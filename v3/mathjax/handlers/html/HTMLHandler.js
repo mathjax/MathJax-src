@@ -1,4 +1,4 @@
-import {Handler} from "../../core/handler.js";
+import {Handler} from "../../core/Handler.js";
 import {HTMLDocument} from "./HTMLDocument.js";
 
 const VERSION = "3.0.0";
