@@ -1,4 +1,6 @@
 import {MathJax} from "mathjax/mathjax.js";
+export {MathJax} from "mathjax/mathjax.js";
+
 import "mathjax/handlers/html.js";
 import "mathjax/input/LegacyTeX.js";
 
