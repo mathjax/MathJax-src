@@ -1,3 +1,4 @@
+process.chdir(__dirname);
 system  = require("./lib/system.js");
 system.config({map: {'traceur': './lib/traceur.min.js'}});
 
