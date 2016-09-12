@@ -98,6 +98,8 @@ export abstract class AbstractVisitor implements Visitor {
       [Kind.mscarries, this.visitNodeMscarries.bind(this)],
       [Kind.mscarry, this.visitNodeMscarry.bind(this)],
       [Kind.msline, this.visitNodeMsline.bind(this)],
+      [Kind.maction, this.visitNodeMaction.bind(this)],
+      [Kind.math, this.visitNodeMath.bind(this)],
       [Kind.semantics, this.visitNodeSemantics.bind(this)],
       [Kind.annotation, this.visitNodeAnnotation.bind(this)],
       [Kind['annotation-xml'], this.visitNodeAnnotationXml.bind(this)],
@@ -454,6 +456,24 @@ export abstract class AbstractVisitor implements Visitor {
    * @protected
    */
   protected visitNodeMsline(node: nf.NodeMsline) {
+    this.visitChildren(node.getChildren());
+  }
+
+  /**
+   * Visits an Maction node.
+   * @param {NodeMaction} node The Maction node.
+   * @protected
+   */
+  protected visitNodeMaction(node: nf.NodeMaction) {
+    this.visitChildren(node.getChildren());
+  }
+
+  /**
+   * Visits an Math node.
+   * @param {NodeMath} node The Math node.
+   * @protected
+   */
+  protected visitNodeMath(node: nf.NodeMath) {
     this.visitChildren(node.getChildren());
   }
 

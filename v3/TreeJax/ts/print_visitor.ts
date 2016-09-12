@@ -70,6 +70,13 @@ export class PrintVisitor extends AbstractVisitor {
   /**
    * @override
    */
+  protected visitNodeMath(node: nf.NodeMath) {
+    this.printNode(node, super.visitNodeMath.bind(this));
+  }
+
+  /**
+   * @override
+   */
   protected visitNodeDummy(node: nf.NodeDummy) {
     this.printNode(node, super.visitNodeDummy.bind(this));
   }

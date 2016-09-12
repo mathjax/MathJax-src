@@ -109,6 +109,10 @@ export namespace NodeFactory {
       return new NodeMscarry();
     case 'msline':
       return new NodeMsline();
+    case 'maction':
+      return new NodeMaction();
+    case 'math':
+      return new NodeMath();
     case 'semantics':
       return new NodeSemantics();
     case 'annotation':
@@ -591,14 +595,40 @@ export class NodeMscarry extends AbstractNode {
 }
 
 
-export class NodeMsline extends AbstractNode {
+export class NodeMsline extends AbstractEmpty {
 
   /**
    * @constructor
    * @extends{AbstractNode}
    */
   constructor() {
-    super(Kind.msline, true);
+    super(Kind.msline);
+  }
+
+}
+
+
+export class NodeMaction extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.maction, true);
+  }
+
+}
+
+
+export class NodeMath extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.math, true);
   }
 
 }
