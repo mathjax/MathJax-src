@@ -159,6 +159,11 @@ export interface TreeNode extends Visitable {
    */
   isLeaf(): boolean;
 
+  /**
+   * @return {boolean} True if node is a leaf.
+   */
+  isEmpty(): boolean;
+
 }
 
 export abstract class AbstractNode implements TreeNode {
@@ -229,6 +234,13 @@ export abstract class AbstractNode implements TreeNode {
    * @override
    */
   public isLeaf() {
+    return this.children.length === 0;
+  }
+
+  /**
+   * @override
+   */
+  public isEmpty() {
     return false;
   }
 

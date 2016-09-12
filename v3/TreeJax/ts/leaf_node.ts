@@ -76,3 +76,42 @@ export abstract class AbstractLeaf extends AbstractNode implements LeafNode {
   }
 
 }
+
+
+export interface EmptyNode extends TreeNode { }
+
+
+export abstract class AbstractEmpty extends AbstractLeaf implements EmptyNode {
+
+  /**
+   * @param {string} kind The type of node.
+   * @constructor
+   * @implements {LeafNode}
+   * @extends {AbstractNode}
+   */
+  constructor(kind: Kind) {
+    super(kind);
+  };
+
+
+  // TODO: Throw exception on access?
+  /**
+   * @override
+   */
+  public getText() {
+    return '';
+  }
+
+  /**
+   * @override
+   */
+  public setText(text: string) { }
+
+  /**
+   * @override
+   */
+  public isEmpty() {
+    return true;
+  }
+
+}

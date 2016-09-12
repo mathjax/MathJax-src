@@ -22,7 +22,7 @@
  */
 
 import {Kind, TreeNode, AbstractNode} from './tree_node';
-import {LeafNode, AbstractLeaf} from './leaf_node';
+import {LeafNode, AbstractLeaf, AbstractEmpty} from './leaf_node';
 
 
 export namespace NodeFactory {
@@ -41,8 +41,82 @@ export namespace NodeFactory {
       return new NodeMo();
     case 'mn':
       return new NodeMn();
+    case 'mtext':
+      return new NodeMtext();
+    case 'mspace':
+      return new NodeMspace();
+    case 'ms':
+      return new NodeMs();
+    case 'mrow':
+      return new NodeMrow();
+    case 'mfrac':
+      return new NodeMfrac();
+    case 'msqrt':
+      return new NodeMsqrt();
+    case 'mroot':
+      return new NodeMroot();
+    case 'mstyle':
+      return new NodeMstyle();
+    case 'merror':
+      return new NodeMerror();
+    case 'mpadded':
+      return new NodeMpadded();
+    case 'mphantom':
+      return new NodeMphantom();
+    case 'mfenced':
+      return new NodeMfenced();
+    case 'menclose':
+      return new NodeMenclose();
+    case 'msub':
+      return new NodeMsub();
     case 'msup':
       return new NodeMsup();
+    case 'msubsup':
+      return new NodeMsubsup();
+    case 'munder':
+      return new NodeMunder();
+    case 'mover':
+      return new NodeMover();
+    case 'munderover':
+      return new NodeMunderover();
+    case 'mmultiscripts':
+      return new NodeMmultiscripts();
+    case 'mprescripts':
+      return new NodeMprescripts();
+    case 'mtable':
+      return new NodeMtable();
+    case 'mlabeledtr':
+      return new NodeMlabeledtr();
+    case 'mtr':
+      return new NodeMtr();
+    case 'mtd':
+      return new NodeMtd();
+    case 'maligngroup':
+      return new NodeMaligngroup();
+    case 'malignmark':
+      return new NodeMalignmark();
+    case 'mstack':
+      return new NodeMstack();
+    case 'mlongdiv':
+      return new NodeMlongdiv();
+    case 'msgroup':
+      return new NodeMsgroup();
+    case 'msrow':
+      return new NodeMsrow();
+    case 'mscarries':
+      return new NodeMscarries();
+    case 'mscarry':
+      return new NodeMscarry();
+    case 'msline':
+      return new NodeMsline();
+    case 'semantics':
+      return new NodeSemantics();
+    case 'annotation':
+      return new NodeAnnotation();
+    case 'annotation-xml':
+      return new NodeAnnotationXml();
+    case 'none':
+      return new NodeNone();
     default:
       return new NodeDummy();
     }
@@ -88,6 +162,188 @@ export class NodeMn extends AbstractLeaf {
 
 }
 
+export class NodeMtext extends AbstractLeaf {
+
+  /**
+   * @constructor
+   * @extends{AbstractLeaf}
+   */
+  constructor() {
+    super(Kind.mtext);
+  }
+
+}
+
+
+export class NodeMspace extends AbstractEmpty {
+
+  /**
+   * @constructor
+   * @extends{AbstractEmpty}
+   */
+  constructor() {
+    super(Kind.mspace);
+  }
+
+}
+
+
+export class NodeMs extends AbstractLeaf {
+
+  /**
+   * @constructor
+   * @extends{AbstractLeaf}
+   */
+  constructor() {
+    super(Kind.ms);
+  }
+
+}
+
+
+export class NodeMrow extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mrow, true);
+  }
+
+}
+
+
+export class NodeMfrac extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mfrac, 2);
+  }
+
+}
+
+
+export class NodeMsqrt extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.msqrt, true);
+  }
+
+}
+
+
+export class NodeMroot extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mroot, true);
+  }
+
+}
+
+
+export class NodeMstyle extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mstyle, true);
+  }
+
+}
+
+
+export class NodeMerror extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.merror, true);
+  }
+
+}
+
+
+export class NodeMpadded extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mpadded, true);
+  }
+
+}
+
+
+export class NodeMphantom extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mphantom, true);
+  }
+
+}
+
+
+export class NodeMfenced extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mfenced, true);
+  }
+
+}
+
+
+export class NodeMenclose extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.menclose, true);
+  }
+
+}
+
+
+export class NodeMsub extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.msub, 2);
+  }
+
+}
+
+
 export class NodeMsup extends AbstractNode {
 
   /**
@@ -96,6 +352,303 @@ export class NodeMsup extends AbstractNode {
    */
   constructor() {
     super(Kind.msup, 2);
+  }
+
+}
+
+
+export class NodeMsubsup extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.msubsup, 3);
+  }
+
+}
+
+
+export class NodeMunder extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.munder, 2);
+  }
+
+}
+
+
+export class NodeMover extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mover, 2);
+  }
+
+}
+
+
+export class NodeMunderover extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.munderover, 3);
+  }
+
+}
+
+
+export class NodeMmultiscripts extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mmultiscripts, true);
+  }
+
+}
+
+
+export class NodeMprescripts extends AbstractEmpty {
+
+  /**
+   * @constructor
+   * @extends{AbstractEmpty}
+   */
+  constructor() {
+    super(Kind.mprescripts);
+  }
+
+}
+
+
+export class NodeMtable extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mtable, true);
+  }
+
+}
+
+
+export class NodeMlabeledtr extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mlabeledtr, true);
+  }
+
+}
+
+
+export class NodeMtr extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mtr, true);
+  }
+
+}
+
+
+export class NodeMtd extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mtd, true);
+  }
+
+}
+
+
+export class NodeMaligngroup extends AbstractEmpty {
+
+  /**
+   * @constructor
+   * @extends{AbstractEmpty}
+   */
+  constructor() {
+    super(Kind.maligngroup);
+  }
+
+}
+
+
+export class NodeMalignmark extends AbstractEmpty {
+
+  /**
+   * @constructor
+   * @extends{AbstractEmpty}
+   */
+  constructor() {
+    super(Kind.malignmark);
+  }
+
+}
+
+
+export class NodeMstack extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mstack, true);
+  }
+
+}
+
+
+export class NodeMlongdiv extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mlongdiv, true);
+  }
+
+}
+
+
+export class NodeMsgroup extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.msgroup, true);
+  }
+
+}
+
+
+export class NodeMsrow extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.msrow, true);
+  }
+
+}
+
+
+export class NodeMscarries extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mscarries, true);
+  }
+
+}
+
+
+export class NodeMscarry extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.mscarry, true);
+  }
+
+}
+
+
+export class NodeMsline extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.msline, true);
+  }
+
+}
+
+
+export class NodeSemantics extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.semantics, true);
+  }
+
+}
+
+
+export class NodeAnnotation extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.annotation, 1);
+  }
+
+}
+
+export class NodeAnnotationXml extends AbstractNode {
+
+  /**
+   * @constructor
+   * @extends{AbstractNode}
+   */
+  constructor() {
+    super(Kind.annotation, 1);
+  }
+
+}
+
+export class NodeNone extends AbstractEmpty {
+
+  /**
+   * @constructor
+   * @extends{AbstractEmpty}
+   */
+  constructor() {
+    super(Kind.none);
   }
 
 }
