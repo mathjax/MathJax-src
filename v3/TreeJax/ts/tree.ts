@@ -42,6 +42,7 @@ export class Tree implements Visitable {
    * @return {Tree} The newly constructed tree.
    */
   public static parse(json: any): Tree {
+    console.log(json.type);
     let root = Tree.parseNode(json);
     let tree = new Tree();
     tree.root = root;

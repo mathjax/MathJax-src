@@ -238,7 +238,7 @@ export abstract class AbstractNode implements TreeNode {
    * @override
    */
   public isLeaf() {
-    return this.children.length === 0;
+    return false;
   }
 
   /**
