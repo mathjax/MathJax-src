@@ -369,7 +369,7 @@ export class PrintVisitor extends AbstractVisitor {
    * @param {Function} func The super function to call.
    */
   private printLeaf(node: LeafNode, func: Function) {
-    this.printNode(node, func, ': ' + (<LeafNode>node).getText());
+    this.printNode(node, func, ': ' + node.getText());
   }
 
   /**
