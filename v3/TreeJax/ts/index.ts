@@ -26,4 +26,5 @@ import {Tree} from './tree';
 export {PrintVisitor} from './print_visitor';
 
 export let parse = Tree.parse;
+export let parseFile = Tree.parseFile;
 

@@ -1,1211 +1,1129 @@
 {
-   "type":"math",
-   "attributes":{
-      "display":"block"
-   },
-   "children":[
-      {
-         "type":"mrow",
-         "attributes":{},
-         "inferred":true,
-         "children":[
+  "attributes" : {
+    "display" : "block"
+  },
+  "children" : [
+    {
+      "children" : [
+        {
+          "type" : "msubsup",
+          "attributes" : {},
+          "children" : [
             {
-               "attributes":{},
-               "children":[
-                  {
-                     "attributes":{},
-                     "text":"D",
-                     "type":"mi"
-                  },
-                  {
-                     "type":"mi",
-                     "text":"x",
-                     "attributes":{}
-                  },
-                  {
-                     "text":"n",
-                     "attributes":{},
-                     "type":"mi"
-                  }
-               ],
-               "type":"msubsup"
+              "attributes" : {},
+              "type" : "mi",
+              "text" : "D"
             },
             {
-               "text":"w",
-               "attributes":{},
-               "type":"mi"
+              "attributes" : {},
+              "text" : "x",
+              "type" : "mi"
             },
             {
-               "type":"mo",
-               "text":"=",
-               "attributes":{}
-            },
-            {
-               "text":"s",
-               "attributes":{},
-               "type":"mi"
-            },
-            {
-               "type":"mi",
-               "text":"u",
-               "attributes":{}
-            },
-            {
-               "children":[
-                  {
-                     "type":"mi",
-                     "text":"m",
-                     "attributes":{}
-                  },
-                  {
-                     "type":"mrow",
-                     "children":[
-                        {
-                           "children":[
-                              {
-                                 "type":"mn",
-                                 "attributes":{},
-                                 "text":"0"
-                              },
-                              {
-                                 "type":"mi",
-                                 "text":"l",
-                                 "attributes":{}
-                              },
-                              {
-                                 "attributes":{},
-                                 "text":"e",
-                                 "type":"mi"
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"j"
-                              },
-                              {
-                                 "text":"l",
-                                 "attributes":{},
-                                 "type":"mi"
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"e"
-                              },
-                              {
-                                 "text":"n",
-                                 "attributes":{},
-                                 "type":"mi"
-                              }
-                           ],
-                           "inferred":true,
-                           "attributes":{},
-                           "type":"mrow"
-                        }
-                     ],
-                     "attributes":{},
-                     "TeXAtom":"ORD"
-                  }
-               ],
-               "attributes":{},
-               "type":"msub"
-            },
-            {
-               "attributes":{},
-               "text":"s",
-               "type":"mi"
-            },
-            {
-               "text":"u",
-               "attributes":{},
-               "type":"mi"
-            },
-            {
-               "type":"msub",
-               "children":[
-                  {
-                     "type":"mi",
-                     "attributes":{},
-                     "text":"m"
-                  },
-                  {
-                     "children":[
-                        {
-                           "type":"mrow",
-                           "children":[
-                              {
-                                 "text":"s",
-                                 "attributes":{},
-                                 "type":"mi"
-                              },
-                              {
-                                 "text":"c",
-                                 "attributes":{},
-                                 "type":"mi"
-                              },
-                              {
-                                 "type":"mi",
-                                 "text":"r",
-                                 "attributes":{}
-                              },
-                              {
-                                 "text":"i",
-                                 "attributes":{},
-                                 "type":"mi"
-                              },
-                              {
-                                 "attributes":{},
-                                 "text":"p",
-                                 "type":"mi"
-                              },
-                              {
-                                 "type":"mi",
-                                 "text":"t",
-                                 "attributes":{}
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"s"
-                              },
-                              {
-                                 "type":"mi",
-                                 "text":"t",
-                                 "attributes":{}
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"y"
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"l"
-                              },
-                              {
-                                 "type":"mi",
-                                 "text":"e",
-                                 "attributes":{}
-                              },
-                              {
-                                 "type":"msub",
-                                 "children":[
-                                    {
-                                       "attributes":{},
-                                       "text":"k",
-                                       "type":"mi"
-                                    },
-                                    {
-                                       "attributes":{},
-                                       "text":"1",
-                                       "type":"mn"
-                                    }
-                                 ],
-                                 "attributes":{}
-                              },
-                              {
-                                 "type":"mo",
-                                 "attributes":{},
-                                 "text":"+"
-                              },
-                              {
-                                 "attributes":{},
-                                 "children":[
-                                    {
-                                       "type":"mi",
-                                       "attributes":{},
-                                       "text":"k"
-                                    },
-                                    {
-                                       "type":"mn",
-                                       "text":"2",
-                                       "attributes":{}
-                                    }
-                                 ],
-                                 "type":"msub"
-                              },
-                              {
-                                 "type":"mo",
-                                 "text":"+",
-                                 "attributes":{}
-                              },
-                              {
-                                 "type":"mi",
-                                 "text":"c",
-                                 "attributes":{}
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"d"
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"o"
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"t"
-                              },
-                              {
-                                 "type":"mi",
-                                 "text":"s",
-                                 "attributes":{}
-                              },
-                              {
-                                 "text":"+",
-                                 "attributes":{},
-                                 "type":"mo"
-                              },
-                              {
-                                 "children":[
-                                    {
-                                       "attributes":{},
-                                       "text":"k",
-                                       "type":"mi"
-                                    },
-                                    {
-                                       "type":"mi",
-                                       "attributes":{},
-                                       "text":"n"
-                                    }
-                                 ],
-                                 "attributes":{},
-                                 "type":"msub"
-                              },
-                              {
-                                 "attributes":{},
-                                 "text":"=",
-                                 "type":"mo"
-                              },
-                              {
-                                 "text":"j",
-                                 "attributes":{},
-                                 "type":"mi"
-                              },
-                              {
-                                 "attributes":{},
-                                 "text":"a",
-                                 "type":"mi"
-                              },
-                              {
-                                 "type":"mi",
-                                 "attributes":{},
-                                 "text":"t"
-                              },
-                              {
-                                 "text":"o",
-                                 "attributes":{},
-                                 "type":"mi"
-                              },
-                              {
-                                 "text":"p",
-                                 "attributes":{},
-                                 "type":"mi"
-                              },
-                              {
-                                 "children":[
-                                    {
-                                       "attributes":{},
-                                       "children":[
-                                          {
-                                             "type":"mi",
-                                             "attributes":{},
-                                             "text":"s"
-                                          },
-                                          {
-                                             "text":"c",
-                                             "attributes":{},
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "attributes":{},
-                                             "text":"r",
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "text":"i",
-                                             "attributes":{}
-                                          },
-                                          {
-                                             "attributes":{},
-                                             "text":"p",
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "text":"t",
-                                             "attributes":{},
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "text":"s",
-                                             "attributes":{},
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "attributes":{},
-                                             "text":"t"
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "text":"y",
-                                             "attributes":{}
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "text":"l",
-                                             "attributes":{}
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "attributes":{},
-                                             "text":"e"
-                                          },
-                                          {
-                                             "type":"msub",
-                                             "children":[
-                                                {
-                                                   "type":"mi",
-                                                   "text":"k",
-                                                   "attributes":{}
-                                                },
-                                                {
-                                                   "type":"mn",
-                                                   "text":"1",
-                                                   "attributes":{}
-                                                }
-                                             ],
-                                             "attributes":{}
-                                          },
-                                          {
-                                             "text":"+",
-                                             "attributes":{},
-                                             "type":"mo"
-                                          },
-                                          {
-                                             "type":"mn",
-                                             "attributes":{},
-                                             "text":"2"
-                                          },
-                                          {
-                                             "type":"msub",
-                                             "attributes":{},
-                                             "children":[
-                                                {
-                                                   "type":"mi",
-                                                   "attributes":{},
-                                                   "text":"k"
-                                                },
-                                                {
-                                                   "type":"mn",
-                                                   "attributes":{},
-                                                   "text":"2"
-                                                }
-                                             ]
-                                          },
-                                          {
-                                             "attributes":{},
-                                             "text":"+",
-                                             "type":"mo"
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "attributes":{},
-                                             "text":"c"
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "attributes":{},
-                                             "text":"d"
-                                          },
-                                          {
-                                             "text":"o",
-                                             "attributes":{},
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "attributes":{},
-                                             "text":"t",
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "attributes":{},
-                                             "text":"s",
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "text":"+",
-                                             "attributes":{},
-                                             "type":"mo"
-                                          },
-                                          {
-                                             "text":"n",
-                                             "attributes":{},
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "type":"msub",
-                                             "children":[
-                                                {
-                                                   "type":"mi",
-                                                   "attributes":{},
-                                                   "text":"k"
-                                                },
-                                                {
-                                                   "text":"n",
-                                                   "attributes":{},
-                                                   "type":"mi"
-                                                }
-                                             ],
-                                             "attributes":{}
-                                          },
-                                          {
-                                             "type":"mo",
-                                             "attributes":{},
-                                             "text":"="
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "attributes":{},
-                                             "text":"n"
-                                          },
-                                          {
-                                             "text":"a",
-                                             "attributes":{},
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "attributes":{},
-                                             "text":"t"
-                                          },
-                                          {
-                                             "type":"mi",
-                                             "attributes":{},
-                                             "text":"o"
-                                          },
-                                          {
-                                             "text":"p",
-                                             "attributes":{},
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "children":[
-                                                {
-                                                   "inferred":true,
-                                                   "children":[
-                                                      {
-                                                         "type":"mi",
-                                                         "text":"s",
-                                                         "attributes":{}
-                                                      },
-                                                      {
-                                                         "attributes":{},
-                                                         "text":"c",
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "attributes":{},
-                                                         "text":"r",
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "text":"i",
-                                                         "attributes":{},
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "type":"mi",
-                                                         "attributes":{},
-                                                         "text":"p"
-                                                      },
-                                                      {
-                                                         "text":"t",
-                                                         "attributes":{},
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "attributes":{},
-                                                         "text":"s",
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "attributes":{},
-                                                         "text":"t",
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "type":"mi",
-                                                         "attributes":{},
-                                                         "text":"y"
-                                                      },
-                                                      {
-                                                         "type":"mi",
-                                                         "attributes":{},
-                                                         "text":"l"
-                                                      },
-                                                      {
-                                                         "text":"e",
-                                                         "attributes":{},
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "children":[
-                                                            {
-                                                               "text":"k",
-                                                               "attributes":{},
-                                                               "type":"mi"
-                                                            },
-                                                            {
-                                                               "text":"1",
-                                                               "attributes":{},
-                                                               "type":"mn"
-                                                            }
-                                                         ],
-                                                         "attributes":{},
-                                                         "type":"msub"
-                                                      },
-                                                      {
-                                                         "type":"mo",
-                                                         "attributes":{},
-                                                         "text":","
-                                                      },
-                                                      {
-                                                         "type":"msub",
-                                                         "children":[
-                                                            {
-                                                               "type":"mi",
-                                                               "attributes":{},
-                                                               "text":"k"
-                                                            },
-                                                            {
-                                                               "type":"mn",
-                                                               "text":"2",
-                                                               "attributes":{}
-                                                            }
-                                                         ],
-                                                         "attributes":{}
-                                                      },
-                                                      {
-                                                         "attributes":{},
-                                                         "text":",",
-                                                         "type":"mo"
-                                                      },
-                                                      {
-                                                         "type":"mi",
-                                                         "text":"l",
-                                                         "attributes":{}
-                                                      },
-                                                      {
-                                                         "type":"mi",
-                                                         "text":"d",
-                                                         "attributes":{}
-                                                      },
-                                                      {
-                                                         "text":"o",
-                                                         "attributes":{},
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "attributes":{},
-                                                         "text":"t",
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "type":"mi",
-                                                         "attributes":{},
-                                                         "text":"s"
-                                                      },
-                                                      {
-                                                         "type":"mo",
-                                                         "attributes":{},
-                                                         "text":","
-                                                      },
-                                                      {
-                                                         "attributes":{},
-                                                         "children":[
-                                                            {
-                                                               "type":"mi",
-                                                               "text":"k",
-                                                               "attributes":{}
-                                                            },
-                                                            {
-                                                               "type":"mi",
-                                                               "attributes":{},
-                                                               "text":"n"
-                                                            }
-                                                         ],
-                                                         "type":"msub"
-                                                      },
-                                                      {
-                                                         "attributes":{},
-                                                         "text":"g",
-                                                         "type":"mi"
-                                                      },
-                                                      {
-                                                         "type":"mi",
-                                                         "attributes":{},
-                                                         "text":"e"
-                                                      },
-                                                      {
-                                                         "type":"mn",
-                                                         "text":"0",
-                                                         "attributes":{}
-                                                      }
-                                                   ],
-                                                   "attributes":{},
-                                                   "type":"mrow"
-                                                }
-                                             ],
-                                             "attributes":{},
-                                             "TeXAtom":"ORD",
-                                             "type":"mrow"
-                                          }
-                                       ],
-                                       "inferred":true,
-                                       "type":"mrow"
-                                    }
-                                 ],
-                                 "TeXAtom":"ORD",
-                                 "attributes":{},
-                                 "type":"mrow"
-                              }
-                           ],
-                           "inferred":true,
-                           "attributes":{}
-                        }
-                     ],
-                     "TeXAtom":"ORD",
-                     "attributes":{},
-                     "type":"mrow"
-                  }
-               ],
-               "attributes":{}
-            },
-            {
-               "type":"msubsup",
-               "children":[
-                  {
-                     "text":"D",
-                     "attributes":{},
-                     "type":"mi"
-                  },
-                  {
-                     "attributes":{},
-                     "text":"u",
-                     "type":"mi"
-                  },
-                  {
-                     "attributes":{},
-                     "text":"j",
-                     "type":"mi"
-                  }
-               ],
-               "attributes":{}
-            },
-            {
-               "type":"mi",
-               "text":"w",
-               "attributes":{}
-            },
-            {
-               "type":"mrow",
-               "children":[
-                  {
-                     "type":"mrow",
-                     "children":[
-                        {
-                           "type":"mo",
-                           "text":"\f",
-                           "attributes":{}
-                        }
-                     ],
-                     "inferred":true,
-                     "attributes":{}
-                  }
-               ],
-               "TeXAtom":"ORD",
-               "attributes":{}
-            },
-            {
-               "type":"mi",
-               "attributes":{},
-               "text":"r"
-            },
-            {
-               "text":"a",
-               "attributes":{},
-               "type":"mi"
-            },
-            {
-               "attributes":{},
-               "text":"c",
-               "type":"mi"
-            },
-            {
-               "children":[
-                  {
-                     "children":[
-                        {
-                           "type":"mi",
-                           "attributes":{},
-                           "text":"n"
-                        },
-                        {
-                           "text":"!",
-                           "attributes":{},
-                           "type":"mo"
-                        },
-                        {
-                           "attributes":{},
-                           "children":[
-                              {
-                                 "children":[
-                                    {
-                                       "type":"mrow",
-                                       "attributes":{},
-                                       "children":[
-                                          {
-                                             "attributes":{
-                                                "stretchy":false
-                                             },
-                                             "text":"(",
-                                             "type":"mo"
-                                          },
-                                          {
-                                             "type":"msubsup",
-                                             "children":[
-                                                {
-                                                   "text":"D",
-                                                   "attributes":{},
-                                                   "type":"mi"
-                                                },
-                                                {
-                                                   "attributes":{},
-                                                   "text":"x",
-                                                   "type":"mi"
-                                                },
-                                                {
-                                                   "type":"mn",
-                                                   "attributes":{},
-                                                   "text":"1"
-                                                }
-                                             ],
-                                             "attributes":{}
-                                          },
-                                          {
-                                             "attributes":{},
-                                             "text":"u",
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "attributes":{
-                                                "stretchy":false
-                                             },
-                                             "text":")",
-                                             "type":"mo"
-                                          }
-                                       ],
-                                       "inferred":true
-                                    }
-                                 ],
-                                 "TeXAtom":"ORD",
-                                 "attributes":{},
-                                 "type":"mrow"
-                              },
-                              {
-                                 "type":"mrow",
-                                 "TeXAtom":"ORD",
-                                 "attributes":{},
-                                 "children":[
-                                    {
-                                       "attributes":{},
-                                       "children":[
-                                          {
-                                             "attributes":{},
-                                             "children":[
-                                                {
-                                                   "type":"mi",
-                                                   "text":"k",
-                                                   "attributes":{}
-                                                },
-                                                {
-                                                   "type":"mn",
-                                                   "attributes":{},
-                                                   "text":"1"
-                                                }
-                                             ],
-                                             "type":"msub"
-                                          }
-                                       ],
-                                       "inferred":true,
-                                       "type":"mrow"
-                                    }
-                                 ]
-                              }
-                           ],
-                           "type":"msup"
-                        },
-                        {
-                           "type":"mi",
-                           "text":"c",
-                           "attributes":{}
-                        },
-                        {
-                           "type":"mi",
-                           "text":"d",
-                           "attributes":{}
-                        },
-                        {
-                           "attributes":{},
-                           "text":"o",
-                           "type":"mi"
-                        },
-                        {
-                           "attributes":{},
-                           "text":"t",
-                           "type":"mi"
-                        },
-                        {
-                           "text":"s",
-                           "attributes":{},
-                           "type":"mi"
-                        },
-                        {
-                           "children":[
-                              {
-                                 "children":[
-                                    {
-                                       "type":"mrow",
-                                       "children":[
-                                          {
-                                             "text":"(",
-                                             "attributes":{
-                                                "stretchy":false
-                                             },
-                                             "type":"mo"
-                                          },
-                                          {
-                                             "type":"msubsup",
-                                             "attributes":{},
-                                             "children":[
-                                                {
-                                                   "attributes":{},
-                                                   "text":"D",
-                                                   "type":"mi"
-                                                },
-                                                {
-                                                   "type":"mi",
-                                                   "attributes":{},
-                                                   "text":"x"
-                                                },
-                                                {
-                                                   "type":"mi",
-                                                   "text":"n",
-                                                   "attributes":{}
-                                                }
-                                             ]
-                                          },
-                                          {
-                                             "attributes":{},
-                                             "text":"u",
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "type":"mo",
-                                             "text":")",
-                                             "attributes":{
-                                                "stretchy":false
-                                             }
-                                          }
-                                       ],
-                                       "inferred":true,
-                                       "attributes":{}
-                                    }
-                                 ],
-                                 "attributes":{},
-                                 "TeXAtom":"ORD",
-                                 "type":"mrow"
-                              },
-                              {
-                                 "children":[
-                                    {
-                                       "inferred":true,
-                                       "children":[
-                                          {
-                                             "children":[
-                                                {
-                                                   "type":"mi",
-                                                   "text":"k",
-                                                   "attributes":{}
-                                                },
-                                                {
-                                                   "text":"n",
-                                                   "attributes":{},
-                                                   "type":"mi"
-                                                }
-                                             ],
-                                             "attributes":{},
-                                             "type":"msub"
-                                          }
-                                       ],
-                                       "attributes":{},
-                                       "type":"mrow"
-                                    }
-                                 ],
-                                 "attributes":{},
-                                 "TeXAtom":"ORD",
-                                 "type":"mrow"
-                              }
-                           ],
-                           "attributes":{},
-                           "type":"msup"
-                        }
-                     ],
-                     "inferred":true,
-                     "attributes":{},
-                     "type":"mrow"
-                  }
-               ],
-               "attributes":{},
-               "TeXAtom":"ORD",
-               "type":"mrow"
-            },
-            {
-               "attributes":{},
-               "TeXAtom":"ORD",
-               "children":[
-                  {
-                     "attributes":{},
-                     "children":[
-                        {
-                           "children":[
-                              {
-                                 "text":"k",
-                                 "attributes":{},
-                                 "type":"mi"
-                              },
-                              {
-                                 "type":"mn",
-                                 "attributes":{},
-                                 "text":"1"
-                              }
-                           ],
-                           "attributes":{},
-                           "type":"msub"
-                        },
-                        {
-                           "type":"mo",
-                           "attributes":{},
-                           "text":"!"
-                        },
-                        {
-                           "type":"msup",
-                           "attributes":{},
-                           "children":[
-                              {
-                                 "type":"mrow",
-                                 "children":[
-                                    {
-                                       "attributes":{},
-                                       "inferred":true,
-                                       "children":[
-                                          {
-                                             "type":"mo",
-                                             "attributes":{
-                                                "stretchy":false
-                                             },
-                                             "text":"("
-                                          },
-                                          {
-                                             "text":"1",
-                                             "attributes":{},
-                                             "type":"mn"
-                                          },
-                                          {
-                                             "attributes":{},
-                                             "text":"!",
-                                             "type":"mo"
-                                          },
-                                          {
-                                             "type":"mo",
-                                             "text":")",
-                                             "attributes":{
-                                                "stretchy":false
-                                             }
-                                          }
-                                       ],
-                                       "type":"mrow"
-                                    }
-                                 ],
-                                 "TeXAtom":"ORD",
-                                 "attributes":{}
-                              },
-                              {
-                                 "type":"mrow",
-                                 "attributes":{},
-                                 "TeXAtom":"ORD",
-                                 "children":[
-                                    {
-                                       "attributes":{},
-                                       "children":[
-                                          {
-                                             "attributes":{},
-                                             "children":[
-                                                {
-                                                   "type":"mi",
-                                                   "attributes":{},
-                                                   "text":"k"
-                                                },
-                                                {
-                                                   "type":"mn",
-                                                   "attributes":{},
-                                                   "text":"1"
-                                                }
-                                             ],
-                                             "type":"msub"
-                                          }
-                                       ],
-                                       "inferred":true,
-                                       "type":"mrow"
-                                    }
-                                 ]
-                              }
-                           ]
-                        },
-                        {
-                           "attributes":{},
-                           "text":"c",
-                           "type":"mi"
-                        },
-                        {
-                           "text":"d",
-                           "attributes":{},
-                           "type":"mi"
-                        },
-                        {
-                           "attributes":{},
-                           "text":"o",
-                           "type":"mi"
-                        },
-                        {
-                           "type":"mi",
-                           "text":"t",
-                           "attributes":{}
-                        },
-                        {
-                           "attributes":{},
-                           "text":"s",
-                           "type":"mi"
-                        },
-                        {
-                           "type":"msub",
-                           "attributes":{},
-                           "children":[
-                              {
-                                 "type":"mi",
-                                 "text":"k",
-                                 "attributes":{}
-                              },
-                              {
-                                 "text":"n",
-                                 "attributes":{},
-                                 "type":"mi"
-                              }
-                           ]
-                        },
-                        {
-                           "type":"mo",
-                           "text":"!",
-                           "attributes":{}
-                        },
-                        {
-                           "type":"msup",
-                           "attributes":{},
-                           "children":[
-                              {
-                                 "attributes":{},
-                                 "TeXAtom":"ORD",
-                                 "children":[
-                                    {
-                                       "type":"mrow",
-                                       "children":[
-                                          {
-                                             "type":"mo",
-                                             "attributes":{
-                                                "stretchy":false
-                                             },
-                                             "text":"("
-                                          },
-                                          {
-                                             "text":"n",
-                                             "attributes":{},
-                                             "type":"mi"
-                                          },
-                                          {
-                                             "text":"!",
-                                             "attributes":{},
-                                             "type":"mo"
-                                          },
-                                          {
-                                             "type":"mo",
-                                             "attributes":{
-                                                "stretchy":false
-                                             },
-                                             "text":")"
-                                          }
-                                       ],
-                                       "inferred":true,
-                                       "attributes":{}
-                                    }
-                                 ],
-                                 "type":"mrow"
-                              },
-                              {
-                                 "TeXAtom":"ORD",
-                                 "attributes":{},
-                                 "children":[
-                                    {
-                                       "attributes":{},
-                                       "children":[
-                                          {
-                                             "type":"msub",
-                                             "attributes":{},
-                                             "children":[
-                                                {
-                                                   "type":"mi",
-                                                   "attributes":{},
-                                                   "text":"k"
-                                                },
-                                                {
-                                                   "type":"mi",
-                                                   "attributes":{},
-                                                   "text":"n"
-                                                }
-                                             ]
-                                          }
-                                       ],
-                                       "inferred":true,
-                                       "type":"mrow"
-                                    }
-                                 ],
-                                 "type":"mrow"
-                              }
-                           ]
-                        }
-                     ],
-                     "inferred":true,
-                     "type":"mrow"
-                  }
-               ],
-               "type":"mrow"
+              "attributes" : {},
+              "text" : "n",
+              "type" : "mi"
             }
-         ]
-      }
-   ]
+          ]
+        },
+        {
+          "attributes" : {},
+          "text" : "w",
+          "type" : "mi"
+        },
+        {
+          "attributes" : {},
+          "text" : "=",
+          "type" : "mo"
+        },
+        {
+          "type" : "munder",
+          "attributes" : {},
+          "children" : [
+            {
+              "text" : "∑",
+              "type" : "mo",
+              "attributes" : {}
+            },
+            {
+              "TeXAtom" : "ORD",
+              "type" : "mrow",
+              "attributes" : {},
+              "children" : [
+                {
+                  "inferred" : true,
+                  "type" : "mrow",
+                  "attributes" : {},
+                  "children" : [
+                    {
+                      "attributes" : {},
+                      "type" : "mn",
+                      "text" : "0"
+                    },
+                    {
+                      "type" : "mo",
+                      "text" : "≤",
+                      "attributes" : {}
+                    },
+                    {
+                      "attributes" : {},
+                      "text" : "j",
+                      "type" : "mi"
+                    },
+                    {
+                      "attributes" : {},
+                      "type" : "mo",
+                      "text" : "≤"
+                    },
+                    {
+                      "type" : "mi",
+                      "text" : "n",
+                      "attributes" : {}
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "attributes" : {},
+          "children" : [
+            {
+              "text" : "∑",
+              "type" : "mo",
+              "attributes" : {}
+            },
+            {
+              "TeXAtom" : "ORD",
+              "type" : "mrow",
+              "children" : [
+                {
+                  "inferred" : true,
+                  "children" : [
+                    {
+                      "type" : "munder",
+                      "children" : [
+                        {
+                          "TeXAtom" : "OP",
+                          "attributes" : {},
+                          "children" : [
+                            {
+                              "inferred" : true,
+                              "attributes" : {},
+                              "children" : [
+                                {
+                                  "attributes" : {},
+                                  "children" : [
+                                    {
+                                      "children" : [
+                                        {
+                                          "children" : [
+                                            {
+                                              "attributes" : {
+                                                "displaystyle" : false,
+                                                "rowspacing" : "0.1em",
+                                                "columnspacing" : "0em"
+                                              },
+                                              "children" : [
+                                                {
+                                                  "type" : "mtr",
+                                                  "attributes" : {},
+                                                  "children" : [
+                                                    {
+                                                      "attributes" : {},
+                                                      "children" : [
+                                                        {
+                                                          "inferred" : true,
+                                                          "children" : [
+                                                            {
+                                                              "attributes" : {
+                                                                "displaystyle" : false,
+                                                                "scriptlevel" : 1
+                                                              },
+                                                              "children" : [
+                                                                {
+                                                                  "type" : "mrow",
+                                                                  "children" : [
+                                                                    {
+                                                                      "type" : "msub",
+                                                                      "children" : [
+                                                                        {
+                                                                          "text" : "k",
+                                                                          "type" : "mi",
+                                                                          "attributes" : {}
+                                                                        },
+                                                                        {
+                                                                          "type" : "mn",
+                                                                          "text" : "1",
+                                                                          "attributes" : {}
+                                                                        }
+                                                                      ],
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "text" : "+",
+                                                                      "type" : "mo"
+                                                                    },
+                                                                    {
+                                                                      "children" : [
+                                                                        {
+                                                                          "type" : "mi",
+                                                                          "text" : "k",
+                                                                          "attributes" : {}
+                                                                        },
+                                                                        {
+                                                                          "attributes" : {},
+                                                                          "text" : "2",
+                                                                          "type" : "mn"
+                                                                        }
+                                                                      ],
+                                                                      "attributes" : {},
+                                                                      "type" : "msub"
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "text" : "+",
+                                                                      "type" : "mo"
+                                                                    },
+                                                                    {
+                                                                      "type" : "mo",
+                                                                      "text" : "⋯",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "type" : "mo",
+                                                                      "text" : "+",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "children" : [
+                                                                        {
+                                                                          "attributes" : {},
+                                                                          "type" : "mi",
+                                                                          "text" : "k"
+                                                                        },
+                                                                        {
+                                                                          "attributes" : {},
+                                                                          "type" : "mi",
+                                                                          "text" : "n"
+                                                                        }
+                                                                      ],
+                                                                      "attributes" : {},
+                                                                      "type" : "msub"
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "text" : "=",
+                                                                      "type" : "mo"
+                                                                    },
+                                                                    {
+                                                                      "type" : "mi",
+                                                                      "text" : "j",
+                                                                      "attributes" : {}
+                                                                    }
+                                                                  ],
+                                                                  "attributes" : {},
+                                                                  "inferred" : true
+                                                                }
+                                                              ],
+                                                              "type" : "mstyle"
+                                                            }
+                                                          ],
+                                                          "attributes" : {},
+                                                          "type" : "mrow"
+                                                        }
+                                                      ],
+                                                      "type" : "mtd"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "children" : [
+                                                    {
+                                                      "attributes" : {},
+                                                      "children" : [
+                                                        {
+                                                          "type" : "mrow",
+                                                          "children" : [
+                                                            {
+                                                              "type" : "mstyle",
+                                                              "children" : [
+                                                                {
+                                                                  "type" : "mrow",
+                                                                  "children" : [
+                                                                    {
+                                                                      "type" : "msub",
+                                                                      "children" : [
+                                                                        {
+                                                                          "text" : "k",
+                                                                          "type" : "mi",
+                                                                          "attributes" : {}
+                                                                        },
+                                                                        {
+                                                                          "text" : "1",
+                                                                          "type" : "mn",
+                                                                          "attributes" : {}
+                                                                        }
+                                                                      ],
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "text" : "+",
+                                                                      "type" : "mo"
+                                                                    },
+                                                                    {
+                                                                      "type" : "mn",
+                                                                      "text" : "2",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "type" : "msub",
+                                                                      "children" : [
+                                                                        {
+                                                                          "text" : "k",
+                                                                          "type" : "mi",
+                                                                          "attributes" : {}
+                                                                        },
+                                                                        {
+                                                                          "attributes" : {},
+                                                                          "type" : "mn",
+                                                                          "text" : "2"
+                                                                        }
+                                                                      ],
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "text" : "+",
+                                                                      "type" : "mo"
+                                                                    },
+                                                                    {
+                                                                      "type" : "mo",
+                                                                      "text" : "⋯",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "type" : "mo",
+                                                                      "text" : "+"
+                                                                    },
+                                                                    {
+                                                                      "text" : "n",
+                                                                      "type" : "mi",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "children" : [
+                                                                        {
+                                                                          "attributes" : {},
+                                                                          "text" : "k",
+                                                                          "type" : "mi"
+                                                                        },
+                                                                        {
+                                                                          "attributes" : {},
+                                                                          "type" : "mi",
+                                                                          "text" : "n"
+                                                                        }
+                                                                      ],
+                                                                      "attributes" : {},
+                                                                      "type" : "msub"
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "type" : "mo",
+                                                                      "text" : "="
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "text" : "n",
+                                                                      "type" : "mi"
+                                                                    }
+                                                                  ],
+                                                                  "attributes" : {},
+                                                                  "inferred" : true
+                                                                }
+                                                              ],
+                                                              "attributes" : {
+                                                                "displaystyle" : false,
+                                                                "scriptlevel" : 1
+                                                              }
+                                                            }
+                                                          ],
+                                                          "attributes" : {},
+                                                          "inferred" : true
+                                                        }
+                                                      ],
+                                                      "type" : "mtd"
+                                                    }
+                                                  ],
+                                                  "attributes" : {},
+                                                  "type" : "mtr"
+                                                },
+                                                {
+                                                  "attributes" : {},
+                                                  "children" : [
+                                                    {
+                                                      "type" : "mtd",
+                                                      "children" : [
+                                                        {
+                                                          "inferred" : true,
+                                                          "type" : "mrow",
+                                                          "children" : [
+                                                            {
+                                                              "type" : "mstyle",
+                                                              "attributes" : {
+                                                                "displaystyle" : false,
+                                                                "scriptlevel" : 1
+                                                              },
+                                                              "children" : [
+                                                                {
+                                                                  "inferred" : true,
+                                                                  "children" : [
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "children" : [
+                                                                        {
+                                                                          "attributes" : {},
+                                                                          "type" : "mi",
+                                                                          "text" : "k"
+                                                                        },
+                                                                        {
+                                                                          "type" : "mn",
+                                                                          "text" : "1",
+                                                                          "attributes" : {}
+                                                                        }
+                                                                      ],
+                                                                      "type" : "msub"
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "type" : "mo",
+                                                                      "text" : ","
+                                                                    },
+                                                                    {
+                                                                      "type" : "msub",
+                                                                      "attributes" : {},
+                                                                      "children" : [
+                                                                        {
+                                                                          "type" : "mi",
+                                                                          "text" : "k",
+                                                                          "attributes" : {}
+                                                                        },
+                                                                        {
+                                                                          "type" : "mn",
+                                                                          "text" : "2",
+                                                                          "attributes" : {}
+                                                                        }
+                                                                      ]
+                                                                    },
+                                                                    {
+                                                                      "text" : ",",
+                                                                      "type" : "mo",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "text" : "…",
+                                                                      "type" : "mo",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "type" : "mo",
+                                                                      "text" : ",",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "children" : [
+                                                                        {
+                                                                          "type" : "mi",
+                                                                          "text" : "k",
+                                                                          "attributes" : {}
+                                                                        },
+                                                                        {
+                                                                          "attributes" : {},
+                                                                          "type" : "mi",
+                                                                          "text" : "n"
+                                                                        }
+                                                                      ],
+                                                                      "type" : "msub"
+                                                                    },
+                                                                    {
+                                                                      "type" : "mo",
+                                                                      "text" : "≥",
+                                                                      "attributes" : {}
+                                                                    },
+                                                                    {
+                                                                      "attributes" : {},
+                                                                      "type" : "mn",
+                                                                      "text" : "0"
+                                                                    }
+                                                                  ],
+                                                                  "attributes" : {},
+                                                                  "type" : "mrow"
+                                                                }
+                                                              ]
+                                                            }
+                                                          ],
+                                                          "attributes" : {}
+                                                        }
+                                                      ],
+                                                      "attributes" : {}
+                                                    }
+                                                  ],
+                                                  "type" : "mtr"
+                                                }
+                                              ],
+                                              "type" : "mtable"
+                                            }
+                                          ],
+                                          "attributes" : {},
+                                          "type" : "mrow",
+                                          "inferred" : true
+                                        }
+                                      ],
+                                      "attributes" : {
+                                        "scriptlevel" : 1
+                                      },
+                                      "type" : "mstyle"
+                                    },
+                                    {
+                                      "attributes" : {},
+                                      "type" : "mo",
+                                      "text" : "⏟"
+                                    }
+                                  ],
+                                  "type" : "munder"
+                                }
+                              ],
+                              "type" : "mrow"
+                            }
+                          ],
+                          "type" : "mrow"
+                        },
+                        {
+                          "children" : [
+                            {
+                              "attributes" : {},
+                              "children" : [
+                                {
+                                  "children" : [
+                                    {
+                                      "inferred" : true,
+                                      "children" : [
+                                        {
+                                          "attributes" : {},
+                                          "type" : "mtext",
+                                          "text" : "lower constraint 1"
+                                        }
+                                      ],
+                                      "attributes" : {},
+                                      "type" : "mrow"
+                                    }
+                                  ],
+                                  "attributes" : {
+                                    "displaystyle" : false,
+                                    "scriptlevel" : 0
+                                  },
+                                  "type" : "mstyle"
+                                }
+                              ],
+                              "type" : "mrow",
+                              "inferred" : true
+                            }
+                          ],
+                          "attributes" : {},
+                          "type" : "mrow",
+                          "TeXAtom" : "ORD"
+                        }
+                      ],
+                      "attributes" : {}
+                    }
+                  ],
+                  "attributes" : {},
+                  "type" : "mrow"
+                }
+              ],
+              "attributes" : {}
+            }
+          ],
+          "type" : "munder"
+        },
+        {
+          "type" : "msubsup",
+          "attributes" : {},
+          "children" : [
+            {
+              "attributes" : {},
+              "text" : "D",
+              "type" : "mi"
+            },
+            {
+              "type" : "mi",
+              "text" : "u",
+              "attributes" : {}
+            },
+            {
+              "attributes" : {},
+              "type" : "mi",
+              "text" : "j"
+            }
+          ]
+        },
+        {
+          "attributes" : {},
+          "text" : "w",
+          "type" : "mi"
+        },
+        {
+          "type" : "mfrac",
+          "children" : [
+            {
+              "children" : [
+                {
+                  "TeXAtom" : "OP",
+                  "type" : "mrow",
+                  "children" : [
+                    {
+                      "type" : "mrow",
+                      "children" : [
+                        {
+                          "children" : [
+                            {
+                              "children" : [
+                                {
+                                  "text" : "n",
+                                  "type" : "mi",
+                                  "attributes" : {}
+                                },
+                                {
+                                  "text" : "!",
+                                  "type" : "mo",
+                                  "attributes" : {}
+                                },
+                                {
+                                  "attributes" : {},
+                                  "children" : [
+                                    {
+                                      "type" : "mrow",
+                                      "attributes" : {},
+                                      "children" : [
+                                        {
+                                          "children" : [
+                                            {
+                                              "type" : "mo",
+                                              "text" : "(",
+                                              "attributes" : {
+                                                "stretchy" : false
+                                              }
+                                            },
+                                            {
+                                              "children" : [
+                                                {
+                                                  "attributes" : {},
+                                                  "text" : "D",
+                                                  "type" : "mi"
+                                                },
+                                                {
+                                                  "text" : "x",
+                                                  "type" : "mi",
+                                                  "attributes" : {}
+                                                },
+                                                {
+                                                  "attributes" : {},
+                                                  "text" : "1",
+                                                  "type" : "mn"
+                                                }
+                                              ],
+                                              "attributes" : {},
+                                              "type" : "msubsup"
+                                            },
+                                            {
+                                              "text" : "u",
+                                              "type" : "mi",
+                                              "attributes" : {}
+                                            },
+                                            {
+                                              "attributes" : {
+                                                "stretchy" : false
+                                              },
+                                              "text" : ")",
+                                              "type" : "mo"
+                                            }
+                                          ],
+                                          "attributes" : {},
+                                          "type" : "mrow",
+                                          "inferred" : true
+                                        }
+                                      ],
+                                      "TeXAtom" : "ORD"
+                                    },
+                                    {
+                                      "type" : "mrow",
+                                      "attributes" : {},
+                                      "children" : [
+                                        {
+                                          "type" : "mrow",
+                                          "attributes" : {},
+                                          "children" : [
+                                            {
+                                              "type" : "msub",
+                                              "children" : [
+                                                {
+                                                  "attributes" : {},
+                                                  "type" : "mi",
+                                                  "text" : "k"
+                                                },
+                                                {
+                                                  "text" : "1",
+                                                  "type" : "mn",
+                                                  "attributes" : {}
+                                                }
+                                              ],
+                                              "attributes" : {}
+                                            }
+                                          ],
+                                          "inferred" : true
+                                        }
+                                      ],
+                                      "TeXAtom" : "ORD"
+                                    }
+                                  ],
+                                  "type" : "msup"
+                                },
+                                {
+                                  "attributes" : {},
+                                  "type" : "mo",
+                                  "text" : "⋯"
+                                },
+                                {
+                                  "attributes" : {},
+                                  "children" : [
+                                    {
+                                      "TeXAtom" : "ORD",
+                                      "type" : "mrow",
+                                      "attributes" : {},
+                                      "children" : [
+                                        {
+                                          "type" : "mrow",
+                                          "attributes" : {},
+                                          "children" : [
+                                            {
+                                              "type" : "mo",
+                                              "text" : "(",
+                                              "attributes" : {
+                                                "stretchy" : false
+                                              }
+                                            },
+                                            {
+                                              "type" : "msubsup",
+                                              "children" : [
+                                                {
+                                                  "attributes" : {},
+                                                  "text" : "D",
+                                                  "type" : "mi"
+                                                },
+                                                {
+                                                  "attributes" : {},
+                                                  "text" : "x",
+                                                  "type" : "mi"
+                                                },
+                                                {
+                                                  "attributes" : {},
+                                                  "type" : "mi",
+                                                  "text" : "n"
+                                                }
+                                              ],
+                                              "attributes" : {}
+                                            },
+                                            {
+                                              "text" : "u",
+                                              "type" : "mi",
+                                              "attributes" : {}
+                                            },
+                                            {
+                                              "type" : "mo",
+                                              "text" : ")",
+                                              "attributes" : {
+                                                "stretchy" : false
+                                              }
+                                            }
+                                          ],
+                                          "inferred" : true
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "TeXAtom" : "ORD",
+                                      "attributes" : {},
+                                      "children" : [
+                                        {
+                                          "attributes" : {},
+                                          "children" : [
+                                            {
+                                              "attributes" : {},
+                                              "children" : [
+                                                {
+                                                  "text" : "k",
+                                                  "type" : "mi",
+                                                  "attributes" : {}
+                                                },
+                                                {
+                                                  "text" : "n",
+                                                  "type" : "mi",
+                                                  "attributes" : {}
+                                                }
+                                              ],
+                                              "type" : "msub"
+                                            }
+                                          ],
+                                          "type" : "mrow",
+                                          "inferred" : true
+                                        }
+                                      ],
+                                      "type" : "mrow"
+                                    }
+                                  ],
+                                  "type" : "msup"
+                                }
+                              ],
+                              "attributes" : {},
+                              "type" : "mrow",
+                              "inferred" : true
+                            },
+                            {
+                              "attributes" : {},
+                              "text" : "⏞",
+                              "type" : "mo"
+                            }
+                          ],
+                          "attributes" : {},
+                          "type" : "mover"
+                        }
+                      ],
+                      "attributes" : {},
+                      "inferred" : true
+                    }
+                  ],
+                  "attributes" : {}
+                },
+                {
+                  "TeXAtom" : "ORD",
+                  "type" : "mrow",
+                  "children" : [
+                    {
+                      "type" : "mrow",
+                      "children" : [
+                        {
+                          "type" : "mstyle",
+                          "children" : [
+                            {
+                              "type" : "mrow",
+                              "attributes" : {},
+                              "children" : [
+                                {
+                                  "text" : " numerator 1",
+                                  "type" : "mtext",
+                                  "attributes" : {}
+                                }
+                              ],
+                              "inferred" : true
+                            }
+                          ],
+                          "attributes" : {
+                            "displaystyle" : false,
+                            "scriptlevel" : 0
+                          }
+                        }
+                      ],
+                      "attributes" : {},
+                      "inferred" : true
+                    }
+                  ],
+                  "attributes" : {}
+                }
+              ],
+              "attributes" : {},
+              "type" : "mover"
+            },
+            {
+              "type" : "munder",
+              "attributes" : {},
+              "children" : [
+                {
+                  "attributes" : {},
+                  "children" : [
+                    {
+                      "inferred" : true,
+                      "children" : [
+                        {
+                          "attributes" : {},
+                          "children" : [
+                            {
+                              "type" : "mrow",
+                              "attributes" : {},
+                              "children" : [
+                                {
+                                  "type" : "msub",
+                                  "children" : [
+                                    {
+                                      "text" : "k",
+                                      "type" : "mi",
+                                      "attributes" : {}
+                                    },
+                                    {
+                                      "type" : "mn",
+                                      "text" : "1",
+                                      "attributes" : {}
+                                    }
+                                  ],
+                                  "attributes" : {}
+                                },
+                                {
+                                  "attributes" : {},
+                                  "text" : "!",
+                                  "type" : "mo"
+                                },
+                                {
+                                  "type" : "msup",
+                                  "attributes" : {},
+                                  "children" : [
+                                    {
+                                      "TeXAtom" : "ORD",
+                                      "type" : "mrow",
+                                      "attributes" : {},
+                                      "children" : [
+                                        {
+                                          "inferred" : true,
+                                          "type" : "mrow",
+                                          "attributes" : {},
+                                          "children" : [
+                                            {
+                                              "type" : "mo",
+                                              "text" : "(",
+                                              "attributes" : {
+                                                "stretchy" : false
+                                              }
+                                            },
+                                            {
+                                              "text" : "1",
+                                              "type" : "mn",
+                                              "attributes" : {}
+                                            },
+                                            {
+                                              "type" : "mo",
+                                              "text" : "!",
+                                              "attributes" : {}
+                                            },
+                                            {
+                                              "attributes" : {
+                                                "stretchy" : false
+                                              },
+                                              "type" : "mo",
+                                              "text" : ")"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "TeXAtom" : "ORD",
+                                      "children" : [
+                                        {
+                                          "inferred" : true,
+                                          "attributes" : {},
+                                          "children" : [
+                                            {
+                                              "type" : "msub",
+                                              "children" : [
+                                                {
+                                                  "attributes" : {},
+                                                  "text" : "k",
+                                                  "type" : "mi"
+                                                },
+                                                {
+                                                  "attributes" : {},
+                                                  "type" : "mn",
+                                                  "text" : "1"
+                                                }
+                                              ],
+                                              "attributes" : {}
+                                            }
+                                          ],
+                                          "type" : "mrow"
+                                        }
+                                      ],
+                                      "attributes" : {},
+                                      "type" : "mrow"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "attributes" : {},
+                                  "type" : "mo",
+                                  "text" : "⋯"
+                                },
+                                {
+                                  "type" : "msub",
+                                  "attributes" : {},
+                                  "children" : [
+                                    {
+                                      "type" : "mi",
+                                      "text" : "k",
+                                      "attributes" : {}
+                                    },
+                                    {
+                                      "text" : "n",
+                                      "type" : "mi",
+                                      "attributes" : {}
+                                    }
+                                  ]
+                                },
+                                {
+                                  "text" : "!",
+                                  "type" : "mo",
+                                  "attributes" : {}
+                                },
+                                {
+                                  "attributes" : {},
+                                  "children" : [
+                                    {
+                                      "TeXAtom" : "ORD",
+                                      "type" : "mrow",
+                                      "children" : [
+                                        {
+                                          "inferred" : true,
+                                          "type" : "mrow",
+                                          "children" : [
+                                            {
+                                              "attributes" : {
+                                                "stretchy" : false
+                                              },
+                                              "text" : "(",
+                                              "type" : "mo"
+                                            },
+                                            {
+                                              "text" : "n",
+                                              "type" : "mi",
+                                              "attributes" : {}
+                                            },
+                                            {
+                                              "text" : "!",
+                                              "type" : "mo",
+                                              "attributes" : {}
+                                            },
+                                            {
+                                              "attributes" : {
+                                                "stretchy" : false
+                                              },
+                                              "type" : "mo",
+                                              "text" : ")"
+                                            }
+                                          ],
+                                          "attributes" : {}
+                                        }
+                                      ],
+                                      "attributes" : {}
+                                    },
+                                    {
+                                      "TeXAtom" : "ORD",
+                                      "type" : "mrow",
+                                      "children" : [
+                                        {
+                                          "inferred" : true,
+                                          "attributes" : {},
+                                          "children" : [
+                                            {
+                                              "attributes" : {},
+                                              "children" : [
+                                                {
+                                                  "text" : "k",
+                                                  "type" : "mi",
+                                                  "attributes" : {}
+                                                },
+                                                {
+                                                  "attributes" : {},
+                                                  "text" : "n",
+                                                  "type" : "mi"
+                                                }
+                                              ],
+                                              "type" : "msub"
+                                            }
+                                          ],
+                                          "type" : "mrow"
+                                        }
+                                      ],
+                                      "attributes" : {}
+                                    }
+                                  ],
+                                  "type" : "msup"
+                                }
+                              ],
+                              "inferred" : true
+                            },
+                            {
+                              "text" : "⏟",
+                              "type" : "mo",
+                              "attributes" : {}
+                            }
+                          ],
+                          "type" : "munder"
+                        }
+                      ],
+                      "attributes" : {},
+                      "type" : "mrow"
+                    }
+                  ],
+                  "type" : "mrow",
+                  "TeXAtom" : "OP"
+                },
+                {
+                  "type" : "mrow",
+                  "children" : [
+                    {
+                      "inferred" : true,
+                      "type" : "mrow",
+                      "children" : [
+                        {
+                          "type" : "mstyle",
+                          "attributes" : {
+                            "scriptlevel" : 0,
+                            "displaystyle" : false
+                          },
+                          "children" : [
+                            {
+                              "type" : "mrow",
+                              "attributes" : {},
+                              "children" : [
+                                {
+                                  "attributes" : {},
+                                  "type" : "mtext",
+                                  "text" : "denominator 1"
+                                }
+                              ],
+                              "inferred" : true
+                            }
+                          ]
+                        }
+                      ],
+                      "attributes" : {}
+                    }
+                  ],
+                  "attributes" : {},
+                  "TeXAtom" : "ORD"
+                }
+              ]
+            }
+          ],
+          "attributes" : {}
+        }
+      ],
+      "attributes" : {},
+      "type" : "mrow",
+      "inferred" : true
+    }
+  ],
+  "type" : "math"
 }

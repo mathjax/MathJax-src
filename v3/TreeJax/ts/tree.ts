@@ -24,11 +24,14 @@
  */
 
 /// <reference path="tree_node.ts" />
+/// <reference path="node.d.ts" />
 
 import {TreeNode} from './tree_node';
 import {LeafNode} from './leaf_node';
 import {Visitable, Visitor} from './visitor';
 import {NodeFactory} from './node_factory';
+
+import fs = require('fs');
 
 export class Tree implements Visitable {
 
@@ -37,12 +40,27 @@ export class Tree implements Visitable {
   private current: TreeNode;
 
   /**
+   * Parses a Tree from a JSON file.
+   * @param {string} filename Name of the JSON file.
+   * @return {Tree} The newly constructed tree.
+   */
+  public static parseFile(filename: string): Tree {
+    let json: any;
+    try {
+      json = JSON.parse(fs.readFileSync(filename, {encoding: 'utf8'}));
+    } catch (err) {
+      throw new Error('Can not open file: ' + filename);
+    }
+    console.log(json);
+    return Tree.parse(json);
+  }
+
+  /**
    * Parses a Tree from JSON.
    * @param {JSON} json The JSON structure of a tree.
    * @return {Tree} The newly constructed tree.
    */
   public static parse(json: any): Tree {
-    console.log(json.type);
     let root = Tree.parseNode(json);
     let tree = new Tree();
     tree.root = root;
