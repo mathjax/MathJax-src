@@ -24,14 +24,12 @@
  */
 
 /// <reference path="tree_node.ts" />
-/// <reference path="node.d.ts" />
 
 import {TreeNode, Kind} from './tree_node';
 import {LeafNode} from './leaf_node';
 import {Visitable, Visitor} from './visitor';
 import {NodeFactory, NodeMrow} from './node_factory';
-
-import fs = require('fs');
+import * as external from './external';
 
 export class Tree implements Visitable {
 
@@ -63,7 +61,7 @@ export class Tree implements Visitable {
   public static parseFile(filename: string): Tree {
     let json: {[key: string]: any};
     try {
-      json = JSON.parse(fs.readFileSync(filename, {encoding: 'utf8'}));
+      json = JSON.parse(external.readFile(filename, {encoding: 'utf8'}));
     } catch (err) {
       throw new Error('Can not open file: ' + filename);
     }
