@@ -26,10 +26,10 @@
 /// <reference path="tree_node.ts" />
 /// <reference path="node.d.ts" />
 
-import {TreeNode} from './tree_node';
+import {TreeNode, Kind} from './tree_node';
 import {LeafNode} from './leaf_node';
 import {Visitable, Visitor} from './visitor';
-import {NodeFactory} from './node_factory';
+import {NodeFactory, NodeMrow} from './node_factory';
 
 import fs = require('fs');
 
@@ -39,7 +39,7 @@ export class Tree implements Visitable {
    * Alphapetically sorted list of keys that are expected in the input JSON.
    * @type {Array.<string>}
    */
-  private static treeAllowedKeys: string[] = [
+  private static validKeys: string[] = [
     'TeXAtom',
     'attributes',
     'children',
@@ -100,6 +100,14 @@ export class Tree implements Visitable {
     node.setChildren(children);
     if (node.isLeaf()) {
       (<LeafNode>node).setText(json['text'] || '');
+    }
+    node.setAttributes(json['attributes'] || {});
+    node.setTexAtom(json['TeXAtom'] || '');
+    if (json['inferred']) {
+      if (node.getKind() !== Kind.mrow) {
+        throw new Error('Only mrow nodes can be inferred!');
+      }
+      (<NodeMrow>node).setInferred();
     }
     children.forEach(x => x.setParent(node));
     return node;

@@ -159,6 +159,28 @@ export interface TreeNode extends Visitable {
   getArity(): number|boolean;
 
   /**
+   * Sets the attributes of the node.
+   * @param {Object.<string, string>} attributes The new attributes.
+   */
+  setAttributes(attributes: {[kind: string]: string}): void;
+
+  /**
+   * @return {Object.<string, string>} Returns the attributes of the node.
+   */
+  getAttributes(): {[kind: string]: string};
+
+  /**
+   * Sets the TeX Atom of the node.
+   * @param {string} texAtom The new TeX Atom.
+   */
+  setTexAtom(texAtom: string): void;
+
+  /**
+   * @return {string} Returns the TeX Atom of the node.
+   */
+  getTexAtom(): string;
+
+  /**
    * @return {boolean} True if node is a leaf.
    */
   isLeaf(): boolean;
@@ -168,13 +190,20 @@ export interface TreeNode extends Visitable {
    */
   isEmpty(): boolean;
 
+  /**
+   * @return {boolean} True if node is an inferred mrow.
+   */
+  isInferred(): boolean;
+
 }
 
 export abstract class AbstractNode implements TreeNode {
 
-  private parent: TreeNode;
+  private attributes: {[kind: string]: string} = {};
   private children: TreeNode[];
+  private parent: TreeNode;
   private tag: string;
+  private texAtom: string = '';
 
   /**
    * @param {string} kind The type of node.
@@ -237,6 +266,34 @@ export abstract class AbstractNode implements TreeNode {
   /**
    * @override
    */
+  public getAttributes() {
+    return this.attributes;
+  }
+
+  /**
+   * @override
+   */
+  public setAttributes(attributes: {[kind: string]: string}) {
+    this.attributes = attributes;
+  }
+
+  /**
+   * @override
+   */
+  public setTexAtom(texAtom: string) {
+    this.texAtom = texAtom;
+  }
+
+  /**
+   * @override
+   */
+  public getTexAtom() {
+    return this.texAtom;
+  }
+
+  /**
+   * @override
+   */
   public isLeaf() {
     return false;
   }
@@ -251,9 +308,15 @@ export abstract class AbstractNode implements TreeNode {
   /**
    * @override
    */
+  public isInferred() {
+    return false;
+  }
+
+  /**
+   * @override
+   */
   public accept(visitor: Visitor) {
     visitor.visitNode(this);
   }
 
 }
-

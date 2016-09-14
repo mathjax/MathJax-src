@@ -356,11 +356,40 @@ export class PrintVisitor extends AbstractVisitor {
   private printNode(node: TreeNode, func: Function, output: string) {
     let str = (new Array(this.indent + 1)).join(' ');
     str += Tag.get(node.getKind());
+    let list: string[] = [];
+    let attr: string = this.printAttributes(node.getAttributes());
+    if (attr) {
+      list.push(attr);
+    }
+    let atom = node.getTexAtom();
+    if (atom) {
+      list.push('TeXAtom: ' + atom);
+    }
+    if (node.isInferred()) {
+      list.push('inferred');
+    }
+    if (list.length) {
+      str += '(' + list.join(', ') + ')';
+    }
     str += output;
     this.result.push(str);
     this.indent++;
     func(node);
     this.indent--;
+  }
+
+  /**
+   * Turn attribute object into a string.
+   * @param {Object.<string, string>} attributes The attributes.
+   * @return {string} The stringified version of the attributes.
+   */
+  private printAttributes(attributes: {[key: string]: string}): string {
+    let attr: string[] = [];
+    for (let key in attributes) {
+      attr.push(key + ': ' + attributes[key]);
+    }
+    let result = attr.join(', ');
+    return result ? '{' + result + '}' : '';
   }
 
   /**

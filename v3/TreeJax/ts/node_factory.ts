@@ -207,12 +207,28 @@ export class NodeMs extends AbstractLeaf {
 
 export class NodeMrow extends AbstractNode {
 
+  private inferred = false;
+
   /**
    * @constructor
    * @extends{AbstractNode}
    */
   constructor() {
     super(Kind.mrow, true);
+  }
+
+  /**  
+   * Sets the inferred flag.
+   */
+  public setInferred() {
+    this.inferred = true;
+  }
+
+  /**
+   * @override
+   */
+  public isInferred() {
+    return this.inferred;
   }
 
 }
