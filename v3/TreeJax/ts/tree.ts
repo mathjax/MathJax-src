@@ -35,9 +35,25 @@ import fs = require('fs');
 
 export class Tree implements Visitable {
 
+  /**
+   * Alphapetically sorted list of keys that are expected in the input JSON.
+   * @type {Array.<string>}
+   */
+  private static treeAllowedKeys: string[] = [
+    'TeXAtom',
+    'attributes',
+    'children',
+    'inferred',
+    'text',
+    'type'
+  ];
+  private static currentKeys: {[key: string]: any} = {};
+
   private root: TreeNode;
   private position: TreeNode;
   private current: TreeNode;
+  private containedKeys: string[] = [];
+
 
   /**
    * Parses a Tree from a JSON file.
@@ -45,13 +61,12 @@ export class Tree implements Visitable {
    * @return {Tree} The newly constructed tree.
    */
   public static parseFile(filename: string): Tree {
-    let json: any;
+    let json: {[key: string]: any};
     try {
       json = JSON.parse(fs.readFileSync(filename, {encoding: 'utf8'}));
     } catch (err) {
       throw new Error('Can not open file: ' + filename);
     }
-    console.log(json);
     return Tree.parse(json);
   }
 
@@ -60,10 +75,12 @@ export class Tree implements Visitable {
    * @param {JSON} json The JSON structure of a tree.
    * @return {Tree} The newly constructed tree.
    */
-  public static parse(json: any): Tree {
+  public static parse(json: {[key: string]: any}): Tree {
+    Tree.currentKeys = {};
     let root = Tree.parseNode(json);
     let tree = new Tree();
     tree.root = root;
+    tree.containedKeys = Object.keys(Tree.currentKeys).sort();
     return tree;
   }
 
@@ -71,14 +88,18 @@ export class Tree implements Visitable {
    * Parses a Node from JSON.
    * @param {JSON} json The JSON structure of a node.
    * @return {TreeNode} The newly constructed node.
+   * @private
    */
-  public static parseNode(json: any) {
+  private static parseNode(json: {[key: string]: any}) {
+    for (let key in json) {
+      Tree.currentKeys[key] = true;
+    }
     let node = NodeFactory.getNode(json['type']);
     // TODO: Error if node is empty!
     let children: TreeNode[] = (json['children'] || []).map(Tree.parseNode);
     node.setChildren(children);
     if (node.isLeaf()) {
-      (<LeafNode>node).setText(json.text || '');
+      (<LeafNode>node).setText(json['text'] || '');
     }
     children.forEach(x => x.setParent(node));
     return node;
