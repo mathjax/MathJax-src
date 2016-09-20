@@ -39,6 +39,9 @@ export function readFile (
     return fs.readFileSync(filename, options);
   }
 
+/**
+ * @return {Document} Returns a dummy document.
+ */
 function dummyDocument () {
   let dp = new dom.DOMParser();
   return dp.parseFromString('<dummy></dummy>', 'text/xml');
