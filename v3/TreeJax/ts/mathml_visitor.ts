@@ -30,7 +30,6 @@ import {document} from './external';
 
 export class MathmlVisitor extends AbstractVisitor {
 
-  private indent = 0;
   private result: Element = document.createElement('top');
   private current: Element = this.result;
 
@@ -87,7 +86,11 @@ export class MathmlVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMrow(node: nf.NodeMrow) {
-    this.xmlBranch(node, super.visitNodeMrow.bind(this));
+    if (node.isInferred()) {
+      super.visitNodeMrow(node);
+    } else {
+      this.xmlBranch(node, super.visitNodeMrow.bind(this));
+    }
   }
 
   /**
@@ -379,8 +382,8 @@ export class MathmlVisitor extends AbstractVisitor {
   }
 
   /**
-   * Prints output for a leaf node.
-   * @param {TreeNode} node The node to print.
+   * Creates XML element for a leaf node.
+   * @param {TreeNode} node The node to translate.
    * @param {Function} func The super function to call.
    */
   private xmlLeaf(node: LeafNode, func: Function) {
@@ -388,8 +391,8 @@ export class MathmlVisitor extends AbstractVisitor {
   }
 
   /**
-   * Prints output for an empty node.
-   * @param {TreeNode} node The node to print.
+   * Creates XML element for an empty node.
+   * @param {TreeNode} node The node to translate.
    * @param {Function} func The super function to call.
    */
   private xmlEmpty(node: EmptyNode, func: Function) {
@@ -397,8 +400,8 @@ export class MathmlVisitor extends AbstractVisitor {
   }
 
   /**
-   * Prints output for a branching node.
-   * @param {TreeNode} node The node to print.
+   * Creates XML element for a branching node.
+   * @param {TreeNode} node The node to translate.
    * @param {Function} func The super function to call.
    */
   private xmlBranch(node: TreeNode, func: Function) {
