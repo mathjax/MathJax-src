@@ -30,7 +30,6 @@ import {document} from './external';
 
 export class MathmlVisitor extends AbstractVisitor {
 
-  private indent = 0;
   private result: Element = document.createElement('top');
   private current: Element = this.result;
 
@@ -87,7 +86,12 @@ export class MathmlVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMrow(node: nf.NodeMrow) {
-    this.xmlBranch(node, super.visitNodeMrow.bind(this));
+    if (node.isInferred() && this.current.tagName !== 'munder' &&
+        this.current.tagName !== 'mover') {
+      super.visitNodeMrow(node);
+    } else {
+      this.xmlBranch(node, super.visitNodeMrow.bind(this));
+    }
   }
 
   /**
@@ -362,10 +366,52 @@ export class MathmlVisitor extends AbstractVisitor {
     save.appendChild(this.current);
     this.addAttributes(node.getAttributes());
     if (text) {
-      this.current.appendChild(document.createTextNode(text));
+      this.addText(text);
     }
+    this.addTexClass(node.getTexAtom());
     func(node);
     this.current = save;
+  }
+
+  /**
+   * Adds the TeX Atom class to the XML node.
+   * @param {string} tex The TeX atom type.
+   */
+  private addTexClass(tex: string) {
+    if (!tex) {
+      return;
+    }
+    tex = 'MJX-TeXAtom-' + tex;
+    if (this.current.classList) {
+      this.current.classList.add(tex);
+    }
+    this.current.setAttribute('class', tex);
+  };
+
+  /**
+   * Adds a text element to the XML node.
+   * @param {string} text The content of the text element.
+   */
+  private addText(text: string): void {
+    let content = text;
+    let comment = '';
+    let element: Text;
+    let hi = text.charCodeAt(0);
+    if (text.length === 1 && hi >= 0x80 ||
+        text.length === 2 && 0xD800 <= hi && hi <= 0xDBFF) {
+      let lo = text.charCodeAt(1);
+      comment = text;
+      // TODO: That's still missing the ampersand!
+      content = '#x' +
+        (lo ? ((hi - 0xD800) * 0x400) + (lo - 0xDC00) + 0x10000 : hi).
+        toString(16).toUpperCase() +
+        ';';
+    }
+    element = document.createTextNode(content);
+    this.current.appendChild(element);
+    if (comment) {
+      this.current.appendChild(document.createComment(' ' + text + ' '));
+    }
   }
 
   /**
@@ -379,8 +425,8 @@ export class MathmlVisitor extends AbstractVisitor {
   }
 
   /**
-   * Prints output for a leaf node.
-   * @param {TreeNode} node The node to print.
+   * Creates XML element for a leaf node.
+   * @param {TreeNode} node The node to translate.
    * @param {Function} func The super function to call.
    */
   private xmlLeaf(node: LeafNode, func: Function) {
@@ -388,8 +434,8 @@ export class MathmlVisitor extends AbstractVisitor {
   }
 
   /**
-   * Prints output for an empty node.
-   * @param {TreeNode} node The node to print.
+   * Creates XML element for an empty node.
+   * @param {TreeNode} node The node to translate.
    * @param {Function} func The super function to call.
    */
   private xmlEmpty(node: EmptyNode, func: Function) {
@@ -397,8 +443,8 @@ export class MathmlVisitor extends AbstractVisitor {
   }
 
   /**
-   * Prints output for a branching node.
-   * @param {TreeNode} node The node to print.
+   * Creates XML element for a branching node.
+   * @param {TreeNode} node The node to translate.
    * @param {Function} func The super function to call.
    */
   private xmlBranch(node: TreeNode, func: Function) {
