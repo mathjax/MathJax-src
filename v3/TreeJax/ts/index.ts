@@ -25,6 +25,7 @@
 import {Tree} from './tree';
 export {PrintVisitor} from './print_visitor';
 export {MathmlVisitor} from './mathml_visitor';
+export {SemanticVisitor} from './semantic_visitor';
 
 export let parse = Tree.parse;
 export let parseFile = Tree.parseFile;
