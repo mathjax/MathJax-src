@@ -4,6 +4,7 @@
   "description": "Experiments in a tree data structure for MathJax",
   "main": "index.js",
   "dependencies": {
+    "xmldom": "^0.1.22"
   },
   "devDependencies": {
     "typescript": "^1.8.10",
