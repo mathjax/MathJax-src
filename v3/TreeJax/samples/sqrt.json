@@ -1,9 +1,8 @@
 {
    "children":[
       {
-         "type":"mrow",
+         "type":"msqrt",
          "attributes":{},
-         "inferred":true,
          "children":[
            {
                "children":[

@@ -18,8 +18,8 @@
                      "type":"mn"
                   }
                ],
-               "type":"msup",
-               "attributes":{}
+               "type":"mfrac",
+             "attributes":{"linethickness": "0pt"}
             }
          ]
       }
