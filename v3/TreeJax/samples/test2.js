@@ -30,5 +30,27 @@ tree.accept(sv);
 tree.accept(mv);
 var sem = require('semantic');
 sv.getResult().toString();
-sem.getTree(mv.getResult()).toString();
+var str = mv.getResult().toString().replace(/#x/g, '&#x');
+sem.getTreeFromString(str).toString();
+
+
+var compareParsing = function(iter) {
+  var timeIn = (new Date()).getTime();
+  var i = 0;
+  while (i < iter) {
+    var sv = new tj.SemanticVisitor();
+    tree.accept(sv);
+    i++;
+  }
+  var timeOut = (new Date()).getTime();
+  console.log('Time: ' + (timeOut - timeIn));
+  i = 0;
+  timeIn = (new Date()).getTime();
+  while (i < iter) {
+    sem.getTreeFromString(str);
+    i++;
+  }
+  timeOut = (new Date()).getTime();
+  console.log('Time: ' + (timeOut - timeIn));
+};
 
