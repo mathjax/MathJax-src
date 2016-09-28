@@ -129,7 +129,6 @@ export class Tree implements Visitable {
    * @override
    */
   public accept(visitor: Visitor) {
-    console.log('here in tree');
     visitor.visitTree(this);
   }
 
