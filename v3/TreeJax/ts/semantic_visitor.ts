@@ -48,7 +48,7 @@ export class SemanticVisitor extends AbstractVisitor {
   }
 
   /**
-   * @return {Element} The XML representation of the tree.
+   * @return {SemanticTree} The semantic tree.
    */
   public getResult(): sem.Tree {
     this.result.root = this.levels.get(0)[0];
@@ -109,7 +109,7 @@ export class SemanticVisitor extends AbstractVisitor {
   //  * @override
   //  */
   // protected visitNodeMspace(node: nf.NodeMspace) {
-  //   this.xmlEmpty(node, super.visitNodeMspace.bind(this));
+  //   super.visitNodeMspace(node);
   // }
 
   /**
@@ -176,7 +176,7 @@ export class SemanticVisitor extends AbstractVisitor {
   //  * @override
   //  */
   // protected visitNodeMerror(node: nf.NodeMerror) {
-  //   this.xmlBranch(node, super.visitNodeMerror.bind(this));
+  //   super.visitNodeMerror(node);
   // }
 
   /**
@@ -190,7 +190,7 @@ export class SemanticVisitor extends AbstractVisitor {
   //  * @override
   //  */
   // protected visitNodeMphantom(node: nf.NodeMphantom) {
-  //   this.xmlBranch(node, super.visitNodeMphantom.bind(this));
+  //   super.visitNodeMphantom(node);
   // }
 
   /**
@@ -269,14 +269,14 @@ export class SemanticVisitor extends AbstractVisitor {
   //  * @override
   //  */
   // protected visitNodeMmultiscripts(node: nf.NodeMmultiscripts) {
-  //   this.xmlBranch(node, super.visitNodeMmultiscripts.bind(this));
+  //   super.visitNodeMmultiscripts(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMprescripts(node: nf.NodeMprescripts) {
-  //   this.xmlEmpty(node, super.visitNodeMprescripts.bind(this));
+  //   super.visitNodeMprescripts(node);
   // }
 
   /**
@@ -296,7 +296,7 @@ export class SemanticVisitor extends AbstractVisitor {
   //  * @override
   //  */
   // protected visitNodeMlabeledtr(node: nf.NodeMlabeledtr) {
-  //   this.xmlBranch(node, super.visitNodeMlabeledtr.bind(this));
+  //   super.visitNodeMlabeledtr(node);
   // }
 
   /**
@@ -330,63 +330,63 @@ export class SemanticVisitor extends AbstractVisitor {
   //  * @override
   //  */
   // protected visitNodeMaligngroup(node: nf.NodeMaligngroup) {
-  //   this.xmlEmpty(node, super.visitNodeMaligngroup.bind(this));
+  //   super.visitNodeMaligngroup(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMalignmark(node: nf.NodeMalignmark) {
-  //   this.xmlEmpty(node, super.visitNodeMalignmark.bind(this));
+  //   super.visitNodeMalignmark(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMstack(node: nf.NodeMstack) {
-  //   this.xmlBranch(node, super.visitNodeMstack.bind(this));
+  //   super.visitNodeMstack(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMlongdiv(node: nf.NodeMlongdiv) {
-  //   this.xmlBranch(node, super.visitNodeMlongdiv.bind(this));
+  //   super.visitNodeMlongdiv(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMsgroup(node: nf.NodeMsgroup) {
-  //   this.xmlBranch(node, super.visitNodeMsgroup.bind(this));
+  //   super.visitNodeMsgroup(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMsrow(node: nf.NodeMsrow) {
-  //   this.xmlBranch(node, super.visitNodeMsrow.bind(this));
+  //   super.visitNodeMsrow(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMscarries(node: nf.NodeMscarries) {
-  //   this.xmlBranch(node, super.visitNodeMscarries.bind(this));
+  //   super.visitNodeMscarries(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMscarry(node: nf.NodeMscarry) {
-  //   this.xmlBranch(node, super.visitNodeMscarry.bind(this));
+  //   super.visitNodeMscarry(node);
   // }
 
   // /**
   //  * @override
   //  */
   // protected visitNodeMsline(node: nf.NodeMsline) {
-  //   this.xmlEmpty(node, super.visitNodeMsline.bind(this));
+  //   super.visitNodeMsline(node);
   // }
 
   /**
@@ -394,11 +394,10 @@ export class SemanticVisitor extends AbstractVisitor {
    */
   protected visitNodeMaction(node: nf.NodeMaction) {
     if (node.getChildren().length <= 1) {
-      this.factory.makeUnprocessed(node);
+      this.appendChild(this.factory.makeUnprocessed(node));
       return;
     }
-    super.visitNodeMaction(node);
-    this.appendChild(this.levels.get(this.level)[1]);
+    this.visitNode(node.getChildren()[1]);
   }
 
   /**
@@ -443,7 +442,7 @@ export class SemanticVisitor extends AbstractVisitor {
   //  * @override
   //  */
   // protected visitNodeDummy(node: nf.NodeDummy) {
-  //   this.xmlBranch(node, super.visitNodeDummy.bind(this));
+  //   super.visitNodeDummy(node);
   // }
 
   /**
