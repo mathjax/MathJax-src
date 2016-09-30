@@ -1,56 +1,52 @@
 require.cache = {};
 var location = '/home/sorge/git/MathJax/mathjax-tc/v3/TreeJax/';
 var tj = require(location + 'lib/index.js');
-var sv = new tj.SemanticVisitor();
-var mv = new tj.MathmlVisitor();
-var json = {
-  'children': [
-    {
-      'text': 'x',
-      'type': 'mi',
-      'attributes': {}
-    },
-    {
-      'text': '2',
-      'attributes': {},
-      'type': 'mn'
-    }
-  ],
-  'type': 'msup',
-  'attributes': {}
-};
-//var tree = tj.parse(json);
-// var tree = tj.parseFile(location + 'samples/fraction2.json');
-//var tree = tj.parseFile(location + 'samples/superscript.json');
-//var tree = tj.parseFile(location + 'samples/sum.json');
-// var tree = tj.parseFile(location + 'samples/semantics.json');
-// var tree = tj.parseFile(location + 'samples/sqrt.json');
-var tree = tj.parseFile(location + 'samples/faa_di_bruno.json');
-tree.accept(sv);
-tree.accept(mv);
 var sem = require('semantic');
-sv.getResult().toString();
-var str = mv.getResult().toString().replace(/#x/g, '&#x');
-sem.getTreeFromString(str).toString();
+var assert = require('assert');
+
+var tests = [
+  'fraction2',
+  'fraction',
+  'pure_superscript',
+  'root',
+  'semantics',
+  'sqrt',
+  'sum',
+  'superscript',
+  'faa_di_bruno'
+  //'faa_di_bruno_simple'
+];
 
 
-var compareParsing = function(iter) {
-  var timeIn = (new Date()).getTime();
-  var i = 0;
-  while (i < iter) {
+
+var testRunner = function() {
+  for (var test of tests) {
+    console.log('Testing ' + test + '...');
+    var tree = getSample(test);
     var sv = new tj.SemanticVisitor();
+    var mv = new tj.MathmlVisitor();
     tree.accept(sv);
-    i++;
+    tree.accept(mv);
+    var mvStr = removeIds(sem.getTreeFromString(
+      rewriteMathmlString(mv.getResult().toString())).toString());
+    var svStr = removeIds(sv.getResult().toString());
+    // console.log(svStr);
+    // console.log(mvStr);
+    assert.equal(mvStr, svStr);
   }
-  var timeOut = (new Date()).getTime();
-  console.log('Time: ' + (timeOut - timeIn));
-  i = 0;
-  timeIn = (new Date()).getTime();
-  while (i < iter) {
-    sem.getTreeFromString(str);
-    i++;
-  }
-  timeOut = (new Date()).getTime();
-  console.log('Time: ' + (timeOut - timeIn));
 };
 
+var getSample = function (basename) {
+  return tj.parseFile(location + 'samples/' + basename + '.json');
+}
+
+var rewriteMathmlString = function(str) {
+  return str.replace(/#x/g, '&#x');
+};
+
+var removeIds = function(str) {
+  return str.replace(/ id="\d*"/g, '');
+};
+
+
+testRunner();
