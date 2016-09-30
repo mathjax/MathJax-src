@@ -130,10 +130,9 @@ export class SemanticVisitor extends AbstractVisitor {
   protected visitNodeMfrac(node: nf.NodeMfrac) {
     this.stackChildren();
     super.visitNodeMfrac(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let semNode = sem.Processor.fractionLikeNode(
       node.getAttributes()['linethickness'], children[0], children[1]);
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -143,10 +142,9 @@ export class SemanticVisitor extends AbstractVisitor {
   protected visitNodeMsqrt(node: nf.NodeMsqrt) {
     this.stackChildren();
     super.visitNodeMsqrt(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let semNode = this.factory.makeBranchNode(
       sem.Type.SQRT, [sem.Processor.row(children)], []);
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -156,10 +154,9 @@ export class SemanticVisitor extends AbstractVisitor {
   protected visitNodeMroot(node: nf.NodeMroot) {
     this.stackChildren();
     super.visitNodeMroot(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let semNode = this.factory.makeBranchNode(
       sem.Type.ROOT, [children[1], children[0]], []);
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -197,13 +194,12 @@ export class SemanticVisitor extends AbstractVisitor {
   protected visitNodeMfenced(node: nf.NodeMfenced) {
     this.stackChildren();
     super.visitNodeMfenced(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let attributes = node.getAttributes();
     let sepValue = this.getAttributeDefault(attributes, 'separators', ',');
     let open = this.getAttributeDefault(attributes, 'open', '(');
     let close = this.getAttributeDefault(attributes, 'close', ')');
     let semNode = sem.Processor.mfenced(open, close, sepValue, children);
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -213,11 +209,10 @@ export class SemanticVisitor extends AbstractVisitor {
   protected visitNodeMenclose(node: nf.NodeMenclose) {
     this.stackChildren();
     super.visitNodeMenclose(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let semNode = this.factory.makeBranchNode(
       sem.Type.ENCLOSE, [sem.Processor.row(children)], []);
     semNode.role = node.getAttributes()['notation'] || sem.Role.UNKNOWN;
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -283,10 +278,9 @@ export class SemanticVisitor extends AbstractVisitor {
   protected visitNodeMtable(node: nf.NodeMtable) {
     this.stackChildren();
     super.visitNodeMtable(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let semNode = this.factory.makeBranchNode(sem.Type.TABLE, children, []);
     sem.Processor.tableToMultiline(semNode);
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -303,10 +297,9 @@ export class SemanticVisitor extends AbstractVisitor {
   protected visitNodeMtr(node: nf.NodeMtr) {
     this.stackChildren();
     super.visitNodeMtr(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let semNode = this.factory.makeBranchNode(sem.Type.ROW, children, []);
     semNode.role = sem.Role.TABLE;
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -316,11 +309,10 @@ export class SemanticVisitor extends AbstractVisitor {
   protected visitNodeMtd(node: nf.NodeMtd) {
     this.stackChildren();
     super.visitNodeMtd(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let semNode = this.factory.makeBranchNode(
       sem.Type.CELL, [sem.Processor.row(children)], []);
     semNode.role = sem.Role.TABLE;
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -454,7 +446,7 @@ export class SemanticVisitor extends AbstractVisitor {
    * Removes the current level from the child structure.
    */
   private unstackChildren() {
-    this.childrenStack.shift();
+    return this.childrenStack.shift();
   }
 
   /**
@@ -475,10 +467,9 @@ export class SemanticVisitor extends AbstractVisitor {
   private inferredRow(node: TreeNode, func: Function) {
     this.stackChildren();
     func(node);
-    let children = this.childrenStack[0];
+    let children = this.unstackChildren();
     let semNode = (children.length !== 1) ?
       sem.Processor.row(children) : children[0];
-    this.unstackChildren();
     this.appendChild(semNode);
   }
 
