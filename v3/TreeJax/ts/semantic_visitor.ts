@@ -33,8 +33,7 @@ export class SemanticVisitor extends AbstractVisitor {
 
   private factory: sem.NodeFactory;
   private result: sem.Tree = sem.emptyTree();
-  private childrenMap: Map<number, sem.Node[]> = new Map<number, sem.Node[]>();
-  private level: number = 0;
+  private childrenStack: sem.Node[][] = [[]];
 
   /**
    * @constructor
@@ -43,7 +42,6 @@ export class SemanticVisitor extends AbstractVisitor {
   constructor() {
     super();
     this.factory = new sem.NodeFactory();
-    this.childrenMap.set(0, []);
     sem.Processor.setFactory(this.factory);
   }
 
@@ -51,7 +49,7 @@ export class SemanticVisitor extends AbstractVisitor {
    * @return {SemanticTree} The semantic tree.
    */
   public getResult(): sem.Tree {
-    this.result.root = this.childrenMap.get(0)[0];
+    this.result.root = this.childrenStack[0][0];
     return this.result;
   }
 
@@ -64,9 +62,9 @@ export class SemanticVisitor extends AbstractVisitor {
       node.getText(), attributes['mathvariant'], attributes['class']);
     // TODO: Do we need this for leaf nodes?
     this.appendChild(semNode);
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMi(node);
-    this.removeLevel();
+    this.unstackChildren();
   }
 
   /**
@@ -80,9 +78,9 @@ export class SemanticVisitor extends AbstractVisitor {
     }
     // TODO: Do we need this for leaf nodes?
     this.appendChild(semNode);
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMo(node);
-    this.removeLevel();
+    this.unstackChildren();
   }
 
   /**
@@ -93,9 +91,9 @@ export class SemanticVisitor extends AbstractVisitor {
       node.getText(), node.getAttributes()['mathvariant']);
     sem.Processor.number(semNode);
     this.appendChild(semNode);
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMn(node);
-    this.removeLevel();
+    this.unstackChildren();
   }
 
   /**
@@ -130,12 +128,12 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMfrac(node: nf.NodeMfrac) {
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMfrac(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let semNode = sem.Processor.fractionLikeNode(
       node.getAttributes()['linethickness'], children[0], children[1]);
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -143,12 +141,12 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMsqrt(node: nf.NodeMsqrt) {
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMsqrt(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let semNode = this.factory.makeBranchNode(
       sem.Type.SQRT, [sem.Processor.row(children)], []);
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -156,12 +154,12 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMroot(node: nf.NodeMroot) {
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMroot(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let semNode = this.factory.makeBranchNode(
       sem.Type.ROOT, [children[1], children[0]], []);
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -197,15 +195,15 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMfenced(node: nf.NodeMfenced) {
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMfenced(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let attributes = node.getAttributes();
     let sepValue = this.getAttributeDefault(attributes, 'separators', ',');
     let open = this.getAttributeDefault(attributes, 'open', '(');
     let close = this.getAttributeDefault(attributes, 'close', ')');
     let semNode = sem.Processor.mfenced(open, close, sepValue, children);
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -213,13 +211,13 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMenclose(node: nf.NodeMenclose) {
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMenclose(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let semNode = this.factory.makeBranchNode(
       sem.Type.ENCLOSE, [sem.Processor.row(children)], []);
     semNode.role = node.getAttributes()['notation'] || sem.Role.UNKNOWN;
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -283,12 +281,12 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMtable(node: nf.NodeMtable) {
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMtable(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let semNode = this.factory.makeBranchNode(sem.Type.TABLE, children, []);
     sem.Processor.tableToMultiline(semNode);
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -303,12 +301,12 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMtr(node: nf.NodeMtr) {
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMtr(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let semNode = this.factory.makeBranchNode(sem.Type.ROW, children, []);
     semNode.role = sem.Role.TABLE;
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -316,13 +314,13 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMtd(node: nf.NodeMtd) {
-    this.addLevel();
+    this.stackChildren();
     super.visitNodeMtd(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let semNode = this.factory.makeBranchNode(
       sem.Type.CELL, [sem.Processor.row(children)], []);
     semNode.role = sem.Role.TABLE;
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -448,41 +446,39 @@ export class SemanticVisitor extends AbstractVisitor {
   /**
    * Adds a level to the child structure.
    */
-  private addLevel() {
-    this.level++;
-    this.childrenMap.set(this.level, []);
+  private stackChildren() {
+    this.childrenStack.unshift([]);
   }
 
   /**
    * Removes the current level from the child structure.
    */
-  private removeLevel() {
-    this.childrenMap.delete(this.level);
-    this.level--;
+  private unstackChildren() {
+    this.childrenStack.shift();
   }
 
   /**
    * Appends a node at the current level in the child structure.
    */
   private appendChild(node: sem.Node) {
-    this.childrenMap.get(this.level).push(node);
+    this.childrenStack[0].push(node);
   }
 
   private limitNode(tag: string, node: TreeNode, func: Function) {
-    this.addLevel();
+    this.stackChildren();
     func(node);
-    let semNode = sem.Processor.limitNode(tag, this.childrenMap.get(this.level));
-    this.removeLevel();
+    let semNode = sem.Processor.limitNode(tag, this.childrenStack[0]);
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
   private inferredRow(node: TreeNode, func: Function) {
-    this.addLevel();
+    this.stackChildren();
     func(node);
-    let children = this.childrenMap.get(this.level);
+    let children = this.childrenStack[0];
     let semNode = (children.length !== 1) ?
       sem.Processor.row(children) : children[0];
-    this.removeLevel();
+    this.unstackChildren();
     this.appendChild(semNode);
   }
 
@@ -490,9 +486,9 @@ export class SemanticVisitor extends AbstractVisitor {
     let semNode = sem.Processor.text(
       node.getText(), node.getAttributes()['mathvariant'], tag);
     this.appendChild(semNode);
-    this.addLevel();
+    this.stackChildren();
     func(node);
-    this.removeLevel();
+    this.unstackChildren();
   }
 
   private getAttributeDefault(
