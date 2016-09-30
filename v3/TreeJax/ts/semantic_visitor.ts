@@ -60,11 +60,7 @@ export class SemanticVisitor extends AbstractVisitor {
     let attributes = node.getAttributes();
     let semNode = sem.Processor.identifierNode(
       node.getText(), attributes['mathvariant'], attributes['class']);
-    // TODO: Do we need this for leaf nodes?
-    this.appendChild(semNode);
-    this.stackChildren();
-    super.visitNodeMi(node);
-    this.unstackChildren();
+    this.walkLeafNode(semNode, node, super.visitNodeMi.bind(this));
   }
 
   /**
@@ -77,10 +73,7 @@ export class SemanticVisitor extends AbstractVisitor {
       semNode.type = sem.Type.OPERATOR;
     }
     // TODO: Do we need this for leaf nodes?
-    this.appendChild(semNode);
-    this.stackChildren();
-    super.visitNodeMo(node);
-    this.unstackChildren();
+    this.walkLeafNode(semNode, node, super.visitNodeMo.bind(this));
   }
 
   /**
@@ -90,10 +83,7 @@ export class SemanticVisitor extends AbstractVisitor {
     let semNode = this.factory.makeLeafNode(
       node.getText(), node.getAttributes()['mathvariant']);
     sem.Processor.number(semNode);
-    this.appendChild(semNode);
-    this.stackChildren();
-    super.visitNodeMn(node);
-    this.unstackChildren();
+    this.walkLeafNode(semNode, node, super.visitNodeMn.bind(this));
   }
 
   /**
@@ -476,11 +466,16 @@ export class SemanticVisitor extends AbstractVisitor {
   private textNode(tag: string, node: LeafNode, func: Function) {
     let semNode = sem.Processor.text(
       node.getText(), node.getAttributes()['mathvariant'], tag);
+    this.walkLeafNode(semNode, node, func);
+  }
+
+  private walkLeafNode(semNode: sem.Node, node: LeafNode, func: Function) {
     this.appendChild(semNode);
     this.stackChildren();
     func(node);
     this.unstackChildren();
   }
+
 
   private getAttributeDefault(
     attributes: {[kind: string]: string}, attr: string, def: string) {
