@@ -441,11 +441,19 @@ export class SemanticVisitor extends AbstractVisitor {
 
   /**
    * Appends a node at the current level in the child structure.
+   * @param {sem.Node} node The semantic node that forms the new child.
    */
   private appendChild(node: sem.Node) {
     this.childrenStack[0].push(node);
   }
 
+  /**
+   * Processes semantic limit nodes (e.g., sub/superscripts, over/unders).
+   * @param {string} tag The original MathML tag name.
+   * @param {TreeNode} node The limit node itself.
+   * @param {Function} func The call to the superclass method.
+   * @private
+   */
   private limitNode(tag: string, node: TreeNode, func: Function) {
     this.stackChildren();
     func(node);
@@ -454,6 +462,12 @@ export class SemanticVisitor extends AbstractVisitor {
     this.appendChild(semNode);
   }
 
+  /**
+   * Processes inferred rows (e.g. mrows, math elements).
+   * @param {TreeNode} node The row node itself.
+   * @param {Function} func The call to the superclass method.
+   * @private
+   */
   private inferredRow(node: TreeNode, func: Function) {
     this.stackChildren();
     func(node);
@@ -463,12 +477,26 @@ export class SemanticVisitor extends AbstractVisitor {
     this.appendChild(semNode);
   }
 
+  /**
+   * Processes text like nodes.
+   * @param {string} tag The original MathML tag name.
+   * @param {TreeNode} node The text node itself.
+   * @param {Function} func The call to the superclass method.
+   * @private
+   */
   private textNode(tag: string, node: LeafNode, func: Function) {
     let semNode = sem.Processor.text(
       node.getText(), node.getAttributes()['mathvariant'], tag);
     this.walkLeafNode(semNode, node, func);
   }
 
+  /**
+   * Wrapper method for tree walking on leaf nodes.
+   * @param {sem.Node} node The semantic node that is the leaf.
+   * @param {TreeNode} node The leaf node of the MathML tree.
+   * @param {Function} func The call to the superclass method.
+   * @private
+   */
   private walkLeafNode(semNode: sem.Node, node: LeafNode, func: Function) {
     this.appendChild(semNode);
     this.stackChildren();
@@ -476,7 +504,14 @@ export class SemanticVisitor extends AbstractVisitor {
     this.unstackChildren();
   }
 
-
+  /**
+   * Retrieves an attribute for a node or returns a default value if attribute
+   * does not exist.
+   * @param {Object.<string, string>} attributes The attributes of the node.
+   * @param {string} attr The attribute key to retrieve.
+   * @param {string} def The default return value.
+   * @return {string} The attribute value.
+   */
   private getAttributeDefault(
     attributes: {[kind: string]: string}, attr: string, def: string) {
     let value = attributes[attr];
