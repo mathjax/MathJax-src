@@ -20,6 +20,7 @@ var tests = [
 
 
 var testRunner = function() {
+  var timeIn = (new Date()).getTime();
   for (var test of tests) {
     console.log('Testing ' + test + '...');
     var tree = getSample(test);
@@ -30,15 +31,15 @@ var testRunner = function() {
     var mvStr = removeIds(sem.getTreeFromString(
       rewriteMathmlString(mv.getResult().toString())).toString());
     var svStr = removeIds(sv.getResult().toString());
-    // console.log(svStr);
-    // console.log(mvStr);
     assert.equal(mvStr, svStr);
   }
+  var timeOut = (new Date()).getTime();
+  console.log('Time: ' + (timeOut - timeIn));
 };
 
-var getSample = function (basename) {
+var getSample = function(basename) {
   return tj.parseFile(location + 'samples/' + basename + '.json');
-}
+};
 
 var rewriteMathmlString = function(str) {
   return str.replace(/#x/g, '&#x');
