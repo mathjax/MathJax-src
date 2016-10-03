@@ -675,14 +675,14 @@ export class NodeAnnotation extends AbstractNode {
 
 }
 
-export class NodeAnnotationXml extends AbstractNode {
+export class NodeAnnotationXml extends AbstractLeaf {
 
   /**
    * @constructor
    * @extends{AbstractNode}
    */
   constructor() {
-    super(Kind.annotation, 1);
+    super(Kind.annotation);
   }
 
 }

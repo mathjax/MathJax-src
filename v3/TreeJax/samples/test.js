@@ -54,3 +54,23 @@ var mv = new tj.MathmlVisitor();
 tree.accept(mv);
 console.log(formatXml(mv.getResult().toString()));
 
+var compareParsing = function(iter) {
+  var timeIn = (new Date()).getTime();
+  var i = 0;
+  while (i < iter) {
+    var sv = new tj.SemanticVisitor();
+    tree.accept(sv);
+    i++;
+  }
+  var timeOut = (new Date()).getTime();
+  console.log('Time: ' + (timeOut - timeIn));
+  i = 0;
+  timeIn = (new Date()).getTime();
+  while (i < iter) {
+    sem.getTreeFromString(str);
+    i++;
+  }
+  timeOut = (new Date()).getTime();
+  console.log('Time: ' + (timeOut - timeIn));
+};
+
