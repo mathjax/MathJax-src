@@ -118,36 +118,41 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMfrac(node: nf.NodeMfrac) {
-    this.stackChildren();
-    super.visitNodeMfrac(node);
-    let children = this.unstackChildren();
-    let semNode = sem.Processor.fractionLikeNode(
-      node.getAttributes()['linethickness'], children[0], children[1]);
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        return sem.Processor.fractionLikeNode(
+          node.getAttributes()['linethickness'], children[0], children[1]);
+      }, super.visitNodeMfrac.bind(this)
+    );
   }
 
   /**
    * @override
    */
   protected visitNodeMsqrt(node: nf.NodeMsqrt) {
-    this.stackChildren();
-    super.visitNodeMsqrt(node);
-    let children = this.unstackChildren();
-    let semNode = this.factory.makeBranchNode(
-      sem.Type.SQRT, [sem.Processor.row(children)], []);
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        return this.factory.makeBranchNode(
+          sem.Type.SQRT, [sem.Processor.row(children)], []);
+      }.bind(this),
+      super.visitNodeMsqrt.bind(this)
+    );
   }
 
   /**
    * @override
    */
   protected visitNodeMroot(node: nf.NodeMroot) {
-    this.stackChildren();
-    super.visitNodeMroot(node);
-    let children = this.unstackChildren();
-    let semNode = this.factory.makeBranchNode(
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        return this.factory.makeBranchNode(
       sem.Type.ROOT, [children[1], children[0]], []);
-    this.appendChild(semNode);
+      }.bind(this),
+      super.visitNodeMroot.bind(this)
+    );
   }
 
   /**
@@ -182,28 +187,33 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMfenced(node: nf.NodeMfenced) {
-    this.stackChildren();
-    super.visitNodeMfenced(node);
-    let children = this.unstackChildren();
-    let attributes = node.getAttributes();
-    let sepValue = this.getAttributeDefault(attributes, 'separators', ',');
-    let open = this.getAttributeDefault(attributes, 'open', '(');
-    let close = this.getAttributeDefault(attributes, 'close', ')');
-    let semNode = sem.Processor.mfenced(open, close, sepValue, children);
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        let attributes = node.getAttributes();
+        let sepValue = this.getAttributeDefault(attributes, 'separators', ',');
+        let open = this.getAttributeDefault(attributes, 'open', '(');
+        let close = this.getAttributeDefault(attributes, 'close', ')');
+        return sem.Processor.mfenced(open, close, sepValue, children);
+      }.bind(this),
+      super.visitNodeMfenced.bind(this)
+    );
   }
 
   /**
    * @override
    */
   protected visitNodeMenclose(node: nf.NodeMenclose) {
-    this.stackChildren();
-    super.visitNodeMenclose(node);
-    let children = this.unstackChildren();
-    let semNode = this.factory.makeBranchNode(
-      sem.Type.ENCLOSE, [sem.Processor.row(children)], []);
-    semNode.role = node.getAttributes()['notation'] || sem.Role.UNKNOWN;
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        let semNode = this.factory.makeBranchNode(
+          sem.Type.ENCLOSE, [sem.Processor.row(children)], []);
+        semNode.role = node.getAttributes()['notation'] || sem.Role.UNKNOWN;
+        return semNode;
+      }.bind(this),
+      super.visitNodeMenclose.bind(this)
+    );
   }
 
   /**
@@ -266,12 +276,15 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMtable(node: nf.NodeMtable) {
-    this.stackChildren();
-    super.visitNodeMtable(node);
-    let children = this.unstackChildren();
-    let semNode = this.factory.makeBranchNode(sem.Type.TABLE, children, []);
-    sem.Processor.tableToMultiline(semNode);
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        let semNode = this.factory.makeBranchNode(sem.Type.TABLE, children, []);
+        sem.Processor.tableToMultiline(semNode);
+        return semNode;
+      }.bind(this),
+      super.visitNodeMtable.bind(this)
+    );
   }
 
   // /**
@@ -285,25 +298,31 @@ export class SemanticVisitor extends AbstractVisitor {
    * @override
    */
   protected visitNodeMtr(node: nf.NodeMtr) {
-    this.stackChildren();
-    super.visitNodeMtr(node);
-    let children = this.unstackChildren();
-    let semNode = this.factory.makeBranchNode(sem.Type.ROW, children, []);
-    semNode.role = sem.Role.TABLE;
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        let semNode = this.factory.makeBranchNode(sem.Type.ROW, children, []);
+        semNode.role = sem.Role.TABLE;
+        return semNode;
+      }.bind(this),
+      super.visitNodeMtr.bind(this)
+    );
   }
 
   /**
    * @override
    */
   protected visitNodeMtd(node: nf.NodeMtd) {
-    this.stackChildren();
-    super.visitNodeMtd(node);
-    let children = this.unstackChildren();
-    let semNode = this.factory.makeBranchNode(
-      sem.Type.CELL, [sem.Processor.row(children)], []);
-    semNode.role = sem.Role.TABLE;
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        let semNode = this.factory.makeBranchNode(
+          sem.Type.CELL, [sem.Processor.row(children)], []);
+        semNode.role = sem.Role.TABLE;
+        return semNode;
+      }.bind(this),
+      super.visitNodeMtd.bind(this)
+    );
   }
 
   // /**
@@ -448,6 +467,27 @@ export class SemanticVisitor extends AbstractVisitor {
   }
 
   /**
+   * Wrapper method for tree walking branch nodes handling operation on the
+   * children stack.
+   * @param {TreeNode} node The branch node to transform.
+   * @param {function(TreeNode, Array.<sem.Node>): sem.Node} exec Method to
+   *     execute that transforms the branch node and connects it to already
+   *     computed semantic children.
+   * @param {function(TreeNode)} func The call to the superclass method to
+   *     continue walking.
+   */
+private walkWithStack(
+    node: TreeNode,
+    exec: (node: TreeNode, children: sem.Node[]) => sem.Node,
+    func: (node: TreeNode) => void) {
+    this.stackChildren();
+    func(node);
+    let children = this.unstackChildren();
+    let semNode = exec(node, children);
+    this.appendChild(semNode);
+  }
+
+  /**
    * Processes semantic limit nodes (e.g., sub/superscripts, over/unders).
    * @param {string} tag The original MathML tag name.
    * @param {TreeNode} node The limit node itself.
@@ -456,11 +496,12 @@ export class SemanticVisitor extends AbstractVisitor {
    */
   private limitNode(tag: string, node: TreeNode,
                     func: (node: TreeNode) => void) {
-    this.stackChildren();
-    func(node);
-    let semNode = sem.Processor.limitNode(tag, this.childrenStack[0]);
-    this.unstackChildren();
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        return sem.Processor.limitNode(tag, children);
+      },
+      func);
   }
 
   /**
@@ -470,12 +511,12 @@ export class SemanticVisitor extends AbstractVisitor {
    * @private
    */
   private inferredRow(node: TreeNode, func: (node: TreeNode) => void) {
-    this.stackChildren();
-    func(node);
-    let children = this.unstackChildren();
-    let semNode = (children.length !== 1) ?
-      sem.Processor.row(children) : children[0];
-    this.appendChild(semNode);
+    this.walkWithStack(
+      node,
+      function(node: TreeNode, children: sem.Node[]): sem.Node {
+        return children.length !== 1 ?
+          sem.Processor.row(children) : children[0];
+      }, func);
   }
 
   /**
