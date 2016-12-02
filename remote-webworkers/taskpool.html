@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax webworker task pool example</title>
+
+  <!--
+   | This show show to implement a pool of webworkers that can use
+   | ressources from the CDN. The pool is run inside an iframe whose
+   | contents is from the CDN, and that is where the workers are started
+   | (so they can load resources from the CDN as well).  The main page
+   | passes messages to the iframe, which in turn passes them to the
+   | workers.  The workers pass messages back via the iframe.  So
+   | everything is asynchronous and requires callbacks.
+   | 
+   | In the main page, workers are handled via Task objects.  These can
+   | have two-way communication with the workers, via commands passed to
+   | the workers and (named) callbacks that are part of the tasks.  There
+   | are a number of pre-defined commands for the workers, but they can be
+   | told to load additional ones, or they can be asked to evaluate code
+   | directly that defines new commands or carries out their actions.
+  -->
+
+
+<script src="lib/traceur.min.js"></script>
+<script src="lib/system.js"></script>
+<script>
+  System.import('taskpool.js').then(function (TaskPool) {
+    console.log("TaskPool loaded");
+
+    //
+    //  The callbacks used for the examples
+    //
+    var Report = {
+      ready: function (data) {
+        console.log("TaskPool: task "+this.task+" started with worker "+this.worker);
+        this.id = this.task;
+      },
+      done: function (data) {
+        console.log("TaskPool: task "+this.id+" done",data);
+      },
+      error: function (data) {
+        console.log("TaskPool: task "+this.id+" error:",data.message);
+        if (data.stack) console.log(data.stack);
+      },
+      echo: function (data) {
+        console.log(">>>",data);
+      }
+    };
+
+/*
+    var pool = TaskPool.Create();
+    pool.POOL = "http://localhost/webworkers/" + pool.POOL;
+    pool.Start(function (ok) {
+      if (!ok) throw Error("TaskPool:  failed to start!");
+      console.log("TaskPool:  started");
+    });
+*/
+
+/*
+    TaskPool.Create().Start(function (ok) {
+      if (!ok) throw Error("TaskPool:  failed to start!");
+      this.imports = "library.js";
+      this.Task("double",{x:1, y:2},Report);
+      this.Task("double",{x:-1, y:5},Report);
+      this.Task("crash",{x:2, y:.5},Report);
+      this.Task("double",null,Report);
+    });
+*/
+
+    TaskPool.Create().Start(function (ok) {
+      if (!ok) throw Error("TaskPool:  failed to start!");
+      console.log("TaskPool:  started");
+
+      this.Task("echo","message",Report).Stop();
+
+/*
+      this.Task("echo","testing",{
+        echo:function(msg) {console.log("  echo: "+msg); this.Stop()}
+      });
+*/
+
+/*
+      this.Task("echo","testing",{
+        echo:function(msg) {console.log("  echo: "+msg)}
+      }).Stop();
+*/
+
+/*
+      this.Task()
+        .Callbacks(Report)
+        .Echo("Here",{
+          echo: function (msg) {
+            console.log("  echo: "+msg);
+            if (msg === "Here") {
+              this.Import("import.js")
+                  .Run("combine",["xyz","XYZ"])
+                  .Stop();
+            }
+          }
+        });
+*/
+
+/*
+      this.Task()
+        .Callbacks(Report)
+        .Run("eval","global.f = function (x,y) {return x+y}")
+        .Run("eval","Task('echo',global.f(2,3))")
+        .Stop();
+*/
+
+/*
+      this.Task()
+        .Callbacks(Report)
+        .Run("eval",[
+          "Commands.example = function (data,post) {",
+          "  Task('echo','Example running...',post)",
+          "  Task('done',null,post)",
+          "};"
+        ].join("\n"))
+        .Run("example");
+*/
+
+//      this.Task().Import("demo/import.js").Import("demo/import.js").Stop();
+
+//      this.Task().Callbacks(Report).Import("demo/library.js").Run("double",{x:3,y:1});
+
+//      this.Task().Callbacks(Report).Import("sleep.cgi",Report).Run("echo","12345");
+
+/*
+      this.Task()
+        .Callbacks(Report)
+        .Eval("function f(x) {return Math.random()*x}; var y = 0; for (var i = 0; i < 10000000; i++) {y+=f(1)}; Task('echo',[1,y])")
+        .Stop();
+      var pool = this;
+      setTimeout(function () {
+        pool.Task()
+            .Callbacks(Report)
+            .Eval("function f(x) {return Math.random()*x}; var y = 0; for (var i = 0; i < 10000000; i++) {y+=f(1)}; Task('echo',[2,y])")
+            .Stop();
+      },1000);
+      var n = 0;
+      function Loop() {console.log(n++); if (n < 15) setTimeout(Loop,300)}
+      Loop();
+*/
+
+/*
+      this.Task()
+        .Callbacks(Report)
+        .Eval('setTimeout(function () {Task("echo","long"); Task("done")},2000)')
+        .Echo("immediate")
+        .Eval('setTimeout(function () {Task("echo","short")},1000)');
+*/
+        
+    });
+
+});
+</script>
+</head>
+<body>
+</body>
+</html>
