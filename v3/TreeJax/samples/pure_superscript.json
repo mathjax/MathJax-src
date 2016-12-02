@@ -1,0 +1,16 @@
+{
+  "children":[
+    {
+      "text":"x",
+      "type":"mi",
+      "attributes":{}
+    },
+    {
+      "text":"2",
+      "attributes":{},
+      "type":"mn"
+    }
+  ],
+  "type":"msup",
+  "attributes":{}
+}

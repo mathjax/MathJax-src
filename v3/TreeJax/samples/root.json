@@ -1,0 +1,24 @@
+{
+  "children":[
+    {
+      "type":"mroot",
+       "attributes":{},
+       "children":[
+         {
+           "text":"x",
+           "type":"mi",
+           "attributes":{}
+         },
+         {
+           "text":"2",
+           "attributes":{},
+           "type":"mn"
+         }
+       ]
+     }
+   ],
+  "type":"math",
+  "attributes":{
+    "display":"block"
+  }
+}
