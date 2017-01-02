@@ -594,6 +594,8 @@ exports.MathJax = MathJax;
   //  Update sheets count and look up the head object
   //  
   var HEAD = function (head) {
+    return null;
+/*
     if (document.styleSheets && document.styleSheets.length > sheets)
       {sheets = document.styleSheets.length}
     if (!head) {
@@ -601,6 +603,7 @@ exports.MathJax = MathJax;
       if (!head) {head = document.body}
     }
     return head;
+*/
   };
   
   //
@@ -752,23 +755,19 @@ exports.MathJax = MathJax;
       //
       JS: function (file,callback) {
         var name = this.fileName(file);
-        var script = document.createElement("script");
         var timeout = BASE.Callback(["loadTimeout",this,file]);
-        this.loading[file] = {
-          callback: callback,
-          timeout: setTimeout(timeout,this.timeout),
-          status: this.STATUS.OK,
-          script: script
-        };
-        //
-        // Add this to the structure above after it is created to prevent recursion
-        //  when loading the initial localization file (before loading messsage is available)
-        //
-        this.loading[file].message = BASE.Message.File(name);
-        script.onerror = timeout;  // doesn't work in IE and no apparent substitute
-        script.type = "text/javascript";
-        script.src = file+this.fileRev(name);
-        this.head.appendChild(script);
+	this.loading[file] = {
+	  callback: callback,
+	  timeout: setTimeout(timeout,this.timeout),
+	  status: this.STATUS.OK,
+	  script: null
+	};
+	//
+	// Add this to the structure above after it is created to prevent recursion
+	//  when loading the initial localization file (before loading messsage is available)
+	//
+	this.loading[file].message = BASE.Message.File(name);
+        setTimeout(function (THIS) {System.import(file).catch(timeout)},1,this);
       },
       //
       //  Create a LINK tag to load the style sheet
@@ -889,7 +888,7 @@ exports.MathJax = MathJax;
       var loading = this.loading[file];
       if (loading && !loading.preloaded) {
         BASE.Message.Clear(loading.message);
-        clearTimeout(loading.timeout);
+        if (loading.timeout) clearTimeout(loading.timeout);
 	if (loading.script) {
 	  if (SCRIPTS.length === 0) {setTimeout(REMOVESCRIPTS,0)}
 	  SCRIPTS.push(loading.script);
@@ -1476,7 +1475,15 @@ MathJax.Message = {
     return text;
   },
   
-  Set: function (text,n,clearDelay) {},
+  Set: function (text,n,clearDelay) {
+    if (MathJax.debug) {
+      if (Array.isArray(text)) {
+        text = MathJax.Localization._.apply(MathJax.Localization,text);
+      }
+      console.log("Message: "+text);
+    }
+  },
+
   Clear: function (n,delay) {},
   Remove: function () {},
   File: function (file) {
@@ -1490,7 +1497,7 @@ MathJax.Message = {
 
 MathJax.Hub = {
   config: {
-    root: "",
+    root: "./mathjax/legacy",
     config: [],      // list of configuration files to load
     jax: [],         // list of input and output jax to load
     extensions: [],  // list of extensions to load
@@ -1641,6 +1648,7 @@ MathJax.Hub.Startup = {
   signal:  MathJax.Callback.Signal("Startup")  // Signal used for startup events
 };
 
+MathJax.Ajax.config.root = MathJax.Hub.config.root;
 
 /**********************************************************/
 

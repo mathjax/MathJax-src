@@ -1,4 +1,4 @@
-MathJax = require("./LegacyMJ.js").MathJax;
+MathJax = require("../../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(
   "[MathJax]/jax/input/TeX/config.js",
@@ -14,19 +14,19 @@ MathJax.Ajax.Preloading(
   "[MathJax]/extensions/TeX/HTML.js"
 );
 
-require("./LegacyMJ/element/jax.js");
-require("./LegacyMJ/input/TeX/config.js");
-require("./LegacyMJ/input/TeX/jax.js");
-require("./LegacyMJ/extensions/TeX/AMSmath.js");
-require("./LegacyMJ/extensions/TeX/AMSsymbols.js");
-require("./LegacyMJ/extensions/TeX/AMScd.js");
-require("./LegacyMJ/extensions/TeX/newcommand.js");
-require("./LegacyMJ/extensions/TeX/unicode.js");
-require("./LegacyMJ/extensions/TeX/mathchoice.js");
-require("./LegacyMJ/extensions/TeX/bbox.js");
-require("./LegacyMJ/extensions/TeX/HTML.js");
+require("../../legacy/jax/element/jax.js");
+require("../../legacy/jax/input/TeX/config.js");
+require("../../legacy/jax/input/TeX/jax.js");
+require("../../legacy/extensions/TeX/AMSmath.js");
+require("../../legacy/extensions/TeX/AMSsymbols.js");
+require("../../legacy/extensions/TeX/AMScd.js");
+require("../../legacy/extensions/TeX/newcommand.js");
+require("../../legacy/extensions/TeX/unicode.js");
+require("../../legacy/extensions/TeX/mathchoice.js");
+require("../../legacy/extensions/TeX/bbox.js");
+require("../../legacy/extensions/TeX/HTML.js");
 
-require("./LegacyMJ/element/JSON.js");
+require("../../legacy/jax/element/JSON.js");
 
 exports.Translate = function (tex,display) {
   var script = {

@@ -25,7 +25,7 @@
  */
 
 MathJax.Extension["TeX/AMSmath"] = {
-  version: "2.7.0-beta",
+  version: "2.7.0",
   
   number: 0,        // current equation number
   startNumber: 0,   // current starting equation number (for when equation is restarted)
@@ -60,7 +60,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var baseURL = "";
                 // (document.getElementsByTagName("base").length === 0) ? "" :
                 // String(document.location).replace(/#.*$/,"");
-
   
   /******************************************************************************/
   
@@ -604,7 +603,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   TEX.prefilterHooks.Add(function (data) {
     AMS.display = data.display;
     AMS.number = AMS.startNumber;  // reset equation numbers (in case the equation restarted)
-    AMS.eqlabels = AMS.eqIDs = {}; AMS.badref = false;
+    AMS.eqlabels = {};
+    AMS.eqIDs = {}; 
+    AMS.badref = false;
     if (AMS.refUpdate) {AMS.number = data.script.MathJax.startNumber}
   });
   TEX.postfilterHooks.Add(function (data) {
@@ -638,7 +639,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   //
   TEX.resetEquationNumbers = function (n,keepLabels) {
     AMS.startNumber = (n || 0);
-    if (!keepLabels) {AMS.labels = AMS.IDs = {}}
+    if (!keepLabels) {
+      AMS.labels = {};
+      AMS.IDs = {};
+    }
   }
 
   /******************************************************************************/
