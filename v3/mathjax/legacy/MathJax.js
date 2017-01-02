@@ -1,4 +1,4 @@
-var MathJax = {};
+var MathJax = {debug:true};
 
 var window = {
   MathJax: MathJax
@@ -767,7 +767,7 @@ exports.MathJax = MathJax;
 	//  when loading the initial localization file (before loading messsage is available)
 	//
 	this.loading[file].message = BASE.Message.File(name);
-        setTimeout(function (THIS) {System.import(file).catch(timeout)},1,this);
+        System.import(file).catch(timeout);
       },
       //
       //  Create a LINK tag to load the style sheet
