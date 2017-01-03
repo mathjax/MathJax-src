@@ -1,7 +1,8 @@
 process.chdir(__dirname);
-system  = require("./lib/system.js");
-system.config({map: {'traceur': './lib/traceur.min.js'}});
-system.config({
+require("./lib/system.js");
+System.nodeRequire = require;  // make this available to modules running in node for now
+System.config({map: {'traceur': './lib/traceur.min.js'}});
+System.config({
   packages: {
     "TreeJax/lib": {
       map: {
@@ -17,6 +18,6 @@ system.config({
   }
 });
 
-system.import('main.js')
+System.import('main.js')
   .then(function (mj) {mathjax = mj.MathJax})
   .catch(function (error) {console.log(error.message)});
