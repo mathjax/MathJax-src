@@ -16,9 +16,13 @@ export class HTMLDocument extends Document {
   }
   Compile(options) {
     if (!this.processed.Compile) {
-      if (this.typeset == null) this.typeset = new Array(this.math.length);
+      var COMPILED = HTMLMathItem.STATE.COMPILED;
       for (let i = 0, m = this.math.length; i < m; i++) {
-        this.typeset[i] = HTMLCompile(this.math[i]);
+        var math = this.math[i];
+        if (math && math.State() < COMPILED) {
+          math.tree = HTMLCompile(this.math[i]);
+          math.State(COMPILED);
+        }
       }
       this.processed.Compile = true;
     }
@@ -26,6 +30,7 @@ export class HTMLDocument extends Document {
   }
   Typeset(options) {
     if (!this.processed.Typeset) {
+      if (this.typeset == null) this.typeset = new Array(this.math.length);
       console.log("- Typeset");
       this.processed.Typeset = true;
     }
@@ -50,11 +55,6 @@ export class HTMLDocument extends Document {
       console.log("- UpdateDocument");
       this.processed.UpdateDocument = true;
     }
-    return this;
-  }
-  
-  Concat(collection) {
-    this.math = this.math.concat(collection.math);
     return this;
   }
   

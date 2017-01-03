@@ -6,9 +6,9 @@ export class MathItem {
     this.display = true;
     this.start = start;
     this.end = start;
-    this.root = null;
+    this.tree = null;
     this.typeset = null;
-    this.state = 0;
+    this.state = STATE.UNPROCESSED;
     this.metrics = {};
     this.bbox = {};
     this.inputData = {};
@@ -33,4 +33,10 @@ export class MathItem {
     return this.state;
   }
   
+};
+
+let STATE = MathItem.STATE = {
+  UNPROCESSED: 0,
+  COMPILED: 1,
+  TYPESET: 2
 };

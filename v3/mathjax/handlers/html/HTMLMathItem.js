@@ -8,3 +8,5 @@ export class HTMLMathItem extends MathItem {
   addEventHandlers() {}
   
 };
+
+HTMLMathItem.STATE = MathItem.STATE;
