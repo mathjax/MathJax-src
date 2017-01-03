@@ -1,6 +1,5 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
-import {HTMLCompile} from "./HTMLCompile.js";
 
 export class HTMLDocument extends Document {
   constructor (document,options) {
@@ -14,28 +13,28 @@ export class HTMLDocument extends Document {
     }
     return this;
   }
+  
   Compile(options) {
     if (!this.processed.Compile) {
-      var COMPILED = HTMLMathItem.STATE.COMPILED;
       for (let i = 0, m = this.math.length; i < m; i++) {
-        var math = this.math[i];
-        if (math && math.State() < COMPILED) {
-          math.tree = HTMLCompile(this.math[i]);
-          math.State(COMPILED);
-        }
+        if (this.math[i]) this.math[i].Compile();
       }
       this.processed.Compile = true;
     }
     return this;
   }
+  
   Typeset(options) {
     if (!this.processed.Typeset) {
       if (this.typeset == null) this.typeset = new Array(this.math.length);
-      console.log("- Typeset");
+      for (let i = 0, m = this.math.length; i < m; i++) {
+        if (this.math[i]) this.math[i].Typeset();
+      }
       this.processed.Typeset = true;
     }
     return this;
   }
+  
   GetMetrics() {
     if (!this.processed.GetMetrics) {
       console.log("- GetMetrics");
@@ -43,6 +42,7 @@ export class HTMLDocument extends Document {
     }
     return this;
   }
+  
   AddEventHandlers() {
     if (!this.processed.AddEventHandlers) {
       console.log("- AddEventHandlers");
@@ -50,6 +50,7 @@ export class HTMLDocument extends Document {
     }
     return this;
   }
+  
   UpdateDocument() {
     if (!this.processed.UpdateDocument) {
       console.log("- UpdateDocument");

@@ -28,11 +28,20 @@ require("../../legacy/extensions/TeX/HTML.js");
 
 require("../../legacy/jax/element/JSON.js");
 
-exports.Translate = function (tex,display) {
+var Tree = require("../../../TreeJax/lib/tree.js").Tree;
+
+var Translate = function (tex,display) {
   var script = {
     type:"math/tex"+(display?"; mode=display":""),
     innerText: tex,
     MathJax: {}
   };
   return MathJax.InputJax.TeX.Translate(script).root.toJSON();
-}
+};
+
+var Compile = function (tex,display) {
+  return Tree.parse(Translate(tex,display));
+};
+
+exports.Compile = Compile;
+exports.Translate = Translate;
