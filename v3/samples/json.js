@@ -5,5 +5,13 @@ import "mathjax/handlers/html.js";
 import "mathjax/input/LegacyTeX.js";
 
 let html = MathJax.HandlerFor("<html></html>");
-html.TestMath(process.argv[3] || "x").Compile();
-console.log(JSON.stringify(html.typeset[0]));
+
+MathJax.HandleRetriesFor(function () {
+
+    html.TestMath(process.argv[3] || '').Compile();
+    console.log(JSON.stringify(html.typeset[0]));
+
+}).catch(err => {
+  console.log(err.message);
+  console.log(err.stack.replace(/\n    .*\/system.js:(.|\n)*/,""));
+});
