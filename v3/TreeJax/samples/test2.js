@@ -1,5 +1,6 @@
 require.cache = {};
-var location = '/home/sorge/git/MathJax/mathjax-tc/v3/TreeJax/';
+var path = require("path");
+var location = path.resolve(__dirname,'../') + '/';
 var tj = require(location + 'lib/index.js');
 var sem = require('semantic');
 var assert = require('assert');
