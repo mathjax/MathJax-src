@@ -20,7 +20,7 @@ System.config({
     }
   }
 });
-System.import('main.js')
+System.import(location.search.substr(1) || 'main.js')
   .then(function () {document.body.appendChild(document.createTextNode("Done"))})
   .catch(function (error) {console.log(error.message)});
 </script>

@@ -18,6 +18,6 @@ System.config({
   }
 });
 
-System.import('main.js')
+System.import(process.argv[2] || 'main.js')
   .then(function (mj) {mathjax = mj.MathJax})
   .catch(function (error) {console.log(error.message)});
