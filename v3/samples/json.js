@@ -13,5 +13,5 @@ MathJax.HandleRetriesFor(function () {
 
 }).catch(err => {
   console.log(err.message);
-  console.log(err.stack.replace(/\n    .*\/system.js:(.|\n)*/,""));
+  console.log(err.stack.replace(/\n.*\/system\.js:(.|\n)*/,""));
 });
