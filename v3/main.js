@@ -2,16 +2,22 @@ import {MathJax} from "mathjax/mathjax.js";
 export {MathJax} from "mathjax/mathjax.js";
 
 import "mathjax/handlers/html.js";
-import {MmlVisitor} from "TreeJax/lib/mml_visitor.js";
 
-let mml = new MmlVisitor();
-let html = MathJax.HandlerFor("<html></html>");
+let html = MathJax.HandlerFor(`
+<html>
+<head><title>Test MathJax3</title></head>
+<body>
+This is some math: \\(x+1\\).
+<p>\\[x+1/over x-1\\]</p>
+more: \\(1-x\\)
+</body>
+</html>
+`);
 
 MathJax.HandleRetriesFor(function () {
 
-    html.TestMath(process.argv[3] || '').Compile();
-    mml.visitTree(html.math[0].tree);
-    console.log(mml.getResult().toString());
+    html.FindMath();
+    console.log(html.math);
 
 }).catch(err => {
   console.log(err.message);

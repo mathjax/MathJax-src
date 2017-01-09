@@ -1,5 +1,6 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
+import {FindMath} from "../../input/legacy/tex2jax.js";
 
 export class HTMLDocument extends Document {
   constructor (document,options) {
@@ -8,7 +9,7 @@ export class HTMLDocument extends Document {
   
   FindMath(options) {
     if (!this.processed.FindMath) {
-      console.log("- FindMath");
+      this.math = FindMath(this.document.body);
       this.processed.FindMath = true;
     }
     return this;
@@ -26,7 +27,6 @@ export class HTMLDocument extends Document {
   
   Typeset(options) {
     if (!this.processed.Typeset) {
-      if (this.typeset == null) this.typeset = new Array(this.math.length);
       for (let i = 0, m = this.math.length; i < m; i++) {
         if (this.math[i]) this.math[i].Typeset();
       }
@@ -61,7 +61,7 @@ export class HTMLDocument extends Document {
   
   TestMath(string,display=true) {
     if (!this.processed.TestMath) {
-      this.math = [new HTMLMathItem(string,"LegacyTeX",display)];
+      this.math = [new HTMLMathItem(string,"TeX",display)];
       this.processed.TestMath = true;
     }
     return this;

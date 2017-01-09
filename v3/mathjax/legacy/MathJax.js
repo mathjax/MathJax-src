@@ -4,7 +4,7 @@ var window = {
   MathJax: MathJax
 };
 var navigator = {};
-
+var document = null;
 
 exports.MathJax = MathJax;
 
@@ -110,6 +110,12 @@ exports.MathJax = MathJax;
 
     })
   });
+
+  BASE.Object.isArray = Array.isArray || function (obj) {
+    return Object.prototype.toString.call(obj) === "[object Array]";
+  };
+  
+  BASE.Object.Array = Array;
 
 })("MathJax");
 
@@ -981,6 +987,61 @@ exports.MathJax = MathJax;
 /**********************************************************/
 
 MathJax.HTML = {
+  setDocument: function (doc) {document = this.document = doc},
+  //
+  //  Create an HTML element with given attributes and content.
+  //  The def parameter is an (optional) object containing key:value pairs
+  //  of the attributes and their values, and contents is an (optional)
+  //  array of strings to be inserted as text, or arrays of the form
+  //  [type,def,contents] that describes an HTML element to be inserted
+  //  into the current element.  Thus the contents can describe a complete
+  //  HTML snippet of arbitrary complexity.  E.g.:
+  //  
+  //    MathJax.HTML.Element("span",{id:"mySpan",style{"font-style":"italic"}},[
+  //        "(See the ",["a",{href:"http://www.mathjax.org"},["MathJax home page"]],
+  //        " for more details.)"]);
+  // 
+  Element: function (type,def,contents) {
+    var obj = document.createElement(type), id;
+    if (def) {
+      if (def.hasOwnProperty("style")) {
+        var style = def.style; def.style = {};
+        for (id in style) {if (style.hasOwnProperty(id))
+          {def.style[id.replace(/-([a-z])/g,this.ucMatch)] = style[id]}}
+      }
+      MathJax.Hub.Insert(obj,def);
+      for (id in def) {
+        if (id === "role" || id.substr(0,5) === "aria-") obj.setAttribute(id,def[id]);
+      }
+    }
+    if (contents) {
+      if (!MathJax.Object.isArray(contents)) {contents = [contents]}
+      for (var i = 0, m = contents.length; i < m; i++) {
+        if (MathJax.Object.isArray(contents[i])) {
+          obj.appendChild(this.Element(contents[i][0],contents[i][1],contents[i][2]));
+        } else if (type === "script") { // IE throws an error if script is added as a text node
+          this.setScript(obj, contents[i]);
+        } else {
+          obj.appendChild(document.createTextNode(contents[i]));
+        }
+      }
+    }
+    return obj;
+  },
+  ucMatch: function (match,c) {return c.toUpperCase()},
+  addElement: function (span,type,def,contents) {return span.appendChild(this.Element(type,def,contents))},
+  TextNode: function (text) {return document.createTextNode(text)},
+  addText: function (span,text) {return span.appendChild(this.TextNode(text))},
+
+  //
+  //  Set and get the text of a script
+  //
+  setScript: function (script,text) {
+    if (this.setScriptBug) {script.text = text} else {
+      while (script.firstChild) {script.removeChild(script.firstChild)}
+      this.addText(script,text);
+    }
+  },
   getScript: function (script) {return script.innerText}
 }
 
@@ -1874,3 +1935,5 @@ MathJax.Ajax.config.root = MathJax.Hub.config.root;
   BASE.ElementJax.prototype.STATE = BASE.ElementJax.STATE;
   
 })("MathJax");
+
+MathJax.Hub.Browser = {};
