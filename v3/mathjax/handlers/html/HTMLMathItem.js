@@ -1,5 +1,6 @@
 import {MathItem} from "../../core/MathItem.js";
 import {Compile} from "../../input/legacy/TeX.js";
+import {Typeset} from "../../output/legacy/CommonHTML.js";
 
 export class HTMLMathItem extends MathItem {
   
@@ -15,7 +16,12 @@ export class HTMLMathItem extends MathItem {
     }
   }
   
-  Typeset(options) {}
+  Typeset(html,options) {
+    if (this.State() < STATE.TYPESET) {
+      this.typeset = Typeset(this,this.tree,html);
+      this.State(STATE.TYPESET);
+    }
+  }
   
   addEventHandlers() {}
   

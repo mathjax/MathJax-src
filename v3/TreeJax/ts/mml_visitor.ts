@@ -38,7 +38,9 @@ export class MmlVisitor implements Visitor {
    * @return {Element} The old-style internal representation of the tree.
    */
   public getResult(): any {
-    return (this.result.data.length > 1 ? this.result : this.result.data[0]);
+    let mml = (this.result.data.length > 1 ? this.result : this.result.data[0]);
+    mml.parent = null;
+    return mml;
   }
   
   /**

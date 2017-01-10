@@ -28,7 +28,7 @@ export class HTMLDocument extends Document {
   Typeset(options) {
     if (!this.processed.Typeset) {
       for (let i = 0, m = this.math.length; i < m; i++) {
-        if (this.math[i]) this.math[i].Typeset();
+        if (this.math[i]) this.math[i].Typeset(this);
       }
       this.processed.Typeset = true;
     }

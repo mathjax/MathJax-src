@@ -1936,4 +1936,4 @@ MathJax.Ajax.config.root = MathJax.Hub.config.root;
   
 })("MathJax");
 
-MathJax.Hub.Browser = {};
+MathJax.Hub.Browser = {Select: function () {}};
