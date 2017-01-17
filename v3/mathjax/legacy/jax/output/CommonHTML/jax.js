@@ -1773,7 +1773,6 @@
             var indent = this.CHTMLlength2em(CONFIG.displayIndent,CHTML.cwidth);
             shift += (values.indentalign === MML.INDENTALIGN.RIGHT ? -indent : indent);
           }
-console.log(node.parentNode.outerHTML);
           var styles = node.parentNode.parentNode.style;
           node.parentNode.style.textAlign = styles.textAlign = values.indentalign;
           // ### FIXME: make percentage widths respond to changes in container
