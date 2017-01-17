@@ -38,5 +38,6 @@ export class MathItem {
 let STATE = MathItem.STATE = {
   UNPROCESSED: 0,
   COMPILED: 1,
-  TYPESET: 2
+  TYPESET: 2,
+  INSERTED: 3
 };

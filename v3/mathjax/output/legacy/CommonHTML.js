@@ -13,6 +13,7 @@ require("../../legacy/jax/output/CommonHTML/fonts/TeX/fontdata.js");
 
 var CHTML = MathJax.OutputJax.CommonHTML;
 var HTML = MathJax.HTML;
+var AJAX = MathJax.Ajax;
 
 CHTML.Augment({
   Startup: function () {}  // for now
@@ -34,6 +35,9 @@ MathJax.Hub.Startup.signal.Post("onLoad");
 MmlVisitor = require("TreeJax/lib/mml_visitor.js").MmlVisitor;
 var visitor = new MmlVisitor();
 
+//
+//  Typeset a MathItem tree
+//
 exports.Typeset = function (math,html) {
   if (!ready.called) MathJax.Hub.RestartAfter(ready);
   HTML.setDocument(html.document);
@@ -63,4 +67,15 @@ exports.Typeset = function (math,html) {
   }
   delete this.CHTMLnode;
   return NODE;
+}
+
+//
+//  Produces the CSS style element for the CommonHTML output
+//
+exports.CHTMLStyleSheet = function (html) {
+  var sheet = html.document.createElement("style");
+  sheet.setAttribute("id","MathJax-CHTML-Styles");
+  var styles = AJAX.StyleString(CHTML.config.styles);
+  sheet.appendChild(html.document.createTextNode(styles));
+  return sheet;
 }

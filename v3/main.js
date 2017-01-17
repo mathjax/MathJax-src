@@ -9,17 +9,16 @@ let html = MathJax.HandlerFor(`
 <body>
 This is some math: \\(x+1\\).
 \\[x+1\\over x-1\\]
-</body>
-</html>
-`);
+</body></html>`);
 
 MathJax.HandleRetriesFor(function () {
 
     html.FindMath()
         .Compile()
-        .Typeset();
+        .Typeset()
+        .UpdateDocument();
         
-    console.log(html.math);
+    console.log(html.document.body.parentNode.outerHTML);
 
 }).catch(err => {
   console.log(err.message);

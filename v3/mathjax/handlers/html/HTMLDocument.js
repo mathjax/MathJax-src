@@ -1,6 +1,7 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
 import {FindMath} from "../../input/legacy/tex2jax.js";
+import {CHTMLStyleSheet} from "../../output/legacy/CommonHTML.js";
 
 export class HTMLDocument extends Document {
   constructor (document,options) {
@@ -53,10 +54,23 @@ export class HTMLDocument extends Document {
   
   UpdateDocument() {
     if (!this.processed.UpdateDocument) {
-      console.log("- UpdateDocument");
+      for (let i = 0, m = this.math.length; i < m; i++) {
+        if (this.math[i]) this.math[i].UpdateDocument(this);
+      }
+      let sheet = this.DocumentStyleSheet();
+      let styles = this.document.getElementById(sheet.id);
+      if (styles) {
+        styles.parentNode.replaceChild(sheet,styles);
+      } else {
+        this.document.head.appendChild(sheet);
+      }
       this.processed.UpdateDocument = true;
     }
     return this;
+  }
+  
+  DocumentStyleSheet() {
+    return CHTMLStyleSheet(this);
   }
   
   TestMath(string,display=true) {

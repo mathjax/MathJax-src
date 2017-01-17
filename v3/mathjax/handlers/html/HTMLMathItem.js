@@ -25,6 +25,15 @@ export class HTMLMathItem extends MathItem {
   
   addEventHandlers() {}
   
+  UpdateDocument(html,options) {
+    if (this.State() < STATE.INSERTED) {
+      var node = this.start.node;
+      node.parentNode.insertBefore(this.typeset,node);
+      node.parentNode.removeChild(node);
+      this.State(STATE.INSERTED);
+    }
+  }
+  
 };
 
 let STATE = HTMLMathItem.STATE = MathItem.STATE;
