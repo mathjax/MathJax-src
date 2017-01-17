@@ -8,7 +8,7 @@ let html = MathJax.HandlerFor(`
 <head><title>Test MathJax3</title></head>
 <body>
 This is some math: \\(x+1\\).
-\\[x+1/over x-1\\]
+\\[x+1\\over x-1\\]
 </body>
 </html>
 `);
