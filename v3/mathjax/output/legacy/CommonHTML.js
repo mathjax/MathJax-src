@@ -34,10 +34,10 @@ MathJax.Hub.Startup.signal.Post("onLoad");
 MmlVisitor = require("TreeJax/lib/mml_visitor.js").MmlVisitor;
 var visitor = new MmlVisitor();
 
-exports.Typeset = function (math,tree,html) {
+exports.Typeset = function (math,html) {
   if (!ready.called) MathJax.Hub.RestartAfter(ready);
   HTML.setDocument(html.document);
-  visitor.visitTree(tree);
+  visitor.visitTree(math.tree);
   var mml = visitor.getResult();
   var jax = {
     CHTML: {

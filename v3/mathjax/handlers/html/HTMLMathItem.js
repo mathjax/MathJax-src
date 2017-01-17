@@ -18,7 +18,7 @@ export class HTMLMathItem extends MathItem {
   
   Typeset(html,options) {
     if (this.State() < STATE.TYPESET) {
-      this.typeset = Typeset(this,this.tree,html);
+      this.typeset = Typeset(this,html);
       this.State(STATE.TYPESET);
     }
   }
