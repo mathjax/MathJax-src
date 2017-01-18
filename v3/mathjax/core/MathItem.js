@@ -22,7 +22,7 @@ export class MathItem {
 
   setMetrics(em,ex,cwidth,lwidth,scale) {
     this.metrics = {
-      em: em, ex:ex,
+      em: em, ex: ex,
       containerWidth: cwidth,
       lineWidth: lwidth,
       scale: scale

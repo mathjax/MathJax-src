@@ -1,7 +1,7 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
 import {FindMath} from "../../input/legacy/tex2jax.js";
-import {CHTMLStyleSheet} from "../../output/legacy/CommonHTML.js";
+import {CHTMLStyleSheet,CHTMLgetMetrics} from "../../output/legacy/CommonHTML.js";
 
 export class HTMLDocument extends Document {
   constructor (document,options) {
@@ -38,7 +38,7 @@ export class HTMLDocument extends Document {
   
   GetMetrics() {
     if (!this.processed.GetMetrics) {
-      console.log("- GetMetrics");
+      CHTMLgetMetrics(this);
       this.processed.GetMetrics = true;
     }
     return this;

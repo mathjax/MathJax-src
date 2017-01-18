@@ -32,8 +32,6 @@
   var MML;
   var isArray = MathJax.Object.isArray;
   
-  var window = {};
-
   var EVENT, TOUCH, HOVER; // filled in later
 
   var STRUTHEIGHT = 1,
