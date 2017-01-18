@@ -88,119 +88,123 @@ MathJax.Hub.Startup.signal.Post("onLoad");
 MmlVisitor = require("TreeJax/lib/mml_visitor.js").MmlVisitor;
 var visitor = new MmlVisitor();
 
-//
-//  Typeset a MathItem tree
-//
-exports.Typeset = function (math,html) {
-  if (!ready.called) MathJax.Hub.RestartAfter(ready);
-  HTML.setDocument(html.document);
-  visitor.visitTree(math.tree);
-  var mml = visitor.getResult();
-  var metrics = math.metrics;
-  var jax = {
-    CHTML: {
-      em: metrics.em, outerEm: metrics.em / metrics.scale, ex: metrics.ex,
-      scale: metrics.scale, fontSize: Math.ceil(metrics.scale*100) + "%",
-      cwidth: metrics.containerWidth, lineWidth: metrics.lineWidth,
-      display: math.display
+exports.LegacyCHTML = {
+
+  //
+  //  Typeset a MathItem tree
+  //
+  Typeset: function (math,html) {
+    if (!ready.called) MathJax.Hub.RestartAfter(ready);
+    HTML.setDocument(html.document);
+    visitor.visitTree(math.tree);
+    var mml = visitor.getResult();
+    var metrics = math.metrics;
+    var jax = {
+      CHTML: {
+        em: metrics.em, outerEm: metrics.em / metrics.scale, ex: metrics.ex,
+        scale: metrics.scale, fontSize: Math.ceil(metrics.scale*100) + "%",
+        cwidth: metrics.containerWidth, lineWidth: metrics.lineWidth,
+        display: math.display
+      }
+    };
+    CHTML.getMetrics(jax);
+    var node = CHTML.Element("mjx-chtml",{className:"MathJax_CHTML"}), NODE = node;
+    if (math.display) {
+      NODE = CHTML.Element("mjx-chtml",{className:"MJXc-display",isMathJax:false});
+      NODE.appendChild(node);
     }
-  };
-  CHTML.getMetrics(jax);
-  var node = CHTML.Element("mjx-chtml",{className:"MathJax_CHTML"}), NODE = node;
-  if (math.display) {
-    NODE = CHTML.Element("mjx-chtml",{className:"MJXc-display",isMathJax:false});
-    NODE.appendChild(node);
-  }
-  if (CHTML.scale !== 1) node.style.fontSize = jax.CHTML.fontSize;
-  CHTML.initCHTML(mml,node);
-  CHTML.CHTMLnode = node;
-  try {
-    mml.setTeXclass();
-    mml.toCommonHTML(node);
-  } catch (err) {
+    if (CHTML.scale !== 1) node.style.fontSize = jax.CHTML.fontSize;
+    CHTML.initCHTML(mml,node);
+    CHTML.CHTMLnode = node;
+    try {
+      mml.setTeXclass();
+      mml.toCommonHTML(node);
+    } catch (err) {
+      delete this.CHTMLnode;
+      throw err;
+    }
     delete this.CHTMLnode;
-    throw err;
-  }
-  delete this.CHTMLnode;
-  return NODE;
-}
+    return NODE;
+  },
 
-//
-//  Produces the CSS style element for the CommonHTML output
-//
-exports.CHTMLStyleSheet = function (html) {
-  var sheet = html.document.createElement("style");
-  sheet.setAttribute("id","MathJax-CHTML-Styles");
-  var styles = AJAX.StyleString(CHTML.config.styles);
-  sheet.appendChild(html.document.createTextNode(styles));
-  return sheet;
-}
+  //
+  //  Determine metrics for the locations of the math elements
+  //
+  GetMetrics: function (html) {
+    if (!ready.called) MathJax.Hub.RestartAfter(ready);
 
-//
-//  Determine metrics for the locations of the math elements
-//
-exports.CHTMLgetMetrics = function (html) {
-  if (!ready.called) MathJax.Hub.RestartAfter(ready);
+    var i, m = html.math.length, math, test, node;
+    var em, ex, cwidth, lwidth, relwidth, width, linebreak, maxwidth = MAXWIDTH;
+    var document = html.document;
+    var CONFIG = CHTML.config;
 
-  var i, m = html.math.length, math, test, node;
-  var em, ex, cwidth, lwidth, relwidth, width, linebreak, maxwidth = MAXWIDTH;
-  var document = html.document;
-  var CONFIG = CHTML.config;
+    var canMeasure = (html.document.body.offsetWidth > 0);
   
-  var canMeasure = (html.document.body.offsetWidth > 0);
-  
-  //
-  //  Get linebreaking information
-  //
-  width = CHTML.config.linebreaks.width;
-  linebreak = CHTML.config.linebreaks.automatic;
-  if (linebreak) {
-    relwidth = !!width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/);
-    if (relwidth) width = width.replace(/\s*container\s*/,"");
-    if (width === "") width = "100%";
-  }
-  //
-  //  Insert spans for size testing
-  //
-  if (canMeasure) {
-    for (i = 0; i < m; i++) {
-      node = html.math[i].start.node;
-      test = document.importNode(CHTML.linebreakSpan,true);
-      node.parentNode.insertBefore(test,node);
-      test = document.importNode(CHTML.TestSpan,true);
-      node.parentNode.insertBefore(test,node);
+    //
+    //  Get linebreaking information
+    //
+    width = CHTML.config.linebreaks.width;
+    linebreak = CHTML.config.linebreaks.automatic;
+    if (linebreak) {
+      relwidth = !!width.match(/^\s*(\d+(\.\d*)?%\s*)?container\s*$/);
+      if (relwidth) width = width.replace(/\s*container\s*/,"");
+      if (width === "") width = "100%";
     }
-  }
-  //
-  //  Collect size information
-  //
-  for (i = 0; i < m; i++) {
-    math = html.math[i]; node = math.start.node;
-    em = CHTML.getFontSize(node.parentNode);
+    //
+    //  Insert spans for size testing
+    //
     if (canMeasure) {
-      test = node.previousSibling;
-      ex = test.firstChild.offsetHeight / 60;
-      cwidth = Math.max(0,test.previousSibling.firstChild.offsetWidth-2);
+      for (i = 0; i < m; i++) {
+        node = html.math[i].start.node;
+        test = document.importNode(CHTML.linebreakSpan,true);
+        node.parentNode.insertBefore(test,node);
+        test = document.importNode(CHTML.TestSpan,true);
+        node.parentNode.insertBefore(test,node);
+      }
     }
-    if (ex === 0 || isNaN(ex) || !canMeasure) {
-      ex = Math.ceil(em/2);
-      cwidth = MAXWIDTH;
-    }
-    if (relwidth) maxwidth = cwidth;
-    scale = (CONFIG.matchFontHeight ? ex/CHTML.TEX.x_height/em : 1);
-    scale = Math.floor(Math.max(CONFIG.minScaleAdjust/100,scale)*CONFIG.scale);
-    scale /= 100; em *= scale; cwidth /= em;
-    lwidth = (linebreak ? CHTML.length2em(width,maxwidth/em,1) : maxwidth);
-    math.setMetrics(em, ex, cwidth, lwidth, scale);
-  }
-  //
-  //  Remove test spans
-  //
-  if (canMeasure) {
+    //
+    //  Collect size information
+    //
     for (i = 0; i < m; i++) {
-      node = html.math[i].start.node;
-      node.parentNode.removeChild(node.previousSibling);
-      node.parentNode.removeChild(node.previousSibling);
+      math = html.math[i]; node = math.start.node;
+      em = CHTML.getFontSize(node.parentNode);
+      if (canMeasure) {
+        test = node.previousSibling;
+        ex = test.firstChild.offsetHeight / 60;
+        cwidth = Math.max(0,test.previousSibling.firstChild.offsetWidth-2);
+      }
+      if (ex === 0 || isNaN(ex) || !canMeasure) {
+        ex = Math.ceil(em/2);
+        cwidth = MAXWIDTH;
+      }
+      if (relwidth) maxwidth = cwidth;
+      scale = (CONFIG.matchFontHeight ? ex/CHTML.TEX.x_height/em : 1);
+      scale = Math.floor(Math.max(CONFIG.minScaleAdjust/100,scale)*CONFIG.scale);
+      scale /= 100; em *= scale; cwidth /= em;
+      lwidth = (linebreak ? CHTML.length2em(width,maxwidth/em,1) : maxwidth);
+      math.setMetrics(em, ex, cwidth, lwidth, scale);
     }
+    //
+    //  Remove test spans
+    //
+    if (canMeasure) {
+      for (i = 0; i < m; i++) {
+        node = html.math[i].start.node;
+        node.parentNode.removeChild(node.previousSibling);
+        node.parentNode.removeChild(node.previousSibling);
+      }
+    }
+  },
+    
+  //
+  //  Produces the CSS style element for the CommonHTML output
+  //
+  StyleSheet: function (html) {
+    var sheet = html.document.createElement("style");
+    sheet.setAttribute("id","MathJax-CHTML-Styles");
+    var styles = AJAX.StyleString(CHTML.config.styles);
+    sheet.appendChild(html.document.createTextNode(styles));
+    return sheet;
   }
-}
+
+};

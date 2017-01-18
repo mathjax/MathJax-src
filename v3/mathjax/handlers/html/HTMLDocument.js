@@ -1,11 +1,12 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
 import {FindMath} from "../../input/legacy/tex2jax.js";
-import {CHTMLStyleSheet,CHTMLgetMetrics} from "../../output/legacy/CommonHTML.js";
+import {CHTML} from "../../output/chtml.js";
 
 export class HTMLDocument extends Document {
   constructor (document,options) {
     super(document,"HTML",options);
+    this.OutputJax = new CHTML();  // should come from options
   }
   
   FindMath(options) {
@@ -38,7 +39,7 @@ export class HTMLDocument extends Document {
   
   GetMetrics() {
     if (!this.processed.GetMetrics) {
-      CHTMLgetMetrics(this);
+      this.OutputJax.GetMetrics(this);
       this.processed.GetMetrics = true;
     }
     return this;
@@ -70,7 +71,7 @@ export class HTMLDocument extends Document {
   }
   
   DocumentStyleSheet() {
-    return CHTMLStyleSheet(this);
+    return this.OutputJax.StyleSheet(this);
   }
   
   TestMath(string,display=true) {
