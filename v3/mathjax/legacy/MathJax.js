@@ -747,7 +747,7 @@ exports.MathJax = MathJax;
     Preloading: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
         var file = this.fileURL(arguments[i]);
-        if (!this.loading[file]) {this.loading[file] = {preloaded: true}}
+        if (!this.loading[file] && !this.loaded[file]) {this.loading[file] = {preloaded: true}}
       }
     },
     

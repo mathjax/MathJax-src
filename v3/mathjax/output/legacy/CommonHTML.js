@@ -3,11 +3,13 @@ MathJax = require("../../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(
   "[MathJax]/extensions/MathEvents.js",
+  "[MathJax]/jax/element/mml/jax.js",
   "[MathJax]/jax/output/Common/config.js",
   "[MathJax]/jax/output/CommonHTML/jax.js",
   "[MathJax]/jax/output/CommonHTML/fonts/TeX/fontdata.js"
 );
 
+require("../../legacy/jax/element/mml/jax.js");
 require("../../legacy/jax/output/CommonHTML/config.js");
 require("../../legacy/jax/output/CommonHTML/jax.js");
 require("../../legacy/jax/output/CommonHTML/fonts/TeX/fontdata.js");
