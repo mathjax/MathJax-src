@@ -1,5 +1,4 @@
 import {MathItem} from "../../core/MathItem.js";
-import {Compile} from "../../input/legacy/TeX.js";
 
 export class HTMLMathItem extends MathItem {
   
@@ -8,9 +7,9 @@ export class HTMLMathItem extends MathItem {
     super(math,format,display,start,end);
   }
   
-  Compile(options) {
+  Compile(html,options) {
     if (this.State() < STATE.COMPILED) {
-      this.tree = Compile(this.math,this.display);
+      this.tree = html.InputJax.Compile(this.math,this.display);
       this.State(STATE.COMPILED);
     }
   }

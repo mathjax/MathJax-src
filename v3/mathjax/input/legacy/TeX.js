@@ -14,7 +14,7 @@ MathJax.Ajax.Preloading(
   "[MathJax]/extensions/TeX/HTML.js"
 );
 
-require("../../legacy/jax/element/jax.js");
+require("../../legacy/jax/element/mml/jax.js");
 require("../../legacy/jax/input/TeX/config.js");
 require("../../legacy/jax/input/TeX/jax.js");
 require("../../legacy/extensions/TeX/AMSmath.js");
@@ -30,18 +30,16 @@ require("../../legacy/jax/element/JSON.js");
 
 var Tree = require("../../../TreeJax/lib/tree.js").Tree;
 
-var Translate = function (tex,display) {
-  var script = {
-    type:"math/tex"+(display?"; mode=display":""),
-    innerText: tex,
-    MathJax: {}
-  };
-  return MathJax.InputJax.TeX.Translate(script).root.toJSON();
+exports.LegacyTeX = {
+  Compile: function (tex,display) {
+    return Tree.parse(this.Translate(tex,display));
+  },
+  Translate: function (tex,display) {
+    var script = {
+      type:"math/tex"+(display?"; mode=display":""),
+      innerText: tex,
+      MathJax: {}
+    };
+    return MathJax.InputJax.TeX.Translate(script).root.toJSON();
+  }
 };
-
-var Compile = function (tex,display) {
-  return Tree.parse(Translate(tex,display));
-};
-
-exports.Compile = Compile;
-exports.Translate = Translate;
