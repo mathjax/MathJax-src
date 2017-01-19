@@ -1,18 +1,18 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
-import {TeX} from "../../input/tex.js";
-import {CHTML} from "../../output/chtml.js";
+import {InputJax} from "../../core/InputJax.js";
+import {OutputJax} from "../../core/OutputJax.js";
 
 export class HTMLDocument extends Document {
   constructor (document,options) {
     super(document,"HTML",options);
-    this.InputJax = new TeX();         // should come from options
-    this.OutputJax = new CHTML();      // should come from options
+    this.InputJax = this.options["InputJax"] || new InputJax();
+    this.OutputJax = this.options["OutputJax"] || new OutputJax();
   }
   
   FindMath(options) {
     if (!this.processed.FindMath) {
-      this.math = this.InputJax.FindMath(this.document.body);
+      this.math = this.math.concat(this.InputJax.FindMath(this.document.body));
       this.processed.FindMath = true;
     }
     return this;
@@ -60,11 +60,13 @@ export class HTMLDocument extends Document {
         if (this.math[i]) this.math[i].UpdateDocument(this);
       }
       let sheet = this.DocumentStyleSheet();
-      let styles = this.document.getElementById(sheet.id);
-      if (styles) {
-        styles.parentNode.replaceChild(sheet,styles);
-      } else {
-        this.document.head.appendChild(sheet);
+      if (sheet) {
+        let styles = this.document.getElementById(sheet.id);
+        if (styles) {
+          styles.parentNode.replaceChild(sheet,styles);
+        } else {
+          this.document.head.appendChild(sheet);
+        }
       }
       this.processed.UpdateDocument = true;
     }

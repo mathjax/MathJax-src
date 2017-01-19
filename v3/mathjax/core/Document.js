@@ -1,9 +1,15 @@
+import {UserOptions, DefaultOptions} from "../util/Options.js";
+
+const OPTIONS = {
+  OutputJax: null,
+  InputJax: null
+};
 
 export class Document {
   constructor (document,type,options) {
     this.document = document;
     this.type = type;
-    this.options = options;
+    this.options = UserOptions(DefaultOptions({},OPTIONS),options);
     this.math = [];
     this.processed = {
       FindMath: false,

@@ -6,7 +6,8 @@ export class InputJax {
   }
   
   FindMath(node,options) {
-    // should be on array of strings, but for now, use DOM node
+    // should operate on an array of strings, but for now, use DOM node
+    return [];
   }
   
   Compile(math,options) {

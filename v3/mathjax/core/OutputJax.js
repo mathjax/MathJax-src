@@ -10,5 +10,8 @@ export class OutputJax {
   
   GetMetrics(document) {
   }
+  
+  StyleSheet(document) {
+  }
 
 };
