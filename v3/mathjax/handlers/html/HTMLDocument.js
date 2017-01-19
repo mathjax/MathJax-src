@@ -8,11 +8,15 @@ export class HTMLDocument extends Document {
     super(document,"HTML",options);
     this.InputJax = this.options["InputJax"] || new InputJax();
     this.OutputJax = this.options["OutputJax"] || new OutputJax();
+    if (!Array.isArray(this.InputJax)) this.InputJax = [this.InputJax];
+    this.InputJax.forEach(jax => this.InputJaxMap.set(jax.name,jax));
   }
   
   FindMath(options) {
     if (!this.processed.FindMath) {
-      this.math = this.math.concat(this.InputJax.FindMath(this.document.body));
+      this.InputJax.forEach(jax => {
+        this.math = this.math.concat(jax.FindMath(this.document.body));
+      });
       this.processed.FindMath = true;
     }
     return this;

@@ -19,6 +19,9 @@ export class Document {
       AddEventHandlers: false,
       UpdateDocument: false
     };
+    this.InputJaxMap = new Map();
+    this.InputJax = [];
+    this.OutputJax = null;
   }
   
   FindMath(options) {
