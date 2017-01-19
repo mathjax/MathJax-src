@@ -32,9 +32,11 @@ MathJax.Extension.tex2jax.createMathTag = function (mode,tex) {
 };
 
 var math;
-exports.FindMath = function (node) {
-  math = [];
-  MathJax.HTML.setDocument(node.ownerDocument);
-  MathJax.Extension.tex2jax.PreProcess(node);
-  return math;
+exports.LegacyTeX2jax = {
+  FindMath: function (node) {
+    math = [];
+    MathJax.HTML.setDocument(node.ownerDocument);
+    MathJax.Extension.tex2jax.PreProcess(node);
+    return math;
+  }
 };

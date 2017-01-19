@@ -1,15 +1,16 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
-import {FindMath} from "../../input/legacy/tex2jax.js";
+import {TeX} from "../../input/tex.js";
 
 export class HTMLDocument extends Document {
   constructor (document,options) {
     super(document,"HTML",options);
+    this.InputJax = new TeX();         // should be obtained from options
   }
   
   FindMath(options) {
     if (!this.processed.FindMath) {
-      this.math = FindMath(this.document.body);
+      this.math = this.InputJax.FindMath(this.document.body);
       this.processed.FindMath = true;
     }
     return this;
@@ -18,7 +19,7 @@ export class HTMLDocument extends Document {
   Compile(options) {
     if (!this.processed.Compile) {
       for (let i = 0, m = this.math.length; i < m; i++) {
-        if (this.math[i]) this.math[i].Compile();
+        if (this.math[i]) this.math[i].Compile(this);
       }
       this.processed.Compile = true;
     }
