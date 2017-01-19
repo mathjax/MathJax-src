@@ -14,7 +14,7 @@ MathJax.Ajax.Preloading(
   "[MathJax]/extensions/TeX/HTML.js"
 );
 
-require("../../legacy/jax/element/jax.js");
+require("../../legacy/jax/element/mml/jax.js");
 require("../../legacy/jax/input/TeX/config.js");
 require("../../legacy/jax/input/TeX/jax.js");
 require("../../legacy/extensions/TeX/AMSmath.js");
