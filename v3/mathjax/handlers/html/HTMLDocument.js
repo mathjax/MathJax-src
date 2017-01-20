@@ -3,6 +3,16 @@ import {HTMLMathItem} from "./HTMLMathItem.js";
 
 export class HTMLDocument extends Document {
 
+  FindMath(options) {
+    if (!this.processed.FindMath) {
+      this.InputJax.forEach(jax => {
+        this.math = this.math.concat(jax.FindMath(this.document.body));
+      });
+      this.processed.FindMath = true;
+    }
+    return this;
+  }
+  
   UpdateDocument() {
     if (!this.processed.UpdateDocument) {
       super.UpdateDocument();

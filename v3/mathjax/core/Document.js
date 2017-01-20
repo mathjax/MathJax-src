@@ -27,12 +27,7 @@ export class Document {
   }
   
   FindMath(options) {
-    if (!this.processed.FindMath) {
-      this.InputJax.forEach(jax => {
-        this.math = this.math.concat(jax.FindMath(this.document.body));
-      });
-      this.processed.FindMath = true;
-    }
+    this.processed.FindMath = true;
     return this;
   }
   
@@ -65,10 +60,7 @@ export class Document {
   }
 
   AddEventHandlers() {
-    if (!this.processed.AddEventHandlers) {
-      console.log("- AddEventHandlers");
-      this.processed.AddEventHandlers = true;
-    }
+    this.processed.AddEventHandlers = true;
     return this;
   }
 
