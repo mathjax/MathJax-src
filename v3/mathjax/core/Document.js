@@ -21,11 +21,9 @@ export class Document {
       AddEventHandlers: false,
       UpdateDocument: false
     };
-    this.InputJaxMap = new Map();
     this.InputJax = this.options["InputJax"] || new InputJax();
     this.OutputJax = this.options["OutputJax"] || new OutputJax();
     if (!Array.isArray(this.InputJax)) this.InputJax = [this.InputJax];
-    this.InputJax.forEach(jax => this.InputJaxMap.set(jax.name,jax));
   }
   
   FindMath(options) {

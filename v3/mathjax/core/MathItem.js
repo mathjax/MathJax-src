@@ -1,8 +1,8 @@
 
 export class MathItem {
-  constructor (math,format,display=true,start={i:0, n:0, delim:""},end={i:0, n:0, delim:""}) {
+  constructor (math,jax,display=true,start={i:0, n:0, delim:""},end={i:0, n:0, delim:""}) {
     this.math = math;
-    this.format = format;
+    this.inputJax = jax;
     this.display = display;
     this.start = start;
     this.end = end;

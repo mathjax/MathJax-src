@@ -23,7 +23,7 @@ MathJax.Extension.tex2jax.createMathTag = function (mode,tex) {
   var node = HTML.TextNode(search.openDelim+tex + search.closeDelim)
   this.insertNode(node);
   var item = new HTMLMathItem(
-    tex, 'TeX', mode !== '',
+    tex, this.jax, mode !== '',
     {node:node, n:0, delim:search.openDelim},
     {node:node, n:tex.length-1, delim:search.closeDelim}
   );
@@ -33,9 +33,10 @@ MathJax.Extension.tex2jax.createMathTag = function (mode,tex) {
 
 var math;
 exports.LegacyTeX2jax = {
-  FindMath: function (node) {
+  FindMath: function (node,jax) {
     math = [];
     MathJax.HTML.setDocument(node.ownerDocument);
+    MathJax.Extension.tex2jax.jax = jax;
     MathJax.Extension.tex2jax.PreProcess(node);
     return math;
   }

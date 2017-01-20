@@ -9,7 +9,7 @@ export class HTMLMathItem extends MathItem {
   
   Compile(html,options) {
     if (this.State() < STATE.COMPILED) {
-      this.tree = html.InputJaxMap.get(this.format).Compile(this.math,this.display);
+      this.tree = this.inputJax.Compile(this.math,this.display);
       this.State(STATE.COMPILED);
     }
   }

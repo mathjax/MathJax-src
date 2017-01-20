@@ -17,7 +17,7 @@ export class TeX extends InputJax {
   }
   
   FindMath(node) {
-    return LegacyTeX2jax.FindMath(node);
+    return LegacyTeX2jax.FindMath(node,this);
   }
   
 };
