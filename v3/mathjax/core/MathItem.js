@@ -15,11 +15,24 @@ export class MathItem {
     this.outputData = {};
   }
   
-  Compile(options) {}
-  Typeset(options) {}
+  Compile(document,options) {
+    if (this.State() < STATE.COMPILED) {
+      this.tree = this.inputJax.Compile(this.math,this.display);
+      this.State(STATE.COMPILED);
+    }
+  }
+  
+  Typeset(document,options) {
+    if (this.State() < STATE.TYPESET) {
+      this.typeset = document.OutputJax.Typeset(this,document);
+      this.State(STATE.TYPESET);
+    }
+  }
   
   addEventHandlers() {}
-
+  
+  UpdateDocument(document,options) {}
+  
   setMetrics(em,ex,cwidth,lwidth,scale) {
     this.metrics = {
       em: em, ex: ex,
@@ -28,6 +41,7 @@ export class MathItem {
       scale: scale
     }
   }
+  
   State(state=null) {
     if (state != null) this.state = state;
     return this.state;

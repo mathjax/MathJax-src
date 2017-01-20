@@ -2,23 +2,10 @@ import {MathItem} from "../../core/MathItem.js";
 
 export class HTMLMathItem extends MathItem {
   
-  constructor(math,format,display=true,
-             start={node:null, n:0, delim:""},end={node:null, n:0, delim:""}) {
-    super(math,format,display,start,end);
-  }
-  
-  Compile(html,options) {
-    if (this.State() < STATE.COMPILED) {
-      this.tree = this.inputJax.Compile(this.math,this.display);
-      this.State(STATE.COMPILED);
-    }
-  }
-  
-  Typeset(html,options) {
-    if (this.State() < STATE.TYPESET) {
-      this.typeset = html.OutputJax.Typeset(this,html);
-      this.State(STATE.TYPESET);
-    }
+  constructor(math,jax,display=true,
+             start={node:null, n:0, delim:""},
+             end={node:null, n:0, delim:""}) {
+    super(math,jax,display,start,end);
   }
   
   addEventHandlers() {}
