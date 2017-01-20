@@ -1,0 +1,17 @@
+{
+  "name": "mathjax3",
+  "version": "0.1.0",
+  "description": "MathJax version 3 testbed",
+  "main": "load.js",
+  "dependencies": {
+    "jsdom": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathjax/mathjax-tc/"
+  },
+  "keywords": [
+    "MathJax"
+  ],
+  "license": "Apache-2.0"
+}

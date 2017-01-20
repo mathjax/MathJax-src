@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Testing MathJax v3 setup</title>
+<script src="lib/traceur.min.js"></script>
+<script src="lib/system.js"></script>
+<script>
+System.config({
+  packages: {
+    "TreeJax/lib": {
+      map: {
+        fs: "../../lib/fs.js",
+        xmldom: "../node_modules/xmldom/dom-parser.js"
+      }
+    },
+    "TreeJax/node_modules/xmldom": {
+      map: {
+        dom: "dom.js"
+      }
+    }
+  }
+});
+System.import(location.search.substr(1) || 'main.js')
+  .then(function () {document.body.appendChild(document.createTextNode("Done"))})
+  .catch(function (error) {console.log(error.message)});
+</script>
+</head>
+<body>
+Loading ...
+</body>
+</html>
+
+

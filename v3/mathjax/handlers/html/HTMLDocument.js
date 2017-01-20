@@ -1,43 +1,51 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
-import {HTMLCompile} from "./HTMLCompile.js";
+import {TeX} from "../../input/tex.js";
+import {CHTML} from "../../output/chtml.js";
 
 export class HTMLDocument extends Document {
   constructor (document,options) {
     super(document,"HTML",options);
+    this.InputJax = new TeX();         // should come from options
+    this.OutputJax = new CHTML();      // should come from options
   }
   
   FindMath(options) {
     if (!this.processed.FindMath) {
-      console.log("- FindMath");
+      this.math = this.InputJax.FindMath(this.document.body);
       this.processed.FindMath = true;
     }
     return this;
   }
+  
   Compile(options) {
     if (!this.processed.Compile) {
-      if (this.typeset == null) this.typeset = new Array(this.math.length);
       for (let i = 0, m = this.math.length; i < m; i++) {
-        this.typeset[i] = HTMLCompile(this.math[i]);
+        if (this.math[i]) this.math[i].Compile(this);
       }
       this.processed.Compile = true;
     }
     return this;
   }
+  
   Typeset(options) {
     if (!this.processed.Typeset) {
-      console.log("- Typeset");
+      for (let i = 0, m = this.math.length; i < m; i++) {
+        if (this.math[i]) this.math[i].Typeset(this);
+      }
       this.processed.Typeset = true;
     }
     return this;
   }
+  
   GetMetrics() {
     if (!this.processed.GetMetrics) {
-      console.log("- GetMetrics");
+      this.OutputJax.GetMetrics(this);
       this.processed.GetMetrics = true;
     }
     return this;
   }
+  
   AddEventHandlers() {
     if (!this.processed.AddEventHandlers) {
       console.log("- AddEventHandlers");
@@ -45,22 +53,31 @@ export class HTMLDocument extends Document {
     }
     return this;
   }
+  
   UpdateDocument() {
     if (!this.processed.UpdateDocument) {
-      console.log("- UpdateDocument");
+      for (let i = 0, m = this.math.length; i < m; i++) {
+        if (this.math[i]) this.math[i].UpdateDocument(this);
+      }
+      let sheet = this.DocumentStyleSheet();
+      let styles = this.document.getElementById(sheet.id);
+      if (styles) {
+        styles.parentNode.replaceChild(sheet,styles);
+      } else {
+        this.document.head.appendChild(sheet);
+      }
       this.processed.UpdateDocument = true;
     }
     return this;
   }
   
-  Concat(collection) {
-    this.math = this.math.concat(collection.math);
-    return this;
+  DocumentStyleSheet() {
+    return this.OutputJax.StyleSheet(this);
   }
   
   TestMath(string,display=true) {
     if (!this.processed.TestMath) {
-      this.math = [new HTMLMathItem(string,"LegacyTeX",display)];
+      this.math = [new HTMLMathItem(string,"TeX",display)];
       this.processed.TestMath = true;
     }
     return this;
