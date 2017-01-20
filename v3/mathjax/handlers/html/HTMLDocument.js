@@ -26,7 +26,7 @@ export class HTMLDocument extends Document {
   
   TestMath(string,display=true) {
     if (!this.processed.TestMath) {
-      this.math = [new HTMLMathItem(string,null,display)];
+      this.math = [new HTMLMathItem(string,this.InputJax[0],display)];
       this.processed.TestMath = true;
     }
     return this;
