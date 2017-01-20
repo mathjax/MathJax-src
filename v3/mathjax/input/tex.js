@@ -4,10 +4,6 @@ import {LegacyTeX2jax} from "./legacy/tex2jax.js";
 
 export class TeX extends InputJax {
   
-  constructor(options) {
-    super("TeX",options);
-  }
-
   Compile(tex,display) {
     return LegacyTeX.Compile(tex,display);
   }
@@ -21,3 +17,5 @@ export class TeX extends InputJax {
   }
   
 };
+
+TeX.NAME = "TeX";

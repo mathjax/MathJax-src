@@ -1,7 +1,7 @@
 export class InputJax {
   
-  constructor(name,options = {}) {
-    this.name = name;
+  constructor(options = {}) {
+    this.name = this.constructor.NAME;
     this.options = options;
   }
   
@@ -14,3 +14,5 @@ export class InputJax {
   }
   
 };
+
+InputJax.NAME = "Generic";

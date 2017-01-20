@@ -1,7 +1,7 @@
 export class OutputJax {
   
-  constructor(name,options = {}) {
-    this.name = name;
+  constructor(options = {}) {
+    this.name = this.constructor.NAME;
     this.options = options;
   }
   
@@ -15,3 +15,5 @@ export class OutputJax {
   }
 
 };
+
+OutputJax.NAME = "Generic";

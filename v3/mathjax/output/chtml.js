@@ -3,10 +3,6 @@ import {LegacyCHTML} from "./legacy/CommonHTML.js";
 
 export class CHTML extends OutputJax {
 
-  constructor(options) {
-    super("CHTML",options);
-  }
-
   //
   //  Typeset a MathItem tree
   //
@@ -29,3 +25,5 @@ export class CHTML extends OutputJax {
   }
 
 };
+
+CHTML.NAME = "CHTML";
