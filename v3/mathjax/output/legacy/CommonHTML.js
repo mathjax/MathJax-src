@@ -1,4 +1,5 @@
 window = require("../../util/document.js").window;
+var document = require("../../util/document.js").document;
 MathJax = require("../../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(
@@ -21,6 +22,8 @@ var CSS;
 
 var MAXWIDTH = 1000000;
 var DEFAULT_EM = 16;
+
+HTML.setDocument(document);
 
 CHTML.Augment({
   Startup: function () {
