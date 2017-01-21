@@ -1,6 +1,7 @@
 import {InputJax} from "../core/InputJax.js";
 import {LegacyTeX} from "./legacy/TeX.js";
 import {LegacyTeX2jax} from "./legacy/tex2jax.js";
+import {DefaultOptions} from "../util/Options.js";
 
 export class TeX extends InputJax {
   
@@ -19,3 +20,4 @@ export class TeX extends InputJax {
 };
 
 TeX.NAME = "TeX";
+TeX.OPTIONS = DefaultOptions({},InputJax.OPTIONS);

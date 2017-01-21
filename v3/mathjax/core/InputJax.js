@@ -1,17 +1,10 @@
 import {UserOptions, DefaultOptions} from '../util/Options.js';
 
-//
-//  The default options for InputJax
-//  
-const OPTIONS = {
-  //  (none just yet).
-};
-
 export class InputJax {
   
   constructor(options = {}) {
     this.name = this.constructor.NAME;
-    this.options = UserOptions(DefaultOptions({},OPTIONS),options);
+    this.options = UserOptions(DefaultOptions({},this.constructor.OPTIONS),options);
   }
   
   FindMath(node,options) {
@@ -25,3 +18,6 @@ export class InputJax {
 };
 
 InputJax.NAME = "Generic";
+InputJax.OPTIONS = {
+  //  (none just yet).
+};

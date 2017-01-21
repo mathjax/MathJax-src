@@ -1,5 +1,6 @@
 import {Document} from "../../core/Document.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
+import {DefaultOptions} from "../../util/Options.js";
 
 export class HTMLDocument extends Document {
 
@@ -45,3 +46,4 @@ export class HTMLDocument extends Document {
 };
 
 HTMLDocument.type = "HTML";
+HTMLDocument.OPTIONS = DefaultOptions({},Document.OPTIONS);
