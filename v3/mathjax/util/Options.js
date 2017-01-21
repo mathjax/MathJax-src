@@ -77,10 +77,19 @@ export function DefaultOptions(options,...defs) {
 }
 
 //
-//  Merge options with warnings about undefined one (so we can merge
+//  Merge options with warnings about undefined ones (so we can merge
 //  user options into the default list)
 //
 export function UserOptions(options,...defs) {
   defs.forEach(def => Insert(options,def,true));
   return options;
+}
+
+//
+//  Select a subset of options by key name
+//
+export function SelectOptions(options,...keys) {
+  let subset = {};
+  keys.forEach(key => subset[key] = options[key]);
+  return subset;
 }
