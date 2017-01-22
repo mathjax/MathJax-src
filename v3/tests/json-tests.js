@@ -4,71 +4,37 @@ export {MathJax} from 'mathjax/mathjax.js';
 import 'mathjax/handlers/html.js';
 import {LegacyTeX} from 'mathjax/input/legacy/TeX.js';
 
-let test = System.nodeRequire('tape');
-let time = 0;
-
-let runningTests = {};
-
-let concludedTests = {};
-
-let startTest = function(name) {
-  runningTests[name] = (new Date()).getTime();
-};
-      
-
-let stopTest = function(name) {
-  concludedTests[name] = (new Date()).getTime() - runningTests[name];
-  delete runningTests[name];
-};
+import {Test} from './tests.js';
 
 
-let printTime = function() {
-  if (Object.keys(runningTests).length) {
-    setTimeout(printTime, 100);
-    return;
+class JsonTest extends Test {
+
+  constructor () {
+    super();
   }
-  let time = 0;
-  for (var test in concludedTests) {
-    time += concludedTests[test];
-    delete concludedTests[test];
-  }
-  console.log(time + 'ms');
-};
 
+  // Tests exclusively the timing of the Translate method.
+  runTest(name, tex, expected) {
+    let html = MathJax.HandlerFor('<html></html>');
+    MathJax.HandleRetriesFor(function () {
+      html.TestMath(tex).Compile();
+      this.startTest(name);
+      this.test(name, function(t) {
+        t.plan(1);
+        t.deepEqual(LegacyTeX.Translate(html.math[0].math, html.math[0].display),
+                    expected, name);
+        const timeOut = (new Date()).getTime();
+        this.stopTest(name);
+      }.bind(this));
+    }.bind(this)).catch(err => {
+        console.log(err.message);
+      });
+  };
+}
 
-test.createStream({ objectMode: true }).on('data', function (result) {
-  if (result.type !== 'assert') return;
-  process.stdout.write('Running test ' + result.name + '\t' +
-                       (result.ok ?
-                        ('\u001B\u005B\u0033\u0032\u006D' + 'PASS' + '\u001B\u005B\u0033\u0037\u006D') :
-                        ('\u001B\u005B\u0033\u0031\u006D' + 'FAIL' + '\u001B\u005B\u0033\u0037\u006D')) +
-                       '\n');
-  if (result.ok) return;
-  process.stdout.write('Actual: \n');
-  process.stdout.write(JSON.stringify(result.actual) + '\n');
-  process.stdout.write('Expected: \n');
-  process.stdout.write(JSON.stringify(result.expected) + '\n');
-});
+let jsonTest = new JsonTest();
 
-
-let runTest = function(name, tex, expected) {
-  let html = MathJax.HandlerFor('<html></html>');
-  MathJax.HandleRetriesFor(function () {
-    html.TestMath(tex).Compile();
-    startTest(name);
-    test(name, function(t) {
-      t.plan(1);
-      t.deepEqual(LegacyTeX.Translate(html.math[0].math, html.math[0].display),
-                  expected, name);
-      const timeOut = (new Date()).getTime();
-      stopTest(name);
-    });}).catch(err => {
-      console.log(err.message);
-    });
-};
-
-
-runTest('Square', 'x^2',
+jsonTest.runTest('Square', 'x^2',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -89,7 +55,7 @@ runTest('Square', 'x^2',
        );
 
 
-runTest('Cube', 'x^3',
+jsonTest.runTest('Cube', 'x^3',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -110,7 +76,7 @@ runTest('Cube', 'x^3',
        );
 
 
-runTest('Quadratic Formula',
+jsonTest.runTest('Quadratic Formula',
         'x = \\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}',
         {'type':'math',
          'children':[
@@ -182,7 +148,7 @@ runTest('Quadratic Formula',
        );
 
 
-runTest('Cauchy-Schwarz Inequality',
+jsonTest.runTest('Cauchy-Schwarz Inequality',
         '\\left( \\sum_{k=1}^n a_k b_k \\right)^{\\!\\!2} \\leq' +
         '  \\left( \\sum_{k=1}^n a_k^2 \\right)' +
         '  \\left( \\sum_{k=1}^n b_k^2 \\right)',
@@ -367,7 +333,7 @@ runTest('Cauchy-Schwarz Inequality',
 
 
 
-runTest('An Identity of Ramanujan',
+jsonTest.runTest('An Identity of Ramanujan',
         '\\frac{1}{\\Bigl(\\sqrt{\\phi\\sqrt{5}}-\\phi\\Bigr)' +
         '  e^{\\frac25\\pi}} =' +
         '    1+\\frac{e^{-2\\pi}}' +
@@ -627,7 +593,7 @@ runTest('An Identity of Ramanujan',
        );
 
 
-runTest('A Rogers-Ramanujan Identity',
+jsonTest.runTest('A Rogers-Ramanujan Identity',
         '1 + \\frac{q^2}{(1-q)}' +
         '  + \\frac{q^6}{(1-q)(1-q^2)} + \\cdots =' +
         '\\prod_{j=0}^{\\infty}' +
@@ -921,7 +887,7 @@ runTest('A Rogers-Ramanujan Identity',
        );
 
 
-runTest('A Summation Formula',
+jsonTest.runTest('A Summation Formula',
         '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
         {'type':'math',
          'children':[
@@ -1008,7 +974,7 @@ runTest('A Summation Formula',
        );
 
 
-runTest('Cauchy\'s Integral Formula',
+jsonTest.runTest('Cauchy\'s Integral Formula',
         'f(a) = \\oint_\\gamma \\frac{f(z)}{z-a}dz',
         {'type':'math',
          'children':[
@@ -1081,7 +1047,7 @@ runTest('Cauchy\'s Integral Formula',
          'attributes':{'display':'block'}}
        );
 
-runTest('Standard Deviation',
+jsonTest.runTest('Standard Deviation',
         '\\sigma = \\sqrt{\\frac{1}{N}\\sum_{i=1}^N {(x_i-\\mu)}^2}',
         {'type':'math',
          'children':[
@@ -1175,5 +1141,4 @@ runTest('Standard Deviation',
        );
 
 
-printTime();
-
+jsonTest.printTime();
