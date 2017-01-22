@@ -9,25 +9,25 @@ import {Test} from './tests.js';
 
 class JsonTest extends Test {
 
-  constructor () {
+  constructor() {
     super();
   }
 
   // Tests exclusively the timing of the Translate method.
   runTest(name, tex, expected) {
     let html = MathJax.HandlerFor('<html></html>');
-    MathJax.HandleRetriesFor(function () {
+    MathJax.HandleRetriesFor(function() {
       html.TestMath(tex).Compile();
       this.test(
-        name,
-        function(t) {
-          t.deepEqual(
-            LegacyTeX.Translate(html.math[0].math, html.math[0].display),
-            expected, name);
-        });
+          name,
+          t => {
+            t.deepEqual(
+                LegacyTeX.Translate(html.math[0].math, html.math[0].display),
+                expected, name);
+          });
     }.bind(this)).
       catch(err => { console.log(err.message); });
-  };
+  }
 }
 
 let jsonTest = new JsonTest();
