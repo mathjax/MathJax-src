@@ -41,7 +41,12 @@ export class Test {
   };
 
   test(name, func) {
-    test(name, func);
+    this.startTest(name);
+    test(name, function(t) {
+      t.plan(1);
+      func(t);
+      this.stopTest(name);
+    }.bind(this));
   };
 
   createStream() {

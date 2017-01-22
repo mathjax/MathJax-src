@@ -18,17 +18,15 @@ class JsonTest extends Test {
     let html = MathJax.HandlerFor('<html></html>');
     MathJax.HandleRetriesFor(function () {
       html.TestMath(tex).Compile();
-      this.startTest(name);
-      this.test(name, function(t) {
-        t.plan(1);
-        t.deepEqual(LegacyTeX.Translate(html.math[0].math, html.math[0].display),
-                    expected, name);
-        const timeOut = (new Date()).getTime();
-        this.stopTest(name);
-      }.bind(this));
-    }.bind(this)).catch(err => {
-        console.log(err.message);
-      });
+      this.test(
+        name,
+        function(t) {
+          t.deepEqual(
+            LegacyTeX.Translate(html.math[0].math, html.math[0].display),
+            expected, name);
+        });
+    }.bind(this)).
+      catch(err => { console.log(err.message); });
   };
 }
 
@@ -1137,7 +1135,8 @@ jsonTest.runTest('Standard Deviation',
                      'attributes':{}}],
                   'attributes':{}}],
                'attributes':{}}],
-            'attributes':{}}],'attributes':{'display':'block'}}
+            'attributes':{}}],
+         'attributes':{'display':'block'}}
        );
 
 
