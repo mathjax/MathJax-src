@@ -61,7 +61,7 @@ export class Document {
 
   UpdateDocument() {
     if (!this.processed.UpdateDocument) {
-      for (let i = 0, m = this.math.length; i < m; i++) {
+      for (let i = this.math.length - 1; i >= 0; i--) {
         if (this.math[i]) this.math[i].UpdateDocument(this);
       }
       this.processed.UpdateDocument = true;
@@ -70,8 +70,11 @@ export class Document {
   }
   
   Concat(collection) {
-    this.math = this.math.concat(collection.math);
+    this.MergeMath(collection.math);
     return this;
+  }
+  MergeMath(math) {
+    this.math = this.math.concat(math);
   }
   
 };

@@ -24,7 +24,11 @@ export class MathItem {
   
   Typeset(document,options) {
     if (this.State() < STATE.TYPESET) {
-      this.typeset = document.OutputJax.Typeset(this,document);
+      if (this.display === null) {
+        this.typeset = document.OutputJax.Escaped(this,document);
+      } else {
+        this.typeset = document.OutputJax.Typeset(this,document);
+      }
       this.State(STATE.TYPESET);
     }
   }

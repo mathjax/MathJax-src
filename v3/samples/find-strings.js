@@ -3,16 +3,24 @@ export {MathJax} from "mathjax/mathjax.js";
 
 import "mathjax/handlers/html.js";
 import {TeX} from "mathjax/input/tex.js";
-import {CHTML} from "mathjax/output/chtml.js";
 
 let OPTIONS = {
-  InputJax: new TeX(),
-  OutputJax: new CHTML()
+  InputJax: new TeX()
 };
 
 let HTML = `
-  This is \\$ some math: \\(x+1\\).
+  This is some math: $x = y \\text{ for $x < 1$}\\$$ and \\(x < y\\).
+  <div>
+  text
+  <!-- comment -->
+  <p>
   \\[x+1\\over x-1\\]
+  and
+  $$\int x\,dx$$
+  </p>
+    \\begin{xyz} x<br> y\\end{xyz}
+  <span>and more \\$ and \\ref{x}</span>
+  </div>
 `;
 
 var html;
@@ -37,15 +45,20 @@ try {
   );
 }
 
+const STRING = function (item) {
+  let {node, n, delim} = item;
+  let value = node.nodeValue;
+  return (value.substr(0,n)+"|"+value.substr(n)).replace(/\n/g,"\\n");
+}
+
 MathJax.HandleRetriesFor(function () {
 
-    html.FindMath()
-        .Compile()
-        .GetMetrics()
-        .Typeset()
-        .UpdateDocument();
-        
-    console.log(html.document.body.parentNode.outerHTML);
+    html.FindMath();
+    html.math.forEach(math => {
+      console.log(math.math,math.display);
+      console.log(">> ",STRING(math.start));
+      console.log("<< ",STRING(math.end));
+    });
 
 }).catch(err => {
   console.log(err.message);

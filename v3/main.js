@@ -3,12 +3,25 @@ export {MathJax} from "mathjax/mathjax.js";
 
 import "mathjax/handlers/html.js";
 import {TeX} from "mathjax/input/tex.js";
-import {CHTML} from "mathjax/output/chtml.js";
 
 let OPTIONS = {
-  InputJax: new TeX(),
-  OutputJax: new CHTML()
+  InputJax: new TeX()
 };
+
+let HTML = `
+  This is some math: $x = y \\text{ for $x < 1$}\\$$ and \\(x < y\\).
+  <div>
+  text
+  <!-- comment -->
+  <p>
+  \\[x+1\\over x-1\\]
+  and
+  $$\int x\,dx$$
+  </p>
+    \\begin{euqation} x<br> y\\end{equation}
+  <span>and more \\$ and \\ref{x}</span>
+  </div>
+`;
 
 var html;
 try {
@@ -16,32 +29,36 @@ try {
   //  Use browser document, if there is one
   //
   html = MathJax.HandlerFor(document,OPTIONS);
-  var text = document.createTextNode('This is some math: \\(x+1\\).\n\\[x+1\\over x-1\\]');
-  document.body.insertBefore(text,document.body.firstChild);
+  document.body.insertBefore(document.createElement("hr"),document.body.firstChild);
+  var div = document.createElement('div');
+  div.innerHTML = HTML; div.style.marginBottom = "1em";
+  document.body.insertBefore(div,document.body.firstChild);
 } catch (err) {
   //
   //  Otherwise, make a new document (measurements not supported here)
   //
-  html = MathJax.HandlerFor(`
-    <html>
-    <head><title>Test MathJax3</title></head>
-    <body>
-    This is some math: \\(x+1\\).
-    \\[x+1\\over x-1\\]
-    </body></html>`,
+  html = MathJax.HandlerFor(
+    '<html><head><title>Test MathJax3</title></head><body>'
+    + HTML +
+    '</body></html>',
     OPTIONS
   );
 }
 
+const STRING = function (item) {
+  let {node, n, delim} = item;
+  let value = node.nodeValue;
+  return (value.substr(0,n)+"|"+value.substr(n)).replace(/\n/g,"\\n");
+}
+
 MathJax.HandleRetriesFor(function () {
 
-    html.FindMath()
-        .Compile()
-        .GetMetrics()
-        .Typeset()
-        .UpdateDocument();
-        
-    console.log(html.document.body.parentNode.outerHTML);
+    html.FindMath();
+    html.math.forEach(math => {
+      console.log(math.math,math.display);
+      console.log(">> ",STRING(math.start));
+      console.log("<< ",STRING(math.end));
+    });
 
 }).catch(err => {
   console.log(err.message);

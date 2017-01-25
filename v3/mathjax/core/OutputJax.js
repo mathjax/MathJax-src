@@ -10,6 +10,9 @@ export class OutputJax {
   Typeset(math,document,options) {
   }
   
+  Escaped(nath,document,options) {
+  }
+  
   GetMetrics(document) {
   }
   

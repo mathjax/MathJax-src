@@ -10,6 +10,17 @@ export class CHTML extends OutputJax {
   Typeset(math,html) {
    return LegacyCHTML.Typeset(math,html);
   }
+  
+  //
+  //  Handle an escaped character
+  //  (put it in a span so that it won't be a delimiter if
+  //  the page is typeset again).
+  //
+  Escaped(math,html) {
+    let span = html.document.createElement("span");
+    span.appendChild(html.document.createTextNode(math.math));
+    return span;
+  }
 
   //
   //  Determine metrics for the locations of the math elements
