@@ -24,7 +24,7 @@ export function Keys(def) {
 //
 export function Copy(def) {
   let props = {};
-  Keys(def).forEach(key => {
+  for (let key of Keys(def)) {
     let prop = Object.getOwnPropertyDescriptor(def,key);
     let value = prop.value;
     if (Array.isArray(value)) {
@@ -33,7 +33,7 @@ export function Copy(def) {
       prop.value = Copy(value);
     }
     if (prop.enumerable) props[key] = prop;
-  });
+  }
   return Object.defineProperties({},props);
 }
 
@@ -42,7 +42,7 @@ export function Copy(def) {
 //  keys that aren't in the original)
 //
 export function Insert(dst,src,warn = true) {
-  Keys(src).forEach(key => {
+  for (let key of Keys(src)) {
     if (warn && dst[key] === undefined) {
       if (typeof key === "symbol") key = key.toString();
       throw new Error("Invalid option '"+key+"' (no default value).");
@@ -63,7 +63,7 @@ export function Insert(dst,src,warn = true) {
     } else {
       dst[key] = sval;
     }
-  });
+  }
   return dst;
 }
 
@@ -90,6 +90,8 @@ export function UserOptions(options,...defs) {
 //
 export function SelectOptions(options,...keys) {
   let subset = {};
-  keys.forEach(key => subset[key] = options[key]);
+  for (let key of keys) {
+    subset[key] = options[key];
+  }
   return subset;
 }
