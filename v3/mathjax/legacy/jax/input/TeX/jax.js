@@ -26,6 +26,12 @@
  *  limitations under the License.
  */
 
+
+// VS Q: How do you include the mml_visitor without having to add the .js
+//       suffixes?
+// 
+let TexParser =  require('../../../../../TexParser/lib/symbol_map.js');
+
 (function (TEX,HUB,AJAX) {
   var MML, NBSP = "\u00A0"; 
   
@@ -35,6 +41,13 @@
   };
 
   var STACK = MathJax.Object.Subclass({
+    // VS Q: What exactly is inner?
+    //       Seems to be a dictionary of properties.
+    //       However there is also boolean possible (see !!env below)?
+    //
+    // What's this.global?
+    //
+    // What are the different items you can push on the stack?
     Init: function (env,inner) {
       this.global = {isInner: inner};
       this.data = [STACKITEM.start(this.global)];
@@ -376,6 +389,7 @@
       return [mml,item];
     }
   });
+  // VS Q What's special about that?
   STACKITEM.not.remap = {
     0x2190:0x219A, 0x2192:0x219B, 0x2194:0x21AE,
     0x21D0:0x21CD, 0x21D2:0x21CF, 0x21D4:0x21CE,
@@ -425,11 +439,11 @@
     HUB.Insert(TEXDEF,{
   
       // patterns for letters and numbers
-      letter:  /[a-z]/i,
-      digit:   /[0-9.]/,
+      letter:  new TexParser.RegExpMap('letter', /[a-z]/i),
+      digit:   new TexParser.RegExpMap('digit', /[0-9.]/),
       number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
     
-      special: {
+      special: TexParser.MacroMap.create('special', {
         '\\':  'ControlSequence',
         '{':   'Open',
         '}':   'Close',
@@ -446,7 +460,7 @@
         '#':   'Hash',
         '\u00A0': 'Space',
         '\u2019': 'Prime'
-      },
+      }),
       
       remap: {
         '-':   '2212',
@@ -454,7 +468,7 @@
         '`':   '2018'   // map ` to back quote
       },
     
-      mathchar0mi: {
+      mathchar0mi: TexParser.CharacterMap.create('mathchar0mi', {
 	// Lower-case greek
 	alpha:        '03B1',
 	beta:         '03B2',
@@ -518,9 +532,9 @@
         diamondsuit:  ['2662',{mathvariant: MML.VARIANT.NORMAL}],
         heartsuit:    ['2661',{mathvariant: MML.VARIANT.NORMAL}],
         spadesuit:    ['2660',{mathvariant: MML.VARIANT.NORMAL}]
-      },
+      }),
         
-      mathchar0mo: {
+      mathchar0mo: TexParser.CharacterMap.create('mathchar0mo', {
         surd:         '221A',
 
         // big ops
@@ -669,9 +683,9 @@
         ldotp:            ['002E', {texClass: MML.TEXCLASS.PUNCT}],
         cdotp:            ['22C5', {texClass: MML.TEXCLASS.PUNCT}],
         colon:            ['003A', {texClass: MML.TEXCLASS.PUNCT}]
-      },
+      }),
       
-      mathchar7: {
+      mathchar7: TexParser.CharacterMap.create('mathchar7', {
         Gamma:        '0393',
         Delta:        '0394',
         Theta:        '0398',
@@ -690,9 +704,9 @@
         '%':          '0025',
         '&':          '0026',
         And:          '0026'
-      },
+      }),
       
-      delimiter: {
+      delimiter: TexParser.CharacterMap.create('delimiter', {
         '(':                '(',
         ')':                ')',
         '[':                '[',
@@ -734,9 +748,9 @@
         '\\lfloor':         '230A',
         '\\lbrack':         '[',
         '\\rbrack':         ']'
-      },
-      
-      macros: {
+      }),
+
+      macros: TexParser.MacroMap.create('macros', {
         displaystyle:      ['SetStyle','D',true,0],
         textstyle:         ['SetStyle','T',false,0],
         scriptstyle:       ['SetStyle','S',false,1],
@@ -1011,9 +1025,9 @@
 
         require:            'Require'
 
-      },
+      }),
       
-      environment: {
+      environment: TexParser.MacroMap.create('environment', {
         array:        ['AlignedArray'],
         matrix:       ['Array',null,null,null,'c'],
         pmatrix:      ['Array',null,'(',')','c'],
@@ -1023,6 +1037,8 @@
         Vmatrix:      ['Array',null,'\\Vert','\\Vert','c'],
         cases:        ['Array',null,'\\{','.','ll',null,".2em",'T'],
 
+        // VS Q What are these with function null?
+        //      What about the AMSmath argument?
         equation:     [null,'Equation'],
         'equation*':  [null,'Equation'],
 
@@ -1041,15 +1057,18 @@
         alignat:      ['ExtensionEnv',null,'AMSmath'],
         'alignat*':   ['ExtensionEnv',null,'AMSmath'],
         alignedat:    ['ExtensionEnv',null,'AMSmath']
-      },
+      }),
       
       p_height: 1.2 / .85   // cmex10 height plus depth over .85
 
     });
-    
+
     //
     //  Add macros defined in the configuration
     //
+    //  VS Q: Is this ever used anywhere?
+    //        Is this for local definitions of macros?
+    //        Can I get an example to play with?
     if (this.config.Macros) {
       var MACROS = this.config.Macros;
       for (var id in MACROS) {if (MACROS.hasOwnProperty(id)) {
@@ -1065,6 +1084,10 @@
    *   The TeX Parser
    */
 
+  // VS Q: Order of dispatch:
+  //     Parse
+  //  then function from special
+  // 
   var PARSE = MathJax.Object.Subclass({
     Init: function (string,env) {
       this.string = string; this.i = 0; this.macroCount = 0;
@@ -1077,10 +1100,17 @@
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        if (TEXDEF.special[c]) {this[TEXDEF.special[c]](c)}
-        else if (TEXDEF.letter.test(c)) {this.Variable(c)}
-        else if (TEXDEF.digit.test(c)) {this.Number(c)}
-        else {this.Other(c)}
+        // TODO VS Rewrite that as a general lookup!
+        var special = TEXDEF.special.lookup(c);
+        if (special) {
+          this[special.getFunction()](c);
+        } else if (TEXDEF.letter.lookup(c)) {
+          this.Variable(c);
+        } else if (TEXDEF.digit.lookup(c)) {
+          this.Number(c);
+        } else {
+          this.Other(c);
+        }
       }
     },
     Push: function () {this.stack.Push.apply(this.stack,arguments)},
@@ -1099,16 +1129,28 @@
      *  Lookup a control-sequence and process it
      */
     ControlSequence: function (c) {
-      var name = this.GetCS(), macro = this.csFindMacro(name);
-      if (macro) {
-        if (!(macro instanceof Array)) {macro = [macro]}
-        var fn = macro[0]; if (!(fn instanceof Function)) {fn = this[fn]}
-        fn.apply(this,[c+name].concat(macro.slice(1)));
-      } else if (TEXDEF.mathchar0mi[name])            {this.csMathchar0mi(name,TEXDEF.mathchar0mi[name])}
-        else if (TEXDEF.mathchar0mo[name])            {this.csMathchar0mo(name,TEXDEF.mathchar0mo[name])}
-        else if (TEXDEF.mathchar7[name])              {this.csMathchar7(name,TEXDEF.mathchar7[name])}
-        else if (TEXDEF.delimiter["\\"+name] != null) {this.csDelimiter(name,TEXDEF.delimiter["\\"+name])}
-        else                                          {this.csUndefined(c+name)}
+      var name = this.GetCS();
+      if (TEXDEF.macros.contains(name)) {
+        // VS Q: This always seems to be used like that. I.e., macro functions
+        //       are always saved as strings, not as functions?
+        var macro = TEXDEF.macros.lookup(name);
+        // console.log(name);
+        // console.log(macro);
+        // console.log(this[macro.getFunction()]);
+        this[macro.getFunction()].apply(this,[c+name].concat(macro.getArguments()));
+      } else if (TEXDEF.mathchar0mi.contains(name)) {this.csMathchar0mi(TEXDEF.mathchar0mi.lookup(name));} 
+        else if (TEXDEF.mathchar0mo.contains(name)) {this.csMathchar0mo(TEXDEF.mathchar0mo.lookup(name));} 
+        else if (TEXDEF.mathchar7.contains(name)) {this.csMathchar7(TEXDEF.mathchar7.lookup(name));} 
+        else if (TEXDEF.delimiter.contains('\\' + name)) {this.csDelimiter(TEXDEF.delimiter.lookup("\\" + name));} 
+        else                                          {this.csUndefined(c+name)} 
+      // } else {
+      //   let mi = TEXDEF.mathchar0mi.lookup(name);
+      //   if (mi) {this.csMathchar0mi(mi) } 
+      //   else if (TEXDEF.mathchar0mo[name])            {this.csMathchar0mo(name,TEXDEF.mathchar0mo[name])}
+      //   else if (TEXDEF.mathchar7[name])              {this.csMathchar7(name,TEXDEF.mathchar7[name])}
+      //   else if (TEXDEF.delimiter["\\"+name] != null) {this.csDelimiter(name,TEXDEF.delimiter["\\"+name])}
+      //   else                                          {this.csUndefined(c+name)} 
+      // }
     },
     //
     //  Look up a macro in the macros list
@@ -1118,36 +1160,35 @@
     //
     //  Handle normal mathchar (as an mi)
     //
-    csMathchar0mi: function (name,mchar) {
-      var def = {mathvariant: MML.VARIANT.ITALIC};
-      if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
-      this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
+    csMathchar0mi: function (mchar) {
+      var def = mchar.getAttributes() || {mathvariant: MML.VARIANT.ITALIC};
+      // VS Q: Do we want to handle characters in this way or directly as Unicode?
+      this.Push(this.mmlToken(MML.mi(mchar.getChar()).With(def)));
     },
     //
     //  Handle normal mathchar (as an mo)
     //
-    csMathchar0mo: function (name,mchar) {
-      var def = {stretchy: false};
-      if (mchar instanceof Array) {def = mchar[1]; def.stretchy = false; mchar = mchar[0]}
-      this.Push(this.mmlToken(MML.mo(MML.entity("#x"+mchar)).With(def)));
+    csMathchar0mo: function (mchar) {
+      var def = mchar.getAttributes() || {};
+      def.stretchy = false;
+      this.Push(this.mmlToken(MML.mo(mchar.getChar()).With(def)));
     },
     //
     //  Handle mathchar in current family
     //
-    csMathchar7: function (name,mchar) {
-      var def = {mathvariant: MML.VARIANT.NORMAL};
-      if (mchar instanceof Array) {def = mchar[1]; mchar = mchar[0]}
+    csMathchar7: function (mchar) {
+      var def = mchar.getAttributes() || {mathvariant: MML.VARIANT.NORMAL};
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
+      this.Push(this.mmlToken(MML.mi(mchar.getChar()).With(def)));
     },
     //
     //  Handle delimiter
     //
-    csDelimiter: function (name,delim) {
-      var def = {};
-      if (delim instanceof Array) {def = delim[1]; delim = delim[0]}
-      if (delim.length === 4) {delim = MML.entity('#x'+delim)} else {delim = MML.chars(delim)}
-      this.Push(this.mmlToken(MML.mo(delim).With({fence: false, stretchy: false}).With(def)));
+    // VS Q: Does the original version with delim.length === 4 ever happen, as
+    // the second argument always seems to be an Attributes dictionary?
+    csDelimiter: function (delim) {
+      var def = delim.getAttributes() || {};
+      this.Push(this.mmlToken(MML.mo(delim.getChar()).With({fence: false, stretchy: false}).With(def)));
     },
     //
     //  Handle undefined control sequence
@@ -1782,27 +1823,30 @@
       if (env.match(/^\\end\\/)) {isEnd = true; env = env.substr(5)} // special \end{} for \newenvironment environments
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
       var cmd = this.envFindName(env);
-      if (!cmd) {TEX.Error(["UnknownEnv","Unknown environment '%1'",env])}
-      if (!(cmd instanceof Array)) {cmd = [cmd]}
-      var end = (cmd[1] instanceof Array ? cmd[1][0] : cmd[1]);
+      // VS Q: The following line: Can the second element of an environment ever be an Array? 
+      // var end = (cmd[1] instanceof Array ? cmd[1][0] : cmd[1]);
+      if (!cmd) {
+        TEX.Error(["UnknownEnv", "Unknown environment '%1'", env])
+      }
+      // if (!(cmd instanceof Array)) {cmd = [cmd]}
+      var func = cmd.getFunction();
+      var args = cmd.getArguments();
+console.log(args);
+      var end = args[0];
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       if (name === "\\end") {
-        if (!isEnd && cmd[1] instanceof Array && this[cmd[1][1]]) {
-          mml = this[cmd[1][1]].apply(this,[mml].concat(cmd.slice(2)));
-        } else {
-          mml = STACKITEM.end().With({name: env});
-        }
+        mml = STACKITEM.end().With({name: env});
       } else {
         if (++this.macroCount > TEX.config.MAXMACROS) {
           TEX.Error(["MaxMacroSub2",
                      "MathJax maximum substitution count exceeded; " +
                      "is there a recursive latex environment?"]);
         }
-        if (cmd[0] && this[cmd[0]]) {mml = this[cmd[0]].apply(this,[mml].concat(cmd.slice(2)))}
+        if (func && this[func]) {mml = this[func].apply(this,[mml].concat(args.slice(1)))}
       }
       this.Push(mml);
     },
-    envFindName: function (name) {return TEXDEF.environment[name]},
+    envFindName: function (name) {return TEXDEF.environment.lookup(name)},
     
     Equation: function (begin,row) {return row},
     
@@ -1858,12 +1902,11 @@
     /*
      *  Convert delimiter to character
      */
+    // VS Q This just converts delimiters. Can it ever have null as input?
+    // Incoming: character string
+    // Return: looked up character.
     convertDelimiter: function (c) {
-      if (c) {c = TEXDEF.delimiter[c]}
-      if (c == null) {return null}
-      if (c instanceof Array) {c = c[0]}
-      if (c.length === 4) {c = String.fromCharCode(parseInt(c,16))}
-      return c;
+      return TEXDEF.delimiter.lookup(c).getChar() || null;
     },
 
     /*
@@ -1965,7 +2008,7 @@
       if (this.i <= this.string.length) {
         if (c == "\\") {c += this.GetCS(name)}
         else if (c === "{" && braceOK) {this.i--; c = this.GetArgument(name)}
-        if (TEXDEF.delimiter[c] != null) {return this.convertDelimiter(c)}
+        if (TEXDEF.delimiter.contains(c)) {return this.convertDelimiter(c)}
       }
       TEX.Error(["MissingOrUnrecognizedDelim",
                  "Missing or unrecognized delimiter for %1",name]);
@@ -2124,6 +2167,7 @@
   
   /************************************************************************/
 
+// VS Q: What does the augment really do? How is the Parse called?
   TEX.Augment({
     Stack: STACK, Parse: PARSE, Definitions: TEXDEF, Startup: STARTUP,
     
@@ -2201,6 +2245,7 @@
     //  Add a user-defined macro to the macro list
     //
     Macro: function (name,def,argn) {
+      console.log('HERE');
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
       TEXDEF.macros[name].isUser = true;
     },
