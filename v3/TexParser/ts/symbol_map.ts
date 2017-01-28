@@ -36,13 +36,14 @@ export type LookupReturn = string | Array<string|boolean|JSON> | boolean;
 /**
  * SymbolMaps are the base components for the input parsers.
  * 
- * They provide a lookup method that provides the main functionality for basic
- * symbol parsing, from simple regular expression test, straight forward symbol
- * mapping to transformational functionality on the parsed string.
+ * They provide a contains method that checks if a map is applicable (contains)
+ * a particular string. Implementing classes then perform the actual symbol
+ * parsing, from simple regular expression test, straight forward symbol mapping
+ * to transformational functionality on the parsed string.
  * 
  * @interface
  */
-export interface SymbolMap<T> {
+export interface SymbolMap {
   
   /**
    * @return {string} The name of the map.
@@ -51,43 +52,16 @@ export interface SymbolMap<T> {
 
   /**
    * @param {string} symbol
-   * @return {T} 
+   * @return {boolean} 
    */
-  lookup(symbol: string): T;
-  
-}
+  contains(symbol: string): boolean;
 
-export class RegExpMap implements SymbolMap<boolean> {
-
-  private name: string;
-  private regExp: RegExp;
-  
-  constructor(name: string, regExp: RegExp) {
-    this.name = name;
-    this.regExp = regExp;
-  };
-
-  /**
-   * @override
-   */
-  public getName(): string {
-    return this.name;
-  }
-
-  /**
-   * @override
-   */
-  public lookup(symbol: string) {
-    return this.regExp.test(symbol);
-  }
-  
 }
 
 
-export abstract class AbstractSymbolMap<T> implements SymbolMap<T> {
+export abstract class AbstractSymbolMap<T> implements SymbolMap {
 
   private name: string;
-  private map: Map<string, T> = new Map<string, T>();
   
   constructor(name: string) {
     this.name = name;
@@ -103,25 +77,69 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap<T> {
   /**
    * @override
    */
+  public abstract contains(symbol: string): boolean;
+
+
+  /**
+   * @param {string} symbol
+   * @return {T} 
+   */
+  public abstract lookup(symbol: string): T;
+
+}
+
+
+export class RegExpMap extends AbstractSymbolMap<boolean> {
+
+  private regExp: RegExp;
+  
+  constructor(name: string, regExp: RegExp) {
+    super(name);
+    this.regExp = regExp;
+  };
+
+  /**
+   * @override
+   */
+  public contains(symbol: string) {
+    return this.lookup(symbol);
+  }
+  
+  /**
+   * @override
+   */
+  public lookup(symbol: string) {
+    return this.regExp.test(symbol);
+  }
+  
+}
+
+
+export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
+
+  private map: Map<string, K> = new Map<string, K>();
+
+  /**
+   * @override
+   */
   public lookup(symbol: string) {
     return this.map.get(symbol);
   }
 
   /**
+   * @override
+   */
+  public contains(symbol: string) {
+    return this.map.has(symbol);
+  }
+  
+  /**
    * 
    * @param {string} symbol
    * @param {T} object
    */
-  protected add(symbol: string, object: T) {
+  protected add(symbol: string, object: K) {
     this.map.set(symbol, object);
-  }
-
-  /**
-   * @param {string} symbol
-   * @return {boolean} 
-   */
-  public contains(symbol: string) {
-    return this.map.has(symbol);
   }
 
   /**
@@ -130,11 +148,11 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap<T> {
    * @param {JSON} object Element given in MathJax's configuration format.
    */
   public abstract addElement<K>(symbol: string, object: K): void;
-  
+
 }
 
 
-export class CharacterMap extends AbstractSymbolMap<Symbol> {
+export class CharacterMap extends AbstractParseMap<Symbol> {
 
   public addElement(symbol: string, object: [string, null] | [string, Record<string, Args>]): void {
     let character = new Symbol(symbol, object[0], object[1]);
@@ -156,7 +174,7 @@ export class CharacterMap extends AbstractSymbolMap<Symbol> {
 }
 
 
-export class MacroMap extends AbstractSymbolMap<Macro> {
+export class MacroMap extends AbstractParseMap<Macro> {
 
   public addElement(symbol: string, object: Args[]): void {
     let character = new Macro(symbol, <string> object[0], object.slice(1));

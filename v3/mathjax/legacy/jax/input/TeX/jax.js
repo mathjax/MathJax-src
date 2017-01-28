@@ -29,8 +29,9 @@
 
 // VS Q: How do you include the mml_visitor without having to add the .js
 //       suffixes?
+// A: add structure in load.js
 // 
-let TexParser =  require('../../../../../TexParser/lib/symbol_map.js');
+let TexParser =  require('TexParser/lib/symbol_map.js');
 
 (function (TEX,HUB,AJAX) {
   var MML, NBSP = "\u00A0"; 
@@ -462,11 +463,11 @@ let TexParser =  require('../../../../../TexParser/lib/symbol_map.js');
         '\u2019': 'Prime'
       }),
       
-      remap: {
+      remap: TexParser.CharacterMap.create('remap', {
         '-':   '2212',
         '*':   '2217',
         '`':   '2018'   // map ` to back quote
-      },
+      }),
     
       mathchar0mi: TexParser.CharacterMap.create('mathchar0mi', {
 	// Lower-case greek
@@ -1331,10 +1332,9 @@ let TexParser =  require('../../../../../TexParser/lib/symbol_map.js');
     Other: function (c) {
       var def, mo;
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
-      if (TEXDEF.remap[c]) {
-        c = TEXDEF.remap[c];
-        if (c instanceof Array) {def = c[1]; c = c[0]}
-        mo = MML.mo(MML.entity('#x'+c)).With(def);
+      var remap = TEXDEF.remap.lookup(c);
+      if (remap) {
+        mo = MML.mo(remap.getChar()).With(def);
       } else {
         mo = MML.mo(c).With(def);
       }

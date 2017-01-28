@@ -1413,8 +1413,7 @@ MathJax.ElementJax.mml.Augment({
       var n = this.value();
       if (n <= 0xFFFF) {return String.fromCharCode(n)}
       n -= 0x10000;
-      return String.fromCharCode((n>>10)+0xD800)
-           + String.fromCharCode((n&0x3FF)+0xDC00);
+      return String.fromCharCode((n>>10)+0xD800, (n&0x3FF)+0xDC00);
     }
   });
   

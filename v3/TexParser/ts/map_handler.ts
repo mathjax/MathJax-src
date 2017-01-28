@@ -22,21 +22,15 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {SymbolMap} from './symbol_map';
+import {AbstractSymbolMap, SymbolMap} from './symbol_map';
 import {Symbol, Macro} from './symbol';
 
-// This is awkward and should not have to be like that!  Need to replace
-// SymbolMap with a non-generic base interface, once it has stabilised.  Base
-// interface should only have the contains method that will always return a
-// boolean. Abstract base class then is generic with lookup method (or apply for
-// parsing).
-type Lookup = boolean|Symbol|Macro;
 
 export class MapHandler {
 
   private static instance: MapHandler;
-  private maps: Map<string, SymbolMap<Lookup>> = new Map<string, SymbolMap<Lookup>>();
-  private configuration: Array<SymbolMap<Lookup>> = [];
+  private maps: Map<string, SymbolMap> = new Map<string, SymbolMap>();
+  private configuration: Array<SymbolMap> = [];
 
   public static getInstance(): MapHandler {
     if (!MapHandler.instance) {
@@ -45,7 +39,7 @@ export class MapHandler {
     return MapHandler.instance;
   }
 
-  public register(map: SymbolMap<Lookup>): void {
+  public register(map: SymbolMap): void {
     this.maps.set(map.getName(), map);
   }
   
@@ -60,6 +54,38 @@ export class MapHandler {
     }
   }
 
+  /**
+   * Retrieves the first applicable symbol map in the configuration.
+   * @param {string} symbol The symbol to parse.
+   * @return {SymbolMap} A map that can parse the symbol.
+   */
+  private applicable(symbol: string): SymbolMap {
+    for (let map of this.configuration) {
+      if (map.contains(symbol)) {
+        return map;
+      }
+    }
+    return null;
+  }
+
+  // I think here we should return the JSON value that can be handled by the
+  // parser. Meaning we should give the symbol_map a function that actually
+  // performs the parsing. E.g., a singular method for RegExp and Character. An
+  // execution method for custom functions on Macro.
+  // 
+  // This can then be actually put into the interface. We can then avoid casting!
+  //
+  // Also: How are we to know "outside" what the actual value is?
+  /**
+   * Maps a symbol to its "parse value" if it exists.
+   * @param {string} symbol The symbol to parse.
+   * @return {T} A boolean, Character, or Macro.
+   */
+  public lookup<T>(symbol: string): T {
+    let map = <AbstractSymbolMap<T>>(this.applicable(symbol));
+    return map ? map.lookup(symbol) : null;
+  }
+  
   // TODO: Turn this into a global warning and error functionality
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
