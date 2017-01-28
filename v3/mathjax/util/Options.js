@@ -95,3 +95,7 @@ export function SelectOptions(options,...keys) {
   }
   return subset;
 }
+
+export function SelectOptionsFromKeys(options,object) {
+  return SelectOptions(options,...Object.keys(object));
+}
