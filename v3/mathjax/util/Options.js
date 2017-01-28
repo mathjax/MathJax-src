@@ -57,7 +57,7 @@ export function Insert(dst,src,warn = true) {
       }
     } else if (Array.isArray(sval)) {
       dst[key] = [];
-      Insert(dst[key],sval,warn);
+      Insert(dst[key],sval,false);
     } else if (isObject(sval)) {
       dst[key] = Copy(sval);
     } else {
