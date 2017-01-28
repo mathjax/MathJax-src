@@ -3,9 +3,10 @@ export {MathJax} from "mathjax/mathjax.js";
 
 import "mathjax/handlers/html.js";
 import {TeX} from "mathjax/input/tex.js";
+import {APPEND} from "mathjax/util/Options.js";
 
 let OPTIONS = {
-  InputJax: new TeX()
+  InputJax: new TeX({inlineMath:{[APPEND]:[['$','$']]}})
 };
 
 let HTML = `

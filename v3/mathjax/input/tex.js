@@ -1,14 +1,15 @@
 import {InputJax} from "../core/InputJax.js";
 import {LegacyTeX} from "./legacy/TeX.js";
-import {DefaultOptions} from "../util/Options.js";
+import {DefaultOptions,SeparateOptions} from "../util/Options.js";
 
 import {FindTeX} from "./tex/FindTeX.js";
 
 export class TeX extends InputJax {
   
   constructor(options) {
-    super(options);
-    this.FindTeX = this.options.FindTeX || new FindTeX();
+    let [tex,find] = SeparateOptions(options,FindTeX.OPTIONS);
+    super(tex);
+    this.FindTeX = this.options.FindTeX || new FindTeX(find);
   }
   
   Compile(tex,display) {
