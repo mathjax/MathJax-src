@@ -73,7 +73,7 @@ export class HTMLDocument extends Document {
   
   TestMath(string,display=true) {
     if (!this.processed.TestMath) {
-      this.math = [new HTMLMathItem(string,this.InputJax[0],display)];
+      this.math.push(new HTMLMathItem(string,this.InputJax[0],display));
       this.processed.TestMath = true;
     }
     return this;

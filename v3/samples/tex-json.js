@@ -10,7 +10,8 @@ let html = MathJax.HandlerFor("<html></html>");
 MathJax.HandleRetriesFor(function () {
 
     html.TestMath(process.argv[3] || '');
-    console.log(JSON.stringify(Translate(html.math[0].math,html.math[0].display)));
+    let math = html.math.pop();
+    console.log(JSON.stringify(Translate(math.math,math.display)));
 
 }).catch(err => {
   console.log(err.message);
