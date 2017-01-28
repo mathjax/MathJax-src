@@ -1,13 +1,14 @@
 import {UserOptions, DefaultOptions} from "../util/Options.js";
 import {InputJax} from "./InputJax.js";
 import {OutputJax} from "./OutputJax.js";
+import {MathList} from "./MathList.js";
 
 export class Document {
   constructor (document,options) {
     this.document = document;
     this.type = this.constructor.type;
     this.options = UserOptions(DefaultOptions({},this.constructor.OPTIONS),options);
-    this.math = [];
+    this.math = new this.options.MathList();
     this.processed = {
       FindMath: false,
       Compile: false,
@@ -82,6 +83,7 @@ export class Document {
 Document.type = "Document";
 Document.OPTIONS = {
   OutputJax: null,
-  InputJax: null
+  InputJax: null,
+  MathList: MathList
 };
 

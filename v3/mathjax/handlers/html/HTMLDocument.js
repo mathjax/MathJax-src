@@ -1,6 +1,7 @@
 import {Document} from "../../core/Document.js";
 import {DefaultOptions} from "../../util/Options.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
+import {HTMLMathList} from "./HTMLMathList.js";
 import {HTMLDomStrings} from "./HTMLDomStrings.js";
 
 export class HTMLDocument extends Document {
@@ -38,11 +39,11 @@ export class HTMLDocument extends Document {
     if (!this.processed.FindMath) {
       let [strings, nodes] = this.DomStrings.Find(this.document.body);
       for (let jax of this.InputJax) {
-        let list = [];
+        let list = new this.options.MathList();
         for (let math of jax.FindMath(strings)) {
           list.push(this.MathItem(math,jax,nodes));
         }
-        this.MergeMath(list);
+        this.math.merge(list);
       };
       this.processed.FindMath = true;
     }
@@ -70,31 +71,6 @@ export class HTMLDocument extends Document {
     return this.OutputJax.StyleSheet(this);
   }
   
-  MergeMath(list) {
-    if (this.math.length === 0) {
-      this.math = list;
-    } else {
-      let BEFORE = this.document.DOCUMENT_POSITION_PRECEDING;
-      let m = 0; let l = 0;
-      let mitem = this.math[m];
-      let litem = list[l];
-      while (mitem && litem) {
-        let mnode = mitem.start.node;
-        let lnode = litem.start.node;
-        if ((lnode === mnode && litem.start.n < mitem.start.n) ||
-            (lnode.start.node.compareDocumentPoisition(mnode) & BEFORE)) {
-          this.math.splice(m,0,litem);
-          m++; l++; litem = list[l];
-        } else {
-          m++; mitem = this.math[m];
-        }
-      };
-      if (litem) {
-        this.math = this.match.concat(list.slice(l));
-      }
-    }
-  }
-  
   TestMath(string,display=true) {
     if (!this.processed.TestMath) {
       this.math = [new HTMLMathItem(string,this.InputJax[0],display)];
@@ -107,5 +83,6 @@ export class HTMLDocument extends Document {
 
 HTMLDocument.type = "HTML";
 HTMLDocument.OPTIONS = DefaultOptions({
+  MathList: HTMLMathList,
   DomStrings: null
 },Document.OPTIONS);

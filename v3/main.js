@@ -18,7 +18,7 @@ let HTML = `
   and
   $$\int x\,dx$$
   </p>
-    \\begin{euqation} x<br> y\\end{equation}
+    \\begin{equation} x<br> y\\end{equation}
   <span>and more \\$ and \\ref{x}</span>
   </div>
 `;
@@ -48,17 +48,17 @@ try {
 const STRING = function (item) {
   let {node, n, delim} = item;
   let value = node.nodeValue;
-  return (value.substr(0,n)+"|"+value.substr(n)).replace(/\n/g,"\\n");
+  return (value.substr(0,n)+"@"+value.substr(n)).replace(/\n/g,"\\n");
 }
 
 MathJax.HandleRetriesFor(function () {
 
     html.FindMath();
-    html.math.forEach(math => {
+    for (const math of html.math) {
       console.log(math.math,math.display);
       console.log(">> ",STRING(math.start));
       console.log("<< ",STRING(math.end));
-    });
+    };
 
 }).catch(err => {
   console.log(err.message);
