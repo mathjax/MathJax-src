@@ -109,7 +109,7 @@ export function SelectOptionsFromKeys(options,object) {
 //
 export function SeparateOptions(options,object) {
   let exists = {}, missing = {};
-  for (const key of Object.keys(options)) {
+  for (const key of Object.keys(options||{})) {
     (object[key] === undefined ? missing : exists)[key] = options[key];
   }
   return [missing,exists];
