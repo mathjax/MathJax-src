@@ -9,7 +9,8 @@ let html = MathJax.HandlerFor("<html></html>", {InputJax: new TeX()});
 MathJax.HandleRetriesFor(function () {
 
     html.TestMath(process.argv[3] || '').Compile();
-    console.log(html.math[0].tree);
+    let math = html.math.pop();
+    console.log(math.tree);
 
 }).catch(err => {
   console.log(err.message);

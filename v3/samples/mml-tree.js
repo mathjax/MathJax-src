@@ -11,7 +11,8 @@ let html = MathJax.HandlerFor("<html></html>",{InputJax: new TeX()});
 MathJax.HandleRetriesFor(function () {
 
     html.TestMath(process.argv[3] || '').Compile();
-    mml.visitTree(html.math[0].tree);
+    let math = html.math.pop();
+    mml.visitTree(math.tree);
     console.log(mml.getResult().toString());
 
 }).catch(err => {
