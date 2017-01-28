@@ -26,7 +26,7 @@ MathJax.HandleRetriesFor(function () {
         .Compile()
         .Typeset();
         
-    console.log(html.math);
+    console.log(Array.from(html.math));
 
 }).catch(err => {
   console.log(err.message);

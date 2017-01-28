@@ -20,7 +20,7 @@ let html = MathJax.HandlerFor(`
 MathJax.HandleRetriesFor(function () {
 
     html.FindMath();
-    console.log(html.math);
+    console.log(Array.from(html.math));
 
 }).catch(err => {
   console.log(err.message);
