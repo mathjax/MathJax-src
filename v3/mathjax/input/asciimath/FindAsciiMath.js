@@ -40,7 +40,7 @@ export class FindAsciiMath {
     let options = this.options;
     let starts = [];
     this.end = {};
-    options.delimiters.forEach(delims => this.addPattern(starts,delims,true));
+    options.delimiters.forEach(delims => this.addPattern(starts,delims,false));
     this.start = new RegExp(starts.join("|"),"g");
     this.hasPatterns = (starts.length > 0);
   }
