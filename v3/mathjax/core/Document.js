@@ -29,8 +29,8 @@ export class Document {
   
   Compile(options) {
     if (!this.processed.Compile) {
-      for (let i = 0, m = this.math.length; i < m; i++) {
-        if (this.math[i]) this.math[i].Compile(this);
+      for (const math of this.math) {
+        if (math) math.Compile(this);
       }
       this.processed.Compile = true;
     }
@@ -39,8 +39,8 @@ export class Document {
 
   Typeset(options) {
     if (!this.processed.Typeset) {
-      for (let i = 0, m = this.math.length; i < m; i++) {
-        if (this.math[i]) this.math[i].Typeset(this);
+      for (const math of this.math) {
+        if (math) math.Typeset(this);
       }
       this.processed.Typeset = true;
     }
@@ -62,8 +62,8 @@ export class Document {
 
   UpdateDocument() {
     if (!this.processed.UpdateDocument) {
-      for (let i = this.math.length - 1; i >= 0; i--) {
-        if (this.math[i]) this.math[i].UpdateDocument(this);
+      for (const math of this.math.reversed()) {
+        math.UpdateDocument(this);
       }
       this.processed.UpdateDocument = true;
     }
@@ -71,11 +71,8 @@ export class Document {
   }
   
   Concat(collection) {
-    this.MergeMath(collection.math);
+    this.math.merge(collection.math);
     return this;
-  }
-  MergeMath(math) {
-    this.math = this.math.concat(math);
   }
   
 };
