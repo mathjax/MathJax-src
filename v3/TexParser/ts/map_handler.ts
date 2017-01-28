@@ -25,6 +25,11 @@
 import {SymbolMap} from './symbol_map';
 import {Symbol, Macro} from './symbol';
 
+// This is awkward and should not have to be like that!  Need to replace
+// SymbolMap with a non-generic base interface, once it has stabilised.  Base
+// interface should only have the contains method that will always return a
+// boolean. Abstract base class then is generic with lookup method (or apply for
+// parsing).
 type Lookup = boolean|Symbol|Macro;
 
 export class MapHandler {

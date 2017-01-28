@@ -29,6 +29,10 @@
 import {Symbol, Macro, Args} from './symbol';
 import {someTest} from './parse_methods';
 
+//// TODO: This is temporary, until we have got rid of the Array/boolean return
+//// values!
+export type LookupReturn = string | Array<string|boolean|JSON> | boolean;
+
 /**
  * SymbolMaps are the base components for the input parsers.
  * 
@@ -86,7 +90,6 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap<T> {
   private map: Map<string, T> = new Map<string, T>();
   
   constructor(name: string) {
-    console.log(someTest());
     this.name = name;
   };
 

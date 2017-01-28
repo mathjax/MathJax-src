@@ -1,0 +1,48 @@
+
+* Testing
+  Currently I've implemented a trivial test runner using tape.
+  This should change in the future:
+
+** Unit tests 
+   Probably with Mocha
+
+** Platform testing 
+   Karma
+
+* Refactoring of TeX Input
+
+** Maps
+
+*** General structure discussion:
+   
+    It is awkward to have generic interface definition! Therefore we needed to
+    replace SymbolMap with a non-generic base interface. Base interface should
+    only have the contains method that will always return a boolean. Abstract
+    base class then is generic with lookup method (or apply for parsing).
+
+
+*** Abstract Base class symbol map
+
+*** TODO Do we have to have a trivial subclass that handles digits, numbers and characters?
+
+**** Regexp class
+
+*** concrete classes:
+
+**** character map: char + attributes
+
+***** Objects: special, remap, mathchar0mi, mathchar0mo, mathchar7, delimiter
+
+**** macro map: function + arguments
+
+**** environment map: function + arguments
+
+*** Each class gets a specific method to execute it
+
+
+** Map handler with
+
+*** lookup function
+
+*** change of map (for different configurations)
+
