@@ -24,7 +24,7 @@ export function Keys(def) {
 //
 export function Copy(def) {
   let props = {};
-  for (let key of Keys(def)) {
+  for (const key of Keys(def)) {
     let prop = Object.getOwnPropertyDescriptor(def,key);
     let value = prop.value;
     if (Array.isArray(value)) {
@@ -90,8 +90,27 @@ export function UserOptions(options,...defs) {
 //
 export function SelectOptions(options,...keys) {
   let subset = {};
-  for (let key of keys) {
+  for (const key of keys) {
     subset[key] = options[key];
   }
   return subset;
+}
+
+//
+//  Select a subset of options by keys from an object
+//
+export function SelectOptionsFromKeys(options,object) {
+  return SelectOptions(options,...Object.keys(object));
+}
+
+//
+//  Separate options into two sets: the ones having the same keys
+//  as the second object, and the ones that don't.
+//
+export function SeparateOptions(options,object) {
+  let exists = {}, missing = {};
+  for (const key of Object.keys(options)) {
+    (object[key] === undefined ? missing : exists)[key] = options[key];
+  }
+  return [missing,exists];
 }
