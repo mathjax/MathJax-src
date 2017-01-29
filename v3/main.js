@@ -2,28 +2,26 @@ import {MathJax} from "mathjax/mathjax.js";
 export {MathJax} from "mathjax/mathjax.js";
 
 import "mathjax/handlers/html.js";
-import {AsciiMath} from "mathjax/input/asciimath.js";
-import {CHTML} from "mathjax/output/chtml.js";
+import {MathML} from "mathjax/input/MathML.js";
 
 let OPTIONS = {
-  InputJax: new AsciiMath(),
-  OutputJax: new CHTML()
+  InputJax: new MathML()
 };
 
-let HTML = [
-  'This is some math: `x = y` and `x < z`.',
-  '<div>',
-  'text',
-  '<!-- comment -->',
-  '<p>',
-  '`(x+1)/(x-1)`',
-  'and',
-  '`int x dx`',
-  '</p>',
-  '` x<br> y `',
-  '<span>and more `z-1`</span>',
-  '</div>'
-].join("\n");
+let HTML = `
+  This is some math: <math><mi>x</mi></math>.
+  <div>
+  text
+  <!-- comment -->
+  <p>
+  <m:math>
+    <m:mi>y</m:mi>
+  </m:math>
+  end
+  </p>
+  <span>and more <math><mtext>here</mtext></math></span>
+  </div>
+`;
 
 var html;
 try {
@@ -31,6 +29,7 @@ try {
   //  Use browser document, if there is one
   //
   html = MathJax.HandlerFor(document,OPTIONS);
+  document.documentElement.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
   document.body.insertBefore(document.createElement("hr"),document.body.firstChild);
   var div = document.createElement('div');
   div.innerHTML = HTML; div.style.marginBottom = "1em";
@@ -40,7 +39,8 @@ try {
   //  Otherwise, make a new document (measurements not supported here)
   //
   html = MathJax.HandlerFor(
-    '<html><head><title>Test MathJax3</title></head><body>'
+    '<html xmlns:m="http://www.w3.org/1998/Math/MathML">'
+    + '<head><title>Test MathJax3</title></head><body>'
     + HTML +
     '</body></html>',
     OPTIONS
@@ -49,13 +49,8 @@ try {
 
 MathJax.HandleRetriesFor(function () {
 
-    html.FindMath()
-        .Compile()
-        .GetMetrics()
-        .Typeset()
-        .UpdateDocument();
-        
-    console.log(html.document.body.parentNode.outerHTML);
+    html.FindMath();
+    console.log(Array.from(html.math));
 
 }).catch(err => {
   console.log(err.message);

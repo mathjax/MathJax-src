@@ -36,8 +36,15 @@ export class HTMLDocument extends Document {
       let [strings, nodes] = this.DomStrings.Find(this.document.body);
       for (let jax of this.InputJax) {
         let list = new this.options.MathList();
-        for (let math of jax.FindMath(strings)) {
-          list.push(this.MathItem(math,jax,nodes));
+        if (jax.processStrings) {
+          for (let math of jax.FindMath(strings)) {
+            list.push(this.MathItem(math,jax,nodes));
+          }
+        } else {
+          for (let math of jax.FindMath(this.document.body)) {
+            let item = new HTMLMathItem(math.math,jax,math.display,math.start,math.end);
+            list.push(item);
+          }
         }
         this.math.merge(list);
       };
