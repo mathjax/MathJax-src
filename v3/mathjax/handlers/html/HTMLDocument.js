@@ -28,10 +28,6 @@ export class HTMLDocument extends Document {
     let math = item.math;
     let start = this.FindPosition(item.n, item.start, item.open, nodes);
     let end = this.FindPosition(item.n, item.end, item.close, nodes);
-    if (item.open.substr(0,7) === '\\begin{') {
-      start.delim = end.delim = '';
-      math = item.open + math + item.close;
-    }
     return new HTMLMathItem(math, jax, item.display, start, end);
   }
   

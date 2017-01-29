@@ -108,6 +108,10 @@ export class FindTeX {
       if (start[this.env] !== undefined && this.env) {
         let end = "\\end{"+start[this.env]+"}";
         match = this.FindEnd(string, n, start, end, true, this.endPattern(end));
+        if (match) {
+          match.math = match.open + match.math + match.close;
+          match.open = match.close = '';
+        }
       } else if (start[this.sub] !== undefined && this.sub) {
         let math = start[this.sub];
         let end = start.index + start[this.sub].length;
