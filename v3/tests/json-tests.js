@@ -28,6 +28,12 @@ class JsonTest extends Test {
     }.bind(this)).
       catch(err => { console.log(err.message); });
   }
+
+  ignoreTest(name, tex, expected) {
+  }
+  amsTest(name, tex, expected) {
+  }
+  
 }
 
 let jsonTest = new JsonTest();
@@ -940,7 +946,6 @@ jsonTest.runTest('A Rogers-Ramanujan Identity',
          'attributes':{'display':'block'}}
        );
 
-
 jsonTest.runTest('A Summation Formula',
         '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
         {'type':'math',
@@ -1196,7 +1201,7 @@ jsonTest.runTest('Standard Deviation',
        );
 
 
-jsonTest.runTest(
+jsonTest.amsTest(
   'The Lorenz Equations', '\\begin{align}' +
     '\\dot{x} & = \\sigma(y-x) \\\\' +
     '\\dot{y} & = \\rho x - y - xz \\\\' +
@@ -1668,7 +1673,7 @@ jsonTest.runTest(
    'attributes':{'display':'block'}});
 
 
-jsonTest.runTest(
+jsonTest.amsTest(
   'Probability', 'P(E) = {n \\choose k} p^k (1-p)^{ n-k}',
   {'type':'math',
    'children':[
@@ -1860,7 +1865,7 @@ jsonTest.runTest(
    'attributes':{'display':'block'}});
 
 
-jsonTest.runTest(
+jsonTest.amsTest(
   'Maxwell\'s Equations', '\\begin{align} ' +
     '\\nabla \\times \\vec{\\mathbf{B}} -\\, \\frac1c\\, ' +
     '\\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t} &' +
@@ -2310,5 +2315,503 @@ jsonTest.runTest(
       'attributes':{}}],
    'attributes':{'display':'block'}});
 
+
+jsonTest.runTest(
+  'Color Frac', '\\frac{{\\cal \\color{red}{X}}}{\\color{blue}{\\sf y}}',
+  {"type":"math",
+   "children":[
+     {"type":"mrow",
+      "inferred":true,
+      "children":[
+	{"type":"mfrac",
+	 "children":[
+	   {"type":"mrow",
+	    "children":[
+	      {"type":"mrow",
+	       "inferred":true,
+	       "children":[
+	         {"type":"mstyle",
+	          "children":[
+	            {"type":"mrow",
+	             "inferred":true,
+	             "children":[
+	               {"type":"mi",
+	                "text":"X",
+	                "attributes":{"mathvariant":"-tex-caligraphic"}}],
+	             "attributes":{}}],
+	          "attributes":{"mathcolor":"red"}}],
+	       "attributes":{}}],
+	    "attributes":{},
+	    "TeXAtom":"ORD"},
+	   {"type":"mstyle",
+	    "children":[
+	      {"type":"mrow",
+	       "inferred":true,
+	       "children":[
+	         {"type":"mi",
+	          "text":"y",
+	          "attributes":{"mathvariant":"sans-serif"}}],
+	       "attributes":{}}],
+	    "attributes":{"mathcolor":"blue"}}],
+	 "attributes":{}}],
+      "attributes":{}}],
+   "attributes":{"display":"block"}}
+);
+
+
+jsonTest.amsTest(
+  'Cubic Binomial',
+	 '{\\begin{eqnarray}(x+y)^{3}&=&(x+y)(x+y)(x+y)\\\\&' +
+    '=&xxx+xxy+xyx+{\\underline {xyy}}+yxx+{\\underline {yxy}}' +
+    '+{\\underline {yyx}}+yyy\\\\&=&x^{3}+3x^{2}y+' +
+    '{\\underline {3xy^{2}}}+y^{3}.\\end{eqnarray}}',
+  {"type":"math",
+   "children":[
+     {"type":"mrow",
+      "inferred":true,
+      "children":[
+	{"type":"mrow",
+	 "children":[
+	   {"type":"mrow",
+	    "inferred":true,
+	    "children":[
+	      {"type":"mtable",
+	       "children":[
+	         {"type":"mtr",
+	          "children":[
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[
+	                  {"type":"mo",
+	                   "text":"(",
+	                   "attributes":{"stretchy":false}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"msup",
+	                   "children":[
+	                     {"type":"mo",
+	                      "text":")",
+	                      "attributes":{"stretchy":false}},
+	                     {"type":"mrow",
+	                      "children":[
+	                        {"type":"mrow",
+	                         "inferred":true,
+	                         "children":[
+	                           {"type":"mn",
+	                            "text":"3",
+	                            "attributes":{}}],
+	                         "attributes":{}}],
+	                      "attributes":{},
+	                      "TeXAtom":"ORD"}],
+	                   "attributes":{}}],
+	                "attributes":{}}],
+	             "attributes":{}},
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[
+	                  {"type":"mi",
+	                   "text":"",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"=",
+	                   "attributes":{}}],
+	                "attributes":{}}],
+	             "attributes":{}},
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[
+	                  {"type":"mi",
+	                   "text":"",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"(",
+	                   "attributes":{"stretchy":false}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":")",
+	                   "attributes":{"stretchy":false}},
+	                  {"type":"mo",
+	                   "text":"(",
+	                   "attributes":{"stretchy":false}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":")",
+	                   "attributes":{"stretchy":false}},
+	                  {"type":"mo",
+	                   "text":"(",
+	                   "attributes":{"stretchy":false}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":")",
+	                   "attributes":{"stretchy":false}}],
+	                "attributes":{}}],
+	             "attributes":{}}],
+	          "attributes":{}},
+	         {"type":"mtr",
+	          "children":[
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[],
+	                "attributes":{}}],
+	             "attributes":{}},
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[
+	                  {"type":"mi",
+	                   "text":"",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"=",
+	                   "attributes":{}}],
+	                "attributes":{}}],
+	             "attributes":{}},
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mrow",
+	                   "children":[
+	                     {"type":"mrow",
+	                      "inferred":true,
+	                      "children":[
+	                        {"type":"munder",
+	                         "children":[
+	                           {"type":"mrow",
+	                            "inferred":true,
+	                            "children":[
+	                              {"type":"mi",
+	                               "text":"x",
+	                               "attributes":{}},
+	                              {"type":"mi",
+	                               "text":"y",
+	                               "attributes":{}},
+	                              {"type":"mi",
+	                               "text":"y",
+	                               "attributes":{}}],
+	                            "attributes":{}},
+	                           {"type":"mo",
+	                            "text":"_",
+	                            "attributes":{}}],
+	                         "attributes":{}}],
+	                      "attributes":{}}],
+	                   "attributes":{},
+	                   "TeXAtom":"ORD"},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"x",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mrow",
+	                   "children":[
+	                     {"type":"mrow",
+	                      "inferred":true,
+	                      "children":[
+	                        {"type":"munder",
+	                         "children":[
+	                           {"type":"mrow",
+	                            "inferred":true,
+	                            "children":[
+	                              {"type":"mi",
+	                               "text":"y",
+	                               "attributes":{}},
+	                              {"type":"mi",
+	                               "text":"x",
+	                               "attributes":{}},
+	                              {"type":"mi",
+	                               "text":"y",
+	                               "attributes":{}}],
+	                            "attributes":{}},
+	                           {"type":"mo",
+	                            "text":"_",
+	                            "attributes":{}}],
+	                         "attributes":{}}],
+	                      "attributes":{}}],
+	                   "attributes":{},
+	                   "TeXAtom":"ORD"},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mrow",
+	                   "children":[
+	                     {"type":"mrow",
+	                      "inferred":true,
+	                      "children":[
+	                        {"type":"munder",
+	                         "children":[
+	                           {"type":"mrow",
+	                            "inferred":true,
+	                            "children":[
+	                              {"type":"mi",
+	                               "text":"y",
+	                               "attributes":{}},
+	                              {"type":"mi",
+	                               "text":"y",
+	                               "attributes":{}},
+	                              {"type":"mi",
+	                               "text":"x",
+	                               "attributes":{}}],
+	                            "attributes":{}},
+	                           {"type":"mo",
+	                            "text":"_",
+	                            "attributes":{}}],
+	                         "attributes":{}}],
+	                      "attributes":{}}],
+	                   "attributes":{},
+	                   "TeXAtom":"ORD"},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}}],
+	                "attributes":{}}],
+	             "attributes":{}}],
+	          "attributes":{}},
+	         {"type":"mtr",
+	          "children":[
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[],
+	                "attributes":{}}],
+	             "attributes":{}},
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[
+	                  {"type":"mi",
+	                   "text":"",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"=",
+	                   "attributes":{}}],
+	                "attributes":{}}],
+	             "attributes":{}},
+	            {"type":"mtd",
+	             "children":[
+	               {"type":"mrow",
+	                "inferred":true,
+	                "children":[
+	                  {"type":"msup",
+	                   "children":[
+	                     {"type":"mi",
+	                      "text":"x",
+	                      "attributes":{}},
+	                     {"type":"mrow",
+	                      "children":[
+	                        {"type":"mrow",
+	                         "inferred":true,
+	                         "children":[
+	                           {"type":"mn",
+	                            "text":"3",
+	                            "attributes":{}}],
+	                         "attributes":{}}],
+	                      "attributes":{},
+	                      "TeXAtom":"ORD"}],
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mn",
+	                   "text":"3",
+	                   "attributes":{}},
+	                  {"type":"msup",
+	                   "children":[
+	                     {"type":"mi",
+	                      "text":"x",
+	                      "attributes":{}},
+	                     {"type":"mrow",
+	                      "children":[
+	                        {"type":"mrow",
+	                         "inferred":true,
+	                         "children":[
+	                           {"type":"mn",
+	                            "text":"2",
+	                            "attributes":{}}],
+	                         "attributes":{}}],
+	                      "attributes":{},
+	                      "TeXAtom":"ORD"}],
+	                   "attributes":{}},
+	                  {"type":"mi",
+	                   "text":"y",
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"mrow",
+	                   "children":[
+	                     {"type":"mrow",
+	                      "inferred":true,
+	                      "children":[
+	                        {"type":"munder",
+	                         "children":[
+	                           {"type":"mrow",
+	                            "inferred":true,
+	                            "children":[
+	                              {"type":"mn",
+	                               "text":"3",
+	                               "attributes":{}},
+	                              {"type":"mi",
+	                               "text":"x",
+	                               "attributes":{}},
+	                              {"type":"msup",
+	                               "children":[
+	                                 {"type":"mi",
+	                                  "text":"y",
+	                                  "attributes":{}},
+	                                 {"type":"mrow",
+	                                  "children":[
+	                                    {"type":"mrow",
+	                                     "inferred":true,
+	                                     "children":[
+	                                       {"type":"mn",
+	                                        "text":"2",
+	                                        "attributes":{}}],
+	                                     "attributes":{}}],
+	                                  "attributes":{},
+	                                  "TeXAtom":"ORD"}],
+	                               "attributes":{}}],
+	                            "attributes":{}},
+	                           {"type":"mo",
+	                            "text":"_",
+	                            "attributes":{}}],
+	                         "attributes":{}}],
+	                      "attributes":{}}],
+	                   "attributes":{},
+	                   "TeXAtom":"ORD"},
+	                  {"type":"mo",
+	                   "text":"+",
+	                   "attributes":{}},
+	                  {"type":"msup",
+	                   "children":[
+	                     {"type":"mi",
+	                      "text":"y",
+	                      "attributes":{}},
+	                     {"type":"mrow",
+	                      "children":[
+	                        {"type":"mrow",
+	                         "inferred":true,
+	                         "children":[
+	                           {"type":"mn",
+	                            "text":"3",
+	                            "attributes":{}}],
+	                         "attributes":{}}],
+	                      "attributes":{},
+	                      "TeXAtom":"ORD"}],
+	                   "attributes":{}},
+	                  {"type":"mo",
+	                   "text":".",
+	                   "attributes":{}}],
+	                "attributes":{}}],
+	             "attributes":{}}],
+	          "attributes":{}}],
+	       "attributes":{"columnalign":"right center left",
+	                     "rowspacing":"3pt",
+	                     "columnspacing":"0 thickmathspace",
+	                     "displaystyle":true}}],
+	    "attributes":{}}],
+	 "attributes":{},
+	 "TeXAtom":"ORD"}],
+      "attributes":{}}],
+   "attributes":{"display":"block"}}
+);
+
+// Currently ignored tests use AMS math stuff.
 
 jsonTest.printTime();
