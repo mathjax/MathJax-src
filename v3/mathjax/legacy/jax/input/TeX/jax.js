@@ -33,6 +33,17 @@ let Stack = require('TexParser/lib/stack.js').default;
 let StackItem = require('TexParser/lib/stack_item.js');
 
 (function (TEX,HUB,AJAX) {
+    // TODO: This is temporary until we know what's happening with output of
+    //       these MML Data methods.
+  StackItem.setTempFunctions(function(data, attribute) {
+    return MathJax.ElementJax.mml.mrow.apply(MathJax.ElementJax.mml, data).With(attribute);
+  },
+                             function(content) {
+                               MathJax.InputJax.TeX.Error(content);
+                             });
+
+  console.log(StackItem.createMmlElement);
+  
   var MML, NBSP = "\u00A0"; 
 
   // VS Q: How are we going to handle this in the future?
@@ -457,15 +468,6 @@ let StackItem = require('TexParser/lib/stack_item.js');
   var STARTUP = function () {
     MML = MathJax.ElementJax.mml;
 
-    // TODO: This is temporary until we know what's happening with output of
-    //       these MML Data methods.
-    StackItem.createMmlElement = function(data, attribute) {
-      return MML.mrow.apply(MML, data).With(attribute);
-    };
-    StackItem.createError = function(content) {
-      TEX.Error(content);
-    };
-    
     HUB.Insert(TEXDEF,{
   
       // patterns for letters and numbers
@@ -1124,14 +1126,18 @@ let StackItem = require('TexParser/lib/stack_item.js');
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = new Stack(ENV, !!env,
-                             function(x) {return STACKITEM.start(x);},
+                             // function(x) {return STACKITEM.start(x);},
+                             // function(item) {
+                             //   return item instanceof MML.mbase ? STACKITEM.mml(item) : item;
+                             // },
                              function(item) {
-                               return item instanceof MML.mbase ? STACKITEM.mml(item) : item;
+                               return item instanceof MML.mbase;
                              },
                              function(item) {return item instanceof STACKITEM;}
                             );
       // this.stack = TEX.Stack(ENV,!!env);
-      this.Parse(); this.Push(STACKITEM.stop());
+      // this.Parse(); this.Push(STACKITEM.stop());
+      this.Parse(); this.Push(new StackItem.StackItemStop());
     },
     Parse: function () {
       var c, n;
@@ -1160,7 +1166,8 @@ let StackItem = require('TexParser/lib/stack_item.js');
       } 
     },
     mml: function () {
-      if (this.stack.Top().type !== "mml") {return null}
+      console.log(this.stack.Top());
+      if (!this.stack.Top().hasType('mml')) {return null}
       return this.stack.Top().data[0];
     },
     mmlToken: function (token) {return token}, // used by boldsymbol extension
@@ -2244,13 +2251,20 @@ let StackItem = require('TexParser/lib/stack_item.js');
       var data = {math:math, display:display, script:script};
       var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
       math = data.math;
+      console.log('doing the math');
+      console.log(math);
       try {
-        mml = TEX.Parse(math).mml();
+        var parse = TEX.Parse(math);
+        console.log(parse);
+        console.log(parse.mml);
+        mml = parse.mml();
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);
         isError = true;
       }
+      console.log('No error?');
+      console.log(mml);
       if (mml.isa(MML.mtable) && mml.displaystyle === "inherit") mml.displaystyle = display; // for tagged equations
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
       if (display) {mml.root.display = "block"}

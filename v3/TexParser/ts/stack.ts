@@ -23,26 +23,27 @@
  */
 
 import {Environment} from './types';
-import {StackItem} from './stack_item';
+import * as StackItem from './stack_item';
 
 
 export default class Stack {
 
-  private global: Environment = {};
-  // TODO: Refine this type to stack items.
-  private data: any[] = [];
   public env: Environment = {};
+  private global: Environment = {};
+  private data: StackItem.StackItem[] = [];
+
   // TODO: Special functions that can be removed eventually.
   private transformMML: (item: any) => any;
   private testStackItem: (item: any) => boolean;
 
   constructor(env: Environment, inner: boolean,
-              start: (global: Environment) => any,
-              transform: (item: any) => any,
+              transform: (item: any) => boolean,
               test: (item: any) => boolean) {
     this.global = {isInner: inner};
-    this.data = [start(this.global)];
-    if (env) {this.data[0].env = env}
+    this.data = [new StackItem.Start(this.global)];
+    if (env) {
+      this.data[0].env = env;
+    }
     this.env = this.data[0].env;
     this.transformMML = transform;
     this.testStackItem = test;
@@ -51,13 +52,28 @@ export default class Stack {
   // TODO: Capitalised methods are temporary and will be removed!
   // This should be rewritten to rest arguments!
   public Push(item: any): void {
+    console.log('BEFORE: ' + this.data.map(x => x.toString()).join(', '));
+    console.log(this.data.length);
+    console.log('ITEM');
+    console.log(item.toString());
     this.push(item);
+    console.log('AFTER: ' + this.data.map(x => x.toString()).join(', '));
   }
-  public push(item: any):void {
-    if (!item) return;
-    item = this.transformMML(item);
+  public push(item: any): void {
+    if (!item) {
+      return;
+    }
+    console.log(item);
+    console.log(this.transformMML(item));
+
+    item = this.transformMML(item) ? new StackItem.Mml(item) : item;
     item.global = this.global;
+
+    console.log('TOP');
+    console.log(this.top());
+
     let top = (this.data.length ? this.top().checkItem(item) : true);
+
     // TODO: Can we model this with a multi-stackitem?
     if (top instanceof Array) {
       this.pop();
@@ -65,7 +81,7 @@ export default class Stack {
         this.push(it);
       }
     }
-    else if (this.testStackItem(top)) {
+    else if (top instanceof StackItem.Base) {
       this.pop();
       this.push(top);
     }
@@ -73,14 +89,12 @@ export default class Stack {
       this.data.push(item);
       // TODO: This needs to be reconciled with the env in new stack item.
       if (item.env) {
-        for (var id in this.env) {
-          if (this.env.hasOwnProperty(id)) {
-            item.env[id] = this.env[id];
-          }
+        for (let id in this.env) {
+          item.env[id] = this.env[id];
         }
         this.env = item.env;
       } else {
-        item.env = this.env
+        item.env = this.env;
       }
     }
   }
@@ -89,10 +103,10 @@ export default class Stack {
     return this.Pop();
   }
   public pop(): any {
-    var item = this.data.pop();
+    let item = this.data.pop();
     // TODO: This needs to be reconciled with the environment in stack item.
-    if (!item.isOpen) {
-      delete item.env
+    if (!item.isOpen()) {
+      delete item.env;
     }
     this.env = (this.data.length ? this.top().env : {});
     return item;
@@ -102,27 +116,31 @@ export default class Stack {
     return this.top(n);
   }
   public top(n?: number): any {
-    if (n == null) {n = 1}
-    if (this.data.length < n) {return null}
-    return this.data[this.data.length-n];
+    if (n == null) {
+      n = 1;
+    }
+    if (this.data.length < n) {
+      return null;
+    }
+    return this.data[this.data.length - n];
   }
 
   public Prev(noPop: boolean): any {
     return this.prev(noPop);
   }
   public prev(noPop: boolean): any {
-    var top = this.top();
+    let top = this.top();
     if (noPop) {
-      return top.data[top.data.length-1];
+      return top.data[top.data.length - 1];
     }
     return top.Pop();
   }
-  
+
   /**
    * @override
    */
   public toString() {
-    return "stack[\n  " + this.data.join("\n  ") + "\n]";
+    return 'stack[\n  ' + this.data.join(', ') + '\n]';
   }
-  
+
 }

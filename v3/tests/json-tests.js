@@ -38,7 +38,7 @@ class JsonTest extends Test {
 
 let jsonTest = new JsonTest();
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'Identifier', 'x',
   {'type':'math',
    'children':[
@@ -54,7 +54,7 @@ jsonTest.runTest(
 );
 
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'Two Identifiers', 'xy',
   {'type':'math',
    'children':[
@@ -73,7 +73,7 @@ jsonTest.runTest(
 );
 
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'Number', '2',
   {'type':'math',
    'children':[
@@ -111,7 +111,7 @@ jsonTest.runTest(
        );
 
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'Cube', 'x^3',
         {'type':'math',
          'children':[
@@ -134,6 +134,28 @@ jsonTest.runTest(
 
 
 jsonTest.runTest(
+  'Index', 'x_3',
+        {'type':'math',
+         'children':[
+           {'type':'mrow',
+            'inferred':true,
+            'children':[
+              {'type':'msub',
+               'children':[
+                 {'type':'mi',
+                  'text':'x',
+                  'attributes':{}},
+                 {'type':'mn',
+                  'text':'3',
+                  'attributes':{}}],
+               'attributes':{}}],
+            'attributes':{}}],
+         'attributes':{'display':'block'}
+        }
+       );
+
+
+jsonTest.ignoreTest(
   'Square Root Expression', '\\sqrt{3x-1}+(1+x)^2',
   {'type':'math',
    'children':[
@@ -187,7 +209,7 @@ jsonTest.runTest(
    'attributes':{'display':'block'}});
 
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'General Root Expression', '\\sqrt[4]{3x-1}+(1+x)^2',
   {'type':'math',
    'children':[
@@ -244,7 +266,7 @@ jsonTest.runTest(
    'attributes':{'display':'block'}});
 
 
-jsonTest.runTest('Quadratic Formula',
+jsonTest.ignoreTest('Quadratic Formula',
         'x = \\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}',
         {'type':'math',
          'children':[
@@ -316,7 +338,7 @@ jsonTest.runTest('Quadratic Formula',
        );
 
 
-jsonTest.runTest('Cauchy-Schwarz Inequality',
+jsonTest.ignoreTest('Cauchy-Schwarz Inequality',
         '\\left( \\sum_{k=1}^n a_k b_k \\right)^{\\!\\!2} \\leq' +
         '  \\left( \\sum_{k=1}^n a_k^2 \\right)' +
         '  \\left( \\sum_{k=1}^n b_k^2 \\right)',
@@ -501,7 +523,7 @@ jsonTest.runTest('Cauchy-Schwarz Inequality',
 
 
 
-jsonTest.runTest('An Identity of Ramanujan',
+jsonTest.ignoreTest('An Identity of Ramanujan',
         '\\frac{1}{\\Bigl(\\sqrt{\\phi\\sqrt{5}}-\\phi\\Bigr)' +
         '  e^{\\frac25\\pi}} =' +
         '    1+\\frac{e^{-2\\pi}}' +
@@ -761,7 +783,7 @@ jsonTest.runTest('An Identity of Ramanujan',
        );
 
 
-jsonTest.runTest('A Rogers-Ramanujan Identity',
+jsonTest.ignoreTest('A Rogers-Ramanujan Identity',
         '1 + \\frac{q^2}{(1-q)}' +
         '  + \\frac{q^6}{(1-q)(1-q^2)} + \\cdots =' +
         '\\prod_{j=0}^{\\infty}' +
@@ -1054,7 +1076,7 @@ jsonTest.runTest('A Rogers-Ramanujan Identity',
          'attributes':{'display':'block'}}
        );
 
-jsonTest.runTest('A Summation Formula',
+jsonTest.ignoreTest('A Summation Formula',
         '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
         {'type':'math',
          'children':[
@@ -1141,7 +1163,7 @@ jsonTest.runTest('A Summation Formula',
        );
 
 
-jsonTest.runTest('Cauchy\'s Integral Formula',
+jsonTest.ignoreTest('Cauchy\'s Integral Formula',
         'f(a) = \\oint_\\gamma \\frac{f(z)}{z-a}dz',
         {'type':'math',
          'children':[
@@ -1214,7 +1236,7 @@ jsonTest.runTest('Cauchy\'s Integral Formula',
          'attributes':{'display':'block'}}
        );
 
-jsonTest.runTest('Standard Deviation',
+jsonTest.ignoreTest('Standard Deviation',
         '\\sigma = \\sqrt{\\frac{1}{N}\\sum_{i=1}^N {(x_i-\\mu)}^2}',
         {'type':'math',
          'children':[
@@ -1507,7 +1529,7 @@ jsonTest.amsTest(
    'attributes':{'display':'block'}});
 
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'A Cross Product Formula', '\\mathbf{V}_1 \\times \\mathbf{V}_2 =' +
     '   \\begin{vmatrix}' +
     ' \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\' +
@@ -2424,7 +2446,7 @@ jsonTest.amsTest(
    'attributes':{'display':'block'}});
 
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'Color Frac', '\\frac{{\\cal \\color{red}{X}}}{\\color{blue}{\\sf y}}',
   {'type':'math',
    'children':[
