@@ -27,15 +27,15 @@
  */
 
 
-// VS Q: How do you include the mml_visitor without having to add the .js
-//       suffixes?
-// A: add structure in load.js
-// 
-let TexParser =  require('TexParser/lib/symbol_map.js');
+let TexParser = require('TexParser/lib/symbol_map.js');
+let MapHandler = require('TexParser/lib/map_handler.js').default;
+let Stack = require('TexParser/lib/stack.js').default;
+let StackItem = require('TexParser/lib/stack_item.js');
 
 (function (TEX,HUB,AJAX) {
   var MML, NBSP = "\u00A0"; 
-  
+
+  // VS Q: How are we going to handle this in the future?
   var _ = function (id) {
     return MathJax.Localization._.apply(MathJax.Localization,
       [["TeX", id]].concat([].slice.call(arguments,1)));
@@ -55,23 +55,34 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
       if (env) {this.data[0].env = env}
       this.env = this.data[0].env;
     },
-    Push: function () {
-      var i, m, item, top;
-      for (i = 0, m = arguments.length; i < m; i++) {
-        item = arguments[i]; if (!item) continue;
-        if (item instanceof MML.mbase) {item = STACKITEM.mml(item)}
-        item.global = this.global;
-        top = (this.data.length ? this.Top().checkItem(item) : true);
-        if (top instanceof Array) {this.Pop(); this.Push.apply(this,top)}
-        else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
-        else if (top) {
-          this.data.push(item);
-          if (item.env) {
-            for (var id in this.env)
-              {if (this.env.hasOwnProperty(id)) {item.env[id] = this.env[id]}}
-            this.env = item.env;
-          } else {item.env = this.env}
+    // Rewrote this to single argument push! Need to explicitly push an array of
+    // arguments in the extensions!
+    Push: function (item) {
+      if (!item) return;
+      if (item instanceof MML.mbase) {
+        item = STACKITEM.mml(item);
+      }
+      item.global = this.global;
+      if (this.data.length) {
+        var t1 = this.Top();
+      }
+      var top = (this.data.length ? this.Top().checkItem(item) : true);
+      if (top instanceof Array) {
+        this.Pop();
+        for (var i = 0, l = top.length; i < l; i++) {
+          this.Push(top[i]);
         }
+      }
+      else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
+      else if (top) {
+        this.data.push(item);
+        if (item.env) {
+          for (var id in this.env) {
+            if (this.env.hasOwnProperty(id)) {
+              item.env[id] = this.env[id]}
+          }
+          this.env = item.env;
+        } else {item.env = this.env}
       }
     },
     Pop: function () {
@@ -91,9 +102,12 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
     },
     toString: function () {return "stack[\n  "+this.data.join("\n  ")+"\n]"}
   });
+
   
   var STACKITEM = STACK.Item = MathJax.Object.Subclass({
     type: "base",
+    // VS Q: This is effectively the abstract class?
+    // 
     endError:   /*_()*/ ["ExtraOpenMissingClose","Extra open brace or missing close brace"],
     closeError: /*_()*/ ["ExtraCloseMissingOpen","Extra close brace or missing open brace"],
     rightError: /*_()*/ ["MissingLeftExtraRight","Missing \\left or extra \\right"],
@@ -102,8 +116,11 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
       this.data = [];
       this.Push.apply(this,arguments);
     },
-    Push: function () {this.data.push.apply(this.data,arguments)},
+    Push: function () {
+      this.data.push.apply(this.data,arguments)
+    },
     Pop: function () {return this.data.pop()},
+    // VS Q Forcerow never seems to be used.
     mmlData: function (inferred,forceRow) {
       if (inferred == null) {inferred = true}
       if (this.data.length === 1 && !forceRow) {return this.data[0]}
@@ -349,6 +366,8 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
   });
 
   STACKITEM.mml = STACKITEM.Subclass({
+    // VS Q: isNotStack is only used by mml? So why not test for that.
+    //       Add never seems to be used.
     type: "mml", isNotStack: true,
     Add: function () {this.data.push.apply(this.data,arguments); return this}
   });
@@ -437,6 +456,16 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
   };
   var STARTUP = function () {
     MML = MathJax.ElementJax.mml;
+
+    // TODO: This is temporary until we know what's happening with output of
+    //       these MML Data methods.
+    StackItem.createMmlElement = function(data, attribute) {
+      return MML.mrow.apply(MML, data).With(attribute);
+    };
+    StackItem.createError = function(content) {
+      TEX.Error(content);
+    };
+    
     HUB.Insert(TEXDEF,{
   
       // patterns for letters and numbers
@@ -1079,6 +1108,7 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
       }}
     }
   };
+
   
   /************************************************************************/
   /*
@@ -1093,7 +1123,14 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
     Init: function (string,env) {
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
-      this.stack = TEX.Stack(ENV,!!env);
+      this.stack = new Stack(ENV, !!env,
+                             function(x) {return STACKITEM.start(x);},
+                             function(item) {
+                               return item instanceof MML.mbase ? STACKITEM.mml(item) : item;
+                             },
+                             function(item) {return item instanceof STACKITEM;}
+                            );
+      // this.stack = TEX.Stack(ENV,!!env);
       this.Parse(); this.Push(STACKITEM.stop());
     },
     Parse: function () {
@@ -1114,7 +1151,14 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
         }
       }
     },
-    Push: function () {this.stack.Push.apply(this.stack,arguments)},
+    Push: function (arg) {
+      this.stack.Push(arg);
+    },
+    PushAll: function (args) {
+      for(var i = 0, m = args.length; i < m; i++) {
+        this.stack.Push(args[i]);
+      } 
+    },
     mml: function () {
       if (this.stack.Top().type !== "mml") {return null}
       return this.stack.Top().data[0];
@@ -1135,9 +1179,6 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
         // VS Q: This always seems to be used like that. I.e., macro functions
         //       are always saved as strings, not as functions?
         var macro = TEXDEF.macros.lookup(name);
-        // console.log(name);
-        // console.log(macro);
-        // console.log(this[macro.getFunction()]);
         this[macro.getFunction()].apply(this,[c+name].concat(macro.getArguments()));
       } else if (TEXDEF.mathchar0mi.contains(name)) {this.csMathchar0mi(TEXDEF.mathchar0mi.lookup(name));} 
         else if (TEXDEF.mathchar0mo.contains(name)) {this.csMathchar0mo(TEXDEF.mathchar0mo.lookup(name));} 
@@ -1641,7 +1682,7 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
     },
     
     HBox: function (name,style) {
-      this.Push.apply(this,this.InternalMath(this.GetArgument(name),style));
+      this.PushAll(this.InternalMath(this.GetArgument(name),style));
     },
     
     FBox: function (name) {
@@ -1732,7 +1773,8 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
         }
         var text = string.substr(this.i,i-this.i);
         if (!text.match(/^\s*\\text[^a-zA-Z]/)) {
-          this.Push.apply(this,this.InternalMath(text,0));
+          var internal = this.InternalMath(text,0);
+          this.PushAll(internal);
           this.i = i;
         }
       }
@@ -1831,7 +1873,6 @@ let TexParser =  require('TexParser/lib/symbol_map.js');
       // if (!(cmd instanceof Array)) {cmd = [cmd]}
       var func = cmd.getFunction();
       var args = cmd.getArguments();
-console.log(args);
       var end = args[0];
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       if (name === "\\end") {
@@ -2245,7 +2286,6 @@ console.log(args);
     //  Add a user-defined macro to the macro list
     //
     Macro: function (name,def,argn) {
-      console.log('HERE');
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
       TEXDEF.macros[name].isUser = true;
     },

@@ -23,10 +23,9 @@
  */
 
 import {AbstractSymbolMap, SymbolMap} from './symbol_map';
-import {Symbol, Macro} from './symbol';
 
 
-export class MapHandler {
+export default class MapHandler {
 
   private static instance: MapHandler;
   private maps: Map<string, SymbolMap> = new Map<string, SymbolMap>();

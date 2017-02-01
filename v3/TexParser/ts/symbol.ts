@@ -22,17 +22,16 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-/// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
+import {Args, Attributes} from './types';
 
-export type Args = boolean|number|string|null;
 
 export class Symbol {
 
   private symbol: string;
   private char: string;
-  private attributes: Record<string, Args>;
+  private attributes: Attributes;
 
-  constructor(symbol: string, char: string, attributes: null|Record<string, Args>) {
+  constructor(symbol: string, char: string, attributes: Attributes) {
     this.symbol = symbol;
     this.char = Symbol.parse(char);
     this.attributes = attributes;
@@ -46,7 +45,7 @@ export class Symbol {
     return this.char;
   }
 
-  public getAttributes(): Record<string, Args> {
+  public getAttributes(): Attributes {
     return this.attributes;
   }
   

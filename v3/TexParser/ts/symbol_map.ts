@@ -23,15 +23,10 @@
  */
 
 /// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
-/// <reference path="symbol.ts"/>
-/// <reference path="parse_methods.ts"/>
+import {Attributes, Args} from './types';
+import {Symbol, Macro} from './symbol';
+import MapHandler from './map_handler';
 
-import {Symbol, Macro, Args} from './symbol';
-import {someTest} from './parse_methods';
-
-//// TODO: This is temporary, until we have got rid of the Array/boolean return
-//// values!
-export type LookupReturn = string | Array<string|boolean|JSON> | boolean;
 
 /**
  * SymbolMaps are the base components for the input parsers.
@@ -65,6 +60,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   
   constructor(name: string) {
     this.name = name;
+    MapHandler.getInstance().register(this);
   };
 
   /**
@@ -154,15 +150,16 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
 
 export class CharacterMap extends AbstractParseMap<Symbol> {
 
-  public addElement(symbol: string, object: [string, null] | [string, Record<string, Args>]): void {
+  public addElement(symbol: string, object: [string, null] | [string, Attributes]): void {
     let character = new Symbol(symbol, object[0], object[1]);
     this.add(symbol, character);
   }
 
   // TODO: Some of this is due to the legacy code format.  In particular working
   //       with nullable Attributes should not be necessary!
+  // These should evolve into the fromJSON methods.
   public static create(name: string,
-                       json: {[index: string]: string|[string, Record<string, Args>]}): CharacterMap {
+                       json: {[index: string]: string|[string, Attributes]}): CharacterMap {
     let map = new CharacterMap(name);
     for (let key in json) {
       let value = json[key];
