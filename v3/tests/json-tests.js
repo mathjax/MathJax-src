@@ -39,6 +39,57 @@ class JsonTest extends Test {
 let jsonTest = new JsonTest();
 
 jsonTest.runTest(
+  'Identifier', 'x',
+  {'type':'math',
+   'children':[
+     {'type':'mrow',
+      'inferred':true,
+      'children':[
+        {'type':'mi',
+         'text':'x',
+         'attributes':{}}],
+      'attributes':{}}],
+   'attributes':{'display':'block'}
+  }
+);
+
+
+jsonTest.runTest(
+  'Two Identifiers', 'xy',
+  {'type':'math',
+   'children':[
+     {'type':'mrow',
+      'inferred':true,
+      'children':[
+        {'type':'mi',
+         'text':'x',
+         'attributes':{}},
+        {'type':'mi',
+         'text':'y',
+         'attributes':{}}],
+      'attributes':{}}],
+   'attributes':{'display':'block'}
+  }
+);
+
+
+jsonTest.runTest(
+  'Number', '2',
+  {'type':'math',
+   'children':[
+     {'type':'mrow',
+      'inferred':true,
+      'children':[
+        {'type':'mn',
+         'text':'2',
+         'attributes':{}}],
+      'attributes':{}}],
+   'attributes':{'display':'block'}
+  }
+);
+
+
+jsonTest.runTest(
   'Square', 'x^2',
   {'type':'math',
    'children':[
