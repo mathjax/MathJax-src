@@ -221,6 +221,27 @@ jsonTest.runTest(
 );
 
 
+jsonTest.runTest(
+  'PrePrime', '\'x',
+  {'type':'math',
+   'children':[
+     {'type':'mrow',
+      'inferred':true,
+      'children':[
+        {'type':'msub',
+         'children':[
+           {'type':'mi',
+            'text':'x',
+            'attributes':{}},
+           {'type':'mo',
+            'text':'″',
+            'attributes':{}}],
+         'attributes':{}}],
+      'attributes':{}}],
+   'attributes':{'display':'block'}}
+);
+
+
 jsonTest.ignoreTest(
   'Square Root Expression', '\\sqrt{3x-1}+(1+x)^2',
   {'type':'math',
