@@ -133,6 +133,8 @@ export default class Stack {
     if (noPop) {
       return top.data[top.data.length - 1];
     }
+    // TODO: This Pop has to be small once all the step item functions are
+    //       refactored.
     return top.Pop();
   }
 

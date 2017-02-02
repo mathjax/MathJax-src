@@ -35,14 +35,18 @@ let StackItem = require('TexParser/lib/stack_item.js');
 (function (TEX,HUB,AJAX) {
     // TODO: This is temporary until we know what's happening with output of
     //       these MML Data methods.
-  StackItem.setTempFunctions(function(data, attribute) {
-    return MathJax.ElementJax.mml.mrow.apply(MathJax.ElementJax.mml, data).With(attribute);
-  },
-                             function(content) {
-                               MathJax.InputJax.TeX.Error(content);
-                             });
+  StackItem.setTempFunctions(
+    {mml: function(func, data, attribute) {
+      return MathJax.ElementJax.mml[func].apply(MathJax.ElementJax.mml, data).With(attribute);
+    },
+     error: function(content) {
+       MathJax.InputJax.TeX.Error(content);
+     },
+     setdata: function(base, count, item) {
+       base.SetData(count, item);
+     }
+    });
 
-  console.log(StackItem.createMmlElement);
   
   var MML, NBSP = "\u00A0"; 
 
@@ -204,6 +208,7 @@ let StackItem = require('TexParser/lib/stack_item.js');
     checkItem: function (item) {
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
+        // VS Q: What are these primes. What does SetData exactly do?
         if (this.primes) {
           if (this.position !== 2) {this.data[0].SetData(2,this.primes)}
             else {item.data[0] = MML.mrow(this.primes.With({variantForm:true}),item.data[0])}
@@ -1137,7 +1142,7 @@ let StackItem = require('TexParser/lib/stack_item.js');
                             );
       // this.stack = TEX.Stack(ENV,!!env);
       // this.Parse(); this.Push(STACKITEM.stop());
-      this.Parse(); this.Push(new StackItem.StackItemStop());
+      this.Parse(); this.Push(new StackItem.Stop());
     },
     Parse: function () {
       var c, n;
@@ -1304,9 +1309,12 @@ let StackItem = require('TexParser/lib/stack_item.js');
           position = base.sup;
         }
       }
-      this.Push(STACKITEM.subsup(base).With({
+      this.Push(new StackItem.Subsup(base, {
         position: position, primes: primes, movesupsub: movesupsub
       }));
+      // this.Push(STACKITEM.subsup(base).With({
+      //   position: position, primes: primes, movesupsub: movesupsub
+      // }));
     },
     Subscript: function (c) {
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
@@ -1331,9 +1339,12 @@ let StackItem = require('TexParser/lib/stack_item.js');
           position = base.sub;
         }
       }
-      this.Push(STACKITEM.subsup(base).With({
+      this.Push(new StackItem.Subsup(base, {
         position: position, primes: primes, movesupsub: movesupsub
       }));
+      // this.Push(STACKITEM.subsup(base).With({
+      //   position: position, primes: primes, movesupsub: movesupsub
+      // }));
     },
     PRIME: "\u2032", SMARTQUOTE: "\u2019",
     Prime: function (c) {
@@ -1346,7 +1357,7 @@ let StackItem = require('TexParser/lib/stack_item.js');
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
       sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
-      this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
+      this.Push(new StackItem.Prime(base, this.mmlToken(MML.mo(sup)), {}));
     },
     mi2mo: function (mi) {
       var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
@@ -2253,16 +2264,16 @@ let StackItem = require('TexParser/lib/stack_item.js');
       math = data.math;
       console.log('doing the math');
       console.log(math);
-      try {
+      // try {
         var parse = TEX.Parse(math);
         console.log(parse);
         console.log(parse.mml);
         mml = parse.mml();
-      } catch(err) {
-        if (!err.texError) {throw err}
-        mml = this.formatError(err,math,display,script);
-        isError = true;
-      }
+      // } catch(err) {
+      //   if (!err.texError) {throw err}
+      //   mml = this.formatError(err,math,display,script);
+      //   isError = true;
+      // }
       console.log('No error?');
       console.log(mml);
       if (mml.isa(MML.mtable) && mml.displaystyle === "inherit") mml.displaystyle = display; // for tagged equations

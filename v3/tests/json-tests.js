@@ -89,7 +89,7 @@ jsonTest.ignoreTest(
 );
 
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'Square', 'x^2',
   {'type':'math',
    'children':[
@@ -133,7 +133,7 @@ jsonTest.ignoreTest(
        );
 
 
-jsonTest.runTest(
+jsonTest.ignoreTest(
   'Index', 'x_3',
         {'type':'math',
          'children':[
@@ -153,6 +153,72 @@ jsonTest.runTest(
          'attributes':{'display':'block'}
         }
        );
+
+
+jsonTest.ignoreTest(
+  'SubSup', 'x^a_3',
+        {'type':'math',
+         'children':[
+           {'type':'mrow',
+            'inferred':true,
+            'children':[
+              {'type':'msubsup',
+               'children':[
+                 {'type':'mi',
+                  'text':'x',
+                  'attributes':{}},
+                 {'type':'mn',
+                  'text':'3',
+                  'attributes':{}},
+                 {'type':'mi',
+                  'text':'a',
+                  'attributes':{}}],
+               'attributes':{}}],
+            'attributes':{}}],
+         'attributes':{'display':'block'}
+        }
+       );
+
+
+jsonTest.runTest(
+  'Prime', 'x\'',
+  {'type':'math',
+   'children':[
+     {'type':'mrow',
+      'inferred':true,
+      'children':[
+        {'type':'msub',
+         'children':[
+           {'type':'mi',
+            'text':'x',
+            'attributes':{}},
+           {'type':'mo',
+            'text':'′',
+            'attributes':{}}],
+         'attributes':{}}],
+      'attributes':{}}],
+   'attributes':{'display':'block'}}
+);
+
+jsonTest.runTest(
+  'Double Prime', 'x\'\'',
+  {'type':'math',
+   'children':[
+     {'type':'mrow',
+      'inferred':true,
+      'children':[
+        {'type':'msub',
+         'children':[
+           {'type':'mi',
+            'text':'x',
+            'attributes':{}},
+           {'type':'mo',
+            'text':'″',
+            'attributes':{}}],
+         'attributes':{}}],
+      'attributes':{}}],
+   'attributes':{'display':'block'}}
+);
 
 
 jsonTest.ignoreTest(
