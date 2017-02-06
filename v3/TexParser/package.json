@@ -1,0 +1,27 @@
+{
+  "name": "texparser",
+  "version": "0.0.1",
+  "description": "Attempt to parse ",
+  "main": "index.js",
+  "devDependencies": {
+    "typescript": ">=1.8.10",
+    "typescript-tools": "*",
+    "tss": "*",
+    "tslint": ">=3.15.0",
+    "tslint-jsdoc-rules": "*",
+    "tslint-unix-formatter": "*"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathjax/mathjax-tc/tree/v3-structure/v3/TexParser"
+  },
+  "keywords": [
+    "MathJax",
+    "Tree"
+  ],
+  "author": "Volker Sorge <Volker.Sorge@gmail.com> (http://www.cs.bham.ac.uk/~vxs)",
+  "license": "Apache-2.0"
+}
