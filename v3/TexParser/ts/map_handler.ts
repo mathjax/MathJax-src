@@ -81,7 +81,7 @@ export default class MapHandler {
    * @return {T} A boolean, Character, or Macro.
    */
   public lookup<T>(symbol: string): T {
-    let map = <AbstractSymbolMap<T>>(this.applicable(symbol));
+    let map = this.applicable(symbol) as AbstractSymbolMap<T>;
     return map ? map.lookup(symbol) : null;
   }
   
