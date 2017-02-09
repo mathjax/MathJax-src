@@ -4,7 +4,7 @@
   "description": "Attempt to parse ",
   "main": "index.js",
   "devDependencies": {
-    "typescript": ">=1.8.10",
+    "typescript": "2.1.*",
     "typescript-tools": "*",
     "tss": "*",
     "tslint": ">=3.15.0",
