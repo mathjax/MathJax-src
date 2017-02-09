@@ -23,8 +23,6 @@
  * @author volker.sorge@gmail.com (Volker Sorge)
  */
 
-/// <reference path="tree_node.ts" />
-
 import {TreeNode, Kind} from './tree_node';
 import {LeafNode} from './leaf_node';
 import {Visitable, Visitor} from './visitor';
