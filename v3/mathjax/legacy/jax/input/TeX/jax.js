@@ -28,6 +28,7 @@
 
 
 let TexParser = require('TexParser/lib/symbol_map.js');
+let tp = require('TexParser/lib/tex_parser.js');
 let MapHandler = require('TexParser/lib/map_handler.js').default;
 let Stack = require('TexParser/lib/stack.js').default;
 let StackItem = require('TexParser/lib/stack_item.js');
@@ -476,6 +477,8 @@ let StackItem = require('TexParser/lib/stack_item.js');
     HUB.Insert(TEXDEF,{
   
       // patterns for letters and numbers
+      // letter:  TexParser.RegExpMap.create('letter', PARSE.Variable, /[a-z]/i),
+      // digit:   TexParser.RegExpMap.create('digit', PARSE.Number, /[0-9.]/),
       letter:  new TexParser.RegExpMap('letter', /[a-z]/i),
       digit:   new TexParser.RegExpMap('digit', /[0-9.]/),
       number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
@@ -499,13 +502,13 @@ let StackItem = require('TexParser/lib/stack_item.js');
         '\u2019': 'Prime'
       }),
       
-      remap: TexParser.CharacterMap.create('remap', {
+      remap: TexParser.CharacterMap.create('remap', null, {
         '-':   '2212',
         '*':   '2217',
         '`':   '2018'   // map ` to back quote
       }),
     
-      mathchar0mi: TexParser.CharacterMap.create('mathchar0mi', {
+      mathchar0mi: TexParser.CharacterMap.create('mathchar0mi', null, {
 	// Lower-case greek
 	alpha:        '03B1',
 	beta:         '03B2',
@@ -571,7 +574,7 @@ let StackItem = require('TexParser/lib/stack_item.js');
         spadesuit:    ['2660',{mathvariant: MML.VARIANT.NORMAL}]
       }),
         
-      mathchar0mo: TexParser.CharacterMap.create('mathchar0mo', {
+      mathchar0mo: TexParser.CharacterMap.create('mathchar0mo', null, {
         surd:         '221A',
 
         // big ops
@@ -722,7 +725,7 @@ let StackItem = require('TexParser/lib/stack_item.js');
         colon:            ['003A', {texClass: MML.TEXCLASS.PUNCT}]
       }),
       
-      mathchar7: TexParser.CharacterMap.create('mathchar7', {
+      mathchar7: TexParser.CharacterMap.create('mathchar7', null, {
         Gamma:        '0393',
         Delta:        '0394',
         Theta:        '0398',
@@ -743,7 +746,7 @@ let StackItem = require('TexParser/lib/stack_item.js');
         And:          '0026'
       }),
       
-      delimiter: TexParser.CharacterMap.create('delimiter', {
+      delimiter: TexParser.CharacterMap.create('delimiter', null, {
         '(':                '(',
         ')':                ')',
         '[':                '[',
@@ -1128,6 +1131,10 @@ let StackItem = require('TexParser/lib/stack_item.js');
   // 
   var PARSE = MathJax.Object.Subclass({
     Init: function (string,env) {
+      TEXDEF.letter.setParser(this.Variable.bind(this));
+      TEXDEF.digit.setParser(this.Number.bind(this));
+      console.log(tp.TexParser);
+      console.log(MapHandler);
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = new Stack(ENV, !!env,
@@ -1153,12 +1160,14 @@ let StackItem = require('TexParser/lib/stack_item.js');
         var special = TEXDEF.special.lookup(c);
         if (special) {
           this[special.getFunction()](c);
-        } else if (TEXDEF.letter.lookup(c)) {
-          this.Variable(c);
-        } else if (TEXDEF.digit.lookup(c)) {
-          this.Number(c);
         } else {
-          this.Other(c);
+          var result = tp.TexParser.parse(c);
+          console.log('LLLLL: ' + result);
+        //   if (TEXDEF.letter.contains(c)) {
+        //   var lll = TEXDEF.letter.parse(c);
+          // } else if (TEXDEF.digit.lookup(c)) {
+          //   this.Number(c);
+          result || this.Other(c);
         }
       }
     },
@@ -1257,6 +1266,8 @@ let StackItem = require('TexParser/lib/stack_item.js');
      */
     Variable: function (c) {
       var def = {}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
+      console.log('DEF: ');
+      console.log(def);
       this.Push(this.mmlToken(MML.mi(MML.chars(c)).With(def)));
     },
 

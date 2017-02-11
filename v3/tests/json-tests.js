@@ -38,7 +38,7 @@ class JsonTest extends Test {
 
 let jsonTest = new JsonTest();
 
-jsonTest.ignoreTest(
+jsonTest.runTest(
   'Identifier', 'x',
   {'type':'math',
    'children':[
@@ -54,7 +54,7 @@ jsonTest.ignoreTest(
 );
 
 
-jsonTest.ignoreTest(
+jsonTest.runTest(
   'Two Identifiers', 'xy',
   {'type':'math',
    'children':[
@@ -73,7 +73,7 @@ jsonTest.ignoreTest(
 );
 
 
-jsonTest.ignoreTest(
+jsonTest.runTest(
   'Number', '2',
   {'type':'math',
    'children':[
@@ -89,7 +89,7 @@ jsonTest.ignoreTest(
 );
 
 
-jsonTest.ignoreTest(
+jsonTest.runTest(
   'Square', 'x^2',
   {'type':'math',
    'children':[
@@ -111,7 +111,7 @@ jsonTest.ignoreTest(
        );
 
 
-jsonTest.ignoreTest(
+jsonTest.runTest(
   'Cube', 'x^3',
         {'type':'math',
          'children':[
@@ -133,7 +133,7 @@ jsonTest.ignoreTest(
        );
 
 
-jsonTest.ignoreTest(
+jsonTest.runTest(
   'Index', 'x_3',
         {'type':'math',
          'children':[
@@ -155,7 +155,7 @@ jsonTest.ignoreTest(
        );
 
 
-jsonTest.ignoreTest(
+jsonTest.runTest(
   'SubSup', 'x^a_3',
         {'type':'math',
          'children':[

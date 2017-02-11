@@ -23,6 +23,7 @@
  */
 
 import {AbstractSymbolMap, SymbolMap} from './symbol_map';
+import {ParseResult} from './types';
 
 
 export default class MapHandler {
@@ -31,13 +32,8 @@ export default class MapHandler {
   private maps: Map<string, SymbolMap> = new Map<string, SymbolMap>();
   private configuration: Array<SymbolMap> = [];
 
-  public static getInstance(): MapHandler {
-    if (!MapHandler.instance) {
-      MapHandler.instance = new MapHandler();
-    }
-    return MapHandler.instance;
-  }
-
+  private constructor() { }
+  
   public register(map: SymbolMap): void {
     this.maps.set(map.getName(), map);
   }
@@ -85,9 +81,21 @@ export default class MapHandler {
     return map ? map.lookup(symbol) : null;
   }
   
+  public parse(symbol: string): ParseResult {
+    let map = this.applicable(symbol);
+    return map ? map.parse(symbol) : null;
+  }
+
   // TODO: Turn this into a global warning and error functionality
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
+  }
+
+  static getInstance(): MapHandler {
+    if (!MapHandler.instance) {
+      MapHandler.instance = new MapHandler();
+    }
+    return MapHandler.instance;
   }
 
 }

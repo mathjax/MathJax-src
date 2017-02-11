@@ -69,10 +69,11 @@ export class Symbol {
 export class Macro {
 
   private symbol: string;
-  // Eventually this should become a keyof Parser type.
+  //  private func: (str: string) => JSON;
   private func: string;
   private args: Args[];
 
+  //constructor(symbol: string, func: (str: string) => JSON, args: Args[]) {
   constructor(symbol: string, func: string, args: Args[]) {
     this.symbol = symbol,
     this.func = func;
@@ -83,6 +84,7 @@ export class Macro {
     return this.symbol;
   }
 
+  //  public getFunction(): (str: string) => JSON {
   public getFunction(): string {
     return this.func;
   }

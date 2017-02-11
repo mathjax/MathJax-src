@@ -22,8 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-/// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
-import {Attributes, Args} from './types';
+// Can eventually be removed!
+import {Attributes, Args, ParseResult} from './types';
 import {Symbol, Macro} from './symbol';
 import MapHandler from './map_handler';
 
@@ -46,17 +46,31 @@ export interface SymbolMap {
   getName(): string;
 
   /**
-   * @param {string} symbol
-   * @return {boolean} 
+   * @param {string} symbol A symbol to parse.
+   * @return {boolean} True if the symbol map applies to the symbol.
    */
   contains(symbol: string): boolean;
 
+  /**
+   * @param {string} symbol A symbol to parse.
+   * @return {function(string): ParseResult} A parse method for the symbol.
+   */
+  parserFor(symbol: string): (str: string) => ParseResult;
+
+  /**
+   * @param {string} symbol A symbol to parse.
+   * @return {ParseResult} The parsed symbol and the rest
+   * string.
+   */
+  parse(symbol: string): ParseResult;
+  
 }
 
 
 export abstract class AbstractSymbolMap<T> implements SymbolMap {
 
   private name: string;
+  private parser: (str: string) => ParseResult;
   
   constructor(name: string) {
     this.name = name;
@@ -75,6 +89,29 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
    */
   public abstract contains(symbol: string): boolean;
 
+  /**
+   * @override
+   */
+  public parserFor(symbol: string) {
+    return this.contains(symbol) ? this.parser : null;
+  }
+  
+  /**
+   * @override
+   */
+  public parse(symbol: string) {
+    let parser = this.parserFor(symbol);
+    return parser ? parser(symbol) : null;
+  }
+  
+  /**
+   * @param {function(string): ParseResult} parser Sets the central parser
+   * function.
+   */
+  public setParser(parser: (str: string) => ParseResult):void {
+    console.log(parser);
+    this.parser = parser;
+  }
 
   /**
    * @param {string} symbol
@@ -100,7 +137,7 @@ export class RegExpMap extends AbstractSymbolMap<boolean> {
   public contains(symbol: string) {
     return this.lookup(symbol);
   }
-  
+
   /**
    * @override
    */
@@ -108,6 +145,16 @@ export class RegExpMap extends AbstractSymbolMap<boolean> {
     return this.regExp.test(symbol);
   }
   
+  // TODO: Some of this is due to the legacy code format.  In particular working
+  //       with nullable Attributes should not be necessary!
+  // These should evolve into the fromJSON methods.
+  public static create(
+    name: string, parser: (str: string) => ParseResult,
+    regexp: RegExp): RegExpMap {
+      let map = new RegExpMap(name, regexp);
+      map.setParser(parser);
+      return map;
+    }
 }
 
 
@@ -158,26 +205,34 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
   // TODO: Some of this is due to the legacy code format.  In particular working
   //       with nullable Attributes should not be necessary!
   // These should evolve into the fromJSON methods.
-  public static create(name: string,
-                       json: {[index: string]: string|[string, Attributes]}): CharacterMap {
-    let map = new CharacterMap(name);
-    for (let key in json) {
-      let value = json[key];
-      map.addElement(key, (typeof(value) === "string") ? [value, null] : value);
+  public static create(
+    name: string, parser: (str: string) => ParseResult,
+    json: {[index: string]: string|[string, Attributes]}): CharacterMap {
+      let map = new CharacterMap(name);
+      for (let key in json) {
+        let value = json[key];
+        map.addElement(key, (typeof(value) === "string") ? [value, null] : value);
+      }
+      map.setParser(parser);
+      return map;
     }
-    return map;
-  }
-  
 }
 
 
 export class MacroMap extends AbstractParseMap<Macro> {
 
   public addElement(symbol: string, object: Args[]): void {
-    let character = new Macro(symbol, <string> object[0], object.slice(1));
+    let character = new Macro(symbol, object[0] as string, object.slice(1));
     this.add(symbol, character);
   }
 
+  public setParser(parser: (str: string) => ParseResult) { }
+
+  // public parserFor(symbol: string) {
+  //   let macro = this.lookup(symbol);
+  //   return macro ? macro.getFunction() : null;
+  // }
+  
   // TODO: Some of this is due to the legacy code format.
   public static create(name: string,
                        json: {[index: string]: string|Args[]}): MacroMap {
