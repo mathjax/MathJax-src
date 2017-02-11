@@ -1,7 +1,6 @@
 import {JsonVisitor} from 'TreeJax/lib/json_visitor';
 import {Tree} from 'TreeJax/lib/tree';
 
-var assert = System.nodeRequire('assert');
 import {Test} from './tests.js';
 
 
@@ -19,7 +18,6 @@ class TreeTest extends Test {
         let tree = Tree.parse(expected);
         let jv = new JsonVisitor();
         tree.accept(jv);
-        assert.deepEqual(jv.getResult(), expected);
         t.deepEqual(
           jv.getResult(), expected, name);
       });
