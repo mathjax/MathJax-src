@@ -58,11 +58,11 @@
   MML.msubsup.Augment({
     toJSON: function () {
       var json = this.SUPER(arguments).toJSON.call(this);
-      if (this.data[1] == null) {
+      if (this.data[this.sub] == null) {
         json.type = "msup";
         json.children.splice(1,1);
       }
-      if (this.data[2] == null) {
+      if (this.data[this.sup] == null) {
         json.type = "msub";
         json.children.splice(2,1);
       }
@@ -73,11 +73,11 @@
   MML.munderover.Augment({
     toJSON: function () {
       var json = this.SUPER(arguments).toJSON.call(this);
-      if (this.data[1] == null) {
+      if (this.data[this.munder] == null) {
         json.type = "mover";
         json.children.splice(1,1);
       }
-      if (this.data[2] == null) {
+      if (this.data[this.mover] == null) {
         json.type = "munder";
         json.children.splice(2,1);
       }
