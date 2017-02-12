@@ -1,33 +1,41 @@
 import {JsonVisitor} from 'TreeJax/lib/json_visitor';
 import {Tree} from 'TreeJax/lib/tree';
+import {TexParser} from 'TexParser/lib/tex_parser';
 
 import {Test} from './tests.js';
 
 
-class TreeTest extends Test {
+
+
+class ParserTest extends Test {
 
   constructor() {
     super();
   }
 
   // Tests exclusively the timing of the Translate method.
-  runTest(name, expected) {
+  runTest(name, tex, expected) {
     this.test(
       name,
       t => {
-        let tree = Tree.parse(expected);
+        let tree = TexParser.parse(tex);
         let jv = new JsonVisitor();
         tree.accept(jv);
         t.deepEqual(jv.getResult(), expected, name);
       });
   }
 
+  ignoreTest(name, tex, expected) {
+  }
+  amsTest(name, tex, expected) {
+  }
+  
 }
 
-let treeTest = new TreeTest();
+let parserTest = new ParserTest();
 
-treeTest.runTest(
-  'Identifier',
+parserTest.runTest(
+  'Identifier', 'x',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -42,8 +50,8 @@ treeTest.runTest(
 );
 
 
-treeTest.runTest(
-  'Two Identifiers',
+parserTest.runTest(
+  'Two Identifiers', 'xy',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -61,8 +69,8 @@ treeTest.runTest(
 );
 
 
-treeTest.runTest(
-  'Number',
+parserTest.runTest(
+  'Number', '2',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -77,8 +85,8 @@ treeTest.runTest(
 );
 
 
-treeTest.runTest(
-  'Square',
+parserTest.runTest(
+  'Square', 'x^2',
   {'type':'math',
    'children':[
            {'type':'mrow',
@@ -99,8 +107,8 @@ treeTest.runTest(
        );
 
 
-treeTest.runTest(
-  'Cube',
+parserTest.runTest(
+  'Cube', 'x^3',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -121,8 +129,8 @@ treeTest.runTest(
        );
 
 
-treeTest.runTest(
-  'Index',
+parserTest.runTest(
+  'Index', 'x_3',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -143,8 +151,8 @@ treeTest.runTest(
        );
 
 
-treeTest.runTest(
-  'SubSup',
+parserTest.runTest(
+  'SubSup', 'x^a_3',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -168,8 +176,8 @@ treeTest.runTest(
        );
 
 
-treeTest.runTest(
-  'Prime',
+parserTest.runTest(
+  'Prime', 'x\'',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -188,8 +196,8 @@ treeTest.runTest(
    'attributes':{'display':'block'}}
 );
 
-treeTest.runTest(
-  'Double Prime',
+parserTest.runTest(
+  'Double Prime', 'x\'\'',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -209,8 +217,8 @@ treeTest.runTest(
 );
 
 
-treeTest.runTest(
-  'PrePrime',
+parserTest.runTest(
+  'PrePrime', '\'x',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -230,8 +238,8 @@ treeTest.runTest(
 );
 
 
-treeTest.runTest(
-  'Square Root Expression',
+parserTest.ignoreTest(
+  'Square Root Expression', '\\sqrt{3x-1}+(1+x)^2',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -284,8 +292,8 @@ treeTest.runTest(
    'attributes':{'display':'block'}});
 
 
-treeTest.runTest(
-  'General Root Expression',
+parserTest.ignoreTest(
+  'General Root Expression', '\\sqrt[4]{3x-1}+(1+x)^2',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -341,7 +349,8 @@ treeTest.runTest(
    'attributes':{'display':'block'}});
 
 
-treeTest.runTest('Quadratic Formula',
+parserTest.ignoreTest('Quadratic Formula',
+        'x = \\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -412,7 +421,10 @@ treeTest.runTest('Quadratic Formula',
        );
 
 
-treeTest.runTest('Cauchy-Schwarz Inequality',
+parserTest.ignoreTest('Cauchy-Schwarz Inequality',
+        '\\left( \\sum_{k=1}^n a_k b_k \\right)^{\\!\\!2} \\leq' +
+        '  \\left( \\sum_{k=1}^n a_k^2 \\right)' +
+        '  \\left( \\sum_{k=1}^n b_k^2 \\right)',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -594,7 +606,14 @@ treeTest.runTest('Cauchy-Schwarz Inequality',
 
 
 
-treeTest.runTest('An Identity of Ramanujan',
+parserTest.ignoreTest('An Identity of Ramanujan',
+        '\\frac{1}{\\Bigl(\\sqrt{\\phi\\sqrt{5}}-\\phi\\Bigr)' +
+        '  e^{\\frac25\\pi}} =' +
+        '    1+\\frac{e^{-2\\pi}}' +
+        '      {1+\\frac{e^{-4\\pi}}' +
+        '        {1+\\frac{e^{-6\\pi}}' +
+        '          {1+\\frac{e^{-8\\pi}}' +
+        '            {1+\\ldots} } } }',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -847,7 +866,12 @@ treeTest.runTest('An Identity of Ramanujan',
        );
 
 
-treeTest.runTest('A Rogers-Ramanujan Identity',
+parserTest.ignoreTest('A Rogers-Ramanujan Identity',
+        '1 + \\frac{q^2}{(1-q)}' +
+        '  + \\frac{q^6}{(1-q)(1-q^2)} + \\cdots =' +
+        '\\prod_{j=0}^{\\infty}' +
+        '  \\frac{1}{(1-q^{5j+2})(1-q^{5j+3})},' +
+        '     \\quad\\quad \\text{for $|q|<1$}.',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -1135,7 +1159,8 @@ treeTest.runTest('A Rogers-Ramanujan Identity',
          'attributes':{'display':'block'}}
        );
 
-treeTest.runTest('A Summation Formula',
+parserTest.ignoreTest('A Summation Formula',
+        '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -1221,7 +1246,8 @@ treeTest.runTest('A Summation Formula',
        );
 
 
-treeTest.runTest('Cauchy\'s Integral Formula',
+parserTest.ignoreTest('Cauchy\'s Integral Formula',
+        'f(a) = \\oint_\\gamma \\frac{f(z)}{z-a}dz',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -1293,7 +1319,8 @@ treeTest.runTest('Cauchy\'s Integral Formula',
          'attributes':{'display':'block'}}
        );
 
-treeTest.runTest('Standard Deviation',
+parserTest.ignoreTest('Standard Deviation',
+        '\\sigma = \\sqrt{\\frac{1}{N}\\sum_{i=1}^N {(x_i-\\mu)}^2}',
         {'type':'math',
          'children':[
            {'type':'mrow',
@@ -1387,8 +1414,12 @@ treeTest.runTest('Standard Deviation',
        );
 
 
-treeTest.amsTest(
-  'The Lorenz Equations',
+parserTest.amsTest(
+  'The Lorenz Equations', '\\begin{align}' +
+    '\\dot{x} & = \\sigma(y-x) \\\\' +
+    '\\dot{y} & = \\rho x - y - xz \\\\' +
+    '\\dot{z} & = -\\beta z + xy' +
+    '\\end{align}',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -1581,8 +1612,15 @@ treeTest.amsTest(
    'attributes':{'display':'block'}});
 
 
-treeTest.runTest(
-  'A Cross Product Formula',
+parserTest.ignoreTest(
+  'A Cross Product Formula', '\\mathbf{V}_1 \\times \\mathbf{V}_2 =' +
+    '   \\begin{vmatrix}' +
+    ' \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\' +
+    '    \\frac{\\partial X}{\\partial u} &' +
+    ' \\frac{\\partial Y}{\\partial u} & 0 \\\\' +
+    '    \\frac{\\partial X}{\\partial v} &' +
+    ' \\frac{\\partial Y}{\\partial v} & 0 \\\\' +
+    '   \\end{vmatrix}',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -1848,8 +1886,8 @@ treeTest.runTest(
    'attributes':{'display':'block'}});
 
 
-treeTest.amsTest(
-  'Probability',
+parserTest.amsTest(
+  'Probability', 'P(E) = {n \\choose k} p^k (1-p)^{ n-k}',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -2040,8 +2078,17 @@ treeTest.amsTest(
    'attributes':{'display':'block'}});
 
 
-treeTest.amsTest(
-  'Maxwell\'s Equations',
+parserTest.amsTest(
+  'Maxwell\'s Equations', '\\begin{align} ' +
+    '\\nabla \\times \\vec{\\mathbf{B}} -\\, \\frac1c\\, ' +
+    '\\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t} &' +
+    ' = \\frac{4\\pi}{c}\\vec{\\mathbf{j}} \\\\' +
+    '  \\nabla \\cdot \\vec{\\mathbf{E}} & = 4 \\pi \\rho \\\\' +
+    '  \\nabla \\times \\vec{\\mathbf{E}}\\, +\\, \\frac1c\\, ' +
+    '\\frac{\\partial\\vec{\\mathbf{B}}}{\\partial t} &' +
+    ' = \\vec{\\mathbf{0}} \\\\' +
+    '  \\nabla \\cdot \\vec{\\mathbf{B}} & = 0' +
+    ' \\end{align}',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -2482,8 +2529,8 @@ treeTest.amsTest(
    'attributes':{'display':'block'}});
 
 
-treeTest.runTest(
-  'Color Frac',
+parserTest.ignoreTest(
+  'Color Frac', '\\frac{{\\cal \\color{red}{X}}}{\\color{blue}{\\sf y}}',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -2525,8 +2572,12 @@ treeTest.runTest(
 );
 
 
-treeTest.runTest(
+parserTest.amsTest(
   'Cubic Binomial',
+	 '{\\begin{eqnarray}(x+y)^{3}&=&(x+y)(x+y)(x+y)\\\\&' +
+    '=&xxx+xxy+xyx+{\\underline {xyy}}+yxx+{\\underline {yxy}}' +
+    '+{\\underline {yyx}}+yyy\\\\&=&x^{3}+3x^{2}y+' +
+    '{\\underline {3xy^{2}}}+y^{3}.\\end{eqnarray}}',
   {'type':'math',
    'children':[
      {'type':'mrow',
@@ -2652,6 +2703,184 @@ treeTest.runTest(
 	             'children':[
 	               {'type':'mrow',
 	                'inferred':true,
+	                'children':[],
+	                'attributes':{}}],
+	             'attributes':{}},
+	            {'type':'mtd',
+	             'children':[
+	               {'type':'mrow',
+	                'inferred':true,
+	                'children':[
+	                  {'type':'mi',
+	                   'text':'',
+	                   'attributes':{}},
+	                  {'type':'mo',
+	                   'text':'=',
+	                   'attributes':{}}],
+	                'attributes':{}}],
+	             'attributes':{}},
+	            {'type':'mtd',
+	             'children':[
+	               {'type':'mrow',
+	                'inferred':true,
+	                'children':[
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mo',
+	                   'text':'+',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'y',
+	                   'attributes':{}},
+	                  {'type':'mo',
+	                   'text':'+',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'y',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mo',
+	                   'text':'+',
+	                   'attributes':{}},
+	                  {'type':'mrow',
+	                   'children':[
+	                     {'type':'mrow',
+	                      'inferred':true,
+	                      'children':[
+	                        {'type':'munder',
+	                         'children':[
+	                           {'type':'mrow',
+	                            'inferred':true,
+	                            'children':[
+	                              {'type':'mi',
+	                               'text':'x',
+	                               'attributes':{}},
+	                              {'type':'mi',
+	                               'text':'y',
+	                               'attributes':{}},
+	                              {'type':'mi',
+	                               'text':'y',
+	                               'attributes':{}}],
+	                            'attributes':{}},
+	                           {'type':'mo',
+	                            'text':'_',
+	                            'attributes':{}}],
+	                         'attributes':{}}],
+	                      'attributes':{}}],
+	                   'attributes':{},
+	                   'TeXAtom':'ORD'},
+	                  {'type':'mo',
+	                   'text':'+',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'y',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'x',
+	                   'attributes':{}},
+	                  {'type':'mo',
+	                   'text':'+',
+	                   'attributes':{}},
+	                  {'type':'mrow',
+	                   'children':[
+	                     {'type':'mrow',
+	                      'inferred':true,
+	                      'children':[
+	                        {'type':'munder',
+	                         'children':[
+	                           {'type':'mrow',
+	                            'inferred':true,
+	                            'children':[
+	                              {'type':'mi',
+	                               'text':'y',
+	                               'attributes':{}},
+	                              {'type':'mi',
+	                               'text':'x',
+	                               'attributes':{}},
+	                              {'type':'mi',
+	                               'text':'y',
+	                               'attributes':{}}],
+	                            'attributes':{}},
+	                           {'type':'mo',
+	                            'text':'_',
+	                            'attributes':{}}],
+	                         'attributes':{}}],
+	                      'attributes':{}}],
+	                   'attributes':{},
+	                   'TeXAtom':'ORD'},
+	                  {'type':'mo',
+	                   'text':'+',
+	                   'attributes':{}},
+	                  {'type':'mrow',
+	                   'children':[
+	                     {'type':'mrow',
+	                      'inferred':true,
+	                      'children':[
+	                        {'type':'munder',
+	                         'children':[
+	                           {'type':'mrow',
+	                            'inferred':true,
+	                            'children':[
+	                              {'type':'mi',
+	                               'text':'y',
+	                               'attributes':{}},
+	                              {'type':'mi',
+	                               'text':'y',
+	                               'attributes':{}},
+	                              {'type':'mi',
+	                               'text':'x',
+	                               'attributes':{}}],
+	                            'attributes':{}},
+	                           {'type':'mo',
+	                            'text':'_',
+	                            'attributes':{}}],
+	                         'attributes':{}}],
+	                      'attributes':{}}],
+	                   'attributes':{},
+	                   'TeXAtom':'ORD'},
+	                  {'type':'mo',
+	                   'text':'+',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'y',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'y',
+	                   'attributes':{}},
+	                  {'type':'mi',
+	                   'text':'y',
+	                   'attributes':{}}],
+	                'attributes':{}}],
+	             'attributes':{}}],
+	          'attributes':{}},
+	         {'type':'mtr',
+	          'children':[
+	            {'type':'mtd',
+	             'children':[
+	               {'type':'mrow',
+	                'inferred':true,
+	                'children':[],
 	                'attributes':{}}],
 	             'attributes':{}},
 	            {'type':'mtd',
@@ -2798,4 +3027,4 @@ treeTest.runTest(
 
 // Currently ignored tests use AMS math stuff.
 
-treeTest.printTime();
+parserTest.printTime();

@@ -23,7 +23,7 @@
  */
 
 // Can eventually be removed!
-import {Attributes, Args, ParseResult} from './types';
+import {Attributes, Args, ParseMethod, ParseResult} from './types';
 import {Symbol, Macro} from './symbol';
 import MapHandler from './map_handler';
 
@@ -149,7 +149,7 @@ export class RegExpMap extends AbstractSymbolMap<boolean> {
   //       with nullable Attributes should not be necessary!
   // These should evolve into the fromJSON methods.
   public static create(
-    name: string, parser: (str: string) => ParseResult,
+    name: string, parser: ParseMethod,
     regexp: RegExp): RegExpMap {
       let map = new RegExpMap(name, regexp);
       map.setParser(parser);

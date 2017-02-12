@@ -52,6 +52,7 @@ MathJax.ElementJax.mml.Augment({
     }
   }
 },{
+  // VS Q: These two do what?
   INHERIT: "_inherit_",
   AUTO: "_auto_",
   SIZE: {
@@ -214,6 +215,9 @@ MathJax.ElementJax.mml.Augment({
     NONE:   -1
   },
   TEXCLASSNAMES: ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"],
+
+  // VS Q: What do these do?
+  
   skipAttributes: {
     texClass:true, useHeight:true, texprimestyle:true
   },

@@ -32,3 +32,7 @@ export type ParseResult = {rest: string, item: Item};
 
 // TODO: refine this type!
 export type Item = any;
+
+export interface ParseMethod {
+  (str: string): ParseResult;
+}

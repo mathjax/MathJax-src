@@ -17,27 +17,28 @@
 
 
 /**
- * @fileoverview The TexParser.
+ * @fileoverview Base parsing methods for TeX Parsing.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {AbstractSymbolMap, SymbolMap} from './symbol_map';
-import {ParseResult} from './types';
-import MapHandler from './map_handler';
-import {BaseMappings} from './base_mappings';
-import {Tree} from '../../TreeJax/lib/tree';
+import {TexConstant} from './tex_constants';
+import {ParseMethod} from './types';
 
 
-export namespace TexParser {
-
-  let tree = new Tree();
+export namespace BaseMethods {
   
-  export function parse(symbol: string): Tree {
-    MapHandler.getInstance().configure(BaseMappings.Configuration);
-    MapHandler.getInstance().parse(symbol);
-    console.log(tree);
-    return tree;
-  }
-  
+  export let variable: ParseMethod = function(str) {
+    return {rest: '', item: ''};
+  };
+
+  export let digit: ParseMethod = function(str) {
+    return {rest: '', item: ''};
+  };
+
+  export let num: ParseMethod = function(str) {
+    return {rest: '', item: ''};
+  };
+
 }
+
