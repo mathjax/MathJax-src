@@ -21,8 +21,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-/// <reference path="semantic.d.ts" />
-
 import {Visitor, AbstractVisitor} from './visitor';
 import {TreeNode, Kind, Tag} from './tree_node';
 import {LeafNode, EmptyNode} from './leaf_node';

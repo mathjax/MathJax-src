@@ -7,7 +7,7 @@
     "xmldom": "^0.1.22"
   },
   "devDependencies": {
-    "typescript": "^1.8.10",
+    "typescript": "2.1.*",
     "tslint": "^3.15.0",
     "tslint-jsdoc-rules": "*",
     "tslint-unix-formatter": "*"

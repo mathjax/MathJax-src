@@ -22,9 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-/// <reference path="node.d.ts" />
-/// <reference path="xmldom.d.ts" />
-
 import fs = require('fs');
 import dom = require('xmldom');
 

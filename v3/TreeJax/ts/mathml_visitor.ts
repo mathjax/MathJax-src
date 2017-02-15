@@ -37,7 +37,7 @@ export class MathmlVisitor extends AbstractVisitor {
    * @return {Element} The XML representation of the tree.
    */
   public getResult(): Element {
-    return <Element>(this.result.firstChild);
+    return this.result.firstChild as Element;
   }
 
   /**
