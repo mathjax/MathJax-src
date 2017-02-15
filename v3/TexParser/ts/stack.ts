@@ -24,11 +24,13 @@
 
 import {Environment} from './types';
 import * as StackItem from './stack_item';
+import {Tree} from '../../TreeJax/lib/tree';
 
 
 export default class Stack {
 
   public env: Environment = {};
+  private tree = new Tree();
   private global: Environment = {};
   private data: StackItem.StackItem[] = [];
 
@@ -49,41 +51,39 @@ export default class Stack {
     this.testStackItem = test;
   }
 
-  // TODO: Capitalised methods are temporary and will be removed!
-  // This should be rewritten to rest arguments!
-  public Push(item: any): void {
-    console.log('BEFORE: ' + this.data.map(x => x.toString()).join(', '));
-    console.log(this.data.length);
-    console.log('ITEM');
-    console.log(item.toString());
-    this.push(item);
-    console.log('AFTER: ' + this.data.map(x => x.toString()).join(', '));
+
+  private pushItem(item: StackItem.StackItem) {
+    this.data.push(item);
   }
-  public push(item: any): void {
-    if (!item) {
+  
+  // This should be rewritten to rest arguments!
+  public push(itemJson: {kind: StackItem.ItemType, content: any}) {
+    if (!itemJson) {
       return;
     }
-    console.log(item);
-    console.log(this.transformMML(item));
 
-    item = this.transformMML(item) ? new StackItem.Mml(item) : item;
-    item.global = this.global;
-
-    console.log('TOP');
-    console.log(this.top());
-
+    if (itemJson.kind === 'mml') {
+      Tree.parseNode(itemJson.content);
+    }
+    let item = StackItem.ItemFactory(itemJson.kind, itemJson.content);
+    item.env = this.global;
     let top = (this.data.length ? this.top().checkItem(item) : true);
 
+    if (item.hasType('mml')) {
+      this.tree.setRoot((item as StackItem.Mml).node);
+    }
+    
     // TODO: Can we model this with a multi-stackitem?
     if (top instanceof Array) {
       this.pop();
       for (let it of top) {
-        this.push(it);
+        this.pushItem(it);
       }
     }
+    // Do we really need this?
     else if (top instanceof StackItem.Base) {
       this.pop();
-      this.push(top);
+      this.pushItem(top);
     }
     else if (top) {
       this.data.push(item);
@@ -99,9 +99,6 @@ export default class Stack {
     }
   }
 
-  public Pop(): any {
-    return this.Pop();
-  }
   public pop(): any {
     let item = this.data.pop();
     // TODO: This needs to be reconciled with the environment in stack item.
@@ -112,9 +109,6 @@ export default class Stack {
     return item;
   }
 
-  public Top(n?: number): any {
-    return this.top(n);
-  }
   public top(n?: number): any {
     if (n == null) {
       n = 1;
@@ -125,9 +119,6 @@ export default class Stack {
     return this.data[this.data.length - n];
   }
 
-  public Prev(noPop: boolean): any {
-    return this.prev(noPop);
-  }
   public prev(noPop: boolean): any {
     let top = this.top();
     if (noPop) {
@@ -145,4 +136,11 @@ export default class Stack {
     return 'stack[\n  ' + this.data.join(', ') + '\n]';
   }
 
+  public getResult(): Tree {
+    if (this.top().kind === 'stop') {
+      console.log('Warning: incomplete parsing!');
+    }
+    return this.tree;
+  }
+  
 }

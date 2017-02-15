@@ -24,6 +24,7 @@
 
 import {AbstractSymbolMap, SymbolMap} from './symbol_map';
 import {ParseResult} from './types';
+import Stack from './stack';
 
 
 export default class MapHandler {
@@ -81,9 +82,9 @@ export default class MapHandler {
     return map ? map.lookup(symbol) : null;
   }
   
-  public parse(symbol: string): ParseResult {
+  public parse(symbol: string, rest: string, stack: Stack): ParseResult {
     let map = this.applicable(symbol);
-    return map ? map.parse(symbol) : null;
+    return map ? map.parse(symbol, rest, stack) : null;
   }
 
   // TODO: Turn this into a global warning and error functionality

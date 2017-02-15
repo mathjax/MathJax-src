@@ -26,6 +26,7 @@
 import {Attributes, Args, ParseMethod, ParseResult} from './types';
 import {Symbol, Macro} from './symbol';
 import MapHandler from './map_handler';
+import Stack from './stack';
 
 
 /**
@@ -55,14 +56,14 @@ export interface SymbolMap {
    * @param {string} symbol A symbol to parse.
    * @return {function(string): ParseResult} A parse method for the symbol.
    */
-  parserFor(symbol: string): (str: string) => ParseResult;
+  parserFor(symbol: string): ParseMethod;
 
   /**
    * @param {string} symbol A symbol to parse.
    * @return {ParseResult} The parsed symbol and the rest
    * string.
    */
-  parse(symbol: string): ParseResult;
+  parse: ParseMethod;
   
 }
 
@@ -70,7 +71,7 @@ export interface SymbolMap {
 export abstract class AbstractSymbolMap<T> implements SymbolMap {
 
   private name: string;
-  private parser: (str: string) => ParseResult;
+  private parser: ParseMethod;
   
   constructor(name: string) {
     this.name = name;
@@ -99,16 +100,16 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   /**
    * @override
    */
-  public parse(symbol: string) {
+  public parse(symbol: string, rest: string, stack: Stack) {
     let parser = this.parserFor(symbol);
-    return parser ? parser(symbol) : null;
+    return parser ? parser(symbol, rest, stack) : null;
   }
   
   /**
    * @param {function(string): ParseResult} parser Sets the central parser
    * function.
    */
-  public setParser(parser: (str: string) => ParseResult):void {
+  public setParser(parser: ParseMethod):void {
     console.log(parser);
     this.parser = parser;
   }
@@ -206,7 +207,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
   //       with nullable Attributes should not be necessary!
   // These should evolve into the fromJSON methods.
   public static create(
-    name: string, parser: (str: string) => ParseResult,
+    name: string, parser: ParseMethod,
     json: {[index: string]: string|[string, Attributes]}): CharacterMap {
       let map = new CharacterMap(name);
       for (let key in json) {

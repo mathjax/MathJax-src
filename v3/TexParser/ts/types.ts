@@ -22,6 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import Stack from './stack';
+
 export type Args = boolean|number|string|null;
 
 export type Attributes = Record<string, Args>;
@@ -34,5 +36,5 @@ export type ParseResult = {rest: string, item: Item};
 export type Item = any;
 
 export interface ParseMethod {
-  (str: string): ParseResult;
+  (symbol: string, rest: string, stack: Stack): ParseResult;
 }

@@ -1,6 +1,6 @@
 import {JsonVisitor} from 'TreeJax/lib/json_visitor';
 import {Tree} from 'TreeJax/lib/tree';
-import {TexParser} from 'TexParser/lib/tex_parser';
+import TexParser from 'TexParser/lib/tex_parser';
 
 import {Test} from './tests.js';
 

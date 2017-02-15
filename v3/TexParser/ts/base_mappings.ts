@@ -36,8 +36,13 @@ export namespace BaseMappings {
   RegExpMap.create('number', BaseMethods.num,
                 /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
 
+  RegExpMap.create('command', BaseMethods.controlSequence, /^\\/);
+
+  
   MacroMap.create('special', {
-    '\\':  'ControlSequence',
+
+    // '\\':  'ControlSequence',
+
     '{':   'Open',
     '}':   'Close',
     '~':   'Tilde',
@@ -679,6 +684,6 @@ export namespace BaseMappings {
   });
 
   // TODO: This is temporary until we have merged with configuration options.
-  export const Configuration = ['letter', 'digit'];
+  export const Configuration = ['command', 'special', 'letter', 'digit'];
 
 }

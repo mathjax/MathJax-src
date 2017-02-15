@@ -17,27 +17,64 @@
 
 
 /**
- * @fileoverview The TexParser.
+ * @fileoverview The TexParser. Implements the basic parsing functionality and
+ *     administers the global stack and tree objects.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {AbstractSymbolMap, SymbolMap} from './symbol_map';
-import {ParseResult} from './types';
 import MapHandler from './map_handler';
+import {Environment} from './types';
+import Stack from './stack';
 import {BaseMappings} from './base_mappings';
+import {BaseMethods} from './base_methods';
 import {Tree} from '../../TreeJax/lib/tree';
 
 
-export namespace TexParser {
+// TODO: Make this into a singleton?
+export default class TexParser {
 
-  let tree = new Tree();
-  
-  export function parse(symbol: string): Tree {
+  private stack: Stack;
+  private input: string = '';
+  private remainder: string = '';
+  private macroCount: number = 0;
+
+  constructor(input: string, env: Environment) {
+    // We might want to put this explicitly elsewhere.
     MapHandler.getInstance().configure(BaseMappings.Configuration);
-    MapHandler.getInstance().parse(symbol);
-    console.log(tree);
-    return tree;
+    this.input = input;
+    this.remainder = input;
+    this.stack = new Stack(env, false, null, null);
+    this.parse();
+    this.stack.push({kind: 'stop', content: {}});
   }
   
+  public parse() {
+    // Main parse loop!
+    while (this.remainder) {
+      let char = this.getChar();
+      let result = MapHandler.getInstance().parse(char, this.remainder, this.stack);
+      this.remainder = result.rest;
+      this.stack.push(result.item);
+    }
+  }
+
+  private getChar(): string {
+    let char = this.remainder.charAt(0);
+    this.remainder = this.remainder.slice(1);
+    let charCode = char.charCodeAt(0);
+    // Surrogate pairs. Refactor with util function in symbol.ts
+    if (charCode >= 0xD800 && charCode < 0xDC00) {
+      char += this.remainder.charAt(0)
+      this.remainder = this.remainder.slice(1);
+    }
+    return char;
+  }
+  
+  public static parse(input: string): Tree {
+    let parser = new TexParser(input, {});
+    console.log(parser);
+    return parser.stack.getResult();
+  }
+
 }

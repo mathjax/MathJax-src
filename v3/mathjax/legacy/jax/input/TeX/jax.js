@@ -1191,6 +1191,8 @@ let StackItem = require('TexParser/lib/stack_item.js');
      *   Handle various token classes
      */
 
+
+    // VS Q: This has to be made explicitly!
     /*
      *  Lookup a control-sequence and process it
      */
@@ -1969,6 +1971,9 @@ let StackItem = require('TexParser/lib/stack_item.js');
      *   String handling routines
      */
 
+    // VS Q: These are all utility functions.
+    //
+    // 
     /*
      *  Convert delimiter to character
      */

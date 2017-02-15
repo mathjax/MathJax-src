@@ -23,8 +23,9 @@
  */
 
 import {Attributes, Environment} from './types';
-// import nf = require('../../TreeJax/lib/node_factory');
 import {NodeFactory} from '../../TreeJax/lib/node_factory';
+import {Tree} from '../../TreeJax/lib/tree';
+import {TreeNode} from '../../TreeJax/lib/tree_node';
 
 
 // TODO: This is a placeholder for the current MML elements.
@@ -59,7 +60,7 @@ export interface StackItem {
 
   env: Environment;
   data: StackItem[];
-  attributes: Environment;
+  attributes: Attributes;
   
   /**
    * @return {string} The type of the stack item as a string.
@@ -193,8 +194,6 @@ export abstract class Base implements StackItem {
       inferred = true;
     }
     if (this.data.length === 1) {
-      console.log('This is data of length 1.');
-      console.log(this.data[0].data);
       return this.data[0];
     }
     let node = NodeFactory.getNode('mrow');
@@ -242,17 +241,11 @@ export class Stop extends Base {
 export class Mml extends Base {
 
   kind: ItemType = 'mml';
-
-  constructor(args: any) {
+  public node: TreeNode;
+  
+  constructor(node: any) {
     super({});
-    if (args instanceof Array) {
-      for (let arg of args) {
-        this.data.push(arg);
-      }
-    } else {
-      console.log(args.toString());
-      this.data.push(args);
-    }
+    this.node = node;
   }
   // TODO: Do we need the Add method?
 }
@@ -333,3 +326,20 @@ export class Prime extends Base {
   }
 }
   
+
+let ItemDictionary: any = {}
+
+ItemDictionary['start'] = Start;
+ItemDictionary['stop'] = Stop;
+ItemDictionary['mml'] = Mml;
+
+export function factory(kind: 'start', content: any): Start;
+export function factory(kind: 'stop', content: any): Stop;
+export function factory(kind: 'mml', content: any): Mml;
+export function factory(kind: ItemType, content: any) {
+  return new ItemDictionary[kind](content);
+}
+
+export function ItemFactory(kind: any, content: any): StackItem {
+  return factory(kind, content);
+}

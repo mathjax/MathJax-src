@@ -28,15 +28,26 @@ import {ParseMethod} from './types';
 
 export namespace BaseMethods {
   
-  export let variable: ParseMethod = function(str) {
+  export let variable: ParseMethod = function(symbol, rest, stack) {
+    // if () {def.mathvariant = this.stack.env.font}
+    let font = stack.env['font'];
+    let attributes = font ? {mathvariant: font} : {};
+    return {rest: rest, item: {kind: 'mml',
+                               content: {type: 'mi',
+                                         attributes: attributes,
+                                         text: symbol}
+                              }}
+  };
+
+  export let digit: ParseMethod = function(symbol, rest, stack) {
     return {rest: '', item: ''};
   };
 
-  export let digit: ParseMethod = function(str) {
+  export let num: ParseMethod = function(symbol, rest, stack) {
     return {rest: '', item: ''};
   };
 
-  export let num: ParseMethod = function(str) {
+  export let controlSequence: ParseMethod = function(symbol, rest, stack) {
     return {rest: '', item: ''};
   };
 
