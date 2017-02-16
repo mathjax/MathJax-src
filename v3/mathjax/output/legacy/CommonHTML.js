@@ -138,7 +138,7 @@ exports.LegacyCHTML = {
   GetMetrics: function (html) {
     if (!ready.called) MathJax.Hub.RestartAfter(ready);
 
-    var i, m = html.math.length, math, test, node;
+    var math, test, node;
     var em, ex, cwidth, lwidth, relwidth, width, linebreak, maxwidth = MAXWIDTH;
     var document = html.document;
     var CONFIG = CHTML.config;
@@ -159,8 +159,8 @@ exports.LegacyCHTML = {
     //  Insert spans for size testing
     //
     if (canMeasure) {
-      for (i = 0; i < m; i++) {
-        node = html.math[i].start.node;
+      for (var math of html.math) {
+        node = math.start.node;
         test = document.importNode(CHTML.linebreakSpan,true);
         node.parentNode.insertBefore(test,node);
         test = document.importNode(CHTML.TestSpan,true);
@@ -170,8 +170,8 @@ exports.LegacyCHTML = {
     //
     //  Collect size information
     //
-    for (i = 0; i < m; i++) {
-      math = html.math[i]; node = math.start.node;
+    for (math of html.math) {
+      node = math.start.node;
       em = CHTML.getFontSize(node.parentNode);
       if (canMeasure) {
         test = node.previousSibling;
@@ -193,8 +193,8 @@ exports.LegacyCHTML = {
     //  Remove test spans
     //
     if (canMeasure) {
-      for (i = 0; i < m; i++) {
-        node = html.math[i].start.node;
+      for (math of html.math) {
+        node = math.start.node;
         node.parentNode.removeChild(node.previousSibling);
         node.parentNode.removeChild(node.previousSibling);
       }
