@@ -10,7 +10,7 @@ export class HTMLMathItem extends MathItem {
   
   addEventHandlers() {}
   
-  UpdateDocument(html,options) {
+  UpdateDocument(html) {
     if (this.State() < STATE.INSERTED) {
       var node = this.start.node;
       if (node === this.end.node) {
@@ -35,7 +35,25 @@ export class HTMLMathItem extends MathItem {
       this.State(STATE.INSERTED);
     }
   }
-  
+
+  RemoveFromDocument(restore = false) {
+    let node = this.start.node;
+    if (restore) {
+      let document = node.ownerDocument;
+      let text = this.start.delim + this.math + this.end.delim;
+      let math;
+      if (this.inputJax.processStrings) {
+        math = document.createTextNode(text);
+      } else {
+        math = document.createNode("span");
+        span.innerHTML = text;
+        math = span.firstChild;
+      }
+      node.parentNode.insertBefore(math,node);
+    }
+    node.parentNode.removeChild(node);
+  }
+
 };
 
 let STATE = HTMLMathItem.STATE = MathItem.STATE;
