@@ -6,7 +6,7 @@ export class HandlerList extends FunctionList {
   UnRegister(handler) {this.Remove(handler)}
   
   HandlesDocument(document) {
-    for (let item of this) {
+    for (const item of this) {
       let handler = item.item;
       if (handler.HandlesDocument(document)) return handler;
     }

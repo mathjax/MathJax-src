@@ -2,7 +2,7 @@ import {PrioritizedList} from "./PrioritizedList.js";
 
 export class FunctionList extends PrioritizedList {
   Execute(...data) {
-    for (let item of this) {
+    for (const item of this) {
       let result = item.item(...data);
       if (result === false) return false;
     }
