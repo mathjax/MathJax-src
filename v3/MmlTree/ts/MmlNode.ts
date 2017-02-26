@@ -139,6 +139,10 @@ export abstract class AMmlNode implements IMmlNode {
     childNodes: MmlNode[] = [];
 
     constructor(...children: (MmlNode | string | (MmlNode | string)[])[]) {
+        if (this.arity < 0) {
+            this.childNodes = [new MmlInferredMrow()];
+            this.childNodes[0].setParent(this);
+        }
         if (children.length === 1 && Array.isArray(children[0])) children = children[0] as (MmlNode | string)[];
         for (let child of children) {
             if (typeof child === 'string') child = new TextNode(child as string);
@@ -152,7 +156,11 @@ export abstract class AMmlNode implements IMmlNode {
     get isSpacelike() {return false}
     get linebreakContainer() {return false}
     get texClass() {return this._texClass}
-    get parent() {return this._parent}
+    get parent(): MmlNode {
+        let parent = this._parent as AMmlNode;
+        if (parent.isInferred) return parent.parent;
+        return parent;
+    }
     get hasNewLine() {return false}
     get arity() {return 0}
     get isInferred() {return false}
@@ -214,20 +222,32 @@ export abstract class AMmlNode implements IMmlNode {
     }
 
     setChildren(children: MmlNode[]) {
-        this.childNodes = children;
-        for (const child of children) {
-            child.setParent(this);
+        if (this.arity < 0) {
+            (this.childNodes[0] as AMmlNode).setChildren(children);
+        } else {
+            this.childNodes = children;
+            for (const child of children) {
+                child.setParent(this);
+            }
         }
     }
     appendChild(child: MmlNode) {
-        this.childNodes.push(child);
-        child.setParent(this);
+        if (this.arity < 0) {
+            (this.childNodes[0] as AMmlNode).appendChild(child);
+        } else {
+            this.childNodes.push(child);
+            child.setParent(this);
+        }
         return child;
     }
     replaceChild(oldChild: MmlNode, newChild: MmlNode) {
-        let i = this.childIndex(oldChild);
-        this.childNodes[i] = newChild;
-        newChild.setParent(this);
+        if (this.arity < 0) {
+            (this.childNodes[0] as AMmlNode).replaceChild(oldChild,newChild);
+        } else {
+            let i = this.childIndex(oldChild);
+            this.childNodes[i] = newChild;
+            newChild.setParent(this);
+        }
         return newChild;
     }
 
@@ -287,11 +307,24 @@ export abstract class AMmlTokenNode extends AMmlNode {
     }
 }
 
+export class MmlMrow extends AMmlNode {
+    static defaults: PropertyList = {
+        ...AMmlNode.defaults
+    };
+    get kind() {return 'mrow'}
+}
+
+export class MmlInferredMrow extends MmlMrow {
+    static defaults: PropertyList = MmlMrow.defaults;
+    get isInferred() {return true}
+}
+
 export class MmlMath extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults
     };
     get kind() {return 'math'}
+    get arity() {return -1}
 }
 
 export class MmlMi extends AMmlTokenNode {
