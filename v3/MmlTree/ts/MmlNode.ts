@@ -210,6 +210,12 @@ export abstract class AMmlNode implements IMmlNode {
         } else {
             scriptlevel = script as number;
         }
+        if (this.arity > 0 && this.childNodes.length !== this.arity) {
+            //
+            // FIXME: should create merror element surrounding this one.
+            //
+            throw Error("Incorrect number of child nodes for '"+this.kind+"'");
+        }
         this.setChildInheritedAttributes(attributes, displaystyle, scriptlevel);
     }
     protected setChildInheritedAttributes(attributes: {[attribute: string]: [string, Property]},
