@@ -1,6 +1,7 @@
 type Function = { [key:string]: any };
 
-export type PropertyList = {[key: string]: string};
+export type Property = string | number | boolean;
+export type PropertyList = {[key: string]: Property};
 
 export type MmlNode = AMmlNode | TextNode | XMLNode;
 
@@ -28,24 +29,24 @@ export interface IMmlNode {
     updateTeXclass(core: MmlNode): void;
     texSpacing(): string;
 
-    setInheritedAttributes(attributes: {[attribute: string]: [string, string]}): void;
+    setInheritedAttributes(attributes: {[attribute: string]: [string, Property]}): void;
 
     setChildren(children: MmlNode[]): void;
     appendChild(child: MmlNode): MmlNode;
     replaceChild(oldChild: MmlNode, newChild: MmlNode): MmlNode;
 
-    setAttribute(name: string, value: string): void;
+    setAttribute(name: string, value: Property): void;
     setAttributes(attributes: PropertyList): void;
-    setInherited(name: string, value: string): void;
-    setProperty(name: string, value: string): void;
+    setInherited(name: string, value: Property): void;
+    setProperty(name: string, value: Property): void;
 
-    getAttribute(name: string): string;
-    getInherited(name: string): string;
-    getProperty(name: string): string;
-    getDefault(name: string): string;
+    getAttribute(name: string): Property;
+    getInherited(name: string): Property;
+    getProperty(name: string): Property;
+    getDefault(name: string): Property;
 
-    Get(...name: string[]): string | PropertyList;
-    autoDefault(name: string): string;
+    Get(...name: string[]): Property | PropertyList;
+    autoDefault(name: string): Property;
 }
 
 interface IMmlNodeClass {
@@ -68,6 +69,38 @@ export abstract class AMmlNode implements IMmlNode {
         mathbackground: DEFAULT.INHERIT,
         mathcolor: DEFAULT.INHERIT,
         dir: DEFAULT.INHERIT
+    };
+    static globalDefaults: PropertyList = {
+        mathvariant: "normal",
+        mathsize: "normal",
+        mathcolor: "", // should be "black", but allow it to inherit from surrounding text
+        mathbackground: "transparent",
+        dir: "ltr",
+        scriptlevel: 0,
+        displaystyle: false,
+        display: "inline",
+        maxwidth: "",
+        overflow: "linebreak",
+        altimg: "",
+        'altimg-width': "",
+        'altimg-height': "",
+        'altimg-valign': "",
+        alttext: "",
+        cdgroup: "",
+        scriptsizemultiplier: Math.sqrt(1/2),
+        scriptminsize: "8px",    // should be 8pt, but that's too big
+        infixlinebreakstyle: "before",
+        lineleading: "1ex",
+        indentshift: "auto",     // use user configuration
+        indentalign: "auto",
+        indentalignfirst: "indentalign",
+        indentshiftfirst: "indentshift",
+        indentalignlast:  "indentalign",
+        indentshiftlast:  "indentshift"
+    };
+    static globalProperties: PropertyList = {
+        decimalseparator: ".",
+        texprimestyle: false     // is it in TeX's C' style?
     };
     static noInherit: {[node1: string]: {[node2: string]: {[attribute: string]: boolean}}} = {
         mstyle: {
@@ -121,7 +154,7 @@ export abstract class AMmlNode implements IMmlNode {
     get texClass() {return this._texClass}
     get parent() {return this._parent}
     get hasNewLine() {return false}
-    get arity() {return true}
+    get arity() {return 0}
     get isInferred() {return false}
     get defaults() {return (this.constructor as IMmlNodeClass).defaults}
 
@@ -145,7 +178,8 @@ export abstract class AMmlNode implements IMmlNode {
     updateTeXclass(core: MmlNode) {}
     texSpacing() {return ''}
 
-    setInheritedAttributes(attributes: {[attribute: string]: [string, string]} = {}) {
+    setInheritedAttributes(attributes: {[attribute: string]: [string, Property]} = {},
+                           displaystyle: boolean = false, scriptlevel: number = 0) {
         let defaults = this.defaults;
         for (const key of Object.keys(attributes)) {
             if (key in defaults) {
@@ -156,12 +190,25 @@ export abstract class AMmlNode implements IMmlNode {
                 }
             }
         }
-        this.setChildInheritedAttributes(attributes);
+        let display = this.getAttribute("displaystyle");
+        if (display === undefined) {
+            this.setInherited("displaystyle",displaystyle);
+        } else {
+            displaystyle = display as boolean;
+        }
+        let script = this.getAttribute("scriptlevel");
+        if (script === undefined) {
+            this.setInherited("scriptlevel",scriptlevel);
+        } else {
+            scriptlevel = script as number;
+        }
+        this.setChildInheritedAttributes(attributes, displaystyle, scriptlevel);
     }
-    protected setChildInheritedAttributes(attributes: {[attribute: string]: [string, string]} = {}) {
+    protected setChildInheritedAttributes(attributes: {[attribute: string]: [string, Property]},
+                                          displaystyle: boolean, scriptlevel: number) {
         for (const child of this.childNodes) {
             if (child instanceof AMmlNode) {
-                child.setInheritedAttributes(attributes);
+                child.setInheritedAttributes(attributes, displaystyle, scriptlevel);
             }
         }
     }
@@ -184,10 +231,10 @@ export abstract class AMmlNode implements IMmlNode {
         return newChild;
     }
 
-    setAttribute(name: string, value: string) {this.attributes[name] = value}
+    setAttribute(name: string, value: Property) {this.attributes[name] = value}
     setAttributes(attributes: PropertyList) {Object.assign(this.attributes,attributes)}
-    setInherited(name: string, value: string) {this.inherited[name] = value}
-    setProperty(name: string, value: string) {this.properties[name] = value}
+    setInherited(name: string, value: Property) {this.inherited[name] = value}
+    setProperty(name: string, value: Property) {this.properties[name] = value}
 
     getAttribute(name: string) {return this.attributes[name]}
     getInherited(name: string) {return this.inherited[name]}
@@ -207,8 +254,10 @@ export abstract class AMmlNode implements IMmlNode {
             } else if (name in defaults) {
                 let value = defaults[name];
                 if (value === DEFAULT.AUTO) value = this.autoDefault(name);
-                else if (value === DEFAULT.INHERIT) value = MmlMath.defaults[name];
+                else if (value === DEFAULT.INHERIT) value = AMmlNode.globalDefaults[name];
                 values[name] = value;
+            } else if (name in AMmlNode.globalProperties) {
+                values[name] = AMmlNode.globalProperties[name];
             }
         }
         return (names.length === 1 ? values[names[0]] : values);
