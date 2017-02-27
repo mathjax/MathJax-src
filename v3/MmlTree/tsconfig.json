@@ -11,6 +11,6 @@
     "sourceMap": true,
     "outDir": "js"
   },
-  "include": ["ts/*"],
+  "include": ["ts/**/*"],
   "exclude": ["js"]
 }
