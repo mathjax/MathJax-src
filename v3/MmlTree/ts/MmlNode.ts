@@ -1,29 +1,21 @@
-type Function = { [key:string]: any };
-
-export type Property = string | number | boolean;
-export type PropertyList = {[key: string]: Property};
+import {Property, PropertyList, Node, TextNode, ANode, AContainerNode, INode} from './Node';
 
 export type MmlNode = AMmlNode | TextNode | XMLNode;
 
-export interface IMmlNode {
-    readonly kind: string;
+export interface IMmlNode extends INode {
     readonly isToken: boolean;
     readonly isEmbellished: boolean;
     readonly isSpacelike: boolean;
     readonly linebreakContainer: boolean;
     readonly texClass: number;
-    readonly parent: MmlNode;
     readonly hasNewLine: boolean;
     readonly arity: number;
     readonly isInferred: boolean;
     readonly defaults: PropertyList;
 
-    setParent(node: MmlNode): void;
-
     core(): MmlNode;
     coreMO(): MmlNode;
     coreIndex(): number;
-    childIndex(child: MmlNode): number;
 
     setTeXclass(): void;
     updateTeXclass(core: MmlNode): void;
@@ -31,27 +23,22 @@ export interface IMmlNode {
 
     setInheritedAttributes(attributes: {[attribute: string]: [string, Property]}): void;
 
-    setChildren(children: MmlNode[]): void;
-    appendChild(child: MmlNode): MmlNode;
-    replaceChild(oldChild: MmlNode, newChild: MmlNode): MmlNode;
-
     setAttribute(name: string, value: Property): void;
     setAttributes(attributes: PropertyList): void;
     setInherited(name: string, value: Property): void;
-    setProperty(name: string, value: Property): void;
 
     getAttribute(name: string): Property;
     getInherited(name: string): Property;
-    getProperty(name: string): Property;
     getDefault(name: string): Property;
 
     Get(...name: string[]): Property | PropertyList;
     autoDefault(name: string): Property;
 }
 
-interface IMmlNodeClass {
-    (): MmlNode;
+export interface IMmlNodeClass {
+    new (...children: (MmlNode | string | (MmlNode | string)[])[]): MmlNode;
     defaults: PropertyList;
+    defaultProperties?: PropertyList;
 }
 
 export const DEFAULT = {
@@ -64,43 +51,11 @@ export const TEXCLASS = {
     NONE: -1
 };
 
-export abstract class AMmlNode implements IMmlNode {
+export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     static defaults: PropertyList = {
         mathbackground: DEFAULT.INHERIT,
         mathcolor: DEFAULT.INHERIT,
         dir: DEFAULT.INHERIT
-    };
-    static globalDefaults: PropertyList = {
-        mathvariant: "normal",
-        mathsize: "normal",
-        mathcolor: "", // should be "black", but allow it to inherit from surrounding text
-        mathbackground: "transparent",
-        dir: "ltr",
-        scriptlevel: 0,
-        displaystyle: false,
-        display: "inline",
-        maxwidth: "",
-        overflow: "linebreak",
-        altimg: "",
-        'altimg-width': "",
-        'altimg-height': "",
-        'altimg-valign': "",
-        alttext: "",
-        cdgroup: "",
-        scriptsizemultiplier: Math.sqrt(1/2),
-        scriptminsize: "8px",    // should be 8pt, but that's too big
-        infixlinebreakstyle: "before",
-        lineleading: "1ex",
-        indentshift: "auto",     // use user configuration
-        indentalign: "auto",
-        indentalignfirst: "indentalign",
-        indentshiftfirst: "indentshift",
-        indentalignlast:  "indentalign",
-        indentshiftlast:  "indentshift"
-    };
-    static globalProperties: PropertyList = {
-        decimalseparator: ".",
-        texprimestyle: false     // is it in TeX's C' style?
     };
     static noInherit: {[node1: string]: {[node2: string]: {[attribute: string]: boolean}}} = {
         mstyle: {
@@ -129,34 +84,32 @@ export abstract class AMmlNode implements IMmlNode {
         }
     };
 
+    static inferredMrow: IMmlNodeClass = null;
+    static mathClass: IMmlNodeClass = null;
+
     protected _texClass: number = TEXCLASS.NONE;
-    protected _parent: MmlNode = null;
 
     protected attributes: PropertyList = {};
     protected inherited:  PropertyList = {};
-    protected properties: PropertyList = {};
 
     childNodes: MmlNode[] = [];
 
     constructor(...children: (MmlNode | string | (MmlNode | string)[])[]) {
+        super();
         if (this.arity < 0) {
-            this.childNodes = [new MmlInferredMrow()];
+            this.childNodes = [new (AMmlNode.inferredMrow)()];
             this.childNodes[0].setParent(this);
         }
         if (children.length === 1 && Array.isArray(children[0])) children = children[0] as (MmlNode | string)[];
-        for (let child of children) {
-            if (typeof child === 'string') child = new TextNode(child as string);
-            this.appendChild(child as MmlNode);
-        }
+        this.setChildren(children as (MmlNode | string)[]);
     }
     
-    get kind() {return ''}
     get isToken() {return false}
     get isEmbellished() {return false}
     get isSpacelike() {return false}
     get linebreakContainer() {return false}
     get texClass() {return this._texClass}
-    get parent(): MmlNode {
+    get parent(): Node {
         let parent = this._parent as AMmlNode;
         if (parent.isInferred) return parent.parent;
         return parent;
@@ -166,21 +119,24 @@ export abstract class AMmlNode implements IMmlNode {
     get isInferred() {return false}
     get defaults() {return (this.constructor as IMmlNodeClass).defaults}
 
-    setParent(node: MmlNode) {this._parent = node}
+    appendChild(child: MmlNode) {
+        if (this.arity < 0) {
+            (this.childNodes[0] as AMmlNode).appendChild(child);
+            return child;
+        }
+        return super.appendChild(child);
+    }
+    replaceChild(oldChild: Node, newChild: Node) {
+        if (this.arity < 0) {
+            (this.childNodes[0] as AMmlNode).replaceChild(oldChild,newChild);
+            return newChild;
+        }
+        return super.replaceChild(oldChild,newChild);
+    }
 
     core() {return this}
     coreMO() {return this}
     coreIndex() {return 0}
-    childIndex(node: MmlNode) {
-        let i = 0;
-        for (const child of this.childNodes) {
-            if (child === node) {
-                return i;
-            }
-            i++;
-        }
-        return null;
-    }
 
     setTeXclass() {}
     updateTeXclass(core: MmlNode) {}
@@ -227,36 +183,6 @@ export abstract class AMmlNode implements IMmlNode {
         }
     }
 
-    setChildren(children: MmlNode[]) {
-        if (this.arity < 0) {
-            (this.childNodes[0] as AMmlNode).setChildren(children);
-        } else {
-            this.childNodes = children;
-            for (const child of children) {
-                child.setParent(this);
-            }
-        }
-    }
-    appendChild(child: MmlNode) {
-        if (this.arity < 0) {
-            (this.childNodes[0] as AMmlNode).appendChild(child);
-        } else {
-            this.childNodes.push(child);
-            child.setParent(this);
-        }
-        return child;
-    }
-    replaceChild(oldChild: MmlNode, newChild: MmlNode) {
-        if (this.arity < 0) {
-            (this.childNodes[0] as AMmlNode).replaceChild(oldChild,newChild);
-        } else {
-            let i = this.childIndex(oldChild);
-            this.childNodes[i] = newChild;
-            newChild.setParent(this);
-        }
-        return newChild;
-    }
-
     setAttribute(name: string, value: Property) {this.attributes[name] = value}
     setAttributes(attributes: PropertyList) {Object.assign(this.attributes,attributes)}
     setInherited(name: string, value: Property) {this.inherited[name] = value}
@@ -270,6 +196,7 @@ export abstract class AMmlNode implements IMmlNode {
     Get(...names: string[]) {
         let values: PropertyList = {};
         let defaults = this.defaults;
+        let math = AMmlNode.mathClass || ({defaults:{}, defaultProperties:{}} as IMmlNodeClass);
         for (const name of names) {
             if (name in this.properties) {
                 values[name] = this.properties[name];
@@ -280,10 +207,10 @@ export abstract class AMmlNode implements IMmlNode {
             } else if (name in defaults) {
                 let value = defaults[name];
                 if (value === DEFAULT.AUTO) value = this.autoDefault(name);
-                else if (value === DEFAULT.INHERIT) value = AMmlNode.globalDefaults[name];
+                else if (value === DEFAULT.INHERIT) value = math.defaults[name];
                 values[name] = value;
-            } else if (name in AMmlNode.globalProperties) {
-                values[name] = AMmlNode.globalProperties[name];
+            } else if (name in math.defaultProperties) {
+                values[name] = math.defaultProperties[name];
             }
         }
         return (names.length === 1 ? values[names[0]] : values);
@@ -313,63 +240,12 @@ export abstract class AMmlTokenNode extends AMmlNode {
     }
 }
 
-export class MmlMrow extends AMmlNode {
-    static defaults: PropertyList = {
-        ...AMmlNode.defaults
-    };
-    get kind() {return 'mrow'}
-}
 
-export class MmlInferredMrow extends MmlMrow {
-    static defaults: PropertyList = MmlMrow.defaults;
-    get isInferred() {return true}
-}
-
-export class MmlMath extends AMmlNode {
-    static defaults: PropertyList = {
-        ...AMmlNode.defaults
-    };
-    get kind() {return 'math'}
-    get arity() {return -1}
-}
-
-export class MmlMi extends AMmlTokenNode {
-    static defaults: PropertyList = {
-        ...AMmlTokenNode.defaults,
-        mathvariant: DEFAULT.AUTO
-    };
-    _texClass = TEXCLASS.ORD;
-    get kind() {return 'math'}
-
-    autoDefault(name: string) {
-        if (name === "mathvariant") {
-            let text = this.getText();
-            if (text.length === 1) return "italic";
-            return "normal";
-        }
-        return "";
-    }
-}
-
-export class TextNode {
-    protected text: string;
-
-    constructor(text:string = "") {
-        this.text = text;
-    }
-    
-    get kind() {return 'text'}
-
-    getText(): string {return this.text}
-    setText(text: string): void {this.text = text}
-
-    setParent(node: MmlNode) {}
-}
-
-export class XMLNode {
+export class XMLNode extends ANode {
     protected xml: Object;
 
     constructor(xml:Object = {}) {
+        super();
         this.xml = xml;
     }
 
@@ -377,6 +253,4 @@ export class XMLNode {
 
     getXML(): Object {return this.xml}
     setXML(xml: Object): void {this.xml = xml}
-
-    setParent(node: MmlNode) {}
 }
