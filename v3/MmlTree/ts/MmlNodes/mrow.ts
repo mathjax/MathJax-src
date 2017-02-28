@@ -11,4 +11,5 @@ export class MmlMrow extends AMmlNode {
 export class MmlInferredMrow extends MmlMrow {
     static defaults: PropertyList = MmlMrow.defaults;
     get isInferred() {return true}
+    get kind() {return 'inferredMrow'}
 }

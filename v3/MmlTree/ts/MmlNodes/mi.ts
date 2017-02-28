@@ -7,7 +7,7 @@ export class MmlMi extends AMmlTokenNode {
         mathvariant: DEFAULT.AUTO
     };
     _texClass = TEXCLASS.ORD;
-    get kind() {return 'math'}
+    get kind() {return 'mi'}
 
     autoDefault(name: string) {
         if (name === "mathvariant") {
