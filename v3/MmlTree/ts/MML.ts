@@ -5,10 +5,10 @@ import {MmlMrow,MmlInferredMrow} from './MmlNodes/mrow.js';
 import {MmlMi} from './MmlNodes/mi.js';
 
 export let MML: {[kind: string]: MmlNodeClass} = {
-    math: MmlMath,
-    mrow: MmlMrow,
-    mi: MmlMi,
-    inferredMrow: MmlInferredMrow,
-    text: TextNode,
-    xml: XMLNode
+    [MmlMath.prototype.kind]: MmlMath,
+    [MmlMrow.prototype.kind]: MmlMrow,
+    [MmlInferredMrow.prototype.kind]: MmlInferredMrow,
+    [MmlMi.prototype.kind]: MmlMi,
+    [TextNode.prototype.kind]: TextNode,
+    [XMLNode.prototype.kind]: XMLNode
 };
