@@ -1,7 +1,10 @@
 export type Property = string | number | boolean;
 export type PropertyList = {[key: string]: Property};
+export type ChildParams = (Node | string | (Node | string)[])[];
+export type ChildArray = (Node | string)[];
 
 export type Node = ANode;
+export type NodeClass = INodeClass;
 
 export interface INode {
     readonly kind: string;
@@ -9,6 +12,10 @@ export interface INode {
 
     setProperty(name: string, value: Property): void;
     getProperty(name: string): Property;
+}
+
+export interface INodeClass {
+    new (...children: ChildParams): Node;
 }
 
 export abstract class ANode implements INode {
@@ -29,14 +36,18 @@ export interface IContainerNode extends INode {
     childIndex(child: Node): number;
 }
 
+export function ChildNodes(children: ChildParams): ChildArray {
+    if (children.length === 1 && Array.isArray(children[0])) children = children[0] as ChildArray;
+    return children as ChildArray;
+}
+
 export abstract class AContainerNode extends ANode implements IContainerNode {
     
     childNodes: Node[] = [];
 
-    constructor(...children: (Node | string | (Node | string)[])[]) {
+    constructor(...children: ChildParams) {
         super();
-        if (children.length === 1 && Array.isArray(children[0])) children = children[0] as (Node | string)[];
-        this.setChildren(children as (Node | string)[]);
+        this.setChildren(ChildNodes(children));
     }
 
     setChildren(children: (Node | string)[]) {

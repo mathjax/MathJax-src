@@ -1,6 +1,10 @@
-import {Property, PropertyList, Node, TextNode, ANode, AContainerNode, INode} from './Node';
+import {Property, PropertyList, ChildNodes, Node, TextNode, ANode, AContainerNode, INode, INodeClass} from './Node';
 
 export type MmlNode = AMmlNode | TextNode | XMLNode;
+export type MmlNodeClass = IMmlNodeClass | INodeClass;
+
+export type MmlChildParams = (MmlNode | string | (MmlNode | string)[])[];
+export type MmlChildArray = (MmlNode | string)[];
 
 export interface IMmlNode extends INode {
     readonly isToken: boolean;
@@ -35,8 +39,8 @@ export interface IMmlNode extends INode {
     autoDefault(name: string): Property;
 }
 
-export interface IMmlNodeClass {
-    new (...children: (MmlNode | string | (MmlNode | string)[])[]): MmlNode;
+export interface IMmlNodeClass extends INodeClass {
+    new (...children: MmlChildParams): MmlNode;
     defaults: PropertyList;
     defaultProperties?: PropertyList;
 }
@@ -50,6 +54,10 @@ export const TEXCLASS = {
     ORD: 0,
     NONE: -1
 };
+
+export function MmlChildNodes(children: MmlChildParams): MmlChildArray {
+    return ChildNodes(children) as MmlChildArray;
+}
 
 export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     static defaults: PropertyList = {
@@ -94,14 +102,13 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
 
     childNodes: MmlNode[] = [];
 
-    constructor(...children: (MmlNode | string | (MmlNode | string)[])[]) {
+    constructor(...children: MmlChildParams) {
         super();
         if (this.arity < 0) {
             this.childNodes = [new (AMmlNode.inferredMrow)()];
             this.childNodes[0].setParent(this);
         }
-        if (children.length === 1 && Array.isArray(children[0])) children = children[0] as (MmlNode | string)[];
-        this.setChildren(children as (MmlNode | string)[]);
+        this.setChildren(MmlChildNodes(children));
     }
     
     get isToken() {return false}
