@@ -131,7 +131,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         }
         return super.appendChild(child);
     }
-    replaceChild(oldChild: Node, newChild: Node) {
+    replaceChild(oldChild: MmlNode, newChild: MmlNode) {
         if (this.arity < 0) {
             (this.childNodes[0] as AMmlNode).replaceChild(oldChild,newChild);
             return newChild;
