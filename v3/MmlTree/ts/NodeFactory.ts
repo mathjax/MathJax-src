@@ -9,7 +9,7 @@ export interface INodeFactory {
 
 export class NodeFactory implements INodeFactory {
     protected nodeMap: Map<string, NodeClass> = new Map();
-    node: {[kind: string]: Function} = {};
+    protected node: {[kind: string]: Function} = {};
     
     constructor(nodes: {[kind: string]: NodeClass} = {}) {
         for (const kind of Object.keys(nodes)) {
@@ -24,10 +24,14 @@ export class NodeFactory implements INodeFactory {
     setNodeClass(kind: string, nodeClass: NodeClass) {
         this.nodeMap.set(kind, nodeClass);
         let THIS = this;
+        let KIND = this.nodeMap.get(kind);
         this.node[kind] = function (...children: ChildParams) {
-            return new (THIS.nodeMap.get(kind))(THIS, ChildNodes(children))
+            return new KIND(THIS, ChildNodes(children));
         }
     }
     getNodeClass(kind: string): NodeClass {return this.nodeMap.get(kind)}
-    deleteNodeClass(kind: string) {this.nodeMap.delete(kind)}
+    deleteNodeClass(kind: string) {
+        this.nodeMap.delete(kind);
+        delete this.node[kind];
+    }
 }
