@@ -1,3 +1,5 @@
+import {NodeFactory} from './NodeFactory';
+
 export type Property = string | number | boolean;
 export type PropertyList = {[key: string]: Property};
 export type ChildParams = (Node | string | (Node | string)[])[];
@@ -15,12 +17,17 @@ export interface INode {
 }
 
 export interface INodeClass {
-    new (...children: ChildParams): Node;
+    new (factory: NodeFactory, ...children: ChildParams): Node;
 }
 
 export abstract class ANode implements INode {
     protected _parent: Node = null;
     protected properties: PropertyList = {};
+    factory: NodeFactory = null;
+
+    constructor(factory: NodeFactory = null) {
+        this.factory = factory;
+    }
 
     get kind() {return 'unknown'}
     get parent() {return this._parent}
@@ -45,14 +52,14 @@ export abstract class AContainerNode extends ANode implements IContainerNode {
     
     childNodes: Node[] = [];
 
-    constructor(...children: ChildParams) {
-        super();
+    constructor(factory: NodeFactory, ...children: ChildParams) {
+        super(factory);
         this.setChildren(ChildNodes(children));
     }
 
     setChildren(children: (Node | string)[]) {
         for (let child of children) {
-            if (typeof child === 'string') child = new TextNode(child as string);
+            if (typeof child === 'string') child = this.factory.create("text",child);
             this.appendChild(child as Node);
         }
     }
@@ -83,8 +90,8 @@ export abstract class AContainerNode extends ANode implements IContainerNode {
 export class TextNode extends ANode {
     protected text: string;
 
-    constructor(text:string = "") {
-        super();
+    constructor(factory: NodeFactory, text:string = "") {
+        super(factory);
         this.text = text;
     }
     

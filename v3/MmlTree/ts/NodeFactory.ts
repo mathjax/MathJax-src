@@ -25,7 +25,7 @@ export class NodeFactory implements INodeFactory {
         this.nodeMap.set(kind, nodeClass);
         let THIS = this;
         this.node[kind] = function (...children: ChildParams) {
-            return new (THIS.nodeMap.get(kind))(ChildNodes(children))
+            return new (THIS.nodeMap.get(kind))(THIS, ChildNodes(children))
         }
     }
     getNodeClass(kind: string): NodeClass {return this.nodeMap.get(kind)}

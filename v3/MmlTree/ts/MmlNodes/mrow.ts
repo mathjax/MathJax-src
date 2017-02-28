@@ -12,5 +12,3 @@ export class MmlInferredMrow extends MmlMrow {
     static defaults: PropertyList = MmlMrow.defaults;
     get isInferred() {return true}
 }
-
-AMmlNode.inferredMrow = MmlInferredMrow;

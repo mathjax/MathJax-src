@@ -1,4 +1,5 @@
 import {Property, PropertyList, ChildNodes, Node, TextNode, ANode, AContainerNode, INode, INodeClass} from './Node';
+import {MmlFactory} from './MmlFactory';
 
 export type MmlNode = AMmlNode | TextNode | XMLNode;
 export type MmlNodeClass = IMmlNodeClass | INodeClass;
@@ -40,7 +41,7 @@ export interface IMmlNode extends INode {
 }
 
 export interface IMmlNodeClass extends INodeClass {
-    new (...children: MmlChildParams): MmlNode;
+    new (factory: MmlFactory, ...children: MmlChildParams): MmlNode;
     defaults: PropertyList;
     defaultProperties?: PropertyList;
 }
@@ -92,9 +93,6 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         }
     };
 
-    static inferredMrow: IMmlNodeClass = null;
-    static mathClass: IMmlNodeClass = null;
-
     protected _texClass: number = TEXCLASS.NONE;
 
     protected attributes: PropertyList = {};
@@ -102,10 +100,10 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
 
     childNodes: MmlNode[] = [];
 
-    constructor(...children: MmlChildParams) {
-        super();
+    constructor(factory: MmlFactory, ...children: MmlChildParams) {
+        super(factory);
         if (this.arity < 0) {
-            this.childNodes = [new (AMmlNode.inferredMrow)()];
+            this.childNodes = [factory.create('inferredMrow') as MmlNode];
             this.childNodes[0].setParent(this);
         }
         this.setChildren(MmlChildNodes(children));
@@ -203,7 +201,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     Get(...names: string[]) {
         let values: PropertyList = {};
         let defaults = this.defaults;
-        let math = AMmlNode.mathClass || ({defaults:{}, defaultProperties:{}} as IMmlNodeClass);
+        let math = (this.factory.getNodeClass('math') || {defaults:{}, defaultProperties:{}}) as IMmlNodeClass;
         for (const name of names) {
             if (name in this.properties) {
                 values[name] = this.properties[name];
@@ -251,8 +249,8 @@ export abstract class AMmlTokenNode extends AMmlNode {
 export class XMLNode extends ANode {
     protected xml: Object;
 
-    constructor(xml:Object = {}) {
-        super();
+    constructor(factory: MmlFactory, xml:Object = {}) {
+        super(factory);
         this.xml = xml;
     }
 

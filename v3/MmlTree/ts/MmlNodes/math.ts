@@ -38,5 +38,3 @@ export class MmlMath extends AMmlNode {
     get kind() {return 'math'}
     get arity() {return -1}
 }
-
-AMmlNode.mathClass = MmlMath;
