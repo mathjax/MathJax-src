@@ -33,6 +33,7 @@ export interface IMmlNode extends INode {
     setInherited(name: string, value: Property): void;
 
     getAttribute(name: string): Property;
+    getAttributes(): PropertyList;
     getInherited(name: string): Property;
     getDefault(name: string): Property;
 
@@ -191,11 +192,10 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     setAttribute(name: string, value: Property) {this.attributes[name] = value}
     setAttributes(attributes: PropertyList) {Object.assign(this.attributes,attributes)}
     setInherited(name: string, value: Property) {this.inherited[name] = value}
-    setProperty(name: string, value: Property) {this.properties[name] = value}
 
     getAttribute(name: string) {return this.attributes[name]}
+    getAttributes() {return this.attributes}
     getInherited(name: string) {return this.inherited[name]}
-    getProperty(name: string) {return this.properties[name]}
     getDefault(name: string) {return this.defaults[name]}
 
     Get(...names: string[]) {
