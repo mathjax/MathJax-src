@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode} from '../MmlNode';
+import {AMmlNode, AttributeList} from '../MmlNode';
 
 export class MmlMath extends AMmlNode {
     static defaults: PropertyList = {
@@ -37,4 +37,12 @@ export class MmlMath extends AMmlNode {
     };
     get kind() {return 'math'}
     get arity() {return -1}
+    get linebreakContainer() {return true}
+
+    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+        attributes = this.addInheritedAttributes(attributes, this.getAttributes());
+        display = this.Get('display') === 'block' || !!this.Get('displaystyle');
+        level = this.Get('scriptlevel') as number || 0;
+        super.setChildInheritedAttributes(attributes, display, level, prime);
+    }
 }

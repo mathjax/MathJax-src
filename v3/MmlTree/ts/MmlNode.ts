@@ -7,6 +7,8 @@ export type MmlNodeClass = IMmlNodeClass | INodeClass;
 export type MmlChildParams = (MmlNode | string | (MmlNode | string)[])[];
 export type MmlChildArray = (MmlNode | string)[];
 
+export type AttributeList = {[attribute: string]: [string, Property]};
+
 export interface IMmlNode extends INode {
     readonly isToken: boolean;
     readonly isEmbellished: boolean;
@@ -26,7 +28,7 @@ export interface IMmlNode extends INode {
     updateTeXclass(core: MmlNode): void;
     texSpacing(): string;
 
-    setInheritedAttributes(attributes: {[attribute: string]: [string, Property]}): void;
+    setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
 
     setAttribute(name: string, value: Property): void;
     setAttributes(attributes: PropertyList): void;
@@ -53,9 +55,19 @@ export const DEFAULT = {
 };
 
 export const TEXCLASS = {
-    ORD: 0,
-    NONE: -1
+    ORD:   0,
+    OP:    1,
+    BIN:   2,
+    REL:   3,
+    OPEN:  4,
+    CLOSE: 5,
+    PUNCT: 6,
+    INNER: 7,
+    VCENTER: 8,
+    NONE:   -1
 };
+
+export const TEXCLASSNAMES = ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"];
 
 export function MmlChildNodes(children: MmlChildParams): MmlChildArray {
     return ChildNodes(children) as MmlChildArray;
@@ -81,7 +93,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
                 alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
                 columnspacing: true, rowlines: true, columnlines: true, frame: true,
                 framespacing: true, equalrows: true, equalcolumns: true, displaystyle: true,
-                side: true, minlabelspacing: true, texClass: true, useHeight: true
+                side: true, minlabelspacing: true
             }
         },
         mtr: {
@@ -121,7 +133,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         return parent;
     }
     get hasNewLine() {return false}
-    get arity() {return 0}
+    get arity() {return Infinity}
     get isInferred() {return false}
     get defaults() {return (this.constructor as IMmlNodeClass).defaults}
 
@@ -140,16 +152,16 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         return super.replaceChild(oldChild,newChild);
     }
 
-    core() {return this}
-    coreMO() {return this}
+    core(): MmlNode {return this}
+    coreMO(): MmlNode {return this}
     coreIndex() {return 0}
 
     setTeXclass() {}
     updateTeXclass(core: MmlNode) {}
     texSpacing() {return ''}
 
-    setInheritedAttributes(attributes: {[attribute: string]: [string, Property]} = {},
-                           displaystyle: boolean = false, scriptlevel: number = 0) {
+    setInheritedAttributes(attributes: AttributeList = {},
+                           display: boolean = false, level: number = 0, prime: boolean = false) {
         let defaults = this.defaults;
         for (const key of Object.keys(attributes)) {
             if (key in defaults) {
@@ -160,33 +172,44 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
                 }
             }
         }
-        let display = this.getAttribute("displaystyle");
-        if (display === undefined) {
-            this.setInherited("displaystyle",displaystyle);
+        let displaystyle = this.getAttribute("displaystyle");
+        if (displaystyle === undefined) {
+            this.setInherited("displaystyle",display);
         } else {
-            displaystyle = display as boolean;
+            display = !!displaystyle;
         }
-        let script = this.getAttribute("scriptlevel");
-        if (script === undefined) {
-            this.setInherited("scriptlevel",scriptlevel);
-        } else {
-            scriptlevel = script as number;
+        let scriptlevel = this.getAttribute("scriptlevel");
+        if (scriptlevel === undefined) {
+            this.setInherited("scriptlevel",level);
         }
-        if (this.arity > 0 && this.childNodes.length !== this.arity) {
+        if (prime) {
+            this.setProperty("texprimestyle", prime);
+        }
+        let arity = this.arity;
+        if (arity >= 0 && arity !== Infinity && ((arity === 1 && this.childNodes.length === 0) ||
+                                                 (arity !== 1 && this.childNodes.length !== arity))) {
             //
             // FIXME: should create merror element surrounding this one.
             //
             throw Error("Incorrect number of child nodes for '"+this.kind+"'");
         }
-        this.setChildInheritedAttributes(attributes, displaystyle, scriptlevel);
+        this.setChildInheritedAttributes(attributes, display, level, prime);
     }
-    protected setChildInheritedAttributes(attributes: {[attribute: string]: [string, Property]},
-                                          displaystyle: boolean, scriptlevel: number) {
+    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         for (const child of this.childNodes) {
             if (child instanceof AMmlNode) {
-                child.setInheritedAttributes(attributes, displaystyle, scriptlevel);
+                child.setInheritedAttributes(attributes, display, level, prime);
             }
         }
+    }
+    protected addInheritedAttributes(current: AttributeList, attributes: PropertyList) {
+        let updated: AttributeList = {...current};
+        for (const name of Object.keys(attributes)) {
+            if (name !== 'displaystyle' && name !== 'scriptlevel' && name !== 'style') {
+                updated[name] = [this.kind, attributes[name]];
+            }
+        }
+        return updated;
     }
 
     setAttribute(name: string, value: Property) {this.attributes[name] = value}
