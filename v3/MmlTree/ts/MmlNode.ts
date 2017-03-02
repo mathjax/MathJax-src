@@ -18,11 +18,14 @@ export interface IMmlNode extends INode {
     readonly hasNewLine: boolean;
     readonly arity: number;
     readonly isInferred: boolean;
+    readonly notParent: boolean;
     readonly defaults: PropertyList;
 
     core(): MmlNode;
     coreMO(): MmlNode;
     coreIndex(): number;
+
+    childPosition(): number;
 
     setTeXclass(): void;
     updateTeXclass(core: MmlNode): void;
@@ -129,12 +132,15 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     get texClass() {return this._texClass}
     get parent(): Node {
         let parent = this._parent as AMmlNode;
-        if (parent.isInferred) return parent.parent;
+        while (parent && parent.notParent) {
+            parent = parent.parent as AMmlNode;
+        }
         return parent;
     }
     get hasNewLine() {return false}
     get arity() {return Infinity}
     get isInferred() {return false}
+    get notParent() {return false}
     get defaults() {return (this.constructor as IMmlNodeClass).defaults}
 
     appendChild(child: MmlNode) {
@@ -155,6 +161,23 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     core(): MmlNode {return this}
     coreMO(): MmlNode {return this}
     coreIndex() {return 0}
+
+    childPosition() {
+        let child: MmlNode = this;
+        let parent = child._parent as AMmlNode;
+        while (parent && parent.notParent) {
+            child = parent;
+            parent = parent._parent as AMmlNode;
+        }
+        if (parent) {
+            let i = 0;
+            for (const node of parent.childNodes) {
+                if (node === child) return i;
+                i++;
+            }
+        }
+        return null;
+    }
 
     setTeXclass() {}
     updateTeXclass(core: MmlNode) {}

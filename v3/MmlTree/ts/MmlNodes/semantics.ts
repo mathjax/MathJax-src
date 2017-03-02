@@ -9,6 +9,7 @@ export class MmlSemantics extends AMmlNode {
     };
 
     get kind() {return 'semantics'}
+    get notParent() {return true}
 }
 
 export class MmlAnnotationXML extends AMmlNode {

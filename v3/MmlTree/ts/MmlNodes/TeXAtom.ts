@@ -9,4 +9,5 @@ export class TeXAtom extends AMmlNode {
 
     get kind() {return 'TeXAtom'}
     get arity() {return -1}
+    get notParent() {return true}
 }
