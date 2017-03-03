@@ -90,7 +90,7 @@ MathJax.Hub.Startup.signal.Post("onLoad");
 //
 //  The Tree-to-ElementJax visitor
 //
-MmlVisitor = require("TreeJax/lib/mml_visitor.js").MmlVisitor;
+MmlVisitor = require("MmlTree/js/LegacyMmlVisitor.js").LegacyMmlVisitor;
 var visitor = new MmlVisitor();
 
 exports.LegacyCHTML = {
@@ -101,8 +101,7 @@ exports.LegacyCHTML = {
   Typeset: function (math,html) {
     if (!ready.called) MathJax.Hub.RestartAfter(ready);
     HTML.setDocument(html.document);
-    visitor.visitTree(math.tree);
-    var mml = visitor.getResult();
+    var mml = visitor.visitTree(math.tree.root);
     var metrics = math.metrics;
     var jax = {
       CHTML: {

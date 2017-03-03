@@ -69,7 +69,7 @@
   });
   MML.entity.Augment({
     toMmlNode: function (factory) {
-      return factory.MML.text(this.data.join(""));
+      return factory.MML.text(this.toString());
     }
   });
   
