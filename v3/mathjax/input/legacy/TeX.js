@@ -26,13 +26,17 @@ require("../../legacy/extensions/TeX/mathchoice.js");
 require("../../legacy/extensions/TeX/bbox.js");
 require("../../legacy/extensions/TeX/HTML.js");
 
-require("../../legacy/jax/element/JSON.js");
+require("../../legacy/jax/element/MmlNode.js");
 
 var Tree = require("../../../TreeJax/lib/tree.js").Tree;
+var MmlFactory = require("../../../MmlTree/js/MmlFactory.js").MmlFactory;
+var factory = new MmlFactory();
 
 exports.LegacyTeX = {
   Compile: function (tex,display) {
-    return Tree.parse(this.Translate(tex,display));
+    var tree = new Tree();
+    tree.setRoot(this.Translate(tex,display));
+    return tree;
   },
   Translate: function (tex,display) {
     var script = {
@@ -40,6 +44,8 @@ exports.LegacyTeX = {
       innerText: tex,
       MathJax: {}
     };
-    return MathJax.InputJax.TeX.Translate(script).root.toJSON();
+    var node = MathJax.InputJax.TeX.Translate(script).root.toMmlNode(factory);
+    node.setInheritedAttributes();
+    return node;
   }
 };
