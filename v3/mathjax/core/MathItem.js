@@ -15,14 +15,14 @@ export class MathItem {
     this.outputData = {};
   }
   
-  Compile(document,options) {
+  Compile(document) {
     if (this.State() < STATE.COMPILED) {
       this.tree = this.inputJax.Compile(this.math,this.display);
       this.State(STATE.COMPILED);
     }
   }
   
-  Typeset(document,options) {
+  Typeset(document) {
     if (this.State() < STATE.TYPESET) {
       if (this.display === null) {
         this.typeset = document.OutputJax.Escaped(this,document);
@@ -35,7 +35,8 @@ export class MathItem {
   
   addEventHandlers() {}
   
-  UpdateDocument(document,options) {}
+  UpdateDocument(document) {}
+  RemoveFromDocument(restore = false) {}
   
   setMetrics(em,ex,cwidth,lwidth,scale) {
     this.metrics = {
@@ -46,8 +47,20 @@ export class MathItem {
     }
   }
   
-  State(state=null) {
-    if (state != null) this.state = state;
+  State(state = null, restore = false) {
+    if (state != null) {
+      if (state < STATE.INSERTED && this.state >= STATE.INSERTED) {
+        this.RemoveFromDocument(restore);
+      }
+      if (state < STATE.TYPESET && this.state >= STATE.TYPESET) {
+        this.bbox = {};
+        this.outputData = {};
+      }
+      if (state < STATE.COMPILED && this.state >= STATE.COMPILED) {
+        this.inputData = {};
+      }
+      this.state = state
+    }
     return this.state;
   }
   

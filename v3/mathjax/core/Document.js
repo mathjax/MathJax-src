@@ -2,6 +2,7 @@ import {UserOptions, DefaultOptions} from "../util/Options.js";
 import {InputJax} from "./InputJax.js";
 import {OutputJax} from "./OutputJax.js";
 import {MathList} from "./MathList.js";
+import {MathItem} from "./MathItem.js";
 
 export class Document {
   constructor (document,options) {
@@ -27,7 +28,7 @@ export class Document {
     return this;
   }
   
-  Compile(options) {
+  Compile() {
     if (!this.processed.Compile) {
       for (const math of this.math) {
         if (math) math.Compile(this);
@@ -37,7 +38,7 @@ export class Document {
     return this;
   }
 
-  Typeset(options) {
+  Typeset() {
     if (!this.processed.Typeset) {
       for (const math of this.math) {
         if (math) math.Typeset(this);
@@ -69,6 +70,39 @@ export class Document {
     }
     return this;
   }
+  RemoveFromDocument() {
+    return this;
+  }
+  
+  State(state,restore = false) {
+    for (const math of this.math) {
+      math.State(state,restore);
+    }
+    if (state < STATE.INSERTED) {
+      this.processed.UpdateDocument = false;
+    }
+    if (state < STATE.TYPESET) {
+      this.processed.Typeset = false;
+      this.processed.AddEventHandlers = false;
+      this.processed.GetMetrics = false;
+    }
+    if (state < STATE.COMPILED) {
+      this.processed.Compile = false;
+    }
+    return this;
+  }
+  
+  Reset() {
+    for (const key of Object.keys(this.processed)) {
+      this.processed[key] = false;
+    }
+  }
+  
+  Clear() {
+    this.Reset();
+    this.math.Clear();
+    return this;
+  }
   
   Concat(collection) {
     this.math.merge(collection.math);
@@ -83,4 +117,4 @@ Document.OPTIONS = {
   InputJax: null,
   MathList: MathList
 };
-
+let STATE = Document.STATE = MathItem.STATE;

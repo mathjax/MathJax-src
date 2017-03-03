@@ -7,10 +7,10 @@ export class OutputJax {
     this.options = UserOptions(DefaultOptions({},this.constructor.OPTIONS),options);
   }
   
-  Typeset(math,document,options) {
+  Typeset(math,document) {
   }
   
-  Escaped(nath,document,options) {
+  Escaped(nath,document) {
   }
   
   GetMetrics(document) {

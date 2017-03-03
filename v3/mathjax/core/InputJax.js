@@ -13,7 +13,7 @@ export class InputJax {
     return [];
   }
   
-  Compile(math,options) {
+  Compile(math) {
   }
   
 };

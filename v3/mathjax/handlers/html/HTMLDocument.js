@@ -1,5 +1,5 @@
 import {Document} from "../../core/Document.js";
-import {DefaultOptions} from "../../util/Options.js";
+import {DefaultOptions, UserOptions} from "../../util/Options.js";
 import {HTMLMathItem} from "./HTMLMathItem.js";
 import {HTMLMathList} from "./HTMLMathList.js";
 import {HTMLDomStrings} from "./HTMLDomStrings.js";
@@ -12,9 +12,8 @@ export class HTMLDocument extends Document {
   }
 
   FindPosition(N,index,delim,nodes) {
-    let list = nodes[N];
-    for (let i = 0, m = list.length; i < m; i++) {
-      let [node, n] = list[i];
+    for (const list of nodes[N]) {
+      let [node, n] = list;
       if (index <= n) {
         return {node:node, n:index, delim:delim};
       } else {
@@ -31,23 +30,40 @@ export class HTMLDocument extends Document {
     return new HTMLMathItem(math, jax, item.display, start, end);
   }
   
+  getElements(nodes,document) {
+    let containers = [];
+    for (const node of nodes) {
+      if (typeof(node) === 'string') {
+        containers = containers.concat(Array.from(document.querySelectorAll(node)));
+      } else if (Array.isArray(node)) {
+        containers = containers.concat(node);
+      } else {
+        containers.push(node);
+      }
+    }
+    return containers;
+  }
+  
   FindMath(options) {
+    options = UserOptions({elements:[this.document.body]},options);
     if (!this.processed.FindMath) {
-      let [strings, nodes] = this.DomStrings.Find(this.document.body);
-      for (let jax of this.InputJax) {
-        let list = new this.options.MathList();
-        if (jax.processStrings) {
-          for (let math of jax.FindMath(strings)) {
-            list.push(this.MathItem(math,jax,nodes));
+      for (const container of this.getElements(options.elements,this.document)) {
+        let [strings, nodes] = this.DomStrings.Find(container);
+        for (const jax of this.InputJax) {
+          let list = new this.options.MathList();
+          if (jax.processStrings) {
+            for (const math of jax.FindMath(strings)) {
+              list.push(this.MathItem(math,jax,nodes));
+            }
+          } else {
+            for (const math of jax.FindMath(this.document.body)) {
+              let item = new HTMLMathItem(math.math,jax,math.display,math.start,math.end);
+              list.push(item);
+            }
           }
-        } else {
-          for (let math of jax.FindMath(this.document.body)) {
-            let item = new HTMLMathItem(math.math,jax,math.display,math.start,math.end);
-            list.push(item);
-          }
+          this.math.merge(list);
         }
-        this.math.merge(list);
-      };
+      }
       this.processed.FindMath = true;
     }
     return this;
@@ -69,6 +85,17 @@ export class HTMLDocument extends Document {
     }
     return this;
   }
+
+  RemoveFromDocument(restore = false) {
+    if (this.processed.UpdateDocument) {
+      for (const math of this.math) {
+        if (math.State() >= STATE.INSERTED) {
+          math.State(STATE.TYPESET,restore);
+        }
+      }
+    }
+    this.processed.UpdateDocument = false;
+  }
   
   DocumentStyleSheet() {
     return this.OutputJax.StyleSheet(this);
@@ -89,3 +116,4 @@ HTMLDocument.OPTIONS = DefaultOptions({
   MathList: HTMLMathList,
   DomStrings: null
 },Document.OPTIONS);
+let STATE = HTMLDocument.STATE = Document.STATE;

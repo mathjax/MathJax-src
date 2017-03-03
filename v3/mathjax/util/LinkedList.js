@@ -94,6 +94,13 @@ export class LinkedList {
   }
   
   //
+  //  Empty the list
+  //
+  Clear() {
+    this.list.next = this.list.prev = this.list;
+  }
+  
+  //
   //  Make the list iterable and return the data from
   //  the items in the list.
   //
