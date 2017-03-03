@@ -14,6 +14,7 @@ export interface INode {
 
     setProperty(name: string, value: Property): void;
     getProperty(name: string): Property;
+    getProperties(): PropertyList;
 }
 
 export interface INodeClass {
@@ -34,6 +35,7 @@ export abstract class ANode implements INode {
     setParent(node: Node) {this._parent = node}
     setProperty(name: string, value: Property) {this.properties[name] = value}
     getProperty(name: string) {return this.properties[name]}
+    getProperties() {return this.properties}
 }
 
 export interface IContainerNode extends INode {

@@ -40,6 +40,7 @@ export interface IMmlNode extends INode {
     getAttribute(name: string): Property;
     getAttributes(): PropertyList;
     getInherited(name: string): Property;
+    getInheritedAttributes(): PropertyList;
     getDefault(name: string): Property;
 
     Get(...name: string[]): Property | PropertyList;
@@ -242,6 +243,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     getAttribute(name: string) {return this.attributes[name]}
     getAttributes() {return this.attributes}
     getInherited(name: string) {return this.inherited[name]}
+    getInheritedAttributes() {return this.inherited}
     getDefault(name: string) {return this.defaults[name]}
 
     Get(...names: string[]) {
