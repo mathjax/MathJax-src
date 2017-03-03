@@ -21,8 +21,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-/// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
-
 import {Tree} from './tree';
 import {Kind, TreeNode} from './tree_node';
 import * as nf from './node_factory';

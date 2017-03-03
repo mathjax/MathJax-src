@@ -22,8 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-/// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
-
 import {Visitable, Visitor} from './visitor';
 import {LeafNode} from './leaf_node';
 

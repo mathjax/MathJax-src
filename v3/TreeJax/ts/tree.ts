@@ -23,8 +23,6 @@
  * @author volker.sorge@gmail.com (Volker Sorge)
  */
 
-/// <reference path="tree_node.ts" />
-
 import {TreeNode, Kind} from './tree_node';
 import {LeafNode} from './leaf_node';
 import {Visitable, Visitor} from './visitor';
@@ -86,9 +84,8 @@ export class Tree implements Visitable {
    * Parses a Node from JSON.
    * @param {JSON} json The JSON structure of a node.
    * @return {TreeNode} The newly constructed node.
-   * @private
    */
-  private static parseNode(json: {[key: string]: any}) {
+  public static parseNode(json: {[key: string]: any}) {
     for (let key in json) {
       Tree.currentKeys[key] = true;
     }
@@ -97,7 +94,7 @@ export class Tree implements Visitable {
     let children: TreeNode[] = (json['children'] || []).map(Tree.parseNode);
     node.setChildren(children);
     if (node.isLeaf()) {
-      (<LeafNode>node).setText(json['text'] || '');
+      (node as LeafNode).setText(json['text'] || '');
     }
     node.setAttributes(json['attributes'] || {});
     node.setTexAtom(json['TeXAtom'] || '');
@@ -105,7 +102,7 @@ export class Tree implements Visitable {
       if (node.getKind() !== Kind.mrow) {
         throw new Error('Only mrow nodes can be inferred!');
       }
-      (<NodeMrow>node).setInferred();
+      (node as NodeMrow).setInferred();
     }
     children.forEach(x => x.setParent(node));
     return node;
@@ -116,6 +113,13 @@ export class Tree implements Visitable {
    */
   public getRoot(): TreeNode {
     return this.root;
+  }
+
+  /**
+   * @param {TreeNode} node The root node of the tree.
+   */
+  public setRoot(node: TreeNode) {
+    this.root = node;
   }
 
   /**

@@ -1,33 +1,36 @@
 /*************************************************************
  *
- *  Copyright (c) 2015-2016 The MathJax Consortium
+ *  MathJax/jax/output/HTML-CSS/optable/MiscSymbolsAndArrows.js
+ *
+ *  Copyright (c) 2010-2016 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */
-
-
-/**
- * @fileoverview Top level API for TreeJax
  *
- * @author volker.sorge@gmail.com (Volker Sorge)
  */
 
-import {Tree} from './tree';
-export {JsonVisitor} from './json_visitor';
-export {PrintVisitor} from './print_visitor';
-export {MathmlVisitor} from './mathml_visitor';
-export {SemanticVisitor} from './semantic_visitor';
+(function (MML) {
+  var MO = MML.mo.OPTYPES;
+  var TEXCLASS = MML.TEXCLASS;
 
-export let parse = Tree.parse;
-export let parseFile = Tree.parseFile;
+  MathJax.Hub.Insert(MML.mo.prototype,{
+    OPTABLE: {
+      infix: {
+        '\u2B45': MO.RELSTRETCH, // leftwards quadruple arrow
+        '\u2B46': MO.RELSTRETCH  // rightwards quadruple arrow
+      }
+    }
+  });
 
+  MathJax.Ajax.loadComplete(MML.optableDir+"/MiscSymbolsAndArrows.js");
+
+})(MathJax.ElementJax.mml);
