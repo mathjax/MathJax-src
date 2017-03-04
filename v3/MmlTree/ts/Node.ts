@@ -15,6 +15,8 @@ export interface INode {
     setProperty(name: string, value: Property): void;
     getProperty(name: string): Property;
     getProperties(): PropertyList;
+
+    isKind(kind: string): boolean;
 }
 
 export interface INodeClass {
@@ -36,6 +38,7 @@ export abstract class ANode implements INode {
     setProperty(name: string, value: Property) {this.properties[name] = value}
     getProperty(name: string) {return this.properties[name]}
     getProperties() {return this.properties}
+    isKind(kind: string) {return this.factory.nodeIsKind(this, kind)}
 }
 
 export interface IContainerNode extends INode {

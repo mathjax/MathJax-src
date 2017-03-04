@@ -5,6 +5,7 @@ export interface INodeFactory {
     setNodeClass(kind: string, nodeClass: NodeClass): void;
     getNodeClass(kind: string): NodeClass;
     deleteNodeClass(kind: string): void;
+    nodeIsKind(node: Node, kind: string): boolean;
     getKinds(): string[];
 }
 
@@ -34,6 +35,10 @@ export class NodeFactory implements INodeFactory {
     deleteNodeClass(kind: string) {
         this.nodeMap.delete(kind);
         delete this.node[kind];
+    }
+
+    nodeIsKind(node: Node, kind: string) {
+        return (node instanceof this.getNodeClass(kind));
     }
 
     getKinds() {
