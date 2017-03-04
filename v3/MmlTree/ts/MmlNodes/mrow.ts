@@ -5,17 +5,10 @@ export class MmlMrow extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults
     };
-    get kind() {return 'mrow'}
-}
-
-export class MmlInferredMrow extends MmlMrow {
-    static defaults: PropertyList = MmlMrow.defaults;
 
     protected _core: number = null;
 
-    get kind() {return 'inferredMrow'}
-    get isInferred() {return true}
-    get notParent() {return true}
+    get kind() {return 'mrow'}
     get isSpacelike() {
         for (const child of this.childNodes) {
             if (!(child as AMmlNode).isSpacelike) return false;
@@ -31,7 +24,7 @@ export class MmlInferredMrow extends MmlMrow {
                 if (embellished) return false;
                 embellished = true;
                 this._core = i;
-            } else if (child.isSpacelike) {
+            } else if (!child.isSpacelike) {
                 return false;
             }
         }
@@ -66,4 +59,12 @@ export class MmlInferredMrow extends MmlMrow {
         }
         return null;
     }
+}
+
+export class MmlInferredMrow extends MmlMrow {
+    static defaults: PropertyList = MmlMrow.defaults;
+
+    get kind() {return 'inferredMrow'}
+    get isInferred() {return true}
+    get notParent() {return true}
 }
