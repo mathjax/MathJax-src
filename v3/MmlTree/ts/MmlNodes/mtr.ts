@@ -5,9 +5,9 @@ import {ANode} from '../Node';
 export class MmlMtr extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults,
-      rowalign: DEFAULT.INHERIT,
-      columnalign: DEFAULT.INHERIT,
-      groupalign: DEFAULT.INHERIT
+        rowalign: DEFAULT.INHERIT,
+        columnalign: DEFAULT.INHERIT,
+        groupalign: DEFAULT.INHERIT
     };
 
     get kind() {return 'mtr'}

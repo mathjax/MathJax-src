@@ -35,8 +35,7 @@ export class MmlMtable extends AMmlNode {
     //  FIXME:  this should be in MathML input jax, not here
     //
     appendChild(child: MmlNode) {
-        if (!(child instanceof this.factory.getNodeClass('mtr')) &&
-            !(child instanceof this.factory.getNodeClass('mlabeledtr'))) {
+        if (!(child instanceof this.factory.getNodeClass('mtr'))) {
             child = this.factory.create('mtr',child);
         }
         return super.appendChild(child);
