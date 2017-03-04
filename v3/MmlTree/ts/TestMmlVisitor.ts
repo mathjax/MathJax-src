@@ -21,7 +21,9 @@ export class TestMmlVisitor extends MmlVisitor {
         let kind = node.kind;
         let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['',''] : ['\n',space]);
         let mml = space + '<' + kind + this.getAttributes(node) +
-            this.getInherited(node) + this.getProperties(node) + '>' + nl;
+            this.getInherited(node) + this.getProperties(node) +
+            this.attributeString({isEmbellished: node.isEmbellished, isSpacelike: node.isSpacelike}, '{', '}') +
+            '>' + nl;
         space += "  ";
         for (const child of node.childNodes) {
             mml += this.visitNode(child, space ) + nl;
@@ -30,15 +32,15 @@ export class TestMmlVisitor extends MmlVisitor {
         return mml;
     }
     getAttributes(node: AMmlNode) {
-        return this.attributeString(node, node.getAttributes(), '', '');
+        return this.attributeString(node.getAttributes(), '', '');
     }
     getInherited(node: AMmlNode) {
-        return this.attributeString(node, node.getInheritedAttributes(), '[', ']');
+        return this.attributeString(node.getInheritedAttributes(), '[', ']');
     }
     getProperties(node: AMmlNode) {
-        return this.attributeString(node, node.getProperties(), '[[', ']]');
+        return this.attributeString(node.getProperties(), '[[', ']]');
     }
-    attributeString(node: AMmlNode, attributes: PropertyList, open: string, close: string) {
+    attributeString(attributes: PropertyList, open: string, close: string) {
         let ATTR = '';
         for (const name of Object.keys(attributes)) {
             ATTR += ' ' + open + name + '="' + this.quoteAttribute(attributes[name].toString()) + '"' + close;
