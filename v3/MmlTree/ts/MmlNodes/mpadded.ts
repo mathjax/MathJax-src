@@ -1,9 +1,9 @@
 import {PropertyList} from '../Node';
-import {AMmlNode} from '../MmlNode';
+import {AMmlLayoutNode} from '../MmlNode';
 
-export class MmlMpadded extends AMmlNode {
+export class MmlMpadded extends AMmlLayoutNode {
     static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AMmlLayoutNode.defaults,
         width: '',
         height: '',
         depth: '',

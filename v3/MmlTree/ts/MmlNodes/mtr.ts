@@ -16,8 +16,8 @@ export class MmlMtr extends AMmlNode {
     // FIXME: Should be in MathML input jax, not here
     //
     appendChild(child: MmlNode) {
-        if (!(child instanceof this.factory.getNodeClass('mtd'))) {
-            child = this.factory.create('mtd',child);
+        if (!child.isKind('mtd')) {
+            child = this.factory.create('mtd', child);
         }
         return super.appendChild(child);
     }

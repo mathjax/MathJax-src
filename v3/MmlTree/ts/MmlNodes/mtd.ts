@@ -1,9 +1,9 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, DEFAULT} from '../MmlNode';
+import {AMmlBaseNode, DEFAULT} from '../MmlNode';
 
-export class MmlMtd extends AMmlNode {
+export class MmlMtd extends AMmlBaseNode {
     static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AMmlBaseNode.defaults,
         rowspan: 1,
         columnspan: 1,
         rowalign: DEFAULT.INHERIT,

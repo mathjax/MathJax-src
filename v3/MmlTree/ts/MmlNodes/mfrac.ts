@@ -1,9 +1,9 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AttributeList} from '../MmlNode';
+import {AMmlNode, AMmlBaseNode, AttributeList} from '../MmlNode';
 
-export class MmlMfrac extends AMmlNode {
+export class MmlMfrac extends AMmlBaseNode {
     static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AMmlBaseNode.defaults,
         linethickness: 'medium',
         numalign: 'center',
         denomalign: 'center',

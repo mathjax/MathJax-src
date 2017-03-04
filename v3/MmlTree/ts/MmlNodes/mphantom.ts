@@ -1,9 +1,9 @@
 import {PropertyList} from '../Node';
-import {AMmlTokenNode, TEXCLASS} from '../MmlNode';
+import {AMmlLayoutNode, TEXCLASS} from '../MmlNode';
 
-export class MmlMphantom extends AMmlTokenNode {
+export class MmlMphantom extends AMmlLayoutNode {
     static defaults: PropertyList = {
-        ...AMmlTokenNode.defaults
+        ...AMmlLayoutNode.defaults
     };
     protected properties: PropertyList = {
         texClass: TEXCLASS.ORD

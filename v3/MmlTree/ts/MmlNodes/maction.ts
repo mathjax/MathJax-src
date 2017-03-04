@@ -10,7 +10,9 @@ export class MmlMaction extends AMmlNode {
 
     get kind() {return 'maction'}
     get arity() {return 1}
-    get selected(): AMmlNode {return this.childNodes[this.Get("selection") as number] || this.factory.create('mrow')}
+    get selected(): AMmlNode {
+        return this.childNodes[(this.Get("selection") as number) - 1] || this.factory.create('mrow');
+    }
     get isEmbellished() {return this.selected.isEmbellished}
     get isSpacelike() {return this.selected.isSpacelike}
     core(): MmlNode {return this.selected.core()}

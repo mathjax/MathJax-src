@@ -1,9 +1,9 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AttributeList, DEFAULT} from '../MmlNode';
+import {AMmlNode, AMmlBaseNode, AttributeList, DEFAULT} from '../MmlNode';
 
-export class MmlMunderover extends AMmlNode {
+export class MmlMunderover extends AMmlBaseNode {
     static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AMmlBaseNode.defaults,
         accent: DEFAULT.AUTO,
         accentunder: DEFAULT.AUTO,
         align: 'center'

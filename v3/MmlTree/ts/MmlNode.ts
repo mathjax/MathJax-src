@@ -293,6 +293,21 @@ export abstract class AMmlTokenNode extends AMmlNode {
     }
 }
 
+export abstract class AMmlLayoutNode extends AMmlNode {
+    static defaults: PropertyList = AMmlNode.defaults;
+    get isSpacelike() {return (this.childNodes[0] as AMmlNode).isSpacelike}
+    get isEmbellished() {return (this.childNodes[0] as AMmlNode).isEmbellished}
+    core(): MmlNode {return this.childNodes[0]}
+    coreMO(): MmlNode {return (this.childNodes[0] as AMmlNode).coreMO()}
+}
+
+export abstract class AMmlBaseNode extends AMmlNode {
+    static defaults: PropertyList = AMmlNode.defaults;
+    get isEmbellished() {return (this.childNodes[0] as AMmlNode).isEmbellished}
+    core(): MmlNode {return this.childNodes[0]}
+    coreMO(): MmlNode {return (this.childNodes[0] as AMmlNode).coreMO()}
+}
+
 
 export class XMLNode extends ANode {
     protected xml: Object;

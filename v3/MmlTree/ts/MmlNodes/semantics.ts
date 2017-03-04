@@ -1,9 +1,9 @@
 import {PropertyList} from '../Node';
-import {AMmlNode} from '../MmlNode';
+import {AMmlNode, AMmlBaseNode} from '../MmlNode';
 
-export class MmlSemantics extends AMmlNode {
+export class MmlSemantics extends AMmlBaseNode {
     static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AMmlBaseNode.defaults,
         definitionUrl: null,
         encoding: null
     };

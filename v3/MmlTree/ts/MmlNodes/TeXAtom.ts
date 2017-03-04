@@ -1,9 +1,9 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, TEXCLASS} from '../MmlNode';
+import {AMmlBaseNode, TEXCLASS} from '../MmlNode';
 
-export class TeXAtom extends AMmlNode {
+export class TeXAtom extends AMmlBaseNode {
     static defaults: PropertyList = {
-        ...AMmlNode.defaults
+        ...AMmlBaseNode.defaults
     };
     _texClass = TEXCLASS.ORD;
 
