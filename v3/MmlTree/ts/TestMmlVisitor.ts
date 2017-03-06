@@ -21,8 +21,12 @@ export class TestMmlVisitor extends MmlVisitor {
         let kind = node.kind;
         let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['',''] : ['\n',space]);
         let mml = space + '<' + kind + this.getAttributes(node) +
-            this.getInherited(node) + this.getProperties(node) +
-            this.attributeString({isEmbellished: node.isEmbellished, isSpacelike: node.isSpacelike}, '{', '}') +
+            this.getInherited(node) + this.getProperties(node) + '\n' + space + '   ' +
+            this.attributeString({
+                isEmbellished: node.isEmbellished,
+                isSpacelike: node.isSpacelike,
+                texClass: node.texClass
+            }, '{', '}') +
             '>' + nl;
         space += "  ";
         for (const child of node.childNodes) {
@@ -43,7 +47,7 @@ export class TestMmlVisitor extends MmlVisitor {
     attributeString(attributes: PropertyList, open: string, close: string) {
         let ATTR = '';
         for (const name of Object.keys(attributes)) {
-            ATTR += ' ' + open + name + '="' + this.quoteAttribute(attributes[name].toString()) + '"' + close;
+            ATTR += ' ' + open + name + '="' + this.quoteAttribute(String(attributes[name])) + '"' + close;
         }
         return ATTR;
     }
