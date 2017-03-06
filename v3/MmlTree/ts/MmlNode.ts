@@ -46,7 +46,6 @@ export interface IMmlNode extends INode {
     getDefault(name: string): Property;
 
     Get(...name: string[]): Property | PropertyList;
-    autoDefault(name: string): Property;
 }
 
 export interface IMmlNodeClass extends INodeClass {
@@ -313,7 +312,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         return (names.length === 1 ? values[names[0]] : values);
     }
 
-    autoDefault(name: string) {return ''}
+    protected autoDefault(name: string) {return ''}
     
 }
 
