@@ -10,7 +10,7 @@ export class MmlMi extends AMmlTokenNode {
         height: 'auto',
         valign: '0em'
     };
-    _texClass = TEXCLASS.ORD;
+    texClass = TEXCLASS.ORD;
 
     get kind() {return 'mglyph'}
 }

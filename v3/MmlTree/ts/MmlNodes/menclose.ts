@@ -6,9 +6,20 @@ export class MmlMenclose extends AMmlNode {
         ...AMmlNode.defaults,
         notation: 'longdiv'
     };
-    _texClass = TEXCLASS.ORD;
+    texClass = TEXCLASS.ORD;
 
     get kind() {return 'menclose'}
     get arity() {return -1}
     get linebreakContininer() {return true}
+
+    setTeXclass(prev: AMmlNode) {
+        this.getPrevClass(prev);
+        for (const child of (this.childNodes as AMmlNode[])) {
+            child.setTeXclass(null);
+        }
+        if (this.isEmbellished) {
+            this.updateTeXclass(this.core() as AMmlNode);
+        }
+        return this;
+    }
 }

@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, MmlNode} from '../MmlNode';
+import {AMmlNode, MmlNode, TEXCLASS} from '../MmlNode';
 
 export class MmlMrow extends AMmlNode {
     static defaults: PropertyList = {
@@ -54,10 +54,38 @@ export class MmlMrow extends AMmlNode {
         return null;
     }
     lastNonSpace() {
-        for (const child of (this.childNodes as AMmlNode[]).reverse()) {
+        let i = this.childNodes.length;
+        while (--i >= 0) {
+            let child = this.childNodes[i] as AMmlNode;
             if (child && !child.isSpacelike) return child;
         }
         return null;
+    }
+
+    setTeXclass(prev: AMmlNode) {
+        if ((this.getProperty('open') != null || this.getProperty('close') != null) &&
+            (!prev || prev.getProperty('fnOp') != null)) {
+            //
+            // <mrow> came from \left...\right
+            // so treat as subexpression (TeX class INNER).
+            //
+            this.getPrevClass(prev);
+            prev = null;
+            for (const child of (this.childNodes as AMmlNode[])) {
+                prev = child.setTeXclass(prev);
+            }
+            if (this.texClass == null) this.texClass = TEXCLASS.INNER;
+            return prev;
+        } else {
+            //
+            //  Normal <mrow>, so treat as though mrow is not there
+            //
+            for (const child of (this.childNodes as AMmlNode[])) {
+                prev = child.setTeXclass(prev);
+            }
+            if (this.childNodes[0]) this.updateTeXclass(this.childNodes[0] as AMmlNode);
+            return prev;
+        }
     }
 }
 

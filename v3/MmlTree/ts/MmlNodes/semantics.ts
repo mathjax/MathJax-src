@@ -10,6 +10,15 @@ export class MmlSemantics extends AMmlBaseNode {
 
     get kind() {return 'semantics'}
     get notParent() {return true}
+
+    setTeXclass(prev: AMmlNode) {
+        let child = this.childNodes[0] as AMmlNode;
+        if (child) {
+            prev = child.setTeXclass(prev);
+            this.updateTeXclass(child);
+        }
+        return prev;
+    }
 }
 
 export class MmlAnnotationXML extends AMmlNode {

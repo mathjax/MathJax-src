@@ -1,9 +1,9 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AttributeList} from '../MmlNode';
+import {AMmlLayoutNode, AttributeList} from '../MmlNode';
 
-export class MmlMath extends AMmlNode {
+export class MmlMath extends AMmlLayoutNode {
     static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AMmlLayoutNode.defaults,
         mathvariant: "normal",
         mathsize: "normal",
         mathcolor: "", // should be "black", but allow it to inherit from surrounding text
@@ -21,11 +21,13 @@ export class MmlMath extends AMmlNode {
         alttext: "",
         cdgroup: "",
         scriptsizemultiplier: Math.sqrt(1/2),
-        scriptminsize: "8px",    // should be 8pt, but that's too big
+        scriptminsize: "8px",        // should be 8pt, but that's too big
         infixlinebreakstyle: "before",
         lineleading: "1ex",
-        indentshift: "auto",     // use user configuration
+        linebreakmultchar: '\u2062', // invisible times
+        indentshift: "auto",         // use user configuration
         indentalign: "auto",
+        indenttarget: '',
         indentalignfirst: "indentalign",
         indentshiftfirst: "indentshift",
         indentalignlast:  "indentalign",

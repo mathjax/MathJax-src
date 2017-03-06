@@ -27,7 +27,7 @@ export class MmlMtable extends AMmlNode {
     properties = {
         useHeight: 1
     }
-    _texClass = TEXCLASS.ORD;
+    texClass = TEXCLASS.ORD;
 
     get kind() {return 'mtable'}
     get linebreakContainer() {return true}
@@ -45,5 +45,16 @@ export class MmlMtable extends AMmlNode {
         display = !!(this.getAttribute('displaystyle') || this.defaults['displaystyle']);
         attributes = this.addInheritedAttributes(attributes, this.getAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
+    }
+
+    setTeXclass(prev: AMmlNode) {
+        this.getPrevClass(prev);
+        for (const child of (this.childNodes as AMmlNode[])) {
+            child.setTeXclass(null);
+        }
+        if (this.isEmbellished) {
+            this.updateTeXclass(this.core() as AMmlNode);
+        }
+        return this;
     }
 }

@@ -14,12 +14,14 @@ export interface IMmlNode extends INode {
     readonly isEmbellished: boolean;
     readonly isSpacelike: boolean;
     readonly linebreakContainer: boolean;
-    readonly texClass: number;
     readonly hasNewLine: boolean;
     readonly arity: number;
     readonly isInferred: boolean;
     readonly notParent: boolean;
     readonly defaults: PropertyList;
+    texClass: number;
+    prevClass: number;
+    prevLevel: number;
 
     core(): MmlNode;
     coreMO(): MmlNode;
@@ -27,8 +29,8 @@ export interface IMmlNode extends INode {
 
     childPosition(): number;
 
-    setTeXclass(): void;
-    updateTeXclass(core: MmlNode): void;
+    setTeXclass(prev: AMmlNode): void;
+    updateTeXclass(core: AMmlNode): void;
     texSpacing(): string;
 
     setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
@@ -73,6 +75,21 @@ export const TEXCLASS = {
 
 export const TEXCLASSNAMES = ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"];
 
+export const TEXSPACELENGTH = ['', 'thinmathspace', 'mediummathspace', 'thickmathspace'];
+
+// See TeXBook Chapter 18 (p. 170)
+export const TEXSPACE = [
+    [ 0,-1, 2, 3, 0, 0, 0, 1], // ORD
+    [-1,-1, 0, 3, 0, 0, 0, 1], // OP
+    [ 2, 2, 0, 0, 2, 0, 0, 2], // BIN
+    [ 3, 3, 0, 0, 3, 0, 0, 3], // REL
+    [ 0, 0, 0, 0, 0, 0, 0, 0], // OPEN
+    [ 0,-1, 2, 3, 0, 0, 0, 1], // CLOSE
+    [ 1, 1, 0, 1, 1, 1, 1, 1], // PUNCT
+    [ 1,-1, 2, 3, 1, 0, 1, 1]  // INNER
+];
+
+
 export function MmlChildNodes(children: MmlChildParams): MmlChildArray {
     return ChildNodes(children) as MmlChildArray;
 }
@@ -110,7 +127,9 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         }
     };
 
-    protected _texClass: number = TEXCLASS.NONE;
+    texClass: number = null;
+    prevClass: number = null;
+    prevLevel: number = null;
 
     protected attributes: PropertyList = {};
     protected inherited:  PropertyList = {};
@@ -130,7 +149,6 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     get isEmbellished() {return false}
     get isSpacelike() {return false}
     get linebreakContainer() {return false}
-    get texClass() {return this._texClass}
     get parent(): Node {
         let parent = this._parent as AMmlNode;
         while (parent && parent.notParent) {
@@ -180,9 +198,35 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         return null;
     }
 
-    setTeXclass() {}
-    updateTeXclass(core: MmlNode) {}
-    texSpacing() {return ''}
+    setTeXclass(prev: AMmlNode) {
+        this.getPrevClass(prev);
+        return (this.texClass === null ? this : prev);
+    }
+    updateTeXclass(core: AMmlNode) {
+        if (core) {
+            this.prevClass = core.prevClass;
+            this.prevLevel = core.prevLevel;
+            core.prevClass = core.prevLevel = null;
+            this.texClass = core.texClass;
+        }
+    }
+    protected getPrevClass(prev: AMmlNode) {
+        if (prev) {
+            this.prevClass = prev.texClass;
+            this.prevLevel = prev.getInherited('sciprtlevel') as number;
+        }
+    }
+    
+    texSpacing() {
+        let prevClass = (this.prevClass != null ? this.prevClass : TEXCLASS.NONE);
+        let texClass = this.texClass || TEXCLASS.ORD;
+        if (prevClass === TEXCLASS.NONE || texClass === TEXCLASS.NONE) return '';
+        if (prevClass === TEXCLASS.VCENTER) prevClass = TEXCLASS.ORD;
+        if (texClass === TEXCLASS.VCENTER)  texClass = TEXCLASS.ORD;
+        let space = TEXSPACE[prevClass][texClass];
+        if (this.prevLevel > 0 && this.Get('scriptlevel') > 0 && space >= 0) return '';
+        return TEXSPACELENGTH[Math.abs(space)];
+    }
 
     setInheritedAttributes(attributes: AttributeList = {},
                            display: boolean = false, level: number = 0, prime: boolean = false) {
@@ -251,9 +295,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         let defaults = this.defaults;
         let math = (this.factory.getNodeClass('math') || {defaults:{}, defaultProperties:{}}) as IMmlNodeClass;
         for (const name of names) {
-            if (name in this.properties) {
-                values[name] = this.properties[name];
-            } else if (name in this.attributes) {
+            if (name in this.attributes) {
                 values[name] = this.attributes[name];
             } else if (name in this.inherited) {
                 values[name] = this.inherited[name];
@@ -299,6 +341,11 @@ export abstract class AMmlLayoutNode extends AMmlNode {
     get isEmbellished() {return (this.childNodes[0] as AMmlNode).isEmbellished}
     core(): MmlNode {return this.childNodes[0]}
     coreMO(): MmlNode {return (this.childNodes[0] as AMmlNode).coreMO()}
+    setTeXclass(prev: AMmlNode) {
+        prev = (this.childNodes[0] as AMmlNode).setTeXclass(prev);
+        this.updateTeXclass(this.childNodes[0] as AMmlNode);
+        return prev;
+    }
 }
 
 export abstract class AMmlBaseNode extends AMmlNode {
@@ -306,6 +353,28 @@ export abstract class AMmlBaseNode extends AMmlNode {
     get isEmbellished() {return (this.childNodes[0] as AMmlNode).isEmbellished}
     core(): MmlNode {return this.childNodes[0]}
     coreMO(): MmlNode {return (this.childNodes[0] as AMmlNode).coreMO()}
+    setTeXclass(prev: AMmlNode) {
+        this.getPrevClass(prev);
+        this.texClass = TEXCLASS.NONE;
+        let base = (this.childNodes[0] as AMmlNode);
+        if (base) {
+            if (this.isEmbellished || base.isKind('mi')) {
+                prev = base.setTeXclass(prev);
+                this.updateTeXclass(this.core() as AMmlNode);
+            } else {
+                base.setTeXclass(null);
+                prev = this;
+            }
+        } else {
+            prev = this;
+        }
+        for (const child of (this.childNodes as AMmlNode[]).slice(1)) {
+            if (child) {
+                child.setTeXclass(null);
+            }
+        }
+        return prev;
+    }
 }
 
 

@@ -5,7 +5,7 @@ export class MmlMerror extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults
     };
-    _texClass = TEXCLASS.ORD;
+    texClass = TEXCLASS.ORD;
 
     get kind() {return 'merror'}
     get arity() {return -1}

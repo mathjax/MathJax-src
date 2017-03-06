@@ -5,7 +5,7 @@ export class MmlMn extends AMmlTokenNode {
     static defaults: PropertyList = {
         ...AMmlTokenNode.defaults
     };
-    _texClass = TEXCLASS.ORD;
+    texClass = TEXCLASS.ORD;
 
     get kind() {return 'mn'}
 }

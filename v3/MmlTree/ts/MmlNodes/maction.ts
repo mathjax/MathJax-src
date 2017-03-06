@@ -17,4 +17,14 @@ export class MmlMaction extends AMmlNode {
     get isSpacelike() {return this.selected.isSpacelike}
     core(): MmlNode {return this.selected.core()}
     coreMO(): MmlNode {return this.selected.coreMO()}
+
+    setTeXclass(prev: AMmlNode) {
+        if (this.Get('actiontype') === 'tooltip' && this.childNodes[1]) {
+            (this.childNodes[1] as AMmlNode).setTeXclass(null);
+        }
+        let selected = this.selected;
+        prev = selected.setTeXclass(prev);
+        this.updateTeXclass(selected);
+        return prev;
+    }
 }

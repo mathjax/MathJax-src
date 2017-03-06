@@ -9,7 +9,7 @@ export class MmlMspace extends AMmlTokenNode {
         depth:  '0ex',
         linebreak: 'auto'
     };
-    _texClass = TEXCLASS.ORD;
+    texClass = TEXCLASS.ORD;
 
     get kind() {return 'mspace'}
     get isSpacelike() {return true}

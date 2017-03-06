@@ -26,6 +26,17 @@ export class MmlMtr extends AMmlNode {
         attributes = this.addInheritedAttributes(attributes, this.getAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
+
+    setTeXclass(prev: AMmlNode) {
+        this.getPrevClass(prev);
+        for (const child of (this.childNodes as AMmlNode[])) {
+            child.setTeXclass(null);
+        }
+        if (this.isEmbellished) {
+            this.updateTeXclass(this.core() as AMmlNode);
+        }
+        return this;
+    }
 }
 
 export class MmlMlabeledtr extends MmlMtr {

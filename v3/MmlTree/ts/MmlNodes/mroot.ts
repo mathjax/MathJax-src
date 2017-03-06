@@ -5,7 +5,7 @@ export class MmlMroot extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults
     };
-    _texClass = TEXCLASS.ORD;
+    texClass = TEXCLASS.ORD;
 
     get kind() {return 'mroot'}
     get arity() {return 2}
