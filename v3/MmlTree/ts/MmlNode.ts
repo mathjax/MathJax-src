@@ -312,7 +312,6 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     }
 
     protected autoDefault(name: string) {return ''}
-    
 }
 
 export abstract class AMmlTokenNode extends AMmlNode {

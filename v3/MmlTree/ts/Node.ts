@@ -18,6 +18,8 @@ export interface INode {
     removeProperty(...names: string[]): void;
 
     isKind(kind: string): boolean;
+
+    walkTree(func: (node: Node, data?: any) => void, data?: any): void;
 }
 
 export interface INodeClass {
@@ -43,6 +45,11 @@ export abstract class ANode implements INode {
         }
     }
     isKind(kind: string) {return this.factory.nodeIsKind(this, kind)}
+
+    walkTree(func: (node: Node, data?: any) => void, data?: any) {
+        func(this, data);
+        return data;
+    }
 }
 
 export interface IContainerNode extends INode {
@@ -50,6 +57,7 @@ export interface IContainerNode extends INode {
     appendChild(child: Node): Node;
     replaceChild(oldChild: Node, newChild: Node): Node;
     childIndex(child: Node): number;
+    findNodes(kind: string): Node[];
 }
 
 export function ChildNodes(children: ChildParams): ChildArray {
@@ -93,6 +101,22 @@ export abstract class AContainerNode extends ANode implements IContainerNode {
             i++;
         }
         return null;
+    }
+
+    walkTree(func: (node: Node, data?: any) => void, data?: any) {
+        func(this, data);
+        for (const child of this.childNodes) {
+            child.walkTree(func, data);
+        }
+        return data;
+    }
+
+    findNodes(kind: string) {
+        let nodes: Node[] = [];
+        this.walkTree((node: Node) => {
+            if (node.isKind(kind)) nodes.push(node);
+        });
+        return nodes;
     }
 }
 
