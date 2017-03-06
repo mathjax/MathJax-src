@@ -30,7 +30,6 @@ export interface IMmlNode extends INode {
     childPosition(): number;
 
     setTeXclass(prev: AMmlNode): void;
-    updateTeXclass(core: AMmlNode): void;
     texSpacing(): string;
 
     setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
@@ -203,7 +202,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         this.getPrevClass(prev);
         return (this.texClass === null ? this : prev);
     }
-    updateTeXclass(core: AMmlNode) {
+    protected updateTeXclass(core: AMmlNode) {
         if (core) {
             this.prevClass = core.prevClass;
             this.prevLevel = core.prevLevel;
