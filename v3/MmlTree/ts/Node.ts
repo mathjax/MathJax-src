@@ -15,6 +15,7 @@ export interface INode {
     setProperty(name: string, value: Property): void;
     getProperty(name: string): Property;
     getProperties(): PropertyList;
+    removeProperty(...names: string[]): void;
 
     isKind(kind: string): boolean;
 }
@@ -35,9 +36,15 @@ export abstract class ANode implements INode {
     get kind() {return 'unknown'}
     get parent() {return this._parent}
     setParent(node: Node) {this._parent = node}
+    getParent() {return this._parent}
     setProperty(name: string, value: Property) {this.properties[name] = value}
     getProperty(name: string) {return this.properties[name]}
     getProperties() {return this.properties}
+    removeProperty(...names: string[]) {
+        for (const name of names) {
+            delete this.properties[name];
+        }
+    }
     isKind(kind: string) {return this.factory.nodeIsKind(this, kind)}
 }
 
