@@ -361,13 +361,15 @@ export class MmlMo extends AMmlTokenNode {
         let parent: AMmlNode = this;
         let math = this.factory.getNodeClass('math');
         while (parent && parent.isEmbellished && parent.coreMO() === this && !(parent instanceof math)) {
-            parent = (parent as AMmlNode).parent as AMmlNode;
+            parent = (parent as AMmlNode).Parent as AMmlNode;
         }
         return parent;
     }
     coreText(parent: AMmlNode) {
         if (!parent) return '';
-        if (parent.isEmbellished) return (parent.coreMO() as MmlMo).getText();
+        if (parent.isEmbellished) {
+            return (parent.coreMO() as MmlMo).getText();
+        }
         while ((((parent.isKind('mrow') || parent.isKind('TeXAtom') || parent.isKind('mstyle') ||
                   parent.isKind('mphantom')) && parent.childNodes.length === 1) ||
                 parent.isKind('munderover')) && parent.childNodes[0]) {
@@ -459,12 +461,12 @@ export class MmlMo extends AMmlTokenNode {
     }
     protected getForms() {
         let core: AMmlNode = this;
-        let parent: AMmlNode = this.getParent() as AMmlNode;
-        let Parent: AMmlNode = this.parent as AMmlNode;
+        let parent: AMmlNode = this.parent as AMmlNode;
+        let Parent: AMmlNode = this.Parent as AMmlNode;
         while (Parent && Parent.isEmbellished) {
             core = parent;
-            parent = Parent.getParent() as AMmlNode;
-            Parent = Parent.parent as AMmlNode;
+            parent = Parent.parent as AMmlNode;
+            Parent = Parent.Parent as AMmlNode;
         }
         if (parent && parent.isKind('mrow') && (parent as MmlMrow).nonSpaceLength() !== 1) {
             if ((parent as MmlMrow).firstNonSpace() === core) return ['prefix','infix','postfix'];

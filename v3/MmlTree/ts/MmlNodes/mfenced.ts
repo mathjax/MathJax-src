@@ -63,7 +63,7 @@ export class MmlMfenced extends AMmlNode {
             this.open = this.factory.create('mo',open);
             this.open.setAttributes({fence: true, form: 'prefix'});
             this.open.texClass = TEXCLASS.OPEN;
-            this.open.setParent(this);
+            this.open.parent = this;
         }
         //
         // Create nodes for the separators
@@ -76,7 +76,7 @@ export class MmlMfenced extends AMmlNode {
             for (const child of (this.childNodes as AMmlNode[]).slice(1)) {
                 if (child) {
                     let mo = this.factory.create('mo',separators.charAt(i));
-                    mo.setParent(this);
+                    mo.parent = this;
                     this.separators.push(mo);
                 }
             }
@@ -88,7 +88,7 @@ export class MmlMfenced extends AMmlNode {
             this.close = this.factory.create('mo',close);
             this.close.setAttributes({fence: true, form: 'postfix'});
             this.close.texClass = TEXCLASS.CLOSE;
-            this.close.setParent(this);
+            this.close.parent = this;
         }
     }
 }

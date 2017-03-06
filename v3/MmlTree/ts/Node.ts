@@ -10,7 +10,7 @@ export type NodeClass = INodeClass;
 
 export interface INode {
     readonly kind: string;
-    readonly parent: Node;
+    parent: Node;
 
     setProperty(name: string, value: Property): void;
     getProperty(name: string): Property;
@@ -25,7 +25,7 @@ export interface INodeClass {
 }
 
 export abstract class ANode implements INode {
-    protected _parent: Node = null;
+    parent: Node = null;
     protected properties: PropertyList = {};
     factory: NodeFactory = null;
 
@@ -34,9 +34,6 @@ export abstract class ANode implements INode {
     }
 
     get kind() {return 'unknown'}
-    get parent() {return this._parent}
-    setParent(node: Node) {this._parent = node}
-    getParent() {return this._parent}
     setProperty(name: string, value: Property) {this.properties[name] = value}
     getProperty(name: string) {return this.properties[name]}
     getProperties() {return this.properties}
@@ -77,13 +74,13 @@ export abstract class AContainerNode extends ANode implements IContainerNode {
     }
     appendChild(child: Node) {
         this.childNodes.push(child);
-        child.setParent(this);
+        child.parent = this;
         return child;
     }
     replaceChild(oldChild: Node, newChild: Node) {
         let i = this.childIndex(oldChild);
         this.childNodes[i] = newChild;
-        newChild.setParent(this);
+        newChild.parent = this;
         return newChild;
     }
 

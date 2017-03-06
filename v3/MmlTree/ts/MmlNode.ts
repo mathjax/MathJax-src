@@ -77,7 +77,9 @@ export const TEXCLASSNAMES = ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT
 
 export const TEXSPACELENGTH = ['', 'thinmathspace', 'mediummathspace', 'thickmathspace'];
 
+//
 // See TeXBook Chapter 18 (p. 170)
+//
 export const TEXSPACE = [
     [ 0,-1, 2, 3, 0, 0, 0, 1], // ORD
     [-1,-1, 0, 3, 0, 0, 0, 1], // OP
@@ -140,7 +142,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         super(factory);
         if (this.arity < 0) {
             this.childNodes = [factory.create('inferredMrow') as MmlNode];
-            this.childNodes[0].setParent(this);
+            this.childNodes[0].parent = this;
         }
         this.setChildren(MmlChildNodes(children));
     }
@@ -149,10 +151,10 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     get isEmbellished() {return false}
     get isSpacelike() {return false}
     get linebreakContainer() {return false}
-    get parent(): Node {
-        let parent = this._parent as AMmlNode;
+    get Parent(): AMmlNode {
+        let parent = this.parent as AMmlNode;
         while (parent && parent.notParent) {
-            parent = parent.parent as AMmlNode;
+            parent = parent.Parent;
         }
         return parent;
     }
@@ -183,10 +185,10 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
 
     childPosition() {
         let child: MmlNode = this;
-        let parent = child._parent as AMmlNode;
+        let parent = child.parent as AMmlNode;
         while (parent && parent.notParent) {
             child = parent;
-            parent = parent._parent as AMmlNode;
+            parent = parent.parent as AMmlNode;
         }
         if (parent) {
             let i = 0;
