@@ -66,7 +66,7 @@ export function ChildNodes(children: ChildParams): ChildArray {
 }
 
 export abstract class AContainerNode extends ANode implements IContainerNode {
-    
+
     childNodes: Node[] = [];
 
     constructor(factory: NodeFactory, ...children: ChildParams) {
@@ -127,7 +127,7 @@ export class TextNode extends ANode {
         super(factory);
         this.text = text;
     }
-    
+
     get kind() {return 'text'}
 
     getText(): string {return this.text}

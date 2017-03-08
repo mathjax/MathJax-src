@@ -63,6 +63,5 @@ export class TestMmlVisitor extends MmlVisitor {
             .replace(/([\u0080-\uD7FF\uE000-\uFFFF])/g,(m,c) => {
                 return '&#x' + c.charCodeAt(0).toString(16).toUpperCase() + ';';
             });
-        ;
     }
 }

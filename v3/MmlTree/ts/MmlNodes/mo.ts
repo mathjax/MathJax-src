@@ -102,7 +102,7 @@ export class MmlMo extends AMmlTokenNode {
         [0x2B00,0x2BFF,TEXCLASS.ORD,"MiscSymbolsAndArrows"],
         [0x1D400,0x1D7FF,TEXCLASS.ORD,'']
     ];
-    
+
     static OPTABLE: {[form: string]: OperatorList} = {
         prefix: {
             '\u2200': MO.ORD21,    // for all
@@ -350,7 +350,7 @@ export class MmlMo extends AMmlTokenNode {
             '\uFE38': MO.WIDEACCENT  // horizontal brace up
         }
     };
-    
+
     texClass = TEXCLASS.REL;  // for MathML, but TeX sets it explicitly in setTeXclass()
 
     get kind() {return 'mo'}

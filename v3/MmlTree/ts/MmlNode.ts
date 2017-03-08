@@ -144,7 +144,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         }
         this.setChildren(MmlChildNodes(children));
     }
-    
+
     get isToken() {return false}
     get isEmbellished() {return false}
     get isSpacelike() {return false}
@@ -216,7 +216,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
             this.prevLevel = prev.getInherited('sciprtlevel') as number;
         }
     }
-    
+
     texSpacing() {
         let prevClass = (this.prevClass != null ? this.prevClass : TEXCLASS.NONE);
         let texClass = this.texClass || TEXCLASS.ORD;
@@ -320,7 +320,7 @@ export abstract class AMmlTokenNode extends AMmlNode {
         mathvariant: DEFAULT.AUTO,
         mathsize: DEFAULT.INHERIT
     };
-    
+
     get isToken() {return true}
 
     getText(): string {

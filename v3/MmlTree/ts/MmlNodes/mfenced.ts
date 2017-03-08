@@ -15,7 +15,7 @@ export class MmlMfenced extends AMmlNode {
     protected close: AMmlNode = null;
 
     get kind() {return 'mfenced'}
-    
+
     setTeXclass(prev: AMmlNode) {
         this.addFakeNodes();
         this.getPrevClass(prev);

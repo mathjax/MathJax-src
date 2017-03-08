@@ -12,13 +12,13 @@ export interface INodeFactory {
 export class NodeFactory implements INodeFactory {
     protected nodeMap: Map<string, NodeClass> = new Map();
     protected node: {[kind: string]: Function} = {};
-    
+
     constructor(nodes: {[kind: string]: NodeClass} = {}) {
         for (const kind of Object.keys(nodes)) {
             this.setNodeClass(kind, nodes[kind]);
         }
     }
-    
+
     create(kind: string, ...children: ChildParams) {
         return this.node[kind](ChildNodes(children));
     }
