@@ -3,7 +3,7 @@
     "*.d.ts"
   ],
   "rulesDirectory": [
-    "./node_modules/tslint-jsdoc-rules/lib"
+    "../TreeJax/node_modules/tslint-jsdoc-rules/lib"
   ],
   "rules": {
     "class-name": true,
@@ -26,7 +26,7 @@
     "linebreak-style": true,
     "max-line-length": [
       true,
-      80
+      140
     ],
     "member-access": true,
     "member-ordering": [
