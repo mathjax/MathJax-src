@@ -14,7 +14,8 @@ export interface INode {
 
     setProperty(name: string, value: Property): void;
     getProperty(name: string): Property;
-    getProperties(): PropertyList;
+    getPropertyNames(): string[];
+    getAllProperties(): PropertyList;
     removeProperty(...names: string[]): void;
 
     isKind(kind: string): boolean;
@@ -38,7 +39,8 @@ export abstract class ANode implements INode {
     get kind() {return 'unknown'}
     setProperty(name: string, value: Property) {this.properties[name] = value}
     getProperty(name: string) {return this.properties[name]}
-    getProperties() {return this.properties}
+    getPropertyNames() {return Object.keys(this.properties)}
+    getAllProperties() {return this.properties}
     removeProperty(...names: string[]) {
         for (const name of names) {
             delete this.properties[name];

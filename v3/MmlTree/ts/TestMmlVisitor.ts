@@ -42,7 +42,7 @@ export class TestMmlVisitor extends MmlVisitor {
         return this.attributeString(node.attributes.getAllInherited(), '[', ']');
     }
     getProperties(node: AMmlNode) {
-        return this.attributeString(node.getProperties(), '[[', ']]');
+        return this.attributeString(node.getAllProperties(), '[[', ']]');
     }
     attributeString(attributes: PropertyList, open: string, close: string) {
         let ATTR = '';

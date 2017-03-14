@@ -62,9 +62,9 @@ export class LegacyMmlVisitor extends MmlVisitor {
         }
     }
     addProperties(node: AMmlNode, mml: any) {
-        let properties = node.getProperties();
-        for (const name of Object.keys(properties)) {
-            mml[name] = properties[name];
+        let names = node.getPropertyNames();
+        for (const name of names) {
+            mml[name] = node.getProperty(name);
         }
     }
 
