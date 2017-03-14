@@ -42,8 +42,8 @@ export class MmlMtable extends AMmlNode {
     }
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        display = !!(this.getAttribute('displaystyle') || this.defaults['displaystyle']);
-        attributes = this.addInheritedAttributes(attributes, this.getAttributes());
+        display = !!(this.attributes.getExplicit('displaystyle') || this.attributes.getDefault('displaystyle'));
+        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 

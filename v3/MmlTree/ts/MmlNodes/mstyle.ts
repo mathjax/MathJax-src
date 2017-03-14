@@ -18,16 +18,16 @@ export class MmlMstyle extends AMmlLayoutNode {
     get arity() {return -1}
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        let scriptlevel = this.getAttribute('scriptlevel');
+        let scriptlevel = this.attributes.getExplicit('scriptlevel');
         if (scriptlevel != null) {
             scriptlevel = scriptlevel.toString();
-            if (scriptlevel.match(/^ *[-+]/)) {
+            if (scriptlevel.match(/^\s*[-+]/)) {
                 level += parseInt(scriptlevel);
             } else {
                 level = parseInt(scriptlevel);
             }
         }
-        attributes = this.addInheritedAttributes(attributes, this.getAttributes());
+        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         (this.childNodes[0] as AMmlNode).setInheritedAttributes(attributes, display, level, prime);
     }
 }

@@ -51,7 +51,7 @@ export class MmlMfenced extends AMmlNode {
     }
 
     addFakeNodes() {
-        let {open, close, separators} = this.Get('open', 'close', 'separators') as
+        let {open, close, separators} = this.attributes.getList('open', 'close', 'separators') as
                                             {open: string, close: string, separators: string};
         open = open.replace(/[ \t\n\r]/g,'');
         close = close.replace(/[ \t\n\r]/g,'');
@@ -61,7 +61,7 @@ export class MmlMfenced extends AMmlNode {
         //
         if (open) {
             this.open = this.factory.create('mo',open);
-            this.open.setAttributes({fence: true, form: 'prefix'});
+            this.open.attributes.setList({fence: true, form: 'prefix'});
             this.open.texClass = TEXCLASS.OPEN;
             this.open.parent = this;
         }
@@ -86,7 +86,7 @@ export class MmlMfenced extends AMmlNode {
         //
         if (close) {
             this.close = this.factory.create('mo',close);
-            this.close.setAttributes({fence: true, form: 'postfix'});
+            this.close.attributes.setList({fence: true, form: 'postfix'});
             this.close.texClass = TEXCLASS.CLOSE;
             this.close.parent = this;
         }

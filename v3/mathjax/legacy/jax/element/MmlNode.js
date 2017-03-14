@@ -39,7 +39,7 @@
         for (var id in defaults) {
           if (!skip[id] && !copy[id] && defaults.hasOwnProperty(id)) {
             if (this[id] != null && this[id] !== defaults[id]) {
-              if (this.Get(id,null,1) !== this[id]) node.setAttribute(id,this[id]);
+              if (this.Get(id,null,1) !== this[id]) node.attributes.setAttribute(id,this[id]);
             }
           }
         }
@@ -48,7 +48,7 @@
         if (copy[names[i]] === 1 && !defaults.hasOwnProperty(names[i])) continue;
         value = (this.attr||{})[names[i]];
         if (value == null) value = this[names[i]];
-        if (value != null) node.setAttribute(names[i],value);
+        if (value != null) node.attributes.setAttribute(names[i],value);
       }
     },
     nodeAddProperties: function (node) {

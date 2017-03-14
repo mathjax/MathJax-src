@@ -36,10 +36,10 @@ export class TestMmlVisitor extends MmlVisitor {
         return mml;
     }
     getAttributes(node: AMmlNode) {
-        return this.attributeString(node.getAttributes(), '', '');
+        return this.attributeString(node.attributes.getAllAttributes(), '', '');
     }
     getInherited(node: AMmlNode) {
-        return this.attributeString(node.getInheritedAttributes(), '[', ']');
+        return this.attributeString(node.attributes.getAllInherited(), '[', ']');
     }
     getProperties(node: AMmlNode) {
         return this.attributeString(node.getProperties(), '[[', ']]');

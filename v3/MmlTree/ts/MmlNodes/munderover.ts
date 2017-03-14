@@ -19,15 +19,16 @@ export class MmlMunderover extends AMmlBaseNode {
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         let nodes = this.childNodes as AMmlNode[];
-        let force = !!(!display && ((this.childNodes[0] as AMmlNode).coreMO() as AMmlNode).Get('movablelimits'));
+        let force = !!(!display && ((this.childNodes[0] as AMmlNode).coreMO() as AMmlNode).attributes.get('movablelimits'));
         nodes[0].setInheritedAttributes(attributes, display, level, prime || !!this.childNodes[this.over]);
         nodes[1].setInheritedAttributes(attributes, display, this.getScriptlevel(1, force, level), prime);
         if (!nodes[2]) return;
         nodes[2].setInheritedAttributes(attributes, display, this.getScriptlevel(2, force, level), prime);
     }
     protected getScriptlevel(n: number, force: boolean, level: number) {
-        if (n === this.under && (force || !this.Get('accentunder'))) return level + 1;
-        if (n === this.over  && (force || !this.Get('accent'))) return level + 1;
+        let attributes = this.attributes;
+        if (n === this.under && (force || !attributes.get('accentunder'))) return level + 1;
+        if (n === this.over  && (force || !attributes.get('accent'))) return level + 1;
         return level;
     }
 }

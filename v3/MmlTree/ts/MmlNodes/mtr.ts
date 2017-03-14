@@ -23,7 +23,7 @@ export class MmlMtr extends AMmlNode {
     }
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        attributes = this.addInheritedAttributes(attributes, this.getAttributes());
+        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 

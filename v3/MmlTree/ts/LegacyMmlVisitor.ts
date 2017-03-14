@@ -55,9 +55,10 @@ export class LegacyMmlVisitor extends MmlVisitor {
         parent.Append(mml);
     }
     addAttributes(node: AMmlNode, mml: any) {
-        let attributes = node.getAttributes();
-        for (const name of Object.keys(attributes)) {
-            mml[name] = attributes[name];
+        let attributes = node.attributes;
+        let names = attributes.getExplicitNames();
+        for (const name of names) {
+            mml[name] = attributes.get(name);
         }
     }
     addProperties(node: AMmlNode, mml: any) {

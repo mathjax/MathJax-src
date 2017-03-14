@@ -1,3 +1,5 @@
+import {Attributes} from './Attributes';
+
 import {Property, PropertyList, ChildNodes, Node, TextNode, ANode, AContainerNode, INode, INodeClass} from './Node';
 import {MmlFactory} from './MmlFactory';
 
@@ -22,6 +24,7 @@ export interface IMmlNode extends INode {
     texClass: number;
     prevClass: number;
     prevLevel: number;
+    attributes: Attributes;
 
     core(): MmlNode;
     coreMO(): MmlNode;
@@ -33,18 +36,6 @@ export interface IMmlNode extends INode {
     texSpacing(): string;
 
     setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
-
-    setAttribute(name: string, value: Property): void;
-    setAttributes(attributes: PropertyList): void;
-    setInherited(name: string, value: Property): void;
-
-    getAttribute(name: string): Property;
-    getAttributes(): PropertyList;
-    getInherited(name: string): Property;
-    getInheritedAttributes(): PropertyList;
-    getDefault(name: string): Property;
-
-    Get(...name: string[]): Property | PropertyList;
 }
 
 export interface IMmlNodeClass extends INodeClass {
@@ -131,10 +122,9 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     prevClass: number = null;
     prevLevel: number = null;
 
-    protected attributes: PropertyList = {};
-    protected inherited:  PropertyList = {};
+    attributes: Attributes;
 
-    childNodes: MmlNode[] = [];
+    childNodes: MmlNode[];
 
     constructor(factory: MmlFactory, ...children: MmlChildParams) {
         super(factory);
@@ -143,6 +133,10 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
             this.childNodes[0].parent = this;
         }
         this.setChildren(MmlChildNodes(children));
+        this.attributes = new Attributes(
+            (factory.getNodeClass(this.kind) as IMmlNodeClass).defaults,
+            (factory.getNodeClass('math') as IMmlNodeClass).defaults
+        );
     }
 
     get isToken() {return false}
@@ -213,7 +207,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     protected getPrevClass(prev: AMmlNode) {
         if (prev) {
             this.prevClass = prev.texClass;
-            this.prevLevel = prev.getInherited('sciprtlevel') as number;
+            this.prevLevel = prev.attributes.get('scriptlevel') as number;
         }
     }
 
@@ -224,7 +218,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         if (prevClass === TEXCLASS.VCENTER) prevClass = TEXCLASS.ORD;
         if (texClass === TEXCLASS.VCENTER)  texClass = TEXCLASS.ORD;
         let space = TEXSPACE[prevClass][texClass];
-        if (this.prevLevel > 0 && this.Get('scriptlevel') > 0 && space >= 0) return '';
+        if (this.prevLevel > 0 && this.attributes.get('scriptlevel') > 0 && space >= 0) return '';
         return TEXSPACELENGTH[Math.abs(space)];
     }
 
@@ -236,19 +230,19 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
                 let [node, value] = attributes[key];
                 let noinherit = (AMmlNode.noInherit[node] || {})[this.kind] || {};
                 if (!noinherit[key]) {
-                    this.setInherited(key,value);
+                    this.attributes.setInherited(key,value);
                 }
             }
         }
-        let displaystyle = this.getAttribute("displaystyle");
+        let displaystyle = this.attributes.getExplicit("displaystyle");
         if (displaystyle === undefined) {
-            this.setInherited("displaystyle",display);
+            this.attributes.setInherited("displaystyle",display);
         } else {
             display = !!displaystyle;
         }
-        let scriptlevel = this.getAttribute("scriptlevel");
+        let scriptlevel = this.attributes.getExplicit("scriptlevel");
         if (scriptlevel === undefined) {
-            this.setInherited("scriptlevel",level);
+            this.attributes.setInherited("scriptlevel",level);
         }
         if (prime) {
             this.setProperty("texprimestyle", prime);
@@ -278,37 +272,6 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
             }
         }
         return updated;
-    }
-
-    setAttribute(name: string, value: Property) {this.attributes[name] = value}
-    setAttributes(attributes: PropertyList) {Object.assign(this.attributes,attributes)}
-    setInherited(name: string, value: Property) {this.inherited[name] = value}
-
-    getAttribute(name: string) {return this.attributes[name]}
-    getAttributes() {return this.attributes}
-    getInherited(name: string) {return this.inherited[name]}
-    getInheritedAttributes() {return this.inherited}
-    getDefault(name: string) {return this.defaults[name]}
-
-    Get(...names: string[]) {
-        let values: PropertyList = {};
-        let defaults = this.defaults;
-        let math = (this.factory.getNodeClass('math') || {defaults:{}, defaultProperties:{}}) as IMmlNodeClass;
-        for (const name of names) {
-            if (name in this.attributes) {
-                values[name] = this.attributes[name];
-            } else if (name in this.inherited) {
-                values[name] = this.inherited[name];
-            } else if (name in defaults) {
-                let value = defaults[name];
-                if (value === DEFAULT.AUTO) value = this.autoDefault(name);
-                else if (value === DEFAULT.INHERIT) value = math.defaults[name];
-                values[name] = value;
-            } else if (name in math.defaultProperties) {
-                values[name] = math.defaultProperties[name];
-            }
-        }
-        return (names.length === 1 ? values[names[0]] : values);
     }
 
     protected autoDefault(name: string) {return ''}

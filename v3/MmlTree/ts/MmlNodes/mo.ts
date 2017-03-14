@@ -355,7 +355,7 @@ export class MmlMo extends AMmlTokenNode {
 
     get kind() {return 'mo'}
     get isEmbellished() {return true}
-    get hasNewLine() {return this.Get('linebreak') === 'newline'}
+    get hasNewLine() {return this.attributes.get('linebreak') === 'newline'}
 
     coreParent() {
         let parent: AMmlNode = this;
@@ -379,7 +379,7 @@ export class MmlMo extends AMmlTokenNode {
     }
 
     setTeXclass(prev: AMmlNode) {
-        let {form, lspace, rspace, fence} = this.Get('form', 'lspace', 'rspace', 'fence') as
+        let {form, lspace, rspace, fence} = this.attributes.getList('form', 'lspace', 'rspace', 'fence') as
                                              {form: string, lspace: string, rspace: string, fence: string};
         // if (this.useMMLspacing) {this.texClass = TEXCLASS.NONE; return this}
         if (fence && this.texClass === TEXCLASS.REL) {
@@ -408,7 +408,7 @@ export class MmlMo extends AMmlTokenNode {
                 texClass = this.texClass = TEXCLASS.ORD;
             }
             prevClass = this.prevClass = (prev.texClass || TEXCLASS.ORD);
-            this.prevLevel = this.getInherited('scriptlevel') as number;
+            this.prevLevel = this.attributes.getInherited('scriptlevel') as number;
         } else {
             prevClass = this.prevClass = TEXCLASS.NONE;
         }
@@ -444,13 +444,13 @@ export class MmlMo extends AMmlTokenNode {
         super.setInheritedAttributes(attributes, display, level, prime);
         let mo = this.getText();
         let [form1, form2, form3] = this.getForms();
-        this.setInherited('form', form1);
+        this.attributes.setInherited('form', form1);
         let OPTABLE = (this.constructor as typeof MmlMo).OPTABLE;
         let def = OPTABLE[form1][mo] || OPTABLE[form2][mo] || OPTABLE[form3][mo];
         if (def) {
             this.texClass = def[2];
             for (const name of Object.keys(def[3] || {})) {
-                this.setInherited(name, def[3][name]);
+                this.attributes.setInherited(name, def[3][name]);
             }
         } else {
             let range = this.getRange(mo);

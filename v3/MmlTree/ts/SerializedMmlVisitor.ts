@@ -31,7 +31,7 @@ export class SerlializedMmlVisitor extends MmlVisitor {
     }
     getAttributes(node: AMmlNode) {
         let ATTR = '';
-        let attributes = node.getAttributes();
+        let attributes = node.attributes.getAllAttributes();
         for (const name of Object.keys(attributes)) {
             ATTR += ' ' + name + '="' + this.quoteAttribute(attributes[name].toString()) + '"';
         }

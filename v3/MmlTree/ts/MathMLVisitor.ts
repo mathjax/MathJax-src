@@ -29,9 +29,10 @@ export class MathMLVisitor extends MmlVisitor {
         parent.appendChild(mml);
     }
     addAttributes(node: AMmlNode, mml: Element) {
-        let attributes = node.getAttributes();
-        for (const name of Object.keys(attributes)) {
-            mml.setAttribute(name, attributes[name].toString());
+        let attributes = node.attributes;
+        let names = attributes.getExplicitNames();
+        for (const name of names) {
+            mml.setAttribute(name, attributes.get(name).toString());
         }
     }
 }

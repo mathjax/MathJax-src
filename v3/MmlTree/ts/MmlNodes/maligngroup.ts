@@ -11,7 +11,7 @@ export class MmlMaligngroup extends AMmlNode {
     get isSpacelike() {return true}
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        attributes = this.addInheritedAttributes(attributes, this.getAttributes());
+        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 }

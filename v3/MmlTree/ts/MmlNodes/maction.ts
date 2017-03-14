@@ -11,7 +11,7 @@ export class MmlMaction extends AMmlNode {
     get kind() {return 'maction'}
     get arity() {return 1}
     get selected(): AMmlNode {
-        return this.childNodes[(this.Get("selection") as number) - 1] || this.factory.create('mrow');
+        return this.childNodes[(this.attributes.get("selection") as number) - 1] || this.factory.create('mrow');
     }
     get isEmbellished() {return this.selected.isEmbellished}
     get isSpacelike() {return this.selected.isSpacelike}
@@ -19,7 +19,7 @@ export class MmlMaction extends AMmlNode {
     coreMO(): MmlNode {return this.selected.coreMO()}
 
     setTeXclass(prev: AMmlNode) {
-        if (this.Get('actiontype') === 'tooltip' && this.childNodes[1]) {
+        if (this.attributes.get('actiontype') === 'tooltip' && this.childNodes[1]) {
             (this.childNodes[1] as AMmlNode).setTeXclass(null);
         }
         let selected = this.selected;

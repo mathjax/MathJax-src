@@ -42,9 +42,9 @@ export class MmlMath extends AMmlLayoutNode {
     get linebreakContainer() {return true}
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        attributes = this.addInheritedAttributes(attributes, this.getAttributes());
-        display = this.Get('display') === 'block' || !!this.Get('displaystyle');
-        level = this.Get('scriptlevel') as number || 0;
+        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
+        display = this.attributes.get('display') === 'block' || !!this.attributes.get('displaystyle');
+        level = this.attributes.get('scriptlevel') as number || 0;
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 }
