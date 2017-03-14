@@ -41,7 +41,6 @@ export interface IMmlNode extends INode {
 export interface IMmlNodeClass extends INodeClass {
     new (factory: MmlFactory, ...children: MmlChildParams): MmlNode;
     defaults: PropertyList;
-    defaultProperties?: PropertyList;
 }
 
 export const TEXCLASS = {

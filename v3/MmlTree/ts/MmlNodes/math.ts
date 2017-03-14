@@ -33,10 +33,6 @@ export class MmlMath extends AMmlLayoutNode {
         indentalignlast:  "indentalign",
         indentshiftlast:  "indentshift"
     };
-    static defaultProperties: PropertyList = {
-        decimalseparator: ".",
-        texprimestyle: false     // is it in TeX's C' style?
-    };
     get kind() {return 'math'}
     get arity() {return -1}
     get linebreakContainer() {return true}
