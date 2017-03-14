@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, MmlNode, AttributeList, DEFAULT, TEXCLASS} from '../MmlNode';
+import {AMmlNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode';
 import {ANode} from '../Node';
 
 export class MmlMtable extends AMmlNode {

@@ -1,14 +1,15 @@
 import {PropertyList} from '../Node';
-import {AMmlBaseNode, AMmlNode, DEFAULT} from '../MmlNode';
+import {AMmlBaseNode, AMmlNode} from '../MmlNode';
+import {INHERIT} from '../Attributes';
 
 export class MmlMtd extends AMmlBaseNode {
     static defaults: PropertyList = {
         ...AMmlBaseNode.defaults,
         rowspan: 1,
         columnspan: 1,
-        rowalign: DEFAULT.INHERIT,
-        columnalign: DEFAULT.INHERIT,
-        groupalign: DEFAULT.INHERIT
+        rowalign: INHERIT,
+        columnalign: INHERIT,
+        groupalign: INHERIT
     };
     get kind() {return 'mtd'}
     get arity() {return -1}

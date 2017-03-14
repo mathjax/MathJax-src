@@ -1,10 +1,11 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AttributeList, DEFAULT} from '../MmlNode';
+import {AMmlNode, AttributeList} from '../MmlNode';
+import {INHERIT} from '../Attributes';
 
 export class MmlMaligngroup extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults,
-        groupalign: DEFAULT.INHERIT
+        groupalign: INHERIT
     };
 
     get kind() {return 'maligngroup'}

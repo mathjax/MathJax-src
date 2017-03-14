@@ -1,6 +1,6 @@
 import {PropertyList, Property} from './Node';
 
-const INHERIT = "_inherit_";
+export const INHERIT = "_inherit_";
 
 export class Attributes {
     protected attributes: PropertyList;

@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlTokenNode, AMmlNode, AttributeList, DEFAULT, TEXCLASS} from '../MmlNode';
+import {AMmlTokenNode, AMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
 import {MmlMrow} from './mrow';
 
 export type OperatorDef = [number, number, number, PropertyList];

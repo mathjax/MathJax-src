@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AMmlBaseNode, AttributeList, DEFAULT, TEXCLASS} from '../MmlNode';
+import {AMmlNode, AMmlBaseNode, AttributeList, TEXCLASS} from '../MmlNode';
 
 export class MmlMsubsup extends AMmlBaseNode {
     static defaults: PropertyList = {

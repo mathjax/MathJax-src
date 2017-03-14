@@ -1,4 +1,4 @@
-import {Attributes} from './Attributes';
+import {Attributes, INHERIT} from './Attributes';
 
 import {Property, PropertyList, ChildNodes, Node, TextNode, ANode, AContainerNode, INode, INodeClass} from './Node';
 import {MmlFactory} from './MmlFactory';
@@ -44,11 +44,6 @@ export interface IMmlNodeClass extends INodeClass {
     defaultProperties?: PropertyList;
 }
 
-export const DEFAULT = {
-    INHERIT: "_inherit_",
-    AUTO: "_auto_"
-};
-
 export const TEXCLASS = {
     ORD:   0,
     OP:    1,
@@ -87,9 +82,9 @@ export function MmlChildNodes(children: MmlChildParams): MmlChildArray {
 
 export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     static defaults: PropertyList = {
-        mathbackground: DEFAULT.INHERIT,
-        mathcolor: DEFAULT.INHERIT,
-        dir: DEFAULT.INHERIT
+        mathbackground: INHERIT,
+        mathcolor: INHERIT,
+        dir: INHERIT
     };
     static noInherit: {[node1: string]: {[node2: string]: {[attribute: string]: boolean}}} = {
         mstyle: {
@@ -274,14 +269,13 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         return updated;
     }
 
-    protected autoDefault(name: string) {return ''}
 }
 
 export abstract class AMmlTokenNode extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults,
-        mathvariant: DEFAULT.AUTO,
-        mathsize: DEFAULT.INHERIT
+        mathvariant: 'normal',
+        mathsize: INHERIT
     };
 
     get isToken() {return true}

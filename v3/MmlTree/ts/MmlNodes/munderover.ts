@@ -1,11 +1,11 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AMmlBaseNode, AttributeList, DEFAULT} from '../MmlNode';
+import {AMmlNode, AMmlBaseNode, AttributeList} from '../MmlNode';
 
 export class MmlMunderover extends AMmlBaseNode {
     static defaults: PropertyList = {
         ...AMmlBaseNode.defaults,
-        accent: DEFAULT.AUTO,
-        accentunder: DEFAULT.AUTO,
+        accent: false,
+        accentunder: false,
         align: 'center'
     };
     protected static ACCENTS = ['', 'accentunder', 'accent'];
@@ -19,17 +19,30 @@ export class MmlMunderover extends AMmlBaseNode {
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         let nodes = this.childNodes as AMmlNode[];
-        let force = !!(!display && ((this.childNodes[0] as AMmlNode).coreMO() as AMmlNode).attributes.get('movablelimits'));
         nodes[0].setInheritedAttributes(attributes, display, level, prime || !!this.childNodes[this.over]);
+        let force = !!(!display && ((this.childNodes[0] as AMmlNode).coreMO() as AMmlNode).attributes.get('movablelimits'));
         nodes[1].setInheritedAttributes(attributes, display, this.getScriptlevel(1, force, level), prime);
+        let ACCENTS = (this.constructor as typeof MmlMunderover).ACCENTS;
+        this.setInheritedAccent(1, ACCENTS[1], display, level, prime, force);
         if (!nodes[2]) return;
         nodes[2].setInheritedAttributes(attributes, display, this.getScriptlevel(2, force, level), prime);
+        this.setInheritedAccent(2, ACCENTS[2], display, level, prime, force);
     }
     protected getScriptlevel(n: number, force: boolean, level: number) {
         let attributes = this.attributes;
         if (n === this.under && (force || !attributes.get('accentunder'))) return level + 1;
         if (n === this.over  && (force || !attributes.get('accent'))) return level + 1;
         return level;
+    }
+    protected setInheritedAccent(n: number, accent: string, display: boolean, level: number, prime: boolean, force: boolean) {
+        let node = this.childNodes[n] as AMmlNode;
+        if (this.attributes.getExplicit(accent) == null && node.isEmbellished) {
+            let value = (node.coreMO() as AMmlNode).attributes.get(accent);
+            this.attributes.setInherited(accent,value);
+            if (value !== this.attributes.getDefault(accent)) {
+                node.setInheritedAttributes({}, display, this.getScriptlevel(n, force, level), prime);
+            }
+        }
     }
 }
 

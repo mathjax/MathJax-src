@@ -1,13 +1,13 @@
-import {PropertyList} from '../Node';
-import {AMmlNode, MmlNode, AttributeList, DEFAULT} from '../MmlNode';
-import {ANode} from '../Node';
+import {PropertyList, ANode} from '../Node';
+import {AMmlNode, MmlNode, AttributeList} from '../MmlNode';
+import {INHERIT} from '../Attributes';
 
 export class MmlMtr extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults,
-        rowalign: DEFAULT.INHERIT,
-        columnalign: DEFAULT.INHERIT,
-        groupalign: DEFAULT.INHERIT
+        rowalign: INHERIT,
+        columnalign: INHERIT,
+        groupalign: INHERIT
     };
 
     get kind() {return 'mtr'}

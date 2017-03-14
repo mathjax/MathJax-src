@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlTokenNode, DEFAULT, TEXCLASS} from '../MmlNode';
+import {AMmlTokenNode, TEXCLASS} from '../MmlNode';
 
 export class MmlMspace extends AMmlTokenNode {
     static defaults: PropertyList = {

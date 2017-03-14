@@ -1,16 +1,17 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AMmlLayoutNode, AttributeList, DEFAULT} from '../MmlNode';
+import {AMmlNode, AMmlLayoutNode, AttributeList} from '../MmlNode';
+import {INHERIT} from '../Attributes';
 
 export class MmlMstyle extends AMmlLayoutNode {
     static defaults: PropertyList = {
         ...AMmlLayoutNode.defaults,
-        scriptlevel: DEFAULT.INHERIT,
-        displaystyle: DEFAULT.INHERIT,
+        scriptlevel: INHERIT,
+        displaystyle: INHERIT,
         scriptsizemultiplier: Math.sqrt(1/2),
         scriptminsize: "8pt",
-        mathbackground: DEFAULT.INHERIT,
-        mathcolor: DEFAULT.INHERIT,
-        dir: DEFAULT.INHERIT,
+        mathbackground: INHERIT,
+        mathcolor: INHERIT,
+        dir: INHERIT,
         infixlinebreakstyle: 'before'
     };
 

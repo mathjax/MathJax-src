@@ -1,23 +1,22 @@
 import {PropertyList} from '../Node';
-import {AMmlTokenNode, AMmlNode, DEFAULT, TEXCLASS} from '../MmlNode';
+import {AMmlTokenNode, AMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
 
 export class MmlMi extends AMmlTokenNode {
     static defaults: PropertyList = {
-        ...AMmlTokenNode.defaults,
-        mathvariant: DEFAULT.AUTO
+        ...AMmlTokenNode.defaults
     };
     static namePattern: RegExp = /^[a-z][a-z0-9]*$/i;
     texClass = TEXCLASS.ORD;
 
     get kind() {return 'mi'}
 
-    autoDefault(name: string) {
-        if (name === "mathvariant") {
-            let text = this.getText();
-            if (text.length === 1) return "italic";
-            return "normal";
+    setInheritedAttributes(attributes: AttributeList = {},
+                           display: boolean = false, level: number = 0, prime: boolean = false) {
+        super.setInheritedAttributes(attributes, display, level, prime);
+        let text = this.getText();
+        if (text.match(/^[\uD800-\uDCFF]?.$/)) {
+            this.attributes.setInherited('mathvariant','italic');
         }
-        return "";
     }
     setTeXclass(prev: AMmlNode) {
         this.getPrevClass(prev);
