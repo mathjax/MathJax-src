@@ -7,8 +7,6 @@ export class MmlMs extends AMmlTokenNode {
         lquote: '"',
         rquote: '"'
     };
-    protected properties: PropertyList = {
-        texClass: TEXCLASS.ORD
-    }
+    texClass = TEXCLASS.ORD;
     get kind() {return 'ms'}
 }

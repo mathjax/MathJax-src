@@ -1,5 +1,4 @@
-import {TextNode} from './Node';
-import {XMLNode} from './MmlNode';
+import {TextNode, XMLNode} from './MmlNode';
 import {MmlFactory} from './MmlFactory';
 import {Visitor} from './Visitor';
 
@@ -9,5 +8,5 @@ export class MmlVisitor extends Visitor {
         super(factory);
     }
     visitTextNode(node: TextNode, ...args: any[]): any {}
-    visitXmlNode(node: XMLNode, ...args: any[]): any {}
+    visitXMLNode(node: XMLNode, ...args: any[]): any {}
 }

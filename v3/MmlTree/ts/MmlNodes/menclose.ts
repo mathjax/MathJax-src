@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, TEXCLASS} from '../MmlNode';
+import {MmlNode, AMmlNode, TEXCLASS} from '../MmlNode';
 
 export class MmlMenclose extends AMmlNode {
     static defaults: PropertyList = {
@@ -12,13 +12,13 @@ export class MmlMenclose extends AMmlNode {
     get arity() {return -1}
     get linebreakContininer() {return true}
 
-    setTeXclass(prev: AMmlNode) {
+    setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        for (const child of (this.childNodes as AMmlNode[])) {
+        for (const child of this.childNodes) {
             child.setTeXclass(null);
         }
         if (this.isEmbellished) {
-            this.updateTeXclass(this.core() as AMmlNode);
+            this.updateTeXclass(this.core());
         }
         return this;
     }

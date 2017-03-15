@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AMmlLayoutNode, AttributeList} from '../MmlNode';
+import {AMmlLayoutNode, AttributeList} from '../MmlNode';
 import {INHERIT} from '../Attributes';
 
 export class MmlMstyle extends AMmlLayoutNode {
@@ -29,6 +29,6 @@ export class MmlMstyle extends AMmlLayoutNode {
             }
         }
         attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
-        (this.childNodes[0] as AMmlNode).setInheritedAttributes(attributes, display, level, prime);
+        this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
     }
 }

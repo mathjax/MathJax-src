@@ -11,7 +11,7 @@ export class MmlMroot extends AMmlNode {
     get arity() {return 2}
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        (this.childNodes[0] as AMmlNode).setInheritedAttributes(attributes, display, level, true);
-        (this.childNodes[1] as AMmlNode).setInheritedAttributes(attributes, false, level + 2, prime);
+        this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
+        this.childNodes[1].setInheritedAttributes(attributes, false, level + 2, prime);
     }
 }

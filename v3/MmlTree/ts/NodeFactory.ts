@@ -1,7 +1,7 @@
-import {Node, NodeClass, ChildParams, ChildNodes} from './Node.js';
+import {Node, NodeClass, PropertyList} from './Node.js';
 
 export interface INodeFactory {
-    create(kind: string, children: Node[]): Node;
+    create(kind: string, properties: PropertyList, children: Node[]): Node;
     setNodeClass(kind: string, nodeClass: NodeClass): void;
     getNodeClass(kind: string): NodeClass;
     deleteNodeClass(kind: string): void;
@@ -19,16 +19,16 @@ export class NodeFactory implements INodeFactory {
         }
     }
 
-    create(kind: string, ...children: ChildParams) {
-        return this.node[kind](ChildNodes(children));
+    create(kind: string, properties: PropertyList = {}, children: Node[] = []) {
+        return this.node[kind](properties, children);
     }
 
     setNodeClass(kind: string, nodeClass: NodeClass) {
         this.nodeMap.set(kind, nodeClass);
         let THIS = this;
         let KIND = this.nodeMap.get(kind);
-        this.node[kind] = function (...children: ChildParams) {
-            return new KIND(THIS, ChildNodes(children));
+        this.node[kind] = function (properties: PropertyList, children: Node[]) {
+            return new KIND(THIS, properties, children);
         }
     }
     getNodeClass(kind: string): NodeClass {return this.nodeMap.get(kind)}
@@ -42,6 +42,6 @@ export class NodeFactory implements INodeFactory {
     }
 
     getKinds() {
-        return Object.keys(this.node);
+        return Array.from(this.nodeMap.keys());
     }
 }

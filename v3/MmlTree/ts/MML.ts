@@ -1,5 +1,4 @@
-import {TextNode} from './Node.js';
-import {MmlNodeClass, XMLNode} from './MmlNode.js';
+import {MmlNodeClass, TextNode, XMLNode} from './MmlNode.js';
 
 import {MmlMath}      from './MmlNodes/math.js';
 

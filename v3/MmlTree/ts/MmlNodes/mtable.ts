@@ -1,6 +1,6 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode';
-import {ANode} from '../Node';
+import {MmlNode, AMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
+import {INode} from '../Node';
 
 export class MmlMtable extends AMmlNode {
     static defaults: PropertyList = {
@@ -36,7 +36,7 @@ export class MmlMtable extends AMmlNode {
     //
     appendChild(child: MmlNode) {
         if (!child.isKind('mtr')) {
-            child = this.factory.create('mtr', child);
+            child = this.factory.create('mtr', {}, [child]);
         }
         return super.appendChild(child);
     }
@@ -47,13 +47,13 @@ export class MmlMtable extends AMmlNode {
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 
-    setTeXclass(prev: AMmlNode) {
+    setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        for (const child of (this.childNodes as AMmlNode[])) {
+        for (const child of this.childNodes) {
             child.setTeXclass(null);
         }
         if (this.isEmbellished) {
-            this.updateTeXclass(this.core() as AMmlNode);
+            this.updateTeXclass(this.core());
         }
         return this;
     }

@@ -2,15 +2,14 @@ import {NodeFactory} from './NodeFactory';
 
 export type Property = string | number | boolean;
 export type PropertyList = {[key: string]: Property};
-export type ChildParams = (Node | string | (Node | string)[])[];
-export type ChildArray = (Node | string)[];
 
-export type Node = ANode;
+export type Node = INode;
 export type NodeClass = INodeClass;
 
 export interface INode {
     readonly kind: string;
     parent: Node;
+    childNodes: Node[];
 
     setProperty(name: string, value: Property): void;
     getProperty(name: string): Property;
@@ -20,20 +19,31 @@ export interface INode {
 
     isKind(kind: string): boolean;
 
+    setChildren(children: Node[]): void;
+    appendChild(child: Node): Node;
+    replaceChild(oldChild: Node, newChild: Node): Node;
+    childIndex(child: Node): number;
+    findNodes(kind: string): Node[];
+
     walkTree(func: (node: Node, data?: any) => void, data?: any): void;
 }
 
 export interface INodeClass {
-    new (factory: NodeFactory, ...children: ChildParams): Node;
+    new (factory: NodeFactory, properties?: PropertyList, children?: Node[]): Node;
 }
 
 export abstract class ANode implements INode {
     parent: Node = null;
     protected properties: PropertyList = {};
     factory: NodeFactory = null;
+    childNodes: Node[] = [];
 
-    constructor(factory: NodeFactory = null) {
+    constructor(factory: NodeFactory, properties: PropertyList = {}, children: Node[] = []) {
         this.factory = factory;
+        for (const name of Object.keys(properties)) {
+            this.setProperty(name, properties[name]);
+        }
+        this.setChildren(children);
     }
 
     get kind() {return 'unknown'}
@@ -46,40 +56,12 @@ export abstract class ANode implements INode {
             delete this.properties[name];
         }
     }
-    isKind(kind: string) {return this.factory.nodeIsKind(this, kind)}
 
-    walkTree(func: (node: Node, data?: any) => void, data?: any) {
-        func(this, data);
-        return data;
-    }
-}
+    isKind(kind: string): boolean {return this.factory.nodeIsKind(this, kind)}
 
-export interface IContainerNode extends INode {
-    setChildren(children: (Node | string)[]): void;
-    appendChild(child: Node): Node;
-    replaceChild(oldChild: Node, newChild: Node): Node;
-    childIndex(child: Node): number;
-    findNodes(kind: string): Node[];
-}
-
-export function ChildNodes(children: ChildParams): ChildArray {
-    if (children.length === 1 && Array.isArray(children[0])) children = children[0] as ChildArray;
-    return children as ChildArray;
-}
-
-export abstract class AContainerNode extends ANode implements IContainerNode {
-
-    childNodes: Node[] = [];
-
-    constructor(factory: NodeFactory, ...children: ChildParams) {
-        super(factory);
-        this.setChildren(ChildNodes(children));
-    }
-
-    setChildren(children: (Node | string)[]) {
+    setChildren(children: Node[]) {
         for (let child of children) {
-            if (typeof child === 'string') child = this.factory.create("text",child);
-            this.appendChild(child as Node);
+            this.appendChild(child);
         }
     }
     appendChild(child: Node) {
@@ -120,18 +102,12 @@ export abstract class AContainerNode extends ANode implements IContainerNode {
         });
         return nodes;
     }
+
 }
 
-export class TextNode extends ANode {
-    protected text: string;
-
-    constructor(factory: NodeFactory, text:string = "") {
-        super(factory);
-        this.text = text;
-    }
-
-    get kind() {return 'text'}
-
-    getText(): string {return this.text}
-    setText(text: string): void {this.text = text}
+export class AEmptyNode extends ANode {
+    setChildren(children: Node[]) {}
+    appendChild(child: Node) {return child}
+    replaceChild(oldChild: Node, newChild: Node) {return oldChild}
+    childIndex(node: Node) {return null as number}
 }

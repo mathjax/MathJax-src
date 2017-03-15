@@ -1,13 +1,9 @@
 import {Attributes, INHERIT} from './Attributes';
-
-import {Property, PropertyList, ChildNodes, Node, TextNode, ANode, AContainerNode, INode, INodeClass} from './Node';
+import {Property, PropertyList, Node, ANode, AEmptyNode, INode, INodeClass} from './Node';
 import {MmlFactory} from './MmlFactory';
 
-export type MmlNode = AMmlNode | TextNode | XMLNode;
-export type MmlNodeClass = IMmlNodeClass | INodeClass;
-
-export type MmlChildParams = (MmlNode | string | (MmlNode | string)[])[];
-export type MmlChildArray = (MmlNode | string)[];
+export type MmlNode = IMmlNode;
+export type MmlNodeClass = IMmlNodeClass;
 
 export type AttributeList = {[attribute: string]: [string, Property]};
 
@@ -20,11 +16,13 @@ export interface IMmlNode extends INode {
     readonly arity: number;
     readonly isInferred: boolean;
     readonly notParent: boolean;
+    readonly Parent: MmlNode;
     readonly defaults: PropertyList;
     texClass: number;
     prevClass: number;
     prevLevel: number;
     attributes: Attributes;
+    parent: MmlNode;
 
     core(): MmlNode;
     coreMO(): MmlNode;
@@ -32,15 +30,15 @@ export interface IMmlNode extends INode {
 
     childPosition(): number;
 
-    setTeXclass(prev: AMmlNode): void;
+    setTeXclass(prev: MmlNode): MmlNode;
     texSpacing(): string;
 
     setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
 }
 
 export interface IMmlNodeClass extends INodeClass {
-    new (factory: MmlFactory, ...children: MmlChildParams): MmlNode;
-    defaults: PropertyList;
+    new (factory: MmlFactory, attributes?: PropertyList, children?: MmlNode[]): MmlNode;
+    defaults?: PropertyList;
 }
 
 export const TEXCLASS = {
@@ -75,11 +73,7 @@ export const TEXSPACE = [
 ];
 
 
-export function MmlChildNodes(children: MmlChildParams): MmlChildArray {
-    return ChildNodes(children) as MmlChildArray;
-}
-
-export abstract class AMmlNode extends AContainerNode implements IMmlNode {
+export abstract class AMmlNode extends ANode implements IMmlNode {
     static defaults: PropertyList = {
         mathbackground: INHERIT,
         mathcolor: INHERIT,
@@ -119,17 +113,18 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     attributes: Attributes;
 
     childNodes: MmlNode[];
+    parent: MmlNode;
 
-    constructor(factory: MmlFactory, ...children: MmlChildParams) {
+    constructor(factory: MmlFactory, attributes: PropertyList = {}, children: MmlNode[] = []) {
         super(factory);
         if (this.arity < 0) {
             this.childNodes = [factory.create('inferredMrow') as MmlNode];
             this.childNodes[0].parent = this;
         }
-        this.setChildren(MmlChildNodes(children));
+        this.setChildren(children);
         this.attributes = new Attributes(
-            (factory.getNodeClass(this.kind) as IMmlNodeClass).defaults,
-            (factory.getNodeClass('math') as IMmlNodeClass).defaults
+            (factory.getNodeClass(this.kind) as MmlNodeClass).defaults,
+            (factory.getNodeClass('math') as MmlNodeClass).defaults
         );
     }
 
@@ -137,8 +132,8 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     get isEmbellished() {return false}
     get isSpacelike() {return false}
     get linebreakContainer() {return false}
-    get Parent(): AMmlNode {
-        let parent = this.parent as AMmlNode;
+    get Parent() {
+        let parent = this.parent;
         while (parent && parent.notParent) {
             parent = parent.Parent;
         }
@@ -148,18 +143,18 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     get arity() {return Infinity}
     get isInferred() {return false}
     get notParent() {return false}
-    get defaults() {return (this.constructor as IMmlNodeClass).defaults}
+    get defaults() {return (this.constructor as MmlNodeClass).defaults}
 
     appendChild(child: MmlNode) {
         if (this.arity < 0) {
-            (this.childNodes[0] as AMmlNode).appendChild(child);
+            this.childNodes[0].appendChild(child);
             return child;
         }
         return super.appendChild(child);
     }
     replaceChild(oldChild: MmlNode, newChild: MmlNode) {
         if (this.arity < 0) {
-            (this.childNodes[0] as AMmlNode).replaceChild(oldChild,newChild);
+            this.childNodes[0].replaceChild(oldChild,newChild);
             return newChild;
         }
         return super.replaceChild(oldChild,newChild);
@@ -171,10 +166,10 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
 
     childPosition() {
         let child: MmlNode = this;
-        let parent = child.parent as AMmlNode;
+        let parent = child.parent;
         while (parent && parent.notParent) {
             child = parent;
-            parent = parent.parent as AMmlNode;
+            parent = parent.parent;
         }
         if (parent) {
             let i = 0;
@@ -186,11 +181,11 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
         return null;
     }
 
-    setTeXclass(prev: AMmlNode) {
+    setTeXclass(prev: MmlNode): MmlNode {
         this.getPrevClass(prev);
         return (this.texClass === null ? this : prev);
     }
-    protected updateTeXclass(core: AMmlNode) {
+    protected updateTeXclass(core: MmlNode) {
         if (core) {
             this.prevClass = core.prevClass;
             this.prevLevel = core.prevLevel;
@@ -198,7 +193,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
             this.texClass = core.texClass;
         }
     }
-    protected getPrevClass(prev: AMmlNode) {
+    protected getPrevClass(prev: MmlNode) {
         if (prev) {
             this.prevClass = prev.texClass;
             this.prevLevel = prev.attributes.get('scriptlevel') as number;
@@ -253,9 +248,7 @@ export abstract class AMmlNode extends AContainerNode implements IMmlNode {
     }
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         for (const child of this.childNodes) {
-            if (child instanceof AMmlNode) {
-                child.setInheritedAttributes(attributes, display, level, prime);
-            }
+            child.setInheritedAttributes(attributes, display, level, prime);
         }
     }
     protected addInheritedAttributes(current: AttributeList, attributes: PropertyList) {
@@ -288,34 +281,51 @@ export abstract class AMmlTokenNode extends AMmlNode {
         }
         return text;
     }
+
+    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+        for (const child of this.childNodes) {
+            if (child instanceof AMmlNode) {
+                child.setInheritedAttributes(attributes, display, level, prime);
+            }
+        }
+    }
+    walkTree(func: (node: Node, data?: any) => void, data?: any) {
+        func(this, data);
+        for (const child of this.childNodes) {
+            if (child instanceof AMmlNode) {
+                child.walkTree(func, data);
+            }
+        }
+        return data;
+    }
 }
 
 export abstract class AMmlLayoutNode extends AMmlNode {
     static defaults: PropertyList = AMmlNode.defaults;
-    get isSpacelike() {return (this.childNodes[0] as AMmlNode).isSpacelike}
-    get isEmbellished() {return (this.childNodes[0] as AMmlNode).isEmbellished}
+    get isSpacelike() {return this.childNodes[0].isSpacelike}
+    get isEmbellished() {return this.childNodes[0].isEmbellished}
     core(): MmlNode {return this.childNodes[0]}
-    coreMO(): MmlNode {return (this.childNodes[0] as AMmlNode).coreMO()}
-    setTeXclass(prev: AMmlNode) {
-        prev = (this.childNodes[0] as AMmlNode).setTeXclass(prev);
-        this.updateTeXclass(this.childNodes[0] as AMmlNode);
+    coreMO(): MmlNode {return this.childNodes[0].coreMO()}
+    setTeXclass(prev: MmlNode) {
+        prev = this.childNodes[0].setTeXclass(prev);
+        this.updateTeXclass(this.childNodes[0]);
         return prev;
     }
 }
 
 export abstract class AMmlBaseNode extends AMmlNode {
     static defaults: PropertyList = AMmlNode.defaults;
-    get isEmbellished() {return (this.childNodes[0] as AMmlNode).isEmbellished}
+    get isEmbellished() {return this.childNodes[0].isEmbellished}
     core(): MmlNode {return this.childNodes[0]}
-    coreMO(): MmlNode {return (this.childNodes[0] as AMmlNode).coreMO()}
-    setTeXclass(prev: AMmlNode) {
+    coreMO(): MmlNode {return this.childNodes[0].coreMO()}
+    setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
         this.texClass = TEXCLASS.NONE;
-        let base = (this.childNodes[0] as AMmlNode);
+        let base = this.childNodes[0];
         if (base) {
             if (this.isEmbellished || base.isKind('mi')) {
                 prev = base.setTeXclass(prev);
-                this.updateTeXclass(this.core() as AMmlNode);
+                this.updateTeXclass(this.core());
             } else {
                 base.setTeXclass(null);
                 prev = this;
@@ -323,7 +333,7 @@ export abstract class AMmlBaseNode extends AMmlNode {
         } else {
             prev = this;
         }
-        for (const child of (this.childNodes as AMmlNode[]).slice(1)) {
+        for (const child of this.childNodes.slice(1)) {
             if (child) {
                 child.setTeXclass(null);
             }
@@ -332,8 +342,50 @@ export abstract class AMmlBaseNode extends AMmlNode {
     }
 }
 
+const dummyAttributes = new Attributes({}, {});
 
-export class XMLNode extends ANode {
+export abstract class AMmlEmptyNode extends AEmptyNode implements IMmlNode {
+    attributes: Attributes = dummyAttributes;
+
+    get isToken() {return false}
+    get isEmbellished() {return false}
+    get isSpacelike() {return false}
+    get linebreakContainer() {return false}
+    get hasNewLine() {return false}
+    get arity() {return 0}
+    get isInferred() {return false}
+    get notParent() {return false}
+    get Parent() {return this.parent}
+    get defaults() {return {}}
+    get texClass() {return 0}
+    get prevClass() {return 0}
+    get prevLevel() {return 0}
+    parent: MmlNode;
+
+    core() {return this}
+    coreMO() {return this}
+    coreIndex() {return 0}
+
+    childPosition() {return 0}
+
+    setTeXclass(prev: MmlNode) {return prev}
+    texSpacing() {return ''}
+
+    setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {}
+    protected setChildInheritedAttributes() {}
+}
+
+export class TextNode extends AMmlEmptyNode {
+    protected text: string = '';
+
+    get kind() {return 'text'}
+
+    getText(): string {return this.text}
+    setText(text: string) {this.text = text; return this}
+}
+
+
+export class XMLNode extends AMmlEmptyNode {
     protected xml: Object;
 
     constructor(factory: MmlFactory, xml:Object = {}) {
@@ -341,8 +393,8 @@ export class XMLNode extends ANode {
         this.xml = xml;
     }
 
-    get kind() {return 'xml'}
+    get kind() {return 'XML'}
 
     getXML(): Object {return this.xml}
-    setXML(xml: Object): void {this.xml = xml}
+    setXML(xml: Object) {this.xml = xml; return this}
 }

@@ -1,11 +1,10 @@
 import {MmlVisitor} from './MmlVisitor';
 import {MmlFactory} from './MmlFactory';
-import {AMmlNode} from './MmlNode';
-import {TextNode} from './Node';
+import {MmlNode, TextNode, XMLNode} from './MmlNode';
 
 export class MathMLVisitor extends MmlVisitor {
     protected document: any = null;
-    visitTree(node: AMmlNode, document: any) {
+    visitTree(node: MmlNode, document: any) {
         this.document = document;
         let root = document.createElement('top');
         this.visitNode(node,root);
@@ -13,14 +12,17 @@ export class MathMLVisitor extends MmlVisitor {
         return root.firstChild;
     }
     visitTextNode(node: TextNode, parent: Element) {
-        parent.appendChild(this.document.createTextNode((node as TextNode).getText()));
+        parent.appendChild(this.document.createTextNode(node.getText()));
     }
-    visitInferredMrowNode(node: AMmlNode, parent: Element) {
+    visitXMLNode(node: XMLNode, parent: Element) {
+        parent.appendChild((node.getXML() as Element).cloneNode(true));
+    }
+    visitInferredMrowNode(node: MmlNode, parent: Element) {
         for (const child of node.childNodes) {
             this.visitNode(child, parent);
         }
     }
-    visitDefault(node: AMmlNode, parent: Element) {
+    visitDefault(node: MmlNode, parent: Element) {
         let mml = this.document.createElement(node.kind);
         this.addAttributes(node, mml);
         for (const child of node.childNodes) {
@@ -28,7 +30,7 @@ export class MathMLVisitor extends MmlVisitor {
         }
         parent.appendChild(mml);
     }
-    addAttributes(node: AMmlNode, mml: Element) {
+    addAttributes(node: MmlNode, mml: Element) {
         let attributes = node.attributes;
         let names = attributes.getExplicitNames();
         for (const name of names) {

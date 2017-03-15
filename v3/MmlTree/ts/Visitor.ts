@@ -1,4 +1,4 @@
-import {Node, AContainerNode} from './Node.js';
+import {Node} from './Node.js';
 import {NodeFactory} from './NodeFactory.js';
 
 export type VisitorFunction = (visitor: NodeFactory, node: Node, ...args: any[]) => any;
@@ -32,7 +32,7 @@ export class Visitor implements IVisitor {
         return handler.call(this, node, ...args);
     }
     visitDefault(node: Node, ...args: any[]) {
-        if (node instanceof AContainerNode) {
+        if (node instanceof Node) {
             for (const child of node.childNodes) {
                 this.visitNode(child, ...args);
             }
@@ -49,6 +49,6 @@ export class Visitor implements IVisitor {
     static methodName(kind: string) {
         return "visit" + kind.charAt(0).toUpperCase() + kind.substr(1) + "Node";
     }
-    
+
     [kind: string]: any;
 }

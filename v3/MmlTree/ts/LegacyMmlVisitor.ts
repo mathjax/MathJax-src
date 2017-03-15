@@ -22,15 +22,14 @@
  */
 
 import {MmlVisitor} from './MmlVisitor';
-import {AMmlNode} from './MmlNode';
-import {TextNode} from './Node';
+import {MmlNode, TextNode, XMLNode} from './MmlNode';
 
 declare var MathJax: any;
 let MML = MathJax.ElementJax.mml;
 
 export class LegacyMmlVisitor extends MmlVisitor {
 
-    visitTree(node: AMmlNode) {
+    visitTree(node: MmlNode) {
         let root = MML.mrow();
         this.visitNode(node, root);
         root = root.data[0];
@@ -38,14 +37,17 @@ export class LegacyMmlVisitor extends MmlVisitor {
         return root;
     }
     visitTextNode(node: TextNode, parent: any) {
-        parent.Append(MML.chars((node as TextNode).getText()));
+        parent.Append(MML.chars(node.getText()));
     }
-    visitInferredMrowNode(node: AMmlNode, parent: any) {
+    visitXMLNode(node: XMLNode, parent: any) {
+        parent.Append(MML.xml(node.getXML()));
+    }
+    visitInferredMrowNode(node: MmlNode, parent: any) {
         for (const child of node.childNodes) {
             this.visitNode(child, parent);
         }
     }
-    visitDefault(node: AMmlNode, parent: any) {
+    visitDefault(node: MmlNode, parent: any) {
         let mml = MML[node.kind]();
         this.addAttributes(node, mml);
         this.addProperties(node, mml);
@@ -54,14 +56,14 @@ export class LegacyMmlVisitor extends MmlVisitor {
         }
         parent.Append(mml);
     }
-    addAttributes(node: AMmlNode, mml: any) {
+    addAttributes(node: MmlNode, mml: any) {
         let attributes = node.attributes;
         let names = attributes.getExplicitNames();
         for (const name of names) {
             mml[name] = attributes.get(name);
         }
     }
-    addProperties(node: AMmlNode, mml: any) {
+    addProperties(node: MmlNode, mml: any) {
         let names = node.getPropertyNames();
         for (const name of names) {
             mml[name] = node.getProperty(name);

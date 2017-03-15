@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AMmlBaseNode, AttributeList} from '../MmlNode';
+import {MmlNode, AMmlBaseNode, AttributeList} from '../MmlNode';
 
 export class MmlMfrac extends AMmlBaseNode {
     static defaults: PropertyList = {
@@ -13,20 +13,20 @@ export class MmlMfrac extends AMmlBaseNode {
     get arity() {return 2}
     get linebreakContainer() {return true}
 
-    setTeXclass(prev: AMmlNode) {
+    setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        for (const child of (this.childNodes as AMmlNode[])) {
+        for (const child of this.childNodes) {
             child.setTeXclass(null);
         }
         if (this.isEmbellished) {
-            this.updateTeXclass(this.core() as AMmlNode);
+            this.updateTeXclass(this.core());
         }
         return this;
     }
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         if (!display || level > 0) level++;
-        (this.childNodes[0] as AMmlNode).setInheritedAttributes(attributes, false, level, prime);
-        (this.childNodes[1] as AMmlNode).setInheritedAttributes(attributes, false, level, true);
+        this.childNodes[0].setInheritedAttributes(attributes, false, level, prime);
+        this.childNodes[1].setInheritedAttributes(attributes, false, level, true);
     }
 }

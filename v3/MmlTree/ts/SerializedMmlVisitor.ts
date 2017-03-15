@@ -1,24 +1,25 @@
 import {MmlVisitor} from './MmlVisitor';
 import {MmlFactory} from './MmlFactory';
-import {AMmlNode} from './MmlNode';
-import {TextNode} from './Node';
-
+import {MmlNode, TextNode, XMLNode} from './MmlNode';
 
 export class SerlializedMmlVisitor extends MmlVisitor {
-    visitTree(node: AMmlNode) {
+    visitTree(node: MmlNode) {
         return this.visitNode(node,'');
     }
     visitTextNode(node: TextNode, space: string) {
-        return (node as TextNode).getText();
+        return node.getText();
     }
-    visitInferredMrowNode(node: AMmlNode, space: string) {
+    visitXMLNode(node: XMLNode, space: string) {
+        return 'XML Node not implemented';
+    }
+    visitInferredMrowNode(node: MmlNode, space: string) {
         let mml = [];
         for (const child of node.childNodes) {
             mml.push(this.visitNode(child, space));
         }
         return mml.join("\n");
     }
-    visitDefault(node: AMmlNode, space: string) {
+    visitDefault(node: MmlNode, space: string) {
         let kind = node.kind;
         let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['',''] : ['\n',space]);
         let mml = space + '<' + kind + this.getAttributes(node) + '>' + nl;
@@ -29,7 +30,7 @@ export class SerlializedMmlVisitor extends MmlVisitor {
         mml += endspace + '</' + kind + '>';
         return mml;
     }
-    getAttributes(node: AMmlNode) {
+    getAttributes(node: MmlNode) {
         let ATTR = '';
         let attributes = node.attributes.getAllAttributes();
         for (const name of Object.keys(attributes)) {

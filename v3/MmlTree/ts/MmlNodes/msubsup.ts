@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AMmlBaseNode, AttributeList, TEXCLASS} from '../MmlNode';
+import {AMmlBaseNode, AttributeList, TEXCLASS} from '../MmlNode';
 
 export class MmlMsubsup extends AMmlBaseNode {
     static defaults: PropertyList = {
@@ -15,7 +15,7 @@ export class MmlMsubsup extends AMmlBaseNode {
     get sup() {return 2}
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        let nodes = this.childNodes as AMmlNode[];
+        let nodes = this.childNodes;
         nodes[0].setInheritedAttributes(attributes, display, level, prime);
         nodes[1].setInheritedAttributes(attributes, display, level + 1, prime || this.sub === 1);
         if (!nodes[2]) return;
