@@ -14,7 +14,7 @@ export class MmlMi extends AMmlTokenNode {
                            display: boolean = false, level: number = 0, prime: boolean = false) {
         super.setInheritedAttributes(attributes, display, level, prime);
         let text = this.getText();
-        if (text.match(/^[\uD800-\uDCFF]?.$/)) {
+        if (text.match(/^[\uD800-\uDBFF]?.$/)) {
             this.attributes.setInherited('mathvariant','italic');
         }
     }
