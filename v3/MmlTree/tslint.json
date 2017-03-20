@@ -72,7 +72,7 @@
         "variable-declaration": "nospace"
       }
     ],
-    "use-strict": true,
+//    "use-strict": true,
     "variable-name": [
       true,
       "ban-keywords"

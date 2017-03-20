@@ -1,98 +1,270 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview Generic Node classes for node trees
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {NodeFactory} from './NodeFactory';
 
+/*
+ *  PropertyList and Property are for string data like
+ *  attributes and other properties
+ */
 export type Property = string | number | boolean;
 export type PropertyList = {[key: string]: Property};
-export type ChildParams = (Node | string | (Node | string)[])[];
-export type ChildArray = (Node | string)[];
 
-export type Node = ANode;
+/*
+ *  The basic Node and NodeClass types
+ */
+export type Node = INode;
 export type NodeClass = INodeClass;
+
+/*********************************************************/
+/*
+ *  The generic Node interface
+ */
 
 export interface INode {
     readonly kind: string;
     parent: Node;
+    childNodes: Node[];
 
+    /*
+     * @param {string} name  The name of the property to set
+     * @param {Property} value  The value to which the property will be set
+     */
     setProperty(name: string, value: Property): void;
+
+    /*
+     * @param {string} name  The name of the property to set
+     * @return {Property}  The value of the named property
+     */
     getProperty(name: string): Property;
-    getProperties(): PropertyList;
+
+    /*
+     * @return {string[]}  An array of the names of every property currently defined
+     */
+    getPropertyNames(): string[];
+
+    /*
+     * @return {PropertyList}  The propery list containing all the properties of the node
+     */
+    getAllProperties(): PropertyList;
+
+    /*
+     * @param {string[]} names  The names of the properties to be removed
+     */
     removeProperty(...names: string[]): void;
 
+
+    /*
+     * @param {string} kind  The type of node to test for
+     * @return {boolean}  True when the node is of the given type
+     */
     isKind(kind: string): boolean;
 
+    /*
+     * @param {Node[]} children  The child nodes to add to this node
+     */
+    setChildren(children: Node[]): void;
+
+    /*
+     * @param {Node} child  A node to add to this ones children
+     * @return {Node}  The child node that was added
+     */
+    appendChild(child: Node): Node;
+
+    /*
+     * @param {Node} newChild  A child node to be replaced
+     * @param {Node} oldChild  A child node to be replaced
+     * @return {Node}  The old child node that was removed
+     */
+    replaceChild(newChild: Node, oldChild: Node): Node;
+
+    /*
+     * @param {Node} child  A child node whose index in childNodes is desired
+     * @return {number}  The index of the child in childNodes, or null if not found
+     */
+    childIndex(child: Node): number;
+
+    /*
+     * @param {string} kind  The kind of nodes to be located in the tree
+     * @return {Node[]}  An array of nodes that are children (at any depth) of the given kind
+     */
+    findNodes(kind: string): Node[];
+
+    /*
+     * @param {Function} func  A function to apply to each node in the tree rooted at this node
+     * @param {any} data  data to pass to the function (as state information)
+     */
     walkTree(func: (node: Node, data?: any) => void, data?: any): void;
 }
 
+/*********************************************************/
+/*
+ *  The generic Node class interface
+ */
+
 export interface INodeClass {
-    new (factory: NodeFactory, ...children: ChildParams): Node;
+    /*
+     * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
+     * @param {PropertyList} properties  Any properties to be added to the node, if any
+     * @param {Node[]} children  The initial child nodes, if any
+     * @return {Node}  The newly created node
+     */
+    new (factory: NodeFactory, properties?: PropertyList, children?: Node[]): Node;
 }
 
-export abstract class ANode implements INode {
-    parent: Node = null;
-    protected properties: PropertyList = {};
-    factory: NodeFactory = null;
+/*********************************************************/
+/*
+ *  The abstract Node class
+ */
 
-    constructor(factory: NodeFactory = null) {
+export abstract class ANode implements INode {
+
+    /*
+     * The parent node for this one
+     */
+    public parent: Node = null;
+
+    /*
+     * The properties for this node
+     */
+    protected properties: PropertyList = {};
+
+    /*
+     * The NodeFactory to use to create additional nodes, as needed
+     */
+    public factory: NodeFactory = null;
+
+    /*
+     * The children for this node
+     */
+    public childNodes: Node[] = [];
+
+    /*
+     * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
+     * @param {PropertyList} properties  Any properties to be added to the node, if any
+     * @param {Node[]} children  The initial child nodes, if any
+     * @return {Node}  The newly created node
+     *
+     * @constructor
+     * @implements {INode}
+     */
+    constructor(factory: NodeFactory, properties: PropertyList = {}, children: Node[] = []) {
         this.factory = factory;
+        for (const name of Object.keys(properties)) {
+            this.setProperty(name, properties[name]);
+        }
+        this.setChildren(children);
     }
 
-    get kind() {return 'unknown'}
-    setProperty(name: string, value: Property) {this.properties[name] = value}
-    getProperty(name: string) {return this.properties[name]}
-    getProperties() {return this.properties}
-    removeProperty(...names: string[]) {
+    /*
+     * @override
+     */
+    public get kind() {
+        return 'unknown';
+    }
+
+    /*
+     * @override
+     */
+    public setProperty(name: string, value: Property) {
+        this.properties[name] = value;
+    }
+
+    /*
+     * @override
+     */
+    public getProperty(name: string) {
+        return this.properties[name];
+    }
+
+    /*
+     * @override
+     */
+    public getPropertyNames() {
+        return Object.keys(this.properties);
+    }
+
+    /*
+     * @override
+     */
+    public getAllProperties() {
+        return this.properties;
+    }
+
+    /*
+     * @override
+     */
+    public removeProperty(...names: string[]) {
         for (const name of names) {
             delete this.properties[name];
         }
     }
-    isKind(kind: string) {return this.factory.nodeIsKind(this, kind)}
 
-    walkTree(func: (node: Node, data?: any) => void, data?: any) {
-        func(this, data);
-        return data;
-    }
-}
 
-export interface IContainerNode extends INode {
-    setChildren(children: (Node | string)[]): void;
-    appendChild(child: Node): Node;
-    replaceChild(oldChild: Node, newChild: Node): Node;
-    childIndex(child: Node): number;
-    findNodes(kind: string): Node[];
-}
-
-export function ChildNodes(children: ChildParams): ChildArray {
-    if (children.length === 1 && Array.isArray(children[0])) children = children[0] as ChildArray;
-    return children as ChildArray;
-}
-
-export abstract class AContainerNode extends ANode implements IContainerNode {
-
-    childNodes: Node[] = [];
-
-    constructor(factory: NodeFactory, ...children: ChildParams) {
-        super(factory);
-        this.setChildren(ChildNodes(children));
+    /*
+     * @override
+     */
+    public isKind(kind: string): boolean {
+        return this.factory.nodeIsKind(this, kind);
     }
 
-    setChildren(children: (Node | string)[]) {
+
+    /*
+     * @override
+     */
+    public setChildren(children: Node[]) {
+        if (this.childNodes.length) {
+            this.childNodes = [];
+        }
         for (let child of children) {
-            if (typeof child === 'string') child = this.factory.create("text",child);
-            this.appendChild(child as Node);
+            this.appendChild(child);
         }
     }
-    appendChild(child: Node) {
+
+    /*
+     * @override
+     */
+    public appendChild(child: Node) {
         this.childNodes.push(child);
         child.parent = this;
         return child;
     }
-    replaceChild(oldChild: Node, newChild: Node) {
+
+    /*
+     * @override
+     */
+    public replaceChild(newChild: Node, oldChild: Node) {
         let i = this.childIndex(oldChild);
         this.childNodes[i] = newChild;
         newChild.parent = this;
         return newChild;
     }
 
-    childIndex(node: Node) {
+
+    /*
+     * @override
+     */
+    public childIndex(node: Node) {
         let i = 0;
         for (const child of this.childNodes) {
             if (child === node) {
@@ -103,7 +275,25 @@ export abstract class AContainerNode extends ANode implements IContainerNode {
         return null;
     }
 
-    walkTree(func: (node: Node, data?: any) => void, data?: any) {
+
+    /*
+     * @override
+     */
+    public findNodes(kind: string) {
+        let nodes: Node[] = [];
+        this.walkTree((node: Node) => {
+            if (node.isKind(kind)) {
+                nodes.push(node);
+            }
+        });
+        return nodes;
+    }
+
+
+    /*
+     * @override
+     */
+    public walkTree(func: (node: Node, data?: any) => void, data?: any) {
         func(this, data);
         for (const child of this.childNodes) {
             child.walkTree(func, data);
@@ -111,25 +301,53 @@ export abstract class AContainerNode extends ANode implements IContainerNode {
         return data;
     }
 
-    findNodes(kind: string) {
-        let nodes: Node[] = [];
-        this.walkTree((node: Node) => {
-            if (node.isKind(kind)) nodes.push(node);
-        });
-        return nodes;
-    }
 }
 
-export class TextNode extends ANode {
-    protected text: string;
+/*********************************************************/
+/*
+ *  The abstract EmptyNode class
+ */
 
-    constructor(factory: NodeFactory, text:string = "") {
-        super(factory);
-        this.text = text;
+export abstract class AEmptyNode extends ANode {
+    /*
+     *  We don't have children, so ignore these methods
+     */
+
+    /*
+     * @override
+     */
+    public setChildren(children: Node[]) {
     }
 
-    get kind() {return 'text'}
+    /*
+     * @override
+     */
+    public appendChild(child: Node) {
+        return child;
+    }
 
-    getText(): string {return this.text}
-    setText(text: string): void {this.text = text}
+    /*
+     * @override
+     */
+    public replaceChild(newChild: Node, oldChild: Node) {
+        return oldChild;
+    }
+
+    /*
+     * @override
+     */
+    public childIndex(node: Node) {
+        return null as number;
+    }
+
+    /*
+     * Don't step into children (there aren't any)
+     *
+     * @override
+     */
+    public walkTree(func: (node: Node, data?: any) => void, data?: any) {
+        func(this, data);
+        return data;
+    }
+
 }

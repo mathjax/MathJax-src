@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
+import {MmlNode, AMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
 
 export class MmlMsqrt extends AMmlNode {
     static defaults: PropertyList = {
@@ -11,18 +11,18 @@ export class MmlMsqrt extends AMmlNode {
     get arity() {return -1}
     get linebreakContainer() {return true}
 
-    setTeXclass(prev: AMmlNode) {
+    setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        for (const child of (this.childNodes as AMmlNode[])) {
+        for (const child of this.childNodes) {
             child.setTeXclass(null);
         }
         if (this.isEmbellished) {
-            this.updateTeXclass(this.core() as AMmlNode);
+            this.updateTeXclass(this.core());
         }
         return this;
     }
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        (this.childNodes[0] as AMmlNode).setInheritedAttributes(attributes, display, level, true);
+        this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
     }
 }

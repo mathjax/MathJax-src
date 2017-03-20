@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlNode, AMmlBaseNode} from '../MmlNode';
+import {MmlNode, AMmlNode, AMmlBaseNode, IMmlNode} from '../MmlNode';
 
 export class MmlSemantics extends AMmlBaseNode {
     static defaults: PropertyList = {
@@ -11,8 +11,8 @@ export class MmlSemantics extends AMmlBaseNode {
     get kind() {return 'semantics'}
     get notParent() {return true}
 
-    setTeXclass(prev: AMmlNode) {
-        let child = this.childNodes[0] as AMmlNode;
+    setTeXclass(prev: MmlNode) {
+        let child = this.childNodes[0];
         if (child) {
             prev = child.setTeXclass(prev);
             this.updateTeXclass(child);
@@ -33,6 +33,8 @@ export class MmlAnnotationXML extends AMmlNode {
 
     get kind() {return 'annotation-xml'}
     get linebreakContainer() {return true}
+
+    protected setChildInheritedAttributes() {}
 }
 
 export class MmlAnnotation extends MmlAnnotationXML {

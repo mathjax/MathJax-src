@@ -1,13 +1,13 @@
-import {PropertyList} from '../Node';
-import {AMmlNode, MmlNode, AttributeList, DEFAULT} from '../MmlNode';
-import {ANode} from '../Node';
+import {PropertyList, ANode, INode} from '../Node';
+import {MmlNode, AMmlNode, AttributeList} from '../MmlNode';
+import {INHERIT} from '../Attributes';
 
 export class MmlMtr extends AMmlNode {
     static defaults: PropertyList = {
         ...AMmlNode.defaults,
-        rowalign: DEFAULT.INHERIT,
-        columnalign: DEFAULT.INHERIT,
-        groupalign: DEFAULT.INHERIT
+        rowalign: INHERIT,
+        columnalign: INHERIT,
+        groupalign: INHERIT
     };
 
     get kind() {return 'mtr'}
@@ -17,23 +17,23 @@ export class MmlMtr extends AMmlNode {
     //
     appendChild(child: MmlNode) {
         if (!child.isKind('mtd')) {
-            child = this.factory.create('mtd', child);
+            child = this.factory.create('mtd', {}, [child]);
         }
         return super.appendChild(child);
     }
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        attributes = this.addInheritedAttributes(attributes, this.getAttributes());
+        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 
-    setTeXclass(prev: AMmlNode) {
+    setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        for (const child of (this.childNodes as AMmlNode[])) {
+        for (const child of this.childNodes) {
             child.setTeXclass(null);
         }
         if (this.isEmbellished) {
-            this.updateTeXclass(this.core() as AMmlNode);
+            this.updateTeXclass(this.core());
         }
         return this;
     }

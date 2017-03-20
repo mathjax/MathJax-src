@@ -1,36 +1,77 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the MmlMfenced node
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {PropertyList} from '../Node';
-import {AMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
+import {MmlNode, AMmlNode, IMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
+
+/*****************************************************************/
+/*
+ *  Implements the MmlMfenced node class (subclass of AMmlNode)
+ */
 
 export class MmlMfenced extends AMmlNode {
-    static defaults: PropertyList = {
+    public static defaults: PropertyList = {
         ...AMmlNode.defaults,
         open: '(',
         close: ')',
         separators: ','
     };
-    texClass = TEXCLASS.INNER;
+    public texClass = TEXCLASS.INNER;
 
-    protected separators: AMmlNode[] = [];
-    protected open: AMmlNode = null;
-    protected close: AMmlNode = null;
+    /*
+     *  Storage for "fake" nodes for the delimiters and separators
+     */
+    protected separators: MmlNode[] = [];
+    protected open: MmlNode = null;
+    protected close: MmlNode = null;
 
-    get kind() {return 'mfenced'}
+    /*
+     * @return {string}  The mfenced kind
+     */
+    public get kind() {
+        return 'mfenced';
+    }
 
-    setTeXclass(prev: AMmlNode) {
-        this.addFakeNodes();
+    /*
+     * Include the fake nodes in the process, since they will be used
+     *  to produce the output.
+     *
+     * @override
+     */
+    public setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
         if (this.open) {
             prev = this.open.setTeXclass(prev);
         }
         if (this.childNodes[0]) {
-            prev = (this.childNodes[0] as AMmlNode).setTeXclass(prev);
+            prev = this.childNodes[0].setTeXclass(prev);
         }
-        for (let i = 0, m = this.childNodes.length; i < m; i++) {
-            if (this.separators[i]) {
-                prev = this.separators[i].setTeXclass(prev);
+        for (let i = 1, m = this.childNodes.length; i < m; i++) {
+            if (this.separators[i - 1]) {
+                prev = this.separators[i - 1].setTeXclass(prev);
             }
             if (this.childNodes[i]) {
-                prev = (this.childNodes[i] as AMmlNode).setTeXclass(prev);
+                prev = this.childNodes[i].setTeXclass(prev);
             }
         }
         if (this.close) {
@@ -40,6 +81,12 @@ export class MmlMfenced extends AMmlNode {
         return prev;
     }
 
+    /*
+     * Create the fake nodes and do their inheritance
+     * Then do inheridence of usual children
+     *
+     * @override
+     */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         this.addFakeNodes();
         for (const child of [this.open, this.close].concat(this.separators)) {
@@ -50,20 +97,20 @@ export class MmlMfenced extends AMmlNode {
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 
-    addFakeNodes() {
-        let {open, close, separators} = this.Get('open', 'close', 'separators') as
+    /*
+     * Create <mo> elements for the open and close delimiters, and for the separators (if any)
+     */
+    protected addFakeNodes() {
+        let {open, close, separators} = this.attributes.getList('open', 'close', 'separators') as
                                             {open: string, close: string, separators: string};
-        open = open.replace(/[ \t\n\r]/g,'');
-        close = close.replace(/[ \t\n\r]/g,'');
-        separators = separators.replace(/[ \t\n\r]/g,'');
+        open = open.replace(/[ \t\n\r]/g, '');
+        close = close.replace(/[ \t\n\r]/g, '');
+        separators = separators.replace(/[ \t\n\r]/g, '');
         //
         // Create open node
         //
         if (open) {
-            this.open = this.factory.create('mo',open);
-            this.open.setAttributes({fence: true, form: 'prefix'});
-            this.open.texClass = TEXCLASS.OPEN;
-            this.open.parent = this;
+            this.open = this.fakeNode(open, {fence: true, form: 'prefix'}, TEXCLASS.OPEN);
         }
         //
         // Create nodes for the separators
@@ -73,22 +120,32 @@ export class MmlMfenced extends AMmlNode {
                 separators += separators.charAt(separators.length - 1);
             }
             let i = 0;
-            for (const child of (this.childNodes as AMmlNode[]).slice(1)) {
+            for (const child of this.childNodes.slice(1)) {
                 if (child) {
-                    let mo = this.factory.create('mo',separators.charAt(i));
-                    mo.parent = this;
-                    this.separators.push(mo);
+                    this.separators.push(this.fakeNode(separators.charAt(i++)));
                 }
             }
         }
         //
-        //  Crete close node
+        //  Create close node
         //
         if (close) {
-            this.close = this.factory.create('mo',close);
-            this.close.setAttributes({fence: true, form: 'postfix'});
-            this.close.texClass = TEXCLASS.CLOSE;
-            this.close.parent = this;
+            this.close = this.fakeNode(close, {fence: true, form: 'postfix'}, TEXCLASS.CLOSE);
         }
     }
+
+    /*
+     * @param {string} c                 The character for the text of the node
+     * @param {PropertyList} properties  The attributes for the node
+     * @param {number} texClass          The TeX class for the node
+     * @return {MmlNode}                 The generated <mo> node
+     */
+    protected fakeNode(c: string, properties: PropertyList = {}, texClass: number = null): MmlNode {
+        let text = this.factory.create('text').setText(c);
+        let node = this.factory.create('mo', properties, [text]);
+        node.texClass = texClass;
+        node.parent = this;
+        return node;
+    }
+
 }

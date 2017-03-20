@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlTokenNode, AMmlNode, AttributeList, DEFAULT, TEXCLASS} from '../MmlNode';
+import {AMmlTokenNode, MmlNode, IMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
 import {MmlMrow} from './mrow';
 
 export type OperatorDef = [number, number, number, PropertyList];
@@ -355,17 +355,17 @@ export class MmlMo extends AMmlTokenNode {
 
     get kind() {return 'mo'}
     get isEmbellished() {return true}
-    get hasNewLine() {return this.Get('linebreak') === 'newline'}
+    get hasNewLine() {return this.attributes.get('linebreak') === 'newline'}
 
     coreParent() {
-        let parent: AMmlNode = this;
+        let parent: MmlNode = this;
         let math = this.factory.getNodeClass('math');
         while (parent && parent.isEmbellished && parent.coreMO() === this && !(parent instanceof math)) {
-            parent = (parent as AMmlNode).Parent as AMmlNode;
+            parent = (parent as MmlNode).Parent;
         }
         return parent;
     }
-    coreText(parent: AMmlNode) {
+    coreText(parent: MmlNode) {
         if (!parent) return '';
         if (parent.isEmbellished) {
             return (parent.coreMO() as MmlMo).getText();
@@ -373,13 +373,13 @@ export class MmlMo extends AMmlTokenNode {
         while ((((parent.isKind('mrow') || parent.isKind('TeXAtom') || parent.isKind('mstyle') ||
                   parent.isKind('mphantom')) && parent.childNodes.length === 1) ||
                 parent.isKind('munderover')) && parent.childNodes[0]) {
-            parent = parent.childNodes[0] as AMmlNode;
+            parent = parent.childNodes[0] as MmlNode;
         }
         return (parent.isToken ? (parent as AMmlTokenNode).getText() : '');
     }
 
-    setTeXclass(prev: AMmlNode) {
-        let {form, lspace, rspace, fence} = this.Get('form', 'lspace', 'rspace', 'fence') as
+    setTeXclass(prev: MmlNode) {
+        let {form, lspace, rspace, fence} = this.attributes.getList('form', 'lspace', 'rspace', 'fence') as
                                              {form: string, lspace: string, rspace: string, fence: string};
         // if (this.useMMLspacing) {this.texClass = TEXCLASS.NONE; return this}
         if (fence && this.texClass === TEXCLASS.REL) {
@@ -399,7 +399,7 @@ export class MmlMo extends AMmlTokenNode {
         }
         return this.adjustTeXclass(prev);
     }
-    adjustTeXclass(prev: AMmlNode): AMmlNode {
+    adjustTeXclass(prev: MmlNode): MmlNode {
         let texClass = this.texClass;
         let prevClass = this.prevClass;
         if (texClass === TEXCLASS.NONE) return prev;
@@ -408,7 +408,7 @@ export class MmlMo extends AMmlTokenNode {
                 texClass = this.texClass = TEXCLASS.ORD;
             }
             prevClass = this.prevClass = (prev.texClass || TEXCLASS.ORD);
-            this.prevLevel = this.getInherited('scriptlevel') as number;
+            this.prevLevel = this.attributes.getInherited('scriptlevel') as number;
         } else {
             prevClass = this.prevClass = TEXCLASS.NONE;
         }
@@ -424,13 +424,13 @@ export class MmlMo extends AMmlTokenNode {
             // Check if node is the last one in its container since the rule
             // above only takes effect if there is a node that follows.
             //
-            let child: AMmlNode = this;
-            let parent: AMmlNode = this.parent as AMmlNode;
+            let child: MmlNode = this;
+            let parent = this.parent;
             while (parent && parent.parent && parent.isEmbellished &&
                    (parent.childNodes.length === 1 ||
                     (!parent.isKind('mrow') && parent.core() === child))) {
                 child = parent;
-                parent = parent.parent as AMmlNode;
+                parent = parent.parent;
             }
             if (parent.childNodes[parent.childNodes.length-1] === child) {
                 this.texClass = TEXCLASS.ORD;
@@ -444,13 +444,13 @@ export class MmlMo extends AMmlTokenNode {
         super.setInheritedAttributes(attributes, display, level, prime);
         let mo = this.getText();
         let [form1, form2, form3] = this.getForms();
-        this.setInherited('form', form1);
-        let OPTABLE = (this.constructor as typeof MmlMo).OPTABLE;
+        this.attributes.setInherited('form', form1);
+        let OPTABLE = MmlMo.OPTABLE;
         let def = OPTABLE[form1][mo] || OPTABLE[form2][mo] || OPTABLE[form3][mo];
         if (def) {
             this.texClass = def[2];
             for (const name of Object.keys(def[3] || {})) {
-                this.setInherited(name, def[3][name]);
+                this.attributes.setInherited(name, def[3][name]);
             }
         } else {
             let range = this.getRange(mo);
@@ -460,13 +460,13 @@ export class MmlMo extends AMmlTokenNode {
         }
     }
     protected getForms() {
-        let core: AMmlNode = this;
-        let parent: AMmlNode = this.parent as AMmlNode;
-        let Parent: AMmlNode = this.Parent as AMmlNode;
+        let core: MmlNode = this;
+        let parent = this.parent;
+        let Parent = this.Parent;
         while (Parent && Parent.isEmbellished) {
             core = parent;
-            parent = Parent.parent as AMmlNode;
-            Parent = Parent.Parent as AMmlNode;
+            parent = Parent.parent;
+            Parent = Parent.Parent;
         }
         if (parent && parent.isKind('mrow') && (parent as MmlMrow).nonSpaceLength() !== 1) {
             if ((parent as MmlMrow).firstNonSpace() === core) return ['prefix','infix','postfix'];
@@ -480,7 +480,7 @@ export class MmlMo extends AMmlTokenNode {
         if (mo.length === 2) {
             n = (n - 0xD800) * 0x400 + mo.charCodeAt(1) - 0xDC00 + 0x10000;
         }
-        let ranges = (this.constructor as typeof MmlMo).RANGES;
+        let ranges = MmlMo.RANGES;
         for (const range of ranges) {
             if (range[0] <= n && n <= range[1]) return range;
             if (n < range[0]) return null

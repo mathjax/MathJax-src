@@ -13,7 +13,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
         let n = 0;
         for (const child of this.childNodes) {
             let primestyle = prime || (n % 2 === 1);
-            (child as AMmlNode).setInheritedAttributes(attributes, display, level, primestyle);
+            child.setInheritedAttributes(attributes, display, level, primestyle);
             n++;
         }
     }

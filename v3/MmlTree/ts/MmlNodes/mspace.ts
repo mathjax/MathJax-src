@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlTokenNode, DEFAULT, TEXCLASS} from '../MmlNode';
+import {AMmlTokenNode, TEXCLASS} from '../MmlNode';
 
 export class MmlMspace extends AMmlTokenNode {
     static defaults: PropertyList = {
@@ -14,7 +14,8 @@ export class MmlMspace extends AMmlTokenNode {
     get kind() {return 'mspace'}
     get isSpacelike() {return true}
     get hasNewline() {
-        return (this.getAttribute('width') == null && this.getAttribute('height') == null &&
-                this.getAttribute('depth') == null && this.Get('linebreak') === 'newline');
+        let attributes = this.attributes;
+        return (attributes.getExplicit('width') == null && attributes.getExplicit('height') == null &&
+                attributes.getExplicit('depth') == null && attributes.get('linebreak') === 'newline');
     }
 }

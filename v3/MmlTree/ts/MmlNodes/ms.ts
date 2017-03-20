@@ -1,5 +1,5 @@
 import {PropertyList} from '../Node';
-import {AMmlTokenNode, DEFAULT, TEXCLASS} from '../MmlNode';
+import {AMmlTokenNode, TEXCLASS} from '../MmlNode';
 
 export class MmlMs extends AMmlTokenNode {
     static defaults: PropertyList = {
@@ -7,8 +7,6 @@ export class MmlMs extends AMmlTokenNode {
         lquote: '"',
         rquote: '"'
     };
-    protected properties: PropertyList = {
-        texClass: TEXCLASS.ORD
-    }
+    texClass = TEXCLASS.ORD;
     get kind() {return 'ms'}
 }
