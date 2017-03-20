@@ -1,46 +1,97 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the MmlMath node
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {PropertyList} from '../Node';
 import {AMmlLayoutNode, AttributeList} from '../MmlNode';
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMath node class (subclass of AMmlLayoutNode)
+ */
+
 export class MmlMath extends AMmlLayoutNode {
-    static defaults: PropertyList = {
+    /*
+     *  These are used as the defaults for any attributes marked INHERIT in other classes
+     */
+    public static defaults: PropertyList = {
         ...AMmlLayoutNode.defaults,
-        mathvariant: "normal",
-        mathsize: "normal",
-        mathcolor: "", // should be "black", but allow it to inherit from surrounding text
-        mathbackground: "transparent",
-        dir: "ltr",
+        mathvariant: 'normal',
+        mathsize: 'normal',
+        mathcolor: '', // Should be 'black', but allow it to inherit from surrounding text
+        mathbackground: 'transparent',
+        dir: 'ltr',
         scriptlevel: 0,
         displaystyle: false,
-        display: "inline",
-        maxwidth: "",
-        overflow: "linebreak",
-        altimg: "",
-        'altimg-width': "",
-        'altimg-height': "",
-        'altimg-valign': "",
-        alttext: "",
-        cdgroup: "",
-        scriptsizemultiplier: Math.sqrt(1/2),
-        scriptminsize: "8px",        // should be 8pt, but that's too big
-        infixlinebreakstyle: "before",
-        lineleading: "1ex",
-        linebreakmultchar: '\u2062', // invisible times
-        indentshift: "auto",         // use user configuration
-        indentalign: "auto",
+        display: 'inline',
+        maxwidth: '',
+        overflow: 'linebreak',
+        altimg: '',
+        'altimg-width': '',
+        'altimg-height': '',
+        'altimg-valign': '',
+        alttext: '',
+        cdgroup: '',
+        scriptsizemultiplier: 1 / Math.sqrt(2),
+        scriptminsize: '8px',        // Should be 8pt, but that's too big
+        infixlinebreakstyle: 'before',
+        lineleading: '1ex',
+        linebreakmultchar: '\u2062', // Invisible times
+        indentshift: 'auto',         // Use user configuration
+        indentalign: 'auto',
         indenttarget: '',
-        indentalignfirst: "indentalign",
-        indentshiftfirst: "indentshift",
-        indentalignlast:  "indentalign",
-        indentshiftlast:  "indentshift"
+        indentalignfirst: 'indentalign',
+        indentshiftfirst: 'indentshift',
+        indentalignlast:  'indentalign',
+        indentshiftlast:  'indentshift'
     };
-    get kind() {return 'math'}
-    get arity() {return -1}
-    get linebreakContainer() {return true}
 
+    /*
+     * @return {string}  The math kind
+     */
+    public get kind() {
+        return 'math';
+    }
+
+    /*
+     * @return {boolean} Linebreaking can occur in math nodes
+     */
+    public get linebreakContainer() {
+        return true;
+    }
+
+    /*
+     * The attributes of math nodes are inherited, so add them into the list.
+     * The displaystyle attribute comes from the display attribute if not given explicitly
+     * The scriptlevel comes from the scriptlevel attribute or default
+     *
+     * @override
+     */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
-        display = this.attributes.get('display') === 'block' || !!this.attributes.get('displaystyle');
-        level = this.attributes.get('scriptlevel') as number || 0;
+        display = (!!this.attributes.get('displaystyle') ||
+                   (!this.attributes.get('displaystyle') && this.attributes.get('display') === 'block'));
+        level = (this.attributes.get('scriptlevel') ||
+                 (this.constructor as typeof MmlMath).defaults['scriptlevel']) as number;
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 }

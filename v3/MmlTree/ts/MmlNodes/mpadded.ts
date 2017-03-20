@@ -10,6 +10,6 @@ export class MmlMpadded extends AMmlLayoutNode {
         lspace: 0,
         voffset: 0
     };
+
     get kind() {return 'mpadded'}
-    get arity() {return -1}
 }

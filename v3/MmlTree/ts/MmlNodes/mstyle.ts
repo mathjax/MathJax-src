@@ -16,7 +16,6 @@ export class MmlMstyle extends AMmlLayoutNode {
     };
 
     get kind() {return 'mstyle'}
-    get arity() {return -1}
 
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         let scriptlevel = this.attributes.getExplicit('scriptlevel');
