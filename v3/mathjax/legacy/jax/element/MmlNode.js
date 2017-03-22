@@ -12,7 +12,6 @@
     'isError',
     'multiline',
     'variantForm',
-    'texClass',
     'autoOP'
   ];
 
@@ -28,6 +27,7 @@
       }
       this.nodeAddAttributes(node);
       this.nodeAddProperties(node);
+      if ("texClass" in this) node.texClass = this.texClass;
       return node;
     },
     nodeAddAttributes: function (node) {
