@@ -1,44 +1,111 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the MmlSemantics, MmlAnnotation, and MmlAnnotationXML nodes
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {PropertyList} from '../Node';
 import {MmlNode, AMmlNode, AMmlBaseNode, IMmlNode} from '../MmlNode';
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMroot node class (subclass of AMmlBaseNode)
+ */
+
 export class MmlSemantics extends AMmlBaseNode {
-    static defaults: PropertyList = {
+    public static defaults: PropertyList = {
         ...AMmlBaseNode.defaults,
         definitionUrl: null,
         encoding: null
     };
 
-    get kind() {return 'semantics'}
-    get notParent() {return true}
-
-    setTeXclass(prev: MmlNode) {
-        let child = this.childNodes[0];
-        if (child) {
-            prev = child.setTeXclass(prev);
-            this.updateTeXclass(child);
-        }
-        return prev;
+    /*
+     * @return {string}  The semantics kind
+     */
+    public get kind() {
+        return 'semantics';
     }
+
+    /*
+     * @return {number}  <semantics> requires at least one node
+     */
+    public get arity() {
+        return 1;
+    }
+
+    /*
+     * @return {boolean}  Ignore <semantics> when looking for partent node
+     */
+    public get notParent() {
+        return true;
+    }
+
 }
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMroot node class (subclass of AMmlNode)
+ */
+
 export class MmlAnnotationXML extends AMmlNode {
-    static defaults: PropertyList = {
+    public static defaults: PropertyList = {
         ...AMmlNode.defaults,
         definitionUrl: null,
         encoding: null,
-        cd: "mathmlkeys",
-        name: "",
+        cd: 'mathmlkeys',
+        name: '',
         src: null
     };
 
-    get kind() {return 'annotation-xml'}
-    get linebreakContainer() {return true}
+    /*
+     * @return {string}  The annotation-xml kind
+     */
+    public get kind() {
+        return 'annotation-xml';
+    }
 
+    /*
+     * Children are XMLNodes, so don't bother inheritting to them
+     *
+     * @override
+     */
     protected setChildInheritedAttributes() {}
 }
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMroot node class (subclass of MmlAnnotationXML)
+ */
+
 export class MmlAnnotation extends MmlAnnotationXML {
-    properties = {
+    public static defaults = {
+        ...MmlAnnotationXML.defaults
+    };
+    public properties = {
         isChars: true
+    };
+
+    /*
+     * @return {string}  The annotation-xml kind
+     */
+    public get kind() {
+        return 'annotation';
     }
 }

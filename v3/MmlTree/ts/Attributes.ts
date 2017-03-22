@@ -89,7 +89,7 @@ export class Attributes {
      */
     public getExplicit(name: string) {
         if (!(name in this.attributes)) {
-            return null;
+            return undefined;
         }
         return this.attributes[name];
     }

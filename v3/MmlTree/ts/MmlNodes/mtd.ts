@@ -1,9 +1,37 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the MmlMtd node
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {PropertyList} from '../Node';
 import {AMmlBaseNode, MmlNode} from '../MmlNode';
 import {INHERIT} from '../Attributes';
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMtd node class (subclass of AMmlBaseNode)
+ */
+
 export class MmlMtd extends AMmlBaseNode {
-    static defaults: PropertyList = {
+    public static defaults: PropertyList = {
         ...AMmlBaseNode.defaults,
         rowspan: 1,
         columnspan: 1,
@@ -11,18 +39,34 @@ export class MmlMtd extends AMmlBaseNode {
         columnalign: INHERIT,
         groupalign: INHERIT
     };
-    get kind() {return 'mtd'}
-    get arity() {return -1}
-    get linebreakContainer() {return true}
 
-    setTeXclass(prev: MmlNode) {
+    /*
+     * @return {string}  The mtd kind
+     */
+    public get kind() {
+        return 'mtd';
+    }
+
+    /*
+     * @return {number}  <mtd> has an inferred mrow
+     */
+    public get arity() {
+        return -1;
+    }
+
+    /*
+     * @return {boolean}  <mtd> can contain line breaks
+     */
+    public get linebreakContainer() {
+        return true;
+    }
+
+    /*
+     * @override
+     */
+    public setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        for (const child of this.childNodes) {
-            child.setTeXclass(null);
-        }
-        if (this.isEmbellished) {
-            this.updateTeXclass(this.core());
-        }
+        this.childNodes[0].setTeXclass(null);
         return this;
     }
 }

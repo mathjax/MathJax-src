@@ -1,15 +1,59 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the MmlMroot node
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {PropertyList} from '../Node';
 import {AMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMroot node class (subclass of AMmlNode)
+ */
+
 export class MmlMroot extends AMmlNode {
-    static defaults: PropertyList = {
+    public static defaults: PropertyList = {
         ...AMmlNode.defaults
     };
-    texClass = TEXCLASS.ORD;
+    public texClass = TEXCLASS.ORD;
 
-    get kind() {return 'mroot'}
-    get arity() {return 2}
+    /*
+     * @return {string}  The mroot kind
+     */
+    public get kind() {
+        return 'mroot';
+    }
 
+    /*
+     * @return {number}  <mroot> requires two children
+     */
+    public get arity() {
+        return 2;
+    }
+
+    /*
+     * Set the children display/level/prime for the base and root.
+     *
+     * @override
+     */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
         this.childNodes[1].setInheritedAttributes(attributes, false, level + 2, prime);

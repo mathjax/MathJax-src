@@ -1,12 +1,28 @@
 import {PropertyList} from '../Node';
 import {AMmlTokenNode, TEXCLASS} from '../MmlNode';
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMtext node class (subclass of AMmlTokenNode)
+ */
+
 export class MmlMtext extends AMmlTokenNode {
-    static defaults: PropertyList = {
+    public static defaults: PropertyList = {
         ...AMmlTokenNode.defaults
     };
-    texClass = TEXCLASS.ORD;
+    public texClass = TEXCLASS.ORD;
 
-    get kind() {return 'mtext'}
-    get isSpacelike() {return true}
+    /*
+     * @return {string}  The mtext kind
+     */
+    public get kind() {
+        return 'mtext';
+    }
+
+    /*
+     * @return {boolean}  <mtext> is always space-like according to the spec
+     */
+    public get isSpacelike() {
+        return true;
+    }
 }

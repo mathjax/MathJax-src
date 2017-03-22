@@ -309,7 +309,9 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
 
     /*
      * @return {number}  The number of children allowed, or Infinity for any number,
-     *                   or -1 for when an inferred row is needed for the children
+     *                   or -1 for when an inferred row is needed for the children.
+     *                   Special case is 1, meaning at least one (other numbers
+     *                   mean exactly that many).
      */
     public get arity() {
         return Infinity;
@@ -341,6 +343,12 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
         return false;
     }
 
+    public setChildren(children: MmlNode[]) {
+        if (this.arity < 0) {
+            return this.childNodes[0].setChildren(children);
+        }
+        return super.setChildren(children);
+    }
     /*
      * If there is an inferred row, append to that instead
      *
@@ -673,11 +681,11 @@ export abstract class AMmlLayoutNode extends AMmlNode {
 
 /*****************************************************************/
 /*
- *  The abstract MmlNode Script-schema Class (extends the AMmlNode)
+ *  The abstract MmlNode-with-base-node Class (extends the AMmlNode)
  *
- *  These have a base element and script elements (msubsup, munderover, etc).
+ *  These have a base element and other elemetns, (e.g., script elements for msubsup).
  *  They can be embellished (if their base is), and get their TeX classes
- *    from their base with their scripts being handled a separate math lists.
+ *    from their base with their scripts being handled as separate math lists.
  */
 
 export abstract class AMmlBaseNode extends AMmlNode {

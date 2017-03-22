@@ -1,68 +1,153 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the MmlMrow node
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {PropertyList} from '../Node';
 import {MmlNode, AMmlNode, IMmlNode, TEXCLASS} from '../MmlNode';
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMrow node class (subclass of AMmlNode)
+ */
+
 export class MmlMrow extends AMmlNode {
-    static defaults: PropertyList = {
+    public static defaults: PropertyList = {
         ...AMmlNode.defaults
     };
 
+    /*
+     * The index of the core child, when acting as an embellish mrow
+     */
     protected _core: number = null;
 
-    get kind() {return 'mrow'}
-    get isSpacelike() {
+    /*
+     * @return {string}  The mrow kind
+     */
+    public get kind() {
+        return 'mrow';
+    }
+
+    /*
+     * An mrow is space-like if all its children are.
+     *
+     * @override
+     */
+    public get isSpacelike() {
         for (const child of this.childNodes) {
-            if (!child.isSpacelike) return false;
+            if (!child.isSpacelike) {
+                return false;
+            }
         }
         return true;
     }
-    get isEmbellished() {
+
+    /*
+     * An mrow is embellished if it contains one embellished operator
+     * and any number of space-like nodes
+     *
+     * @override
+     */
+    public get isEmbellished() {
         let embellished = false;
         let i = 0;
         for (const child of this.childNodes) {
-            if (!child) continue;
-            if (child.isEmbellished) {
-                if (embellished) return false;
-                embellished = true;
-                this._core = i;
-            } else if (!child.isSpacelike) {
-                return false;
+            if (child) {
+                if (child.isEmbellished) {
+                    if (embellished) {
+                        return false;
+                    }
+                    embellished = true;
+                    this._core = i;
+                } else if (!child.isSpacelike) {
+                    return false;
+                }
             }
         }
         return embellished;
     }
 
-    core(): MmlNode {
-        if (!this.isEmbellished || this._core == null) return this;
+    /*
+     * @override
+     */
+    public core(): MmlNode {
+        if (!this.isEmbellished || this._core == null) {
+            return this;
+        }
         return this.childNodes[this._core];
     }
-    coreMO(): MmlNode {
-        if (!this.isEmbellished || this._core == null) return this;
+
+    /*
+     * @override
+     */
+    public coreMO(): MmlNode {
+        if (!this.isEmbellished || this._core == null) {
+            return this;
+        }
         return this.childNodes[this._core].coreMO();
     }
 
-    nonSpaceLength() {
+    /*
+     * @return {number}  The number of non-spacelike child nodes
+     */
+    public nonSpaceLength() {
         let n = 0;
         for (const child of this.childNodes) {
-            if (child && !child.isSpacelike) n++;
+            if (child && !child.isSpacelike) {
+                n++;
+            }
         }
         return n;
     }
-    firstNonSpace() {
+
+    /*
+     * @return {MmlNode}  The first non-space-like child node
+     */
+    public firstNonSpace() {
         for (const child of this.childNodes) {
-            if (child && !child.isSpacelike) return child;
-        }
-        return null;
-    }
-    lastNonSpace() {
-        let i = this.childNodes.length;
-        while (--i >= 0) {
-            let child = this.childNodes[i];
-            if (child && !child.isSpacelike) return child;
+            if (child && !child.isSpacelike) {
+                return child;
+            }
         }
         return null;
     }
 
-    setTeXclass(prev: MmlNode) {
+    /*
+     * @return {MmlNode}  The last non-space-like child node
+     */
+    public lastNonSpace() {
+        let i = this.childNodes.length;
+        while (--i >= 0) {
+            let child = this.childNodes[i];
+            if (child && !child.isSpacelike) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    /*
+     * @override
+     */
+    public setTeXclass(prev: MmlNode) {
         if ((this.getProperty('open') != null || this.getProperty('close') != null) &&
             (!prev || prev.getProperty('fnOp') != null)) {
             //
@@ -77,7 +162,6 @@ export class MmlMrow extends AMmlNode {
             if (this.texClass == null) {
                 this.texClass = TEXCLASS.INNER;
             }
-            return prev;
         } else {
             //
             //  Normal <mrow>, so treat as though mrow is not there
@@ -88,15 +172,38 @@ export class MmlMrow extends AMmlNode {
             if (this.childNodes[0]) {
                 this.updateTeXclass(this.childNodes[0]);
             }
-            return prev;
         }
+        return prev;
     }
 }
 
-export class MmlInferredMrow extends MmlMrow {
-    static defaults: PropertyList = MmlMrow.defaults;
 
-    get kind() {return 'inferredMrow'}
-    get isInferred() {return true}
-    get notParent() {return true}
+/*****************************************************************/
+/*
+ *  Implements the MmlInferredMrow node class (subclass of MmlMrow)
+ */
+
+export class MmlInferredMrow extends MmlMrow {
+    public static defaults: PropertyList = MmlMrow.defaults;
+
+    /*
+     * @return {string}  The inferred-mrow kind
+     */
+    public get kind() {
+        return 'inferredMrow';
+    }
+
+    /*
+     * @return {boolean}  This is inferred
+     */
+    public get isInferred() {
+        return true;
+    }
+
+    /*
+     * @return {boolean}  This node is not considered a parent node
+     */
+    public get notParent() {
+        return true;
+    }
 }

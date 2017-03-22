@@ -44,10 +44,10 @@ export class MmlMaction extends AMmlNode {
     }
 
     /*
-     * @return {number}  Any nummber of nodes
+     * @return {number}  At least one child
      */
     public get arity() {
-        return Infinity;
+        return 1;
     }
 
     /*

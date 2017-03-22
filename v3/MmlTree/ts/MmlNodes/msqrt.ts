@@ -1,27 +1,75 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the MmlMsqrt node
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {PropertyList} from '../Node';
 import {MmlNode, AMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
 
+/*****************************************************************/
+/*
+ *  Implements the MmlMsqrt node class (subclass of AMmlNode)
+ */
+
 export class MmlMsqrt extends AMmlNode {
-    static defaults: PropertyList = {
+    public static defaults: PropertyList = {
         ...AMmlNode.defaults
     };
-    texClass = TEXCLASS.ORD;
+    public texClass = TEXCLASS.ORD;
 
-    get kind() {return 'msqrt'}
-    get arity() {return -1}
-    get linebreakContainer() {return true}
+    /*
+     * @return {string}  The msqrt kind
+     */
+    public get kind() {
+        return 'msqrt';
+    }
 
-    setTeXclass(prev: MmlNode) {
+    /*
+     * @return {number}  <msqrt> has an inferred mrow
+     */
+    public get arity() {
+        return -1;
+    }
+
+    /*
+     * @return {boolean}  <msqrt> can contain line breaks
+     */
+    public get linebreakContainer() {
+        return true;
+    }
+
+    /*
+     * @override
+     */
+    public setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        for (const child of this.childNodes) {
-            child.setTeXclass(null);
-        }
-        if (this.isEmbellished) {
-            this.updateTeXclass(this.core());
-        }
+        this.childNodes[0].setTeXclass(null);
         return this;
     }
 
+    /*
+     * The contents of sqrt are in TeX prime style.
+     *
+     * @override
+     */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
     }

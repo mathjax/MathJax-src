@@ -173,7 +173,9 @@ export abstract class ANode implements INode {
         for (const name of Object.keys(properties)) {
             this.setProperty(name, properties[name]);
         }
-        this.setChildren(children);
+        if (children.length) {
+            this.setChildren(children);
+        }
     }
 
     /*
