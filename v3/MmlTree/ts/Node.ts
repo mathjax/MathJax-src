@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {NodeFactory} from './NodeFactory';
+import {NodeFactory} from './NodeFactory.js';
 
 /*
  *  PropertyList and Property are for string data like

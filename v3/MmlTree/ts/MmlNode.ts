@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Attributes, INHERIT} from './Attributes';
-import {Property, PropertyList, Node, ANode, AEmptyNode, INode, INodeClass} from './Node';
-import {MmlFactory} from './MmlFactory';
+import {Attributes, INHERIT} from './Attributes.js';
+import {Property, PropertyList, Node, ANode, AEmptyNode, INode, INodeClass} from './Node.js';
+import {MmlFactory} from './MmlFactory.js';
 
 /*
  *  The basix MmlNode classes

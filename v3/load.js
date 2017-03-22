@@ -4,7 +4,6 @@ System.nodeRequire = require;  // make this available to modules running in node
 System.config({map: {'traceur': './lib/traceur.min.js'}});
 System.config({
   packages: {
-    "MmlTree/js": {},
     "TreeJax/lib": {
       map: {
         fs: "../../lib/fs.js",

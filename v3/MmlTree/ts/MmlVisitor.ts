@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {TextNode, XMLNode} from './MmlNode';
-import {MmlFactory} from './MmlFactory';
-import {Visitor} from './Visitor';
+import {TextNode, XMLNode} from './MmlNode.js';
+import {MmlFactory} from './MmlFactory.js';
+import {Visitor} from './Visitor.js';
 
 /*****************************************************************/
 /*

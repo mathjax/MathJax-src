@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../Node';
-import {AMmlTokenNode, MmlNode, IMmlNode, AttributeList, TEXCLASS} from '../MmlNode';
-import {MmlMrow} from './mrow';
+import {PropertyList} from '../Node.js';
+import {AMmlTokenNode, MmlNode, IMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {MmlMrow} from './mrow.js';
 
 /*
  * Types needed for the operator dictionary

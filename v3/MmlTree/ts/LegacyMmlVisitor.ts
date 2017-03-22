@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlVisitor} from './MmlVisitor';
-import {MmlNode, TextNode, XMLNode} from './MmlNode';
+import {MmlVisitor} from './MmlVisitor.js';
+import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
 
 /*
  *  Get access to legacy MML Element Jax

@@ -24,9 +24,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SerializedMmlVisitor} from './SerializedMmlVisitor';
-import {MmlNode, TextNode, XMLNode} from './MmlNode';
-import {PropertyList} from './Node';
+import {SerializedMmlVisitor} from './SerializedMmlVisitor.js';
+import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
+import {PropertyList} from './Node.js';
 
 /*****************************************************************/
 /*

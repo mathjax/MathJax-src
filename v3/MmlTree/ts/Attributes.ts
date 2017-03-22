@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList, Property} from './Node';
+import {PropertyList, Property} from './Node.js';
 
 /*
  * A constant for when a property shoudl be inherited from the global defaults lists

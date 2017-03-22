@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../Node';
-import {AMmlBaseNode, MmlNode} from '../MmlNode';
-import {INHERIT} from '../Attributes';
+import {PropertyList} from '../Node.js';
+import {AMmlBaseNode, MmlNode} from '../MmlNode.js';
+import {INHERIT} from '../Attributes.js';
 
 /*****************************************************************/
 /*

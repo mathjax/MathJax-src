@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../Node';
-import {AMmlTokenNode, TEXCLASS} from '../MmlNode';
+import {PropertyList} from '../Node.js';
+import {AMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
