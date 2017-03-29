@@ -10,20 +10,23 @@ require("../../legacy/jax/element/mml/jax.js");
 require("../../legacy/jax/input/AsciiMath/config.js");
 require("../../legacy/jax/input/AsciiMath/jax.js");
 
-require("../../legacy/jax/element/JSON.js");
+require("../../legacy/jax/element/MmlNode.js");
 
-var Tree = require("../../../TreeJax/lib/tree.js").Tree;
+var MmlFactory = require("../../../MmlTree/js/MmlFactory.js").MmlFactory;
+var factory = new MmlFactory();
 
 exports.LegacyAsciiMath = {
   Compile: function (am,display) {
-    return Tree.parse(this.Translate(am,display));
-  },
-  Translate: function (am,display) {
     var script = {
       type:"math/asciimath",
       innerText: am,
       MathJax: {}
     };
-    return MathJax.InputJax.AsciiMath.Translate(script).root.toJSON();
+    var node = MathJax.InputJax.AsciiMath.Translate(script).root.toMmlNode(factory);
+    node.setInheritedAttributes();
+    return node;
+  },
+  Translate: function (am,display) {
+    return this.Compile(am,display);
   }
 };

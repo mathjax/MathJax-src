@@ -101,7 +101,7 @@ exports.LegacyCHTML = {
   Typeset: function (math,html) {
     if (!ready.called) MathJax.Hub.RestartAfter(ready);
     HTML.setDocument(html.document);
-    var mml = visitor.visitTree(math.tree.root);
+    var mml = visitor.visitTree(math.root);
     var metrics = math.metrics;
     var jax = {
       CHTML: {

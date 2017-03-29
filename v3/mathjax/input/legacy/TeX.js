@@ -28,17 +28,11 @@ require("../../legacy/extensions/TeX/HTML.js");
 
 require("../../legacy/jax/element/MmlNode.js");
 
-var Tree = require("../../../TreeJax/lib/tree.js").Tree;
 var MmlFactory = require("../../../MmlTree/js/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 
 exports.LegacyTeX = {
   Compile: function (tex,display) {
-    var tree = new Tree();
-    tree.setRoot(this.Translate(tex,display));
-    return tree;
-  },
-  Translate: function (tex,display) {
     var script = {
       type:"math/tex"+(display?"; mode=display":""),
       innerText: tex,
@@ -47,5 +41,8 @@ exports.LegacyTeX = {
     var node = MathJax.InputJax.TeX.Translate(script).root.toMmlNode(factory);
     node.setInheritedAttributes();
     return node;
+  },
+  Translate: function (tex,display) {
+    return this.Compile(tex,display);
   }
 };

@@ -6,7 +6,7 @@ export class MathItem {
     this.display = display;
     this.start = start;
     this.end = end;
-    this.tree = null;
+    this.root = null;
     this.typeset = null;
     this.state = STATE.UNPROCESSED;
     this.metrics = {};
@@ -17,7 +17,7 @@ export class MathItem {
   
   Compile(document) {
     if (this.State() < STATE.COMPILED) {
-      this.tree = this.inputJax.Compile(this.math,this.display);
+      this.root = this.inputJax.Compile(this.math,this.display);
       this.State(STATE.COMPILED);
     }
   }

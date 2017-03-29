@@ -71,9 +71,8 @@ require("../../legacy/jax/input/MathML/entities/z.js");
 require("../../legacy/jax/element/MmlNode.js");
 
 var window = require("../../util/document.js").window;
-var Tree = require("../../../TreeJax/lib/tree.js").Tree;
-var MmlFactory = require ("../../../MmlTree/js/MmlFactory.js").MmlFactory;
 
+var MmlFactory = require("../../../MmlTree/js/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 
 MathJax.InputJax.MathML.Augment({
@@ -102,11 +101,6 @@ MathJax.InputJax.MathML.Augment({
 
 exports.LegacyMathML = {
   Compile: function (mml,display) {
-    var tree = new Tree();
-    tree.setRoot(this.Translate(mml,display));
-    return tree;
-  },
-  Translate: function (mml,display) {
     var script = {
       type:"math/mml",
       innerText: mml,
@@ -115,5 +109,8 @@ exports.LegacyMathML = {
     var node = MathJax.InputJax.MathML.Translate(script).root.toMmlNode(factory);
     node.setInheritedAttributes();
     return node;
+  },
+  Translate: function (mml,display) {
+    return this.Compile(mml,display);
   }
 };
