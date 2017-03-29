@@ -68,13 +68,43 @@ require("../../legacy/jax/input/MathML/entities/x.js");
 require("../../legacy/jax/input/MathML/entities/y.js");
 require("../../legacy/jax/input/MathML/entities/z.js");
 
-require("../../legacy/jax/element/JSON.js");
+require("../../legacy/jax/element/MmlNode.js");
 
+var window = require("../../util/document.js").window;
 var Tree = require("../../../TreeJax/lib/tree.js").Tree;
+var MmlFactory = require ("../../../MmlTree/js/MmlFactory.js").MmlFactory;
+
+var factory = new MmlFactory();
+
+MathJax.InputJax.MathML.Augment({
+  createParser: function () {
+    if (window.DOMParser) {
+      this.parser = new window.DOMParser();
+      return(this.parseDOM);
+    } else if (window.ActiveXObject) {
+      this.parser = this.createMSParser();
+      if (!this.parser) {
+        MathJax.Localization.Try(this.parserCreationError); 
+        return(this.parseError);
+      }
+      this.parser.async = false;
+      return(this.parseMS);
+    }
+    this.div = MathJax.Hub.Insert(document.createElement("div"),{
+         style:{visibility:"hidden", overflow:"hidden", height:"1px",
+                position:"absolute", top:0}
+    });
+    if (!document.body.firstChild) {document.body.appendChild(this.div)}
+      else {document.body.insertBefore(this.div,document.body.firstChild)}
+    return(this.parseDIV);
+  }
+});
 
 exports.LegacyMathML = {
   Compile: function (mml,display) {
-    return Tree.parse(this.Translate(mml,display));
+    var tree = new Tree();
+    tree.setRoot(this.Translate(mml,display));
+    return tree;
   },
   Translate: function (mml,display) {
     var script = {
@@ -82,6 +112,8 @@ exports.LegacyMathML = {
       innerText: mml,
       MathJax: {}
     };
-    return MathJax.InputJax.MathML.Translate(script).root.toJSON();
+    var node = MathJax.InputJax.MathML.Translate(script).root.toMmlNode(factory);
+    node.setInheritedAttributes();
+    return node;
   }
 };
