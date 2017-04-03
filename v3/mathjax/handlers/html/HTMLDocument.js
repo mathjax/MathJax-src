@@ -103,7 +103,9 @@ export class HTMLDocument extends Document {
   
   TestMath(string,display=true) {
     if (!this.processed.TestMath) {
-      this.math.push(new HTMLMathItem(string,this.InputJax[0],display));
+      let math = new HTMLMathItem(string,this.InputJax[0],display)
+      math.setMetrics(6,14,1000000,1000000,1);
+      this.math.push(math);
       this.processed.TestMath = true;
     }
     return this;
