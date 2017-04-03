@@ -3,7 +3,7 @@ export {MathJax} from "mathjax/mathjax.js";
 
 import "mathjax/handlers/html.js";
 import {LegacyAsciiMath} from "mathjax/input/legacy/AsciiMath.js";
-let Translate = LegacyAsciiMath.Translate;
+let Translate = LegacyAsciiMath.Translate.bind(LegacyAsciiMath);
 
 let html = MathJax.HandlerFor("<html></html>");
 

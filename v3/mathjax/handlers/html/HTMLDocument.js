@@ -56,7 +56,7 @@ export class HTMLDocument extends Document {
               list.push(this.MathItem(math,jax,nodes));
             }
           } else {
-            for (const math of jax.FindMath(this.document.body)) {
+            for (const math of jax.FindMath(container)) {
               let item = new HTMLMathItem(math.math,jax,math.display,math.start,math.end);
               list.push(item);
             }

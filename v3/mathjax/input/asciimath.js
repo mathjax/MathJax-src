@@ -16,10 +16,6 @@ export class AsciiMath extends InputJax {
     return LegacyAsciiMath.Compile(am,display);
   }
   
-  Translate(am,display) {
-    return LegacyAsciiMath.Translate(am,display);
-  }
-  
   FindMath(strings) {
     return this.FindAsciiMath.FindMath(strings);
   }

@@ -17,7 +17,7 @@ export class MathItem {
   
   Compile(document) {
     if (this.State() < STATE.COMPILED) {
-      this.root = this.inputJax.Compile(this.math,this.display);
+      this.root = this.inputJax.Compile(this);
       this.State(STATE.COMPILED);
     }
   }

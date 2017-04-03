@@ -18,7 +18,7 @@ MathJax.HandleRetriesFor(function () {
         .Compile();
 
     let math = html.math.pop();
-    console.log(toMathML(math.tree.getRoot()));
+    console.log(toMathML(math.root));
 
 }).catch(err => {
   console.log(err.message);

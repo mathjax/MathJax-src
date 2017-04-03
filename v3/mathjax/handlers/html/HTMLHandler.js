@@ -23,7 +23,7 @@ export class HTMLHandler extends Handler {
 
   Create(document,options) {
     if (typeof(document) === "string") {
-      document = parser.parseFromString(document, 'text/html')
+      document = parser.parseFromString(document, 'text/html');
     }
     return new HTMLDocument(document,options);
   }

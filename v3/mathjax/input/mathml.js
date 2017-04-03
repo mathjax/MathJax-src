@@ -13,12 +13,8 @@ export class MathML extends InputJax {
     this.FindMathML = this.options.FindMathML || new FindMathML(find);
   }
   
-  Compile(mml,display) {
-    return LegacyMathML.Compile(mml,display);
-  }
-  
-  Translate(mml,display) {
-    return LegacyMathML.Translate(mml,display);
+  Compile(math) {
+    return LegacyMathML.Compile(math.math,math.display);
   }
   
   FindMath(node) {

@@ -12,12 +12,8 @@ export class TeX extends InputJax {
     this.FindTeX = this.options.FindTeX || new FindTeX(find);
   }
   
-  Compile(tex,display) {
-    return LegacyTeX.Compile(tex,display);
-  }
-  
-  Translate(tex,display) {
-    return LegacyTeX.Translate(tex,display);
+  Compile(math) {
+    return LegacyTeX.Compile(math.math,math.display);
   }
   
   FindMath(strings) {
