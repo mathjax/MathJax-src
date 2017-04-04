@@ -8,8 +8,9 @@ let html = MathJax.HandlerFor("<html></html>",{
   InputJax: new MathML()
 });
 
-import {TestMmlVisitor} from 'MmlTree/js/TestMmlVisitor.js';
-let visitor = new TestMmlVisitor();
+import {TestMmlVisitor as MmlVisitor} from 'MmlTree/js/TestMmlVisitor.js';
+//import {SerializedMmlVisitor as MmlVisitor} from 'MmlTree/js/SerializedMmlVisitor.js';
+let visitor = new MmlVisitor();
 let toMathML = function (node) {return visitor.visitTree(node,html.document)};
 
 MathJax.HandleRetriesFor(function () {

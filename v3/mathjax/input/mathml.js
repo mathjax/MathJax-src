@@ -1,8 +1,9 @@
 import {InputJax} from "../core/InputJax.js";
-import {LegacyMathML} from "./legacy/MathML.js";
 import {DefaultOptions,SeparateOptions} from "../util/Options.js";
+import {DOMParser} from "../util/document.js";
 
 import {FindMathML} from "./mathml/FindMathML.js";
+import {MathMLCompile} from "./mathml/js/MathMLCompile.js";
 
 export class MathML extends InputJax {
   
@@ -11,10 +12,18 @@ export class MathML extends InputJax {
     super(mml);
     this.processStrings = false;
     this.FindMathML = this.options.FindMathML || new FindMathML(find);
+    this.MathML = this.options.MathMLCompile || new MathMLCompile();
+    this.parser = this.options.DOMParser || new DOMParser();
   }
   
   Compile(math) {
-    return LegacyMathML.Compile(math.math,math.display);
+    let mml = math.start.node;
+    if (!mml) {
+      let mathml = math.math || '<math></math>';
+      let html = this.parser.parseFromString(mathml, "text/html");
+      mml = html.body.removeChild(html.body.firstChild);
+    }
+    return this.MathML.Compile(mml);
   }
   
   FindMath(node) {
@@ -25,5 +34,7 @@ export class MathML extends InputJax {
 
 MathML.NAME = "MathML";
 MathML.OPTIONS = DefaultOptions({
-  FindMathML: null
+  FindMathML: null,
+  MathMLCompile: null,
+  DOMParser: null
 },InputJax.OPTIONS);
