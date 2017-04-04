@@ -206,4 +206,8 @@ export class MmlInferredMrow extends MmlMrow {
     public get notParent() {
         return true;
     }
+
+    public toString() {
+        return '[' + this.childNodes.join(',') + ']';
+    }
 }

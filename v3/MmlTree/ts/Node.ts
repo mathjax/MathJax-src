@@ -303,6 +303,13 @@ export abstract class ANode implements INode {
         return data;
     }
 
+    /*
+     * Simple string version for debugging, just to get the structure.
+     */
+    public toString() {
+        return this.kind + '(' + this.childNodes.join(',') + ')';
+    }
+
 }
 
 /*********************************************************/
@@ -350,6 +357,13 @@ export abstract class AEmptyNode extends ANode {
     public walkTree(func: (node: Node, data?: any) => void, data?: any) {
         func(this, data);
         return data;
+    }
+
+    /*
+     * Simple string version for debugging, just to get the structure.
+     */
+    public toString() {
+        return this.kind;
     }
 
 }
