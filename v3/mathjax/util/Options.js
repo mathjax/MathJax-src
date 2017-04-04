@@ -107,10 +107,16 @@ export function SelectOptionsFromKeys(options,object) {
 //  Separate options into two sets: the ones having the same keys
 //  as the second object, and the ones that don't.
 //
-export function SeparateOptions(options,object) {
-  let exists = {}, missing = {};
-  for (const key of Object.keys(options||{})) {
-    (object[key] === undefined ? missing : exists)[key] = options[key];
+export function SeparateOptions(options,...objects) {
+  let results = [];
+  for (const object of objects) {
+    let exists = {}, missing = {};
+    for (const key of Object.keys(options||{})) {
+      (object[key] === undefined ? missing : exists)[key] = options[key];
+    }
+    results.push(exists);
+    options = missing;
   }
-  return [missing,exists];
+  results.unshift(options);
+  return results;
 }
