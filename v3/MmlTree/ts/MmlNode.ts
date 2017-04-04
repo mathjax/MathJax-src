@@ -940,6 +940,13 @@ export class TextNode extends AMmlEmptyNode {
         this.text = text;
         return this;
     }
+
+    /*
+     * Just ue the text
+     */
+    toString() {
+        return this.text;
+    }
 }
 
 
@@ -975,5 +982,12 @@ export class XMLNode extends AMmlEmptyNode {
     public setXML(xml: Object) {
         this.xml = xml;
         return this;
+    }
+
+    /*
+     * Just indicate that this is XML data
+     */
+    public toString() {
+        return 'XML data';
     }
 }
