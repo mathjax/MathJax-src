@@ -88,7 +88,7 @@ export class Attributes {
      *                      node (not inherited or defaulted), null otherwise
      */
     public getExplicit(name: string) {
-        if (!(name in this.attributes)) {
+        if (!this.attributes.hasOwnProperty(name)) {
             return undefined;
         }
         return this.attributes[name];
