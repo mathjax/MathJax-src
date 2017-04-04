@@ -52,24 +52,41 @@ export class MmlMtr extends AMmlNode {
         return true;
     }
 
-    //
-    // FIXME: Should be in MathML input jax, not here (if at all)
-    //
-    public appendChild(child: MmlNode) {
-        if (!child.isKind('mtd')) {
-            child = this.factory.create('mtd', {}, [child]);
-        }
-        return super.appendChild(child);
-    }
-
     /*
      * Inherit the mtr attributes
      *
      * @override
      */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+        for (const child of this.childNodes) {
+            if (!child.isKind('mtd')) {
+                this.replaceChild(this.factory.create('mtd'), child)
+                    .appendChild(child);
+            }
+        }
         attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
+    }
+
+    /*
+     * Check that parent is mtable and children are mtd
+     *
+     * @override
+     */
+    protected verifyChildren(options: PropertyList) {
+        if (this.parent && !this.parent.isKind('mtable')) {
+            this.mError(this.kind + ' can only be a child of an mtable', options, true);
+            return;
+        }
+        if (!options['fixMtables']) {
+            for (const child of this.childNodes) {
+                if (!child.isKind('mtd')) {
+                    let mtr = this.replaceChild(this.factory.create('mtr'), child) as MmlNode;
+                    mtr.mError('Children of ' + this.kind + ' must be mtd', options, true);
+                }
+            }
+        }
+        super.verifyChildren(options);
     }
 
     /*

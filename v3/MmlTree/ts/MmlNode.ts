@@ -157,6 +157,22 @@ export interface IMmlNode extends INode {
      * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
      */
     setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
+
+    /*
+     * Replace the current node with an error message (or the name of the node)
+     *
+     * @param {string} message         The error message to use
+     * @param {PropertyList} options   The options telling how much to verify
+     * @param {boolean} short          True means use just the kind if not using full errors
+     */
+    mError(message: string, options: PropertyList, short?: boolean): void;
+
+    /*
+     * Check integrity of MathML structure
+     *
+     * @param {PropertyList} options  The options controlling the check
+     */
+    verifyTree(options?: PropertyList): void;
 }
 
 
@@ -232,6 +248,16 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
             mrow: {groupalign: true},
             mtable: {groupalign: true}
         }
+    };
+    /*
+     * This is the list of options for the verifyTree() method
+     */
+    public static verifyDefaults: PropertyList = {
+        checkArity: true,
+        checkAttributes: false,
+        fullErrors: false,
+        fixMmultiscripts: true,
+        fixMtables: true
     };
 
     /*
@@ -512,9 +538,16 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
         if (arity >= 0 && arity !== Infinity && ((arity === 1 && this.childNodes.length === 0) ||
                                                  (arity !== 1 && this.childNodes.length !== arity))) {
             //
-            // FIXME: should create merror element surrounding this one.
+            //  Make sure there are the right number of child nodes
+            //  (trim them or add empty mrows)
             //
-            throw Error('Incorrect number of child nodes for "' + this.kind + '"');
+            if (arity < this.childNodes.length) {
+                this.childNodes = this.childNodes.slice(0,arity);
+            } else {
+                while (this.childNodes.length < arity) {
+                    this.appendChild(this.factory.create('mrow'));
+                }
+            }
         }
         this.setChildInheritedAttributes(attributes, display, level, prime);
     }
@@ -548,6 +581,83 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
             }
         }
         return updated;
+    }
+
+    /*
+     * Verify the attributes, and that there are the right number of children.
+     * Then verify the children.
+     *
+     * @param {PropertyList} options   The options telling how much to verify
+     */
+    public verifyTree(options: PropertyList = null) {
+        if (options === null) return;
+        this.verifyAttributes(options);
+        let arity = this.arity;
+        if (options['checkArity']) {
+            if (arity >= 0 && arity !== Infinity &&
+                ((arity === 1 && this.childNodes.length === 0) ||
+                 (arity !== 1 && this.childNodes.length !== arity))) {
+                this.mError('Wrong number of children for "' + this.kind + '" node', options, true);
+            }
+        }
+        this.verifyChildren(options);
+    }
+
+    /*
+     * Verify that all the attributes are valid (i.e., have defaults)
+     *
+     * @param {PropertyList} options   The options telling how much to verify
+     */
+    protected verifyAttributes(options: PropertyList) {
+        if (options['checkAttributes']) {
+            const attributes = this.attributes;
+            const bad = [];
+            for (const name of attributes.getExplicitNames()) {
+                if (name.substr(0,5) !== 'data-' && attributes.getDefault(name) === undefined &&
+                    !name.match(/^(?:class|style|id|(?:xlink:)?href)$/)) {
+                    // FIXME: provide a configurable checker for names that are OK
+                    bad.push(name);
+                }
+                // FIXME: add ability to check attribute values?
+            }
+            if (bad.length) {
+                this.mError('Unknown attributes for ' + this.kind + ' node: ' + bad.join(', '), options);
+            }
+        }
+    }
+
+    /*
+     * Verify the children.
+     *
+     * @param {PropertyList} options   The options telling how much to verify
+     */
+    protected verifyChildren(options: PropertyList) {
+        for (const child of this.childNodes) {
+            child.verifyTree(options);
+        }
+    }
+
+    /*
+     * Replace the current node with an error message (or the name of the node)
+     *
+     * @param {string} message         The error message to use
+     * @param {PropertyList} options   The options telling how much to verify
+     */
+    public mError(message: string, options: PropertyList, short: boolean = false) {
+        if (this.parent && this.parent.isKind('merror')) return;
+        let merror = this.factory.create('merror');
+        if (options['fullErrors'] || short) {
+            let mtext = this.factory.create('mtext');
+            let text = this.factory.create('text');
+            text.setText(options['fullErrors'] ? message : this.kind);
+            mtext.appendChild(text)
+            merror.appendChild(mtext);
+            this.parent.replaceChild(merror, this);
+        } else {
+            this.parent.replaceChild(merror, this);
+            merror.appendChild(this);
+        }
+        return merror;
     }
 
 }
@@ -896,7 +1006,7 @@ export abstract class AMmlEmptyNode extends AEmptyNode implements IMmlNode {
     }
 
     /*
-     * No children, so ignore this call.
+     * No children or attributes, so ignore this call.
      *
      * @param {AttributeList} attributes  The list of inheritable attributes (with the node kinds
      *                                    from which they came)
@@ -905,6 +1015,20 @@ export abstract class AMmlEmptyNode extends AEmptyNode implements IMmlNode {
      * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
      */
     public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {}
+
+    /*
+     * No children or attributes, so ignore this call.
+     *
+     * @param {MmlNode} node          The node tree to be checked
+     * @param {PropertyList} options  The opritons for the check
+     */
+    public verifyTree(options: PropertyList) {}
+
+    /*
+     *  @override
+     */
+    public mError(message: string, options: PropertyList, short: boolean = false) {}
+
 }
 
 /*****************************************************************/

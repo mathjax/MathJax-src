@@ -62,6 +62,19 @@ export class MmlMtd extends AMmlBaseNode {
     }
 
     /*
+     * Check that parent is mtr
+     *
+     * @override
+     */
+    protected verifyChildren(options: PropertyList) {
+        if (this.parent && !this.parent.isKind('mtr')) {
+            this.mError(this.kind + ' can only be a child of an mtr or mlabeledtr', options, true);
+            return;
+        }
+        super.verifyChildren(options);
+    }
+
+    /*
      * @override
      */
     public setTeXclass(prev: MmlNode) {

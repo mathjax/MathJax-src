@@ -51,21 +51,64 @@ export class MmlMmultiscripts extends MmlMsubsup {
 
     /*
      * Push the inherited values to the base
+     * Make sure the number of pre- and post-scripts are even by adding mrows, if needed.
      * For the scripts, use displaystyle = false, scriptlevel + 1, and
-     *   set the primestyle in the subscripts
+     *   set the primestyle in the subscripts.
      *
      * @override
      */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
-        let n = 0;
-        for (const child of this.childNodes.slice(1)) {
-            if (!child.isKind('mprescripts')) {
+        let prescripts = false;
+        for (let i = 1, n = 0; i < this.childNodes.length; i++) {
+            let child = this.childNodes[i];
+            if (child.isKind('mprescripts')) {
+                if (!prescripts) {
+                    prescripts = true;
+                    if (i % 2 === 0) {
+                        let mrow = this.factory.create('mrow');
+                        this.childNodes.splice(i, 0, mrow);
+                        mrow.parent = this;
+                        i++;
+                    }
+                }
+            } else {
                 let primestyle = prime || (n % 2 === 0);
                 child.setInheritedAttributes(attributes, false, level + 1, primestyle);
                 n++;
             }
         }
+        if (this.childNodes.length % 2 === (prescripts ? 1 : 0)) {
+            this.appendChild(this.factory.create('mrow'));
+            this.childNodes[this.childNodes.length-1].setInheritedAttributes(attributes, false, level + 1, prime);
+        }
+    }
+
+    /*
+     * Check that mprescripts only occurs once, and that the number of pre- and post-scripts are even.
+     *
+     * @override
+     */
+    protected verifyChildren(options: PropertyList) {
+        let prescripts = false;
+        let fix = options['fixMmultiscripts'];
+        for (let i = 0; i < this.childNodes.length; i++) {
+            let child = this.childNodes[i];
+            if (child.isKind('mprescripts')) {
+                if (prescripts) {
+                    child.mError(child.kind + ' can only appear once in ' + this.kind, options, true);
+                } else {
+                    prescripts = true;
+                    if (i % 2 === 0 && !fix) {
+                        this.mError('There must be an equal number of prescripts of each type', options);
+                    }
+                }
+            }
+        }
+        if (this.childNodes.length % 2 == (prescripts ? 1 : 0) && !fix) {
+            this.mError('There must be an equal number of scripts of each type', options);
+        }
+        super.verifyChildren(options);
     }
 }
 
@@ -92,6 +135,18 @@ export class MmlMprescripts extends AMmlNode {
     public get arity() {
         return 0;
     }
+
+    /*
+     * Check that parent is mmultiscripts
+     *
+     * @override
+     */
+    public verifyTree(options: PropertyList) {
+        super.verifyTree(options);
+        if (this.parent && !this.parent.isKind('mmultiscripts')) {
+            this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
+        }
+    }
 }
 
 /*****************************************************************/
@@ -116,5 +171,17 @@ export class MmlNone extends AMmlNode {
      */
     public get arity() {
         return 0;
+    }
+
+    /*
+     * Check that parent is mmultiscripts
+     *
+     * @override
+     */
+    public verifyTree(options: PropertyList) {
+        super.verifyTree(options);
+        if (this.parent && !this.parent.isKind('mmultiscripts')) {
+            this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
+        }
     }
 }

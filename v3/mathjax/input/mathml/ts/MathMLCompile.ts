@@ -1,28 +1,36 @@
 import {MmlFactory} from "../../../../MmlTree/js/MmlFactory.js";
-import {MmlNode, AMmlTokenNode, TEXCLASS} from "../../../../MmlTree/js/MmlNode.js";
+import {MmlNode, AMmlNode, AMmlTokenNode, TEXCLASS} from "../../../../MmlTree/js/MmlNode.js";
 import {OptionList, DefaultOptions, UserOptions} from "../../../util/Options.js";
 
 export class MathMLCompile {
     public static OPTIONS: OptionList = {
         MmlFactory: null,
         fixMisplacedChildren: true,
-        verifyStructure: true,
+        verify: {},
         translateEntities: true
+    };
+
+    public static VERIFY: OptionList = {
+        ...AMmlNode.verifyDefaults
     };
 
     protected factory: MmlFactory;
     protected options: OptionList;
 
     constructor(options: OptionList = {}) {
-        this.options = UserOptions(DefaultOptions({},(this.constructor as typeof MathMLCompile).OPTIONS),options);
+        const Class = this.constructor as typeof MathMLCompile;
+        this.options = UserOptions(DefaultOptions({}, Class.OPTIONS), options);
+        if (this.options['verify']) {
+            this.options['verify'] = UserOptions(DefaultOptions({}, Class.VERIFY), this.options['verify']);
+        }
         this.factory = this.options['MmlFactory'] || new MmlFactory();
     }
 
     public Compile(node: HTMLElement) {
         let mml = this.makeNode(node);
+        mml.verifyTree(this.options['verify']);
         mml.setInheritedAttributes();
         mml.walkTree(this.markMrows);
-        // FIXME:  walk tree to do verification of structure
         return mml;
     }
 
@@ -77,7 +85,7 @@ export class MathMLCompile {
             } else if (mml.isKind('annotation-xml')) {
                 mml.appendChild(this.factory.create('XML').setXML(child));
             } else {
-                let childMml = this.makeNode(child);
+                let childMml = mml.appendChild(this.makeNode(child)) as MmlNode;
                 if (childMml.arity === 0 && child.childNodes.length) {
                     if (this.options['fixMisplacedChildren']) {
                         this.addChildren(mml, child);
@@ -85,7 +93,6 @@ export class MathMLCompile {
                         // FIXME:  Should this produce an error?
                     }
                 }
-                mml.appendChild(childMml);
             }
         }
     }
@@ -98,7 +105,7 @@ export class MathMLCompile {
                 text = this.trimSpace(text);
             }
             mml.appendChild(this.factory.create('text').setText(text));
-        } else {
+        } else if (text.match(/\S/)) {
             this.Error('Unexpected text node "'+text+'"');
         }
     }

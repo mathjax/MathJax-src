@@ -71,26 +71,38 @@ export class MmlMtable extends AMmlNode {
         return true;
     }
 
-    //
-    //  FIXME:  this should be in MathML input jax, not here (if at all)
-    //          (currently, this fixes up bad MathML by adding missing <mtr> nodes
-    //
-    public appendChild(child: MmlNode) {
-        if (!child.isKind('mtr')) {
-            child = this.factory.create('mtr', {}, [child]);
-        }
-        return super.appendChild(child);
-    }
-
     /*
-     *  Inherit the table attributes, and set the display attribute based on the table's displaystyle attribute
+     * Make sure all children are mtr or mlabeledtr nodes
+     * Inherit the table attributes, and set the display attribute based on the table's displaystyle attribute
      *
-     *  @override
+     * @override
      */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+        for (const child of this.childNodes) {
+            if (!child.isKind('mtr')) {
+                this.replaceChild(this.factory.create('mtr'), child)
+                    .appendChild(child);
+            }
+        }
         display = !!(this.attributes.getExplicit('displaystyle') || this.attributes.getDefault('displaystyle'));
         attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
+    }
+
+    /*
+     * Check that children are mtr or mlabeledtr
+     *
+     * @override
+     */
+    protected verifyChildren(options: PropertyList) {
+        if (!options['fixMtables']) {
+            for (const child of this.childNodes) {
+                if (!child.isKind('mtr')) {
+                    this.mError('Children of ' + this.kind + ' must be mtr or mlabeledtr', options);
+                }
+            }
+        }
+        super.verifyChildren(options);
     }
 
     /*

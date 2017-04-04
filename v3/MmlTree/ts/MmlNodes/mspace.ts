@@ -47,6 +47,13 @@ export class MmlMspace extends AMmlTokenNode {
     }
 
     /*
+     * @return {number}  mspace can't have children
+     */
+    public get arity() {
+        return 0;
+    }
+
+    /*
      * @override
      */
     public get isSpacelike() {

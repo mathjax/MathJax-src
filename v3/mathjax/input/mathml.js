@@ -8,11 +8,11 @@ import {MathMLCompile} from "./mathml/js/MathMLCompile.js";
 export class MathML extends InputJax {
   
   constructor(options) {
-    let [mml,find] = SeparateOptions(options,FindMathML.OPTIONS);
+    let [mml,find,compile] = SeparateOptions(options,FindMathML.OPTIONS,MathMLCompile.OPTIONS);
     super(mml);
     this.processStrings = false;
     this.FindMathML = this.options.FindMathML || new FindMathML(find);
-    this.MathML = this.options.MathMLCompile || new MathMLCompile();
+    this.MathML = this.options.MathMLCompile || new MathMLCompile(compile);
     this.parser = this.options.DOMParser || new DOMParser();
   }
   
