@@ -1,10 +1,12 @@
 import {MmlFactory} from "../../../../MmlTree/js/MmlFactory.js";
+import {MmlEntities} from "./MmlEntities.js";
 import {MmlNode, AMmlNode, AMmlTokenNode, TEXCLASS} from "../../../../MmlTree/js/MmlNode.js";
 import {OptionList, DefaultOptions, UserOptions} from "../../../util/Options.js";
 
 export class MathMLCompile {
     public static OPTIONS: OptionList = {
         MmlFactory: null,
+        MmlEntities: null,
         fixMisplacedChildren: true,
         verify: {},
         translateEntities: true
@@ -15,6 +17,7 @@ export class MathMLCompile {
     };
 
     protected factory: MmlFactory;
+    protected entities: MmlEntities;
     protected options: OptionList;
 
     constructor(options: OptionList = {}) {
@@ -24,6 +27,7 @@ export class MathMLCompile {
             this.options['verify'] = UserOptions(DefaultOptions({}, Class.VERIFY), this.options['verify']);
         }
         this.factory = this.options['MmlFactory'] || new MmlFactory();
+        this.entities = this.options['MmlEntities'] || new MmlEntities();
     }
 
     public Compile(node: HTMLElement) {
@@ -101,7 +105,7 @@ export class MathMLCompile {
         let text = child.nodeValue;
         if ((mml.isToken || mml.getProperty('isChars')) && mml.arity) {
             if (mml.isToken) {
-                // FIXME:  translate entities
+                text = this.entities.translate(text);
                 text = this.trimSpace(text);
             }
             mml.appendChild(this.factory.create('text').setText(text));
