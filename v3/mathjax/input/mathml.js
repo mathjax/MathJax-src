@@ -18,10 +18,18 @@ export class MathML extends InputJax {
   
   Compile(math) {
     let mml = math.start.node;
-    if (!mml) {
+    if (!mml || this.options.forceReparse) {
       let mathml = math.math || '<math></math>';
-      let html = this.parser.parseFromString(mathml, "text/html");
-      mml = html.body.removeChild(html.body.firstChild);
+      let doc = this.parser.parseFromString(mathml, "text/" + this.options.parseAs);
+      let err = doc.querySelector('parsererror');
+      if (err) {
+        this.options.parseError.call(this,err);
+      }
+      if (doc.body) {
+        mml = doc.body.removeChild(html.body.firstChild);
+      } else {
+        mml = doc.removeChild(doc.firstChild);
+      }
     }
     return this.MathML.Compile(mml);
   }
@@ -30,11 +38,18 @@ export class MathML extends InputJax {
     return this.FindMathML.FindMath(node);
   }
   
+  Error(message) {
+    throw new Error(message);
+  }
+  
 };
 
 MathML.NAME = "MathML";
 MathML.OPTIONS = DefaultOptions({
+  parseAs: 'xml',
+  forceReparse: false,
   FindMathML: null,
   MathMLCompile: null,
-  DOMParser: null
+  DOMParser: null,
+  parseError: function (node) {this.Error(node.textContent.replace(/\n.*/g,''))}
 },InputJax.OPTIONS);
