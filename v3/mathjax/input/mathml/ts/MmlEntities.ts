@@ -1,14 +1,52 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Converts named entities to unicode characters
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {RetryAfter} from '../../../util/Retries.js';
 import {AsyncLoad} from '../../../util/AsyncLoad.js';
 import {OptionList, DefaultOptions, UserOptions} from '../../../util/Options.js';
 
+/*
+ * The type for lists of entities
+ */
 export type EntityList = {[name: string]: string};
 
+
+/********************************************************************/
+/*
+ *  The class for converting entities to characters
+ */
+
 export class MmlEntities {
+    /*
+     *  Options controlling the process of conversion
+     */
     public static OPTIONS: OptionList = {
-        loadMissingEntities: true
+        loadMissingEntities: true           // True means load entity files dynamically if needed
     };
 
+    /*
+     *  The entity name-to-value translation table
+     */
     public static ENTITIES: EntityList = {
         ApplyFunction: '\u2061',
         Backslash: '\u2216',
@@ -415,44 +453,93 @@ export class MmlEntities {
         zigrarr: '\u21DD'
     };
 
+    /*
+     * The files that have been loaded
+     */
     protected static loaded: {[name: string]: boolean} = {};
 
+    /*
+     * The options for this entity translator
+     */
+    protected options: OptionList;
+
+    /*
+     * Cache for the replace function bound to this object
+     */
+    protected REPLACE: (match: string, entity: string) => string;
+
+    /*
+     * Used by entity files to add more entities to the table
+     *
+     * @param {EntityList} entities  The entities to add
+     * @param {string} file          The name of the file that they came from
+     */
     public static add(entities: EntityList, file: string) {
-        Object.assign(this.ENTITIES,entities);
+        Object.assign(this.ENTITIES, entities);
         this.loaded[file] = true;
     }
 
+    /*
+     * Used to remove an entity from the list, if needed
+     *
+     * @param {string} entity  The name of the entity to remove
+     */
     public static remove(entity: string) {
         delete this.ENTITIES[entity];
     }
 
-    protected options: OptionList;
-
+    /*
+     * Create the translator and save its options
+     *
+     * @param {OptionList} options  The options to apply to this translator
+     */
     public constructor(options: OptionList = {}) {
         this.options = UserOptions(DefaultOptions({}, (this.constructor as typeof MmlEntities).OPTIONS), options);
+        this.REPLACE = this.replace.bind(this);
     }
 
+    /*
+     * @return {EntityList}  The entities table
+     */
     protected get entities() {
         return (this.constructor as typeof MmlEntities).ENTITIES;
     }
 
+    /*
+     * @return {{[name: string]: boolean}}  The table of loaded files
+     */
     protected get loaded() {
         return (this.constructor as typeof MmlEntities).loaded;
     }
 
+    /*
+     * @param {string} text  The text whose entities are to be replaced
+     * @return {string}      The text with entiries replaced
+     */
     public translate(text: string) {
-        return text.replace(/&([a-z][a-z0-9]*);/ig,this.replace.bind(this));
+        return text.replace(/&([a-z][a-z0-9]*);/ig, this.REPLACE);
     }
 
+    /*
+     * Returns the unicode character for an entity, if found
+     * If not, loads an entity file to see if it is there (and retries after loading)
+     * Otherwire, returns the original entity string
+     *
+     * @param {string} match   The complete entity being replaced
+     * @param {string} entity  The name of the entity to be replaced
+     * @return {string}        The unicode character for the entity, or the entity name (if none found)
+     */
     protected replace(match: string, entity: string) {
         let entities = this.entities;
-        if (entities[entity]) return entities[entity];
+        if (entities[entity]) {
+            return entities[entity];
+        }
         if (this.options['loadMissingEntities']) {
             let file = (entity.match(/^[a-zA-Z](fr|scr|opf)$/) ? RegExp.$1 : entity.charAt(0).toLowerCase());
             let loaded = this.loaded;
             if (!loaded[file]) {
                 loaded[file] = true;
-                RetryAfter(AsyncLoad('mathjax/input/mathml/js/entities/' + file + ".js"));
+                RetryAfter(AsyncLoad('mathjax/input/mathml/js/entities/' + file + '.js'));
             }
         }
         return match;
