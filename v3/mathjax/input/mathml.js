@@ -21,17 +21,32 @@ export class MathML extends InputJax {
     if (!mml || this.options.forceReparse) {
       let mathml = math.math || '<math></math>';
       let doc = this.parser.parseFromString(mathml, "text/" + this.options.parseAs);
-      let err = doc.querySelector('parsererror');
-      if (err) {
-        this.options.parseError.call(this,err);
-      }
+      doc = this.checkForErrors(doc);
       if (doc.body) {
-        mml = doc.body.removeChild(html.body.firstChild);
+        if (doc.body.childNodes.length !== 1) {
+          this.Error('MathML must consist of a single element');
+        }
+        mml = doc.body.removeChild(doc.body.firstChild);
       } else {
         mml = doc.removeChild(doc.firstChild);
       }
+      if (mml.nodeName.toLowerCase().replace(/^[a-z]+:/,"") !== "math") {
+        this.Error('MathML must be formed by a <math> element, not <' +
+                      mml.nodeName.toLowerCase() + '>');
+      }
     }
     return this.MathML.Compile(mml);
+  }
+  
+  checkForErrors(doc) {
+    let err = doc.querySelector('parsererror');
+    if (err) {
+      if (err.textContent === '') {
+        this.Error('Error processing MathML');
+      }
+      this.options.parseError.call(this,err);
+    }
+    return doc;
   }
   
   FindMath(node) {
@@ -39,6 +54,7 @@ export class MathML extends InputJax {
   }
   
   Error(message) {
+    // FIXME:  should this be creating merror nodes instead?
     throw new Error(message);
   }
   
@@ -46,7 +62,7 @@ export class MathML extends InputJax {
 
 MathML.NAME = "MathML";
 MathML.OPTIONS = DefaultOptions({
-  parseAs: 'xml',
+  parseAs: 'html',
   forceReparse: false,
   FindMathML: null,
   MathMLCompile: null,
