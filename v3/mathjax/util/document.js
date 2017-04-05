@@ -14,10 +14,16 @@ try {
   //
   //  Node version
   //
-  var jsdom = System.nodeRequire("jsdom").jsdom;
-  exports.document = jsdom();
+  var jsdom = System.nodeRequire("jsdom");
+  
+  function XMLSerializer() {}
+  XMLSerializer.prototype.serializeToString = function (node) {
+    return jsdom.serializeDocument(node);
+  };
+  
+  exports.document = jsdom.jsdom();
   exports.window = exports.document.defaultView;
   exports.DOMParser = exports.window.DOMParser;
-  exports.XMLSerializer = exports.window.XMLSerializer;
+  exports.XMLSerializer = XMLSerializer;
 
 }
