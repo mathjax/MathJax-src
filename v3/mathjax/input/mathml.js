@@ -1,6 +1,7 @@
 import {InputJax} from "../core/InputJax.js";
 import {DefaultOptions,SeparateOptions} from "../util/Options.js";
 import {DOMParser} from "../util/document.js";
+import {FunctionList} from "../util/FunctionList.js";
 
 import {FindMathML} from "./mathml/FindMathML.js";
 import {MathMLCompile} from "./mathml/js/MathMLCompile.js";
@@ -14,12 +15,13 @@ export class MathML extends InputJax {
     this.FindMathML = this.options.FindMathML || new FindMathML(find);
     this.MathML = this.options.MathMLCompile || new MathMLCompile(compile);
     this.parser = this.options.DOMParser || new DOMParser();
+    this.mmlFilters = new FunctionList();
   }
   
   Compile(math) {
     let mml = math.start.node;
     if (!mml || this.options.forceReparse) {
-      let mathml = math.math || '<math></math>';
+      let mathml = this.executeFilters(this.preFilters, math, math.math || '<math></math>');
       let doc = this.parser.parseFromString(mathml, "text/" + this.options.parseAs);
       doc = this.checkForErrors(doc);
       if (doc.body) {
@@ -35,7 +37,15 @@ export class MathML extends InputJax {
                       mml.nodeName.toLowerCase() + '>');
       }
     }
-    return this.MathML.Compile(mml);
+    mml = this.executeFilters(this.mmlFilters, math, mml);
+    return this.executeFilters(this.postFilters, math, this.MathML.Compile(mml));
+    return data.root;
+  }
+  
+  executeFilters(filters,math,data) {
+    let args = {math: math, data: data};
+    filters.Execute(args);
+    return args.data;
   }
   
   checkForErrors(doc) {

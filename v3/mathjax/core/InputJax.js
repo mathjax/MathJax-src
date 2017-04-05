@@ -1,4 +1,5 @@
 import {UserOptions, DefaultOptions} from '../util/Options.js';
+import {FunctionList} from '../util/FunctionList.js';
 
 export class InputJax {
   
@@ -6,6 +7,8 @@ export class InputJax {
     this.name = this.constructor.NAME;
     this.processStrings = true;
     this.options = UserOptions(DefaultOptions({},this.constructor.OPTIONS),options);
+    this.preFilters = new FunctionList();
+    this.postFilters = new FunctionList();
   }
   
   FindMath(node,options) {
