@@ -542,7 +542,7 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
             //  (trim them or add empty mrows)
             //
             if (arity < this.childNodes.length) {
-                this.childNodes = this.childNodes.slice(0,arity);
+                this.childNodes = this.childNodes.slice(0, arity);
             } else {
                 while (this.childNodes.length < arity) {
                     this.appendChild(this.factory.create('mrow'));
@@ -590,7 +590,9 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
      * @param {PropertyList} options   The options telling how much to verify
      */
     public verifyTree(options: PropertyList = null) {
-        if (options === null) return;
+        if (options === null) {
+            return;
+        }
         this.verifyAttributes(options);
         let arity = this.arity;
         if (options['checkArity']) {
@@ -613,7 +615,7 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
             const attributes = this.attributes;
             const bad = [];
             for (const name of attributes.getExplicitNames()) {
-                if (name.substr(0,5) !== 'data-' && attributes.getDefault(name) === undefined &&
+                if (name.substr(0, 5) !== 'data-' && attributes.getDefault(name) === undefined &&
                     !name.match(/^(?:class|style|id|(?:xlink:)?href)$/)) {
                     // FIXME: provide a configurable checker for names that are OK
                     bad.push(name);
@@ -644,13 +646,15 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
      * @param {PropertyList} options   The options telling how much to verify
      */
     public mError(message: string, options: PropertyList, short: boolean = false) {
-        if (this.parent && this.parent.isKind('merror')) return;
+        if (this.parent && this.parent.isKind('merror')) {
+            return;
+        }
         let merror = this.factory.create('merror');
         if (options['fullErrors'] || short) {
             let mtext = this.factory.create('mtext');
             let text = this.factory.create('text');
             text.setText(options['fullErrors'] ? message : this.kind);
-            mtext.appendChild(text)
+            mtext.appendChild(text);
             merror.appendChild(mtext);
             this.parent.replaceChild(merror, this);
         } else {
@@ -1068,7 +1072,7 @@ export class TextNode extends AMmlEmptyNode {
     /*
      * Just ue the text
      */
-    toString() {
+    public toString() {
         return this.text;
     }
 }

@@ -80,7 +80,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
         }
         if (this.childNodes.length % 2 === (prescripts ? 1 : 0)) {
             this.appendChild(this.factory.create('mrow'));
-            this.childNodes[this.childNodes.length-1].setInheritedAttributes(attributes, false, level + 1, prime);
+            this.childNodes[this.childNodes.length - 1].setInheritedAttributes(attributes, false, level + 1, prime);
         }
     }
 
@@ -105,7 +105,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
                 }
             }
         }
-        if (this.childNodes.length % 2 == (prescripts ? 1 : 0) && !fix) {
+        if (this.childNodes.length % 2 === (prescripts ? 1 : 0) && !fix) {
             this.mError('There must be an equal number of scripts of each type', options);
         }
         super.verifyChildren(options);
