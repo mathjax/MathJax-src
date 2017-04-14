@@ -1,5 +1,6 @@
 import {OutputJax} from "../core/OutputJax.js";
 import {LegacyCHTML} from "./legacy/CommonHTML.js";
+import {DefaultOptions} from "../util/Options.js";
 
 export class CHTML extends OutputJax {
 
@@ -25,3 +26,6 @@ export class CHTML extends OutputJax {
   }
 
 };
+
+CHTML.NAME = "CHTML";
+CHTML.OPTIONS = DefaultOptions({},OutputJax.OPTIONS);

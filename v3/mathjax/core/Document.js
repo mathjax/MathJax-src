@@ -1,9 +1,12 @@
+import {UserOptions, DefaultOptions} from "../util/Options.js";
+import {InputJax} from "./InputJax.js";
+import {OutputJax} from "./OutputJax.js";
 
 export class Document {
-  constructor (document,type,options) {
+  constructor (document,options) {
     this.document = document;
-    this.type = type;
-    this.options = options;
+    this.type = this.constructor.type;
+    this.options = UserOptions(DefaultOptions({},this.constructor.OPTIONS),options);
     this.math = [];
     this.processed = {
       FindMath: false,
@@ -13,30 +16,56 @@ export class Document {
       AddEventHandlers: false,
       UpdateDocument: false
     };
+    this.InputJax = this.options["InputJax"] || new InputJax();
+    this.OutputJax = this.options["OutputJax"] || new OutputJax();
+    if (!Array.isArray(this.InputJax)) this.InputJax = [this.InputJax];
   }
   
   FindMath(options) {
     this.processed.FindMath = true;
     return this;
   }
+  
   Compile(options) {
-    this.processed.Compile = true;
+    if (!this.processed.Compile) {
+      for (let i = 0, m = this.math.length; i < m; i++) {
+        if (this.math[i]) this.math[i].Compile(this);
+      }
+      this.processed.Compile = true;
+    }
     return this;
   }
+
   Typeset(options) {
-    this.processed.Typeset = true;
+    if (!this.processed.Typeset) {
+      for (let i = 0, m = this.math.length; i < m; i++) {
+        if (this.math[i]) this.math[i].Typeset(this);
+      }
+      this.processed.Typeset = true;
+    }
     return this;
   }
+
   GetMetrics() {
-    this.process.GetMetrics = true;
+    if (!this.processed.GetMetrics) {
+      this.OutputJax.GetMetrics(this);
+      this.processed.GetMetrics = true;
+    }
     return this;
   }
+
   AddEventHandlers() {
-    this.process.AddEventHandlers = true;
+    this.processed.AddEventHandlers = true;
     return this;
   }
+
   UpdateDocument() {
-    this.processed.UpdateDocument = true;
+    if (!this.processed.UpdateDocument) {
+      for (let i = 0, m = this.math.length; i < m; i++) {
+        if (this.math[i]) this.math[i].UpdateDocument(this);
+      }
+      this.processed.UpdateDocument = true;
+    }
     return this;
   }
   
@@ -46,3 +75,10 @@ export class Document {
   }
   
 };
+
+Document.type = "Document";
+Document.OPTIONS = {
+  OutputJax: null,
+  InputJax: null
+};
+

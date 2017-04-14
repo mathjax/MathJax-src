@@ -1,8 +1,10 @@
+import {UserOptions, DefaultOptions} from '../util/Options.js';
+
 export class OutputJax {
   
-  constructor(name,options = {}) {
-    this.name = name;
-    this.options = options;
+  constructor(options = {}) {
+    this.name = this.constructor.NAME;
+    this.options = UserOptions(DefaultOptions({},this.constructor.OPTIONS),options);
   }
   
   Typeset(math,document,options) {
@@ -10,5 +12,13 @@ export class OutputJax {
   
   GetMetrics(document) {
   }
+  
+  StyleSheet(document) {
+  }
 
+};
+
+OutputJax.NAME = "Generic";
+OutputJax.OPTIONS = {
+  //  (none just yet).
 };
