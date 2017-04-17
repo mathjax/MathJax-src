@@ -22,17 +22,17 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {MmlNode, AMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
-import {INode} from '../Node.js';
+import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {Node} from '../Node.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMtable node class (subclass of AMmlNode)
+ *  Implements the MmlMtable node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMtable extends AMmlNode {
+export class MmlMtable extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AbstractMmlNode.defaults,
         align: 'axis',
         rowalign: 'baseline',
         columnalign: 'center',

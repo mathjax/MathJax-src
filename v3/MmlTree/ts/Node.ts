@@ -30,31 +30,25 @@ import {NodeFactory} from './NodeFactory.js';
 export type Property = string | number | boolean;
 export type PropertyList = {[key: string]: Property};
 
-/*
- *  The basic Node and NodeClass types
- */
-export type Node = INode;
-export type NodeClass = INodeClass;
-
 /*********************************************************/
 /*
  *  The generic Node interface
  */
 
-export interface INode {
+export interface Node {
     readonly kind: string;
     parent: Node;
     childNodes: Node[];
 
     /*
-     * @param {string} name  The name of the property to set
+     * @param {string} name     The name of the property to set
      * @param {Property} value  The value to which the property will be set
      */
     setProperty(name: string, value: Property): void;
 
     /*
-     * @param {string} name  The name of the property to set
-     * @return {Property}  The value of the named property
+     * @param {string} name  The name of the property to get
+     * @return {Property}   The value of the named property
      */
     getProperty(name: string): Property;
 
@@ -76,7 +70,7 @@ export interface INode {
 
     /*
      * @param {string} kind  The type of node to test for
-     * @return {boolean}  True when the node is of the given type
+     * @return {boolean}     True when the node is of the given type
      */
     isKind(kind: string): boolean;
 
@@ -86,33 +80,33 @@ export interface INode {
     setChildren(children: Node[]): void;
 
     /*
-     * @param {Node} child  A node to add to this ones children
-     * @return {Node}  The child node that was added
+     * @param {Node} child  A node to add to this node's children
+     * @return {Node}       The child node that was added
      */
     appendChild(child: Node): Node;
 
     /*
-     * @param {Node} newChild  A child node to be replaced
+     * @param {Node} newChild  A child node to be inserted
      * @param {Node} oldChild  A child node to be replaced
-     * @return {Node}  The old child node that was removed
+     * @return {Node}          The old child node that was removed
      */
     replaceChild(newChild: Node, oldChild: Node): Node;
 
     /*
      * @param {Node} child  A child node whose index in childNodes is desired
-     * @return {number}  The index of the child in childNodes, or null if not found
+     * @return {number}     The index of the child in childNodes, or null if not found
      */
     childIndex(child: Node): number;
 
     /*
      * @param {string} kind  The kind of nodes to be located in the tree
-     * @return {Node[]}  An array of nodes that are children (at any depth) of the given kind
+     * @return {Node[]}      An array of nodes that are children (at any depth) of the given kind
      */
     findNodes(kind: string): Node[];
 
     /*
      * @param {Function} func  A function to apply to each node in the tree rooted at this node
-     * @param {any} data  data to pass to the function (as state information)
+     * @param {any} data       Data to pass to the function (as state information)
      */
     walkTree(func: (node: Node, data?: any) => void, data?: any): void;
 }
@@ -122,7 +116,7 @@ export interface INode {
  *  The generic Node class interface
  */
 
-export interface INodeClass {
+export interface NodeClass {
     /*
      * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
      * @param {PropertyList} properties  Any properties to be added to the node, if any
@@ -137,7 +131,7 @@ export interface INodeClass {
  *  The abstract Node class
  */
 
-export abstract class ANode implements INode {
+export abstract class AbstractNode implements Node {
 
     /*
      * The parent node for this one
@@ -152,7 +146,7 @@ export abstract class ANode implements INode {
     /*
      * The NodeFactory to use to create additional nodes, as needed
      */
-    public factory: NodeFactory = null;
+    protected _factory: NodeFactory = null;
 
     /*
      * The children for this node
@@ -166,16 +160,23 @@ export abstract class ANode implements INode {
      * @return {Node}  The newly created node
      *
      * @constructor
-     * @implements {INode}
+     * @implements {Node}
      */
     constructor(factory: NodeFactory, properties: PropertyList = {}, children: Node[] = []) {
-        this.factory = factory;
+        this._factory = factory;
         for (const name of Object.keys(properties)) {
             this.setProperty(name, properties[name]);
         }
         if (children.length) {
             this.setChildren(children);
         }
+    }
+
+    /*
+     * @override
+     */
+    public get factory () {
+        return this._factory;
     }
 
     /*
@@ -235,9 +236,7 @@ export abstract class ANode implements INode {
      * @override
      */
     public setChildren(children: Node[]) {
-        if (this.childNodes.length) {
-            this.childNodes = [];
-        }
+        this.childNodes = [];
         for (let child of children) {
             this.appendChild(child);
         }
@@ -257,8 +256,11 @@ export abstract class ANode implements INode {
      */
     public replaceChild(newChild: Node, oldChild: Node) {
         let i = this.childIndex(oldChild);
-        this.childNodes[i] = newChild;
-        newChild.parent = this;
+        // If i === null should we error?  return null?  silently fail?
+        if (i !== null) {
+            this.childNodes[i] = newChild;
+            newChild.parent = this;
+        }
         return newChild;
     }
 
@@ -267,14 +269,8 @@ export abstract class ANode implements INode {
      * @override
      */
     public childIndex(node: Node) {
-        let i = 0;
-        for (const child of this.childNodes) {
-            if (child === node) {
-                return i;
-            }
-            i++;
-        }
-        return null;
+        let i = this.childNodes.indexOf(node);
+        return (i === -1 ? null : i);
     }
 
 
@@ -317,7 +313,7 @@ export abstract class ANode implements INode {
  *  The abstract EmptyNode class
  */
 
-export abstract class AEmptyNode extends ANode {
+export abstract class AbstractEmptyNode extends AbstractNode {
     /*
      *  We don't have children, so ignore these methods
      */

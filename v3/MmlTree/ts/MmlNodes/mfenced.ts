@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {MmlNode, AMmlNode, IMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMfenced node class (subclass of AMmlNode)
+ *  Implements the MmlMfenced node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMfenced extends AMmlNode {
+export class MmlMfenced extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AbstractMmlNode.defaults,
         open: '(',
         close: ')',
         separators: ','

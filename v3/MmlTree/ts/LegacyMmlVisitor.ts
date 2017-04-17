@@ -82,7 +82,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
     }
 
     /*
-     * The gneric visiting function:
+     * The generic visiting function:
      *   Create a node of the correct type.
      *   Add its explicit attributes.
      *   Add its non-attribute properties.

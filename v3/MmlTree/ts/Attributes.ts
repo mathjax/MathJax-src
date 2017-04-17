@@ -24,7 +24,7 @@
 import {PropertyList, Property} from './Node.js';
 
 /*
- * A constant for when a property shoudl be inherited from the global defaults lists
+ * A constant for when a property should be inherited from the global defaults lists
  */
 export const INHERIT = '_inherit_';
 
@@ -44,7 +44,7 @@ export class Attributes {
 
     /*
      * @param {PropertyList} defaults  The defaults for this node type
-     * @param {PropertyList} global  The global properties (from the math node)
+     * @param {PropertyList} global    The global properties (from the math node)
      *
      * @constructor
      */
@@ -56,7 +56,7 @@ export class Attributes {
     }
 
     /*
-     * @param {string} name  The name of the attribute to set
+     * @param {string} name     The name of the attribute to set
      * @param {Property} value  The value to give the named attribute
      */
     public set(name: string, value: Property) {
@@ -72,7 +72,7 @@ export class Attributes {
 
     /*
      * @param {string} name  The name of the attribute whose value is to be returned
-     * @return {Property}  The value of the named attribute (including inheritance and defaults)
+     * @return {Property}    The value of the named attribute (including inheritance and defaults)
      */
     public get(name: string) {
         let value = this.attributes[name];
@@ -84,8 +84,8 @@ export class Attributes {
 
     /*
      * @param {string} name  The value of the attribute whose value is to be returned
-     * @return {Property}  The attribute whse name was given if it is explicit on the
-     *                      node (not inherited or defaulted), null otherwise
+     * @return {Property}    The attribute whose name was given if it is explicit on the
+     *                       node (not inherited or defaulted), null otherwise
      */
     public getExplicit(name: string) {
         if (!this.attributes.hasOwnProperty(name)) {
@@ -96,7 +96,7 @@ export class Attributes {
 
     /*
      * @param {string[]} names  The names of attributes whose values are to be returned
-     * @return {PropertyList}  On object containing the attributes and their values
+     * @return {PropertyList}   An object containing the attributes and their values
      */
     public getList(...names: string[]) {
         let values: PropertyList = {};
@@ -116,7 +116,7 @@ export class Attributes {
 
     /*
      * @param {string} name  The name of an inherited attribute whose value is to be returned
-     * @return {Property}  THe value of the named attribute if it is inherited, null otherwise
+     * @return {Property}    The value of the named attribute if it is inherited, null otherwise
      */
     public getInherited(name: string) {
         return this.inherited[name];
@@ -124,7 +124,7 @@ export class Attributes {
 
     /*
      * @param {string} name  The name of a default attribute whose value is to be returned
-     * @return {Property}  THe value of the named attribute if a default exists for it, null otherwise
+     * @return {Property}    The value of the named attribute if a default exists for it, null otherwise
      */
     public getDefault(name: string) {
         return this.defaults[name];
@@ -132,7 +132,7 @@ export class Attributes {
 
     /*
      * @param {string} name  The name of an attribute to test for the existance of a default
-     * @return {boolean}  True of there is a default for the named attribute, false otherwise
+     * @return {boolean}     True of there is a default for the named attribute, false otherwise
      */
     public hasDefault(name: string) {
         return (name in this.defaults);

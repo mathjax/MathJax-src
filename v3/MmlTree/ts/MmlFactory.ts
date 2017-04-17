@@ -21,7 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {NodeFactory} from './NodeFactory.js';
+import {Node, PropertyList} from './Node.js';
+import {AbstractNodeFactory} from './NodeFactory.js';
 import {MmlNodeClass} from './MmlNode.js';
 import {MML} from './MML.js';
 
@@ -30,7 +31,12 @@ import {MML} from './MML.js';
  *  Implements the MmlFactory (subclass of NodeFactory)
  */
 
-export class MmlFactory extends NodeFactory {
+export class MmlFactory extends AbstractNodeFactory {
+    /*
+     * Mark this as containing MmlNodeClass entries
+     */
+    protected nodeMap: Map<string, MmlNodeClass>;
+
     /*
      * @parm {object} nodes  The list of node kinds and classes that can be created
      *                       (defaults to the standard MML nodes)
@@ -41,6 +47,14 @@ export class MmlFactory extends NodeFactory {
     constructor(nodes: {[kind: string]: MmlNodeClass} = MML) {
         super(nodes);
     }
+
+    /*
+     * @override
+     */
+    public getNodeClass(kind: string): MmlNodeClass {
+        return this.nodeMap.get(kind);
+    }
+
     /*
      * @return {object}  The list of node-creation functions (similar to the
      *                   MML object from MathJax v2).

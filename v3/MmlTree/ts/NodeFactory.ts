@@ -28,7 +28,7 @@ import {Node, NodeClass, PropertyList} from './Node.js';
  * The NodeFactory interface
  */
 
-export interface INodeFactory {
+export interface NodeFactory {
     /*
      * @param {string} kind  The kind of node to create
      * @param {PropertyList} properties  The list of initial properties for the node (if any)
@@ -72,7 +72,7 @@ export interface INodeFactory {
  * The generic NodeFactory class
  */
 
-export class NodeFactory implements INodeFactory {
+export abstract class AbstractNodeFactory implements NodeFactory {
     /*
      * The map of node kinds to node classes
      */

@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlNode, AttributeList} from '../MmlNode.js';
+import {AbstractMmlNode, AttributeList} from '../MmlNode.js';
 import {MmlMsubsup} from './msubsup.js';
 
 /*****************************************************************/
@@ -71,12 +71,12 @@ export class MmlMmultiscripts extends MmlMsubsup {
 
 /*****************************************************************/
 /*
- *  Implements the MmlMprescripts node class (subclass of AMmlNode)
+ *  Implements the MmlMprescripts node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMprescripts extends AMmlNode {
+export class MmlMprescripts extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults
+        ...AbstractMmlNode.defaults
     };
 
     /*
@@ -96,12 +96,12 @@ export class MmlMprescripts extends AMmlNode {
 
 /*****************************************************************/
 /*
- *  Implements the MmlNone node class (subclass of AMmlNode)
+ *  Implements the MmlNone node class (subclass of AbstractMmlNode)
  */
 
-export class MmlNone extends AMmlNode {
+export class MmlNone extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults
+        ...AbstractMmlNode.defaults
     };
 
     /*

@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {MmlNode, AMmlNode, IMmlNode, TEXCLASS} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMrow node class (subclass of AMmlNode)
+ *  Implements the MmlMrow node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMrow extends AMmlNode {
+export class MmlMrow extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults
+        ...AbstractMmlNode.defaults
     };
 
     /*
@@ -201,12 +201,15 @@ export class MmlInferredMrow extends MmlMrow {
     }
 
     /*
-     * @return {boolean}  This node is not considered a parent node
+     * @override
      */
     public get notParent() {
         return true;
     }
 
+    /*
+     * Show the child nodes in brackets
+     */
     public toString() {
         return '[' + this.childNodes.join(',') + ']';
     }

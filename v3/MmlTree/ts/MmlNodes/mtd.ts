@@ -22,17 +22,17 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlBaseNode, MmlNode} from '../MmlNode.js';
+import {AbstractMmlBaseNode, MmlNode} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMtd node class (subclass of AMmlBaseNode)
+ *  Implements the MmlMtd node class (subclass of AbstractMmlBaseNode)
  */
 
-export class MmlMtd extends AMmlBaseNode {
+export class MmlMtd extends AbstractMmlBaseNode {
     public static defaults: PropertyList = {
-        ...AMmlBaseNode.defaults,
+        ...AbstractMmlBaseNode.defaults,
         rowspan: 1,
         columnspan: 1,
         rowalign: INHERIT,

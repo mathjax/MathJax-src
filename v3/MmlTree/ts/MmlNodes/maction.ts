@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {MmlNode, AMmlNode, IMmlNode} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMaction node class (subclass of AMmlNode)
+ *  Implements the MmlMaction node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMaction extends AMmlNode {
+export class MmlMaction extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AbstractMmlNode.defaults,
         actiontype: 'toggle',
         selection: 1
     };

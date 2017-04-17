@@ -22,14 +22,8 @@
  */
 
 import {Attributes, INHERIT} from './Attributes.js';
-import {Property, PropertyList, Node, ANode, AEmptyNode, INode, INodeClass} from './Node.js';
+import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass} from './Node.js';
 import {MmlFactory} from './MmlFactory.js';
-
-/*
- *  The basix MmlNode classes
- */
-export type MmlNode = IMmlNode;
-export type MmlNodeClass = IMmlNodeClass;
 
 /*
  *  Used in setInheritedAttrbutes() to pass originating node kind as well as property value
@@ -76,10 +70,10 @@ const TEXSPACE = [
 
 /*****************************************************************/
 /*
- *  The MmlNode interface (extends INode interface)
+ *  The MmlNode interface (extends Node interface)
  */
 
-export interface IMmlNode extends INode {
+export interface MmlNode extends Node {
     /*
      * Test various properties of MathML nodes
      */
@@ -162,10 +156,10 @@ export interface IMmlNode extends INode {
 
 /*****************************************************************/
 /*
- *  The MmlNode class interface (extends the INodeClass)
+ *  The MmlNode class interface (extends the NodeClass)
  */
 
-export interface IMmlNodeClass extends INodeClass {
+export interface MmlNodeClass extends NodeClass {
     /*
      *  The list of default attribute values for nodes of this class
      */
@@ -186,11 +180,11 @@ export interface IMmlNodeClass extends INodeClass {
 
 /*****************************************************************/
 /*
- *  The abstract MmlNode class (extends the ANode class and implements
+ *  The abstract MmlNode class (extends the AbstractNode class and implements
  *  the IMmlNode interface)
  */
 
-export abstract class AMmlNode extends ANode implements IMmlNode {
+export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     /*
      * The properties common to all MathML nodes
      */
@@ -250,6 +244,7 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
      */
     public childNodes: MmlNode[];
     public parent: MmlNode;
+    public factory: MmlFactory;
 
     /*
      *  Create an MmlNode:
@@ -262,13 +257,13 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
     constructor(factory: MmlFactory, attributes: PropertyList = {}, children: MmlNode[] = []) {
         super(factory);
         if (this.arity < 0) {
-            this.childNodes = [factory.create('inferredMrow') as MmlNode];
+            this.childNodes = [factory.create('inferredMrow')];
             this.childNodes[0].parent = this;
         }
         this.setChildren(children);
         this.attributes = new Attributes(
-            (factory.getNodeClass(this.kind) as MmlNodeClass).defaults,
-            (factory.getNodeClass('math') as MmlNodeClass).defaults
+            factory.getNodeClass(this.kind).defaults,
+            factory.getNodeClass('math').defaults
         );
     }
 
@@ -343,6 +338,11 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
         return false;
     }
 
+    /*
+     * If there is an inferred row, the the children of that instead
+     *
+     * @override
+     */
     public setChildren(children: MmlNode[]) {
         if (this.arity < 0) {
             return this.childNodes[0].setChildren(children);
@@ -491,7 +491,7 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
         for (const key of Object.keys(attributes)) {
             if (key in defaults) {
                 let [node, value] = attributes[key];
-                let noinherit = (AMmlNode.noInherit[node] || {})[this.kind] || {};
+                let noinherit = (AbstractMmlNode.noInherit[node] || {})[this.kind] || {};
                 if (!noinherit[key]) {
                     this.attributes.setInherited(key, value);
                 }
@@ -554,16 +554,16 @@ export abstract class AMmlNode extends ANode implements IMmlNode {
 
 /*****************************************************************/
 /*
- *  The abstract MmlNode Token node class (extends the AMmlNode)
+ *  The abstract MmlNode Token node class (extends the AbstractMmlNode)
  */
 
-export abstract class AMmlTokenNode extends AMmlNode {
+export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
 
     /*
      * Add the attributes common to all token nodes
      */
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AbstractMmlNode.defaults,
         mathvariant: 'normal',
         mathsize: INHERIT
     };
@@ -590,26 +590,26 @@ export abstract class AMmlTokenNode extends AMmlNode {
     }
 
     /*
-     * Only inherit to child nodes that are AMmlNodes (not TextNodes)
+     * Only inherit to child nodes that are AbstractMmlNodes (not TextNodes)
      *
      * @override
      */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         for (const child of this.childNodes) {
-            if (child instanceof AMmlNode) {
+            if (child instanceof AbstractMmlNode) {
                 child.setInheritedAttributes(attributes, display, level, prime);
             }
         }
     }
 
     /*
-     * Only step into children that are AMmlNodes (not TextNodes)
+     * Only step into children that are AbstractMmlNodes (not TextNodes)
      * @override
      */
     public walkTree(func: (node: Node, data?: any) => void, data?: any) {
         func(this, data);
         for (const child of this.childNodes) {
-            if (child instanceof AMmlNode) {
+            if (child instanceof AbstractMmlNode) {
                 child.walkTree(func, data);
             }
         }
@@ -621,18 +621,18 @@ export abstract class AMmlTokenNode extends AMmlNode {
 
 /*****************************************************************/
 /*
- *  The abstract MmlNode Layout class (extends the AMmlNode)
+ *  The abstract MmlNode Layout class (extends the AbstractMmlNode)
  *
  *  These have inferred mrows (so only one child) and can be
  *  spacelike or embellished based on their contents.
  */
 
-export abstract class AMmlLayoutNode extends AMmlNode {
+export abstract class AbstractMmlLayoutNode extends AbstractMmlNode {
 
     /*
-     * Use the same defaults as AMmlNodes
+     * Use the same defaults as AbstractMmlNodes
      */
-    public static defaults: PropertyList = AMmlNode.defaults;
+    public static defaults: PropertyList = AbstractMmlNode.defaults;
 
     /*
      * @override
@@ -681,19 +681,19 @@ export abstract class AMmlLayoutNode extends AMmlNode {
 
 /*****************************************************************/
 /*
- *  The abstract MmlNode-with-base-node Class (extends the AMmlNode)
+ *  The abstract MmlNode-with-base-node Class (extends the AbstractMmlNode)
  *
  *  These have a base element and other elemetns, (e.g., script elements for msubsup).
  *  They can be embellished (if their base is), and get their TeX classes
  *    from their base with their scripts being handled as separate math lists.
  */
 
-export abstract class AMmlBaseNode extends AMmlNode {
+export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
 
     /*
-     * Use the same defaults as AMmlNodes
+     * Use the same defaults as AbstractMmlNodes
      */
-    public static defaults: PropertyList = AMmlNode.defaults;
+    public static defaults: PropertyList = AbstractMmlNode.defaults;
 
     /*
      * @override
@@ -745,14 +745,14 @@ export abstract class AMmlBaseNode extends AMmlNode {
 
 /*****************************************************************/
 /*
- *  The abstract MmlNode Empty Class (extends AEmptyNode, implements IMmlNode)
+ *  The abstract MmlNode Empty Class (extends AbstractEmptyNode, implements MmlNode)
  *
  *  These have no children and no attributes (TextNode and XMLNode), so we
  *  override all the methods dealing with them, and with the data that usually
  *  goes with an MmlNode.
  */
 
-export abstract class AMmlEmptyNode extends AEmptyNode implements IMmlNode {
+export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements MmlNode {
 
     /*
      * @return {boolean}  Not a token element
@@ -852,44 +852,41 @@ export abstract class AMmlEmptyNode extends AEmptyNode implements IMmlNode {
 
 
     /*
-     * @return {MmlNode}  No core element
+     * @override
      */
     public core(): MmlNode {
         return this;
     }
 
     /*
-     * @return {MmlNode}  No core <mo>
+     * @override
      */
     public coreMO(): MmlNode {
         return this;
     }
 
     /*
-     * @return {MmlNode}  No core element
+     * @override
      */
     public coreIndex() {
         return 0;
     }
 
     /*
-     * @return {number}  Never gets called, so index doesn't matter
+     * @override
      */
     public childPosition() {
         return 0;
     }
 
     /*
-     * @param {MmlNode} prev  The node that is before this one for TeX spacing purposes
-     *                        (not all nodes count in TeX measurements)
-     * @return {MmlNode}  The node that should be the previous node for the next one
-     *                    in the tree (usually, either the last child, or the node itself)
+     * @override
      */
     public setTeXclass(prev: MmlNode) {
         return prev;
     }
     /*
-     * @return {string}  The spacing to use before this element (one of TEXSPACELENGTH array above)
+     * @override
      */
     public texSpacing() {
         return '';
@@ -898,28 +895,25 @@ export abstract class AMmlEmptyNode extends AEmptyNode implements IMmlNode {
     /*
      * No children, so ignore this call.
      *
-     * @param {AttributeList} attributes  The list of inheritable attributes (with the node kinds
-     *                                    from which they came)
-     * @param {boolean} display           The displaystyle to inherit
-     * @param {number} level              The scriptlevel to inherit
-     * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
+     * @override
      */
     public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {}
+
 }
 
 /*****************************************************************/
 /*
- *  The TextNode Class (extends AMmlEmptyNode)
+ *  The TextNode Class (extends AbstractMmlEmptyNode)
  */
 
-export class TextNode extends AMmlEmptyNode {
+export class TextNode extends AbstractMmlEmptyNode {
     /*
      * The text for this node
      */
     protected text: string = '';
 
     /*
-     * @return {string}  The text kind
+     * @override
      */
     public get kind() {
         return 'text';
@@ -942,27 +936,28 @@ export class TextNode extends AMmlEmptyNode {
     }
 
     /*
-     * Just ue the text
+     * Just use the text
      */
     toString() {
         return this.text;
     }
+
 }
 
 
 /*****************************************************************/
 /*
- *  The XMLNode Class (extends AMmlEmptyNode)
+ *  The XMLNode Class (extends AbstractMmlEmptyNode)
  */
 
-export class XMLNode extends AMmlEmptyNode {
+export class XMLNode extends AbstractMmlEmptyNode {
     /*
      * The XML content for this node
      */
     protected xml: Object = null;
 
     /*
-     * @return {string}  The XML kind
+     * @override
      */
     public get kind() {
         return 'XML';
@@ -990,4 +985,5 @@ export class XMLNode extends AMmlEmptyNode {
     public toString() {
         return 'XML data';
     }
+
 }
