@@ -154,7 +154,7 @@ export class MmlMrow extends AbstractMmlNode {
             // <mrow> came from \left...\right
             //   so treat as subexpression (TeX class INNER).
             // Use prev = null for the initial element in the
-            //   delimiters, since there is nothing previous it
+            //   delimiters, since there is nothing previous to
             //   it in what would be the TeX math list.
             //
             this.getPrevClass(prev);
