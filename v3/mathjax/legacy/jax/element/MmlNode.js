@@ -26,8 +26,9 @@
     },
     nodeMake: function (factory,kind) {
       var node = factory.MML[kind]();
-        for (var i = 0, m = this.data.length; i < m; i++) {
-        var child = this.data[i];
+      var data = (this.data[0] && this.data[0].inferred ? this.data[0].data : this.data);
+      for (var i = 0, m = data.length; i < m; i++) {
+        var child = data[i];
         if (child) node.appendChild(child.toMmlNode(factory));
       }
       this.nodeAddAttributes(node);
