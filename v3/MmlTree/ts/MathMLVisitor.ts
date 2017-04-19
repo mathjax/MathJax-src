@@ -40,7 +40,7 @@ export class MathMLVisitor extends MmlVisitor {
      * Convert the tree rooted at a particular node into DOM nodes.
      *
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
-     * @param {DOcument} document  The document in which the nodes are created
+     * @param {Document} document  The document in which the nodes are created
      * @return {Element}  The MathML DOM nodes representing the internal tree
      */
     public visitTree(node: MmlNode, document: Document) {
@@ -81,7 +81,7 @@ export class MathMLVisitor extends MmlVisitor {
     }
 
     /*
-     * The gneric visiting function:
+     * The generic visiting function:
      *   Create a DOM node of the correct type.
      *   Add its explicit attributes.
      *   Append its children nodes.
