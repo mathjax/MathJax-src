@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, PropertyList} from './Node.js';
-import {AbstractNodeFactory} from './NodeFactory.js';
+import {Node, PropertyList} from '../Tree/Node.js';
+import {AbstractNodeFactory} from '../Tree/NodeFactory.js';
 import {MmlNodeClass} from './MmlNode.js';
 import {MML} from './MML.js';
 

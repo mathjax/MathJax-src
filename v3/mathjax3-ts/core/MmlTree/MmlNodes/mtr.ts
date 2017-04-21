@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList, Node} from '../Node.js';
+import {PropertyList, Node} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from './Node.js';
+import {PropertyList} from '../Tree/Node.js';
 import {MmlVisitor} from './MmlVisitor.js';
 import {MmlFactory} from './MmlFactory.js';
 import {MmlNode, TextNode, XMLNode} from './MmlNode.js';

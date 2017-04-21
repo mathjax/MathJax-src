@@ -22,7 +22,7 @@
  */
 
 import {Attributes, INHERIT} from './Attributes.js';
-import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass} from './Node.js';
+import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass} from '../Tree/Node.js';
 import {MmlFactory} from './MmlFactory.js';
 
 /*

@@ -26,7 +26,7 @@
 
 import {SerializedMmlVisitor} from './SerializedMmlVisitor.js';
 import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
-import {PropertyList} from './Node.js';
+import {PropertyList} from '../Tree/Node.js';
 
 /*****************************************************************/
 /*

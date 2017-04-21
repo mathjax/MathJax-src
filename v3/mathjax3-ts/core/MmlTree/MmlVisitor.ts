@@ -23,7 +23,7 @@
 
 import {TextNode, XMLNode} from './MmlNode.js';
 import {MmlFactory} from './MmlFactory.js';
-import {AbstractVisitor} from './Visitor.js';
+import {AbstractVisitor} from '../Tree/Visitor.js';
 
 /*****************************************************************/
 /*
