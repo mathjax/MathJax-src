@@ -21,10 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlFactory} from '../../../../MmlTree/js/MmlFactory.js';
+import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlEntities} from './MmlEntities.js';
-import {MmlNode, AMmlNode, AMmlTokenNode, TEXCLASS} from '../../../../MmlTree/js/MmlNode.js';
-import {OptionList, DefaultOptions, UserOptions} from '../../../util/Options.js';
+import {MmlNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
+import {OptionList, DefaultOptions, UserOptions} from '../../util/Options.js';
 
 /********************************************************************/
 /*
@@ -51,7 +51,7 @@ export class MathMLCompile {
      *  The default values for the verify option
      */
     public static VERIFY: OptionList = {
-        ...AMmlNode.verifyDefaults
+        ...AbstractMmlNode.verifyDefaults
     };
 
     /*
@@ -259,10 +259,10 @@ export class MathMLCompile {
             if (first.isKind('mo') && first.attributes.get('fence') &&
                 last.isKind('mo') && last.attributes.get('fence')) {
                 if (first.childNodes.length) {
-                    mml.setProperty('open', (first as AMmlTokenNode).getText());
+                    mml.setProperty('open', (first as AbstractMmlTokenNode).getText());
                 }
                 if (last.childNodes.length) {
-                    mml.setProperty('close', (last as AMmlTokenNode).getText());
+                    mml.setProperty('close', (last as AbstractMmlTokenNode).getText());
                 }
             }
         }

@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {RetryAfter} from '../../../util/Retries.js';
-import {AsyncLoad} from '../../../util/AsyncLoad.js';
-import {OptionList, DefaultOptions, UserOptions} from '../../../util/Options.js';
+import {RetryAfter} from '../../util/Retries.js';
+import {AsyncLoad} from '../../util/AsyncLoad.js';
+import {OptionList, DefaultOptions, UserOptions} from '../../util/Options.js';
 
 /*
  * The type for lists of entities
