@@ -18,8 +18,7 @@ MathJax.HandleRetriesFor(function () {
         .Compile();
 
     let math = html.math.pop().tree.getRoot();
-    math.setTeXclass();
-    console.log(JSON.stringify(toJSON(math)));
+    console.log(math.toString());
 
 }).catch(err => {
   console.log(err.message);

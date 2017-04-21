@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {MmlNode, AMmlBaseNode, AttributeList} from '../MmlNode.js';
+import {MmlNode, AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMfrac node class (subclass of AMmlBaseNode)
+ *  Implements the MmlMfrac node class (subclass of AbstractMmlBaseNode)
  */
 
-export class MmlMfrac extends AMmlBaseNode {
+export class MmlMfrac extends AbstractMmlBaseNode {
     public static defaults: PropertyList = {
-        ...AMmlBaseNode.defaults,
+        ...AbstractMmlBaseNode.defaults,
         linethickness: 'medium',
         numalign: 'center',
         denomalign: 'center',

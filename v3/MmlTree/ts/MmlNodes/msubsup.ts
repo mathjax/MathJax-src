@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlBaseNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {AbstractMmlBaseNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMsubsup node class (subclass of AMmlBaseNode)
+ *  Implements the MmlMsubsup node class (subclass of AbstractMmlBaseNode)
  */
 
-export class MmlMsubsup extends AMmlBaseNode {
+export class MmlMsubsup extends AbstractMmlBaseNode {
     public static defaults: PropertyList = {
-        ...AMmlBaseNode.defaults,
+        ...AbstractMmlBaseNode.defaults,
         subscriptshift: '',
         superscriptshift: ''
     };

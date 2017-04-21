@@ -23,7 +23,7 @@
 
 import {TextNode, XMLNode} from './MmlNode.js';
 import {MmlFactory} from './MmlFactory.js';
-import {Visitor} from './Visitor.js';
+import {AbstractVisitor} from './Visitor.js';
 
 /*****************************************************************/
 /*
@@ -31,12 +31,12 @@ import {Visitor} from './Visitor.js';
  *  for visitors that accept MmlNode trees)
  */
 
-export class MmlVisitor extends Visitor {
+export class MmlVisitor extends AbstractVisitor {
     /*
      * @param {MmlFactory} factory  The MmlNode factory (defaults to MmlFactory if not given)
      *
      * @constructor
-     * @extends {Visitor}
+     * @extends {AbstractVisitor}
      */
     constructor(factory: MmlFactory = null) {
         if (!factory) {

@@ -22,19 +22,19 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlLayoutNode, AttributeList} from '../MmlNode.js';
+import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMath node class (subclass of AMmlLayoutNode)
+ *  Implements the MmlMath node class (subclass of AbstractMmlLayoutNode)
  */
 
-export class MmlMath extends AMmlLayoutNode {
+export class MmlMath extends AbstractMmlLayoutNode {
     /*
      *  These are used as the defaults for any attributes marked INHERIT in other classes
      */
     public static defaults: PropertyList = {
-        ...AMmlLayoutNode.defaults,
+        ...AbstractMmlLayoutNode.defaults,
         mathvariant: 'normal',
         mathsize: 'normal',
         mathcolor: '', // Should be 'black', but allow it to inherit from surrounding text

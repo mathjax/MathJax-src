@@ -22,17 +22,17 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlLayoutNode, AttributeList} from '../MmlNode.js';
+import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMstyle node class (subclass of AMmlLayoutNode)
+ *  Implements the MmlMstyle node class (subclass of AbstractMmlLayoutNode)
  */
 
-export class MmlMstyle extends AMmlLayoutNode {
+export class MmlMstyle extends AbstractMmlLayoutNode {
     public static defaults: PropertyList = {
-        ...AMmlLayoutNode.defaults,
+        ...AbstractMmlLayoutNode.defaults,
         scriptlevel: INHERIT,
         displaystyle: INHERIT,
         scriptsizemultiplier: 1 / Math.sqrt(2),

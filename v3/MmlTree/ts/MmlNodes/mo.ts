@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlTokenNode, MmlNode, IMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 import {MmlMrow} from './mrow.js';
 
 /*
@@ -71,12 +71,12 @@ export let MO = {
 
 /*****************************************************************/
 /*
- *  Implements the MmlMo node class (subclass of AMmlTokenNode)
+ *  Implements the MmlMo node class (subclass of AbstractMmlTokenNode)
  */
 
-export class MmlMo extends AMmlTokenNode {
+export class MmlMo extends AbstractMmlTokenNode {
     public static defaults: PropertyList = {
-        ...AMmlTokenNode.defaults,
+        ...AbstractMmlTokenNode.defaults,
         form: 'infix',
         fence: false,
         separator: false,
@@ -450,7 +450,7 @@ export class MmlMo extends AMmlTokenNode {
                 parent.isKind('munderover')) && parent.childNodes[0]) {
             parent = parent.childNodes[0] as MmlNode;
         }
-        return (parent.isToken ? (parent as AMmlTokenNode).getText() : '');
+        return (parent.isToken ? (parent as AbstractMmlTokenNode).getText() : '');
     }
 
     /*

@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {MmlNode, AMmlNode, AMmlBaseNode, IMmlNode} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMroot node class (subclass of AMmlBaseNode)
+ *  Implements the MmlMroot node class (subclass of AbstractMmlBaseNode)
  */
 
-export class MmlSemantics extends AMmlBaseNode {
+export class MmlSemantics extends AbstractMmlBaseNode {
     public static defaults: PropertyList = {
-        ...AMmlBaseNode.defaults,
+        ...AbstractMmlBaseNode.defaults,
         definitionUrl: null,
         encoding: null
     };
@@ -61,12 +61,12 @@ export class MmlSemantics extends AMmlBaseNode {
 
 /*****************************************************************/
 /*
- *  Implements the MmlMroot node class (subclass of AMmlNode)
+ *  Implements the MmlMroot node class (subclass of AbstractMmlNode)
  */
 
-export class MmlAnnotationXML extends AMmlNode {
+export class MmlAnnotationXML extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AbstractMmlNode.defaults,
         definitionUrl: null,
         encoding: null,
         cd: 'mathmlkeys',

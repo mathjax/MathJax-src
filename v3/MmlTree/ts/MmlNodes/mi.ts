@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlTokenNode, AMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {AbstractMmlTokenNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMi node class (subclass of AMmlTokenNode)
+ *  Implements the MmlMi node class (subclass of AbstractMmlTokenNode)
  */
 
-export class MmlMi extends AMmlTokenNode {
+export class MmlMi extends AbstractMmlTokenNode {
     public static defaults: PropertyList = {
-        ...AMmlTokenNode.defaults
+        ...AbstractMmlTokenNode.defaults
     };
     /*
      * Patterns for operator names and single-character texts
@@ -68,7 +68,7 @@ export class MmlMi extends AMmlTokenNode {
      *
      * @override
      */
-    public setTeXclass(prev: AMmlNode) {
+    public setTeXclass(prev: AbstractMmlNode) {
         this.getPrevClass(prev);
         let name = this.getText();
         if (name.length > 1 && name.match(MmlMi.operatorName) && this.texClass === TEXCLASS.ORD) {

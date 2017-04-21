@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlLayoutNode} from '../MmlNode.js';
+import {AbstractMmlLayoutNode} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMpadded node class (subclass of AMmlLayoutNode)
+ *  Implements the MmlMpadded node class (subclass of AbstractMmlLayoutNode)
  */
 
-export class MmlMpadded extends AMmlLayoutNode {
+export class MmlMpadded extends AbstractMmlLayoutNode {
     public static defaults: PropertyList = {
-        ...AMmlLayoutNode.defaults,
+        ...AbstractMmlLayoutNode.defaults,
         width: '',
         height: '',
         depth: '',

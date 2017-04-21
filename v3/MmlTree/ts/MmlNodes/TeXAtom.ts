@@ -22,17 +22,17 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlBaseNode, MmlNode, IMmlNode, TEXCLASS} from '../MmlNode.js';
+import {AbstractMmlBaseNode, MmlNode, TEXCLASS} from '../MmlNode.js';
 import {MmlMo} from './mo.js';
 
 /*****************************************************************/
 /*
- *  Implements the TeXAtom node class (subclass of AMmlBaseNode)
+ *  Implements the TeXAtom node class (subclass of AbstractMmlBaseNode)
  */
 
-export class TeXAtom extends AMmlBaseNode {
+export class TeXAtom extends AbstractMmlBaseNode {
     public static defaults: PropertyList = {
-        ...AMmlBaseNode.defaults
+        ...AbstractMmlBaseNode.defaults
     };
     public texClass = TEXCLASS.ORD;
 

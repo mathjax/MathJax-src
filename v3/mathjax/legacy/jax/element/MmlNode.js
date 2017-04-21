@@ -17,17 +17,22 @@
 
   MML.mbase.Augment({
     toMmlNode: function (factory) {
-      var m = this.data.length;
-      var kind = this.type; if (kind === 'texatom') kind = 'TeXAtom';
+      var kind = this.type;
+      if (kind === 'texatom') kind = 'TeXAtom';
       if (this.inferred) kind = 'inferredMrow';
+      var node = this.nodeMake(factory, kind);
+      if ("texClass" in this) node.texClass = this.texClass;
+      return node;
+    },
+    nodeMake: function (factory,kind) {
       var node = factory.MML[kind]();
-      for (var i = 0; i < m; i++) {
-        var child = this.data[i];
+      var data = (this.data[0] && this.data[0].inferred ? this.data[0].data : this.data);
+      for (var i = 0, m = data.length; i < m; i++) {
+        var child = data[i];
         if (child) node.appendChild(child.toMmlNode(factory));
       }
       this.nodeAddAttributes(node);
       this.nodeAddProperties(node);
-      if ("texClass" in this) node.texClass = this.texClass;
       return node;
     },
     nodeAddAttributes: function (node) {
@@ -77,27 +82,15 @@
     toMmlNode: function (factory) {
       var kind = (this.data[this.sub] == null ? 'msup' :
                   this.data[this.sup] == null ? 'msub' : 'msubsup'); 
-      var node = factory.MML[kind]();
-      for (var i = 0, m = this.data.length; i < m; i++) {
-        var child = this.data[i];
-        if (child) node.appendChild(child.toMmlNode(factory));
-      }
-      this.nodeAddAttributes(node);
-      return node;
+      return this.nodeMake(factory, kind);
     }
   });
   
   MML.munderover.Augment({
     toMmlNode: function (factory) {
       var kind = (this.data[this.under] == null ? 'mover' :
-                  this.data[this.over]  == null ? 'mover' : 'munderover'); 
-      var node = factory.MML[kind]();
-      for (var i = 0, m = this.data.length; i < m; i++) {
-        var child = this.data[i];
-        if (child) node.appendChild(child.toMmlNode(factory));
-      }
-      this.nodeAddAttributes(node);
-      return node;
+                  this.data[this.over]  == null ? 'munder' : 'munderover'); 
+      return this.nodeMake(factory, kind);
     }
   });
   

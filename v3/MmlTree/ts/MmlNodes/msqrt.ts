@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {MmlNode, AMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMsqrt node class (subclass of AMmlNode)
+ *  Implements the MmlMsqrt node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMsqrt extends AMmlNode {
+export class MmlMsqrt extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults
+        ...AbstractMmlNode.defaults
     };
     public texClass = TEXCLASS.ORD;
 

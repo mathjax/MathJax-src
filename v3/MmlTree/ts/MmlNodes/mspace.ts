@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {AMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMspace node class (subclass of AMmlTokenNode)
+ *  Implements the MmlMspace node class (subclass of AbstractMmlTokenNode)
  */
 
-export class MmlMspace extends AMmlTokenNode {
+export class MmlMspace extends AbstractMmlTokenNode {
     public static defaults: PropertyList = {
-        ...AMmlTokenNode.defaults,
+        ...AbstractMmlTokenNode.defaults,
         width:  '0em',
         height: '0ex',
         depth:  '0ex',

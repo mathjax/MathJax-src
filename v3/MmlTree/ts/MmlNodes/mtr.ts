@@ -21,18 +21,18 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList, ANode, INode} from '../Node.js';
-import {MmlNode, AMmlNode, AttributeList} from '../MmlNode.js';
+import {PropertyList, Node} from '../Node.js';
+import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMtr node class (subclass of AMmlNode)
+ *  Implements the MmlMtr node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMtr extends AMmlNode {
+export class MmlMtr extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults,
+        ...AbstractMmlNode.defaults,
         rowalign: INHERIT,
         columnalign: INHERIT,
         groupalign: INHERIT

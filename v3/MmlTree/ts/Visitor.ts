@@ -34,7 +34,7 @@ export type VisitorFunction = (visitor: NodeFactory, node: Node, ...args: any[])
  *  Implements the Visitor interface
  */
 
-export interface IVisitor {
+export interface Visitor {
 
     /*
      * Visit the tree rooted at the given node (passing along any needed parameters)
@@ -90,7 +90,7 @@ export interface IVisitor {
  *  Implements the generic Visitor object
  */
 
-export class Visitor implements IVisitor {
+export abstract class AbstractVisitor implements Visitor {
     /*
      * Holds the mapping from node kinds to visitor funcitons
      */
@@ -116,7 +116,7 @@ export class Visitor implements IVisitor {
      */
     constructor(factory: NodeFactory) {
         for (const kind of factory.getKinds()) {
-            let method = (this as IVisitor)[Visitor.methodName(kind)] as VisitorFunction;
+            let method = (this as Visitor)[AbstractVisitor.methodName(kind)] as VisitorFunction;
             if (method) {
                 this.nodeHandlers.set(kind, method);
             }
@@ -124,8 +124,6 @@ export class Visitor implements IVisitor {
     }
 
     /*
-     * Visit the tree by visiting the root node
-     *
      * @override
      */
     public visitTree(tree: Node, ...args: any[]) {
@@ -133,9 +131,6 @@ export class Visitor implements IVisitor {
     }
 
     /*
-     * Visit a node by calling the proper visitor function
-     *   (either the one for the specific node kind, or the default one)
-     *
      * @override
      */
     public visitNode(node: Node, ...args: any[]) {
@@ -144,8 +139,6 @@ export class Visitor implements IVisitor {
     }
 
     /*
-     * The generic default visitory just visits all the child nodes
-     *
      * @override
      */
     public visitDefault(node: Node, ...args: any[]) {

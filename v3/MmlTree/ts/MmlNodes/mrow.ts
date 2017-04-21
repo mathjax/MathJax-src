@@ -22,16 +22,16 @@
  */
 
 import {PropertyList} from '../Node.js';
-import {MmlNode, AMmlNode, IMmlNode, TEXCLASS} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
- *  Implements the MmlMrow node class (subclass of AMmlNode)
+ *  Implements the MmlMrow node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMrow extends AMmlNode {
+export class MmlMrow extends AbstractMmlNode {
     public static defaults: PropertyList = {
-        ...AMmlNode.defaults
+        ...AbstractMmlNode.defaults
     };
 
     /*
@@ -152,7 +152,10 @@ export class MmlMrow extends AMmlNode {
             (!prev || prev.getProperty('fnOp') != null)) {
             //
             // <mrow> came from \left...\right
-            // so treat as subexpression (TeX class INNER).
+            //   so treat as subexpression (TeX class INNER).
+            // Use prev = null for the initial element in the
+            //   delimiters, since there is nothing previous to
+            //   it in what would be the TeX math list.
             //
             this.getPrevClass(prev);
             prev = null;
@@ -201,12 +204,15 @@ export class MmlInferredMrow extends MmlMrow {
     }
 
     /*
-     * @return {boolean}  This node is not considered a parent node
+     * @override
      */
     public get notParent() {
         return true;
     }
 
+    /*
+     * Show the child nodes in brackets
+     */
     public toString() {
         return '[' + this.childNodes.join(',') + ']';
     }
