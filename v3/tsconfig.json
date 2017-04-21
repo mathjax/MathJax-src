@@ -9,8 +9,8 @@
     "lib": ["es6", "dom"],
     "noLib": false,
     "sourceMap": true,
-    "outDir": "js"
+    "outDir": "mathjax3"
   },
-  "include": ["ts/**/*"],
-  "exclude": ["js"]
+  "include": ["mathjax3-ts/**/*"],
+  "exclude": ["mathjax3"]
 }

@@ -3,7 +3,7 @@
     "*.d.ts"
   ],
   "rulesDirectory": [
-    "../../../TreeJax/node_modules/tslint-jsdoc-rules/lib"
+    "../TreeJax/node_modules/tslint-jsdoc-rules/lib"
   ],
   "rules": {
     "class-name": true,

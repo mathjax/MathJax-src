@@ -1,5 +1,5 @@
 node_modules
-TreeJax/lib
-TreeJax/node_modules
-MmlTree/js
-mathjax/input/mathml/js
+old/TreeJax/lib
+old/TreeJax/node_modules
+mathjax3
+
