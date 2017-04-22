@@ -4,7 +4,7 @@ function ARRAY(list: FunctionList) {
     return Array.from(list);
 }
 
-export class FunctionList extends PrioritizedList {
+export class FunctionList extends PrioritizedList<Function> {
     Execute(...data: any[]) {
         for (const item of ARRAY(this)) {
             let result = item.item(...data);

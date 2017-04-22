@@ -41,14 +41,14 @@ export function Copy(def: OptionList): OptionList {
         }
         if (prop.enumerable) props[key] = prop;
     }
-    return Object.defineProperties({},props);
+    return Object.defineProperties({}, props);
 }
 
 //
 //  Insert one object into another (with optional warnings about
 //  keys that aren't in the original)
 //
-export function Insert(dst: OptionList, src: OptionList, warn:boolean = true) {
+export function Insert(dst: OptionList, src: OptionList, warn: boolean = true) {
     for (let key of Keys(src)) {
         if (warn && dst[key] === undefined) {
             if (typeof key === 'symbol') key = key.toString();
@@ -88,7 +88,7 @@ export function DefaultOptions(options: OptionList, ...defs: OptionList[]) {
 //  user options into the default list)
 //
 export function UserOptions(options: OptionList, ...defs: OptionList[]) {
-    defs.forEach(def => Insert(options,def,true));
+    defs.forEach(def => Insert(options, def, true));
     return options;
 }
 
@@ -107,7 +107,7 @@ export function SelectOptions(options: OptionList, ...keys: string[]) {
 //  Select a subset of options by keys from an object
 //
 export function SelectOptionsFromKeys(options: OptionList, object: OptionList) {
-    return SelectOptions(options,...Object.keys(object));
+    return SelectOptions(options, ...Object.keys(object));
 }
 
 //

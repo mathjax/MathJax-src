@@ -31,7 +31,10 @@ try {
         DOMParser: DOMParser;
     }
     class DOMXMLSerializer implements XMLSerializer {
-        serializeToString(node: Element) {
+        public serializeToString(node: Element) {
+            return jsdom.serializeDocument(node);
+        }
+        public static serializeToString(node: Element) {
             return jsdom.serializeDocument(node);
         }
     }
@@ -39,7 +42,7 @@ try {
     theDocument = jsdom.jsdom();
     theWindow = theDocument.defaultView;
     theDOMParser = (theWindow as DOMWindow).DOMParser;
-    theXMLSerializer = new DOMXMLSerializer();
+    theXMLSerializer = DOMXMLSerializer;
 
 }
 
