@@ -1,12 +1,10 @@
-import {PrioritizedList} from "./PrioritizedList.js";
+import {PrioritizedList, PrioritizedListItem} from "./PrioritizedList.js";
 
-function ARRAY(list: FunctionList) {
-    return Array.from(list);
-}
+export interface FunctionListItem extends PrioritizedListItem<Function> {}
 
 export class FunctionList extends PrioritizedList<Function> {
     Execute(...data: any[]) {
-        for (const item of ARRAY(this)) {
+        for (const item of this.toArray()) {
             let result = item.item(...data);
             if (result === false) return false;
         }
