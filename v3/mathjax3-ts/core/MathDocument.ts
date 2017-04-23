@@ -19,7 +19,7 @@ export interface MathDocument {
     GetMetrics(): MathDocument;
     AddEventHandlers(): MathDocument;
     UpdateDocument(): MathDocument;
-    RemoveFromDocument(): MathDocument;
+    RemoveFromDocument(restore?: boolean): MathDocument;
     State(state: number, restore: boolean): MathDocument;
     Reset(): MathDocument;
     Clear(): MathDocument;
@@ -131,7 +131,7 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
-    RemoveFromDocument() {
+    RemoveFromDocument(restore: boolean = false) {
         return this;
     }
 

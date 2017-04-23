@@ -3,15 +3,7 @@ import {OptionList} from "../util/Options.js";
 import {Handler} from "./Handler.js";
 import {MathDocument} from "./MathDocument.js";
 
-export interface HandlerList extends PrioritizedList<Handler> {
-    Register(handler: Handler): Handler;
-    UnRegister(handler: Handler): void;
-    HandlesDocument(document: any): Handler;
-    HandlerFor(document: any, options?: OptionList): MathDocument;
-    toArray(): PrioritizedListItem<Handler>[];
-}
-
-export abstract class AbstractHandlerList extends PrioritizedList<Handler> implements HandlerList {
+export class HandlerList extends PrioritizedList<Handler>  {
 
     Register(handler: Handler) {
         return this.Add(handler, handler.priority);
@@ -29,7 +21,7 @@ export abstract class AbstractHandlerList extends PrioritizedList<Handler> imple
         throw new Error("Can't find handler for document");
     }
 
-    HandlerFor(document: any, options: OptionList = null) {
+    Document(document: any, options: OptionList = null) {
         return this.HandlesDocument(document).Create(document,options);
     }
 

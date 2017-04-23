@@ -1,8 +1,11 @@
+interface DOMWindow extends Window {
+    DOMParser: DOMParser;
+    XMLSerializer: XMLSerializer;
+}
+
 declare var System: {nodeRequire: Function};
 declare var document: Document;
-declare var window: Window;
-declare var DOMParser: DOMParser;
-declare var XMLSerializer: XMLSerializer;
+declare var window: DOMWindow;
 
 let theDocument: Document;
 let theWindow: Window;
@@ -16,9 +19,9 @@ try {
     //
     document;  // errors if not in browser
     theDocument = document;
-    theWindow =  window;
-    theDOMParser = DOMParser;
-    theXMLSerializer = XMLSerializer;
+    theWindow =  window as Window;
+    theDOMParser = window.DOMParser;
+    theXMLSerializer = window.XMLSerializer;
 
 } catch (err) {
 
@@ -27,9 +30,6 @@ try {
     //
     let jsdom = System.nodeRequire("jsdom");
 
-    interface DOMWindow extends Window {
-        DOMParser: DOMParser;
-    }
     class DOMXMLSerializer implements XMLSerializer {
         public serializeToString(node: Element) {
             return jsdom.serializeDocument(node);

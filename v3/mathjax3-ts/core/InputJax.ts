@@ -1,4 +1,4 @@
-import {MathItem} from './MathItem.js';
+import {MathItem, ProtoItem} from './MathItem.js';
 import {MmlNode} from './MmlTree/MmlNode.js';
 import {UserOptions, DefaultOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
@@ -10,7 +10,7 @@ export interface InputJax {
     preFilters: FunctionList;
     postFilters: FunctionList;
 
-    FindMath(node: Element, options?: OptionList): MathItem[];
+    FindMath(node: Element | string[], options?: OptionList): ProtoItem[];
     Compile(math: MathItem): MmlNode;
 }
 
@@ -38,9 +38,9 @@ export abstract class AbstractInputJax implements InputJax {
         this.postFilters = new FunctionList();
     }
 
-    FindMath(node: Element, options: OptionList) {
+    FindMath(node: Element | string[], options: OptionList) {
         // should operate on an array of strings, but for now, use DOM node
-        return [] as MathItem[];
+        return [] as ProtoItem[];
     }
 
     Compile(math: MathItem) {

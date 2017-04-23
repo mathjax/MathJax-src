@@ -7,7 +7,7 @@ export interface Location {
     i?: number;
     n?: number;
     delim?: string;
-    node?: Element;
+    node?: Text | Element;
 }
 
 export interface Metrics {
@@ -40,10 +40,19 @@ export interface MathItem {
     UpdateDocument(document: MathDocument): void;
     RemoveFromDocument(restore: boolean): void;
     setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number): void;
-    State(state: number, restore: boolean): number;
+    State(state?: number, restore?: boolean): number;
 
 }
 
+export interface ProtoItem {
+    math: string;
+    start: number;
+    end: number;
+    open: string;
+    close: string;
+    n: number;
+    display: boolean;
+}
 
 export abstract class AbstractMathItem implements MathItem {
     public static STATE = {
