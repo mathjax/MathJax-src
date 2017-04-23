@@ -1,18 +1,36 @@
-import {FunctionList} from "../util/FunctionList.js";
+import {PrioritizedList, PrioritizedListItem} from "../util/PrioritizedList.js";
+import {OptionList} from "../util/Options.js";
+import {Handler} from "./Handler.js";
+import {MathDocument} from "./MathDocument.js";
 
-export class HandlerList extends FunctionList {
+export interface HandlerList extends PrioritizedList<Handler> {
+    Register(handler: Handler): Handler;
+    UnRegister(handler: Handler): void;
+    HandlesDocument(document: any): Handler;
+    HandlerFor(document: any, options?: OptionList): MathDocument;
+    toArray(): PrioritizedListItem<Handler>[];
+}
 
-  Register(handler) {return this.Add(handler,handler.priority)}
-  UnRegister(handler) {this.Remove(handler)}
-  
-  HandlesDocument(document) {
-    for (const item of this) {
-      let handler = item.item;
-      if (handler.HandlesDocument(document)) return handler;
+export abstract class AbstractHandlerList extends PrioritizedList<Handler> implements HandlerList {
+
+    Register(handler: Handler) {
+        return this.Add(handler, handler.priority);
     }
-    throw new Error("Can't find handler for document");
-  }
-  HandlerFor(document,options) {
-    return this.HandlesDocument(document).Create(document,options);
-  }
+
+    UnRegister(handler: Handler) {
+        this.Remove(handler);
+    }
+
+    HandlesDocument(document: any) {
+        for (const item of this.toArray()) {
+            let handler = item.item;
+            if (handler.HandlesDocument(document)) return handler;
+        }
+        throw new Error("Can't find handler for document");
+    }
+
+    HandlerFor(document: any, options: OptionList = null) {
+        return this.HandlesDocument(document).Create(document,options);
+    }
+
 };

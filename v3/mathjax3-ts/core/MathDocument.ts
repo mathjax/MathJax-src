@@ -1,120 +1,176 @@
-import {UserOptions, DefaultOptions} from "../util/Options.js";
-import {InputJax} from "./InputJax.js";
-import {OutputJax} from "./OutputJax.js";
-import {MathList} from "./MathList.js";
-import {MathItem} from "./MathItem.js";
+import {UserOptions, DefaultOptions, OptionList} from '../util/Options.js';
+import {InputJax, AbstractInputJax} from './InputJax.js';
+import {OutputJax, AbstractOutputJax} from './OutputJax.js';
+import {MathList, MathListClass} from './MathList.js';
+import {MathItem, AbstractMathItem} from './MathItem.js';
 
-export class Document {
-  constructor (document,options) {
-    this.document = document;
-    this.type = this.constructor.type;
-    this.options = UserOptions(DefaultOptions({},this.constructor.OPTIONS),options);
-    this.math = new this.options.MathList();
-    this.processed = {
-      FindMath: false,
-      Compile: false,
-      Typeset: false,
-      GetMetrics: false,
-      AddEventHandlers: false,
-      UpdateDocument: false
+export interface MathDocument {
+    document: any;
+    kind: string;
+    options: OptionList;
+    math: MathList;
+    processed: {[name: string]: boolean};
+    InputJax: InputJax[];
+    OutputJax: OutputJax;
+
+    FindMath(options: OptionList): MathDocument;
+    Compile(): MathDocument;
+    Typeset(): MathDocument;
+    GetMetrics(): MathDocument;
+    AddEventHandlers(): MathDocument;
+    UpdateDocument(): MathDocument;
+    RemoveFromDocument(): MathDocument;
+    State(state: number, restore: boolean): MathDocument;
+    Reset(): MathDocument;
+    Clear(): MathDocument;
+    Concat(collection: MathDocument): MathDocument;
+
+}
+
+export interface MathDocumentClass {
+    new(document: any, options?: OptionList): MathDocument;
+    KIND: string;
+    OPTIONS: OptionList;
+}
+
+export interface MathProcessed {
+    FindMath: boolean;
+    Compile: boolean;
+    Typeset: boolean;
+    GetMetrics: boolean;
+    AddEventHandlers: boolean;
+    UpdateDocument: boolean;
+    [name: string]: boolean;
+}
+
+class defaultInputJax extends AbstractInputJax {}
+class defaultOutputJax extends AbstractOutputJax {}
+
+export abstract class AbstractMathDocument implements MathDocument {
+
+    public static KIND: string = 'MathDocument';
+    public static OPTIONS: OptionList = {
+        OutputJax: null,
+        InputJax: null,
+        MathList: MathList
     };
-    this.InputJax = this.options["InputJax"] || new InputJax();
-    this.OutputJax = this.options["OutputJax"] || new OutputJax();
-    if (!Array.isArray(this.InputJax)) this.InputJax = [this.InputJax];
-  }
-  
-  FindMath(options) {
-    this.processed.FindMath = true;
-    return this;
-  }
-  
-  Compile() {
-    if (!this.processed.Compile) {
-      for (const math of this.math) {
-        if (math) math.Compile(this);
-      }
-      this.processed.Compile = true;
-    }
-    return this;
-  }
+    public static STATE = AbstractMathItem.STATE;
 
-  Typeset() {
-    if (!this.processed.Typeset) {
-      for (const math of this.math) {
-        if (math) math.Typeset(this);
-      }
-      this.processed.Typeset = true;
-    }
-    return this;
-  }
+    public document: any;
+    public kind: string;
+    public options: OptionList;
+    public math: MathList;
+    public processed: MathProcessed;
+    public InputJax: InputJax[];
+    public OutputJax: OutputJax;
 
-  GetMetrics() {
-    if (!this.processed.GetMetrics) {
-      this.OutputJax.GetMetrics(this);
-      this.processed.GetMetrics = true;
+    constructor (document: any, options: OptionList) {
+        let CLASS = this.constructor as MathDocumentClass;
+        this.document = document;
+        this.kind = CLASS.KIND;
+        this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
+        this.math = new (this.options['MathList'] as MathListClass)();
+        this.processed = {
+            FindMath: false,
+            Compile: false,
+            Typeset: false,
+            GetMetrics: false,
+            AddEventHandlers: false,
+            UpdateDocument: false
+        };
+        this.InputJax = this.options['InputJax'] || [new defaultInputJax()];
+        this.OutputJax = this.options['OutputJax'] || new defaultOutputJax();
+        if (!Array.isArray(this.InputJax)) this.InputJax = [this.InputJax];
     }
-    return this;
-  }
 
-  AddEventHandlers() {
-    this.processed.AddEventHandlers = true;
-    return this;
-  }
+    FindMath(options: OptionList) {
+        this.processed.FindMath = true;
+        return this;
+    }
 
-  UpdateDocument() {
-    if (!this.processed.UpdateDocument) {
-      for (const math of this.math.reversed()) {
-        math.UpdateDocument(this);
-      }
-      this.processed.UpdateDocument = true;
+    Compile() {
+        if (!this.processed.Compile) {
+            for (const math of this.math.toArray()) {
+                if (math) math.Compile(this);
+            }
+            this.processed.Compile = true;
+        }
+        return this;
     }
-    return this;
-  }
-  RemoveFromDocument() {
-    return this;
-  }
-  
-  State(state,restore = false) {
-    for (const math of this.math) {
-      math.State(state,restore);
+
+    Typeset() {
+        if (!this.processed.Typeset) {
+            for (const math of this.math.toArray()) {
+                if (math) math.Typeset(this);
+            }
+            this.processed.Typeset = true;
+        }
+        return this;
     }
-    if (state < STATE.INSERTED) {
-      this.processed.UpdateDocument = false;
+
+    GetMetrics() {
+        if (!this.processed.GetMetrics) {
+            this.OutputJax.GetMetrics(this);
+            this.processed.GetMetrics = true;
+        }
+        return this;
     }
-    if (state < STATE.TYPESET) {
-      this.processed.Typeset = false;
-      this.processed.AddEventHandlers = false;
-      this.processed.GetMetrics = false;
+
+    AddEventHandlers() {
+        this.processed.AddEventHandlers = true;
+        return this;
     }
-    if (state < STATE.COMPILED) {
-      this.processed.Compile = false;
+
+    UpdateDocument() {
+        if (!this.processed.UpdateDocument) {
+            for (const math of this.math.reversed().toArray()) {
+                math.UpdateDocument(this);
+            }
+            this.processed.UpdateDocument = true;
+        }
+        return this;
     }
-    return this;
-  }
-  
-  Reset() {
-    for (const key of Object.keys(this.processed)) {
-      this.processed[key] = false;
+
+    RemoveFromDocument() {
+        return this;
     }
-  }
-  
-  Clear() {
-    this.Reset();
-    this.math.Clear();
-    return this;
-  }
-  
-  Concat(collection) {
-    this.math.merge(collection.math);
-    return this;
-  }
-  
+
+    State(state: number, restore: boolean = false) {
+        for (const math of this.math.toArray()) {
+            math.State(state,restore);
+        }
+        if (state < STATE.INSERTED) {
+            this.processed.UpdateDocument = false;
+        }
+        if (state < STATE.TYPESET) {
+            this.processed.Typeset = false;
+            this.processed.AddEventHandlers = false;
+            this.processed.GetMetrics = false;
+        }
+        if (state < STATE.COMPILED) {
+            this.processed.Compile = false;
+        }
+        return this;
+    }
+
+    Reset() {
+        for (const key of Object.keys(this.processed)) {
+            this.processed[key] = false;
+        }
+        return this;
+    }
+
+    Clear() {
+        this.Reset();
+        this.math.Clear();
+        return this;
+    }
+
+    Concat(collection: MathDocument) {
+        this.math.merge(collection.math);
+        return this;
+    }
+
 };
 
-Document.type = "Document";
-Document.OPTIONS = {
-  OutputJax: null,
-  InputJax: null,
-  MathList: MathList
-};
-let STATE = Document.STATE = MathItem.STATE;
+let STATE = AbstractMathDocument.STATE;

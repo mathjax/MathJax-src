@@ -1,27 +1,46 @@
-import {UserOptions, DefaultOptions} from '../util/Options.js';
+import {UserOptions, DefaultOptions, OptionList} from '../util/Options.js';
+import {MathDocument} from './MathDocument.js';
+import {MathItem} from './MathItem.js';
 
-export class OutputJax {
-  
-  constructor(options = {}) {
-    this.name = this.constructor.NAME;
-    this.options = UserOptions(DefaultOptions({},this.constructor.OPTIONS),options);
-  }
-  
-  Typeset(math,document) {
-  }
-  
-  Escaped(nath,document) {
-  }
-  
-  GetMetrics(document) {
-  }
-  
-  StyleSheet(document) {
-  }
+export interface OutputJax {
+    name: string;
+    options: OptionList;
 
-};
+    Typeset(math: MathItem, document?: MathDocument): any;
+    Escaped(math: MathItem, document?: MathDocument): any;
+    GetMetrics(document: MathDocument): void;
+    StyleSheet(document: MathDocument): any;
+}
 
-OutputJax.NAME = "Generic";
-OutputJax.OPTIONS = {
-  //  (none just yet).
+export interface OutputJaxClass {
+    new(options?: OptionList): OutputJax;
+    NAME: string;
+    OPTIONS: OptionList;
+}
+
+export abstract class AbstractOutputJax implements OutputJax {
+    public static NAME: string = 'Generic';
+    public static OPTIONS: OptionList = {};
+
+    public name: string;
+    public options: OptionList;
+
+    constructor(options: OptionList = {}) {
+        let CLASS = this.constructor as OutputJaxClass;
+        this.name = CLASS.NAME;
+        this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
+    }
+
+    Typeset(math: MathItem, document: MathDocument = null) {
+    }
+
+    Escaped(math: MathItem, document: MathDocument = null) {
+    }
+
+    GetMetrics(document: MathDocument) {
+    }
+
+    StyleSheet(document: MathDocument) {
+    }
+
 };
