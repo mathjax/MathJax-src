@@ -19,6 +19,9 @@ export class ListItem<DataClass> {
     }
 }
 
+export interface LinkedListClass<DataClass> {
+    new(...args: DataClass[]): LinkedList<DataClass>;
+}
 
 //
 //  The generic Linked List class
@@ -43,10 +46,10 @@ export class LinkedList<DataClass> {
     //
     //  Typescript targeted at ES5 doesn't handle
     //    for (const x of this)
-    //  so use toArray() to convert to arraymwhen needed
+    //  so use toArray() to convert to array, when needed
     //
     toArray() {
-        return Array.from(this);
+        return Array.from(this) as DataClass[];
     }
 
     //
@@ -145,6 +148,9 @@ export class LinkedList<DataClass> {
                 current = current.prev;
                 if (current.data === END) return {done: true};
                 return {value: current.data};
+            },
+            toArray() {
+                return Array.from(this) as DataClass[];
             }
         }
     }
