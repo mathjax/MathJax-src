@@ -1,4 +1,4 @@
-export interface PriorityListItem<DataClass> {
+export interface PrioritizedListItem<DataClass> {
     priority: number;
     item: DataClass;
 }
@@ -6,7 +6,7 @@ export interface PriorityListItem<DataClass> {
 export class PrioritizedList<DataClass> {
     public static DEFAULTPRIORITY: number = 5;
 
-    protected items: PriorityListItem<DataClass>[] = [];
+    protected items: PrioritizedListItem<DataClass>[] = [];
     protected i: number;
 
     constructor() {
@@ -34,6 +34,10 @@ export class PrioritizedList<DataClass> {
         let i = this.items.length;
         do {i--} while (i >= 0 && this.items[i].item !== item);
         if (i >= 0) this.items.splice(i,1);
+    }
+
+    toArray() {
+        return Array.from(this);
     }
 
 };
