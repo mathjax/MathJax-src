@@ -1,8 +1,8 @@
-import {MathJax} from "mathjax/mathjax.js";
-export {MathJax} from "mathjax/mathjax.js";
+import {MathJax} from "mathjax3/mathjax.js";
+export {MathJax} from "mathjax3/mathjax.js";
 
-import "mathjax/handlers/html.js";
-import {AsciiMath} from "mathjax/input/asciimath.js";
+import "mathjax3/handlers/html.js";
+import {AsciiMath} from "mathjax3/input/asciimath.js";
 
 let OPTIONS = {
   InputJax: new AsciiMath()
@@ -28,7 +28,7 @@ try {
   //
   //  Use browser document, if there is one
   //
-  html = MathJax.HandlerFor(document,OPTIONS);
+  html = MathJax.Document(document,OPTIONS);
   document.body.insertBefore(document.createElement("hr"),document.body.firstChild);
   var div = document.createElement('div');
   div.innerHTML = HTML; div.style.marginBottom = "1em";
@@ -37,7 +37,7 @@ try {
   //
   //  Otherwise, make a new document (measurements not supported here)
   //
-  html = MathJax.HandlerFor(
+  html = MathJax.Document(
     '<html><head><title>Test MathJax3</title></head><body>'
     + HTML +
     '</body></html>',
@@ -49,13 +49,13 @@ const STRING = function (item) {
   let {node, n, delim} = item;
   let value = node.nodeValue;
   return (value.substr(0,n)+"@"+value.substr(n)).replace(/\n/g,"\\n");
-}
+};
 
 const DELIMITERS = function (start,end) {
   let value = start.node.nodeValue;
   let [n,m] = [start.n,end.n];
   return (value.substr(0,n)+"@"+value.substr(n,m-n)+"@"+value.substr(m)).replace(/\n/g,"\\n");
-}
+};
 
 MathJax.HandleRetriesFor(function () {
 
@@ -65,8 +65,8 @@ MathJax.HandleRetriesFor(function () {
       if (math.start.node === math.end.node) {
         console.log("=> ",DELIMITERS(math.start,math.end));
       } else {
-        console.log("=> ",STRING(math.start));
-        console.log("=> ",STRING(math.end));
+        console.log(">> ",STRING(math.start));
+        console.log("<< ",STRING(math.end));
       }
     };
 

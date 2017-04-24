@@ -1,16 +1,16 @@
-import {MathJax} from "mathjax/mathjax.js";
-export {MathJax} from "mathjax/mathjax.js";
+import {MathJax} from "mathjax3/mathjax.js";
+export {MathJax} from "mathjax3/mathjax.js";
 
-import "mathjax/handlers/html.js";
-import {TeX} from "mathjax/input/tex.js";
-import {CHTML} from "mathjax/output/chtml.js";
+import "mathjax3/handlers/html.js";
+import {TeX} from "mathjax3/input/tex.js";
+import {CHTML} from "mathjax3/output/chtml.js";
 
 let OPTIONS = {
   InputJax: new TeX(),
   OutputJax: new CHTML()
 };
 
-let html = MathJax.HandlerFor(`
+let html = MathJax.Document(`
   <html>
   <head><title>Test MathJax3</title></head>
   <body>

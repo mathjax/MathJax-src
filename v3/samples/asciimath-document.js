@@ -1,9 +1,9 @@
-import {MathJax} from "mathjax/mathjax.js";
-export {MathJax} from "mathjax/mathjax.js";
+import {MathJax} from "mathjax3/mathjax.js";
+export {MathJax} from "mathjax3/mathjax.js";
 
-import "mathjax/handlers/html.js";
-import {AsciiMath} from "mathjax/input/asciimath.js";
-import {CHTML} from "mathjax/output/chtml.js";
+import "mathjax3/handlers/html.js";
+import {AsciiMath} from "mathjax3/input/asciimath.js";
+import {CHTML} from "mathjax3/output/chtml.js";
 
 let OPTIONS = {
   InputJax: new AsciiMath(),
@@ -39,7 +39,7 @@ try {
   //
   //  Otherwise, make a new document (measurements not supported here)
   //
-  html = MathJax.HandlerFor(
+  html = MathJax.Document(
     '<html><head><title>Test MathJax3</title></head><body>'
     + HTML +
     '</body></html>',

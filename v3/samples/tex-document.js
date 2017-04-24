@@ -1,9 +1,9 @@
-import {MathJax} from "mathjax/mathjax.js";
-export {MathJax} from "mathjax/mathjax.js";
+import {MathJax} from "mathjax3/mathjax.js";
+export {MathJax} from "mathjax3/mathjax.js";
 
-import "mathjax/handlers/html.js";
-import {TeX} from "mathjax/input/tex.js";
-import {CHTML} from "mathjax/output/chtml.js";
+import "mathjax3/handlers/html.js";
+import {TeX} from "mathjax3/input/tex.js";
+import {CHTML} from "mathjax3/output/chtml.js";
 
 let OPTIONS = {
   InputJax: new TeX(),
@@ -20,7 +20,7 @@ try {
   //
   //  Use browser document, if there is one
   //
-  html = MathJax.HandlerFor(document,OPTIONS);
+  html = MathJax.Document(document,OPTIONS);
   document.body.insertBefore(document.createElement("hr"),document.body.firstChild);
   var div = document.createElement('div');
   div.innerHTML = HTML; div.style.marginBottom = "1em";
@@ -29,7 +29,7 @@ try {
   //
   //  Otherwise, make a new document (measurements not supported here)
   //
-  html = MathJax.HandlerFor(
+  html = MathJax.Document(
     '<html><head><title>Test MathJax3</title></head><body>'
     + HTML +
     '</body></html>',

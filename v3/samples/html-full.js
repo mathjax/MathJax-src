@@ -1,11 +1,11 @@
-import {MathJax} from "mathjax/mathjax.js";
-import "mathjax/handlers/html.js";
+import {MathJax} from "mathjax3/mathjax.js";
+import "mathjax3/handlers/html.js";
 
 function Delay(n) {
   return new Promise((ok,fail) => {setTimeout(ok,n)});
 }
 
-let html = MathJax.HandlerFor("<html></html>");
+let html = MathJax.Document("<html></html>");
 
 MathJax.HandleRetriesFor(function () {
 
