@@ -51,7 +51,9 @@ export function Copy(def: OptionList): OptionList {
 export function Insert(dst: OptionList, src: OptionList, warn: boolean = true) {
     for (let key of Keys(src)) {
         if (warn && dst[key] === undefined) {
-            if (typeof key === 'symbol') key = key.toString();
+            if (typeof key === 'symbol') {
+                key = key.toString();
+            }
             throw new Error("Invalid option '" + key + "' (no default value).");
         }
         let sval = src[key], dval = dst[key];

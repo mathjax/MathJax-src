@@ -1,9 +1,9 @@
-import {PrioritizedList, PrioritizedListItem} from "./PrioritizedList.js";
+import {PrioritizedList, PrioritizedListItem} from './PrioritizedList.js';
 
 export interface FunctionListItem extends PrioritizedListItem<Function> {}
 
 export class FunctionList extends PrioritizedList<Function> {
-    Execute(...data: any[]) {
+    public Execute(...data: any[]) {
         for (const item of this.toArray()) {
             let result = item.item(...data);
             if (result === false) return false;
@@ -11,7 +11,7 @@ export class FunctionList extends PrioritizedList<Function> {
         return true;
     }
 
-    asyncExecute(...data: any[]) {
+    public asyncExecute(...data: any[]) {
         let i = -1;
         let items = this.items;
         return new Promise((ok: Function, fail: Function) => {

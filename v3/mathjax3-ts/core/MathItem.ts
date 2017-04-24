@@ -76,8 +76,8 @@ export abstract class AbstractMathItem implements MathItem {
     public outputData: OptionList = {};
 
     constructor (math: string, jax: InputJax, display: boolean =true,
-                 start: Location = {i: 0, n: 0, delim: ""},
-                 end: Location = {i: 0, n: 0, delim: ""}) {
+                 start: Location = {i: 0, n: 0, delim: ''},
+                 end: Location = {i: 0, n: 0, delim: ''}) {
         this.math = math;
         this.inputJax = jax;
         this.display = display;
@@ -92,30 +92,31 @@ export abstract class AbstractMathItem implements MathItem {
         this.outputData = {};
     }
 
-    Compile(document: MathDocument) {
+    public Compile(document: MathDocument) {
         if (this.State() < STATE.COMPILED) {
             this.root = this.inputJax.Compile(this);
             this.State(STATE.COMPILED);
         }
     }
 
-    Typeset(document: MathDocument) {
+    public Typeset(document: MathDocument) {
         if (this.State() < STATE.TYPESET) {
             if (this.display === null) {
-                this.typeset = document.OutputJax.Escaped(this,document);
+                this.typeset = document.OutputJax.Escaped(this, document);
             } else {
-                this.typeset = document.OutputJax.Typeset(this,document);
+                this.typeset = document.OutputJax.Typeset(this, document);
             }
             this.State(STATE.TYPESET);
         }
     }
 
-    addEventHandlers() {}
+    public addEventHandlers() {}
 
-    UpdateDocument(document: MathDocument) {}
-    RemoveFromDocument(restore: boolean = false) {}
+    public UpdateDocument(document: MathDocument) {}
 
-    setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number) {
+    public RemoveFromDocument(restore: boolean = false) {}
+
+    public setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number) {
         this.metrics = {
             em: em, ex: ex,
             containerWidth: cwidth,
@@ -124,7 +125,7 @@ export abstract class AbstractMathItem implements MathItem {
         }
     }
 
-    State(state: number = null, restore: boolean = false) {
+    public State(state: number = null, restore: boolean = false) {
         if (state != null) {
             if (state < STATE.INSERTED && this.state >= STATE.INSERTED) {
                 this.RemoveFromDocument(restore);

@@ -19,28 +19,26 @@ export interface OutputJaxClass {
 }
 
 export abstract class AbstractOutputJax implements OutputJax {
-    public static NAME: string = 'Generic';
+    public static NAME: string = 'generic';
     public static OPTIONS: OptionList = {};
 
-    public name: string;
     public options: OptionList;
 
     constructor(options: OptionList = {}) {
         let CLASS = this.constructor as OutputJaxClass;
-        this.name = CLASS.NAME;
         this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
     }
 
-    Typeset(math: MathItem, document: MathDocument = null) {
+    public get name() {
+        return (this.constructor as OutputJaxClass).NAME;
     }
 
-    Escaped(math: MathItem, document: MathDocument = null) {
-    }
+    public Typeset(math: MathItem, document: MathDocument = null) {}
 
-    GetMetrics(document: MathDocument) {
-    }
+    public Escaped(math: MathItem, document: MathDocument = null) {}
 
-    StyleSheet(document: MathDocument) {
-    }
+    public GetMetrics(document: MathDocument) {}
+
+    public StyleSheet(document: MathDocument) {}
 
 };

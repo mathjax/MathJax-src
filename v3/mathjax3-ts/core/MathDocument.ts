@@ -57,7 +57,6 @@ export abstract class AbstractMathDocument implements MathDocument {
     public static STATE = AbstractMathItem.STATE;
 
     public document: any;
-    public kind: string;
     public options: OptionList;
     public math: MathList;
     public processed: MathProcessed;
@@ -67,7 +66,6 @@ export abstract class AbstractMathDocument implements MathDocument {
     constructor (document: any, options: OptionList) {
         let CLASS = this.constructor as MathDocumentClass;
         this.document = document;
-        this.kind = CLASS.KIND;
         this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
         this.math = new (this.options['MathList'] as MathListClass)();
         this.processed = {
@@ -80,35 +78,41 @@ export abstract class AbstractMathDocument implements MathDocument {
         };
         this.InputJax = this.options['InputJax'] || [new defaultInputJax()];
         this.OutputJax = this.options['OutputJax'] || new defaultOutputJax();
-        if (!Array.isArray(this.InputJax)) this.InputJax = [this.InputJax];
+        if (!Array.isArray(this.InputJax)) {
+            this.InputJax = [this.InputJax];
+        }
     }
 
-    FindMath(options: OptionList) {
+    public get kind() {
+        return (this.constructor as MathDocumentClass).KIND;
+    }
+
+    public FindMath(options: OptionList) {
         this.processed.FindMath = true;
         return this;
     }
 
-    Compile() {
+    public Compile() {
         if (!this.processed.Compile) {
             for (const math of this.math.toArray()) {
-                if (math) math.Compile(this);
+                math.Compile(this);
             }
             this.processed.Compile = true;
         }
         return this;
     }
 
-    Typeset() {
+    public Typeset() {
         if (!this.processed.Typeset) {
             for (const math of this.math.toArray()) {
-                if (math) math.Typeset(this);
+                math.Typeset(this);
             }
             this.processed.Typeset = true;
         }
         return this;
     }
 
-    GetMetrics() {
+    public GetMetrics() {
         if (!this.processed.GetMetrics) {
             this.OutputJax.GetMetrics(this);
             this.processed.GetMetrics = true;
@@ -116,12 +120,12 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
-    AddEventHandlers() {
+    public AddEventHandlers() {
         this.processed.AddEventHandlers = true;
         return this;
     }
 
-    UpdateDocument() {
+    public UpdateDocument() {
         if (!this.processed.UpdateDocument) {
             for (const math of this.math.reversed().toArray()) {
                 math.UpdateDocument(this);
@@ -131,11 +135,11 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
-    RemoveFromDocument(restore: boolean = false) {
+    public RemoveFromDocument(restore: boolean = false) {
         return this;
     }
 
-    State(state: number, restore: boolean = false) {
+    public State(state: number, restore: boolean = false) {
         for (const math of this.math.toArray()) {
             math.State(state,restore);
         }
@@ -153,20 +157,20 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
-    Reset() {
+    public Reset() {
         for (const key of Object.keys(this.processed)) {
             this.processed[key] = false;
         }
         return this;
     }
 
-    Clear() {
+    public Clear() {
         this.Reset();
         this.math.Clear();
         return this;
     }
 
-    Concat(collection: MathDocument) {
+    public Concat(collection: MathDocument) {
         this.math.merge(collection.math);
         return this;
     }

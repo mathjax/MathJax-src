@@ -1,5 +1,5 @@
-import {MathDocument, AbstractMathDocument} from "./MathDocument.js";
-import {OptionList} from "../util/Options.js";
+import {MathDocument, AbstractMathDocument} from './MathDocument.js';
+import {OptionList} from '../util/Options.js';
 
 export interface Handler {
     name: string;
@@ -9,23 +9,32 @@ export interface Handler {
     Create(document: any, options: OptionList): MathDocument;
 }
 
+export interface HandlerClass {
+    new(priority?: number): Handler;
+    NAME: string;
+}
+
 class defaultMathDocument extends AbstractMathDocument {}
 
 export abstract class AbstractHandler implements Handler {
 
-    public name: string;
+    public static NAME: string = 'generic';
+
     public priority: number;
 
-    constructor(name: string, priority: number = 5) {
-        this.name = name;
+    constructor(priority: number = 5) {
         this.priority = priority;
     }
 
-    HandlesDocument(document: any) {
+    public get name() {
+        return (this.constructor as HandlerClass).NAME;
+    }
+
+    public HandlesDocument(document: any) {
         return false;
     }
 
-    Create(document: any, options: OptionList) {
+    public Create(document: any, options: OptionList) {
         return new defaultMathDocument(document, options) as MathDocument;
     }
 

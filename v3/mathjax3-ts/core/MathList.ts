@@ -7,7 +7,7 @@ export interface MathListClass extends LinkedListClass<MathItem> {
 
 export class MathList extends LinkedList<MathItem> {
 
-    isBefore(a: MathItem, b: MathItem) {
+    public isBefore(a: MathItem, b: MathItem) {
         return (a.start.i < b.start.i || (a.start.i === b.start.i && a.start.n < b.start.n));
     }
 

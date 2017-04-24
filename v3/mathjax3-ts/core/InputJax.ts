@@ -21,21 +21,26 @@ export interface InputJaxClass {
 }
 
 export abstract class AbstractInputJax implements InputJax {
-    public static NAME: string = 'Generic';
+    public static NAME: string = 'generic';
     public static OPTIONS: OptionList = {};
 
-    public name: string;
-    public processStrings: boolean = true;
     public options: OptionList;
     public preFilters: FunctionList;
     public postFilters: FunctionList;
 
     constructor(options: OptionList = {}) {
         let CLASS = this.constructor as InputJaxClass;
-        this.name = CLASS.NAME;
         this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
         this.preFilters = new FunctionList();
         this.postFilters = new FunctionList();
+    }
+
+    get name() {
+        return (this.constructor as InputJaxClass).NAME;
+    }
+
+    get processStrings() {
+        return true;
     }
 
     FindMath(node: Element | string[], options: OptionList) {

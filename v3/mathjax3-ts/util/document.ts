@@ -28,7 +28,7 @@ try {
     //
     //  Node version
     //
-    let jsdom = System.nodeRequire("jsdom");
+    let jsdom = System.nodeRequire('jsdom');
 
     class DOMXMLSerializer implements XMLSerializer {
         public serializeToString(node: Element) {

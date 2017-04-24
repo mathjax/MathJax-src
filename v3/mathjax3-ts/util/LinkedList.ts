@@ -48,7 +48,7 @@ export class LinkedList<DataClass> {
     //    for (const x of this)
     //  so use toArray() to convert to array, when needed
     //
-    toArray() {
+    public toArray() {
         return Array.from(this) as DataClass[];
     }
 
@@ -56,14 +56,14 @@ export class LinkedList<DataClass> {
     //  Used for sorting and merging lists
     //  (Overridden by subclasses)
     //
-    isBefore(a: DataClass, b: DataClass) {
+    public isBefore(a: DataClass, b: DataClass) {
         return (a < b);
     }
 
     //
     //  Push items on the end of the list
     //
-    push(...args: DataClass[]) {
+    public push(...args: DataClass[]) {
         for (const data of args) {
             let item = new ListItem<DataClass>(data);
             item.next = this.list;
@@ -77,7 +77,7 @@ export class LinkedList<DataClass> {
     //
     //  Pop the end item off the list and return its data
     //
-    pop(): DataClass {
+    public pop(): DataClass {
         let item = this.list.prev;
         if (item.data === END) return null;
         this.list.prev = item.prev;
@@ -89,7 +89,7 @@ export class LinkedList<DataClass> {
     //
     //  Push items at the head of the list
     //
-    unshift(...args: DataClass[]) {
+    public unshift(...args: DataClass[]) {
         for (const data of args) {
             let item = new ListItem<DataClass>(data);
             item.next = this.list.next;
@@ -103,7 +103,7 @@ export class LinkedList<DataClass> {
     //
     //  Remove an item from the head of the list and return its data
     //
-    shift(): DataClass {
+    public shift(): DataClass {
         let item = this.list.next;
         if (item.data === END) return null;
         this.list.next = item.next;
@@ -115,7 +115,7 @@ export class LinkedList<DataClass> {
     //
     //  Empty the list
     //
-    Clear() {
+    public Clear() {
         this.list.next = this.list.prev = this.list;
         return this;
     }
@@ -124,7 +124,7 @@ export class LinkedList<DataClass> {
     //  Make the list iterable and return the data from
     //  the items in the list.
     //
-    [Symbol.iterator]() {
+    public [Symbol.iterator]() {
         let current = this.list;
         return {
             next() {
@@ -138,7 +138,7 @@ export class LinkedList<DataClass> {
     //
     //  An iterator for the list in reverse order
     //
-    reversed() {
+    public reversed() {
         let current = this.list;
         return {
             [Symbol.iterator]() {
@@ -158,7 +158,7 @@ export class LinkedList<DataClass> {
     //
     //  Insert a new item into a sorted list in the correct locations
     //
-    insert(data: DataClass, isBefore: SortFn<DataClass> = null) {
+    public insert(data: DataClass, isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) {
             isBefore = this.isBefore.bind(this);
         }
@@ -176,7 +176,7 @@ export class LinkedList<DataClass> {
     //
     //  Sort the list using an optional sort function
     //
-    sort(isBefore: SortFn<DataClass> = null) {
+    public sort(isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) isBefore = this.isBefore.bind(this);
         //
         //  Make an array of singleton lists
@@ -208,7 +208,7 @@ export class LinkedList<DataClass> {
     //
     //  Merge a sorted list with another sorted list
     //
-    merge(list: LinkedList<DataClass>, isBefore: SortFn<DataClass> = null) {
+    public merge(list: LinkedList<DataClass>, isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) {
             isBefore = this.isBefore.bind(this);
         }

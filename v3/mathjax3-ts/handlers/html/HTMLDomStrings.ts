@@ -1,4 +1,4 @@
-import {UserOptions, DefaultOptions, OptionList} from "../../util/Options.js";
+import {UserOptions, DefaultOptions, OptionList} from '../../util/Options.js';
 
 //
 //  Make sure an option is an Array
@@ -24,20 +24,20 @@ export type HTMLNodeList = [Element, number][];
 export class HTMLDomStrings {
 
     public static OPTIONS: OptionList = {
-        skipTags: ["script","noscript","style","textarea","pre","code","annotation","annotation-xml"],
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'annotation', 'annotation-xml'],
                                           // The names of the tags whose contents will not be
                                           // scanned for math delimiters
 
-        includeTags: {br: "\n", wbr: "", "#comment": ""},
+        includeTags: {br: '\n', wbr: '', '#comment': ''},
                                           //  tags to be included in the text (and what
                                           //  text to replace them with)
 
-        ignoreClass: "tex2jax_ignore",    // the class name of elements whose contents should
+        ignoreClass: 'tex2jax_ignore',    // the class name of elements whose contents should
                                           // NOT be processed by tex2jax.  Note that this
                                           // is a regular expression, so be sure to quote any
                                           // regexp special characters
 
-        processClass: "tex2jax_process"   // the class name of elements whose contents SHOULD
+        processClass: 'tex2jax_process'   // the class name of elements whose contents SHOULD
                                           // be processed when they appear inside ones that
                                           // are ignored.  Note that this is a regular expression,
                                           // so be sure to quote any regexp special characters
@@ -63,7 +63,7 @@ export class HTMLDomStrings {
     //
     //  Set the initial values of the main properties
     //
-    Init() {
+    protected Init() {
         this.strings = [];
         this.string = '';
         this.snodes = [];
@@ -74,19 +74,19 @@ export class HTMLDomStrings {
     //
     //  Create the search pattersn for skipTags, ignoreClass, and processClass
     //
-    GetPatterns() {
+    protected GetPatterns() {
         let skip = MAKEARRAY(this.options['skipTags']);
         let ignore = MAKEARRAY(this.options['ignoreClass']);
         let process = MAKEARRAY(this.options['processClass']);
-        this.skipTags = new RegExp("^(?:"+skip.join("|")+")$","i");
-        this.ignoreClass = new RegExp("(?:^| )(?:"+ignore.join("|")+")(?: |$)");
-        this.processClass = new RegExp("(?:^| )(?:"+process+")(?: |$)");
+        this.skipTags = new RegExp('^(?:' + skip.join('|') + ')$', 'i');
+        this.ignoreClass = new RegExp('(?:^| )(?:' + ignore.join('|') + ')(?: |$)');
+        this.processClass = new RegExp('(?:^| )(?:' + process + ')(?: |$)');
     }
 
     //
     //  Add a string to the string array (and record its node)
     //
-    PushString() {
+    protected PushString() {
         if (this.string.match(/\S/)) {
             this.strings.push(this.string);
             this.nodes.push(this.snodes);
@@ -99,16 +99,18 @@ export class HTMLDomStrings {
     //  Add more text to the current string (and record the
     //  node and its position in the string)
     //
-    ExtendString(node: Element, string: string) {
-        this.snodes.push([node,string.length]);
+    protected ExtendString(node: Element, string: string) {
+        this.snodes.push([node, string.length]);
         this.string += string;
     }
 
     //
     //  Handle a #text node
     //
-    HandleText(node: Element, ignore: boolean) {
-        if (!ignore) this.ExtendString(node,node.nodeValue);
+    protected HandleText(node: Element, ignore: boolean) {
+        if (!ignore) {
+            this.ExtendString(node, node.nodeValue);
+        }
         return node.nextSibling as Element;
     }
 
@@ -116,7 +118,7 @@ export class HTMLDomStrings {
     //  Handle a BR, WBR, or #comment element (or others
     //  in the includeTag object).
     //
-    HandleTag(node: Element, ignore: boolean) {
+    protected HandleTag(node: Element, ignore: boolean) {
         if (!ignore) {
             let text = this.options['includeTags'][node.nodeName.toLowerCase()];
             this.ExtendString(node, text);
@@ -127,14 +129,14 @@ export class HTMLDomStrings {
     //
     //  Handle an arbitrary DOM node
     //
-    HandleContainer(node: Element, ignore: boolean) {
+    protected HandleContainer(node: Element, ignore: boolean) {
         this.PushString();
         let cname = node.className || '';
         let tname = node.tagName || '';
         let process = this.processClass.exec(cname);
-        if (node.firstChild && !node.getAttribute("data-MJX") &&
+        if (node.firstChild && !node.getAttribute('data-MJX') &&
             (process || !this.skipTags.exec(tname))) {
-            this.stack.push([node.nextSibling,ignore]);
+            this.stack.push([node.nextSibling, ignore]);
             node = node.firstChild as Element;
             ignore = (ignore || this.ignoreClass.exec(cname)) && !process;
         } else {
@@ -146,7 +148,7 @@ export class HTMLDomStrings {
     //
     //  Find the strings for a given DOM element
     //
-    Find(node: Element) {
+    public Find(node: Element) {
         this.Init();
         let stop = node.nextSibling;
         let ignore = false;

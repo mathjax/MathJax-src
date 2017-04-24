@@ -58,7 +58,7 @@ export class FindAsciiMath extends AbstractFindMath {
         let starts: string[] = [];
         this.end = {};
         options['delimiters'].forEach((delims: DELIMS) => this.addPattern(starts, delims, false));
-        this.start = new RegExp(starts.join("|"), "g");
+        this.start = new RegExp(starts.join('|'), 'g');
         this.hasPatterns = (starts.length > 0);
     }
 
@@ -68,13 +68,13 @@ export class FindAsciiMath extends AbstractFindMath {
     protected addPattern(starts: string[], delims: DELIMS, display: boolean) {
         let [open, close] = delims;
         starts.push(quotePattern(open));
-        this.end[open] = [close, display, new RegExp(quotePattern(close),"g")];
+        this.end[open] = [close, display, new RegExp(quotePattern(close), 'g')];
     }
 
     //
     //  Search for the end delimiter given the start delimiter.
     //
-    FindEnd(string: string, n: number, start: RegExpExecArray, end: ENDITEM) {
+    protected FindEnd(string: string, n: number, start: RegExpExecArray, end: ENDITEM) {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match = pattern.exec(string);
@@ -86,7 +86,7 @@ export class FindAsciiMath extends AbstractFindMath {
     //
     //  Search a string for math delimited by one of the delimiter pairs.
     //
-    FindMathInString(math: ProtoItem[], n: number, string: string) {
+    protected FindMathInString(math: ProtoItem[], n: number, string: string) {
         let start, match;
         this.start.lastIndex = 0;
         while ((start = this.start.exec(string))) {
@@ -102,7 +102,7 @@ export class FindAsciiMath extends AbstractFindMath {
     //  Search for math in an array of strings and return
     //  an array of matches.
     //
-    FindMath(strings: string[]) {
+    public FindMath(strings: string[]) {
         let math: ProtoItem[] = [];
         if (this.hasPatterns) {
             for (let i = 0, m = strings.length; i < m; i++) {

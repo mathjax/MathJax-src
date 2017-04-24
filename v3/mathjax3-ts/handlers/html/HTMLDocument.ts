@@ -1,26 +1,27 @@
-import {MathDocument, AbstractMathDocument} from "../../core/MathDocument.js";
-import {DefaultOptions, UserOptions, OptionList} from "../../util/Options.js";
-import {HTMLMathItem} from "./HTMLMathItem.js";
-import {HTMLMathList} from "./HTMLMathList.js";
-import {HTMLDomStrings} from "./HTMLDomStrings.js";
-import {InputJax} from "../../core/InputJax.js";
-import {MathItem, ProtoItem} from "../../core/MathItem.js";
+import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
+import {DefaultOptions, UserOptions, OptionList} from '../../util/Options.js';
+import {HTMLMathItem} from './HTMLMathItem.js';
+import {HTMLMathList} from './HTMLMathList.js';
+import {HTMLDomStrings} from './HTMLDomStrings.js';
+import {InputJax} from '../../core/InputJax.js';
+import {MathItem, ProtoItem} from '../../core/MathItem.js';
 
 export type HTMLNodeList = [Element, number][][];
 
 export class HTMLDocument extends AbstractMathDocument {
 
     public static KIND: string = 'HTML';
-    public static OPTIONS = DefaultOptions({
+    public static OPTIONS: OptionList = {
+        ...AbstractMathDocument.OPTIONS,
         MathList: HTMLMathList,
         DomStrings: null
-    }, AbstractMathDocument.OPTIONS);
+    };
     public static STATE = AbstractMathDocument.STATE;
 
     public DomStrings: HTMLDomStrings;
 
     constructor(document: any, options: OptionList) {
-        super(document,options);
+        super(document, options);
         this.DomStrings = this.options['DomStrings'] || new HTMLDomStrings();
     }
 
@@ -28,12 +29,12 @@ export class HTMLDocument extends AbstractMathDocument {
         for (const list of nodes[N]) {
             let [node, n] = list;
             if (index <= n) {
-                return {node:node, n:index, delim:delim};
+                return {node: node, n: index, delim: delim};
             } else {
                 index -= n;
             }
         }
-        return {node:null, n:0, delim:delim};
+        return {node: null, n: 0, delim: delim};
     }
 
     protected MathItem(item: ProtoItem, jax: InputJax, nodes: HTMLNodeList) {
@@ -57,7 +58,7 @@ export class HTMLDocument extends AbstractMathDocument {
         return containers;
     }
 
-    FindMath(options: OptionList) {
+    public FindMath(options: OptionList) {
         options = UserOptions({elements: [this.document.body]}, options);
         if (!this.processed.FindMath) {
             for (const container of this.getElements(options['elements'], this.document)) {
@@ -70,7 +71,7 @@ export class HTMLDocument extends AbstractMathDocument {
                         }
                     } else {
                         for (const math of jax.FindMath(container)) {
-                            let item = new HTMLMathItem(math.math,jax,math.display,math.start,math.end);
+                            let item = new HTMLMathItem(math.math, jax, math.display, math.start, math.end);
                             list.push(item);
                         }
                     }
@@ -82,14 +83,14 @@ export class HTMLDocument extends AbstractMathDocument {
         return this;
     }
 
-    UpdateDocument() {
+    public UpdateDocument() {
         if (!this.processed.UpdateDocument) {
             super.UpdateDocument();
             let sheet = this.DocumentStyleSheet();
             if (sheet) {
                 let styles = this.document.getElementById(sheet.id);
                 if (styles) {
-                    styles.parentNode.replaceChild(sheet,styles);
+                    styles.parentNode.replaceChild(sheet, styles);
                 } else {
                     this.document.head.appendChild(sheet);
                 }
@@ -99,11 +100,11 @@ export class HTMLDocument extends AbstractMathDocument {
         return this;
     }
 
-    RemoveFromDocument(restore: boolean = false) {
+    public RemoveFromDocument(restore: boolean = false) {
         if (this.processed.UpdateDocument) {
             for (const math of this.math.toArray()) {
                 if (math.State() >= STATE.INSERTED) {
-                    math.State(STATE.TYPESET,restore);
+                    math.State(STATE.TYPESET, restore);
                 }
             }
         }
@@ -111,14 +112,14 @@ export class HTMLDocument extends AbstractMathDocument {
         return this;
     }
 
-    DocumentStyleSheet() {
+    public DocumentStyleSheet() {
         return this.OutputJax.StyleSheet(this);
     }
 
-    TestMath(string: string, display: boolean = true) {
+    public TestMath(string: string, display: boolean = true) {
         if (!this.processed['TestMath']) {
-            let math = new HTMLMathItem(string,this.InputJax[0],display)
-            math.setMetrics(6,14,1000000,1000000,1);
+            let math = new HTMLMathItem(string, this.InputJax[0], display)
+            math.setMetrics(6, 14, 1000000, 1000000, 1);
             this.math.push(math);
             this.processed['TestMath'] = true;
         }

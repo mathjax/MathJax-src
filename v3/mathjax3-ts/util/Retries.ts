@@ -1,5 +1,3 @@
-//import {MathJax} from '../legacy/MathJax.js';
-
 declare var MathJax: {Callback: {After: Function}};
 
 export class RetryError extends Error {
@@ -24,7 +22,7 @@ export function HandleRetriesFor(code: Function) {
 };
 
 export function RetryAfter(promise: Promise<Object>) {
-    let err = new Error("MathJax retry") as RetryError;
+    let err = new Error('MathJax retry') as RetryError;
     err.retry = promise;
     throw err;
 }

@@ -13,7 +13,7 @@ export class PrioritizedList<DataClass> {
         this.items = [];
     }
 
-    [Symbol.iterator]() {
+    public [Symbol.iterator]() {
         let i = 0;
         let items = this.items;
         return {
@@ -23,20 +23,20 @@ export class PrioritizedList<DataClass> {
         };
     }
 
-    Add(item: DataClass, priority = PrioritizedList.DEFAULTPRIORITY) {
+    public Add(item: DataClass, priority = PrioritizedList.DEFAULTPRIORITY) {
         let i = this.items.length;
         do {i--} while (i >= 0 && priority < this.items[i].priority);
-        this.items.splice(i+1, 0, {item: item, priority: priority});
+        this.items.splice(i + 1, 0, {item: item, priority: priority});
         return item;
     }
 
-    Remove(item: DataClass) {
+    public Remove(item: DataClass) {
         let i = this.items.length;
         do {i--} while (i >= 0 && this.items[i].item !== item);
-        if (i >= 0) this.items.splice(i,1);
+        if (i >= 0) this.items.splice(i, 1);
     }
 
-    toArray() {
+    public toArray() {
         return Array.from(this);
     }
 

@@ -1,12 +1,12 @@
-import {AbstractOutputJax} from "../core/OutputJax.js";
-import {LegacyCHTML} from "../../mathjax2/output/CommonHTML.js";
-import {OptionList} from "../util/Options.js";
+import {AbstractOutputJax} from '../core/OutputJax.js';
+import {LegacyCHTML} from '../../mathjax2/output/CommonHTML.js';
+import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 
 export class CHTML extends AbstractOutputJax {
 
-    public static NAME: string = "CHTML";
+    public static NAME: string = 'CHTML';
     public static OPTIONS: OptionList = {
         ...AbstractOutputJax.OPTIONS
     };
@@ -14,8 +14,8 @@ export class CHTML extends AbstractOutputJax {
     //
     //  Typeset a MathItem tree
     //
-    Typeset(math: MathItem, html: MathDocument) {
-        return LegacyCHTML.Typeset(math,html);
+    public Typeset(math: MathItem, html: MathDocument) {
+        return LegacyCHTML.Typeset(math, html);
     }
 
     //
@@ -23,8 +23,8 @@ export class CHTML extends AbstractOutputJax {
     //  (put it in a span so that it won't be a delimiter if
     //  the page is typeset again).
     //
-    Escaped(math: MathItem, html: MathDocument) {
-        let span = html.document.createElement("span");
+    public Escaped(math: MathItem, html: MathDocument) {
+        let span = html.document.createElement('span');
         span.appendChild(html.document.createTextNode(math.math));
         return span;
     }
@@ -32,14 +32,14 @@ export class CHTML extends AbstractOutputJax {
     //
     //  Determine metrics for the locations of the math elements
     //
-    GetMetrics(html: MathDocument) {
+    public GetMetrics(html: MathDocument) {
         return LegacyCHTML.GetMetrics(html);
     }
 
     //
     //  Produces the CSS style element for the CommonHTML output
     //
-    StyleSheet(html: MathDocument) {
+    public StyleSheet(html: MathDocument) {
         return LegacyCHTML.StyleSheet(html);
     }
 

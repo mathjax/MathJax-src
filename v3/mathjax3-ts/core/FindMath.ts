@@ -24,7 +24,7 @@ export abstract class AbstractFindMath implements FindMath {
     //
     //  Locate math in an Element or a string array;
     //
-    FindMath(node: Element | string[]) {
+    public FindMath(node: Element | string[]) {
         return [] as ProtoItem[];
     }
 
