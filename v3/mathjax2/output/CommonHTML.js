@@ -1,6 +1,6 @@
 window = require("../../mathjax3/util/document.js").window;
 var document = require("../../mathjax3/util/document.js").document;
-MathJax = require("./legacy/MathJax.js").MathJax;
+MathJax = require("../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(
   "[MathJax]/extensions/MathEvents.js",
