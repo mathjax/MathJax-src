@@ -1,6 +1,6 @@
 interface DOMWindow extends Window {
-    DOMParser: DOMParser;
-    XMLSerializer: XMLSerializer;
+    DOMParser: typeof DOMParser;
+    XMLSerializer: typeof XMLSerializer;
 }
 
 declare var System: {nodeRequire: Function};
@@ -9,8 +9,8 @@ declare var window: DOMWindow;
 
 let theDocument: Document;
 let theWindow: Window;
-let theDOMParser: DOMParser;
-let theXMLSerializer: XMLSerializer;
+let theDOMParser: typeof DOMParser;
+let theXMLSerializer: typeof XMLSerializer;
 
 try {
 
