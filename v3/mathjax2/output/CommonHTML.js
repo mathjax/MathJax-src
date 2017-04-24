@@ -1,6 +1,6 @@
-window = require("../../util/document.js").window;
-var document = require("../../util/document.js").document;
-MathJax = require("../../legacy/MathJax.js").MathJax;
+window = require("../../mathjax3/util/document.js").window;
+var document = require("../../mathjax3/util/document.js").document;
+MathJax = require("./legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(
   "[MathJax]/extensions/MathEvents.js",
@@ -10,10 +10,10 @@ MathJax.Ajax.Preloading(
   "[MathJax]/jax/output/CommonHTML/fonts/TeX/fontdata.js"
 );
 
-require("../../legacy/jax/element/mml/jax.js");
-require("../../legacy/jax/output/CommonHTML/config.js");
-require("../../legacy/jax/output/CommonHTML/jax.js");
-require("../../legacy/jax/output/CommonHTML/fonts/TeX/fontdata.js");
+require("../legacy/jax/element/mml/jax.js");
+require("../legacy/jax/output/CommonHTML/config.js");
+require("../legacy/jax/output/CommonHTML/jax.js");
+require("../legacy/jax/output/CommonHTML/fonts/TeX/fontdata.js");
 
 var CHTML = MathJax.OutputJax.CommonHTML;
 var HTML = MathJax.HTML;
@@ -90,7 +90,7 @@ MathJax.Hub.Startup.signal.Post("onLoad");
 //
 //  The Tree-to-ElementJax visitor
 //
-MmlVisitor = require("MmlTree/js/LegacyMmlVisitor.js").LegacyMmlVisitor;
+MmlVisitor = require("../../mathjax3/core/MmlTree/LegacyMmlVisitor.js").LegacyMmlVisitor;
 var visitor = new MmlVisitor();
 
 exports.LegacyCHTML = {

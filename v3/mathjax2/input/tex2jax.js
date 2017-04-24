@@ -1,9 +1,9 @@
-var MathJax = require("../../legacy/MathJax.js").MathJax;
+var MathJax = require("../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading("[MathJax]/extensions/tex2jax.js");
-require("../../legacy/extensions/tex2jax.js");
+require("../legacy/extensions/tex2jax.js");
 
-var HTMLMathItem = require("../../handlers/html/HTMLMathItem.js").HTMLMathItem;
+var HTMLMathItem = require("../../mathjax3/handlers/html/HTMLMathItem.js").HTMLMathItem;
 
 var tex2jax = MathJax.Extension.tex2jax,
     encloseMath = tex2jax.encloseMath,

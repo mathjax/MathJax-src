@@ -1,4 +1,4 @@
-MathJax = require("../../legacy/MathJax.js").MathJax;
+MathJax = require("../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(
   "[MathJax]/jax/input/TeX/config.js",
@@ -14,21 +14,21 @@ MathJax.Ajax.Preloading(
   "[MathJax]/extensions/TeX/HTML.js"
 );
 
-require("../../legacy/jax/element/mml/jax.js");
-require("../../legacy/jax/input/TeX/config.js");
-require("../../legacy/jax/input/TeX/jax.js");
-require("../../legacy/extensions/TeX/AMSmath.js");
-require("../../legacy/extensions/TeX/AMSsymbols.js");
-require("../../legacy/extensions/TeX/AMScd.js");
-require("../../legacy/extensions/TeX/newcommand.js");
-require("../../legacy/extensions/TeX/unicode.js");
-require("../../legacy/extensions/TeX/mathchoice.js");
-require("../../legacy/extensions/TeX/bbox.js");
-require("../../legacy/extensions/TeX/HTML.js");
+require("../legacy/jax/element/mml/jax.js");
+require("../legacy/jax/input/TeX/config.js");
+require("../legacy/jax/input/TeX/jax.js");
+require("../legacy/extensions/TeX/AMSmath.js");
+require("../legacy/extensions/TeX/AMSsymbols.js");
+require("../legacy/extensions/TeX/AMScd.js");
+require("../legacy/extensions/TeX/newcommand.js");
+require("../legacy/extensions/TeX/unicode.js");
+require("../legacy/extensions/TeX/mathchoice.js");
+require("../legacy/extensions/TeX/bbox.js");
+require("../legacy/extensions/TeX/HTML.js");
 
-require("../../legacy/jax/element/MmlNode.js");
+require("../legacy/jax/element/MmlNode.js");
 
-var MmlFactory = require("../../../MmlTree/js/MmlFactory.js").MmlFactory;
+var MmlFactory = require("../mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 
 exports.LegacyTeX = {

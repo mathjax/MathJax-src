@@ -38,8 +38,8 @@ export class HTMLDocument extends AbstractMathDocument {
 
     protected MathItem(item: ProtoItem, jax: InputJax, nodes: HTMLNodeList) {
         let math = item.math;
-        let start = this.FindPosition(item.n, item.start, item.open, nodes);
-        let end = this.FindPosition(item.n, item.end, item.close, nodes);
+        let start = this.FindPosition(item.n, item.start.n, item.open, nodes);
+        let end = this.FindPosition(item.n, item.end.n, item.close, nodes);
         return new HTMLMathItem(math, jax, item.display, start, end);
     }
 

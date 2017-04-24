@@ -1,4 +1,4 @@
-MathJax = require("../../legacy/MathJax.js").MathJax;
+MathJax = require("../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(
   "[MathJax]/jax/input/MathML/config.js",
@@ -35,44 +35,44 @@ MathJax.Ajax.Preloading(
   "[MathJax]/jax/input/MathML/entities/z.js"
 );
 
-require("../../legacy/jax/element/mml/jax.js");
-require("../../legacy/jax/input/MathML/config.js");
-require("../../legacy/jax/input/MathML/jax.js");
-require("../../legacy/jax/input/MathML/entities/a.js");
-require("../../legacy/jax/input/MathML/entities/b.js");
-require("../../legacy/jax/input/MathML/entities/c.js");
-require("../../legacy/jax/input/MathML/entities/d.js");
-require("../../legacy/jax/input/MathML/entities/e.js");
-require("../../legacy/jax/input/MathML/entities/f.js");
-require("../../legacy/jax/input/MathML/entities/fr.js");
-require("../../legacy/jax/input/MathML/entities/g.js");
-require("../../legacy/jax/input/MathML/entities/h.js");
-require("../../legacy/jax/input/MathML/entities/i.js");
-require("../../legacy/jax/input/MathML/entities/j.js");
-require("../../legacy/jax/input/MathML/entities/k.js");
-require("../../legacy/jax/input/MathML/entities/l.js");
-require("../../legacy/jax/input/MathML/entities/m.js");
-require("../../legacy/jax/input/MathML/entities/n.js");
-require("../../legacy/jax/input/MathML/entities/o.js");
-require("../../legacy/jax/input/MathML/entities/opf.js");
-require("../../legacy/jax/input/MathML/entities/p.js");
-require("../../legacy/jax/input/MathML/entities/q.js");
-require("../../legacy/jax/input/MathML/entities/r.js");
-require("../../legacy/jax/input/MathML/entities/s.js");
-require("../../legacy/jax/input/MathML/entities/scr.js");
-require("../../legacy/jax/input/MathML/entities/t.js");
-require("../../legacy/jax/input/MathML/entities/u.js");
-require("../../legacy/jax/input/MathML/entities/v.js");
-require("../../legacy/jax/input/MathML/entities/w.js");
-require("../../legacy/jax/input/MathML/entities/x.js");
-require("../../legacy/jax/input/MathML/entities/y.js");
-require("../../legacy/jax/input/MathML/entities/z.js");
+require("../legacy/jax/element/mml/jax.js");
+require("../legacy/jax/input/MathML/config.js");
+require("../legacy/jax/input/MathML/jax.js");
+require("../legacy/jax/input/MathML/entities/a.js");
+require("../legacy/jax/input/MathML/entities/b.js");
+require("../legacy/jax/input/MathML/entities/c.js");
+require("../legacy/jax/input/MathML/entities/d.js");
+require("../legacy/jax/input/MathML/entities/e.js");
+require("../legacy/jax/input/MathML/entities/f.js");
+require("../legacy/jax/input/MathML/entities/fr.js");
+require("../legacy/jax/input/MathML/entities/g.js");
+require("../legacy/jax/input/MathML/entities/h.js");
+require("../legacy/jax/input/MathML/entities/i.js");
+require("../legacy/jax/input/MathML/entities/j.js");
+require("../legacy/jax/input/MathML/entities/k.js");
+require("../legacy/jax/input/MathML/entities/l.js");
+require("../legacy/jax/input/MathML/entities/m.js");
+require("../legacy/jax/input/MathML/entities/n.js");
+require("../legacy/jax/input/MathML/entities/o.js");
+require("../legacy/jax/input/MathML/entities/opf.js");
+require("../legacy/jax/input/MathML/entities/p.js");
+require("../legacy/jax/input/MathML/entities/q.js");
+require("../legacy/jax/input/MathML/entities/r.js");
+require("../legacy/jax/input/MathML/entities/s.js");
+require("../legacy/jax/input/MathML/entities/scr.js");
+require("../legacy/jax/input/MathML/entities/t.js");
+require("../legacy/jax/input/MathML/entities/u.js");
+require("../legacy/jax/input/MathML/entities/v.js");
+require("../legacy/jax/input/MathML/entities/w.js");
+require("../legacy/jax/input/MathML/entities/x.js");
+require("../legacy/jax/input/MathML/entities/y.js");
+require("../legacy/jax/input/MathML/entities/z.js");
 
-require("../../legacy/jax/element/MmlNode.js");
+require("../legacy/jax/element/MmlNode.js");
 
-var window = require("../../util/document.js").window;
+var window = require("../../mathjax3/util/document.js").window;
 
-var MmlFactory = require("../../../MmlTree/js/MmlFactory.js").MmlFactory;
+var MmlFactory = require("../../mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 
 MathJax.InputJax.MathML.Augment({

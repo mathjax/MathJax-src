@@ -1,4 +1,4 @@
-MathJax = require("../../legacy/MathJax.js").MathJax;
+MathJax = require("../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(
   "[MathJax]/jax/input/AsciiMath/config.js",
@@ -6,13 +6,13 @@ MathJax.Ajax.Preloading(
   "[MathJax]/jax/element/mml/jax.js"
 );
 
-require("../../legacy/jax/element/mml/jax.js");
-require("../../legacy/jax/input/AsciiMath/config.js");
-require("../../legacy/jax/input/AsciiMath/jax.js");
+require("../legacy/jax/element/mml/jax.js");
+require("../legacy/jax/input/AsciiMath/config.js");
+require("../legacy/jax/input/AsciiMath/jax.js");
 
-require("../../legacy/jax/element/MmlNode.js");
+require("../legacy/jax/element/MmlNode.js");
 
-var MmlFactory = require("../../../MmlTree/js/MmlFactory.js").MmlFactory;
+var MmlFactory = require("../../core/core/MmlTree/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 
 exports.LegacyAsciiMath = {

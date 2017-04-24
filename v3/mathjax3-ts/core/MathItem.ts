@@ -46,11 +46,11 @@ export interface MathItem {
 
 export interface ProtoItem {
     math: string;
-    start: number;
-    end: number;
-    open: string;
-    close: string;
-    n: number;
+    start: Location;
+    end: Location;
+    open?: string;
+    close?: string;
+    n?: number;
     display: boolean;
 }
 
