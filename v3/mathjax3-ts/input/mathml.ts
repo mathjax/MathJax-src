@@ -2,6 +2,7 @@ import {AbstractInputJax} from "../core/InputJax.js";
 import {DefaultOptions, SeparateOptions, OptionList} from "../util/Options.js";
 import {FunctionList} from "../util/FunctionList.js";
 import {MathItem, ProtoItem} from "../core/MathItem.js";
+import {DOMParser} from "../util/document.js";
 
 import {FindMathML} from "./mathml/FindMathML.js";
 import {MathMLCompile} from "./mathml/MathMLCompile.js";
