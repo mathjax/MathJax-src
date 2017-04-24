@@ -4,7 +4,7 @@ import {ProtoItem} from '../../core/MathItem.js';
 
 const NAMESPACE = "http://www.w3.org/1998/Math/MathML";
 
-export class NodeSet extends Set<Element> {}
+export type NodeSet = Set<Element>;
 
 //
 //  Locates MathML expressions within DOM nodes
@@ -17,7 +17,7 @@ export class FindMathML extends AbstractFindMath {
     //  Locate MathML nodes in the DOM
     //
     FindMath(node: Element) {
-        let set = new NodeSet();
+        let set: NodeSet = new Set<Element>();
         this.FindMathNodes(node, set);
         this.FindMathPrefixed(node, set);
         if (node.ownerDocument.documentElement.nodeName === 'html' &&  set.size === 0) {
