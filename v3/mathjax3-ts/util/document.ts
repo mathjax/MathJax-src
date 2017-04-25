@@ -1,6 +1,5 @@
 interface DOMWindow extends Window {
     DOMParser: typeof DOMParser;
-    XMLSerializer: typeof XMLSerializer;
 }
 
 declare var System: {nodeRequire: Function};
@@ -10,7 +9,6 @@ declare var window: DOMWindow;
 let theDocument: Document;
 let theWindow: Window;
 let theDOMParser: typeof DOMParser;
-let theXMLSerializer: typeof XMLSerializer;
 
 try {
 
@@ -21,32 +19,21 @@ try {
     theDocument = document;
     theWindow =  window as Window;
     theDOMParser = window.DOMParser;
-    theXMLSerializer = window.XMLSerializer;
 
 } catch (err) {
 
     //
     //  Node version
     //
-    let jsdom = System.nodeRequire('jsdom');
+    const jsdom = System.nodeRequire('jsdom');
+    const { JSDOM } = jsdom;
 
-    class DOMXMLSerializer implements XMLSerializer {
-        public static serializeToString(node: Element) {
-            return jsdom.serializeDocument(node);
-        }
-        public serializeToString(node: Element) {
-            return jsdom.serializeDocument(node);
-        }
-    }
-
-    theDocument = jsdom.jsdom();
-    theWindow = theDocument.defaultView;
+    theWindow = new JSDOM().window;
+    theDocument = theWindow.document;
     theDOMParser = (theWindow as DOMWindow).DOMParser;
-    theXMLSerializer = DOMXMLSerializer;
 
 }
 
 export {theDocument as document};
 export {theWindow as window};
 export {theDOMParser as DOMParser};
-export {theXMLSerializer as XMLSerializer};
