@@ -18,26 +18,28 @@ export class PrioritizedList<DataClass> {
         let items = this.items;
         return {
             next() {
-                return {value: items[i++], done: (i > items.length)}
+                return {value: items[i++], done: (i > items.length)};
             }
         };
     }
 
     public Add(item: DataClass, priority = PrioritizedList.DEFAULTPRIORITY) {
         let i = this.items.length;
-        do {i--} while (i >= 0 && priority < this.items[i].priority);
+        do { i--; } while (i >= 0 && priority < this.items[i].priority);
         this.items.splice(i + 1, 0, {item: item, priority: priority});
         return item;
     }
 
     public Remove(item: DataClass) {
         let i = this.items.length;
-        do {i--} while (i >= 0 && this.items[i].item !== item);
-        if (i >= 0) this.items.splice(i, 1);
+        do { i--; } while (i >= 0 && this.items[i].item !== item);
+        if (i >= 0) {
+            this.items.splice(i, 1);
+        }
     }
 
     public toArray() {
         return Array.from(this);
     }
 
-};
+}

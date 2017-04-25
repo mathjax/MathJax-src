@@ -20,11 +20,15 @@ export class HTMLHandler extends AbstractHandler {
 
     public HandlesDocument(document: any) {
         if (typeof(document) === 'string') {
-            try {document = parser.parseFromString(document, 'text/html')} catch (err) {}
+            try {
+                document = parser.parseFromString(document, 'text/html');
+            } catch (err) {}
         }
         if (document instanceof DOCUMENT ||
             document instanceof HTMLELEMENT ||
-            document instanceof FRAGMENT) return true;
+            document instanceof FRAGMENT) {
+            return true;
+        }
         return false;
     }
 
@@ -42,4 +46,4 @@ export class HTMLHandler extends AbstractHandler {
         }
         return new HTMLDocument(document, options);
     }
-};
+}

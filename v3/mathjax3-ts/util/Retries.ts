@@ -1,6 +1,6 @@
 declare var MathJax: {Callback: {After: Function}};
 
-export class RetryError extends Error {
+export interface RetryError extends Error {
     retry: Object;
 }
 
@@ -19,7 +19,7 @@ export function HandleRetriesFor(code: Function) {
             }
         }
     });
-};
+}
 
 export function RetryAfter(promise: Promise<Object>) {
     let err = new Error('MathJax retry') as RetryError;

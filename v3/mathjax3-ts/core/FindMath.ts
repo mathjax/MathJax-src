@@ -7,8 +7,8 @@ export interface FindMath {
 }
 
 export interface FindMathClass {
-    new(options: OptionList): FindMath;
     OPTIONS: OptionList;
+    new(options: OptionList): FindMath;
 }
 
 export abstract class AbstractFindMath implements FindMath {

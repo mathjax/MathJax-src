@@ -29,4 +29,4 @@ export class TeX extends AbstractInputJax {
         return this.FindTeX.FindMath(strings);
     }
 
-};
+}

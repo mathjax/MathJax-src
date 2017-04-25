@@ -11,4 +11,5 @@ export class MathList extends LinkedList<MathItem> {
         return (a.start.i < b.start.i || (a.start.i === b.start.i && a.start.n < b.start.n));
     }
 
-};
+}
+

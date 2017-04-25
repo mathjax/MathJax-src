@@ -10,11 +10,11 @@ export interface Handler {
 }
 
 export interface HandlerClass {
-    new(priority?: number): Handler;
     NAME: string;
+    new(priority?: number): Handler;
 }
 
-class defaultMathDocument extends AbstractMathDocument {}
+class DefaultMathDocument extends AbstractMathDocument {}
 
 export abstract class AbstractHandler implements Handler {
 
@@ -35,7 +35,7 @@ export abstract class AbstractHandler implements Handler {
     }
 
     public Create(document: any, options: OptionList) {
-        return new defaultMathDocument(document, options) as MathDocument;
+        return new DefaultMathDocument(document, options) as MathDocument;
     }
 
-};
+}

@@ -26,7 +26,9 @@ export class HTMLMathItem extends AbstractMathItem {
                 }
                 node.parentNode.replaceChild(this.typeset, node);
             } else {
-                if (this.start.n) node = node.splitText(this.start.n);
+                if (this.start.n) {
+                    node = node.splitText(this.start.n);
+                }
                 while (node !== this.end.node) {
                     let next = node.nextSibling as Text;
                     node.parentNode.removeChild(node);
@@ -62,6 +64,6 @@ export class HTMLMathItem extends AbstractMathItem {
         node.parentNode.removeChild(node);
     }
 
-};
+}
 
 let STATE = HTMLMathItem.STATE;

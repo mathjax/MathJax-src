@@ -29,4 +29,4 @@ export class AsciiMath extends AbstractInputJax {
         return this.FindAsciiMath.FindMath(strings);
     }
 
-};
+}

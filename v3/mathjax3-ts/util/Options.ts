@@ -39,7 +39,9 @@ export function Copy(def: OptionList): OptionList {
         } else if (isObject(value)) {
             prop.value = Copy(value);
         }
-        if (prop.enumerable) props[key] = prop;
+        if (prop.enumerable) {
+            props[key] = prop;
+        }
     }
     return Object.defineProperties({}, props);
 }
@@ -120,7 +122,7 @@ export function SeparateOptions(options: OptionList, ...objects: OptionList[]) {
     let results: OptionList[] = [];
     for (const object of objects) {
         let exists: OptionList = {}, missing: OptionList = {};
-        for (const key of Object.keys(options||{})) {
+        for (const key of Object.keys(options || {})) {
             (object[key] === undefined ? missing : exists)[key] = options[key];
         }
         results.push(exists);

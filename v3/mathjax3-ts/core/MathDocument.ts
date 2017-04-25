@@ -28,9 +28,9 @@ export interface MathDocument {
 }
 
 export interface MathDocumentClass {
-    new(document: any, options?: OptionList): MathDocument;
     KIND: string;
     OPTIONS: OptionList;
+    new(document: any, options?: OptionList): MathDocument;
 }
 
 export interface MathProcessed {
@@ -43,8 +43,8 @@ export interface MathProcessed {
     [name: string]: boolean;
 }
 
-class defaultInputJax extends AbstractInputJax {}
-class defaultOutputJax extends AbstractOutputJax {}
+class DefaultInputJax extends AbstractInputJax {}
+class DefaultOutputJax extends AbstractOutputJax {}
 
 export abstract class AbstractMathDocument implements MathDocument {
 
@@ -76,8 +76,8 @@ export abstract class AbstractMathDocument implements MathDocument {
             AddEventHandlers: false,
             UpdateDocument: false
         };
-        this.InputJax = this.options['InputJax'] || [new defaultInputJax()];
-        this.OutputJax = this.options['OutputJax'] || new defaultOutputJax();
+        this.InputJax = this.options['InputJax'] || [new DefaultInputJax()];
+        this.OutputJax = this.options['OutputJax'] || new DefaultOutputJax();
         if (!Array.isArray(this.InputJax)) {
             this.InputJax = [this.InputJax];
         }
@@ -141,7 +141,7 @@ export abstract class AbstractMathDocument implements MathDocument {
 
     public State(state: number, restore: boolean = false) {
         for (const math of this.math.toArray()) {
-            math.State(state,restore);
+            math.State(state, restore);
         }
         if (state < STATE.INSERTED) {
             this.processed.UpdateDocument = false;
@@ -175,6 +175,6 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
-};
+}
 
 let STATE = AbstractMathDocument.STATE;

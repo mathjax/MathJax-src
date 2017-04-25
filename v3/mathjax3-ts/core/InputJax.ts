@@ -15,9 +15,9 @@ export interface InputJax {
 }
 
 export interface InputJaxClass {
-    new(options?: OptionList): InputJax;
     NAME: string;
     OPTIONS: OptionList;
+    new(options?: OptionList): InputJax;
 }
 
 export abstract class AbstractInputJax implements InputJax {
@@ -35,21 +35,21 @@ export abstract class AbstractInputJax implements InputJax {
         this.postFilters = new FunctionList();
     }
 
-    get name() {
+    public get name() {
         return (this.constructor as InputJaxClass).NAME;
     }
 
-    get processStrings() {
+    public get processStrings() {
         return true;
     }
 
-    FindMath(node: Element | string[], options: OptionList) {
+    public FindMath(node: Element | string[], options: OptionList) {
         // should operate on an array of strings, but for now, use DOM node
         return [] as ProtoItem[];
     }
 
-    Compile(math: MathItem) {
+    public Compile(math: MathItem) {
         return null as MmlNode;
     }
 
-};
+}

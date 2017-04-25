@@ -74,4 +74,4 @@ export class FindMathML extends AbstractFindMath {
         return math;
     }
 
-};
+}

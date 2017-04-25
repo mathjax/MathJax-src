@@ -79,7 +79,9 @@ export class LinkedList<DataClass> {
     //
     public pop(): DataClass {
         let item = this.list.prev;
-        if (item.data === END) return null;
+        if (item.data === END) {
+            return null;
+        }
         this.list.prev = item.prev;
         item.prev.next = this.list;
         item.next = item.prev = null;
@@ -105,9 +107,11 @@ export class LinkedList<DataClass> {
     //
     public shift(): DataClass {
         let item = this.list.next;
-        if (item.data === END) return null;
+        if (item.data === END) {
+            return null;
+        }
         this.list.next = item.next;
-        item.next.prev = this.list
+        item.next.prev = this.list;
         item.next = item.prev = null;
         return item.data as DataClass;
     }
@@ -129,10 +133,11 @@ export class LinkedList<DataClass> {
         return {
             next() {
                 current = current.next;
-                if (current.data === END) return {value: null, done: true};
-                return {value: current.data, done: false};
+                return (current.data === END ?
+                        {value: null, done: true} :
+                        {value: current.data, done: false});
             }
-        }
+        };
     }
 
     //
@@ -146,13 +151,14 @@ export class LinkedList<DataClass> {
             },
             next() {
                 current = current.prev;
-                if (current.data === END) return {done: true};
-                return {value: current.data};
+                return (current.data === END ?
+                        {value: null, done: true} :
+                        {value: current.data, done: false});
             },
             toArray() {
                 return Array.from(this) as DataClass[];
             }
-        }
+        };
     }
 
     //
@@ -177,7 +183,9 @@ export class LinkedList<DataClass> {
     //  Sort the list using an optional sort function
     //
     public sort(isBefore: SortFn<DataClass> = null) {
-        if (isBefore === null) isBefore = this.isBefore.bind(this);
+        if (isBefore === null) {
+            isBefore = this.isBefore.bind(this);
+        }
         //
         //  Make an array of singleton lists
         //
@@ -195,13 +203,15 @@ export class LinkedList<DataClass> {
         while (lists.length > 1) {
             let l1 = lists.shift();
             let l2 = lists.shift();
-            l1.merge(l2,isBefore);
+            l1.merge(l2, isBefore);
             lists.push(l1);
         }
         //
         //  Use the final list as our list
         //
-        if (lists.length) this.list = lists[0].list;
+        if (lists.length) {
+            this.list = lists[0].list;
+        }
         return this;
     }
 
@@ -232,11 +242,11 @@ export class LinkedList<DataClass> {
             //    Go on to the next item in the main list
             //
             if (isBefore(mcur.data as DataClass, lcur.data as DataClass)) {
-                [mcur.prev.next,lcur.prev.next] = [lcur,mcur];
-                [mcur.prev,lcur.prev] = [lcur.prev,mcur.prev];
-                [this.list.prev.next,list.list.prev.next] = [list.list,this.list];
-                [this.list.prev,list.list.prev] = [list.list.prev,this.list.prev];
-                [lcur,mcur] = [mcur.next,lcur];
+                [mcur.prev.next, lcur.prev.next] = [lcur, mcur];
+                [mcur.prev, lcur.prev] = [lcur.prev, mcur.prev];
+                [this.list.prev.next, list.list.prev.next] = [list.list, this.list];
+                [this.list.prev, list.list.prev] = [list.list.prev, this.list.prev];
+                [lcur, mcur] = [mcur.next, lcur];
             } else {
                 lcur = lcur.next;
             }

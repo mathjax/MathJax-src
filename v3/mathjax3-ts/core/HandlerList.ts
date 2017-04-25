@@ -27,4 +27,4 @@ export class HandlerList extends PrioritizedList<Handler>  {
         return this.HandlesDocument(document).Create(document, options);
     }
 
-};
+}

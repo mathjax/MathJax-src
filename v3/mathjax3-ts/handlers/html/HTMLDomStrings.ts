@@ -3,14 +3,16 @@ import {UserOptions, DefaultOptions, OptionList} from '../../util/Options.js';
 //
 //  Make sure an option is an Array
 //
-const MAKEARRAY = function (x: string): string[] {return (Array.isArray(x) ? x : [x])};
+const MAKEARRAY = function (x: string): string[] {
+    return (Array.isArray(x) ? x : [x]);
+};
 
 //
 //  Class interface for HTMLDomStrings
 //
 export interface HTMLDomStringsClass {
-    new(options: OptionList): HTMLDomStrings;
     OPTIONS: OptionList;
+    new(options: OptionList): HTMLDomStrings;
 }
 
 //
@@ -99,9 +101,9 @@ export class HTMLDomStrings {
     //  Add more text to the current string (and record the
     //  node and its position in the string)
     //
-    protected ExtendString(node: Element, string: string) {
-        this.snodes.push([node, string.length]);
-        this.string += string;
+    protected ExtendString(node: Element, text: string) {
+        this.snodes.push([node, text.length]);
+        this.string += text;
     }
 
     //
@@ -160,7 +162,7 @@ export class HTMLDomStrings {
             } else if (include[node.nodeName.toLowerCase()] !== undefined) {
                 node = this.HandleTag(node, ignore);
             } else {
-                [node, ignore] = this.HandleContainer(node,ignore);
+                [node, ignore] = this.HandleContainer(node, ignore);
             }
             if (!node && this.stack.length) {
                 this.PushString();

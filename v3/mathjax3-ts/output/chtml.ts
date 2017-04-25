@@ -43,4 +43,4 @@ export class CHTML extends AbstractOutputJax {
         return LegacyCHTML.StyleSheet(html);
     }
 
-};
+}

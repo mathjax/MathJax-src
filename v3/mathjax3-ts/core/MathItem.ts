@@ -75,7 +75,7 @@ export abstract class AbstractMathItem implements MathItem {
     public inputData: OptionList = {};
     public outputData: OptionList = {};
 
-    constructor (math: string, jax: InputJax, display: boolean =true,
+    constructor (math: string, jax: InputJax, display: boolean = true,
                  start: Location = {i: 0, n: 0, delim: ''},
                  end: Location = {i: 0, n: 0, delim: ''}) {
         this.math = math;
@@ -122,7 +122,7 @@ export abstract class AbstractMathItem implements MathItem {
             containerWidth: cwidth,
             lineWidth: lwidth,
             scale: scale
-        }
+        };
     }
 
     public State(state: number = null, restore: boolean = false) {
@@ -137,11 +137,11 @@ export abstract class AbstractMathItem implements MathItem {
             if (state < STATE.COMPILED && this.state >= STATE.COMPILED) {
                 this.inputData = {};
             }
-            this.state = state
+            this.state = state;
         }
         return this.state;
     }
 
-};
+}
 
 let STATE = AbstractMathItem.STATE;

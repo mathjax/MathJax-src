@@ -31,10 +31,10 @@ try {
     let jsdom = System.nodeRequire('jsdom');
 
     class DOMXMLSerializer implements XMLSerializer {
-        public serializeToString(node: Element) {
+        public static serializeToString(node: Element) {
             return jsdom.serializeDocument(node);
         }
-        public static serializeToString(node: Element) {
+        public serializeToString(node: Element) {
             return jsdom.serializeDocument(node);
         }
     }

@@ -16,7 +16,9 @@ export class MathML extends AbstractInputJax {
         FindMathML: null,
         MathMLCompile: null,
         DOMParser: null,
-        parseError: function (node: Element) {this.Error(node.textContent.replace(/\n.*/g,''))}
+        parseError: function (node: Element) {
+            this.Error(node.textContent.replace(/\n.*/g, ''));
+        }
     }, AbstractInputJax.OPTIONS);
 
     protected FindMathML: FindMathML;
@@ -72,7 +74,7 @@ export class MathML extends AbstractInputJax {
             if (err.textContent === '') {
                 this.Error('Error processing MathML');
             }
-            this.options['parseError'].call(this,err);
+            this.options['parseError'].call(this, err);
         }
         return doc;
     }
@@ -86,4 +88,4 @@ export class MathML extends AbstractInputJax {
         throw new Error(message);
     }
 
-};
+}

@@ -116,9 +116,9 @@ export class HTMLDocument extends AbstractMathDocument {
         return this.OutputJax.StyleSheet(this);
     }
 
-    public TestMath(string: string, display: boolean = true) {
+    public TestMath(text: string, display: boolean = true) {
         if (!this.processed['TestMath']) {
-            let math = new HTMLMathItem(string, this.InputJax[0], display)
+            let math = new HTMLMathItem(text, this.InputJax[0], display);
             math.setMetrics(6, 14, 1000000, 1000000, 1);
             this.math.push(math);
             this.processed['TestMath'] = true;
@@ -126,6 +126,6 @@ export class HTMLDocument extends AbstractMathDocument {
         return this;
     }
 
-};
+}
 
 let STATE = HTMLDocument.STATE;

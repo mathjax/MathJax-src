@@ -6,15 +6,17 @@ import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
 //  Sort strings by length
 //
 const sortLength = function (a: string, b: string) {
-    if (a.length !== b.length) {return b.length - a.length}
-    return (a == b ? 0 : (a < b ? -1 : 1));
+    if (a.length !== b.length) {
+        return b.length - a.length;
+    }
+    return (a === b ? 0 : (a < b ? -1 : 1));
 };
 
 //
 //  Quote a string for use in regular expressions
 //
 const quotePattern = function (text: string) {
-    return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g,'\\$1');
+    return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
 };
 
 //
@@ -37,7 +39,7 @@ export type DELIMS = [string, string];
 export class FindAsciiMath extends AbstractFindMath {
 
     public static OPTIONS: OptionList = {
-        delimiters: [['`','`']],   // The start/stop delimiter pairs for asciimath code
+        delimiters: [['`', '`']],   // The start/stop delimiter pairs for asciimath code
     };
 
     protected start: RegExp;
@@ -74,23 +76,25 @@ export class FindAsciiMath extends AbstractFindMath {
     //
     //  Search for the end delimiter given the start delimiter.
     //
-    protected FindEnd(string: string, n: number, start: RegExpExecArray, end: ENDITEM) {
+    protected FindEnd(text: string, n: number, start: RegExpExecArray, end: ENDITEM) {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
-        let match = pattern.exec(string);
-        if (!match) return null;
-        return MATCH(start[0], string.substr(i, match.index - i), match[0],
+        let match = pattern.exec(text);
+        if (!match) {
+            return null;
+        }
+        return MATCH(start[0], text.substr(i, match.index - i), match[0],
                      n, start.index, match.index + match[0].length, display);
     }
 
     //
     //  Search a string for math delimited by one of the delimiter pairs.
     //
-    protected FindMathInString(math: ProtoItem[], n: number, string: string) {
+    protected FindMathInString(math: ProtoItem[], n: number, text: string) {
         let start, match;
         this.start.lastIndex = 0;
-        while ((start = this.start.exec(string))) {
-            match = this.FindEnd(string, n, start, this.end[start[0]]);
+        while ((start = this.start.exec(text))) {
+            match = this.FindEnd(text, n, start, this.end[start[0]]);
             if (match) {
                 math.push(match);
                 this.start.lastIndex = match.end.n;
@@ -106,10 +110,10 @@ export class FindAsciiMath extends AbstractFindMath {
         let math: ProtoItem[] = [];
         if (this.hasPatterns) {
             for (let i = 0, m = strings.length; i < m; i++) {
-                this.FindMathInString(math,i,strings[i]);
+                this.FindMathInString(math, i, strings[i]);
             }
         }
         return math;
     }
 
-};
+}

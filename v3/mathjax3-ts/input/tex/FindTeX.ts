@@ -6,8 +6,10 @@ import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
 //  Sort strings by length
 //
 const sortLength = function (a: string, b: string) {
-    if (a.length !== b.length) {return b.length - a.length}
-    return (a == b ? 0 : (a < b ? -1 : 1));
+    if (a.length !== b.length) {
+        return b.length - a.length;
+    }
+    return (a === b ? 0 : (a < b ? -1 : 1));
 };
 
 //
@@ -37,13 +39,13 @@ export class FindTeX extends AbstractFindMath {
 
     public static OPTIONS: OptionList = {
         inlineMath: [              // The start/stop pairs for in-line math
-      //  ['$','$'],               //  (comment out any you don't want, or add your own, but
-          ['\\(','\\)']            //  be sure that you don't have an extra comma at the end)
+      //  ['$', '$'],              //  (comment out any you don't want, or add your own, but
+          ['\\(', '\\)']           //  be sure that you don't have an extra comma at the end)
         ],
 
         displayMath: [             // The start/stop pairs for display math
-          ['$$','$$'],             //  (comment out any you don't want, or add your own, but
-          ['\\[','\\]']            //  be sure that you don't have an extra comma at the end)
+          ['$$', '$$'],            //  (comment out any you don't want, or add your own, but
+          ['\\[', '\\]']           //  be sure that you don't have an extra comma at the end)
         ],
 
         processEscapes: true,      // set to true to allow \$ to produce a dollar without
@@ -78,13 +80,19 @@ export class FindTeX extends AbstractFindMath {
         let i = 1;
         options['inlineMath'].forEach((delims: DELIMS) => this.addPattern(starts, delims, false));
         options['displayMath'].forEach((delims: DELIMS) => this.addPattern(starts, delims, true));
-        if (starts.length) parts.push(starts.sort(sortLength).join('|'));
+        if (starts.length) {
+            parts.push(starts.sort(sortLength).join('|'));
+        }
         if (options['processEnvironments']) {
             parts.push('\\\\begin\\{([^}]*)\\}');
             this.env = i; i++;
         }
-        if (options['processEscapes']) subparts.push('\\\\([\\\\$])');
-        if (options['processRefs'])    subparts.push('(\\\\(?:eq)?ref\\{[^}]*\\})');
+        if (options['processEscapes']) {
+            subparts.push('\\\\([\\\\$])');
+        }
+        if (options['processRefs'])    {
+            subparts.push('(\\\\(?:eq)?ref\\{[^}]*\\})');
+        }
         if (subparts.length) {
             parts.push('(' + subparts.join('|') + ')');
             this.sub = i;
@@ -114,18 +122,20 @@ export class FindTeX extends AbstractFindMath {
     //  skipping braced groups, and control sequences that aren't
     //  the close delimiter.
     //
-    protected FindEnd(string: string, n: number, start: RegExpExecArray, end: ENDITEM) {
+    protected FindEnd(text: string, n: number, start: RegExpExecArray, end: ENDITEM) {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match: RegExpExecArray, braces: number = 0;
-        while ((match = pattern.exec(string))) {
+        while ((match = pattern.exec(text))) {
             if (match[0] === close && braces === 0) {
-                return MATCH(start[0], string.substr(i, match.index - i), match[0],
+                return MATCH(start[0], text.substr(i, match.index - i), match[0],
                              n, start.index, match.index + match[0].length, display);
             } else if (match[0] === '{') {
                 braces++;
             } else if (match[0] === '}') {
-                if (braces) braces--;
+                if (braces) {
+                    braces--;
+                }
             }
         }
         return null;
@@ -135,13 +145,13 @@ export class FindTeX extends AbstractFindMath {
     //  Search a string for math delimited by one of the delimiter pairs,
     //  or by \being{env}...\end{env}, or \eqref{...}, \ref{...}, \\, or \$.
     //
-    protected FindMathInString(math: ProtoItem[], n: number, string: string) {
+    protected FindMathInString(math: ProtoItem[], n: number, text: string) {
         let start, match;
         this.start.lastIndex = 0;
-        while ((start = this.start.exec(string))) {
+        while ((start = this.start.exec(text))) {
             if (start[this.env] !== undefined && this.env) {
                 let end = '\\end{' + start[this.env] + '}';
-                match = this.FindEnd(string, n, start, [end, true, this.endPattern(end)]);
+                match = this.FindEnd(text, n, start, [end, true, this.endPattern(end)]);
                 if (match) {
                     match.math = match.open + match.math + match.close;
                     match.open = match.close = '';
@@ -155,7 +165,7 @@ export class FindTeX extends AbstractFindMath {
                     match = MATCH('', math, '', n, start.index, end, false);
                 }
             } else {
-                match = this.FindEnd(string, n, start, this.end[start[0]]);
+                match = this.FindEnd(text, n, start, this.end[start[0]]);
             }
             if (match) {
                 math.push(match);
@@ -172,10 +182,10 @@ export class FindTeX extends AbstractFindMath {
         let math: ProtoItem[] = [];
         if (this.hasPatterns) {
             for (let i = 0, m = strings.length; i < m; i++) {
-                this.FindMathInString(math,i,strings[i]);
+                this.FindMathInString(math, i, strings[i]);
             }
         }
         return math;
     }
 
-};
+}

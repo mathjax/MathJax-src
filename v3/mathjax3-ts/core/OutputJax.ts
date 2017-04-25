@@ -13,9 +13,9 @@ export interface OutputJax {
 }
 
 export interface OutputJaxClass {
-    new(options?: OptionList): OutputJax;
     NAME: string;
     OPTIONS: OptionList;
+    new(options?: OptionList): OutputJax;
 }
 
 export abstract class AbstractOutputJax implements OutputJax {
@@ -41,4 +41,4 @@ export abstract class AbstractOutputJax implements OutputJax {
 
     public StyleSheet(document: MathDocument) {}
 
-};
+}

@@ -6,7 +6,9 @@ export class FunctionList extends PrioritizedList<Function> {
     public Execute(...data: any[]) {
         for (const item of this.toArray()) {
             let result = item.item(...data);
-            if (result === false) return false;
+            if (result === false) {
+                return false;
+            }
         }
         return true;
     }
@@ -31,4 +33,4 @@ export class FunctionList extends PrioritizedList<Function> {
             })();
         });
     }
-};
+}
