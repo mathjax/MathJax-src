@@ -2,7 +2,7 @@ import {AbstractInputJax} from '../core/InputJax.js';
 import {DefaultOptions, SeparateOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {MathItem, ProtoItem} from '../core/MathItem.js';
-import {DOMParser} from '../util/document.js';
+import {DOM} from '../util/DOM.js';
 
 import {FindMathML} from './mathml/FindMathML.js';
 import {MathMLCompile} from './mathml/MathMLCompile.js';
@@ -31,7 +31,7 @@ export class MathML extends AbstractInputJax {
         super(mml);
         this.FindMathML = this.options['FindMathML'] || new FindMathML(find);
         this.MathML = this.options['MathMLCompile'] || new MathMLCompile(compile);
-        this.parser = this.options['DOMParser'] || new DOMParser();
+        this.parser = this.options['DOMParser'] || new (DOM.DOMParser)();
         this.mmlFilters = new FunctionList();
     }
 

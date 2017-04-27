@@ -1,19 +1,69 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the HTMLMathItem object
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {AbstractMathItem, Location} from '../../core/MathItem.js';
 import {InputJax} from '../../core/InputJax.js';
 import {HTMLDocument} from './HTMLDocument.js';
+
+/*****************************************************************/
+/*
+ *  Implements the HTMLMathItem class (extends AbstractMathItem)
+ */
 
 export class HTMLMathItem extends AbstractMathItem {
 
     public static STATE = AbstractMathItem.STATE;
 
+    /*
+     * @override
+     */
     constructor(math: string, jax: InputJax, display: boolean = true,
                 start: Location = {node: null, n: 0, delim: ''},
                 end: Location = {node: null, n: 0, delim: ''}) {
         super(math, jax, display, start, end);
     }
 
+    /*
+     * Not yet implemented
+     *
+     * @override
+     */
     public addEventHandlers() {}
 
+    /*
+     * Insert the typeset MathItem into the document at the right location
+     *   If the starting and ending nodes are the same:
+     *     Split the text to isolate the math and its delimiters
+     *     Replace the math by the typeset version
+     *   Otherewise (spread over several nodes)
+     *     Split the start node, if needed
+     *     Remove nodes until we reach the end node
+     *     Insert the math before the end node
+     *     Split the end node, if needed
+     *     Remove the end node
+     *
+     * @override
+     */
     public UpdateDocument(html: HTMLDocument) {
         if (this.State() < STATE.INSERTED) {
             let node = this.start.node as Text;
@@ -37,8 +87,8 @@ export class HTMLMathItem extends AbstractMathItem {
                 node.parentNode.insertBefore(this.typeset, node);
                 if (this.end.n < node.nodeValue.length) {
                     node.splitText(this.end.n);
-                    node.parentNode.removeChild(node);
                 }
+                node.parentNode.removeChild(node);
             }
             this.start.node = this.end.node = this.typeset;
             this.start.n = this.end.n = 0;
@@ -46,6 +96,12 @@ export class HTMLMathItem extends AbstractMathItem {
         }
     }
 
+    /*
+     * Remove the typeset math from the document, and put back the original
+     *  expression and its delimiters, if requested.
+     *
+     * @override
+     */
     public RemoveFromDocument(restore: boolean = false) {
         if (this.State() >= STATE.TYPESET) {
             let node = this.start.node;

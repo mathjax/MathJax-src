@@ -1,3 +1,26 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the HTMLDomStrings class
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {UserOptions, DefaultOptions, OptionList} from '../../util/Options.js';
 
 //
@@ -7,22 +30,32 @@ const MAKEARRAY = function (x: string): string[] {
     return (Array.isArray(x) ? x : [x]);
 };
 
-//
-//  Class interface for HTMLDomStrings
-//
+/*****************************************************************/
+/*
+ *  The HTHMLDomStrings class interface
+ */
+
 export interface HTMLDomStringsClass {
+    /*
+     * The default options
+     */
     OPTIONS: OptionList;
+
     new(options: OptionList): HTMLDomStrings;
 }
 
-//
-//  List of nodes and their indices
-//
+/*
+ *  List of consecutive text nodes and their text lengths
+ */
 export type HTMLNodeList = [Element, number][];
 
-//
-//  A class for finding the strings in a DOM object
-//
+/*****************************************************************/
+/*
+ *  The HTMLDocument class (extends AbstractMathDocument)
+ *
+ *  A class for extracting the text from DOM trees
+ */
+
 export class HTMLDomStrings {
 
     public static OPTIONS: OptionList = {
@@ -45,16 +78,49 @@ export class HTMLDomStrings {
                                           // so be sure to quote any regexp special characters
     };
 
+    /*
+     * The options for this instance
+     */
     protected options: OptionList;
+
+    /*
+     * The array of strings found in the DOM
+     */
     protected strings: string[];
+
+    /*
+     * The string currently being constructed
+     */
     protected string: string;
+
+    /*
+     * The list of nodes and lengths for the string being constructed
+     */
     protected snodes: HTMLNodeList;
+
+    /*
+     * The list of node lists corresponding to the strings in this.strings
+     */
     protected nodes: HTMLNodeList[];
-    protected stack: any[];
+
+    /*
+     * The container nodes that are currently being traversed, and whether their
+     *  contents are being ignored or not
+     */
+    protected stack: [Element, boolean][];
+
+    /*
+     * Regular expressions for the tags to be skipped, and which classes should start/stop
+     *  processing of math
+     */
     protected skipTags: RegExp;
     protected ignoreClass: RegExp;
     protected processClass: RegExp;
 
+    /*
+     * @param{OptionList} options  The user-supplied options
+     * @constructor
+     */
     constructor(options: OptionList = null) {
         let CLASS = this.constructor as HTMLDomStringsClass;
         this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
@@ -62,9 +128,9 @@ export class HTMLDomStrings {
         this.GetPatterns();
     }
 
-    //
-    //  Set the initial values of the main properties
-    //
+    /*
+     * Set the initial values of the main properties
+     */
     protected Init() {
         this.strings = [];
         this.string = '';
@@ -73,9 +139,9 @@ export class HTMLDomStrings {
         this.stack = [];
     }
 
-    //
-    //  Create the search pattersn for skipTags, ignoreClass, and processClass
-    //
+    /*
+     * Create the search patterns for skipTags, ignoreClass, and processClass
+     */
     protected GetPatterns() {
         let skip = MAKEARRAY(this.options['skipTags']);
         let ignore = MAKEARRAY(this.options['ignoreClass']);
@@ -85,9 +151,9 @@ export class HTMLDomStrings {
         this.processClass = new RegExp('(?:^| )(?:' + process + ')(?: |$)');
     }
 
-    //
-    //  Add a string to the string array (and record its node)
-    //
+    /*
+     * Add a string to the string array and record its node list
+     */
     protected PushString() {
         if (this.string.match(/\S/)) {
             this.strings.push(this.string);
@@ -97,18 +163,27 @@ export class HTMLDomStrings {
         this.snodes = [];
     }
 
-    //
-    //  Add more text to the current string (and record the
-    //  node and its position in the string)
-    //
+    /*
+     * Add more text to the current string, and record the
+     * node and its position in the string.
+     *
+     * @param{Element} node  The node to be pushed
+     * @param{string} text   The text to be added (it may not be the actual text
+     *                         of the node, if it is one of the nodes that gets
+     *                         translated to text, like <br> to a newline).
+     */
     protected ExtendString(node: Element, text: string) {
         this.snodes.push([node, text.length]);
         this.string += text;
     }
 
-    //
-    //  Handle a #text node
-    //
+    /*
+     * Handle a #text node (add its text to the current string)
+     *
+     * @param{Element} node    The Text node to process
+     * @param{boolean} ignore  Whether we are currently ignoring content
+     * @return{Element}        The next element to process
+     */
     protected HandleText(node: Element, ignore: boolean) {
         if (!ignore) {
             this.ExtendString(node, node.nodeValue);
@@ -116,10 +191,13 @@ export class HTMLDomStrings {
         return node.nextSibling as Element;
     }
 
-    //
-    //  Handle a BR, WBR, or #comment element (or others
-    //  in the includeTag object).
-    //
+    /*
+     * Handle a BR, WBR, or #comment element (or others in the includeTag object).
+     *
+     * @param{Element} node    The node to process
+     * @param{boolean} ignore  Whether we are currently ignoring content
+     * @return{Element}        The next element to process
+     */
     protected HandleTag(node: Element, ignore: boolean) {
         if (!ignore) {
             let text = this.options['includeTags'][node.nodeName.toLowerCase()];
@@ -128,9 +206,22 @@ export class HTMLDomStrings {
         return node.nextSibling as Element;
     }
 
-    //
-    //  Handle an arbitrary DOM node
-    //
+    /*
+     * Handle an arbitrary DOM node:
+     *   Check the class to see if it matches the processClass regex
+     *   If the node has a child and is not marked as created by MathJax (data-MJX)
+     *       and either it is marked as restarting processing or is not a tag to be skipped, then
+     *     Save the current node and whether we are currently ignoring content
+     *     Move to the first child node
+     *     Update whether we are ignoring content
+     *   Otherwise
+     *     Move on to the next sibling
+     *   Return the next node to process and the ignore state
+     *
+     * @param{Element} node         The node to process
+     * @param{boolean} ignore       Whether we are currently ignoring content
+     * @return{[Element, boolean]}  The next element to process and whether to ignore its content
+     */
     protected HandleContainer(node: Element, ignore: boolean) {
         this.PushString();
         let cname = node.className || '';
@@ -138,7 +229,7 @@ export class HTMLDomStrings {
         let process = this.processClass.exec(cname);
         if (node.firstChild && !node.getAttribute('data-MJX') &&
             (process || !this.skipTags.exec(tname))) {
-            this.stack.push([node.nextSibling, ignore]);
+            this.stack.push([node.nextSibling as Element, ignore]);
             node = node.firstChild as Element;
             ignore = (ignore || this.ignoreClass.exec(cname)) && !process;
         } else {
@@ -147,9 +238,24 @@ export class HTMLDomStrings {
         return [node, ignore] as [Element, boolean];
     }
 
-    //
-    //  Find the strings for a given DOM element
-    //
+    /*
+     * Find the strings for a given DOM element:
+     *   Initialize the state
+     *   Get the element where we stop processing
+     *   While we still have a node, and it is not the one where we are to stop:
+     *     If it is a text node, handle it and get the next node
+     *     Otherwise, if it is in the inclideTags list, handle it and get the next node
+     *     Otherwise, handle it as a container and get the next node and ignore status
+     *     If there is no next node, and there are more nodes on the stack:
+     *       Save the current string, and pop the node and ignore status from the stack
+     *   Push the final string
+     *   Get the string array and array of associated DOM nodes
+     *   Clear the internal values (so the memory can be freed)
+     *   Return the strings and node lists
+     *
+     * @param{Element} node                 The node to search
+     * @return{[string[], HTMLNodeList[]]}  The array of strings and their associated lists of nodes
+     */
     public Find(node: Element) {
         this.Init();
         let stop = node.nextSibling;

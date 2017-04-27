@@ -1,5 +1,5 @@
-window = require("../../mathjax3/util/document.js").window;
-var document = require("../../mathjax3/util/document.js").document;
+window = require("../../mathjax3/util/DOM.js").DOM.window;
+var document = require("../../mathjax3/util/DOM.js").DOM.document;
 MathJax = require("../legacy/MathJax.js").MathJax;
 
 MathJax.Ajax.Preloading(

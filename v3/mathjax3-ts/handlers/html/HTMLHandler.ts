@@ -1,49 +1,114 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the HTMLHandler object
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {AbstractHandler} from '../../core/Handler.js';
 import {HTMLDocument} from './HTMLDocument.js';
 import {OptionList} from '../../util/Options.js';
-import {document, window, DOMParser} from '../../util/document.js';
+import {DOM} from '../../util/DOM.js';
 
-const VERSION = '3.0.0';
+/*****************************************************************/
+/*
+ *  Typescript's Window doesn't seem to include these constructors,
+ *  so use this fake interface to access them.
+ */
 
-interface DOMWindow {
+interface DOMWindow extends Window {
+    DOMParser?: typeof DOMParser;
     HTMLElement?: typeof HTMLElement;
     DocumentFragment?: typeof DocumentFragment;
 }
 
-const parser = new DOMParser();
-const DOCUMENT = document.constructor;
-const HTMLELEMENT = (window as DOMWindow).HTMLElement;
-const FRAGMENT = (window as DOMWindow).DocumentFragment;
+
+/*****************************************************************/
+/*
+ *  Implements the HTMLHandler class (extends AbstractHandler)
+ */
 
 export class HTMLHandler extends AbstractHandler {
-    public static version = VERSION;
 
+    /*
+     * A DOMParser instance used to create new documents if they are specified
+     * by a zerialized HTML document rather than an already parsed one.
+     */
+    protected parser: DOMParser;
+
+    /*
+     * Some classes that can be used as the document for HTMLHandler.
+     */
+    protected DOCUMENT: typeof Document;
+    protected HTMLELEMENT: typeof HTMLElement;
+    protected FRAGMENT: typeof DocumentFragment;
+
+    /*
+     * @override
+     * @constructor
+     * @extends{AbstractHandler)
+     */
+    constructor(priority: number = 5) {
+        super(priority);
+        let window = DOM.window as DOMWindow;
+        this.DOCUMENT = DOM.document.constructor as typeof Document;
+        this.HTMLELEMENT = window.HTMLElement;
+        this.FRAGMENT = window.DocumentFragment;
+        this.parser = new (DOM.DOMParser)();
+    }
+
+    /*
+     * @override
+     */
     public HandlesDocument(document: any) {
         if (typeof(document) === 'string') {
             try {
-                document = parser.parseFromString(document, 'text/html');
+                document = this.parser.parseFromString(document, 'text/html');
             } catch (err) {}
         }
-        if (document instanceof DOCUMENT ||
-            document instanceof HTMLELEMENT ||
-            document instanceof FRAGMENT) {
+        if (document instanceof this.DOCUMENT ||
+            document instanceof this.HTMLELEMENT ||
+            document instanceof this.FRAGMENT) {
             return true;
         }
         return false;
     }
 
+    /*
+     * If the document isn't already a Document object, create one
+     * using the given data
+     *
+     * @override
+     */
     public Create(document: any, options: OptionList) {
         if (typeof(document) === 'string') {
-            document = parser.parseFromString(document, 'text/html');
-        } else if (document instanceof HTMLELEMENT) {
+            document = this.parser.parseFromString(document, 'text/html');
+        } else if (document instanceof this.HTMLELEMENT) {
             let child = document;
-            document = parser.parseFromString('', 'text/html');
+            document = this.parser.parseFromString('', 'text/html');
             document.body.appendChild(child);
-        } else if (document instanceof FRAGMENT) {
+        } else if (document instanceof this.FRAGMENT) {
             let fragment = document;
-            document = parser.parseFromString('', 'text/html');
+            document = this.parser.parseFromString('', 'text/html');
             document.body.appendChild(fragment);
         }
         return new HTMLDocument(document, options);
     }
+
 }
