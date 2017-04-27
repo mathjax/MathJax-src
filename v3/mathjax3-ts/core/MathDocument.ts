@@ -1,58 +1,238 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the interface and abstract class for MathDocument objects
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {UserOptions, DefaultOptions, OptionList} from '../util/Options.js';
 import {InputJax, AbstractInputJax} from './InputJax.js';
 import {OutputJax, AbstractOutputJax} from './OutputJax.js';
-import {MathList, MathListClass} from './MathList.js';
+import {MathList, MathListClass, AbstractMathList} from './MathList.js';
 import {MathItem, AbstractMathItem} from './MathItem.js';
 
+/*****************************************************************/
+/*
+ *  The MathDocument interface
+ *
+ *  The MathDocument is created by MathJax.Document() and holds the
+ *  document, the math found in it, and so on.  The methods of the
+ *  MathDocument all return the MathDocument itself, so you can
+ *  chain the method calls.  E.g.,
+ *
+ *    const html = MathJax.Document('<html>...</html>');
+ *    html.FindMath()
+ *        .Compile()
+ *        .GetMetrics()
+ *        .Typeset()
+ *        .AddEventHandlers()
+ *        .UpdateDocument();
+ *
+ *  The MathDocument is the main interface for page authors to
+ *  interact with MathJax.
+ */
+
 export interface MathDocument {
+    /*
+     * The document being processed (e.g., DOM document, or Markdown string)
+     */
     document: any;
+
+    /*
+     * The kind of MathDocument (e.g., "HTML")
+     */
     kind: string;
+
+    /*
+     * The options for the document
+     */
     options: OptionList;
+
+    /*
+     * The list of MathItems found in this page
+     */
     math: MathList;
+
+    /*
+     * This object tracks what operations have been performed, so that (when
+     *  asynchronous operations are used), the ones that have already been
+     *  completed won't be performed again.
+     */
     processed: {[name: string]: boolean};
+
+    /*
+     * An array of input jax to run on the document
+     */
     InputJax: InputJax[];
+
+    /*
+     * The output jax to use for the document
+     */
     OutputJax: OutputJax;
 
-    FindMath(options: OptionList): MathDocument;
+    /*
+     * Locates the math in the document and constructs the MathList
+     *  for the document.
+     *
+     * @param{OptionList} options  The options for locating the math
+     * @return{MathDocument}       The math document instance
+     */
+    FindMath(options?: OptionList): MathDocument;
+
+    /*
+     * Calls the input jax to process the MathItems in the MathList
+     *
+     * @return{MathDocument}  The math document instance
+     */
     Compile(): MathDocument;
-    Typeset(): MathDocument;
+
+    /*
+     * Gets the metric information for the MathItems
+     *
+     * @return{MathDocument}  The math document instance
+     */
     GetMetrics(): MathDocument;
+
+    /*
+     * Calls the output jax to process the compiled math in the MathList
+     *
+     * @return{MathDocument}  The math document instance
+     */
+    Typeset(): MathDocument;
+
+    /*
+     * Add any event handlers to the typeset math
+     *
+     * @return{MathDocument}  The math document instance
+     */
     AddEventHandlers(): MathDocument;
+
+    /*
+     * Updates the document to include the typeset math
+     *
+     * @return{MathDocument}  The math document instance
+     */
     UpdateDocument(): MathDocument;
+
+    /*
+     * Removes the typeset math from the document
+     *
+     * @param{boolean} restore  True if the original math should be put
+     *                            back into the document as well
+     * @return{MathDocument}    The math document instance
+     */
     RemoveFromDocument(restore?: boolean): MathDocument;
-    State(state: number, restore: boolean): MathDocument;
+
+    /*
+     * Set the state of the document (allowing you to roll back
+     *  the state to a previous one, if needed).
+     *
+     * @param{boolean} restore  True if the original math should be put
+     *                            back into the document during the rollback
+     * @return{MathDocument}    The math document instance
+     */
+    State(state: number, restore?: boolean): MathDocument;
+
+    /*
+     * Clear the processed values so that the document can be reprocessed
+     *
+     * @return{MathDocument}  The math document instance
+     */
     Reset(): MathDocument;
+
+    /*
+     * Reset the processed values and clear the MathList (so that new math
+     * can be processed in the document).
+     *
+     * @return{MathDocument}  The math document instance
+     */
     Clear(): MathDocument;
-    Concat(collection: MathDocument): MathDocument;
+
+    /*
+     * Merges a MathList into the list for this document.
+     *
+     * @param{MathList} list   The MathList to be merged into this document's list
+     * @return{MathDocument}   The math document instance
+     */
+    Concat(list: MathList): MathDocument;
 
 }
+
+/*****************************************************************/
+/*
+ *  The MathDocument interface
+ */
 
 export interface MathDocumentClass {
+    /*
+     * The kind of MathDocument (e.g., "HTML")
+     */
     KIND: string;
+
+    /*
+     * The default options for this type of document
+     */
     OPTIONS: OptionList;
+
+    /*
+     *  The document states
+     */
+    STATE: {[name: string]: number};
+
     new(document: any, options?: OptionList): MathDocument;
 }
+
+/*****************************************************************/
+/*
+ *  The booleans used to keep track of what processing has been
+ *  performed.
+ */
 
 export interface MathProcessed {
     FindMath: boolean;
     Compile: boolean;
-    Typeset: boolean;
     GetMetrics: boolean;
+    Typeset: boolean;
     AddEventHandlers: boolean;
     UpdateDocument: boolean;
     [name: string]: boolean;
 }
 
+/*
+ * Defautls used when input and output jax aren't specified
+ */
 class DefaultInputJax extends AbstractInputJax {}
 class DefaultOutputJax extends AbstractOutputJax {}
+class DefaultMathList extends AbstractMathList {}
+
+/*****************************************************************/
+/*
+ *  Implements the abstract MathDocument class
+ */
 
 export abstract class AbstractMathDocument implements MathDocument {
 
     public static KIND: string = 'MathDocument';
     public static OPTIONS: OptionList = {
-        OutputJax: null,
-        InputJax: null,
-        MathList: MathList
+        OutputJax: null,           // instance of an OutputJax for the document
+        InputJax: null,            // instance of in InputJax or an array of them
+        MathList: DefaultMathList  // class to use for the MathList
     };
     public static STATE = AbstractMathItem.STATE;
 
@@ -63,6 +243,11 @@ export abstract class AbstractMathDocument implements MathDocument {
     public InputJax: InputJax[];
     public OutputJax: OutputJax;
 
+    /*
+     * @param{any} document        The document (HTML string, parsed DOM, etc.) to be processed
+     * @param{OptionList} options  The options for this document
+     * @constructor
+     */
     constructor (document: any, options: OptionList) {
         let CLASS = this.constructor as MathDocumentClass;
         this.document = document;
@@ -76,22 +261,31 @@ export abstract class AbstractMathDocument implements MathDocument {
             AddEventHandlers: false,
             UpdateDocument: false
         };
-        this.InputJax = this.options['InputJax'] || [new DefaultInputJax()];
         this.OutputJax = this.options['OutputJax'] || new DefaultOutputJax();
+        this.InputJax = this.options['InputJax'] || [new DefaultInputJax()];
         if (!Array.isArray(this.InputJax)) {
             this.InputJax = [this.InputJax];
         }
     }
 
+    /*
+     * @return{string}  The kind of document
+     */
     public get kind() {
         return (this.constructor as MathDocumentClass).KIND;
     }
 
+    /*
+     * @override
+     */
     public FindMath(options: OptionList) {
         this.processed.FindMath = true;
         return this;
     }
 
+    /*
+     * @override
+     */
     public Compile() {
         if (!this.processed.Compile) {
             for (const math of this.math.toArray()) {
@@ -102,6 +296,9 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
+    /*
+     * @override
+     */
     public Typeset() {
         if (!this.processed.Typeset) {
             for (const math of this.math.toArray()) {
@@ -112,6 +309,9 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
+    /*
+     * @override
+     */
     public GetMetrics() {
         if (!this.processed.GetMetrics) {
             this.OutputJax.GetMetrics(this);
@@ -120,11 +320,17 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
+    /*
+     * @override
+     */
     public AddEventHandlers() {
         this.processed.AddEventHandlers = true;
         return this;
     }
 
+    /*
+     * @override
+     */
     public UpdateDocument() {
         if (!this.processed.UpdateDocument) {
             for (const math of this.math.reversed().toArray()) {
@@ -135,10 +341,16 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
+    /*
+     * @override
+     */
     public RemoveFromDocument(restore: boolean = false) {
         return this;
     }
 
+    /*
+     * @override
+     */
     public State(state: number, restore: boolean = false) {
         for (const math of this.math.toArray()) {
             math.State(state, restore);
@@ -157,6 +369,9 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
+    /*
+     * @override
+     */
     public Reset() {
         for (const key of Object.keys(this.processed)) {
             this.processed[key] = false;
@@ -164,14 +379,20 @@ export abstract class AbstractMathDocument implements MathDocument {
         return this;
     }
 
+    /*
+     * @override
+     */
     public Clear() {
         this.Reset();
         this.math.Clear();
         return this;
     }
 
-    public Concat(collection: MathDocument) {
-        this.math.merge(collection.math);
+    /*
+     * @override
+     */
+    public Concat(list: MathList) {
+        this.math.merge(list);
         return this;
     }
 

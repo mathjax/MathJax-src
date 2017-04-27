@@ -42,7 +42,7 @@ export class MmlFactory extends AbstractNodeFactory {
      *                       (defaults to the standard MML nodes)
      *
      * @constructor
-     * @extends {NodeFactory}
+     * @extends {AbstractNodeFactory}
      */
     constructor(nodes: {[kind: string]: MmlNodeClass} = MML) {
         super(nodes);

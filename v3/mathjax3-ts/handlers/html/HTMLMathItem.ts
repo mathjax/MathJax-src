@@ -47,21 +47,23 @@ export class HTMLMathItem extends AbstractMathItem {
     }
 
     public RemoveFromDocument(restore: boolean = false) {
-        let node = this.start.node;
-        if (restore) {
-            let document = node.ownerDocument;
-            let text = this.start.delim + this.math + this.end.delim;
-            let math;
-            if (this.inputJax.processStrings) {
-                math = document.createTextNode(text);
-            } else {
-                let span = document.createElement('span');
-                span.innerHTML = text;
-                math = span.firstChild;
+        if (this.State() >= STATE.TYPESET) {
+            let node = this.start.node;
+            if (restore) {
+                let document = node.ownerDocument;
+                let text = this.start.delim + this.math + this.end.delim;
+                let math;
+                if (this.inputJax.processStrings) {
+                    math = document.createTextNode(text);
+                } else {
+                    let span = document.createElement('span');
+                    span.innerHTML = text;
+                    math = span.firstChild;
+                }
+                node.parentNode.insertBefore(math, node);
             }
-            node.parentNode.insertBefore(math, node);
+            node.parentNode.removeChild(node);
         }
-        node.parentNode.removeChild(node);
     }
 
 }
