@@ -147,4 +147,19 @@ export abstract class AbstractInputJax implements InputJax {
         return null as MmlNode;
     }
 
+    /*
+     * Execute a set of filters, passing them the MathItem and any needed data,
+     *  and return the (possibly modified) data
+     *
+     * @param{FunctionList} filters  The list of functions to be performed
+     * @param{MathItem} math         The math item that is being processed
+     * @param{any} data              Whatever other data is needed
+     * @return{any}                  The (possibly modidied) data
+     */
+    protected executeFilters(filters: FunctionList, math: MathItem, data: any) {
+        let args = {math: math, data: data};
+        filters.Execute(args);
+        return args.data;
+    }
+
 }

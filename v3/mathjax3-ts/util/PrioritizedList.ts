@@ -1,18 +1,73 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements a list sorted by a numeric priority
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
+/*****************************************************************/
+/*
+ *  The PrioritizedListItem<DataClass> interface
+ */
+
 export interface PrioritizedListItem<DataClass> {
+
+    /*
+     * The priority of this item
+     */
     priority: number;
+
+    /*
+     * The data for the list item
+     */
     item: DataClass;
 }
 
+/*****************************************************************/
+/*
+ *  Implements the PrioritizedList<DataClass> class
+ */
+
 export class PrioritizedList<DataClass> {
+
+    /*
+     * The default priority for items added to the list
+     */
     public static DEFAULTPRIORITY: number = 5;
 
+    /*
+     * The list of items, sorted by priority (smallest number first)
+     */
     protected items: PrioritizedListItem<DataClass>[] = [];
-    protected i: number;
 
+    /*
+     * @constructor
+     */
     constructor() {
         this.items = [];
     }
 
+    /*
+     * Make the list iterable, and return the data for the items in the list
+     *
+     * @return{{next: Function}}  The object containing the iterator's next() function
+     */
     public [Symbol.iterator]() {
         let i = 0;
         let items = this.items;
@@ -23,13 +78,25 @@ export class PrioritizedList<DataClass> {
         };
     }
 
-    public Add(item: DataClass, priority = PrioritizedList.DEFAULTPRIORITY) {
+    /*
+     * Add an item to the list
+     *
+     * @param{DataClass} item   The data for the item to be added
+     * @param{number} priority  The priority for the item
+     * @return{DataClass}       The data itself
+     */
+    public Add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY) {
         let i = this.items.length;
-        do { i--; } while (i >= 0 && priority < this.items[i].priority);
+        do { i--; } while (i >= 0 && priority <= this.items[i].priority);
         this.items.splice(i + 1, 0, {item: item, priority: priority});
         return item;
     }
 
+    /*
+     * Remove an item from the list
+     *
+     * @param{DataClass} item   The data for the item to be removed
+     */
     public Remove(item: DataClass) {
         let i = this.items.length;
         do { i--; } while (i >= 0 && this.items[i].item !== item);
@@ -38,6 +105,15 @@ export class PrioritizedList<DataClass> {
         }
     }
 
+    /*
+     * Typescript targeted at ES5 doesn't handle
+     *
+     *     for (const x of this) {...}
+     *
+     * so use toArray() to convert to array, when needed
+     *
+     * @return{PrioritizedListItem<DataClass>[]}  The list converted to an array
+     */
     public toArray() {
         return Array.from(this);
     }

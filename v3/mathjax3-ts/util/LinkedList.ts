@@ -1,68 +1,134 @@
-//
-//  A symbol used to mark the special node used to indicate
-//  the start and end of the list.
-//
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implement a generic LinkedList object.
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
+/*****************************************************************/
+/*
+ *  A symbol used to mark the special node used to indicate
+ *  the start and end of the list.
+ */
 const END = Symbol();
 
+/*
+ * Shorthand type for the functions used to sort the data items
+ */
 export type SortFn<DataClass> = (a: DataClass, b: DataClass) => boolean;
 
-//
-//  The items in the doubly-linked list.
-//
+/*****************************************************************/
+/*
+ *  The ListItem interface (for a specific type of data item)
+ *
+ *  These are the items in the doubly-linked list.
+ */
+
 export class ListItem<DataClass> {
+    /*
+     * The data for the list item
+     */
     public data: DataClass | symbol;
+
+    /*
+     * Pointers to the next and previous items in the list
+     */
     public next: ListItem<DataClass> = null;
     public prev: ListItem<DataClass> = null;
 
+    /*
+     * @param{any} data  The data to be stored in the list item
+     * @constructor
+     */
     constructor (data: any = null) {
         this.data = data;
     }
 }
 
+/*****************************************************************/
+/*
+ *  The ListList class interface
+ */
+
 export interface LinkedListClass<DataClass> {
     new(...args: DataClass[]): LinkedList<DataClass>;
 }
 
-//
-//  The generic Linked List class
-//
-export class LinkedList<DataClass> {
-    public list: ListItem<DataClass>;
+/*****************************************************************/
+/*
+ *  Implements the generic ListList class
+ */
 
-    //
-    //  This.list is a special ListItem whose next property
-    //    points to the head of the list and whose prev
-    //    property points to the tail.  This lets us relink
-    //    the head and tail items in the same way as any other
-    //    item in the list, without having to handle special
-    //    cases.
-    //
+export class LinkedList<DataClass> {
+
+    /*
+     * The linked list
+     */
+    protected list: ListItem<DataClass>;
+
+    /*
+     *  This.list is a special ListItem whose next property
+     *    points to the head of the list and whose prev
+     *    property points to the tail.  This lets us relink
+     *    the head and tail items in the same way as any other
+     *    item in the list, without having to handle special
+     *    cases.
+     *
+     * @param{DataClass[]} args  The data items that form the initial list
+     * @constructor
+     */
     constructor(...args: DataClass[]) {
         this.list = new ListItem<DataClass>(END);
         this.list.next = this.list.prev = this.list;
         this.push(...args);
     }
 
-    //
-    //  Typescript targeted at ES5 doesn't handle
-    //    for (const x of this)
-    //  so use toArray() to convert to array, when needed
-    //
+    /*
+     * Typescript targeted at ES5 doesn't handle
+     *
+     *     for (const x of this) {...}
+     *
+     * so use toArray() to convert to array, when needed
+     *
+     * @return{DataClass[]}  The list converted to an array
+     */
     public toArray() {
         return Array.from(this) as DataClass[];
     }
 
-    //
-    //  Used for sorting and merging lists
-    //  (Overridden by subclasses)
-    //
+    /*
+     *  Used for sorting and merging lists (Overridden by subclasses)
+     *
+     * @param{DataClass} a   The first item to compare
+     * @param{DataClass} b   The second item to compare
+     * @return{boolean}      True if a is before b, false otherwise
+     */
     public isBefore(a: DataClass, b: DataClass) {
         return (a < b);
     }
 
-    //
-    //  Push items on the end of the list
-    //
+    /*
+     * Push items on the end of the list
+     *
+     * @param{DataClass[]} args   The list of data items to be pushed
+     * @return{LinkedList}        The LinkedList object (for chaining)
+     */
     public push(...args: DataClass[]) {
         for (const data of args) {
             let item = new ListItem<DataClass>(data);
@@ -74,9 +140,11 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    //
-    //  Pop the end item off the list and return its data
-    //
+    /*
+     * Pop the end item off the list and return its data
+     *
+     * @return{DataClass}  The data from the last item in the list
+     */
     public pop(): DataClass {
         let item = this.list.prev;
         if (item.data === END) {
@@ -88,9 +156,12 @@ export class LinkedList<DataClass> {
         return item.data as DataClass;
     }
 
-    //
-    //  Push items at the head of the list
-    //
+    /*
+     * Push items at the head of the list
+     *
+     * @param{DataClass[]} args   The list of data items to inserted
+     * @return{LinkedList}        The LinkedList object (for chaining)
+     */
     public unshift(...args: DataClass[]) {
         for (const data of args) {
             let item = new ListItem<DataClass>(data);
@@ -102,9 +173,11 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    //
-    //  Remove an item from the head of the list and return its data
-    //
+    /*
+     * Remove an item from the head of the list and return its data
+     *
+     * @return{DataClass}  The data from the first item in the list
+     */
     public shift(): DataClass {
         let item = this.list.next;
         if (item.data === END) {
@@ -116,18 +189,21 @@ export class LinkedList<DataClass> {
         return item.data as DataClass;
     }
 
-    //
-    //  Empty the list
-    //
+    /*
+     * Empty the list
+     *
+     * @return{LinkedList}  The LinkedList object (for chaining)
+     */
     public Clear() {
         this.list.next = this.list.prev = this.list;
         return this;
     }
 
-    //
-    //  Make the list iterable and return the data from
-    //  the items in the list.
-    //
+    /*
+     * Make the list iterable and return the data from the items in the list
+     *
+     * @return{{next: Function}}  The object containing the iterator's next() function
+     */
     public [Symbol.iterator]() {
         let current = this.list;
         return {
@@ -140,9 +216,11 @@ export class LinkedList<DataClass> {
         };
     }
 
-    //
-    //  An iterator for the list in reverse order
-    //
+    /*
+     * An iterator for the list in reverse order
+     *
+     * @return{Object}  The iterator for walking the list in reverse
+     */
     public reversed() {
         let current = this.list;
         return {
@@ -161,9 +239,13 @@ export class LinkedList<DataClass> {
         };
     }
 
-    //
-    //  Insert a new item into a sorted list in the correct locations
-    //
+    /*
+     * Insert a new item into a sorted list in the correct locations
+     *
+     * @param{DataClass} data   The data item to add
+     * @param{SortFn} isBefore  The function used to order the data
+     * @param{LinkedList}       The LinkedList object (for chaining)
+     */
     public insert(data: DataClass, isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) {
             isBefore = this.isBefore.bind(this);
@@ -179,9 +261,12 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    //
-    //  Sort the list using an optional sort function
-    //
+    /*
+     * Sort the list using an optional sort function
+     *
+     * @param{SortFn} isBefore  The function used to order the data
+     * @return{LinkedList}      The LinkedList object (for chaining)
+     */
     public sort(isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) {
             isBefore = this.isBefore.bind(this);
@@ -215,9 +300,13 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    //
-    //  Merge a sorted list with another sorted list
-    //
+    /*
+     * Merge a sorted list with another sorted list
+     *
+     * @param{LinkedList} list  The list to merge into this instance's list
+     * @param{SortFn} isBefore  The function used to order the data
+     * @return{LinkedList}      The LinkedList instance (for chaining)
+     */
     public merge(list: LinkedList<DataClass>, isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) {
             isBefore = this.isBefore.bind(this);
@@ -235,7 +324,7 @@ export class LinkedList<DataClass> {
             //  If the merge item is before the list item
             //    (we have found where the head of the merge list belongs)
             //    Link the merge list into the main list at this point
-            //      and make the merge list be the remainder of the original list
+            //      and make the merge list be the remainder of the original list.
             //    The merge continues by looking for where the rest of the original
             //      list fits into the newly formed main list (the old merge list).
             //  Otherwise

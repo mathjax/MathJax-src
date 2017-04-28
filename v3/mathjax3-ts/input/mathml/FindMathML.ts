@@ -1,21 +1,56 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the MathML version of the FindMath object
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {AbstractFindMath} from '../../core/FindMath.js';
 import {OptionList} from '../../util/Options.js';
 import {ProtoItem} from '../../core/MathItem.js';
 
+/*
+ * The MathML namespace
+ */
 const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
 
+/*
+ * Shorthand for Set of Elements
+ */
 export type NodeSet = Set<Element>;
 
-//
-//  Locates MathML expressions within DOM nodes
-//
+/*****************************************************************/
+/*
+ *  Implements the FindMathML object (extends AbstractFindMath)
+ */
+
 export class FindMathML extends AbstractFindMath {
 
     public static OPTIONS: OptionList = {};
 
-    //
-    //  Locate MathML nodes in the DOM
-    //
+    /*
+     * Locates math nodes, possibly with namespace prefixes.
+     *  Store them in a set so that if found more than once, they will only
+     *  appear in the list once.
+     *
+     * @override
+     */
     public FindMath(node: Element) {
         let set: NodeSet = new Set<Element>();
         this.FindMathNodes(node, set);
@@ -26,18 +61,24 @@ export class FindMathML extends AbstractFindMath {
         return this.ProcessMath(set);
     }
 
-    //
-    //  Find plain <math> tags
-    //
+    /*
+     * Find plain <math> tags
+     *
+     * @param{Element} node  The container to seaerch for math
+     * @param{NodeSet} set   The set in which to store the math nodes
+     */
     protected FindMathNodes(node: Element, set: NodeSet) {
         for (const math of Array.from(node.getElementsByTagName('math'))) {
             set.add(math);
         }
     }
 
-    //
-    //  Find <m:math> tags (or whatever prefixes there are)
-    //
+    /*
+     * Find <m:math> tags (or whatever prefixes there are)
+     *
+     * @param{Element} node  The container to seaerch for math
+     * @param{NodeSet} set   The set in which to store the math nodes
+     */
     protected FindMathPrefixed(node: Element, set: NodeSet) {
         let html = node.ownerDocument.documentElement;
         for (const attr of Array.from(html.attributes)) {
@@ -50,18 +91,21 @@ export class FindMathML extends AbstractFindMath {
         }
     }
 
-    //
-    //  Find namespaced math in XHTML documents (is this really needed?)
-    //
+    /*
+     * Find namespaced math in XHTML documents (is this really needed?)
+     *
+     * @param{Element} node  The container to seaerch for math
+     * @param{NodeSet} set   The set in which to store the math nodes
+     */
     protected FindMathNS(node: Element, set: NodeSet) {
         for (const math of Array.from(node.getElementsByTagNameNS(NAMESPACE, 'math'))) {
             set.add(math);
         }
     }
 
-    //
-    //  Produce the array of math records that can be converted into MathItems
-    //
+    /*
+     *  Produce the array of proto math items from the node set
+     */
     protected ProcessMath(set: NodeSet) {
         let math: ProtoItem[] = [];
         for (const mml of Array.from(set)) {
