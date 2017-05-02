@@ -29,6 +29,7 @@
 declare var System: {nodeRequire: Function};
 declare var document: Document;
 declare var window: Window;
+declare var require: Function;
 
 /*
  * Typescript's Window doesn't seem to know about DOMParser
@@ -69,7 +70,7 @@ try {
     //
     //  Node version
     //
-    const jsdom = System.nodeRequire('jsdom');
+    const jsdom = (typeof(System) === 'undefined' ? require : System.nodeRequire)('jsdom');
     const { JSDOM } = jsdom;
 
     DOM.window = new JSDOM().window;
