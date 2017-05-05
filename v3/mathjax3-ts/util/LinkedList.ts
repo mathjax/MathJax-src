@@ -163,7 +163,7 @@ export class LinkedList<DataClass> {
      * @return{LinkedList}        The LinkedList object (for chaining)
      */
     public unshift(...args: DataClass[]) {
-        for (const data of args) {
+        for (const data of args.slice(0).reverse()) {
             let item = new ListItem<DataClass>(data);
             item.next = this.list.next;
             item.prev = this.list;
@@ -194,7 +194,7 @@ export class LinkedList<DataClass> {
      *
      * @return{LinkedList}  The LinkedList object (for chaining)
      */
-    public Clear() {
+    public clear() {
         this.list.next = this.list.prev = this.list;
         return this;
     }
