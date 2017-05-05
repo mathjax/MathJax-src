@@ -22,14 +22,19 @@
  */
 
 declare var System: {import: Function};
-declare var __moduleName: string;
+declare function require(name: string): Object;
 
 /*
- * Load a file asynchronously
+ * Load a file asynchronously, either using System.js, or node's require().
  *
  * @param{string} name  The name of the file to load
  * @return{Promise}     The promise that is satisfied when the file is loaded
  */
 export function AsyncLoad(name: string) {
-    return System.import(name, __moduleName);
+    if (typeof(System) !== 'undefined') {
+        return System.import(name);
+    }
+    return new Promise((ok, fail) => {
+        ok(require(name));
+    });
 }
