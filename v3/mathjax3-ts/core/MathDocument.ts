@@ -384,7 +384,7 @@ export abstract class AbstractMathDocument implements MathDocument {
      */
     public Clear() {
         this.Reset();
-        this.math.Clear();
+        this.math.clear();
         return this;
     }
 
