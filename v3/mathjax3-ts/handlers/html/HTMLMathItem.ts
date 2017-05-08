@@ -66,29 +66,33 @@ export class HTMLMathItem extends AbstractMathItem {
      */
     public UpdateDocument(html: HTMLDocument) {
         if (this.State() < STATE.INSERTED) {
-            let node = this.start.node as Text;
-            if (node === this.end.node) {
-                if (this.end.n < this.end.node.nodeValue.length) {
-                    this.end.node.splitText(this.end.n);
-                }
-                if (this.start.n) {
-                    node = (this.start.node as Text).splitText(this.start.n);
-                }
-                node.parentNode.replaceChild(this.typeset, node);
-            } else {
-                if (this.start.n) {
-                    node = node.splitText(this.start.n);
-                }
-                while (node !== this.end.node) {
-                    let next = node.nextSibling as Text;
+            if (this.inputJax.processStrings) {
+                let node = this.start.node as Text;
+                if (node === this.end.node) {
+                    if (this.end.n < this.end.node.nodeValue.length) {
+                        this.end.node.splitText(this.end.n);
+                    }
+                    if (this.start.n) {
+                        node = (this.start.node as Text).splitText(this.start.n);
+                    }
+                    node.parentNode.replaceChild(this.typeset, node);
+                } else {
+                    if (this.start.n) {
+                        node = node.splitText(this.start.n);
+                    }
+                    while (node !== this.end.node) {
+                        let next = node.nextSibling as Text;
+                        node.parentNode.removeChild(node);
+                        node = next;
+                    }
+                    node.parentNode.insertBefore(this.typeset, node);
+                    if (this.end.n < node.nodeValue.length) {
+                        node.splitText(this.end.n);
+                    }
                     node.parentNode.removeChild(node);
-                    node = next;
                 }
-                node.parentNode.insertBefore(this.typeset, node);
-                if (this.end.n < node.nodeValue.length) {
-                    node.splitText(this.end.n);
-                }
-                node.parentNode.removeChild(node);
+            } else {
+                this.start.node.parentNode.replaceChild(this.typeset, this.start.node);
             }
             this.start.node = this.end.node = this.typeset;
             this.start.n = this.end.n = 0;
