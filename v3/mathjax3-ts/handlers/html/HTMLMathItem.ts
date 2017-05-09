@@ -64,8 +64,8 @@ export class HTMLMathItem extends AbstractMathItem {
      *
      * @override
      */
-    public UpdateDocument(html: HTMLDocument) {
-        if (this.State() < STATE.INSERTED) {
+    public updateDocument(html: HTMLDocument) {
+        if (this.state() < STATE.INSERTED) {
             if (this.inputJax.processStrings) {
                 let node = this.start.node as Text;
                 if (node === this.end.node) {
@@ -75,7 +75,7 @@ export class HTMLMathItem extends AbstractMathItem {
                     if (this.start.n) {
                         node = (this.start.node as Text).splitText(this.start.n);
                     }
-                    node.parentNode.replaceChild(this.typeset, node);
+                    node.parentNode.replaceChild(this.typesetRoot, node);
                 } else {
                     if (this.start.n) {
                         node = node.splitText(this.start.n);
@@ -85,18 +85,18 @@ export class HTMLMathItem extends AbstractMathItem {
                         node.parentNode.removeChild(node);
                         node = next;
                     }
-                    node.parentNode.insertBefore(this.typeset, node);
+                    node.parentNode.insertBefore(this.typesetRoot, node);
                     if (this.end.n < node.nodeValue.length) {
                         node.splitText(this.end.n);
                     }
                     node.parentNode.removeChild(node);
                 }
             } else {
-                this.start.node.parentNode.replaceChild(this.typeset, this.start.node);
+                this.start.node.parentNode.replaceChild(this.typesetRoot, this.start.node);
             }
-            this.start.node = this.end.node = this.typeset;
+            this.start.node = this.end.node = this.typesetRoot;
             this.start.n = this.end.n = 0;
-            this.State(STATE.INSERTED);
+            this.state(STATE.INSERTED);
         }
     }
 
@@ -106,8 +106,8 @@ export class HTMLMathItem extends AbstractMathItem {
      *
      * @override
      */
-    public RemoveFromDocument(restore: boolean = false) {
-        if (this.State() >= STATE.TYPESET) {
+    public removeFromDocument(restore: boolean = false) {
+        if (this.state() >= STATE.TYPESET) {
             let node = this.start.node;
             if (restore) {
                 let document = node.ownerDocument;

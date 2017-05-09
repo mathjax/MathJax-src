@@ -107,7 +107,7 @@ export interface MathItem {
     /*
      * The typeset version of the expression (once typeset)
      */
-    typeset: Element;
+    typesetRoot: Element;
 
     /*
      * The metric information at the location of the math
@@ -131,14 +131,14 @@ export interface MathItem {
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
-    Compile(document: MathDocument): void;
+    compile(document: MathDocument): void;
 
     /*
      * Converts the internal format to the typeset version by caling the output jax
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
-    Typeset(document: MathDocument): void;
+    typeset(document: MathDocument): void;
 
     /*
      * Adds any needed event handlers to the typeset output
@@ -150,7 +150,7 @@ export interface MathItem {
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
-    UpdateDocument(document: MathDocument): void;
+    updateDocument(document: MathDocument): void;
 
     /*
      * Removes the typeset version from the document, optionally replacing the original
@@ -158,7 +158,7 @@ export interface MathItem {
      *
      * @param{boolena} restore  True if the original version is to be restored
      */
-    RemoveFromDocument(restore: boolean): void;
+    removeFromDocument(restore: boolean): void;
 
     /*
      * Sets the metric information for this expression
@@ -180,7 +180,7 @@ export interface MathItem {
      * @param{number} restore  True if the original form should be restored
      *                           when rolling back a typeset version
      */
-    State(state?: number, restore?: boolean): number;
+    state(state?: number, restore?: boolean): number;
 
 }
 
@@ -224,8 +224,8 @@ export abstract class AbstractMathItem implements MathItem {
     public start: Location;
     public end: Location;
     public root: MmlNode = null;
-    public typeset: Element = null;
-    public state: number = STATE.UNPROCESSED;
+    public typesetRoot: Element = null;
+    protected _state: number = STATE.UNPROCESSED;
     public metrics: Metrics = {} as Metrics;
     public bbox: BBox = {};
     public inputData: OptionList = {};
@@ -248,8 +248,7 @@ export abstract class AbstractMathItem implements MathItem {
         this.start = start;
         this.end = end;
         this.root = null;
-        this.typeset = null;
-        this.state = STATE.UNPROCESSED;
+        this.typesetRoot = null;
         this.metrics = {} as Metrics;
         this.bbox = {};
         this.inputData = {};
@@ -259,24 +258,24 @@ export abstract class AbstractMathItem implements MathItem {
     /*
      * @override
      */
-    public Compile(document: MathDocument) {
-        if (this.State() < STATE.COMPILED) {
-            this.root = this.inputJax.Compile(this);
-            this.State(STATE.COMPILED);
+    public compile(document: MathDocument) {
+        if (this.state() < STATE.COMPILED) {
+            this.root = this.inputJax.compile(this);
+            this.state(STATE.COMPILED);
         }
     }
 
     /*
      * @override
      */
-    public Typeset(document: MathDocument) {
-        if (this.State() < STATE.TYPESET) {
+    public typeset(document: MathDocument) {
+        if (this.state() < STATE.TYPESET) {
             if (this.display === null) {
-                this.typeset = document.OutputJax.Escaped(this, document);
+                this.typesetRoot = document.outputJax.escaped(this, document);
             } else {
-                this.typeset = document.OutputJax.Typeset(this, document);
+                this.typesetRoot = document.outputJax.typeset(this, document);
             }
-            this.State(STATE.TYPESET);
+            this.state(STATE.TYPESET);
         }
     }
 
@@ -288,12 +287,12 @@ export abstract class AbstractMathItem implements MathItem {
     /*
      * @override
      */
-    public UpdateDocument(document: MathDocument) {}
+    public updateDocument(document: MathDocument) {}
 
     /*
      * @override
      */
-    public RemoveFromDocument(restore: boolean = false) {}
+    public removeFromDocument(restore: boolean = false) {}
 
     /*
      * @override
@@ -310,21 +309,21 @@ export abstract class AbstractMathItem implements MathItem {
     /*
      * @override
      */
-    public State(state: number = null, restore: boolean = false) {
+    public state(state: number = null, restore: boolean = false) {
         if (state != null) {
-            if (state < STATE.INSERTED && this.state >= STATE.INSERTED) {
-                this.RemoveFromDocument(restore);
+            if (state < STATE.INSERTED && this._state >= STATE.INSERTED) {
+                this.removeFromDocument(restore);
             }
-            if (state < STATE.TYPESET && this.state >= STATE.TYPESET) {
+            if (state < STATE.TYPESET && this._state >= STATE.TYPESET) {
                 this.bbox = {};
                 this.outputData = {};
             }
-            if (state < STATE.COMPILED && this.state >= STATE.COMPILED) {
+            if (state < STATE.COMPILED && this._state >= STATE.COMPILED) {
                 this.inputData = {};
             }
-            this.state = state;
+            this._state = state;
         }
-        return this.state;
+        return this._state;
     }
 
 }

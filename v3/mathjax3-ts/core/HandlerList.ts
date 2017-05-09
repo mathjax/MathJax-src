@@ -41,25 +41,25 @@ export class HandlerList extends PrioritizedList<Handler>  {
      * @param{Handler} handler  The handler to register
      * @return{PrioritizedListItem<Handler>}  The list item created for the handler
      */
-    public Register(handler: Handler) {
-        return this.Add(handler, handler.priority);
+    public register(handler: Handler) {
+        return this.add(handler, handler.priority);
     }
 
     /*
      * @param{Handler} Handler  The handler to remove from the list
      */
-    public UnRegister(handler: Handler) {
-        this.Remove(handler);
+    public unregister(handler: Handler) {
+        this.remove(handler);
     }
 
     /*
      * @param{any} document  The document (string, window, DOM element, etc) to be handled
      * @return{boolean}      The handler from the list that can process the given document
      */
-    public HandlesDocument(document: any) {
+    public handlesDocument(document: any) {
         for (const item of this.toArray()) {
             let handler = item.item;
-            if (handler.HandlesDocument(document)) {
+            if (handler.handlesDocument(document)) {
                 return handler;
             }
         }
@@ -71,8 +71,8 @@ export class HandlerList extends PrioritizedList<Handler>  {
      * @param{OptionList} options  The options for the handler
      * @return{MathDocument}       The MathDocument created by the handler for this document
      */
-    public Document(document: any, options: OptionList = null) {
-        return this.HandlesDocument(document).Create(document, options);
+    public document(document: any, options: OptionList = null) {
+        return this.handlesDocument(document).create(document, options);
     }
 
 }

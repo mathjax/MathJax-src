@@ -23,7 +23,7 @@
 
 import {MathItem, ProtoItem} from './MathItem.js';
 import {MmlNode} from './MmlTree/MmlNode.js';
-import {UserOptions, DefaultOptions, OptionList} from '../util/Options.js';
+import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
 
 /*****************************************************************/
@@ -62,7 +62,7 @@ export interface InputJax {
      * @return{ProtoItem[]}              Array of proto math items found (further processed by the
      *                                     handler to produce actual MathItem objects)
      */
-    FindMath(which: Element | string[], options?: OptionList): ProtoItem[];
+    findMath(which: Element | string[], options?: OptionList): ProtoItem[];
 
     /*
      * Convert the math in a math item into the internal format
@@ -70,7 +70,7 @@ export interface InputJax {
      * @param{MathItem} math  The MathItem whose math content is to processed
      * @return{MmlNode}       The resulting internal node tree for the math
      */
-    Compile(math: MathItem): MmlNode;
+    compile(math: MathItem): MmlNode;
 }
 
 /*****************************************************************/
@@ -113,7 +113,7 @@ export abstract class AbstractInputJax implements InputJax {
      */
     constructor(options: OptionList = {}) {
         let CLASS = this.constructor as InputJaxClass;
-        this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
+        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
         this.preFilters = new FunctionList();
         this.postFilters = new FunctionList();
     }
@@ -135,7 +135,7 @@ export abstract class AbstractInputJax implements InputJax {
     /*
      * @override
      */
-    public FindMath(node: Element | string[], options: OptionList) {
+    public findMath(node: Element | string[], options: OptionList) {
         // should operate on an array of strings, but for now, use DOM node
         return [] as ProtoItem[];
     }
@@ -143,7 +143,7 @@ export abstract class AbstractInputJax implements InputJax {
     /*
      * @override
      */
-    public Compile(math: MathItem) {
+    public compile(math: MathItem) {
         return null as MmlNode;
     }
 
@@ -158,7 +158,7 @@ export abstract class AbstractInputJax implements InputJax {
      */
     protected executeFilters(filters: FunctionList, math: MathItem, data: any) {
         let args = {math: math, data: data};
-        filters.Execute(args);
+        filters.execute(args);
         return args.data;
     }
 

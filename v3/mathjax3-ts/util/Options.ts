@@ -60,7 +60,7 @@ export const APPEND = Symbol('Append to option array');
  * @param{Optionlist} def        The object whose keys are to be returned
  * @return{(string | symbol)[]}  The list of keys for the object
  */
-export function Keys(def: OptionList) {
+export function keys(def: OptionList) {
     if (!def) {
         return [];
     }
@@ -74,15 +74,15 @@ export function Keys(def: OptionList) {
  * @param{OptionList} def  The object to be copied
  * @return{OptionList}     The copy of the object
  */
-export function Copy(def: OptionList): OptionList {
+export function copy(def: OptionList): OptionList {
     let props: OptionList = {};
-    for (const key of Keys(def)) {
+    for (const key of keys(def)) {
         let prop = Object.getOwnPropertyDescriptor(def, key);
         let value = prop.value;
         if (Array.isArray(value)) {
-            prop.value = Insert([], value, false);
+            prop.value = insert([], value, false);
         } else if (isObject(value)) {
-            prop.value = Copy(value);
+            prop.value = copy(value);
         }
         if (prop.enumerable) {
             props[key] = prop;
@@ -101,8 +101,8 @@ export function Copy(def: OptionList): OptionList {
  * @param{boolean} warn    True if a warning shoudl be issued for a src option that isn't already in dst
  * @return{OptionList}     The modified destination option list (dst)
  */
-export function Insert(dst: OptionList, src: OptionList, warn: boolean = true) {
-    for (let key of Keys(src)) {
+export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
+    for (let key of keys(src)) {
         if (warn && dst[key] === undefined) {
             if (typeof key === 'symbol') {
                 key = key.toString();
@@ -112,16 +112,16 @@ export function Insert(dst: OptionList, src: OptionList, warn: boolean = true) {
         let sval = src[key], dval = dst[key];
         if (isObject(sval) && dval !== null &&
             (typeof dval === 'object' || typeof dval === 'function')) {
-            if (Array.isArray(dval) && Array.isArray(sval[APPEND]) && Keys(sval).length === 1) {
+            if (Array.isArray(dval) && Array.isArray(sval[APPEND]) && keys(sval).length === 1) {
                 dval.push(...sval[APPEND]);
             } else {
-                Insert(dval, sval, warn);
+                insert(dval, sval, warn);
             }
         } else if (Array.isArray(sval)) {
             dst[key] = [];
-            Insert(dst[key], sval, false);
+            insert(dst[key], sval, false);
         } else if (isObject(sval)) {
-            dst[key] = Copy(sval);
+            dst[key] = copy(sval);
         } else {
             dst[key] = sval;
         }
@@ -138,8 +138,8 @@ export function Insert(dst: OptionList, src: OptionList, warn: boolean = true) {
  * @param{OptionList[]} defs   The option lists to merge into the first one
  * @return{OptionList}         The modified options list
  */
-export function DefaultOptions(options: OptionList, ...defs: OptionList[]) {
-    defs.forEach(def => Insert(options, def, false));
+export function defaultOptions(options: OptionList, ...defs: OptionList[]) {
+    defs.forEach(def => insert(options, def, false));
     return options;
 }
 
@@ -152,8 +152,8 @@ export function DefaultOptions(options: OptionList, ...defs: OptionList[]) {
  * @param{OptionList[]} defs   The option lists to merge into the first one
  * @return{OptionList}         The modified options list
  */
-export function UserOptions(options: OptionList, ...defs: OptionList[]) {
-    defs.forEach(def => Insert(options, def, true));
+export function userOptions(options: OptionList, ...defs: OptionList[]) {
+    defs.forEach(def => insert(options, def, true));
     return options;
 }
 
@@ -165,7 +165,7 @@ export function UserOptions(options: OptionList, ...defs: OptionList[]) {
  * @param{string[]} keys       The names of the options to extract
  * @return{OptionList}         The option list consisting of only the ones whose keys were given
  */
-export function SelectOptions(options: OptionList, ...keys: string[]) {
+export function selectOptions(options: OptionList, ...keys: string[]) {
     let subset: OptionList = {};
     for (const key of keys) {
         subset[key] = options[key];
@@ -182,8 +182,8 @@ export function SelectOptions(options: OptionList, ...keys: string[]) {
  * @return{OptionList}         The option list consisting of the option values from the first
  *                               list whose keys are those from the second list.
  */
-export function SelectOptionsFromKeys(options: OptionList, object: OptionList) {
-    return SelectOptions(options, ...Object.keys(object));
+export function selectOptionsFromKeys(options: OptionList, object: OptionList) {
+    return selectOptions(options, ...Object.keys(object));
 }
 
 /*****************************************************************/
@@ -201,7 +201,7 @@ export function SelectOptionsFromKeys(options: OptionList, object: OptionList) {
  *                                 consists of the values not appearing in any of the others
  *                                 (i.e., whose keys were not in any of the others).
  */
-export function SeparateOptions(options: OptionList, ...objects: OptionList[]) {
+export function separateOptions(options: OptionList, ...objects: OptionList[]) {
     let results: OptionList[] = [];
     for (const object of objects) {
         let exists: OptionList = {}, missing: OptionList = {};

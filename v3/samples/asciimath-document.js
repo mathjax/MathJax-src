@@ -30,7 +30,7 @@ try {
   //
   //  Use browser document, if there is one
   //
-  html = MathJax.HandlerFor(document,OPTIONS);
+  html = MathJax.handlerFor(document,OPTIONS);
   document.body.insertBefore(document.createElement("hr"),document.body.firstChild);
   var div = document.createElement('div');
   div.innerHTML = HTML; div.style.marginBottom = "1em";
@@ -39,7 +39,7 @@ try {
   //
   //  Otherwise, make a new document (measurements not supported here)
   //
-  html = MathJax.Document(
+  html = MathJax.document(
     '<html><head><title>Test MathJax3</title></head><body>'
     + HTML +
     '</body></html>',
@@ -47,13 +47,13 @@ try {
   );
 }
 
-MathJax.HandleRetriesFor(function () {
+MathJax.handleRetriesFor(function () {
 
-    html.FindMath()
-        .Compile()
-        .GetMetrics()
-        .Typeset()
-        .UpdateDocument();
+    html.findMath()
+        .compile()
+        .getMetrics()
+        .typeset()
+        .updateDocument();
         
     console.log(html.document.body.parentNode.outerHTML);
 

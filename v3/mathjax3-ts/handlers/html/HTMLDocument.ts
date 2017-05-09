@@ -22,7 +22,7 @@
  */
 
 import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
-import {UserOptions, SeparateOptions, OptionList} from '../../util/Options.js';
+import {userOptions, separateOptions, OptionList} from '../../util/Options.js';
 import {HTMLMathItem} from './HTMLMathItem.js';
 import {HTMLMathList} from './HTMLMathList.js';
 import {HTMLDomStrings} from './HTMLDomStrings.js';
@@ -57,7 +57,7 @@ export class HTMLDocument extends AbstractMathDocument {
     /*
      * The DomString parser for locating the text in DOM trees
      */
-    public DomStrings: HTMLDomStrings;
+    public domStrings: HTMLDomStrings;
 
     /*
      * @override
@@ -65,9 +65,9 @@ export class HTMLDocument extends AbstractMathDocument {
      * @extends{AbstractMathDocument}
      */
     constructor(document: any, options: OptionList) {
-        let [html, dom] = SeparateOptions(options, HTMLDomStrings.OPTIONS);
+        let [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
         super(document, html);
-        this.DomStrings = this.options['DomStrings'] || new HTMLDomStrings(dom);
+        this.domStrings = this.options['DomStrings'] || new HTMLDomStrings(dom);
     }
 
     /*
@@ -81,7 +81,7 @@ export class HTMLDocument extends AbstractMathDocument {
      * @param{HTMLNodeArray} nodes  The list of node lists representing the string array
      * @return{Location}            The Location object for the position of the delimiter in the document
      */
-    protected FindPosition(N: number, index: number, delim: string, nodes: HTMLNodeArray): Location {
+    protected findPosition(N: number, index: number, delim: string, nodes: HTMLNodeArray): Location {
         for (const list of nodes[N]) {
             let [node, n] = list;
             if (index <= n) {
@@ -102,10 +102,10 @@ export class HTMLDocument extends AbstractMathDocument {
      * @param{HTMLNodeArray} nodes  The array of node lists that produced the string array
      * @return{HTMLMathItem}        The MathItem for the given proto item
      */
-    protected MathItem(item: ProtoItem, jax: InputJax, nodes: HTMLNodeArray) {
+    protected mathItem(item: ProtoItem, jax: InputJax, nodes: HTMLNodeArray) {
         let math = item.math;
-        let start = this.FindPosition(item.n, item.start.n, item.open, nodes);
-        let end = this.FindPosition(item.n, item.end.n, item.close, nodes);
+        let start = this.findPosition(item.n, item.start.n, item.open, nodes);
+        let end = this.findPosition(item.n, item.end.n, item.close, nodes);
         return new HTMLMathItem(math, jax, item.display, start, end);
     }
 
@@ -151,22 +151,22 @@ export class HTMLDocument extends AbstractMathDocument {
      *
      * @override
      */
-    public FindMath(options: OptionList) {
-        if (!this.processed.FindMath) {
-            options = UserOptions({elements: [this.document.body]}, options);
+    public findMath(options: OptionList) {
+        if (!this.processed.findMath) {
+            options = userOptions({elements: [this.document.body]}, options);
             for (const container of this.getElements(options['elements'], this.document)) {
                 let [strings, nodes] = [null, null] as [string[], HTMLNodeArray];
-                for (const jax of this.InputJax) {
+                for (const jax of this.inputJax) {
                     let list = new (this.options['MathList'])();
                     if (jax.processStrings) {
                         if (strings === null) {
-                            [strings, nodes] = this.DomStrings.Find(container);
+                            [strings, nodes] = this.domStrings.find(container);
                         }
-                        for (const math of jax.FindMath(strings)) {
-                            list.push(this.MathItem(math, jax, nodes));
+                        for (const math of jax.findMath(strings)) {
+                            list.push(this.mathItem(math, jax, nodes));
                         }
                     } else {
-                        for (const math of jax.FindMath(container)) {
+                        for (const math of jax.findMath(container)) {
                             let item = new HTMLMathItem(math.math, jax, math.display, math.start, math.end);
                             list.push(item);
                         }
@@ -174,7 +174,7 @@ export class HTMLDocument extends AbstractMathDocument {
                     this.math.merge(list);
                 }
             }
-            this.processed.FindMath = true;
+            this.processed.findMath = true;
         }
         return this;
     }
@@ -182,10 +182,10 @@ export class HTMLDocument extends AbstractMathDocument {
     /*
      * @override
      */
-    public UpdateDocument() {
-        if (!this.processed.UpdateDocument) {
-            super.UpdateDocument();
-            let sheet = this.DocumentStyleSheet();
+    public updateDocument() {
+        if (!this.processed.updateDocument) {
+            super.updateDocument();
+            let sheet = this.documentStyleSheet();
             if (sheet) {
                 let styles = this.document.getElementById(sheet.id);
                 if (styles) {
@@ -194,7 +194,7 @@ export class HTMLDocument extends AbstractMathDocument {
                     this.document.head.appendChild(sheet);
                 }
             }
-            this.processed.UpdateDocument = true;
+            this.processed.updateDocument = true;
         }
         return this;
     }
@@ -202,31 +202,31 @@ export class HTMLDocument extends AbstractMathDocument {
     /*
      * @override
      */
-    public RemoveFromDocument(restore: boolean = false) {
-        if (this.processed.UpdateDocument) {
+    public removeFromDocument(restore: boolean = false) {
+        if (this.processed.updateDocument) {
             for (const math of this.math.toArray()) {
-                if (math.State() >= STATE.INSERTED) {
-                    math.State(STATE.TYPESET, restore);
+                if (math.state() >= STATE.INSERTED) {
+                    math.state(STATE.TYPESET, restore);
                 }
             }
         }
-        this.processed.UpdateDocument = false;
+        this.processed.updateDocument = false;
         return this;
     }
 
     /*
      * @override
      */
-    public DocumentStyleSheet() {
-        return this.OutputJax.StyleSheet(this);
+    public documentStyleSheet() {
+        return this.outputJax.styleSheet(this);
     }
 
     /*
-     * @override
+     * Temporary funciton for testing purposes.  Will be removed
      */
     public TestMath(text: string, display: boolean = true) {
         if (!this.processed['TestMath']) {
-            let math = new HTMLMathItem(text, this.InputJax[0], display);
+            let math = new HTMLMathItem(text, this.inputJax[0], display);
             math.setMetrics(6, 14, 1000000, 1000000, 1);
             this.math.push(math);
             this.processed['TestMath'] = true;

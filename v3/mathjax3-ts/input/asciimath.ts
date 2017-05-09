@@ -23,7 +23,7 @@
 
 import {AbstractInputJax} from '../core/InputJax.js';
 import {LegacyAsciiMath} from '../../mathjax2/input/AsciiMath.js';
-import {SeparateOptions, OptionList} from '../util/Options.js';
+import {separateOptions, OptionList} from '../util/Options.js';
 import {MathItem, ProtoItem} from '../core/MathItem.js';
 
 import {FindAsciiMath} from './asciimath/FindAsciiMath.js';
@@ -44,15 +44,15 @@ export class AsciiMath extends AbstractInputJax {
     /*
      * The FindMath object used to search for AsciiMath in the document
      */
-    protected FindAsciiMath: FindAsciiMath;
+    protected findAsciiMath: FindAsciiMath;
 
     /*
      * @override
      */
     constructor(options: OptionList) {
-        let [am, find] = SeparateOptions(options, FindAsciiMath.OPTIONS);
+        let [am, find] = separateOptions(options, FindAsciiMath.OPTIONS);
         super(am);
-        this.FindAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
+        this.findAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
     }
 
     /*
@@ -60,15 +60,15 @@ export class AsciiMath extends AbstractInputJax {
      *
      * @override
      */
-    public Compile(math: MathItem) {
+    public compile(math: MathItem) {
         return LegacyAsciiMath.Compile(math.math, math.display);
     }
 
     /*
      * @override
      */
-    public FindMath(strings: string[]) {
-        return this.FindAsciiMath.FindMath(strings);
+    public findMath(strings: string[]) {
+        return this.findAsciiMath.findMath(strings);
     }
 
 }

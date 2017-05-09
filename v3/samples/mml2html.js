@@ -5,16 +5,16 @@ import "mathjax3/handlers/html.js";
 import {MathML} from "mathjax3/input/mathml.js";
 import {CHTML} from "mathjax3/output/chtml.js";
 
-let html = MathJax.Document("<html></html>", {
+let html = MathJax.document("<html></html>", {
   InputJax: new MathML(),
   OutputJax: new CHTML()
 });
 
-MathJax.HandleRetriesFor(function () {
+MathJax.handleRetriesFor(function () {
 
-    html.TestMath(process.argv[3] || '<math></math>').Compile().Typeset();
+    html.TestMath(process.argv[3] || '<math></math>').compile().typeset();
     let math = html.math.pop();
-    console.log(math.typeset.outerHTML);
+    console.log(math.typesetRoot.outerHTML);
 
 }).catch(err => {
   console.log(err.message);

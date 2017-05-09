@@ -22,7 +22,7 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {DefaultOptions, SeparateOptions, OptionList} from '../util/Options.js';
+import {defaultOptions, separateOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {MathItem, ProtoItem} from '../core/MathItem.js';
 import {DOM} from '../util/DOM.js';
@@ -38,7 +38,7 @@ import {MathMLCompile} from './mathml/MathMLCompile.js';
 export class MathML extends AbstractInputJax {
 
     public static NAME: string = 'MathML';
-    public static OPTIONS: OptionList = DefaultOptions({
+    public static OPTIONS: OptionList = defaultOptions({
         parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
         forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
         FindMathML: null,        // The FindMathML instance to override the default one
@@ -55,12 +55,12 @@ export class MathML extends AbstractInputJax {
     /*
      * The FindMathML instance used to locate MathML in the document
      */
-    protected FindMathML: FindMathML;
+    protected findMathML: FindMathML;
 
     /*
      * The MathMLCompile instance used to convert the MathML tree to internal format
      */
-    protected MathML: MathMLCompile;
+    protected mathml: MathMLCompile;
 
     /*
      * The DOMParser instance used to parse the MathML string
@@ -76,10 +76,10 @@ export class MathML extends AbstractInputJax {
      * @override
      */
     constructor(options: OptionList = {}) {
-        let [mml, find, compile] = SeparateOptions(options, FindMathML.OPTIONS, MathMLCompile.OPTIONS);
+        let [mml, find, compile] = separateOptions(options, FindMathML.OPTIONS, MathMLCompile.OPTIONS);
         super(mml);
-        this.FindMathML = this.options['FindMathML'] || new FindMathML(find);
-        this.MathML = this.options['MathMLCompile'] || new MathMLCompile(compile);
+        this.findMathML = this.options['FindMathML'] || new FindMathML(find);
+        this.mathml = this.options['MathMLCompile'] || new MathMLCompile(compile);
         this.parser = this.options['DOMParser'] || new (DOM.DOMParser)();
         this.mmlFilters = new FunctionList();
     }
@@ -109,7 +109,7 @@ export class MathML extends AbstractInputJax {
      *
      * @override
      */
-    public Compile(math: MathItem) {
+    public compile(math: MathItem) {
         let mml = math.start.node;
         if (!mml || this.options['forceReparse']) {
             let mathml = this.executeFilters(this.preFilters, math, math.math || '<math></math>');
@@ -117,19 +117,19 @@ export class MathML extends AbstractInputJax {
             doc = this.checkForErrors(doc);
             if (doc.body) {
                 if (doc.body.childNodes.length !== 1) {
-                    this.Error('MathML must consist of a single element');
+                    this.error('MathML must consist of a single element');
                 }
                 mml = doc.body.removeChild(doc.body.firstChild) as Element;
             } else {
                 mml = doc.removeChild(doc.firstChild) as Element;
             }
             if (mml.nodeName.toLowerCase().replace(/^[a-z]+:/, '') !== 'math') {
-                this.Error('MathML must be formed by a <math> element, not <' +
+                this.error('MathML must be formed by a <math> element, not <' +
                            mml.nodeName.toLowerCase() + '>');
             }
         }
         mml = this.executeFilters(this.mmlFilters, math, mml);
-        return this.executeFilters(this.postFilters, math, this.MathML.Compile(mml as HTMLElement));
+        return this.executeFilters(this.postFilters, math, this.mathml.compile(mml as HTMLElement));
     }
 
     /*
@@ -142,7 +142,7 @@ export class MathML extends AbstractInputJax {
         let err = doc.querySelector('parsererror');
         if (err) {
             if (err.textContent === '') {
-                this.Error('Error processing MathML');
+                this.error('Error processing MathML');
             }
             this.options['parseError'].call(this, err);
         }
@@ -154,7 +154,7 @@ export class MathML extends AbstractInputJax {
      *
      * @param{string} message  The error message to produce
      */
-    protected Error(message: string) {
+    protected error(message: string) {
         // FIXME:  should this be creating merror nodes instead?
         throw new Error(message);
     }
@@ -162,8 +162,8 @@ export class MathML extends AbstractInputJax {
     /*
      * @override
      */
-    public FindMath(node: Element) {
-        return this.FindMathML.FindMath(node);
+    public findMath(node: Element) {
+        return this.findMathML.findMath(node);
     }
 
 }

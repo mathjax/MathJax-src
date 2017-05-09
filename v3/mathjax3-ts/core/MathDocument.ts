@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {UserOptions, DefaultOptions, OptionList} from '../util/Options.js';
+import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {InputJax, AbstractInputJax} from './InputJax.js';
 import {OutputJax, AbstractOutputJax} from './OutputJax.js';
 import {MathList, MathListClass, AbstractMathList} from './MathList.js';
@@ -37,12 +37,12 @@ import {MathItem, AbstractMathItem} from './MathItem.js';
  *  chain the method calls.  E.g.,
  *
  *    const html = MathJax.Document('<html>...</html>');
- *    html.FindMath()
- *        .Compile()
- *        .GetMetrics()
- *        .Typeset()
- *        .AddEventHandlers()
- *        .UpdateDocument();
+ *    html.findMath()
+ *        .compile()
+ *        .getMetrics()
+ *        .typeset()
+ *        .addEventHandlers()
+ *        .updateDocument();
  *
  *  The MathDocument is the main interface for page authors to
  *  interact with MathJax.
@@ -79,12 +79,12 @@ export interface MathDocument {
     /*
      * An array of input jax to run on the document
      */
-    InputJax: InputJax[];
+    inputJax: InputJax[];
 
     /*
      * The output jax to use for the document
      */
-    OutputJax: OutputJax;
+    outputJax: OutputJax;
 
     /*
      * Locates the math in the document and constructs the MathList
@@ -93,42 +93,42 @@ export interface MathDocument {
      * @param{OptionList} options  The options for locating the math
      * @return{MathDocument}       The math document instance
      */
-    FindMath(options?: OptionList): MathDocument;
+    findMath(options?: OptionList): MathDocument;
 
     /*
      * Calls the input jax to process the MathItems in the MathList
      *
      * @return{MathDocument}  The math document instance
      */
-    Compile(): MathDocument;
+    compile(): MathDocument;
 
     /*
      * Gets the metric information for the MathItems
      *
      * @return{MathDocument}  The math document instance
      */
-    GetMetrics(): MathDocument;
+    getMetrics(): MathDocument;
 
     /*
      * Calls the output jax to process the compiled math in the MathList
      *
      * @return{MathDocument}  The math document instance
      */
-    Typeset(): MathDocument;
+    typeset(): MathDocument;
 
     /*
      * Add any event handlers to the typeset math
      *
      * @return{MathDocument}  The math document instance
      */
-    AddEventHandlers(): MathDocument;
+    addEventHandlers(): MathDocument;
 
     /*
      * Updates the document to include the typeset math
      *
      * @return{MathDocument}  The math document instance
      */
-    UpdateDocument(): MathDocument;
+    updateDocument(): MathDocument;
 
     /*
      * Removes the typeset math from the document
@@ -137,7 +137,7 @@ export interface MathDocument {
      *                            back into the document as well
      * @return{MathDocument}    The math document instance
      */
-    RemoveFromDocument(restore?: boolean): MathDocument;
+    removeFromDocument(restore?: boolean): MathDocument;
 
     /*
      * Set the state of the document (allowing you to roll back
@@ -147,14 +147,14 @@ export interface MathDocument {
      *                            back into the document during the rollback
      * @return{MathDocument}    The math document instance
      */
-    State(state: number, restore?: boolean): MathDocument;
+    state(state: number, restore?: boolean): MathDocument;
 
     /*
      * Clear the processed values so that the document can be reprocessed
      *
      * @return{MathDocument}  The math document instance
      */
-    Reset(): MathDocument;
+    reset(): MathDocument;
 
     /*
      * Reset the processed values and clear the MathList (so that new math
@@ -162,7 +162,7 @@ export interface MathDocument {
      *
      * @return{MathDocument}  The math document instance
      */
-    Clear(): MathDocument;
+    clear(): MathDocument;
 
     /*
      * Merges a MathList into the list for this document.
@@ -170,7 +170,7 @@ export interface MathDocument {
      * @param{MathList} list   The MathList to be merged into this document's list
      * @return{MathDocument}   The math document instance
      */
-    Concat(list: MathList): MathDocument;
+    concat(list: MathList): MathDocument;
 
 }
 
@@ -205,12 +205,12 @@ export interface MathDocumentClass {
  */
 
 export interface MathProcessed {
-    FindMath: boolean;
-    Compile: boolean;
-    GetMetrics: boolean;
-    Typeset: boolean;
-    AddEventHandlers: boolean;
-    UpdateDocument: boolean;
+    findMath: boolean;
+    compile: boolean;
+    getMetrics: boolean;
+    typeset: boolean;
+    addEventHandlers: boolean;
+    updateDocument: boolean;
     [name: string]: boolean;
 }
 
@@ -240,8 +240,8 @@ export abstract class AbstractMathDocument implements MathDocument {
     public options: OptionList;
     public math: MathList;
     public processed: MathProcessed;
-    public InputJax: InputJax[];
-    public OutputJax: OutputJax;
+    public inputJax: InputJax[];
+    public outputJax: OutputJax;
 
     /*
      * @param{any} document        The document (HTML string, parsed DOM, etc.) to be processed
@@ -251,20 +251,20 @@ export abstract class AbstractMathDocument implements MathDocument {
     constructor (document: any, options: OptionList) {
         let CLASS = this.constructor as MathDocumentClass;
         this.document = document;
-        this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
+        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
         this.math = new (this.options['MathList'] as MathListClass)();
         this.processed = {
-            FindMath: false,
-            Compile: false,
-            Typeset: false,
-            GetMetrics: false,
-            AddEventHandlers: false,
-            UpdateDocument: false
+            findMath: false,
+            compile: false,
+            typeset: false,
+            getMetrics: false,
+            addEventHandlers: false,
+            updateDocument: false
         };
-        this.OutputJax = this.options['OutputJax'] || new DefaultOutputJax();
-        this.InputJax = this.options['InputJax'] || [new DefaultInputJax()];
-        if (!Array.isArray(this.InputJax)) {
-            this.InputJax = [this.InputJax];
+        this.outputJax = this.options['OutputJax'] || new DefaultOutputJax();
+        this.inputJax = this.options['InputJax'] || [new DefaultInputJax()];
+        if (!Array.isArray(this.inputJax)) {
+            this.inputJax = [this.inputJax];
         }
     }
 
@@ -278,20 +278,20 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public FindMath(options: OptionList) {
-        this.processed.FindMath = true;
+    public findMath(options: OptionList) {
+        this.processed.findMath = true;
         return this;
     }
 
     /*
      * @override
      */
-    public Compile() {
-        if (!this.processed.Compile) {
+    public compile() {
+        if (!this.processed.compile) {
             for (const math of this.math.toArray()) {
-                math.Compile(this);
+                math.compile(this);
             }
-            this.processed.Compile = true;
+            this.processed.compile = true;
         }
         return this;
     }
@@ -299,12 +299,12 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public Typeset() {
-        if (!this.processed.Typeset) {
+    public typeset() {
+        if (!this.processed.typeset) {
             for (const math of this.math.toArray()) {
-                math.Typeset(this);
+                math.typeset(this);
             }
-            this.processed.Typeset = true;
+            this.processed.typeset = true;
         }
         return this;
     }
@@ -312,10 +312,10 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public GetMetrics() {
-        if (!this.processed.GetMetrics) {
-            this.OutputJax.GetMetrics(this);
-            this.processed.GetMetrics = true;
+    public getMetrics() {
+        if (!this.processed.getMetrics) {
+            this.outputJax.getMetrics(this);
+            this.processed.getMetrics = true;
         }
         return this;
     }
@@ -323,20 +323,20 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public AddEventHandlers() {
-        this.processed.AddEventHandlers = true;
+    public addEventHandlers() {
+        this.processed.addEventHandlers = true;
         return this;
     }
 
     /*
      * @override
      */
-    public UpdateDocument() {
-        if (!this.processed.UpdateDocument) {
+    public updateDocument() {
+        if (!this.processed.updateDocument) {
             for (const math of this.math.reversed().toArray()) {
-                math.UpdateDocument(this);
+                math.updateDocument(this);
             }
-            this.processed.UpdateDocument = true;
+            this.processed.updateDocument = true;
         }
         return this;
     }
@@ -344,27 +344,27 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public RemoveFromDocument(restore: boolean = false) {
+    public removeFromDocument(restore: boolean = false) {
         return this;
     }
 
     /*
      * @override
      */
-    public State(state: number, restore: boolean = false) {
+    public state(state: number, restore: boolean = false) {
         for (const math of this.math.toArray()) {
-            math.State(state, restore);
+            math.state(state, restore);
         }
         if (state < STATE.INSERTED) {
-            this.processed.UpdateDocument = false;
+            this.processed.updateDocument = false;
         }
         if (state < STATE.TYPESET) {
-            this.processed.Typeset = false;
-            this.processed.AddEventHandlers = false;
-            this.processed.GetMetrics = false;
+            this.processed.typeset = false;
+            this.processed.addEventHandlers = false;
+            this.processed.getMetrics = false;
         }
         if (state < STATE.COMPILED) {
-            this.processed.Compile = false;
+            this.processed.compile = false;
         }
         return this;
     }
@@ -372,7 +372,7 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public Reset() {
+    public reset() {
         for (const key of Object.keys(this.processed)) {
             this.processed[key] = false;
         }
@@ -382,8 +382,8 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public Clear() {
-        this.Reset();
+    public clear() {
+        this.reset();
         this.math.clear();
         return this;
     }
@@ -391,7 +391,7 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public Concat(list: MathList) {
+    public concat(list: MathList) {
         this.math.merge(list);
         return this;
     }

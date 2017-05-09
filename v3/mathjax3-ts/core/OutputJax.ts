@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {UserOptions, DefaultOptions, OptionList} from '../util/Options.js';
+import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {MathDocument} from './MathDocument.js';
 import {MathItem, Metrics} from './MathItem.js';
 
@@ -47,7 +47,7 @@ export interface OutputJax {
      * @param{MathDocument} document  The MathDocument in which the typesetting should occur
      * @return{Element}               The DOM tree for the typeset math
      */
-    Typeset(math: MathItem, document?: MathDocument): Element;
+    typeset(math: MathItem, document?: MathDocument): Element;
 
     /*
      * Handle an escaped character (e.g., \$ from the TeX input jax preventing it from being a delimiter)
@@ -56,21 +56,21 @@ export interface OutputJax {
      * @param{MathDocument} document  The MathDocument in which the math occurs
      * @return{Element}               The DOM tree for the escaped item
      */
-    Escaped(math: MathItem, document?: MathDocument): Element;
+    escaped(math: MathItem, document?: MathDocument): Element;
 
     /*
      * Get the metric information for all math in the given document
      *
      * @param{MathDocument} document  The MathDocument being processed
      */
-    GetMetrics(document: MathDocument): void;
+    getMetrics(document: MathDocument): void;
 
     /*
      * Produce the stylesheet needed for this output jax
      *
      * @param{MathDocument} document  The MathDocument being processed
      */
-    StyleSheet(document: MathDocument): Element;
+    styleSheet(document: MathDocument): Element;
 }
 
 /*****************************************************************/
@@ -109,7 +109,7 @@ export abstract class AbstractOutputJax implements OutputJax {
      */
     constructor(options: OptionList = {}) {
         let CLASS = this.constructor as OutputJaxClass;
-        this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
+        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     }
 
     /*
@@ -122,27 +122,27 @@ export abstract class AbstractOutputJax implements OutputJax {
     /*
      * @override
      */
-    public Typeset(math: MathItem, document: MathDocument = null) {
+    public typeset(math: MathItem, document: MathDocument = null) {
         return null as Element;
     }
 
     /*
      * @override
      */
-    public Escaped(math: MathItem, document: MathDocument = null) {
+    public escaped(math: MathItem, document: MathDocument = null) {
         return null as Element;
     }
 
     /*
      * @override
      */
-    public GetMetrics(document: MathDocument) {
+    public getMetrics(document: MathDocument) {
     }
 
     /*
      * @override
      */
-    public StyleSheet(document: MathDocument) {
+    public styleSheet(document: MathDocument) {
         return null as Element;
     }
 

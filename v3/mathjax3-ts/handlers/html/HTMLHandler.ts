@@ -76,7 +76,7 @@ export class HTMLHandler extends AbstractHandler {
     /*
      * @override
      */
-    public HandlesDocument(document: any) {
+    public handlesDocument(document: any) {
         if (typeof(document) === 'string') {
             try {
                 document = this.parser.parseFromString(document, 'text/html');
@@ -96,7 +96,7 @@ export class HTMLHandler extends AbstractHandler {
      *
      * @override
      */
-    public Create(document: any, options: OptionList) {
+    public create(document: any, options: OptionList) {
         if (typeof(document) === 'string') {
             document = this.parser.parseFromString(document, 'text/html');
         } else if (document instanceof this.HTMLELEMENT) {

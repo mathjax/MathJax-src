@@ -117,14 +117,14 @@ export class FindTeX extends AbstractFindMath {
      */
     constructor(options: OptionList) {
         super(options);
-        this.GetPatterns();
+        this.getPatterns();
     }
 
     /*
      * Create the patterns needed for searching the strings for TeX
      *   based on the configuration options
      */
-    protected GetPatterns() {
+    protected getPatterns() {
         let options = this.options;
         let starts: string[] = [], parts: string[] = [], subparts: string[] = [];
         this.end = {};
@@ -187,7 +187,7 @@ export class FindTeX extends AbstractFindMath {
      * @param{ENDITEM} end            The end-delimiter data corresponding to the start delimiter
      * @return{ProtoItem}             The proto math item for the math, if found
      */
-    protected FindEnd(text: string, n: number, start: RegExpExecArray, end: ENDITEM) {
+    protected findEnd(text: string, n: number, start: RegExpExecArray, end: ENDITEM) {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match: RegExpExecArray, braces: number = 0;
@@ -214,13 +214,13 @@ export class FindTeX extends AbstractFindMath {
      * @param{number} n          The index of the string being searched
      * @param{string} text       The string being searched
      */
-    protected FindMathInString(math: ProtoItem[], n: number, text: string) {
+    protected findMathInString(math: ProtoItem[], n: number, text: string) {
         let start, match;
         this.start.lastIndex = 0;
         while ((start = this.start.exec(text))) {
             if (start[this.env] !== undefined && this.env) {
                 let end = '\\end{' + start[this.env] + '}';
-                match = this.FindEnd(text, n, start, [end, true, this.endPattern(end)]);
+                match = this.findEnd(text, n, start, [end, true, this.endPattern(end)]);
                 if (match) {
                     match.math = match.open + match.math + match.close;
                     match.open = match.close = '';
@@ -234,7 +234,7 @@ export class FindTeX extends AbstractFindMath {
                     match = MATCH('', math, '', n, start.index, end, false);
                 }
             } else {
-                match = this.FindEnd(text, n, start, this.end[start[0]]);
+                match = this.findEnd(text, n, start, this.end[start[0]]);
             }
             if (match) {
                 math.push(match);
@@ -248,11 +248,11 @@ export class FindTeX extends AbstractFindMath {
      *
      * @override
      */
-    public FindMath(strings: string[]) {
+    public findMath(strings: string[]) {
         let math: ProtoItem[] = [];
         if (this.hasPatterns) {
             for (let i = 0, m = strings.length; i < m; i++) {
-                this.FindMathInString(math, i, strings[i]);
+                this.findMathInString(math, i, strings[i]);
             }
         }
         return math;

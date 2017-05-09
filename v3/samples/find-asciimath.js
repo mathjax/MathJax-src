@@ -28,7 +28,7 @@ try {
   //
   //  Use browser document, if there is one
   //
-  html = MathJax.Document(document,OPTIONS);
+  html = MathJax.document(document,OPTIONS);
   document.body.insertBefore(document.createElement("hr"),document.body.firstChild);
   var div = document.createElement('div');
   div.innerHTML = HTML; div.style.marginBottom = "1em";
@@ -37,7 +37,7 @@ try {
   //
   //  Otherwise, make a new document (measurements not supported here)
   //
-  html = MathJax.Document(
+  html = MathJax.document(
     '<html><head><title>Test MathJax3</title></head><body>'
     + HTML +
     '</body></html>',
@@ -57,9 +57,9 @@ const DELIMITERS = function (start,end) {
   return (value.substr(0,n)+"@"+value.substr(n,m-n)+"@"+value.substr(m)).replace(/\n/g,"\\n");
 };
 
-MathJax.HandleRetriesFor(function () {
+MathJax.handleRetriesFor(function () {
 
-    html.FindMath();
+    html.findMath();
     for (const math of html.math) {
       console.log(math.math,math.display);
       if (math.start.node === math.end.node) {

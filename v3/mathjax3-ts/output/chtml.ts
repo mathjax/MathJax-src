@@ -42,7 +42,7 @@ export class CHTML extends AbstractOutputJax {
     /*
      * @override
      */
-    public Typeset(math: MathItem, html: MathDocument) {
+    public typeset(math: MathItem, html: MathDocument) {
         return LegacyCHTML.Typeset(math, html);
     }
 
@@ -53,7 +53,7 @@ export class CHTML extends AbstractOutputJax {
      *
      * @override
      */
-    public Escaped(math: MathItem, html: MathDocument) {
+    public escaped(math: MathItem, html: MathDocument) {
         let span = html.document.createElement('span');
         span.appendChild(html.document.createTextNode(math.math));
         return span;
@@ -62,14 +62,14 @@ export class CHTML extends AbstractOutputJax {
     /*
      * @override
      */
-    public GetMetrics(html: MathDocument) {
+    public getMetrics(html: MathDocument) {
         return LegacyCHTML.GetMetrics(html);
     }
 
     /*
      * @override
      */
-    public StyleSheet(html: MathDocument) {
+    public styleSheet(html: MathDocument) {
         return LegacyCHTML.StyleSheet(html);
     }
 

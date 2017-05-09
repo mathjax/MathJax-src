@@ -10,21 +10,38 @@ let OPTIONS = {
   OutputJax: new CHTML()
 };
 
-let html = MathJax.Document(`
-  <html>
-  <head><title>Test MathJax3</title></head>
-  <body>
-  This is some math: \\(x+1\\).
+let HTML = `
+  This is \\$ some math: \\(x+1\\).
   \\[x+1\\over x-1\\]
-  </body></html>`,
-  OPTIONS
-);
+`;
 
-MathJax.HandleRetriesFor(function () {
+var html;
+try {
+  //
+  //  Use browser document, if there is one
+  //
+  html = MathJax.document(document,OPTIONS);
+  document.body.insertBefore(document.createElement("hr"),document.body.firstChild);
+  var div = document.createElement('div');
+  div.innerHTML = HTML; div.style.marginBottom = "1em";
+  document.body.insertBefore(div,document.body.firstChild);
+} catch (err) {
+  //
+  //  Otherwise, make a new document (measurements not supported here)
+  //
+  html = MathJax.document(
+    '<html><head><title>Test MathJax3</title></head><body>'
+    + HTML +
+    '</body></html>',
+    OPTIONS
+  );
+}
 
-    html.FindMath()
-        .Compile()
-        .Typeset();
+MathJax.handleRetriesFor(function () {
+
+    html.findMath()
+        .compile()
+        .typeset();
         
     console.log(Array.from(html.math));
 

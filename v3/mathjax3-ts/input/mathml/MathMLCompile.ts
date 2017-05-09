@@ -24,7 +24,7 @@
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlEntities} from './MmlEntities.js';
 import {MmlNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
-import {OptionList, DefaultOptions, UserOptions} from '../../util/Options.js';
+import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 
 /********************************************************************/
 /*
@@ -70,9 +70,9 @@ export class MathMLCompile {
      */
     constructor(options: OptionList = {}) {
         const Class = this.constructor as typeof MathMLCompile;
-        this.options = UserOptions(DefaultOptions({}, Class.OPTIONS), options);
+        this.options = userOptions(defaultOptions({}, Class.OPTIONS), options);
         if (this.options['verify']) {
-            this.options['verify'] = UserOptions(DefaultOptions({}, Class.VERIFY), this.options['verify']);
+            this.options['verify'] = userOptions(defaultOptions({}, Class.VERIFY), this.options['verify']);
         }
         this.factory = this.options['MmlFactory'] || new MmlFactory();
         this.entities = this.options['MmlEntities'] || new MmlEntities();
@@ -84,7 +84,7 @@ export class MathMLCompile {
      * @param {HTMLElement} node  The <math> node to convert to MmlNodes
      * @return {MmlNode}          The MmlNode at the root of the converted tree
      */
-    public Compile(node: HTMLElement) {
+    public compile(node: HTMLElement) {
         let mml = this.makeNode(node);
         mml.verifyTree(this.options['verify']);
         mml.setInheritedAttributes();
@@ -112,10 +112,10 @@ export class MathMLCompile {
                 limits = true;
             }
         }
-        this.factory.getNodeClass(type) || this.Error('Unknown node type "' + type + '"');
+        this.factory.getNodeClass(type) || this.error('Unknown node type "' + type + '"');
         let mml = this.factory.create(type);
         if (texClass) {
-            this.TeXAtom(mml, texClass, limits);
+            this.texAtom(mml, texClass, limits);
         }
         this.addAttributes(mml, node);
         this.checkClass(mml, node);
@@ -204,7 +204,7 @@ export class MathMLCompile {
             }
             mml.appendChild(this.factory.create('text').setText(text));
         } else if (text.match(/\S/)) {
-            this.Error('Unexpected text node "' + text + '"');
+            this.error('Unexpected text node "' + text + '"');
         }
     }
 
@@ -239,7 +239,7 @@ export class MathMLCompile {
      * @param {string} texClass  The texClass indicated in the MJX class identifier
      * @param {boolena} limits   Whether MJX-fixedlimits was found in teh class list
      */
-    protected TeXAtom(mml: MmlNode, texClass: string, limits: boolean) {
+    protected texAtom(mml: MmlNode, texClass: string, limits: boolean) {
         mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
         if (texClass === 'OP' && !limits) {
             mml.setProperty('movesupsub', true);
@@ -282,7 +282,7 @@ export class MathMLCompile {
     /*
      * @param {string} message  The error message to produce
      */
-    protected Error(message: string) {
+    protected error(message: string) {
         throw new Error(message);
     }
 }

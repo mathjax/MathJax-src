@@ -51,12 +51,12 @@ export interface RetryError extends Error {
  *
  *     HandleRetriesFor(() => {
  *
- *         html.FindMath()
- *             .Compile()
- *             .GetMetrics()
- *             .Typeset()
- *             .AddEventHandlers()
- *             .UpdateDocument();
+ *         html.findMath()
+ *             .compile()
+ *             .getMetrics()
+ *             .typeset()
+ *             .addEventHandlers()
+ *             .updateDocument();
  *
  *     }).catch(err => {
  *       console.log(err.message);
@@ -68,7 +68,7 @@ export interface RetryError extends Error {
  *                         generates an error (that is not a retry).
  */
 
-export function HandleRetriesFor(code: Function) {
+export function handleRetriesFor(code: Function) {
     return new Promise(function run(ok: Function, fail: Function) {
         try {
             ok(code());
@@ -95,7 +95,7 @@ export function HandleRetriesFor(code: Function) {
  *                            actions will continue
  */
 
-export function RetryAfter(promise: Promise<Object>) {
+export function retryAfter(promise: Promise<Object>) {
     let err = new Error('MathJax retry') as RetryError;
     err.retry = promise;
     throw err;

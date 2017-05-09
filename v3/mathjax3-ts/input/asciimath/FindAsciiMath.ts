@@ -90,14 +90,14 @@ export class FindAsciiMath extends AbstractFindMath {
      */
     constructor(options: OptionList) {
         super(options);
-        this.GetPatterns();
+        this.getPatterns();
     }
 
     /*
      * Create the patterns needed for searching the strings for AsciiMath
      *   based on the configuration options
      */
-    protected GetPatterns() {
+    protected getPatterns() {
         let options = this.options;
         let starts: string[] = [];
         this.end = {};
@@ -128,7 +128,7 @@ export class FindAsciiMath extends AbstractFindMath {
      * @param{ENDITEM} end            The end-delimiter data corresponding to the start delimiter
      * @return{ProtoItem}             The proto math item for the math, if found
      */
-    protected FindEnd(text: string, n: number, start: RegExpExecArray, end: ENDITEM) {
+    protected findEnd(text: string, n: number, start: RegExpExecArray, end: ENDITEM) {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match = pattern.exec(text);
@@ -143,11 +143,11 @@ export class FindAsciiMath extends AbstractFindMath {
      * @param{number} n          The index of the string being searched
      * @param{string} text       The string being searched
      */
-    protected FindMathInString(math: ProtoItem[], n: number, text: string) {
+    protected findMathInString(math: ProtoItem[], n: number, text: string) {
         let start, match;
         this.start.lastIndex = 0;
         while ((start = this.start.exec(text))) {
-            match = this.FindEnd(text, n, start, this.end[start[0]]);
+            match = this.findEnd(text, n, start, this.end[start[0]]);
             if (match) {
                 math.push(match);
                 this.start.lastIndex = match.end.n;
@@ -160,11 +160,11 @@ export class FindAsciiMath extends AbstractFindMath {
      *
      * @override
      */
-    public FindMath(strings: string[]) {
+    public findMath(strings: string[]) {
         let math: ProtoItem[] = [];
         if (this.hasPatterns) {
             for (let i = 0, m = strings.length; i < m; i++) {
-                this.FindMathInString(math, i, strings[i]);
+                this.findMathInString(math, i, strings[i]);
             }
         }
         return math;

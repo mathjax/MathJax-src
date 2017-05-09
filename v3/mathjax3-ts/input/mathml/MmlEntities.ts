@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {RetryAfter} from '../../util/Retries.js';
-import {AsyncLoad} from '../../util/AsyncLoad.js';
-import {OptionList, DefaultOptions, UserOptions} from '../../util/Options.js';
+import {retryAfter} from '../../util/Retries.js';
+import {asyncLoad} from '../../util/AsyncLoad.js';
+import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 
 /*
  * The type for lists of entities
@@ -494,7 +494,7 @@ export class MmlEntities {
      * @param {OptionList} options  The options to apply to this translator
      */
     public constructor(options: OptionList = {}) {
-        this.options = UserOptions(DefaultOptions({}, (this.constructor as typeof MmlEntities).OPTIONS), options);
+        this.options = userOptions(defaultOptions({}, (this.constructor as typeof MmlEntities).OPTIONS), options);
         this.REPLACE = this.replace.bind(this);
     }
 
@@ -539,7 +539,7 @@ export class MmlEntities {
             let loaded = this.loaded;
             if (!loaded[file]) {
                 loaded[file] = true;
-                RetryAfter(AsyncLoad('mathjax/input/mathml/js/entities/' + file + '.js'));
+                retryAfter(asyncLoad('mathjax/input/mathml/js/entities/' + file + '.js'));
             }
         }
         return match;

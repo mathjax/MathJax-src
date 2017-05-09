@@ -27,4 +27,4 @@ import {HTMLHandler} from './html/HTMLHandler.js';
 /*
  *  Create the HTML handler object and register it with MathJax.
  */
-MathJax.handlers.Register(new HTMLHandler());
+MathJax.handlers.register(new HTMLHandler());

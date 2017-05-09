@@ -46,7 +46,7 @@ export class FunctionList extends PrioritizedList<Function> {
      * @return{boolean}    False if any function stopped the list by
      *                       returning false, true otherwise
      */
-    public Execute(...data: any[]) {
+    public execute(...data: any[]) {
         for (const item of this.toArray()) {
             let result = item.item(...data);
             if (result === false) {

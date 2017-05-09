@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {UserOptions, DefaultOptions, OptionList} from '../util/Options.js';
+import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {ProtoItem} from './MathItem.js';
 
 /*****************************************************************/
@@ -34,8 +34,8 @@ export interface FindMath {
      * One of two possibilities:  Look through a DOM element,
      *   or look through an array of strings for delimited math.
      */
-    FindMath(node: Element): ProtoItem[];
-    FindMath(strings: string[]): ProtoItem[];
+    findMath(node: Element): ProtoItem[];
+    findMath(strings: string[]): ProtoItem[];
 }
 
 /*****************************************************************/
@@ -72,7 +72,7 @@ export abstract class AbstractFindMath implements FindMath {
      */
     constructor(options: OptionList) {
         let CLASS = this.constructor as FindMathClass;
-        this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
+        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     }
 
     /*
@@ -81,7 +81,7 @@ export abstract class AbstractFindMath implements FindMath {
      * @param{Element | string[]} where  The node or string array to search for math
      * @return{ProtoItem[]}              The array of proto math items found
      */
-    public FindMath(where: Element | string[]) {
+    public findMath(where: Element | string[]) {
         return [] as ProtoItem[];
     }
 

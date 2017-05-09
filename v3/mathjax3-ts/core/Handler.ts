@@ -47,7 +47,7 @@ export interface Handler {
      * @param{any} document  The document to be processed (string, window, etc.)
      * @return{boolean}      True if this handler can process the given document
      */
-    HandlesDocument(document: any): boolean;
+    handlesDocument(document: any): boolean;
 
     /*
      * Creates a MathDocument for the given handler
@@ -56,7 +56,7 @@ export interface Handler {
      * @param{OptionList} options  The options for the handling of the document
      * @return{MathDocument}       The MathDocument object that manages the processing
      */
-    Create(document: any, options: OptionList): MathDocument;
+    create(document: any, options: OptionList): MathDocument;
 }
 
 /*****************************************************************/
@@ -116,14 +116,14 @@ export abstract class AbstractHandler implements Handler {
     /*
      * @override
      */
-    public HandlesDocument(document: any) {
+    public handlesDocument(document: any) {
         return false;
     }
 
     /*
      * @override
      */
-    public Create(document: any, options: OptionList) {
+    public create(document: any, options: OptionList) {
         return new DefaultMathDocument(document, options) as MathDocument;
     }
 

@@ -51,14 +51,14 @@ export class FindMathML extends AbstractFindMath {
      *
      * @override
      */
-    public FindMath(node: Element) {
+    public findMath(node: Element) {
         let set: NodeSet = new Set<Element>();
-        this.FindMathNodes(node, set);
-        this.FindMathPrefixed(node, set);
+        this.findMathNodes(node, set);
+        this.findMathPrefixed(node, set);
         if (node.ownerDocument.documentElement.nodeName === 'html' &&  set.size === 0) {
-            this.FindMathNS(node, set);
+            this.findMathNS(node, set);
         }
-        return this.ProcessMath(set);
+        return this.processMath(set);
     }
 
     /*
@@ -67,7 +67,7 @@ export class FindMathML extends AbstractFindMath {
      * @param{Element} node  The container to seaerch for math
      * @param{NodeSet} set   The set in which to store the math nodes
      */
-    protected FindMathNodes(node: Element, set: NodeSet) {
+    protected findMathNodes(node: Element, set: NodeSet) {
         for (const math of Array.from(node.getElementsByTagName('math'))) {
             set.add(math);
         }
@@ -79,7 +79,7 @@ export class FindMathML extends AbstractFindMath {
      * @param{Element} node  The container to seaerch for math
      * @param{NodeSet} set   The set in which to store the math nodes
      */
-    protected FindMathPrefixed(node: Element, set: NodeSet) {
+    protected findMathPrefixed(node: Element, set: NodeSet) {
         let html = node.ownerDocument.documentElement;
         for (const attr of Array.from(html.attributes)) {
             if (attr.nodeName.substr(0, 6) === 'xmlns:' && attr.nodeValue === NAMESPACE) {
@@ -97,7 +97,7 @@ export class FindMathML extends AbstractFindMath {
      * @param{Element} node  The container to seaerch for math
      * @param{NodeSet} set   The set in which to store the math nodes
      */
-    protected FindMathNS(node: Element, set: NodeSet) {
+    protected findMathNS(node: Element, set: NodeSet) {
         for (const math of Array.from(node.getElementsByTagNameNS(NAMESPACE, 'math'))) {
             set.add(math);
         }
@@ -106,7 +106,7 @@ export class FindMathML extends AbstractFindMath {
     /*
      *  Produce the array of proto math items from the node set
      */
-    protected ProcessMath(set: NodeSet) {
+    protected processMath(set: NodeSet) {
         let math: ProtoItem[] = [];
         for (const mml of Array.from(set)) {
             let display = (mml.getAttribute('display') === 'block' ||

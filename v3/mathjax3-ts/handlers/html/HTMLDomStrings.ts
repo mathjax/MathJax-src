@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {UserOptions, DefaultOptions, OptionList} from '../../util/Options.js';
+import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 
 //
 //  Make sure an option is an Array
@@ -123,15 +123,15 @@ export class HTMLDomStrings {
      */
     constructor(options: OptionList = null) {
         let CLASS = this.constructor as HTMLDomStringsClass;
-        this.options = UserOptions(DefaultOptions({}, CLASS.OPTIONS), options);
-        this.Init();
-        this.GetPatterns();
+        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
+        this.init();
+        this.getPatterns();
     }
 
     /*
      * Set the initial values of the main properties
      */
-    protected Init() {
+    protected init() {
         this.strings = [];
         this.string = '';
         this.snodes = [];
@@ -142,7 +142,7 @@ export class HTMLDomStrings {
     /*
      * Create the search patterns for skipTags, ignoreClass, and processClass
      */
-    protected GetPatterns() {
+    protected getPatterns() {
         let skip = MAKEARRAY(this.options['skipTags']);
         let ignore = MAKEARRAY(this.options['ignoreClass']);
         let process = MAKEARRAY(this.options['processClass']);
@@ -154,7 +154,7 @@ export class HTMLDomStrings {
     /*
      * Add a string to the string array and record its node list
      */
-    protected PushString() {
+    protected pushString() {
         if (this.string.match(/\S/)) {
             this.strings.push(this.string);
             this.nodes.push(this.snodes);
@@ -172,7 +172,7 @@ export class HTMLDomStrings {
      *                         of the node, if it is one of the nodes that gets
      *                         translated to text, like <br> to a newline).
      */
-    protected ExtendString(node: Element, text: string) {
+    protected extendString(node: Element, text: string) {
         this.snodes.push([node, text.length]);
         this.string += text;
     }
@@ -184,9 +184,9 @@ export class HTMLDomStrings {
      * @param{boolean} ignore  Whether we are currently ignoring content
      * @return{Element}        The next element to process
      */
-    protected HandleText(node: Element, ignore: boolean) {
+    protected handleText(node: Element, ignore: boolean) {
         if (!ignore) {
-            this.ExtendString(node, node.nodeValue);
+            this.extendString(node, node.nodeValue);
         }
         return node.nextSibling as Element;
     }
@@ -198,10 +198,10 @@ export class HTMLDomStrings {
      * @param{boolean} ignore  Whether we are currently ignoring content
      * @return{Element}        The next element to process
      */
-    protected HandleTag(node: Element, ignore: boolean) {
+    protected handleTag(node: Element, ignore: boolean) {
         if (!ignore) {
             let text = this.options['includeTags'][node.nodeName.toLowerCase()];
-            this.ExtendString(node, text);
+            this.extendString(node, text);
         }
         return node.nextSibling as Element;
     }
@@ -222,8 +222,8 @@ export class HTMLDomStrings {
      * @param{boolean} ignore       Whether we are currently ignoring content
      * @return{[Element, boolean]}  The next element to process and whether to ignore its content
      */
-    protected HandleContainer(node: Element, ignore: boolean) {
-        this.PushString();
+    protected handleContainer(node: Element, ignore: boolean) {
+        this.pushString();
         let cname = node.className || '';
         let tname = node.tagName || '';
         let process = this.processClass.exec(cname);
@@ -256,29 +256,29 @@ export class HTMLDomStrings {
      * @param{Element} node                 The node to search
      * @return{[string[], HTMLNodeList[]]}  The array of strings and their associated lists of nodes
      */
-    public Find(node: Element) {
-        this.Init();
+    public find(node: Element) {
+        this.init();
         let stop = node.nextSibling;
         let ignore = false;
         let include = this.options['includeTags'];
 
         while (node && node !== stop) {
             if (node.nodeName === '#text') {
-                node = this.HandleText(node, ignore);
+                node = this.handleText(node, ignore);
             } else if (include[node.nodeName.toLowerCase()] !== undefined) {
-                node = this.HandleTag(node, ignore);
+                node = this.handleTag(node, ignore);
             } else {
-                [node, ignore] = this.HandleContainer(node, ignore);
+                [node, ignore] = this.handleContainer(node, ignore);
             }
             if (!node && this.stack.length) {
-                this.PushString();
+                this.pushString();
                 [node, ignore] = this.stack.pop();
             }
         }
 
-        this.PushString();
+        this.pushString();
         let result = [this.strings, this.nodes] as [string[], HTMLNodeList[]];
-        this.Init(); // free up memory
+        this.init(); // free up memory
         return result;
     }
 

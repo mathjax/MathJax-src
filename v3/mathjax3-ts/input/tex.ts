@@ -23,7 +23,7 @@
 
 import {AbstractInputJax} from '../core/InputJax.js';
 import {LegacyTeX} from '../../mathjax2/input/TeX.js';
-import {SeparateOptions, OptionList} from '../util/Options.js';
+import {separateOptions, OptionList} from '../util/Options.js';
 import {MathItem, ProtoItem} from '../core/MathItem.js';
 
 import {FindTeX} from './tex/FindTeX.js';
@@ -44,15 +44,15 @@ export class TeX extends AbstractInputJax {
     /*
      * The FindTeX instance used for locating TeX in strings
      */
-    protected FindTeX: FindTeX;
+    protected findTeX: FindTeX;
 
     /*
      * @override
      */
     constructor(options: OptionList) {
-        let [tex, find] = SeparateOptions(options, FindTeX.OPTIONS);
+        let [tex, find] = separateOptions(options, FindTeX.OPTIONS);
         super(tex);
-        this.FindTeX = this.options['FindTeX'] || new FindTeX(find);
+        this.findTeX = this.options['FindTeX'] || new FindTeX(find);
     }
 
     /*
@@ -60,15 +60,15 @@ export class TeX extends AbstractInputJax {
      *
      * @override
      */
-    public Compile(math: MathItem) {
+    public compile(math: MathItem) {
         return LegacyTeX.Compile(math.math, math.display);
     }
 
     /*
      * @override
      */
-    public FindMath(strings: string[]) {
-        return this.FindTeX.FindMath(strings);
+    public findMath(strings: string[]) {
+        return this.findTeX.findMath(strings);
     }
 
 }

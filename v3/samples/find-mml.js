@@ -28,7 +28,7 @@ try {
   //
   //  Use browser document, if there is one
   //
-  html = MathJax.Document(document,OPTIONS);
+  html = MathJax.document(document,OPTIONS);
   document.documentElement.setAttribute("xmlns:m","http://www.w3.org/1998/Math/MathML");
   document.body.insertBefore(document.createElement("hr"),document.body.firstChild);
   var div = document.createElement('div');
@@ -38,7 +38,7 @@ try {
   //
   //  Otherwise, make a new document (measurements not supported here)
   //
-  html = MathJax.Document(
+  html = MathJax.document(
     '<html xmlns:m="http://www.w3.org/1998/Math/MathML">'
     + '<head><title>Test MathJax3</title></head><body>'
     + HTML +
@@ -47,9 +47,9 @@ try {
   );
 }
 
-MathJax.HandleRetriesFor(function () {
+MathJax.handleRetriesFor(function () {
 
-    html.FindMath();
+    html.findMath();
     for (const math of html.math) {
       console.log(math.math,math.display);
       console.log("");

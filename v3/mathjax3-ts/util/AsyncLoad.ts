@@ -30,7 +30,7 @@ declare function require(name: string): Object;
  * @param{string} name  The name of the file to load
  * @return{Promise}     The promise that is satisfied when the file is loaded
  */
-export function AsyncLoad(name: string) {
+export function asyncLoad(name: string) {
     if (typeof(System) !== 'undefined') {
         return System.import(name);
     }
