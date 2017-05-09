@@ -168,7 +168,9 @@ export function userOptions(options: OptionList, ...defs: OptionList[]) {
 export function selectOptions(options: OptionList, ...keys: string[]) {
     let subset: OptionList = {};
     for (const key of keys) {
-        subset[key] = options[key];
+        if (options.hasOwnProperty(key)) {
+            subset[key] = options[key];
+        }
     }
     return subset;
 }
