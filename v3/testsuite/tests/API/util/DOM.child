@@ -1,0 +1,106 @@
+let result = {};
+
+//
+//  If we are looking for the System.js version,
+//    define a fake System object to trigger it.
+//
+if (process.argv[2] === 'system') {
+  System = {
+    nodeRequire: function (name) {
+      result.system = true;
+      return require(name);
+    }
+  };
+}
+//
+//  If we are asking for the browser version,
+//    define fake versions of the objects.
+//
+if (process.argv[2] === 'browser') {
+  document = {
+    body: {},
+    head: {},
+    querySelectorAll: {},
+    createElement: {},
+    createTextNode: {},
+    location: {},
+    replaceChild: {},
+    styleSheets: {}
+  };
+  window = {
+    document: document,
+    Node: {},
+    HTMLElement: {},
+    DocumentFragment: {},
+    Text: {},
+    DOMParser: function () {}
+  };
+  window.DOMParser.prototype.parseFromString = function (x,y) {
+    result.browser = true;
+    return {firstChild: {outerHTML: '<html><head></head><body></body></html>'}};
+  }
+}
+
+//
+//  Load the DOM utility
+//
+let DOM = require("../../../../mathjax3/util/DOM.js").DOM;
+
+//
+//  Check that an object has the required parts defined
+//
+function CheckParts(obj,keys) {
+  if (obj == null) obj = {};
+  let result = {};
+  for (const name of keys) {
+    result[name] = (obj[name] != null);
+  }
+  return result;
+}
+
+//
+//  Make sure the objects are defined
+//
+result.window = (typeof DOM.window === 'object');
+result.document = (typeof DOM.document === 'object');
+result.DOMParser = (typeof DOM.DOMParser === 'function');
+
+//
+//  Check for the desired properties
+//
+result.windowParts = CheckParts(DOM.window,[
+  'document',
+  'DOMParser',
+  'Node',
+  'HTMLElement',
+  'DocumentFragment',
+  'Text'
+]);
+
+result.documentParts = CheckParts(DOM.document,[
+  'body',
+  'head',
+  'querySelectorAll',
+  'createElement',
+  'createTextNode',
+  'location',
+  'replaceChild',
+  'styleSheets'
+]);
+
+//
+//  Try to use the DOMParser
+//
+try {
+  let parser = new DOM.DOMParser();
+  result.DOMParserParts = CheckParts(parser,['parseFromString']);
+  result.DOMParserResult = parser.parseFromString('', 'text/html').firstChild.outerHTML;
+} catch (err) {
+  if (!result.DOMParserParts) result.DOMParserParts = {parseFromString: false};
+  result.DOMParserResult = err.message;
+}
+
+//
+//  Print the result
+//
+console.log(JSON.stringify(result));
