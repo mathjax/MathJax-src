@@ -68,11 +68,11 @@ export class PrioritizedList<DataClass> {
      *
      * @return{{next: Function}}  The object containing the iterator's next() function
      */
-    public [Symbol.iterator]() {
+    public [Symbol.iterator](): Iterator<PrioritizedListItem<DataClass>> {
         let i = 0;
         let items = this.items;
         return {
-            next() {
+            next(): IteratorResult<PrioritizedListItem<DataClass>> {
                 return {value: items[i++], done: (i > items.length)};
             }
         };

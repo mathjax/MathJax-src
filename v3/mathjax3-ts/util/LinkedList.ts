@@ -231,7 +231,7 @@ export class LinkedList<DataClass> {
                 current = current.prev;
                 return (current.data === END ?
                         {value: null, done: true} :
-                        {value: current.data, done: false});
+                        {value: current.data, done: false}) as IteratorResult<DataClass>;
             },
             toArray() {
                 return Array.from(this) as DataClass[];
