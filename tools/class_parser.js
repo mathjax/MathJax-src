@@ -190,10 +190,11 @@ classParser.dotOutput = function() {
   let result = 'digraph structs {\n' +
         '  edge [dir=back];\n' +
         '  node [shape=record];\n';
+  const rew = function(x) {return x === 'Node' ? '"Node"' : x;};
   for (let id in classParser.store) {
     let value = classParser.store[id];
     classParser.outputModifiers(value.modifiers, value);
-    result += id + ' [';
+    result += rew(id) + ' [';
     result += value.attrs.length ? value.attrs.join(', ') + ', ' : '';
     result += 'label="{ ';
     result += value.mods.length ? value.mods.join(' ') + ' ' : '';
@@ -202,9 +203,9 @@ classParser.dotOutput = function() {
       result += value.members.map(classParser.outputMethod).join('\\n');
     }
     result += '}"];\n';
-    value.extends.forEach(x => result += x + ' -> ' + id +
+    value.extends.forEach(x => result += rew(x) + ' -> ' + id +
                           '[label="extends"]\n');
-    value.implements.forEach(x => result += x + ' -> ' + id +
+    value.implements.forEach(x => result += rew(x) + ' -> ' + id +
                              '[label="implements"]\n');
   }
   result += '}\n';
