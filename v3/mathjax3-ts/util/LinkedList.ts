@@ -100,7 +100,7 @@ export class LinkedList<DataClass> {
     }
 
     /*
-     * Typescript targeted at ES5 doesn't handle
+     * Typescript < 2.3 targeted at ES5 doesn't handle
      *
      *     for (const x of this) {...}
      *
@@ -204,14 +204,14 @@ export class LinkedList<DataClass> {
      *
      * @return{{next: Function}}  The object containing the iterator's next() function
      */
-    public [Symbol.iterator]() {
+    public [Symbol.iterator](): Iterator<DataClass> {
         let current = this.list;
         return {
             next() {
                 current = current.next;
                 return (current.data === END ?
                         {value: null, done: true} :
-                        {value: current.data, done: false});
+                        {value: current.data, done: false}) as IteratorResult<DataClass>;
             }
         };
     }
@@ -224,7 +224,7 @@ export class LinkedList<DataClass> {
     public reversed() {
         let current = this.list;
         return {
-            [Symbol.iterator]() {
+            [Symbol.iterator](): Iterator<DataClass> {
                 return this;
             },
             next() {
@@ -275,7 +275,7 @@ export class LinkedList<DataClass> {
         //  Make an array of singleton lists
         //
         let lists: LinkedList<DataClass>[] = [];
-        for (const item of this.toArray()) {
+        for (const item of this) {
             lists.push(new LinkedList<DataClass>(item as DataClass));
         }
         //

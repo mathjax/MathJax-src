@@ -288,7 +288,7 @@ export abstract class AbstractMathDocument implements MathDocument {
      */
     public compile() {
         if (!this.processed.compile) {
-            for (const math of this.math.toArray()) {
+            for (const math of this.math) {
                 math.compile(this);
             }
             this.processed.compile = true;
@@ -301,7 +301,7 @@ export abstract class AbstractMathDocument implements MathDocument {
      */
     public typeset() {
         if (!this.processed.typeset) {
-            for (const math of this.math.toArray()) {
+            for (const math of this.math) {
                 math.typeset(this);
             }
             this.processed.typeset = true;
@@ -333,7 +333,7 @@ export abstract class AbstractMathDocument implements MathDocument {
      */
     public updateDocument() {
         if (!this.processed.updateDocument) {
-            for (const math of this.math.reversed().toArray()) {
+            for (const math of this.math.reversed()) {
                 math.updateDocument(this);
             }
             this.processed.updateDocument = true;
@@ -352,7 +352,7 @@ export abstract class AbstractMathDocument implements MathDocument {
      * @override
      */
     public state(state: number, restore: boolean = false) {
-        for (const math of this.math.toArray()) {
+        for (const math of this.math) {
             math.state(state, restore);
         }
         if (state < STATE.INSERTED) {

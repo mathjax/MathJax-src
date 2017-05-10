@@ -204,7 +204,7 @@ export class HTMLDocument extends AbstractMathDocument {
      */
     public removeFromDocument(restore: boolean = false) {
         if (this.processed.updateDocument) {
-            for (const math of this.math.toArray()) {
+            for (const math of this.math) {
                 if (math.state() >= STATE.INSERTED) {
                     math.state(STATE.TYPESET, restore);
                 }

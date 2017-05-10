@@ -10,7 +10,8 @@
     "typescript": "2.1.*",
     "tslint": "^3.15.0",
     "tslint-jsdoc-rules": "*",
-    "tslint-unix-formatter": "*"
+    "tslint-unix-formatter": "*",
+    "typescript": "2.3.*"
   },
   "repository": {
     "type": "git",

@@ -106,7 +106,7 @@ export class PrioritizedList<DataClass> {
     }
 
     /*
-     * Typescript targeted at ES5 doesn't handle
+     * Typescript < 2.3 targeted at ES5 doesn't handle
      *
      *     for (const x of this) {...}
      *

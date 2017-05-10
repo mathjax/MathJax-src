@@ -57,7 +57,7 @@ export class HandlerList extends PrioritizedList<Handler>  {
      * @return{boolean}      The handler from the list that can process the given document
      */
     public handlesDocument(document: any) {
-        for (const item of this.toArray()) {
+        for (const item of this) {
             let handler = item.item;
             if (handler.handlesDocument(document)) {
                 return handler;

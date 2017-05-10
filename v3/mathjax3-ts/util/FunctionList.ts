@@ -47,7 +47,7 @@ export class FunctionList extends PrioritizedList<Function> {
      *                       returning false, true otherwise
      */
     public execute(...data: any[]) {
-        for (const item of this.toArray()) {
+        for (const item of this) {
             let result = item.item(...data);
             if (result === false) {
                 return false;
