@@ -1,0 +1,17 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "ES5",
+    "downlevelIteration": true,
+    "module": "commonjs",
+    "declaration": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "lib": ["es6", "dom"],
+    "noLib": false,
+    "sourceMap": true,
+    "outDir": "mathjax3"
+  },
+  "include": ["mathjax3-ts/**/*"],
+  "exclude": ["mathjax3"]
+}

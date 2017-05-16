@@ -4,14 +4,21 @@
   "description": "MathJax version 3 testbed",
   "main": "load.js",
   "dependencies": {
-    "jsdom": "*"
+    "jsdom": "10.*"
+  },
+  "devDependencies": {
+    "typescript": "2.1.*",
+    "tslint": "^3.15.0",
+    "tslint-jsdoc-rules": "*",
+    "tslint-unix-formatter": "*",
+    "typescript": "2.3.*"
   },
   "devDependencies": {
     "tape": "*"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mathjax/mathjax-tc/"
+    "url": "https://github.com/mathjax/mathjax-v3/"
   },
   "keywords": [
     "MathJax"
