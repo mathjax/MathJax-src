@@ -73,24 +73,6 @@ export interface OutputJax {
     styleSheet(document: MathDocument): Element;
 }
 
-/*****************************************************************/
-/*
- *  The OutputJax interface
- */
-
-export interface OutputJaxClass {
-    /*
-     * The name for this output jax class
-     */
-    NAME: string;
-
-    /*
-     * The default options for this class
-     */
-    OPTIONS: OptionList;
-
-    new(options?: OptionList): OutputJax;
-}
 
 /*****************************************************************/
 /*
@@ -108,7 +90,7 @@ export abstract class AbstractOutputJax implements OutputJax {
      * @param{OptionList} options  The options for this instance
      */
     constructor(options: OptionList = {}) {
-        let CLASS = this.constructor as OutputJaxClass;
+        let CLASS = this.constructor as typeof AbstractOutputJax;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     }
 
@@ -116,7 +98,7 @@ export abstract class AbstractOutputJax implements OutputJax {
      * @return{string}  The name for this output jax class
      */
     public get name() {
-        return (this.constructor as OutputJaxClass).NAME;
+        return (this.constructor as typeof AbstractOutputJax).NAME;
     }
 
     /*

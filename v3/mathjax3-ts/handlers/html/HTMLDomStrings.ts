@@ -30,20 +30,6 @@ const MAKEARRAY = function (x: string): string[] {
     return (Array.isArray(x) ? x : [x]);
 };
 
-/*****************************************************************/
-/*
- *  The HTHMLDomStrings class interface
- */
-
-export interface HTMLDomStringsClass {
-    /*
-     * The default options
-     */
-    OPTIONS: OptionList;
-
-    new(options: OptionList): HTMLDomStrings;
-}
-
 /*
  *  List of consecutive text nodes and their text lengths
  */
@@ -122,7 +108,7 @@ export class HTMLDomStrings {
      * @constructor
      */
     constructor(options: OptionList = null) {
-        let CLASS = this.constructor as HTMLDomStringsClass;
+        let CLASS = this.constructor as typeof HTMLDomStrings;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
         this.init();
         this.getPatterns();

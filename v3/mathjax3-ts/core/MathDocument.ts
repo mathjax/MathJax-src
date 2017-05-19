@@ -24,7 +24,7 @@
 import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {InputJax, AbstractInputJax} from './InputJax.js';
 import {OutputJax, AbstractOutputJax} from './OutputJax.js';
-import {MathList, MathListClass, AbstractMathList} from './MathList.js';
+import {MathList, AbstractMathList} from './MathList.js';
 import {MathItem, AbstractMathItem} from './MathItem.js';
 
 /*****************************************************************/
@@ -176,30 +176,6 @@ export interface MathDocument {
 
 /*****************************************************************/
 /*
- *  The MathDocument interface
- */
-
-export interface MathDocumentClass {
-    /*
-     * The kind of MathDocument (e.g., "HTML")
-     */
-    KIND: string;
-
-    /*
-     * The default options for this type of document
-     */
-    OPTIONS: OptionList;
-
-    /*
-     *  The document states
-     */
-    STATE: {[name: string]: number};
-
-    new(document: any, options?: OptionList): MathDocument;
-}
-
-/*****************************************************************/
-/*
  *  The booleans used to keep track of what processing has been
  *  performed.
  */
@@ -249,10 +225,10 @@ export abstract class AbstractMathDocument implements MathDocument {
      * @constructor
      */
     constructor (document: any, options: OptionList) {
-        let CLASS = this.constructor as MathDocumentClass;
+        let CLASS = this.constructor as typeof AbstractMathDocument;
         this.document = document;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-        this.math = new (this.options['MathList'] as MathListClass)();
+        this.math = new (this.options['MathList'] as typeof DefaultMathList)();
         this.processed = {
             findMath: false,
             compile: false,
@@ -272,7 +248,7 @@ export abstract class AbstractMathDocument implements MathDocument {
      * @return{string}  The kind of document
      */
     public get kind() {
-        return (this.constructor as MathDocumentClass).KIND;
+        return (this.constructor as typeof AbstractMathDocument).KIND;
     }
 
     /*

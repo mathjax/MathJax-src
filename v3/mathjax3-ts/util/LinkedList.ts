@@ -61,14 +61,6 @@ export class ListItem<DataClass> {
     }
 }
 
-/*****************************************************************/
-/*
- *  The ListList class interface
- */
-
-export interface LinkedListClass<DataClass> {
-    new(...args: DataClass[]): LinkedList<DataClass>;
-}
 
 /*****************************************************************/
 /*

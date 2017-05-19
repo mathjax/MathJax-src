@@ -40,19 +40,6 @@ export interface FindMath {
 
 /*****************************************************************/
 /*
- *  The FindMath class interface
- */
-export interface FindMathClass {
-    /*
-     * The default options
-     */
-    OPTIONS: OptionList;
-
-    new(options: OptionList): FindMath;
-}
-
-/*****************************************************************/
-/*
  *  The FindMath abstract class
  */
 export abstract class AbstractFindMath implements FindMath {
@@ -71,7 +58,7 @@ export abstract class AbstractFindMath implements FindMath {
      * @param {OptionList} options  The user options for this instance
      */
     constructor(options: OptionList) {
-        let CLASS = this.constructor as FindMathClass;
+        let CLASS = this.constructor as typeof AbstractFindMath;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     }
 

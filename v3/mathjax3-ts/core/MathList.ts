@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LinkedList, LinkedListClass} from '../util/LinkedList.js';
+import {LinkedList} from '../util/LinkedList.js';
 import {MathItem, AbstractMathItem} from './MathItem.js';
 
 /*****************************************************************/
@@ -37,15 +37,6 @@ export interface MathList extends LinkedList<MathItem> {
      * @param{MathItem} b   The second MathItem
      */
     isBefore(a: MathItem, b: MathItem): boolean;
-}
-
-/*****************************************************************/
-/*
- *  The MathList class interface (extends LinkedListClass<MathItem>)
- */
-
-export interface MathListClass extends LinkedListClass<MathItem> {
-    new(...args: MathItem[]): MathList;
 }
 
 /*****************************************************************/

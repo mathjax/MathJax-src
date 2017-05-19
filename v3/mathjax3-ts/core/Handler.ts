@@ -61,20 +61,6 @@ export interface Handler {
 
 /*****************************************************************/
 /*
- *  The Handler class interface
- */
-
-export interface HandlerClass {
-    /*
-     * The name for this class
-     */
-    NAME: string;
-
-    new(priority?: number): Handler;
-}
-
-/*****************************************************************/
-/*
  *  The default MathDocument class (subclasses use their own)
  */
 
@@ -110,7 +96,7 @@ export abstract class AbstractHandler implements Handler {
      * @return{string}  The name of this handler class
      */
     public get name() {
-        return (this.constructor as HandlerClass).NAME;
+        return (this.constructor as typeof AbstractHandler).NAME;
     }
 
     /*

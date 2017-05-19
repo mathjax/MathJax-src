@@ -75,25 +75,6 @@ export interface InputJax {
 
 /*****************************************************************/
 /*
- *  The InputJax class interface
- */
-
-export interface InputJaxClass {
-    /*
-     *  The name of this subclass
-     */
-    NAME: string;
-
-    /*
-     *  The default options for this input jax class
-     */
-    OPTIONS: OptionList;
-
-    new(options?: OptionList): InputJax;
-}
-
-/*****************************************************************/
-/*
  *  The abstract InputJax class
  */
 
@@ -112,7 +93,7 @@ export abstract class AbstractInputJax implements InputJax {
      * @constructor
      */
     constructor(options: OptionList = {}) {
-        let CLASS = this.constructor as InputJaxClass;
+        let CLASS = this.constructor as typeof AbstractInputJax;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
         this.preFilters = new FunctionList();
         this.postFilters = new FunctionList();
@@ -122,7 +103,7 @@ export abstract class AbstractInputJax implements InputJax {
      * @return{string}  The name of this input jax class
      */
     public get name() {
-        return (this.constructor as InputJaxClass).NAME;
+        return (this.constructor as typeof AbstractInputJax).NAME;
     }
 
     /*
