@@ -34,12 +34,12 @@ import {MmlNode} from './MmlTree/MmlNode.js';
  *  the string, and the delimiter at that location).
  */
 
-export interface Location {
+export type Location = {
     i?: number;
     n?: number;
     delim?: string;
     node?: Text | Element;
-}
+};
 
 /*****************************************************************/
 /*
@@ -47,13 +47,13 @@ export interface Location {
  *  a Mathitem.
  */
 
-export interface Metrics {
+export type Metrics = {
     em: number;
     ex: number;
     containerWidth: number;
     lineWidth: number;
     scale: number;
-}
+};
 
 /*****************************************************************/
 /*
@@ -61,7 +61,7 @@ export interface Metrics {
  *  for the typeset element.
  */
 
-export interface BBox {
+export type BBox = {
     // will be defined later
 }
 
@@ -280,11 +280,7 @@ export abstract class AbstractMathItem implements MathItem {
      */
     public typeset(document: MathDocument) {
         if (this.state() < STATE.TYPESET) {
-            if (this.display === null) {
-                this.typesetRoot = document.outputJax.escaped(this, document);
-            } else {
-                this.typesetRoot = document.outputJax.typeset(this, document);
-            }
+            this.typesetRoot = document.outputJax[this.display === null ? 'escaped' : 'typeset'](this, document);
             this.state(STATE.TYPESET);
         }
     }
