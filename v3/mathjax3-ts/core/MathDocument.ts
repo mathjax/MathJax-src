@@ -27,6 +27,7 @@ import {OutputJax, AbstractOutputJax} from './OutputJax.js';
 import {MathList, AbstractMathList} from './MathList.js';
 import {MathItem, AbstractMathItem} from './MathItem.js';
 import {MmlNode} from './MmlTree/MmlNode.js';
+import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 
 /*****************************************************************/
 /*
@@ -209,6 +210,9 @@ class DefaultOutputJax extends AbstractOutputJax {
 }
 class DefaultMathList extends AbstractMathList {}
 
+let errorFactory = new MmlFactory();
+
+
 /*****************************************************************/
 /*
  *  Implements the abstract MathDocument class
@@ -220,7 +224,13 @@ export abstract class AbstractMathDocument implements MathDocument {
     public static OPTIONS: OptionList = {
         OutputJax: null,           // instance of an OutputJax for the document
         InputJax: null,            // instance of in InputJax or an array of them
-        MathList: DefaultMathList  // class to use for the MathList
+        MathList: DefaultMathList, // class to use for the MathList
+        compileError: (doc: AbstractMathDocument, math: MathItem, err: Error) => {
+            doc.compileError(math, err);
+        },
+        typesetError: (doc: AbstractMathDocument, math: MathItem, err: Error) => {
+            doc.typesetError(math, err);
+        }
     };
     public static STATE = AbstractMathItem.STATE;
 
@@ -278,11 +288,38 @@ export abstract class AbstractMathDocument implements MathDocument {
     public compile() {
         if (!this.processed.compile) {
             for (const math of this.math) {
-                math.compile(this);
+                try {
+                    math.compile(this);
+                } catch (err) {
+                    if (err.retry || err.restart) {
+                        throw err;
+                    }
+                    this.options['compileError'](this, math, err);
+                    math.inputData['error'] = err;
+                }
             }
             this.processed.compile = true;
         }
         return this;
+    }
+
+    /*
+     * Produce an error using MmlNodes
+     *
+     * @param{MathItem} math  The MathItem producing the error
+     * @param{Error} err      The Error object for the error
+     */
+    public compileError(math: MathItem, err: Error) {
+        math.root = errorFactory.create('math', {'data-mjx-error': err.message}, [
+            errorFactory.create('merror', null, [
+                errorFactory.create('mtext', null, [
+                    errorFactory.create('text').setText('Math input error')
+                ])
+            ])
+        ]);
+        if (math.display) {
+            math.root.attributes.set('display', 'block');
+        }
     }
 
     /*
@@ -291,11 +328,32 @@ export abstract class AbstractMathDocument implements MathDocument {
     public typeset() {
         if (!this.processed.typeset) {
             for (const math of this.math) {
-                math.typeset(this);
+                try {
+                    math.typeset(this);
+                } catch (err) {
+                    if (err.retry || err.restart) {
+                        throw err;
+                    }
+                    this.options['typesetError'](this, math, err);
+                    math.outputData['error'] = err;
+                }
             }
             this.processed.typeset = true;
         }
         return this;
+    }
+
+    /*
+     * Produce an error using HTML
+     *
+     * @param{MathItem} math  The MathItem producing the error
+     * @param{Error} err      The Error object for the error
+     */
+    public typesetError(math: MathItem, err: Error) {
+        let error = this.document.createElement('span');
+        error.setAttribute('data-mjx-error',err.message);
+        error.appendChild(this.document.createTextNode('Math output error'));
+        math.typesetRoot = error;
     }
 
     /*
