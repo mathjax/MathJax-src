@@ -54,7 +54,7 @@ export class HandlerList extends PrioritizedList<Handler>  {
 
     /*
      * @param{any} document  The document (string, window, DOM element, etc) to be handled
-     * @return{boolean}      The handler from the list that can process the given document
+     * @return{handler}      The handler from the list that can process the given document
      */
     public handlesDocument(document: any) {
         for (const item of this) {

@@ -64,7 +64,7 @@ export class ListItem<DataClass> {
 
 /*****************************************************************/
 /*
- *  Implements the generic ListList class
+ *  Implements the generic LinkedList class
  */
 
 export class LinkedList<DataClass> {
@@ -187,6 +187,7 @@ export class LinkedList<DataClass> {
      * @return{LinkedList}  The LinkedList object (for chaining)
      */
     public clear() {
+        this.list.next.prev = this.list.prev.next = null;
         this.list.next = this.list.prev = this.list;
         return this;
     }

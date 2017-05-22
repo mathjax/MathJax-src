@@ -180,7 +180,7 @@ export interface MathDocument {
  *  performed.
  */
 
-export interface MathProcessed {
+export type MathProcessed = {
     findMath: boolean;
     compile: boolean;
     getMetrics: boolean;
@@ -191,7 +191,7 @@ export interface MathProcessed {
 }
 
 /*
- * Defautls used when input and output jax aren't specified
+ * Defaults used when input and output jax aren't specified
  */
 class DefaultInputJax extends AbstractInputJax {}
 class DefaultOutputJax extends AbstractOutputJax {}
@@ -238,10 +238,11 @@ export abstract class AbstractMathDocument implements MathDocument {
             updateDocument: false
         };
         this.outputJax = this.options['OutputJax'] || new DefaultOutputJax();
-        this.inputJax = this.options['InputJax'] || [new DefaultInputJax()];
-        if (!Array.isArray(this.inputJax)) {
-            this.inputJax = [this.inputJax];
+        let inputJax = this.options['InputJax'] || [new DefaultInputJax()];
+        if (!Array.isArray(inputJax)) {
+            inputJax = [inputJax];
         }
+        this.inputJax = inputJax;
     }
 
     /*
@@ -254,7 +255,7 @@ export abstract class AbstractMathDocument implements MathDocument {
     /*
      * @override
      */
-    public findMath(options: OptionList) {
+    public findMath(options: OptionList = null) {
         this.processed.findMath = true;
         return this;
     }
@@ -331,15 +332,15 @@ export abstract class AbstractMathDocument implements MathDocument {
         for (const math of this.math) {
             math.state(state, restore);
         }
-        if (state < STATE.INSERTED) {
+        if (state < this.STATE.INSERTED) {
             this.processed.updateDocument = false;
         }
-        if (state < STATE.TYPESET) {
+        if (state < this.STATE.TYPESET) {
             this.processed.typeset = false;
             this.processed.addEventHandlers = false;
             this.processed.getMetrics = false;
         }
-        if (state < STATE.COMPILED) {
+        if (state < this.STATE.COMPILED) {
             this.processed.compile = false;
         }
         return this;
@@ -373,5 +374,3 @@ export abstract class AbstractMathDocument implements MathDocument {
     }
 
 }
-
-let STATE = AbstractMathDocument.STATE;
