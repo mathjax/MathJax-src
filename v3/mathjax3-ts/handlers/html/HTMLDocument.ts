@@ -28,10 +28,11 @@ import {HTMLMathList} from './HTMLMathList.js';
 import {HTMLDomStrings} from './HTMLDomStrings.js';
 import {InputJax} from '../../core/InputJax.js';
 import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
+import {DOM} from '../../util/DOM.js';
 
 /*****************************************************************/
 /*
- * List of List of pairs consisting of a DOM node and its text length
+ * List of Lists of pairs consisting of a DOM node and its text length
  *
  * These represent the Text elements that make up a single
  * string in the list of strings to be searched for math
@@ -72,7 +73,7 @@ export class HTMLDocument extends AbstractMathDocument {
 
     /*
      * Creates a Location object for a delimiter at the position given by index in the N's string
-     *  of the array of strings searched for math, recovering the origin DOM node where the delimiter
+     *  of the array of strings searched for math, recovering the original DOM node where the delimiter
      *  was found.
      *
      * @param{number} N             The index of the string in the string array
@@ -86,9 +87,8 @@ export class HTMLDocument extends AbstractMathDocument {
             let [node, n] = list;
             if (index <= n) {
                 return {node: node, n: index, delim: delim};
-            } else {
-                index -= n;
             }
+            index -= n;
         }
         return {node: null, n: 0, delim: delim};
     }
@@ -119,13 +119,14 @@ export class HTMLDocument extends AbstractMathDocument {
      */
     protected getElements(nodes: (string | Element | Element[])[], document: Document) {
         let containers: Element[] = [];
-        let NODELIST = document.childNodes.constructor as typeof NodeList;
+        let widow = document.defaultView || DOM.window;
         for (const node of nodes) {
             if (typeof(node) === 'string') {
                 containers = containers.concat(Array.from(document.querySelectorAll(node)));
             } else if (Array.isArray(node)) {
                 containers = containers.concat(node);
-            } else if (node instanceof NODELIST) {
+                containers = containers.concat(Array.from(node) as Element[]);
+            } else if (node instanceof window.NodeList || node instanceof window.HTMLCollection) {
                 containers = containers.concat(Array.from(node) as Element[]);
             } else {
                 containers.push(node);
@@ -222,7 +223,7 @@ export class HTMLDocument extends AbstractMathDocument {
     }
 
     /*
-     * Temporary funciton for testing purposes.  Will be removed
+     * Temporary function for testing purposes.  Will be removed
      */
     public TestMath(text: string, display: boolean = true) {
         if (!this.processed['TestMath']) {

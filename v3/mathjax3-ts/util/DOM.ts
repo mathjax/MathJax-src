@@ -32,10 +32,19 @@ declare var window: Window;
 declare var require: Function;
 
 /*
- * Typescript's Window doesn't seem to know about DOMParser
+ * Typescript's Window doesn't seem to know about DOMParser and other
+ *   objects
  */
-interface DOMWindow extends Window {
-    DOMParser: typeof DOMParser;
+
+declare global {
+    interface Window {
+        Document: typeof Document;
+        DOMParser: typeof DOMParser;
+        HTMLElement: typeof HTMLElement;
+        HTMLCollection: typeof HTMLCollection;
+        NodeList: typeof NodeList;
+        DocumentFragment: typeof DocumentFragment;
+    }
 }
 
 /*
@@ -63,7 +72,7 @@ try {
     document;  // errors if not in browser
     DOM.document = document;
     DOM.window =  window;
-    DOM.DOMParser = (window as DOMWindow).DOMParser;
+    DOM.DOMParser = window.DOMParser;
 
 } catch (err) {
 
@@ -75,6 +84,6 @@ try {
 
     DOM.window = new JSDOM().window;
     DOM.document = DOM.window.document;
-    DOM.DOMParser = (DOM.window as DOMWindow).DOMParser;
+    DOM.DOMParser = DOM.window.DOMParser;
 
 }

@@ -24,7 +24,7 @@
 import {AbstractInputJax} from '../core/InputJax.js';
 import {LegacyTeX} from '../../mathjax2/input/TeX.js';
 import {separateOptions, OptionList} from '../util/Options.js';
-import {MathItem, ProtoItem} from '../core/MathItem.js';
+import {MathItem} from '../core/MathItem.js';
 
 import {FindTeX} from './tex/FindTeX.js';
 

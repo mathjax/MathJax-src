@@ -21,14 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
-
-//
-//  Make sure an option is an Array
-//
-const MAKEARRAY = function (x: string): string[] {
-    return (Array.isArray(x) ? x : [x]);
-};
+import {userOptions, defaultOptions, OptionList, makeArray} from '../../util/Options.js';
 
 /*
  *  List of consecutive text nodes and their text lengths
@@ -129,9 +122,9 @@ export class HTMLDomStrings {
      * Create the search patterns for skipTags, ignoreClass, and processClass
      */
     protected getPatterns() {
-        let skip = MAKEARRAY(this.options['skipTags']);
-        let ignore = MAKEARRAY(this.options['ignoreClass']);
-        let process = MAKEARRAY(this.options['processClass']);
+        let skip = makeArray(this.options['skipTags']);
+        let ignore = makeArray(this.options['ignoreClass']);
+        let process = makeArray(this.options['processClass']);
         this.skipTags = new RegExp('^(?:' + skip.join('|') + ')$', 'i');
         this.ignoreClass = new RegExp('(?:^| )(?:' + ignore.join('|') + ')(?: |$)');
         this.processClass = new RegExp('(?:^| )(?:' + process + ')(?: |$)');
@@ -230,7 +223,7 @@ export class HTMLDomStrings {
      *   Get the element where we stop processing
      *   While we still have a node, and it is not the one where we are to stop:
      *     If it is a text node, handle it and get the next node
-     *     Otherwise, if it is in the inclideTags list, handle it and get the next node
+     *     Otherwise, if it is in the includeTags list, handle it and get the next node
      *     Otherwise, handle it as a container and get the next node and ignore status
      *     If there is no next node, and there are more nodes on the stack:
      *       Save the current string, and pop the node and ignore status from the stack

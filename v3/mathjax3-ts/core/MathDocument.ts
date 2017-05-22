@@ -26,6 +26,7 @@ import {InputJax, AbstractInputJax} from './InputJax.js';
 import {OutputJax, AbstractOutputJax} from './OutputJax.js';
 import {MathList, AbstractMathList} from './MathList.js';
 import {MathItem, AbstractMathItem} from './MathItem.js';
+import {MmlNode} from './MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
@@ -193,8 +194,19 @@ export type MathProcessed = {
 /*
  * Defaults used when input and output jax aren't specified
  */
-class DefaultInputJax extends AbstractInputJax {}
-class DefaultOutputJax extends AbstractOutputJax {}
+class DefaultInputJax extends AbstractInputJax {
+    compile(math: MathItem) {
+        return null as MmlNode;
+    }
+}
+class DefaultOutputJax extends AbstractOutputJax {
+    typeset(math: MathItem, document: MathDocument = null) {
+        return null as Element;
+    }
+    escaped(math: MathItem, document?: MathDocument) {
+        return null as Element;
+    }
+}
 class DefaultMathList extends AbstractMathList {}
 
 /*****************************************************************/

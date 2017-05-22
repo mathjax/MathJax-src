@@ -25,20 +25,20 @@ import {PrioritizedList, PrioritizedListItem} from './PrioritizedList.js';
 
 /*****************************************************************/
 /*
- *  The FuntionListItem interface (extends PrioritizedListItem<Function>
+ *  The FunctionListItem interface (extends PrioritizedListItem<Function>
  */
 
 export interface FunctionListItem extends PrioritizedListItem<Function> {}
 
 /*****************************************************************/
 /*
- *  Implements the FuntionList class (extends PrioritizedList<Function>
+ *  Implements the FunctionList class (extends PrioritizedList<Function>
  */
 
 export class FunctionList extends PrioritizedList<Function> {
 
     /*
-     * Executes the functions in the list (in prioritied order),
+     * Executes the functions in the list (in prioritized order),
      *   passing the given data to the functions.  If any return
      *   false, the list is terminated.
      *

@@ -55,6 +55,14 @@ export const APPEND = Symbol('Append to option array');
 
 /*****************************************************************/
 /*
+ *  Make sure an option is an Array
+ */
+export function makeArray(x: any): any[] {
+    return Array.isArray(x) ? x : [x];
+};
+
+/*****************************************************************/
+/*
  * Get all keys and symbols from an object
  *
  * @param{Optionlist} def        The object whose keys are to be returned

@@ -111,12 +111,13 @@ export class FindTeX extends AbstractFindMath {
         }
         if (options['processEnvironments']) {
             parts.push('\\\\begin\\{([^}]*)\\}');
-            this.env = i; i++;
+            this.env = i;
+            i++;
         }
         if (options['processEscapes']) {
             subparts.push('\\\\([\\\\$])');
         }
-        if (options['processRefs'])    {
+        if (options['processRefs']) {
             subparts.push('(\\\\(?:eq)?ref\\{[^}]*\\})');
         }
         if (subparts.length) {
@@ -171,10 +172,8 @@ export class FindTeX extends AbstractFindMath {
                                  n, start.index, match.index + match[0].length, display);
             } else if (match[0] === '{') {
                 braces++;
-            } else if (match[0] === '}') {
-                if (braces) {
-                    braces--;
-                }
+            } else if (match[0] === '}' && braces) {
+                braces--;
             }
         }
         return null;
@@ -182,7 +181,7 @@ export class FindTeX extends AbstractFindMath {
 
     /*
      * Search a string for math delimited by one of the delimiter pairs,
-     *   or by \being{env}...\end{env}, or \eqref{...}, \ref{...}, \\, or \$.
+     *   or by \begin{env}...\end{env}, or \eqref{...}, \ref{...}, \\, or \$.
      *
      * @param{ProtoItem[]} math  The array of proto math items located so far
      * @param{number} n          The index of the string being searched

@@ -24,7 +24,7 @@
 import {AbstractInputJax} from '../core/InputJax.js';
 import {defaultOptions, separateOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
-import {MathItem, ProtoItem} from '../core/MathItem.js';
+import {MathItem} from '../core/MathItem.js';
 import {DOM} from '../util/DOM.js';
 
 import {FindMathML} from './mathml/FindMathML.js';
@@ -48,7 +48,7 @@ export class MathML extends AbstractInputJax {
          * The function to use to handle a parsing error (throw an error by default)
          */
         parseError: function (node: Element) {
-            this.Error(node.textContent.replace(/\n.*/g, ''));
+            this.error(node.textContent.replace(/\n.*/g, ''));
         }
     }, AbstractInputJax.OPTIONS);
 
@@ -103,7 +103,7 @@ export class MathML extends AbstractInputJax {
      *     Otherwise
      *       Use the root element from the XML document
      *     If the node is not a <math> node, report the error.
-     *   Execute the mmlFilters on teh parsed MathML
+     *   Execute the mmlFilters on the parsed MathML
      *   Compile the MathML to internal format, and execute the postFilters
      *   Return the resulting internal format
      *
@@ -155,7 +155,6 @@ export class MathML extends AbstractInputJax {
      * @param{string} message  The error message to produce
      */
     protected error(message: string) {
-        // FIXME:  should this be creating merror nodes instead?
         throw new Error(message);
     }
 

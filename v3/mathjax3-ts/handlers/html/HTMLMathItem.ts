@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLMathItem object
+ * @fileoverview  Implements the HTMLMathItem class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLHandler object
+ * @fileoverview  Implements the HTMLHandler class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -28,19 +28,6 @@ import {DOM} from '../../util/DOM.js';
 
 /*****************************************************************/
 /*
- *  Typescript's Window doesn't seem to include these constructors,
- *  so use this fake interface to access them.
- */
-
-interface DOMWindow extends Window {
-    DOMParser?: typeof DOMParser;
-    HTMLElement?: typeof HTMLElement;
-    DocumentFragment?: typeof DocumentFragment;
-}
-
-
-/*****************************************************************/
-/*
  *  Implements the HTMLHandler class (extends AbstractHandler)
  */
 
@@ -48,16 +35,9 @@ export class HTMLHandler extends AbstractHandler {
 
     /*
      * A DOMParser instance used to create new documents if they are specified
-     * by a zerialized HTML document rather than an already parsed one.
+     * by a serialized HTML document rather than an already parsed one.
      */
     protected parser: DOMParser;
-
-    /*
-     * Some classes that can be used as the document for HTMLHandler.
-     */
-    protected DOCUMENT: typeof Document;
-    protected HTMLELEMENT: typeof HTMLElement;
-    protected FRAGMENT: typeof DocumentFragment;
 
     /*
      * @override
@@ -66,10 +46,6 @@ export class HTMLHandler extends AbstractHandler {
      */
     constructor(priority: number = 5) {
         super(priority);
-        let window = DOM.window as DOMWindow;
-        this.DOCUMENT = DOM.document.constructor as typeof Document;
-        this.HTMLELEMENT = window.HTMLElement;
-        this.FRAGMENT = window.DocumentFragment;
         this.parser = new (DOM.DOMParser)();
     }
 
@@ -82,9 +58,9 @@ export class HTMLHandler extends AbstractHandler {
                 document = this.parser.parseFromString(document, 'text/html');
             } catch (err) {}
         }
-        if (document instanceof this.DOCUMENT ||
-            document instanceof this.HTMLELEMENT ||
-            document instanceof this.FRAGMENT) {
+        if (document instanceof DOM.window.Document ||
+            document instanceof DOM.window.HTMLElement ||
+            document instanceof DOM.window.DocumentFragment) {
             return true;
         }
         return false;
@@ -99,14 +75,11 @@ export class HTMLHandler extends AbstractHandler {
     public create(document: any, options: OptionList) {
         if (typeof(document) === 'string') {
             document = this.parser.parseFromString(document, 'text/html');
-        } else if (document instanceof this.HTMLELEMENT) {
+        } else if (document instanceof DOM.window.HTMLElement ||
+                   document instanceof DOM.window.DocumentFragment) {
             let child = document;
             document = this.parser.parseFromString('', 'text/html');
             document.body.appendChild(child);
-        } else if (document instanceof this.FRAGMENT) {
-            let fragment = document;
-            document = this.parser.parseFromString('', 'text/html');
-            document.body.appendChild(fragment);
         }
         return new HTMLDocument(document, options);
     }

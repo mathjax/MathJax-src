@@ -22,7 +22,6 @@
  */
 
 import {AbstractMathList} from '../../core/MathList.js';
-import {HTMLMathItem} from './HTMLMathItem.js';
 
 /*****************************************************************/
 /*
@@ -30,14 +29,4 @@ import {HTMLMathItem} from './HTMLMathItem.js';
  */
 
 export class HTMLMathList extends AbstractMathList {
-
-    /*
-     * Sort by position in the list of strings, and the position within the string
-     *
-     * @override
-     */
-    public isBefore(a: HTMLMathItem, b: HTMLMathItem) {
-        return (a.start.i < b.start.i || (a.start.i === b.start.i && a.start.n < b.start.n));
-    }
-
 }

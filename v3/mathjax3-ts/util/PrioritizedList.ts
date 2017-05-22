@@ -87,7 +87,9 @@ export class PrioritizedList<DataClass> {
      */
     public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY) {
         let i = this.items.length;
-        do { i--; } while (i >= 0 && priority <= this.items[i].priority);
+        do {
+            i--;
+        } while (i >= 0 && priority <= this.items[i].priority);
         this.items.splice(i + 1, 0, {item: item, priority: priority});
         return item;
     }
@@ -99,7 +101,9 @@ export class PrioritizedList<DataClass> {
      */
     public remove(item: DataClass) {
         let i = this.items.length;
-        do { i--; } while (i >= 0 && this.items[i].item !== item);
+        do {
+            i--;
+        } while (i >= 0 && this.items[i].item !== item);
         if (i >= 0) {
             this.items.splice(i, 1);
         }
