@@ -117,16 +117,13 @@ export abstract class AbstractInputJax implements InputJax {
      * @override
      */
     public findMath(node: Element | string[], options: OptionList) {
-        // should operate on an array of strings, but for now, use DOM node
         return [] as ProtoItem[];
     }
 
     /*
      * @override
      */
-    public compile(math: MathItem) {
-        return null as MmlNode;
-    }
+    public abstract compile(math: MathItem): MmlNode;
 
     /*
      * Execute a set of filters, passing them the MathItem and any needed data,

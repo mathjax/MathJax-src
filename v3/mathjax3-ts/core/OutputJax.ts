@@ -104,16 +104,12 @@ export abstract class AbstractOutputJax implements OutputJax {
     /*
      * @override
      */
-    public typeset(math: MathItem, document: MathDocument = null) {
-        return null as Element;
-    }
+    public abstract typeset(math: MathItem, document?: MathDocument): Element;
 
     /*
      * @override
      */
-    public escaped(math: MathItem, document: MathDocument = null) {
-        return null as Element;
-    }
+    public abstract escaped(math: MathItem, document?: MathDocument): Element;
 
     /*
      * @override
