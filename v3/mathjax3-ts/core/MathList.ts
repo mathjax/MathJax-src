@@ -44,7 +44,7 @@ export interface MathList extends LinkedList<MathItem> {
  *  The MathList abstract class (extends LinkedList<MathItem>)
  */
 
-export abstract class AbstractMathList extends LinkedList<MathItem> {
+export abstract class AbstractMathList extends LinkedList<MathItem> implements MathList {
 
     /*
      * @override
