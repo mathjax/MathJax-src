@@ -29,8 +29,8 @@ import {MathItem, ProtoItem, protoItem, Location} from '../../core/MathItem.js';
 /*
  * Shorthand types for data about end delimiters and delimiter pairs
  */
-export type ENDITEM = [string, boolean, RegExp];
-export type DELIMS = [string, string];
+export type EndItem = [string, boolean, RegExp];
+export type Delims = [string, string];
 
 /*****************************************************************/
 /*
@@ -69,7 +69,7 @@ export class FindTeX extends AbstractFindMath {
     /*
      * The end-delimiter data keyed to the opening delimiter string
      */
-    protected end: {[name: string]: ENDITEM};
+    protected end: {[name: string]: EndItem};
 
     /*
      * False if the configuration has no delimiters (so search can be skipped), true otherwise
@@ -104,8 +104,8 @@ export class FindTeX extends AbstractFindMath {
         this.end = {};
         this.env = this.sub = 0;
         let i = 1;
-        options['inlineMath'].forEach((delims: DELIMS) => this.addPattern(starts, delims, false));
-        options['displayMath'].forEach((delims: DELIMS) => this.addPattern(starts, delims, true));
+        options['inlineMath'].forEach((delims: Delims) => this.addPattern(starts, delims, false));
+        options['displayMath'].forEach((delims: Delims) => this.addPattern(starts, delims, true));
         if (starts.length) {
             parts.push(starts.sort(sortLength).join('|'));
         }
@@ -131,10 +131,10 @@ export class FindTeX extends AbstractFindMath {
      * Add the needed patterns for a pair of delimiters
      *
      * @param{string[]} starts  Array of starting delimiter strings
-     * @param{DELIMS} delims    Array of delimiter strings, as [start, end]
+     * @param{Delims} delims    Array of delimiter strings, as [start, end]
      * @param{boolean} display  True if the delimiters are for display mode
      */
-    protected addPattern(starts: string[], delims: DELIMS, display: boolean) {
+    protected addPattern(starts: string[], delims: Delims, display: boolean) {
         let [open, close] = delims;
         starts.push(quotePattern(open));
         this.end[open] = [close, display, this.endPattern(close)];
@@ -158,10 +158,10 @@ export class FindTeX extends AbstractFindMath {
      * @param{string} text            The string being searched for the end delimiter
      * @param{number} n               The index of the string being searched
      * @param{RegExpExecArray} start  The result array from the start-delimiter search
-     * @param{ENDITEM} end            The end-delimiter data corresponding to the start delimiter
+     * @param{EndItem} end            The end-delimiter data corresponding to the start delimiter
      * @return{ProtoItem}             The proto math item for the math, if found
      */
-    protected findEnd(text: string, n: number, start: RegExpExecArray, end: ENDITEM) {
+    protected findEnd(text: string, n: number, start: RegExpExecArray, end: EndItem) {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match: RegExpExecArray, braces: number = 0;
