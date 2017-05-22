@@ -329,18 +329,19 @@ export abstract class AbstractMathDocument implements MathDocument {
      * @override
      */
     public state(state: number, restore: boolean = false) {
+        let STATE = AbstractMathDocument.STATE;
         for (const math of this.math) {
             math.state(state, restore);
         }
-        if (state < this.STATE.INSERTED) {
+        if (state < STATE.INSERTED) {
             this.processed.updateDocument = false;
         }
-        if (state < this.STATE.TYPESET) {
+        if (state < STATE.TYPESET) {
             this.processed.typeset = false;
             this.processed.addEventHandlers = false;
             this.processed.getMetrics = false;
         }
-        if (state < this.STATE.COMPILED) {
+        if (state < STATE.COMPILED) {
             this.processed.compile = false;
         }
         return this;
