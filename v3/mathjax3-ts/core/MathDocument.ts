@@ -329,7 +329,6 @@ export abstract class AbstractMathDocument implements MathDocument {
      * @override
      */
     public state(state: number, restore: boolean = false) {
-        let STATE = AbstractMathDocument.STATE;
         for (const math of this.math) {
             math.state(state, restore);
         }
@@ -375,3 +374,5 @@ export abstract class AbstractMathDocument implements MathDocument {
     }
 
 }
+
+let STATE = AbstractMathDocument.STATE;
