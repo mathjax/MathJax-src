@@ -77,6 +77,22 @@ CHTML.Augment({
   }
 });
 
+MathJax.ElementJax.mml.mbase.Augment({
+  CHTMLnodeElement: function () {
+    if (!this.CHTMLnodeID) {return null}
+    return HTML.document.getElementById((this.id||"MJXc-Node-"+this.CHTMLnodeID)+CHTML.idPostfix);
+  }
+});
+
+if (document.body.offsetWidth === 0) {
+  CHTML.Augment({
+    getHDW: function (c,name,styles) {
+      return {h: .8, d: .2, w: .5*c.length};
+    }
+  });
+}
+
+
 //
 //  Make sure we wait for CHTML to fully load.
 //
@@ -117,6 +133,7 @@ exports.LegacyCHTML = {
       NODE = CHTML.Element("mjx-chtml",{className:"MJXc-display",isMathJax:false});
       NODE.appendChild(node);
     }
+    html.document.body.appendChild(NODE);
     if (CHTML.scale !== 1) node.style.fontSize = jax.CHTML.fontSize;
     CHTML.initCHTML(mml,node);
     CHTML.CHTMLnode = node;
@@ -124,9 +141,11 @@ exports.LegacyCHTML = {
       mml.setTeXclass();
       mml.toCommonHTML(node);
     } catch (err) {
+      html.document.body.removeChild(NODE);
       delete this.CHTMLnode;
       throw err;
     }
+    html.document.body.removeChild(NODE);
     delete this.CHTMLnode;
     return NODE;
   },
