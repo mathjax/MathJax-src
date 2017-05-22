@@ -23,34 +23,8 @@
 
 import {AbstractFindMath} from '../../core/FindMath.js';
 import {OptionList} from '../../util/Options.js';
-import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
-
-/*
- *  Sort strings by length
- */
-const sortLength = function (a: string, b: string) {
-    if (a.length !== b.length) {
-        return b.length - a.length;
-    }
-    return (a === b ? 0 : (a < b ? -1 : 1));
-};
-
-/*
- *  Quote a string for use in regular expressions
- */
-const quotePattern = function (text: string) {
-    return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
-};
-
-/*
- *  Produce a proto math item that can be turned into a MathItem
- */
-const MATCH = function (open: string, math: string, close: string, n: number,
-                        start: number, end: number, display: boolean = null) {
-    let item: ProtoItem = {open: open, math: math, close: close,
-                           n: n, start: {n: start}, end: {n: end}, display: display};
-    return item;
-};
+import {sortLength, quotePattern} from '../../util/string.js';
+import {MathItem, ProtoItem, protoItem, Location} from '../../core/MathItem.js';
 
 /*
  * Shorthand types for data about end delimiters and delimiter pairs
@@ -193,8 +167,8 @@ export class FindTeX extends AbstractFindMath {
         let match: RegExpExecArray, braces: number = 0;
         while ((match = pattern.exec(text))) {
             if (match[0] === close && braces === 0) {
-                return MATCH(start[0], text.substr(i, match.index - i), match[0],
-                             n, start.index, match.index + match[0].length, display);
+                return protoItem(start[0], text.substr(i, match.index - i), match[0],
+                                 n, start.index, match.index + match[0].length, display);
             } else if (match[0] === '{') {
                 braces++;
             } else if (match[0] === '}') {
@@ -229,9 +203,9 @@ export class FindTeX extends AbstractFindMath {
                 let math = start[this.sub];
                 let end = start.index + start[this.sub].length;
                 if (math.length === 2) {
-                    match = MATCH('', math.substr(1), '', n, start.index, end);
+                    match = protoItem('', math.substr(1), '', n, start.index, end);
                 } else {
-                    match = MATCH('', math, '', n, start.index, end, false);
+                    match = protoItem('', math, '', n, start.index, end, false);
                 }
             } else {
                 match = this.findEnd(text, n, start, this.end[start[0]]);

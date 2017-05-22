@@ -194,7 +194,7 @@ export interface MathItem {
  *  is translated back into the actual node location in the DOM).
  */
 
-export interface ProtoItem {
+export type ProtoItem = {
     math: string;      // The math expression itself
     start: Location;   // The starting location of the math
     end: Location;     // The ending location of the math
@@ -202,7 +202,17 @@ export interface ProtoItem {
     close?: string;    // The closing delimiter
     n?: number;        // The index of the string in which this math is found
     display: boolean;  // True means display mode, false is inline mode
-}
+};
+
+/*
+ *  Produce a proto math item that can be turned into a MathItem
+ */
+export function protoItem(open: string, math: string, close: string, n: number,
+                        start: number, end: number, display: boolean = null) {
+    let item: ProtoItem = {open: open, math: math, close: close,
+                           n: n, start: {n: start}, end: {n: end}, display: display};
+    return item;
+};
 
 /*****************************************************************/
 /*

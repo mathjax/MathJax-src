@@ -23,34 +23,8 @@
 
 import {AbstractFindMath} from '../../core/FindMath.js';
 import {OptionList} from '../../util/Options.js';
-import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
-
-/*
- *  Sort strings by length
- */
-const sortLength = function (a: string, b: string) {
-    if (a.length !== b.length) {
-        return b.length - a.length;
-    }
-    return (a === b ? 0 : (a < b ? -1 : 1));
-};
-
-/*
- *  Quote a string for use in regular expressions
- */
-const quotePattern = function (text: string) {
-    return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
-};
-
-/*
- *  Produce a proto math item that can be turned into a MathItem
- */
-const MATCH = function (open: string, math: string, close: string, n: number,
-                        start: number, end: number, display: boolean = null) {
-    let item: ProtoItem = {open: open, math: math, close: close,
-                           n: n, start: {n: start}, end: {n: end}, display: display};
-    return item;
-};
+import {sortLength, quotePattern} from '../../util/string.js';
+import {MathItem, ProtoItem, protoItem, Location} from '../../core/MathItem.js';
 
 /*
  * Shorthand types for data about end delimiters and delimiter pairs
@@ -132,8 +106,8 @@ export class FindAsciiMath extends AbstractFindMath {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match = pattern.exec(text);
-        return (!match ? null : MATCH(start[0], text.substr(i, match.index - i), match[0],
-                                      n, start.index, match.index + match[0].length, display));
+        return (!match ? null : protoItem(start[0], text.substr(i, match.index - i), match[0],
+                                          n, start.index, match.index + match[0].length, display));
     }
 
     /*
