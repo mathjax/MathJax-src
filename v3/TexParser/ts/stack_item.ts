@@ -23,7 +23,7 @@
  */
 
 import {Attributes, Environment} from './types';
-import {NodeFactory} from '../../TreeJax/lib/node_factory';
+import {MmlFactory} from '../../mathjax3/core/MmlTree/MmlFactory';
 import {Tree} from '../../TreeJax/lib/tree';
 import {TreeNode} from '../../TreeJax/lib/tree_node';
 
@@ -196,7 +196,7 @@ export abstract class Base implements StackItem {
     if (this.data.length === 1) {
       return this.data[0];
     }
-    let node = NodeFactory.getNode('mrow');
+    let node = (new MmlFactory).create('mrow', {}, []);
     return tempFunctions.createMmlElement(
       'mrow', this.data, inferred ? {inferred: true}: {});
   }

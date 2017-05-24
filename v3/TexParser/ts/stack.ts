@@ -24,7 +24,7 @@
 
 import {Environment} from './types';
 import * as StackItem from './stack_item';
-import {Tree} from '../../TreeJax/lib/tree';
+import {MathItem} from '../../mathjax3/core/MathItem';
 
 
 export default class Stack {
