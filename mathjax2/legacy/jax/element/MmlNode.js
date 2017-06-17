@@ -74,7 +74,7 @@
   });
   MML.entity.Augment({
     toMmlNode: function (factory) {
-      return factory.MML.text(this.toString());
+      return factory.MML.text().setText(this.toString());
     }
   });
   
