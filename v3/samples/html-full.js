@@ -1,20 +1,16 @@
-import {MathJax} from "mathjax/mathjax.js";
-import "mathjax/handlers/html.js";
+import {MathJax} from "mathjax3/mathjax.js";
+import "mathjax3/handlers/html.js";
 
-function Delay(n) {
-  return new Promise((ok,fail) => {setTimeout(ok,n)});
-}
+let html = MathJax.document("<html></html>");
 
-let html = MathJax.HandlerFor("<html></html>");
+MathJax.handleRetriesFor(function () {
 
-MathJax.HandleRetriesFor(function () {
-
-  html.FindMath()
-      .Compile()
-      .GetMetrics()
-      .Typeset()
-      .AddEventHandlers()
-      .UpdateDocument();
+  html.findMath()
+      .compile()
+      .getMetrics()
+      .typeset()
+      .addEventHandlers()
+      .updateDocument();
 
 }).then(_ => {console.log("Worked!")})
   .catch(err => {
