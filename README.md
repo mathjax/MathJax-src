@@ -1,4 +1,4 @@
-# Test branch for proposed v3 struture #
+# Test repository for MathJax v3 #
 
 There are two bootstrap files for running the code:
 
@@ -14,6 +14,16 @@ will run the file `samples/filename.js`, while entering
     load.html?samples/filename.js
 
 in your browser will run the same file in your browser.  If you leave off the file to load, then it defaults to `main.js`.
+
+Additional arguments get passed to the script in the `process.argv` array.  For example
+
+    node load samples/tex2html.js 'x+1'
+
+or
+
+    load.html?samples/tex2html.js&x+1
+
+would load `tex2html.js` passing it `x+1` in `process.argv[3]`.
 
 Both `load.js` and `load.html` use `System.js` to manage the loading of version 3 files.  In some browsers (e.g., Firefox), you get syntax errors for the files as they load, but that seems to be some side-effect of how `System.js` works.  The code is OK and runs properly anyway.
 
