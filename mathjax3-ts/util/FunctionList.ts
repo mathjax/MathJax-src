@@ -62,8 +62,8 @@ export class FunctionList extends PrioritizedList<Function> {
      *   only when the previous one completes.  If the function returns a
      *   Promise, then use that to control the flow.  Otherwise, if the
      *   function returns false, the list is terminated.
-     * This funciton returns a Promise.  If any function in the list fails,
-     *   the promise fails.  If any funciton returns false, the promise
+     * This function returns a Promise.  If any function in the list fails,
+     *   the promise fails.  If any function returns false, the promise
      *   succeeds, but passes false as its argument.  Otherwise it succeeds
      *   and passes true.
      *

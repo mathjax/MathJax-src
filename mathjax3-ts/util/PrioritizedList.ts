@@ -89,7 +89,7 @@ export class PrioritizedList<DataClass> {
         let i = this.items.length;
         do {
             i--;
-        } while (i >= 0 && priority <= this.items[i].priority);
+        } while (i >= 0 && priority < this.items[i].priority);
         this.items.splice(i + 1, 0, {item: item, priority: priority});
         return item;
     }
