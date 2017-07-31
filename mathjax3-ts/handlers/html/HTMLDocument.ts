@@ -119,7 +119,7 @@ export class HTMLDocument extends AbstractMathDocument {
      */
     protected getElements(nodes: (string | Element | Element[])[], document: Document) {
         let containers: Element[] = [];
-        let widow = document.defaultView || DOM.window;
+        let window = document.defaultView || DOM.window;
         for (const node of nodes) {
             if (typeof(node) === 'string') {
                 containers = containers.concat(Array.from(document.querySelectorAll(node)));

@@ -37,7 +37,7 @@ export class MmlMi extends AbstractMmlTokenNode {
      * Patterns for operator names and single-character texts
      */
     public static operatorName: RegExp = /^[a-z][a-z0-9]*$/i;
-    public static singleCharacter: RegExp = /^[\uD800-\uDBFF]$/;
+    public static singleCharacter: RegExp = /^[\uD800-\uDBFF]?.$/;
 
     public texClass = TEXCLASS.ORD;
 

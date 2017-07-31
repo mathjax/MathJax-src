@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node} from './Node.js';
+import {Node, AbstractNode} from './Node.js';
 import {NodeFactory} from './NodeFactory.js';
 
 /*
@@ -142,7 +142,7 @@ export abstract class AbstractVisitor implements Visitor {
      * @override
      */
     public visitDefault(node: Node, ...args: any[]) {
-        if (node instanceof Node) {
+        if (node instanceof AbstractNode) {
             for (const child of node.childNodes) {
                 this.visitNode(child, ...args);
             }
