@@ -190,21 +190,21 @@ export type MathProcessed = {
     addEventHandlers: boolean;
     updateDocument: boolean;
     [name: string]: boolean;
-}
+};
 
 /*
  * Defaults used when input and output jax aren't specified
  */
 class DefaultInputJax extends AbstractInputJax {
-    compile(math: MathItem) {
+    public compile(math: MathItem) {
         return null as MmlNode;
     }
 }
 class DefaultOutputJax extends AbstractOutputJax {
-    typeset(math: MathItem, document: MathDocument = null) {
+    public typeset(math: MathItem, document: MathDocument = null) {
         return null as Element;
     }
-    escaped(math: MathItem, document?: MathDocument) {
+    public escaped(math: MathItem, document?: MathDocument) {
         return null as Element;
     }
 }
@@ -351,7 +351,7 @@ export abstract class AbstractMathDocument implements MathDocument {
      */
     public typesetError(math: MathItem, err: Error) {
         let error = this.document.createElement('span');
-        error.setAttribute('data-mjx-error',err.message);
+        error.setAttribute('data-mjx-error', err.message);
         error.appendChild(this.document.createTextNode('Math output error'));
         math.typesetRoot = error;
     }

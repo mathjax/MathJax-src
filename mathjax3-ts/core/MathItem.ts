@@ -63,7 +63,7 @@ export type Metrics = {
 
 export type BBox = {
     // will be defined later
-}
+};
 
 /*****************************************************************/
 /*
@@ -212,7 +212,7 @@ export function protoItem(open: string, math: string, close: string, n: number,
     let item: ProtoItem = {open: open, math: math, close: close,
                            n: n, start: {n: start}, end: {n: end}, display: display};
     return item;
-};
+}
 
 /*****************************************************************/
 /*

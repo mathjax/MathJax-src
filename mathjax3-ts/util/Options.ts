@@ -59,7 +59,7 @@ export const APPEND = Symbol('Append to option array');
  */
 export function makeArray(x: any): any[] {
     return Array.isArray(x) ? x : [x];
-};
+}
 
 /*****************************************************************/
 /*

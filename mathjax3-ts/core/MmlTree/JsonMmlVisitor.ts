@@ -106,7 +106,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @return {MmlJSON[]}      The array of child JSON objects
      */
     public getChildren(node: MmlNode) {
-        let children = []
+        let children = [];
         for (const child of node.childNodes) {
             children.push(this.visitNode(child));
         }
