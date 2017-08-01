@@ -103,7 +103,7 @@ export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNo
     /*
      * The default kind
      */
-    public defaultKind = "unknown";
+    public defaultKind = 'unknown';
 
     /*
      * The map of node kinds to node classes
@@ -113,7 +113,7 @@ export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNo
     /*
      * An object containing functions for creating the various node kinds
      */
-    protected node: {[kind: string]: Function} = {};
+    protected node: {[kind: string]: (...args: any[]) => N} = {};
 
     /*
      * @override
@@ -137,11 +137,13 @@ export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNo
     /*
      * @override
      */
-        public setNodeClass(kind: string, nodeClass: C) {
+    public setNodeClass(kind: string, nodeClass: C) {
         this.nodeMap.set(kind, nodeClass);
         let THIS = this;
         let KIND = this.nodeMap.get(kind);
-        this.node[kind] = (...args: any[]) => {return new KIND(THIS, ...args);};
+        this.node[kind] = (...args: any[]) => {
+            return new KIND(THIS, ...args);
+        };
     }
     /*
      * @override
