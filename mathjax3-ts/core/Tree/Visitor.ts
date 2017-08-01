@@ -21,13 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, AbstractNode} from './Node.js';
+import {Node, NodeClass, AbstractNode} from './Node.js';
 import {NodeFactory} from './NodeFactory.js';
 
 /*
  * The type for the functions associated with each node class
  */
-export type VisitorFunction = (visitor: NodeFactory, node: Node, ...args: any[]) => any;
+export type VisitorFunction = (visitor: NodeFactory<Node, NodeClass>, node: Node, ...args: any[]) => any;
 
 /*****************************************************************/
 /*
@@ -114,7 +114,7 @@ export abstract class AbstractVisitor implements Visitor {
      * @constructor
      * @param {NodeFactory} factory  The node factory for the kinds of nodes this visitor handles
      */
-    constructor(factory: NodeFactory) {
+    constructor(factory: NodeFactory<Node, NodeClass>) {
         for (const kind of factory.getKinds()) {
             let method = (this as Visitor)[AbstractVisitor.methodName(kind)] as VisitorFunction;
             if (method) {
