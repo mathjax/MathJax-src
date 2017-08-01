@@ -50,12 +50,12 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
      * Defines a class for a given node kind
      *
      * @param {string} kind  The kind whose class is being defined
-     * @param {NodeClass} nodeClass  The class for the given kind
+     * @param {C} nodeClass  The class for the given kind
      */
     setNodeClass(kind: string, nodeClass: C): void;
     /*
      * @param {string} kind  The kind of node whose class is to be returned
-     * @return {NodeClass}  The class object for the given kind
+     * @return {C}  The class object for the given kind
      */
     getNodeClass(kind: string): C;
     /*
@@ -64,7 +64,7 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
     deleteNodeClass(kind: string): void;
 
     /*
-     * @param {Node} node  The node to test if it is of a given kind
+     * @param {N} node  The node to test if it is of a given kind
      * @param {string} kind  The kind to test for
      * @return {boolean}  True if the node is of the given kind, false otherwise
      */
