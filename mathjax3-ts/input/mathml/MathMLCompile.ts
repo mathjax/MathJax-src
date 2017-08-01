@@ -23,7 +23,8 @@
 
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlEntities} from './MmlEntities.js';
-import {MmlNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
+    from '../../core/MmlTree/MmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 
 /********************************************************************/
@@ -87,7 +88,7 @@ export class MathMLCompile {
     public compile(node: HTMLElement) {
         let mml = this.makeNode(node);
         mml.verifyTree(this.options['verify']);
-        mml.setInheritedAttributes();
+        mml.setInheritedAttributes({}, false, 0, false);
         mml.walkTree(this.markMrows);
         return mml;
     }
@@ -174,7 +175,7 @@ export class MathMLCompile {
             if (child.nodeName === '#text') {
                 this.addText(mml, child);
             } else if (mml.isKind('annotation-xml')) {
-                mml.appendChild(this.factory.create('XML').setXML(child));
+                mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child));
             } else {
                 let childMml = mml.appendChild(this.makeNode(child)) as MmlNode;
                 if (childMml.arity === 0 && child.childNodes.length) {
@@ -202,7 +203,7 @@ export class MathMLCompile {
                 text = this.entities.translate(text);
                 text = this.trimSpace(text);
             }
-            mml.appendChild(this.factory.create('text').setText(text));
+            mml.appendChild((this.factory.create('text') as TextNode).setText(text));
         } else if (text.match(/\S/)) {
             this.error('Unexpected text node "' + text + '"');
         }

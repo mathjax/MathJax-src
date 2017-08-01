@@ -652,7 +652,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         let merror = this.factory.create('merror');
         if (options['fullErrors'] || short) {
             let mtext = this.factory.create('mtext');
-            let text = this.factory.create('text');
+            let text = this.factory.create('text') as TextNode;
             text.setText(options['fullErrors'] ? message : this.kind);
             mtext.appendChild(text);
             merror.appendChild(mtext);
