@@ -49,10 +49,10 @@ export class Attributes {
      * @constructor
      */
     constructor(defaults: PropertyList, global: PropertyList) {
-        this.defaults = defaults;
-        this.inherited = Object.create(defaults);
-        this.attributes = Object.create(this.inherited);
         this.global = global;
+        this.defaults = Object.create(global);
+        this.inherited = Object.create(this.defaults);
+        this.attributes = Object.create(this.inherited);
     }
 
     /*
