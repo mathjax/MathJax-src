@@ -27,12 +27,12 @@
  */
 export function sortLength(a: string, b: string) {
     return a.length !== b.length ? b.length - a.length : a === b ? 0 : a < b ? -1 : 1;
-};
+}
 
 /*
  *  Quote a string for use in regular expressions
  */
 export function quotePattern(text: string) {
     return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
-};
+}
 
