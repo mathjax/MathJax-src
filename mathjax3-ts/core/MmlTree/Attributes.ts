@@ -175,17 +175,24 @@ export class Attributes {
     }
 
     /*
-     * @return {PropertyList}  The attribute object
+     * @return {PropertyList}  The inherited object
      */
     public getAllInherited() {
         return this.inherited;
     }
 
     /*
-     * @return {PropertyList}  The attribute object
+     * @return {PropertyList}  The defaults object
      */
     public getAllDefaults() {
         return this.defaults;
+    }
+
+    /*
+     * @return {PropertyList}  The global object
+     */
+    public getAllGlobals() {
+        return this.global;
     }
 
 }
