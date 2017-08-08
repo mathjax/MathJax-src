@@ -30,15 +30,34 @@ export interface FactoryNode {
     readonly kind: string;
 }
 
+/*
+ * @template N  The Node type being created by teh factory
+ */
 export interface FactoryNodeClass<N extends FactoryNode> {
+    /*
+     * @param{Factory<N, FactoryNodeClass<N>>} factory  The factory for creating more nodes
+     * @param{any[]} args  Any additional arguments needed by the node
+     * @return{N}  The newly created node
+     */
     new(factory: Factory<N, FactoryNodeClass<N>>, ...args: any[]): N;
 }
 
 /*****************************************************************/
 /*
  * The Factory interface
+ *
+ * Factory<N, C> takes a node type N and a node class C, which give
+ * the interfaces for the node instance and the node constructors. We
+ * need both for two reasons: first, you can't use typeof N to get C,
+ * since N is a type not an object, and if N has static members, we
+ * may want to access them from the results of getNodeClass(kind)
+ * (this is done in MmlNodes, for example).
  */
 
+/*
+ * @template N  The node type created by the factory
+ * @template C  The class of the node being constructed (for access to static properties)
+ */
 export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
     /*
      * @param {string} kind  The kind of node to create
@@ -53,11 +72,13 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
      * @param {C} nodeClass  The class for the given kind
      */
     setNodeClass(kind: string, nodeClass: C): void;
+
     /*
      * @param {string} kind  The kind of node whose class is to be returned
      * @return {C}  The class object for the given kind
      */
     getNodeClass(kind: string): C;
+
     /*
      * @param {string} kind  The kind whose definition is to be deleted
      */
@@ -83,6 +104,10 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
  *   (needed for access to defaultNodes via the constructor)
  */
 
+/*
+ * @template N  The node type created by the factory
+ * @template C  The class of the node being constructed (for access to static properties)
+ */
 interface AbstractFactoryClass<N extends FactoryNode, C extends FactoryNodeClass<N>> extends Function {
     defaultNodes: {[kind: string]: C};
 }
@@ -93,6 +118,10 @@ interface AbstractFactoryClass<N extends FactoryNode, C extends FactoryNodeClass
  * The generic AbstractFactory class
  */
 
+/*
+ * @template N  The node type created by the factory
+ * @template C  The class of the node being constructed (for access to static properties)
+ */
 export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNodeClass<N>> implements Factory<N, C> {
 
     /*
@@ -151,6 +180,7 @@ export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNo
     public getNodeClass(kind: string): C {
         return this.nodeMap.get(kind);
     }
+
     /*
      * @override
      */

@@ -29,6 +29,10 @@ import {Factory, FactoryNodeClass, AbstractFactory} from './Factory.js';
  * The NodeFactory interface
  */
 
+/*
+ * @template N  The node type created by the factory
+ * @template C  The class of the node being constructed (for access to static properties)
+ */
 export interface NodeFactory<N extends Node, C extends FactoryNodeClass<N>> extends Factory<N, C> {
     /*
      * @param {string} kind  The kind of node to create
@@ -44,6 +48,10 @@ export interface NodeFactory<N extends Node, C extends FactoryNodeClass<N>> exte
  * The generic NodeFactory class
  */
 
+/*
+ * @template N  The node type created by the factory
+ * @template C  The class of the node being constructed (for access to static properties)
+ */
 export abstract class AbstractNodeFactory<N extends Node, C extends FactoryNodeClass<N>> extends AbstractFactory<N, C> {
     /*
      * @override
