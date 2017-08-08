@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {MmlNode, TextNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /*
@@ -141,7 +141,7 @@ export class MmlMfenced extends AbstractMmlNode {
      * @return {MmlNode}                 The generated <mo> node
      */
     protected fakeNode(c: string, properties: PropertyList = {}, texClass: number = null): MmlNode {
-        let text = this.factory.create('text').setText(c);
+        let text = (this.factory.create('text') as TextNode).setText(c);
         let node = this.factory.create('mo', properties, [text]);
         node.texClass = texClass;
         node.parent = this;

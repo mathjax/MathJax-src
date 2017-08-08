@@ -123,7 +123,7 @@ export interface NodeClass {
      * @param {Node[]} children  The initial child nodes, if any
      * @return {Node}  The newly created node
      */
-    new (factory: NodeFactory, properties?: PropertyList, children?: Node[]): Node;
+    new (factory: NodeFactory<Node, NodeClass>, properties?: PropertyList, children?: Node[]): Node;
 }
 
 /*********************************************************/
@@ -146,7 +146,7 @@ export abstract class AbstractNode implements Node {
     /*
      * The NodeFactory to use to create additional nodes, as needed
      */
-    protected _factory: NodeFactory = null;
+    protected _factory: NodeFactory<Node, NodeClass> = null;
 
     /*
      * The children for this node
@@ -162,7 +162,7 @@ export abstract class AbstractNode implements Node {
      * @constructor
      * @implements {Node}
      */
-    constructor(factory: NodeFactory, properties: PropertyList = {}, children: Node[] = []) {
+    constructor(factory: NodeFactory<Node, NodeClass>, properties: PropertyList = {}, children: Node[] = []) {
         this._factory = factory;
         for (const name of Object.keys(properties)) {
             this.setProperty(name, properties[name]);

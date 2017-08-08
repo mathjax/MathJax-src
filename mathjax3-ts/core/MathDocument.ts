@@ -26,7 +26,7 @@ import {InputJax, AbstractInputJax} from './InputJax.js';
 import {OutputJax, AbstractOutputJax} from './OutputJax.js';
 import {MathList, AbstractMathList} from './MathList.js';
 import {MathItem, AbstractMathItem} from './MathItem.js';
-import {MmlNode} from './MmlTree/MmlNode.js';
+import {MmlNode, TextNode} from './MmlTree/MmlNode.js';
 import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 
 /*****************************************************************/
@@ -313,7 +313,7 @@ export abstract class AbstractMathDocument implements MathDocument {
         math.root = errorFactory.create('math', {'data-mjx-error': err.message}, [
             errorFactory.create('merror', null, [
                 errorFactory.create('mtext', null, [
-                    errorFactory.create('text').setText('Math input error')
+                    (errorFactory.create('text') as TextNode).setText('Math input error')
                 ])
             ])
         ]);

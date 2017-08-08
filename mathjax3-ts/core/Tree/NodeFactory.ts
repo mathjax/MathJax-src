@@ -22,49 +22,25 @@
  */
 
 import {Node, NodeClass, PropertyList} from './Node.js';
+import {Factory, FactoryNodeClass, AbstractFactory} from './Factory.js';
 
 /*****************************************************************/
 /*
  * The NodeFactory interface
  */
 
-export interface NodeFactory {
+/*
+ * @template N  The node type created by the factory
+ * @template C  The class of the node being constructed (for access to static properties)
+ */
+export interface NodeFactory<N extends Node, C extends FactoryNodeClass<N>> extends Factory<N, C> {
     /*
      * @param {string} kind  The kind of node to create
      * @param {PropertyList} properties  The list of initial properties for the node (if any)
-     * @param {Node[]} children  The array of initial child nodes (if any)
-     * @return {Node}  The newly created node of the given kind
+     * @param {N[]} children  The array of initial child nodes (if any)
+     * @return {N}  The newly created node of the given kind
      */
-    create(kind: string, properties?: PropertyList, children?: Node[]): Node;
-
-    /*
-     * Defines a class for a given node kind
-     *
-     * @param {string} kind  The kind whose class is being defined
-     * @param {NodeClass} nodeClass  The class for the given kind
-     */
-    setNodeClass(kind: string, nodeClass: NodeClass): void;
-    /*
-     * @param {string} kind  The kind of node whose class is to be returned
-     * @return {NodeClass}  The class object for the given kind
-     */
-    getNodeClass(kind: string): NodeClass;
-    /*
-     * @param {string} kind  The kind whose definition is to be deleted
-     */
-    deleteNodeClass(kind: string): void;
-
-    /*
-     * @param {Node} node  The node to test if it is of a given kind
-     * @param {string} kind  The kind to test for
-     * @return {boolean}  True if the node is of the given kind, false otherwise
-     */
-    nodeIsKind(node: Node, kind: string): boolean;
-
-    /*
-     * @return {string[]}  The names of all the available kinds of nodes
-     */
-    getKinds(): string[];
+    create(kind: string, properties?: PropertyList, children?: N[]): N;
 }
 
 /*****************************************************************/
@@ -72,69 +48,16 @@ export interface NodeFactory {
  * The generic NodeFactory class
  */
 
-export abstract class AbstractNodeFactory implements NodeFactory {
-    /*
-     * The map of node kinds to node classes
-     */
-    protected nodeMap: Map<string, NodeClass> = new Map();
-    /*
-     * An object containing functions for creating the various node kinds
-     */
-    protected node: {[kind: string]: Function} = {};
-
+/*
+ * @template N  The node type created by the factory
+ * @template C  The class of the node being constructed (for access to static properties)
+ */
+export abstract class AbstractNodeFactory<N extends Node, C extends FactoryNodeClass<N>> extends AbstractFactory<N, C> {
     /*
      * @override
      */
-    constructor(nodes: {[kind: string]: NodeClass} = {}) {
-        for (const kind of Object.keys(nodes)) {
-            this.setNodeClass(kind, nodes[kind]);
-        }
-    }
-
-    /*
-     * @override
-     */
-    public create(kind: string, properties: PropertyList = {}, children: Node[] = []) {
+    public create(kind: string, properties: PropertyList = {}, children: N[] = []) {
         return this.node[kind](properties, children);
-    }
-
-    /*
-     * @override
-     */
-    public setNodeClass(kind: string, nodeClass: NodeClass) {
-        this.nodeMap.set(kind, nodeClass);
-        let THIS = this;
-        let KIND = this.nodeMap.get(kind);
-        this.node[kind] = function (properties: PropertyList, children: Node[]) {
-            return new KIND(THIS, properties, children);
-        };
-    }
-    /*
-     * @override
-     */
-    public getNodeClass(kind: string): NodeClass {
-        return this.nodeMap.get(kind);
-    }
-    /*
-     * @override
-     */
-    public deleteNodeClass(kind: string) {
-        this.nodeMap.delete(kind);
-        delete this.node[kind];
-    }
-
-    /*
-     * @override
-     */
-    public nodeIsKind(node: Node, kind: string) {
-        return (node instanceof this.getNodeClass(kind));
-    }
-
-    /*
-     * @override
-     */
-    public getKinds() {
-        return Array.from(this.nodeMap.keys());
     }
 
 }
