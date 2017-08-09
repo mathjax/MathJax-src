@@ -58,7 +58,7 @@ export class MmlMi extends AbstractMmlTokenNode {
                            display: boolean = false, level: number = 0, prime: boolean = false) {
         super.setInheritedAttributes(attributes, display, level, prime);
         let text = this.getText();
-        if (text.match(MmlMi.singleCharacter)) {
+        if (text.match(MmlMi.singleCharacter) && !attributes.mathvariant) {
             this.attributes.setInherited('mathvariant', 'italic');
         }
     }

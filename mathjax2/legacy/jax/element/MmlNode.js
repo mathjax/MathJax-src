@@ -48,6 +48,7 @@
             }
           }
         }
+        if (this['class']) node.attributes.set('class',this['class']);
       }
       for (var i = 0, m = names.length; i < m; i++) {
         if (copy[names[i]] === 1 && !defaults.hasOwnProperty(names[i])) continue;
