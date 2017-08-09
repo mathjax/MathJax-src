@@ -11,7 +11,7 @@ let OPTIONS = {
 };
 
 let HTML = `
-  This is \\$ some math: \\(x+1\\).
+  This is \\$ some math: \\(\\sin(x+1)\\) and \\(\\bf x \\scr X \\mathbb X \\sf X \\cal X \\frak X\\).
   \\[x+1\\over x-1\\]
 `;
 
