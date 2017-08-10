@@ -23,9 +23,8 @@
  */
 
 import {Attributes, Environment} from './types';
-import {MmlFactory} from '../../mathjax3/core/MmlTree/MmlFactory';
-import {Tree} from '../../TreeJax/lib/tree';
-import {TreeNode} from '../../TreeJax/lib/tree_node';
+import {MmlFactory} from '../../core/MmlTree/MmlFactory';
+import {MmlNode, TextNode, XMLNode, TEXCLASS} from '../../core/MmlTree/MmlNode';
 
 
 // TODO: This is a placeholder for the current MML elements.
@@ -241,7 +240,7 @@ export class Stop extends Base {
 export class Mml extends Base {
 
   kind: ItemType = 'mml';
-  public node: TreeNode;
+  public node: MmlNode;
   
   constructor(node: any) {
     super({});
