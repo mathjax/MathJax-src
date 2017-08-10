@@ -28,7 +28,7 @@ import {Environment} from './types';
 import Stack from './stack';
 import {BaseMappings} from './base_mappings';
 import {BaseMethods} from './base_methods';
-import {Tree} from '../../TreeJax/lib/tree';
+// import {Tree} from '../../TreeJax/lib/tree';
 
 
 // TODO: Make this into a singleton?
@@ -71,10 +71,10 @@ export default class TexParser {
     return char;
   }
   
-  public static parse(input: string): Tree {
-    let parser = new TexParser(input, {});
-    console.log(parser);
-    return parser.stack.getResult();
+  public static parse(input: string): void {
+    // let parser = new TexParser(input, {});
+    // console.log(parser);
+    // return parser.stack.getResult();
   }
 
 }

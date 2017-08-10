@@ -30,7 +30,7 @@ import {MathItem} from '../../mathjax3/core/MathItem';
 export default class Stack {
 
   public env: Environment = {};
-  private tree = new Tree();
+  // private tree = new Tree();
   private global: Environment = {};
   private data: StackItem.StackItem[] = [];
 
@@ -63,14 +63,14 @@ export default class Stack {
     }
 
     if (itemJson.kind === 'mml') {
-      Tree.parseNode(itemJson.content);
+      // Tree.parseNode(itemJson.content);
     }
     let item = StackItem.ItemFactory(itemJson.kind, itemJson.content);
     item.env = this.global;
     let top = (this.data.length ? this.top().checkItem(item) : true);
 
     if (item.hasType('mml')) {
-      this.tree.setRoot((item as StackItem.Mml).node);
+      // this.tree.setRoot((item as StackItem.Mml).node);
     }
     
     // TODO: Can we model this with a multi-stackitem?
@@ -136,11 +136,11 @@ export default class Stack {
     return 'stack[\n  ' + this.data.join(', ') + '\n]';
   }
 
-  public getResult(): Tree {
-    if (this.top().kind === 'stop') {
-      console.log('Warning: incomplete parsing!');
-    }
-    return this.tree;
-  }
+  // public getResult(): Tree {
+  //   if (this.top().kind === 'stop') {
+  //     console.log('Warning: incomplete parsing!');
+  //   }
+  //   return this.tree;
+  // }
   
 }
