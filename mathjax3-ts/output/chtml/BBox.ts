@@ -149,7 +149,7 @@ export class BBox {
     }
 
     /*
-     * @param{BBox} cbox  The bounding box to use to overright this one
+     * @param{BBox} cbox  The bounding box to use to overwrite this one
      */
     public updateFrom(cbox: BBox) {
         this.h = cbox.h;
