@@ -138,7 +138,14 @@ export class BBox {
      * @param{BBox} cbox  A bounding box to be added to the right of this one
      */
     public append(cbox: BBox) {
-        this.combine(cbox, this.w, 0);
+        let scale = cbox.rscale;
+        this.w += scale * (cbox.w + cbox.L + cbox.R);
+        if (scale * cbox.h > this.h) {
+            this.h = scale * cbox.h;
+        }
+        if (scale * cbox.d > this.d) {
+            this.d = scale*cbox.d;
+        }
     }
 
     /*
