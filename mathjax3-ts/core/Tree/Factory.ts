@@ -31,7 +31,7 @@ export interface FactoryNode {
 }
 
 /*
- * @template N  The Node type being created by teh factory
+ * @template N  The Node type being created by the factory
  */
 export interface FactoryNodeClass<N extends FactoryNode> {
     /*

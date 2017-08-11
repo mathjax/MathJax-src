@@ -31,15 +31,20 @@ import {WrapperFactory} from './WrapperFactory.js';
  *  It points to a Node object.  Subclasses add methods for the visitor to call.
  */
 
+/*
+ * @template N  The Node type being created by the factory
+ * @template W  The Wrapper type being produced
+ */
 export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
     node: N;
     readonly kind: string;
 
     /*
-     * @param {Node} node  A (child) node to be wrapped
-     * @return {Wrapper}  The newly wrapped node
+     * @param {Node} node  A node to be wrapped
+     * @param{any[]} args  Any additional arguments needed when wrapping the node
+     * @return {Wrapper}   The newly wrapped node
      */
-    wrap(node: N): W;
+    wrap(node: N, ...args: any[]): W;
 }
 
 /*********************************************************/
@@ -47,7 +52,17 @@ export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
  *  The Wrapper class interface
  */
 
+/*
+ * @template N  The Node type being created by the factory
+ * @template W  The Wrapper type being produced
+ */
 export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
+    /*
+     * @param{WrapperFactory} factory  The factory used to create more wrappers
+     * @param{N} node  The node to be wrapped
+     * @param{any[]} args  Any additional arguments needed when wrapping the node
+     * @return{W}  The wrapped node
+     */
     new(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N, ...args: any[]): W;
 }
 
@@ -56,6 +71,10 @@ export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
  *  The abstract Wrapper class
  */
 
+/*
+ * @template N  The Node type being created by the factory
+ * @template W  The Wrapper type being produced
+ */
 export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements Wrapper<N, W> {
     /*
      * The Node object associated with this instance
@@ -67,6 +86,9 @@ export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements
      */
     protected factory: WrapperFactory<N, W, WrapperClass<N, W>>;
 
+    /*
+     * The kind of this wrapper
+     */
     get kind() {
         return this.node.kind;
     }
