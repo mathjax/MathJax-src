@@ -458,7 +458,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Set the CSS for the math variant
      */
     protected handleVariant() {
-        if (this.variant !== '-explicitFont') {
+        if (this.node.isToken && this.variant !== '-explicitFont') {
             this.chtml.className = VARIANT[this.variant] || VARIANT.normal;
         }
     }
