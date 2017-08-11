@@ -37,7 +37,7 @@ export class CHTMLmspace extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: Element, WHD: number[] = []) {
+    public toCHTML(parent: HTMLElement, WHD: number[] = []) {
         let chtml = this.html('mjx-space');
         this.chtml = parent.appendChild(chtml);
         this.handleScale();
@@ -68,5 +68,13 @@ export class CHTMLmspace extends CHTMLWrapper {
         bbox.h = this.length2em(attributes.get('height'), 0);
         bbox.d = this.length2em(attributes.get('depth'), 0);
         return bbox;
+    }
+
+    /*
+     * No contents, so no need for variant class
+     *
+     * @override
+     */
+    protected handleVariant() {
     }
 }
