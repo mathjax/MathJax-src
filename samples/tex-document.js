@@ -10,7 +10,7 @@ let OPTIONS = {
   OutputJax: new CHTML()
 };
 
-let HTML = `
+let HTML = process.argv[3] || `
   This is \\$ some math: \\(\\sin(x+1)\\) and \\(\\bf x \\scr X \\mathbb X \\sf X \\cal X \\frak X\\).
   \\[x+1\\over x-1\\]
 `;
