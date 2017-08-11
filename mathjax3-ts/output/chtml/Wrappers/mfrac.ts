@@ -37,7 +37,7 @@ export class CHTMLmfrac extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: Element, WHD: number[] = []) {
+    public toCHTML(parent: HTMLElement, WHD: number[] = []) {
         let num, den;
         let chtml = this.html('mjx-frac', {}, [
             num = this.html('mjx-num', {}, [this.html('mjx-dstrut')]),
@@ -67,7 +67,7 @@ export class CHTMLmfrac extends CHTMLWrapper {
         const a = this.TeX.axis_height;
         const t = this.TeX.rule_thickness;
         bbox.combine(dbox, pad, a + 1.5 * t + nbox.d);
-        bbox.combine(nbox, pad, a + 1.5 * t + dbox.h);
+        bbox.combine(nbox, pad, a - 1.5 * t - dbox.h);
         bbox.w += pad;
         bbox.clean();
         return bbox;
