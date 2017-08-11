@@ -4,7 +4,7 @@ import {Factory, AbstractFactory} from './Factory.js';
 
 export interface WrapperFactory<N extends Node, W extends Wrapper<N, W>, C extends WrapperClass<N, W>>
 extends Factory<W, C> {
-    wrap(node: N): W;
+    wrap(node: N, ...args: any[]): W;
 }
 
 /*****************************************************************/
@@ -14,7 +14,7 @@ extends Factory<W, C> {
 
 export abstract class AbstractWrapperFactory<N extends Node, W extends Wrapper<N, W>, C extends WrapperClass<N, W>>
 extends AbstractFactory<W, C> implements WrapperFactory<N, W, C> {
-    public wrap(node: N) {
-        return this.create(node.kind, node);
+    public wrap(node: N, ...args: any[]) {
+        return this.create(node.kind, node, ...args);
     }
 }

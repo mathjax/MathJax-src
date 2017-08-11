@@ -48,7 +48,7 @@ export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
  */
 
 export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
-    new(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N): W;
+    new(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N, ...args: any[]): W;
 }
 
 /*********************************************************/

@@ -212,8 +212,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * @override
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode) {
+    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
         super(factory, node);
+        this.parent = parent;
         this.bbox = BBox.zero();
         this.getStyles();
         this.getVariant();
@@ -229,8 +230,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{CHTMLWrapper}  The newly wrapped node
      */
     public wrap(node: MmlNode, parent: CHTMLWrapper = null) {
-        const wrapped = this.factory.wrap(node);
-        wrapped.parent = parent || this;
+        const wrapped = this.factory.wrap(node, parent || this);
         if (parent) {
             parent.childNodes.push(wrapped);
         }
