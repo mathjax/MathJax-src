@@ -37,7 +37,7 @@ export class CHTMLmspace extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement, WHD: number[] = []) {
+    public toCHTML(parent: HTMLElement) {
         let chtml = this.html('mjx-space');
         this.chtml = parent.appendChild(chtml);
         this.handleScale();

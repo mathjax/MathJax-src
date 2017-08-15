@@ -36,7 +36,7 @@ export class CHTMLTextNode extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement, WHD: number[] = []) {
+    public toCHTML(parent: HTMLElement) {
         let text = (this.node as TextNode).getText();
         if (this.parent.variant === '-explicitFont') {
             parent.appendChild(this.text(text));
