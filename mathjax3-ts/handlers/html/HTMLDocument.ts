@@ -228,7 +228,7 @@ export class HTMLDocument extends AbstractMathDocument {
     public TestMath(text: string, display: boolean = true) {
         if (!this.processed['TestMath']) {
             let math = new HTMLMathItem(text, this.inputJax[0], display);
-            math.setMetrics(6, 14, 1000000, 1000000, 1);
+            math.setMetrics(16, 8, 1000000, 1000000, 1);
             this.math.push(math);
             this.processed['TestMath'] = true;
         }
