@@ -28,36 +28,6 @@ import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /*
- *  These will be part of a font class in the future.  They are
- *  just temporary for now.
- */
-
-/*
- * Stretchy delimiter data
- */
-type DelimiterData = {
-    dir: string;
-    sizes: [number];
-    fonts?: [number];
-};
-
-/*
- * The stretch direction
- */
-const V = 'V';
-const H = 'H';
-
-/*
- * The delimiter list (will be longer in the future)
- */
-const DELIMITERS: {[n: number]: DelimiterData} = {
-    0x0028: {dir: V, sizes: [1, 1.2, 1.8, 2.4, 3.0]}
-};
-
-const VARIANT = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
-
-/*****************************************************************/
-/*
  *  The CHTMLmo wrapper for the MmlMo object
  */
 export class CHTMLmo extends CHTMLWrapper {
@@ -118,7 +88,7 @@ export class CHTMLmo extends CHTMLWrapper {
         if (!attributes.get('stretchy')) return false;
         let c = this.getText();
         if (c.length !== 1) return false;
-        let C = DELIMITERS[c.charCodeAt(0)];
+        let C = this.font.getDelimiter(c.charCodeAt(0));
         this.stretch = (C && C.dir === direction.substr(0, 1) ? C.dir : '');
         return this.stretch !== '';
     }
@@ -135,9 +105,10 @@ export class CHTMLmo extends CHTMLWrapper {
             D = Math.max(min, Math.min(max, D));
             const m = (min ? D : Math.max(D * this.TeX.delimiterfactor / 1000, D - this.TeX.delimitershortfall));
             let i = 0;
-            for (const d of DELIMITERS[this.getText().charCodeAt(0)].sizes) {
+            let c = this.getText().charCodeAt(0);
+            for (const d of this.font.getDelimiter(c).sizes) {
                 if (d >= m) {
-                    this.variant = VARIANT[i];
+                    this.variant = this.font.getSizeVariant(c, i);
                     this.size = i;
                     return;
                 }

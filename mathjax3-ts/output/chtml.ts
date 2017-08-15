@@ -29,6 +29,8 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {HTMLNodes} from '../util/HTMLNodes.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
+import {FontData} from './chtml/FontData.js';
+import {TeXFont} from './chtml/fonts/tex.js';
 import {BIGDIMEN, percent} from '../util/lengths.js';
 
 /*****************************************************************/
@@ -43,14 +45,16 @@ export class CHTML extends AbstractOutputJax {
         ...AbstractOutputJax.OPTIONS,
         scale: 1,                      // Global scaling factor for all expressions
         skipAttributes: {},            // RFDa and other attributes NOT to copy to CHTML output
-        CHTMLWrapperFactory: null      // The CHTMLWrapper factory to use
+        CHTMLWrapperFactory: null,     // The CHTMLWrapper factory to use
+        font: null                     // The FontData object to use
     };
 
     /*
-     *  Used to store the HTMLNodes factory and the CHTMLWraper factory.
+     *  Used to store the HTMLNodes factory, the CHTMLWraper factory, and FontData object.
      */
     public nodes: HTMLNodes;
     public factory: CHTMLWrapperFactory;
+    public font: FontData;
 
     /*
      * The MatahDocument for the math we find
@@ -78,6 +82,7 @@ export class CHTML extends AbstractOutputJax {
         this.factory = this.options.CHTMLWrapperFactory || new CHTMLWrapperFactory();
         this.factory.chtml = this;
         this.nodes = new HTMLNodes();
+        this.font = this.options.font || new TeXFont();
     }
 
     /*

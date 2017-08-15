@@ -34,6 +34,7 @@ import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
 import {TexFontParams} from './TeX.js';
+import {FontData} from './FontData.js';
 
 /*****************************************************************/
 
@@ -224,6 +225,13 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     get metrics() {
         return this.factory.chtml.math.metrics;
+    }
+
+    /*
+     * Easy access to the font parameters
+     */
+    get font() {
+        return this.factory.chtml.font;
     }
 
     /*******************************************************************/
