@@ -32,27 +32,14 @@ export class HTMLNodes {
     /*
      * The document in which the HTML nodes will be created
      */
-    protected _document: Document;
+    public document: Document;
 
     /*
      * @param{Document} document  The document in which the nodes will be created
      * @constructor
      */
     constructor(document: Document = null) {
-        this._document = document;
-    }
-
-    /*
-     * Set or get the document in which the elements are created
-     *
-     * @param{Document} document  The document in which to create elements
-     * @return{Document}  The document currently used for creating elements
-     */
-    public document(document: Document = null) {
-        if (document) {
-            this._document = document;
-        }
-        return this._document;
+        this.document = document;
     }
 
     /*
@@ -62,7 +49,7 @@ export class HTMLNodes {
      * @return{HTMLElement}    The generated HTML tree
      */
     public node(type: string, def: OptionList = {}, children: Node[] = []) {
-        let node = this._document.createElement(type);
+        let node = this.document.createElement(type);
         this.setProperties(node, def);
         for (const child of children) {
             node.appendChild(child);
@@ -75,7 +62,7 @@ export class HTMLNodes {
      * @return{HTMLElement}  The generated text node with the given text
      */
     public text(text: string) {
-        return this._document.createTextNode(text);
+        return this.document.createTextNode(text);
     }
 
     /*
