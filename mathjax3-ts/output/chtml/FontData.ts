@@ -50,6 +50,44 @@ export type DelimiterMap = {
 };
 
 /*
+ * Font parameters
+ */
+export type FontParameters = {
+    x_height: number,
+    quad: number,
+    num1: number,
+    num2: number,
+    num3: number,
+    denom1: number,
+    denom2: number,
+    sup1: number,
+    sup2: number,
+    sup3: number,
+    sub1: number,
+    sub2: number,
+    sup_drop: number,
+    sub_drop: number,
+    delim1: number,
+    delim2: number,
+    axis_height: number,
+    rule_thickness: number,
+    big_op_spacing1: number,
+    big_op_spacing2: number,
+    big_op_spacing3: number,
+    big_op_spacing4: number,
+    big_op_spacing5: number,
+
+    surd_height: number,
+
+    scriptspace: number,
+    nulldelimiterspace: number,
+    delimiterfactor: number,
+    delimitershortfall: number,
+
+    min_rule_thickness: number
+}
+
+/*
  * The stretch direction
  */
 export const V = 'V';
@@ -77,6 +115,44 @@ export class FontData {
         ['monospace', 'normal']
     ];
 
+    public static defaultParams: FontParameters = {
+        x_height:         .442,
+        quad:             1,
+        num1:             .676,
+        num2:             .394,
+        num3:             .444,
+        denom1:           .686,
+        denom2:           .345,
+        sup1:             .413,
+        sup2:             .363,
+        sup3:             .289,
+        sub1:             .15,
+        sub2:             .247,
+        sup_drop:         .386,
+        sub_drop:         .05,
+        delim1:          2.39,
+        delim2:          1.0,
+        axis_height:      .25,
+        rule_thickness:   .06,
+        big_op_spacing1:  .111,
+        big_op_spacing2:  .167,
+        big_op_spacing3:  .2,
+        big_op_spacing4:  .45, // .6,  // better spacing for under arrows and braces
+        big_op_spacing5:  .1,
+
+        surd_height:      .075,
+
+        scriptspace:         .05,
+        nulldelimiterspace:  .12,
+        delimiterfactor:     901,
+        delimitershortfall:   .3,
+
+        min_rule_thickness:  1.25     // in pixels
+    };
+
+
+    public params: FontParameters;
+
     protected static defaultDelimiters: DelimiterMap = {};
     protected static defaultChars: CharMapMap = {};
 
@@ -88,6 +164,7 @@ export class FontData {
 
     constructor() {
         let CLASS = (this.constructor as typeof FontData)
+        this.params = Object.assign({}, CLASS.defaultParams);
         this.sizeVariants = CLASS.defaultSizeVariants;
         this.createVariants(CLASS.defaultVariants);
         this.defineDelimiters(CLASS.defaultDelimiters);

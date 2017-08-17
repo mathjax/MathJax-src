@@ -103,7 +103,8 @@ export class CHTMLmo extends CHTMLWrapper {
             let min = this.getSize('minsize', 0);
             let max = this.getSize('maxsize', Infinity);
             D = Math.max(min, Math.min(max, D));
-            const m = (min ? D : Math.max(D * this.TeX.delimiterfactor / 1000, D - this.TeX.delimitershortfall));
+            const m = (min ? D : Math.max(D * this.font.params.delimiterfactor / 1000,
+                                          D - this.font.params.delimitershortfall));
             let i = 0;
             let c = this.getText().charCodeAt(0);
             for (const d of this.font.getDelimiter(c).sizes) {

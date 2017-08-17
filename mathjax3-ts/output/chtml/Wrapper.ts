@@ -33,7 +33,6 @@ import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
-import {TexFontParams} from './TeX.js';
 import {FontData} from './FontData.js';
 
 /*****************************************************************/
@@ -211,7 +210,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * Easy access to the font parameters
      */
-    public TeX = TexFontParams;
+    public font: FontData = null;
 
     /*
      * Easy access to the CHTML output jax for this node
@@ -227,13 +226,6 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         return this.factory.chtml.math.metrics;
     }
 
-    /*
-     * Easy access to the font parameters
-     */
-    get font() {
-        return this.factory.chtml.font;
-    }
-
     /*******************************************************************/
 
     /*
@@ -242,6 +234,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
         super(factory, node);
         this.parent = parent;
+        this.font = factory.chtml.font;
         this.bbox = BBox.zero();
         this.getStyles();
         this.getVariant();
