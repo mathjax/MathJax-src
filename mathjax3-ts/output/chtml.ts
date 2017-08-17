@@ -84,7 +84,7 @@ export class CHTML extends AbstractOutputJax {
     public typeset(math: MathItem, html: MathDocument) {
         this.document = html;
         this.math = math;
-        this.nodes.document(html.document);
+        this.nodes.document = html.document;
         math.root.setTeXclass(null);
         let node = this.html('mjx-chtml', {'class': 'MathJax_CHTML MJX-TEX'});
         const scale = math.metrics.scale * this.options.scale;
@@ -99,7 +99,7 @@ export class CHTML extends AbstractOutputJax {
      * @override
      */
     public escaped(math: MathItem, html: MathDocument) {
-        this.nodes.document(html.document);
+        this.nodes.document = html.document;
         return this.html('span', {}, [this.text(math.math)]);
     }
 
