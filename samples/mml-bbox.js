@@ -14,13 +14,13 @@ function showBBox(node, space) {
     const {h, d, w} = node.getBBox();
     console.log(space + node.node.toString(), [h, d, w], node.variant);
     if (!node.node.isToken) {
-        for (const child of node.childNodes) showBBox(child, space+"  ");
+        for (const child of node.childNodes) showBBox(child, space+'  ');
     }
 }
 
 MathJax.handleRetriesFor(function () {
 
-    html.TestMath(process.argv[3] || '<math></math>').compile();
+    html.TestMath(process.argv[3] || '<math></math>').compile().typeset();
     let math = html.math.pop();
     let chtml = html.options.OutputJax;
     chtml.document = html;
@@ -28,7 +28,12 @@ MathJax.handleRetriesFor(function () {
     chtml.nodes.document(html.document);
     chtml.nodeMap = new Map();
     let wrap = chtml.factory.wrap(math.root);
-    showBBox(wrap, "");
+
+    console.log('');
+    showBBox(wrap, '');
+    console.log('');
+    console.log(math.typesetRoot.outerHTML);
+    
 
 }).catch(err => {
   console.log(err.message);
