@@ -10,12 +10,25 @@ let html = MathJax.document("<html></html>", {
   OutputJax: new CHTML()
 });
 
+function showBBox(node, space) {
+    const {h, d, w} = node.getBBox();
+    console.log(space + node.node.toString(), [h, d, w], node.variant);
+    if (!node.node.isToken) {
+        for (const child of node.childNodes) showBBox(child, space+"  ");
+    }
+}
+
 MathJax.handleRetriesFor(function () {
 
     html.TestMath(process.argv[3] || '<math></math>').compile();
     let math = html.math.pop();
     let chtml = html.options.OutputJax;
-    console.log(chtml.getBBox(math, html));
+    chtml.document = html;
+    chtml.math = math;
+    chtml.nodes.document(html.document);
+    chtml.nodeMap = new Map();
+    let wrap = chtml.factory.wrap(math.root);
+    showBBox(wrap, "");
 
 }).catch(err => {
   console.log(err.message);

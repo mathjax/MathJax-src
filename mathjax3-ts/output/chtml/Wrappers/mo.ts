@@ -122,10 +122,10 @@ export class CHTMLmo extends CHTMLWrapper {
     public computeBBox() {
         const attributes = this.node.attributes;
         const symmetric = attributes.get('symmetric');
-        if (this.stretch) {
-            if (this.size === null) {
-                this.getStretchedVariant([0]);
-            }
+        if (this.stretch && this.size === null) {
+            this.getStretchedVariant([0]);
+        }
+        if (this.stretch && this.size < 0) {
             return this.bbox;
         } else {
             const bbox = super.computeBBox();
@@ -226,7 +226,8 @@ export class CHTMLmo extends CHTMLWrapper {
         if (WH.length === 0) return 0;
         if (WH.length === 1) return WH[0];
         let [H, D] = WH;
-        return (this.node.attributes.get('symmetric') ? 2 * Math.max(H, D) : H + D);
+        const a = this.font.params.axis_height;
+        return (this.node.attributes.get('symmetric') ? 2 * Math.max(H - a, D + a) : H + D);
     }
 
     /*
@@ -261,8 +262,9 @@ export class CHTMLmo extends CHTMLWrapper {
             //
             //  Center on the math axis
             //
-            h = 2 * Math.max(H, D);
-            d = h / 2 - this.font.params.axis_height;
+            const a = this.font.params.axis_height
+            h = 2 * Math.max(H - a, D + a);
+            d = h / 2 - a;
         } else if (hasWHD) {
             //
             //  Use the given depth (from mrow)
