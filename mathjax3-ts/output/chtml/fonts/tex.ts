@@ -1,9 +1,49 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  The MathJax TeXFont object
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {FontData, DelimiterMap, CharMapMap, V, H} from '../FontData.js';
 
-const STDVSIZES = [1, 1.2, 1.8, 2.4, 3];
-const STDVHD = [.75, .25, .5];
 
+/*
+ * NOTE:  This is just a small amount of the needed data, which will be filled out
+ *        further later.
+ */
+
+/*
+ * The standard heights of vertically stretchy delimiters (most are the same), and
+ * the standard height, depth, width data for vertically stretchy delimiters
+ */
+const STDVSIZES = [1, 1.2, 1.8, 2.4, 3];
+const STDVHDW = [.75, .25, .5];
+
+/***********************************************************************************/
+/*
+ *  The TeXFont class
+ */
 export class TeXFont extends FontData {
+    /*
+     *  Add the extra variants for the TeX fonts
+     */
     protected static defaultVariants = FontData.defaultVariants.concat([
         ['-smallop', 'normal'],
         ['-largeop', 'normal'],
@@ -15,20 +55,29 @@ export class TeXFont extends FontData {
         ['-tex-mathit', 'italic']
     ]);
 
+    /*
+     *  The stretchy delimiter data (incomplete at the moment)
+     */
     protected static defaultDelimiters: DelimiterMap = {
-        0x28: {dir: V, sizes: STDVSIZES, stretch: [0x239B, 0x239C, 0x239D], HDW: STDVHD}, // (
-        0x29: {dir: V, sizes: STDVSIZES, stretch: [0x239E, 0x239F, 0x23A0], HDW: STDVHD}, // )
-        0x2F: {dir: V, sizes: STDVSIZES},                                                // /
-        0x5B: {dir: V, sizes: STDVSIZES, stretch: [0x23A1, 0x23A2, 0x23A3], HDW: STDVHD}, // [
-        0x5C: {dir: V, sizes: STDVSIZES},                                                // \
-        0x5D: {dir: V, sizes: STDVSIZES, stretch: [0x23A4, 0x23A5, 0x23A6], HDW: STDVHD}, // ]
-        0x7B: {dir: V, sizes: STDVSIZES, stretch: [0x23A7, 0x23AA, 0x23A9, 0x23A8], HDW: STDVHD}, // {
-        0x7C: {dir: V, sizes: [1], stretch: [0, 0x2223, 0], HDW: STDVHD},                 // |
-        0x7D: {dir: V, sizes: STDVSIZES, stretch: [0x23AB, 0x23AA, 0x23AD, 0x23AC], HDW: STDVHD}, // }
+        0x28: {dir: V, sizes: STDVSIZES, stretch: [0x239B, 0x239C, 0x239D], HDW: STDVHDW}, // (
+        0x29: {dir: V, sizes: STDVSIZES, stretch: [0x239E, 0x239F, 0x23A0], HDW: STDVHDW}, // )
+        0x2F: {dir: V, sizes: STDVSIZES},                                                  // /
+        0x5B: {dir: V, sizes: STDVSIZES, stretch: [0x23A1, 0x23A2, 0x23A3], HDW: STDVHDW}, // [
+        0x5C: {dir: V, sizes: STDVSIZES},                                                  // \
+        0x5D: {dir: V, sizes: STDVSIZES, stretch: [0x23A4, 0x23A5, 0x23A6], HDW: STDVHDW}, // ]
+        0x7B: {dir: V, sizes: STDVSIZES, stretch: [0x23A7, 0x23AA, 0x23A9, 0x23A8], HDW: STDVHDW}, // {
+        0x7C: {dir: V, sizes: [1], stretch: [0, 0x2223, 0], HDW: STDVHDW},                 // |
+        0x7D: {dir: V, sizes: STDVSIZES, stretch: [0x23AB, 0x23AA, 0x23AD, 0x23AC], HDW: STDVHDW}, // }
     };
 
+    /*
+     *  The default variants for the standard stretchy sizes
+     */
     protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
 
+    /*
+     *  The character data by variant
+     */
     protected static defaultChars: CharMapMap = {
         'normal': {
             0x20: [   0,     0, .25],      // SPACE

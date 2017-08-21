@@ -111,6 +111,10 @@ export class CHTML extends AbstractOutputJax {
         return node;
     }
 
+    /*
+     * @param{MathItem} math      The MathItem to get the bounding box for
+     * @param{MathDocument} html  The MathDocument for the math
+     */
     public getBBox(math: MathItem, html: MathDocument) {
         this.document = html;
         this.math = math;
