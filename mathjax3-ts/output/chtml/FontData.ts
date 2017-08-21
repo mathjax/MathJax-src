@@ -12,11 +12,11 @@ export type CharData =
 
 export type CharMap = {
     [n: number]: CharData;
-}
+};
 
 export type CharMapMap = {
     [name: string]: CharMap;
-}
+};
 
 /*
  * Data for a variant
@@ -35,7 +35,7 @@ export type VariantData = {
 
 export type VariantMap = {
     [name: string]: VariantData;
-}
+};
 
 /*
  * Stretchy delimiter data
@@ -88,7 +88,7 @@ export type FontParameters = {
     delimitershortfall: number,
 
     min_rule_thickness: number
-}
+};
 
 /*
  * The stretch direction
@@ -154,8 +154,6 @@ export class FontData {
     };
 
 
-    public params: FontParameters;
-
     protected static defaultDelimiters: DelimiterMap = {};
     protected static defaultChars: CharMapMap = {};
 
@@ -165,8 +163,10 @@ export class FontData {
     protected delimiters: DelimiterMap = {};
     protected sizeVariants: string[];
 
+    public params: FontParameters;
+
     constructor() {
-        let CLASS = (this.constructor as typeof FontData)
+        let CLASS = (this.constructor as typeof FontData);
         this.params = Object.assign({}, CLASS.defaultParams);
         this.sizeVariants = CLASS.defaultSizeVariants;
         this.createVariants(CLASS.defaultVariants);

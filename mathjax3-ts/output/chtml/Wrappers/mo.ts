@@ -111,7 +111,7 @@ export class CHTMLmo extends CHTMLWrapper {
         //
         //  Make the main element and ad it to the parent
         //
-        const html = this.html('mjx-stretchy-'+this.stretch.toLowerCase(),
+        const html = this.html('mjx-stretchy-' + this.stretch.toLowerCase(),
                                {c: this.char(c), style: styles}, content);
         chtml.appendChild(html);
     }
@@ -254,7 +254,7 @@ export class CHTMLmo extends CHTMLWrapper {
      * @param{number[]}         The height and depth for the vertically stretched delimiter
      */
     protected getBaseline(WHD: number[], HD: number, C: DelimiterData) {
-        const hasWHD = (WHD.length == 2);
+        const hasWHD = (WHD.length === 2);
         const symmetric = (hasWHD && this.node.attributes.get('symmetric'));
         const [H, D] = (hasWHD ? WHD : [HD, 0]);
         let [h, d] = [H + D, 0];
@@ -262,7 +262,7 @@ export class CHTMLmo extends CHTMLWrapper {
             //
             //  Center on the math axis
             //
-            const a = this.font.params.axis_height
+            const a = this.font.params.axis_height;
             h = 2 * Math.max(H - a, D + a);
             d = h / 2 - a;
         } else if (hasWHD) {

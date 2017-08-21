@@ -89,7 +89,7 @@ export const FONTSIZE: StringMap = {
     '173%': 'LG',
     '207%': 'hg',
     '249%': 'HG'
-}
+};
 
 /*
  * Needed to access node.style[id] using variable id
@@ -566,7 +566,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{string}  For a token node, the combined text content of the node's children
      */
     public getText() {
-        let text = "";
+        let text = '';
         if (this.node.isToken) {
             for (const child of this.node.childNodes) {
                 if (child instanceof TextNode) {
@@ -586,7 +586,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (this.node.isEmbellished) {
             let core = this.core();
             if (core && core.node !== this.node) {
-                if (core.canStretch(direction)) this.stretch = direction.substr(0,1);
+                if (core.canStretch(direction)) this.stretch = direction.substr(0, 1);
             }
         }
         return this.stretch !== '';
