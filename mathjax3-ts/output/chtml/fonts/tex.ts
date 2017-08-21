@@ -1,6 +1,7 @@
 import {FontData, DelimiterMap, CharMapMap, V, H} from '../FontData.js';
 
 const STDVSIZES = [1, 1.2, 1.8, 2.4, 3];
+const STDVHD = [.75, .25, .5];
 
 export class TeXFont extends FontData {
     protected static defaultVariants = FontData.defaultVariants.concat([
@@ -15,15 +16,15 @@ export class TeXFont extends FontData {
     ]);
 
     protected static defaultDelimiters: DelimiterMap = {
-        0x28: {dir: V, sizes: STDVSIZES}, // (
-        0x29: {dir: V, sizes: STDVSIZES}, // )
-        0x2F: {dir: V, sizes: STDVSIZES}, // /
-        0x5B: {dir: V, sizes: STDVSIZES}, // [
-        0x5C: {dir: V, sizes: STDVSIZES}, // \
-        0x5D: {dir: V, sizes: STDVSIZES}, // ]
-        0x7B: {dir: V, sizes: STDVSIZES}, // {
-        0x7C: {dir: V, sizes: [1]},       // |
-        0x7D: {dir: V, sizes: STDVSIZES}, // }
+        0x28: {dir: V, sizes: STDVSIZES, stretch: [0x239B, 0x239C, 0x239D], HDW: STDVHD}, // (
+        0x29: {dir: V, sizes: STDVSIZES, stretch: [0x239E, 0x239F, 0x23A0], HDW: STDVHD}, // )
+        0x2F: {dir: V, sizes: STDVSIZES},                                                // /
+        0x5B: {dir: V, sizes: STDVSIZES, stretch: [0x23A1, 0x23A2, 0x23A3], HDW: STDVHD}, // [
+        0x5C: {dir: V, sizes: STDVSIZES},                                                // \
+        0x5D: {dir: V, sizes: STDVSIZES, stretch: [0x23A4, 0x23A5, 0x23A6], HDW: STDVHD}, // ]
+        0x7B: {dir: V, sizes: STDVSIZES, stretch: [0x23A7, 0x23AA, 0x23A9, 0x23A8], HDW: STDVHD}, // {
+        0x7C: {dir: V, sizes: [1], stretch: [0, 0x2223, 0], HDW: STDVHD},                 // |
+        0x7D: {dir: V, sizes: STDVSIZES, stretch: [0x23AB, 0x23AA, 0x23AD, 0x23AC], HDW: STDVHD}, // }
     };
 
     protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];

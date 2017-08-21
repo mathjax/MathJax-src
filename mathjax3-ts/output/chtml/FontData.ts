@@ -5,7 +5,9 @@ import {OptionList} from '../../util/Options.js';
  *   [height, depth, width, italic-correction, skew, options]
  */
 export type CharData =
-    [number] |
+    [number, number, number] |
+    [number, number, number, number] |
+    [number, number, number, number, number] |
     [number, number, number, number, number, OptionList];
 
 export type CharMap = {
@@ -43,6 +45,7 @@ export type DelimiterData = {
     sizes?: number[];
     variants?: number[];
     stretch?: number[];
+    HDW?: number[];
 };
 
 export type DelimiterMap = {
@@ -209,7 +212,10 @@ export class FontData {
     }
 
     public getSizeVariant(n: number, i: number) {
-        return this.sizeVariants[this.delimiters[n].variants[i]];
+        if (this.delimiters[n].variants) {
+            i = this.delimiters[n].variants[i];
+        }
+        return this.sizeVariants[i];
     }
 
     public getChar(name: string, n: number) {

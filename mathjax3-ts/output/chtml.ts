@@ -32,6 +32,7 @@ import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {FontData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import {BIGDIMEN, percent} from '../util/lengths.js';
+import {BBox} from './chtml/BBox.js';
 
 /*****************************************************************/
 /*
@@ -108,6 +109,17 @@ export class CHTML extends AbstractOutputJax {
         this.toCHTML(math.root, node);
         this.nodeMap = null;
         return node;
+    }
+
+    public getBBox(math: MathItem, html: MathDocument) {
+        this.document = html;
+        this.math = math;
+        this.nodes.document(html.document);
+        math.root.setTeXclass(null);
+        this.nodeMap = new Map<MmlNode, CHTMLWrapper>();
+        let bbox = this.factory.wrap(math.root).getBBox();
+        this.nodeMap = null;
+        return bbox;
     }
 
     /*

@@ -104,7 +104,7 @@ export class CHTMLmrow extends CHTMLWrapper {
             //  Stretch the stretchable children
             //
             for (const child of stretchy) {
-                child.coreMO().getStretchedVariant(H+D);
+                child.coreMO().getStretchedVariant([H,D]);
             }
         }
     }
