@@ -28,6 +28,7 @@ import {CHTMLmspace} from './Wrappers/mspace.js';
 import {CHTMLmpadded} from './Wrappers/mpadded.js';
 import {CHTMLmrow, CHTMLinferredMrow} from './Wrappers/mrow.js';
 import {CHTMLmfrac} from './Wrappers/mfrac.js';
+import {CHTMLTeXAtom} from './Wrappers/TeXAtom.js';
 import {CHTMLTextNode} from './Wrappers/TextNode.js';
 
 export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
@@ -38,6 +39,7 @@ export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
     [CHTMLmspace.kind]: CHTMLmspace,
     [CHTMLmpadded.kind]: CHTMLmpadded,
     [CHTMLmfrac.kind]: CHTMLmfrac,
+    [CHTMLTeXAtom.kind]: CHTMLTeXAtom,
     [CHTMLTextNode.kind]: CHTMLTextNode,
     [CHTMLWrapper.kind]: CHTMLWrapper
 };
