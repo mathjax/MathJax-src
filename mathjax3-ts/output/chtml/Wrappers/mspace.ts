@@ -38,12 +38,7 @@ export class CHTMLmspace extends CHTMLWrapper {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        let chtml = this.html('mjx-mspace');
-        this.chtml = parent.appendChild(chtml);
-        this.handleScale();
-        this.handleColor();
-        this.handleSpace();
-        this.handleAttributes();
+        let chtml = this.standardCHTMLnode(parent);
         let {w, h, d} = this.getBBox();
         if (w < 0) {
             chtml.style.marginRight = this.em(w);
