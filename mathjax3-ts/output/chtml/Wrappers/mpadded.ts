@@ -88,7 +88,7 @@ export class CHTMLmpadded extends CHTMLWrapper {
      */
     getDimens() {
         const values = this.node.attributes.getList('width', 'height', 'depth', 'lspace', 'voffset');
-        const bbox = (this.childNodes.length ? this.childNodes[0].getBBox() : BBox.zero());
+        const bbox = super.computeBBox();  // get unmodified bbox of children
         let {w, h, d} = bbox;
         let W = w, H = h, D = d, x = 0, y = 0;
         if (values.width !== '')   w = this.dimen(values.width, bbox, 'w', 0);
