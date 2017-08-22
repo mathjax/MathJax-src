@@ -6,14 +6,14 @@ import {MathML} from "mathjax3/input/mathml.js";
 import {CHTML} from "mathjax3/output/chtml.js";
 
 let html = MathJax.document("<html></html>", {
-  InputJax: new MathML(),
-  OutputJax: new CHTML()
+    InputJax: new MathML(),
+    OutputJax: new CHTML()
 });
 
 function showBBox(node, space) {
     const {h, d, w} = node.getBBox();
     console.log(space + node.node.toString(), [h, d, w], node.variant);
-    if (!node.node.isToken) {
+    if (!node.node.isToken && !node.node.isKind('annotation') && !node.node.isKind('annotation-xml')) {
         for (const child of node.childNodes) showBBox(child, space+'  ');
     }
 }
