@@ -38,7 +38,7 @@ export class CHTMLmo extends CHTMLWrapper {
      * The font size that a stretched operator uses.
      * If -1, then stretch arbitrarily, and bbox gives the actual height, depth, width
      */
-    protected size: number = null;
+    public size: number = null;
 
     /*
      * @override

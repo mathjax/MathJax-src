@@ -614,6 +614,15 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
+     * @param{number} m   A number of em's to be shown as pixels
+     * @param{number} M   The minimum number of pixels to allow
+     * @return{string}  The number with units of px
+     */
+    protected px(m: number, M: number = -LENGTHS.BIGDIMEN) {
+        return LENGTHS.px(m, M, this.metrics.em);
+    }
+
+    /*
      * @param{Property} length  A dimension (giving number and units) or number to be converted to ems
      * @param{number} size  The default size of the dimension (for percentage values)
      * @param{number} scale  The current scaling factor (to handle absolute units)
