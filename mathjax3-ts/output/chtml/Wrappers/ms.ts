@@ -42,7 +42,7 @@ export class CHTMLms extends CHTMLWrapper {
     constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
         super(factory, node, parent);
         const attributes = this.node.attributes;
-        let quotes = attributes.getList('lquote','rquote');
+        let quotes = attributes.getList('lquote', 'rquote');
         if (this.variant !== 'monospace') {
             if (!attributes.isSet('lquote') && quotes.lquote === '"') quotes.lquote = '\u201C';
             if (!attributes.isSet('rquote') && quotes.rquote === '"') quotes.rquote = '\u201D';
@@ -55,8 +55,9 @@ export class CHTMLms extends CHTMLWrapper {
      * Create a text wrapper with the given text;
      *
      * @param{string} text  The text for the wrapped element
+     * @return{CHTMLWrapper}   The wrapped text node
      */
-    createText(text: string) {
+    protected createText(text: string) {
         const mmlFactory = (this.node as AbstractMmlNode).factory;
         const node = this.wrap((mmlFactory.create('text') as TextNode).setText(text));
         node.parent = this;

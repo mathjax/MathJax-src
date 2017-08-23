@@ -30,7 +30,7 @@ import {Property} from '../../../core/Tree/Node.js';
 /*
  * Needed in order to access BBox properties by variable
  */
-interface iBBox extends BBox {
+interface IBBox extends BBox {
     [name: string]: number | string | Function;
 }
 
@@ -86,7 +86,7 @@ export class CHTMLmpadded extends CHTMLWrapper {
      * @return{number[]}  The original height, depth, width, the changes in height, depth,
      *                    and width, and the horizontal and vertical offsets of the content
      */
-    getDimens() {
+    protected getDimens() {
         const values = this.node.attributes.getList('width', 'height', 'depth', 'lspace', 'voffset');
         const bbox = super.computeBBox();  // get unmodified bbox of children
         let {w, h, d} = bbox;
@@ -109,10 +109,10 @@ export class CHTMLmpadded extends CHTMLWrapper {
      * @param{number} m          The minimum value allowed for the dimension
      * @return{number}           The final dimension in ems
      */
-    dimen(length: Property, bbox: BBox, d: string = '', m: number = null) {
+    protected dimen(length: Property, bbox: BBox, d: string = '', m: number = null) {
         length = String(length);
         const match = length.match(/width|height|depth/);
-        const size = (match ? (bbox as iBBox)[match[0].charAt(0)] : (d ? (bbox as iBBox)[d]: 0)) as number;
+        const size = (match ? (bbox as IBBox)[match[0].charAt(0)] : (d ? (bbox as IBBox)[d] : 0)) as number;
         let dimen = (this.length2em(length, size) || 0);
         if (length.match(/^[-+]/) && d) {
             dimen += size;
