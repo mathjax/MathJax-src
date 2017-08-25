@@ -46,3 +46,9 @@
 
 *** change of map (for different configurations)
 
+
+* Previous notes
+** Checkout problems with tests.
+** The texparser needs to extend abstract input jax
+** Need to fill MathItem.
+** Build it on MmlNodes
