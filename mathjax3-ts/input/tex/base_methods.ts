@@ -22,8 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {TexConstant} from './tex_constants';
-import {ParseMethod} from './types';
+import {TexConstant} from './tex_constants.js';
+import {ParseMethod} from './types.js';
 
 
 export namespace BaseMethods {

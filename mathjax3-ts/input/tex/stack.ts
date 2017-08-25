@@ -22,9 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Environment} from './types';
-import * as StackItem from './stack_item';
-import {MathItem} from '../../core/MathItem';
+import {Environment} from './types.js';
+import * as StackItem from './stack_item.js';
+import {MathItem} from '../../core/MathItem.js';
 
 
 export default class Stack {

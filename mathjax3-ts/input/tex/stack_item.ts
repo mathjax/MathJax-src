@@ -22,9 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Attributes, Environment} from './types';
-import {MmlFactory} from '../../core/MmlTree/MmlFactory';
-import {MmlNode, TextNode, XMLNode, TEXCLASS} from '../../core/MmlTree/MmlNode';
+import {Attributes, Environment} from './types.js';
+import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
+import {MmlNode, TextNode, XMLNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 
 
 // TODO: This is a placeholder for the current MML elements.

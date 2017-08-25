@@ -22,9 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {RegExpMap, CharacterMap, MacroMap} from './symbol_map';
-import {TexConstant} from './tex_constants';
-import {BaseMethods} from './base_methods';
+import {RegExpMap, CharacterMap, MacroMap} from './symbol_map.js';
+import {TexConstant} from './tex_constants.js';
+import {BaseMethods} from './base_methods.js';
 
 
 export namespace BaseMappings {

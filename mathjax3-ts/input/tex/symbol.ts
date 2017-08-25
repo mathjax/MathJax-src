@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Args, Attributes} from './types';
+import {Args, Attributes} from './types.js';
 
 
 export class Symbol {

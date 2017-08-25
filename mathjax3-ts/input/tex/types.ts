@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import Stack from './stack';
+import Stack from './stack.js';
 
 export type Args = boolean|number|string|null;
 

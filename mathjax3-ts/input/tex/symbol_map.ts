@@ -23,10 +23,10 @@
  */
 
 // Can eventually be removed!
-import {Attributes, Args, ParseMethod, ParseResult} from './types';
-import {Symbol, Macro} from './symbol';
-import MapHandler from './map_handler';
-import Stack from './stack';
+import {Attributes, Args, ParseMethod, ParseResult} from './types.js';
+import {Symbol, Macro} from './symbol.js';
+import MapHandler from './map_handler.js';
+import Stack from './stack.js';
 
 
 /**

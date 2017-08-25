@@ -22,9 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {AbstractSymbolMap, SymbolMap} from './symbol_map';
-import {ParseResult} from './types';
-import Stack from './stack';
+import {AbstractSymbolMap, SymbolMap} from './symbol_map.js';
+import {ParseResult} from './types.js';
+import Stack from './stack.js';
 
 
 export default class MapHandler {

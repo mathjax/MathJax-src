@@ -23,12 +23,12 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import MapHandler from './map_handler';
-import {Environment} from './types';
-import Stack from './stack';
-import {BaseMappings} from './base_mappings';
-import {BaseMethods} from './base_methods';
-// import {Tree} from '../../TreeJax/lib/tree';
+import MapHandler from './map_handler.js';
+import {Environment} from './types.js';
+import Stack from './stack.js';
+import {BaseMappings} from './base_mappings.js';
+import {BaseMethods} from './base_methods.js';
+// import {Tree} from '../../TreeJax/lib/tree.js';
 
 
 // TODO: Make this into a singleton?
