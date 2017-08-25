@@ -27,11 +27,11 @@
  */
 
 
-let TexParser = require('TexParser/lib/symbol_map.js');
-let tp = require('TexParser/lib/tex_parser.js');
-let MapHandler = require('TexParser/lib/map_handler.js').default;
-let Stack = require('TexParser/lib/stack.js').default;
-let StackItem = require('TexParser/lib/stack_item.js');
+let TexParser = require('mathjax3/input/tex/symbol_map.js');
+let tp = require('mathjax3/input/tex/tex_parser.js');
+let MapHandler = require('mathjax3/input/tex/map_handler.js').default;
+let Stack = require('mathjax3/input/tex/stack.js').default;
+let StackItem = require('mathjax3/input/tex/stack_item.js');
 
 (function (TEX,HUB,AJAX) {
     // TODO: This is temporary until we know what's happening with output of
