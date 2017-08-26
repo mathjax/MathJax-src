@@ -88,7 +88,7 @@ export class BBox {
      * @constructor
      */
     constructor(def: BBoxData = {w: 0, h: -BIGDIMEN, d: -BIGDIMEN}) {
-        this.w = ('w' in def ? def.w : 0);
+        this.w = def.w || 0;
         this.h = ('h' in def ? def.h : -BIGDIMEN);
         this.d = ('d' in def ? def.d : -BIGDIMEN);
         this.x = this.y = this.L = this.R = 0;
@@ -155,7 +155,7 @@ export class BBox {
         this.h = cbox.h;
         this.d = cbox.d;
         this.w = cbox.w;
-        if (cbox.pwidth !== '') {
+        if (cbox.pwidth) {
             this.pwidth = cbox.pwidth;
         }
     }

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Utility functions for handing dimensions (lengths)
+ * @fileoverview  Utility functions for handling dimensions (lengths)
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -24,7 +24,6 @@
 /*
  *  A very large number
  */
-
 export const BIGDIMEN = 1000000;
 
 /*
@@ -86,16 +85,28 @@ export const MATHSPACE: {[name: string]: number} = {
  * @return{number}          The dimension converted to ems
  */
 export function length2em(length: string, size: number = 0, scale: number = 1, em: number = 16) {
-    if (length === '' || length == null) return size;
-    if (MATHSPACE[length]) return MATHSPACE[length];
+    if (length === '' || length == null) {
+        return size;
+    }
+    if (MATHSPACE[length]) {
+        return MATHSPACE[length];
+    }
 
     let match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
-    if (!match) return size;
+    if (!match) {
+        return size;
+    }
     let m = parseFloat(match[1] || '1'), unit = match[2];
-    if (UNITS.hasOwnProperty(unit)) return m * UNITS[unit] / em / scale;
-    if (RELUNITS.hasOwnProperty(unit)) return m * RELUNITS[unit];
-    if (unit === '%') return m / 100 * size;  // percentage of the size
-    return m * size;                          // relative to size
+    if (UNITS.hasOwnProperty(unit)) {
+        return m * UNITS[unit] / em / scale;
+    }
+    if (RELUNITS.hasOwnProperty(unit)) {
+        return m * RELUNITS[unit];
+    }
+    if (unit === '%') {
+        return m / 100 * size;  // percentage of the size
+    }
+    return m * size;            // relative to size
 }
 
 /*

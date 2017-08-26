@@ -46,7 +46,7 @@ export function quotePattern(text: string) {
  * Convert a UTF-8 string to an array of unicode code points
  *
  * @param{string} text  The string to be turned into unicode positions
- * @return{number[]}  Array of numbers represeting the string's unicode charater positions
+ * @return{number[]}  Array of numbers representing the string's unicode character positions
  */
 export function unicodeChars(text: string) {
     let unicode: number[] = [];

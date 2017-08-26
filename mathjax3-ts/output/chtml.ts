@@ -52,7 +52,7 @@ export class CHTML extends AbstractOutputJax {
     public factory: CHTMLWrapperFactory;
 
     /*
-     * The MatahDocument for the math we find
+     * The MathDocument for the math we find
      * and the MathItem currently being processed
      */
     public document: MathDocument;

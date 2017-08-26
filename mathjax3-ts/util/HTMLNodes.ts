@@ -25,7 +25,7 @@ import {OptionList} from './Options.js';
 
 /*****************************************************************/
 /*
- *  Implements the HTMLNodes class for creting HTML elements
+ *  Implements the HTMLNodes class for creating HTML elements
  */
 
 export class HTMLNodes {
@@ -43,7 +43,7 @@ export class HTMLNodes {
     }
 
     /*
-     * @param{string} type     The tag name of rhe HTML node to be created
+     * @param{string} type     The tag name of the HTML node to be created
      * @param{OptionList} def  The properties to set for the created node
      * @param{Node[]} content  The child nodes for the created HTML node
      * @return{HTMLElement}    The generated HTML tree
@@ -73,7 +73,7 @@ export class HTMLNodes {
         if (def.style) {
             let style = node.style as OptionList;
             for (let key of Object.keys(def.style)) {
-                style[key.replace(/-([a-z])/g, (m, c) => c.tpUpperCase())] = def.style[key];
+                style[key.replace(/-([a-z])/g, (m, c) => c.toUpperCase())] = def.style[key];
             }
         }
         if (def.properties) {

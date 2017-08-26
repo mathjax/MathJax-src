@@ -226,7 +226,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
 
     /*
      * @param{MmlNode} node  The node to the wrapped
-     * @param{CHTMLWrapper} parent  The parent wrapped node
+     * @param{CHTMLWrapper} parent  The wrapped parent node
      * @return{CHTMLWrapper}  The newly wrapped node
      */
     public wrap(node: MmlNode, parent: CHTMLWrapper = null) {
@@ -258,21 +258,21 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*******************************************************************/
     /*
      * Return the wrapped node's bounding box, either the cached one, if it exists,
-     *   or computed direcctly if not.
+     *   or computed directly if not.
      *
      * @param{boolean} save  Whether to cache the bbox or not (used for stretchy elements)
      * @return{BBox}  The computed bounding box
      */
     public getBBox(save: boolean = true) {
-        if (!this.bboxComputed) {
-            let bbox = this.computeBBox();
-            if (save) {
-                this.bbox = bbox;
-                this.bboxComputed = true;
-            }
-            return bbox;
+        if (this.bboxComputed) {
+            retirn this.bbox;
         }
-        return this.bbox;
+        let bbox = this.computeBBox();
+        if (save) {
+            this.bbox = bbox;
+            this.bboxComputed = true;
+        }
+        return bbox;
     }
 
     /*
@@ -561,14 +561,14 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
 
     /*
      * @param{string} text  The text to turn into unicode locations
-     * @return{number[]}  Array of numbers represeting the string's unicode charater positions
+     * @return{number[]}  Array of numbers represeting the string's unicode character positions
      */
     protected unicodeChars(text: string) {
         return unicodeChars(text);
     }
 
     /*
-     * @param{number} n  A unicode code point to be converred to a character reference for use with the
+     * @param{number} n  A unicode code point to be converted to a character reference for use with the
      *                   CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
      *                   for higher values, or for the double quote and backslash characters).
      * @return{string}  The character as a properly encoded string.

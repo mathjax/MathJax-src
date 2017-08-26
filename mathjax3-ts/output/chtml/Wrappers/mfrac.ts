@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmfracr wrapper for the MmlMfrac object
+ * @fileoverview  Implements the CHTMLmfrac wrapper for the MmlMfrac object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
