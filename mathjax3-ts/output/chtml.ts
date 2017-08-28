@@ -28,7 +28,7 @@ import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {HTMLNodes} from '../util/HTMLNodes.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
-import {BIGDIMEN, percent} from '../util/lengths.js';
+import {percent} from '../util/lengths.js';
 
 /*****************************************************************/
 /*

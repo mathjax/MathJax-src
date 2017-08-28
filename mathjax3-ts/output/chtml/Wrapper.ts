@@ -265,7 +265,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     public getBBox(save: boolean = true) {
         if (this.bboxComputed) {
-            retirn this.bbox;
+            return this.bbox;
         }
         let bbox = this.computeBBox();
         if (save) {
