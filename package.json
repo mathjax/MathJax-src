@@ -8,10 +8,10 @@
   },
   "devDependencies": {
     "typescript": "2.3.*",
+    "tape": "^4.8.0",
     "tslint": "^3.15.0",
     "tslint-jsdoc-rules": "*",
     "tslint-unix-formatter": "*",
-    "tape": "*"
   },
   "repository": {
     "type": "git",
