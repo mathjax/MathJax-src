@@ -22,6 +22,7 @@
  */
 
 import {FontData, DelimiterMap, CharMapMap, V, H} from '../FontData.js';
+import {StyleList} from '../CssStyles.js';
 
 
 /*
@@ -68,6 +69,7 @@ export class TeXFont extends FontData {
         0x7B: {dir: V, sizes: STDVSIZES, stretch: [0x23A7, 0x23AA, 0x23A9, 0x23A8], HDW: STDVHDW}, // {
         0x7C: {dir: V, sizes: [1], stretch: [0, 0x2223, 0], HDW: STDVHDW},                 // |
         0x7D: {dir: V, sizes: STDVSIZES, stretch: [0x23AB, 0x23AA, 0x23AD, 0x23AC], HDW: STDVHDW}, // }
+        0x2191: {dir: V, sizes: STDVSIZES, stretch: [0x2191, 0x23D0, 0], HDW: STDVHDW}, // \uparrow
         0x221A: {dir: V, sizes: STDVSIZES, stretch: [0xE001, 0xE000, 0x23B7], HDW: STDVHDW}, // \surd
     };
 
@@ -179,4 +181,8 @@ export class TeXFont extends FontData {
         }
     };
 
+    get styles() {
+        // eventually put styles here
+        return null as StyleList;
+    }
 }

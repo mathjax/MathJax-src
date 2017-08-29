@@ -34,6 +34,7 @@ import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
 import {FontData} from './FontData.js';
+import {StyleList} from './CssStyles.js';
 
 /*****************************************************************/
 
@@ -106,6 +107,46 @@ interface CSSStyle extends CSSStyleDeclaration {
 export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
 
     public static kind: string = 'unknown';
+
+    public static autoStyle = true;
+    public static styles: StyleList = {
+        'mjx-chtml [space="1"]': {'margin-left': '.167em'},
+        'mjx-chtml [space="2"]': {'margin-left': '.222em'},
+        'mjx-chtml [space="3"]': {'margin-left': '.278em'},
+        'mjx-chtml [size="s"]' : {'font-size': '70.7%'},
+        'mjx-chtml [size="ss"]': {'font-size': '50%'},
+        'mjx-chtml [size="Tn"]': {'font-size': '60%'},
+        'mjx-chtml [size="sm"]': {'font-size': '85%'},
+        'mjx-chtml [size="lg"]': {'font-size': '120%'},
+        'mjx-chtml [size="Lg"]': {'font-size': '144%'},
+        'mjx-chtml [size="LG"]': {'font-size': '173%'},
+        'mjx-chtml [size="hg"]': {'font-size': '207%'},
+        'mjx-chtml [size="HG"]': {'font-size': '249%'},
+
+        'mjx-box': {display: 'inline-block'},
+        'mjx-block': {display: 'block'},
+        'mjx-itable': {display: 'inline-table'},
+
+        //
+        //  These don't have Wrapper subclasses, so add their styles here
+        //
+        'mjx-mi': {display: 'inline-block'},
+        'mjx-mn': {display: 'inline-block'},
+        'mjx-mtext': {display: 'inline-block'},
+        'mjx-merror': {
+            display: 'inline-block',
+            color: 'red',
+            'background-color': 'yellow'
+        },
+
+        'mjx-mphantom': {visibility: 'hidden'},
+
+        'mjx-math': {
+            display: 'inline-block',
+            'line-height': '0px'
+        }
+
+    };
 
     /*
      * Styles that should not be passed on from style attribute

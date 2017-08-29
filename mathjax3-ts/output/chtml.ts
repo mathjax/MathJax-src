@@ -31,6 +31,7 @@ import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {FontData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
+import {CssStyles} from './chtml/CssStyles.js';
 import {BIGDIMEN, percent} from '../util/lengths.js';
 import {BBox} from './chtml/BBox.js';
 
@@ -47,15 +48,18 @@ export class CHTML extends AbstractOutputJax {
         scale: 1,                      // Global scaling factor for all expressions
         skipAttributes: {},            // RFDa and other attributes NOT to copy to CHTML output
         CHTMLWrapperFactory: null,     // The CHTMLWrapper factory to use
-        font: null                     // The FontData object to use
+        font: null,                    // The FontData object to use
+        cssStyles: null                // The CssStyles object to use
     };
 
     /*
-     *  Used to store the HTMLNodes factory, the CHTMLWraper factory, and FontData object.
+     *  Used to store the HTMLNodes factory, the CHTMLWraper factory,
+     *  the FontData object, and the CssStyles object.
      */
     public nodes: HTMLNodes;
     public factory: CHTMLWrapperFactory;
     public font: FontData;
+    public cssStyles: CssStyles;
 
     /*
      * The MatahDocument for the math we find
@@ -83,6 +87,7 @@ export class CHTML extends AbstractOutputJax {
         this.factory = this.options.CHTMLWrapperFactory || new CHTMLWrapperFactory();
         this.factory.chtml = this;
         this.nodes = new HTMLNodes();
+        this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new TeXFont();
     }
 
@@ -147,7 +152,27 @@ export class CHTML extends AbstractOutputJax {
      * @override
      */
     public styleSheet(html: MathDocument) {
-        return null as Element;
+        //
+        // Gather the CSS from the classes
+        //
+        for (const kind of this.factory.getKinds()) {
+            const CLASS = this.factory.getNodeClass(kind);
+            if (CLASS.autoStyle && kind !== 'unknown') {
+                this.cssStyles.addStyles({['mjx-' + CLASS.kind]: {display: 'inline-block'}});
+            }
+            this.cssStyles.addStyles(CLASS.styles);
+        }
+        //
+        // Get the font styles
+        //
+        this.cssStyles.addStyles((this.font as TeXFont).styles);
+        //
+        // Create the stylesheet for the CSS
+        //
+        const sheet = this.html('style') as HTMLStyleElement;
+        sheet.id = 'CHTML-styles';
+        sheet.innerHTML = '\n' + this.cssStyles.cssText + '\n';
+        return sheet;
     }
 
     /*

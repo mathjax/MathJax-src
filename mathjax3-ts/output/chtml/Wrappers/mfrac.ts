@@ -25,6 +25,7 @@ import {CHTMLWrapper} from '../Wrapper.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
+import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
@@ -33,6 +34,64 @@ import {BBox} from '../BBox.js';
 
 export class CHTMLmfrac extends CHTMLWrapper {
     public static kind = MmlMfrac.prototype.kind;
+
+    public static styles: StyleList = {
+        'mjx-strut' {
+            display: 'inline-block',
+            height: '1em',
+            width: 0,
+            'vertical-align': '-.2em'
+        },
+        'mjx-hstrut': {
+            display: 'inline-block',
+            height: '.8em',
+            width: 0
+        },
+        'mjx-dstrut': {
+            display: 'inline-block',
+            height: '.2em',
+            width: 0,
+            'vertical-align': '-.2em'
+        },
+
+        'mjx-frac': {
+            display: 'inline-block',
+            'vertical-align': '0.145em',
+            padding: '0 3px'
+        },
+        'mjx-dtable': {
+            display: 'inline-table',
+            width: '100%'
+        },
+        'mjx-dtable > *': {
+            'font-size': '2000%'
+        },
+        'mjx-row': {
+            display: 'table-row'
+        },
+        'mjx-num': {
+            display: 'block',
+            'text-align': 'center'
+        },
+        'mjx-den': {
+            display: 'block',
+            'text-align': 'center'
+        },
+        'mjx-dbox': {
+            display: 'block',
+            'font-size': '5%'
+        },
+
+        'mjx-line': {
+            display: 'block',
+            'box-sizing': 'border-box',
+            'min-height': '1px',
+            height: '.07em',
+            'border-top': '.07em solid',
+            margin: '.07em -3px',
+            overflow: 'hidden'
+        }
+    };
 
     /*
      * @override
