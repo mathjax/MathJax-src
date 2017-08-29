@@ -1,6 +1,9 @@
-import {JsonVisitor} from 'TreeJax/lib/json_visitor';
-import {Tree} from 'TreeJax/lib/tree';
-import TexParser from 'TexParser/lib/tex_parser';
+import {MathJax} from 'mathjax3/mathjax.js';
+
+import 'mathjax3/handlers/html.js';
+import {TeX} from 'mathjax3/input/tex.js';
+
+import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 
 import {Test} from './tests.js';
 
@@ -18,13 +21,22 @@ class ParserTest extends Test {
     this.test(
       name,
       t => {
-        let tree = TexParser.parse(tex);
-        let jv = new JsonVisitor();
-        tree.accept(jv);
-        t.deepEqual(jv.getResult(), expected, name);
-      });
+        MathJax.handleRetriesFor(function () {
+          let html = MathJax.document('<html></html>', {
+            InputJax: new TeX()
+          });
+          html.TestMath(tex).compile();
+          let jv = new JsonMmlVisitor();
+          let math = html.math.pop().root;
+          t.deepEqual(jv.visitTree(math), expected, name);
+        }).catch(err => {
+          console.log(err.message);
+          console.log(err.stack.replace(/\n.*\/system\.js:(.|\n)*/,""));
+        });
+      }
+    );
   }
-
+    
   ignoreTest(name, tex, expected) {
   }
   amsTest(name, tex, expected) {
