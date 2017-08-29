@@ -28,7 +28,7 @@
 
 
 let TexParser = require('mathjax3/input/tex/symbol_map.js');
-let tp = require('mathjax3/input/tex/tex_parser.js');
+let TP = require('mathjax3/input/tex/tex_parser.js').default;
 let MapHandler = require('mathjax3/input/tex/map_handler.js').default;
 let Stack = require('mathjax3/input/tex/stack.js').default;
 let StackItem = require('mathjax3/input/tex/stack_item.js');
@@ -50,21 +50,13 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
 
   
   var MML, NBSP = "\u00A0"; 
-
-  // VS Q: How are we going to handle this in the future?
+  
   var _ = function (id) {
     return MathJax.Localization._.apply(MathJax.Localization,
       [["TeX", id]].concat([].slice.call(arguments,1)));
   };
 
   var STACK = MathJax.Object.Subclass({
-    // VS Q: What exactly is inner?
-    //       Seems to be a dictionary of properties.
-    //       However there is also boolean possible (see !!env below)?
-    //
-    // What's this.global?
-    //
-    // What are the different items you can push on the stack?
     Init: function (env,inner) {
       this.global = {isInner: inner};
       this.data = [STACKITEM.start(this.global)];
@@ -73,32 +65,51 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     },
     // Rewrote this to single argument push! Need to explicitly push an array of
     // arguments in the extensions!
-    Push: function (item) {
-      if (!item) return;
-      if (item instanceof MML.mbase) {
-        item = STACKITEM.mml(item);
-      }
-      item.global = this.global;
-      if (this.data.length) {
-        var t1 = this.Top();
-      }
-      var top = (this.data.length ? this.Top().checkItem(item) : true);
-      if (top instanceof Array) {
-        this.Pop();
-        for (var i = 0, l = top.length; i < l; i++) {
-          this.Push(top[i]);
+    // Push: function (item) {
+    //   if (!item) return;
+    //   if (item instanceof MML.mbase) {
+    //     item = STACKITEM.mml(item);
+    //   }
+    //   item.global = this.global;
+    //   if (this.data.length) {
+    //     var t1 = this.Top();
+    //   }
+    //   var top = (this.data.length ? this.Top().checkItem(item) : true);
+    //   if (top instanceof Array) {
+    //     this.Pop();
+    //     for (var i = 0, l = top.length; i < l; i++) {
+    //       this.Push(top[i]);
+    //     }
+    //   }
+    //   else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
+    //   else if (top) {
+    //     this.data.push(item);
+    //     if (item.env) {
+    //       for (var id in this.env) {
+    //         if (this.env.hasOwnProperty(id)) {
+    //           item.env[id] = this.env[id]}
+    //       }
+    //       this.env = item.env;
+    //     } else {item.env = this.env}
+    //   }
+    // },
+    Push: function () {
+      var i, m, item, top;
+      for (i = 0, m = arguments.length; i < m; i++) {
+        item = arguments[i]; if (!item) continue;
+        if (item instanceof MML.mbase) {item = STACKITEM.mml(item)}
+        item.global = this.global;
+        top = (this.data.length ? this.Top().checkItem(item) : true);
+        if (top instanceof Array) {this.Pop(); this.Push.apply(this,top)}
+        else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
+        else if (top) {
+          this.data.push(item);
+          if (item.env) {
+            for (var id in this.env)
+              {if (this.env.hasOwnProperty(id)) {item.env[id] = this.env[id]}}
+            this.env = item.env;
+          } else {item.env = this.env}
         }
-      }
-      else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
-      else if (top) {
-        this.data.push(item);
-        if (item.env) {
-          for (var id in this.env) {
-            if (this.env.hasOwnProperty(id)) {
-              item.env[id] = this.env[id]}
-          }
-          this.env = item.env;
-        } else {item.env = this.env}
       }
     },
     Pop: function () {
@@ -118,12 +129,9 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     },
     toString: function () {return "stack[\n  "+this.data.join("\n  ")+"\n]"}
   });
-
   
   var STACKITEM = STACK.Item = MathJax.Object.Subclass({
     type: "base",
-    // VS Q: This is effectively the abstract class?
-    // 
     endError:   /*_()*/ ["ExtraOpenMissingClose","Extra open brace or missing close brace"],
     closeError: /*_()*/ ["ExtraCloseMissingOpen","Extra close brace or missing open brace"],
     rightError: /*_()*/ ["MissingLeftExtraRight","Missing \\left or extra \\right"],
@@ -132,11 +140,8 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       this.data = [];
       this.Push.apply(this,arguments);
     },
-    Push: function () {
-      this.data.push.apply(this.data,arguments)
-    },
+    Push: function () {this.data.push.apply(this.data,arguments)},
     Pop: function () {return this.data.pop()},
-    // VS Q Forcerow never seems to be used.
     mmlData: function (inferred,forceRow) {
       if (inferred == null) {inferred = true}
       if (this.data.length === 1 && !forceRow) {return this.data[0]}
@@ -209,7 +214,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     checkItem: function (item) {
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
-        // VS Q: What are these primes. What does SetData exactly do?
         if (this.primes) {
           if (this.position !== 2) {this.data[0].SetData(2,this.primes)}
             else {item.data[0] = MML.mrow(this.primes.With({variantForm:true}),item.data[0])}
@@ -383,8 +387,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
   });
 
   STACKITEM.mml = STACKITEM.Subclass({
-    // VS Q: isNotStack is only used by mml? So why not test for that.
-    //       Add never seems to be used.
     type: "mml", isNotStack: true,
     Add: function () {this.data.push.apply(this.data,arguments); return this}
   });
@@ -426,7 +428,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       return [mml,item];
     }
   });
-  // VS Q What's special about that?
   STACKITEM.not.remap = {
     0x2190:0x219A, 0x2192:0x219B, 0x2194:0x21AE,
     0x21D0:0x21CD, 0x21D2:0x21CF, 0x21D4:0x21CE,
@@ -473,7 +474,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
   };
   var STARTUP = function () {
     MML = MathJax.ElementJax.mml;
-
     HUB.Insert(TEXDEF,{
   
       // patterns for letters and numbers
@@ -1077,8 +1077,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
         Vmatrix:      ['Array',null,'\\Vert','\\Vert','c'],
         cases:        ['Array',null,'\\{','.','ll',null,".2em",'T'],
 
-        // VS Q What are these with function null?
-        //      What about the AMSmath argument?
         equation:     [null,'Equation'],
         'equation*':  [null,'Equation'],
 
@@ -1102,13 +1100,10 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       p_height: 1.2 / .85   // cmex10 height plus depth over .85
 
     });
-
+    
     //
     //  Add macros defined in the configuration
     //
-    //  VS Q: Is this ever used anywhere?
-    //        Is this for local definitions of macros?
-    //        Can I get an example to play with?
     if (this.config.Macros) {
       var MACROS = this.config.Macros;
       for (var id in MACROS) {if (MACROS.hasOwnProperty(id)) {
@@ -1118,40 +1113,36 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       }}
     }
   };
-
   
   /************************************************************************/
   /*
    *   The TeX Parser
    */
 
-  // VS Q: Order of dispatch:
-  //     Parse
-  //  then function from special
-  // 
   var PARSE = MathJax.Object.Subclass({
     Init: function (string,env) {
       TEXDEF.letter.setParser(this.Variable.bind(this));
       TEXDEF.digit.setParser(this.Number.bind(this));
-      console.log(tp.TexParser);
-      console.log(MapHandler);
+      console.log("HERE!");
+
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
-      this.stack = new Stack(ENV, !!env,
-                             // function(x) {return STACKITEM.start(x);},
-                             // function(item) {
-                             //   return item instanceof MML.mbase ? STACKITEM.mml(item) : item;
-                             // },
-                             function(item) {
-                               return item instanceof MML.mbase;
-                             },
-                             function(item) {return item instanceof STACKITEM;}
-                            );
-      // this.stack = TEX.Stack(ENV,!!env);
-      // this.Parse(); this.Push(STACKITEM.stop());
-      this.Parse(); this.Push(new StackItem.Stop());
+      // this.stack = new Stack(ENV, !!env,
+      //                        // function(x) {return STACKITEM.start(x);},
+      //                        // function(item) {
+      //                        //   return item instanceof MML.mbase ? STACKITEM.mml(item) : item;
+      //                        // },
+      //                        function(item) {
+      //                          return item instanceof MML.mbase;
+      //                        },
+      //                        function(item) {return item instanceof STACKITEM;}
+      //                       );
+      this.stack = TEX.Stack(ENV,!!env);
+      this.Parse(); this.Push(STACKITEM.stop());
+      // this.Parse(); this.Push(new StackItem.Stop());
     },
     Parse: function () {
+      console.log("Parsing the string: " + this.string);
       var c, n;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
@@ -1160,16 +1151,32 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
         var special = TEXDEF.special.lookup(c);
         if (special) {
           this[special.getFunction()](c);
+        } else if (TEXDEF.letter.contains(c)) {
+          this.Variable(c);
+        } else if (TEXDEF.digit.lookup(c)) {
+          this.Number(c);
         } else {
-          var result = tp.TexParser.parse(c);
-          console.log('LLLLL: ' + result);
-        //   if (TEXDEF.letter.contains(c)) {
-        //   var lll = TEXDEF.letter.parse(c);
-          // } else if (TEXDEF.digit.lookup(c)) {
-          //   this.Number(c);
-          result || this.Other(c);
+         this.Other(c);
         }
       }
+      // while (this.i < this.string.length) {
+      //   c = this.string.charAt(this.i++); n = c.charCodeAt(0);
+      //   if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
+      //   // TODO VS Rewrite that as a general lookup!
+      //   var special = TEXDEF.special.lookup(c);
+      //   if (special) {
+      //     this[special.getFunction()](c);
+      //   } else {
+      //     console.log("before parser");
+      //     var result = TP.parse(c);
+      //     console.log('LLLLL: ' + result);
+      //     //   if (TEXDEF.letter.contains(c)) {
+      //     //   var lll = TEXDEF.letter.parse(c);
+      //     // } else if (TEXDEF.digit.lookup(c)) {
+      //     //   this.Number(c);
+      //     result || this.Other(c);
+      //   }
+      // }
     },
     Push: function (arg) {
       this.stack.Push(arg);
@@ -1180,8 +1187,7 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       } 
     },
     mml: function () {
-      console.log(this.stack.Top());
-      if (!this.stack.Top().hasType('mml')) {return null}
+      if (this.stack.Top().type !== "mml") {return null}
       return this.stack.Top().data[0];
     },
     mmlToken: function (token) {return token}, // used by boldsymbol extension
@@ -1191,8 +1197,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
      *   Handle various token classes
      */
 
-
-    // VS Q: This has to be made explicitly!
     /*
      *  Lookup a control-sequence and process it
      */
@@ -1268,8 +1272,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
      */
     Variable: function (c) {
       var def = {}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      console.log('DEF: ');
-      console.log(def);
       this.Push(this.mmlToken(MML.mi(MML.chars(c)).With(def)));
     },
 
@@ -1322,12 +1324,12 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
           position = base.sup;
         }
       }
-      this.Push(new StackItem.Subsup(base, {
-        position: position, primes: primes, movesupsub: movesupsub
-      }));
-      // this.Push(STACKITEM.subsup(base).With({
+      // this.Push(new StackItem.Subsup(base, {
       //   position: position, primes: primes, movesupsub: movesupsub
       // }));
+      this.Push(STACKITEM.subsup(base).With({
+        position: position, primes: primes, movesupsub: movesupsub
+      }));
     },
     Subscript: function (c) {
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
@@ -1352,12 +1354,12 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
           position = base.sub;
         }
       }
-      this.Push(new StackItem.Subsup(base, {
-        position: position, primes: primes, movesupsub: movesupsub
-      }));
-      // this.Push(STACKITEM.subsup(base).With({
+      // this.Push(new StackItem.Subsup(base, {
       //   position: position, primes: primes, movesupsub: movesupsub
       // }));
+      this.Push(STACKITEM.subsup(base).With({
+        position: position, primes: primes, movesupsub: movesupsub
+      }));
     },
     PRIME: "\u2032", SMARTQUOTE: "\u2019",
     Prime: function (c) {
@@ -1370,7 +1372,8 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
       sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
-      this.Push(new StackItem.Prime(base, this.mmlToken(MML.mo(sup)), {}));
+      // this.Push(new StackItem.Prime(base, this.mmlToken(MML.mo(sup)), {}));
+      this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
     },
     mi2mo: function (mi) {
       var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
@@ -1971,15 +1974,9 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
      *   String handling routines
      */
 
-    // VS Q: These are all utility functions.
-    //
-    // 
     /*
      *  Convert delimiter to character
      */
-    // VS Q This just converts delimiters. Can it ever have null as input?
-    // Incoming: character string
-    // Return: looked up character.
     convertDelimiter: function (c) {
       return TEXDEF.delimiter.lookup(c).getChar() || null;
     },
@@ -2242,7 +2239,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
   
   /************************************************************************/
 
-// VS Q: What does the augment really do? How is the Parse called?
   TEX.Augment({
     Stack: STACK, Parse: PARSE, Definitions: TEXDEF, Startup: STARTUP,
     
@@ -2278,20 +2274,13 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       var data = {math:math, display:display, script:script};
       var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
       math = data.math;
-      console.log('doing the math');
-      console.log(math);
-      // try {
-        var parse = TEX.Parse(math);
-        console.log(parse);
-        console.log(parse.mml);
-        mml = parse.mml();
-      // } catch(err) {
-      //   if (!err.texError) {throw err}
-      //   mml = this.formatError(err,math,display,script);
-      //   isError = true;
-      // }
-      console.log('No error?');
-      console.log(mml);
+      try {
+        mml = TEX.Parse(math).mml();
+      } catch(err) {
+        if (!err.texError) {throw err}
+        mml = this.formatError(err,math,display,script);
+        isError = true;
+      }
       if (mml.isa(MML.mtable) && mml.displaystyle === "inherit") mml.displaystyle = display; // for tagged equations
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
       if (display) {mml.root.display = "block"}

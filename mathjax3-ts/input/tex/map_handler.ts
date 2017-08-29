@@ -30,7 +30,7 @@ import Stack from './stack.js';
 export default class MapHandler {
 
   private static instance: MapHandler;
-  private maps: Map<string, SymbolMap> = new Map<string, SymbolMap>();
+  private maps: Map<string, SymbolMap> = new Map();
   private configuration: Array<SymbolMap> = [];
 
   private constructor() { }
@@ -56,7 +56,10 @@ export default class MapHandler {
    * @return {SymbolMap} A map that can parse the symbol.
    */
   private applicable(symbol: string): SymbolMap {
-    for (let map of this.configuration) {
+    // for (let map of this.configuration) {
+    for (let [name, map] of this.maps) {
+      console.log('Testing the symbol for: ' + name);
+      console.log(map.contains(symbol));
       if (map.contains(symbol)) {
         return map;
       }
@@ -84,6 +87,9 @@ export default class MapHandler {
   
   public parse(symbol: string, rest: string, stack: Stack): ParseResult {
     let map = this.applicable(symbol);
+    console.log(this.lookup(symbol));
+    console.log("PARSING");
+    console.log(map.parse(symbol, rest, stack));
     return map ? map.parse(symbol, rest, stack) : null;
   }
 

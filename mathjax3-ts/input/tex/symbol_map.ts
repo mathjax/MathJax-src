@@ -110,6 +110,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
    * function.
    */
   public setParser(parser: ParseMethod):void {
+    console.log('Setting parser!');
     console.log(parser);
     this.parser = parser;
   }

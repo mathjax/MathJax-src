@@ -51,6 +51,8 @@ export default class TexParser {
   
   public parse() {
     // Main parse loop!
+    console.log("In parser");
+    console.log(this.remainder);
     while (this.remainder) {
       let char = this.getChar();
       let result = MapHandler.getInstance().parse(char, this.remainder, this.stack);
@@ -72,6 +74,10 @@ export default class TexParser {
   }
   
   public static parse(input: string): void {
+    console.log("In parser 2");
+    console.log(input);
+    let result = MapHandler.getInstance().parse(input, '', null);
+    console.log(result);
     // let parser = new TexParser(input, {});
     // console.log(parser);
     // return parser.stack.getResult();
