@@ -55,7 +55,9 @@ export class CHTMLmrow extends CHTMLWrapper {
         let hasNegative = false;
         for (const child of this.childNodes) {
             child.toCHTML(chtml);
-            if (child.bbox && child.bbox.w < 0) hasNegative = true;
+            if (child.bbox && child.bbox.w < 0) {
+                hasNegative = true;
+            }
         }
         // FIXME:  handle line breaks
         if (hasNegative) {

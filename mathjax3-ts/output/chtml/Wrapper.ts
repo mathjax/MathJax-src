@@ -585,7 +585,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (this.node.isEmbellished) {
             let core = this.core();
             if (core && core.node !== this.node) {
-                if (core.canStretch(direction)) this.stretch = direction.substr(0,1);
+                if (core.canStretch(direction)) {
+                    this.stretch = direction.substr(0,1);
+                }
             }
         }
         return this.stretch !== '';
