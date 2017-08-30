@@ -98,6 +98,10 @@ export default class MapHandler {
     console.log('TexParser Warning: ' + message);
   }
 
+  public getMap(name: string): SymbolMap {
+    return this.maps.get(name);
+  }
+
   static getInstance(): MapHandler {
     if (!MapHandler.instance) {
       MapHandler.instance = new MapHandler();

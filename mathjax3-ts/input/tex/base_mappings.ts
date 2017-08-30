@@ -41,7 +41,8 @@ export namespace BaseMappings {
   
   MacroMap.create('special', {
 
-    // '\\':  'ControlSequence',
+    // This is temporarily included!
+    '\\':  'ControlSequence',
 
     '{':   'Open',
     '}':   'Close',
