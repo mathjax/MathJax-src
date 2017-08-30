@@ -8,8 +8,6 @@ import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 import {Test} from './tests.js';
 
 
-
-
 class ParserTest extends Test {
 
   constructor() {
@@ -21,17 +19,19 @@ class ParserTest extends Test {
     this.test(
       name,
       t => {
-        MathJax.handleRetriesFor(function () {
+        MathJax.handleRetriesFor(function() {
           let html = MathJax.document('<html></html>', {
             InputJax: new TeX()
           });
           html.TestMath(tex).compile();
           let jv = new JsonMmlVisitor();
           let math = html.math.pop().root;
-          t.deepEqual(jv.visitTree(math), expected, name);
+          math.setTeXclass();
+          let actual = jv.visitTree(math);
+          t.deepEqual(actual, expected, name);
         }).catch(err => {
           console.log(err.message);
-          console.log(err.stack.replace(/\n.*\/system\.js:(.|\n)*/,""));
+          console.log(err.stack.replace(/\n.*\/system\.js:(.|\n)*/, ''));
         });
       }
     );
@@ -536,7 +536,7 @@ parserTest.runTest(
 );
 
 
-parserTest.ignoreTest(
+parserTest.runTest(
   'Square Root Expression', '\\sqrt{3x-1}+(1+x)^2',
   {"kind":"math",
  "texClass":0,
@@ -711,7 +711,7 @@ parserTest.ignoreTest(
 );
 
 
-parserTest.ignoreTest(
+parserTest.runTest(
   'General Root Expression', '\\sqrt[4]{3x-1}+(1+x)^2',
   {"kind":"math",
  "texClass":0,
@@ -855,7 +855,7 @@ parserTest.ignoreTest(
 );
 
 
-parserTest.ignoreTest('Quadratic Formula',
+parserTest.runTest('Quadratic Formula',
         'x = \\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}',
                       {"kind":"math",
  "texClass":0,
@@ -932,7 +932,7 @@ parserTest.ignoreTest('Quadratic Formula',
        );
 
 
-parserTest.ignoreTest('Cauchy-Schwarz Inequality',
+parserTest.runTest('Cauchy-Schwarz Inequality',
         '\\left( \\sum_{k=1}^n a_k b_k \\right)^{\\!\\!2} \\leq' +
         '  \\left( \\sum_{k=1}^n a_k^2 \\right)' +
         '  \\left( \\sum_{k=1}^n b_k^2 \\right)',
@@ -1537,7 +1537,7 @@ parserTest.ignoreTest('Cauchy-Schwarz Inequality',
 
 
 
-parserTest.ignoreTest('An Identity of Ramanujan',
+parserTest.runTest('An Identity of Ramanujan',
         '\\frac{1}{\\Bigl(\\sqrt{\\phi\\sqrt{5}}-\\phi\\Bigr)' +
         '  e^{\\frac25\\pi}} =' +
         '    1+\\frac{e^{-2\\pi}}' +
@@ -2293,7 +2293,7 @@ parserTest.ignoreTest('An Identity of Ramanujan',
        );
 
 
-parserTest.ignoreTest('A Rogers-Ramanujan Identity',
+parserTest.runTest('A Rogers-Ramanujan Identity',
         '1 + \\frac{q^2}{(1-q)}' +
         '  + \\frac{q^6}{(1-q)(1-q^2)} + \\cdots =' +
         '\\prod_{j=0}^{\\infty}' +
@@ -3079,7 +3079,7 @@ parserTest.ignoreTest('A Rogers-Ramanujan Identity',
 
        );
 
-parserTest.ignoreTest('A Summation Formula',
+parserTest.runTest('A Summation Formula',
         '\\sum_{n=1}^\\infty {1\\over n^2} = {\\pi^2\\over 6}',
                       {"kind":"math",
  "texClass":1,
@@ -3327,7 +3327,7 @@ parserTest.ignoreTest('A Summation Formula',
        );
 
 
-parserTest.ignoreTest('Cauchy\'s Integral Formula',
+parserTest.runTest('Cauchy\'s Integral Formula',
         'f(a) = \\oint_\\gamma \\frac{f(z)}{z-a}dz',
                       {"kind":"math",
  "texClass":0,
@@ -3502,7 +3502,7 @@ parserTest.ignoreTest('Cauchy\'s Integral Formula',
 
        );
 
-parserTest.ignoreTest('Standard Deviation',
+parserTest.runTest('Standard Deviation',
         '\\sigma = \\sqrt{\\frac{1}{N}\\sum_{i=1}^N {(x_i-\\mu)}^2}',
                       {"kind":"math",
  "texClass":0,
@@ -4391,7 +4391,7 @@ parserTest.amsTest(
 );
 
 
-parserTest.ignoreTest(
+parserTest.runTest(
   'A Cross Product Formula', '\\mathbf{V}_1 \\times \\mathbf{V}_2 =' +
     '   \\begin{vmatrix}' +
     ' \\mathbf{i} & \\mathbf{j} & \\mathbf{k} \\\\' +
@@ -6184,7 +6184,7 @@ parserTest.amsTest(
 );
 
 
-parserTest.ignoreTest(
+parserTest.runTest(
   'Color Frac', '\\frac{{\\cal \\color{red}{X}}}{\\color{blue}{\\sf y}}',
   {"kind":"math",
  "texClass":null,
