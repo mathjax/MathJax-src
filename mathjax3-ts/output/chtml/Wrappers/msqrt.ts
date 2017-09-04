@@ -97,7 +97,8 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      */
     protected createMo(text: string) {
         const mmlFactory = (this.node as AbstractMmlNode).factory;
-        const node = this.wrap(mmlFactory.create('mo', {stretchy: true}, [(mmlFactory.create('text') as TextNode).setText(text)])) as CHTMLmo;
+        const textNode = (mmlFactory.create('text') as TextNode).setText(text);
+        const node = this.wrap(mmlFactory.create('mo', {stretchy: true}, [textNode])) as CHTMLmo;
         node.parent = this;
         this.childNodes.push(node);
         return node;

@@ -42,7 +42,7 @@ export const enum CSS {
     width = 1 << 0,
     padding = 1 << 1,
     content = 1 << 2
-};
+}
 
 
 /*

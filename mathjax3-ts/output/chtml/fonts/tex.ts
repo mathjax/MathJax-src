@@ -389,13 +389,13 @@ export class TeXFont extends FontData {
             const He = this.addDelimiterVPart(styles, c, 'end', data.stretch[2]);
             const css: StyleData = {};
             if (Hb) {
-                css['border-top-width'] = this.em(Math.max(0, Hb-.03));
+                css['border-top-width'] = this.em(Math.max(0, Hb - .03));
             }
             if (He) {
-                css['border-bottom-width'] = this.em(Math.max(0, He-.03));
+                css['border-bottom-width'] = this.em(Math.max(0, He - .03));
                 css['margin-bottom'] = this.em(-He);
             }
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css;
         } else {
             //  FIXME: still need to add this
         }
