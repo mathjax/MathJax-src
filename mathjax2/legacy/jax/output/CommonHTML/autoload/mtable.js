@@ -9,7 +9,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2015-2016 The MathJax Consortium
+ *  Copyright (c) 2015-2017 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
  */
 
 MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
-  var VERSION = "2.7.0";
+  var VERSION = "2.7.2";
   var MML = MathJax.ElementJax.mml,
       CONFIG = MathJax.Hub.config,
       CHTML = MathJax.OutputJax.CommonHTML,
@@ -201,6 +201,11 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //
         B = RSPACE[i]/2; border = null; L = "0";
         if (RLINES[i] !== MML.LINES.NONE && RLINES[i] !== "") border = state.t+" "+RLINES[i];
+        if (border || (CLINES[j] !== MML.LINES.NONE && CLINES[j] !== "")) {
+          while (row.length <= state.J) {
+            row.push(CHTML.addElement(row.node,"mjx-mtd",null,[['span']]));
+          }
+        }
         state.RH[i] = lastB + state.H[i];                 // distance to baseline in row
         lastB = Math.max(0,B);
         state.RHD[i] = state.RH[i] + lastB + state.D[i];  // total height of row
@@ -214,7 +219,8 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
         //
         for (var j = 0, M = row.length; j < M; j++) {
           var s = (rdata.type === "mtr" ? 0 : LABEL);
-          cell = row[j].style; cbox = rdata.data[j-s].CHTML;
+          var mtd = rdata.data[j-s] || {CHTML: CHTML.BBOX.zero()};
+          var cell = row[j].style; cbox = mtd.CHTML;
           //
           //  Space and borders between columns
           //
@@ -230,7 +236,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           //
           //  Handle vertical alignment
           //
-          align = (rdata.data[j-s].rowalign||this.data[i].rowalign||RALIGN[i]);
+          align = (mtd.rowalign||(this.data[i]||{}).rowalign||RALIGN[i]);
           var H = Math.max(1,cbox.h), D = Math.max(.2,cbox.d),
               HD = (state.H[i]+state.D[i]) - (H+D),
               child = row[j].firstChild.style;
@@ -249,7 +255,7 @@ MathJax.Hub.Register.StartupHook("CommonHTML Jax Ready",function () {
           //
           //  Handle horizontal alignment
           //
-          align = (rdata.data[j-s].columnalign||RCALIGN[i][j]||CALIGN[j]);
+          align = (mtd.columnalign||RCALIGN[i][j]||CALIGN[j]);
           if (align !== MML.ALIGN.CENTER) cell.textAlign = align;
         }
         row.node.style.height = CHTML.Em(state.RHD[i]);
