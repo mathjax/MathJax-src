@@ -36,7 +36,7 @@ export class CHTMLmfrac extends CHTMLWrapper {
     public static kind = MmlMfrac.prototype.kind;
 
     public static styles: StyleList = {
-        'mjx-strut' {
+        'mjx-strut': {
             display: 'inline-block',
             height: '1em',
             width: 0,

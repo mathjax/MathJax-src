@@ -44,33 +44,6 @@ import {StyleList} from './CssStyles.js';
 export type StringMap = {[key: string]: string};
 
 /*
- * The classes to use for each variant
- */
-export const VARIANT: StringMap = {
-    normal: 'mjx-n',
-    bold: 'mjx-b',
-    italic: 'mjx-i',
-    'bold-italic': 'mjx-b mjx-i',
-    'double-struck': 'mjx-ds',
-    'fraktur': 'mjx-fr',
-    'bold-fraktur': 'mjx-fr mjx-b',
-    'script': 'mjx-sc',
-    'bold-script': 'mjx-sc mjx-b',
-    'sans-serif': 'mjx-ss',
-    'bold-sans-serif': 'mjx-ss mjx-b',
-    'sans-serif-italic': 'mjx-ss mjx-i',
-    'bold-sans-serif-italic': 'mjx-ss mjx-b mjx-i',
-    monospace: 'mjx-ty',
-    '-tex-caligraphic': 'mjx-cal',
-    '-tex-oldstyle': 'mjx-os',
-    '-tex-mathit': 'mjx-mit',
-    '-smallop': 'mjx-sop',
-    '-largeop': 'mjx-lop',
-    '-size3': 'mjx-s3',
-    '-size4': 'mjx-s4',
-};
-
-/*
  * The value to use for each spacing size
  */
 export const SPACE: StringMap = {
@@ -516,7 +489,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleVariant() {
         if (this.node.isToken && this.variant !== '-explicitFont') {
-            this.chtml.className = VARIANT[this.variant] || VARIANT.normal;
+            this.chtml.className = (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes;
         }
     }
 
@@ -691,8 +664,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{string}  The character as a properly encoded string.
      */
     protected char(n: number, escape: boolean = false) {
-        return (n >= 0x20 && n <= 0x7E && n !== 0x22 && n !== 0x5C ?
-                String.fromCharCode(n) : (escape ? '\\' : '') + n.toString(16).toUpperCase());
+        return this.font.char(n, escape);
     }
 
     /*

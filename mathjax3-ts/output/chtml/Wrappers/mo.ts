@@ -65,9 +65,15 @@ export class CHTMLmo extends CHTMLWrapper {
         'mjx-stretchy-v': {
             display: 'inline-block'
         },
-        'mjx-stretchy-v > mjx-beg, mjx-stretchy-v> mjx-end': {
+        'mjx-stretchy-v > mjx-beg': {
             display: 'block',
             height: 0
+        },
+        'mjx-stretchy-v > mjx-end': {
+            display: 'block'
+        },
+        'mjx-stretchy-v > mjx-end > mjx-c': {
+            display: 'block'
         },
         'mjx-stretchy-v > mjx-beg > mjx-c, mjx-stretchy-v > mjx-end > mjx-c': {
             overflow: 'hidden'
@@ -80,7 +86,7 @@ export class CHTMLmo extends CHTMLWrapper {
             overflow: 'hidden'
         },
         'mjx-stretchy-v > mjx-ext > mjx-c': {
-            transform: 'scaley(1000)'
+            transform: 'scaleY(1000) translateY(.5em)'
         },
         'mjx-mark': {
             display: 'inline-block',
