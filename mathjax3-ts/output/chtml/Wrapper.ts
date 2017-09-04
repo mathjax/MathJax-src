@@ -52,6 +52,9 @@ export const SPACE: StringMap = {
     thickmathspace: '3'
 };
 
+/*
+ * Some standard sizes to use in predefind CSS properties
+ */
 export const FONTSIZE: StringMap = {
     '70.7%': 's',
     '70%': 's',
@@ -81,11 +84,20 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
 
     public static kind: string = 'unknown';
 
+    /*
+     * If true, this causes a style for the node type to be generated automatically
+     * that sets display:inline-block (as needed for the output for MmlNodes).
+     */
     public static autoStyle = true;
+
+    /*
+     *  The default styles for CommonHTML
+     */
     public static styles: StyleList = {
         'mjx-chtml [space="1"]': {'margin-left': '.167em'},
         'mjx-chtml [space="2"]': {'margin-left': '.222em'},
         'mjx-chtml [space="3"]': {'margin-left': '.278em'},
+
         'mjx-chtml [size="s"]' : {'font-size': '70.7%'},
         'mjx-chtml [size="ss"]': {'font-size': '50%'},
         'mjx-chtml [size="Tn"]': {'font-size': '60%'},
@@ -115,6 +127,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         'mjx-mphantom': {visibility: 'hidden'},
 
         'mjx-math': {
+            //
+            //  There will be more here when the math wrapper is written
+            //
             display: 'inline-block',
             'line-height': '0px'
         }
