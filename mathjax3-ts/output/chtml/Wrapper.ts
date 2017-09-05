@@ -295,17 +295,16 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected getStyles() {
         const styleString = this.node.attributes.getExplicit('style') as string;
-        if (styleString) {
-            this.styles = this.html('span').style;
-            const style = this.styles as CSSStyle;
-            style.cssText = styleString;
-            for (let i = 0, m = CHTMLWrapper.removeStyles.length; i < m; i++) {
-                const id = CHTMLWrapper.removeStyles[i];
-                if (style[id]) {
-                    if (!this.removedStyles) this.removedStyles = {};
-                    this.removedStyles[id] = style[id] as string;
-                    style[id] = '';
-                }
+        if (!styleString) return;
+        this.styles = this.html('span').style;
+        const style = this.styles as CSSStyle;
+        style.cssText = styleString;
+        for (let i = 0, m = CHTMLWrapper.removeStyles.length; i < m; i++) {
+            const id = CHTMLWrapper.removeStyles[i];
+            if (style[id]) {
+                if (!this.removedStyles) this.removedStyles = {};
+                this.removedStyles[id] = style[id] as string;
+                style[id] = '';
             }
         }
     }
@@ -314,33 +313,32 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Get the mathvariant (or construct one, if needed).
      */
     protected getVariant() {
-        if (this.node.isToken) {
-            const attributes = this.node.attributes;
-            let variant = attributes.get('mathvariant') as string;
-            if (!attributes.getExplicit('mathvariant')) {
-                const values = attributes.getList('fontfamily', 'fontweight', 'fontstyle') as StringMap;
-                if (this.removedStyles) {
-                    const style = this.removedStyles;
-                    if (style.fontFamily) values.family = style.fontFamily;
-                    if (style.fontWeight) values.weight = style.fontWeight;
-                    if (style.fontStyle)  values.style  = style.fontStyle;
-                }
-                if (values.fontfamily) values.family = values.fontfamily;
-                if (values.fontweight) values.weight = values.fontweight;
-                if (values.fontstyle)  values.style  = values.fontstyle;
-                if (values.weight && values.weight.match(/^\d+$/)) {
-                    values.weight = (parseInt(values.weight) > 600 ? 'bold' : 'normal');
-                }
-                if (values.family) {
-                    variant = this.explicitVariant(values.family, values.weight, values.style);
-                } else {
-                    if (this.node.getProperty('variantForm')) variant = '-TeX-variant';
-                    variant = (CHTMLWrapper.BOLDVARIANTS[values.weight] || {})[variant] || variant;
-                    variant = (CHTMLWrapper.ITALICVARIANTS[values.style] || {})[variant] || variant;
-                }
+        if (!this.node.isToken) return;
+        const attributes = this.node.attributes;
+        let variant = attributes.get('mathvariant') as string;
+        if (!attributes.getExplicit('mathvariant')) {
+            const values = attributes.getList('fontfamily', 'fontweight', 'fontstyle') as StringMap;
+            if (this.removedStyles) {
+                const style = this.removedStyles;
+                if (style.fontFamily) values.family = style.fontFamily;
+                if (style.fontWeight) values.weight = style.fontWeight;
+                if (style.fontStyle)  values.style  = style.fontStyle;
             }
-            this.variant = variant;
+            if (values.fontfamily) values.family = values.fontfamily;
+            if (values.fontweight) values.weight = values.fontweight;
+            if (values.fontstyle)  values.style  = values.fontstyle;
+            if (values.weight && values.weight.match(/^\d+$/)) {
+                values.weight = (parseInt(values.weight) > 600 ? 'bold' : 'normal');
+            }
+            if (values.family) {
+                    variant = this.explicitVariant(values.family, values.weight, values.style);
+            } else {
+                if (this.node.getProperty('variantForm')) variant = '-TeX-variant';
+                variant = (CHTMLWrapper.BOLDVARIANTS[values.weight] || {})[variant] || variant;
+                variant = (CHTMLWrapper.ITALICVARIANTS[values.style] || {})[variant] || variant;
+            }
         }
+        this.variant = variant;
     }
 
     /*
@@ -446,11 +444,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Set the CSS styles for the chtml element
      */
     protected handleStyles() {
-        if (this.styles) {
-            const styles = this.styles.cssText;
-            if (styles) {
-                this.chtml.style.cssText = styles;
-            }
+        if (!this.styles) return;
+        const styles = this.styles.cssText;
+        if (styles) {
+            this.chtml.style.cssText = styles;
         }
     }
 
