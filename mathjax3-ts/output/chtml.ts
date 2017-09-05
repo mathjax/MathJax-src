@@ -27,6 +27,7 @@ import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {HTMLNodes} from '../util/HTMLNodes.js';
+import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {percent} from '../util/lengths.js';
 
@@ -57,6 +58,13 @@ export class CHTML extends AbstractOutputJax {
      */
     public document: MathDocument;
     public math: MathItem;
+
+    /*
+     * A map from the nodes in the expression currently being processed to the
+     * wrapper nodes for them (used by functions like core() to locate the wrappers
+     * from the core nodes)
+     */
+    public nodeMap: Map<MmlNode, CHTMLWrapper> = null;
 
     /*
      * Get the WrapperFactory and connect it to this output jax
@@ -91,7 +99,9 @@ export class CHTML extends AbstractOutputJax {
         if (scale !== 1) {
             node.style.fontSize = percent(scale);
         }
+        this.nodeMap = new Map<MmlNode, CHTMLWrapper>();
         this.toCHTML(math.root, node);
+        this.nodeMap = null;
         return node;
     }
 
@@ -107,7 +117,9 @@ export class CHTML extends AbstractOutputJax {
      * @override
      */
     public getMetrics(html: MathDocument) {
-
+        for (const math of html.math) {
+            math.setMetrics(16, 8, 1000000, 1000000, 1);
+        }
     }
 
     /*

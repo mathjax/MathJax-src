@@ -37,7 +37,7 @@ export class CHTMLmfrac extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement, WHD: number[] = []) {
+    public toCHTML(parent: HTMLElement) {
         let num, den;
         let chtml = this.html('mjx-frac', {}, [
             num = this.html('mjx-num', {}, [this.html('mjx-dstrut')]),
@@ -71,5 +71,12 @@ export class CHTMLmfrac extends CHTMLWrapper {
         bbox.w += pad;
         bbox.clean();
         return bbox;
+    }
+
+    /*
+     * @override
+     */
+    public canStretch(direction: string) {
+        return false;
     }
 }
