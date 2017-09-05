@@ -1,3 +1,6 @@
+/* -*- Mode: Javascript; indent-tabs-mode:nil; js-indent-level: 2 -*- */
+/* vim: set ts=2 et sw=2 tw=80: */
+
 /*************************************************************
  *
  *  MathJax/jax/input/TeX/config.js
@@ -7,7 +10,7 @@
  *
  *  ---------------------------------------------------------------------
  *  
- *  Copyright (c) 2009-2015 The MathJax Consortium
+ *  Copyright (c) 2009-2017 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +27,7 @@
 
 MathJax.InputJax.TeX = MathJax.InputJax({
   id: "TeX",
-  version: "2.6.1",
+  version: "2.7.2",
   directory: MathJax.InputJax.directory + "/TeX",
   extensionDir: MathJax.InputJax.extensionDir + "/TeX",
   
@@ -39,10 +42,12 @@ MathJax.InputJax.TeX = MathJax.InputJax({
       formatNumber: function (n) {return n},
       formatTag:    function (n) {return '('+n+')'},
       formatID:     function (n) {return 'mjx-eqn-'+String(n).replace(/[:"'<>&]/g,"")},
-      formatURL:    function (id) {return '#'+escape(id)},
+      formatURL:    function (id,base) {return base+'#'+escape(id)},
       useLabelIds:  true
     }
-  }
+  },
+  
+  resetEquationNumbers: function () {}  // filled in by AMSmath extension
 });
 MathJax.InputJax.TeX.Register("math/tex");
 
