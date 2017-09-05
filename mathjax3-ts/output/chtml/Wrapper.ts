@@ -23,7 +23,7 @@
 
 import {AbstractWrapper} from '../../core/Tree/Wrapper.js';
 import {Node} from '../../core/Tree/Node.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
 import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
@@ -31,6 +31,7 @@ import * as LENGTHS from '../../util/lengths.js';
 import {HTMLNodes} from '../../util/HTMLNodes.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
+import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
 import {TexFontParams} from './TeX.js';
 
@@ -76,6 +77,19 @@ export const SPACE: StringMap = {
     mediummathspace: '2',
     thickmathspace: '3'
 };
+
+export const FONTSIZE: StringMap = {
+    '70.7%': 's',
+    '70%': 's',
+    '50%': 'ss',
+    '60%': 'Tn',
+    '85%': 'sm',
+    '120%': 'lg',
+    '144%': 'Lg',
+    '173%': 'LG',
+    '207%': 'hg',
+    '249%': 'HG'
+}
 
 /*
  * Needed to access node.style[id] using variable id
@@ -189,6 +203,11 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     protected bboxComputed: boolean = false;
 
     /*
+     * Direction this node can be stretched (null means not yet determined)
+     */
+    public stretch: string = null;
+
+    /*
      * Easy access to the font parameters
      */
     public TeX = TexFontParams;
@@ -234,6 +253,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (parent) {
             parent.childNodes.push(wrapped);
         }
+        this.CHTML.nodeMap.set(node, wrapped);
         return wrapped;
     }
 
@@ -242,16 +262,11 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Create the HTML for the wrapped node.
      *
      * @param{HTMLElement} parent  The HTML node where the output is added
-     * @param{number[]} WHD  Either [W] or [H,D], giving the dimensions to stretch
-     *                       a stretchable embellished operator to
      */
-    public toCHTML(parent: HTMLElement, WHD: number[] = []) {
-        let chtml = parent;
-        if (!this.node.isInferred) {
-            chtml = this.standardCHTMLnode(parent);
-        }
+    public toCHTML(parent: HTMLElement) {
+        let chtml = this.standardCHTMLnode(parent);
         for (const child of this.childNodes) {
-            child.toCHTML(chtml, WHD);
+            child.toCHTML(chtml);
         }
     }
 
@@ -469,7 +484,12 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     protected handleScale() {
         const scale = (Math.abs(this.bbox.rscale - 1) < .001 ? 1 : this.bbox.rscale);
         if (this.chtml && scale !== 1) {
-            this.chtml.style.fontSize = this.percent(scale);
+            const size = this.percent(scale);
+            if (FONTSIZE[size]) {
+                this.chtml.setAttribute('size', FONTSIZE[size]);
+            } else {
+                this.chtml.style.fontSize = size;
+            }
         }
     }
 
@@ -512,10 +532,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleAttributes() {
         const attributes = this.node.attributes;
-        const globals = attributes.getAllGlobals();
+        const defaults = attributes.getAllDefaults();
         const skip = CHTMLWrapper.skipAttributes;
         for (const name of attributes.getExplicitNames()) {
-            if (skip[name] === false || (!globals.hasOwnProperty(name) && !skip[name] &&
+            if (skip[name] === false || (!(name in defaults) && !skip[name] &&
                                          typeof((this.chtml as {[name: string]: any})[name]) === 'undefined')) {
                 this.chtml.setAttribute(name, attributes.getExplicit(name) as string);
             }
@@ -523,6 +543,54 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (attributes.get('class')) {
             this.chtml.classList.add(attributes.get('class') as string);
         }
+    }
+
+    /*******************************************************************/
+
+    /*
+     * @return{CHTMLWrapper}  The wrapper for this node's core node
+     */
+    public core() {
+        return this.CHTML.nodeMap.get(this.node.core());
+    }
+
+    /*
+     * @return{CHTMLWrapper}  The wrapper for this node's core <mo> node
+     */
+    public coreMO(): CHTMLmo {
+        return this.CHTML.nodeMap.get(this.node.coreMO()) as CHTMLmo;
+    }
+
+    /*
+     * @return{string}  For a token node, the combined text content of the node's children
+     */
+    public getText() {
+        let text = "";
+        if (this.node.isToken) {
+            for (const child of this.node.childNodes) {
+                if (child instanceof TextNode) {
+                    text += child.getText();
+                }
+            }
+        }
+        return text;
+    }
+
+    /*
+     * @param{string} direction  The direction to stretch this node
+     * @return{boolean}  Whether the node can stretch in that direction
+     */
+    public canStretch(direction: string): boolean {
+        this.stretch = '';
+        if (this.node.isEmbellished) {
+            let core = this.core();
+            if (core && core.node !== this.node) {
+                if (core.canStretch(direction)) {
+                    this.stretch = direction.substr(0,1);
+                }
+            }
+        }
+        return this.stretch !== '';
     }
 
     /*******************************************************************/
