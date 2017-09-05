@@ -12,7 +12,10 @@
       "check-space"
 //      "check-uppercase"
     ],
-    "curly": true,
+    "curly": [
+      true,
+      "ignore-same-line"
+    ],
     "eofline": true,
     "indent": [
       true,
