@@ -53,6 +53,7 @@ export class Attributes {
         this.defaults = Object.create(global);
         this.inherited = Object.create(this.defaults);
         this.attributes = Object.create(this.inherited);
+        Object.assign(this.defaults, defaults);
     }
 
     /*
@@ -131,6 +132,15 @@ export class Attributes {
     }
 
     /*
+     * @param {string} name  The name of a attribute to check
+     * @return {boolena}     True if attribute is set explicitly or inherited
+     *                         from an explicit mstyle or math attribute
+     */
+    public isSet(name: string) {
+        return this.attributes.hasOwnProperty(name) || this.inherited.hasOwnProperty(name);
+    }
+
+    /*
      * @param {string} name  The name of an attribute to test for the existance of a default
      * @return {boolean}     True of there is a default for the named attribute, false otherwise
      */
@@ -165,7 +175,6 @@ export class Attributes {
     public getGlobalNames() {
         return Object.keys(this.global);
     }
-
 
     /*
      * @return {PropertyList}  The attribute object
