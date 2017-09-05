@@ -109,7 +109,7 @@ export class CHTMLmo extends CHTMLWrapper {
             styles.width = this.em(w);
         }
         //
-        //  Make the main element and ad it to the parent
+        //  Make the main element and add it to the parent
         //
         const html = this.html('mjx-stretchy-' + this.stretch.toLowerCase(),
                                {c: this.char(c), style: styles}, content);
@@ -183,9 +183,9 @@ export class CHTMLmo extends CHTMLWrapper {
             //  Look through the delimiter sizes for one that matches
             //
             const c = this.getText().charCodeAt(0);
-            const C = this.font.getDelimiter(c);
+            const delim = this.font.getDelimiter(c);
             let i = 0;
-            for (const d of C.sizes) {
+            for (const d of delim.sizes) {
                 if (d >= m) {
                     this.variant = this.font.getSizeVariant(c, i);
                     this.size = i;
@@ -197,9 +197,9 @@ export class CHTMLmo extends CHTMLWrapper {
             //  No size matches, so if we can make multi-character delimiters,
             //  record the data for that, otherwise, use the largest fixed size.
             //
-            if (C.stretch) {
+            if (delim.stretch) {
                 this.size = -1;
-                this.getStretchBBox(WH, D, C);
+                this.getStretchBBox(WH, D, delim);
             } else {
                 this.variant = this.font.getSizeVariant(c, i - 1);
                 this.size = i - 1;

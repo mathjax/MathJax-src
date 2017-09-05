@@ -216,7 +216,7 @@ export class FontData {
      */
     constructor() {
         let CLASS = (this.constructor as typeof FontData);
-        this.params = Object.assign({}, CLASS.defaultParams);
+        this.params = {...CLASS.defaultParams};
         this.sizeVariants = CLASS.defaultSizeVariants.slice(0);
         this.createVariants(CLASS.defaultVariants);
         this.defineDelimiters(CLASS.defaultDelimiters);
@@ -227,7 +227,7 @@ export class FontData {
 
     /*
      * Creates the data structure for a variant (an object with prototype chain
-     *   that includes a copy of the linked variant, and then the inherit variant chain.
+     *   that includes a copy of the linked variant, and then the inherited variant chain.
      *   The linked copy is updated automatically when the link variant is modified.
      *   (The idea is to be able to have something like bold-italic inherit from both
      *   bold and intalic by having the prototype chain include a copy of bold plus
@@ -261,14 +261,14 @@ export class FontData {
      */
     public createVariants(variants: string[][]) {
         for (const variant of variants) {
-            this.createVariant.apply(this, variant);
+            this.createVariant(variant[0], variant[1], variant[2]);
         }
     }
 
     /*
      * Defines new character data in a given variant
      *
-     * @param{srtring} name   The variant for these characters
+     * @param{string} name    The variant for these characters
      * @param{CharMap} chars  The characters to define
      */
     public defineChars(name: string, chars: CharMap) {
@@ -290,7 +290,7 @@ export class FontData {
 
     /*
      * @param{number} n  The delimiter character number whose data is desired
-     * @return{DelimiterData}  The data for that delimiter (or null)
+     * @return{DelimiterData}  The data for that delimiter (or undefined)
      */
     public getDelimiter(n: number) {
         return this.delimiters[n];
@@ -311,7 +311,7 @@ export class FontData {
     /*
      * @param{string} name  The variant whose character data is being querried
      * @param{number} n     The unicode number for the character to be found
-     * @return{CharData}    The data for the given character (or null)
+     * @return{CharData}    The data for the given character (or undefined)
      */
     public getChar(name: string, n: number) {
         return this.variant[name].chars[n];
@@ -319,7 +319,7 @@ export class FontData {
 
     /*
      * @param{string} name   The name of the variant whose data is to be obtained
-     * @return{VariantData}  The data for the requested variant (or null)
+     * @return{VariantData}  The data for the requested variant (or undefined)
      */
     public getVariant(name: string) {
         return this.variant[name];
