@@ -13,7 +13,7 @@ i=0
 sum=0
 while [ $i -lt $repeat ]
 do
-    sum=$(( $sum + `node load.js tests/json-tests.js | tail -1 | awk -Fm '{print $1}'`))
+    sum=$(( $sum + `node load.js tests/parser-tests.js | tail -1 | awk -Fm '{print $1}'`))
     i=$(( $i + 1 ))
 done
 

@@ -27,9 +27,8 @@
  */
 
 
-let TexParser = require('mathjax3/input/tex/symbol_map.js');
-let TP = require('mathjax3/input/tex/tex_parser.js').default;
 let MapHandler = require('mathjax3/input/tex/map_handler.js').default;
+let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
 let Stack = require('mathjax3/input/tex/stack.js').default;
 let StackItem = require('mathjax3/input/tex/stack_item.js');
 
@@ -548,9 +547,7 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       //   if (special) {
       //     this[special.getFunction()](c);
       //   } else {
-      //     console.log("before parser");
-      //     var result = TP.parse(c);
-      //     console.log('LLLLL: ' + result);
+      //     var result = TeXParser.parse(c);
       //     //   if (TEXDEF.letter.contains(c)) {
       //     //   var lll = TEXDEF.letter.parse(c);
       //     // } else if (TEXDEF.digit.lookup(c)) {

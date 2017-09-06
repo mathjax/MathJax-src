@@ -74,10 +74,8 @@ export default class TexParser {
   }
   
   public static parse(input: string): void {
-    console.log("In parser 2");
-    console.log(input);
-    let result = MapHandler.getInstance().parse(input, '', null);
-    console.log(result);
+    // let result = MapHandler.getInstance().parse(input, '', null);
+    // console.log(result);
     // let parser = new TexParser(input, {});
     // console.log(parser);
     // return parser.stack.getResult();
