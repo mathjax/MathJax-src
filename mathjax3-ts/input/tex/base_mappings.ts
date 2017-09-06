@@ -684,7 +684,55 @@ export namespace BaseMappings {
     alignedat:    ['ExtensionEnv', null, 'AMSmath']
   });
 
-  // TODO: This is temporary until we have merged with configuration options.
+  CharacterMap.create('not_remap', null, {
+    '\u2190': '219A',
+    '\u2192': '219B',
+    '\u2194': '21AE',
+    '\u21D0': '21CD',
+    '\u21D2': '21CF',
+    '\u21D4': '21CE',
+    '\u2208': '2209',
+    '\u220B': '220C',
+    '\u2223': '2224',
+    '\u2225': '2226',
+    '\u223C': '2241',
+    '\u007E': '2241',
+    '\u2243': '2244',
+    '\u2245': '2247',
+    '\u2248': '2249',
+    '\u224D': '226D',
+    '\u003D': '2260',
+    '\u2261': '2262',
+    '\u003C': '226E',
+    '\u003E': '226F',
+    '\u2264': '2270',
+    '\u2265': '2271',
+    '\u2272': '2274',
+    '\u2273': '2275',
+    '\u2276': '2278',
+    '\u2277': '2279',
+    '\u227A': '2280',
+    '\u227B': '2281',
+    '\u2282': '2284',
+    '\u2283': '2285',
+    '\u2286': '2288',
+    '\u2287': '2289',
+    '\u22A2': '22AC',
+    '\u22A8': '22AD',
+    '\u22A9': '22AE',
+    '\u22AB': '22AF',
+    '\u227C': '22E0',
+    '\u227D': '22E1',
+    '\u2291': '22E2',
+    '\u2292': '22E3',
+    '\u22B2': '22EA',
+    '\u22B3': '22EB',
+    '\u22B4': '22EC',
+    '\u22B5': '22ED',
+    '\u2203': '2204'
+  });
+  
+  // TODO': This is temporary until we have merged with configuration options.
   export const Configuration = ['command', 'special', 'letter', 'digit'];
 
 }
