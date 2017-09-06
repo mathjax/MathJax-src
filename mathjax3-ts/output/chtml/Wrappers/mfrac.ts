@@ -26,6 +26,7 @@ import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
@@ -135,7 +136,7 @@ export class CHTMLmfrac extends CHTMLWrapper {
     /*
      * @override
      */
-    public canStretch(direction: string) {
+    public canStretch(direction: DIRECTION) {
         return false;
     }
 }
