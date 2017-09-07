@@ -63,9 +63,9 @@ export class CHTMLmfrac extends CHTMLWrapper {
         const bbox = BBox.empty();
         const nbox = this.childNodes[0].getBBox();
         const dbox = this.childNodes[1].getBBox();
-        const pad = (this.node.getProperty('withDelims') as boolean ? this.TeX.nulldelimiterspace : 0);
-        const a = this.TeX.axis_height;
-        const t = this.TeX.rule_thickness;
+        const pad = (this.node.getProperty('withDelims') as boolean ? this.font.params.nulldelimiterspace : 0);
+        const a = this.font.params.axis_height;
+        const t = this.font.params.rule_thickness;
         bbox.combine(dbox, pad, a + 1.5 * t + nbox.d);
         bbox.combine(nbox, pad, a - 1.5 * t - dbox.h);
         bbox.w += pad;

@@ -106,7 +106,7 @@ export class CHTMLmrow extends CHTMLWrapper {
             //  Stretch the stretchable children
             //
             for (const child of stretchy) {
-                child.coreMO().getStretchedVariant(H+D);
+                child.coreMO().getStretchedVariant([H, D]);
             }
         }
     }
@@ -129,6 +129,6 @@ export class CHTMLinferredMrow extends CHTMLmrow {
      */
     protected getScale() {
         this.bbox.scale = this.parent.bbox.scale;
-        this.bbox.rscale = 1
+        this.bbox.rscale = 1;
     }
 }
