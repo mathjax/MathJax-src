@@ -500,8 +500,11 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
 
   var PARSE = MathJax.Object.Subclass({
     Init: function (string,env) {
-      TEXDEF.letter.setParser(this.Variable.bind(this));
-      TEXDEF.digit.setParser(this.Number.bind(this));
+      TEXDEF.letter.setParser(this.Variable);
+      TEXDEF.digit.setParser(this.Number);
+      TEXDEF.mathchar7.setParser(this.csMathchar7);
+      TEXDEF.mathchar0mo.setParser(this.csMathchar0mo);
+      TEXDEF.mathchar0mi.setParser(this.csMathchar0mi);
 
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
@@ -529,12 +532,11 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
         if (special) {
           this[special.getFunction()](c);
         } else if (TEXDEF.letter.contains(c)) {
-          // console.log();
-          // TEXDEF.letter.parse(c);
-          // TEXDEF.letter.parser(c);
-          this.Variable(c);
+          // this.Variable(c);
+          TEXDEF.letter.parse(c, this);
         } else if (TEXDEF.digit.lookup(c)) {
-          this.Number(c);
+          // this.Number(c);
+          TEXDEF.digit.parse(c, this);
         } else {
          this.Other(c);
         }
@@ -585,19 +587,21 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
         //       are always saved as strings, not as functions?
         var macro = TEXDEF.macros.lookup(name);
         this[macro.getFunction()].apply(this,[c+name].concat(macro.getArguments()));
-      } else if (TEXDEF.mathchar0mi.contains(name)) {this.csMathchar0mi(TEXDEF.mathchar0mi.lookup(name));} 
-        else if (TEXDEF.mathchar0mo.contains(name)) {this.csMathchar0mo(TEXDEF.mathchar0mo.lookup(name));} 
-        else if (TEXDEF.mathchar7.contains(name)) {this.csMathchar7(TEXDEF.mathchar7.lookup(name));} 
-        else if (TEXDEF.delimiter.contains('\\' + name)) {this.csDelimiter(TEXDEF.delimiter.lookup("\\" + name));} 
-        else                                          {this.csUndefined(c+name)} 
-      // } else {
-      //   let mi = TEXDEF.mathchar0mi.lookup(name);
-      //   if (mi) {this.csMathchar0mi(mi) } 
-      //   else if (TEXDEF.mathchar0mo[name])            {this.csMathchar0mo(name,TEXDEF.mathchar0mo[name])}
-      //   else if (TEXDEF.mathchar7[name])              {this.csMathchar7(name,TEXDEF.mathchar7[name])}
-      //   else if (TEXDEF.delimiter["\\"+name] != null) {this.csDelimiter(name,TEXDEF.delimiter["\\"+name])}
-      //   else                                          {this.csUndefined(c+name)} 
-      // }
+      } else if (TEXDEF.mathchar0mi.contains(name)) {
+        TEXDEF.mathchar0mi.parse(name, this);
+      }
+      else if (TEXDEF.mathchar0mo.contains(name)) {
+        TEXDEF.mathchar0mo.parse(name, this);
+      }
+      else if (TEXDEF.mathchar7.contains(name)) {
+        TEXDEF.mathchar7.parse(name, this);
+      }
+      else if (TEXDEF.delimiter.contains('\\' + name)) {
+        TEXDEF.delimiter.parse("\\" + name, this);
+      } 
+      else {
+        this.csUndefined(c+name);
+      }
     },
     //
     //  Look up a macro in the macros list
@@ -634,6 +638,7 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     // VS Q: Does the original version with delim.length === 4 ever happen, as
     // the second argument always seems to be an Attributes dictionary?
     csDelimiter: function (delim) {
+      console.log('Delimiter');
       var def = delim.getAttributes() || {};
       this.Push(this.mmlToken(MML.mo(delim.getChar()).With({fence: false, stretchy: false}).With(def)));
     },

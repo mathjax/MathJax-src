@@ -7861,7 +7861,24 @@ parserTest.runTest(
            {"kind":"text",
             "text":"d"}]}],
       "isInferred":true}]}
+
 );
+
+// TODO: Test for mathchar7.
+// TODO: Test for delimiter.
+
+// parserTest.runTest(
+//   'Fenced', '\\left(\\frac{a}{\\left[bc\\right]}\\right)',
+//   {"kind":"math","texClass":7,"attributes":{"display":"block"},"inherited":{"displaystyle":false,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":7,"attributes":{},"inherited":{"display":"block","displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":7,"attributes":{},"inherited":{"display":"block","displaystyle":true,"scriptlevel":0},"properties":{"open":"(","close":")"},"childNodes":[{"kind":"mo","texClass":4,"attributes":{},"inherited":{"display":"block","displaystyle":true,"scriptlevel":0,"form":"prefix","fence":true,"stretchy":true,"symmetric":true},"properties":{},"childNodes":[{"kind":"text","text":"("}],"isEmbellished":true},{"kind":"mfrac","texClass":null,"attributes":{},"inherited":{"display":"block","displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"display":"block","displaystyle":false,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"a"}]},{"kind":"mrow","texClass":7,"attributes":{},"inherited":{"display":"block","displaystyle":false,"scriptlevel":0},"properties":{"open":"[","close":"]","texprimestyle":true},"childNodes":[{"kind":"mo","texClass":4,"attributes":{},"inherited":{"display":"block","displaystyle":false,"scriptlevel":0,"form":"prefix","fence":true,"stretchy":true,"symmetric":true},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"["}],"isEmbellished":true},{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"display":"block","displaystyle":false,"scriptlevel":0},"properties":{"texprimestyle":true},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"display":"block","displaystyle":false,"scriptlevel":0,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"b"}]},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"display":"block","displaystyle":false,"scriptlevel":0,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"c"}]}],"isInferred":true},{"kind":"mo","texClass":5,"attributes":{},"inherited":{"display":"block","displaystyle":false,"scriptlevel":0,"form":"postfix","fence":true,"stretchy":true,"symmetric":true},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"]"}],"isEmbellished":true}]}]},{"kind":"mo","texClass":5,"attributes":{},"inherited":{"display":"block","displaystyle":true,"scriptlevel":0,"form":"postfix","fence":true,"stretchy":true,"symmetric":true},"properties":{},"childNodes":[{"kind":"text","text":")"}],"isEmbellished":true}]}],"isInferred":true}]}
+
+// );
+
+// parserTest.runTest(
+//   'Fenced2', '\\{\\frac{a}{\\uparrow bc\\downarrow}\\}',
+//   {}
+
+// );
+
 
 // Currently ignored tests use AMS math stuff.
 
