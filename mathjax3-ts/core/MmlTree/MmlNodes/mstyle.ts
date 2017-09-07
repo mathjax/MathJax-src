@@ -36,7 +36,7 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
         scriptlevel: INHERIT,
         displaystyle: INHERIT,
         scriptsizemultiplier: 1 / Math.sqrt(2),
-        scriptminsize: '8pt',
+        scriptminsize: '8px',  // should be 8pt, but that is too large
         mathbackground: INHERIT,
         mathcolor: INHERIT,
         dir: INHERIT,
