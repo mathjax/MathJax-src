@@ -236,8 +236,9 @@ export class CHTMLmo extends CHTMLWrapper {
      * Determint variant for vertically/horizontally stretched character
      *
      * @param{number[]} WH  size to stretch to, either [W] or [H, D]
+     * @param{boolean} exact  True if not allowed to use delimiter factor and shortfall
      */
-    public getStretchedVariant(WH: number[]) {
+    public getStretchedVariant(WH: number[], exact: boolean = false) {
         if (this.stretch) {
             let D = this.getWH(WH);
             const min = this.getSize('minsize', 0);
@@ -247,8 +248,8 @@ export class CHTMLmo extends CHTMLWrapper {
             //  then get the minimum size via TeX rules
             //
             D = Math.max(min, Math.min(max, D));
-            const m = (min ? D : Math.max(D * this.font.params.delimiterfactor / 1000,
-                                          D - this.font.params.delimitershortfall));
+            const m = (min || exact ? D : Math.max(D * this.font.params.delimiterfactor / 1000,
+                                                   D - this.font.params.delimitershortfall));
             //
             //  Look through the delimiter sizes for one that matches
             //

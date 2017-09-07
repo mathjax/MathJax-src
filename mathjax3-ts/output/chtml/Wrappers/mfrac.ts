@@ -41,24 +41,24 @@ export class CHTMLmfrac extends CHTMLWrapper {
             display: 'inline-block',
             height: '1em',
             width: 0,
-            'vertical-align': '-.2em'
+            'vertical-align': '-.25em'
         },
         'mjx-hstrut': {
             display: 'inline-block',
-            height: '.8em',
+            height: '.75em',
             width: 0
         },
         'mjx-dstrut': {
             display: 'inline-block',
-            height: '.2em',
+            height: '.25em',
             width: 0,
-            'vertical-align': '-.2em'
+            'vertical-align': '-.25em'
         },
 
         'mjx-frac': {
             display: 'inline-block',
             'vertical-align': '0.145em',
-            padding: '0 3px'
+            padding: '0 .1em'
         },
         'mjx-dtable': {
             display: 'inline-table',
@@ -87,9 +87,9 @@ export class CHTMLmfrac extends CHTMLWrapper {
             display: 'block',
             'box-sizing': 'border-box',
             'min-height': '1px',
-            height: '.07em',
-            'border-top': '.07em solid',
-            margin: '.07em -3px',
+            height: '.06em',
+            'border-top': '.06em solid',
+            margin: '.06em -.1em',
             overflow: 'hidden'
         }
     };
@@ -120,15 +120,15 @@ export class CHTMLmfrac extends CHTMLWrapper {
      * @override
      */
     public computeBBox() {
-        const bbox = BBox.empty();
+        const bbox = this.bbox.empty();
         const nbox = this.childNodes[0].getBBox();
         const dbox = this.childNodes[1].getBBox();
         const pad = (this.node.getProperty('withDelims') as boolean ? this.font.params.nulldelimiterspace : 0);
         const a = this.font.params.axis_height;
         const t = this.font.params.rule_thickness;
-        bbox.combine(dbox, pad, a + 1.5 * t + nbox.d);
-        bbox.combine(nbox, pad, a - 1.5 * t - dbox.h);
-        bbox.w += pad;
+        bbox.combine(nbox, pad, a + 1.5 * t + Math.max(nbox.d, .25));
+        bbox.combine(dbox, pad, a - 1.5 * t - Math.max(dbox.h, .75));
+        bbox.w += pad + .2;
         bbox.clean();
         return bbox;
     }
