@@ -226,14 +226,30 @@ export class FontData {
     }
 
     /*
-     * Creates the data structure for a variant (an object with prototype chain
-     *   that includes a copy of the linked variant, and then the inherited variant chain.
-     *   The linked copy is updated automatically when the link variant is modified.
-     *   (The idea is to be able to have something like bold-italic inherit from both
-     *   bold and intalic by having the prototype chain include a copy of bold plus
-     *   the full italic chain.  So if something is not defined explicitly in bold-italic,
-     *   it defaults first to a bold version, than an italic version, then the normal
-     *   version, which is in the italic prototype chain.)
+     * Creates the data structure for a variant -- an object with
+     *   prototype chain that includes a copy of the linked variant,
+     *   and then the inherited variant chain.
+     *
+     *   The reason for this extra link is that for a mathvariant like
+     *   bold-italic, you want to inherit from both the bold and
+     *   italic variants, but the prototype chain can only inherit
+     *   from one. So for bold-italic, we make an object that has a
+     *   prototype consisting of a copy of the bold data, and add the
+     *   italic data as the prototype chain. (Since this is a copy, we
+     *   keep a record of this link so that if bold is changed later,
+     *   we can update this copy. That is not needed for the prototype
+     *   chain, since the prototypes are the actual objects, not
+     *   copies.) We then use this bold-plus-italic object as the
+     *   prototype chain for the bold-italic object
+     *
+     *   That means that bold-italic will first look in its own object
+     *   for specifically bold-italic glyphs that are defined there,
+     *   then in the copy of the bold glyphs (only its top level is
+     *   copied, not its prototype chain), and then the specifically
+     *   italic glyphs, and then the prototype chain for italics,
+     *   which is the normal glyphs. Effectively, this means
+     *   bold-italic looks for bold-italic, then bold, then italic,
+     *   then normal glyphs in order to find the given character.
      *
      * @param{string} name     The new variant to create
      * @param{string} inherit  The variant to use if a character is not in this one
@@ -267,6 +283,9 @@ export class FontData {
 
     /*
      * Defines new character data in a given variant
+     *  (We use Object.assign() here rather than the spread operator since
+     *  the character maps are objeccts with prototypes, and we don't
+     *  want to loose those by doing {...chars} or something similar.)
      *
      * @param{string} name    The variant for these characters
      * @param{CharMap} chars  The characters to define
