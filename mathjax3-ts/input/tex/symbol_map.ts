@@ -60,6 +60,7 @@ export interface SymbolMap {
 
   /**
    * @param {string} symbol A symbol to parse.
+   * @param {Object} env The current calling object. // (This is temporary!)
    * @return {ParseResult} The parsed symbol and the rest
    * string.
    */
@@ -100,9 +101,10 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   /**
    * @override
    */
-  public parse(symbol: string, rest: string, stack: Stack) {
+  public parse(symbol: string, env: Object) {
     let parser = this.parserFor(symbol);
-    return parser ? parser(symbol, rest, stack) : null;
+    let mapped = this.lookup(symbol);
+    return (parser && mapped) ? parser.bind(env)(mapped) : null;
   }
   
   /**
@@ -122,7 +124,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
 }
 
 
-export class RegExpMap extends AbstractSymbolMap<boolean> {
+export class RegExpMap extends AbstractSymbolMap<string> {
 
   private regExp: RegExp;
   
@@ -135,14 +137,14 @@ export class RegExpMap extends AbstractSymbolMap<boolean> {
    * @override
    */
   public contains(symbol: string) {
-    return this.lookup(symbol);
+    return this.regExp.test(symbol);
   }
 
   /**
    * @override
    */
   public lookup(symbol: string) {
-    return this.regExp.test(symbol);
+    return this.contains(symbol) ? symbol : null;
   }
   
   // TODO: Some of this is due to the legacy code format.  In particular working
