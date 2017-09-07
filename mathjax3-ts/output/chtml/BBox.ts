@@ -144,7 +144,7 @@ export class BBox {
             this.h = scale * cbox.h;
         }
         if (scale * cbox.d > this.d) {
-            this.d = scale*cbox.d;
+            this.d = scale * cbox.d;
         }
     }
 

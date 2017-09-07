@@ -21,40 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapper, StringMap} from '../Wrapper.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
-
-/*****************************************************************/
-/*
- *  These will be part of a font class in the future.  They are
- *  just temporary for now.
- */
-
-/*
- * Stretchy delimiter data
- */
-type DelimiterData = {
-    dir: string;
-    sizes: [number];
-    fonts?: [number];
-};
-
-/*
- * The stretch direction
- */
-const V = 'V';
-const H = 'H';
-
-/*
- * The delimiter list (will be longer in the future)
- */
-const DELIMITERS: {[n: number]: DelimiterData} = {
-    0x0028: {dir: V, sizes: [1, 1.2, 1.8, 2.4, 3.0]}
-};
-
-const VARIANT = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
+import {DelimiterData} from '../FontData.js';
 
 /*****************************************************************/
 /*
@@ -65,44 +36,112 @@ export class CHTMLmo extends CHTMLWrapper {
 
     /*
      * The font size that a stretched operator uses.
-     * If -1, then stretch arbitrarily, and WHD gives the actual width or height to use
+     * If -1, then stretch arbitrarily, and bbox gives the actual height, depth, width
      */
     protected size: number = null;
-    protected WH: number = 0;
 
     /*
      * @override
      */
     public toCHTML(parent: HTMLElement) {
         // eventually handle centering, largop, etc.
-        let attributes = this.node.attributes;
+        const attributes = this.node.attributes;
+        const symmetric = attributes.get('symmetric') as boolean;
         if (this.stretch && this.size === null) {
-            this.getStretchedVariant(0);
+            this.getStretchedVariant([]);
         }
         let chtml = this.standardCHTMLnode(parent);
-        if (attributes.get('symmetric') || attributes.get('largeop')) {
-            chtml = chtml.appendChild(this.html('mjx-symmetric'));
+        if (this.stretch && this.size < 0) {
+            this.stretchHTML(chtml, symmetric);
+        } else {
+            if (symmetric || attributes.get('largeop')) {
+                chtml = chtml.appendChild(this.html('mjx-symmetric'));
+            }
+            for (const child of this.childNodes) {
+                child.toCHTML(chtml);
+            }
         }
-        for (const child of this.childNodes) {
-            child.toCHTML(chtml);
+    }
+
+    /*
+     * Create the HTML for a multi-character stretchy delimiter
+     *
+     * @param{HTMLElement} chtml  The parent element in which to put the delimiter
+     * @param{boolean} symmetric  Whether delimiter should be symmetric about the math axis
+     */
+    protected stretchHTML(chtml: HTMLElement, symmetric: boolean) {
+        const c = this.getText().charCodeAt(0);
+        const C = this.font.getDelimiter(c).stretch;
+        const content: HTMLElement[] = [];
+        //
+        //  Set up the beginning, extension, and end pieces
+        //
+        if (C[0]) {
+            content.push(this.html('mjx-beg', {}, [this.html('mjx-c')]));
         }
+        content.push(this.html('mjx-ext', {}, [this.html('mjx-c')]));
+        if (C.length === 4) {
+            //
+            //  Braces have a middle and second extensible piece
+            //
+            content.push(
+                this.html('mjx-mid', {}, [this.html('mjx-c')]),
+                this.html('mjx-ext', {}, [this.html('mjx-c')])
+            );
+        }
+        if (C[2]) {
+            content.push(this.html('mjx-end', {}, [this.html('mjx-c')]));
+        }
+        //
+        //  Set the styles needed
+        //
+        const styles: StringMap = {};
+        const {h, d, w} = this.bbox;
+        if (this.stretch === 'V') {
+            //
+            //  Vertical needs an extra (empty) element to get vertical position right
+            //  in some browsers (e.g., Safari)
+            //
+            content.push(this.html('mjx-mark'));
+            styles.height = this.em(h + d);
+            styles.verticalAlign = this.em(-d);
+        } else {
+            styles.width = this.em(w);
+        }
+        //
+        //  Make the main element and add it to the parent
+        //
+        const html = this.html('mjx-stretchy-' + this.stretch.toLowerCase(),
+                               {c: this.char(c), style: styles}, content);
+        chtml.appendChild(html);
     }
 
     /*
      * @override
      */
     public computeBBox() {
-        // eventually handle centering, largop, etc.
+        const attributes = this.node.attributes;
+        const symmetric = attributes.get('symmetric');
         if (this.stretch && this.size === null) {
-            this.getStretchedVariant(0);
+            this.getStretchedVariant([0]);
         }
-        return super.computeBBox();
+        if (this.stretch && this.size < 0) {
+            return this.bbox;
+        } else {
+            const bbox = super.computeBBox();
+            if (symmetric) {
+                const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
+                bbox.h += d;
+                bbox.d += d;
+            }
+            return bbox;
+        }
     }
 
     /*
      * @override
      */
-    getVariant() {
+    protected getVariant() {
         if (this.node.attributes.get('largeop')) {
             this.variant = (this.node.attributes.get('displaystyle') ? '-largeop' : '-smallop');
         } else {
@@ -116,9 +155,9 @@ export class CHTMLmo extends CHTMLWrapper {
     public canStretch(direction: string) {
         const attributes = this.node.attributes;
         if (!attributes.get('stretchy')) return false;
-        let c = this.getText();
+        const c = this.getText();
         if (c.length !== 1) return false;
-        let C = DELIMITERS[c.charCodeAt(0)];
+        const C = this.font.getDelimiter(c.charCodeAt(0));
         this.stretch = (C && C.dir === direction.substr(0, 1) ? C.dir : '');
         return this.stretch !== '';
     }
@@ -126,25 +165,45 @@ export class CHTMLmo extends CHTMLWrapper {
     /*
      * Determint variant for vertically/horizontally stretched character
      *
-     * @param{number} D  size to stretch to
+     * @param{number[]} WH  size to stretch to, either [W] or [H, D]
      */
-    public getStretchedVariant(D: number) {
+    public getStretchedVariant(WH: number[]) {
         if (this.stretch) {
-            let min = this.getSize('minsize', 0);
-            let max = this.getSize('maxsize', Infinity);
+            let D = this.getWH(WH);
+            const min = this.getSize('minsize', 0);
+            const max = this.getSize('maxsize', Infinity);
+            //
+            //  Clamp the dimension to the max and min
+            //  then get the minimum size via TeX rules
+            //
             D = Math.max(min, Math.min(max, D));
-            const m = (min ? D : Math.max(D * this.TeX.delimiterfactor / 1000, D - this.TeX.delimitershortfall));
+            const m = (min ? D : Math.max(D * this.font.params.delimiterfactor / 1000,
+                                          D - this.font.params.delimitershortfall));
+            //
+            //  Look through the delimiter sizes for one that matches
+            //
+            const c = this.getText().charCodeAt(0);
+            const delim = this.font.getDelimiter(c);
             let i = 0;
-            for (const d of DELIMITERS[this.getText().charCodeAt(0)].sizes) {
+            for (const d of delim.sizes) {
                 if (d >= m) {
-                    this.variant = VARIANT[i];
+                    this.variant = this.font.getSizeVariant(c, i);
                     this.size = i;
                     return;
                 }
                 i++;
             }
-            this.size = -1;
-            this.WH = D;
+            //
+            //  No size matches, so if we can make multi-character delimiters,
+            //  record the data for that, otherwise, use the largest fixed size.
+            //
+            if (delim.stretch) {
+                this.size = -1;
+                this.getStretchBBox(WH, D, delim);
+            } else {
+                this.variant = this.font.getSizeVariant(c, i - 1);
+                this.size = i - 1;
+            }
         }
     }
 
@@ -158,6 +217,68 @@ export class CHTMLmo extends CHTMLWrapper {
             value = this.length2em(attributes.get(name), 1, 1); // FIXME: should use height of actual character
         }
         return value;
+    }
+
+    /*
+     * @param{number[]} WH  Either [W] for width, [H, D] for height and depth, or [] for min/max size
+     */
+    protected getWH(WH: number[]) {
+        if (WH.length === 0) return 0;
+        if (WH.length === 1) return WH[0];
+        let [H, D] = WH;
+        const a = this.font.params.axis_height;
+        return (this.node.attributes.get('symmetric') ? 2 * Math.max(H - a, D + a) : H + D);
+    }
+
+    /*
+     * @param{number[]} WHD     The [W] or [H, D] being requested from the parent mrow
+     * @param{number} D         The full dimension (including symmetry, etc)
+     * @param{DelimiterData} C  The delimiter data for the stretchy character
+     */
+    protected getStretchBBox(WHD: number[], D: number, C: DelimiterData) {
+        let [h, d, w] = C.HDW;
+        if (this.stretch === 'V') {
+            [h, d] = this.getBaseline(WHD, D, C);
+        } else {
+            w = D;
+        }
+        this.bbox.h = h;
+        this.bbox.d = d;
+        this.bbox.w = w;
+    }
+
+    /*
+     * @param{number[]} WHD     The [H, D] being requested from the parent mrow
+     * @param{number} HD        The full height (including symmetry, etc)
+     * @param{DelimiterData} C  The delimiter data for the stretchy character
+     * @param{number[]}         The height and depth for the vertically stretched delimiter
+     */
+    protected getBaseline(WHD: number[], HD: number, C: DelimiterData) {
+        const hasWHD = (WHD.length === 2);
+        const symmetric = (hasWHD && this.node.attributes.get('symmetric'));
+        const [H, D] = (hasWHD ? WHD : [HD, 0]);
+        let [h, d] = [H + D, 0];
+        if (symmetric) {
+            //
+            //  Center on the math axis
+            //
+            const a = this.font.params.axis_height;
+            h = 2 * Math.max(H - a, D + a);
+            d = h / 2 - a;
+        } else if (hasWHD) {
+            //
+            //  Use the given depth (from mrow)
+            //
+            d = D;
+        } else {
+            //
+            //  Use depth proportional to the normal-size character
+            //  (when stretching for minsize or maxsize by itself)
+            //
+            let [ch, cd] = (C.HDW || [.75, .25]);
+            d = cd * (h / (ch + cd));
+        }
+        return [h - d, d];
     }
 
 }

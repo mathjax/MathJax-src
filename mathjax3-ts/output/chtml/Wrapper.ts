@@ -33,7 +33,7 @@ import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
-import {TexFontParams} from './TeX.js';
+import {FontData} from './FontData.js';
 
 /*****************************************************************/
 
@@ -89,7 +89,7 @@ export const FONTSIZE: StringMap = {
     '173%': 'LG',
     '207%': 'hg',
     '249%': 'HG'
-}
+};
 
 /*
  * Needed to access node.style[id] using variable id
@@ -210,7 +210,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * Easy access to the font parameters
      */
-    public TeX = TexFontParams;
+    public font: FontData = null;
 
     /*
      * Easy access to the CHTML output jax for this node
@@ -234,6 +234,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
         super(factory, node);
         this.parent = parent;
+        this.font = factory.chtml.font;
         this.bbox = BBox.zero();
         this.getStyles();
         this.getVariant();
@@ -562,7 +563,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{string}  For a token node, the combined text content of the node's children
      */
     public getText() {
-        let text = "";
+        let text = '';
         if (this.node.isToken) {
             for (const child of this.node.childNodes) {
                 if (child instanceof TextNode) {
