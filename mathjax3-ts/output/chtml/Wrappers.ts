@@ -23,17 +23,32 @@
 
 import {CHTMLWrapper} from './Wrapper.js';
 import {CHTMLmo} from './Wrappers/mo.js';
+import {CHTMLms} from './Wrappers/ms.js';
 import {CHTMLmspace} from './Wrappers/mspace.js';
+import {CHTMLmpadded} from './Wrappers/mpadded.js';
 import {CHTMLmrow, CHTMLinferredMrow} from './Wrappers/mrow.js';
 import {CHTMLmfrac} from './Wrappers/mfrac.js';
+import {CHTMLmsqrt} from './Wrappers/msqrt.js';
+import {CHTMLmroot} from './Wrappers/mroot.js';
+import {CHTMLsemantics, CHTMLannotation, CHTMLannotationXML, CHTMLxml} from './Wrappers/semantics.js';
+import {CHTMLTeXAtom} from './Wrappers/TeXAtom.js';
 import {CHTMLTextNode} from './Wrappers/TextNode.js';
 
 export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
     [CHTMLmrow.kind]: CHTMLmrow,
     [CHTMLinferredMrow.kind]: CHTMLinferredMrow,
     [CHTMLmo.kind]: CHTMLmo,
+    [CHTMLms.kind]: CHTMLms,
     [CHTMLmspace.kind]: CHTMLmspace,
+    [CHTMLmpadded.kind]: CHTMLmpadded,
     [CHTMLmfrac.kind]: CHTMLmfrac,
+    [CHTMLmsqrt.kind]: CHTMLmsqrt,
+    [CHTMLmroot.kind]: CHTMLmroot,
+    [CHTMLsemantics.kind]: CHTMLsemantics,
+    [CHTMLannotation.kind]: CHTMLannotation,
+    [CHTMLannotationXML.kind]: CHTMLannotationXML,
+    [CHTMLxml.kind]: CHTMLxml,
+    [CHTMLTeXAtom.kind]: CHTMLTeXAtom,
     [CHTMLTextNode.kind]: CHTMLTextNode,
     [CHTMLWrapper.kind]: CHTMLWrapper
 };

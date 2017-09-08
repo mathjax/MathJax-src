@@ -22,7 +22,28 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../../util/Options.js';
+import {StringMap} from './Wrapper.js';
+
+/*
+ * The extra options allowed in a CharData array
+ */
+export type CharOptions = {
+    c?: string;                   // the content value (for css)
+    f?: string;                   // the font postfix (for css)
+    css?: number;                 // a bitmap for whether CSS is needed for content, padding, or width
+    ic?: number;                  // italic correction value
+    sk?: number;                  // skew value
+};
+
+/*
+ * The bit values for CharOptions.css
+ */
+export const enum CSS {
+    width = 1 << 0,
+    padding = 1 << 1,
+    content = 1 << 2
+}
+
 
 /*
  * Data about a character
@@ -30,9 +51,7 @@ import {OptionList} from '../../util/Options.js';
  */
 export type CharData =
     [number, number, number] |
-    [number, number, number, number] |
-    [number, number, number, number, number] |
-    [number, number, number, number, number, OptionList];
+    [number, number, number, CharOptions];
 
 export type CharMap = {
     [n: number]: CharData;
@@ -55,6 +74,10 @@ export type VariantData = {
      * The character data for this variant
      */
     chars: CharMap;
+    /*
+     * The classes to use for this variant
+     */
+    classes?: string;
 };
 
 export type VariantMap = {
@@ -68,9 +91,12 @@ export type DelimiterData = {
     dir: string;                 // 'V' or 'H' for vertcial or horizontal
     sizes?: number[];            // Array of fixed sizes for this character
     variants?: number[];         // The variants in which the different sizes can be found (if not the default)
+    schar?: number[];            // The character number to use for each size (if different from the default)
     stretch?: number[];          // The unicode character numbers for the parts of multi-character versions [beg, ext, end, mid?]
     HDW?: number[];              // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
                                  //            for horizontal, h and d are the multi-character ones, w is for the normal size).
+    min?: number;                // The minimum size a multi-character version can be
+    c?: number;                   // The character number (for aliased delimiters)
 };
 
 export type DelimiterMap = {
@@ -198,6 +224,11 @@ export class FontData {
     protected static defaultSizeVariants: string[] = [];
 
     /*
+     * The default class names to use for each variant
+     */
+    protected static defaultVariantClasses: StringMap = {};
+
+    /*
      * The actual variant, delimiter, and size information for this font
      */
     protected variant: VariantMap = {};
@@ -222,6 +253,9 @@ export class FontData {
         this.defineDelimiters(CLASS.defaultDelimiters);
         for (const name of Object.keys(CLASS.defaultChars)) {
             this.defineChars(name, CLASS.defaultChars[name]);
+        }
+        for (const name of Object.keys(CLASS.defaultVariantClasses)) {
+            this.variant[name].classes = CLASS.defaultVariantClasses[name];
         }
     }
 
@@ -342,6 +376,17 @@ export class FontData {
      */
     public getVariant(name: string) {
         return this.variant[name];
+    }
+
+    /*
+     * @param{number} n  A unicode code point to be converred to a character reference for use with the
+     *                   CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
+     *                   for higher values, or for the double quote and backslash characters).
+     * @return{string}  The character as a properly encoded string.
+     */
+    public char(n: number, escape: boolean = false) {
+        return (n >= 0x20 && n <= 0x7E && n !== 0x22 && n !== 0x27 && n !== 0x5C ?
+                String.fromCharCode(n) : (escape ? '\\' : '') + n.toString(16).toUpperCase());
     }
 
 }
