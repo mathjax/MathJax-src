@@ -643,7 +643,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     // VS Q: Does the original version with delim.length === 4 ever happen, as
     // the second argument always seems to be an Attributes dictionary?
     csDelimiter: function (delim) {
-      console.log('Delimiter');
       var def = delim.getAttributes() || {};
       this.Push(this.mmlToken(MML.mo(delim.getChar()).With({fence: false, stretchy: false}).With(def)));
     },
