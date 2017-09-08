@@ -29,20 +29,22 @@ import {BaseMethods} from './base_methods.js';
 
 export namespace BaseMappings {
 
+  // TODO: Thes parsing methods are currently overwritten in the legacy code.
   RegExpMap.create('letter', BaseMethods.variable, /[a-z]/i);
 
   RegExpMap.create('digit', BaseMethods.digit, /[0-9.]/);
 
+  // Currently not in use!
   RegExpMap.create('number', BaseMethods.num,
                 /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
 
-  RegExpMap.create('command', BaseMethods.controlSequence, /^\\/);
+  RegExpMap.create('command', BaseMethods.controlSequence, /^\\/);  //
 
   
   MacroMap.create('special', {
 
-    // This is temporarily included!
-    '\\':  'ControlSequence',
+    // This is now handled with a RegExp!
+    // '\\':  'ControlSequence',
 
     '{':   'Open',
     '}':   'Close',
@@ -732,7 +734,7 @@ export namespace BaseMappings {
     '\u2203': '2204'
   });
   
-  // TODO': This is temporary until we have merged with configuration options.
+  // TODO: This is temporary until we have merged with configuration options.
   export const Configuration = ['command', 'special', 'letter', 'digit'];
 
 }

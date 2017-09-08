@@ -223,6 +223,9 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
 
 export class MacroMap extends AbstractParseMap<Macro> {
 
+  // private functionMap: Map<string, ParseMethod> = new Map();
+  private functionMap: any;
+  
   public addElement(symbol: string, object: Args[]): void {
     let character = new Macro(symbol, object[0] as string, object.slice(1));
     this.add(symbol, character);
@@ -230,10 +233,29 @@ export class MacroMap extends AbstractParseMap<Macro> {
 
   public setParser(parser: (str: string) => ParseResult) { }
 
-  // public parserFor(symbol: string) {
-  //   let macro = this.lookup(symbol);
-  //   return macro ? macro.getFunction() : null;
-  // }
+  // TODO: This needs to be set explicitly from an object.
+  public setFunctionMap(map: Map<string, ParseMethod>) {
+    this.functionMap = map;
+  }
+
+  public parserFor(symbol: string) {
+    let macro = this.lookup(symbol);
+    // return macro ? (this.functionMap.get(macro.getFunction()) as ParseMethod) : null;
+    return macro ? this.functionMap[macro.getFunction()] : null;
+  }
+  
+  /**
+   * @override
+   */
+  public parse(symbol: string, env: Object) {
+    let macro = this.lookup(symbol);
+    if (!macro) {
+      return null;
+    }
+    let parser = this.functionMap[macro.getFunction()];
+    let args = ['\\' + symbol].concat(macro.getArguments() as string[]);
+    return parser ? parser.bind(env).apply(env, args) : null;
+  }
   
   // TODO: Some of this is due to the legacy code format.
   public static create(name: string,

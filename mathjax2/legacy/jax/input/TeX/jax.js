@@ -468,24 +468,28 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     MML = MathJax.ElementJax.mml;
     HUB.Insert(TEXDEF,{
       number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
+      p_height: 1.2 / .85,   // cmex10 height plus depth over .85
 
       letter:  MapHandler.getInstance().getMap('letter'),
       digit:   MapHandler.getInstance().getMap('digit'),
-      special: MapHandler.getInstance().getMap('special'),
+      command: MapHandler.getInstance().getMap('command'),
+      
       remap:   MapHandler.getInstance().getMap('remap'),
       mathchar0mi: MapHandler.getInstance().getMap('mathchar0mi'),
       mathchar0mo: MapHandler.getInstance().getMap('mathchar0mo'),
       mathchar7: MapHandler.getInstance().getMap('mathchar7'),
       delimiter: MapHandler.getInstance().getMap('delimiter'),
-      macros: MapHandler.getInstance().getMap('macros'),
-      environment: MapHandler.getInstance().getMap('environment'),
 
-      p_height: 1.2 / .85   // cmex10 height plus depth over .85
+      special: MapHandler.getInstance().getMap('special'),
+      macros: MapHandler.getInstance().getMap('macros'),
+      environment: MapHandler.getInstance().getMap('environment')
 
     });
     
     //
     //  Add macros defined in the configuration
+    //
+    // VS: This needs to be rewritten or removed!
     //
     if (this.config.Macros) {
       var MACROS = this.config.Macros;
@@ -504,13 +508,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
 
   var PARSE = MathJax.Object.Subclass({
     Init: function (string,env) {
-      TEXDEF.letter.setParser(this.Variable);
-      TEXDEF.digit.setParser(this.Number);
-      TEXDEF.mathchar7.setParser(this.csMathchar7);
-      TEXDEF.mathchar0mo.setParser(this.csMathchar0mo);
-      TEXDEF.mathchar0mi.setParser(this.csMathchar0mi);
-      TEXDEF.delimiter.setParser(this.csDelimiter);
-
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       // this.stack = new Stack(ENV, !!env,
@@ -524,44 +521,46 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       //                        function(item) {return item instanceof STACKITEM;}
       //                       );
       this.stack = TEX.Stack(ENV,!!env);
+      this.Setup();
       this.Parse(); this.Push(STACKITEM.stop());
       // this.Parse(); this.Push(new StackItem.Stop());
     },
+    // TODO: Move to configuration.
+    Setup: function() {
+      TEXDEF.macros.setFunctionMap(this);
+      TEXDEF.special.setFunctionMap(this);
+      TEXDEF.environment.setFunctionMap(this);
+
+      TEXDEF.letter.setParser(this.Variable);
+      TEXDEF.digit.setParser(this.Number);
+      TEXDEF.command.setParser(this.ControlSequence);
+
+      TEXDEF.mathchar7.setParser(this.csMathchar7);
+      TEXDEF.mathchar0mo.setParser(this.csMathchar0mo);
+      TEXDEF.mathchar0mi.setParser(this.csMathchar0mi);
+      TEXDEF.delimiter.setParser(this.csDelimiter);
+    },
     Parse: function () {
+
       var c, n;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        // TODO VS Rewrite that as a general lookup!
+        if (TEXDEF.command.contains(c)) {
+          TEXDEF.command.parse(c, this);
+          continue;
+        }
         var special = TEXDEF.special.lookup(c);
         if (special) {
           this[special.getFunction()](c);
         } else if (TEXDEF.letter.contains(c)) {
-          // this.Variable(c);
           TEXDEF.letter.parse(c, this);
-        } else if (TEXDEF.digit.lookup(c)) {
-          // this.Number(c);
+        } else if (TEXDEF.digit.contains(c)) {
           TEXDEF.digit.parse(c, this);
         } else {
          this.Other(c);
         }
       }
-      // while (this.i < this.string.length) {
-      //   c = this.string.charAt(this.i++); n = c.charCodeAt(0);
-      //   if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-      //   // TODO VS Rewrite that as a general lookup!
-      //   var special = TEXDEF.special.lookup(c);
-      //   if (special) {
-      //     this[special.getFunction()](c);
-      //   } else {
-      //     var result = TeXParser.parse(c);
-      //     //   if (TEXDEF.letter.contains(c)) {
-      //     //   var lll = TEXDEF.letter.parse(c);
-      //     // } else if (TEXDEF.digit.lookup(c)) {
-      //     //   this.Number(c);
-      //     result || this.Other(c);
-      //   }
-      // }
     },
     Push: function (arg) {
       this.stack.Push(arg);
@@ -591,7 +590,9 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
         // VS Q: This always seems to be used like that. I.e., macro functions
         //       are always saved as strings, not as functions?
         var macro = TEXDEF.macros.lookup(name);
-        this[macro.getFunction()].apply(this,[c+name].concat(macro.getArguments()));
+        TEXDEF.macros.parse(name, this);
+        // TEXDEF.macros.functionMap[macro.getFunction()].apply(this,[c+name].concat(macro.getArguments()));
+        // this[macro.getFunction()].apply(this,[c+name].concat(macro.getArguments()));
       } else if (TEXDEF.mathchar0mi.contains(name)) {
         TEXDEF.mathchar0mi.parse(name, this);
       }
@@ -612,7 +613,7 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     //  Look up a macro in the macros list
     //  (overridden in begingroup extension)
     //
-    csFindMacro: function (name) {return TEXDEF.macros[name]},
+    // csFindMacro: function (name) {return TEXDEF.macros[name]},
     //
     //  Handle normal mathchar (as an mi)
     //
