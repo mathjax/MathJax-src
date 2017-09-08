@@ -26,6 +26,7 @@ import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {DelimiterData} from '../FontData.js';
+import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
@@ -34,11 +35,71 @@ import {DelimiterData} from '../FontData.js';
 export class CHTMLmo extends CHTMLWrapper {
     public static kind = MmlMo.prototype.kind;
 
+    public static styles: StyleList = {
+        'mjx-symmetric': {
+            'vertical-align': '.25em'
+        },
+        'mjx-symmetric > mjx-c': {
+            'vertical-align': 'middle'
+        },
+
+        'mjx-stretchy-h': {
+            display: 'inline-table',
+            width: '100%',
+            'min-width': '1.2em'
+        },
+        'mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-end': {
+            display: 'table-cell',
+            width: 0
+        },
+        'mjx-stretchy-h > mjx-ext': {
+            display: 'table-cell',
+            overflow: 'hidden',
+            width: '100%'
+        },
+        'mjx-stretchy-h > mjx-ext > mjx-c': {
+            transform: 'scalex(1000)',
+            margin: '0 -1em'
+        },
+
+        'mjx-stretchy-v': {
+            display: 'inline-block'
+        },
+        'mjx-stretchy-v > mjx-beg': {
+            display: 'block',
+            height: 0
+        },
+        'mjx-stretchy-v > mjx-end': {
+            display: 'block'
+        },
+        'mjx-stretchy-v > mjx-end > mjx-c': {
+            display: 'block'
+        },
+        'mjx-stretchy-v > mjx-beg > mjx-c, mjx-stretchy-v > mjx-end > mjx-c': {
+            overflow: 'hidden'
+        },
+        'mjx-stretchy-v > mjx-ext': {
+            display: 'block',
+            height: '100%',
+            'box-sizing': 'border-box',
+            border: '0px solid transparent',
+            overflow: 'hidden'
+        },
+        'mjx-stretchy-v > mjx-ext > mjx-c': {
+            transform: 'scaleY(1000) translateY(.5em)'
+        },
+        'mjx-mark': {
+            display: 'inline-block',
+            height: '0px'
+        }
+
+    };
+
     /*
      * The font size that a stretched operator uses.
      * If -1, then stretch arbitrarily, and bbox gives the actual height, depth, width
      */
-    protected size: number = null;
+    public size: number = null;
 
     /*
      * @override

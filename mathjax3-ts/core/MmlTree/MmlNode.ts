@@ -291,6 +291,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             factory.getNodeClass(this.kind).defaults,
             factory.getNodeClass('math').defaults
         );
+        this.attributes.setList(attributes);
     }
 
     /*

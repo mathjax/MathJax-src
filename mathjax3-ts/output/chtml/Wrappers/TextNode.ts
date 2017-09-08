@@ -33,6 +33,13 @@ import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 export class CHTMLTextNode extends CHTMLWrapper {
     public static kind = TextNode.prototype.kind;
 
+    public static autoStyle = false;
+    public static styles = {
+        'mjx-c, mjx-c::before': {
+            display: 'inline-block'
+        }
+    };
+
     /*
      * @override
      */
@@ -57,12 +64,12 @@ export class CHTMLTextNode extends CHTMLWrapper {
             // FIXME:  measure this using DOM, if possible
         } else {
             const chars = this.unicodeChars((this.node as TextNode).getText());
-            let [h, d, w] = this.font.getChar(variant, chars[0]);
+            let [h, d, w] = this.font.getChar(variant, chars[0]) || [0, 0, 0];
             bbox.h = h;
             bbox.d = d;
             bbox.w = w;
             for (let i = 1, m = chars.length; i < m; i++) {
-                [h, d, w] = this.font.getChar(variant, chars[i]);
+                [h, d, w] = this.font.getChar(variant, chars[i]) || [0, 0, 0];
                 bbox.w += w;
                 if (h > bbox.h) bbox.h = h;
                 if (d > bbox.d) bbox.d = d;
