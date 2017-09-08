@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLMsqrt wrapper for the MmlMsqrt object
+ * @fileoverview  Implements the CHTMLmsqrt wrapper for the MmlMsqrt object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -32,7 +32,7 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLMsqrt wrapper for the Msqrt object
+ *  The CHTMLmsqrt wrapper for the MmlMsqrt object
  */
 
 export class CHTMLmsqrt extends CHTMLWrapper {
