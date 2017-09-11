@@ -222,22 +222,6 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             mpadded: {width: true, height: true, depth: true, lspace: true, voffset: true},
             mtable:  {width: true, height: true, depth: true, align: true}
         },
-        mtable: {
-            mover: {align: true},
-            munder: {align: true},
-            munderover: {align: true},
-            mtable: {
-                align: true, rowalign: true, columnalign: true, groupalign: true,
-                alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
-                columnspacing: true, rowlines: true, columnlines: true, frame: true,
-                framespacing: true, equalrows: true, equalcolumns: true, displaystyle: true,
-                side: true, minlabelspacing: true
-            }
-        },
-        mtr: {
-            mrow: {rowalign: true, columnalign: true, groupalign: true},
-            mtable: {rowalign: true, columnalign: true, groupalign: true}
-        },
         maligngroup: {
             mrow: {groupalign: true},
             mtable: {groupalign: true}
