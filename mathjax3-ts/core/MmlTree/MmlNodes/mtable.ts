@@ -84,7 +84,6 @@ export class MmlMtable extends AbstractMmlNode {
             }
         }
         display = !!(this.attributes.getExplicit('displaystyle') || this.attributes.getDefault('displaystyle'));
-        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 
