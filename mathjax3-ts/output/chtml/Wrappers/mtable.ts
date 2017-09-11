@@ -133,7 +133,7 @@ export class CHTMLmtable extends CHTMLWrapper {
         const cLines = this.getColumnAttributes('columnlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
         const rLines = this.getColumnAttributes('rowlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
         const a = this.font.params.axis_height;
-        const h = H.concat(D,rLines).reduce((a, b) => a + b) + (frame ? .14 : 0) +
+        const h = H.concat(D, rLines).reduce((a, b) => a + b) + (frame ? .14 : 0) +
             rSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1]);
         this.bbox.h = h / 2 + a;
         this.bbox.d = h / 2 - a;
@@ -378,7 +378,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      *
      * @param{string[]} list   The array of dimensions to be turned into em's
      * @param{nunber} n        The number to divide each dimension by after converted
-     * @return{string[]}       The array of values converted to em's 
+     * @return{string[]}       The array of values converted to em's
      */
     protected convertLengths(list: string[], n: number = 1) {
         if (!list) return;
