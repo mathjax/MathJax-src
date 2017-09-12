@@ -12,6 +12,7 @@
     "tslint": "^3.15.0",
     "tslint-jsdoc-rules": "*",
     "tslint-unix-formatter": "*",
+    "typescript-tools": "^0.3.1"
   },
   "repository": {
     "type": "git",
