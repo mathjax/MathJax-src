@@ -29,25 +29,9 @@
 
 let MapHandler = require('mathjax3/input/tex/map_handler.js').default;
 let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
-let Stack = require('mathjax3/input/tex/stack.js').default;
-let StackItem = require('mathjax3/input/tex/stack_item.js');
 
 (function (TEX,HUB,AJAX) {
-    // TODO: This is temporary until we know what's happening with output of
-    //       these MML Data methods.
-  StackItem.setTempFunctions(
-    {mml: function(func, data, attribute) {
-      return MathJax.ElementJax.mml[func].apply(MathJax.ElementJax.mml, data).With(attribute);
-    },
-     error: function(content) {
-       MathJax.InputJax.TeX.Error(content);
-     },
-     setdata: function(base, count, item) {
-       base.SetData(count, item);
-     }
-    });
 
-  
   var MML, NBSP = "\u00A0"; 
   
   var _ = function (id) {
@@ -64,36 +48,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       if (env) {this.data[0].env = env}
       this.env = this.data[0].env;
     },
-    // Rewrote this to single argument push! Need to explicitly push an array of
-    // arguments in the extensions!
-    // Push: function (item) {
-    //   if (!item) return;
-    //   if (item instanceof MML.mbase) {
-    //     item = STACKITEM.mml(item);
-    //   }
-    //   item.global = this.global;
-    //   if (this.data.length) {
-    //     var t1 = this.Top();
-    //   }
-    //   var top = (this.data.length ? this.Top().checkItem(item) : true);
-    //   if (top instanceof Array) {
-    //     this.Pop();
-    //     for (var i = 0, l = top.length; i < l; i++) {
-    //       this.Push(top[i]);
-    //     }
-    //   }
-    //   else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
-    //   else if (top) {
-    //     this.data.push(item);
-    //     if (item.env) {
-    //       for (var id in this.env) {
-    //         if (this.env.hasOwnProperty(id)) {
-    //           item.env[id] = this.env[id]}
-    //       }
-    //       this.env = item.env;
-    //     } else {item.env = this.env}
-    //   }
-    // },
     Push: function () {
       var i, m, item, top;
       for (i = 0, m = arguments.length; i < m; i++) {
@@ -510,16 +464,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     Init: function (string,env) {
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
-      // this.stack = new Stack(ENV, !!env,
-      //                        // function(x) {return STACKITEM.start(x);},
-      //                        // function(item) {
-      //                        //   return item instanceof MML.mbase ? STACKITEM.mml(item) : item;
-      //                        // },
-      //                        function(item) {
-      //                          return item instanceof MML.mbase;
-      //                        },
-      //                        function(item) {return item instanceof STACKITEM;}
-      //                       );
       this.stack = TEX.Stack(ENV,!!env);
       this.Setup();
       this.Parse(); this.Push(STACKITEM.stop());
@@ -547,19 +491,11 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        if (TEXDEF.command.contains(c)) {
-          TEXDEF.command.parse(c, this);
-          continue;
-        }
-        if (TEXDEF.special.lookup(c)) {
-          TEXDEF.special.parse(c, this);
-        } else if (TEXDEF.letter.contains(c)) {
-          TEXDEF.letter.parse(c, this);
-        } else if (TEXDEF.digit.contains(c)) {
-          TEXDEF.digit.parse(c, this);
-        } else {
-         this.Other(c);
-        }
+        TEXDEF.command.parse(c, this) ||
+          TEXDEF.special.parse(c, this) ||
+          TEXDEF.letter.parse(c, this) ||
+          TEXDEF.digit.parse(c, this) ||
+          this.Other(c);
       }
     },
     Push: function (arg) {
@@ -707,9 +643,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
           position = base.sup;
         }
       }
-      // this.Push(new StackItem.Subsup(base, {
-      //   position: position, primes: primes, movesupsub: movesupsub
-      // }));
       this.Push(STACKITEM.subsup(base).With({
         position: position, primes: primes, movesupsub: movesupsub
       }));
@@ -737,9 +670,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
           position = base.sub;
         }
       }
-      // this.Push(new StackItem.Subsup(base, {
-      //   position: position, primes: primes, movesupsub: movesupsub
-      // }));
       this.Push(STACKITEM.subsup(base).With({
         position: position, primes: primes, movesupsub: movesupsub
       }));
@@ -755,7 +685,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
       sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
-      // this.Push(new StackItem.Prime(base, this.mmlToken(MML.mo(sup)), {}));
       this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
     },
     mi2mo: function (mi) {

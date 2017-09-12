@@ -109,7 +109,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   public parse(symbol: string, env: Object) {
     let parser = this.parserFor(symbol);
     let mapped = this.lookup(symbol);
-    return (parser && mapped) ? parser.bind(env)(mapped) : null;
+    return (parser && mapped) ? (parser.bind(env)(mapped) || true) : null;
   }
 
   /**
@@ -313,7 +313,7 @@ export class CommandMap extends MacroMap {
       return null;
     }
     let args = ['\\' + symbol].concat(macro.getArguments() as string[]);
-    return parser ? parser.bind(env).apply(env, args) : null;
+    return parser ? (parser.bind(env).apply(env, args) || true) : null;
   }
 
   // TODO: Some of this is due to the legacy code format.
