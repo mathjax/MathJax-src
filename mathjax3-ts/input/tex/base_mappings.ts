@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {RegExpMap, CharacterMap, MacroMap, SimpleMacroMap, EnvironmentMap} from './symbol_map.js';
+import {RegExpMap, CharacterMap, MacroMap, CommandMap, EnvironmentMap} from './symbol_map.js';
 import {TexConstant} from './tex_constants.js';
 import {BaseMethods} from './base_methods.js';
 
@@ -41,7 +41,7 @@ export namespace BaseMappings {
   RegExpMap.create('command', BaseMethods.controlSequence, /^\\/);  //
 
 
-  SimpleMacroMap.create('special', {
+  MacroMap.create('special', {
 
     // This is now handled with a RegExp!
     // '\\':  'ControlSequence',
@@ -366,7 +366,7 @@ export namespace BaseMappings {
     '\\rbrack':         ']'
   });
 
-  MacroMap.create('macros', {
+  CommandMap.create('macros', {
     displaystyle:      ['SetStyle', 'D', true, 0],
     textstyle:         ['SetStyle', 'T', false, 0],
     scriptstyle:       ['SetStyle', 'S', false, 1],

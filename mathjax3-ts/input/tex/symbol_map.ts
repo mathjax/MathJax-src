@@ -248,6 +248,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
 }
 
 
+// TODO: Maybe have this as the base class.
 /**
  * Maps macros that all bring their own parsing method.
  *
@@ -261,11 +262,6 @@ export class MacroMap extends AbstractParseMap<Macro> {
   private functionMap: any;
 
   
-  public addElement(symbol: string, object: Args[]): void {
-    let character = new Macro(symbol, object[0] as string, object.slice(1));
-    this.add(symbol, character);
-  }
-
   // TODO: This needs to be set explicitly from an object.
   public setFunctionMap(map: Map<string, ParseMethod>) {
     this.functionMap = map;
@@ -275,6 +271,37 @@ export class MacroMap extends AbstractParseMap<Macro> {
     let macro = this.lookup(symbol);
     return macro ? this.functionMap[macro.getFunction()] : null;
   }
+
+  public addElement(symbol: string, object: Args[]): void {
+    let character = new Macro(symbol, object[0] as string, object.slice(1));
+    this.add(symbol, character);
+  }
+
+  protected static addCommands(map: MacroMap, json: {[index: string]: string|Args[]}): void {
+    for (let key in json) {
+      let value = json[key];
+      map.addElement(key, (typeof(value) === 'string') ? [value] : value);
+    }
+  }
+  
+  // TODO: Some of this is due to the legacy code format.
+  //       Make these calls to the Superclass method.
+  public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
+    let map = new MacroMap(name);
+    MacroMap.addCommands(map, json);
+    return map;
+  }
+
+}
+
+
+/**
+ * Maps macros that all bring their own parsing method.
+ *
+ * @constructor
+ * @extends {MacroMap}
+ */
+export class CommandMap extends MacroMap {
 
   /**
    * @override
@@ -292,43 +319,8 @@ export class MacroMap extends AbstractParseMap<Macro> {
   // TODO: Some of this is due to the legacy code format.
   public static create(name: string,
                        json: {[index: string]: string|Args[]}): MacroMap {
-    let map = new MacroMap(name);
-    for (let key in json) {
-      let value = json[key];
-      map.addElement(key, (typeof(value) === 'string') ? [value] : value);
-    }
-    return map;
-  }
-
-}
-
-
-// TODO: Maybe have this as the base class.
-/**
- * Maps macros that all bring their own parsing method.
- *
- * @constructor
- * @extends {MacroMap}
- */
-export class SimpleMacroMap extends MacroMap {
-
-  /**
-   * @override
-   */
-  public parse(symbol: string, env: Object) {
-    let parser = this.parserFor(symbol);
-    let mapped = this.lookup(symbol);
-    return (parser && mapped) ? parser.bind(env)(mapped) : null;
-  }
-
-  // TODO: Some of this is due to the legacy code format.
-  //       Make these calls to the Superclass method.
-  public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
-   let map = new SimpleMacroMap(name);
-    for (let key in json) {
-      let value = json[key];
-      map.addElement(key, (typeof(value) === 'string') ? [value] : value);
-    }
+    let map = new CommandMap(name);
+    MacroMap.addCommands(map, json);
     return map;
   }
 
@@ -362,10 +354,7 @@ export class EnvironmentMap extends MacroMap {
   //       Make these calls to the Superclass method.
   public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
    let map = new EnvironmentMap(name);
-    for (let key in json) {
-      let value = json[key];
-      map.addElement(key, (typeof(value) === 'string') ? [value] : value);
-    }
+    MacroMap.addCommands(map, json);
     return map;
   }
 
