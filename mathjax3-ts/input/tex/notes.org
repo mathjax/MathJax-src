@@ -46,9 +46,12 @@
 
 *** change of map (for different configurations)
 
+** Handling environments: 
+**** If we only through an unknown environment for begin and have unknown end handled differently?
 
 * Previous notes
 ** Checkout problems with tests.
 ** The texparser needs to extend abstract input jax
 ** Need to fill MathItem.
 ** Build it on MmlNodes
+

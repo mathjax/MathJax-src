@@ -529,7 +529,9 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     Setup: function() {
       TEXDEF.macros.setFunctionMap(this);
       TEXDEF.special.setFunctionMap(this);
+
       TEXDEF.environment.setFunctionMap(this);
+      TEXDEF.environment.setParser(this.BeginEnvironment);
 
       TEXDEF.letter.setParser(this.Variable);
       TEXDEF.digit.setParser(this.Number);
@@ -541,7 +543,6 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
       TEXDEF.delimiter.setParser(this.csDelimiter);
     },
     Parse: function () {
-
       var c, n;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
@@ -550,9 +551,8 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
           TEXDEF.command.parse(c, this);
           continue;
         }
-        var special = TEXDEF.special.lookup(c);
-        if (special) {
-          this[special.getFunction()](c);
+        if (TEXDEF.special.lookup(c)) {
+          TEXDEF.special.parse(c, this);
         } else if (TEXDEF.letter.contains(c)) {
           TEXDEF.letter.parse(c, this);
         } else if (TEXDEF.digit.contains(c)) {
@@ -587,12 +587,7 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     ControlSequence: function (c) {
       var name = this.GetCS();
       if (TEXDEF.macros.contains(name)) {
-        // VS Q: This always seems to be used like that. I.e., macro functions
-        //       are always saved as strings, not as functions?
-        var macro = TEXDEF.macros.lookup(name);
         TEXDEF.macros.parse(name, this);
-        // TEXDEF.macros.functionMap[macro.getFunction()].apply(this,[c+name].concat(macro.getArguments()));
-        // this[macro.getFunction()].apply(this,[c+name].concat(macro.getArguments()));
       } else if (TEXDEF.mathchar0mi.contains(name)) {
         TEXDEF.mathchar0mi.parse(name, this);
       }
@@ -1350,34 +1345,29 @@ let StackItem = require('mathjax3/input/tex/stack_item.js');
     */
 
     BeginEnd: function (name) {
-      var env = this.GetArgument(name), isEnd = false;
-      if (env.match(/^\\end\\/)) {isEnd = true; env = env.substr(5)} // special \end{} for \newenvironment environments
+      var env = this.GetArgument(name);
+      if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
-      var cmd = this.envFindName(env);
-      if (!cmd) {
-        TEX.Error(["UnknownEnv", "Unknown environment '%1'", env])
-      }
-      // VS Q: The following line: Can the second element of an environment ever be an Array? 
-      // if (!isArray(cmd)) {cmd = [cmd]}
-      // var end = (isArray(cmd[1]) ? cmd[1][0] : cmd[1]);
-      var func = cmd.getFunction();
-      var args = cmd.getArguments();
-      var end = args[0];
-      var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       if (name === "\\end") {
-        mml = STACKITEM.end().With({name: env});
+        var mml = STACKITEM.end().With({name: env});
+        this.Push(mml);
       } else {
         if (++this.macroCount > TEX.config.MAXMACROS) {
           TEX.Error(["MaxMacroSub2",
                      "MathJax maximum substitution count exceeded; " +
                      "is there a recursive latex environment?"]);
         }
-        if (func && this[func]) {mml = this[func].apply(this,[mml].concat(args.slice(1)))}
+        TEXDEF.environment.parse(env, this) ||
+          TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
       }
+    },
+    BeginEnvironment: function (func, env, args) {
+      var end = args[0];
+      var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
+      mml = func.apply(this,[mml].concat(args.slice(1)));
       this.Push(mml);
     },
-    envFindName: function (name) {return TEXDEF.environment.lookup(name)},
-    
+
     Equation: function (begin,row) {return row},
     
     ExtensionEnv: function (begin,file) {this.Extension(begin.name,file,"environment")},

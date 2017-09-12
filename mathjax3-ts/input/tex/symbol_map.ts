@@ -31,16 +31,16 @@ import Stack from './stack.js';
 
 /**
  * SymbolMaps are the base components for the input parsers.
- * 
+ *
  * They provide a contains method that checks if a map is applicable (contains)
  * a particular string. Implementing classes then perform the actual symbol
  * parsing, from simple regular expression test, straight forward symbol mapping
  * to transformational functionality on the parsed string.
- * 
+ *
  * @interface
  */
 export interface SymbolMap {
-  
+
   /**
    * @return {string} The name of the map.
    */
@@ -65,15 +65,20 @@ export interface SymbolMap {
    * string.
    */
   parse: ParseMethod;
-  
+
 }
 
 
+/**
+ * @constructor
+ * @implements {SymbolMap}
+ * @template T
+ */
 export abstract class AbstractSymbolMap<T> implements SymbolMap {
 
   private name: string;
   private parser: ParseMethod;
-  
+
   constructor(name: string) {
     this.name = name;
     MapHandler.getInstance().register(this);
@@ -97,7 +102,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   public parserFor(symbol: string) {
     return this.contains(symbol) ? this.parser : null;
   }
-  
+
   /**
    * @override
    */
@@ -106,7 +111,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
     let mapped = this.lookup(symbol);
     return (parser && mapped) ? parser.bind(env)(mapped) : null;
   }
-  
+
   /**
    * @param {function(string): ParseResult} parser Sets the central parser
    * function.
@@ -115,19 +120,29 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
     this.parser = parser;
   }
 
+  public getParser(): ParseMethod {
+    return this.parser;
+  }
+  
   /**
    * @param {string} symbol
-   * @return {T} 
+   * @return {T}
    */
   public abstract lookup(symbol: string): T;
 
 }
 
 
+
+/**
+ * Regular expressions used for parsing.
+ * @constructor
+ * @extends {AbstractSymbolMap}
+ */
 export class RegExpMap extends AbstractSymbolMap<string> {
 
   private regExp: RegExp;
-  
+
   constructor(name: string, regExp: RegExp) {
     super(name);
     this.regExp = regExp;
@@ -146,7 +161,7 @@ export class RegExpMap extends AbstractSymbolMap<string> {
   public lookup(symbol: string) {
     return this.contains(symbol) ? symbol : null;
   }
-  
+
   // TODO: Some of this is due to the legacy code format.  In particular working
   //       with nullable Attributes should not be necessary!
   // These should evolve into the fromJSON methods.
@@ -160,6 +175,12 @@ export class RegExpMap extends AbstractSymbolMap<string> {
 }
 
 
+/**
+ * Parse maps associate strings with parsing functionality.
+ * @constructor
+ * @extends {AbstractSymbolMap}
+ * @template K
+ */
 export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
 
   private map: Map<string, K> = new Map<string, K>();
@@ -177,9 +198,9 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   public contains(symbol: string) {
     return this.map.has(symbol);
   }
-  
+
   /**
-   * 
+   *
    * @param {string} symbol
    * @param {T} object
    */
@@ -197,6 +218,12 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
 }
 
 
+/**
+ * Maps symbols that can all be parsed with the same method.
+ *
+ * @constructor
+ * @extends {AbstractParseMap}
+ */
 export class CharacterMap extends AbstractParseMap<Symbol> {
 
   public addElement(symbol: string, object: [string, null] | [string, Attributes]): void {
@@ -213,7 +240,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
       let map = new CharacterMap(name);
       for (let key in json) {
         let value = json[key];
-        map.addElement(key, (typeof(value) === "string") ? [value, null] : value);
+        map.addElement(key, (typeof(value) === 'string') ? [value, null] : value);
       }
       map.setParser(parser);
       return map;
@@ -221,17 +248,23 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
 }
 
 
+/**
+ * Maps macros that all bring their own parsing method.
+ *
+ * @constructor
+ * @extends {AbstractParseMap}
+ */
 export class MacroMap extends AbstractParseMap<Macro> {
 
+  // TODO: This is the correct type.
   // private functionMap: Map<string, ParseMethod> = new Map();
   private functionMap: any;
+
   
   public addElement(symbol: string, object: Args[]): void {
     let character = new Macro(symbol, object[0] as string, object.slice(1));
     this.add(symbol, character);
   }
-
-  public setParser(parser: (str: string) => ParseResult) { }
 
   // TODO: This needs to be set explicitly from an object.
   public setFunctionMap(map: Map<string, ParseMethod>) {
@@ -240,33 +273,100 @@ export class MacroMap extends AbstractParseMap<Macro> {
 
   public parserFor(symbol: string) {
     let macro = this.lookup(symbol);
-    // return macro ? (this.functionMap.get(macro.getFunction()) as ParseMethod) : null;
     return macro ? this.functionMap[macro.getFunction()] : null;
   }
-  
+
   /**
    * @override
    */
   public parse(symbol: string, env: Object) {
     let macro = this.lookup(symbol);
-    if (!macro) {
+    let parser = this.parserFor(symbol);
+    if (!macro || !parser) {
       return null;
     }
-    let parser = this.functionMap[macro.getFunction()];
     let args = ['\\' + symbol].concat(macro.getArguments() as string[]);
     return parser ? parser.bind(env).apply(env, args) : null;
   }
-  
+
   // TODO: Some of this is due to the legacy code format.
   public static create(name: string,
                        json: {[index: string]: string|Args[]}): MacroMap {
     let map = new MacroMap(name);
     for (let key in json) {
       let value = json[key];
-      map.addElement(key, (typeof(value) === "string") ? [value] : value);
+      map.addElement(key, (typeof(value) === 'string') ? [value] : value);
     }
     return map;
   }
-  
+
 }
 
+
+// TODO: Maybe have this as the base class.
+/**
+ * Maps macros that all bring their own parsing method.
+ *
+ * @constructor
+ * @extends {MacroMap}
+ */
+export class SimpleMacroMap extends MacroMap {
+
+  /**
+   * @override
+   */
+  public parse(symbol: string, env: Object) {
+    let parser = this.parserFor(symbol);
+    let mapped = this.lookup(symbol);
+    return (parser && mapped) ? parser.bind(env)(mapped) : null;
+  }
+
+  // TODO: Some of this is due to the legacy code format.
+  //       Make these calls to the Superclass method.
+  public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
+   let map = new SimpleMacroMap(name);
+    for (let key in json) {
+      let value = json[key];
+      map.addElement(key, (typeof(value) === 'string') ? [value] : value);
+    }
+    return map;
+  }
+
+}
+
+
+/**
+ * Maps macros that all bring their own parsing method.
+ *
+ * @constructor
+ * @extends {MacroMap}
+ */
+export class EnvironmentMap extends MacroMap {
+
+  /**
+   * @override
+   */
+  public parse(symbol: string, env: Object) {
+    let macro = this.lookup(symbol);
+    let envParser = this.parserFor(symbol);
+    if (!macro || !envParser) {
+      return null;
+    }
+    // TODO: Here we cheat with the type for the time being!
+    this.getParser().bind(env)(envParser.bind(env),
+                               symbol, macro.getArguments());
+    return true;
+  }
+
+  // TODO: Some of this is due to the legacy code format.
+  //       Make these calls to the Superclass method.
+  public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
+   let map = new EnvironmentMap(name);
+    for (let key in json) {
+      let value = json[key];
+      map.addElement(key, (typeof(value) === 'string') ? [value] : value);
+    }
+    return map;
+  }
+
+}
