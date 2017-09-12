@@ -507,15 +507,25 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Set the (relative) scaling factor for the node
      */
     protected handleScale() {
-        const scale = (Math.abs(this.bbox.rscale - 1) < .001 ? 1 : this.bbox.rscale);
-        if (this.chtml && scale !== 1) {
+        this.setScale(this.chtml, this.bbox.rscale);
+    }
+
+    /*
+     * @param{HTMLElement} chtml  The HTML node to scale
+     * @param{number} rscale      The relatie scale to apply
+     * @return{HTMLElement}       The HTML node (for chaining)
+     */
+    setScale(chtml: HTMLElement, rscale: number) {
+        const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
+        if (chtml && scale !== 1) {
             const size = this.percent(scale);
             if (FONTSIZE[size]) {
-                this.chtml.setAttribute('size', FONTSIZE[size]);
+                chtml.setAttribute('size', FONTSIZE[size]);
             } else {
-                this.chtml.style.fontSize = size;
+                chtml.style.fontSize = size;
             }
         }
+        return chtml;
     }
 
     /*
@@ -624,7 +634,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     public drawBBox() {
         const bbox = this.getBBox();
         const box = this.html('mjx-box', {style: {
-            opacity: .25, 'margin-left': this.em(-bbox.w)
+            opacity: .25, 'margin-left': this.em(-bbox.w-bbox.R)
         }}, [
             this.html('mjx-box', {style: {
                 height: this.em(bbox.h),
@@ -640,7 +650,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             }})
         ]);
         const node = this.chtml || this.parent.chtml;
-        node.appendChild(box);
+        node.parentNode.appendChild(box);
         node.style.backgroundColor = '#FFEE00';
     }
 
