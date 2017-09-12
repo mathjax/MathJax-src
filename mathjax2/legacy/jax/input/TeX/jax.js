@@ -522,23 +522,12 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      */
     ControlSequence: function (c) {
       var name = this.GetCS();
-      if (TEXDEF.macros.contains(name)) {
-        TEXDEF.macros.parse(name, this);
-      } else if (TEXDEF.mathchar0mi.contains(name)) {
-        TEXDEF.mathchar0mi.parse(name, this);
-      }
-      else if (TEXDEF.mathchar0mo.contains(name)) {
-        TEXDEF.mathchar0mo.parse(name, this);
-      }
-      else if (TEXDEF.mathchar7.contains(name)) {
-        TEXDEF.mathchar7.parse(name, this);
-      }
-      else if (TEXDEF.delimiter.contains('\\' + name)) {
-        TEXDEF.delimiter.parse("\\" + name, this);
-      } 
-      else {
+      TEXDEF.macros.parse(name, this) ||
+        TEXDEF.mathchar0mi.parse(name, this) ||
+        TEXDEF.mathchar0mo.parse(name, this) ||
+        TEXDEF.mathchar7.parse(name, this) ||
+        TEXDEF.delimiter.parse("\\" + name, this) ||
         this.csUndefined(c+name);
-      }
     },
     //
     //  Look up a macro in the macros list
