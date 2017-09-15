@@ -24,173 +24,173 @@
 
 export namespace TexConstant {
 
-  export const Inherit = "_inherit_";
-  
-  export const Auto = "_auto_";
-  
+  export const Inherit = '_inherit_';
+
+  export const Auto = '_auto_';
+
   export const Size = {
-    INFINITY: "infinity",
-    SMALL: "small",
-    NORMAL: "normal",
-    BIG: "big"
+    INFINITY: 'infinity',
+    SMALL: 'small',
+    NORMAL: 'normal',
+    BIG: 'big'
   };
-  
+
   export const Color = {
-    TRANSPARENT: "transparent"
+    TRANSPARENT: 'transparent'
   };
-  
+
   export const Variant = {
-    NORMAL: "normal",
-    BOLD: "bold",
-    ITALIC: "italic",
-    BOLDITALIC: "bold-italic",
-    DOUBLESTRUCK: "double-struck",
-    FRAKTUR: "fraktur",
-    BOLDFRAKTUR: "bold-fraktur",
-    SCRIPT: "script",
-    BOLDSCRIPT: "bold-script",
-    SANSSERIF: "sans-serif",
-    BOLDSANSSERIF: "bold-sans-serif",
-    SANSSERIFITALIC: "sans-serif-italic",
-    SANSSERIFBOLDITALIC: "sans-serif-bold-italic",
-    MONOSPACE: "monospace",
-    INITIAL: "inital",
-    TAILED: "tailed",
-    LOOPED: "looped",
-    STRETCHED: "stretched",
-    CALIGRAPHIC: "-tex-caligraphic",
-    OLDSTYLE: "-tex-oldstyle"
+    NORMAL: 'normal',
+    BOLD: 'bold',
+    ITALIC: 'italic',
+    BOLDITALIC: 'bold-italic',
+    DOUBLESTRUCK: 'double-struck',
+    FRAKTUR: 'fraktur',
+    BOLDFRAKTUR: 'bold-fraktur',
+    SCRIPT: 'script',
+    BOLDSCRIPT: 'bold-script',
+    SANSSERIF: 'sans-serif',
+    BOLDSANSSERIF: 'bold-sans-serif',
+    SANSSERIFITALIC: 'sans-serif-italic',
+    SANSSERIFBOLDITALIC: 'sans-serif-bold-italic',
+    MONOSPACE: 'monospace',
+    INITIAL: 'inital',
+    TAILED: 'tailed',
+    LOOPED: 'looped',
+    STRETCHED: 'stretched',
+    CALIGRAPHIC: '-tex-caligraphic',
+    OLDSTYLE: '-tex-oldstyle'
   };
-  
+
   export const Form = {
-    PREFIX: "prefix",
-    INFIX: "infix",
-    POSTFIX: "postfix"
+    PREFIX: 'prefix',
+    INFIX: 'infix',
+    POSTFIX: 'postfix'
   };
 
   export const LineBreak = {
-    AUTO: "auto",
-    NEWLINE: "newline",
-    NOBREAK: "nobreak",
-    GOODBREAK: "goodbreak",
-    BADBREAK: "badbreak"
+    AUTO: 'auto',
+    NEWLINE: 'newline',
+    NOBREAK: 'nobreak',
+    GOODBREAK: 'goodbreak',
+    BADBREAK: 'badbreak'
   };
 
   export const LineBreakStyle = {
-    BEFORE: "before",
-    AFTER: "after",
-    DUPLICATE: "duplicate",
-    INFIXLINBREAKSTYLE: "infixlinebreakstyle"
+    BEFORE: 'before',
+    AFTER: 'after',
+    DUPLICATE: 'duplicate',
+    INFIXLINBREAKSTYLE: 'infixlinebreakstyle'
   };
 
   export const IndentAlign = {
-    LEFT: "left",
-    CENTER: "center",
-    RIGHT: "right",
-    AUTO: "auto",
-    ID: "id",
-    INDENTALIGN: "indentalign"
+    LEFT: 'left',
+    CENTER: 'center',
+    RIGHT: 'right',
+    AUTO: 'auto',
+    ID: 'id',
+    INDENTALIGN: 'indentalign'
   };
 
   export const IndentShift = {
-    INDENTSHIFT: "indentshift"
+    INDENTSHIFT: 'indentshift'
   };
 
   export const LineThickness = {
-    THIN: "thin",
-    MEDIUM: "medium",
-    THICK: "thick"
+    THIN: 'thin',
+    MEDIUM: 'medium',
+    THICK: 'thick'
   };
 
   export const Notation = {
-    LONGDIV: "longdiv",
-    ACTUARIAL: "actuarial",
-    RADICAL: "radical",
-    BOX: "box",
-    ROUNDEDBOX: "roundedbox",
-    CIRCLE: "circle",
-    LEFT: "left",
-    RIGHT: "right",
-    TOP: "top",
-    BOTTOM: "bottom",
-    UPDIAGONALSTRIKE: "updiagonalstrike",
-    DOWNDIAGONALSTRIKE: "downdiagonalstrike",
-    UPDIAGONALARROW: "updiagonalarrow",
-    VERTICALSTRIKE: "verticalstrike",
-    HORIZONTALSTRIKE: "horizontalstrike",
-    PHASORANGLE: "phasorangle",
-    MADRUWB: "madruwb"
+    LONGDIV: 'longdiv',
+    ACTUARIAL: 'actuarial',
+    RADICAL: 'radical',
+    BOX: 'box',
+    ROUNDEDBOX: 'roundedbox',
+    CIRCLE: 'circle',
+    LEFT: 'left',
+    RIGHT: 'right',
+    TOP: 'top',
+    BOTTOM: 'bottom',
+    UPDIAGONALSTRIKE: 'updiagonalstrike',
+    DOWNDIAGONALSTRIKE: 'downdiagonalstrike',
+    UPDIAGONALARROW: 'updiagonalarrow',
+    VERTICALSTRIKE: 'verticalstrike',
+    HORIZONTALSTRIKE: 'horizontalstrike',
+    PHASORANGLE: 'phasorangle',
+    MADRUWB: 'madruwb'
   };
 
   export const Align = {
-    TOP: "top",
-    BOTTOM: "bottom",
-    CENTER: "center",
-    BASELINE: "baseline",
-    AXIS: "axis",
-    LEFT: "left",
-    RIGHT: "right"
+    TOP: 'top',
+    BOTTOM: 'bottom',
+    CENTER: 'center',
+    BASELINE: 'baseline',
+    AXIS: 'axis',
+    LEFT: 'left',
+    RIGHT: 'right'
   };
 
   export const Lines = {
-    NONE: "none",
-    SOLID: "solid",
-    DASHED: "dashed"
+    NONE: 'none',
+    SOLID: 'solid',
+    DASHED: 'dashed'
   };
 
   export const Side = {
-    LEFT: "left",
-    RIGHT: "right",
-    LEFTOVERLAP: "leftoverlap",
-    RIGHTOVERLAP: "rightoverlap"
+    LEFT: 'left',
+    RIGHT: 'right',
+    LEFTOVERLAP: 'leftoverlap',
+    RIGHTOVERLAP: 'rightoverlap'
   };
 
   export const Width = {
-    AUTO: "auto",
-    FIT: "fit"
+    AUTO: 'auto',
+    FIT: 'fit'
   };
 
   export const Actiontype = {
-    TOGGLE: "toggle",
-    STATUSLINE: "statusline",
-    TOOLTIP: "tooltip",
-    INPUT: "input"
+    TOGGLE: 'toggle',
+    STATUSLINE: 'statusline',
+    TOOLTIP: 'tooltip',
+    INPUT: 'input'
   };
 
   export const Length = {
-    VERYVERYTHINMATHSPACE: "veryverythinmathspace",
-    VERYTHINMATHSPACE: "verythinmathspace",
-    THINMATHSPACE: "thinmathspace",
-    MEDIUMMATHSPACE: "mediummathspace",
-    THICKMATHSPACE: "thickmathspace",
-    VERYTHICKMATHSPACE: "verythickmathspace",
-    VERYVERYTHICKMATHSPACE: "veryverythickmathspace",
-    NEGATIVEVERYVERYTHINMATHSPACE: "negativeveryverythinmathspace",
-    NEGATIVEVERYTHINMATHSPACE: "negativeverythinmathspace",
-    NEGATIVETHINMATHSPACE: "negativethinmathspace",
-    NEGATIVEMEDIUMMATHSPACE: "negativemediummathspace",
-    NEGATIVETHICKMATHSPACE: "negativethickmathspace",
-    NEGATIVEVERYTHICKMATHSPACE: "negativeverythickmathspace",
-    NEGATIVEVERYVERYTHICKMATHSPACE: "negativeveryverythickmathspace"
+    VERYVERYTHINMATHSPACE: 'veryverythinmathspace',
+    VERYTHINMATHSPACE: 'verythinmathspace',
+    THINMATHSPACE: 'thinmathspace',
+    MEDIUMMATHSPACE: 'mediummathspace',
+    THICKMATHSPACE: 'thickmathspace',
+    VERYTHICKMATHSPACE: 'verythickmathspace',
+    VERYVERYTHICKMATHSPACE: 'veryverythickmathspace',
+    NEGATIVEVERYVERYTHINMATHSPACE: 'negativeveryverythinmathspace',
+    NEGATIVEVERYTHINMATHSPACE: 'negativeverythinmathspace',
+    NEGATIVETHINMATHSPACE: 'negativethinmathspace',
+    NEGATIVEMEDIUMMATHSPACE: 'negativemediummathspace',
+    NEGATIVETHICKMATHSPACE: 'negativethickmathspace',
+    NEGATIVEVERYTHICKMATHSPACE: 'negativeverythickmathspace',
+    NEGATIVEVERYVERYTHICKMATHSPACE: 'negativeveryverythickmathspace'
   };
 
   export const Overflow = {
-    LINBREAK: "linebreak",
-    SCROLL: "scroll",
-    ELIDE: "elide",
-    TRUNCATE: "truncate",
-    SCALE: "scale"
+    LINBREAK: 'linebreak',
+    SCROLL: 'scroll',
+    ELIDE: 'elide',
+    TRUNCATE: 'truncate',
+    SCALE: 'scale'
   };
 
   export const Unit = {
-    EM: "em",
-    EX: "ex",
-    PX: "px",
-    IN: "in",
-    CM: "cm",
-    MM: "mm",
-    PT: "pt",
-    PC: "pc"
+    EM: 'em',
+    EX: 'ex',
+    PX: 'px',
+    IN: 'in',
+    CM: 'cm',
+    MM: 'mm',
+    PT: 'pt',
+    PC: 'pc'
   };
 
   export const TexClass = {
@@ -207,15 +207,15 @@ export namespace TexConstant {
   };
 
   export const TexClassNames = [
-    "ORD",
-    "OP",
-    "BIN",
-    "REL",
-    "OPEN",
-    "CLOSE",
-    "PUNCT",
-    "INNER",
-    "VCENTER"
-  ]
-  
+    'ORD',
+    'OP',
+    'BIN',
+    'REL',
+    'OPEN',
+    'CLOSE',
+    'PUNCT',
+    'INNER',
+    'VCENTER'
+  ];
+
 }
