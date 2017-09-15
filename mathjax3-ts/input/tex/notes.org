@@ -55,3 +55,15 @@
 ** Need to fill MathItem.
 ** Build it on MmlNodes
 
+
+
+*** From map handler parse function. This is probably obsolete!
+  // I think here we should return the JSON value that can be handled by the
+  // parser. Meaning we should give the symbol_map a function that actually
+  // performs the parsing. E.g., a singular method for RegExp and Character. An
+  // execution method for custom functions on Macro.
+  // 
+  // This can then be actually put into the interface. We can then avoid casting!
+  //
+  // Also: How are we to know "outside" what the actual value is?
+

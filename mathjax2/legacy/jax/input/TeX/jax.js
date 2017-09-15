@@ -491,10 +491,10 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        TEXDEF.command.parse(c, this) ||
-          TEXDEF.special.parse(c, this) ||
-          TEXDEF.letter.parse(c, this) ||
-          TEXDEF.digit.parse(c, this) ||
+        TEXDEF.command.parse([c, this]) ||
+          TEXDEF.special.parse([c, this]) ||
+          TEXDEF.letter.parse([c, this]) ||
+          TEXDEF.digit.parse([c, this]) ||
           this.Other(c);
       }
     },
@@ -522,11 +522,11 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      */
     ControlSequence: function (c) {
       var name = this.GetCS();
-      TEXDEF.macros.parse(name, this) ||
-        TEXDEF.mathchar0mi.parse(name, this) ||
-        TEXDEF.mathchar0mo.parse(name, this) ||
-        TEXDEF.mathchar7.parse(name, this) ||
-        TEXDEF.delimiter.parse("\\" + name, this) ||
+      TEXDEF.macros.parse([name, this]) ||
+        TEXDEF.mathchar0mi.parse([name, this]) ||
+        TEXDEF.mathchar0mo.parse([name, this]) ||
+        TEXDEF.mathchar7.parse([name, this]) ||
+        TEXDEF.delimiter.parse([name, this]) ||
         this.csUndefined(c+name);
     },
     //
@@ -1275,7 +1275,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
                      "MathJax maximum substitution count exceeded; " +
                      "is there a recursive latex environment?"]);
         }
-        TEXDEF.environment.parse(env, this) ||
+        TEXDEF.environment.parse([env, this]) ||
           TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
       }
     },
@@ -1341,6 +1341,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
+      console.log("Converting Delimiter: " + c);
       return TEXDEF.delimiter.lookup(c).getChar() || null;
     },
 
@@ -1443,9 +1444,15 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       while (this.nextIsSpace()) {this.i++}
       var c = this.string.charAt(this.i); this.i++;
       if (this.i <= this.string.length) {
-        if (c == "\\") {c += this.GetCS(name)}
-        else if (c === "{" && braceOK) {this.i--; c = this.GetArgument(name)}
-        if (TEXDEF.delimiter.contains(c)) {return this.convertDelimiter(c)}
+        if (c == "\\") {
+          c += this.GetCS(name);
+        } else if (c === "{" && braceOK) {
+          this.i--;
+          c = this.GetArgument(name);
+        }
+        if (TEXDEF.delimiter.contains(c)) {
+          return this.convertDelimiter(c);
+        }
       }
       TEX.Error(["MissingOrUnrecognizedDelim",
                  "Missing or unrecognized delimiter for %1",name]);

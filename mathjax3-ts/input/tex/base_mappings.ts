@@ -22,26 +22,26 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {RegExpMap, CharacterMap, MacroMap, CommandMap, EnvironmentMap} from './symbol_map.js';
+import *  as sm from './symbol_map.js';
 import {TexConstant} from './tex_constants.js';
 import {BaseMethods} from './base_methods.js';
 
 
 export namespace BaseMappings {
 
-  // TODO: Thes parsing methods are currently overwritten in the legacy code.
-  RegExpMap.create('letter', BaseMethods.variable, /[a-z]/i);
+  // TODO: These parsing methods are currently overwritten in the legacy code.
+  sm.RegExpMap.create('letter', BaseMethods.variable, /[a-z]/i);
 
-  RegExpMap.create('digit', BaseMethods.digit, /[0-9.]/);
+  sm.RegExpMap.create('digit', BaseMethods.digit, /[0-9.]/);
 
   // Currently not in use!
-  RegExpMap.create('number', BaseMethods.num,
+  sm.RegExpMap.create('number', BaseMethods.num,
                 /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
 
-  RegExpMap.create('command', BaseMethods.controlSequence, /^\\/);  //
+  sm.RegExpMap.create('command', BaseMethods.controlSequence, /^\\/ );  // )
 
 
-  MacroMap.create('special', {
+  sm.MacroMap.create('special', {
 
     // This is now handled with a RegExp!
     // '\\':  'ControlSequence',
@@ -63,13 +63,13 @@ export namespace BaseMappings {
     '\u2019': 'Prime'
   });
 
-  CharacterMap.create('remap', null, {
+  sm.CharacterMap.create('remap', null, {
     '-':   '2212',
     '*':   '2217',
     '`':   '2018'   // map ` to back quote
   });
 
-  CharacterMap.create('mathchar0mi', null, {
+  sm.CharacterMap.create('mathchar0mi', null, {
     // Lower-case greek
     alpha:        '03B1',
     beta:         '03B2',
@@ -137,7 +137,7 @@ export namespace BaseMappings {
     spadesuit:    ['2660', {mathvariant: TexConstant.Variant.NORMAL}]
   });
 
-  CharacterMap.create('mathchar0mo', null, {
+  sm.CharacterMap.create('mathchar0mo', null, {
     surd:         '221A',
 
     // big ops
@@ -301,7 +301,7 @@ export namespace BaseMappings {
     colon:            ['003A', {texClass: TexConstant.TexClass.PUNCT}]
   });
 
-  CharacterMap.create('mathchar7', null, {
+  sm.CharacterMap.create('mathchar7', null, {
     Gamma:        '0393',
     Delta:        '0394',
     Theta:        '0398',
@@ -322,7 +322,7 @@ export namespace BaseMappings {
     And:          '0026'
   });
 
-  CharacterMap.create('delimiter', null, {
+  sm.DelimiterMap.create('delimiter', null, {
     '(':                '(',
     ')':                ')',
     '[':                '[',
@@ -366,7 +366,7 @@ export namespace BaseMappings {
     '\\rbrack':         ']'
   });
 
-  CommandMap.create('macros', {
+  sm.CommandMap.create('macros', {
     displaystyle:      ['SetStyle', 'D', true, 0],
     textstyle:         ['SetStyle', 'T', false, 0],
     scriptstyle:       ['SetStyle', 'S', false, 1],
@@ -655,7 +655,7 @@ export namespace BaseMappings {
 
   });
 
-  EnvironmentMap.create('environment', {
+  sm.EnvironmentMap.create('environment', {
     array:        ['AlignedArray'],
     matrix:       ['Array', null, null, null, 'c'],
     pmatrix:      ['Array', null, '(', ')', 'c'],
@@ -687,7 +687,7 @@ export namespace BaseMappings {
     alignedat:    ['ExtensionEnv', null, 'AMSmath']
   });
 
-  CharacterMap.create('not_remap', null, {
+  sm.CharacterMap.create('not_remap', null, {
     '\u2190': '219A',
     '\u2192': '219B',
     '\u2194': '21AE',
@@ -734,8 +734,13 @@ export namespace BaseMappings {
     '\u22B5': '22ED',
     '\u2203': '2204'
   });
-  
+
   // TODO: This is temporary until we have merged with configuration options.
-  export const Configuration = ['command', 'special', 'letter', 'digit'];
+  export const Configuration = {
+    character: ['command', 'special', 'letter', 'digit'],
+    delimiter: ['delimiter'],
+    macro: ['macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7', 'delimiter'],
+    environment: ['environment']
+  };
 
 }

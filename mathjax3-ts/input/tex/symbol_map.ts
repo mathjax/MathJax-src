@@ -22,11 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-// Can eventually be removed!
-import {Attributes, Args, ParseMethod, ParseResult} from './types.js';
+import {Attributes, Args, ParseMethod, ParseInput, ParseResult} from './types.js';
 import {Symbol, Macro} from './symbol.js';
 import MapHandler from './map_handler.js';
-import Stack from './stack.js';
 
 
 /**
@@ -64,7 +62,7 @@ export interface SymbolMap {
    * @return {ParseResult} The parsed symbol and the rest
    * string.
    */
-  parse: ParseMethod;
+  parse([symbol, env]: ParseInput): ParseResult;
 
 }
 
@@ -79,6 +77,11 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   private name: string;
   private parser: ParseMethod;
 
+
+  /**
+   * @constructor
+   * @implements {SymbolMap}
+   */
   constructor(name: string) {
     this.name = name;
     MapHandler.getInstance().register(this);
@@ -106,7 +109,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   /**
    * @override
    */
-  public parse(symbol: string, env: Object) {
+  public parse([symbol, env]: ParseInput) {
     let parser = this.parserFor(symbol);
     let mapped = this.lookup(symbol);
     return (parser && mapped) ? (parser.bind(env)(mapped) || true) : null;
@@ -231,20 +234,53 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
     this.add(symbol, character);
   }
 
+
   // TODO: Some of this is due to the legacy code format.  In particular working
   //       with nullable Attributes should not be necessary!
+  protected static addCharacters(map: CharacterMap,
+                                 json: {[index: string]: string|[string, Attributes]}): void {
+    for (let key in json) {
+      let value = json[key];
+      map.addElement(key, (typeof(value) === 'string') ? [value, null] : value);
+    }
+  }
+  
   // These should evolve into the fromJSON methods.
   public static create(
     name: string, parser: ParseMethod,
     json: {[index: string]: string|[string, Attributes]}): CharacterMap {
       let map = new CharacterMap(name);
-      for (let key in json) {
-        let value = json[key];
-        map.addElement(key, (typeof(value) === 'string') ? [value, null] : value);
-      }
+      CharacterMap.addCharacters(map, json);
       map.setParser(parser);
       return map;
     }
+}
+
+
+// TODO: The need for this class is questionable!
+/**
+ * Maps macros that all bring their own parsing method.
+ *
+ * @constructor
+ * @extends {CharacterMap}
+ */
+export class DelimiterMap extends CharacterMap {
+
+  /**
+   * @override
+   */
+  public parse([symbol, env]: ParseInput) {
+    return super.parse(['\\' + symbol, env]);
+  }
+
+  public static create(
+    name: string, parser: ParseMethod,
+    json: {[index: string]: string|[string, Attributes]}): DelimiterMap {
+      let map = new DelimiterMap(name);
+      CharacterMap.addCharacters(map, json);
+      return map;
+    }
+
 }
 
 
@@ -277,6 +313,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
     this.add(symbol, character);
   }
 
+  // TODO: Some of this is due to the legacy code format.
   protected static addCommands(map: MacroMap, json: {[index: string]: string|Args[]}): void {
     for (let key in json) {
       let value = json[key];
@@ -284,8 +321,6 @@ export class MacroMap extends AbstractParseMap<Macro> {
     }
   }
   
-  // TODO: Some of this is due to the legacy code format.
-  //       Make these calls to the Superclass method.
   public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
     let map = new MacroMap(name);
     MacroMap.addCommands(map, json);
@@ -306,7 +341,7 @@ export class CommandMap extends MacroMap {
   /**
    * @override
    */
-  public parse(symbol: string, env: Object) {
+  public parse([symbol, env]: ParseInput) {
     let macro = this.lookup(symbol);
     let parser = this.parserFor(symbol);
     if (!macro || !parser) {
@@ -338,7 +373,7 @@ export class EnvironmentMap extends MacroMap {
   /**
    * @override
    */
-  public parse(symbol: string, env: Object) {
+  public parse([symbol, env]: ParseInput) {
     let macro = this.lookup(symbol);
     let envParser = this.parserFor(symbol);
     if (!macro || !envParser) {
@@ -350,8 +385,6 @@ export class EnvironmentMap extends MacroMap {
     return true;
   }
 
-  // TODO: Some of this is due to the legacy code format.
-  //       Make these calls to the Superclass method.
   public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
    let map = new EnvironmentMap(name);
     MacroMap.addCommands(map, json);

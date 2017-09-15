@@ -23,32 +23,48 @@
  */
 
 import {TexConstant} from './tex_constants.js';
-import {ParseMethod} from './types.js';
+import {ParseMethod, ParseInput} from './types.js';
 
 
 export namespace BaseMethods {
   
-  export let variable: ParseMethod = function(symbol, rest, stack) {
-    // if () {def.mathvariant = this.stack.env.font}
-    let font = stack.env['font'];
-    let attributes = font ? {mathvariant: font} : {};
-    return {rest: rest, item: {kind: 'mml',
-                               content: {type: 'mi',
-                                         attributes: attributes,
-                                         text: symbol}
-                              }}
+  // export let variable: ParseMethod = function(symbol, rest, stack) {
+  //   // if () {def.mathvariant = this.stack.env.font}
+  //   let font = stack.env['font'];
+  //   let attributes = font ? {mathvariant: font} : {};
+  //   return {rest: rest, item: {kind: 'mml',
+  //                              content: {type: 'mi',
+  //                                        attributes: attributes,
+  //                                        text: symbol}
+  //                             }}
+  // };
+
+  // export let digit: ParseMethod = function(symbol, rest, stack) {
+  //   return {rest: '', item: ''};
+  // };
+
+  // export let num: ParseMethod = function(symbol, rest, stack) {
+  //   return {rest: '', item: ''};
+  // };
+
+  // export let controlSequence: ParseMethod = function(symbol, rest, stack) {
+  //   return {rest: '', item: ''};
+  // };
+
+  export let variable: ParseMethod = function(input: ParseInput) {
+    return false;
   };
 
-  export let digit: ParseMethod = function(symbol, rest, stack) {
-    return {rest: '', item: ''};
+  export let digit: ParseMethod = function(input: ParseInput) {
+    return false;
   };
 
-  export let num: ParseMethod = function(symbol, rest, stack) {
-    return {rest: '', item: ''};
+  export let num: ParseMethod = function(input: ParseInput) {
+    return false;
   };
 
-  export let controlSequence: ParseMethod = function(symbol, rest, stack) {
-    return {rest: '', item: ''};
+  export let controlSequence: ParseMethod = function(input: ParseInput) {
+    return false;
   };
 
 }

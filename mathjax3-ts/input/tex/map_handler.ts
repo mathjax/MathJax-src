@@ -23,25 +23,93 @@
  */
 
 import {AbstractSymbolMap, SymbolMap} from './symbol_map.js';
-import {ParseResult} from './types.js';
+import {ParseResult, ParseInput} from './types.js';
 import Stack from './stack.js';
 
 
 export default class MapHandler {
 
   private static instance: MapHandler;
-  private maps: Map<string, SymbolMap> = new Map();
-  private configuration: Array<SymbolMap> = [];
 
-  private constructor() { }
-  
+  public delimiter: Configuration;
+  public character: Configuration;
+  public macro: Configuration;
+  public environment: Configuration;
+  private maps: Map<string, SymbolMap> = new Map();
+
+  /**
+   * @return {MapHandler} The singleton MapHandler object.
+   */
+  public static getInstance(): MapHandler {
+    if (!MapHandler.instance) {
+      MapHandler.instance = new MapHandler();
+    }
+    return MapHandler.instance;
+  }
+
+
+  /**
+   * Adds a new symbol map to the map handler. Might overwrite an existing
+   * symbol map of the same name.
+   * 
+   * @param {SymbolMap} map Registers a new symbol map.
+   */
   public register(map: SymbolMap): void {
     this.maps.set(map.getName(), map);
   }
+
   
-  public configure(configuration: Array<string>): void {
-    for (let config of configuration) {
-      let map = this.maps.get(config);
+  /**
+   * 
+   * @param {{character: Array.<string>,
+   *          delimiter: Array.<string>,
+   *          macro: Array.<string>,
+   *          environment: Array.<string>}} configuration A setting for the
+   *    map handler.
+   */
+  public configure(configuration: {
+    delimiter: Array<string>,
+    character: Array<string>,
+    macro: Array<string>,
+    environment: Array<string>
+  }): void {
+    this.delimiter = new Configuration(configuration.delimiter);
+    this.character = new Configuration(configuration.character);
+    this.macro = new Configuration(configuration.macro);
+    this.environment = new Configuration(configuration.environment);
+  }
+
+
+  /**
+   * Looks up a symbol map if it exists.
+   * 
+   * @param {string} name The name of the symbol map.
+   * @return {SymbolMap} The symbol map with the given name or null.
+   */
+  public getMap(name: string): SymbolMap {
+    return this.maps.get(name);
+  }
+
+  /**
+   * Dummy constructor
+   * @constructor
+   */
+  private constructor() { }
+
+
+}
+
+
+export class Configuration {
+
+  private configuration: Array<SymbolMap> = [];
+
+  /**
+   * @constructor
+   */
+  constructor(maps: Array<string>) {
+    for (const name in maps) {
+      let map = MapHandler.getInstance().getMap(name);
       if (!map) {
         this.warn('Configuration ' + map + ' not found! Omitted.');
         continue;
@@ -50,16 +118,14 @@ export default class MapHandler {
     }
   }
 
+  
   /**
    * Retrieves the first applicable symbol map in the configuration.
    * @param {string} symbol The symbol to parse.
    * @return {SymbolMap} A map that can parse the symbol.
    */
   private applicable(symbol: string): SymbolMap {
-    // for (let map of this.configuration) {
-    for (let [name, map] of this.maps) {
-      console.log('Testing the symbol for: ' + name);
-      console.log(map.contains(symbol));
+    for (let map of this.configuration) {
       if (map.contains(symbol)) {
         return map;
       }
@@ -67,16 +133,17 @@ export default class MapHandler {
     return null;
   }
 
-  // I think here we should return the JSON value that can be handled by the
-  // parser. Meaning we should give the symbol_map a function that actually
-  // performs the parsing. E.g., a singular method for RegExp and Character. An
-  // execution method for custom functions on Macro.
-  // 
-  // This can then be actually put into the interface. We can then avoid casting!
-  //
-  // Also: How are we to know "outside" what the actual value is?
+
+  public parse(input: ParseInput): ParseResult {
+    let [symbol, _] = input;
+    let map = this.applicable(symbol);
+    return map ? map.parse(input) : null;
+  }
+
+
   /**
    * Maps a symbol to its "parse value" if it exists.
+   * 
    * @param {string} symbol The symbol to parse.
    * @return {T} A boolean, Character, or Macro.
    */
@@ -84,29 +151,22 @@ export default class MapHandler {
     let map = this.applicable(symbol) as AbstractSymbolMap<T>;
     return map ? map.lookup(symbol) : null;
   }
-  
-  public parse(symbol: string, rest: string, stack: Stack): ParseResult {
-    let map = this.applicable(symbol);
-    console.log(this.lookup(symbol));
-    console.log("PARSING");
-    console.log(map.parse(symbol, rest, stack));
-    return map ? map.parse(symbol, rest, stack) : null;
+
+
+  /**
+   * Maps a symbol to its "parse value" if it exists.
+   * 
+   * @param {string} symbol The symbol to parse.
+   * @return {T} A boolean, Character, or Macro.
+   */
+  public contains(symbol: string): boolean {
+    return this.applicable(symbol) ? true : false;
   }
 
-  // TODO: Turn this into a global warning and error functionality
+
+  // // TODO: Turn this into a global warning and error functionality
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
-  }
-
-  public getMap(name: string): SymbolMap {
-    return this.maps.get(name);
-  }
-
-  static getInstance(): MapHandler {
-    if (!MapHandler.instance) {
-      MapHandler.instance = new MapHandler();
-    }
-    return MapHandler.instance;
   }
 
 }

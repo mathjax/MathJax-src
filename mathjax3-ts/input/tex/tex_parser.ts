@@ -27,7 +27,7 @@ import MapHandler from './map_handler.js';
 import {Environment} from './types.js';
 import Stack from './stack.js';
 import {BaseMappings} from './base_mappings.js';
-import {BaseMethods} from './base_methods.js';
+// import {BaseMethods} from './base_methods.js';
 // import {Tree} from '../../TreeJax/lib/tree.js';
 
 
@@ -53,12 +53,12 @@ export default class TexParser {
     // Main parse loop!
     console.log("In parser");
     console.log(this.remainder);
-    while (this.remainder) {
-      let char = this.getChar();
-      let result = MapHandler.getInstance().parse(char, this.remainder, this.stack);
-      this.remainder = result.rest;
-      this.stack.push(result.item);
-    }
+    // while (this.remainder) {
+    //   let char = this.getChar();
+    //   let result = MapHandler.getInstance().parse(char, this.remainder, this.stack);
+    //   this.remainder = result.rest;
+    //   this.stack.push(result.item);
+    // }
   }
 
   private getChar(): string {

@@ -30,11 +30,19 @@ export type Attributes = Record<string, Args>;
 
 export type Environment = Record<string, Args>;
 
-export type ParseResult = {rest: string, item: Item};
+// TODO: These are the future types.
+// export type ParseInput = {symbol: string, rest: string, stack: Stack};
+// export type ParseResult = {rest: string, item: Item};
+
+export type ParseInput = [string, Object];
+export type ParseResult = boolean;
+
+// export type ParseResult = {rest: string, item: Item};
+
 
 // TODO: refine this type!
 export type Item = any;
 
 export interface ParseMethod {
-  (symbol: string, rest: string, stack: Stack): ParseResult;
+  (input: ParseInput): ParseResult;
 }
