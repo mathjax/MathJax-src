@@ -44,7 +44,7 @@ export class Test {
       time += this.concludedTests[test];
       delete this.concludedTests[test];
     }
-    process.stdout.write(time + 'ms\n');
+    process.stdout.write(this.constructor.name + ': ' + time + 'ms\n');
   }
 
   test(name, func) {
