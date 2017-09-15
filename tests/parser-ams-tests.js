@@ -11,6 +11,37 @@ class ParserAmsTest extends ParserTest {
 let parserTest = new ParserAmsTest();
 
 parserTest.ignoreTest(
+  'Symbol', '\\digamma',
+  {"kind":"math",
+   "texClass":0,
+   "attributes":{"display":"block"},
+   "inherited":{"displaystyle":false,
+                "scriptlevel":0},
+   "properties":{},
+   "childNodes":[
+     {"kind":"mrow",
+      "texClass":0,
+      "attributes":{},
+      "inherited":{"display":"block",
+                   "displaystyle":true,
+                   "scriptlevel":0},
+      "properties":{},
+      "childNodes":[
+        {"kind":"mi",
+         "texClass":0,
+         "attributes":{},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0,
+                      "mathvariant":"italic"},
+         "properties":{},
+         "childNodes":[
+           {"kind":"text",
+            "text":"ϝ"}]}],
+      "isInferred":true}]}
+);
+
+parserTest.ignoreTest(
   'The Lorenz Equations', '\\begin{align}' +
     '\\dot{x} & = \\sigma(y-x) \\\\' +
     '\\dot{y} & = \\rho x - y - xz \\\\' +
@@ -45,6 +76,7 @@ parserTest.ignoreTest(
             "texClass":null,
             "attributes":{},
             "inherited":{"display":"block",
+                         "columnalign":"right left right left right left right left right left right left",
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -53,6 +85,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -120,6 +153,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -232,6 +266,7 @@ parserTest.ignoreTest(
             "texClass":null,
             "attributes":{},
             "inherited":{"display":"block",
+                         "columnalign":"right left right left right left right left right left right left",
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -240,6 +275,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -307,6 +343,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -423,6 +460,7 @@ parserTest.ignoreTest(
             "texClass":null,
             "attributes":{},
             "inherited":{"display":"block",
+                         "columnalign":"right left right left right left right left right left right left",
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -431,6 +469,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -498,6 +537,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -604,47 +644,6 @@ parserTest.ignoreTest(
 
 
 parserTest.ignoreTest(
-  'Probability', 'P(E) = {n \\choose k} p^k (1-p)^{ n-k}',
-  {"kind":"math",
-   "texClass":0,
-   "attributes":{"display":"block"},
-   "inherited":{},
-   "properties":{},
-   "childNodes":[
-     {"kind":"mrow",
-      "texClass":0,
-      "attributes":{},
-      "inherited":{},
-      "properties":{},
-      "childNodes":[
-        {"kind":"merror",
-         "texClass":0,
-         "attributes":{},
-         "inherited":{},
-         "properties":{},
-         "childNodes":[
-           {"kind":"mrow",
-            "texClass":null,
-            "attributes":{},
-            "inherited":{},
-            "properties":{},
-            "childNodes":[
-              {"kind":"mtext",
-               "texClass":0,
-               "attributes":{},
-               "inherited":{},
-               "properties":{},
-               "childNodes":[
-                 {"kind":"text",
-                  "text":"Math input error"}],
-               "isSpacelike":true}],
-            "isInferred":true,
-            "isSpacelike":true}]}],
-      "isInferred":true}]}
-);
-
-
-parserTest.ignoreTest(
   'Maxwell\'s Equations', '\\begin{align} ' +
     '\\nabla \\times \\vec{\\mathbf{B}} -\\, \\frac1c\\, ' +
     '\\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t} &' +
@@ -684,6 +683,7 @@ parserTest.ignoreTest(
             "texClass":null,
             "attributes":{},
             "inherited":{"display":"block",
+                         "columnalign":"right left right left right left right left right left right left",
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -692,6 +692,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -946,6 +947,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -1080,6 +1082,7 @@ parserTest.ignoreTest(
             "texClass":null,
             "attributes":{},
             "inherited":{"display":"block",
+                         "columnalign":"right left right left right left right left right left right left",
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -1088,6 +1091,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -1196,6 +1200,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -1265,6 +1270,7 @@ parserTest.ignoreTest(
             "texClass":null,
             "attributes":{},
             "inherited":{"display":"block",
+                         "columnalign":"right left right left right left right left right left right left",
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -1273,6 +1279,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -1536,6 +1543,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -1640,6 +1648,7 @@ parserTest.ignoreTest(
             "texClass":null,
             "attributes":{},
             "inherited":{"display":"block",
+                         "columnalign":"right left right left right left right left right left right left",
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -1648,6 +1657,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -1756,6 +1766,7 @@ parserTest.ignoreTest(
                "texClass":null,
                "attributes":{},
                "inherited":{"display":"block",
+                            "columnalign":"right left right left right left right left right left right left",
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{},
@@ -1854,6 +1865,7 @@ parserTest.ignoreTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{"display":"block",
+                               "columnalign":"right center left",
                                "displaystyle":true,
                                "scriptlevel":0},
                   "properties":{},
@@ -1862,6 +1874,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -1979,6 +1992,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -2016,6 +2030,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -2233,6 +2248,7 @@ parserTest.ignoreTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{"display":"block",
+                               "columnalign":"right center left",
                                "displaystyle":true,
                                "scriptlevel":0},
                   "properties":{},
@@ -2241,6 +2257,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -2259,6 +2276,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -2296,6 +2314,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -2703,6 +2722,7 @@ parserTest.ignoreTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{"display":"block",
+                               "columnalign":"right center left",
                                "displaystyle":true,
                                "scriptlevel":0},
                   "properties":{},
@@ -2711,6 +2731,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -2729,6 +2750,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -2766,6 +2788,7 @@ parserTest.ignoreTest(
                      "texClass":null,
                      "attributes":{},
                      "inherited":{"display":"block",
+                                  "columnalign":"right center left",
                                   "displaystyle":true,
                                   "scriptlevel":0},
                      "properties":{},
@@ -3036,5 +3059,48 @@ parserTest.ignoreTest(
             "isInferred":true}]}],
       "isInferred":true}]}
 );
+
+
+// TODO: We get a Math Input Error on this one. It should not even be AMS related!x
+parserTest.ignoreTest(
+  'Probability', 'P(E) = {n \\choose k} p^k (1-p)^{ n-k}',
+  {"kind":"math",
+   "texClass":0,
+   "attributes":{"display":"block"},
+   "inherited":{},
+   "properties":{},
+   "childNodes":[
+     {"kind":"mrow",
+      "texClass":0,
+      "attributes":{},
+      "inherited":{},
+      "properties":{},
+      "childNodes":[
+        {"kind":"merror",
+         "texClass":0,
+         "attributes":{},
+         "inherited":{},
+         "properties":{},
+         "childNodes":[
+           {"kind":"mrow",
+            "texClass":null,
+            "attributes":{},
+            "inherited":{},
+            "properties":{},
+            "childNodes":[
+              {"kind":"mtext",
+               "texClass":0,
+               "attributes":{},
+               "inherited":{},
+               "properties":{},
+               "childNodes":[
+                 {"kind":"text",
+                  "text":"Math input error"}],
+               "isSpacelike":true}],
+            "isInferred":true,
+            "isSpacelike":true}]}],
+      "isInferred":true}]}
+);
+
 
 parserTest.printTime();
