@@ -419,6 +419,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
     }
   };
   var STARTUP = function () {
+    new TeXParser();
     MML = MathJax.ElementJax.mml;
     HUB.Insert(TEXDEF,{
       number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
@@ -491,10 +492,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        TEXDEF.command.parse([c, this]) ||
-          TEXDEF.special.parse([c, this]) ||
-          TEXDEF.letter.parse([c, this]) ||
-          TEXDEF.digit.parse([c, this]) ||
+        MapHandler.getInstance().character.parse([c, this]) ||
           this.Other(c);
       }
     },
@@ -522,11 +520,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      */
     ControlSequence: function (c) {
       var name = this.GetCS();
-      TEXDEF.macros.parse([name, this]) ||
-        TEXDEF.mathchar0mi.parse([name, this]) ||
-        TEXDEF.mathchar0mo.parse([name, this]) ||
-        TEXDEF.mathchar7.parse([name, this]) ||
-        TEXDEF.delimiter.parse([name, this]) ||
+      MapHandler.getInstance().macro.parse([name, this]) ||
         this.csUndefined(c+name);
     },
     //
@@ -709,11 +703,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       var def, mo;
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
       var remap = TEXDEF.remap.lookup(c);
-      if (remap) {
-        mo = MML.mo(remap.getChar()).With(def);
-      } else {
-        mo = MML.mo(c).With(def);
-      }
+      mo = remap ? MML.mo(remap.getChar()).With(def) : MML.mo(c).With(def);
       if (mo.autoDefault("stretchy",true)) {mo.stretchy = false}
       if (mo.autoDefault("texClass",true) == "") {mo = MML.TeXAtom(mo)}
       this.Push(this.mmlToken(mo));
@@ -1275,7 +1265,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
                      "MathJax maximum substitution count exceeded; " +
                      "is there a recursive latex environment?"]);
         }
-        TEXDEF.environment.parse([env, this]) ||
+        MapHandler.getInstance().environment.parse([env, this]) ||
           TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
       }
     },
@@ -1342,7 +1332,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      */
     convertDelimiter: function (c) {
       console.log("Converting Delimiter: " + c);
-      return TEXDEF.delimiter.lookup(c).getChar() || null;
+      return MapHandler.getInstance().delimiter.lookup(c).getChar() || null;
     },
 
     /*

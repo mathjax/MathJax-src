@@ -108,7 +108,7 @@ export class Configuration {
    * @constructor
    */
   constructor(maps: Array<string>) {
-    for (const name in maps) {
+    for (const name of maps) {
       let map = MapHandler.getInstance().getMap(name);
       if (!map) {
         this.warn('Configuration ' + map + ' not found! Omitted.');
@@ -118,7 +118,7 @@ export class Configuration {
     }
   }
 
-  
+
   /**
    * Retrieves the first applicable symbol map in the configuration.
    * @param {string} symbol The symbol to parse.
@@ -135,9 +135,14 @@ export class Configuration {
 
 
   public parse(input: ParseInput): ParseResult {
-    let [symbol, _] = input;
-    let map = this.applicable(symbol);
-    return map ? map.parse(input) : null;
+    // TODO: Can't be done with applicable due to delimiter parsing!
+    for (let map of this.configuration) {
+      const result = map.parse(input);
+      if (result) {
+        return result;
+      }
+    }
+    return null;
   }
 
 

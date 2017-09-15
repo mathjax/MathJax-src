@@ -24,7 +24,7 @@
  */
 
 import MapHandler from './map_handler.js';
-import {Environment} from './types.js';
+import {Environment, ParseInput} from './types.js';
 import Stack from './stack.js';
 import {BaseMappings} from './base_mappings.js';
 // import {BaseMethods} from './base_methods.js';
@@ -39,14 +39,14 @@ export default class TexParser {
   private remainder: string = '';
   private macroCount: number = 0;
 
-  constructor(input: string, env: Environment) {
+  constructor(input: ParseInput) {
     // We might want to put this explicitly elsewhere.
     MapHandler.getInstance().configure(BaseMappings.Configuration);
-    this.input = input;
-    this.remainder = input;
-    this.stack = new Stack(env, false, null, null);
-    this.parse();
-    this.stack.push({kind: 'stop', content: {}});
+    // this.input = input;
+    // this.remainder = input;
+    // this.stack = new Stack(env, false, null, null);
+    // this.parse();
+    // this.stack.push({kind: 'stop', content: {}});
   }
   
   public parse() {
