@@ -34,10 +34,6 @@ export namespace BaseMappings {
 
   sm.RegExpMap.create('digit', BaseMethods.digit, /[0-9.]/);
 
-  // Currently not in use!
-  sm.RegExpMap.create('number', BaseMethods.num,
-                /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
-
   sm.RegExpMap.create('command', BaseMethods.controlSequence, /^\\/ );  // )
 
 
@@ -69,7 +65,7 @@ export namespace BaseMappings {
     '`':   '2018'   // map ` to back quote
   });
 
-  sm.CharacterMap.create('mathchar0mi', null, {
+  sm.CharacterMap.create('mathchar0mi', BaseMethods.mathchar0mi, {
     // Lower-case greek
     alpha:        '03B1',
     beta:         '03B2',
@@ -137,7 +133,7 @@ export namespace BaseMappings {
     spadesuit:    ['2660', {mathvariant: TexConstant.Variant.NORMAL}]
   });
 
-  sm.CharacterMap.create('mathchar0mo', null, {
+  sm.CharacterMap.create('mathchar0mo', BaseMethods.mathchar0mo, {
     surd:         '221A',
 
     // big ops
@@ -301,7 +297,7 @@ export namespace BaseMappings {
     colon:            ['003A', {texClass: TexConstant.TexClass.PUNCT}]
   });
 
-  sm.CharacterMap.create('mathchar7', null, {
+  sm.CharacterMap.create('mathchar7', BaseMethods.mathchar7, {
     Gamma:        '0393',
     Delta:        '0394',
     Theta:        '0398',
@@ -322,7 +318,7 @@ export namespace BaseMappings {
     And:          '0026'
   });
 
-  sm.DelimiterMap.create('delimiter', null, {
+  sm.DelimiterMap.create('delimiter', BaseMethods.delimiter, {
     '(':                '(',
     ')':                ')',
     '[':                '[',
@@ -655,7 +651,7 @@ export namespace BaseMappings {
 
   });
 
-  sm.EnvironmentMap.create('environment', {
+  const envs = sm.EnvironmentMap.create('environment', {
     array:        ['AlignedArray'],
     matrix:       ['Array', null, null, null, 'c'],
     pmatrix:      ['Array', null, '(', ')', 'c'],
@@ -686,6 +682,7 @@ export namespace BaseMappings {
     'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
     alignedat:    ['ExtensionEnv', null, 'AMSmath']
   });
+  envs.setParser(BaseMethods.environment);
 
   sm.CharacterMap.create('not_remap', null, {
     '\u2190': '219A',

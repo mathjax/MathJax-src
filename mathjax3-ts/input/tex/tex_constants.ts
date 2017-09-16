@@ -17,7 +17,8 @@
 
 
 /**
- * @fileoverview Constant definitions for the TeX Parser.
+ * @fileoverview Constant definitions for the TeX Parser. These should
+ *     eventually be combined with the MathML structure.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

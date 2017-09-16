@@ -35,8 +35,7 @@ export type Environment = Record<string, Args>;
 // export type ParseResult = {rest: string, item: Item};
 
 export type ParseInput = [string, Object];
-export type ParseResult = boolean;
-
+export type ParseResult = boolean|string;
 // export type ParseResult = {rest: string, item: Item};
 
 

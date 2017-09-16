@@ -277,6 +277,7 @@ export class DelimiterMap extends CharacterMap {
     name: string, parser: ParseMethod,
     json: {[index: string]: string|[string, Attributes]}): DelimiterMap {
       let map = new DelimiterMap(name);
+      map.setParser(parser);
       CharacterMap.addCharacters(map, json);
       return map;
     }

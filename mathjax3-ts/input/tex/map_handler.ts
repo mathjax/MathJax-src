@@ -58,7 +58,7 @@ export default class MapHandler {
     this.maps.set(map.getName(), map);
   }
 
-  
+
   /**
    * 
    * @param {{character: Array.<string>,

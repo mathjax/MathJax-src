@@ -28,6 +28,7 @@
 
 
 let MapHandler = require('mathjax3/input/tex/map_handler.js').default;
+let sm = require('mathjax3/input/tex/symbol_map.js');
 let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
 
 (function (TEX,HUB,AJAX) {
@@ -424,27 +425,17 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
     HUB.Insert(TEXDEF,{
       number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
       p_height: 1.2 / .85,   // cmex10 height plus depth over .85
-
-      letter:  MapHandler.getInstance().getMap('letter'),
-      digit:   MapHandler.getInstance().getMap('digit'),
-      command: MapHandler.getInstance().getMap('command'),
-      
       remap:   MapHandler.getInstance().getMap('remap'),
-      mathchar0mi: MapHandler.getInstance().getMap('mathchar0mi'),
-      mathchar0mo: MapHandler.getInstance().getMap('mathchar0mo'),
-      mathchar7: MapHandler.getInstance().getMap('mathchar7'),
-      delimiter: MapHandler.getInstance().getMap('delimiter'),
-
-      special: MapHandler.getInstance().getMap('special'),
-      macros: MapHandler.getInstance().getMap('macros'),
-      environment: MapHandler.getInstance().getMap('environment')
+      // TODO (VS): Retained these two for AMScd.js.
+      macros: {},
+      special: {} 
 
     });
     
     //
     //  Add macros defined in the configuration
     //
-    // VS: This needs to be rewritten or removed!
+    // TODO (VS): This needs to be rewritten or removed!
     //
     if (this.config.Macros) {
       var MACROS = this.config.Macros;
@@ -468,24 +459,31 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       this.stack = TEX.Stack(ENV,!!env);
       this.Setup();
       this.Parse(); this.Push(STACKITEM.stop());
-      // this.Parse(); this.Push(new StackItem.Stop());
     },
-    // TODO: Move to configuration.
+    // TODO (VS): Temporary for setting up parsing in SymbolMaps.
     Setup: function() {
-      TEXDEF.macros.setFunctionMap(this);
-      TEXDEF.special.setFunctionMap(this);
-
-      TEXDEF.environment.setFunctionMap(this);
-      TEXDEF.environment.setParser(this.BeginEnvironment);
-
-      TEXDEF.letter.setParser(this.Variable);
-      TEXDEF.digit.setParser(this.Number);
-      TEXDEF.command.setParser(this.ControlSequence);
-
-      TEXDEF.mathchar7.setParser(this.csMathchar7);
-      TEXDEF.mathchar0mo.setParser(this.csMathchar0mo);
-      TEXDEF.mathchar0mi.setParser(this.csMathchar0mi);
-      TEXDEF.delimiter.setParser(this.csDelimiter);
+      this.SetupMaps(MapHandler.getInstance().character.configuration);
+      this.SetupMaps(MapHandler.getInstance().delimiter.configuration);
+      this.SetupMaps(MapHandler.getInstance().macro.configuration);
+      this.SetupMaps(MapHandler.getInstance().environment.configuration);
+    },
+    // TODO (VS): Temporary for setting up parsing in SymbolMaps.
+    SetupMaps: function(maps) {
+      for (var i = 0, map; map = maps[i]; i++) {
+        if (map instanceof sm.CharacterMap ||
+            map instanceof sm.RegExpMap ||
+            map instanceof sm.EnvironmentMap) {
+          try {
+            var parser = map.getParser()();
+            if (typeof parser === 'string') {
+              map.setParser(this[map.getParser()()]);
+            }
+          } catch (e) {}
+        } 
+        if (map instanceof sm.MacroMap) {
+          map.setFunctionMap(this);
+        }
+      }
     },
     Parse: function () {
       var c, n;
@@ -1331,7 +1329,6 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
-      console.log("Converting Delimiter: " + c);
       return MapHandler.getInstance().delimiter.lookup(c).getChar() || null;
     },
 
@@ -1440,7 +1437,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
           this.i--;
           c = this.GetArgument(name);
         }
-        if (TEXDEF.delimiter.contains(c)) {
+        if (MapHandler.getInstance().delimiter.contains(c)) {
           return this.convertDelimiter(c);
         }
       }
@@ -1756,5 +1753,6 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
   });
 
   TEX.loadComplete("jax.js");
+  MathJax.Ajax.loadComplete("TeX_Parser");
   
 })(MathJax.InputJax.TeX,MathJax.Hub,MathJax.Ajax);

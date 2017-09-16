@@ -24,33 +24,39 @@
  *  limitations under the License.
  */
 
+let MapHandler = require('mathjax3/input/tex/map_handler.js').default;
+let sm = require('mathjax3/input/tex/symbol_map.js');
+let tc = require('mathjax3/input/tex/tex_constants.js');
+let BaseMethods = require('mathjax3/input/tex/base_methods.js').default;
+
+
 MathJax.Extension["TeX/AMSsymbols"] = {
   version: "2.7.0"
 };
 
 MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var MML = MathJax.ElementJax.mml,
-      TEXDEF = MathJax.InputJax.TeX.Definitions;
-  
-  TEXDEF.Add({
+      TEXDEF = MathJax.InputJax.TeX.Definitions,
+      PARSE = MathJax.InputJax.TeX.Parse
+      ;
 
-    mathchar0mi: {
+  var miMap = sm.CharacterMap.create('AMSsymbols-mathchar0mi', BaseMethods.mathchar0mi, {
       // Lowercase Greek letters
       digamma:                '03DD',
       varkappa:               '03F0',
       
       // Uppercase Greek letters
-      varGamma:               ['0393',{mathvariant: MML.VARIANT.ITALIC}],
-      varDelta:               ['0394',{mathvariant: MML.VARIANT.ITALIC}],
-      varTheta:               ['0398',{mathvariant: MML.VARIANT.ITALIC}],
-      varLambda:              ['039B',{mathvariant: MML.VARIANT.ITALIC}],
-      varXi:                  ['039E',{mathvariant: MML.VARIANT.ITALIC}],
-      varPi:                  ['03A0',{mathvariant: MML.VARIANT.ITALIC}],
-      varSigma:               ['03A3',{mathvariant: MML.VARIANT.ITALIC}],
-      varUpsilon:             ['03A5',{mathvariant: MML.VARIANT.ITALIC}],
-      varPhi:                 ['03A6',{mathvariant: MML.VARIANT.ITALIC}],
-      varPsi:                 ['03A8',{mathvariant: MML.VARIANT.ITALIC}],
-      varOmega:               ['03A9',{mathvariant: MML.VARIANT.ITALIC}],
+      varGamma:               ['0393',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varDelta:               ['0394',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varTheta:               ['0398',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varLambda:              ['039B',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varXi:                  ['039E',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varPi:                  ['03A0',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varSigma:               ['03A3',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varUpsilon:             ['03A5',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varPhi:                 ['03A6',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varPsi:                 ['03A8',{mathvariant: tc.TexConstant.Variant.ITALIC}],
+      varOmega:               ['03A9',{mathvariant: tc.TexConstant.Variant.ITALIC}],
 
       // Hebrew letters
       beth:                   '2136',
@@ -71,7 +77,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       lozenge:                '25CA',
       Diamond:                '25CA',
       blacklozenge:           '29EB',
-      circledS:               ['24C8',{mathvariant: MML.VARIANT.NORMAL}],
+      circledS:               ['24C8',{mathvariant: tc.TexConstant.Variant.NORMAL}],
       bigstar:                '2605',
 //    angle:                  '2220',  // in TeX/jax.js
       sphericalangle:         '2222',
@@ -79,20 +85,22 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       nexists:                '2204',
       complement:             '2201',
       mho:                    '2127',
-      eth:                    ['00F0',{mathvariant: MML.VARIANT.NORMAL}],
+      eth:                    ['00F0',{mathvariant: tc.TexConstant.Variant.NORMAL}],
       Finv:                   '2132',
       diagup:                 '2571',
       Game:                   '2141',
       diagdown:               '2572',
-      Bbbk:                   ['006B',{mathvariant: MML.VARIANT.DOUBLESTRUCK}],
+      Bbbk:                   ['006B',{mathvariant: tc.TexConstant.Variant.DOUBLESTRUCK}],
       
       yen:                    '00A5',
       circledR:               '00AE',
       checkmark:              '2713',
       maltese:                '2720'
-    },
+  });
 
-    mathchar0mo: {
+  MapHandler.getInstance().macro.configuration.push(miMap);
+
+  var moMap = sm.CharacterMap.create('AMSsymbols-mathchar0m0', BaseMethods.mathchar0mo, {
       // Binary operators
       dotplus:                '2214',
       ltimes:                 '22C9',
@@ -297,23 +305,27 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       nRightarrow:            '21CF',
       nleftrightarrow:        '21AE',
       nLeftrightarrow:        '21CE'
-    },
+  });
     
-    delimiter: {
+  MapHandler.getInstance().macro.configuration.push(moMap);
+
+  var delimMap = sm.DelimiterMap.create('AMSsymbols-delimiter', BaseMethods.delimiter, {
       // corners
       "\\ulcorner":           '231C',
       "\\urcorner":           '231D',
       "\\llcorner":           '231E',
       "\\lrcorner":           '231F'
-    },
+  });
     
-    macros: {
-      implies:    ['Macro','\\;\\Longrightarrow\\;'],
-      impliedby:  ['Macro','\\;\\Longleftarrow\\;']
-    }
-    
-  },null,true);
-  
+  MapHandler.getInstance().macro.configuration.push(delimMap);
+  MapHandler.getInstance().delimiter.configuration.push(delimMap);
+
+  var macros = sm.CommandMap.create('AMSsymbols-macros', {
+    implies:    ['Macro','\\;\\Longrightarrow\\;'],
+    impliedby:  ['Macro','\\;\\Longleftarrow\\;']
+  });
+  MapHandler.getInstance().macro.configuration.push(macros);
+
   var REL = MML.mo.OPTYPES.REL;
 
   MathJax.Hub.Insert(MML.mo.prototype,{
@@ -343,7 +355,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   });
 
   MathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready");
-
+  
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");

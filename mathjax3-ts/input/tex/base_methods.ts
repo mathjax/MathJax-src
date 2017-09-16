@@ -28,7 +28,7 @@ import {ParseMethod, ParseInput} from './types.js';
 
 export namespace BaseMethods {
   
-  // export let variable: ParseMethod = function(symbol, rest, stack) {
+  // export let variable: ParseMethod = function([symbol, rest, stack]) {
   //   // if () {def.mathvariant = this.stack.env.font}
   //   let font = stack.env['font'];
   //   let attributes = font ? {mathvariant: font} : {};
@@ -39,33 +39,51 @@ export namespace BaseMethods {
   //                             }}
   // };
 
-  // export let digit: ParseMethod = function(symbol, rest, stack) {
+  // export let digit: ParseMethod = function([symbol, rest, stack]) {
   //   return {rest: '', item: ''};
   // };
 
-  // export let num: ParseMethod = function(symbol, rest, stack) {
+  // export let num: ParseMethod = function([symbol, rest, stack]) {
   //   return {rest: '', item: ''};
   // };
 
-  // export let controlSequence: ParseMethod = function(symbol, rest, stack) {
+  // export let controlSequence: ParseMethod = function([symbol, rest, stack]) {
   //   return {rest: '', item: ''};
   // };
 
   export let variable: ParseMethod = function(input: ParseInput) {
-    return false;
+    return 'Variable';
   };
 
   export let digit: ParseMethod = function(input: ParseInput) {
-    return false;
-  };
-
-  export let num: ParseMethod = function(input: ParseInput) {
-    return false;
+    return 'Number';
   };
 
   export let controlSequence: ParseMethod = function(input: ParseInput) {
-    return false;
+    return 'ControlSequence';
+  };
+
+  export let mathchar0mi: ParseMethod = function(input: ParseInput) {
+    return 'csMathchar0mi';
+  };
+
+  export let mathchar0mo: ParseMethod = function(input: ParseInput) {
+    return 'csMathchar0mo';
+  };
+
+  export let mathchar7: ParseMethod = function(input: ParseInput) {
+    return 'csMathchar7';
+  };
+
+  export let delimiter: ParseMethod = function(input: ParseInput) {
+    return 'csDelimiter';
+  };
+
+  export let environment: ParseMethod = function(input: ParseInput) {
+    return 'BeginEnvironment';
   };
 
 }
 
+// TODO: Temporary for importing base methods into MathJax legacy code.
+export default BaseMethods;
