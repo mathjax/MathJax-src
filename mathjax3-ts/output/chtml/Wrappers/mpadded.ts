@@ -27,13 +27,6 @@ import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Property} from '../../../core/Tree/Node.js';
 
-/*
- * Needed in order to access BBox properties by variable
- */
-interface IBBox extends BBox {
-    [name: string]: number | string | Function;
-}
-
 /*****************************************************************/
 /*
  *  The CHTMLmpadded wrapper for the MmlMpadded object
@@ -63,8 +56,8 @@ export class CHTMLmpadded extends CHTMLWrapper {
             style.margin = this.em(dh) + ' 0 ' + this.em(dd);
         }
         //
-        // If there is a horizotnal or vertical shift,
-        //   use relative poisitioning to move the contents
+        // If there is a horizontal or vertical shift,
+        //   use relative positioning to move the contents
         //
         if (x || y) {
             style.position = 'relative';
@@ -112,7 +105,7 @@ export class CHTMLmpadded extends CHTMLWrapper {
     protected dimen(length: Property, bbox: BBox, d: string = '', m: number = null) {
         length = String(length);
         const match = length.match(/width|height|depth/);
-        const size = (match ? (bbox as IBBox)[match[0].charAt(0)] : (d ? (bbox as IBBox)[d] : 0)) as number;
+        const size = (match ? bbox[match[0].charAt(0) as (keyof BBox)] : (d ? bbox[d as (keyof BBox)] : 0)) as number;
         let dimen = (this.length2em(length, size) || 0);
         if (length.match(/^[-+]/) && d) {
             dimen += size;

@@ -22,8 +22,8 @@
  */
 
 import {AbstractWrapper} from '../../core/Tree/Wrapper.js';
-import {Node} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
+import {Node, PropertyList} from '../../core/Tree/Node.js';
+import {MmlNode, TextNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
@@ -670,6 +670,24 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     public text(text: string) {
         return this.factory.chtml.text(text);
+    }
+
+    /*
+     * @param{string} text  The text from which to create a TextNode object
+     * @return{CHTMLTextNode}  The TextNode with the given text
+     */
+    public mmlText(text: string) {
+        return ((this.node as AbstractMmlNode).factory.create('text') as TextNode).setText(text);
+    }
+
+    /*
+     * @param{string} kind  The kind of MmlNode to create
+     * @paramProperyList} properties  The properties to set initially
+     * @param{MmlNode[]} children  The child nodes to add to the created node
+     * @return{MmlNode}  The newly created MmlNode
+     */
+    public mmlNode(kind: string, properties: PropertyList = {}, children: MmlNode[] = []) {
+        return (this.node as AbstractMmlNode).factory.create(kind, properties, children);
     }
 
 }
