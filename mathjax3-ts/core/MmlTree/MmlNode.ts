@@ -500,7 +500,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
                            display: boolean = false, level: number = 0, prime: boolean = false) {
         let defaults = this.attributes.getAllDefaults();
         for (const key of Object.keys(attributes)) {
-            if (key in defaults) {
+            if (defaults.hasOwnProperty(key)) {
                 let [node, value] = attributes[key];
                 let noinherit = (AbstractMmlNode.noInherit[node] || {})[this.kind] || {};
                 if (!noinherit[key]) {
