@@ -892,10 +892,77 @@ parserTest.runTest(
 
 parserTest.runTest(
   'spaces', 'A\\,B\\!C',
-  {}
+  {"kind":"math",
+   "texClass":0,
+   "attributes":{"display":"block"},
+   "inherited":{"displaystyle":false,
+                "scriptlevel":0},
+   "properties":{},
+   "childNodes":[
+     {"kind":"mrow",
+      "texClass":0,
+      "attributes":{},
+      "inherited":{"display":"block",
+                   "displaystyle":true,
+                   "scriptlevel":0},
+      "properties":{},
+      "childNodes":[
+        {"kind":"mi",
+         "texClass":0,
+         "attributes":{},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0,
+                      "mathvariant":"italic"},
+         "properties":{},
+         "childNodes":[
+           {"kind":"text",
+            "text":"A"}]},
+        {"kind":"mspace",
+         "texClass":0,
+         "attributes":{"width":"thinmathspace"},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0},
+         "properties":{"scriptlevel":0},
+         "childNodes":[],
+         "isSpacelike":true},
+        {"kind":"mi",
+         "texClass":0,
+         "attributes":{},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0,
+                      "mathvariant":"italic"},
+         "properties":{},
+         "childNodes":[
+           {"kind":"text",
+            "text":"B"}]},
+        {"kind":"mspace",
+         "texClass":0,
+         "attributes":{"width":"negativethinmathspace"},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0},
+         "properties":{"scriptlevel":0},
+         "childNodes":[],
+         "isSpacelike":true},
+        {"kind":"mi",
+         "texClass":0,
+         "attributes":{},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0,
+                      "mathvariant":"italic"},
+         "properties":{},
+         "childNodes":[
+           {"kind":"text",
+            "text":"C"}]}],
+      "isInferred":true}]}
 );
 
-parserTest.ignoreTest(
+
+parserTest.runTest(
   'Maxwell\'s Equations', '\\begin{align} ' +
     '\\nabla \\times \\vec{\\mathbf{B}} -\\, \\frac1c\\, ' +
     '\\frac{\\partial\\vec{\\mathbf{E}}}{\\partial t} &' +

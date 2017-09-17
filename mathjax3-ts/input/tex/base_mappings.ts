@@ -473,7 +473,9 @@ export namespace BaseMappings {
     moveleft:           'MoveLeftRight',
     moveright:          'MoveLeftRight',
 
-    ', ':              ['Spacer', TexConstant.Length.THINMATHSPACE],
+    // TODO: QUESTION: Why was there a space after ,?
+    // ', ':              ['Spacer', TexConstant.Length.THINMATHSPACE],
+    ',':               ['Spacer', TexConstant.Length.THINMATHSPACE],
     ':':               ['Spacer', TexConstant.Length.MEDIUMMATHSPACE],
     '>':               ['Spacer', TexConstant.Length.MEDIUMMATHSPACE],
     ';':               ['Spacer', TexConstant.Length.THICKMATHSPACE],
