@@ -250,7 +250,46 @@ parserTest.runTest(
       "isInferred":true}]}
 );
 
+parserTest.runTest(
+  'AMS-math-mo', '\\iiiint',
+  {"kind":"math",
+   "texClass":0,
+   "attributes":{"display":"block"},
+   "inherited":{"displaystyle":false,
+                "scriptlevel":0},
+   "properties":{},
+   "childNodes":[
+     {"kind":"mrow",
+      "texClass":0,
+      "attributes":{},
+      "inherited":{"display":"block",
+                   "displaystyle":true,
+                   "scriptlevel":0},
+      "properties":{},
+      "childNodes":[
+        {"kind":"mo",
+         "texClass":0,
+         "attributes":{},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0,
+                      "form":"infix"},
+         "properties":{},
+         "childNodes":[
+           {"kind":"text",
+            "text":"⨌"}],
+         "isEmbellished":true}],
+      "isInferred":true,
+      "isEmbellished":true}],
+   "isEmbellished":true}
+);
+
 parserTest.ignoreTest(
+  'AMS-math-macro', '\\ddddot',
+  {}
+);
+
+parserTest.runTest(
   'The Lorenz Equations', '\\begin{align}' +
     '\\dot{x} & = \\sigma(y-x) \\\\' +
     '\\dot{y} & = \\rho x - y - xz \\\\' +
@@ -851,6 +890,10 @@ parserTest.ignoreTest(
       "isInferred":true}]}
 );
 
+parserTest.runTest(
+  'spaces', 'A\\,B\\!C',
+  {}
+);
 
 parserTest.ignoreTest(
   'Maxwell\'s Equations', '\\begin{align} ' +
@@ -2023,7 +2066,7 @@ parserTest.ignoreTest(
 );
 
 
-parserTest.ignoreTest(
+parserTest.runTest(
   'Cubic Binomial',
   '{\\begin{eqnarray}(x+y)^{3}&=&(x+y)(x+y)(x+y)\\\\&' +
     '=&xxx+xxy+xyx+{\\underline {xyy}}+yxx+{\\underline {yxy}}' +

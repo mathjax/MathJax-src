@@ -628,11 +628,11 @@ export namespace BaseMappings {
 
     boldsymbol:        ['Extension', 'boldsymbol'],
 
-    tag:               ['Extension', 'AMSmath'],
-    notag:             ['Extension', 'AMSmath'],
-    label:             ['Extension', 'AMSmath'],
-    ref:               ['Extension', 'AMSmath'],
-    eqref:             ['Extension', 'AMSmath'],
+    // tag:               ['Extension', 'AMSmath'],
+    // notag:             ['Extension', 'AMSmath'],
+    // label:             ['Extension', 'AMSmath'],
+    // ref:               ['Extension', 'AMSmath'],
+    // eqref:             ['Extension', 'AMSmath'],
     nonumber:          ['Macro', '\\notag'],
 
     //  Extensions to TeX
@@ -663,24 +663,24 @@ export namespace BaseMappings {
 
     // VS Q What are these with function null?
     //      What about the AMSmath argument?
-    equation:     [null, 'Equation'],
-    'equation*':  [null, 'Equation'],
+    // equation:     [null, 'Equation'],
+    // 'equation*':  [null, 'Equation'],
 
-    eqnarray:     ['ExtensionEnv', null, 'AMSmath'],
-    'eqnarray*':  ['ExtensionEnv', null, 'AMSmath'],
+    // eqnarray:     ['ExtensionEnv', null, 'AMSmath'],
+    // 'eqnarray*':  ['ExtensionEnv', null, 'AMSmath'],
 
-    align:        ['ExtensionEnv', null, 'AMSmath'],
-    'align*':     ['ExtensionEnv', null, 'AMSmath'],
-    aligned:      ['ExtensionEnv', null, 'AMSmath'],
-    multline:     ['ExtensionEnv', null, 'AMSmath'],
-    'multline*':  ['ExtensionEnv', null, 'AMSmath'],
-    split:        ['ExtensionEnv', null, 'AMSmath'],
-    gather:       ['ExtensionEnv', null, 'AMSmath'],
-    'gather*':    ['ExtensionEnv', null, 'AMSmath'],
-    gathered:     ['ExtensionEnv', null, 'AMSmath'],
-    alignat:      ['ExtensionEnv', null, 'AMSmath'],
-    'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
-    alignedat:    ['ExtensionEnv', null, 'AMSmath']
+    // align:        ['ExtensionEnv', null, 'AMSmath'],
+    // 'align*':     ['ExtensionEnv', null, 'AMSmath'],
+    // aligned:      ['ExtensionEnv', null, 'AMSmath'],
+    // multline:     ['ExtensionEnv', null, 'AMSmath'],
+    // 'multline*':  ['ExtensionEnv', null, 'AMSmath'],
+    // split:        ['ExtensionEnv', null, 'AMSmath'],
+    // gather:       ['ExtensionEnv', null, 'AMSmath'],
+    // 'gather*':    ['ExtensionEnv', null, 'AMSmath'],
+    // gathered:     ['ExtensionEnv', null, 'AMSmath'],
+    // alignat:      ['ExtensionEnv', null, 'AMSmath'],
+    // 'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
+    // alignedat:    ['ExtensionEnv', null, 'AMSmath']
   });
   envs.setParser(BaseMethods.environment);
 

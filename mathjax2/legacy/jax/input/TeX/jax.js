@@ -428,7 +428,8 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       remap:   MapHandler.getInstance().getMap('remap'),
       // TODO (VS): Retained these two for AMScd.js.
       macros: {},
-      special: {} 
+      special: {},
+      environment: {} 
 
     });
     
