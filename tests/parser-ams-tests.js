@@ -284,9 +284,72 @@ parserTest.runTest(
    "isEmbellished":true}
 );
 
-parserTest.ignoreTest(
-  'AMS-math-macro', '\\ddddot',
-  {}
+parserTest.runTest(
+  'AMS-math-macro', '\\ddddot{1}',
+  {"kind":"math",
+   "texClass":0,
+   "attributes":{"display":"block"},
+   "inherited":{"displaystyle":false,
+                "scriptlevel":0},
+   "properties":{},
+   "childNodes":[
+     {"kind":"mrow",
+      "texClass":0,
+      "attributes":{},
+      "inherited":{"display":"block",
+                   "displaystyle":true,
+                   "scriptlevel":0},
+      "properties":{},
+      "childNodes":[
+        {"kind":"TeXAtom",
+         "texClass":0,
+         "attributes":{},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0},
+         "properties":{},
+         "childNodes":[
+           {"kind":"mrow",
+            "texClass":-1,
+            "attributes":{},
+            "inherited":{"display":"block",
+                         "displaystyle":true,
+                         "scriptlevel":0},
+            "properties":{},
+            "childNodes":[
+              {"kind":"mover",
+               "texClass":-1,
+               "attributes":{},
+               "inherited":{"display":"block",
+                            "displaystyle":true,
+                            "scriptlevel":0,
+                            "accent":false},
+               "properties":{},
+               "childNodes":[
+                 {"kind":"mn",
+                  "texClass":0,
+                  "attributes":{},
+                  "inherited":{"display":"block",
+                               "displaystyle":true,
+                               "scriptlevel":0},
+                  "properties":{"texprimestyle":true},
+                  "childNodes":[
+                    {"kind":"text",
+                     "text":"1"}]},
+                 {"kind":"mo",
+                  "texClass":0,
+                  "attributes":{},
+                  "inherited":{"display":"block",
+                               "displaystyle":false,
+                               "scriptlevel":1,
+                               "form":"infix"},
+                  "properties":{},
+                  "childNodes":[
+                    {"kind":"text",
+                     "text":"⃜"}],
+                  "isEmbellished":true}]}],
+            "isInferred":true}]}],
+      "isInferred":true}]}
 );
 
 parserTest.runTest(
@@ -3381,7 +3444,7 @@ parserTest.runTest(
 
 
 // TODO: We get a Math Input Error on this one. It should not even be AMS related!x
-parserTest.ignoreTest(
+parserTest.runTest(
   'Probability', 'P(E) = {n \\choose k} p^k (1-p)^{ n-k}',
   {"kind":"math",
    "texClass":0,
