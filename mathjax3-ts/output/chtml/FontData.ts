@@ -360,7 +360,7 @@ export class FontData {
     }
 
     /*
-     * @param{number} n  A unicode code point to be converred to a character reference for use with the
+     * @param{number} n  A unicode code point to be converted to a character reference for use with the
      *                   CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
      *                   for higher values, or for the double quote and backslash characters).
      * @return{string}  The character as a properly encoded string.
