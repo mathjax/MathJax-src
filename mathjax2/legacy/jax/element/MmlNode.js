@@ -2,6 +2,7 @@
   var MML = MathJax.ElementJax.mml;
   
   var PROPERTY = [
+    'texWithDelims',
     'movesupsub',
     'subsupOK',
     'primes',
@@ -14,6 +15,9 @@
     'variantForm',
     'autoOP'
   ];
+  var RENAME = {
+      texWithDelims: 'withDelims'
+  };
 
   MML.mbase.Augment({
     toMmlNode: function (factory) {
@@ -62,7 +66,7 @@
         var name = PROPERTY[i];
         if (this[name] != null &&
             (this.defaults[name] == null || this.defaults[name] === MML.AUTO)) {
-          node.setProperty(name, this[name]);
+          node.setProperty(RENAME[name] || name, this[name]);
         }
       }
     }
