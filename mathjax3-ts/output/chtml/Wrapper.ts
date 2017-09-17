@@ -405,7 +405,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         let attributes = this.node.attributes;
         let scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
         let fontsize = attributes.get('fontsize');
-        let mathsize = (parent && !this.node.isToken ? parent : this).node.attributes.get('mathsize');
+        let mathsize = (this.node.isToken || this.node.isKind('mstyle') ?
+                        attributes.get('mathsize') : attributes.getInherited('mathsize'));
         //
         // If scriptsize is non-zero, set scale based on scriptsizemultiplier
         //

@@ -207,6 +207,8 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     public static defaults: PropertyList = {
         mathbackground: INHERIT,
         mathcolor: INHERIT,
+        mathsize: INHERIT,  // technically only for token elements, but <mstyle mathsize="..."> should
+                            //    scale all spaces, fractions, etc.
         dir: INHERIT
     };
     /*
