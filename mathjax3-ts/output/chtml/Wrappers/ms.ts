@@ -58,8 +58,7 @@ export class CHTMLms extends CHTMLWrapper {
      * @return{CHTMLWrapper}   The wrapped text node
      */
     protected createText(text: string) {
-        const mmlFactory = (this.node as AbstractMmlNode).factory;
-        const node = this.wrap((mmlFactory.create('text') as TextNode).setText(text));
+        const node = this.wrap(this.mmlText(text));
         node.parent = this;
         return node;
     }
