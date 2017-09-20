@@ -304,24 +304,21 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (this.bboxComputed) {
             return this.bbox;
         }
-        let bbox = this.computeBBox();
-        if (save) {
-            this.bbox = bbox;
-            this.bboxComputed = true;
-        }
+        const bbox = (save ? this.bbox : BBox.zero());
+        this.computeBBox(bbox);
+        this.bboxComputed = save;
         return bbox;
     }
 
     /*
-     * @return{BBox}  The computed bounding box for the wrapped node
+     * @param{BBox} bbox  The bounding box to modify (either this.bbox, or an empty one)
      */
-    protected computeBBox() {
-        const bbox = this.bbox.empty();
+    protected computeBBox(bbox: BBox) {
+        bbox.empty();
         for (const child of this.childNodes) {
             bbox.append(child.getBBox());
         }
         bbox.clean();
-        return bbox;
     }
 
     /*******************************************************************/
@@ -635,7 +632,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     public drawBBox() {
         const bbox = this.getBBox();
         const box = this.html('mjx-box', {style: {
-            opacity: .25, 'margin-left': this.em(-bbox.w-bbox.R)
+            opacity: .25, 'margin-left': this.em(-bbox.w - bbox.R)
         }}, [
             this.html('mjx-box', {style: {
                 height: this.em(bbox.h),

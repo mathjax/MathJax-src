@@ -43,7 +43,7 @@ export class CHTMLTeXAtom extends CHTMLWrapper {
         // Center VCENTER atoms vertically
         //
         if (this.node.texClass === TEXCLASS.VCENTER) {
-            const bbox = super.computeBBox();  // get unmodified bbox of children
+            const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
             const {h, d} = bbox;
             const a = this.font.params.axis_height;
             const dh = ((h + d) / 2 + a) - h;  // new height minus old height
@@ -54,8 +54,8 @@ export class CHTMLTeXAtom extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
-        const bbox = super.computeBBox();
+    public computeBBox(bbox: BBox) {
+        super.computeBBox(bbox);
         //
         // Center VCENTER atoms vertically
         //
@@ -66,7 +66,6 @@ export class CHTMLTeXAtom extends CHTMLWrapper {
             bbox.h += dh;
             bbox.d += dh;
         }
-        return bbox;
     }
 
 }

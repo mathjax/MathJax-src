@@ -119,8 +119,8 @@ export class CHTMLmfrac extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
-        const bbox = this.bbox.empty();
+    public computeBBox(bbox: BBox) {
+        bbox.empty();
         const nbox = this.childNodes[0].getBBox();
         const dbox = this.childNodes[1].getBBox();
         const pad = (this.node.getProperty('withDelims') as boolean ? this.font.params.nulldelimiterspace : 0);
@@ -130,7 +130,6 @@ export class CHTMLmfrac extends CHTMLWrapper {
         bbox.combine(dbox, pad, a - 1.5 * t - Math.max(dbox.h, .75));
         bbox.w += pad + .2;
         bbox.clean();
-        return bbox;
     }
 
     /*

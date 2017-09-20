@@ -109,19 +109,19 @@ export class CHTMLmtable extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
+    public computeBBox(bbox: BBox) {
         const H = new Array(this.numRows).fill(0);
         const D = new Array(this.numRows).fill(0);
         const W = new Array(this.numCols).fill(0);
         for (let j = 0; j < this.numRows; j++) {
             const row = this.childNodes[j] as CHTMLmtr;
             for (let i = 0; i < row.childNodes.length; i++) {
-                const bbox = row.childNodes[i].getBBox();
-                const h = Math.max(bbox.h, .75);
-                const d = Math.max(bbox.d, .25);
+                const cbox = row.childNodes[i].getBBox();
+                const h = Math.max(cbox.h, .75);
+                const d = Math.max(cbox.d, .25);
                 if (h > H[j]) H[j] = h;
                 if (d > D[j]) D[j] = d;
-                if (bbox.w > W[i]) W[i] = bbox.w;
+                if (cbox.w > W[i]) W[i] = cbox.w;
             }
         }
         const cMax = Math.max(0, this.numCols - 1);
@@ -135,11 +135,10 @@ export class CHTMLmtable extends CHTMLWrapper {
         const a = this.font.params.axis_height;
         const h = H.concat(D, rLines).reduce((a, b) => a + b) + (frame ? .14 : 0) +
             rSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1]);
-        this.bbox.h = h / 2 + a;
-        this.bbox.d = h / 2 - a;
-        this.bbox.w = W.concat(cLines).reduce((a, b) => a + b) +
+        bbox.h = h / 2 + a;
+        bbox.d = h / 2 - a;
+        bbox.w = W.concat(cLines).reduce((a, b) => a + b) +
             cSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1]);
-        return this.bbox;
     }
 
     /******************************************************************/
