@@ -59,6 +59,12 @@ export const FONTSIZE: StringMap = {
     '249%': 'HG'
 };
 
+export const SPACE: StringMap = {
+    [LENGTHS.em(3/18)]: '1',
+    [LENGTHS.em(4/18)]: '2',
+    [LENGTHS.em(5/18)]: '3',
+};
+
 /*
  * Needed to access node.style[id] using variable id
  */
@@ -532,7 +538,12 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleSpace() {
         if (this.bbox.L) {
-            this.chtml.setAttribute('space', (this.bbox.L * 18 - 2).toString());
+            const space = this.em(this.bbox.L);
+            if (SPACE[space]) {
+                this.chtml.setAttribute('space', SPACE[space]);
+            } else {
+                this.chtml.style.marginLeft = space;
+            }
         }
     }
 
