@@ -25,6 +25,7 @@
 import *  as sm from './symbol_map.js';
 import {TexConstant} from './tex_constants.js';
 import {BaseMethods} from './base_methods.js';
+import MapHandler from './map_handler.js';
 
 
 export namespace BaseMappings {
@@ -742,4 +743,6 @@ export namespace BaseMappings {
     environment: ['environment']
   };
 
+  MapHandler.getInstance().configure(BaseMappings.Configuration);
+  // console.log(MapHandler.getInstance().toString());
 }

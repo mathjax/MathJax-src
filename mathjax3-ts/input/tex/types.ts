@@ -45,3 +45,5 @@ export type Item = any;
 export interface ParseMethod {
   (input: ParseInput): ParseResult;
 }
+
+export type Configurations = 'delimiter' | 'macro' | 'character' | 'environment';

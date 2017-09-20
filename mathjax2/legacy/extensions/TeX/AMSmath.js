@@ -69,12 +69,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   /******************************************************************************/
   
-  var moMap = sm.CharacterMap.create('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
+  sm.CharacterMap.create('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
     iiiint:     ['2A0C',{texClass: MML.TEXCLASS.OP}]
   });
-  MapHandler.getInstance().macro.configuration.push(moMap);
     
-  var macrosMap = sm.CommandMap.create('AMSmath-macros', {
+  sm.CommandMap.create('AMSmath-macros', {
     mathring:   ['Accent','2DA'],  // or 0x30A
       nobreakspace: 'Tilde',
       negmedspace:    ['Spacer',MML.LENGTH.NEGATIVEMEDIUMMATHSPACE],
@@ -130,9 +129,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       xrightarrow: ['xArrow',0x2192,5,6],
       xleftarrow:  ['xArrow',0x2190,7,3]
   });
-  MapHandler.getInstance().macro.configuration.push(macrosMap);
 
-  var environmentMap = sm.EnvironmentMap.create('AMSmath-environment', {
+  sm.EnvironmentMap.create('AMSmath-environment', {
       align:         ['AMSarray',null,true,true,  'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0])],
       'align*':      ['AMSarray',null,false,true, 'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0])],
       multline:      ['Multline',null,true],
@@ -156,20 +154,20 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
       eqnarray:      ['AMSarray',null,true,true, 'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"],
       'eqnarray*':   ['AMSarray',null,false,true,'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"]
-  });
-  MapHandler.getInstance().environment.configuration.push(environmentMap);
-  environmentMap.setParser(BaseMethods.environment);
+  }).setParser(BaseMethods.environment);
   
-
-  
-  var delimiterMap = sm.EnvironmentMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
+  sm.EnvironmentMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
       '\\lvert':     ['007C',{texClass:MML.TEXCLASS.OPEN}],
       '\\rvert':     ['007C',{texClass:MML.TEXCLASS.CLOSE}],
       '\\lVert':     ['2016',{texClass:MML.TEXCLASS.OPEN}],
       '\\rVert':     ['2016',{texClass:MML.TEXCLASS.CLOSE}]
   });
-  MapHandler.getInstance().macro.configuration.push(delimiterMap);
-  MapHandler.getInstance().delimiter.configuration.push(delimiterMap);
+
+  MapHandler.getInstance().append({
+    delimiter: ['AMSmath-delimiter'],
+    macro: ['AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
+    environment: ['AMSmath-environment']
+  })
   
 
   /******************************************************************************/

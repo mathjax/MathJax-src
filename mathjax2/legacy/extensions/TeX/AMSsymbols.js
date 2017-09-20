@@ -98,8 +98,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       maltese:                '2720'
   });
 
-  MapHandler.getInstance().macro.configuration.push(miMap);
-
   var moMap = sm.CharacterMap.create('AMSsymbols-mathchar0m0', BaseMethods.mathchar0mo, {
       // Binary operators
       dotplus:                '2214',
@@ -307,8 +305,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       nLeftrightarrow:        '21CE'
   });
     
-  MapHandler.getInstance().macro.configuration.push(moMap);
-
   var delimMap = sm.DelimiterMap.create('AMSsymbols-delimiter', BaseMethods.delimiter, {
       // corners
       "\\ulcorner":           '231C',
@@ -317,14 +313,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       "\\lrcorner":           '231F'
   });
     
-  MapHandler.getInstance().macro.configuration.push(delimMap);
-  MapHandler.getInstance().delimiter.configuration.push(delimMap);
-
   var macros = sm.CommandMap.create('AMSsymbols-macros', {
     implies:    ['Macro','\\;\\Longrightarrow\\;'],
     impliedby:  ['Macro','\\;\\Longleftarrow\\;']
   });
-  MapHandler.getInstance().macro.configuration.push(macros);
+
+  MapHandler.getInstance().append({
+    delimiter: ['AMSsymbols-delimiter'],
+    macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0', 'AMSsymbols-delimiter', 'AMSsymbols-macros'],
+  })
 
   var REL = MML.mo.OPTYPES.REL;
 
@@ -355,7 +352,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   });
 
   MathJax.Hub.Startup.signal.Post("TeX AMSsymbols Ready");
-  
+
 });
 
 MathJax.Ajax.loadComplete("[MathJax]/extensions/TeX/AMSsymbols.js");

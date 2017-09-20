@@ -257,7 +257,6 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
 }
 
 
-// TODO: The need for this class is questionable!
 /**
  * Maps macros that all bring their own parsing method.
  *
