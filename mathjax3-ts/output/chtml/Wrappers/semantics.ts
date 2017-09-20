@@ -50,15 +50,13 @@ export class CHTMLsemantics extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
-        const bbox = this.bbox;
+    public computeBBox(bbox: BBox) {
         if (this.childNodes.length) {
             const {w, h, d} = this.childNodes[0].getBBox();
             bbox.w = w;
             bbox.h = h;
             bbox.d = d;
         }
-        return bbox;
     }
 
 }

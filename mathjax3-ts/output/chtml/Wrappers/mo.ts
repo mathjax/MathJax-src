@@ -189,22 +189,17 @@ export class CHTMLmo extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
-        const attributes = this.node.attributes;
-        const symmetric = attributes.get('symmetric');
+    public computeBBox(bbox: BBox) {
+        const symmetric = this.node.attributes.get('symmetric');
         if (this.stretch && this.size === null) {
             this.getStretchedVariant([0]);
         }
-        if (this.stretch && this.size < 0) {
-            return this.bbox;
-        } else {
-            const bbox = super.computeBBox();
-            if (symmetric) {
-                const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
-                bbox.h += d;
-                bbox.d += d;
-            }
-            return bbox;
+        if (this.stretch && this.size < 0) return;
+        super.computeBBox(bbox);
+        if (symmetric) {
+            const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
+            bbox.h += d;
+            bbox.d += d;
         }
     }
 
