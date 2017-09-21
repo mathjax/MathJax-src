@@ -24,7 +24,6 @@
  *  limitations under the License.
  */
 
-let MapHandler = require('mathjax3/input/tex/map_handler.js').default;
 let sm = require('mathjax3/input/tex/symbol_map.js');
 let tc = require('mathjax3/input/tex/tex_constants.js');
 let BaseMethods = require('mathjax3/input/tex/base_methods.js').default;
@@ -163,11 +162,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       '\\rVert':     ['2016',{texClass:MML.TEXCLASS.CLOSE}]
   });
 
-  MapHandler.getInstance().append({
+  TEXDEF.configurations.push({
     delimiter: ['AMSmath-delimiter'],
     macro: ['AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
     environment: ['AMSmath-environment']
-  })
+  });
   
 
   /******************************************************************************/

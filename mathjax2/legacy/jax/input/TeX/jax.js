@@ -28,7 +28,6 @@
 
 
 let MapHandler = require('mathjax3/input/tex/map_handler.js').default;
-let sm = require('mathjax3/input/tex/symbol_map.js');
 let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
 
 (function (TEX,HUB,AJAX) {
@@ -427,8 +426,9 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       // TODO (VS): Retained these for AMScd.js.
       macros: {},
       special: {},
-      environment: {} 
-
+      environment: {},
+      // TODO (VS): Temporary to collect configurations from extensions.
+      configurations: []
     });
     
     //
@@ -459,6 +459,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = TEX.Stack(ENV,!!env);
       NewParser.setup(this);
+      TEXDEF.configurations.forEach(NewParser.append.bind(NewParser));
       this.Parse(); this.Push(STACKITEM.stop());
     },
     Parse: function () {
@@ -466,7 +467,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        MapHandler.getInstance().parse('character', [c, this])
+        NewParser.parse('character', [c, this])
       }
     },
     Push: function (arg) {
@@ -493,7 +494,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      */
     ControlSequence: function (c) {
       var name = this.GetCS();
-      MapHandler.getInstance().parse('macro', [name, this]);
+      NewParser.parse('macro', [name, this]);
     },
     //
     //  Look up a macro in the macros list
@@ -1237,7 +1238,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
                      "MathJax maximum substitution count exceeded; " +
                      "is there a recursive latex environment?"]);
         }
-        MapHandler.getInstance().parse('environment', [env, this])
+        NewParser.parse('environment', [env, this]);
       }
     },
     BeginEnvironment: function (func, env, args) {
@@ -1302,7 +1303,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
-      return MapHandler.getInstance().lookup('delimiter', c).getChar() || null;
+      return NewParser.lookup('delimiter', c).getChar() || null;
     },
 
     /*
@@ -1410,7 +1411,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
           this.i--;
           c = this.GetArgument(name);
         }
-        if (MapHandler.getInstance().contains('delimiter', c)) {
+        if (NewParser.contains('delimiter', c)) {
           return this.convertDelimiter(c);
         }
       }
