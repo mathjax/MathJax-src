@@ -128,7 +128,14 @@ export default class MapHandler {
   }
 
 
-  public fallback(kind: HandlerType, method: (input: string) => ParseResult) {
+  /**
+   * Maps a symbol to its "parse value" if it exists.
+   *
+   * @param {HandlerType} kind Configuration name.
+   * @param {string} symbol The symbol to parse.
+   * @return {T} A boolean, Character, or Macro.
+   */
+  public fallback(kind: HandlerType, method: ParseMethod) {
     return this.configurations.get(kind).fallback(method);
   }
 
@@ -166,7 +173,6 @@ export default class MapHandler {
     this.configure({});
   }
 
-
 }
 
 
@@ -176,10 +182,7 @@ export default class MapHandler {
 class SubHandler {
 
   private _configuration: SymbolMap[] = [];
-  // TODO: This is the proper type for fallback:
-  //
-  // private _fallback: ParseMethod = x => { return null; };
-  private _fallback: (input: string) => ParseResult = x => { return null; };
+  private _fallback: ParseMethod = x => { return null; };
 
   /**
    * @constructor
@@ -197,7 +200,7 @@ class SubHandler {
    * Sets the default method to call when parsing fails.
    * @param {function(string): ParseResult} method The fallback method.
    */
-  public fallback(method: (input: string) => ParseResult) {
+  public fallback(method: ParseMethod) {
     this._fallback = method;
   }
 
@@ -283,7 +286,7 @@ class SubHandler {
   }
 
 
-  // // TODO: Turn this into a global warning and error functionality
+  // TODO: Turn this into a global warning and error functionality
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
   }

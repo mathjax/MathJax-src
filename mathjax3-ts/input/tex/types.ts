@@ -22,8 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import Stack from './stack.js';
-
 export type Args = boolean|number|string|null;
 
 export type Attributes = Record<string, Args>;
@@ -36,11 +34,7 @@ export type Environment = Record<string, Args>;
 
 export type ParseInput = [string, Object];
 export type ParseResult = boolean|string;
-// export type ParseResult = {rest: string, item: Item};
 
-
-// TODO: refine this type!
-export type Item = any;
 
 export interface ParseMethod {
   (input: ParseInput): ParseResult;

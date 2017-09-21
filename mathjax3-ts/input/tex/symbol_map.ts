@@ -56,6 +56,8 @@ export interface SymbolMap {
    */
   parserFor(symbol: string): ParseMethod;
 
+  getParser(): ParseMethod;
+
   /**
    * @param {string} symbol A symbol to parse.
    * @param {Object} env The current calling object. // (This is temporary!)
@@ -299,7 +301,8 @@ export class MacroMap extends AbstractParseMap<Macro> {
 
   
   // TODO: This needs to be set explicitly from an object.
-  public setFunctionMap(map: Map<string, ParseMethod>) {
+  // public setFunctionMap(map: Map<string, ParseMethod>) {
+  public setFunctionMap(map: Record<string, ParseMethod>) {
     this.functionMap = map;
   }
 

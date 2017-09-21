@@ -23,44 +23,48 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import * as sm from './symbol_map.js';
 import MapHandler from './map_handler.js';
-import {Environment, ParseInput} from './types.js';
-import Stack from './stack.js';
+import {Environment, ParseInput, ParseMethod} from './types.js';
 import {BaseMappings} from './base_mappings.js';
-// import {BaseMethods} from './base_methods.js';
-// import {Tree} from '../../TreeJax/lib/tree.js';
 
 
-// TODO: Make this into a singleton?
 export default class TexParser {
 
-  private stack: Stack;
   private input: string = '';
   private remainder: string = '';
   private macroCount: number = 0;
 
   constructor(input: ParseInput) {
-    // We might want to put this explicitly elsewhere.
     MapHandler.getInstance().configure(BaseMappings.CONFIGURATION);
-    MapHandler.getInstance().append({delimiter: ['something']});
-    // this.input = input;
-    // this.remainder = input;
-    // this.stack = new Stack(env, false, null, null);
-    // this.parse();
-    // this.stack.push({kind: 'stop', content: {}});
   }
-  
-  public parse() {
-    // Main parse loop!
-    console.log("In parser");
-    console.log(this.remainder);
-    // while (this.remainder) {
-    //   let char = this.getChar();
-    //   let result = MapHandler.getInstance().parse(char, this.remainder, this.stack);
-    //   this.remainder = result.rest;
-    //   this.stack.push(result.item);
-    // }
+
+
+  // TODO (VS): Temporary for setting up parsing in SymbolMaps.
+  public setup(env: Record<string, ParseMethod>) {
+    const maps = MapHandler.getInstance().allMaps();
+    for (let i = 0, map; map = maps[i]; i++) {
+      if (map instanceof sm.CharacterMap ||
+          map instanceof sm.RegExpMap ||
+          map instanceof sm.EnvironmentMap) {
+        try {
+          let parser = map.getParser()(null);
+          if (typeof parser === 'string') {
+            map.setParser(env[map.getParser()(null) as string]);
+          }
+        } catch (e) {}
+      }
+      if (map instanceof sm.MacroMap) {
+        map.setFunctionMap(env);
+      }
+    }
+    MapHandler.getInstance().fallback('character', env['Other']);
+    MapHandler.getInstance().fallback('macro', env['csUndefined']);
+    MapHandler.getInstance().fallback('environment', env['envUndefined']);
   }
+
+
+  public parse(input: string): void { }
 
   private getChar(): string {
     let char = this.remainder.charAt(0);
@@ -68,19 +72,10 @@ export default class TexParser {
     let charCode = char.charCodeAt(0);
     // Surrogate pairs. Refactor with util function in symbol.ts
     if (charCode >= 0xD800 && charCode < 0xDC00) {
-      char += this.remainder.charAt(0)
+      char += this.remainder.charAt(0);
       this.remainder = this.remainder.slice(1);
     }
     return char;
   }
-  
-  public static parse(input: string): void {
-    // let result = MapHandler.getInstance().parse(input, '', null);
-    // console.log(result);
-    // let parser = new TexParser(input, {});
-    // console.log(parser);
-    // return parser.stack.getResult();
-  }
-
 
 }

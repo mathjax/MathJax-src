@@ -420,12 +420,10 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
     }
   };
   var STARTUP = function () {
-    new TeXParser();
     MML = MathJax.ElementJax.mml;
     HUB.Insert(TEXDEF,{
       number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
       p_height: 1.2 / .85,   // cmex10 height plus depth over .85
-      remap:   MapHandler.getInstance().getMap('remap'),
       // TODO (VS): Retained these for AMScd.js.
       macros: {},
       special: {},
@@ -453,42 +451,15 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
    *   The TeX Parser
    */
 
+  var NewParser = new TeXParser();
   var PARSE = MathJax.Object.Subclass({
+    remap:   MapHandler.getInstance().getMap('remap'),
     Init: function (string,env) {
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = TEX.Stack(ENV,!!env);
-      this.Setup();
+      NewParser.setup(this);
       this.Parse(); this.Push(STACKITEM.stop());
-    },
-    // TODO (VS): Temporary for setting up parsing in SymbolMaps.
-    Setup: function() {
-      this.SetupMaps(MapHandler.getInstance().allMaps());
-      MapHandler.getInstance().fallback('character', this.Other);
-      MapHandler.getInstance().fallback(
-        'macro', function(name) {return this.csUndefined('\\' + name);});
-      MapHandler.getInstance().fallback(
-        'environment', function(env) {
-          return TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
-        });
-    },
-    // TODO (VS): Temporary for setting up parsing in SymbolMaps.
-    SetupMaps: function(maps) {
-      for (var i = 0, map; map = maps[i]; i++) {
-        if (map instanceof sm.CharacterMap ||
-            map instanceof sm.RegExpMap ||
-            map instanceof sm.EnvironmentMap) {
-          try {
-            var parser = map.getParser()();
-            if (typeof parser === 'string') {
-              map.setParser(this[map.getParser()()]);
-            }
-          } catch (e) {}
-        } 
-        if (map instanceof sm.MacroMap) {
-          map.setFunctionMap(this);
-        }
-      }
     },
     Parse: function () {
       var c, n;
@@ -534,7 +505,6 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
     //
     csMathchar0mi: function (mchar) {
       var def = mchar.getAttributes() || {mathvariant: MML.VARIANT.ITALIC};
-      // VS Q: Do we want to handle characters in this way or directly as Unicode?
       this.Push(this.mmlToken(MML.mi(mchar.getChar()).With(def)));
     },
     //
@@ -556,8 +526,6 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
     //
     //  Handle delimiter
     //
-    // VS Q: Does the original version with delim.length === 4 ever happen, as
-    // the second argument always seems to be an Attributes dictionary?
     csDelimiter: function (delim) {
       var def = delim.getAttributes() || {};
       this.Push(this.mmlToken(MML.mo(delim.getChar()).With({fence: false, stretchy: false}).With(def)));
@@ -567,9 +535,12 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
     //  (overridden in noUndefined extension)
     //
     csUndefined: function (name) {
-      TEX.Error(["UndefinedControlSequence","Undefined control sequence %1",name]);
+      TEX.Error(["UndefinedControlSequence","Undefined control sequence %1",'\\' + name]);
     },
-
+    envUndefined: function(env) {
+      TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
+    },
+    
     /*
      *  Handle a variable (a single letter)
      */
@@ -703,7 +674,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
     Other: function (c) {
       var def, mo;
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
-      var remap = TEXDEF.remap.lookup(c);
+      var remap = this.remap.lookup(c);
       mo = remap ? MML.mo(remap.getChar()).With(def) : MML.mo(c).With(def);
       if (mo.autoDefault("stretchy",true)) {mo.stretchy = false}
       if (mo.autoDefault("texClass",true) == "") {mo = MML.TeXAtom(mo)}

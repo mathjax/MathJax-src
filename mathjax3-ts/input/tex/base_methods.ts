@@ -27,7 +27,7 @@ import {ParseMethod, ParseInput} from './types.js';
 
 
 export namespace BaseMethods {
-  
+
   // export let variable: ParseMethod = function([symbol, rest, stack]) {
   //   // if () {def.mathvariant = this.stack.env.font}
   //   let font = stack.env['font'];
