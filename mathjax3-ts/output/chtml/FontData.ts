@@ -197,7 +197,7 @@ export class FontData {
         big_op_spacing1:  .111,
         big_op_spacing2:  .167,
         big_op_spacing3:  .2,
-        big_op_spacing4:  .45, // .6,  // better spacing for under arrows and braces
+        big_op_spacing4:  .6,
         big_op_spacing5:  .1,
 
         surd_height:      .075,

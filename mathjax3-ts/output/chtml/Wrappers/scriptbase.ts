@@ -83,6 +83,24 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     }
 
     /*
+     * @return{boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
+     */
+    protected isCharBase() {
+        let base = this.base;
+        if ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
+            base = base.childNodes[0];
+        }
+        return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
+                base.bbox.rscale === 1 && base.getText().length === 1 &&
+                !base.node.attributes.get('largeop'));
+    }
+
+    /***************************************************************************/
+    /*
+     *  Methods for sub-sup nodes
+     */
+
+    /*
      * Get the shift for the script (implemented in subclasses)
      *
      * @param{BBox} bbox   The bounding box of the base element
@@ -129,17 +147,68 @@ export class CHTMLscriptbase extends CHTMLWrapper {
         );
     }
 
+    /***************************************************************************/
     /*
-     * @return{boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
+     *  Methods for under-over nodes
      */
-    protected isCharBase() {
-        let base = this.base;
-        if ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
-            base = base.childNodes[0];
-        }
-        return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
-                base.bbox.rscale === 1 && base.getText().length === 1 &&
-                !base.node.attributes.get('largeop'));
+
+    /*
+     * @return{boolean}  True if the base has movablelimits (needed by munderover)
+     */
+    protected hasMovableLimits() {
+        const display = this.node.attributes.get('displaystyle');
+        return (!display && (this.node.getProperty('movablelimits') ||
+                             this.node.attributes.get('movablelimits') ||
+                             this.base.coreMO().node.attributes.get('movablelimits')));
     }
 
+    /*
+     * Get the separation and offset for overscripts (TeXBoox Appendix G 13, 13a)
+     *
+     * @param{BBox} basebox  The bounding box of the base
+     * @param{BBox} overbox  The bounding box of the overscript
+     * @return{numner[]}     The separation between their boxes, and the offset of the overscript
+     */
+    protected getOverKU(basebox: BBox, overbox: BBox) {
+        const tex = this.font.params;
+        const d = overbox.d * overbox.rscale;
+        const k = Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d));
+        return [k, basebox.h + k + d];
+    }
+
+    /*
+     * Get the separation and offset for undercripts (TeXBoox Appendix G 13, 13a)
+     *
+     * @param{BBox} basebox   The bounding box of the base
+     * @param{BBox} underbox  The bounding box of the underscript
+     * @return{numner[]}      The separation between their boxes, and the offset of the underscript
+     */
+    protected getUnderKV(basebox: BBox, underbox: BBox) {
+        const tex = this.font.params;
+        const h = underbox.h * underbox.rscale;
+        const k = Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h);
+        return [k, -(basebox.d + k + h)];
+    }
+
+    /*
+     * @param{BBox[]} boxes  The bounding boxes whose offsets are to be computed
+     * @param{number[]}      The x offsets of the boxes to center them in a vertical stack
+     */
+    protected getDeltaW(boxes: BBox[]) {
+        const widths = boxes.map(box => box.w * box.rscale);
+        const w = Math.max(...widths);
+        return widths.map(width => (w - width) / 2);
+    }
+
+    /*
+     * @param{HTMLElement[]} nodes  The HTML elements to be centered in a stack
+     * @param{number[]} dx          The x offsets needed to center the elements
+     */
+    protected setDeltaW(nodes: HTMLElement[], dx: number[]) {
+        for (let i = 0; i < dx.length; i++) {
+            if (dx[i]) {
+                nodes[i].style.paddingLeft = this.em(dx[i]);
+            }
+        }
+    }
 }
