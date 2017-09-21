@@ -22,10 +22,10 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import *  as sm from './symbol_map.js';
-import {TexConstant} from './tex_constants.js';
-import {BaseMethods} from './base_methods.js';
-import MapHandler from './map_handler.js';
+import *  as sm from './SymbolMap.js';
+import {TexConstant} from './TexConstants.js';
+import {BaseMethods} from './BaseMethods.js';
+import MapHandler from './MapHandler.js';
 
 
 export namespace BaseMappings {

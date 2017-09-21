@@ -22,8 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {AbstractSymbolMap, SymbolMap} from './symbol_map.js';
-import {ParseMethod, ParseResult, ParseInput} from './types.js';
+import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
+import {ParseMethod, ParseResult, ParseInput} from './Types.js';
 
 
 export default class MapHandler {

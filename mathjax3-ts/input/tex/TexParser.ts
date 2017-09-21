@@ -23,10 +23,10 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sm from './symbol_map.js';
-import MapHandler from './map_handler.js';
-import {HandlerType, Configuration, ParseInput, ParseResult, ParseMethod} from './types.js';
-import {BaseMappings} from './base_mappings.js';
+import * as sm from './SymbolMap.js';
+import MapHandler from './MapHandler.js';
+import {HandlerType, Configuration, ParseInput, ParseResult, ParseMethod} from './Types.js';
+import {BaseMappings} from './BaseMappings.js';
 
 
 export default class TexParser {

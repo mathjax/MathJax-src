@@ -22,9 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Attributes, Args, ParseMethod, ParseInput, ParseResult} from './types.js';
-import {Symbol, Macro} from './symbol.js';
-import MapHandler from './map_handler.js';
+import {Attributes, Args, ParseMethod, ParseInput, ParseResult} from './Types.js';
+import {Symbol, Macro} from './Symbol.js';
+import MapHandler from './MapHandler.js';
 
 
 /**
