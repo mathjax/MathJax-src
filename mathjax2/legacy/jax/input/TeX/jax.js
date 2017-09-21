@@ -463,8 +463,14 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
     },
     // TODO (VS): Temporary for setting up parsing in SymbolMaps.
     Setup: function() {
-      console.log(MapHandler.getInstance().toString());
       this.SetupMaps(MapHandler.getInstance().allMaps());
+      MapHandler.getInstance().fallback('character', this.Other);
+      MapHandler.getInstance().fallback(
+        'macro', function(name) {return this.csUndefined('\\' + name);});
+      MapHandler.getInstance().fallback(
+        'environment', function(env) {
+          return TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
+        });
     },
     // TODO (VS): Temporary for setting up parsing in SymbolMaps.
     SetupMaps: function(maps) {
@@ -489,8 +495,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        MapHandler.getInstance().parse('character', [c, this]) ||
-          this.Other(c);
+        MapHandler.getInstance().parse('character', [c, this])
       }
     },
     Push: function (arg) {
@@ -517,8 +522,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
      */
     ControlSequence: function (c) {
       var name = this.GetCS();
-      MapHandler.getInstance().parse('macro', [name, this]) ||
-        this.csUndefined(c+name);
+      MapHandler.getInstance().parse('macro', [name, this]);
     },
     //
     //  Look up a macro in the macros list
@@ -1262,8 +1266,7 @@ let TeXParser = require('mathjax3/input/tex/tex_parser.js').default;
                      "MathJax maximum substitution count exceeded; " +
                      "is there a recursive latex environment?"]);
         }
-        MapHandler.getInstance().parse('environment', [env, this]) ||
-          TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
+        MapHandler.getInstance().parse('environment', [env, this])
       }
     },
     BeginEnvironment: function (func, env, args) {

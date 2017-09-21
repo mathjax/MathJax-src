@@ -46,4 +46,8 @@ export interface ParseMethod {
   (input: ParseInput): ParseResult;
 }
 
-export type Configurations = 'delimiter' | 'macro' | 'character' | 'environment';
+export type MapType = 'delimiter' | 'macro' | 'character' | 'environment';
+
+export type Configuration = {
+  [P in MapType]?: string[]
+}

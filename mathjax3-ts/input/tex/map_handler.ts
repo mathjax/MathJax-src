@@ -23,15 +23,14 @@
  */
 
 import {AbstractSymbolMap, SymbolMap} from './symbol_map.js';
-import {Configurations, ParseResult, ParseInput} from './types.js';
-import Stack from './stack.js';
+import {MapType, Configuration, ParseMethod, ParseResult, ParseInput} from './types.js';
 
 
 export default class MapHandler {
 
   private static instance: MapHandler;
 
-  private configurations: Map<Configurations, Configuration> = new Map();
+  private configurations: Map<MapType, SubMap> = new Map();
 
   private maps: Map<string, SymbolMap> = new Map();
 
@@ -49,16 +48,17 @@ export default class MapHandler {
   /**
    * Adds a new symbol map to the map handler. Might overwrite an existing
    * symbol map of the same name.
-   * 
+   *
    * @param {SymbolMap} map Registers a new symbol map.
    */
   public register(map: SymbolMap): void {
     this.maps.set(map.getName(), map);
   }
 
+
   /**
    * Looks up a symbol map if it exists.
-   * 
+   *
    * @param {string} name The name of the symbol map.
    * @return {SymbolMap} The symbol map with the given name or null.
    */
@@ -70,7 +70,7 @@ export default class MapHandler {
   public allMaps(): SymbolMap[] {
     return Array.from(this.maps.values());
   }
-  
+
   /**
    * Sets a new configuration for the map handler.
    * @param {{character: Array.<string>,
@@ -79,11 +79,11 @@ export default class MapHandler {
    *          environment: Array.<string>}} configuration A setting for the
    *    map handler.
    */
-  public configure(config: { [P in Configurations]? : string[]}): void {
-    this.configure_(config.delimiter, 'delimiter');
-    this.configure_(config.character, 'character');
-    this.configure_(config.macro, 'macro');
-    this.configure_(config.environment, 'environment');
+  public configure(config: Configuration): void {
+    for (let key in config) {
+      let name = key as MapType;
+      this.configurations.set(name, new SubMap(config[name] || []));
+    }
   }
 
 
@@ -95,46 +95,52 @@ export default class MapHandler {
    *          environment: Array.<string>}} configuration A setting for the
    *    map handler.
    */
-  public append(config: { [P in Configurations]? : Array<string>}): void {
-    this.append_(config.delimiter, 'delimiter');
-    this.append_(config.character, 'character');
-    this.append_(config.macro, 'macro');
-    this.append_(config.environment, 'environment');
+  public append(config: Configuration): void {
+    for (let key in config) {
+      let name = key as MapType;
+      for (const map of config[name]) {
+        this.configurations.get(name).add(map);
+      }
+    }
   }
 
 
   /**
    * Parses the input with the specified kind of map.
-   * @param {Configurations} kind Configuration name.
+   * @param {MapType} kind Configuration name.
    * @param {ParseInput} input Input to be parsed.
    * @return {ParseResult} The output of the parsing function.
    */
-  public parse(kind: Configurations, input: ParseInput): ParseResult {
+  public parse(kind: MapType, input: ParseInput): ParseResult {
     return this.configurations.get(kind).parse(input);
   }
 
 
   /**
    * Maps a symbol to its "parse value" if it exists.
-   * 
-   * @param {Configurations} kind Configuration name.
+   *
+   * @param {MapType} kind Configuration name.
    * @param {string} symbol The symbol to parse.
    * @return {T} A boolean, Character, or Macro.
    */
-  public lookup(kind: Configurations, symbol: string) {
+  public lookup(kind: MapType, symbol: string) {
     return this.configurations.get(kind).lookup(symbol);
   }
 
 
+  public fallback(kind: MapType, method: (input: string) => ParseResult) {
+    return this.configurations.get(kind).fallback(method);
+  }
+
   /**
    * Checks if a symbol is contained in one of the symbol mappings of the
    * specified kind.
-   * 
+   *
    * @param {string} symbol The symbol to parse.
    * @return {boolean} True if the symbol is contained in the given types of
    *     symbol mapping.
    */
-  public contains(kind: Configurations, symbol: string): boolean {
+  public contains(kind: MapType, symbol: string): boolean {
     return this.configurations.get(kind).contains(symbol);
   }
 
@@ -146,24 +152,11 @@ export default class MapHandler {
     let str = '';
     for (const config of Array.from(this.configurations.keys())) {
       str += config + ': ' +
-        this.configurations.get(config as Configurations) + '\n';
+        this.configurations.get(config as MapType) + '\n';
     }
     return str;
   }
 
-  
-  private configure_(config: string[] | null, name: Configurations): void {
-    this.configurations.set(name, new Configuration(config || []));
-  }
-
-  private append_(config: string[] | null, name: Configurations): void {
-    if (!config) {
-      return;
-    }
-    for (const map of config) {
-      this.configurations.get(name).add(map);
-    }
-  }
 
   /**
    * Dummy constructor
@@ -177,17 +170,35 @@ export default class MapHandler {
 }
 
 
-class Configuration {
+/**
+ * Class of symbol mappings that are active in a configuration.
+ */
+class SubMap {
 
-  private configuration: SymbolMap[] = [];
+  private _configuration: SymbolMap[] = [];
+  // TODO: This is the proper type for fallback:
+  //
+  // private _fallback: ParseMethod = x => { return null; };
+  private _fallback: (input: string) => ParseResult = x => { return null; };
 
   /**
    * @constructor
+   * @param {Array.<string>} maps Names of the maps included in this
+   *     configuration.
    */
   constructor(maps: string[]) {
     for (const name of maps) {
       this.add(name);
     }
+  }
+
+
+  /**
+   * Sets the default method to call when parsing fails.
+   * @param {function(string): ParseResult} method The fallback method.
+   */
+  public fallback(method: (input: string) => ParseResult) {
+    this._fallback = method;
   }
 
 
@@ -201,7 +212,7 @@ class Configuration {
       this.warn('Configuration ' + name + ' not found! Omitted.');
       return;
     }
-    this.configuration.push(map);
+    this._configuration.push(map);
   }
 
 
@@ -212,19 +223,20 @@ class Configuration {
    */
   public parse(input: ParseInput): ParseResult {
     // TODO: Can't be done with applicable due to delimiter parsing!
-    for (let map of this.configuration) {
+    for (let map of this._configuration) {
       const result = map.parse(input);
       if (result) {
         return result;
       }
     }
-    return null;
+    let [symbol, env] = input;
+    return this._fallback.bind(env)(symbol);
   }
 
 
   /**
    * Maps a symbol to its "parse value" if it exists.
-   * 
+   *
    * @param {string} symbol The symbol to parse.
    * @return {T} A boolean, Character, or Macro.
    */
@@ -237,7 +249,7 @@ class Configuration {
   /**
    * Checks if a symbol is contained in one of the symbol mappings of this
    * configuration.
-   * 
+   *
    * @param {string} symbol The symbol to parse.
    * @return {boolean} True if the symbol is contained in the mapping.
    */
@@ -250,7 +262,7 @@ class Configuration {
    * @override
    */
   public toString(): string {
-    return this.configuration
+    return this._configuration
       .map(function(x: SymbolMap) {return x.getName(); })
       .join(', ');
   }
@@ -262,7 +274,7 @@ class Configuration {
    * @return {SymbolMap} A map that can parse the symbol.
    */
   private applicable(symbol: string): SymbolMap {
-    for (let map of this.configuration) {
+    for (let map of this._configuration) {
       if (map.contains(symbol)) {
         return map;
       }

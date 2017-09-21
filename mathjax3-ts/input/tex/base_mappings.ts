@@ -735,14 +735,12 @@ export namespace BaseMappings {
     '\u2203': '2204'
   });
 
-  // TODO: This is temporary until we have merged with configuration options.
-  export const Configuration = {
+  // TODO: This should be merged with configuration options.
+  export const CONFIGURATION = {
     character: ['command', 'special', 'letter', 'digit'],
     delimiter: ['delimiter'],
     macro: ['macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7', 'delimiter'],
     environment: ['environment']
   };
 
-  MapHandler.getInstance().configure(BaseMappings.Configuration);
-  // console.log(MapHandler.getInstance().toString());
 }

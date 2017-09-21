@@ -41,8 +41,8 @@ export default class TexParser {
 
   constructor(input: ParseInput) {
     // We might want to put this explicitly elsewhere.
-    console.log(MapHandler.getInstance().toString());
-    // MapHandler.getInstance().configure(BaseMappings.Configuration);
+    MapHandler.getInstance().configure(BaseMappings.CONFIGURATION);
+    MapHandler.getInstance().append({delimiter: ['something']});
     // this.input = input;
     // this.remainder = input;
     // this.stack = new Stack(env, false, null, null);
