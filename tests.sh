@@ -4,6 +4,8 @@ if [ $# -eq 0 ]; then
     # node load.js tests/json-tests.js
     # node load.js tests/tree-tests.js
     node load.js tests/parser-base-tests.js
+    node load.js tests/parser-error-tests.js
+    node load.js tests/parser-complex-tests.js
     node load.js tests/parser-ams-tests.js
     exit 0
 else
