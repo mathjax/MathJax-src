@@ -23,14 +23,14 @@
  */
 
 import {AbstractSymbolMap, SymbolMap} from './symbol_map.js';
-import {MapType, Configuration, ParseMethod, ParseResult, ParseInput} from './types.js';
+import {HandlerType, Configuration, ParseMethod, ParseResult, ParseInput} from './types.js';
 
 
 export default class MapHandler {
 
   private static instance: MapHandler;
 
-  private configurations: Map<MapType, SubMap> = new Map();
+  private configurations: Map<HandlerType, SubHandler> = new Map();
 
   private maps: Map<string, SymbolMap> = new Map();
 
@@ -81,8 +81,8 @@ export default class MapHandler {
    */
   public configure(config: Configuration): void {
     for (let key in config) {
-      let name = key as MapType;
-      this.configurations.set(name, new SubMap(config[name] || []));
+      let name = key as HandlerType;
+      this.configurations.set(name, new SubHandler(config[name] || []));
     }
   }
 
@@ -97,7 +97,7 @@ export default class MapHandler {
    */
   public append(config: Configuration): void {
     for (let key in config) {
-      let name = key as MapType;
+      let name = key as HandlerType;
       for (const map of config[name]) {
         this.configurations.get(name).add(map);
       }
@@ -107,11 +107,11 @@ export default class MapHandler {
 
   /**
    * Parses the input with the specified kind of map.
-   * @param {MapType} kind Configuration name.
+   * @param {HandlerType} kind Configuration name.
    * @param {ParseInput} input Input to be parsed.
    * @return {ParseResult} The output of the parsing function.
    */
-  public parse(kind: MapType, input: ParseInput): ParseResult {
+  public parse(kind: HandlerType, input: ParseInput): ParseResult {
     return this.configurations.get(kind).parse(input);
   }
 
@@ -119,16 +119,16 @@ export default class MapHandler {
   /**
    * Maps a symbol to its "parse value" if it exists.
    *
-   * @param {MapType} kind Configuration name.
+   * @param {HandlerType} kind Configuration name.
    * @param {string} symbol The symbol to parse.
    * @return {T} A boolean, Character, or Macro.
    */
-  public lookup(kind: MapType, symbol: string) {
+  public lookup(kind: HandlerType, symbol: string) {
     return this.configurations.get(kind).lookup(symbol);
   }
 
 
-  public fallback(kind: MapType, method: (input: string) => ParseResult) {
+  public fallback(kind: HandlerType, method: (input: string) => ParseResult) {
     return this.configurations.get(kind).fallback(method);
   }
 
@@ -140,7 +140,7 @@ export default class MapHandler {
    * @return {boolean} True if the symbol is contained in the given types of
    *     symbol mapping.
    */
-  public contains(kind: MapType, symbol: string): boolean {
+  public contains(kind: HandlerType, symbol: string): boolean {
     return this.configurations.get(kind).contains(symbol);
   }
 
@@ -152,7 +152,7 @@ export default class MapHandler {
     let str = '';
     for (const config of Array.from(this.configurations.keys())) {
       str += config + ': ' +
-        this.configurations.get(config as MapType) + '\n';
+        this.configurations.get(config as HandlerType) + '\n';
     }
     return str;
   }
@@ -173,7 +173,7 @@ export default class MapHandler {
 /**
  * Class of symbol mappings that are active in a configuration.
  */
-class SubMap {
+class SubHandler {
 
   private _configuration: SymbolMap[] = [];
   // TODO: This is the proper type for fallback:
