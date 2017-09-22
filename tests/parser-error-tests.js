@@ -13,9 +13,8 @@ let parserTest = new ParserErrorTest();
 
 // Errors
 
-// Ampersand error
-// This comes currently out with an [Object object] instead of the ampersand.
-parserTest.ignoreTest(
+// Error in checkItem.
+parserTest.runTest(
   'Ampersand-error', '&',
   {"kind":"math",
    "texClass":0,
@@ -64,7 +63,7 @@ parserTest.ignoreTest(
       "isInferred":true}]}
 );
 
-// Argument error
+// Error in GetArgument
 parserTest.runTest(
   'Argument-error', '\\frac{b}',
   {"kind":"math",
@@ -114,7 +113,7 @@ parserTest.runTest(
       "isInferred":true}]}
 );
 
-// Control sequence error
+// Control sequence error: csUndefined
 parserTest.runTest(
   'Undefined-CS', '\\nonsense',
   {"kind":"math",
@@ -164,7 +163,7 @@ parserTest.runTest(
       "isInferred":true}]}
 );
 
-// Environment sequence error
+// Environment sequence error: envUndefined
 parserTest.runTest(
   'Undefined-Env', '\\begin{nonsense} a \\end{nonsense}',
   {"kind":"math",

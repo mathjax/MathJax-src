@@ -108,7 +108,7 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
       if (item.type === "over" && this.isOpen) {item.num = this.mmlData(false); this.data = []}
       if (item.type === "cell" && this.isOpen) {
         if (item.linebreak) {return false}
-        TEX.Error(["Misplaced","Misplaced %1",item.name]);
+        TEX.Error(["Misplaced","Misplaced %1",item.name.symbol]);
       }
       if (item.isClose && this[item.type+"Error"]) {TEX.Error(this[item.type+"Error"])}
       if (!item.isNotStack) {return true}
@@ -1344,6 +1344,7 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
      *  or the contents of the next set of braces).
      */
     GetArgument: function (name,noneOK) {
+      console.log('Getting argument');
       switch (this.GetNext()) {
        case "":
         if (!noneOK) {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
