@@ -51,13 +51,24 @@ export class CHTMLTextNode extends CHTMLWrapper {
      * @override
      */
     public computeBBox() {
-        //
-        // Fake a bbox for now (eventually, this will get looked up in the font table)
-        //
-        this.bbox.w = .5;
-        this.bbox.h = .8;
-        this.bbox.d = .2;
-        return this.bbox;
+        const variant = this.parent.variant;
+        let bbox = this.bbox;
+        if (variant === '-explicitFont') {
+            // FIXME:  measure this using DOM, if possible
+        } else {
+            const chars = this.unicodeChars((this.node as TextNode).getText());
+            let [h, d, w] = this.font.getChar(variant, chars[0]);
+            bbox.h = h;
+            bbox.d = d;
+            bbox.w = w;
+            for (let i = 1, m = chars.length; i < m; i++) {
+                [h, d, w] = this.font.getChar(variant, chars[i]);
+                bbox.w += w;
+                if (h > bbox.h) bbox.h = h;
+                if (d > bbox.d) bbox.d = d;
+            }
+        }
+        return bbox;
     }
 
     /******************************************************/

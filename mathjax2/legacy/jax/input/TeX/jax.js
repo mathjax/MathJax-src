@@ -1344,7 +1344,6 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
      *  or the contents of the next set of braces).
      */
     GetArgument: function (name,noneOK) {
-      console.log('Getting argument');
       switch (this.GetNext()) {
        case "":
         if (!noneOK) {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
@@ -1661,9 +1660,9 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
       var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
       mrow.Append(
         MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
-          );
+      );
       if (mml.type === "mrow" && mml.inferred) {
-        mrow.Append.apply(mrow,mml.data);
+        mrow.Append.apply(mrow, mml.data);
       } else {
         mrow.Append(mml);
       }
