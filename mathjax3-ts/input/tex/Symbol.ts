@@ -25,75 +25,81 @@
 import {Args, Attributes} from './Types.js';
 
 
+/**
+ * Symbol class
+ */
 export class Symbol {
 
-  private symbol: string;
-  private char: string;
-  private attributes: Attributes;
+  private _char: string;
 
-  constructor(symbol: string, char: string, attributes: Attributes) {
-    this.symbol = symbol;
-    this.char = Symbol.parse(char);
-    this.attributes = attributes;
-  }
-
-  public getSymbol(): string {
-    return this.symbol;
-  }
-
-  public getChar(): string {
-    return this.char;
-  }
-
-  public getAttributes(): Attributes {
-    return this.attributes;
-  }
-  
+  /**
+   * Translates a hex code into a unicode character.
+   * @param {string} char The hex code of the character.
+   * @return {string} The unicode character.
+   */
   private static parse(char: string): string {
     if (char.length < 4) {
       return char;
     }
-    var keyValue = parseInt(char, 16);
+    let keyValue = parseInt(char, 16);
     if (keyValue < 0x10000) {
       return String.fromCharCode(keyValue);
     }
     keyValue -= 0x10000;
-    var hiSurrogate = (keyValue >> 10) + 0xD800;
-    var lowSurrogate = (keyValue & 0x3FF) + 0xDC00;
+    let hiSurrogate = (keyValue >> 10) + 0xD800;
+    let lowSurrogate = (keyValue & 0x3FF) + 0xDC00;
     return String.fromCharCode(hiSurrogate, lowSurrogate);
   }
-  
+
+
+  /**
+   * @constructor
+   * @param {string} _symbol The symbol parsed.
+   * @param {string} char The corresponding translation.
+   * @param {Attributes} _attributes The attributes for the translation.
+   */
+  constructor(private _symbol: string, char: string,
+              private _attributes: Attributes) {
+    this._char = Symbol.parse(char);
+  }
+
+  public get symbol(): string {
+    return this._symbol;
+  }
+
+  public get char(): string {
+    return this._char;
+  }
+
+  public get attributes(): Attributes {
+    return this._attributes;
+  }
+
 };
 
 
 export class Macro {
 
-  private symbol: string;
-  //  private func: (str: string) => JSON;
-  private func: string;
-  private args: Args[];
-
-  //constructor(symbol: string, func: (str: string) => JSON, args: Args[]) {
-  constructor(symbol: string, func: string, args: Args[]) {
-    this.symbol = symbol,
-    this.func = func;
-    this.args = args || [];
+  /**
+   * @constructor
+   * @param {string} _symbol The symbol parsed
+   * @param {string} _func The parsing function for that symbol.
+   * @param {Attributes} _args Additional arguments for the function.
+   */
+  constructor(private _symbol: string, private _func: string,
+              private _args: Args[] = []) {
   }
 
-  public getSymbol(): string {
-    return this.symbol;
+  public get symbol(): string {
+    return this._symbol;
   }
 
-  //  public getFunction(): (str: string) => JSON {
-  public getFunction(): string {
-    return this.func;
+  public get func(): string {
+    return this._func;
   }
 
-  public getArguments(): Args[] {
-    return this.args;
+  public get args(): Args[] {
+    return this._args;
   }
-  
+
 };
-
-
-

@@ -308,7 +308,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
 
   public parserFor(symbol: string) {
     let macro = this.lookup(symbol);
-    return macro ? this.functionMap[macro.getFunction()] : null;
+    return macro ? this.functionMap[macro.func] : null;
   }
 
   public addElement(symbol: string, object: Args[]): void {
@@ -350,7 +350,7 @@ export class CommandMap extends MacroMap {
     if (!macro || !parser) {
       return null;
     }
-    let args = ['\\' + symbol].concat(macro.getArguments() as string[]);
+    let args = ['\\' + symbol].concat(macro.args as string[]);
     return parser ? (parser.bind(env).apply(env, args) || true) : null;
   }
 
@@ -384,7 +384,7 @@ export class EnvironmentMap extends MacroMap {
     }
     // TODO: Here we cheat with the type for the time being!
     this.getParser().bind(env)(envParser.bind(env),
-                               symbol, macro.getArguments());
+                               symbol, macro.args);
     return true;
   }
 

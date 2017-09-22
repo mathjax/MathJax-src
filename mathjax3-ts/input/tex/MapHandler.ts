@@ -64,7 +64,7 @@ export default class MapHandler {
     return this.maps.get(name);
   }
 
-  
+
   // Temporary function to allow setting values from legacy code.
   public allMaps(): SymbolMap[] {
     return Array.from(this.maps.values());

@@ -29,22 +29,28 @@ import {HandlerType, Configuration, ParseInput, ParseResult, ParseMethod} from '
 import {BaseMappings} from './BaseMappings.js';
 
 
+/**
+ * The main Tex Parser class.
+ */
 export default class TexParser {
 
   private input: string = '';
   private remainder: string = '';
   private macroCount: number = 0;
-
   private configurations: Map<HandlerType, SubHandler> = new Map();
 
-  constructor(input: ParseInput) {
+
+  /**
+   * @constructor
+   */
+  constructor() {
     this.configure(BaseMappings.CONFIGURATION);
   }
 
 
   // This will eventually become the actual parsing method.
   public process(tex: string): void {
-    
+
   }
 
   // TODO (VS): Temporary for setting up parsing in SymbolMaps.

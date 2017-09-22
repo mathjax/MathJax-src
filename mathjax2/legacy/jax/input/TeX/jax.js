@@ -374,7 +374,7 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
         mml = item.data[0], c = mml.data.join("");
         if (c.length === 1 && !mml.movesupsub && mml.data.length === 1) {
           if (STACKITEM.not.remap.contains(c)) {
-            mml.SetData(0, MML.chars(STACKITEM.not.remap.lookup(c).getChar()));
+            mml.SetData(0, MML.chars(STACKITEM.not.remap.lookup(c).char));
           } else {
             mml.Append(MML.chars("\u0338"));
           }
@@ -505,31 +505,31 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
     //  Handle normal mathchar (as an mi)
     //
     csMathchar0mi: function (mchar) {
-      var def = mchar.getAttributes() || {mathvariant: MML.VARIANT.ITALIC};
-      this.Push(this.mmlToken(MML.mi(mchar.getChar()).With(def)));
+      var def = mchar.attributes || {mathvariant: MML.VARIANT.ITALIC};
+      this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
     },
     //
     //  Handle normal mathchar (as an mo)
     //
     csMathchar0mo: function (mchar) {
-      var def = mchar.getAttributes() || {};
+      var def = mchar.attributes || {};
       def.stretchy = false;
-      this.Push(this.mmlToken(MML.mo(mchar.getChar()).With(def)));
+      this.Push(this.mmlToken(MML.mo(mchar.char).With(def)));
     },
     //
     //  Handle mathchar in current family
     //
     csMathchar7: function (mchar) {
-      var def = mchar.getAttributes() || {mathvariant: MML.VARIANT.NORMAL};
+      var def = mchar.attributes || {mathvariant: MML.VARIANT.NORMAL};
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      this.Push(this.mmlToken(MML.mi(mchar.getChar()).With(def)));
+      this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
     },
     //
     //  Handle delimiter
     //
     csDelimiter: function (delim) {
-      var def = delim.getAttributes() || {};
-      this.Push(this.mmlToken(MML.mo(delim.getChar()).With({fence: false, stretchy: false}).With(def)));
+      var def = delim.attributes || {};
+      this.Push(this.mmlToken(MML.mo(delim.char).With({fence: false, stretchy: false}).With(def)));
     },
     //
     //  Handle undefined control sequence
@@ -676,7 +676,7 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
       var def, mo;
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
       var remap = this.remap.lookup(c);
-      mo = remap ? MML.mo(remap.getChar()).With(def) : MML.mo(c).With(def);
+      mo = remap ? MML.mo(remap.char).With(def) : MML.mo(c).With(def);
       if (mo.autoDefault("stretchy",true)) {mo.stretchy = false}
       if (mo.autoDefault("texClass",true) == "") {mo = MML.TeXAtom(mo)}
       this.Push(this.mmlToken(mo));
@@ -1303,7 +1303,7 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
-      return NewParser.lookup('delimiter', c).getChar() || null;
+      return NewParser.lookup('delimiter', c).char || null;
     },
 
     /*
