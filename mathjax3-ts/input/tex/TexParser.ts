@@ -61,14 +61,14 @@ export default class TexParser {
           map instanceof sm.RegExpMap ||
           map instanceof sm.EnvironmentMap) {
         try {
-          let parser = map.getParser()(null);
+          let parser = map.parser(null);
           if (typeof parser === 'string') {
-            map.setParser(env[map.getParser()(null) as string]);
+            map.parser = env[parser];
           }
         } catch (e) {}
       }
       if (map instanceof sm.MacroMap) {
-        map.setFunctionMap(env);
+        map.functionMap = env;
       }
     }
     this.fallback('character', env['Other']);
@@ -278,7 +278,7 @@ class SubHandler {
    */
   public toString(): string {
     return this._configuration
-      .map(function(x: sm.SymbolMap) {return x.getName(); })
+      .map(function(x: sm.SymbolMap) {return x.name; })
       .join(', ');
   }
 

@@ -153,7 +153,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
       eqnarray:      ['AMSarray',null,true,true, 'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"],
       'eqnarray*':   ['AMSarray',null,false,true,'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"]
-  }).setParser(BaseMethods.environment);
+  }).parser = BaseMethods.environment;
   
   sm.EnvironmentMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
       '\\lvert':     ['007C',{texClass:MML.TEXCLASS.OPEN}],

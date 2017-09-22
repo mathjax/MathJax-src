@@ -42,7 +42,12 @@ export interface SymbolMap {
   /**
    * @return {string} The name of the map.
    */
-  getName(): string;
+  name: string;
+
+  /**
+   * @return {ParseMethod} The default parsing method.
+   */
+  parser: ParseMethod;
 
   /**
    * @param {string} symbol A symbol to parse.
@@ -56,8 +61,6 @@ export interface SymbolMap {
    */
   parserFor(symbol: string): ParseMethod;
 
-  getParser(): ParseMethod;
-
   /**
    * @param {string} symbol A symbol to parse.
    * @param {Object} env The current calling object. // (This is temporary!)
@@ -70,36 +73,35 @@ export interface SymbolMap {
 
 
 /**
- * @constructor
- * @implements {SymbolMap}
+ * Abstract implementation of symbol maps.
  * @template T
  */
 export abstract class AbstractSymbolMap<T> implements SymbolMap {
 
-  private name: string;
-  private parser: ParseMethod;
-
+  private _parser: ParseMethod;
 
   /**
    * @constructor
    * @implements {SymbolMap}
    */
-  constructor(name: string) {
-    this.name = name;
+  constructor(private _name: string) {
     MapHandler.getInstance().register(this);
   };
+
 
   /**
    * @override
    */
-  public getName(): string {
-    return this.name;
+  public get name(): string {
+    return this._name;
   }
+
 
   /**
    * @override
    */
   public abstract contains(symbol: string): boolean;
+
 
   /**
    * @override
@@ -107,6 +109,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   public parserFor(symbol: string) {
     return this.contains(symbol) ? this.parser : null;
   }
+
 
   /**
    * @override
@@ -117,18 +120,16 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
     return (parser && mapped) ? (parser.bind(env)(mapped) || true) : null;
   }
 
-  /**
-   * @param {function(string): ParseResult} parser Sets the central parser
-   * function.
-   */
-  public setParser(parser: ParseMethod):void {
-    this.parser = parser;
+
+  public set parser(parser: ParseMethod) {
+    this._parser = parser;
   }
 
-  public getParser(): ParseMethod {
-    return this.parser;
+  public get parser(): ParseMethod {
+    return this._parser;
   }
-  
+
+
   /**
    * @param {string} symbol
    * @return {T}
@@ -140,25 +141,42 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
 
 
 /**
- * Regular expressions used for parsing.
- * @constructor
- * @extends {AbstractSymbolMap}
+ * Regular expressions used for parsing strings.
  */
 export class RegExpMap extends AbstractSymbolMap<string> {
 
-  private regExp: RegExp;
 
-  constructor(name: string, regExp: RegExp) {
+  /**
+   * Static method to create a new regular expression mapping.
+   * @param {string} name Name of the mapping.
+   * @param {ParseMethod} parser The parser for the mappiong.
+   * @param {RegExp} regexp The regular expression.
+   */
+  public static create(
+    name: string, parser: ParseMethod,
+    regexp: RegExp): RegExpMap {
+      let map = new RegExpMap(name, regexp);
+      map.parser = parser;
+      return map;
+    }
+
+
+  /**
+   * @constructor
+   * @extends {AbstractSymbolMap}
+   */
+  constructor(name: string, private _regExp: RegExp) {
     super(name);
-    this.regExp = regExp;
   };
+
 
   /**
    * @override
    */
   public contains(symbol: string) {
-    return this.regExp.test(symbol);
+    return this._regExp.test(symbol);
   }
+
 
   /**
    * @override
@@ -167,16 +185,6 @@ export class RegExpMap extends AbstractSymbolMap<string> {
     return this.contains(symbol) ? symbol : null;
   }
 
-  // TODO: Some of this is due to the legacy code format.  In particular working
-  //       with nullable Attributes should not be necessary!
-  // These should evolve into the fromJSON methods.
-  public static create(
-    name: string, parser: ParseMethod,
-    regexp: RegExp): RegExpMap {
-      let map = new RegExpMap(name, regexp);
-      map.setParser(parser);
-      return map;
-    }
 }
 
 
@@ -215,7 +223,7 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
 
   /**
    * Adds the a new element to the map.
-   * @param {string} symbol
+   * @param {string} symbol The symbol that is translated.
    * @param {JSON} object Element given in MathJax's configuration format.
    */
   public abstract addElement<K>(symbol: string, object: K): void;
@@ -231,14 +239,12 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
  */
 export class CharacterMap extends AbstractParseMap<Symbol> {
 
-  public addElement(symbol: string, object: [string, null] | [string, Attributes]): void {
-    let character = new Symbol(symbol, object[0], object[1]);
-    this.add(symbol, character);
-  }
-
-
-  // TODO: Some of this is due to the legacy code format.  In particular working
-  //       with nullable Attributes should not be necessary!
+  /**
+   * Adds a character to a given map parsing it first from a JSON representation.
+   * @param {CharacterMap} map The character map.
+   * @param {JSON} json The representation of a character.
+   */
+  // TODO: Some of this is due to the legacy code format. Cleanup.
   protected static addCharacters(map: CharacterMap,
                                  json: {[index: string]: string|[string, Attributes]}): void {
     for (let key in json) {
@@ -246,16 +252,32 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
       map.addElement(key, (typeof(value) === 'string') ? [value, null] : value);
     }
   }
-  
-  // These should evolve into the fromJSON methods.
+
+
+  /**
+   * Static method to create a character mapping.
+   * @param {string} name Name of the mapping.
+   * @param {ParseMethod} parser The parser for the mappiong.
+   * @param {JSON} json The JSON representation of the character mapping.
+   */
   public static create(
     name: string, parser: ParseMethod,
     json: {[index: string]: string|[string, Attributes]}): CharacterMap {
       let map = new CharacterMap(name);
       CharacterMap.addCharacters(map, json);
-      map.setParser(parser);
+      map.parser = parser;
       return map;
     }
+
+
+  /**
+   * @override
+   */
+  public addElement(symbol: string, pair: [string, null] | [string, Attributes]): void {
+    let character = new Symbol(symbol, pair[0], pair[1]);
+    this.add(symbol, character);
+  }
+
 }
 
 
@@ -268,25 +290,31 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
 export class DelimiterMap extends CharacterMap {
 
   /**
+   * Static method to create a delimiter mapping.
+   * @param {string} name Name of the mapping.
+   * @param {ParseMethod} parser The parser for the mappiong.
+   * @param {JSON} json The JSON representation of the delimiter mapping.
+   */
+  public static create(
+    name: string, parser: ParseMethod,
+    json: {[index: string]: string|[string, Attributes]}): DelimiterMap {
+      let map = new DelimiterMap(name);
+      map.parser = parser;
+      CharacterMap.addCharacters(map, json);
+      return map;
+    }
+
+
+  /**
    * @override
    */
   public parse([symbol, env]: ParseInput) {
     return super.parse(['\\' + symbol, env]);
   }
 
-  public static create(
-    name: string, parser: ParseMethod,
-    json: {[index: string]: string|[string, Attributes]}): DelimiterMap {
-      let map = new DelimiterMap(name);
-      map.setParser(parser);
-      CharacterMap.addCharacters(map, json);
-      return map;
-    }
-
 }
 
 
-// TODO: Maybe have this as the base class.
 /**
  * Maps macros that all bring their own parsing method.
  *
@@ -295,39 +323,60 @@ export class DelimiterMap extends CharacterMap {
  */
 export class MacroMap extends AbstractParseMap<Macro> {
 
-  // TODO: This is the correct type.
+  // TODO: Currently the record is effectively a MathJax legacy object. This is
+  // the correct type:
+  //
   // private functionMap: Map<string, ParseMethod> = new Map();
-  private functionMap: any;
+  private _functionMap: Record<string, ParseMethod>;
 
-  
-  // TODO: This needs to be set explicitly from an object.
-  // public setFunctionMap(map: Map<string, ParseMethod>) {
-  public setFunctionMap(map: Record<string, ParseMethod>) {
-    this.functionMap = map;
-  }
-
-  public parserFor(symbol: string) {
-    let macro = this.lookup(symbol);
-    return macro ? this.functionMap[macro.func] : null;
-  }
-
-  public addElement(symbol: string, object: Args[]): void {
-    let character = new Macro(symbol, object[0] as string, object.slice(1));
-    this.add(symbol, character);
-  }
-
-  // TODO: Some of this is due to the legacy code format.
+  /**
+   * Adds a macro to a given map parsing it first from a JSON representation.
+   * @param {CharacterMap} map The macro map.
+   * @param {JSON} json The representation of a command macro.
+   */
+  // TODO: Some of this is due to the legacy code format. Cleanup.
   protected static addCommands(map: MacroMap, json: {[index: string]: string|Args[]}): void {
     for (let key in json) {
       let value = json[key];
       map.addElement(key, (typeof(value) === 'string') ? [value] : value);
     }
   }
-  
+
+
+  /**
+   * Static method to create a new macro mapping.
+   * @param {string} name Name of the mapping.
+   * @param {JSON} json The JSON representation of the macro map.
+   */
   public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
     let map = new MacroMap(name);
     MacroMap.addCommands(map, json);
     return map;
+  }
+
+
+  // TODO: This needs to be set explicitly from an object.
+  // public setFunctionMap(map: Map<string, ParseMethod>) {
+  public set functionMap(map: Record<string, ParseMethod>) {
+    this._functionMap = map;
+  }
+
+
+  /**
+   * @override
+   */
+  public parserFor(symbol: string) {
+    let macro = this.lookup(symbol);
+    return macro ? this._functionMap[macro.func] : null;
+  }
+
+
+  /**
+   * @override
+   */
+  public addElement(symbol: string, object: Args[]): void {
+    let character = new Macro(symbol, object[0] as string, object.slice(1));
+    this.add(symbol, character);
   }
 
 }
@@ -342,6 +391,19 @@ export class MacroMap extends AbstractParseMap<Macro> {
 export class CommandMap extends MacroMap {
 
   /**
+   * Static method to create a command mapping.
+   * @param {string} name Name of the mapping.
+   * @param {JSON} json The JSON representation of the command mapping.
+   */
+  public static create(name: string,
+                       json: {[index: string]: string|Args[]}): MacroMap {
+    let map = new CommandMap(name);
+    MacroMap.addCommands(map, json);
+    return map;
+  }
+
+
+  /**
    * @override
    */
   public parse([symbol, env]: ParseInput) {
@@ -352,14 +414,6 @@ export class CommandMap extends MacroMap {
     }
     let args = ['\\' + symbol].concat(macro.args as string[]);
     return parser ? (parser.bind(env).apply(env, args) || true) : null;
-  }
-
-  // TODO: Some of this is due to the legacy code format.
-  public static create(name: string,
-                       json: {[index: string]: string|Args[]}): MacroMap {
-    let map = new CommandMap(name);
-    MacroMap.addCommands(map, json);
-    return map;
   }
 
 }
@@ -374,6 +428,18 @@ export class CommandMap extends MacroMap {
 export class EnvironmentMap extends MacroMap {
 
   /**
+   * Static method to create an environment mapping.
+   * @param {string} name Name of the mapping.
+   * @param {JSON} json The JSON representation of the environment mapping.
+   */
+  public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
+   let map = new EnvironmentMap(name);
+    MacroMap.addCommands(map, json);
+    return map;
+  }
+
+
+  /**
    * @override
    */
   public parse([symbol, env]: ParseInput) {
@@ -383,15 +449,9 @@ export class EnvironmentMap extends MacroMap {
       return null;
     }
     // TODO: Here we cheat with the type for the time being!
-    this.getParser().bind(env)(envParser.bind(env),
-                               symbol, macro.args);
+    this.parser.bind(env)(envParser.bind(env),
+                          symbol, macro.args);
     return true;
-  }
-
-  public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
-   let map = new EnvironmentMap(name);
-    MacroMap.addCommands(map, json);
-    return map;
   }
 
 }

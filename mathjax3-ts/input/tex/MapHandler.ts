@@ -50,7 +50,7 @@ export default class MapHandler {
    * @param {SymbolMap} map Registers a new symbol map.
    */
   public register(map: SymbolMap): void {
-    this.maps.set(map.getName(), map);
+    this.maps.set(map.name, map);
   }
 
 
@@ -66,6 +66,9 @@ export default class MapHandler {
 
 
   // Temporary function to allow setting values from legacy code.
+  /**
+   * @return {SymbolMap[]} All maps in the handler.
+   */
   public allMaps(): SymbolMap[] {
     return Array.from(this.maps.values());
   }
@@ -75,7 +78,6 @@ export default class MapHandler {
    * Dummy constructor
    * @constructor
    */
-  private constructor() {
-  }
+  private constructor() { }
 
 }

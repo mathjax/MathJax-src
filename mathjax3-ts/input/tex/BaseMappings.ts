@@ -685,7 +685,7 @@ export namespace BaseMappings {
     // 'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
     // alignedat:    ['ExtensionEnv', null, 'AMSmath']
   });
-  envs.setParser(BaseMethods.environment);
+  envs.parser = BaseMethods.environment;
 
   sm.CharacterMap.create('not_remap', null, {
     '\u2190': '219A',
