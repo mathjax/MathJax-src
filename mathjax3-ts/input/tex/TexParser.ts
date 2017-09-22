@@ -48,11 +48,19 @@ export default class TexParser {
   }
 
 
-  // This will eventually become the actual parsing method.
-  public process(tex: string): void {
+  /**
+   * The main parsing method.
+   * @param {string} tex The TeX string.
+   * @return {MmlNode} The parsing result.
+   */
+  // TODO (VS): This will eventually become the actual parsing method.
+  public process(tex: string): void { }
 
-  }
 
+  /**
+   * Sets up parsing methods etc. from legacy code.
+   * @param {Record.<string, ParseMethod} env The MathJax legacy object.
+   */
   // TODO (VS): Temporary for setting up parsing in SymbolMaps.
   public setup(env: Record<string, ParseMethod>) {
     const maps = MapHandler.getInstance().allMaps();
@@ -170,19 +178,6 @@ export default class TexParser {
     return str;
   }
 
-
-  private getChar(): string {
-    let char = this.remainder.charAt(0);
-    this.remainder = this.remainder.slice(1);
-    let charCode = char.charCodeAt(0);
-    // Surrogate pairs. Refactor with util function in symbol.ts
-    if (charCode >= 0xD800 && charCode < 0xDC00) {
-      char += this.remainder.charAt(0);
-      this.remainder = this.remainder.slice(1);
-    }
-    return char;
-  }
-
 }
 
 
@@ -194,7 +189,7 @@ export default class TexParser {
 class SubHandler {
 
   private _configuration: sm.SymbolMap[] = [];
-  private _fallback: ParseMethod = x => { return null; };
+  private _fallback: ParseMethod = (x => { return null; });
 
   /**
    * @constructor
@@ -299,6 +294,10 @@ class SubHandler {
 
 
   // TODO: Turn this into a global warning and error functionality
+  /**
+   * Prints a warning message.
+   * @param {string} message The warning.
+   */
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
   }
