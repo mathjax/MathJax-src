@@ -153,7 +153,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      * Pad any short rows with extra cells
      */
     protected padRows() {
-        for (const row of Array.from(this.chtml.childNodes)) {
+        for (const row of Array.from((this.chtml.firstChild as HTMLElement).childNodes)) {
             while (row.childNodes.length < this.numCols) {
                 row.appendChild(this.html('mjx-mtd'));
             }
