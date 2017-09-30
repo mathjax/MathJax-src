@@ -123,15 +123,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             'background-color': 'yellow'
         },
 
-        'mjx-mphantom': {visibility: 'hidden'},
-
-        'mjx-math': {
-            //
-            //  There will be more here when the math wrapper is written
-            //
-            display: 'inline-block',
-            'line-height': '0px'
-        }
+        'mjx-mphantom': {visibility: 'hidden'}
 
     };
 
