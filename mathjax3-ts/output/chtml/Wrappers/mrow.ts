@@ -69,9 +69,6 @@ export class CHTMLmrow extends CHTMLWrapper {
     }
 
     /*
-     * @return{number}  The number of stretchable child nodes
-     */
-    /*
      * Handle vertical stretching of children to match height of
      *  other nodes in the row.
      */
