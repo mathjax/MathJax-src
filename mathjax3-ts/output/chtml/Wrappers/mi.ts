@@ -1,0 +1,74 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the CHTMLmi wrapper for the MmlMi object
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
+import {CHTMLWrapper, StringMap} from '../Wrapper.js';
+import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {BBox} from '../BBox.js';
+import {DelimiterData} from '../FontData.js';
+import {StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
+
+/*
+ * Convert direction to letter
+ */
+const DirectionVH: {[n: number]: string} = {
+    [DIRECTION.Vertical]: 'v',
+    [DIRECTION.Horizontal]: 'h'
+};
+
+/*****************************************************************/
+/*
+ *  The CHTMLmi wrapper for the MmlMi object
+ */
+export class CHTMLmi extends CHTMLWrapper {
+    public static kind = MmlMi.prototype.kind;
+
+    /*
+     * True if no italic correction should be used
+     */
+    public noIC: boolean = false;
+
+    /*
+     * @override
+     */
+    public toCHTML(parent: HTMLElement) {
+        super.toCHTML(parent);
+        if (this.noIC) {
+            this.chtml.setAttribute('noIC', 'true');
+        }
+    }
+
+    /*
+     * @override
+     */
+    public computeBBox(bbox: BBox) {
+        super.computeBBox(bbox);
+        const child = this.childNodes[this.childNodes.length-1];
+        if (child && child.bbox.ic) {
+            bbox.ic = child.bbox.ic;
+            bbox.w += bbox.ic;
+        }
+    }
+
+}

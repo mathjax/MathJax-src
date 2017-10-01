@@ -50,7 +50,7 @@ export class CHTMLmsub extends CHTMLscriptbase {
      * @override
      */
     protected getOffset(bbox: BBox, sbox: BBox) {
-        return -this.getV(bbox, sbox);
+        return [0, -this.getV(bbox, sbox)];
     }
 
 }
@@ -62,6 +62,8 @@ export class CHTMLmsub extends CHTMLscriptbase {
 
 export class CHTMLmsup extends CHTMLscriptbase {
     public static kind = MmlMsup.prototype.kind;
+
+    public static useIC: boolean = true;
 
     /*
      * @override
@@ -76,7 +78,8 @@ export class CHTMLmsup extends CHTMLscriptbase {
      * @override
      */
     public getOffset(bbox: BBox, sbox: BBox) {
-        return this.getU(bbox, sbox);
+        const x = (this.baseCore.bbox.ic ? .2 * this.baseCore.bbox.ic + .05 : 0);
+        return [x, this.getU(bbox, sbox)];
     }
 
 }
@@ -98,6 +101,8 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
             display: 'block'
         }
     };
+
+    public static noIC: boolean = true;
 
     /*
      *  Cached values for the script offsets and separation (so if they are
@@ -131,6 +136,10 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
         this.sup.toCHTML(stack);
         stack.appendChild(this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
         this.sub.toCHTML(stack);
+        const corebox = this.baseCore.bbox;
+        if (corebox.ic) {
+            this.sup.chtml.style.marginLeft = this.em((1.2 * corebox.ic + .05) / this.sup.bbox.rscale);
+        }
     }
 
     /*

@@ -29,6 +29,11 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {StyleList} from '../CssStyles.js';
 
+/*
+ * Mutliply italic correction by this much (improve horizontal shift for italic characters)
+ */
+const DELTA = 1.1;
+
 /*****************************************************************/
 /*
  *  The CHTMLmunder wrapper for the MmlMunder object
@@ -36,6 +41,8 @@ import {StyleList} from '../CssStyles.js';
 
 export class CHTMLmunder extends CHTMLmsub {
     public static kind = MmlMunder.prototype.kind;
+
+    public static useIC: boolean = true;
 
     public static styles: StyleList = {
         'mjx-munder:not([limits="false"])': {
@@ -73,8 +80,9 @@ export class CHTMLmunder extends CHTMLmsub {
         const basebox = this.base.getBBox();
         const underbox = this.script.getBBox();
         const [k, v] = this.getUnderKV(basebox, underbox);
+        const delta = DELTA * this.baseCore.bbox.ic / 2;
         under.style.paddingTop = this.em(k);
-        this.setDeltaW([base, under], this.getDeltaW([basebox, underbox]));
+        this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -delta]));
     }
 
     /*
@@ -89,7 +97,8 @@ export class CHTMLmunder extends CHTMLmsub {
         const basebox = this.base.getBBox();
         const underbox = this.script.getBBox();
         const [k, v] = this.getUnderKV(basebox, underbox);
-        const [bw, uw] = this.getDeltaW([basebox, underbox]);
+        const delta = DELTA * this.baseCore.bbox.ic / 2;
+        const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
         bbox.combine(basebox, bw, 0);
         bbox.combine(underbox, uw, v);
         bbox.d += this.font.params.big_op_spacing5;
@@ -105,6 +114,8 @@ export class CHTMLmunder extends CHTMLmsub {
 
 export class CHTMLmover extends CHTMLmsup {
     public static kind = MmlMover.prototype.kind;
+
+    public static useIC: boolean = true;
 
     public static styles: StyleList = {
         'mjx-mover:not([limits="false"])': {
@@ -140,8 +151,9 @@ export class CHTMLmover extends CHTMLmsup {
         const overbox = this.script.getBBox();
         const basebox = this.base.getBBox();
         const [k, u] = this.getOverKU(basebox, overbox);
+        const delta = DELTA * this.baseCore.bbox.ic / 2;
         over.style.paddingBottom = this.em(k);
-        this.setDeltaW([base, over], this.getDeltaW([basebox, overbox]));
+        this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
         if (overbox.d < 0) {
             over.style.marginBottom = this.em(overbox.d * overbox.rscale);
         }
@@ -159,7 +171,8 @@ export class CHTMLmover extends CHTMLmsup {
         const basebox = this.base.getBBox();
         const overbox = this.script.getBBox();
         const [k, u] = this.getOverKU(basebox, overbox);
-        const [bw, ow] = this.getDeltaW([basebox, overbox]);
+        const delta = DELTA * this.baseCore.bbox.ic / 2;
+        const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
         bbox.combine(basebox, bw, 0);
         bbox.combine(overbox, ow, u);
         bbox.h += this.font.params.big_op_spacing5;
@@ -175,6 +188,8 @@ export class CHTMLmover extends CHTMLmsup {
 
 export class CHTMLmunderover extends CHTMLmsubsup {
     public static kind = MmlMunderover.prototype.kind;
+
+    public static useIC: boolean = true;
 
     public static styles: StyleList = {
         'mjx-munderover:not([limits="false"])': {
@@ -239,9 +254,10 @@ export class CHTMLmunderover extends CHTMLmsubsup {
         const underbox = this.under.getBBox();
         const [ok, u] = this.getOverKU(basebox, overbox);
         const [uk, v] = this.getUnderKV(basebox, underbox);
+        const delta = DELTA * this.baseCore.bbox.ic / 2;
         over.style.paddingBottom = this.em(ok);
         under.style.paddingTop = this.em(uk);
-        this.setDeltaW([base, under, over], this.getDeltaW([basebox, underbox, overbox]));
+        this.setDeltaW([base, under, over], this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]));
         if (overbox.d < 0) {
             over.style.marginBottom = this.em(overbox.d * overbox.rscale);
         }
@@ -261,7 +277,8 @@ export class CHTMLmunderover extends CHTMLmsubsup {
         const underbox = this.under.getBBox();
         const [ok, u] = this.getOverKU(basebox, overbox);
         const [uk, v] = this.getUnderKV(basebox, underbox);
-        const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox]);
+        const delta = DELTA * this.baseCore.bbox.ic / 2;
+        const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]);
         bbox.combine(basebox, bw, 0);
         bbox.combine(overbox, ow, u);
         bbox.combine(underbox, uw, v);

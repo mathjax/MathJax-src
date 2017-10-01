@@ -441,7 +441,14 @@ export class TeXFont extends FontData {
             }
         }
         if (options.f !== undefined) css['font-family'] = 'MJXZERO, MJXTEX' + (options.f ? '-' + options.f : '');
-        styles['.MJX-TEX' + vclass + ' mjx-c[c="' + this.char(n) + '"]::before'] = css;
+        const char = vclass + ' mjx-c[c="' + this.char(n) + '"]';
+        styles['.MJX-TEX' + char + '::before'] = css;
+        if (options.ic) {
+            styles['.MJX-TEX mjx-mi:not([noIC="true"])' + char.substr(1) + ':last-child::before'] =
+            styles['.MJX-TEX mjx-mo:not([noIC="true"])' + char.substr(1) + ':last-child::before'] = {
+                width: this.em(w + options.ic)
+            };
+        }
     }
 
     /*
