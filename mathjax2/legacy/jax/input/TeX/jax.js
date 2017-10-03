@@ -29,6 +29,11 @@
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
+var MmlFactory = require("mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
+var factory = new MmlFactory();
+let JsonMmlVisitor = require('mathjax3/core/MmlTree/JsonMmlVisitor.js');
+let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
+
 
 (function (TEX,HUB,AJAX) {
 
@@ -52,7 +57,18 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
       var i, m, item, top;
       for (i = 0, m = arguments.length; i < m; i++) {
         item = arguments[i]; if (!item) continue;
-        if (item instanceof MML.mbase) {item = STACKITEM.mml(item)}
+        console.log(item instanceof mmlNode.AbstractMmlNode);
+        console.log("Here is the item: " + item);
+        console.log(typeof item);
+        if (item instanceof mmlNode.AbstractMmlNode) {
+          console.log("Is MmlNode");
+        // }
+        
+        // if (item instanceof MML.mbase) {
+        //   console.log("Is mbase");
+          
+          item = STACKITEM.mml(item);
+        }
         item.global = this.global;
         top = (this.data.length ? this.Top().checkItem(item) : true);
         if (top instanceof Array) {this.Pop(); this.Push.apply(this,top)}
@@ -482,6 +498,8 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
       if (this.stack.Top().type !== "mml") {return null}
       return this.stack.Top().data[0];
     },
+
+    // VS: Forget this for now!
     mmlToken: function (token) {return token}, // used by boldsymbol extension
 
     /************************************************************************/
@@ -506,6 +524,22 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
     //
     csMathchar0mi: function (mchar) {
       var def = mchar.attributes || {mathvariant: MML.VARIANT.ITALIC};
+      console.log("In With:");
+      for (var x in def) {
+        console.log(x + ": " + def[x]);
+      }
+      // console.log(factory.create('mo', def, []));
+      // console.log(factory.create('nix', def, []));
+      // console.log("Testing node class: x");
+      // console.log(factory.getNodeClass('nix'));
+      // console.log(factory.getNodeClass('mo'));
+      var node = factory.create('mo', def, []);
+      node.appendChild((factory.create('text')).setText(mchar.char));
+      console.log(JsonMmlVisitor);
+      var visitor = new JsonMmlVisitor.JsonMmlVisitor();
+      console.log(visitor.visitNode(node));
+      
+      console.log(mchar.char);
       this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
     },
     //
@@ -514,6 +548,10 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
     csMathchar0mo: function (mchar) {
       var def = mchar.attributes || {};
       def.stretchy = false;
+      console.log("In With:");
+      for (var x in def) {
+        console.log(x + ": " + def[x]);
+      }
       this.Push(this.mmlToken(MML.mo(mchar.char).With(def)));
     },
     //
@@ -547,7 +585,18 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
      */
     Variable: function (c) {
       var def = {}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      this.Push(this.mmlToken(MML.mi(MML.chars(c)).With(def)));
+      var node = factory.create('mi', def, []);
+      node.appendChild((factory.create('text')).setText(c));
+      var visitor = new JsonMmlVisitor.JsonMmlVisitor();
+      console.log(visitor instanceof JsonMmlVisitor.JsonMmlVisitor);
+      console.log(visitor.visitNode(node));
+      var token = this.mmlToken(MML.mi(MML.chars(c)).With(def));
+      console.log(token);
+      console.log(token.data[0].parent.data[0]);
+      console.log(this.stack);
+
+      this.Push(node);
+      // this.Push(this.mmlToken(MML.mi(MML.chars(c)).With(def)));
     },
 
     /*
@@ -863,12 +912,14 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
       } else {mml = MML.TeXAtom(this.ParseArg(name)).With(def)}
       this.Push(mml);
     },
-    
+
+    // VS: This method is only called during a macro call.
     MmlToken: function (name) {
       var type = this.GetArgument(name),
           attr = this.GetBrackets(name,"").replace(/^\s+/,""),
           data = this.GetArgument(name),
           def = {attrNames:[]}, match;
+      console.log("Start mmlToken: type: " + type + " data: " + data);
       if (!MML[type] || !MML[type].prototype.isToken)
         {TEX.Error(["NotMathMLToken","%1 is not a token element",type])}
       while (attr !== "") {
@@ -889,6 +940,7 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
         }
         attr = attr.substr(match[0].length);
       }
+      console.log("End mmlToken: type: " + type + " data: " + data);
       this.Push(this.mmlToken(MML[type](data).With(def)));
     },
     MmlFilterAttribute: function (name,value) {return value},
