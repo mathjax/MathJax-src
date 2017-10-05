@@ -32,12 +32,67 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
 var MmlFactory = require("mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 let JsonMmlVisitor = require('mathjax3/core/MmlTree/JsonMmlVisitor.js');
+var visitor = new JsonMmlVisitor.JsonMmlVisitor();
 let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
+require("../../element/MmlNode.js");
+
+var MML = MathJax.ElementJax.mml;
+
+var NEW = false;
+
+var createNode = function(type, children, def, text) {
+  if (NEW) {
+    var node = factory.create(type, def, []);
+    node.appendChild(text);
+    printNew(node);
+    return node;
+  }
+  node = (typeof text === 'undefined') ?
+    MML[type].apply(MML, children).With(def) :
+    MML[type](text).With(def);
+  printOld(node);
+  return node;
+};
+  
+
+var createText = function(text) {
+  return NEW ? factory.create('text').setText(text) : MML.chars(text);
+};
+
+
+var setVariant = function(node, variant) {
+  node.mathvariant = variant;
+};
+
+
+var simpleOut = function(txt) {
+  // console.log(txt);
+};
+
+var jsonOut = function(txt) {
+  // console.log(txt);
+};
+
+var methodOut = function(text) {
+  simpleOut("In " + text);
+};
+
+var printNew = function(node) {
+  if (node instanceof mmlNode.AbstractMmlNode) {
+    jsonOut(visitor.visitNode(node));  
+  }
+};
+
+var printOld = function(node) {
+  var mmlNode = node.toMmlNode(factory);
+  jsonOut(visitor.visitNode(mmlNode));  
+};
 
 
 (function (TEX,HUB,AJAX) {
 
-  var MML, NBSP = "\u00A0"; 
+  var NBSP = "\u00A0"; 
+  var MML = MathJax.ElementJax.mml;
   
   var _ = function (id) {
     return MathJax.Localization._.apply(MathJax.Localization,
@@ -57,19 +112,14 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       var i, m, item, top;
       for (i = 0, m = arguments.length; i < m; i++) {
         item = arguments[i]; if (!item) continue;
-        console.log(item instanceof mmlNode.AbstractMmlNode);
-        console.log("Here is the item: " + item);
-        console.log(typeof item);
         if (item instanceof mmlNode.AbstractMmlNode) {
-          console.log("Is MmlNode");
-        // }
-        
-        // if (item instanceof MML.mbase) {
-        //   console.log("Is mbase");
-          
+          item = STACKITEM.mml(item);
+        }
+        if (item instanceof MML.mbase) {
           item = STACKITEM.mml(item);
         }
         item.global = this.global;
+        
         top = (this.data.length ? this.Top().checkItem(item) : true);
         if (top instanceof Array) {this.Pop(); this.Push.apply(this,top)}
         else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
@@ -113,14 +163,21 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       this.data = [];
       this.Push.apply(this,arguments);
     },
-    Push: function () {this.data.push.apply(this.data,arguments)},
+    Push: function () {
+      methodOut('StackItem Push arguments: ' + this.data.arguments);
+      this.data.push.apply(this.data,arguments)},
     Pop: function () {return this.data.pop()},
     mmlData: function (inferred,forceRow) {
+      methodOut('mmlData');
       if (inferred == null) {inferred = true}
       if (this.data.length === 1 && !forceRow) {return this.data[0]}
-      return MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
+      var node = createNode('mrow', this.data, inferred ? {inferred: true}: {});
+      return node;
+      // VS: OLD
+      // return MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
     },
     checkItem: function (item) {
+      methodOut('Checkitem base for ' + item.type + ' with ' + item);
       if (item.type === "over" && this.isOpen) {item.num = this.mmlData(false); this.data = []}
       if (item.type === "cell" && this.isOpen) {
         if (item.linebreak) {return false}
@@ -144,6 +201,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       this.global = global;
     },
     checkItem: function (item) {
+      methodOut('Checkitem start');
       if (item.type === "stop") {return STACKITEM.mml(this.mmlData())}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
@@ -157,6 +215,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     type: "open", isOpen: true,
     stopError: /*_()*/ ["ExtraOpenMissingClose","Extra open brace or missing close brace"],
     checkItem: function (item) {
+      methodOut('Checkitem open');
       if (item.type === "close") {
         var mml = this.mmlData();
         return STACKITEM.mml(MML.TeXAtom(mml)); // TeXAtom make it an ORD to prevent spacing (FIXME: should be another way)
@@ -172,6 +231,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   STACKITEM.prime = STACKITEM.Subclass({
     type: "prime",
     checkItem: function (item) {
+      methodOut('Checkitem prime');
       if (this.data[0].type !== "msubsup") 
         {return [MML.msup(this.data[0],this.data[1]),item]}
       this.data[0].SetData(this.data[0].sup,this.data[1]);
@@ -185,6 +245,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     supError:  /*_()*/ ["MissingOpenForSup","Missing open brace for superscript"],
     subError:  /*_()*/ ["MissingOpenForSub","Missing open brace for subscript"],
     checkItem: function (item) {
+      methodOut('Checkitem subsup');
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
         if (this.primes) {
@@ -204,6 +265,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   STACKITEM.over = STACKITEM.Subclass({
     type: "over", isClose: true, name: "\\over",
     checkItem: function (item,stack) {
+      methodOut('Checkitem over');
       if (item.type === "over")
         {TEX.Error(["AmbiguousUseOf","Ambiguous use of %1",item.name])}
       if (item.isClose) {
@@ -224,6 +286,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     type: "left", isOpen: true, delim: '(',
     stopError: /*_()*/ ["ExtraLeftMissingRight", "Extra \\left or missing \\right"],
     checkItem: function (item) {
+      methodOut('Checkitem left');
       if (item.type === "right")
         {return STACKITEM.mml(TEX.fenced(this.delim,this.mmlData(),item.delim))}
       return this.SUPER(arguments).checkItem.call(this,item);
@@ -237,6 +300,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   STACKITEM.begin = STACKITEM.Subclass({
     type: "begin", isOpen: true,
     checkItem: function (item) {
+      methodOut('Checkitem begin');
       if (item.type === "end") {
         if (item.name !== this.name)
           {TEX.Error(["EnvBadEnd","\\begin{%1} ended with \\end{%2}",this.name,item.name])}
@@ -256,6 +320,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   STACKITEM.style = STACKITEM.Subclass({
     type: "style",
     checkItem: function (item) {
+      methodOut('Checkitem style');
       if (!item.isClose) {return this.SUPER(arguments).checkItem.call(this,item)}
       var mml = MML.mstyle.apply(MML,this.data).With(this.styles);
       return [STACKITEM.mml(mml),item];
@@ -265,6 +330,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   STACKITEM.position = STACKITEM.Subclass({
     type: "position",
     checkItem: function (item) {
+      methodOut('Checkitem position');
       if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1",this.name])}
       if (item.isNotStack) {
         var mml = item.mmlData();
@@ -287,6 +353,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
+      methodOut('Checkitem array');
       if (item.isClose && item.type !== "over") {
         if (item.isEntry) {this.EndEntry(); this.clearEnv(); return false}
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return false}
@@ -367,6 +434,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   STACKITEM.fn = STACKITEM.Subclass({
     type: "fn",
     checkItem: function (item) {
+      methodOut('Checkitem fn');
       if (this.data[0]) {
         if (item.isOpen) {return true}
         if (item.type !== "fn") {
@@ -384,6 +452,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   STACKITEM.not = STACKITEM.Subclass({
     type: "not",
     checkItem: function (item) {
+      methodOut('Checkitem not');
       var mml, c;
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml" && item.data[0].type.match(/^(mo|mi|mtext)$/)) {
@@ -408,6 +477,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   STACKITEM.dots = STACKITEM.Subclass({
     type: "dots",
     checkItem: function (item) {
+      methodOut('Checkitem dots')
       if (item.type === "open" || item.type === "left") {return true}
       var dots = this.ldots;
       if (item.type === "mml" && item.data[0].isEmbellished()) {
@@ -435,7 +505,8 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     }
   };
   var STARTUP = function () {
-    MML = MathJax.ElementJax.mml;
+    // MML = MathJax.ElementJax.mml;
+
     HUB.Insert(TEXDEF,{
       number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
       p_height: 1.2 / .85,   // cmex10 height plus depth over .85
@@ -471,6 +542,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
   var PARSE = MathJax.Object.Subclass({
     remap:   MapHandler.getInstance().getMap('remap'),
     Init: function (string,env) {
+    methodOut("Init");
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = TEX.Stack(ENV,!!env);
@@ -479,6 +551,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       this.Parse(); this.Push(STACKITEM.stop());
     },
     Parse: function () {
+    methodOut("Parse");
       var c, n;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
@@ -487,14 +560,19 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       }
     },
     Push: function (arg) {
+    methodOut("Push");
       this.stack.Push(arg);
     },
     PushAll: function (args) {
+    methodOut("PushAll");
       for(var i = 0, m = args.length; i < m; i++) {
         this.stack.Push(args[i]);
       } 
     },
     mml: function () {
+    methodOut("mml");
+      // simpleOut(this.stack.Top().type);
+      // // simpleOut(this.stack.Top().data[0]);
       if (this.stack.Top().type !== "mml") {return null}
       return this.stack.Top().data[0];
     },
@@ -502,6 +580,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     // VS: Forget this for now!
     mmlToken: function (token) {return token}, // used by boldsymbol extension
 
+    
     /************************************************************************/
     /*
      *   Handle various token classes
@@ -511,6 +590,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Lookup a control-sequence and process it
      */
     ControlSequence: function (c) {
+    methodOut("ControlSequence");
       var name = this.GetCS();
       NewParser.parse('macro', [name, this]);
     },
@@ -523,34 +603,28 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     //  Handle normal mathchar (as an mi)
     //
     csMathchar0mi: function (mchar) {
+    methodOut("csMathchar0mi");
       var def = mchar.attributes || {mathvariant: MML.VARIANT.ITALIC};
-      console.log("In With:");
+      methodOut("With:");
       for (var x in def) {
-        console.log(x + ": " + def[x]);
+        simpleOut(x + ": " + def[x]);
       }
-      // console.log(factory.create('mo', def, []));
-      // console.log(factory.create('nix', def, []));
-      // console.log("Testing node class: x");
-      // console.log(factory.getNodeClass('nix'));
-      // console.log(factory.getNodeClass('mo'));
-      var node = factory.create('mo', def, []);
-      node.appendChild((factory.create('text')).setText(mchar.char));
-      console.log(JsonMmlVisitor);
-      var visitor = new JsonMmlVisitor.JsonMmlVisitor();
-      console.log(visitor.visitNode(node));
-      
-      console.log(mchar.char);
-      this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
+      var textNode = createText(mchar.char);
+      var node = createNode('mi', [], def, textNode);
+      this.Push(this.mmlToken(node));
+      // VS: OLD
+      // this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
     },
     //
     //  Handle normal mathchar (as an mo)
     //
     csMathchar0mo: function (mchar) {
+    methodOut("csMathchar0mo");
       var def = mchar.attributes || {};
       def.stretchy = false;
-      console.log("In With:");
+      methodOut("With:");
       for (var x in def) {
-        console.log(x + ": " + def[x]);
+        simpleOut(x + ": " + def[x]);
       }
       this.Push(this.mmlToken(MML.mo(mchar.char).With(def)));
     },
@@ -558,6 +632,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     //  Handle mathchar in current family
     //
     csMathchar7: function (mchar) {
+    methodOut("csMathchar7");
       var def = mchar.attributes || {mathvariant: MML.VARIANT.NORMAL};
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
@@ -566,6 +641,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     //  Handle delimiter
     //
     csDelimiter: function (delim) {
+    methodOut("csDelimiter");
       var def = delim.attributes || {};
       this.Push(this.mmlToken(MML.mo(delim.char).With({fence: false, stretchy: false}).With(def)));
     },
@@ -574,6 +650,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     //  (overridden in noUndefined extension)
     //
     csUndefined: function (name) {
+    methodOut("csUndefined");
       TEX.Error(["UndefinedControlSequence","Undefined control sequence %1",'\\' + name]);
     },
     envUndefined: function(env) {
@@ -584,18 +661,15 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Handle a variable (a single letter)
      */
     Variable: function (c) {
+    methodOut("Variable");
       var def = {}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       var node = factory.create('mi', def, []);
       node.appendChild((factory.create('text')).setText(c));
-      var visitor = new JsonMmlVisitor.JsonMmlVisitor();
-      console.log(visitor instanceof JsonMmlVisitor.JsonMmlVisitor);
-      console.log(visitor.visitNode(node));
-      var token = this.mmlToken(MML.mi(MML.chars(c)).With(def));
-      console.log(token);
-      console.log(token.data[0].parent.data[0]);
-      console.log(this.stack);
 
-      this.Push(node);
+      var textNode = createText(c);
+      var oldNode = createNode('mi', [], def, textNode);
+      this.Push(this.mmlToken(oldNode));
+      // VS: OLD
       // this.Push(this.mmlToken(MML.mi(MML.chars(c)).With(def)));
     },
 
@@ -603,11 +677,25 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Determine the extent of a number (pattern may need work)
      */
     Number: function (c) {
+      methodOut("Number");
       var mml, n = this.string.slice(this.i-1).match(TEXDEF.number);
-      if (n) {mml = MML.mn(n[0].replace(/[{}]/g,"")); this.i += n[0].length - 1}
-        else {mml = MML.mo(MML.chars(c))}
-      if (this.stack.env.font) {mml.mathvariant = this.stack.env.font}
+      if (n) {
+        var textNode = createText(n[0].replace(/[{}]/g,""));
+        mml = createNode('mn', [], {}, textNode);
+        this.i += n[0].length - 1;
+      } else {
+        var textNode = createText(c);
+        mml = createNode('mo', [], {}, textNode);
+      }
+      if (this.stack.env.font) {
+        setVariant(mml, this.stack.env.font);
+      }
       this.Push(this.mmlToken(mml));
+      // VS: OLD
+      // if (n) {mml = MML.mn(n[0].replace(/[{}]/g,"")); this.i += n[0].length - 1}
+      // else {mml = MML.mo(MML.chars(c))}
+      // if (this.stack.env.font) {mml.mathvariant = this.stack.env.font}
+      // this.Push(this.mmlToken(mml));
     },
     
     /*
@@ -626,6 +714,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Handle ^, _, and '
      */
     Superscript: function (c) {
+    methodOut("Superscript");
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
         {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
       var primes, base, top = this.stack.Top();
@@ -653,6 +742,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       }));
     },
     Subscript: function (c) {
+    methodOut("Subscript");
       if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
         {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
       var primes, base, top = this.stack.Top();
@@ -681,6 +771,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     PRIME: "\u2032", SMARTQUOTE: "\u2019",
     Prime: function (c) {
+    methodOut("Prime");
       var base = this.stack.Prev(); if (!base) {base = MML.mi()}
       if (base.type === "msubsup" && base.data[base.sup]) {
         TEX.Error(["DoubleExponentPrime",
@@ -693,6 +784,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
     },
     mi2mo: function (mi) {
+    methodOut("mi2mo");
       var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
       for (id in mo.defaults)
         {if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
@@ -707,6 +799,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Handle comments
      */
     Comment: function (c) {
+    methodOut("Comment");
       while (this.i < this.string.length && this.string.charAt(this.i) != "\n") {this.i++}
     },
     
@@ -714,6 +807,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Handle hash marks outside of definitions
      */
     Hash: function (c) {
+    methodOut("Hash");
       TEX.Error(["CantUseHash1",
                  "You can't use 'macro parameter character #' in math mode"]);
     },
@@ -722,6 +816,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Handle other characters (as <mo> elements)
      */
     Other: function (c) {
+    methodOut("Other");
       var def, mo;
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
       var remap = this.remap.lookup(c);
@@ -738,15 +833,18 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     
     SetFont: function (name,font) {this.stack.env.font = font},
     SetStyle: function (name,texStyle,style,level) {
+    methodOut("SetStyle");
       this.stack.env.style = texStyle; this.stack.env.level = level;
       this.Push(STACKITEM.style().With({styles: {displaystyle: style, scriptlevel: level}}));
     },
     SetSize: function (name,size) {
+    methodOut("SetSize");
       this.stack.env.size = size;
       this.Push(STACKITEM.style().With({styles: {mathsize: size+"em"}})); // convert to absolute?
     },
 
     Color: function (name) {
+    methodOut("Color");
       var color = this.GetArgument(name);
       var old = this.stack.env.color; this.stack.env.color = color;
       var math = this.ParseArg(name);
@@ -755,14 +853,17 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Spacer: function (name,space) {
+    methodOut("Spacer");
       this.Push(MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0}));
     },
     
     LeftRight: function (name) {
+    methodOut("LeftRight");
       this.Push(STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
     },
     
     Middle: function (name) {
+    methodOut("Middle");
       var delim = this.GetDelimiter(name);
       this.Push(MML.TeXAtom().With({texClass:MML.TEXCLASS.CLOSE}));
       if (this.stack.Top().type !== "left")
@@ -772,11 +873,13 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     NamedFn: function (name,id) {
+    methodOut("NamedFn");
       if (!id) {id = name.substr(1)};
       var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
       this.Push(STACKITEM.fn(this.mmlToken(mml)));
     },
     NamedOp: function (name,id) {
+    methodOut("NamedOp");
       if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,"\u2006");
       var mml = MML.mo(id).With({
@@ -789,6 +892,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       this.Push(this.mmlToken(mml));
     },
     Limits: function (name,limits) {
+    methodOut("Limits");
       var op = this.stack.Prev("nopop");
       if (!op || (op.Get("texClass") !== MML.TEXCLASS.OP && op.movesupsub == null))
         {TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name])}
@@ -804,6 +908,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Over: function (name,open,close) {
+    methodOut("Over");
       var mml = STACKITEM.over().With({name: name});
       if (open || close) {
         mml.open = open; mml.close = close;
@@ -817,12 +922,14 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
 
     Frac: function (name) {
+    methodOut("Frac");
       var num = this.ParseArg(name);
       var den = this.ParseArg(name);
       this.Push(MML.mfrac(num,den));
     },
 
     Sqrt: function (name) {
+    methodOut("Sqrt");
       var n = this.GetBrackets(name), arg = this.GetArgument(name);
       if (arg === "\\frac") {arg += "{"+this.GetArgument(arg)+"}{"+this.GetArgument(arg)+"}"}
       var mml = TEX.Parse(arg,this.stack.env).mml();
@@ -831,11 +938,13 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       this.Push(mml);
     },
     Root: function (name) {
+    methodOut("Root");
       var n = this.GetUpTo(name,"\\of");
       var arg = this.ParseArg(name);
       this.Push(MML.mroot(arg,this.parseRoot(n)));
     },
     parseRoot: function (n) {
+    methodOut("parseRoot");
       var env = this.stack.env, inRoot = env.inRoot; env.inRoot = true;
       var parser = TEX.Parse(n,env); n = parser.mml(); var global = parser.stack.global;
       if (global.leftRoot || global.upRoot) {
@@ -847,6 +956,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       return n;
     },
     MoveRoot: function (name,id) {
+    methodOut("MoveRoot");
       if (!this.stack.env.inRoot)
         {TEX.Error(["MisplacedMoveRoot","%1 can appear only within a root",name])}
       if (this.stack.global[id])
@@ -860,6 +970,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Accent: function (name,accent,stretchy) {
+    methodOut("Accent");
       var c = this.ParseArg(name);
       var def = {accent: true}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
       var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With(def));
@@ -870,6 +981,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     UnderOver: function (name,c,stack,noaccent) {
+    methodOut("UnderOver");
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
       if (base.Get("movablelimits")) {base.movablelimits = false}
@@ -887,17 +999,20 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Overset: function (name) {
+    methodOut("Overset");
       var top = this.ParseArg(name), base = this.ParseArg(name);
       if (base.movablelimits) base.movablelimits = false;
       this.Push(MML.mover(base,top));
     },
     Underset: function (name) {
+    methodOut("Underset");
       var bot = this.ParseArg(name), base = this.ParseArg(name);
       if (base.movablelimits) base.movablelimits = false;
       this.Push(MML.munder(base,bot));
     },
     
     TeXAtom: function (name,mclass) {
+    methodOut("TeXAtom");
       var def = {texClass: mclass}, mml;
       if (mclass == MML.TEXCLASS.OP) {
         def.movesupsub = def.movablelimits = true;
@@ -915,11 +1030,12 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
 
     // VS: This method is only called during a macro call.
     MmlToken: function (name) {
+    methodOut("MmlToken");
       var type = this.GetArgument(name),
           attr = this.GetBrackets(name,"").replace(/^\s+/,""),
           data = this.GetArgument(name),
           def = {attrNames:[]}, match;
-      console.log("Start mmlToken: type: " + type + " data: " + data);
+      // simpleOut("Start mmlToken: type: " + type + " data: " + data);
       if (!MML[type] || !MML[type].prototype.isToken)
         {TEX.Error(["NotMathMLToken","%1 is not a token element",type])}
       while (attr !== "") {
@@ -940,7 +1056,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
         }
         attr = attr.substr(match[0].length);
       }
-      console.log("End mmlToken: type: " + type + " data: " + data);
+      // simpleOut("End mmlToken: type: " + type + " data: " + data);
       this.Push(this.mmlToken(MML[type](data).With(def)));
     },
     MmlFilterAttribute: function (name,value) {return value},
@@ -951,10 +1067,12 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Strut: function (name) {
+    methodOut("Strut");
       this.Push(MML.mpadded(MML.mrow()).With({height: "8.6pt", depth: "3pt", width: 0}));
     },
     
     Phantom: function (name,v,h) {
+    methodOut("Phantom");
       var box = MML.mphantom(this.ParseArg(name));
       if (v || h) {
         box = MML.mpadded(box);
@@ -965,6 +1083,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Smash: function (name) {
+    methodOut("Smash");
       var bt = this.trimSpaces(this.GetBrackets(name,""));
       var smash = MML.mpadded(this.ParseArg(name));
       switch (bt) {
@@ -976,12 +1095,14 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Lap: function (name) {
+    methodOut("Lap");
       var mml = MML.mpadded(this.ParseArg(name)).With({width: 0});
       if (name === "\\llap") {mml.lspace = "-1width"}
       this.Push(MML.TeXAtom(mml));
     },
     
     RaiseLower: function (name) {
+    methodOut("RaiseLower");
       var h = this.GetDimen(name);
       var item = STACKITEM.position().With({name: name, move: 'vertical'});
       if (h.charAt(0) === '-') {h = h.slice(1); name = {raise: "\\lower", lower: "\\raise"}[name.substr(1)]}
@@ -990,6 +1111,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     MoveLeftRight: function (name) {
+    methodOut("MoveLeftRight");
       var h = this.GetDimen(name);
       var nh = (h.charAt(0) === '-' ? h.slice(1) : '-'+h);
       if (name === "\\moveleft") {var tmp = h; h = nh; nh = tmp}
@@ -1001,10 +1123,12 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Hskip: function (name) {
+    methodOut("Hskip");
       this.Push(MML.mspace().With({width: this.GetDimen(name), mathsize: MML.SIZE.NORMAL}));
     },
     
     Rule: function (name,style) {
+    methodOut("Rule");
       var w = this.GetDimen(name),
           h = this.GetDimen(name),
           d = this.GetDimen(name);
@@ -1015,6 +1139,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       this.Push(MML.mspace().With(def));
     },
     rule: function (name) {
+    methodOut("rule");
       var v = this.GetBrackets(name),
           w = this.GetDimen(name),
           h = this.GetDimen(name);
@@ -1035,6 +1160,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     MakeBig: function (name,mclass,size) {
+    methodOut("MakeBig");
       size *= TEXDEF.p_height;
       size = String(size).replace(/(\.\d\d\d).+/,'$1')+"em";
       var delim = this.GetDelimiter(name,true);
@@ -1045,24 +1171,29 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     BuildRel: function (name) {
+    methodOut("BuildRel");
       var top = this.ParseUpTo(name,"\\over");
       var bot = this.ParseArg(name);
       this.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({texClass: MML.TEXCLASS.REL}));
     },
     
     HBox: function (name,style) {
+    methodOut("HBox");
       this.PushAll(this.InternalMath(this.GetArgument(name),style));
     },
     
     FBox: function (name) {
+    methodOut("FBox");
       this.Push(MML.menclose.apply(MML,this.InternalMath(this.GetArgument(name))).With({notation:"box"}));
     },
     
     Not: function (name) {
+    methodOut("Not");
       this.Push(STACKITEM.not());
     },
     
     Dots: function (name) {
+    methodOut("Dots");
       this.Push(STACKITEM.dots().With({
         ldots: this.mmlToken(MML.mo(MML.entity("#x2026")).With({stretchy:false})),
         cdots: this.mmlToken(MML.mo(MML.entity("#x22EF")).With({stretchy:false}))
@@ -1070,6 +1201,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Require: function (name) {
+    methodOut("Require");
       var file = this.GetArgument(name)
         .replace(/.*\//,"")            // remove any leading path
         .replace(/[^a-z0-9_.-]/ig,""); // remove illegal characters
@@ -1077,6 +1209,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Extension: function (name,file,array) {
+    methodOut("Extension");
       if (name && !typeof(name) === "string") {name = name.name}
       file = TEX.extensionDir+"/"+file;
       if (!file.match(/\.js$/)) {file += ".js"}
@@ -1087,6 +1220,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Macro: function (name,macro,argcount,def) {
+    methodOut("Macro");
       if (argcount) {
         var args = [];
         if (def != null) {
@@ -1106,6 +1240,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Matrix: function (name,open,close,align,spacing,vspacing,style,cases,numbered) {
+    methodOut("Matrix");
       var c = this.GetNext();
       if (c === "")
         {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
@@ -1126,6 +1261,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Entry: function (name) {
+    methodOut("Entry");
       this.Push(STACKITEM.cell().With({isEntry: true, name: name}));
       if (this.stack.Top().isCases) {
         //
@@ -1198,10 +1334,12 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     Cr: function (name) {
+    methodOut("Cr");
       this.Push(STACKITEM.cell().With({isCR: true, name: name}));
     },
     
     CrLaTeX: function (name) {
+    methodOut("CrLaTeX");
       var n;
       if (this.string.charAt(this.i) === "[") {
         n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
@@ -1228,9 +1366,11 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     emPerInch: 7.2,
     pxPerInch: 72,
     matchDimen: function (dim) {
+    // methodOut("matchDimen");
       return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
     },
     dimen2em: function (dim) {
+    // methodOut("dimen2em");
       var match = this.matchDimen(dim);
       var m = parseFloat(match[1]||"1"), unit = match[2];
       if (unit === "em") {return m}
@@ -1245,11 +1385,13 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       return 0;
     },
     Em: function (m) {
+    // methodOut("Em");
       if (Math.abs(m) < .0006) {return "0em"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     
     HLine: function (name,style) {
+    methodOut("HLine");
       if (style == null) {style = "solid"}
       var top = this.stack.Top();
       if (!top.isa(STACKITEM.array) || top.data.length)
@@ -1265,6 +1407,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     HFill: function (name) {
+    methodOut("HFill");
       var top = this.stack.Top();
       if (top.isa(STACKITEM.array)) top.hfill.push(top.data.length);
         else TEX.Error(["UnsupportedHFill","Unsupported use of %1",name]);
@@ -1278,6 +1421,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     */
 
     BeginEnd: function (name) {
+    methodOut("BeginEnd");
       var env = this.GetArgument(name);
       if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
@@ -1294,6 +1438,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       }
     },
     BeginEnvironment: function (func, env, args) {
+    methodOut("BeginEnvironment");
       var end = args[0];
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       mml = func.apply(this,[mml].concat(args.slice(1)));
@@ -1305,6 +1450,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     ExtensionEnv: function (begin,file) {this.Extension(begin.name,file,"environment")},
     
     Array: function (begin,open,close,align,spacing,vspacing,style,raggedHeight) {
+    methodOut("Array");
       if (!align) {align = this.GetArgument("\\begin{"+begin.name+"}")}
       var lines = ("c"+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
       align = align.replace(/[^clr]/g,'').split('').join(' ');
@@ -1334,10 +1480,12 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     },
     
     AlignedArray: function (begin) {
+    methodOut("AlignedArray");
       var align = this.GetBrackets("\\begin{"+begin.name+"}");
       return this.setArrayAlign(this.Array.apply(this,arguments),align);
     },
     setArrayAlign: function (array,align) {
+    methodOut("setArrayAlign");
       align = this.trimSpaces(align||"");
       if (align === "t") {array.arraydef.align = "baseline 1"}
       else if (align === "b") {array.arraydef.align = "baseline -1"}
@@ -1355,6 +1503,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
+    methodOut("convertDelimiter");
       return NewParser.lookup('delimiter', c).char || null;
     },
 
@@ -1362,6 +1511,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Trim spaces from a string
      */
     trimSpaces: function (text) {
+    methodOut("trimSpaces");
       if (typeof(text) != 'string') {return text}
       var TEXT = text.replace(/^\s+|\s+$/g,'');
       if (TEXT.match(/\\$/) && text.match(/ $/)) TEXT += " ";
@@ -1372,6 +1522,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *   Check if the next character is a space
      */
     nextIsSpace: function () {
+    methodOut("nextIsSpace");
       return this.string.charAt(this.i).match(/\s/);
     },
     
@@ -1379,6 +1530,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Get the next non-space character
      */
     GetNext: function () {
+    methodOut("GetNext");
       while (this.nextIsSpace()) {this.i++}
       return this.string.charAt(this.i);
     },
@@ -1387,6 +1539,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Get and return a control-sequence name
      */
     GetCS: function () {
+    methodOut("GetCS");
       var CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
       if (CS) {this.i += CS[1].length; return CS[1]} else {this.i++; return " "}
     },
@@ -1396,6 +1549,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  or the contents of the next set of braces).
      */
     GetArgument: function (name,noneOK) {
+    methodOut("GetArgument");
       switch (this.GetNext()) {
        case "":
         if (!noneOK) {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
@@ -1429,6 +1583,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Get an optional LaTeX argument in brackets
      */
     GetBrackets: function (name,def) {
+    methodOut("GetBrackets");
       if (this.GetNext() != '[') {return def};
       var j = ++this.i, parens = 0;
       while (this.i < this.string.length) {
@@ -1454,6 +1609,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Get the name of a delimiter (check it in the delimiter list).
      */
     GetDelimiter: function (name,braceOK) {
+    methodOut("GetDelimiter");
       while (this.nextIsSpace()) {this.i++}
       var c = this.string.charAt(this.i); this.i++;
       if (this.i <= this.string.length) {
@@ -1475,6 +1631,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Get a dimension (including its units).
      */
     GetDimen: function (name) {
+    methodOut("GetDimen");
       var dimen;
       if (this.nextIsSpace()) {this.i++}
       if (this.string.charAt(this.i) == '{') {
@@ -1497,6 +1654,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Get everything up to the given control sequence (token)
      */
     GetUpTo: function (name,token) {
+    methodOut("GetUpTo");
       while (this.nextIsSpace()) {this.i++}
       var j = this.i, k, c, parens = 0;
       while (this.i < this.string.length) {
@@ -1528,6 +1686,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Break up a string into text and math blocks
      */
     InternalMath: function (text,level) {
+    methodOut("InternalMath");
       var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
       var mml = [], i = 0, k = 0, c, match = '', braces = 0;
       if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
@@ -1580,6 +1739,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
       return mml;
     },
     InternalText: function (text,def) {
+    methodOut("InternalText");
       text = text.replace(/^\s+/,NBSP).replace(/\s+$/,NBSP);
       return MML.mtext(MML.chars(text)).With(def);
     },
@@ -1588,6 +1748,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  Replace macro paramters with their values
      */
     SubstituteArgs: function (args,string) {
+    methodOut("SubstituteArgs");
       var text = ''; var newstring = ''; var c; var i = 0;
       while (i < string.length) {
         c = string.charAt(i++);
@@ -1612,6 +1773,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
      *  could accidentally be continued into the following text.
      */
     AddArgs: function (s1,s2) {
+    methodOut("AddArgs");
       if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
       if (s1.length + s2.length > TEX.config.MAXBUFFER) {
         TEX.Error(["MaxBufferSize",
@@ -1637,7 +1799,8 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
 
     prefilterHooks: MathJax.Callback.Hooks(true),    // hooks to run before processing TeX
     postfilterHooks: MathJax.Callback.Hooks(true),   // hooks to run after processing TeX
-    
+
+
     //
     //  Check if AMSmath extension must be loaded and push
     //    it on the extensions array, if needed
@@ -1654,6 +1817,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
     //  Convert TeX to ElementJax
     //
     Translate: function (script) {
+      methodOut('Translate');
       var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       var data = {math:math, display:display, script:script};
@@ -1666,6 +1830,12 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
         mml = this.formatError(err,math,display,script);
         isError = true;
       }
+      simpleOut('After parse: ' + mml);
+      // simpleOut(visitor.visitNode(mml));
+      // simpleOut(mml instanceof MML.mtable);
+      // simpleOut(mml.displaystyle);
+      // simpleOut(mml.inferred);
+      // simpleOut(display);
       if (mml.isa(MML.mtable) && mml.displaystyle === "inherit") mml.displaystyle = display; // for tagged equations
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
       if (display) {mml.root.display = "block"}
