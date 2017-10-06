@@ -31,6 +31,8 @@ require("../legacy/jax/element/MmlNode.js");
 var MmlFactory = require("../../mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 
+var NEW = false;
+
 exports.LegacyTeX = {
   Compile: function (tex,display) {
     var script = {
@@ -38,7 +40,12 @@ exports.LegacyTeX = {
       innerText: tex,
       MathJax: {}
     };
-    var node = MathJax.InputJax.TeX.Translate(script).root.toMmlNode(factory);
+    // VS: OLD
+    if (NEW) {
+      var node = MathJax.InputJax.TeX.Translate(script);
+    } else {
+      var node = MathJax.InputJax.TeX.Translate(script).root.toMmlNode(factory); 
+    }
     node.setInheritedAttributes();
     return node;
   },

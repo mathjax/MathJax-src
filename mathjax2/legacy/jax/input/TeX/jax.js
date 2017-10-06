@@ -42,9 +42,10 @@ var NEW = false;
 
 var createNode = function(type, children, def, text) {
   if (NEW) {
-    var node = factory.create(type, def, []);
-    node.appendChild(text);
-    printNew(node);
+    var node = factory.create(type, def, children);
+    if (text) {
+      node.appendChild(text);
+    }
     return node;
   }
   node = (typeof text === 'undefined') ?
@@ -112,9 +113,11 @@ var printOld = function(node) {
       var i, m, item, top;
       for (i = 0, m = arguments.length; i < m; i++) {
         item = arguments[i]; if (!item) continue;
+        // VS: NEW
         if (item instanceof mmlNode.AbstractMmlNode) {
           item = STACKITEM.mml(item);
         }
+        // VS: OLD
         if (item instanceof MML.mbase) {
           item = STACKITEM.mml(item);
         }
@@ -218,7 +221,10 @@ var printOld = function(node) {
       methodOut('Checkitem open');
       if (item.type === "close") {
         var mml = this.mmlData();
-        return STACKITEM.mml(MML.TeXAtom(mml)); // TeXAtom make it an ORD to prevent spacing (FIXME: should be another way)
+        var node = createNode('TeXAtom', [mml], {});
+        // VS: OLD
+        // var node = MML.TeXAtom(mml);
+        return STACKITEM.mml(node); // TeXAtom make it an ORD to prevent spacing (FIXME: should be another way)
       }
       return this.SUPER(arguments).checkItem.call(this,item);
     }
@@ -233,7 +239,7 @@ var printOld = function(node) {
     checkItem: function (item) {
       methodOut('Checkitem prime');
       if (this.data[0].type !== "msubsup") 
-        {return [MML.msup(this.data[0],this.data[1]),item]}
+      {console.log("HERE"); return [MML.msup(this.data[0],this.data[1]),item]}
       this.data[0].SetData(this.data[0].sup,this.data[1]);
       return [this.data[0],item];
     }
@@ -663,8 +669,8 @@ var printOld = function(node) {
     Variable: function (c) {
     methodOut("Variable");
       var def = {}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      var node = factory.create('mi', def, []);
-      node.appendChild((factory.create('text')).setText(c));
+      // var node = factory.create('mi', def, []);
+      // node.appendChild((factory.create('text')).setText(c));
 
       var textNode = createText(c);
       var oldNode = createNode('mi', [], def, textNode);
@@ -1830,17 +1836,35 @@ var printOld = function(node) {
         mml = this.formatError(err,math,display,script);
         isError = true;
       }
-      simpleOut('After parse: ' + mml);
-      // simpleOut(visitor.visitNode(mml));
-      // simpleOut(mml instanceof MML.mtable);
-      // simpleOut(mml.displaystyle);
-      // simpleOut(mml.inferred);
-      // simpleOut(display);
+      // VS: temporary (get INHERIT from attributes)
+      if (NEW) {
+      if (mml.isKind('mtable') && mml.attributes.get('displaystyle') === 'inherit') {
+        mml.displaystyle = display;
+      } // for tagged equations
+      if (mml.isInferred) {
+        var mathNode = createNode('math', mml, {});
+      } else {
+        if (!mml.isKind('math')) {
+          mathNode = createNode('math', [mml], {});
+        } else {
+          mathNode = mml;
+        }
+        
+      }
+      if (display) {
+        mathNode.attributes.set("display", "block");
+      }
+      if (isError) {
+        mathNode.texError = true;
+      }
+        return mathNode;
+      }
+      // VS: OLD
       if (mml.isa(MML.mtable) && mml.displaystyle === "inherit") mml.displaystyle = display; // for tagged equations
       if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
       if (display) {mml.root.display = "block"}
       if (isError) {mml.texError = true}
-      data.math = mml; 
+      data.math = mml;
       return this.postfilterHooks.Execute(data) || data.math;
     },
     prefilterMath: function (math,displaystyle,script) {
