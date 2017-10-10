@@ -55,10 +55,10 @@ export class CHTMLmroot extends CHTMLmsqrt {
      */
     protected addRoot(ROOT: HTMLElement, root: CHTMLWrapper, sbox: BBox) {
         root.toCHTML(ROOT);
-        const [x, h, dx, scale] = this.getRootDimens(sbox);
+        const [x, h, dx] = this.getRootDimens(sbox);
         const bbox = root.getBBox();
-        ROOT.style.verticalAlign = this.em(h / scale);
-        ROOT.style.width = this.em(x / scale);
+        ROOT.style.verticalAlign = this.em(h);
+        ROOT.style.width = this.em(x);
         if (dx) (ROOT.firstChild as HTMLElement).style.paddingLeft = this.em(dx);
     }
 
@@ -76,24 +76,26 @@ export class CHTMLmroot extends CHTMLmsqrt {
      */
     protected getRootDimens(sbox: BBox) {
         const surd = this.childNodes[this.surd] as CHTMLmo;
-        const offset = (surd.size < -1 ? .5 : .6) * sbox.w;
         const bbox = this.childNodes[this.root].getBBox();
+        const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
         const {w, rscale} = bbox;
         const W = Math.max(w, offset / rscale);
         const dx = Math.max(0, W - w);
-        const h = this.rootHeight(bbox, sbox, offset);
+        const h = this.rootHeight(bbox, sbox, surd.size);
         const x = W * rscale - offset;
-        return [x, h, dx, rscale];
+        return [x, h, dx];
     }
 
     /*
-     * @param{BBox} bbox      The bbox of the root
+     * @param{BBox} rbox      The bbox of the root
      * @param{BBox} sbox      The bbox of the surd
-     * @param{number} offset  The computed offset for the root within the surd
+     * @param{number} size    The size of the surd
      * @return{number}        The height of the root within the surd
      */
-    protected rootHeight(bbox: BBox, sbox: BBox, offset: number) {
-        return .45 * (sbox.h + sbox.d - .9) + offset + Math.max(0, bbox.d - .075);
+    protected rootHeight(rbox: BBox, sbox: BBox, size: number) {
+        const H = sbox.h + sbox.d;
+        const b = (size < 0 ? 2 + .3 * (H - 4) : .55 * H) - sbox.d;
+        return b + Math.max(0, rbox.d * rbox.rscale);
     }
 
 }

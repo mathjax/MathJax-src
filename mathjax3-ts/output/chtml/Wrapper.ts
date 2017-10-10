@@ -44,15 +44,6 @@ import {StyleList} from './CssStyles.js';
 export type StringMap = {[key: string]: string};
 
 /*
- * The value to use for each spacing size
- */
-export const SPACE: StringMap = {
-    thinmathspace: '1',
-    mediummathspace: '2',
-    thickmathspace: '3'
-};
-
-/*
  * Some standard sizes to use in predefind CSS properties
  */
 export const FONTSIZE: StringMap = {
@@ -268,6 +259,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         this.getStyles();
         this.getVariant();
         this.getScale();
+        this.getSpace();
         this.childNodes = node.childNodes.map((child: Node) => {
             return this.wrap(child as MmlNode);
         });
@@ -324,7 +316,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{BBox}  The computed bounding box for the wrapped node
      */
     protected computeBBox() {
-        const bbox = BBox.empty();
+        const bbox = this.bbox.empty();
         for (const child of this.childNodes) {
             bbox.append(child.getBBox());
         }
@@ -453,6 +445,12 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         this.bbox.rscale = scale / pscale;
     }
 
+    protected getSpace() {
+        const space = this.node.texSpacing();
+        if (space) {
+            this.bbox.L = this.length2em(space);
+        }
+    }
     /*******************************************************************/
 
     /*
@@ -525,10 +523,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      *   FIXME:  still need to handle MathML spacing
      */
     protected handleSpace() {
-        const space = this.node.texSpacing();
-        if (space) {
-            this.bbox.L = this.length2em(space);
-            this.chtml.setAttribute('space', SPACE[space]);
+        if (this.bbox.L) {
+            this.chtml.setAttribute('space', (this.bbox.L * 18 - 2).toString());
         }
     }
 
@@ -618,6 +614,34 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             }
         }
         return this.stretch !== DIRECTION.None;
+    }
+
+    /*******************************************************************/
+    /*
+     * For debugging
+     */
+
+    public drawBBox() {
+        const bbox = this.getBBox();
+        const box = this.html('mjx-box', {style: {
+            opacity: .25, 'margin-left': this.em(-bbox.w)
+        }}, [
+            this.html('mjx-box', {style: {
+                height: this.em(bbox.h),
+                width: this.em(bbox.w),
+                'background-color': 'red'
+            }}),
+            this.html('mjx-box', {style: {
+                height: this.em(bbox.d),
+                width: this.em(bbox.w),
+                'margin-left': this.em(-bbox.w),
+                'vertical-align': this.em(-bbox.d),
+                'background-color': 'green'
+            }})
+        ]);
+        const node = this.chtml || this.parent.chtml;
+        node.appendChild(box);
+        node.style.backgroundColor = '#FFEE00';
     }
 
     /*******************************************************************/
