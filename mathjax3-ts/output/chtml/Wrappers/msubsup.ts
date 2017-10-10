@@ -171,8 +171,9 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
         if (this.UVQ) return this.UVQ;
         const tex = this.font.params;
         const t = 3 * tex.rule_thickness;
-        let [u, v] = (this.isCharBase() ? [0, 0] : [this.getU(basebox, supbox),
-                       Math.max(basebox.d + tex.sub_drop * subbox.rscale, tex.sub2)]);
+        const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
+        const drop = (this.isCharBase() ? 0 : basebox.d + tex.sub_drop * subbox.rscale);
+        let [u, v] = [this.getU(basebox, supbox), Math.max(drop, subscriptshift)];
         let q = (u - supbox.d * supbox.rscale) - (subbox.h * subbox.rscale - v);
         if (q < t) {
             v += t - q;
