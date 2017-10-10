@@ -21,21 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, StringMap} from '../Wrapper.js';
+import {CHTMLWrapper} from '../Wrapper.js';
 import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
-import {DelimiterData} from '../FontData.js';
-import {StyleList} from '../CssStyles.js';
-import {DIRECTION} from '../FontData.js';
-
-/*
- * Convert direction to letter
- */
-const DirectionVH: {[n: number]: string} = {
-    [DIRECTION.Vertical]: 'v',
-    [DIRECTION.Horizontal]: 'h'
-};
 
 /*****************************************************************/
 /*
