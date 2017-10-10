@@ -107,6 +107,8 @@ export class CHTMLannotationXML extends CHTMLWrapper {
 export class CHTMLxml extends CHTMLWrapper {
     public static kind = XMLNode.prototype.kind;
 
+    public static autoStyle = false;
+
     /*
      * @override
      */

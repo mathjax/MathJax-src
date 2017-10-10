@@ -34,6 +34,7 @@ import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
 import {FontData} from './FontData.js';
+import {StyleList} from './CssStyles.js';
 
 /*****************************************************************/
 
@@ -41,33 +42,6 @@ import {FontData} from './FontData.js';
  * Shorthand for a dictionary object (an object of key:value pairs)
  */
 export type StringMap = {[key: string]: string};
-
-/*
- * The classes to use for each variant
- */
-export const VARIANT: StringMap = {
-    normal: 'mjx-n',
-    bold: 'mjx-b',
-    italic: 'mjx-i',
-    'bold-italic': 'mjx-b mjx-i',
-    'double-struck': 'mjx-ds',
-    'fraktur': 'mjx-fr',
-    'bold-fraktur': 'mjx-fr mjx-b',
-    'script': 'mjx-sc',
-    'bold-script': 'mjx-sc mjx-b',
-    'sans-serif': 'mjx-ss',
-    'bold-sans-serif': 'mjx-ss mjx-b',
-    'sans-serif-italic': 'mjx-ss mjx-i',
-    'bold-sans-serif-italic': 'mjx-ss mjx-b mjx-i',
-    monospace: 'mjx-ty',
-    '-tex-caligraphic': 'mjx-cal',
-    '-tex-oldstyle': 'mjx-os',
-    '-tex-mathit': 'mjx-mit',
-    '-smallop': 'mjx-sop',
-    '-largeop': 'mjx-lop',
-    '-size3': 'mjx-s3',
-    '-size4': 'mjx-s4',
-};
 
 /*
  * The value to use for each spacing size
@@ -78,6 +52,9 @@ export const SPACE: StringMap = {
     thickmathspace: '3'
 };
 
+/*
+ * Some standard sizes to use in predefind CSS properties
+ */
 export const FONTSIZE: StringMap = {
     '70.7%': 's',
     '70%': 's',
@@ -106,6 +83,58 @@ interface CSSStyle extends CSSStyleDeclaration {
 export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
 
     public static kind: string = 'unknown';
+
+    /*
+     * If true, this causes a style for the node type to be generated automatically
+     * that sets display:inline-block (as needed for the output for MmlNodes).
+     */
+    public static autoStyle = true;
+
+    /*
+     *  The default styles for CommonHTML
+     */
+    public static styles: StyleList = {
+        'mjx-chtml [space="1"]': {'margin-left': '.167em'},
+        'mjx-chtml [space="2"]': {'margin-left': '.222em'},
+        'mjx-chtml [space="3"]': {'margin-left': '.278em'},
+
+        'mjx-chtml [size="s"]' : {'font-size': '70.7%'},
+        'mjx-chtml [size="ss"]': {'font-size': '50%'},
+        'mjx-chtml [size="Tn"]': {'font-size': '60%'},
+        'mjx-chtml [size="sm"]': {'font-size': '85%'},
+        'mjx-chtml [size="lg"]': {'font-size': '120%'},
+        'mjx-chtml [size="Lg"]': {'font-size': '144%'},
+        'mjx-chtml [size="LG"]': {'font-size': '173%'},
+        'mjx-chtml [size="hg"]': {'font-size': '207%'},
+        'mjx-chtml [size="HG"]': {'font-size': '249%'},
+
+        'mjx-box': {display: 'inline-block'},
+        'mjx-block': {display: 'block'},
+        'mjx-itable': {display: 'inline-table'},
+
+        //
+        //  These don't have Wrapper subclasses, so add their styles here
+        //
+        'mjx-mi': {display: 'inline-block'},
+        'mjx-mn': {display: 'inline-block'},
+        'mjx-mtext': {display: 'inline-block'},
+        'mjx-merror': {
+            display: 'inline-block',
+            color: 'red',
+            'background-color': 'yellow'
+        },
+
+        'mjx-mphantom': {visibility: 'hidden'},
+
+        'mjx-math': {
+            //
+            //  There will be more here when the math wrapper is written
+            //
+            display: 'inline-block',
+            'line-height': '0px'
+        }
+
+    };
 
     /*
      * Styles that should not be passed on from style attribute
@@ -475,7 +504,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleVariant() {
         if (this.node.isToken && this.variant !== '-explicitFont') {
-            this.chtml.className = VARIANT[this.variant] || VARIANT.normal;
+            this.chtml.className = (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes;
         }
     }
 
@@ -650,8 +679,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{string}  The character as a properly encoded string.
      */
     protected char(n: number, escape: boolean = false) {
-        return (n >= 0x20 && n <= 0x7E && n !== 0x22 && n !== 0x5C ?
-                String.fromCharCode(n) : (escape ? '\\' : '') + n.toString(16).toUpperCase());
+        return this.font.char(n, escape);
     }
 
     /*

@@ -27,6 +27,7 @@ import {CHTMLmo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
 import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
@@ -35,6 +36,16 @@ import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.
 
 export class CHTMLmsqrt extends CHTMLWrapper {
     public static kind = MmlMsqrt.prototype.kind;
+
+    public static styles: StyleList = {
+        'mjx-root': {
+            display: 'inline-block'
+        },
+        'mjx-surd': {
+            display: 'inline-block',
+            'vertical-align': 'top'
+        }
+    };
 
     /*
      * @return{number}  The index of the base of the root in childNodes
@@ -70,7 +81,6 @@ export class CHTMLmsqrt extends CHTMLWrapper {
     constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
         super(factory, node, parent);
         const surd = this.createMo('\u221A');
-        this.childNodes.push(surd);
         surd.canStretch('Vertical');
         const {h, d} = this.childNodes[this.base].getBBox();
         const t = this.font.params.rule_thickness;
@@ -86,8 +96,9 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      * @return{CHTMLWrapper}  The wrapped MmlMo node
      */
     protected createMo(text: string) {
-        const node = this.wrap(this.mmlNode('mo', {}, [this.mmlText(text)])) as CHTMLmo;
+        const node = this.wrap(this.mmlNode('mo', {stretchy: true}, [this.mmlText(text)])) as CHTMLmo;
         node.parent = this;
+        this.childNodes.push(node);
         return node;
     }
 
