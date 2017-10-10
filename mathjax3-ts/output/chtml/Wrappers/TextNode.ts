@@ -33,6 +33,13 @@ import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 export class CHTMLTextNode extends CHTMLWrapper {
     public static kind = TextNode.prototype.kind;
 
+    public static autoStyle = false;
+    public static styles = {
+        'mjx-c, mjx-c::before': {
+            display: 'inline-block'
+        }
+    };
+
     /*
      * @override
      */

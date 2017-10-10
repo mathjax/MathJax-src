@@ -26,6 +26,7 @@ import {BBox} from '../BBox.js';
 import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Property} from '../../../core/Tree/Node.js';
+import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
@@ -34,6 +35,16 @@ import {Property} from '../../../core/Tree/Node.js';
 
 export class CHTMLmpadded extends CHTMLWrapper {
     public static kind = MmlMpadded.prototype.kind;
+
+    public static styles: StyleList = {
+        'mjx-mpadded': {
+            display: 'inline-block'
+        },
+        'mjx-rbox': {
+            display: 'inline-block',
+            position: 'relative'
+        }
+    };
 
     /*
      * @override

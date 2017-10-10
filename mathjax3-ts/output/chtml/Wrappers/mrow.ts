@@ -26,6 +26,7 @@ import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
@@ -80,7 +81,7 @@ export class CHTMLmrow extends CHTMLWrapper {
         //  Locate and count the stretchy children
         //
         for (const child of this.childNodes) {
-            if (child.canStretch('Vertical')) {
+            if (child.canStretch(DIRECTION.Vertical)) {
                 stretchy.push(child);
             }
         }
