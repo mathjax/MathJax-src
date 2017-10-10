@@ -25,6 +25,7 @@ import {FontData, DelimiterData, CharData, CharOptions, DelimiterMap, CharMapMap
 import {StyleList, StyleData} from '../CssStyles.js';
 import {em} from '../../../util/lengths.js';
 import {StringMap} from '../Wrapper.js';
+import {DIRECTION} from '../FontData.js';
 
 import {boldItalic} from './tex/bold-italic.js';
 import {bold} from './tex/bold.js';
@@ -155,7 +156,7 @@ export class TeXFont extends FontData {
             'font-family': 'MJXZERO, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-B, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-b.mjx-i mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-BI, MJXTEX-B, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
@@ -165,38 +166,38 @@ export class TeXFont extends FontData {
             'font-family': 'MJXZERO, MJXTEX-C, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-cal.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX-BI, MJXTEX-B, MJXTEX, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
 
         '.MJX-TEX .mjx-ds mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-A, MJXTEX-B, MJXTEX, MJXTEX-I, MJXTEX-S1'
+            'font-family': 'MJXZERO, MJXTEX-A, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1'
         },
 
         '.MJX-TEX .mjx-fr mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-FR, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-fr.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-FR-B, MJXTEX-FR, MJXTEX-B, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-FR-B, MJXTEX-FR, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
         '.MJX-TEX .mjx-sc mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SC, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-sc.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SC-B, MJXTEX-SC, MJXTEX-B, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-SC-B, MJXTEX-SC, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
         '.MJX-TEX .mjx-ss mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SS, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-ss.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SS-B, MJXTEX-SS, MJXTEX-B, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-SS-B, MJXTEX-SS, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-ss.mjx-i mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SS-I, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-ss.mjx-b.mjx-i mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SS-B, MJXTEX-SS-I, MJXTEX-B, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-SS-B, MJXTEX-SS-I, MJXTEX-BI, MJXTEX-B, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
 
         '.MJX-TEX .mjx-ty mjx-c': {
@@ -211,7 +212,7 @@ export class TeXFont extends FontData {
             'font-family': 'MJXZERO, MJXTEX-C, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
         '.MJX-TEX .mjx-os.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
         '.MJX-TEX .mjx-mit mjx-c': {
@@ -382,7 +383,7 @@ export class TeXFont extends FontData {
      */
     protected addDelimiterStyles(styles: StyleList, n: number, data: DelimiterData) {
         if (!data.stretch) return;
-        if (data.dir === 'V') {
+        if (data.dir === DIRECTION.Vertical) {
             const c = this.char(n);
             const Hb = this.addDelimiterVPart(styles, c, 'beg', data.stretch[0]);
             this.addDelimiterVPart(styles, c, 'ext', data.stretch[1]);

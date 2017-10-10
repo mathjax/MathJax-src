@@ -28,6 +28,7 @@ import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
 import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
@@ -81,7 +82,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
     constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
         super(factory, node, parent);
         const surd = this.createMo('\u221A');
-        surd.canStretch('Vertical');
+        surd.canStretch(DIRECTION.Vertical);
         const {h, d} = this.childNodes[this.base].getBBox();
         const t = this.font.params.rule_thickness;
         const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);

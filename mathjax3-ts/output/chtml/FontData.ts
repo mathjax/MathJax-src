@@ -87,8 +87,12 @@ export type VariantMap = {
 /*
  * Stretchy delimiter data
  */
+export const enum DIRECTION {None, Vertical, Horizontal}
+export const V = DIRECTION.Vertical;
+export const H = DIRECTION.Horizontal;
+
 export type DelimiterData = {
-    dir: string;                 // 'V' or 'H' for vertcial or horizontal
+    dir: DIRECTION;              // vertical or horizontal direction
     sizes?: number[];            // Array of fixed sizes for this character
     variants?: number[];         // The variants in which the different sizes can be found (if not the default)
     schar?: number[];            // The character number to use for each size (if different from the default)
@@ -140,12 +144,6 @@ export type FontParameters = {
 
     min_rule_thickness: number
 };
-
-/*
- * The stretch direction
- */
-export const V = 'V';
-export const H = 'H';
 
 /****************************************************************************/
 /*

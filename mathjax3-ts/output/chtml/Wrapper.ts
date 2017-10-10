@@ -33,7 +33,7 @@ import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
-import {FontData} from './FontData.js';
+import {FontData, DIRECTION} from './FontData.js';
 import {StyleList} from './CssStyles.js';
 
 /*****************************************************************/
@@ -234,7 +234,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * Direction this node can be stretched (null means not yet determined)
      */
-    public stretch: string = null;
+    public stretch: DIRECTION = DIRECTION.None;
 
     /*
      * Easy access to the font parameters
@@ -604,20 +604,20 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
-     * @param{string} direction  The direction to stretch this node
-     * @return{boolean}  Whether the node can stretch in that direction
+     * @param{DIRECTION} direction  The direction to stretch this node
+     * @return{boolean}             Whether the node can stretch in that direction
      */
-    public canStretch(direction: string): boolean {
-        this.stretch = '';
+    public canStretch(direction: DIRECTION): boolean {
+        this.stretch = DIRECTION.None;
         if (this.node.isEmbellished) {
             let core = this.core();
             if (core && core.node !== this.node) {
                 if (core.canStretch(direction)) {
-                    this.stretch = direction.substr(0,1);
+                    this.stretch = direction;
                 }
             }
         }
-        return this.stretch !== '';
+        return this.stretch !== DIRECTION.None;
     }
 
     /*******************************************************************/

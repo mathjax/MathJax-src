@@ -27,6 +27,15 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {DelimiterData} from '../FontData.js';
 import {StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
+
+/*
+ * Convert direction to letter
+ */
+const DirectionVH: {[n: number]: string} = {
+    [DIRECTION.Vertical]: 'v',
+    [DIRECTION.Horizontal]: 'h'
+};
 
 /*****************************************************************/
 /*
@@ -158,7 +167,7 @@ export class CHTMLmo extends CHTMLWrapper {
         //
         const styles: StringMap = {};
         const {h, d, w} = this.bbox;
-        if (this.stretch === 'V') {
+        if (this.stretch === DIRECTION.Vertical) {
             //
             //  Vertical needs an extra (empty) element to get vertical position right
             //  in some browsers (e.g., Safari)
@@ -172,8 +181,8 @@ export class CHTMLmo extends CHTMLWrapper {
         //
         //  Make the main element and add it to the parent
         //
-        const html = this.html('mjx-stretchy-' + this.stretch.toLowerCase(),
-                               {c: this.char(c), style: styles}, content);
+        const dir = DirectionVH[this.stretch];
+        const html = this.html('mjx-stretchy-' + dir, {c: this.char(c), style: styles}, content);
         chtml.appendChild(html);
     }
 
@@ -213,14 +222,14 @@ export class CHTMLmo extends CHTMLWrapper {
     /*
      * @override
      */
-    public canStretch(direction: string) {
+    public canStretch(direction: DIRECTION) {
         const attributes = this.node.attributes;
         if (!attributes.get('stretchy')) return false;
         const c = this.getText();
         if (c.length !== 1) return false;
-        const C = this.font.getDelimiter(c.charCodeAt(0));
-        this.stretch = (C && C.dir === direction.substr(0, 1) ? C.dir : '');
-        return this.stretch !== '';
+        const delim = this.font.getDelimiter(c.charCodeAt(0));
+        this.stretch = (delim && delim.dir === direction ? delim.dir : DIRECTION.None);
+        return this.stretch !== DIRECTION.None;
     }
 
     /*
@@ -298,7 +307,7 @@ export class CHTMLmo extends CHTMLWrapper {
      */
     protected getStretchBBox(WHD: number[], D: number, C: DelimiterData) {
         let [h, d, w] = C.HDW;
-        if (this.stretch === 'V') {
+        if (this.stretch === DIRECTION.Vertical) {
             [h, d] = this.getBaseline(WHD, D, C);
         } else {
             w = D;
