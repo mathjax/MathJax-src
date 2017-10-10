@@ -97,6 +97,16 @@ export class BBox {
     }
 
     /*
+     * Set up a bbox for append() and combine() operations
+     * @return{BBOX}  the boox itself (for chaining calls)
+     */
+    public empty() {
+        this.w = 0;
+        this.h = this.d = -BIGDIMEN;
+        return this;
+    }
+
+    /*
      * Convert any unspecified values into zeros
      */
     public clean () {
@@ -123,15 +133,12 @@ export class BBox {
         cbox.x = x;
         cbox.x = y;
         let rscale = cbox.rscale;
-        if (x + rscale * (cbox.w + cbox.L + cbox.R) > this.w) {
-            this.w  = x + rscale * (cbox.w + cbox.L + cbox.R);
-        }
-        if (y + rscale * cbox.h > this.h) {
-            this.h = y + rscale * cbox.h;
-        }
-        if (rscale * cbox.d - y > this.d) {
-            this.d = rscale * cbox.d - y;
-        }
+        let w = x + rscale * (cbox.w + cbox.L + cbox.R);
+        let h = y + rscale * cbox.h;
+        let d = rscale * cbox.d - y;
+        if (w > this.w) this.w = w;
+        if (h > this.h) this.h = h;
+        if (d > this.d) this.d = d;
     }
 
     /*

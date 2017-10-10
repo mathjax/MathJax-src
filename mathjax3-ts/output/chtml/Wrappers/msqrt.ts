@@ -26,7 +26,7 @@ import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {CHTMLmo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
-import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, AbstractMmlNode, TextNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../CssStyles.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -40,11 +40,19 @@ export class CHTMLmsqrt extends CHTMLWrapper {
 
     public static styles: StyleList = {
         'mjx-root': {
-            display: 'inline-block'
+            display: 'inline-block',
+            'white-space': 'nowrap'
         },
         'mjx-surd': {
             display: 'inline-block',
             'vertical-align': 'top'
+        },
+        'mjx-sqrt': {
+            display: 'inline-block',
+            'padding-top': '.07em'
+        },
+        'mjx-sqrt > mjx-box': {
+            'border-top': '.07em solid'
         }
     };
 
@@ -87,17 +95,28 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         const t = this.font.params.rule_thickness;
         const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
         this.surdH = h + d + 2 * t + p / 4;
-        surd.getStretchedVariant([this.surdH, 0]);
+        surd.getStretchedVariant([this.surdH - d, d], true);
     }
 
     /*
-     * Create an mo wrapper with the given text;
+     * Create an mo wrapper with the given text,
+     *   link it in, and give it the right defaults.
      *
      * @param{string} text  The text for the wrapped element
      * @return{CHTMLWrapper}  The wrapped MmlMo node
      */
     protected createMo(text: string) {
-        const node = this.wrap(this.mmlNode('mo', {stretchy: true}, [this.mmlText(text)])) as CHTMLmo;
+        const mmlFactory = (this.node as AbstractMmlNode).factory;
+        const textNode = (mmlFactory.create('text') as TextNode).setText(text);
+        const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
+        const attributes = this.node.attributes;
+        const display = attributes.get('display') as boolean;
+        const scriptlevel = attributes.get('scriptlevel') as number;
+        const defaults: AttributeList = {
+            mathsize: ['math', attributes.get('mathsize')]
+        };
+        mml.setInheritedAttributes(defaults, display, scriptlevel, false);
+        const node = this.wrap(mml) as CHTMLmo;
         node.parent = this;
         this.childNodes.push(node);
         return node;
@@ -115,9 +134,6 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         const sbox = surd.getBBox();
         const bbox = base.getBBox();
         const [p, q] = this.getPQ(sbox);
-        const [x] = this.getRootDimens(sbox);
-        const t = this.font.params.rule_thickness;
-        const T = this.font.params.surd_height;
         //
         //  Create the HTML structure for the root
         //
@@ -127,14 +143,9 @@ export class CHTMLmsqrt extends CHTMLWrapper {
             ROOT = CHTML.appendChild(this.html('mjx-root'));
             root = this.childNodes[this.root];
         }
-        const SQRT = CHTML.appendChild(this.html('mjx-box', {
-            style: {paddingTop: this.px(2 * t - T, 1)}
-        }, [
+        const SQRT = CHTML.appendChild(this.html('mjx-sqrt', {}, [
             SURD = this.html('mjx-surd'),
-            BASE = this.html('mjx-box', {style: {
-                paddingTop: this.px(q, 1),
-                borderTop: this.px(T * bbox.scale, 1) + ' solid'
-            }})
+            BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
         ]));
         //
         //  Add the child content
@@ -158,19 +169,19 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      * @override
      */
     public computeBBox() {
-        const box = BBox.empty();
+        const BBOX = this.bbox.empty();
         const sbox = this.childNodes[this.surd].getBBox();
         const bbox = new BBox(this.childNodes[this.base].getBBox());
         const [p, q] = this.getPQ(sbox);
         const [x] = this.getRootDimens(sbox);
         const t = this.font.params.rule_thickness;
         const H = bbox.h + q + t;
-        bbox.h += q + 2 * t;  // FIXME:  should take into account minimums for this.px() used above
-        this.combineRootBBox(box, sbox);
-        box.combine(sbox, x, H - sbox.h);
-        box.combine(bbox, x + sbox.w, 0);
-        box.clean();
-        return box;
+        bbox.h = H + t;
+        this.combineRootBBox(BBOX, sbox);
+        BBOX.combine(sbox, x, H - sbox.h);
+        BBOX.combine(bbox, x + sbox.w, 0);
+        BBOX.clean();
+        return BBOX;
     }
 
     /*
@@ -183,7 +194,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
     }
 
     /*
-     * @param{BBox} sbox   The bounding box for the surd character
+     * @param{BBox} sbox  The bounding box for the surd character
      * @return{number[]}  The p, q, and x values for the TeX layout computations
      */
     protected getPQ(sbox: BBox) {

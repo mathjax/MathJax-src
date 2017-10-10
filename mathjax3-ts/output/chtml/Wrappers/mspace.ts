@@ -49,7 +49,7 @@ export class CHTMLmspace extends CHTMLWrapper {
         }
         h = Math.max(0, h + d);
         if (h) {
-            chtml.style.height = this.em(Math.max(0, h + d));
+            chtml.style.height = this.em(Math.max(0, h));
         }
         if (d) {
             chtml.style.verticalAlign = this.em(-d);
