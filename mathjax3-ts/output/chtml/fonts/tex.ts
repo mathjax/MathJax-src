@@ -68,6 +68,7 @@ export class TeXFont extends FontData {
         0x7B: {dir: V, sizes: STDVSIZES, stretch: [0x23A7, 0x23AA, 0x23A9, 0x23A8], HDW: STDVHDW}, // {
         0x7C: {dir: V, sizes: [1], stretch: [0, 0x2223, 0], HDW: STDVHDW},                 // |
         0x7D: {dir: V, sizes: STDVSIZES, stretch: [0x23AB, 0x23AA, 0x23AD, 0x23AC], HDW: STDVHDW}, // }
+        0x221A: {dir: V, sizes: STDVSIZES, stretch: [0xE001, 0xE000, 0x23B7], HDW: STDVHDW}, // \surd
     };
 
     /*
@@ -174,6 +175,7 @@ export class TeXFont extends FontData {
             0x7B: [.75,   .25,  .5],       // LEFT CURLY BRACKET
             0x7C: [.75,   .249, .278],     // VERTICAL LINE
             0x7D: [.75,   .25,  .5],       // RIGHT CURLY BRACKET
+            0x221A: [.8,  .2,   .833],     // SQUARE ROOT
         }
     };
 
