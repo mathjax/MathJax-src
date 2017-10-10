@@ -37,7 +37,7 @@ export type StyleList = {
 
 /******************************************************************************/
 /*
- * The CssStyles class (for managing a collection oof CSS style definitions
+ * The CssStyles class (for managing a collection of CSS style definitions)
  */
 
 export class CssStyles {

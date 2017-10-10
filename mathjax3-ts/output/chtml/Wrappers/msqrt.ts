@@ -97,9 +97,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      * @return{CHTMLWrapper}  The wrapped MmlMo node
      */
     protected createMo(text: string) {
-        const mmlFactory = (this.node as AbstractMmlNode).factory;
-        const textNode = (mmlFactory.create('text') as TextNode).setText(text);
-        const node = this.wrap(mmlFactory.create('mo', {stretchy: true}, [textNode])) as CHTMLmo;
+        const node = this.wrap(this.mmlNode('mo', {stretchy: true}, [this.mmlText(text)])) as CHTMLmo;
         node.parent = this;
         this.childNodes.push(node);
         return node;
@@ -150,7 +148,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      * Add root HTML (overridden in mroot)
      *
      * @param{HTMLElement} ROOT   The container for the root
-     * @param{CHTMLWrapper} root  The wreapped MML root content
+     * @param{CHTMLWrapper} root  The wrapped MML root content
      * @param{BBox} sbox          The bounding box of the surd
      */
     protected addRoot(ROOT: HTMLElement, root: CHTMLWrapper, sbox: BBox) {
@@ -160,28 +158,28 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      * @override
      */
     public computeBBox() {
-        const BBOX = BBox.empty();
+        const box = BBox.empty();
         const sbox = this.childNodes[this.surd].getBBox();
         const bbox = new BBox(this.childNodes[this.base].getBBox());
         const [p, q] = this.getPQ(sbox);
         const [x] = this.getRootDimens(sbox);
         const t = this.font.params.rule_thickness;
         const H = bbox.h + q + t;
-        bbox.h += q + 2 * t;  // FIXME:  should take into accound minimums for this.px() used above
-        this.combineRootBBox(BBOX, sbox);
-        BBOX.combine(sbox, x, H - sbox.h);
-        BBOX.combine(bbox, x + sbox.w, 0);
-        BBOX.clean();
-        return BBOX;
+        bbox.h += q + 2 * t;  // FIXME:  should take into account minimums for this.px() used above
+        this.combineRootBBox(box, sbox);
+        box.combine(sbox, x, H - sbox.h);
+        box.combine(bbox, x + sbox.w, 0);
+        box.clean();
+        return box;
     }
 
     /*
      * Combine the bounding box of the root (overridden in mroot)
      *
-     * @param{BBox} BBOX  The bounding box so far
+     * @param{BBox} box   The bounding box so far
      * @param{BBox} sbox  The bounding box of the surd
      */
-    protected combineRootBBox(BBOX: BBox, sbox: BBox) {
+    protected combineRootBBox(box: BBox, sbox: BBox) {
     }
 
     /*

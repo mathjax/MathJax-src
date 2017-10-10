@@ -53,7 +53,7 @@ export class CHTML extends AbstractOutputJax {
     };
 
     /*
-     *  Used to store the HTMLNodes factory, the CHTMLWraper factory,
+     *  Used to store the HTMLNodes factory, the CHTMLWrapper factory,
      *  the FontData object, and the CssStyles object.
      */
     public nodes: HTMLNodes;
