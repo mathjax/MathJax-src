@@ -75,7 +75,27 @@ var createText = function(text) {
 
 
 var setVariant = function(node, variant) {
-  node.mathvariant = variant;
+  if (NEW) {
+    // console.log(node.attributes);
+    // console.log('Setting variant: ' + variant);
+    // node.attributes.set('mathvariant', variant);
+    node.attributes.inherited['mathvariant'] = variant;
+    // console.log(node.attributes.getAllInherited());
+    // node.mathvariant = variant;
+  } else {
+    // This probably sets things twice in most cases!
+    node.With({'mathvariant': variant});
+  }
+};
+
+
+var setStretchy = function(node, variant) {
+  console.log(node.attributes);
+  console.log('Setting variant: ' + variant);
+  node.attributes.set('mathvariant', variant);
+  node.attributes.inherited['mathvariant'] = variant;
+  console.log(node.attributes.getAllInherited());
+  // node.mathvariant = variant;
 };
 
 
@@ -732,10 +752,14 @@ var printDef = function(def) {
     csMathchar7: function (mchar) {
     printMethod("csMathchar7");
       var def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
-      if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      // @test MathChar7
+      if (this.stack.env.font) {
+        // @test MathChar7 Single Font
+        def.mathvariant = this.stack.env.font;
+      }
+      // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
       var textNode = createText(mchar.char);
       var node = createNode('mi', [], def, textNode);
+      setVariant(node, def.mathvariant);
       // PROBLEM: Attributes have to be explicitly set, but then interfere with
       // AMS tests. Try setting variant of node!
       // for (var x in def) {
@@ -778,7 +802,11 @@ var printDef = function(def) {
      */
     Variable: function (c) {
       printMethod("Variable");
-      var def = {}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
+      var def = {};
+      if (this.stack.env.font) {
+        // @test Identifier Font
+        def.mathvariant = this.stack.env.font;
+      }
       // @test Identifier
       var textNode = createText(c);
       var node = createNode('mi', [], def, textNode);
@@ -804,6 +832,7 @@ var printDef = function(def) {
         mml = createNode('mo', [], {}, textNode);
       }
       if (this.stack.env.font) {
+        // @test Integer Font
         setVariant(mml, this.stack.env.font);
       }
       this.Push(this.mmlToken(mml));

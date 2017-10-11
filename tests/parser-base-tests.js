@@ -45,6 +45,55 @@ parserTest.runTest(
 
 
 parserTest.runTest(
+  'Identifier Font', '\\mathbf{x}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "TeXAtom",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+              "properties": {},
+              "childNodes": [
+                {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {"mathvariant": "bold"},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "x"}]}],
+              "isInferred": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
   'Two Identifiers', 'xy',
   {"kind":"math",
    "texClass":0,
@@ -184,6 +233,55 @@ parserTest.runTest(
       "isEmbellished": true}],
   "isEmbellished": true}
 );
+
+
+parserTest.runTest(
+  'Integer Font', '\\mathbf{2}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "TeXAtom",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+              "properties": {},
+              "childNodes": [
+                {"kind": "mn",
+                  "texClass": 0,
+                  "attributes": {"mathvariant": "bold"},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "2"}]}],
+              "isInferred": true}]}],
+      "isInferred": true}]}
+);
+
 
 parserTest.runTest(
   'Prime', 'x\'',
@@ -2173,9 +2271,126 @@ parserTest.runTest(
       "isInferred":true}]}
 );
 
-// Test for mathchar7.
+// Tests for mathchar7.
 parserTest.runTest(
-  'MathChar7', '\\Lambda \\& \\Gamma \\Rightarrow \\Omega\\And\\Upsilon',
+  'MathChar7 Single', '\\Upsilon',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {"mathvariant": "normal"},
+         "inherited": {"display": "block",
+            "displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "\u03a5"}]}],
+      "isInferred": true}]}
+);
+
+// Tests for mathchar7.
+parserTest.runTest(
+  'MathChar7 Single Font', '\\mathbf{\\Upsilon}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "TeXAtom",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+              "properties": {},
+              "childNodes": [
+                {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {"mathvariant": "bold"},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "\u03a5"}]}],
+              "isInferred": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'MathChar7 Operator', '\\Rightarrow',
+  {"kind":"math",
+   "texClass":3,
+   "attributes":{"display":"block"},
+   "inherited":{"displaystyle":false,
+                "scriptlevel":0},
+   "properties":{},
+   "childNodes":[
+     {"kind":"mrow",
+      "texClass":3,
+      "attributes":{},
+      "inherited":{"display":"block",
+                   "displaystyle":true,
+                   "scriptlevel":0},
+      "properties":{},
+      "childNodes":[
+        {"kind":"mo",
+         "texClass":3,
+         "attributes":{"stretchy":false},
+         "inherited":{"display":"block",
+                      "displaystyle":true,
+                      "scriptlevel":0,
+                      "form":"infix",
+                      "accent":true,
+                      "stretchy":true},
+         "properties":{},
+         "childNodes":[
+           {"kind":"text",
+            "text":"⇒"}],
+         "isEmbellished":true}
+      ],
+      "isInferred":true,
+      "isEmbellished":true}],
+   "isEmbellished":true}
+);
+
+parserTest.runTest(
+  'MathChar7 Multi', '\\Lambda \\& \\Gamma \\Rightarrow \\Omega\\And\\Upsilon',
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
