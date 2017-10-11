@@ -56,6 +56,7 @@ var createNode = function(type, children, def, text) {
     if (text) {
       node.appendChild(text);
     }
+    node.attributes.setList(def);
   } else {
     node = (typeof text === 'undefined') ?
       MML[type].apply(MML, children).With(def) :
@@ -79,7 +80,7 @@ var setVariant = function(node, variant) {
     // console.log(node.attributes);
     // console.log('Setting variant: ' + variant);
     // node.attributes.set('mathvariant', variant);
-    node.attributes.inherited['mathvariant'] = variant;
+    // node.attributes.inherited['mathvariant'] = variant;
     // console.log(node.attributes.getAllInherited());
     // node.mathvariant = variant;
   } else {
@@ -320,7 +321,7 @@ var printDef = function(def) {
         if (this.primes) {
           if (this.position !== 2) {this.data[0].SetData(2,this.primes)}
           else {
-            untested(0);
+            // @test Prime on Prime
             var node = MML.mrow(this.primes.With({variantForm:true}),item.data[0]);
             item.data[0] = node;}
         }
@@ -328,8 +329,10 @@ var printDef = function(def) {
         if (this.movesupsub != null) {this.data[0].movesupsub = this.movesupsub}
         return STACKITEM.mml(this.data[0]);
       }
-      if (this.SUPER(arguments).checkItem.call(this,item))
-        {TEX.Error(this[["","subError","supError"][this.position]])}
+      if (this.SUPER(arguments).checkItem.call(this,item)) {
+        // @test Brace Superscript Error
+        TEX.Error(this[["","subError","supError"][this.position]]);
+      }
     },
     Pop: function () {}
   });
@@ -759,7 +762,7 @@ var printDef = function(def) {
       // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
       var textNode = createText(mchar.char);
       var node = createNode('mi', [], def, textNode);
-      setVariant(node, def.mathvariant);
+      // setVariant(node, def.mathvariant);
       // PROBLEM: Attributes have to be explicitly set, but then interfere with
       // AMS tests. Try setting variant of node!
       // for (var x in def) {
@@ -821,19 +824,20 @@ var printDef = function(def) {
     Number: function (c) {
       printMethod("Number");
       var mml, n = this.string.slice(this.i-1).match(TEXDEF.number);
+      var def = {};
+      if (this.stack.env.font) {
+        // @test Integer Font
+        def.mathvariant = this.stack.env.font;
+      }
       if (n) {
         // @test Integer, Number
         var textNode = createText(n[0].replace(/[{}]/g,""));
-        mml = createNode('mn', [], {}, textNode);
+        mml = createNode('mn', [], def, textNode);
         this.i += n[0].length - 1;
       } else {
         // @test Decimal
         var textNode = createText(c);
-        mml = createNode('mo', [], {}, textNode);
-      }
-      if (this.stack.env.font) {
-        // @test Integer Font
-        setVariant(mml, this.stack.env.font);
+        mml = createNode('mo', [], def, textNode);
       }
       this.Push(this.mmlToken(mml));
       // VS: OLD
@@ -876,7 +880,7 @@ var printDef = function(def) {
       }
       var primes, base, top = this.stack.Top();
       if (top.type === "prime") {
-        untested(5);
+        // @test Prime on Prime
         base = top.data[0]; primes = top.data[1]; this.stack.Pop()
       } else {
         // @test Empty base2, Square, Cube
@@ -934,7 +938,7 @@ var printDef = function(def) {
       }
       var primes, base, top = this.stack.Top();
       if (top.type === "prime") {
-        untested(7);
+        // @test Prime on Sub
         base = top.data[0]; primes = top.data[1];
         this.stack.Pop();
       } else {
@@ -960,8 +964,10 @@ var printDef = function(def) {
         if (movesupsub) {
           // @test Large Operator, Move Superscript
           if (base.type !== "munderover" || base.data[base.under]) {
-            if (base.movablelimits && base.isa(MML.mi)) {
-              untested(12);
+            if (base.movablelimits &&
+                // VS: NEW
+                (NEW ? base.isKind('mi') : base.isa(MML.mi))) {
+              untested(8);
               base = this.mi2mo(base);
             }
             // @test Move Superscript
@@ -984,9 +990,16 @@ var printDef = function(def) {
     },
     PRIME: "\u2032", SMARTQUOTE: "\u2019",
     Prime: function (c) {
-    printMethod("Prime");
-      var base = this.stack.Prev(); if (!base) {base = MML.mi()}
+      // @test Prime
+      var base = this.stack.Prev();
+      if (!base) {
+        // @test PrimeSup, PrePrime, Prime on Sup
+        base = createNode('mi', [], {});
+        // VS: OLD
+        // base = MML.mi();
+      }
       if (base.type === "msubsup" && base.data[base.sup]) {
+        // @test Double Prime Error
         TEX.Error(["DoubleExponentPrime",
                    "Prime causes double exponent: use braces to clarify"]);
       }
@@ -994,10 +1007,14 @@ var printDef = function(def) {
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
       sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
-      this.Push(STACKITEM.prime(base,this.mmlToken(MML.mo(sup))));
+      var node = createNode('mo', [sup], {});
+      // VS: OLD
+      // var node = MML.mo(sup);
+      this.Push(STACKITEM.prime(base, this.mmlToken(node)));
     },
     mi2mo: function (mi) {
     printMethod("mi2mo");
+      untested(10);
       var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
       for (id in mo.defaults)
         {if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
@@ -1021,6 +1038,7 @@ var printDef = function(def) {
      */
     Hash: function (c) {
     printMethod("Hash");
+      // @test Hash Error
       TEX.Error(["CantUseHash1",
                  "You can't use 'macro parameter character #' in math mode"]);
     },
@@ -1031,11 +1049,27 @@ var printDef = function(def) {
     Other: function (c) {
     printMethod("Other");
       var def, mo;
-      if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
+      if (this.stack.env.font) {
+        // @test Other Font
+        def = {mathvariant: this.stack.env.font};
+      }
       var remap = this.remap.lookup(c);
-      mo = remap ? MML.mo(remap.char).With(def) : MML.mo(c).With(def);
-      if (mo.autoDefault("stretchy",true)) {mo.stretchy = false}
-      if (mo.autoDefault("texClass",true) == "") {mo = MML.TeXAtom(mo)}
+      // @test Other
+      // @test Other Remap
+      var textNode = createText(remap ? remap.char : c);
+      mo = createNode('mo', [], def, textNode);
+      // VS: OLD
+      // mo = remap ? MML.mo(remap.char).With(def) : MML.mo(c).With(def);
+      if (mo.autoDefault("stretchy",true)) {
+        // @test A Rogers-Ramanujan Identity
+        mo.stretchy = false;
+      }
+      if (mo.autoDefault("texClass",true) == "") {
+        // @test A Rogers-Ramanujan Identity
+        mo = createNode('TeXAtom', [mo], {});
+        // VS: OLD
+        // mo = MML.TeXAtom(mo);
+      }
       this.Push(this.mmlToken(mo));
     },
     
@@ -1059,15 +1093,21 @@ var printDef = function(def) {
 
     Color: function (name) {
     printMethod("Color");
+      // @test Color Frac
       var color = this.GetArgument(name);
-      var old = this.stack.env.color; this.stack.env.color = color;
+      var old = this.stack.env.color;
+      this.stack.env.color = color;
       var math = this.ParseArg(name);
       if (old) {this.stack.env.color} else {delete this.stack.env.color}
-      this.Push(MML.mstyle(math).With({mathcolor: color}));
+      var node = createNode('mstyle', [math], {mathcolor: color});
+      // VS: OLD
+      // var node = MML.mstyle(math).With({mathcolor: color});
+      this.Push(node);
     },
     
     Spacer: function (name,space) {
     printMethod("Spacer");
+      untested(11);
       this.Push(MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0}));
     },
     
