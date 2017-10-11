@@ -33,6 +33,9 @@ let MmlFactory = require("mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
 let TEXCLASS = require("mathjax3/core/MmlTree/MmlNode.js").TEXCLASS;
 let TexConstant = require("mathjax3/input/tex/TexConstants.js").TexConstant;
 let MmlEntities = require("mathjax3/input/mathml/MmlEntities.js").MmlEntities;
+// TODO: That currently does not work as the entities directory is relative to
+//       the mathjax-v3 top directory.
+// require("mathjax3/input/mathml/AllEntities.js");
 let factory = new MmlFactory();
 let JsonMmlVisitor = require('mathjax3/core/MmlTree/JsonMmlVisitor.js');
 let visitor = new JsonMmlVisitor.JsonMmlVisitor();
@@ -579,7 +582,7 @@ var printDef = function(def) {
       untested(4);
       if (item.type === "mml" && item.data[0].isEmbellished()) {
         var tclass = item.data[0].CoreMO().Get("texClass");
-        if (tclass === MML.TEXCLASS.BIN || tclass === MML.TEXCLASS.REL) {dots = this.cdots}
+        if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {dots = this.cdots}
       }
       return [dots,item];
     }
@@ -734,13 +737,13 @@ var printDef = function(def) {
       var textNode = createText(mchar.char);
       var node = createNode('mi', [], def, textNode);
       // PROBLEM: Attributes have to be explicitly set, but then interfere with
-      // AMS tests.
+      // AMS tests. Try setting variant of node!
       // for (var x in def) {
       //   node.attributes.set(x, def[x]);
       // }
-      this.Push(this.mmlToken(node));
       // VS: OLD
-      // this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
+      // var node = MML.mi(mchar.char).With(def);
+      this.Push(this.mmlToken(node));
     },
     //
     //  Handle delimiter
@@ -748,7 +751,14 @@ var printDef = function(def) {
     csDelimiter: function (delim) {
     printMethod("csDelimiter");
       var def = delim.attributes || {};
-      this.Push(this.mmlToken(MML.mo(delim.char).With({fence: false, stretchy: false}).With(def)));
+      // @test Fenced2, Delimiter (AMS)
+      def = Object.assign({fence: false, stretchy: false}, def);
+      var textNode = createText(delim.char);
+      var node = createNode('mo', [], def, textNode);
+      // var node = MML.mo(textNode).With({fence: false, stretchy: false}).With(def); 
+      // VS: OLD
+      // var node = MML.mo(delim.char).With({fence: false, stretchy: false}).With(def); 
+      this.Push(this.mmlToken(node));
     },
     //
     //  Handle undefined control sequence
@@ -759,6 +769,7 @@ var printDef = function(def) {
       TEX.Error(["UndefinedControlSequence","Undefined control sequence %1",'\\' + name]);
     },
     envUndefined: function(env) {
+    printMethod("envUndefined");
       TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
     },
     
@@ -766,16 +777,14 @@ var printDef = function(def) {
      *  Handle a variable (a single letter)
      */
     Variable: function (c) {
-    printMethod("Variable");
+      printMethod("Variable");
       var def = {}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      // var node = factory.create('mi', def, []);
-      // node.appendChild((factory.create('text')).setText(c));
-
+      // @test Identifier
       var textNode = createText(c);
-      var oldNode = createNode('mi', [], def, textNode);
-      this.Push(this.mmlToken(oldNode));
+      var node = createNode('mi', [], def, textNode);
       // VS: OLD
-      // this.Push(this.mmlToken(MML.mi(MML.chars(c)).With(def)));
+      // node = MML.mi(MML.chars(c)).With(def);
+      this.Push(this.mmlToken(node));
     },
 
     /*
@@ -785,10 +794,12 @@ var printDef = function(def) {
       printMethod("Number");
       var mml, n = this.string.slice(this.i-1).match(TEXDEF.number);
       if (n) {
+        // @test Integer, Number
         var textNode = createText(n[0].replace(/[{}]/g,""));
         mml = createNode('mn', [], {}, textNode);
         this.i += n[0].length - 1;
       } else {
+        // @test Decimal
         var textNode = createText(c);
         mml = createNode('mo', [], {}, textNode);
       }
@@ -812,7 +823,17 @@ var printDef = function(def) {
     /*
      *  Handle tilde and spaces
      */
-    Tilde: function (c) {this.Push(MML.mtext(MML.chars(NBSP)))},
+    Tilde: function (c) {
+      // @test Tilde, Tilde2
+      // 
+      // TODO: Once we can properly load AllEntities, this should be the line.
+      // var textNode = createText(MmlEntities.ENTITIES.nbsp);
+      var textNode = createText(NBSP);
+      var node = createNode('mtext', [], {}, textNode);
+      // VS: OLD
+      // node = MML.mtext(MML.chars(NBSP))
+      this.Push(node);
+    },
     Space: function (c) {},
     
     /*
@@ -820,25 +841,55 @@ var printDef = function(def) {
      */
     Superscript: function (c) {
     printMethod("Superscript");
-      if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
-        {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
+      if (this.GetNext().match(/\d/)) {
+        // don't treat numbers as a unit
+        this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1);
+      }
       var primes, base, top = this.stack.Top();
-      if (top.type === "prime") {base = top.data[0]; primes = top.data[1]; this.stack.Pop()}
-        else {base = this.stack.Prev(); if (!base) {base = MML.mi("")}}
-      if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
+      if (top.type === "prime") {
+        untested(5);
+        base = top.data[0]; primes = top.data[1]; this.stack.Pop()
+      } else {
+        // @test Empty base2, Square, Cube
+        base = this.stack.Prev();
+        if (!base) {
+          // @test Empty base
+          var textNode = createText("");
+          base = createNode('mi', [], {}, textNode);
+          // VS: OLD
+          // base = MML.mi("");
+        }
+      }
+      if (base.isEmbellishedWrapper) {
+        base = base.data[0].data[0];
+      }
       var movesupsub = base.movesupsub, position = base.sup;
       if ((base.type === "msubsup" && base.data[base.sup]) ||
-          (base.type === "munderover" && base.data[base.over] && !base.subsupOK))
-           {TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"])}
+          (base.type === "munderover" && base.data[base.over] && !base.subsupOK)) {
+        // @test Double-super-error, Double-over-error
+        TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"]);
+      }
       if (base.type !== "msubsup") {
         if (movesupsub) {
+          // @test Move Superscript, Large Operator
           if (base.type !== "munderover" || base.data[base.over]) {
-            if (base.movablelimits && base.isa(MML.mi)) {base = this.mi2mo(base)}
-            base = MML.munderover(base,null,null).With({movesupsub:true})
+            if (base.movablelimits &&
+                // VS: NEW
+                (NEW ? base.isKind('mi') : base.isa(MML.mi))) {
+              untested(6);
+              base = this.mi2mo(base);
+            }
+            // @test Large Operator
+            base = createNode('munderover', [base], {movesupsub:true});
+            // VS: OLD
+            // base = MML.munderover(base,null,null).With({movesupsub:true});
           }
           position = base.over;
         } else {
-          base = MML.msubsup(base,null,null);
+          // @test Empty base, Empty base2, Square, Cube
+          base = createNode('msubsup', [base], {});
+          // VS: OLD
+          // base = MML.msubsup(base,null,null);
           position = base.sup;
         }
       }
@@ -848,25 +899,53 @@ var printDef = function(def) {
     },
     Subscript: function (c) {
     printMethod("Subscript");
-      if (this.GetNext().match(/\d/)) // don't treat numbers as a unit
-        {this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1)}
+      if (this.GetNext().match(/\d/)) {
+        // don't treat numbers as a unit
+        this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1);
+      }
       var primes, base, top = this.stack.Top();
-      if (top.type === "prime") {base = top.data[0]; primes = top.data[1]; this.stack.Pop()}
-        else {base = this.stack.Prev(); if (!base) {base = MML.mi("")}}
-      if (base.isEmbellishedWrapper) {base = base.data[0].data[0]}
+      if (top.type === "prime") {
+        untested(7);
+        base = top.data[0]; primes = top.data[1];
+        this.stack.Pop();
+      } else {
+        base = this.stack.Prev();
+        if (!base) {
+          // @test Empty Base Indes
+          var textNode = createText("");
+          base = createNode('mi', [], {}, textNode);
+          // VS: OLD
+          // base = MML.mi("");
+        }
+      }
+      if (base.isEmbellishedWrapper) {
+        base = base.data[0].data[0];
+      }
       var movesupsub = base.movesupsub, position = base.sub;
       if ((base.type === "msubsup" && base.data[base.sub]) ||
-          (base.type === "munderover" && base.data[base.under] && !base.subsupOK))
-           {TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"])}
+          (base.type === "munderover" && base.data[base.under] && !base.subsupOK)) {
+        // @test Double-sub-error, Double-under-error
+        TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"]);
+      }
       if (base.type !== "msubsup") {
         if (movesupsub) {
+          // @test Large Operator, Move Superscript
           if (base.type !== "munderover" || base.data[base.under]) {
-            if (base.movablelimits && base.isa(MML.mi)) {base = this.mi2mo(base)}
-            base = MML.munderover(base,null,null).With({movesupsub:true})
+            if (base.movablelimits && base.isa(MML.mi)) {
+              untested(12);
+              base = this.mi2mo(base);
+            }
+            // @test Move Superscript
+            base = createNode('munderover', [base], {movesupsub:true});
+            // VS: OLD
+            // base = MML.munderover(base,null,null).With({movesupsub:true});
           }
           position = base.under;
         } else {
-          base = MML.msubsup(base,null,null);
+          // @test Empty Base Index, Empty, Base Index2, Index
+          base = createNode('msubsup', [base], {});
+          // VS: OLD
+          // base = MML.msubsup(base,null,null);
           position = base.sub;
         }
       }
@@ -1000,8 +1079,10 @@ var printDef = function(def) {
     Limits: function (name,limits) {
     printMethod("Limits");
       var op = this.stack.Prev("nopop");
-      if (!op || (op.Get("texClass") !== MML.TEXCLASS.OP && op.movesupsub == null))
-        {TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name])}
+      if (!op || (op.Get("texClass") !== TEXCLASS.OP && op.movesupsub == null)) {
+        // @test Limits Error
+        TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name]);
+      }
       var top = this.stack.Top();
       if (op.type === "munderover" && !limits) {
         op = top.data[top.data.length-1] = MML.msubsup.apply(MML.subsup,op.data);
