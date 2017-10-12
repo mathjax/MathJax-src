@@ -28,10 +28,11 @@ require("../legacy/extensions/TeX/HTML.js");
 
 require("../legacy/jax/element/MmlNode.js");
 
+
 var MmlFactory = require("../../mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 
-var NEW = false;
+var NEW = process.TEST_NEW || false;
 
 exports.LegacyTeX = {
   Compile: function (tex,display) {

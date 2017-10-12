@@ -26,6 +26,7 @@
  *  limitations under the License.
  */
 
+process.TEST_NEW = false;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -44,7 +45,7 @@ require("../../element/MmlNode.js");
 
 var MML = MathJax.ElementJax.mml;
 
-var NEW = false;
+var NEW = process.TEST_NEW;
 var methodOut = false;
 var defOut = false;
 var jsonOut = false;
@@ -76,29 +77,43 @@ var createText = function(text) {
 };
 
 
-var setVariant = function(node, variant) {
+var setData = function(node, position, item) {
   if (NEW) {
-    // console.log(node.attributes);
-    // console.log('Setting variant: ' + variant);
-    // node.attributes.set('mathvariant', variant);
-    // node.attributes.inherited['mathvariant'] = variant;
-    // console.log(node.attributes.getAllInherited());
-    // node.mathvariant = variant;
+    // Here we assume that everything in data are actually proper nodes!
+    node.childNodes[position] = item;
+    item.parent = node;
+    // for (let child of node.childNodes) {
+    //   if (child) {console.log(child.parent)};
+    // }
   } else {
-    // This probably sets things twice in most cases!
-    node.With({'mathvariant': variant});
+    node.SetData(position, item);
   }
 };
 
+// Unused?
+// var setVariant = function(node, variant) {
+//   if (NEW) {
+//     // console.log(node.attributes);
+//     // console.log('Setting variant: ' + variant);
+//     // node.attributes.set('mathvariant', variant);
+//     // node.attributes.inherited['mathvariant'] = variant;
+//     // console.log(node.attributes.getAllInherited());
+//     // node.mathvariant = variant;
+//   } else {
+//     // This probably sets things twice in most cases!
+//     node.With({'mathvariant': variant});
+//   }
+// };
 
-var setStretchy = function(node, variant) {
-  console.log(node.attributes);
-  console.log('Setting variant: ' + variant);
-  node.attributes.set('mathvariant', variant);
-  node.attributes.inherited['mathvariant'] = variant;
-  console.log(node.attributes.getAllInherited());
-  // node.mathvariant = variant;
-};
+
+// var setStretchy = function(node, variant) {
+//   console.log(node.attributes);
+//   console.log('Setting variant: ' + variant);
+//   node.attributes.set('mathvariant', variant);
+//   node.attributes.inherited['mathvariant'] = variant;
+//   console.log(node.attributes.getAllInherited());
+//   // node.mathvariant = variant;
+// };
 
 
 var printSimple = function(txt) {
@@ -225,7 +240,8 @@ var printDef = function(def) {
       this.Push.apply(this,arguments);
     },
     Push: function () {
-      printMethod('StackItem Push arguments: ' + this.data.arguments);
+      printMethod('StackItem Push arguments: ' + this.data + ' arguments: ');
+      printSimple(arguments);
       this.data.push.apply(this.data,arguments)},
     Pop: function () {return this.data.pop()},
     mmlData: function (inferred,forceRow) {
@@ -320,15 +336,25 @@ var printDef = function(def) {
       if (item.type === "open" || item.type === "left") {return true}
       if (item.type === "mml") {
         if (this.primes) {
-          if (this.position !== 2) {this.data[0].SetData(2,this.primes)}
+          if (this.position !== 2) {
+            untested(100);
+            // @test Prime on Sub
+            setData(this.data[0], 2, this.primes);
+          }
           else {
             // @test Prime on Prime
             var node = MML.mrow(this.primes.With({variantForm:true}),item.data[0]);
             item.data[0] = node;}
         }
-        this.data[0].SetData(this.position,item.data[0]);
-        if (this.movesupsub != null) {this.data[0].movesupsub = this.movesupsub}
-        return STACKITEM.mml(this.data[0]);
+        printSimple('Before set data');
+        printSimple(this.data[0]);
+        printSimple(item);
+        setData(this.data[0], this.position, item.data[0]);
+        if (this.movesupsub != null) {
+          this.data[0].movesupsub = this.movesupsub;
+        }
+        var result = STACKITEM.mml(this.data[0]);
+        return result;
       }
       if (this.SUPER(arguments).checkItem.call(this,item)) {
         // @test Brace Superscript Error
@@ -896,9 +922,12 @@ var printDef = function(def) {
         }
       }
       if (base.isEmbellishedWrapper) {
+        // TODO: Warning, those are childNodes now!
         base = base.data[0].data[0];
       }
       var movesupsub = base.movesupsub, position = base.sup;
+      console.log(base.type);
+      console.log(base.sup);
       if ((base.type === "msubsup" && base.data[base.sup]) ||
           (base.type === "munderover" && base.data[base.over] && !base.subsupOK)) {
         // @test Double-super-error, Double-over-error
@@ -954,6 +983,7 @@ var printDef = function(def) {
         }
       }
       if (base.isEmbellishedWrapper) {
+        // TODO: Warning, those are childNodes now!
         base = base.data[0].data[0];
       }
       var movesupsub = base.movesupsub, position = base.sub;
@@ -1009,7 +1039,8 @@ var printDef = function(def) {
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
       sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
-      var node = createNode('mo', [sup], {});
+      var textNode = createText(sup);
+      var node = createNode('mo', [], {}, textNode);
       // VS: OLD
       // var node = MML.mo(sup);
       this.Push(STACKITEM.prime(base, this.mmlToken(node)));
@@ -1302,7 +1333,7 @@ var printDef = function(def) {
         TEX.Error(["MultipleMoveRoot","Multiple use of %1",name]);
       }
       var n = this.GetArgument(name);
-      console.log(n);
+      printSimple(n);
       if (!n.match(/-?[0-9]+/)) {
         // @test Incorrect Move Root
         TEX.Error(["IntegerArg","The argument to %1 must be an integer",name]);
@@ -1781,7 +1812,7 @@ var printDef = function(def) {
       }
     },
     BeginEnvironment: function (func, env, args) {
-    printMethod("BeginEnvironment");
+      printMethod("BeginEnvironment");
       var end = args[0];
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       mml = func.apply(this,[mml].concat(args.slice(1)));
