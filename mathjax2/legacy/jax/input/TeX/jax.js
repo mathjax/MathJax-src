@@ -56,6 +56,7 @@ var createNode = function(type, children, def, text) {
     if (text) {
       node.appendChild(text);
     }
+    // TODO: Separate properties from proper attributes.
     node.attributes.setList(def);
   } else {
     node = (typeof text === 'undefined') ?
@@ -363,6 +364,7 @@ var printDef = function(def) {
     type: "left", isOpen: true, delim: '(',
     stopError: /*_()*/ ["ExtraLeftMissingRight", "Extra \\left or missing \\right"],
     checkItem: function (item) {
+      // @test Missing Right
       printMethod('Checkitem left');
       if (item.type === "right")
         {return STACKITEM.mml(TEX.fenced(this.delim,this.mmlData(),item.delim))}
@@ -1060,6 +1062,11 @@ var printDef = function(def) {
       mo = createNode('mo', [], def, textNode);
       // VS: OLD
       // mo = remap ? MML.mo(remap.char).With(def) : MML.mo(c).With(def);
+      // VS: Question: What do these autoDefault methods do exactly.
+      //     Is there a modern equivalent in v3?
+      // 
+      //   This changes the operator class, when fences are put around it. Just
+      //   propagate from the inherited attributes or properties.
       if (mo.autoDefault("stretchy",true)) {
         // @test A Rogers-Ramanujan Identity
         mo.stretchy = false;
@@ -1091,6 +1098,7 @@ var printDef = function(def) {
       this.Push(STACKITEM.style().With({styles: {mathsize: size+"em"}})); // convert to absolute?
     },
 
+    // Look at color extension!
     Color: function (name) {
     printMethod("Color");
       // @test Color Frac
@@ -1106,34 +1114,56 @@ var printDef = function(def) {
     },
     
     Spacer: function (name,space) {
-    printMethod("Spacer");
-      untested(11);
-      this.Push(MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0}));
+      // @test Positive Spacing, Negative Spacing
+      var node = createNode('mspace', [],
+                            {width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0});
+      // VS: OLD
+      // var node = MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0});
+      this.Push(node);
     },
     
     LeftRight: function (name) {
-    printMethod("LeftRight");
+      printMethod("LeftRight");
+      // @test Fenced, Fenced3
       this.Push(STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
     },
     
     Middle: function (name) {
-    printMethod("Middle");
+      printMethod("Middle");
+      // @test Middle
       var delim = this.GetDelimiter(name);
-      this.Push(MML.TeXAtom().With({texClass:MML.TEXCLASS.CLOSE}));
-      if (this.stack.Top().type !== "left")
-        {TEX.Error(["MisplacedMiddle","%1 must be within \\left and \\right",name])}
-      this.Push(MML.mo(delim).With({stretchy:true}));
-      this.Push(MML.TeXAtom().With({texClass:MML.TEXCLASS.OPEN}));
+      var node = createNode('TeXAtom', [], {texClass:TEXCLASS.CLOSE});
+      // VS: OLD
+      // var node = MML.TeXAtom().With({texClass:TEXCLASS.CLOSE});
+      this.Push(node);
+      if (this.stack.Top().type !== "left") {
+        // @test Orphan Middle, Middle with Right
+        TEX.Error(["MisplacedMiddle","%1 must be within \\left and \\right",name]);
+      }
+      var textNode = createText(delim);
+      node = createNode('mo', [], {stretchy:true}, textNode);
+      // VS: OLD
+      // node = MML.mo(delim).With({stretchy:true});
+      this.Push(node);
+      node = createNode('TeXAtom', [], {texClass:TEXCLASS.OPEN});
+      // VS: OLD
+      // node = MML.TeXAtom().With({texClass:MML.TEXCLASS.OPEN});
+      this.Push(node);
     },
     
     NamedFn: function (name,id) {
-    printMethod("NamedFn");
+      printMethod("NamedFn");
+      // @test Named Function
       if (!id) {id = name.substr(1)};
-      var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
+      var textNode = createText(id);
+      var mml = createNode('mi', [], {texClass: MML.TEXCLASS.OP}, textNode);
+      // VS: OLD
+      // var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
       this.Push(STACKITEM.fn(this.mmlToken(mml)));
     },
     NamedOp: function (name,id) {
-    printMethod("NamedOp");
+      printMethod("NamedOp");
+      untested(11);
       if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,"\u2006");
       var mml = MML.mo(id).With({
@@ -1146,7 +1176,8 @@ var printDef = function(def) {
       this.Push(this.mmlToken(mml));
     },
     Limits: function (name,limits) {
-    printMethod("Limits");
+      printMethod("Limits");
+      // @test Limits UnderOver
       var op = this.stack.Prev("nopop");
       if (!op || (op.Get("texClass") !== TEXCLASS.OP && op.movesupsub == null)) {
         // @test Limits Error
@@ -1154,8 +1185,10 @@ var printDef = function(def) {
       }
       var top = this.stack.Top();
       if (op.type === "munderover" && !limits) {
+        untested(12);
         op = top.data[top.data.length-1] = MML.msubsup.apply(MML.subsup,op.data);
       } else if (op.type === "msubsup" && limits) {
+        untested(13);
         op = top.data[top.data.length-1] = MML.munderover.apply(MML.underover,op.data);
       }
       op.movesupsub = (limits ? true : false);
@@ -1164,62 +1197,116 @@ var printDef = function(def) {
     },
     
     Over: function (name,open,close) {
-    printMethod("Over");
+      printMethod("Over");
+      // @test Over
       var mml = STACKITEM.over().With({name: name});
       if (open || close) {
+        // @test Choose
         mml.open = open; mml.close = close;
       } else if (name.match(/withdelims$/)) {
+        // @test Over With Delims, Above With Delims
         mml.open  = this.GetDelimiter(name);
         mml.close = this.GetDelimiter(name);
       }
-      if (name.match(/^\\above/)) {mml.thickness = this.GetDimen(name)}
-      else if (name.match(/^\\atop/) || open || close) {mml.thickness = 0}
+      if (name.match(/^\\above/)) {
+        // @test Above, Above With Delims
+        mml.thickness = this.GetDimen(name);
+      }
+      else if (name.match(/^\\atop/) || open || close) {
+        // @test Choose
+        mml.thickness = 0;
+      }
       this.Push(mml);
     },
 
     Frac: function (name) {
-    printMethod("Frac");
+      printMethod("Frac");
+      // @test Frac
       var num = this.ParseArg(name);
       var den = this.ParseArg(name);
-      this.Push(MML.mfrac(num,den));
+      var node = createNode('mfrac', [num, den], {});
+      // VS: OLD
+      // var node = MML.mfrac(num, den);
+      this.Push(node);
     },
 
     Sqrt: function (name) {
-    printMethod("Sqrt");
+      printMethod("Sqrt");
       var n = this.GetBrackets(name), arg = this.GetArgument(name);
       if (arg === "\\frac") {arg += "{"+this.GetArgument(arg)+"}{"+this.GetArgument(arg)+"}"}
       var mml = TEX.Parse(arg,this.stack.env).mml();
-      if (!n) {mml = MML.msqrt.apply(MML,mml.array())}
-         else {mml = MML.mroot(mml,this.parseRoot(n))}
+      if (!n) {
+        // @test Square Root
+        mml = createNode('msqrt', mml.array(), {});
+        // VS: OLD
+        // mml = MML.msqrt.apply(MML,mml.array());
+      } else {
+        // @test General Root
+        mml = createNode('mroot', [mml, this.parseRoot(n)], {});
+        // VS: OLD
+        // mml = MML.mroot(mml,this.parseRoot(n));
+      }
       this.Push(mml);
     },
     Root: function (name) {
-    printMethod("Root");
+      printMethod("Root");
       var n = this.GetUpTo(name,"\\of");
       var arg = this.ParseArg(name);
-      this.Push(MML.mroot(arg,this.parseRoot(n)));
+      var node = createNode('mroot', [arg ,this.parseRoot(n)], {});
+      // VS: OLD
+      // var node = MML.mroot(arg,this.parseRoot(n));
+      this.Push(node);
     },
     parseRoot: function (n) {
     printMethod("parseRoot");
+      // @test General Root, Explicit Root
       var env = this.stack.env, inRoot = env.inRoot; env.inRoot = true;
-      var parser = TEX.Parse(n,env); n = parser.mml(); var global = parser.stack.global;
+      // TODO: This parser call might change!
+      var parser = TEX.Parse(n,env);
+      n = parser.mml();
+      var global = parser.stack.global;
       if (global.leftRoot || global.upRoot) {
-        n = MML.mpadded(n);
-        if (global.leftRoot) {n.width = global.leftRoot}
-        if (global.upRoot) {n.voffset = global.upRoot; n.height = global.upRoot}
+        // @test Tweaked Root
+        var def = {};
+        if (global.leftRoot) {
+          def.width = global.leftRoot;
+        }
+        if (global.upRoot) {
+          def.voffset = global.upRoot;
+          def.height = global.upRoot;
+        }
+        
+        n = createNode('mpadded', [n], def);
+        // VS: OLD
+        // n = MML.mpadded(n);
+        // if (global.leftRoot) {
+        //   n.width = global.leftRoot;
+        // }
+        // if (global.upRoot) {
+        //   n.voffset = global.upRoot;
+        //   n.height = global.upRoot;
+        // }
       }
       env.inRoot = inRoot;
       return n;
     },
     MoveRoot: function (name,id) {
     printMethod("MoveRoot");
-      if (!this.stack.env.inRoot)
-        {TEX.Error(["MisplacedMoveRoot","%1 can appear only within a root",name])}
-      if (this.stack.global[id])
-        {TEX.Error(["MultipleMoveRoot","Multiple use of %1",name])}
+      // @test Tweaked Root
+      if (!this.stack.env.inRoot) {
+        // @test Misplaced Move Root
+        TEX.Error(["MisplacedMoveRoot","%1 can appear only within a root",name]);
+      }
+      if (this.stack.global[id]) {
+        // @test Multiple Move Root
+        TEX.Error(["MultipleMoveRoot","Multiple use of %1",name]);
+      }
       var n = this.GetArgument(name);
-      if (!n.match(/-?[0-9]+/))
-        {TEX.Error(["IntegerArg","The argument to %1 must be an integer",name])}
+      console.log(n);
+      if (!n.match(/-?[0-9]+/)) {
+        // @test Incorrect Move Root
+        TEX.Error(["IntegerArg","The argument to %1 must be an integer",name]);
+      }
       n = (n/15)+"em";
       if (n.substr(0,1) !== "-") {n = "+"+n}
       this.stack.global[id] = n;

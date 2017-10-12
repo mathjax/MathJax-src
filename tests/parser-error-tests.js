@@ -610,4 +610,304 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+
+parserTest.runTest(
+  'Missing Right', '\\left(\\middle|',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Extra \\left or missing \\right"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Orphan Middle', '\\middle|',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "\\middle must be within \\left and \\right"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Middle with Right', '\\middle|\\right)',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "\\middle must be within \\left and \\right"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Misplaced Move Root', '\\uproot{2}\\sqrt[3]{a}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "\\uproot can appear only within a root"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Multiple Move Root', '\\sqrt[\\uproot{-2}\\uproot{2}\\beta]{k}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Multiple use of \\uproot"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Incorrect Move Root', '\\sqrt[\\uproot-2.5\\beta]{k}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "The argument to \\uproot must be an integer"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
 parserTest.printTime();
