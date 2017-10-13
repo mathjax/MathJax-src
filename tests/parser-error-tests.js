@@ -910,4 +910,53 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+parserTest.runTest(
+  'Double Over', '1 \\over 2 \\over 3',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Ambiguous use of \\over"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
 parserTest.printTime();
