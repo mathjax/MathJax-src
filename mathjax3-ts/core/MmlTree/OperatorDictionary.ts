@@ -1,3 +1,26 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2017 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Defines the operator dictionary structure
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {PropertyList} from '../Tree/Node.js';
 import {TEXCLASS} from './MmlNode.js';
 
@@ -45,6 +68,9 @@ export const MO = {
     WIDEACCENT: OPDEF(0, 0, TEXCLASS.ORD, {accent: true, stretchy: true})
 };
 
+/*
+ *  The default TeX classes for the various unicode blocks, and their names
+ */
 export const RANGES: RangeDef[] = [
     [0x20, 0x7F, TEXCLASS.REL, 'BasicLatin'],
     [0xA0, 0xFF, TEXCLASS.ORD, 'Latin1Supplement'],
@@ -76,6 +102,9 @@ export const RANGES: RangeDef[] = [
     [0x1D400, 0x1D7FF, TEXCLASS.ORD, 'MathAlphabets']
 ];
 
+/*
+ *  The operator dictionary, with sections for the three forms:  prefix, postfix, and infix
+ */
 export const OPTABLE: {[form: string]: OperatorList} = {
     prefix: {
         '(': MO.OPEN,            // left parenthesis
@@ -307,7 +336,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
         '//': OPDEF(1, 1),       // multiple character operator: //
         '/=': MO.BIN4,           // multiple character operator: /=
         ':': [1, 2, TEXCLASS.REL, null], // colon
-        ':=': MO.BIN4,           // multiple character operator: 
+        ':=': MO.BIN4,           // multiple character operator: :=
         ';': [0, 3, TEXCLASS.PUNCT, {linebreakstyle: 'after', separator: true}], // semicolon
         '<': MO.REL,             // less-than sign
         '<=': MO.BIN5,           // multiple character operator: <=

@@ -76,11 +76,14 @@ export class MmlMo extends AbstractMmlTokenNode {
     public static RANGES: RangeDef[] = RANGES;
 
     /*
-     * The (minimal) Operator Dictionary.  Currently this only include the basics.
+     * The Operator Dictionary.
      */
     public static OPTABLE: {[form: string]: OperatorList} = OPTABLE;
 
-    public texClass = TEXCLASS.REL;  // for MathML, but TeX sets it explicitly in setTeXclass()
+    /*
+     * The TeX class of the node is set to REL for MathML, but TeX sets it explicitly in setTeXclass()
+     */
+    public texClass = TEXCLASS.REL;
 
     /*
      * @return {string}  The mo kind
