@@ -31,6 +31,7 @@ import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {StyleData, StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
@@ -259,6 +260,45 @@ export class CHTMLscriptbase extends CHTMLWrapper {
         for (let i = 0; i < dx.length; i++) {
             if (dx[i]) {
                 nodes[i].style.paddingLeft = this.em(dx[i]);
+            }
+        }
+    }
+
+    /*
+     * Handle horizontal stretching of children to match greatest width
+     *  of all children
+     */
+    protected stretchChildren() {
+        let stretchy: CHTMLWrapper[] = [];
+        //
+        //  Locate and count the stretchy children
+        //
+        for (const child of this.childNodes) {
+            if (child.canStretch(DIRECTION.Horizontal)) {
+                stretchy.push(child);
+            }
+        }
+        let count = stretchy.length;
+        let nodeCount = this.childNodes.length;
+        if (count && nodeCount > 1) {
+            let W = 0;
+            //
+            //  If all the children are stretchy, find the largest one,
+            //  otherwise, find the width of the non-stretchy  children.
+            //
+            let all = (count > 1 && count === nodeCount);
+            for (const child of this.childNodes) {
+                const noStretch = (child.stretch.dir === DIRECTION.None);
+                if (all || noStretch) {
+                    const {w} = child.getBBox(noStretch);
+                    if (w > W) W = w;
+                }
+            }
+            //
+            //  Stretch the stretchable children
+            //
+            for (const child of stretchy) {
+                child.coreMO().getStretchedVariant([W / child.bbox.rscale]);
             }
         }
     }

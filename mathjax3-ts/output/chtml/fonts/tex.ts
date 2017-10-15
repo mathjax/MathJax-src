@@ -382,23 +382,37 @@ export class TeXFont extends FontData {
      * @param{DelimiterData} data  The data for the delimiter whose CSS is to be added
      */
     protected addDelimiterStyles(styles: StyleList, n: number, data: DelimiterData) {
+        const c = this.char(n);
+        if (data.c && data.c !== n) {
+            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] = {content: '"' + this.char(data.c,true) + '"'};
+        }
         if (!data.stretch) return;
         if (data.dir === DIRECTION.Vertical) {
-            const c = this.char(n);
-            const Hb = this.addDelimiterVPart(styles, c, 'beg', data.stretch[0]);
-            this.addDelimiterVPart(styles, c, 'ext', data.stretch[1]);
-            const He = this.addDelimiterVPart(styles, c, 'end', data.stretch[2]);
-            const css: StyleData = {};
-            if (Hb) {
-                css['border-top-width'] = this.em(Math.max(0, Hb - .03));
-            }
-            if (He) {
-                css['border-bottom-width'] = this.em(Math.max(0, He - .03));
-                css['margin-bottom'] = this.em(-He);
-            }
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css;
+            this.addDelimiterVStyles(styles, c, data);
         } else {
-            //  FIXME: still need to add this
+            this.addDelimiterHStyles(styles, c, data);
+        }
+    }
+
+    /*
+     * @param{StyleList} styles    The style object to add styles to
+     * @param{string} c            The delimiter character string
+     * @param{DelimiterData} data  The data for the delimiter whose CSS is to be added
+     */
+    protected addDelimiterVStyles(styles: StyleList, c: string, data: DelimiterData) {
+        const Hb = this.addDelimiterVPart(styles, c, 'beg', data.stretch[0]);
+        this.addDelimiterVPart(styles, c, 'ext', data.stretch[1]);
+        const He = this.addDelimiterVPart(styles, c, 'end', data.stretch[2]);
+        const css: StyleData = {};
+        if (Hb) {
+            css['border-top-width'] = this.em0(Hb - .03);
+        }
+        if (He) {
+            css['border-bottom-width'] = this.em0(He - .03);
+            css['margin-bottom'] = this.em(-He);
+        }
+        if (Object.keys(css).length) {
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css;
         }
     }
 
@@ -414,10 +428,43 @@ export class TeXFont extends FontData {
         const data = this.getChar('normal', n) || this.getChar('-size4', n);
         const css: StyleData = {content: '"' + this.char(n, true) + '"'};
         if (part !== 'ext') {
-            css.padding = this.em(data[0]) + ' 0 ' + this.em(data[1]);
+            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
         }
         styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
         return data[0] + data[1];
+    }
+
+    /*
+     * @param{StyleList} styles    The style object to add styles to
+     * @param{string} c            The delimiter character string
+     * @param{DelimiterData} data  The data for the delimiter whose CSS is to be added
+     */
+    protected addDelimiterHStyles(styles: StyleList, c: string, data: DelimiterData) {
+        this.addDelimiterHPart(styles, c, 'beg', data.stretch[0]);
+        this.addDelimiterHPart(styles, c, 'ext', data.stretch[1], !(data.stretch[0] || data.stretch[2]));
+        this.addDelimiterHPart(styles, c, 'end', data.stretch[2]);
+        if (data.stretch[3]) {
+            this.addDelimiterHPart(styles, c, 'mid', data.stretch[3]);
+            styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] > mjx-ext'] = {width: '50%'}
+        }
+    }
+
+    /*
+     * @param{StyleList} styles  The style object to add styles to
+     * @param{string} c          The vertical character whose part is being added
+     * @param{string} part       The name of the part (beg, ext, end, mid) that is being added
+     * @param{number} n          The unicode character to use for the part
+     */
+    protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, force: boolean = false) {
+        if (!n) return 0;
+        const data = this.getChar('normal', n) || this.getChar('-size4', n);
+        const options = data[3] as CharOptions;
+        const C = (options && options.c ? options.c : this.char(n, true));
+        const css: StyleData = {content: '"' + C + '"'};
+        if (part !== 'ext' || force) {
+          css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
+        }
+        styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
     }
 
     /*
@@ -434,7 +481,7 @@ export class TeXFont extends FontData {
                 css.width = this.em(w);
             }
             if (options.css & CSS.padding) {
-                css.padding = this.em(Math.max(0, h)) + ' 0 ' + this.em(Math.max(0, d));
+                css.padding = this.em0(h) + ' 0 ' + this.em0(d);
             }
             if (options.css & CSS.content) {
                 css.content = '"' + (options.c || this.char(n, true)) + '"';
@@ -457,6 +504,14 @@ export class TeXFont extends FontData {
      */
     protected em(n: number) {
         return em(n);
+    }
+
+    /*
+     * @param{number} n  The number of ems (will be restricted to non-negative values)
+     * @return{string}   The string representing the number with units of "em"
+     */
+    protected em0(n: number) {
+        return em(Math.max(0, n));
     }
 
 }
