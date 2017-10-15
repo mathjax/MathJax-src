@@ -53,6 +53,10 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         },
         'mjx-sqrt > mjx-box': {
             'border-top': '.07em solid'
+        },
+        'mjx-sqrt.mjx-tall > mjx-box': {
+            'padding-left': '.3em',
+            'margin-left': '-.3em'
         }
     };
 
@@ -126,7 +130,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        const surd = this.childNodes[this.surd];
+        const surd = this.childNodes[this.surd] as CHTMLmo;
         const base = this.childNodes[this.base];
         //
         //  Get the parameters for the spacing of the parts
@@ -153,6 +157,9 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         this.addRoot(ROOT, root, sbox);
         surd.toCHTML(SURD);
         base.toCHTML(BASE);
+        if (surd.size < 0) {
+            SQRT.classList.add('mjx-tall');
+        }
     }
 
     /*
