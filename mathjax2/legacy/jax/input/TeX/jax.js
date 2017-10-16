@@ -46,9 +46,9 @@ require("../../element/MmlNode.js");
 var MML = MathJax.ElementJax.mml;
 
 var NEW = process.TEST_NEW;
-var methodOut = true;
+var methodOut = false;
 var defOut = false;
-var jsonOut = true;
+var jsonOut = false;
 var simpleOut = false;
 
 var createNode = function(type, children, def, text) {
@@ -71,9 +71,37 @@ var createNode = function(type, children, def, text) {
   
 
 var createText = function(text) {
+  if (text == null) {
+    return null;
+  }
   var node = NEW ? factory.create('text').setText(text) : MML.chars(text);
   printJSON(node);
   return node;
+};
+
+
+var createEntity = function(code) {
+  return createText(String.fromCharCode(parseInt(code,16)));
+};
+
+var appendChildren = function(node, children) {
+  if (NEW) {
+    for (let child of children) {
+      node.appendChild(child);
+    }
+  } else {
+    node.Append.apply(node, children);
+  }
+};
+
+
+var setAttribute = function(node, attribute, value) {
+  if (NEW) {
+    console.log(node.attributes.set);
+    node.attributes.set(attribute, value);
+  } else {
+    node[attribute] = value;
+  }
 };
 
 
@@ -92,6 +120,10 @@ var setData = function(node, position, item) {
 
 var isType = function(node, type) {
   return NEW ? node.isKind(type) : node.type === type;
+};
+
+var isClass = function(node, type) {
+  return NEW ? node.isKind(type) : node.isa(MML[type]);
 };
 
 var cleanSubSup = function(node) {
@@ -381,18 +413,22 @@ var printDef = function(def) {
       if (item.hasType('mml')) {
         if (this.primes) {
           if (this.position !== 2) {
-            untested(100);
             // @test Prime on Sub
             setData(this.data[0], 2, this.primes);
           }
           else {
             // @test Prime on Prime
-            var node = MML.mrow(this.primes.With({variantForm:true}),item.data[0]);
-            item.data[0] = node;}
+            if (NEW) {
+              this.primes.setProperty('variantForm', true);
+            } else {
+              this.primes.With({variantForm:true});
+            }
+            var node = createNode('mrow', [this.primes, item.data[0]], {});
+            // VS: OLD
+            // var node = MML.mrow(this.primes, item.data[0]);
+            item.data[0] = node;
+          }
         }
-        printSimple('Before set data');
-        printSimple(this.data[0]);
-        printSimple(item);
         setData(this.data[0], this.position, item.data[0]);
         if (this.movesupsub != null) {
           this.data[0].movesupsub = this.movesupsub;
@@ -420,7 +456,9 @@ var printDef = function(def) {
         var mml = createNode('mfrac', [this.num, this.mmlData(false)], {});
         // VS: OLD
         // var mml = MML.mfrac(this.num,this.mmlData(false));
-        if (this.thickness != null) {mml.linethickness = this.thickness}
+        if (this.thickness != null) {
+          setAttribute(mml, 'linethickness', this.thickness);
+        }
         if (this.open || this.close) {
           mml.texWithDelims = true;
           mml = TEX.fixedFence(this.open,mml,this.close);
@@ -490,8 +528,10 @@ var printDef = function(def) {
         var mml = item.mmlData();
         switch (this.move) {
          case 'vertical':
-          untested(2);
-          mml = MML.mpadded(mml).With({height: this.dh, depth: this.dd, voffset: this.dh});
+          // @test Raise, Lower
+          mml = createNode('mpadded', [mml], {height: this.dh, depth: this.dd, voffset: this.dh});
+          // VS: OLD
+          // mml = MML.mpadded(mml).With({height: this.dh, depth: this.dd, voffset: this.dh});
           return [STACKITEM.mml(mml)];
          case 'horizontal':
           return [STACKITEM.mml(this.left),item,STACKITEM.mml(this.right)];
@@ -613,8 +653,8 @@ var printDef = function(def) {
         if (item.isOpen) {return true}
         if (!item.hasType('fn')) {
           if (!item.hasType('mml') || !item.data[0]) {return [this.data[0],item]}
-          // VS: NEW
-          if (NEW ? item.data[0].isKind('mspace') : item.data[0].isa(MML.mspace)) {
+          if (isClass(item.data[0], 'mspace')) {
+            untested(100);
             return [this.data[0],item];
           }
           var mml = item.data[0]; if (mml.isEmbellished()) {mml = mml.CoreMO()}
@@ -651,7 +691,7 @@ var printDef = function(def) {
           } else {
             // @test Negation Explicit
             var textNode = createText("\u0338");
-            mml.Append(textNode);
+            appendChildren(mml, [textNode]);
             // VS: OLD
             // mml.Append(MML.chars("\u0338"));
           }
@@ -678,10 +718,12 @@ var printDef = function(def) {
       printMethod('Checkitem dots')
       if (item.hasType('open') || item.hasType('left')) {return true}
       var dots = this.ldots;
-      untested(4);
+      // @test Operator Dots
       if (item.hasType('mml') && item.data[0].isEmbellished()) {
         var tclass = item.data[0].CoreMO().Get("texClass");
-        if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {dots = this.cdots}
+        if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
+          dots = this.cdots;
+        }
       }
       return [dots,item];
     }
@@ -992,10 +1034,8 @@ var printDef = function(def) {
           // @test Move Superscript, Large Operator
           if (!isType(base, "munderover") || base.data[base.over]) {
         console.log('Case 3');
-            if (base.movablelimits &&
-                // VS: NEW
-                (NEW ? base.isKind('mi') : base.isa(MML.mi))) {
-              untested(6);
+            if (base.movablelimits && isClass(base, 'mi')) {
+              // @test Mathop Super
               base = this.mi2mo(base);
             }
             // @test Large Operator
@@ -1052,10 +1092,8 @@ var printDef = function(def) {
         if (movesupsub) {
           // @test Large Operator, Move Superscript
           if (!isType(base, "munderover") || base.data[base.under]) {
-            if (base.movablelimits &&
-                // VS: NEW
-                (NEW ? base.isKind('mi') : base.isa(MML.mi))) {
-              untested(8);
+            if (base.movablelimits && isClass(base, 'mi')) {
+              // @test Mathop Sub
               base = this.mi2mo(base);
             }
             // @test Move Superscript
@@ -1103,12 +1141,22 @@ var printDef = function(def) {
     },
     mi2mo: function (mi) {
     printMethod("mi2mo");
-      untested(10);
-      var mo = MML.mo();  mo.Append.apply(mo,mi.data); var id;
-      for (id in mo.defaults)
-        {if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
-      for (id in MML.copyAttributes)
-        {if (MML.copyAttributes.hasOwnProperty(id) && mi[id] != null) {mo[id] = mi[id]}}
+      // @test Mathop Sub, Mathop Super
+      var mo = MML.mo();
+      appendChildren(mo, mi.data);
+      var id;
+      // TODO: Figure out how to copy these attributes.
+      for (id in mo.defaults) {
+        if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {
+          mo[id] = mi[id];
+        }
+      }
+      for (id in MML.copyAttributes) {
+        if (MML.copyAttributes.hasOwnProperty(id) && mi[id] != null) {
+          mo[id] = mi[id];
+        }
+      }
+      // TODO: Do this with get('lspace') etc.
       mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
       mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
       return mo;
@@ -1203,7 +1251,7 @@ var printDef = function(def) {
     Spacer: function (name,space) {
       // @test Positive Spacing, Negative Spacing
       var node = createNode('mspace', [],
-                            {width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0});
+                            {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel:0});
       // VS: OLD
       // var node = MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0});
       this.Push(node);
@@ -1243,28 +1291,35 @@ var printDef = function(def) {
       // @test Named Function
       if (!id) {id = name.substr(1)};
       var textNode = createText(id);
-      var mml = createNode('mi', [], {texClass: MML.TEXCLASS.OP}, textNode);
+      var mml = createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
       // VS: OLD
       // var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
       this.Push(STACKITEM.fn(this.mmlToken(mml)));
     },
     NamedOp: function (name,id) {
       printMethod("NamedOp");
-      untested(11);
       if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,"\u2006");
-      var mml = MML.mo(id).With({
+      var mml = createNode('mo', [id], {
         movablelimits: true,
         movesupsub: true,
-        form: MML.FORM.PREFIX,
-        texClass: MML.TEXCLASS.OP
+        form: TexConstant.Form.PREFIX,
+        texClass: TEXCLASS.OP
       });
+      // VS: OLD
+      // var mml = MML.mo(id).With({
+      //   movablelimits: true,
+      //   movesupsub: true,
+      //   form: MML.FORM.PREFIX,
+      //   texClass: MML.TEXCLASS.OP
+      // });
+      // TODO: Sort this out with get('form');
       mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
       this.Push(this.mmlToken(mml));
     },
     Limits: function (name,limits) {
       printMethod("Limits");
-      // @test Limits UnderOver
+      // @test Limits
       var op = this.stack.Prev("nopop");
       if (!op || (op.Get("texClass") !== TEXCLASS.OP && op.movesupsub == null)) {
         // @test Limits Error
@@ -1272,12 +1327,19 @@ var printDef = function(def) {
       }
       var top = this.stack.Top();
       if (isType(op, "munderover") && !limits) {
-        untested(12);
-        op = top.data[top.data.length-1] = MML.msubsup.apply(MML.subsup,op.data);
+        // @test Limits UnderOver
+        var node = createNode('msubsup', op.data, {});
+        // VS: OLD
+        // var node = MML.msubsup.apply(MML.subsup,op.data);
+        op = top.data[top.data.length-1] = node;
       } else if (isType(op, "msubsup") && limits) {
-        untested(13);
-        op = top.data[top.data.length-1] = MML.munderover.apply(MML.underover,op.data);
+        // @test Limits SubSup
+        node = createNode('munderover', op.data, {});
+        // VS: OLD
+        // node = MML.munderover.apply(MML.underover,op.data);
+        op = top.data[top.data.length-1] = node;
       }
+      // TODO: Turns this into properties.
       op.movesupsub = (limits ? true : false);
       op.Core().movablelimits = false;
       if (op.movablelimits) op.movablelimits = false;
@@ -1400,62 +1462,128 @@ var printDef = function(def) {
     },
     
     Accent: function (name,accent,stretchy) {
-    printMethod("Accent");
+      printMethod("Accent");
+      // @test Vector
       var c = this.ParseArg(name);
-      var def = {accent: true}; if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      var mml = this.mmlToken(MML.mo(MML.entity("#x"+accent)).With(def));
+      var def = {accent: true};
+      if (this.stack.env.font) {
+        // @test Vector Font
+        def.mathvariant = this.stack.env.font;
+      }
+      var entity = createEntity(accent);
+      var moNode = createNode('mo', [], def, entity);
+      // VS: OLD
+      // var entity = MML.entity("#x"+accent);
+      // var moNode = MML.mo(entity).With(def);
+      var mml = this.mmlToken(moNode);
+      // TODO: This should be property?
       mml.stretchy = (stretchy ? true : false);
+      // @test Vector Op, Vector
       var mo = (c.isEmbellished() ? c.CoreMO() : c);
-      if (mo.isa(MML.mo)) mo.movablelimits = false;
-      this.Push(MML.TeXAtom(MML.munderover(c,null,mml).With({accent: true})));
+      if (isClass(mo, 'mo')) {
+        // @test Vector Op
+        mo.movablelimits = false;
+      }
+      var muoNode = createNode('munderover', [c,null,mml], {accent: true});
+      var texAtom = createNode('TeXAtom', [muoNode], {});
+      // VS: OLD
+      // var muoNode = MML.munderover(c,null,mml).With({accent: true});
+      // var texAtom = MML.TeXAtom(muoNode);
+      this.Push(texAtom);
     },
     
     UnderOver: function (name,c,stack,noaccent) {
-    printMethod("UnderOver");
+      printMethod("UnderOver");
+      // @test Overline
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
-      if (base.Get("movablelimits")) {base.movablelimits = false}
-      if (base.isa(MML.munderover) && base.isEmbellished()) {
-        base.Core().With({lspace:0,rspace:0}); // get spacing right for NativeMML
-        base = MML.mrow(MML.mo().With({rspace:0}),base);  // add an empty <mi> so it's not embellished any more
+      // TODO: Sort this one out!
+      if (base.Get("movablelimits")) {
+        // @test Overline Sum
+        base.movablelimits = false;
       }
-      var mml = MML.munderover(base,null,null);
+      if (base.isa(MML.munderover) && base.isEmbellished()) {
+        // @test Overline Limits
+        // TODO: Sort these properties out!
+        base.Core().With({lspace:0,rspace:0}); // get spacing right for NativeMML
+        var mo = createNode('mo', [], {rspace:0});
+        base = createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
+        // VS: OLD
+        // var mo = MML.mo().With({rspace:0});
+        // base = MML.mrow(mo,base);  // add an empty <mi> so it's not embellished any more
+      }
+      var mml = createNode('munderover', [base,null,null], {});
+      var entity = createEntity(c);
+      mo = createNode('mo', [], {stretchy:true, accent:!noaccent}, entity);
+      // VS: OLD
+      // var mml = MML.munderover(base,null,null);
+      // var entity = MML.entity("#x"+c);
+      // mo = MML.mo(entity).With({stretchy:true, accent:!noaccent});
+
       setData(
         mml,
         mml[pos], 
-        this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:!noaccent}))
+        this.mmlToken(mo)
       );
-      if (stack) {mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true})}
+
+      if (stack) {
+        untested(8);
+        mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true});
+      }
+      // TODO: Sort these properties out!
       this.Push(mml.With({subsupOK:true}));
     },
     
     Overset: function (name) {
-    printMethod("Overset");
+      printMethod("Overset");
+      // @test Overset
       var top = this.ParseArg(name), base = this.ParseArg(name);
       if (base.movablelimits) base.movablelimits = false;
-      this.Push(MML.mover(base,top));
+      var node = createNode('mover', [base, top], {});
+      // VS: OLD
+      // var node = MML.mover(base,top); 
+      this.Push(node);
     },
     Underset: function (name) {
-    printMethod("Underset");
+      printMethod("Underset");
+      // @test Underset
       var bot = this.ParseArg(name), base = this.ParseArg(name);
       if (base.movablelimits) base.movablelimits = false;
-      this.Push(MML.munder(base,bot));
+      var node = createNode('munder', [base, bot], {});
+      // VS: OLD
+      // var node = MML.munder(base,bot);
+      this.Push(node);
     },
     
     TeXAtom: function (name,mclass) {
-    printMethod("TeXAtom");
-      var def = {texClass: mclass}, mml;
-      if (mclass == MML.TEXCLASS.OP) {
+      printMethod("TeXAtom");
+      var def = {texClass: mclass}, mml, node;
+      if (mclass == TEXCLASS.OP) {
         def.movesupsub = def.movablelimits = true;
         var arg = this.GetArgument(name);
         var match = arg.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
         if (match) {
-          def.mathvariant = MML.VARIANT.NORMAL;
-          mml = STACKITEM.fn(this.mmlToken(MML.mi(match[1]).With(def)));
+          // @test Mathop
+          def.mathvariant = TexConstant.Variant.NORMAL;
+          node = createNode('mi', [match[1]], def);
+          // VS: OLD
+          // node = MML.mi(match[1]).With(def);
+          mml = STACKITEM.fn(this.mmlToken(node));
         } else {
-          mml = STACKITEM.fn(MML.TeXAtom(TEX.Parse(arg,this.stack.env).mml()).With(def));
+          // @test Mathop Cal
+          var parsed = TEX.Parse(arg,this.stack.env).mml();
+          node = createNode('TeXAtom', [parsed], def);
+          // VS: OLD
+          // node = MML.TeXAtom(parsed).With(def);
+          mml = STACKITEM.fn(node);
         }
-      } else {mml = MML.TeXAtom(this.ParseArg(name)).With(def)}
+      } else {
+        // @test Mathrel
+        parsed = this.ParseArg(name);
+        mml = createNode('TeXAtom', [parsed], def);
+        // VS: OLD
+        // mml = MML.TeXAtom(parsed).With(def);
+      }
       this.Push(mml);
     },
 
@@ -2340,29 +2468,57 @@ var printDef = function(def) {
      */
     fenced: function (open,mml,close) {
       printMethod('fenced');
-      var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
-      mrow.Append(
-        MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
-      );
+      // @test Fenced, Fenced3
+      var mrow = createNode('mrow', [], {open:open, close:close, texClass:TEXCLASS.INNER});
+      var openNode = createText(open);
+      var mo = createNode('mo', [],
+                          {fence:true, stretchy:true, symmetric:true, texClass:TEXCLASS.OPEN},
+                          openNode);
+      appendChildren(mrow, [mo]);
+      // VS: OLD
+      // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
+      // mrow.Append(
+      //   MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
+      // );
       if (isType(mml, "mrow") && mml.inferred) {
-        mrow.Append.apply(mrow, mml.data);
+        // @test Fenced
+        appendChildren(mrow, mml.data);
       } else {
-        mrow.Append(mml);
+        // @test Fenced3
+        appendChildren(mrow, [mml]);
       }
-      mrow.Append(
-        MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
-      );
+      var closeNode = createText(close);
+      mo = createNode('mo', [],
+                      {fence:true, stretchy:true, symmetric:true, texClass:TEXCLASS.CLOSE},
+                      closeNode);
+      appendChildren(mrow, [mo]);
+      // VS: OLD
+      // mrow.Append(
+      //   MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
+      // );
       return mrow;
     },
     /*
      *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
      */
     fixedFence: function (open,mml,close) {
+      // @test Choose, Over With Delims, Above with Delims
       printMethod('fixedFence');
-      var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
-      if (open) {mrow.Append(this.mathPalette(open,"l"))}
-      if (isType(mml, "mrow")) {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
-      if (close) {mrow.Append(this.mathPalette(close,"r"))}
+      var mrow = createNode('mrow', [], {open:open, close:close, texClass:MML.TEXCLASS.ORD});
+      // VS: OLD
+      // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
+      if (open) {
+        appendChildren(mrow, [this.mathPalette(open,"l")]);
+      }
+      if (isType(mml, "mrow")) {
+        appendChildren(mrow, [mrow, mml.data]);
+      } else {
+        appendChildren(mrow, [mml]);
+      }
+      if (close) {
+        appendChildren(mrow, [this.mathPalette(close,"r")]);
+      }
+      console.log(mrow);
       return mrow;
     },
     mathPalette: function (fence,side) {
