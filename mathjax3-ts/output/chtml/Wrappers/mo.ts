@@ -347,8 +347,8 @@ export class CHTMLmo extends CHTMLWrapper {
      * @return{number[]}        The height and depth for the vertically stretched delimiter
      */
     protected getBaseline(WHD: number[], HD: number, C: DelimiterData) {
-        const hasWHD = (WHD.length === 2);
-        const symmetric = (hasWHD && this.node.attributes.get('symmetric'));
+        const hasWHD = (WHD.length === 2 && WHD[0] + WHD[1] === HD);
+        const symmetric = this.node.attributes.get('symmetric');
         const [H, D] = (hasWHD ? WHD : [HD, 0]);
         let [h, d] = [H + D, 0];
         if (symmetric) {
@@ -356,7 +356,7 @@ export class CHTMLmo extends CHTMLWrapper {
             //  Center on the math axis
             //
             const a = this.font.params.axis_height;
-            h = 2 * Math.max(H - a, D + a);
+            if (hasWHD) h = 2 * Math.max(H - a, D + a);
             d = h / 2 - a;
         } else if (hasWHD) {
             //

@@ -28,6 +28,7 @@ import {BBox} from '../BBox.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
 import {StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
@@ -71,6 +72,58 @@ export class CHTMLmtable extends CHTMLWrapper {
         //
         this.numCols = this.childNodes.map(row => (row as CHTMLmtr).numCells).reduce((a, b) => Math.max(a, b));
         this.numRows = this.childNodes.length;
+        //
+        // Stretch the columns (rows are already taken care of in the CHTMLmtr wrapper)
+        //
+        for (let i = 0; i < this.numCols; i++) {
+            this.stretchColumn(i);
+        }
+    }
+
+    /*
+     * Handle horizontal stretching within the ith column
+     */
+    protected stretchColumn(i: number) {
+        let stretchy: CHTMLWrapper[] = [];
+        //
+        //  Locate and count the stretchy children
+        //
+        for (const row of (this.childNodes as CHTMLmtr[])) {
+            const cell = row.childNodes[i + row.firstCell];
+            if (cell) {
+                const child = cell.childNodes[0];
+                if (child.stretch.dir === DIRECTION.None && child.canStretch(DIRECTION.Horizontal)) {
+                    stretchy.push(child);
+                }
+            }
+        }
+        let count = stretchy.length;
+        let nodeCount = this.childNodes.length;
+        if (count && nodeCount > 1) {
+            let W = 0;
+            //
+            //  If all the children are stretchy, find the largest one,
+            //  otherwise, find the width of the non-stretchy children.
+            //
+            let all = (count > 1 && count === nodeCount);
+            for (const row of (this.childNodes as CHTMLmtr[])) {
+                const cell = row.childNodes[i + row.firstCell];
+                if (cell) {
+                    const child = cell.childNodes[0];
+                    const noStretch = (child.stretch.dir === DIRECTION.None);
+                    if (all || noStretch) {
+                        const {w} = child.getBBox(noStretch);
+                        if (w > W) W = w;
+                    }
+                }
+            }
+            //
+            //  Stretch the stretchable children
+            //
+            for (const child of stretchy) {
+                child.coreMO().getStretchedVariant([W]);
+            }
+        }
     }
 
     /******************************************************************/

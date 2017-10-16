@@ -284,7 +284,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
             let W = 0;
             //
             //  If all the children are stretchy, find the largest one,
-            //  otherwise, find the width of the non-stretchy  children.
+            //  otherwise, find the width of the non-stretchy children.
             //
             let all = (count > 1 && count === nodeCount);
             for (const child of this.childNodes) {
