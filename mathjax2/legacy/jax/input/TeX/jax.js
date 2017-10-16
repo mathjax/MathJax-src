@@ -46,9 +46,9 @@ require("../../element/MmlNode.js");
 var MML = MathJax.ElementJax.mml;
 
 var NEW = process.TEST_NEW;
-var methodOut = false;
+var methodOut = true;
 var defOut = false;
-var jsonOut = false;
+var jsonOut = true;
 var simpleOut = false;
 
 var createNode = function(type, children, def, text) {
@@ -124,6 +124,10 @@ var isType = function(node, type) {
 
 var isClass = function(node, type) {
   return NEW ? node.isKind(type) : node.isa(MML[type]);
+};
+
+var isEmbellished = function(node) {
+  return NEW ? node.isEmbellished : node.isEmbellished();
 };
 
 var cleanSubSup = function(node) {
@@ -650,15 +654,30 @@ var printDef = function(def) {
     checkItem: function (item) {
       printMethod('Checkitem fn');
       if (this.data[0]) {
-        if (item.isOpen) {return true}
+        console.log('case 1');
+        if (item.isOpen) {
+          console.log('case 2');
+          return true;
+        }
         if (!item.hasType('fn')) {
-          if (!item.hasType('mml') || !item.data[0]) {return [this.data[0],item]}
+          console.log('case 3');
+          if (!item.hasType('mml') || !item.data[0]) {
+            console.log('case 4');
+            return [this.data[0],item];
+          }
           if (isClass(item.data[0], 'mspace')) {
             untested(100);
             return [this.data[0],item];
           }
-          var mml = item.data[0]; if (mml.isEmbellished()) {mml = mml.CoreMO()}
-          if ([0,0,1,1,0,1,1,0,0,0][mml.Get("texClass")]) {return [this.data[0],item]}
+          var mml = item.data[0];
+          if (isEmbellished(mml)) {
+            console.log('case 5');
+            mml = mml.CoreMO();
+          }
+          console.log(mml.Get);
+          if ([0,0,1,1,0,1,1,0,0,0][mml.Get("texClass")]) {
+            return [this.data[0],item];
+          }
         }
         // @test Named Function
         var text = createText(MmlEntities.ENTITIES.ApplyFunction);
@@ -719,7 +738,7 @@ var printDef = function(def) {
       if (item.hasType('open') || item.hasType('left')) {return true}
       var dots = this.ldots;
       // @test Operator Dots
-      if (item.hasType('mml') && item.data[0].isEmbellished()) {
+      if (item.hasType('mml') && isEmbellished(item.data[0])) {
         var tclass = item.data[0].CoreMO().Get("texClass");
         if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
           dots = this.cdots;
@@ -1479,7 +1498,7 @@ var printDef = function(def) {
       // TODO: This should be property?
       mml.stretchy = (stretchy ? true : false);
       // @test Vector Op, Vector
-      var mo = (c.isEmbellished() ? c.CoreMO() : c);
+      var mo = (isEmbellished(c) ? c.CoreMO() : c);
       if (isClass(mo, 'mo')) {
         // @test Vector Op
         mo.movablelimits = false;
@@ -1502,7 +1521,7 @@ var printDef = function(def) {
         // @test Overline Sum
         base.movablelimits = false;
       }
-      if (base.isa(MML.munderover) && base.isEmbellished()) {
+      if (isClass(base, 'munderover') && isEmbellished(base)) {
         // @test Overline Limits
         // TODO: Sort these properties out!
         base.Core().With({lspace:0,rspace:0}); // get spacing right for NativeMML
@@ -2385,6 +2404,8 @@ var printDef = function(def) {
       math = data.math;
       try {
         mml = TEX.Parse(math).mml();
+        console.log('MML:');
+        console.log(mml);
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);
