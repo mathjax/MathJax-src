@@ -46,9 +46,9 @@ require("../../element/MmlNode.js");
 var MML = MathJax.ElementJax.mml;
 
 var NEW = process.TEST_NEW;
-var methodOut = false;
+var methodOut = true;
 var defOut = false;
-var jsonOut = false;
+var jsonOut = true;
 var simpleOut = false;
 
 var createNode = function(type, children, def, text) {
@@ -88,6 +88,39 @@ var setData = function(node, position, item) {
   } else {
     node.SetData(position, item);
   }
+};
+
+var isType = function(node, type) {
+  return NEW ? node.isKind(type) : node.type === type;
+};
+
+var cleanSubSup = function(node) {
+  console.log('Cleaning');
+  let rewrite = [];
+  node.walkTree((n, d) => {
+    const children = n.childNodes;
+    if ((n.kind === 'msubsup' && (!children[n.sub] || !children[n.sup])) ||
+        (n.isKind('munderover') && (!children[n.under] || !children[n.over]))) {
+      d.unshift(n);
+    }
+  }, rewrite);
+  for (const n of rewrite) {
+    const children = n.childNodes;
+    const parent = n.parent;
+    let newNode = (n.isKind('msubsup')) ?
+          (children[n.sub] ?
+           createNode('msub', [children[n.base], children[n.sub]], {}) :
+           createNode('msup', [children[n.base], children[n.sup]], {})) :
+        (children[n.under] ?
+         createNode('munder', [children[n.base], children[n.under]], {}) :
+         createNode('mover', [children[n.base], children[n.over]], {}));
+    if (parent) {
+      parent.replaceChild(newNode, n);
+    } else {
+      node = newNode;
+    }
+  }
+  return node;
 };
 
 // Unused?
@@ -133,9 +166,7 @@ var printMethod = function(text) {
 };
 
 var printNew = function(node) {
-  if (node instanceof mmlNode.AbstractMmlNode) {
-    console.log(visitor.visitNode(node));  
-  }
+  console.log(visitor.visitNode(node));
 };
 
 var printOld = function(node) {
@@ -244,24 +275,31 @@ var printDef = function(def) {
       printSimple(arguments);
       this.data.push.apply(this.data,arguments)},
     Pop: function () {return this.data.pop()},
+    getType: function() {return this.type;},
+    hasType: function(type) {return type === this.getType();},
     mmlData: function (inferred,forceRow) {
       printMethod('mmlData');
+      console.log(this.data);
+      console.log(this.data[0]);
       if (inferred == null) {inferred = true}
-      if (this.data.length === 1 && !forceRow) {return this.data[0]}
+      if (this.data.length === 1 && !forceRow) {
+        console.log('End 1');
+        return this.data[0]}
       // @test Two Identifiers
       var node = createNode('mrow', this.data, inferred ? {inferred: true}: {});
       // VS: OLD
       // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
+      console.log('End 2');
       return node;
     },
     checkItem: function (item) {
-      printMethod('Checkitem base for ' + item.type + ' with ' + item);
-      if (item.type === "over" && this.isOpen) {item.num = this.mmlData(false); this.data = []}
-      if (item.type === "cell" && this.isOpen) {
+      printMethod('Checkitem base for ' + item.getType() + ' with ' + item);
+      if (item.hasType('over') && this.isOpen) {item.num = this.mmlData(false); this.data = []}
+      if (item.hasType('cell') && this.isOpen) {
         if (item.linebreak) {return false}
         TEX.Error(["Misplaced","Misplaced %1",item.name.symbol]);
       }
-      if (item.isClose && this[item.type+"Error"]) {TEX.Error(this[item.type+"Error"])}
+      if (item.isClose && this[item.getType()+"Error"]) {TEX.Error(this[item.getType()+"Error"])}
       if (!item.isNotStack) {return true}
       this.Push(item.data[0]); return false;
     },
@@ -269,7 +307,7 @@ var printDef = function(def) {
       for (var id in def) {if (def.hasOwnProperty(id)) {this[id] = def[id]}}
       return this;
     },
-    toString: function () {return this.type+"["+this.data.join("; ")+"]"}
+    toString: function () {return this.getType()+"["+this.data.join("; ")+"]"}
   });
 
   STACKITEM.start = STACKITEM.Subclass({
@@ -280,7 +318,7 @@ var printDef = function(def) {
     },
     checkItem: function (item) {
       printMethod('Checkitem start');
-      if (item.type === "stop") {return STACKITEM.mml(this.mmlData())}
+      if (item.hasType('stop')) {return STACKITEM.mml(this.mmlData())}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
   });
@@ -294,9 +332,15 @@ var printDef = function(def) {
     stopError: /*_()*/ ["ExtraOpenMissingClose","Extra open brace or missing close brace"],
     checkItem: function (item) {
       printMethod('Checkitem open');
-      if (item.type === "close") {
+      if (item.hasType('close')) {
         var mml = this.mmlData();
         // @test PrimeSup
+        console.log(mml);
+        if (NEW) {
+          // TODO: Move that into mmlData?
+          mml = cleanSubSup(mml);
+          console.log(mml);
+        }
         var node = createNode('TeXAtom', [mml], {});
         // VS: OLD
         // var node = MML.TeXAtom(mml);
@@ -314,14 +358,14 @@ var printDef = function(def) {
     type: "prime",
     checkItem: function (item) {
       printMethod('Checkitem prime');
-      if (this.data[0].type !== "msubsup") {
+      if (!isType(this.data[0], "msubsup")) {
         // @test Prime, Double Prime
         var node = createNode('msup', [this.data[0],this.data[1]], {});
         // VS: OLD
         // var node = MML.msup(this.data[0],this.data[1]);
         return [node, item];
       }
-      this.data[0].SetData(this.data[0].sup,this.data[1]);
+      setData(this.data[0], this.data[0].sup,this.data[1]);
       return [this.data[0],item];
     }
   });
@@ -333,8 +377,8 @@ var printDef = function(def) {
     subError:  /*_()*/ ["MissingOpenForSub","Missing open brace for subscript"],
     checkItem: function (item) {
       printMethod('Checkitem subsup');
-      if (item.type === "open" || item.type === "left") {return true}
-      if (item.type === "mml") {
+      if (item.hasType('open') || item.hasType('left')) {return true}
+      if (item.hasType('mml')) {
         if (this.primes) {
           if (this.position !== 2) {
             untested(100);
@@ -368,8 +412,10 @@ var printDef = function(def) {
     type: "over", isClose: true, name: "\\over",
     checkItem: function (item,stack) {
       printMethod('Checkitem over');
-      if (item.type === "over")
-        {TEX.Error(["AmbiguousUseOf","Ambiguous use of %1",item.name])}
+      if (item.hasType('over')) {
+        // @test Double Over
+        TEX.Error(["AmbiguousUseOf","Ambiguous use of %1",item.name]);
+      }
       if (item.isClose) {
         var mml = createNode('mfrac', [this.num, this.mmlData(false)], {});
         // VS: OLD
@@ -392,7 +438,7 @@ var printDef = function(def) {
     checkItem: function (item) {
       // @test Missing Right
       printMethod('Checkitem left');
-      if (item.type === "right")
+      if (item.hasType('right'))
         {return STACKITEM.mml(TEX.fenced(this.delim,this.mmlData(),item.delim))}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
@@ -406,13 +452,13 @@ var printDef = function(def) {
     type: "begin", isOpen: true,
     checkItem: function (item) {
       printMethod('Checkitem begin');
-      if (item.type === "end") {
+      if (item.hasType('end')) {
         if (item.name !== this.name)
           {TEX.Error(["EnvBadEnd","\\begin{%1} ended with \\end{%2}",this.name,item.name])}
         if (!this.end) {return STACKITEM.mml(this.mmlData())}
         return this.parse[this.end].call(this.parse,this,this.data);
       }
-      if (item.type === "stop")
+      if (item.hasType('stop'))
         {TEX.Error(["EnvMissingEnd","Missing \\end{%1}",this.name])}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
@@ -463,7 +509,7 @@ var printDef = function(def) {
     },
     checkItem: function (item) {
       printMethod('Checkitem array');
-      if (item.isClose && item.type !== "over") {
+      if (item.isClose && !item.hasType('over')) {
         if (item.isEntry) {this.EndEntry(); this.clearEnv(); return false}
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return false}
         this.EndTable(); this.clearEnv();
@@ -490,7 +536,7 @@ var printDef = function(def) {
         if (this.open || this.close) {mml = TEX.fenced(this.open,mml,this.close)}
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
-          if (item.type === 'close') {return mml}
+          if (item.hasType('close')) {return mml}
           TEX.Error(["MissingCloseBrace","Missing close brace"]);
         }
         return [mml,item];
@@ -565,8 +611,8 @@ var printDef = function(def) {
       printMethod('Checkitem fn');
       if (this.data[0]) {
         if (item.isOpen) {return true}
-        if (item.type !== "fn") {
-          if (item.type !== "mml" || !item.data[0]) {return [this.data[0],item]}
+        if (!item.hasType('fn')) {
+          if (!item.hasType('mml') || !item.data[0]) {return [this.data[0],item]}
           // VS: NEW
           if (NEW ? item.data[0].isKind('mspace') : item.data[0].isa(MML.mspace)) {
             return [this.data[0],item];
@@ -590,14 +636,16 @@ var printDef = function(def) {
     checkItem: function (item) {
       printMethod('Checkitem not');
       var mml, c;
-      if (item.type === "open" || item.type === "left") {return true}
-      if (item.type === "mml" && item.data[0].type.match(/^(mo|mi|mtext)$/)) {
+      if (item.hasType('open') || item.hasType('left')) {return true}
+      if (item.hasType('mml') &&
+          (isType(item.data[0], 'mo') || isType(item.data[0], 'mi') ||
+           isType(item.data[0], 'mtext'))) {
         mml = item.data[0], c = mml.data.join("");
         if (c.length === 1 && !mml.movesupsub && mml.data.length === 1) {
           if (STACKITEM.not.remap.contains(c)) {
             // @test Negation Simple, Negation Complex
             var textNode = createText(STACKITEM.not.remap.lookup(c).char);
-            mml.SetData(0, textNode);
+            setData(mml, 0, textNode);
             // VS: OLD
             // mml.SetData(0, MML.chars(STACKITEM.not.remap.lookup(c).char));
           } else {
@@ -628,10 +676,10 @@ var printDef = function(def) {
     type: "dots",
     checkItem: function (item) {
       printMethod('Checkitem dots')
-      if (item.type === "open" || item.type === "left") {return true}
+      if (item.hasType('open') || item.hasType('left')) {return true}
       var dots = this.ldots;
       untested(4);
-      if (item.type === "mml" && item.data[0].isEmbellished()) {
+      if (item.hasType('mml') && item.data[0].isEmbellished()) {
         var tclass = item.data[0].CoreMO().Get("texClass");
         if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {dots = this.cdots}
       }
@@ -722,7 +770,8 @@ var printDef = function(def) {
     },
     mml: function () {
       printMethod("mml");
-      if (this.stack.Top().type !== "mml") {
+      console.log(this.stack.Top().getType());
+      if (!this.stack.Top().hasType('mml')) {
         return null}
       return this.stack.Top().data[0];
     },
@@ -907,9 +956,11 @@ var printDef = function(def) {
         this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1);
       }
       var primes, base, top = this.stack.Top();
-      if (top.type === "prime") {
+      if (top.hasType('prime')) {
         // @test Prime on Prime
-        base = top.data[0]; primes = top.data[1]; this.stack.Pop()
+        base = top.data[0];
+        primes = top.data[1];
+        this.stack.Pop();
       } else {
         // @test Empty base2, Square, Cube
         base = this.stack.Prev();
@@ -927,16 +978,20 @@ var printDef = function(def) {
       }
       var movesupsub = base.movesupsub, position = base.sup;
       console.log(base.type);
+      console.log(base.kind);
       console.log(base.sup);
-      if ((base.type === "msubsup" && base.data[base.sup]) ||
-          (base.type === "munderover" && base.data[base.over] && !base.subsupOK)) {
+      if ((isType(base, "msubsup") && base.data[base.sup]) ||
+          (isType(base, "munderover") && base.data[base.over] && !base.subsupOK)) {
         // @test Double-super-error, Double-over-error
         TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"]);
       }
-      if (base.type !== "msubsup") {
+      if (!isType(base, "msubsup")) {
+        console.log('Case 1');
         if (movesupsub) {
+        console.log('Case 2');
           // @test Move Superscript, Large Operator
-          if (base.type !== "munderover" || base.data[base.over]) {
+          if (!isType(base, "munderover") || base.data[base.over]) {
+        console.log('Case 3');
             if (base.movablelimits &&
                 // VS: NEW
                 (NEW ? base.isKind('mi') : base.isa(MML.mi))) {
@@ -950,6 +1005,7 @@ var printDef = function(def) {
           }
           position = base.over;
         } else {
+        console.log('Case 4');
           // @test Empty base, Empty base2, Square, Cube
           base = createNode('msubsup', [base], {});
           // VS: OLD
@@ -968,7 +1024,7 @@ var printDef = function(def) {
         this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1);
       }
       var primes, base, top = this.stack.Top();
-      if (top.type === "prime") {
+      if (top.hasType('prime')) {
         // @test Prime on Sub
         base = top.data[0]; primes = top.data[1];
         this.stack.Pop();
@@ -987,15 +1043,15 @@ var printDef = function(def) {
         base = base.data[0].data[0];
       }
       var movesupsub = base.movesupsub, position = base.sub;
-      if ((base.type === "msubsup" && base.data[base.sub]) ||
-          (base.type === "munderover" && base.data[base.under] && !base.subsupOK)) {
+      if ((isType(base, "msubsup") && base.data[base.sub]) ||
+          (isType(base, "munderover") && base.data[base.under] && !base.subsupOK)) {
         // @test Double-sub-error, Double-under-error
         TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"]);
       }
-      if (base.type !== "msubsup") {
+      if (!isType(base, "msubsup")) {
         if (movesupsub) {
           // @test Large Operator, Move Superscript
-          if (base.type !== "munderover" || base.data[base.under]) {
+          if (!isType(base, "munderover") || base.data[base.under]) {
             if (base.movablelimits &&
                 // VS: NEW
                 (NEW ? base.isKind('mi') : base.isa(MML.mi))) {
@@ -1030,7 +1086,7 @@ var printDef = function(def) {
         // VS: OLD
         // base = MML.mi();
       }
-      if (base.type === "msubsup" && base.data[base.sup]) {
+      if (isType(base, "msubsup") && base.data[base.sup]) {
         // @test Double Prime Error
         TEX.Error(["DoubleExponentPrime",
                    "Prime causes double exponent: use braces to clarify"]);
@@ -1167,7 +1223,7 @@ var printDef = function(def) {
       // VS: OLD
       // var node = MML.TeXAtom().With({texClass:TEXCLASS.CLOSE});
       this.Push(node);
-      if (this.stack.Top().type !== "left") {
+      if (!this.stack.Top().hasType('left')) {
         // @test Orphan Middle, Middle with Right
         TEX.Error(["MisplacedMiddle","%1 must be within \\left and \\right",name]);
       }
@@ -1215,10 +1271,10 @@ var printDef = function(def) {
         TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name]);
       }
       var top = this.stack.Top();
-      if (op.type === "munderover" && !limits) {
+      if (isType(op, "munderover") && !limits) {
         untested(12);
         op = top.data[top.data.length-1] = MML.msubsup.apply(MML.subsup,op.data);
-      } else if (op.type === "msubsup" && limits) {
+      } else if (isType(op, "msubsup") && limits) {
         untested(13);
         op = top.data[top.data.length-1] = MML.munderover.apply(MML.underover,op.data);
       }
@@ -1364,7 +1420,8 @@ var printDef = function(def) {
         base = MML.mrow(MML.mo().With({rspace:0}),base);  // add an empty <mi> so it's not embellished any more
       }
       var mml = MML.munderover(base,null,null);
-      mml.SetData(
+      setData(
+        mml,
         mml[pos], 
         this.mmlToken(MML.mo(MML.entity("#x"+c)).With({stretchy:true, accent:!noaccent}))
       );
@@ -2192,6 +2249,7 @@ var printDef = function(def) {
     //
     Translate: function (script) {
       printMethod('Translate');
+      console.log(script);
       var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       var data = {math:math, display:display, script:script};
@@ -2204,8 +2262,11 @@ var printDef = function(def) {
         mml = this.formatError(err,math,display,script);
         isError = true;
       }
+      console.log("HERE?");
+      console.log(mml);
       // VS: temporary (get INHERIT from attributes)
       if (NEW) {
+        mml = cleanSubSup(mml);
         if (mml.isKind('mtable') && mml.attributes.get('displaystyle') === 'inherit') {
           mml.displaystyle = display;
         } // for tagged equations
@@ -2217,7 +2278,9 @@ var printDef = function(def) {
             mathNode = createNode('math', [], {});
             mathNode.setChildren(mml.childNodes);
           } else if (!mml.isKind('math')) {
+            console.log('here2');
             mathNode = createNode('math', [mml], {});
+            console.log('here3');
           } else {
             mathNode = mml;
           }
@@ -2281,7 +2344,7 @@ var printDef = function(def) {
       mrow.Append(
         MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
       );
-      if (mml.type === "mrow" && mml.inferred) {
+      if (isType(mml, "mrow") && mml.inferred) {
         mrow.Append.apply(mrow, mml.data);
       } else {
         mrow.Append(mml);
@@ -2298,7 +2361,7 @@ var printDef = function(def) {
       printMethod('fixedFence');
       var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
       if (open) {mrow.Append(this.mathPalette(open,"l"))}
-      if (mml.type === "mrow") {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
+      if (isType(mml, "mrow")) {mrow.Append.apply(mrow,mml.data)} else {mrow.Append(mml)}
       if (close) {mrow.Append(this.mathPalette(close,"r"))}
       return mrow;
     },
