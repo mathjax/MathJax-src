@@ -846,7 +846,8 @@ var printDef = function(def) {
       printMethod("mml");
       console.log(this.stack.Top().getType());
       if (!this.stack.Top().hasType('mml')) {
-        return null}
+        return null;
+      }
       return this.stack.Top().data[0];
     },
 
@@ -1234,11 +1235,12 @@ var printDef = function(def) {
       // 
       //   This changes the operator class, when fences are put around it. Just
       //   propagate from the inherited attributes or properties.
-      if (mo.autoDefault("stretchy",true)) {
+      // TODO: Currently just omitted!
+      if (!NEW && mo.autoDefault("stretchy",true)) {
         // @test A Rogers-Ramanujan Identity
         mo.stretchy = false;
       }
-      if (mo.autoDefault("texClass",true) == "") {
+      if (!NEW && mo.autoDefault("texClass",true) == "") {
         // @test A Rogers-Ramanujan Identity
         mo = createNode('TeXAtom', [mo], {});
         // VS: OLD
@@ -1418,7 +1420,7 @@ var printDef = function(def) {
       var mml = TEX.Parse(arg,this.stack.env).mml();
       if (!n) {
         // @test Square Root
-        mml = createNode('msqrt', mml.array(), {});
+        mml = createNode('msqrt', NEW ? [mml] : mml.array(), {});
         // VS: OLD
         // mml = MML.msqrt.apply(MML,mml.array());
       } else {
@@ -1445,6 +1447,7 @@ var printDef = function(def) {
       // TODO: This parser call might change!
       var parser = TEX.Parse(n,env);
       n = parser.mml();
+      printJSON(n);
       var global = parser.stack.global;
       if (global.leftRoot || global.upRoot) {
         // @test Tweaked Root
@@ -2552,7 +2555,6 @@ var printDef = function(def) {
       if (close) {
         appendChildren(mrow, [this.mathPalette(close,"r")]);
       }
-      console.log(mrow);
       return mrow;
     },
     mathPalette: function (fence,side) {
