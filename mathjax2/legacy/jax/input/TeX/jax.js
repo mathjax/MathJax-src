@@ -134,6 +134,14 @@ var getTexClass = function(node) {
   return NEW ? node.texClass : node.Get('texClass');
 };
 
+var getCore = function(node) {
+  return NEW ? node.core() : node.Core();
+};
+
+var getCoreMO = function(node) {
+  return NEW ? node.coreMo() : node.CoreMO();
+};
+
 
 var cleanSubSup = function(node) {
   console.log('Cleaning');
@@ -677,7 +685,7 @@ var printDef = function(def) {
           var mml = item.data[0];
           if (isEmbellished(mml)) {
             console.log('case 5');
-            mml = mml.CoreMO();
+            mml = getCoreMO(mml);
           }
           if ([0,0,1,1,0,1,1,0,0,0][getTexClass(mml)]) {
             return [this.data[0],item];
@@ -744,7 +752,7 @@ var printDef = function(def) {
       var dots = this.ldots;
       // @test Operator Dots
       if (item.hasType('mml') && isEmbellished(item.data[0])) {
-        var tclass = getTexClass(item.data[0].CoreMO());
+        var tclass = getTexClass(getCoreMO(item.data[0]));
         if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
           dots = this.cdots;
         }
@@ -1365,7 +1373,7 @@ var printDef = function(def) {
       }
       // TODO: Turns this into properties.
       op.movesupsub = (limits ? true : false);
-      op.Core().movablelimits = false;
+      getCore(op).movablelimits = false;
       if (op.movablelimits) op.movablelimits = false;
     },
     
@@ -1503,7 +1511,7 @@ var printDef = function(def) {
       // TODO: This should be property?
       mml.stretchy = (stretchy ? true : false);
       // @test Vector Op, Vector
-      var mo = (isEmbellished(c) ? c.CoreMO() : c);
+      var mo = (isEmbellished(c) ? getCoreMO(c) : c);
       if (isClass(mo, 'mo')) {
         // @test Vector Op
         mo.movablelimits = false;
@@ -1529,7 +1537,7 @@ var printDef = function(def) {
       if (isClass(base, 'munderover') && isEmbellished(base)) {
         // @test Overline Limits
         // TODO: Sort these properties out!
-        base.Core().With({lspace:0,rspace:0}); // get spacing right for NativeMML
+        getCore(base).With({lspace:0,rspace:0}); // get spacing right for NativeMML
         var mo = createNode('mo', [], {rspace:0});
         base = createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
         // VS: OLD
