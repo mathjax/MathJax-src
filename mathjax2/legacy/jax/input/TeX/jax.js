@@ -130,6 +130,11 @@ var isEmbellished = function(node) {
   return NEW ? node.isEmbellished : node.isEmbellished();
 };
 
+var getTexClass = function(node) {
+  return NEW ? node.texClass : node.Get('texClass');
+};
+
+
 var cleanSubSup = function(node) {
   console.log('Cleaning');
   let rewrite = [];
@@ -674,13 +679,13 @@ var printDef = function(def) {
             console.log('case 5');
             mml = mml.CoreMO();
           }
-          console.log(mml.Get);
-          if ([0,0,1,1,0,1,1,0,0,0][mml.Get("texClass")]) {
+          if ([0,0,1,1,0,1,1,0,0,0][getTexClass(mml)]) {
             return [this.data[0],item];
           }
         }
         // @test Named Function
         var text = createText(MmlEntities.ENTITIES.ApplyFunction);
+        // TODO: Texclass should probably be set and not given as attribute!
         var node = createNode('mo', [], {texClass:TEXCLASS.NONE}, text);
         // VS: OLD
         // var node = MML.mo(MML.entity("#x2061")).With({texClass:MML.TEXCLASS.NONE});
@@ -739,7 +744,7 @@ var printDef = function(def) {
       var dots = this.ldots;
       // @test Operator Dots
       if (item.hasType('mml') && isEmbellished(item.data[0])) {
-        var tclass = item.data[0].CoreMO().Get("texClass");
+        var tclass = getTexClass(item.data[0].CoreMO());
         if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
           dots = this.cdots;
         }
@@ -1340,7 +1345,7 @@ var printDef = function(def) {
       printMethod("Limits");
       // @test Limits
       var op = this.stack.Prev("nopop");
-      if (!op || (op.Get("texClass") !== TEXCLASS.OP && op.movesupsub == null)) {
+      if (!op || (getTexClass(op) !== TEXCLASS.OP && op.movesupsub == null)) {
         // @test Limits Error
         TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name]);
       }
@@ -2561,8 +2566,8 @@ var printDef = function(def) {
           if (mml.isa(MML.mrow)) {
             while (i+1 < m && (m1 = mml.data[i]) && (m2 = mml.data[i+1]) &&
                    m1.isa(MML.mo) && m2.isa(MML.mo) &&
-                   m1.Get("texClass") === MML.TEXCLASS.REL &&
-                   m2.Get("texClass") === MML.TEXCLASS.REL) {
+                   getTexClass(m1) === MML.TEXCLASS.REL &&
+                   getTexClass(m2) === MML.TEXCLASS.REL) {
               if (m1.variantForm == m2.variantForm &&
                   m1.Get("mathvariant") == m2.Get("mathvariant") && m1.style == m2.style &&
                   m1["class"] == m2["class"] && !m1.id && !m2.id) {
