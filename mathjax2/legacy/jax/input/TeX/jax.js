@@ -2229,6 +2229,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       math = data.math;
       try {
         mml = TEX.Parse(math).mml();
+        imp.printSimple(mml);
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);
@@ -2320,6 +2321,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       // mrow.Append(
       //   MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
       // );
+      // TODO: Rewrite the inferred and mml.data
       if (imp.isType(mml, "mrow") && mml.inferred) {
         // @test Fenced
         imp.appendChildren(mrow, mml.data);

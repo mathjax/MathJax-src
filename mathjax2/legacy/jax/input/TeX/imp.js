@@ -43,7 +43,7 @@ imp.attrs = ['autoOP',
             ];
 imp.methodOut = true;
 imp.defOut = false;
-imp.jsonOut = false;
+imp.jsonOut = true;
 imp.simpleOut = false;
 
 
@@ -54,19 +54,16 @@ imp.createNode = function(type, children, def, text) {
     if (text) {
       node.appendChild(text);
     }
-    // TODO: Separate properties from proper attributes.
-    node.attributes.setList(def);
   } else {
     console.log(imp.MML);
     node = (typeof text === 'undefined') ?
-      imp.MML[type].apply(imp.MML, children).With(def) :
-      imp.MML[type](text).With(def);
+      imp.MML[type].apply(imp.MML, children) : imp.MML[type](text);
   }
-  imp.printDef(def);
+  imp.setProperties(node, def);
   imp.printJSON(node);
   return node;
 };
-  
+
 
 imp.createText = function(text) {
   if (text == null) {
@@ -104,9 +101,19 @@ imp.setAttribute = function(node, attribute, value) {
 
 // Sets properties and attributes.
 imp.setProperties = function(node, properties) {
+  imp.printDef(properties);
   if (imp.NEW) {
     for (const name of Object.keys(properties)) {
-      node.setProperty(name, properties[name]);
+      let value = properties[name];
+      if (name === 'texClass') {
+        node.texClass = value;
+      } else if (name === 'inferred') {
+        // ignore
+      } else if (imp.attrs.indexOf(name) !== -1) {
+        node.setProperty(name, value);
+      } else {
+        node.attributes.set(name, value);
+      }
     }
   } else {
     node.With(properties);
