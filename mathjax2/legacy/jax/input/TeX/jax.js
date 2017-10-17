@@ -45,13 +45,26 @@ require("../../element/MmlNode.js");
 
 var MML = MathJax.ElementJax.mml;
 
-var NEW = process.TEST_NEW;
+let NEW = process.TEST_NEW;
 var methodOut = true;
 var defOut = false;
-var jsonOut = true;
+var jsonOut = false;
 var simpleOut = false;
+var attrs = ['autoOP',
+             'fnOP',
+             'movesupsub',
+             'subsupOK',
+             'texprimestyle',
+             'useHeight',
+             'variantForm',
+             'texWithDelims'
+            ];
 
-var createNode = function(type, children, def, text) {
+
+// Intermediate parser namespace
+let imp = {};
+
+imp.createNode = function(type, children, def, text) {
   if (NEW) {
     var node = factory.create(type, def, children);
     if (text) {
@@ -64,27 +77,27 @@ var createNode = function(type, children, def, text) {
       MML[type].apply(MML, children).With(def) :
       MML[type](text).With(def);
   }
-  printDef(def);
-  printJSON(node);
+  imp.printDef(def);
+  imp.printJSON(node);
   return node;
 };
   
 
-var createText = function(text) {
+imp.createText = function(text) {
   if (text == null) {
     return null;
   }
   var node = NEW ? factory.create('text').setText(text) : MML.chars(text);
-  printJSON(node);
+  imp.printJSON(node);
   return node;
 };
 
 
-var createEntity = function(code) {
-  return createText(String.fromCharCode(parseInt(code,16)));
+imp.createEntity = function(code) {
+  return imp.createText(String.fromCharCode(parseInt(code,16)));
 };
 
-var appendChildren = function(node, children) {
+imp.appendChildren = function(node, children) {
   if (NEW) {
     for (let child of children) {
       node.appendChild(child);
@@ -95,7 +108,7 @@ var appendChildren = function(node, children) {
 };
 
 
-var setAttribute = function(node, attribute, value) {
+imp.setAttribute = function(node, attribute, value) {
   if (NEW) {
     node.attributes.set(attribute, value);
   } else {
@@ -104,7 +117,7 @@ var setAttribute = function(node, attribute, value) {
 };
 
 
-var setProperties = function(node, properties) {
+imp.setProperties = function(node, properties) {
   if (NEW) {
     for (const name of Object.keys(properties)) {
       node.setProperty(name, properties[name]);
@@ -115,17 +128,17 @@ var setProperties = function(node, properties) {
 };
 
 
-var getProperty = function(node, property) {
+imp.getProperty = function(node, property) {
   return NEW ? node.getProperty(property) : node[property];
 };
 
 
-var getChildAt = function(node, position) {
+imp.getChildAt = function(node, position) {
   return NEW ? node.getChildren()[position] : node.data[position];
 };
 
 
-var setData = function(node, position, item) {
+imp.setData = function(node, position, item) {
   if (NEW) {
     // Here we assume that everything in data are actually proper nodes!
     node.childNodes[position] = item;
@@ -138,33 +151,32 @@ var setData = function(node, position, item) {
   }
 };
 
-var isType = function(node, type) {
+imp.isType = function(node, type) {
   return NEW ? node.isKind(type) : node.type === type;
 };
 
-var isClass = function(node, type) {
+imp.isClass = function(node, type) {
   return NEW ? node.isKind(type) : node.isa(MML[type]);
 };
 
-var isEmbellished = function(node) {
+imp.isEmbellished = function(node) {
   return NEW ? node.isEmbellished : node.isEmbellished();
 };
 
-var getTexClass = function(node) {
+imp.getTexClass = function(node) {
   return NEW ? node.texClass : node.Get('texClass');
 };
 
-var getCore = function(node) {
+imp.getCore = function(node) {
   return NEW ? node.core() : node.Core();
 };
 
-var getCoreMO = function(node) {
+imp.getCoreMO = function(node) {
   return NEW ? node.coreMo() : node.CoreMO();
 };
 
 
-var cleanSubSup = function(node) {
-  console.log('Cleaning');
+imp.cleanSubSup = function(node) {
   let rewrite = [];
   node.walkTree((n, d) => {
     const children = n.childNodes;
@@ -178,11 +190,11 @@ var cleanSubSup = function(node) {
     const parent = n.parent;
     let newNode = (n.isKind('msubsup')) ?
           (children[n.sub] ?
-           createNode('msub', [children[n.base], children[n.sub]], {}) :
-           createNode('msup', [children[n.base], children[n.sup]], {})) :
+           imp.createNode('msub', [children[n.base], children[n.sub]], {}) :
+           imp.createNode('msup', [children[n.base], children[n.sup]], {})) :
         (children[n.under] ?
-         createNode('munder', [children[n.base], children[n.under]], {}) :
-         createNode('mover', [children[n.base], children[n.over]], {}));
+         imp.createNode('munder', [children[n.base], children[n.under]], {}) :
+         imp.createNode('mover', [children[n.base], children[n.over]], {}));
     if (parent) {
       parent.replaceChild(newNode, n);
     } else {
@@ -218,43 +230,43 @@ var cleanSubSup = function(node) {
 // };
 
 
-var printSimple = function(txt) {
+imp.printSimple = function(txt) {
   if (simpleOut) {
     console.log(txt);
   }
 };
 
-var untested = function(kind) {
+imp.untested = function(kind) {
   console.log("Untested case " + kind);
 };
 
-var printMethod = function(text) {
+imp.printMethod = function(text) {
   if (methodOut) {
     console.log("In " + text);
   }
 };
 
-var printNew = function(node) {
+imp.printNew = function(node) {
   console.log(visitor.visitNode(node));
 };
 
-var printOld = function(node) {
+imp.printOld = function(node) {
   var mmlNode = node.toMmlNode(factory);
   console.log(visitor.visitNode(mmlNode));  
 };
 
 
-var printJSON = function(node) {
+imp.printJSON = function(node) {
   if (jsonOut) {
     if (NEW) {
-      printNew(node);
+      imp.printNew(node);
     } else {
-      printOld(node);
+      imp.printOld(node);
     }
   }
 };
 
-var printDef = function(def) {
+imp.printDef = function(def) {
   if (methodOut && defOut) {
     console.log("With:");
     for (var x in def) {
@@ -340,29 +352,27 @@ var printDef = function(def) {
       this.Push.apply(this,arguments);
     },
     Push: function () {
-      printMethod('StackItem Push arguments: ' + this.data + ' arguments: ');
-      printSimple(arguments);
+      imp.printMethod('StackItem Push arguments: ' + this.data + ' arguments: ');
+      imp.printSimple(arguments);
       this.data.push.apply(this.data,arguments)},
     Pop: function () {return this.data.pop()},
     getType: function() {return this.type;},
     hasType: function(type) {return type === this.getType();},
     mmlData: function (inferred,forceRow) {
-      printMethod('mmlData');
-      console.log(this.data);
-      console.log(this.data[0]);
+      imp.printMethod('mmlData');
       if (inferred == null) {inferred = true}
       if (this.data.length === 1 && !forceRow) {
-        console.log('End 1');
+        imp.printSimple('End 1');
         return this.data[0]}
       // @test Two Identifiers
-      var node = createNode('mrow', this.data, inferred ? {inferred: true}: {});
+      var node = imp.createNode('mrow', this.data, inferred ? {inferred: true}: {});
       // VS: OLD
       // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
-      console.log('End 2');
+      imp.printSimple('End 2');
       return node;
     },
     checkItem: function (item) {
-      printMethod('Checkitem base for ' + item.getType() + ' with ' + item);
+      imp.printMethod('Checkitem base for ' + item.getType() + ' with ' + item);
       if (item.hasType('over') && this.isOpen) {item.num = this.mmlData(false); this.data = []}
       if (item.hasType('cell') && this.isOpen) {
         if (item.linebreak) {return false}
@@ -386,7 +396,7 @@ var printDef = function(def) {
       this.global = global;
     },
     checkItem: function (item) {
-      printMethod('Checkitem start');
+      imp.printMethod('Checkitem start');
       if (item.hasType('stop')) {return STACKITEM.mml(this.mmlData())}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
@@ -400,17 +410,15 @@ var printDef = function(def) {
     type: "open", isOpen: true,
     stopError: /*_()*/ ["ExtraOpenMissingClose","Extra open brace or missing close brace"],
     checkItem: function (item) {
-      printMethod('Checkitem open');
+      imp.printMethod('Checkitem open');
       if (item.hasType('close')) {
         var mml = this.mmlData();
         // @test PrimeSup
-        console.log(mml);
         if (NEW) {
           // TODO: Move that into mmlData?
-          mml = cleanSubSup(mml);
-          console.log(mml);
+          mml = imp.cleanSubSup(mml);
         }
-        var node = createNode('TeXAtom', [mml], {});
+        var node = imp.createNode('TeXAtom', [mml], {});
         // VS: OLD
         // var node = MML.TeXAtom(mml);
         return STACKITEM.mml(node); // TeXAtom make it an ORD to prevent spacing (FIXME: should be another way)
@@ -426,15 +434,15 @@ var printDef = function(def) {
   STACKITEM.prime = STACKITEM.Subclass({
     type: "prime",
     checkItem: function (item) {
-      printMethod('Checkitem prime');
-      if (!isType(this.data[0], "msubsup")) {
+      imp.printMethod('Checkitem prime');
+      if (!imp.isType(this.data[0], "msubsup")) {
         // @test Prime, Double Prime
-        var node = createNode('msup', [this.data[0],this.data[1]], {});
+        var node = imp.createNode('msup', [this.data[0],this.data[1]], {});
         // VS: OLD
         // var node = MML.msup(this.data[0],this.data[1]);
         return [node, item];
       }
-      setData(this.data[0], this.data[0].sup,this.data[1]);
+      imp.setData(this.data[0], this.data[0].sup,this.data[1]);
       return [this.data[0],item];
     }
   });
@@ -445,24 +453,24 @@ var printDef = function(def) {
     supError:  /*_()*/ ["MissingOpenForSup","Missing open brace for superscript"],
     subError:  /*_()*/ ["MissingOpenForSub","Missing open brace for subscript"],
     checkItem: function (item) {
-      printMethod('Checkitem subsup');
+      imp.printMethod('Checkitem subsup');
       if (item.hasType('open') || item.hasType('left')) {return true}
       if (item.hasType('mml')) {
         if (this.primes) {
           if (this.position !== 2) {
             // @test Prime on Sub
-            setData(this.data[0], 2, this.primes);
+            imp.setData(this.data[0], 2, this.primes);
           }
           else {
             // @test Prime on Prime
-            setProperties(this.primes, {variantForm: true});
-            var node = createNode('mrow', [this.primes, item.data[0]], {});
+            imp.setProperties(this.primes, {variantForm: true});
+            var node = imp.createNode('mrow', [this.primes, item.data[0]], {});
             // VS: OLD
             // var node = MML.mrow(this.primes, item.data[0]);
             item.data[0] = node;
           }
         }
-        setData(this.data[0], this.position, item.data[0]);
+        imp.setData(this.data[0], this.position, item.data[0]);
         if (this.movesupsub != null) {
           this.data[0].movesupsub = this.movesupsub;
         }
@@ -480,20 +488,24 @@ var printDef = function(def) {
   STACKITEM.over = STACKITEM.Subclass({
     type: "over", isClose: true, name: "\\over",
     checkItem: function (item,stack) {
-      printMethod('Checkitem over');
+      imp.printMethod('Checkitem over');
       if (item.hasType('over')) {
         // @test Double Over
         TEX.Error(["AmbiguousUseOf","Ambiguous use of %1",item.name]);
       }
       if (item.isClose) {
-        var mml = createNode('mfrac', [this.num, this.mmlData(false)], {});
+        // @test Over
+        var mml = imp.createNode('mfrac', [this.num, this.mmlData(false)], {});
         // VS: OLD
         // var mml = MML.mfrac(this.num,this.mmlData(false));
         if (this.thickness != null) {
-          setAttribute(mml, 'linethickness', this.thickness);
+          // @test Choose, Above, Above with Delims
+          imp.setAttribute(mml, 'linethickness', this.thickness);
         }
         if (this.open || this.close) {
+          // @test Choose
           mml.texWithDelims = true;
+          // setProperty(mml, 'texWithDelims', true);
           mml = TEX.fixedFence(this.open,mml,this.close);
         }
         return [STACKITEM.mml(mml), item];
@@ -508,7 +520,7 @@ var printDef = function(def) {
     stopError: /*_()*/ ["ExtraLeftMissingRight", "Extra \\left or missing \\right"],
     checkItem: function (item) {
       // @test Missing Right
-      printMethod('Checkitem left');
+      imp.printMethod('Checkitem left');
       if (item.hasType('right'))
         {return STACKITEM.mml(TEX.fenced(this.delim,this.mmlData(),item.delim))}
       return this.SUPER(arguments).checkItem.call(this,item);
@@ -522,7 +534,7 @@ var printDef = function(def) {
   STACKITEM.begin = STACKITEM.Subclass({
     type: "begin", isOpen: true,
     checkItem: function (item) {
-      printMethod('Checkitem begin');
+      imp.printMethod('Checkitem begin');
       if (item.hasType('end')) {
         if (item.name !== this.name)
           {TEX.Error(["EnvBadEnd","\\begin{%1} ended with \\end{%2}",this.name,item.name])}
@@ -542,10 +554,10 @@ var printDef = function(def) {
   STACKITEM.style = STACKITEM.Subclass({
     type: "style",
     checkItem: function (item) {
-      printMethod('Checkitem style');
+      imp.printMethod('Checkitem style');
       if (!item.isClose) {return this.SUPER(arguments).checkItem.call(this,item)}
       // @test Style
-      var mml = createNode('mstyle', this.data, this.styles);
+      var mml = imp.createNode('mstyle', this.data, this.styles);
       // VS: OLD
       // var mml = MML.mstyle.apply(MML,this.data).With(this.styles);
       return [STACKITEM.mml(mml),item];
@@ -555,14 +567,14 @@ var printDef = function(def) {
   STACKITEM.position = STACKITEM.Subclass({
     type: "position",
     checkItem: function (item) {
-      printMethod('Checkitem position');
+      imp.printMethod('Checkitem position');
       if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1",this.name])}
       if (item.isNotStack) {
         var mml = item.mmlData();
         switch (this.move) {
          case 'vertical':
           // @test Raise, Lower
-          mml = createNode('mpadded', [mml], {height: this.dh, depth: this.dd, voffset: this.dh});
+          mml = imp.createNode('mpadded', [mml], {height: this.dh, depth: this.dd, voffset: this.dh});
           // VS: OLD
           // mml = MML.mpadded(mml).With({height: this.dh, depth: this.dd, voffset: this.dh});
           return [STACKITEM.mml(mml)];
@@ -581,14 +593,14 @@ var printDef = function(def) {
       this.SUPER(arguments).Init.apply(this,arguments);
     },
     checkItem: function (item) {
-      printMethod('Checkitem array');
+      imp.printMethod('Checkitem array');
       if (item.isClose && !item.hasType('over')) {
         if (item.isEntry) {this.EndEntry(); this.clearEnv(); return false}
         if (item.isCR)    {this.EndEntry(); this.EndRow(); this.clearEnv(); return false}
         this.EndTable(); this.clearEnv();
         var scriptlevel = this.arraydef.scriptlevel; delete this.arraydef.scriptlevel;
         // @test Array1
-        var mml = createNode('mtable', this.table, this.arraydef);
+        var mml = imp.createNode('mtable', this.table, this.arraydef);
         // VS: OLD
         // var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
         if (this.frame.length === 4) {
@@ -597,14 +609,14 @@ var printDef = function(def) {
           mml.hasFrame = true;
           if (this.arraydef.rowlines) {this.arraydef.rowlines = this.arraydef.rowlines.replace(/none( none)+$/,"none")}
           // @test Array2
-          mml = createNode('menclose', [mml], {notation: this.frame.join(" "), isFrame: true});
+          mml = imp.createNode('menclose', [mml], {notation: this.frame.join(" "), isFrame: true});
           // VS: OLD
           // mml = MML.menclose(mml).With({notation: this.frame.join(" "), isFrame: true});
           if ((this.arraydef.columnlines||"none") != "none" ||
               (this.arraydef.rowlines||"none") != "none") {mml.padding = 0} // HTML-CSS jax implements this
         }
         if (scriptlevel) {
-          untested(3);
+          imp.untested(3);
           mml = MML.mstyle(mml).With({scriptlevel: scriptlevel})}
         if (this.open || this.close) {mml = TEX.fenced(this.open,mml,this.close)}
         mml = STACKITEM.mml(mml);
@@ -618,7 +630,7 @@ var printDef = function(def) {
     },
     EndEntry: function () {
       // @test Array1, Array2
-      var mtd = createNode('mtd', this.data, {});
+      var mtd = imp.createNode('mtd', this.data, {});
       // VS: OLD
       // var mtd = MML.mtd.apply(MML,this.data);
       if (this.hfill.length) {
@@ -632,12 +644,12 @@ var printDef = function(def) {
       if (this.isNumbered && this.row.length === 3) {
         this.row.unshift(this.row.pop());  // move equation number to first position
         // @test Label
-        var node = createNode('mlabeledtr', this.row, {});
+        var node = imp.createNode('mlabeledtr', this.row, {});
         // VS: OLD
         // var node = MML.mlabeledtr.apply(MML,this.row);
       } else {
         // @test Array1, Array2
-        node = createNode('mtr', this.row, {});
+        node = imp.createNode('mtr', this.row, {});
         // VS: OLD
         // node = MML.mtr.apply(MML,this.row);
       }
@@ -681,36 +693,36 @@ var printDef = function(def) {
   STACKITEM.fn = STACKITEM.Subclass({
     type: "fn",
     checkItem: function (item) {
-      printMethod('Checkitem fn');
+      imp.printMethod('Checkitem fn');
       if (this.data[0]) {
-        console.log('case 1');
+        imp.printSimple('case 1');
         if (item.isOpen) {
-          console.log('case 2');
+          imp.printSimple('case 2');
           return true;
         }
         if (!item.hasType('fn')) {
-          console.log('case 3');
+          imp.printSimple('case 3');
           if (!item.hasType('mml') || !item.data[0]) {
-            console.log('case 4');
+            imp.printSimple('case 4');
             return [this.data[0],item];
           }
-          if (isClass(item.data[0], 'mspace')) {
-            untested(100);
+          if (imp.isClass(item.data[0], 'mspace')) {
+            imp.untested(100);
             return [this.data[0],item];
           }
           var mml = item.data[0];
-          if (isEmbellished(mml)) {
-            console.log('case 5');
-            mml = getCoreMO(mml);
+          if (imp.isEmbellished(mml)) {
+            imp.printSimple('case 5');
+            mml = imp.getCoreMO(mml);
           }
-          if ([0,0,1,1,0,1,1,0,0,0][getTexClass(mml)]) {
+          if ([0,0,1,1,0,1,1,0,0,0][imp.getTexClass(mml)]) {
             return [this.data[0],item];
           }
         }
         // @test Named Function
-        var text = createText(MmlEntities.ENTITIES.ApplyFunction);
+        var text = imp.createText(MmlEntities.ENTITIES.ApplyFunction);
         // TODO: Texclass should probably be set and not given as attribute!
-        var node = createNode('mo', [], {texClass:TEXCLASS.NONE}, text);
+        var node = imp.createNode('mo', [], {texClass:TEXCLASS.NONE}, text);
         // VS: OLD
         // var node = MML.mo(MML.entity("#x2061")).With({texClass:MML.TEXCLASS.NONE});
         return [this.data[0], node, item];
@@ -722,14 +734,14 @@ var printDef = function(def) {
   STACKITEM.not = STACKITEM.Subclass({
     type: "not",
     checkItem: function (item) {
-      printMethod('Checkitem not');
+      imp.printMethod('Checkitem not');
       var mml, c;
       if (item.hasType('open') || item.hasType('left')) {return true}
       if (item.hasType('mml') &&
-          (isType(item.data[0], 'mo') || isType(item.data[0], 'mi') ||
-           isType(item.data[0], 'mtext'))) {
+          (imp.isType(item.data[0], 'mo') || imp.isType(item.data[0], 'mi') ||
+           imp.isType(item.data[0], 'mtext'))) {
         mml = item.data[0];
-        printJSON(mml);
+        imp.printJSON(mml);
         if (NEW) {
           c = mml.getText();
         } else {
@@ -739,14 +751,14 @@ var printDef = function(def) {
             NEW ? mml.childNodes.length === 1 : mml.data.length === 1) {
           if (STACKITEM.not.remap.contains(c)) {
             // @test Negation Simple, Negation Complex
-            var textNode = createText(STACKITEM.not.remap.lookup(c).char);
-            setData(mml, 0, textNode);
+            var textNode = imp.createText(STACKITEM.not.remap.lookup(c).char);
+            imp.setData(mml, 0, textNode);
             // VS: OLD
             // mml.SetData(0, MML.chars(STACKITEM.not.remap.lookup(c).char));
           } else {
             // @test Negation Explicit
-            var textNode = createText("\u0338");
-            appendChildren(mml, [textNode]);
+            var textNode = imp.createText("\u0338");
+            imp.appendChildren(mml, [textNode]);
             // VS: OLD
             // mml.Append(MML.chars("\u0338"));
           }
@@ -755,10 +767,10 @@ var printDef = function(def) {
       }
       //  \mathrel{\rlap{\notChar}}
       // @test Negation Large
-      textNode = createText("\u29F8");
-      var mtextNode = createNode('mtext', [], {}, textNode);
-      var paddedNode = createNode('mpadded', [mtextNode], {width: 0});
-      mml = createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
+      textNode = imp.createText("\u29F8");
+      var mtextNode = imp.createNode('mtext', [], {}, textNode);
+      var paddedNode = imp.createNode('mpadded', [mtextNode], {width: 0});
+      mml = imp.createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
       // VS: OLD
       // mml = MML.mpadded(MML.mtext("\u29F8")).With({width:0});
       // mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.REL});
@@ -770,12 +782,12 @@ var printDef = function(def) {
   STACKITEM.dots = STACKITEM.Subclass({
     type: "dots",
     checkItem: function (item) {
-      printMethod('Checkitem dots')
+      imp.printMethod('Checkitem dots')
       if (item.hasType('open') || item.hasType('left')) {return true}
       var dots = this.ldots;
       // @test Operator Dots
-      if (item.hasType('mml') && isEmbellished(item.data[0])) {
-        var tclass = getTexClass(getCoreMO(item.data[0]));
+      if (item.hasType('mml') && imp.isEmbellished(item.data[0])) {
+        var tclass = imp.getTexClass(imp.getCoreMO(item.data[0]));
         if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
           dots = this.cdots;
         }
@@ -838,7 +850,7 @@ var printDef = function(def) {
   var PARSE = MathJax.Object.Subclass({
     remap:   MapHandler.getInstance().getMap('remap'),
     Init: function (string,env) {
-    printMethod("Init");
+    imp.printMethod("Init");
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = TEX.Stack(ENV,!!env);
@@ -847,7 +859,7 @@ var printDef = function(def) {
       this.Parse(); this.Push(STACKITEM.stop());
     },
     Parse: function () {
-    printMethod("Parse");
+    imp.printMethod("Parse");
       var c, n;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
@@ -856,18 +868,17 @@ var printDef = function(def) {
       }
     },
     Push: function (arg) {
-    printMethod("Push");
+    imp.printMethod("Push");
       this.stack.Push(arg);
     },
     PushAll: function (args) {
-    printMethod("PushAll");
+    imp.printMethod("PushAll");
       for(var i = 0, m = args.length; i < m; i++) {
         this.stack.Push(args[i]);
       } 
     },
     mml: function () {
-      printMethod("mml");
-      console.log(this.stack.Top().getType());
+      imp.printMethod("mml");
       if (!this.stack.Top().hasType('mml')) {
         return null;
       }
@@ -887,7 +898,7 @@ var printDef = function(def) {
      *  Lookup a control-sequence and process it
      */
     ControlSequence: function (c) {
-    printMethod("ControlSequence");
+    imp.printMethod("ControlSequence");
       var name = this.GetCS();
       NewParser.parse('macro', [name, this]);
     },
@@ -900,11 +911,11 @@ var printDef = function(def) {
     //  Handle normal mathchar (as an mi)
     //
     csMathchar0mi: function (mchar) {
-      printMethod("csMathchar0mi");
+      imp.printMethod("csMathchar0mi");
       var def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
       // @test Greek
-      var textNode = createText(mchar.char);
-      var node = createNode('mi', [], def, textNode);
+      var textNode = imp.createText(mchar.char);
+      var node = imp.createNode('mi', [], def, textNode);
       // VS: OLD
       // var node = this.mmlToken(MML.mi(mchar.char).With(def));
       this.Push(this.mmlToken(node));
@@ -913,12 +924,12 @@ var printDef = function(def) {
     //  Handle normal mathchar (as an mo)
     //
     csMathchar0mo: function (mchar) {
-    printMethod("csMathchar0mo");
+    imp.printMethod("csMathchar0mo");
       var def = mchar.attributes || {};
       def.stretchy = false;
       // @test Large Set
-      var textNode = createText(mchar.char);
-      var node = createNode('mo', [], def, textNode);
+      var textNode = imp.createText(mchar.char);
+      var node = imp.createNode('mo', [], def, textNode);
       // PROBLEM: Attributes stop working when Char7 are explicitly set.
       // VS: OLD
       // var node = this.mmlToken(MML.mo(mchar.char).With(def))
@@ -928,15 +939,15 @@ var printDef = function(def) {
     //  Handle mathchar in current family
     //
     csMathchar7: function (mchar) {
-    printMethod("csMathchar7");
+    imp.printMethod("csMathchar7");
       var def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
       if (this.stack.env.font) {
         // @test MathChar7 Single Font
         def.mathvariant = this.stack.env.font;
       }
       // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
-      var textNode = createText(mchar.char);
-      var node = createNode('mi', [], def, textNode);
+      var textNode = imp.createText(mchar.char);
+      var node = imp.createNode('mi', [], def, textNode);
       // setVariant(node, def.mathvariant);
       // PROBLEM: Attributes have to be explicitly set, but then interfere with
       // AMS tests. Try setting variant of node!
@@ -951,12 +962,12 @@ var printDef = function(def) {
     //  Handle delimiter
     //
     csDelimiter: function (delim) {
-    printMethod("csDelimiter");
+    imp.printMethod("csDelimiter");
       var def = delim.attributes || {};
       // @test Fenced2, Delimiter (AMS)
       def = Object.assign({fence: false, stretchy: false}, def);
-      var textNode = createText(delim.char);
-      var node = createNode('mo', [], def, textNode);
+      var textNode = imp.createText(delim.char);
+      var node = imp.createNode('mo', [], def, textNode);
       // var node = MML.mo(textNode).With({fence: false, stretchy: false}).With(def); 
       // VS: OLD
       // var node = MML.mo(delim.char).With({fence: false, stretchy: false}).With(def); 
@@ -967,11 +978,11 @@ var printDef = function(def) {
     //  (overridden in noUndefined extension)
     //
     csUndefined: function (name) {
-    printMethod("csUndefined");
+    imp.printMethod("csUndefined");
       TEX.Error(["UndefinedControlSequence","Undefined control sequence %1",'\\' + name]);
     },
     envUndefined: function(env) {
-    printMethod("envUndefined");
+    imp.printMethod("envUndefined");
       TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
     },
     
@@ -979,15 +990,15 @@ var printDef = function(def) {
      *  Handle a variable (a single letter)
      */
     Variable: function (c) {
-      printMethod("Variable");
+      imp.printMethod("Variable");
       var def = {};
       if (this.stack.env.font) {
         // @test Identifier Font
         def.mathvariant = this.stack.env.font;
       }
       // @test Identifier
-      var textNode = createText(c);
-      var node = createNode('mi', [], def, textNode);
+      var textNode = imp.createText(c);
+      var node = imp.createNode('mi', [], def, textNode);
       // VS: OLD
       // node = MML.mi(MML.chars(c)).With(def);
       this.Push(this.mmlToken(node));
@@ -997,7 +1008,7 @@ var printDef = function(def) {
      *  Determine the extent of a number (pattern may need work)
      */
     Number: function (c) {
-      printMethod("Number");
+      imp.printMethod("Number");
       var mml, n = this.string.slice(this.i-1).match(TEXDEF.number);
       var def = {};
       if (this.stack.env.font) {
@@ -1006,13 +1017,13 @@ var printDef = function(def) {
       }
       if (n) {
         // @test Integer, Number
-        var textNode = createText(n[0].replace(/[{}]/g,""));
-        mml = createNode('mn', [], def, textNode);
+        var textNode = imp.createText(n[0].replace(/[{}]/g,""));
+        mml = imp.createNode('mn', [], def, textNode);
         this.i += n[0].length - 1;
       } else {
         // @test Decimal
-        var textNode = createText(c);
-        mml = createNode('mo', [], def, textNode);
+        var textNode = imp.createText(c);
+        mml = imp.createNode('mo', [], def, textNode);
       }
       this.Push(this.mmlToken(mml));
       // VS: OLD
@@ -1035,9 +1046,9 @@ var printDef = function(def) {
       // @test Tilde, Tilde2
       // 
       // TODO: Once we can properly load AllEntities, this should be the line.
-      // var textNode = createText(MmlEntities.ENTITIES.nbsp);
-      var textNode = createText(NBSP);
-      var node = createNode('mtext', [], {}, textNode);
+      // var textNode = imp.createText(MmlEntities.ENTITIES.nbsp);
+      var textNode = imp.createText(NBSP);
+      var node = imp.createNode('mtext', [], {}, textNode);
       // VS: OLD
       // node = MML.mtext(MML.chars(NBSP))
       this.Push(node);
@@ -1048,7 +1059,7 @@ var printDef = function(def) {
      *  Handle ^, _, and '
      */
     Superscript: function (c) {
-    printMethod("Superscript");
+    imp.printMethod("Superscript");
       if (this.GetNext().match(/\d/)) {
         // don't treat numbers as a unit
         this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1);
@@ -1064,8 +1075,8 @@ var printDef = function(def) {
         base = this.stack.Prev();
         if (!base) {
           // @test Empty base
-          var textNode = createText("");
-          base = createNode('mi', [], {}, textNode);
+          var textNode = imp.createText("");
+          base = imp.createNode('mi', [], {}, textNode);
           // VS: OLD
           // base = MML.mi("");
         }
@@ -1073,35 +1084,35 @@ var printDef = function(def) {
       if (base.isEmbellishedWrapper) {
         // TODO: Warning, those are childNodes now!
         // base = base.data[0].data[0];
-        base = getChildAt(getChildAt(base, 0), 0);
+        base = imp.getChildAt(imp.getChildAt(base, 0), 0);
       }
       var movesupsub = base.movesupsub, position = base.sup;
-      if ((isType(base, "msubsup") && getChildAt(base, base.sup)) ||
-          (isType(base, "munderover") && getChildAt(base, base.over) && !getProperty(base, 'subsupOK'))) {
+      if ((imp.isType(base, "msubsup") && imp.getChildAt(base, base.sup)) ||
+          (imp.isType(base, "munderover") && imp.getChildAt(base, base.over) && !imp.getProperty(base, 'subsupOK'))) {
         // @test Double-super-error, Double-over-error
         TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"]);
       }
-      if (!isType(base, "msubsup")) {
-        console.log('Case 1');
+      if (!imp.isType(base, "msubsup")) {
+        imp.printSimple('Case 1');
         if (movesupsub) {
-        console.log('Case 2');
+        imp.printSimple('Case 2');
           // @test Move Superscript, Large Operator
-          if (!isType(base, "munderover") || getChildAt(base, base.over)) {
-        console.log('Case 3');
-            if (base.movablelimits && isClass(base, 'mi')) {
+          if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.over)) {
+        imp.printSimple('Case 3');
+            if (base.movablelimits && imp.isClass(base, 'mi')) {
               // @test Mathop Super
               base = this.mi2mo(base);
             }
             // @test Large Operator
-            base = createNode('munderover', [base], {movesupsub:true});
+            base = imp.createNode('munderover', [base], {movesupsub:true});
             // VS: OLD
             // base = MML.munderover(base,null,null).With({movesupsub:true});
           }
           position = base.over;
         } else {
-        console.log('Case 4');
+        imp.printSimple('Case 4');
           // @test Empty base, Empty base2, Square, Cube
-          base = createNode('msubsup', [base], {});
+          base = imp.createNode('msubsup', [base], {});
           // VS: OLD
           // base = MML.msubsup(base,null,null);
           position = base.sup;
@@ -1112,7 +1123,7 @@ var printDef = function(def) {
       }));
     },
     Subscript: function (c) {
-    printMethod("Subscript");
+    imp.printMethod("Subscript");
       if (this.GetNext().match(/\d/)) {
         // don't treat numbers as a unit
         this.string = this.string.substr(0,this.i+1)+" "+this.string.substr(this.i+1);
@@ -1126,42 +1137,42 @@ var printDef = function(def) {
         base = this.stack.Prev();
         if (!base) {
           // @test Empty Base Indes
-          var textNode = createText("");
-          base = createNode('mi', [], {}, textNode);
+          var textNode = imp.createText("");
+          base = imp.createNode('mi', [], {}, textNode);
           // VS: OLD
           // base = MML.mi("");
         }
       }
       if (base.isEmbellishedWrapper) {
         // TODO: Warning, those are childNodes now!
-        base = getChildAt(getChildAt(base, 0), 0);
+        base = imp.getChildAt(imp.getChildAt(base, 0), 0);
       }
-      console.log("HERE??????");
+      imp.printSimple("HERE??????");
       var movesupsub = base.movesupsub, position = base.sub;
-      console.log(movesupsub);
-      console.log(position);
-      if ((isType(base, "msubsup") && getChildAt(base, base.sub)) ||
-          (isType(base, "munderover") && getChildAt(base, base.under) && !getProperty(base, 'subsupOK'))) {
+      imp.printSimple(movesupsub);
+      imp.printSimple(position);
+      if ((imp.isType(base, "msubsup") && imp.getChildAt(base, base.sub)) ||
+          (imp.isType(base, "munderover") && imp.getChildAt(base, base.under) && !imp.getProperty(base, 'subsupOK'))) {
         // @test Double-sub-error, Double-under-error
         TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"]);
       }
-      if (!isType(base, "msubsup")) {
+      if (!imp.isType(base, "msubsup")) {
         if (movesupsub) {
           // @test Large Operator, Move Superscript
-          if (!isType(base, "munderover") || getChildAt(base, base.under)) {
-            if (base.movablelimits && isClass(base, 'mi')) {
+          if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.under)) {
+            if (base.movablelimits && imp.isClass(base, 'mi')) {
               // @test Mathop Sub
               base = this.mi2mo(base);
             }
             // @test Move Superscript
-            base = createNode('munderover', [base], {movesupsub:true});
+            base = imp.createNode('munderover', [base], {movesupsub:true});
             // VS: OLD
             // base = MML.munderover(base,null,null).With({movesupsub:true});
           }
           position = base.under;
         } else {
           // @test Empty Base Index, Empty, Base Index2, Index
-          base = createNode('msubsup', [base], {});
+          base = imp.createNode('msubsup', [base], {});
           // VS: OLD
           // base = MML.msubsup(base,null,null);
           position = base.sub;
@@ -1177,11 +1188,11 @@ var printDef = function(def) {
       var base = this.stack.Prev();
       if (!base) {
         // @test PrimeSup, PrePrime, Prime on Sup
-        base = createNode('mi', [], {});
+        base = imp.createNode('mi', [], {});
         // VS: OLD
         // base = MML.mi();
       }
-      if (isType(base, "msubsup") && getChildAt(base, base.sup)) {
+      if (imp.isType(base, "msubsup") && imp.getChildAt(base, base.sup)) {
         // @test Double Prime Error
         TEX.Error(["DoubleExponentPrime",
                    "Prime causes double exponent: use braces to clarify"]);
@@ -1190,17 +1201,17 @@ var printDef = function(def) {
       do {sup += this.PRIME; this.i++, c = this.GetNext()}
         while (c === "'" || c === this.SMARTQUOTE);
       sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
-      var textNode = createText(sup);
-      var node = createNode('mo', [], {}, textNode);
+      var textNode = imp.createText(sup);
+      var node = imp.createNode('mo', [], {}, textNode);
       // VS: OLD
       // var node = MML.mo(sup);
       this.Push(STACKITEM.prime(base, this.mmlToken(node)));
     },
     mi2mo: function (mi) {
-    printMethod("mi2mo");
+    imp.printMethod("mi2mo");
       // @test Mathop Sub, Mathop Super
       var mo = MML.mo();
-      appendChildren(mo, mi.data);
+      imp.appendChildren(mo, mi.data);
       var id;
       // TODO: Figure out how to copy these attributes.
       for (id in mo.defaults) {
@@ -1223,7 +1234,7 @@ var printDef = function(def) {
      *  Handle comments
      */
     Comment: function (c) {
-    printMethod("Comment");
+    imp.printMethod("Comment");
       while (this.i < this.string.length && this.string.charAt(this.i) != "\n") {this.i++}
     },
     
@@ -1231,7 +1242,7 @@ var printDef = function(def) {
      *  Handle hash marks outside of definitions
      */
     Hash: function (c) {
-    printMethod("Hash");
+    imp.printMethod("Hash");
       // @test Hash Error
       TEX.Error(["CantUseHash1",
                  "You can't use 'macro parameter character #' in math mode"]);
@@ -1241,7 +1252,7 @@ var printDef = function(def) {
      *  Handle other characters (as <mo> elements)
      */
     Other: function (c) {
-    printMethod("Other");
+    imp.printMethod("Other");
       var def, mo;
       if (this.stack.env.font) {
         // @test Other Font
@@ -1250,8 +1261,8 @@ var printDef = function(def) {
       var remap = this.remap.lookup(c);
       // @test Other
       // @test Other Remap
-      var textNode = createText(remap ? remap.char : c);
-      mo = createNode('mo', [], def, textNode);
+      var textNode = imp.createText(remap ? remap.char : c);
+      mo = imp.createNode('mo', [], def, textNode);
       // VS: OLD
       // mo = remap ? MML.mo(remap.char).With(def) : MML.mo(c).With(def);
       // VS: Question: What do these autoDefault methods do exactly.
@@ -1266,7 +1277,7 @@ var printDef = function(def) {
       }
       if (!NEW && mo.autoDefault("texClass",true) == "") {
         // @test A Rogers-Ramanujan Identity
-        mo = createNode('TeXAtom', [mo], {});
+        mo = imp.createNode('TeXAtom', [mo], {});
         // VS: OLD
         // mo = MML.TeXAtom(mo);
       }
@@ -1280,27 +1291,27 @@ var printDef = function(def) {
     
     SetFont: function (name,font) {this.stack.env.font = font},
     SetStyle: function (name,texStyle,style,level) {
-      printMethod("SetStyle: " + name + " texStyle: " + texStyle +
+      imp.printMethod("SetStyle: " + name + " texStyle: " + texStyle +
                 " style: " + style + " level: " + level);
       this.stack.env.style = texStyle; this.stack.env.level = level;
       this.Push(STACKITEM.style().With({styles: {displaystyle: style, scriptlevel: level}}));
     },
     SetSize: function (name,size) {
-    printMethod("SetSize");
+    imp.printMethod("SetSize");
       this.stack.env.size = size;
       this.Push(STACKITEM.style().With({styles: {mathsize: size+"em"}})); // convert to absolute?
     },
 
     // Look at color extension!
     Color: function (name) {
-    printMethod("Color");
+    imp.printMethod("Color");
       // @test Color Frac
       var color = this.GetArgument(name);
       var old = this.stack.env.color;
       this.stack.env.color = color;
       var math = this.ParseArg(name);
       if (old) {this.stack.env.color} else {delete this.stack.env.color}
-      var node = createNode('mstyle', [math], {mathcolor: color});
+      var node = imp.createNode('mstyle', [math], {mathcolor: color});
       // VS: OLD
       // var node = MML.mstyle(math).With({mathcolor: color});
       this.Push(node);
@@ -1308,7 +1319,7 @@ var printDef = function(def) {
     
     Spacer: function (name,space) {
       // @test Positive Spacing, Negative Spacing
-      var node = createNode('mspace', [],
+      var node = imp.createNode('mspace', [],
                             {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel:0});
       // VS: OLD
       // var node = MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0});
@@ -1316,16 +1327,16 @@ var printDef = function(def) {
     },
     
     LeftRight: function (name) {
-      printMethod("LeftRight");
+      imp.printMethod("LeftRight");
       // @test Fenced, Fenced3
       this.Push(STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
     },
     
     Middle: function (name) {
-      printMethod("Middle");
+      imp.printMethod("Middle");
       // @test Middle
       var delim = this.GetDelimiter(name);
-      var node = createNode('TeXAtom', [], {texClass:TEXCLASS.CLOSE});
+      var node = imp.createNode('TeXAtom', [], {texClass:TEXCLASS.CLOSE});
       // VS: OLD
       // var node = MML.TeXAtom().With({texClass:TEXCLASS.CLOSE});
       this.Push(node);
@@ -1333,32 +1344,32 @@ var printDef = function(def) {
         // @test Orphan Middle, Middle with Right
         TEX.Error(["MisplacedMiddle","%1 must be within \\left and \\right",name]);
       }
-      var textNode = createText(delim);
-      node = createNode('mo', [], {stretchy:true}, textNode);
+      var textNode = imp.createText(delim);
+      node = imp.createNode('mo', [], {stretchy:true}, textNode);
       // VS: OLD
       // node = MML.mo(delim).With({stretchy:true});
       this.Push(node);
-      node = createNode('TeXAtom', [], {texClass:TEXCLASS.OPEN});
+      node = imp.createNode('TeXAtom', [], {texClass:TEXCLASS.OPEN});
       // VS: OLD
       // node = MML.TeXAtom().With({texClass:MML.TEXCLASS.OPEN});
       this.Push(node);
     },
     
     NamedFn: function (name,id) {
-      printMethod("NamedFn");
+      imp.printMethod("NamedFn");
       // @test Named Function
       if (!id) {id = name.substr(1)};
-      var textNode = createText(id);
-      var mml = createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
+      var textNode = imp.createText(id);
+      var mml = imp.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
       // VS: OLD
       // var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
       this.Push(STACKITEM.fn(this.mmlToken(mml)));
     },
     NamedOp: function (name,id) {
-      printMethod("NamedOp");
+      imp.printMethod("NamedOp");
       if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,"\u2006");
-      var mml = createNode('mo', [id], {
+      var mml = imp.createNode('mo', [id], {
         movablelimits: true,
         movesupsub: true,
         form: TexConstant.Form.PREFIX,
@@ -1376,35 +1387,35 @@ var printDef = function(def) {
       this.Push(this.mmlToken(mml));
     },
     Limits: function (name,limits) {
-      printMethod("Limits");
+      imp.printMethod("Limits");
       // @test Limits
       var op = this.stack.Prev("nopop");
-      if (!op || (getTexClass(op) !== TEXCLASS.OP && op.movesupsub == null)) {
+      if (!op || (imp.getTexClass(op) !== TEXCLASS.OP && op.movesupsub == null)) {
         // @test Limits Error
         TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name]);
       }
       var top = this.stack.Top();
-      if (isType(op, "munderover") && !limits) {
+      if (imp.isType(op, "munderover") && !limits) {
         // @test Limits UnderOver
-        var node = createNode('msubsup', op.data, {});
+        var node = imp.createNode('msubsup', op.data, {});
         // VS: OLD
         // var node = MML.msubsup.apply(MML.subsup,op.data);
         op = top.data[top.data.length-1] = node;
-      } else if (isType(op, "msubsup") && limits) {
+      } else if (imp.isType(op, "msubsup") && limits) {
         // @test Limits SubSup
-        node = createNode('munderover', op.data, {});
+        node = imp.createNode('munderover', op.data, {});
         // VS: OLD
         // node = MML.munderover.apply(MML.underover,op.data);
         op = top.data[top.data.length-1] = node;
       }
       // TODO: Turns this into properties.
       op.movesupsub = (limits ? true : false);
-      getCore(op).movablelimits = false;
+      imp.getCore(op).movablelimits = false;
       if (op.movablelimits) op.movablelimits = false;
     },
     
     Over: function (name,open,close) {
-      printMethod("Over");
+      imp.printMethod("Over");
       // @test Over
       var mml = STACKITEM.over().With({name: name});
       if (open || close) {
@@ -1427,51 +1438,51 @@ var printDef = function(def) {
     },
 
     Frac: function (name) {
-      printMethod("Frac");
+      imp.printMethod("Frac");
       // @test Frac
       var num = this.ParseArg(name);
       var den = this.ParseArg(name);
-      var node = createNode('mfrac', [num, den], {});
+      var node = imp.createNode('mfrac', [num, den], {});
       // VS: OLD
       // var node = MML.mfrac(num, den);
       this.Push(node);
     },
 
     Sqrt: function (name) {
-      printMethod("Sqrt");
+      imp.printMethod("Sqrt");
       var n = this.GetBrackets(name), arg = this.GetArgument(name);
       if (arg === "\\frac") {arg += "{"+this.GetArgument(arg)+"}{"+this.GetArgument(arg)+"}"}
       var mml = TEX.Parse(arg,this.stack.env).mml();
       if (!n) {
         // @test Square Root
-        mml = createNode('msqrt', NEW ? [mml] : mml.array(), {});
+        mml = imp.createNode('msqrt', NEW ? [mml] : mml.array(), {});
         // VS: OLD
         // mml = MML.msqrt.apply(MML,mml.array());
       } else {
         // @test General Root
-        mml = createNode('mroot', [mml, this.parseRoot(n)], {});
+        mml = imp.createNode('mroot', [mml, this.parseRoot(n)], {});
         // VS: OLD
         // mml = MML.mroot(mml,this.parseRoot(n));
       }
       this.Push(mml);
     },
     Root: function (name) {
-      printMethod("Root");
+      imp.printMethod("Root");
       var n = this.GetUpTo(name,"\\of");
       var arg = this.ParseArg(name);
-      var node = createNode('mroot', [arg ,this.parseRoot(n)], {});
+      var node = imp.createNode('mroot', [arg ,this.parseRoot(n)], {});
       // VS: OLD
       // var node = MML.mroot(arg,this.parseRoot(n));
       this.Push(node);
     },
     parseRoot: function (n) {
-    printMethod("parseRoot");
+    imp.printMethod("parseRoot");
       // @test General Root, Explicit Root
       var env = this.stack.env, inRoot = env.inRoot; env.inRoot = true;
       // TODO: This parser call might change!
       var parser = TEX.Parse(n,env);
       n = parser.mml();
-      printJSON(n);
+      imp.printJSON(n);
       var global = parser.stack.global;
       if (global.leftRoot || global.upRoot) {
         // @test Tweaked Root
@@ -1484,7 +1495,7 @@ var printDef = function(def) {
           def.height = global.upRoot;
         }
         
-        n = createNode('mpadded', [n], def);
+        n = imp.createNode('mpadded', [n], def);
         // VS: OLD
         // n = MML.mpadded(n);
         // if (global.leftRoot) {
@@ -1499,7 +1510,7 @@ var printDef = function(def) {
       return n;
     },
     MoveRoot: function (name,id) {
-    printMethod("MoveRoot");
+    imp.printMethod("MoveRoot");
       // @test Tweaked Root
       if (!this.stack.env.inRoot) {
         // @test Misplaced Move Root
@@ -1510,7 +1521,6 @@ var printDef = function(def) {
         TEX.Error(["MultipleMoveRoot","Multiple use of %1",name]);
       }
       var n = this.GetArgument(name);
-      printSimple(n);
       if (!n.match(/-?[0-9]+/)) {
         // @test Incorrect Move Root
         TEX.Error(["IntegerArg","The argument to %1 must be an integer",name]);
@@ -1521,7 +1531,7 @@ var printDef = function(def) {
     },
     
     Accent: function (name,accent,stretchy) {
-      printMethod("Accent");
+      imp.printMethod("Accent");
       // @test Vector
       var c = this.ParseArg(name);
       var def = {accent: true};
@@ -1529,8 +1539,8 @@ var printDef = function(def) {
         // @test Vector Font
         def.mathvariant = this.stack.env.font;
       }
-      var entity = createEntity(accent);
-      var moNode = createNode('mo', [], def, entity);
+      var entity = imp.createEntity(accent);
+      var moNode = imp.createNode('mo', [], def, entity);
       // VS: OLD
       // var entity = MML.entity("#x"+accent);
       // var moNode = MML.mo(entity).With(def);
@@ -1538,13 +1548,13 @@ var printDef = function(def) {
       // TODO: This should be property?
       mml.stretchy = (stretchy ? true : false);
       // @test Vector Op, Vector
-      var mo = (isEmbellished(c) ? getCoreMO(c) : c);
-      if (isClass(mo, 'mo')) {
+      var mo = (imp.isEmbellished(c) ? imp.getCoreMO(c) : c);
+      if (imp.isClass(mo, 'mo')) {
         // @test Vector Op
         mo.movablelimits = false;
       }
-      var muoNode = createNode('munderover', [c,null,mml], {accent: true});
-      var texAtom = createNode('TeXAtom', [muoNode], {});
+      var muoNode = imp.createNode('munderover', [c,null,mml], {accent: true});
+      var texAtom = imp.createNode('TeXAtom', [muoNode], {});
       // VS: OLD
       // var muoNode = MML.munderover(c,null,mml).With({accent: true});
       // var texAtom = MML.TeXAtom(muoNode);
@@ -1552,7 +1562,7 @@ var printDef = function(def) {
     },
     
     UnderOver: function (name,c,stack,noaccent) {
-      printMethod("UnderOver");
+      imp.printMethod("UnderOver");
       // @test Overline
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
@@ -1561,62 +1571,62 @@ var printDef = function(def) {
         // @test Overline Sum
         base.movablelimits = false;
       }
-      if (isClass(base, 'munderover') && isEmbellished(base)) {
+      if (imp.isClass(base, 'munderover') && imp.isEmbellished(base)) {
         // @test Overline Limits
         // TODO: Sort these properties out!
-        getCore(base).With({lspace:0,rspace:0}); // get spacing right for NativeMML
-        var mo = createNode('mo', [], {rspace:0});
-        base = createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
+        imp.getCore(base).With({lspace:0,rspace:0}); // get spacing right for NativeMML
+        var mo = imp.createNode('mo', [], {rspace:0});
+        base = imp.createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
         // VS: OLD
         // var mo = MML.mo().With({rspace:0});
         // base = MML.mrow(mo,base);  // add an empty <mi> so it's not embellished any more
       }
-      var mml = createNode('munderover', [base,null,null], {});
-      var entity = createEntity(c);
-      mo = createNode('mo', [], {stretchy:true, accent:!noaccent}, entity);
+      var mml = imp.createNode('munderover', [base,null,null], {});
+      var entity = imp.createEntity(c);
+      mo = imp.createNode('mo', [], {stretchy:true, accent:!noaccent}, entity);
       // VS: OLD
       // var mml = MML.munderover(base,null,null);
       // var entity = MML.entity("#x"+c);
       // mo = MML.mo(entity).With({stretchy:true, accent:!noaccent});
 
-      setData(
+      imp.setData(
         mml,
         mml[pos], 
         this.mmlToken(mo)
       );
 
       if (stack) {
-        untested(8);
+        imp.untested(8);
         mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true});
       }
       // TODO: Sort these properties out!
-      setProperties(mml, {subsupOK: true});
+      imp.setProperties(mml, {subsupOK: true});
       this.Push(mml);
     },
     
     Overset: function (name) {
-      printMethod("Overset");
+      imp.printMethod("Overset");
       // @test Overset
       var top = this.ParseArg(name), base = this.ParseArg(name);
       if (base.movablelimits) base.movablelimits = false;
-      var node = createNode('mover', [base, top], {});
+      var node = imp.createNode('mover', [base, top], {});
       // VS: OLD
       // var node = MML.mover(base,top); 
       this.Push(node);
     },
     Underset: function (name) {
-      printMethod("Underset");
+      imp.printMethod("Underset");
       // @test Underset
       var bot = this.ParseArg(name), base = this.ParseArg(name);
       if (base.movablelimits) base.movablelimits = false;
-      var node = createNode('munder', [base, bot], {});
+      var node = imp.createNode('munder', [base, bot], {});
       // VS: OLD
       // var node = MML.munder(base,bot);
       this.Push(node);
     },
     
     TeXAtom: function (name,mclass) {
-      printMethod("TeXAtom");
+      imp.printMethod("TeXAtom");
       var def = {texClass: mclass}, mml, node;
       if (mclass == TEXCLASS.OP) {
         def.movesupsub = def.movablelimits = true;
@@ -1625,14 +1635,14 @@ var printDef = function(def) {
         if (match) {
           // @test Mathop
           def.mathvariant = TexConstant.Variant.NORMAL;
-          node = createNode('mi', [match[1]], def);
+          node = imp.createNode('mi', [match[1]], def);
           // VS: OLD
           // node = MML.mi(match[1]).With(def);
           mml = STACKITEM.fn(this.mmlToken(node));
         } else {
           // @test Mathop Cal
           var parsed = TEX.Parse(arg,this.stack.env).mml();
-          node = createNode('TeXAtom', [parsed], def);
+          node = imp.createNode('TeXAtom', [parsed], def);
           // VS: OLD
           // node = MML.TeXAtom(parsed).With(def);
           mml = STACKITEM.fn(node);
@@ -1640,7 +1650,7 @@ var printDef = function(def) {
       } else {
         // @test Mathrel
         parsed = this.ParseArg(name);
-        mml = createNode('TeXAtom', [parsed], def);
+        mml = imp.createNode('TeXAtom', [parsed], def);
         // VS: OLD
         // mml = MML.TeXAtom(parsed).With(def);
       }
@@ -1649,12 +1659,12 @@ var printDef = function(def) {
 
     // VS: This method is only called during a macro call.
     MmlToken: function (name) {
-    printMethod("MmlToken");
+    imp.printMethod("MmlToken");
       var type = this.GetArgument(name),
           attr = this.GetBrackets(name,"").replace(/^\s+/,""),
           data = this.GetArgument(name),
           def = {attrNames:[]}, match;
-      printSimple("Start mmlToken: type: " + type + " data: " + data);
+      imp.printSimple("Start mmlToken: type: " + type + " data: " + data);
       if (!MML[type] || !MML[type].prototype.isToken)
         {TEX.Error(["NotMathMLToken","%1 is not a token element",type])}
       while (attr !== "") {
@@ -1675,7 +1685,7 @@ var printDef = function(def) {
         }
         attr = attr.substr(match[0].length);
       }
-      printSimple("End mmlToken: type: " + type + " data: " + data);
+      imp.printSimple("End mmlToken: type: " + type + " data: " + data);
       this.Push(this.mmlToken(MML[type](data).With(def)));
     },
     MmlFilterAttribute: function (name,value) {return value},
@@ -1686,12 +1696,12 @@ var printDef = function(def) {
     },
     
     Strut: function (name) {
-    printMethod("Strut");
+    imp.printMethod("Strut");
       this.Push(MML.mpadded(MML.mrow()).With({height: "8.6pt", depth: "3pt", width: 0}));
     },
     
     Phantom: function (name,v,h) {
-    printMethod("Phantom");
+    imp.printMethod("Phantom");
       var box = MML.mphantom(this.ParseArg(name));
       if (v || h) {
         box = MML.mpadded(box);
@@ -1702,7 +1712,7 @@ var printDef = function(def) {
     },
     
     Smash: function (name) {
-    printMethod("Smash");
+    imp.printMethod("Smash");
       var bt = this.trimSpaces(this.GetBrackets(name,""));
       var smash = MML.mpadded(this.ParseArg(name));
       switch (bt) {
@@ -1714,14 +1724,14 @@ var printDef = function(def) {
     },
     
     Lap: function (name) {
-    printMethod("Lap");
+    imp.printMethod("Lap");
       var mml = MML.mpadded(this.ParseArg(name)).With({width: 0});
       if (name === "\\llap") {mml.lspace = "-1width"}
       this.Push(MML.TeXAtom(mml));
     },
     
     RaiseLower: function (name) {
-    printMethod("RaiseLower");
+    imp.printMethod("RaiseLower");
       var h = this.GetDimen(name);
       var item = STACKITEM.position().With({name: name, move: 'vertical'});
       if (h.charAt(0) === '-') {h = h.slice(1); name = {raise: "\\lower", lower: "\\raise"}[name.substr(1)]}
@@ -1730,7 +1740,7 @@ var printDef = function(def) {
     },
     
     MoveLeftRight: function (name) {
-    printMethod("MoveLeftRight");
+    imp.printMethod("MoveLeftRight");
       var h = this.GetDimen(name);
       var nh = (h.charAt(0) === '-' ? h.slice(1) : '-'+h);
       if (name === "\\moveleft") {var tmp = h; h = nh; nh = tmp}
@@ -1742,12 +1752,12 @@ var printDef = function(def) {
     },
     
     Hskip: function (name) {
-    printMethod("Hskip");
+    imp.printMethod("Hskip");
       this.Push(MML.mspace().With({width: this.GetDimen(name), mathsize: MML.SIZE.NORMAL}));
     },
     
     Rule: function (name,style) {
-    printMethod("Rule");
+    imp.printMethod("Rule");
       var w = this.GetDimen(name),
           h = this.GetDimen(name),
           d = this.GetDimen(name);
@@ -1758,7 +1768,7 @@ var printDef = function(def) {
       this.Push(MML.mspace().With(def));
     },
     rule: function (name) {
-    printMethod("rule");
+    imp.printMethod("rule");
       var v = this.GetBrackets(name),
           w = this.GetDimen(name),
           h = this.GetDimen(name);
@@ -1779,7 +1789,7 @@ var printDef = function(def) {
     },
     
     MakeBig: function (name,mclass,size) {
-    printMethod("MakeBig");
+    imp.printMethod("MakeBig");
       size *= TEXDEF.p_height;
       size = String(size).replace(/(\.\d\d\d).+/,'$1')+"em";
       var delim = this.GetDelimiter(name,true);
@@ -1790,29 +1800,29 @@ var printDef = function(def) {
     },
     
     BuildRel: function (name) {
-    printMethod("BuildRel");
+    imp.printMethod("BuildRel");
       var top = this.ParseUpTo(name,"\\over");
       var bot = this.ParseArg(name);
       this.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({texClass: MML.TEXCLASS.REL}));
     },
     
     HBox: function (name,style) {
-    printMethod("HBox");
+    imp.printMethod("HBox");
       this.PushAll(this.InternalMath(this.GetArgument(name),style));
     },
     
     FBox: function (name) {
-    printMethod("FBox");
+    imp.printMethod("FBox");
       this.Push(MML.menclose.apply(MML,this.InternalMath(this.GetArgument(name))).With({notation:"box"}));
     },
     
     Not: function (name) {
-    printMethod("Not");
+    imp.printMethod("Not");
       this.Push(STACKITEM.not());
     },
     
     Dots: function (name) {
-    printMethod("Dots");
+    imp.printMethod("Dots");
       this.Push(STACKITEM.dots().With({
         ldots: this.mmlToken(MML.mo(MML.entity("#x2026")).With({stretchy:false})),
         cdots: this.mmlToken(MML.mo(MML.entity("#x22EF")).With({stretchy:false}))
@@ -1820,7 +1830,7 @@ var printDef = function(def) {
     },
     
     Require: function (name) {
-    printMethod("Require");
+    imp.printMethod("Require");
       var file = this.GetArgument(name)
         .replace(/.*\//,"")            // remove any leading path
         .replace(/[^a-z0-9_.-]/ig,""); // remove illegal characters
@@ -1828,7 +1838,7 @@ var printDef = function(def) {
     },
     
     Extension: function (name,file,array) {
-    printMethod("Extension");
+    imp.printMethod("Extension");
       if (name && !typeof(name) === "string") {name = name.name}
       file = TEX.extensionDir+"/"+file;
       if (!file.match(/\.js$/)) {file += ".js"}
@@ -1839,7 +1849,7 @@ var printDef = function(def) {
     },
     
     Macro: function (name,macro,argcount,def) {
-    printMethod("Macro");
+    imp.printMethod("Macro");
       if (argcount) {
         var args = [];
         if (def != null) {
@@ -1859,7 +1869,7 @@ var printDef = function(def) {
     },
     
     Matrix: function (name,open,close,align,spacing,vspacing,style,cases,numbered) {
-    printMethod("Matrix");
+    imp.printMethod("Matrix");
       var c = this.GetNext();
       if (c === "")
         {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
@@ -1880,7 +1890,7 @@ var printDef = function(def) {
     },
     
     Entry: function (name) {
-    printMethod("Entry");
+    imp.printMethod("Entry");
       this.Push(STACKITEM.cell().With({isEntry: true, name: name}));
       if (this.stack.Top().isCases) {
         //
@@ -1953,12 +1963,12 @@ var printDef = function(def) {
     },
     
     Cr: function (name) {
-    printMethod("Cr");
+    imp.printMethod("Cr");
       this.Push(STACKITEM.cell().With({isCR: true, name: name}));
     },
     
     CrLaTeX: function (name) {
-    printMethod("CrLaTeX");
+    imp.printMethod("CrLaTeX");
       var n;
       if (this.string.charAt(this.i) === "[") {
         n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
@@ -1985,11 +1995,11 @@ var printDef = function(def) {
     emPerInch: 7.2,
     pxPerInch: 72,
     matchDimen: function (dim) {
-    // printMethod("matchDimen");
+    // imp.printMethod("matchDimen");
       return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
     },
     dimen2em: function (dim) {
-    // printMethod("dimen2em");
+    // imp.printMethod("dimen2em");
       var match = this.matchDimen(dim);
       var m = parseFloat(match[1]||"1"), unit = match[2];
       if (unit === "em") {return m}
@@ -2004,13 +2014,13 @@ var printDef = function(def) {
       return 0;
     },
     Em: function (m) {
-    // printMethod("Em");
+    // imp.printMethod("Em");
       if (Math.abs(m) < .0006) {return "0em"}
       return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     
     HLine: function (name,style) {
-    printMethod("HLine");
+    imp.printMethod("HLine");
       if (style == null) {style = "solid"}
       var top = this.stack.Top();
       if (!top.isa(STACKITEM.array) || top.data.length)
@@ -2026,7 +2036,7 @@ var printDef = function(def) {
     },
     
     HFill: function (name) {
-    printMethod("HFill");
+    imp.printMethod("HFill");
       var top = this.stack.Top();
       if (top.isa(STACKITEM.array)) top.hfill.push(top.data.length);
         else TEX.Error(["UnsupportedHFill","Unsupported use of %1",name]);
@@ -2040,7 +2050,7 @@ var printDef = function(def) {
     */
 
     BeginEnd: function (name) {
-    printMethod("BeginEnd");
+    imp.printMethod("BeginEnd");
       var env = this.GetArgument(name);
       if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
@@ -2057,7 +2067,7 @@ var printDef = function(def) {
       }
     },
     BeginEnvironment: function (func, env, args) {
-      printMethod("BeginEnvironment");
+      imp.printMethod("BeginEnvironment");
       var end = args[0];
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       mml = func.apply(this,[mml].concat(args.slice(1)));
@@ -2069,7 +2079,7 @@ var printDef = function(def) {
     ExtensionEnv: function (begin,file) {this.Extension(begin.name,file,"environment")},
     
     Array: function (begin,open,close,align,spacing,vspacing,style,raggedHeight) {
-    printMethod("Array");
+    imp.printMethod("Array");
       if (!align) {align = this.GetArgument("\\begin{"+begin.name+"}")}
       var lines = ("c"+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
       align = align.replace(/[^clr]/g,'').split('').join(' ');
@@ -2099,12 +2109,12 @@ var printDef = function(def) {
     },
     
     AlignedArray: function (begin) {
-    printMethod("AlignedArray");
+    imp.printMethod("AlignedArray");
       var align = this.GetBrackets("\\begin{"+begin.name+"}");
       return this.setArrayAlign(this.Array.apply(this,arguments),align);
     },
     setArrayAlign: function (array,align) {
-    printMethod("setArrayAlign");
+    imp.printMethod("setArrayAlign");
       align = this.trimSpaces(align||"");
       if (align === "t") {array.arraydef.align = "baseline 1"}
       else if (align === "b") {array.arraydef.align = "baseline -1"}
@@ -2122,7 +2132,7 @@ var printDef = function(def) {
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
-    printMethod("convertDelimiter");
+    imp.printMethod("convertDelimiter");
       return NewParser.lookup('delimiter', c).char || null;
     },
 
@@ -2130,7 +2140,7 @@ var printDef = function(def) {
      *  Trim spaces from a string
      */
     trimSpaces: function (text) {
-    printMethod("trimSpaces");
+    imp.printMethod("trimSpaces");
       if (typeof(text) != 'string') {return text}
       var TEXT = text.replace(/^\s+|\s+$/g,'');
       if (TEXT.match(/\\$/) && text.match(/ $/)) TEXT += " ";
@@ -2141,7 +2151,7 @@ var printDef = function(def) {
      *   Check if the next character is a space
      */
     nextIsSpace: function () {
-    printMethod("nextIsSpace");
+    imp.printMethod("nextIsSpace");
       return this.string.charAt(this.i).match(/\s/);
     },
     
@@ -2149,7 +2159,7 @@ var printDef = function(def) {
      *  Get the next non-space character
      */
     GetNext: function () {
-    printMethod("GetNext");
+    imp.printMethod("GetNext");
       while (this.nextIsSpace()) {this.i++}
       return this.string.charAt(this.i);
     },
@@ -2158,7 +2168,7 @@ var printDef = function(def) {
      *  Get and return a control-sequence name
      */
     GetCS: function () {
-    printMethod("GetCS");
+    imp.printMethod("GetCS");
       var CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
       if (CS) {this.i += CS[1].length; return CS[1]} else {this.i++; return " "}
     },
@@ -2168,7 +2178,7 @@ var printDef = function(def) {
      *  or the contents of the next set of braces).
      */
     GetArgument: function (name,noneOK) {
-    printMethod("GetArgument");
+    imp.printMethod("GetArgument");
       switch (this.GetNext()) {
        case "":
         if (!noneOK) {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
@@ -2202,7 +2212,7 @@ var printDef = function(def) {
      *  Get an optional LaTeX argument in brackets
      */
     GetBrackets: function (name,def) {
-    printMethod("GetBrackets");
+    imp.printMethod("GetBrackets");
       if (this.GetNext() != '[') {return def};
       var j = ++this.i, parens = 0;
       while (this.i < this.string.length) {
@@ -2228,7 +2238,7 @@ var printDef = function(def) {
      *  Get the name of a delimiter (check it in the delimiter list).
      */
     GetDelimiter: function (name,braceOK) {
-    printMethod("GetDelimiter");
+    imp.printMethod("GetDelimiter");
       while (this.nextIsSpace()) {this.i++}
       var c = this.string.charAt(this.i); this.i++;
       if (this.i <= this.string.length) {
@@ -2250,7 +2260,7 @@ var printDef = function(def) {
      *  Get a dimension (including its units).
      */
     GetDimen: function (name) {
-    printMethod("GetDimen");
+    imp.printMethod("GetDimen");
       var dimen;
       if (this.nextIsSpace()) {this.i++}
       if (this.string.charAt(this.i) == '{') {
@@ -2273,7 +2283,7 @@ var printDef = function(def) {
      *  Get everything up to the given control sequence (token)
      */
     GetUpTo: function (name,token) {
-    printMethod("GetUpTo");
+    imp.printMethod("GetUpTo");
       while (this.nextIsSpace()) {this.i++}
       var j = this.i, k, c, parens = 0;
       while (this.i < this.string.length) {
@@ -2305,7 +2315,7 @@ var printDef = function(def) {
      *  Break up a string into text and math blocks
      */
     InternalMath: function (text,level) {
-    printMethod("InternalMath");
+    imp.printMethod("InternalMath");
       var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
       var mml = [], i = 0, k = 0, c, match = '', braces = 0;
       if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
@@ -2358,7 +2368,7 @@ var printDef = function(def) {
       return mml;
     },
     InternalText: function (text,def) {
-    printMethod("InternalText");
+    imp.printMethod("InternalText");
       text = text.replace(/^\s+/,NBSP).replace(/\s+$/,NBSP);
       return MML.mtext(MML.chars(text)).With(def);
     },
@@ -2367,7 +2377,7 @@ var printDef = function(def) {
      *  Replace macro paramters with their values
      */
     SubstituteArgs: function (args,string) {
-    printMethod("SubstituteArgs");
+    imp.printMethod("SubstituteArgs");
       var text = ''; var newstring = ''; var c; var i = 0;
       while (i < string.length) {
         c = string.charAt(i++);
@@ -2392,7 +2402,7 @@ var printDef = function(def) {
      *  could accidentally be continued into the following text.
      */
     AddArgs: function (s1,s2) {
-    printMethod("AddArgs");
+    imp.printMethod("AddArgs");
       if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
       if (s1.length + s2.length > TEX.config.MAXBUFFER) {
         TEX.Error(["MaxBufferSize",
@@ -2436,8 +2446,7 @@ var printDef = function(def) {
     //  Convert TeX to ElementJax
     //
     Translate: function (script) {
-      printMethod('Translate');
-      console.log(script);
+      imp.printMethod('Translate');
       var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       var data = {math:math, display:display, script:script};
@@ -2445,32 +2454,26 @@ var printDef = function(def) {
       math = data.math;
       try {
         mml = TEX.Parse(math).mml();
-        console.log('MML:');
-        console.log(mml);
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);
         isError = true;
       }
-      console.log("HERE?");
-      console.log(mml);
       // VS: temporary (get INHERIT from attributes)
       if (NEW) {
-        mml = cleanSubSup(mml);
+        mml = imp.cleanSubSup(mml);
         if (mml.isKind('mtable') && mml.attributes.get('displaystyle') === 'inherit') {
           mml.displaystyle = display;
         } // for tagged equations
         if (mml.isInferred) {
-          var mathNode = createNode('math', mml, {});
+          var mathNode = imp.createNode('math', mml, {});
         } else {
           // TODO: We should not need this case!
           if (mml.isKind('mrow') && !mml.isKind('math')) {
-            mathNode = createNode('math', [], {});
+            mathNode = imp.createNode('math', [], {});
             mathNode.setChildren(mml.childNodes);
           } else if (!mml.isKind('math')) {
-            console.log('here2');
-            mathNode = createNode('math', [mml], {});
-            console.log('here3');
+            mathNode = imp.createNode('math', [mml], {});
           } else {
             mathNode = mml;
           }
@@ -2529,31 +2532,31 @@ var printDef = function(def) {
      *  Create an mrow that has stretchy delimiters at either end, as needed
      */
     fenced: function (open,mml,close) {
-      printMethod('fenced');
+      imp.printMethod('fenced');
       // @test Fenced, Fenced3
-      var mrow = createNode('mrow', [], {open:open, close:close, texClass:TEXCLASS.INNER});
-      var openNode = createText(open);
-      var mo = createNode('mo', [],
+      var mrow = imp.createNode('mrow', [], {open:open, close:close, texClass:TEXCLASS.INNER});
+      var openNode = imp.createText(open);
+      var mo = imp.createNode('mo', [],
                           {fence:true, stretchy:true, symmetric:true, texClass:TEXCLASS.OPEN},
                           openNode);
-      appendChildren(mrow, [mo]);
+      imp.appendChildren(mrow, [mo]);
       // VS: OLD
       // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
       // mrow.Append(
       //   MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
       // );
-      if (isType(mml, "mrow") && mml.inferred) {
+      if (imp.isType(mml, "mrow") && mml.inferred) {
         // @test Fenced
-        appendChildren(mrow, mml.data);
+        imp.appendChildren(mrow, mml.data);
       } else {
         // @test Fenced3
-        appendChildren(mrow, [mml]);
+        imp.appendChildren(mrow, [mml]);
       }
-      var closeNode = createText(close);
-      mo = createNode('mo', [],
+      var closeNode = imp.createText(close);
+      mo = imp.createNode('mo', [],
                       {fence:true, stretchy:true, symmetric:true, texClass:TEXCLASS.CLOSE},
                       closeNode);
-      appendChildren(mrow, [mo]);
+      imp.appendChildren(mrow, [mo]);
       // VS: OLD
       // mrow.Append(
       //   MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
@@ -2565,25 +2568,25 @@ var printDef = function(def) {
      */
     fixedFence: function (open,mml,close) {
       // @test Choose, Over With Delims, Above with Delims
-      printMethod('fixedFence');
-      var mrow = createNode('mrow', [], {open:open, close:close, texClass:MML.TEXCLASS.ORD});
+      imp.printMethod('fixedFence');
+      var mrow = imp.createNode('mrow', [], {open:open, close:close, texClass:MML.TEXCLASS.ORD});
       // VS: OLD
       // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
       if (open) {
-        appendChildren(mrow, [this.mathPalette(open,"l")]);
+        imp.appendChildren(mrow, [this.mathPalette(open,"l")]);
       }
-      if (isType(mml, "mrow")) {
-        appendChildren(mrow, [mrow, mml.data]);
+      if (imp.isType(mml, "mrow")) {
+        imp.appendChildren(mrow, [mrow, mml.data]);
       } else {
-        appendChildren(mrow, [mml]);
+        imp.appendChildren(mrow, [mml]);
       }
       if (close) {
-        appendChildren(mrow, [this.mathPalette(close,"r")]);
+        imp.appendChildren(mrow, [this.mathPalette(close,"r")]);
       }
       return mrow;
     },
     mathPalette: function (fence,side) {
-      printMethod('mathPalette');
+      imp.printMethod('mathPalette');
       if (fence === '{' || fence === '}') {fence = "\\"+fence}
       var D = '{\\bigg'+side+' '+fence+'}', T = '{\\big'+side+' '+fence+'}';
       return TEX.Parse('\\mathchoice'+D+T+T+T,{}).mml();
@@ -2594,23 +2597,23 @@ var printDef = function(def) {
     //    (since MathML treats the spacing very differently)
     //
     combineRelations: function (mml) {
-      printMethod('combineRelations');
+      imp.printMethod('combineRelations');
       var i, m, m1, m2;
       for (i = 0, m = mml.data.length; i < m; i++) {
         if (mml.data[i]) {
           if (mml.isa(MML.mrow)) {
             while (i+1 < m && (m1 = mml.data[i]) && (m2 = mml.data[i+1]) &&
                    m1.isa(MML.mo) && m2.isa(MML.mo) &&
-                   getTexClass(m1) === MML.TEXCLASS.REL &&
-                   getTexClass(m2) === MML.TEXCLASS.REL) {
+                   imp.getTexClass(m1) === MML.TEXCLASS.REL &&
+                   imp.getTexClass(m2) === MML.TEXCLASS.REL) {
               if (m1.variantForm == m2.variantForm &&
                   m1.Get("mathvariant") == m2.Get("mathvariant") && m1.style == m2.style &&
                   m1["class"] == m2["class"] && !m1.id && !m2.id) {
-                untested('Combine Relations Case 1');
+                imp.untested('Combine Relations Case 1');
                 m1.Append.apply(m1,m2.data);
                 mml.data.splice(i+1,1); m--;
               } else {
-                untested('Combine Relations Case 2');
+                imp.untested('Combine Relations Case 2');
                 m1.rspace = m2.lspace = "0pt"; i++;
               }
             }
