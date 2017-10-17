@@ -1,8 +1,9 @@
 #! /bin/bash
+## Depends on typescript 1.7.3
 
 SCRIPT=`dirname $0`/..
 BASE=`pwd -P`/$SCRIPT
-SRC=$BASE/v3/mathjax3-ts
+SRC=$BASE/mathjax3-ts
 DOCTMP=$BASE/graphs/tmp
 DOT=$DOCTMP/dot
 DOC=$BASE/graphs

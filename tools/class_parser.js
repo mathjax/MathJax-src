@@ -1,3 +1,5 @@
+// Depends on typescript 1.7.3
+
 classParser = {};
 classParser.extern = {};
 
