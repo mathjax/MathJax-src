@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = false;
+process.TEST_NEW = true;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -97,11 +97,31 @@ var appendChildren = function(node, children) {
 
 var setAttribute = function(node, attribute, value) {
   if (NEW) {
-    console.log(node.attributes.set);
     node.attributes.set(attribute, value);
   } else {
     node[attribute] = value;
   }
+};
+
+
+var setProperties = function(node, properties) {
+  if (NEW) {
+    for (const name of Object.keys(properties)) {
+      node.setProperty(name, properties[name]);
+    }
+  } else {
+    node.With(properties);
+  }
+};
+
+
+var getProperty = function(node, property) {
+  return NEW ? node.getProperty(property) : node[property];
+};
+
+
+var getChildAt = function(node, position) {
+  return NEW ? node.getChildren()[position] : node.data[position];
 };
 
 
@@ -435,11 +455,7 @@ var printDef = function(def) {
           }
           else {
             // @test Prime on Prime
-            if (NEW) {
-              this.primes.setProperty('variantForm', true);
-            } else {
-              this.primes.With({variantForm:true});
-            }
+            setProperties(this.primes, {variantForm: true});
             var node = createNode('mrow', [this.primes, item.data[0]], {});
             // VS: OLD
             // var node = MML.mrow(this.primes, item.data[0]);
@@ -712,8 +728,15 @@ var printDef = function(def) {
       if (item.hasType('mml') &&
           (isType(item.data[0], 'mo') || isType(item.data[0], 'mi') ||
            isType(item.data[0], 'mtext'))) {
-        mml = item.data[0], c = mml.data.join("");
-        if (c.length === 1 && !mml.movesupsub && mml.data.length === 1) {
+        mml = item.data[0];
+        printJSON(mml);
+        if (NEW) {
+          c = mml.getText();
+        } else {
+          c = mml.data.join("");
+        }
+        if (c.length === 1 && !mml.movesupsub &&
+            NEW ? mml.childNodes.length === 1 : mml.data.length === 1) {
           if (STACKITEM.not.remap.contains(c)) {
             // @test Negation Simple, Negation Complex
             var textNode = createText(STACKITEM.not.remap.lookup(c).char);
@@ -1049,14 +1072,12 @@ var printDef = function(def) {
       }
       if (base.isEmbellishedWrapper) {
         // TODO: Warning, those are childNodes now!
-        base = base.data[0].data[0];
+        // base = base.data[0].data[0];
+        base = getChildAt(getChildAt(base, 0), 0);
       }
       var movesupsub = base.movesupsub, position = base.sup;
-      console.log(base.type);
-      console.log(base.kind);
-      console.log(base.sup);
-      if ((isType(base, "msubsup") && base.data[base.sup]) ||
-          (isType(base, "munderover") && base.data[base.over] && !base.subsupOK)) {
+      if ((isType(base, "msubsup") && getChildAt(base, base.sup)) ||
+          (isType(base, "munderover") && getChildAt(base, base.over) && !getProperty(base, 'subsupOK'))) {
         // @test Double-super-error, Double-over-error
         TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"]);
       }
@@ -1065,7 +1086,7 @@ var printDef = function(def) {
         if (movesupsub) {
         console.log('Case 2');
           // @test Move Superscript, Large Operator
-          if (!isType(base, "munderover") || base.data[base.over]) {
+          if (!isType(base, "munderover") || getChildAt(base, base.over)) {
         console.log('Case 3');
             if (base.movablelimits && isClass(base, 'mi')) {
               // @test Mathop Super
@@ -1113,18 +1134,21 @@ var printDef = function(def) {
       }
       if (base.isEmbellishedWrapper) {
         // TODO: Warning, those are childNodes now!
-        base = base.data[0].data[0];
+        base = getChildAt(getChildAt(base, 0), 0);
       }
+      console.log("HERE??????");
       var movesupsub = base.movesupsub, position = base.sub;
-      if ((isType(base, "msubsup") && base.data[base.sub]) ||
-          (isType(base, "munderover") && base.data[base.under] && !base.subsupOK)) {
+      console.log(movesupsub);
+      console.log(position);
+      if ((isType(base, "msubsup") && getChildAt(base, base.sub)) ||
+          (isType(base, "munderover") && getChildAt(base, base.under) && !getProperty(base, 'subsupOK'))) {
         // @test Double-sub-error, Double-under-error
         TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"]);
       }
       if (!isType(base, "msubsup")) {
         if (movesupsub) {
           // @test Large Operator, Move Superscript
-          if (!isType(base, "munderover") || base.data[base.under]) {
+          if (!isType(base, "munderover") || getChildAt(base, base.under)) {
             if (base.movablelimits && isClass(base, 'mi')) {
               // @test Mathop Sub
               base = this.mi2mo(base);
@@ -1157,7 +1181,7 @@ var printDef = function(def) {
         // VS: OLD
         // base = MML.mi();
       }
-      if (isType(base, "msubsup") && base.data[base.sup]) {
+      if (isType(base, "msubsup") && getChildAt(base, base.sup)) {
         // @test Double Prime Error
         TEX.Error(["DoubleExponentPrime",
                    "Prime causes double exponent: use braces to clarify"]);
@@ -1566,7 +1590,8 @@ var printDef = function(def) {
         mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true});
       }
       // TODO: Sort these properties out!
-      this.Push(mml.With({subsupOK:true}));
+      setProperties(mml, {subsupOK: true});
+      this.Push(mml);
     },
     
     Overset: function (name) {

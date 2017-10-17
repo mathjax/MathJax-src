@@ -67,3 +67,18 @@
   //
   // Also: How are we to know "outside" what the actual value is?
 
+* Notes for future refactoring:
+
+** Why does TextNode not inherit AbstractMmlNode. This hiearchy with empty nodes seems to be odd.
+
+** msubsup.ts -> no TEXCLASS
+
+** Tests that currently do not work:
+   
+*** Choose, Over With Delims, Above With Delims (Need the mathchoice extension!)
+
+*** Label
+
+*** Named Function: AutoOP, FnOP?
+
+
