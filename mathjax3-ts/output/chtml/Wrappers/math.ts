@@ -37,14 +37,27 @@ export class CHTMLmath extends CHTMLWrapper {
 
     public static styles: StyleList = {
         'mjx-math': {
-            display: 'inline-block',
-            'line-height': '0px',
-            'text-align': 'left'
+            'line-height': 0,
+            'text-align': 'left',
+            'text-indent': 0,
+            'font-style': 'normal',
+            'font-weight': 'normal',
+            'font-size': '100%',
+            'font-size-adjust': 'none',
+            'letter-spacing': 'normal',
+            'word-wrap': 'normal',
+            'word-spacing': 'normal',
+            'white-space': 'nowrap',
+            'direction': 'ltr',
+            'padding': '1px 0'
         },
         'mjx-chtml.MJX-DISPLAY': {
             display: 'block',
-            margin: '1em 0',
-            'text-align': 'center'
+            'text-align': 'center',
+            margin: '1em 0'
+        },
+        'mjx-chtml.MJX-DISPLAY mjx-math': {
+            padding: 0
         }
     };
 
