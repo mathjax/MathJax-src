@@ -8489,4 +8489,118 @@ parserTest.runTest(
 );
 
 
+parserTest.runTest(
+  'Shift Left', 'a<<b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "<"},
+            {"kind": "text",
+              "text": "<"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"display": "block",
+            "displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Less Than', 'a<=b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "<"},
+            {"kind": "text",
+              "text": "="}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"display": "block",
+            "displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
 parserTest.printTime();
