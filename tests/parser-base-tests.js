@@ -8547,7 +8547,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Less Than', 'a<=b',
+  'Less Equal', 'a<=b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},

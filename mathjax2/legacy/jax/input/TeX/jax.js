@@ -879,7 +879,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
           // @test Move Superscript, Large Operator
           if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.over)) {
         imp.printSimple('Case 3');
-            if (imp.getAttribute(base, 'movablelimits') && imp.isType(base, 'mi')) {
+            if (imp.getProperty(base, 'movablelimits') && imp.isType(base, 'mi')) {
               // @test Mathop Super
               base = this.mi2mo(base);
             }
@@ -940,7 +940,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         if (movesupsub) {
           // @test Large Operator, Move Superscript
           if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.under)) {
-            if (imp.getAttribute(base, 'movablelimits') && imp.isType(base, 'mi')) {
+            if (imp.getProperty(base, 'movablelimits') && imp.isType(base, 'mi')) {
               // @test Mathop Sub
               base = this.mi2mo(base);
             }
@@ -994,19 +994,25 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.copyChildren(mi, mo);
       var id;
       // TODO: Figure out how to copy these attributes.
-      for (id in mo.defaults) {
-        if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {
-          mo[id] = mi[id];
+      if (imp.NEW) {
+        mo.attributes = mi.attributes;
+        imp.setProperties(mo, mi.properties);
+      } else {
+        for (id in mo.defaults) {
+          if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {
+            mo[id] = mi[id];
+          }
         }
-      }
-      for (id in MML.copyAttributes) {
-        if (MML.copyAttributes.hasOwnProperty(id) && mi[id] != null) {
-          mo[id] = mi[id];
+        for (id in MML.copyAttributes) {
+          if (MML.copyAttributes.hasOwnProperty(id) && mi[id] != null) {
+            mo[id] = mi[id];
+          }
         }
       }
       // TODO: Do this with get('lspace') etc.
-      mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
-      mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
+      imp.setProperties(mo, {lspace: '0', rspace: '0'});
+      // mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
+      // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
       return mo;
     },
     
@@ -1061,7 +1067,6 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         // VS: OLD
         // mo = MML.TeXAtom(mo);
       }
-      console.log('HERE');
       this.Push(this.mmlToken(mo));
     },
     
@@ -1148,6 +1153,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     },
     NamedOp: function (name,id) {
       imp.printMethod("NamedOp");
+      imp.untested(220);
       if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,"\u2006");
       var mml = imp.createNode('mo', [id], {
@@ -1197,7 +1203,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       // TODO: Turns this into properties.
       imp.setProperties(op, {'movesupsub': limits ? true : false});
       imp.setProperties(imp.getCore(op), {'movablelimits': false});
-      if (imp.getAttribute(op, 'movablelimits')) {
+      if (imp.getProperty(op, 'movablelimits')) {
         imp.setProperties(op, {'movablelimits': false});
       }
     },
@@ -1359,7 +1365,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
       // TODO: Sort this one out!
-      if (imp.getAttribute(base, 'movablelimits')) {
+      if (imp.getProperty(base, 'movablelimits')) {
         // @test Overline Sum
         imp.setProperties(base, {'movablelimits': false});
       }
@@ -1396,7 +1402,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.printMethod("Overset");
       // @test Overset
       var top = this.ParseArg(name), base = this.ParseArg(name);
-      if (imp.getAttribute(base, 'movablelimits')) {
+      if (imp.getProperty(base, 'movablelimits')) {
         imp.setProperties(base, {'movablelimits': false});
       }
       var node = imp.createNode('mover', [base, top], {});
@@ -1408,7 +1414,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.printMethod("Underset");
       // @test Underset
       var bot = this.ParseArg(name), base = this.ParseArg(name);
-      if (imp.getAttribute(base, 'movablelimits')) {
+      if (imp.getProperty(base, 'movablelimits')) {
         // @test Overline Sum
         imp.setProperties(base, {'movablelimits': false});
       }
@@ -1588,8 +1594,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       }
       this.Push(STACKITEM.position().With({
         name: name, move: 'horizontal',
-        left:  imp.createNode('mspace', [], {width: h, mathsize: MML.SIZE.NORMAL}),
-        right: imp.createNode('mspace', [], {width: nh, mathsize: MML.SIZE.NORMAL})
+        left:  imp.createNode('mspace', [], {width: h, mathsize: TexConstant.Size.NORMAL}),
+        right: imp.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})
         // VS: OLD
         // left:  MML.mspace().With({width: h, mathsize: MML.SIZE.NORMAL}),
         // right: MML.mspace().With({width: nh, mathsize: MML.SIZE.NORMAL})
@@ -1680,7 +1686,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.setData(node, 0, bot);
       imp.setData(node, 1, null);
       imp.setData(node, 2, top);
-      var atom = imp.createNode('TeXAtom', [node], {texClass: MML.TEXCLASS.REL});
+      var atom = imp.createNode('TeXAtom', [node], {texClass: TEXCLASS.REL});
       // VS: OLD
       // this.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({texClass: MML.TEXCLASS.REL}));
       this.Push(atom);
@@ -2355,7 +2361,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       math = data.math;
       try {
         mml = TEX.Parse(math).mml();
-        console.log(mml.toString());
+        imp.printSimple(mml.toString());
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);
@@ -2368,11 +2374,14 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
           mml.displaystyle = display;
         } // for tagged equations
         if (mml.isInferred) {
-          var mathNode = imp.createNode('math', mml, {});
+          var mathNode = imp.createNode('math', [mml], {});
         } else {
           // TODO: We should not need this case!
           if (mml.isKind('mrow') && !mml.isKind('math')) {
             mathNode = imp.createNode('math', [], {});
+            var inferredMrow = mathNode.childNodes[0];
+            inferredMrow.attributes = mml.attributes;
+            inferredMrow.properties = mml.properties;
             mathNode.setChildren(mml.childNodes);
           } else if (!mml.isKind('math')) {
             mathNode = imp.createNode('math', [mml], {});
@@ -2387,9 +2396,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         if (isError) {
           mathNode.texError = true;
         }
-        // TODO: Apply the post filters: combination of relations etc.
-        // console.log(this.combineRelations);
-        // this.combineRelations(mathNode);
+        this.combineRelations(mathNode);
         return mathNode;
       }
       // VS: OLD
@@ -2404,7 +2411,6 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       return math;
     },
     postfilterMath: function (math,displaystyle,script) {
-      console.log('Calling postfilter math');
       this.combineRelations(math.root);
       return math;
     },
@@ -2503,31 +2509,35 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     //    (since MathML treats the spacing very differently)
     //
     combineRelations: function (mml) {
-      imp.printMethod('combineRelations: ' + mml.data.length);
+      imp.printMethod('combineRelations: ');
       var i, m, m1, m2;
-      for (i = 0, m = mml.data.length; i < m; i++) {
-        if (mml.data[i]) {
-          console.log(mml.data[i]);
-          if (mml.isa(MML.mrow)) {
-            while (i+1 < m && (m1 = mml.data[i]) && (m2 = mml.data[i+1]) &&
-                   m1.isa(MML.mo) && m2.isa(MML.mo) &&
-                   imp.getTexClass(m1) === MML.TEXCLASS.REL &&
-                   imp.getTexClass(m2) === MML.TEXCLASS.REL) {
-              if (m1.variantForm == m2.variantForm &&
-                  m1.Get("mathvariant") == m2.Get("mathvariant") && m1.style == m2.style &&
-                  m1["class"] == m2["class"] && !m1.id && !m2.id) {
-                imp.untested('Combine Relations Case 1');
-                m1.Append.apply(m1,m2.data);
-                mml.data.splice(i+1,1); m--;
+      var children = imp.NEW ? mml.childNodes : mml.data;
+      for (i = 0, m = children.length; i < m; i++) {
+        if (children[i]) {
+          if (imp.isType(mml, 'mrow')) {
+            while (i+1 < m && (m1 = children[i]) && (m2 = children[i+1]) &&
+                   imp.isType(m1, 'mo') && imp.isType(m2, 'mo') &&
+                   imp.getTexClass(m1) === TEXCLASS.REL &&
+                   imp.getTexClass(m2) === TEXCLASS.REL) {
+              if (imp.getProperty(m1, 'variantForm') == imp.getProperty(m2, 'variantForm') &&
+                  imp.getAttribute(m1, 'mathvariant') == imp.getAttribute(m2, 'mathvariant')) {
+                imp.appendChildren(m1, imp.NEW ? m2.childNodes : m2.data);
+                children.splice(i+1,1);
+                // if (imp.NEW) {
+                //   mml.setChildren(children);
+                // }
+                m--;
               } else {
                 imp.untested('Combine Relations Case 2');
-                m1.rspace = m2.lspace = "0pt"; i++;
+                imp.setAttribute(m1, 'rspace', '0pt');
+                imp.setAttribute(m2, 'lspace', '0pt');
+                i++;
               }
             }
           }
-          if (!mml.data[i].isToken) {
+          if (!children[i].isToken) {
             imp.untested('Combine Relations Recurse');
-            this.combineRelations(mml.data[i]);
+            this.combineRelations(children[i]);
           }
         }
       }

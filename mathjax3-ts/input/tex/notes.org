@@ -77,8 +77,8 @@
    
 *** Choose, Over With Delims, Above With Delims (Need the mathchoice extension!)
 
-*** Label
-
+*** Label: Uses AMS Math stuff.
+    
 *** Named Function: AutoOP, FnOP?
 
 *** Limit: mml.SPACE_ATTR ? 
