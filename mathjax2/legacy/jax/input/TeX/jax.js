@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = false;
+process.TEST_NEW = true;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -1334,14 +1334,18 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       // var moNode = MML.mo(entity).With(def);
       var mml = this.mmlToken(moNode);
       // TODO: This should be property?
-      mml.stretchy = (stretchy ? true : false);
+      imp.setProperties(mml, {stretchy: (stretchy ? true : false)});
       // @test Vector Op, Vector
       var mo = (imp.isEmbellished(c) ? imp.getCoreMO(c) : c);
       if (imp.isClass(mo, 'mo')) {
         // @test Vector Op
         imp.setProperties(mo, {'movablelimits': false});
       }
-      var muoNode = imp.createNode('munderover', [c,null,mml], {accent: true});
+      var muoNode = imp.createNode('munderover', [], {accent: true});
+      // TODO: This is necessary to get the empty element into the children.
+      imp.setData(muoNode, 0, c);
+      imp.setData(muoNode, 1, null);
+      imp.setData(muoNode, 2, mml);
       var texAtom = imp.createNode('TeXAtom', [muoNode], {});
       // VS: OLD
       // var muoNode = MML.munderover(c,null,mml).With({accent: true});
