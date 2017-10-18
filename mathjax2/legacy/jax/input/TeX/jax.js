@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = true;
+process.TEST_NEW = false;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -1423,7 +1423,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         if (match) {
           // @test Mathop
           def.mathvariant = TexConstant.Variant.NORMAL;
-          node = imp.createNode('mi', [match[1]], def);
+          var textNode = imp.createText(match[1]);
+          node = imp.createNode('mi', [], def, textNode);
           // VS: OLD
           // node = MML.mi(match[1]).With(def);
           mml = STACKITEM.fn(this.mmlToken(node));
