@@ -39,7 +39,9 @@ imp.attrs = ['autoOP',
              'texprimestyle',
              'useHeight',
              'variantForm',
-             'texWithDelims'
+             'texWithDelims',
+             'open',
+             'close'
             ];
 imp.methodOut = true;
 imp.defOut = false;
@@ -116,6 +118,11 @@ imp.setProperties = function(node, properties) {
       let value = properties[name];
       if (name === 'texClass') {
         node.texClass = value;
+      } else if (name === 'movablelimits') {
+        node.setProperty('movablelimits', value);
+        if (node.isKind('mo') || node.isKind('mstyle')) {
+          node.attributes.set('movablelimits', value);
+        }
       } else if (name === 'inferred') {
         // ignore
       } else if (imp.attrs.indexOf(name) !== -1) {
