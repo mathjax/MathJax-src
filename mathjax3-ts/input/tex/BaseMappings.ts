@@ -493,6 +493,7 @@ export namespace BaseMappings {
     mskip:              'Hskip',
     mspace:             'Hskip',
     mkern:              'Hskip',
+    rule:               'rule',
     Rule:              ['Rule'],
     Space:             ['Rule', 'blank'],
 

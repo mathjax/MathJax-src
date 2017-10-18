@@ -1490,58 +1490,109 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     },
     
     Strut: function (name) {
-    imp.printMethod("Strut");
-      this.Push(MML.mpadded(MML.mrow()).With({height: "8.6pt", depth: "3pt", width: 0}));
+      imp.printMethod("Strut");
+      // @test Strut
+      // TODO: Do we still need this row as it is implicit?
+      var row = imp.createNode('mrow', [], {});
+      var padded = imp.createNode('mpadded', [row],
+                                  {height: "8.6pt", depth: "3pt", width: 0});
+      // VS: OLD
+      // var padded = MML.mpadded(MML.mrow()).With({height: "8.6pt", depth: "3pt", width: 0});
+      this.Push(padded);
     },
     
     Phantom: function (name,v,h) {
     imp.printMethod("Phantom");
-      var box = MML.mphantom(this.ParseArg(name));
+      // @test Phantom
+      var box = imp.createNode('mphantom', [this.ParseArg(name)], {});
       if (v || h) {
-        box = MML.mpadded(box);
-        if (h) {box.height = box.depth = 0}
-        if (v) {box.width = 0}
+        box = imp.createNode('mpadded', [box], {});
+        if (h) {
+          // @test Horizontal Phantom
+          box.height = box.depth = 0;
+        }
+        if (v) {
+          // @test Vertical Phantom
+          box.width = 0;
+        }
       }
-      this.Push(MML.TeXAtom(box));
+      var atom = imp.createNode('TeXAtom', [box], {});
+      this.Push(atom);
+      // VS: OLD
+      // this.Push(MML.TeXAtom(box));
     },
     
     Smash: function (name) {
     imp.printMethod("Smash");
+      // @test Smash, Smash Top, Smash Bottom
       var bt = this.trimSpaces(this.GetBrackets(name,""));
-      var smash = MML.mpadded(this.ParseArg(name));
+      var smash = imp.createNode('mpadded', [this.ParseArg(name)], {});
+      // VS: OLD
+      // var smash = MML.mpadded(this.ParseArg(name));
       switch (bt) {
         case "b": smash.depth = 0; break;
         case "t": smash.height = 0; break;
         default: smash.height = smash.depth = 0;
       }
-      this.Push(MML.TeXAtom(smash));
+      var atom = imp.createNode('TeXAtom', [smash], {});
+      this.Push(atom);
+      // VS: OLD
+      // this.Push(MML.TeXAtom(smash));
     },
     
     Lap: function (name) {
     imp.printMethod("Lap");
-      var mml = MML.mpadded(this.ParseArg(name)).With({width: 0});
-      if (name === "\\llap") {mml.lspace = "-1width"}
-      this.Push(MML.TeXAtom(mml));
+      // @test Llap, Rlap
+      var mml = imp.createNode('mpadded', [this.ParseArg(name)], {width: 0});
+      // VS: OLD
+      // var mml = MML.mpadded(this.ParseArg(name)).With({width: 0});
+      if (name === "\\llap") {
+        // @test Llap
+        imp.setAttribute(mml, 'lspace', '-1width');
+      }
+      var atom = imp.createNode('TeXAtom', [mml], {});
+      this.Push(atom);
+      // VS: OLD
+      // this.Push(MML.TeXAtom(mml));
     },
     
     RaiseLower: function (name) {
-    imp.printMethod("RaiseLower");
+      imp.printMethod("RaiseLower");
+      // @test Raise, Lower, Raise Negative, Lower Negative
       var h = this.GetDimen(name);
       var item = STACKITEM.position().With({name: name, move: 'vertical'});
-      if (h.charAt(0) === '-') {h = h.slice(1); name = {raise: "\\lower", lower: "\\raise"}[name.substr(1)]}
-      if (name === "\\lower") {item.dh = '-'+h; item.dd = '+'+h} else {item.dh = '+'+h; item.dd = '-'+h}
+      if (h.charAt(0) === '-') {
+        // @test Raise Negative, Lower Negative
+        h = h.slice(1);
+        name = {raise: "\\lower", lower: "\\raise"}[name.substr(1)];
+      }
+      if (name === "\\lower") {
+        // @test Raise, Raise Negative
+        item.dh = '-'+h; item.dd = '+'+h;
+      } else {
+        // @test Lower, Lower Negative
+        item.dh = '+'+h; item.dd = '-'+h;
+      }
       this.Push(item);
     },
     
     MoveLeftRight: function (name) {
-    imp.printMethod("MoveLeftRight");
+      imp.printMethod("MoveLeftRight");
+      // @test Move Left, Move Right, Move Left Negative, Move Right Negative
       var h = this.GetDimen(name);
       var nh = (h.charAt(0) === '-' ? h.slice(1) : '-'+h);
-      if (name === "\\moveleft") {var tmp = h; h = nh; nh = tmp}
+      if (name === "\\moveleft") {
+        var tmp = h;
+        h = nh;
+        nh = tmp;
+      }
       this.Push(STACKITEM.position().With({
         name: name, move: 'horizontal',
-        left:  MML.mspace().With({width: h, mathsize: MML.SIZE.NORMAL}),
-        right: MML.mspace().With({width: nh, mathsize: MML.SIZE.NORMAL})
+        left:  imp.createNode('mspace', [], {width: h, mathsize: MML.SIZE.NORMAL}),
+        right: imp.createNode('mspace', [], {width: nh, mathsize: MML.SIZE.NORMAL})
+        // VS: OLD
+        // left:  MML.mspace().With({width: h, mathsize: MML.SIZE.NORMAL}),
+        // right: MML.mspace().With({width: nh, mathsize: MML.SIZE.NORMAL})
       }));
     },
     
@@ -1557,7 +1608,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     },
     
     Rule: function (name,style) {
-    imp.printMethod("Rule");
+      imp.printMethod("Rule");
+      // @test Rule 3D, Space 3D
       var w = this.GetDimen(name),
           h = this.GetDimen(name),
           d = this.GetDimen(name);
@@ -1565,19 +1617,29 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       if (style !== 'blank') {
         def.mathbackground = (this.stack.env.color || "black");
       }
-      this.Push(MML.mspace().With(def));
+      var node = imp.createNode('mspace', [], def);
+      // VS: OLD
+      // var node = MML.mspace().With(def);
+      this.Push(node);
     },
     rule: function (name) {
     imp.printMethod("rule");
+      // @test Rule 2D
       var v = this.GetBrackets(name),
           w = this.GetDimen(name),
           h = this.GetDimen(name);
-      var mml = MML.mspace().With({
+      var mml = imp.createNode('mspace', [], {
         width: w, height:h,
-        mathbackground: (this.stack.env.color || "black")
-      });
+        mathbackground: (this.stack.env.color || "black") });
+      // VS: OLD
+      // var mml = MML.mspace().With({
+      //   width: w, height:h,
+      //   mathbackground: (this.stack.env.color || "black")
+      // });
       if (v) {
-        mml = MML.mpadded(mml).With({voffset: v});
+        mml = imp.createNode('mpadded', [mml], {voffset: v});
+        // VS: OLD
+        // mml = MML.mpadded(mml).With({voffset: v});
         if (v.match(/^\-/)) {
           mml.height = v;
           mml.depth = '+' + v.substr(1);
@@ -1589,35 +1651,64 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     },
     
     MakeBig: function (name,mclass,size) {
-    imp.printMethod("MakeBig");
+      imp.printMethod("MakeBig");
+      // @test Choose, Over With Delims, Above With Delims
       size *= TEXDEF.p_height;
       size = String(size).replace(/(\.\d\d\d).+/,'$1')+"em";
       var delim = this.GetDelimiter(name,true);
-      this.Push(MML.TeXAtom(MML.mo(delim).With({
+      var text = imp.createText(delim);
+      var mo = imp.createNode('mo', [], {
         minsize: size, maxsize: size,
         fence: true, stretchy: true, symmetric: true
-      })).With({texClass: mclass}));
+      }, text);
+      var node = imp.createNode('TeXAtom', [mo], {texClass: mclass});
+      // VS: OLD
+      // var node = MML.TeXAtom(MML.mo(delim).With({
+      //   minsize: size, maxsize: size,
+      //   fence: true, stretchy: true, symmetric: true
+      // })).With({texClass: mclass});
+      this.Push(node);
     },
     
     BuildRel: function (name) {
-    imp.printMethod("BuildRel");
+      imp.printMethod("BuildRel");
+      // @test BuildRel, BuildRel Expression
       var top = this.ParseUpTo(name,"\\over");
       var bot = this.ParseArg(name);
-      this.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({texClass: MML.TEXCLASS.REL}));
+      var node = imp.createNode('munderover', [], {});
+      // TODO: This is necessary to get the empty element into the children.
+      imp.setData(node, 0, bot);
+      imp.setData(node, 1, null);
+      imp.setData(node, 2, top);
+      var atom = imp.createNode('TeXAtom', [node], {texClass: MML.TEXCLASS.REL});
+      // VS: OLD
+      // this.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({texClass: MML.TEXCLASS.REL}));
+      this.Push(atom);
     },
     
     HBox: function (name,style) {
     imp.printMethod("HBox");
+      // @test Hbox
+      // VS: OLD
+      // this.PushAll(this.InternalMath(this.GetArgument(name),style));
+      // TODO: Sort out internal math first!
       this.PushAll(this.InternalMath(this.GetArgument(name),style));
     },
     
     FBox: function (name) {
     imp.printMethod("FBox");
-      this.Push(MML.menclose.apply(MML,this.InternalMath(this.GetArgument(name))).With({notation:"box"}));
+      // @test Fbox
+      var internal = this.InternalMath(this.GetArgument(name));
+      var node = imp.createNode('menclose', internal, {notation:"box"});
+      // VS: OLD
+      // this.Push(MML.menclose.apply(MML,this.InternalMath(this.GetArgument(name))).With({notation:"box"}));
+      this.Push(node);
     },
     
     Not: function (name) {
-    imp.printMethod("Not");
+      imp.printMethod("Not");
+      // @test Negation Simple, Negation Complex, Negation Explicit,
+      //       Negation Large
       this.Push(STACKITEM.not());
     },
     
@@ -1678,6 +1769,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     
     Matrix: function (name,open,close,align,spacing,vspacing,style,cases,numbered) {
     imp.printMethod("Matrix");
+      imp.untested(36);
       var c = this.GetNext();
       if (c === "")
         {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
