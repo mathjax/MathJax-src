@@ -43,8 +43,8 @@ imp.attrs = ['autoOP',
             ];
 imp.methodOut = true;
 imp.defOut = false;
-imp.jsonOut = true;
-imp.simpleOut = false;
+imp.jsonOut = false;
+imp.simpleOut = true;
 
 
 
@@ -55,7 +55,6 @@ imp.createNode = function(type, children, def, text) {
       node.appendChild(text);
     }
   } else {
-    console.log(imp.MML);
     node = (typeof text === 'undefined') ?
       imp.MML[type].apply(imp.MML, children) : imp.MML[type](text);
   }
@@ -126,16 +125,24 @@ imp.getProperty = function(node, property) {
 };
 
 
+imp.getAttribute = function(node, attr) {
+  return imp.NEW ? node.attributes.get(attr) : node[attr];
+}
+
+
 imp.getChildAt = function(node, position) {
-  return imp.NEW ? node.getChildren()[position] : node.data[position];
+  return imp.NEW ? node.childNodes[position] : node.data[position];
 };
 
 
 imp.setData = function(node, position, item) {
   if (imp.NEW) {
-    // Here we assume that everything in data are actually proper nodes!
-    node.childNodes[position] = item;
-    item.parent = node;
+    let children = node.childNodes;
+    children[position] = item;
+    if (item) {
+      item.parent = node;
+    }
+    node.setTeXclass(null);
     // for (let child of node.childNodes) {
     //   if (child) {console.log(child.parent)};
     // }
@@ -143,6 +150,15 @@ imp.setData = function(node, position, item) {
     node.SetData(position, item);
   }
 };
+
+
+imp.copyChildren = function(oldNode, newNode) {
+  let children = imp.NEW ? oldNode.childNodes : oldNode.data;
+  for (let i = 0; i < children.length; i++) {
+    imp.setData(newNode, i, children[i]);
+  }
+};
+
 
 imp.isType = function(node, type) {
   return imp.NEW ? node.isKind(type) : node.type === type;
@@ -165,7 +181,7 @@ imp.getCore = function(node) {
 };
 
 imp.getCoreMO = function(node) {
-  return imp.NEW ? node.coreMo() : node.CoreMO();
+  return imp.NEW ? node.coreMO() : node.CoreMO();
 };
 
 

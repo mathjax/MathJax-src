@@ -138,7 +138,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       if (inferred == null) {inferred = true}
       if (this.data.length === 1 && !forceRow) {
         imp.printSimple('End 1');
-        return this.data[0]}
+        return this.data[0];
+      }
       // @test Two Identifiers
       var node = imp.createNode('mrow', this.data, inferred ? {inferred: true}: {});
       // VS: OLD
@@ -247,7 +248,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         }
         imp.setData(this.data[0], this.position, item.data[0]);
         if (this.movesupsub != null) {
-          this.data[0].movesupsub = this.movesupsub;
+          imp.setProperties(this.data[0], {movesupsub: this.movesupsub});
         }
         var result = STACKITEM.mml(this.data[0]);
         return result;
@@ -522,7 +523,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         } else {
           c = mml.data.join("");
         }
-        if (c.length === 1 && !mml.movesupsub &&
+        if (c.length === 1 && !imp.getProperty(mml, 'movesupsub') &&
             imp.NEW ? mml.childNodes.length === 1 : mml.data.length === 1) {
           if (STACKITEM.not.remap.contains(c)) {
             // @test Negation Simple, Negation Complex
@@ -657,7 +658,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       if (!this.stack.Top().hasType('mml')) {
         return null;
       }
-      return this.stack.Top().data[0];
+      var node = this.stack.Top().data[0];
+      if (imp.NEW) {node.setTeXclass(null);};
+      return node;
     },
 
     // VS: Forget this for now!
@@ -861,7 +864,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         // base = base.data[0].data[0];
         base = imp.getChildAt(imp.getChildAt(base, 0), 0);
       }
-      var movesupsub = base.movesupsub, position = base.sup;
+      var movesupsub = imp.getProperty(base, 'movesupsub');
+      var position = imp.isType(base, "msubsup") ? base.sup : base.over;
+      // var movesupsub = base.movesupsub, position = base.sup;
       if ((imp.isType(base, "msubsup") && imp.getChildAt(base, base.sup)) ||
           (imp.isType(base, "munderover") && imp.getChildAt(base, base.over) && !imp.getProperty(base, 'subsupOK'))) {
         // @test Double-super-error, Double-over-error
@@ -922,12 +927,12 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         // TODO: Warning, those are childNodes now!
         base = imp.getChildAt(imp.getChildAt(base, 0), 0);
       }
-      imp.printSimple("HERE??????");
-      var movesupsub = base.movesupsub, position = base.sub;
-      imp.printSimple(movesupsub);
-      imp.printSimple(position);
+      var movesupsub = imp.getProperty(base, 'movesupsub');
+      var position = imp.isType(base, "msubsup") ? base.sub : base.under;
+      // var movesupsub = base.movesupsub, position = base.sub;
       if ((imp.isType(base, "msubsup") && imp.getChildAt(base, base.sub)) ||
-          (imp.isType(base, "munderover") && imp.getChildAt(base, base.under) && !imp.getProperty(base, 'subsupOK'))) {
+          (imp.isType(base, "munderover") && imp.getChildAt(base, base.under) &&
+           !imp.getProperty(base, 'subsupOK'))) {
         // @test Double-sub-error, Double-under-error
         TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"]);
       }
@@ -935,7 +940,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         if (movesupsub) {
           // @test Large Operator, Move Superscript
           if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.under)) {
-            if (base.movablelimits && imp.isClass(base, 'mi')) {
+            if (imp.getAttribute(base, 'movablelimits') && imp.isClass(base, 'mi')) {
               // @test Mathop Sub
               base = this.mi2mo(base);
             }
@@ -1028,7 +1033,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
      */
     Other: function (c) {
     imp.printMethod("Other");
-      var def, mo;
+      var def = {}, mo;
       if (this.stack.env.font) {
         // @test Other Font
         def = {mathvariant: this.stack.env.font};
@@ -1056,6 +1061,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         // VS: OLD
         // mo = MML.TeXAtom(mo);
       }
+      console.log('HERE');
       this.Push(this.mmlToken(mo));
     },
     
@@ -1165,28 +1171,35 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.printMethod("Limits");
       // @test Limits
       var op = this.stack.Prev("nopop");
-      if (!op || (imp.getTexClass(op) !== TEXCLASS.OP && op.movesupsub == null)) {
+      if (!op || (imp.getTexClass(op) !== TEXCLASS.OP &&
+                  imp.getProperty(op, 'movesupsub') == null)) {
         // @test Limits Error
         TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name]);
       }
       var top = this.stack.Top();
       if (imp.isType(op, "munderover") && !limits) {
         // @test Limits UnderOver
-        var node = imp.createNode('msubsup', op.data, {});
+        var node = imp.createNode('msubsup', [], {});
+        imp.copyChildren(op, node);
         // VS: OLD
         // var node = MML.msubsup.apply(MML.subsup,op.data);
         op = top.data[top.data.length-1] = node;
       } else if (imp.isType(op, "msubsup") && limits) {
         // @test Limits SubSup
-        node = imp.createNode('munderover', op.data, {});
+        // node = imp.createNode('munderover', imp.NEW ? op.childNodes : op.data, {});
+        // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
+        node = imp.createNode('munderover', [], {});
+        imp.copyChildren(op, node);
         // VS: OLD
         // node = MML.munderover.apply(MML.underover,op.data);
         op = top.data[top.data.length-1] = node;
       }
       // TODO: Turns this into properties.
-      op.movesupsub = (limits ? true : false);
-      imp.getCore(op).movablelimits = false;
-      if (op.movablelimits) op.movablelimits = false;
+      imp.setProperties(op, {'movesupsub': limits ? true : false});
+      imp.setProperties(imp.getCore(op), {'movablelimits': false});
+      if (imp.getAttribute(op, 'movablelimits')) {
+        imp.setProperties(op, {'movablelimits': false});
+      }
     },
     
     Over: function (name,open,close) {
@@ -1528,7 +1541,13 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     
     Hskip: function (name) {
     imp.printMethod("Hskip");
-      this.Push(MML.mspace().With({width: this.GetDimen(name), mathsize: MML.SIZE.NORMAL}));
+      // @test Modulo
+      var node = imp.createNode('mspace', [],
+                                {width: this.GetDimen(name),
+                                 mathsize: TexConstant.Size.NORMAL});
+      // VS: OLD
+      // var node = MML.mspace().With({width: this.GetDimen(name), mathsize: TexConstant.Size.NORMAL});
+      this.Push(node);
     },
     
     Rule: function (name,style) {
@@ -1598,9 +1617,17 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     
     Dots: function (name) {
     imp.printMethod("Dots");
+      // @test Operator Dots
+      var ldotsEntity = imp.createEntity('2026');
+      var cdotsEntity = imp.createEntity('22EF');
+      var ldots = imp.createNode('mo', [], {stretchy:false}, ldotsEntity);
+      var cdots = imp.createNode('mo', [], {stretchy:false}, cdotsEntity);
+      // VS: OLD
+      // var ldots = MML.mo(MML.entity("#x2026")).With({stretchy:false});
+      // var cdots = MML.mo(MML.entity("#x22EF")).With({stretchy:false});
       this.Push(STACKITEM.dots().With({
-        ldots: this.mmlToken(MML.mo(MML.entity("#x2026")).With({stretchy:false})),
-        cdots: this.mmlToken(MML.mo(MML.entity("#x22EF")).With({stretchy:false}))
+        ldots: this.mmlToken(ldots),
+        cdots: this.mmlToken(cdots)
       }));
     },
     
@@ -2222,6 +2249,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     //
     Translate: function (script) {
       imp.printMethod('Translate');
+      imp.printSimple(script);
       var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       var data = {math:math, display:display, script:script};
