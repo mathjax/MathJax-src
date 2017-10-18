@@ -78,6 +78,16 @@ imp.createEntity = function(code) {
   return imp.createText(String.fromCharCode(parseInt(code,16)));
 };
 
+imp.createError = function(message) {
+  if (!imp.NEW) {
+    return imp.MML.Error(message);
+  }
+  var text = imp.createText(message);
+  var mtext = imp.createNode('mtext', [], {}, text);
+  var error = imp.createNode('merror', [mtext], {});
+  return error;
+};
+
 imp.appendChildren = function(node, children) {
   if (imp.NEW) {
     for (let child of children) {
@@ -121,12 +131,12 @@ imp.setProperties = function(node, properties) {
 
 
 imp.getProperty = function(node, property) {
-  return imp.NEW ? node.getProperty(property) : node[property];
+  return imp.NEW ? node.getProperty(property) : node.Get(property);
 };
 
 
 imp.getAttribute = function(node, attr) {
-  return imp.NEW ? node.attributes.get(attr) : node[attr];
+  return imp.NEW ? node.attributes.get(attr) : node.Get(attr);
 }
 
 

@@ -206,7 +206,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
   STACKITEM.close = STACKITEM.Subclass({
     type: "close", isClose: true
   });
-
+  
   STACKITEM.prime = STACKITEM.Subclass({
     type: "prime",
     checkItem: function (item) {
@@ -648,7 +648,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       this.stack.Push(arg);
     },
     PushAll: function (args) {
-    imp.printMethod("PushAll");
+      imp.printMethod("PushAll");
       for(var i = 0, m = args.length; i < m; i++) {
         this.stack.Push(args[i]);
       } 
@@ -879,7 +879,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
           // @test Move Superscript, Large Operator
           if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.over)) {
         imp.printSimple('Case 3');
-            if (base.movablelimits && imp.isClass(base, 'mi')) {
+            if (imp.getAttribute(base, 'movablelimits') && imp.isClass(base, 'mi')) {
               // @test Mathop Super
               base = this.mi2mo(base);
             }
@@ -990,8 +990,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     mi2mo: function (mi) {
     imp.printMethod("mi2mo");
       // @test Mathop Sub, Mathop Super
-      var mo = MML.mo();
-      imp.appendChildren(mo, mi.data);
+      var mo = imp.createNode('mo', [], {});
+      imp.copyChildren(mi, mo);
       var id;
       // TODO: Figure out how to copy these attributes.
       for (id in mo.defaults) {
@@ -1339,7 +1339,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       var mo = (imp.isEmbellished(c) ? imp.getCoreMO(c) : c);
       if (imp.isClass(mo, 'mo')) {
         // @test Vector Op
-        mo.movablelimits = false;
+        imp.setProperties(mo, {'movablelimits': false});
       }
       var muoNode = imp.createNode('munderover', [c,null,mml], {accent: true});
       var texAtom = imp.createNode('TeXAtom', [muoNode], {});
@@ -1355,9 +1355,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       var pos = {o: "over", u: "under"}[name.charAt(1)];
       var base = this.ParseArg(name);
       // TODO: Sort this one out!
-      if (base.Get("movablelimits")) {
+      if (imp.getAttribute(base, 'movablelimits')) {
         // @test Overline Sum
-        base.movablelimits = false;
+        imp.setProperties(base, {'movablelimits': false});
       }
       if (imp.isClass(base, 'munderover') && imp.isEmbellished(base)) {
         // @test Overline Limits
@@ -1396,7 +1396,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.printMethod("Overset");
       // @test Overset
       var top = this.ParseArg(name), base = this.ParseArg(name);
-      if (base.movablelimits) base.movablelimits = false;
+      if (imp.getAttribute(base, 'movablelimits')) {
+        imp.setProperties(base, {'movablelimits': false});
+      }
       var node = imp.createNode('mover', [base, top], {});
       // VS: OLD
       // var node = MML.mover(base,top); 
@@ -1406,7 +1408,10 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.printMethod("Underset");
       // @test Underset
       var bot = this.ParseArg(name), base = this.ParseArg(name);
-      if (base.movablelimits) base.movablelimits = false;
+      if (imp.getAttribute(base, 'movablelimits')) {
+        // @test Overline Sum
+        imp.setProperties(base, {'movablelimits': false});
+      }
       var node = imp.createNode('munder', [base, bot], {});
       // VS: OLD
       // var node = MML.munder(base,bot);
@@ -2311,7 +2316,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     formatError: function (err,math,display,script) {
       var message = err.message.replace(/\n.*/,"");
       HUB.signal.Post(["TeX Jax - parse error",message,math,display,script]);
-      return MML.Error(message);
+      return imp.createError(message);
     },
 
     //
@@ -2321,7 +2326,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       //
       //  Translate message if it is ["id","message",args]
       //
-      if (isArray(message)) {message = _.apply(_,message)}
+      if (isArray(message)) {message = _.apply(_,message);}
       throw HUB.Insert(Error(message),{texError: true});
     },
     
