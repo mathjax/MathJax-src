@@ -178,10 +178,6 @@ imp.copyChildren = function(oldNode, newNode) {
 
 
 imp.isType = function(node, type) {
-  return imp.NEW ? node.isKind(type) : node.type === type;
-};
-
-imp.isClass = function(node, type) {
   return imp.NEW ? node.isKind(type) : node.isa(imp.MML[type]);
 };
 

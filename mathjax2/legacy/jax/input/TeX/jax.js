@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = true;
+process.TEST_NEW = false;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -482,7 +482,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
             imp.printSimple('case 4');
             return [this.data[0],item];
           }
-          if (imp.isClass(item.data[0], 'mspace')) {
+          if (imp.isType(item.data[0], 'mspace')) {
             imp.untested(100);
             return [this.data[0],item];
           }
@@ -879,7 +879,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
           // @test Move Superscript, Large Operator
           if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.over)) {
         imp.printSimple('Case 3');
-            if (imp.getAttribute(base, 'movablelimits') && imp.isClass(base, 'mi')) {
+            if (imp.getAttribute(base, 'movablelimits') && imp.isType(base, 'mi')) {
               // @test Mathop Super
               base = this.mi2mo(base);
             }
@@ -940,7 +940,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         if (movesupsub) {
           // @test Large Operator, Move Superscript
           if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.under)) {
-            if (imp.getAttribute(base, 'movablelimits') && imp.isClass(base, 'mi')) {
+            if (imp.getAttribute(base, 'movablelimits') && imp.isType(base, 'mi')) {
               // @test Mathop Sub
               base = this.mi2mo(base);
             }
@@ -1337,7 +1337,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.setProperties(mml, {stretchy: (stretchy ? true : false)});
       // @test Vector Op, Vector
       var mo = (imp.isEmbellished(c) ? imp.getCoreMO(c) : c);
-      if (imp.isClass(mo, 'mo')) {
+      if (imp.isType(mo, 'mo')) {
         // @test Vector Op
         imp.setProperties(mo, {'movablelimits': false});
       }
@@ -1363,7 +1363,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         // @test Overline Sum
         imp.setProperties(base, {'movablelimits': false});
       }
-      if (imp.isClass(base, 'munderover') && imp.isEmbellished(base)) {
+      if (imp.isType(base, 'munderover') && imp.isEmbellished(base)) {
         // @test Overline Limits
         // TODO: Sort these properties out!
         imp.setProperties(imp.getCore(base), {lspace:0,rspace:0}); // get spacing right for NativeMML
@@ -2355,7 +2355,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       math = data.math;
       try {
         mml = TEX.Parse(math).mml();
-        imp.printSimple(mml);
+        console.log(mml.toString());
       } catch(err) {
         if (!err.texError) {throw err}
         mml = this.formatError(err,math,display,script);
@@ -2388,6 +2388,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
           mathNode.texError = true;
         }
         // TODO: Apply the post filters: combination of relations etc.
+        // console.log(this.combineRelations);
+        // this.combineRelations(mathNode);
         return mathNode;
       }
       // VS: OLD
@@ -2402,6 +2404,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       return math;
     },
     postfilterMath: function (math,displaystyle,script) {
+      console.log('Calling postfilter math');
       this.combineRelations(math.root);
       return math;
     },
@@ -2500,10 +2503,11 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     //    (since MathML treats the spacing very differently)
     //
     combineRelations: function (mml) {
-      imp.printMethod('combineRelations');
+      imp.printMethod('combineRelations: ' + mml.data.length);
       var i, m, m1, m2;
       for (i = 0, m = mml.data.length; i < m; i++) {
         if (mml.data[i]) {
+          console.log(mml.data[i]);
           if (mml.isa(MML.mrow)) {
             while (i+1 < m && (m1 = mml.data[i]) && (m2 = mml.data[i+1]) &&
                    m1.isa(MML.mo) && m2.isa(MML.mo) &&
@@ -2521,7 +2525,10 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
               }
             }
           }
-          if (!mml.data[i].isToken) {this.combineRelations(mml.data[i])}
+          if (!mml.data[i].isToken) {
+            imp.untested('Combine Relations Recurse');
+            this.combineRelations(mml.data[i]);
+          }
         }
       }
     }
