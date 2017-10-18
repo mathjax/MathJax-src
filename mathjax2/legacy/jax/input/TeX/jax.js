@@ -1366,14 +1366,14 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       if (imp.isClass(base, 'munderover') && imp.isEmbellished(base)) {
         // @test Overline Limits
         // TODO: Sort these properties out!
-        imp.getCore(base).With({lspace:0,rspace:0}); // get spacing right for NativeMML
+        imp.setProperties(imp.getCore(base), {lspace:0,rspace:0}); // get spacing right for NativeMML
         var mo = imp.createNode('mo', [], {rspace:0});
         base = imp.createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
         // VS: OLD
         // var mo = MML.mo().With({rspace:0});
         // base = MML.mrow(mo,base);  // add an empty <mi> so it's not embellished any more
       }
-      var mml = imp.createNode('munderover', [base,null,null], {});
+      var mml = imp.createNode('munderover', [base], {});
       var entity = imp.createEntity(c);
       mo = imp.createNode('mo', [], {stretchy:true, accent:!noaccent}, entity);
       // VS: OLD
@@ -1381,11 +1381,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       // var entity = MML.entity("#x"+c);
       // mo = MML.mo(entity).With({stretchy:true, accent:!noaccent});
 
-      imp.setData(
-        mml,
-        mml[pos], 
-        this.mmlToken(mo)
-      );
+      imp.setData(mml, mml[pos], this.mmlToken(mo));
 
       if (stack) {
         imp.untested(8);
