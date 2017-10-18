@@ -27,6 +27,7 @@
 let sm = require('mathjax3/input/tex/SymbolMap.js');
 let tc = require('mathjax3/input/tex/TexConstants.js');
 let BaseMethods = require('mathjax3/input/tex/BaseMethods.js').default;
+let imp = require("../../jax/input/TeX/imp.js").imp;
 
 
 MathJax.Extension["TeX/AMSmath"] = {
@@ -177,6 +178,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Add the tag to the environment (to be added to the table row later)
      */
     HandleTag: function (name) {
+      imp.printMethod('AMS-HandleTag');
       var star = this.GetStar();
       var arg = this.trimSpaces(this.GetArgument(name)), tag = arg;
       if (!star) {arg = CONFIG.formatTag(arg)}
@@ -191,6 +193,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
     },
     HandleNoTag: function (name) {
+      imp.printMethod('AMS-HandleNoTag');
       if (this.stack.global.tag) {delete this.stack.global.tag}
       this.stack.global.notag = true;  // prevent auto-tagging
     },
@@ -199,6 +202,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Record a label name for a tag
      */
     HandleLabel: function (name) {
+      imp.printMethod('AMS-HandleLabel');
       var global = this.stack.global, label = this.GetArgument(name);
       if (label === "") return;
       if (!AMS.refUpdate) {
@@ -214,6 +218,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle a label reference
      */
     HandleRef: function (name,eqref) {
+      imp.printMethod('AMS-HandleRef');
       var label = this.GetArgument(name);
       var ref = AMS.labels[label] || AMS.eqlabels[label];
       if (!ref) {ref = {tag:"???",id:""}; AMS.badref = !AMS.refUpdate}
@@ -227,6 +232,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle \DeclareMathOperator
      */
     HandleDeclareOp: function (name) {
+      imp.printMethod('AMS-HandleDeclareOp');
       var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
       var cs = this.trimSpaces(this.GetArgument(name));
       if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
@@ -236,6 +242,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     HandleOperatorName: function (name) {
+      imp.printMethod('AMS-HandleOperatorName');
       var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
       var op = this.trimSpaces(this.GetArgument(name));
       op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
@@ -244,6 +251,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     SkipLimits: function (name) {
+      imp.printMethod('AMS-SkipLimits');
       var c = this.GetNext(), i = this.i;
       if (c === "\\" && ++this.i && this.GetCS() !== "limits") this.i = i;
     },
@@ -252,6 +260,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Record presence of \shoveleft and \shoveright
      */
     HandleShove: function (name,shove) {
+      imp.printMethod('AMS-HandleShove');
       var top = this.stack.Top();
       if (top.type !== "multline" || top.data.length) {
         TEX.Error(["CommandAtTheBeginingOfLine",
@@ -264,6 +273,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle \cfrac
      */
     CFrac: function (name) {
+      imp.printMethod('AMS-CFrac');
       var lr  = this.trimSpaces(this.GetBrackets(name,"")),
           num = this.GetArgument(name),
           den = this.GetArgument(name);
@@ -280,6 +290,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Implement AMS generalized fraction
      */
     Genfrac: function (name,left,right,thick,style) {
+      imp.printMethod('AMS-Genfrac');
       if (left  == null) {left  = this.GetDelimiterArg(name)}
       if (right == null) {right = this.GetDelimiterArg(name)}
       if (thick == null) {thick = this.GetArgument(name)}
@@ -304,6 +315,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Implements multline environment (mostly handled through STACKITEM below)
      */
     Multline: function (begin,numbered) {
+      imp.printMethod('AMS-Multline');
       this.Push(begin); this.checkEqnEnv();
       return STACKITEM.multline(numbered,this.stack).With({
         arraydef: {
@@ -320,6 +332,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle AMS aligned environments
      */
     AMSarray: function (begin,numbered,taggable,align,spacing) {
+      imp.printMethod('AMS-AMSarray');
       this.Push(begin); if (taggable) {this.checkEqnEnv()}
       align = align.replace(/[^clr]/g,'').split('').join(' ');
       align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
@@ -337,6 +350,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     
     AlignedAMSArray: function (begin) {
+      imp.printMethod('AMS-AlignedAMSArray');
       var align = this.GetBrackets("\\begin{"+begin.name+"}");
       return this.setArrayAlign(this.AMSarray.apply(this,arguments),align);
     },
@@ -345,6 +359,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle alignat environments
      */
     AlignAt: function (begin,numbered,taggable) {
+      imp.printMethod('AMS-AlignAt');
       var n, valign, align = "", spacing = [];
       if (!taggable) {valign = this.GetBrackets("\\begin{"+begin.name+"}")}
       n = this.GetArgument("\\begin{"+begin.name+"}");
@@ -363,11 +378,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle equation environment
      */
     EquationBegin: function (begin,force) {
+      imp.printMethod('AMS-EquationBegin');
       this.checkEqnEnv();
       this.stack.global.forcetag = (force && CONFIG.autoNumber !== "none");
       return begin;
     },
     EquationStar: function (begin,row) {
+      imp.printMethod('AMS-EquationStar');
       this.stack.global.tagged = true; // prevent automatic tagging
       return row;
     },
@@ -376,6 +393,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Check for bad nesting of equation environments
      */
     checkEqnEnv: function () {
+      imp.printMethod('AMS-checkEqnEnv');
       if (this.stack.global.eqnenv)
         {TEX.Error(["ErroneousNestingEq","Erroneous nesting of equation structures"])}
       this.stack.global.eqnenv = true;
@@ -385,6 +403,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle multiple integrals (make a mathop if followed by limits)
      */
     MultiIntegral: function (name,integral) {
+      imp.printMethod('AMS-MultiIntegral');
       var next = this.GetNext();
       if (next === "\\") {
         var i = this.i; next = this.GetArgument(name); this.i = i;
@@ -401,6 +420,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle stretchable arrows
      */
     xArrow: function (name,chr,l,r) {
+      imp.printMethod('AMS-xArrow');
       var def = {width: "+"+(l+r)+"mu", lspace: l+"mu"};
       var bot = this.GetBrackets(name),
           top = this.ParseArg(name);
@@ -420,6 +440,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Get a delimiter or empty argument
      */
     GetDelimiterArg: function (name) {
+      imp.printMethod('AMS-GetDelimiterArg');
       var c = this.trimSpaces(this.GetArgument(name));
       if (c == "") return null;
       if (c in TEXDEF.delimiter) return c;
@@ -430,6 +451,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Get a star following a control sequence name, if any
      */
     GetStar: function () {
+      imp.printMethod('AMS-GetStar');
       var star = (this.GetNext() === "*");
       if (star) {this.i++}
       return star;
@@ -444,6 +466,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Increment equation number and form tag mtd element
      */
     autoTag: function () {
+      imp.printMethod('AMS-autoTag');
       var global = this.global;
       if (!global.notag) {
         AMS.number++; global.tagID = CONFIG.formatNumber(AMS.number.toString());
@@ -456,6 +479,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Get the tag and record the label, if any
      */
     getTag: function () {
+      imp.printMethod('AMS-getTag');
       var global = this.global, tag = global.tag; global.tagged = true;
       if (global.label) {
         if (CONFIG.useLabelIds) {tag.id = CONFIG.formatID(global.label)}
@@ -476,6 +500,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       return tag;
     },
     clearTag: function () {
+      imp.printMethod('AMS-clearTag');
       var global = this.global;
       delete global.tag; delete global.tagID; delete global.label;
     },
@@ -487,6 +512,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  be infix.
      */
     fixInitialMO: function (data) {
+      imp.printMethod('AMS-fixInitialMO');
       for (var i = 0, m = data.length; i < m; i++) {
         if (data[i] && (data[i].type !== "mspace" &&
            (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
@@ -503,12 +529,14 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   STACKITEM.multline = STACKITEM.array.Subclass({
     type: "multline",
     Init: function (numbered,stack) {
+      imp.printMethod('AMS-Init');
       this.SUPER(arguments).Init.apply(this);
       this.numbered = (numbered && CONFIG.autoNumber !== "none");
       this.save = {notag: stack.global.notag};
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
+      imp.printMethod('AMS-EndEntry');
       if (this.table.length) {this.fixInitialMO(this.data)}
       var mtd = MML.mtd.apply(MML,this.data);
       if (this.data.shove) {mtd.columnalign = this.data.shove}
@@ -516,6 +544,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.data = [];
     },
     EndRow: function () {
+      imp.printMethod('AMS-EndRow');
       if (this.row.length != 1) {
         TEX.Error(["MultlineRowsOneCol",
                    "The rows within the %1 environment must have exactly one column",
@@ -524,6 +553,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.table.push(this.row); this.row = [];
     },
     EndTable: function () {
+      imp.printMethod('AMS-EndTable');
       this.SUPER(arguments).EndTable.call(this);
       if (this.table.length) {
         var m = this.table.length-1, i, label = -1;
@@ -550,6 +580,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   STACKITEM.AMSarray = STACKITEM.array.Subclass({
     type: "AMSarray",
     Init: function (name,numbered,taggable,stack) {
+      imp.printMethod('AMS-Init');
       this.SUPER(arguments).Init.apply(this);
       this.numbered = (numbered && CONFIG.autoNumber !== "none");
       this.save = {notags: stack.global.notags, notag: stack.global.notag};
@@ -557,11 +588,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
+      imp.printMethod('AMS-EndEntry');
       if (this.row.length) {this.fixInitialMO(this.data)}
       this.row.push(MML.mtd.apply(MML,this.data));
       this.data = [];
     },
     EndRow: function () {
+      imp.printMethod('AMS-EndRow');
       var mtr = MML.mtr;
       if (!this.global.tag && this.numbered) {this.autoTag()}
       if (this.global.tag && !this.global.notags) {
@@ -572,6 +605,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.table.push(mtr.apply(MML,this.row)); this.row = [];
     },
     EndTable: function () {
+      imp.printMethod('AMS-EndTable');
       this.SUPER(arguments).EndTable.call(this);
       this.global.notags = this.save.notags;
       this.global.notag  = this.save.notag;
@@ -584,6 +618,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   STACKITEM.start.Augment({
     oldCheckItem: STACKITEM.start.prototype.checkItem,
     checkItem: function (item) {
+      imp.printMethod('AMS-checkItem');
       if (item.type === "stop") {
         var mml = this.mmlData(), global = this.global;
         if (AMS.display && !global.tag && !global.tagged && !global.isInner &&
