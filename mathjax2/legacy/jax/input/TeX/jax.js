@@ -56,6 +56,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
   var MML = MathJax.ElementJax.mml;
   
   var _ = function (id) {
+    console.log("In localiseation?" + id);
     return MathJax.Localization._.apply(MathJax.Localization,
       [["TeX", id]].concat([].slice.call(arguments,1)));
   };
@@ -73,12 +74,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       var i, m, item, top;
       for (i = 0, m = arguments.length; i < m; i++) {
         item = arguments[i]; if (!item) continue;
-        // VS: NEW
-        if (item instanceof mmlNode.AbstractMmlNode) {
-          item = STACKITEM.mml(item);
-        }
-        // VS: OLD
-        if (item instanceof MML.mbase) {
+        if (imp.isNode(item)) {
           item = STACKITEM.mml(item);
         }
         item.global = this.global;
@@ -190,10 +186,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       if (item.hasType('close')) {
         var mml = this.mmlData();
         // @test PrimeSup
-        if (imp.NEW) {
-          // TODO: Move that into mmlData?
-          mml = imp.cleanSubSup(mml);
-        }
+        // TODO: Move that into mmlData?
+        mml = imp.cleanSubSup(mml);
         var node = imp.createNode('TeXAtom', [mml], {});
         // VS: OLD
         // var node = MML.TeXAtom(mml);
@@ -518,13 +512,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
            imp.isType(item.data[0], 'mtext'))) {
         mml = item.data[0];
         imp.printJSON(mml);
-        if (imp.NEW) {
-          c = mml.getText();
-        } else {
-          c = mml.data.join("");
-        }
+        c = imp.getText(mml);
         if (c.length === 1 && !imp.getProperty(mml, 'movesupsub') &&
-            imp.NEW ? mml.childNodes.length === 1 : mml.data.length === 1) {
+            imp.getChildren(mml).length === 1) {
           if (STACKITEM.not.remap.contains(c)) {
             // @test Negation Simple, Negation Complex
             var textNode = imp.createText(STACKITEM.not.remap.lookup(c).char);
@@ -659,7 +649,10 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         return null;
       }
       var node = this.stack.Top().data[0];
-      if (imp.NEW) {node.setTeXclass(null);};
+      if (imp.NEW) {
+        // Makes sure TeXclasses are properly set, so none is null.
+        node.setTeXclass(null);
+      };
       return node;
     },
 
@@ -992,23 +985,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       // @test Mathop Sub, Mathop Super
       var mo = imp.createNode('mo', [], {});
       imp.copyChildren(mi, mo);
-      var id;
       // TODO: Figure out how to copy these attributes.
-      if (imp.NEW) {
-        mo.attributes = mi.attributes;
-        imp.setProperties(mo, mi.properties);
-      } else {
-        for (id in mo.defaults) {
-          if (mo.defaults.hasOwnProperty(id) && mi[id] != null) {
-            mo[id] = mi[id];
-          }
-        }
-        for (id in MML.copyAttributes) {
-          if (MML.copyAttributes.hasOwnProperty(id) && mi[id] != null) {
-            mo[id] = mi[id];
-          }
-        }
-      }
+      imp.copyAttributes(mi, mo);
       // TODO: Do this with get('lspace') etc.
       imp.setProperties(mo, {lspace: '0', rspace: '0'});
       // mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
@@ -1192,7 +1170,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         op = top.data[top.data.length-1] = node;
       } else if (imp.isType(op, "msubsup") && limits) {
         // @test Limits SubSup
-        // node = imp.createNode('munderover', imp.NEW ? op.childNodes : op.data, {});
+        // node = imp.createNode('munderover', imp.getChildren(op), {});
         // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
         node = imp.createNode('munderover', [], {});
         imp.copyChildren(op, node);
@@ -1249,7 +1227,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       var mml = TEX.Parse(arg,this.stack.env).mml();
       if (!n) {
         // @test Square Root
-        mml = imp.createNode('msqrt', imp.NEW ? [mml] : mml.array(), {});
+        // mml = imp.createNode('msqrt', imp.NEW ? [mml] : mml.array(), {});
+        // .array call never seemed to be necessary!
+        mml = imp.createNode('msqrt', [mml], {});
         // VS: OLD
         // mml = MML.msqrt.apply(MML,mml.array());
       } else {
@@ -1457,7 +1437,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       this.Push(mml);
     },
 
-    // VS: This method is only called during a macro call.
+    // VS: This method is only called during a macro call: AMS Math and \\mod.
     MmlToken: function (name) {
     imp.printMethod("MmlToken");
       var type = this.GetArgument(name),
@@ -1755,6 +1735,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     
     Macro: function (name,macro,argcount,def) {
     imp.printMethod("Macro");
+      imp.untested(200);
       if (argcount) {
         var args = [];
         if (def != null) {
@@ -1956,7 +1937,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     */
 
     BeginEnd: function (name) {
-    imp.printMethod("BeginEnd");
+      imp.printMethod("BeginEnd");
+      imp.untested(201);
       var env = this.GetArgument(name);
       if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
@@ -1974,6 +1956,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     },
     BeginEnvironment: function (func, env, args) {
       imp.printMethod("BeginEnvironment");
+      imp.untested(202);
       var end = args[0];
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       mml = func.apply(this,[mml].concat(args.slice(1)));
@@ -2356,9 +2339,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       imp.printSimple(script);
       var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
-      var data = {math:math, display:display, script:script};
-      var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
-      math = data.math;
+      // var data = {math:math, display:display, script:script};
+      // var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
+      // math = data.math;
       try {
         mml = TEX.Parse(math).mml();
         imp.printSimple(mml.toString());
@@ -2367,45 +2350,23 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         mml = this.formatError(err,math,display,script);
         isError = true;
       }
-      // VS: temporary (get INHERIT from attributes)
-      if (imp.NEW) {
-        mml = imp.cleanSubSup(mml);
-        if (mml.isKind('mtable') && mml.attributes.get('displaystyle') === 'inherit') {
-          mml.displaystyle = display;
-        } // for tagged equations
-        if (mml.isInferred) {
-          var mathNode = imp.createNode('math', [mml], {});
-        } else {
-          // TODO: We should not need this case!
-          if (mml.isKind('mrow') && !mml.isKind('math')) {
-            mathNode = imp.createNode('math', [], {});
-            var inferredMrow = mathNode.childNodes[0];
-            inferredMrow.attributes = mml.attributes;
-            inferredMrow.properties = mml.properties;
-            mathNode.setChildren(mml.childNodes);
-          } else if (!mml.isKind('math')) {
-            mathNode = imp.createNode('math', [mml], {});
-          } else {
-            mathNode = mml;
-          }
-          
-        }
-        if (display) {
-          mathNode.attributes.set("display", "block");
-        }
-        if (isError) {
-          mathNode.texError = true;
-        }
-        this.combineRelations(mathNode);
-        return mathNode;
+      mml = imp.cleanSubSup(mml);
+      if (imp.isType(mml, 'mtable') &&
+          imp.getAttribute(mml, 'displaystyle') === 'inherit') {
+        // for tagged equations
+        imp.untested('Tagged equations');
+        imp.setAttribute(mml, 'displaystyle', display);
       }
-      // VS: OLD
-      if (mml.isa(MML.mtable) && mml.displaystyle === "inherit") mml.displaystyle = display; // for tagged equations
-      if (mml.inferred) {mml = MML.apply(MathJax.ElementJax,mml.data)} else {mml = MML(mml)}
-      if (display) {mml.root.display = "block"}
-      if (isError) {mml.texError = true}
-      data.math = mml;
-      return this.postfilterHooks.Execute(data) || data.math;
+      let mathNode = imp.createMath(mml);
+      let root = imp.getRoot(mathNode);
+      if (display) {
+        imp.setAttribute(root, 'display', 'block');
+      }
+      if (isError) {
+        mathNode.texError = true;
+      }
+      this.combineRelations(root);
+      return mathNode;
     },
     prefilterMath: function (math,displaystyle,script) {
       return math;
@@ -2427,7 +2388,11 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       //
       //  Translate message if it is ["id","message",args]
       //
+      console.log('Original error');
+      console.log(message);
       if (isArray(message)) {message = _.apply(_,message);}
+      console.log('Localised error');
+      console.log(message);
       throw HUB.Insert(Error(message),{texError: true});
     },
     
@@ -2481,7 +2446,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     fixedFence: function (open,mml,close) {
       // @test Choose, Over With Delims, Above with Delims
       imp.printMethod('fixedFence');
-      var mrow = imp.createNode('mrow', [], {open:open, close:close, texClass:MML.TEXCLASS.ORD});
+      var mrow = imp.createNode('mrow', [], {open:open, close:close, texClass:TEXCLASS.ORD});
       // VS: OLD
       // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
       if (open) {
@@ -2511,7 +2476,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     combineRelations: function (mml) {
       imp.printMethod('combineRelations: ');
       var i, m, m1, m2;
-      var children = imp.NEW ? mml.childNodes : mml.data;
+      var children = imp.getChildren(mml);
       for (i = 0, m = children.length; i < m; i++) {
         if (children[i]) {
           if (imp.isType(mml, 'mrow')) {
@@ -2521,11 +2486,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
                    imp.getTexClass(m2) === TEXCLASS.REL) {
               if (imp.getProperty(m1, 'variantForm') == imp.getProperty(m2, 'variantForm') &&
                   imp.getAttribute(m1, 'mathvariant') == imp.getAttribute(m2, 'mathvariant')) {
-                imp.appendChildren(m1, imp.NEW ? m2.childNodes : m2.data);
+                imp.appendChildren(m1, imp.getChildren(m2));
                 children.splice(i+1,1);
-                // if (imp.NEW) {
-                //   mml.setChildren(children);
-                // }
                 m--;
               } else {
                 imp.untested('Combine Relations Case 2');

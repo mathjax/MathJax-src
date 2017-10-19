@@ -24,6 +24,8 @@
  */
 
 
+import {AbstractMmlNode, AbstractMmlEmptyNode} from 'mathjax3/core/MmlTree/MmlNode.js';
+
 // Intermediate parser namespace
 var imp = {};
 console.log("Loading imp!");
@@ -47,7 +49,6 @@ imp.methodOut = true;
 imp.defOut = false;
 imp.jsonOut = false;
 imp.simpleOut = true;
-
 
 
 imp.createNode = function(type, children, def, text) {
@@ -80,6 +81,7 @@ imp.createEntity = function(code) {
   return imp.createText(String.fromCharCode(parseInt(code,16)));
 };
 
+
 imp.createError = function(message) {
   if (!imp.NEW) {
     return imp.MML.Error(message);
@@ -89,6 +91,45 @@ imp.createError = function(message) {
   var error = imp.createNode('merror', [mtext], {});
   return error;
 };
+
+
+imp.createMath = function(math) {
+  if (!imp.NEW) {
+    return math.inferred ? imp.MML.apply(imp.MML, math.data) : imp.MML(math);
+  }
+  if (math.isInferred) {
+    var mathNode = imp.createNode('math', [math], {});
+  } else {
+    // TODO: We should not need this case!
+    if (math.isKind('mrow') && !math.isKind('math')) {
+      mathNode = imp.createNode('math', [], {});
+      var inferredMrow = mathNode.childNodes[0];
+      inferredMrow.attributes = math.attributes;
+      inferredMrow.properties = math.properties;
+      mathNode.setChildren(math.childNodes);
+    } else if (!math.isKind('math')) {
+      mathNode = imp.createNode('math', [math], {});
+    } else {
+      mathNode = math;
+    }
+  }
+  return mathNode;
+};
+
+
+imp.getRoot = function(tree) {
+  return imp.NEW ? tree : tree.root;
+};
+
+imp.getChildren = function(node) {
+  return imp.NEW ? node.childNodes : node.data;
+};
+
+
+imp.getText = function(node) {
+  return imp.NEW ? node.getText() : node.data.join("");
+};
+
 
 imp.appendChildren = function(node, children) {
   if (imp.NEW) {
@@ -177,6 +218,25 @@ imp.copyChildren = function(oldNode, newNode) {
 };
 
 
+imp.copyAttributes = function(oldNode, newNode) {
+  if (imp.NEW) {
+    newNode.attributes = oldNode.attributes;
+    imp.setProperties(newNode, oldNode.properties);
+  } else {
+    for (const id in newNode.defaults) {
+      if (newNode.defaults.hasOwnProperty(id) && oldNode[id] != null) {
+        newNode[id] = oldNode[id];
+      }
+    }
+    for (const id in imp.MML.copyAttributes) {
+      if (imp.MML.copyAttributes.hasOwnProperty(id) && oldNode[id] != null) {
+        newNode[id] = oldNode[id];
+      }
+    }
+  }
+};
+
+
 imp.isType = function(node, type) {
   return imp.NEW ? node.isKind(type) : node.isa(imp.MML[type]);
 };
@@ -199,6 +259,9 @@ imp.getCoreMO = function(node) {
 
 
 imp.cleanSubSup = function(node) {
+  if (!imp.NEW) {
+    return node;
+  }
   let rewrite = [];
   node.walkTree((n, d) => {
     const children = n.childNodes;
@@ -233,12 +296,12 @@ imp.printSimple = function(txt) {
 };
 
 imp.untested = function(kind) {
-  console.log("Untested case " + kind);
+  console.log('Untested case ' + kind);
 };
 
 imp.printMethod = function(text) {
   if (imp.methodOut) {
-    console.log("In " + text);
+    console.log('In ' + text);
   }
 };
 
@@ -264,11 +327,17 @@ imp.printJSON = function(node) {
 
 imp.printDef = function(def) {
   if (imp.methodOut && imp.defOut) {
-    console.log("With:");
+    console.log('With:');
     for (var x in def) {
-      console.log(x + ": " + def[x]);
+      console.log(x + ': ' + def[x]);
     }
   }
+};
+
+imp.isNode = function(item) {
+  return imp.NEW ?
+    (item instanceof AbstractMmlNode || item instanceof AbstractMmlEmptyNode) :
+    item instanceof imp.MML.mbase;
 };
 
 export {imp};
