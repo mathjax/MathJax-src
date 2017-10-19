@@ -2244,7 +2244,10 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
           } else if (c === '}') {
             if (match === '}' && braces === 0) {
               imp.untested(12);
-              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
+              node = imp.createNode('TeXAtom', [TEX.Parse(text.slice(k,i),{}).mml()], def);
+              // VS: OLD
+              // node = MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def));
+              mml.push(node);
               match = ''; k = i;
             } else if (match !== '') {
               if (braces) braces--;
@@ -2261,7 +2264,10 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
                 match = ')'; k = i;
               } else if (c === ')' && match === ')' && braces === 0) {
                 imp.untested(13);
-                mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml()));
+                node = imp.createNode('TeXAtom', [TEX.Parse(text.slice(k,i-2),{}).mml()], {});
+                // VS: OLD
+                // node = MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml());
+                mml.push(node);
                 match = ''; k = i;
               } else if (c.match(/[${}\\]/) && match === '')  {
                 i--; text = text.substr(0,i-1) + text.substr(i); // remove \ from \$, \{, \}, or \\
