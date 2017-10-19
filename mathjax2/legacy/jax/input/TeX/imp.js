@@ -169,7 +169,11 @@ imp.setProperties = function(node, properties) {
       } else if (imp.attrs.indexOf(name) !== -1) {
         node.setProperty(name, value);
       } else {
-        node.attributes.set(name, value);
+        // TODO: Check with Davide if this is correct.
+        let inherited = node.attributes.getInherited(name);
+        if (inherited !== value) {
+          node.attributes.set(name, value);
+        }
       }
     }
   } else {
