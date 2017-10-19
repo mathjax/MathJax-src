@@ -1134,7 +1134,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     },
     NamedOp: function (name,id) {
       imp.printMethod("NamedOp");
-      imp.untested(220);
+      // imp.untested(220);
       if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,"\u2006");
       var mml = imp.createNode('mo', [id], {
@@ -1740,7 +1740,6 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     
     Macro: function (name,macro,argcount,def) {
     imp.printMethod("Macro");
-      imp.untested(200);
       if (argcount) {
         var args = [];
         if (def != null) {
@@ -1761,7 +1760,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     
     Matrix: function (name,open,close,align,spacing,vspacing,style,cases,numbered) {
     imp.printMethod("Matrix");
-      imp.untested(36);
+      // imp.untested(36);
       var c = this.GetNext();
       if (c === "")
         {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
@@ -1783,6 +1782,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     
     Entry: function (name) {
     imp.printMethod("Entry");
+      // imp.untested(20);
       this.Push(STACKITEM.cell().With({isEntry: true, name: name}));
       if (this.stack.Top().isCases) {
         //
@@ -1871,7 +1871,8 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       }
       this.Push(STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
       var top = this.stack.Top();
-      if (top.isa(STACKITEM.array)) {
+      if (top instanceof STACKITEM.array) {
+        // @test Array
         if (n && top.arraydef.rowspacing) {
           var rows = top.arraydef.rowspacing.split(/ /);
           if (!top.rowspacing) {top.rowspacing = this.dimen2em(rows[0])}
@@ -1880,8 +1881,18 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
           top.arraydef.rowspacing = rows.join(' ');
         }
       } else {
-        if (n) {this.Push(MML.mspace().With({depth:n}))}
-        this.Push(MML.mspace().With({linebreak:MML.LINEBREAK.NEWLINE}));
+        if (n) {
+          // @test Custom Linebreak
+          var node = imp.createNode('mspace', [], {depth:n});
+          // VS: OLD
+          // var node = MML.mspace().With({depth:n});
+          this.Push(node);
+        }
+        // @test Linebreak
+        node = imp.createNode('mspace', [], {linebreak:TexConstant.LineBreak.NEWLINE});
+        // VS: OLD
+        // node = MML.mspace().With({linebreak:MML.LINEBREAK.NEWLINE});
+        this.Push(node);
       }
     },
     emPerInch: 7.2,
@@ -1921,7 +1932,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         top.frame.push("top");
       } else {
         var lines = (top.arraydef.rowlines ? top.arraydef.rowlines.split(/ /) : []);
-        while (lines.length < top.table.length) {lines.push("none")}
+        while (lines.length < top.table.length) {
+          lines.push("none");
+        }
         lines[top.table.length-1] = style;
         top.arraydef.rowlines = lines.join(' ');
       }
@@ -1943,7 +1956,6 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
 
     BeginEnd: function (name) {
       imp.printMethod("BeginEnd");
-      imp.untested(201);
       var env = this.GetArgument(name);
       if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
@@ -1961,7 +1973,6 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     },
     BeginEnvironment: function (func, env, args) {
       imp.printMethod("BeginEnvironment");
-      imp.untested(202);
       var end = args[0];
       var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       mml = func.apply(this,[mml].concat(args.slice(1)));
@@ -2211,15 +2222,20 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
     InternalMath: function (text,level) {
     imp.printMethod("InternalMath");
       var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
-      var mml = [], i = 0, k = 0, c, match = '', braces = 0;
+      var mml = [], i = 0, k = 0, c, node, match = '', braces = 0;
       if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
         while (i < text.length) {
           c = text.charAt(i++);
           if (c === '$') {
             if (match === '$' && braces === 0) {
-              mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml()));
+              // @test Interspersed Text
+              node = imp.createNode('TeXAtom', [TEX.Parse(text.slice(k,i-1),{}).mml()], {});
+              // VS: OLD
+              // node = MML.TeXAtom(TEX.Parse(text.slice(k,i-1),{}).mml());
+              mml.push(node);
               match = ''; k = i;
             } else if (match === '') {
+              // @test Interspersed Text
               if (k < i-1) mml.push(this.InternalText(text.slice(k,i-1),def));
               match = '$'; k = i;
             }
@@ -2227,6 +2243,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
             braces++;
           } else if (c === '}') {
             if (match === '}' && braces === 0) {
+              imp.untested(12);
               mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i),{}).mml().With(def)));
               match = ''; k = i;
             } else if (match !== '') {
@@ -2243,6 +2260,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
                 if (k < i-2) mml.push(this.InternalText(text.slice(k,i-2),def));
                 match = ')'; k = i;
               } else if (c === ')' && match === ')' && braces === 0) {
+                imp.untested(13);
                 mml.push(MML.TeXAtom(TEX.Parse(text.slice(k,i-2),{}).mml()));
                 match = ''; k = i;
               } else if (c.match(/[${}\\]/) && match === '')  {
@@ -2255,16 +2273,26 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       }
       if (k < text.length) mml.push(this.InternalText(text.slice(k),def));
       if (level != null) {
-        mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false,scriptlevel:level})];
+        // @test Label, Fbox, Hbox
+        mml = [imp.createNode('mstyle', mml, {displaystyle:false,scriptlevel:level})];
+        // VS: OLD
+        // mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false,scriptlevel:level})];
       } else if (mml.length > 1) {
-        mml = [MML.mrow.apply(MML,mml)];
+        // @test Interspersed Text
+        mml = [imp.createNode('mrow', mml, {})];
+        // VS: OLD
+        // mml = [MML.mrow.apply(MML,mml)];
       }
       return mml;
     },
     InternalText: function (text,def) {
-    imp.printMethod("InternalText");
+      // @test Label, Fbox, Hbox
+      imp.printMethod("InternalText");
       text = text.replace(/^\s+/,NBSP).replace(/\s+$/,NBSP);
-      return MML.mtext(MML.chars(text)).With(def);
+      var textNode = imp.createText(text);
+      return imp.createNode('mtext', [], def, textNode);
+      // VS: OLD
+      // return MML.mtext(MML.chars(text)).With(def);
     },
 
     /*
@@ -2503,7 +2531,6 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
             }
           }
           if (!children[i].isToken) {
-            imp.untested('Combine Relations Recurse');
             this.combineRelations(children[i]);
           }
         }
