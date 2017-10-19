@@ -387,7 +387,10 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         }
         if (scriptlevel) {
           imp.untested(3);
-          mml = MML.mstyle(mml).With({scriptlevel: scriptlevel})}
+          mml = imp.createNode('mstyle', [mml], {scriptlevel: scriptlevel});
+          // VS: OLD
+          // mml = MML.mstyle(mml).With({scriptlevel: scriptlevel})}
+        }
         if (this.open || this.close) {mml = TEX.fenced(this.open,mml,this.close)}
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
@@ -1371,7 +1374,9 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
 
       if (stack) {
         imp.untested(8);
-        mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true});
+        mml = imp.createNode('TeXAtom', [mml], {texClass:TEXCLASS.OP, movesupsub:true});
+        // VS: OLD
+        // mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true});
       }
       // TODO: Sort these properties out!
       imp.setProperties(mml, {subsupOK: true});
