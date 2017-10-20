@@ -26,14 +26,13 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = false;
+process.TEST_NEW = true;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
 let TEXCLASS = require("mathjax3/core/MmlTree/MmlNode.js").TEXCLASS;
 let TexConstant = require("mathjax3/input/tex/TexConstants.js").TexConstant;
 let MmlEntities = require("mathjax3/input/mathml/MmlEntities.js").MmlEntities;
-let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
 require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
 let TexError = require('./TexError.js').TexError;
@@ -88,9 +87,9 @@ imp.NEW = process.TEST_NEW;
       if (item.hasType('over') && this.isOpen) {item.num = this.mmlData(false); this.data = []}
       if (item.hasType('cell') && this.isOpen) {
         if (item.linebreak) {return false}
-        TEX.Error(["Misplaced","Misplaced %1",item.name.symbol]);
+        throw new TexError(["Misplaced","Misplaced %1",item.name.symbol]);
       }
-      if (item.isClose && this[item.getType()+"Error"]) {TEX.Error(this[item.getType()+"Error"])}
+      if (item.isClose && this[item.getType()+"Error"]) {throw new TexError(this[item.getType()+"Error"])}
       if (!item.isNotStack) {return true}
       this.Push(item.data[0]); return false;
     },
@@ -189,7 +188,7 @@ imp.NEW = process.TEST_NEW;
       }
       if (this.SUPER(arguments).checkItem.call(this,item)) {
         // @test Brace Superscript Error
-        TEX.Error(this[["","subError","supError"][this.position]]);
+        throw new TexError(this[["","subError","supError"][this.position]]);
       }
     },
     Pop: function () {}
@@ -201,7 +200,7 @@ imp.NEW = process.TEST_NEW;
       imp.printMethod('Checkitem over');
       if (item.hasType('over')) {
         // @test Double Over
-        TEX.Error(["AmbiguousUseOf","Ambiguous use of %1",item.name]);
+        throw new TexError(["AmbiguousUseOf","Ambiguous use of %1",item.name]);
       }
       if (item.isClose) {
         // @test Over
@@ -214,8 +213,8 @@ imp.NEW = process.TEST_NEW;
         }
         if (this.open || this.close) {
           // @test Choose
-          mml.texWithDelims = true;
-          // setProperty(mml, 'texWithDelims', true);
+          // mml.texWithDelims = true;
+          imp.setProperties(mml, {'texWithDelims': true});
           mml = TEX.fixedFence(this.open,mml,this.close);
         }
         return [STACKITEM.mml(mml), item];
@@ -247,12 +246,12 @@ imp.NEW = process.TEST_NEW;
       imp.printMethod('Checkitem begin');
       if (item.hasType('end')) {
         if (item.name !== this.name)
-          {TEX.Error(["EnvBadEnd","\\begin{%1} ended with \\end{%2}",this.name,item.name])}
+          {throw new TexError(["EnvBadEnd","\\begin{%1} ended with \\end{%2}",this.name,item.name])}
         if (!this.end) {return STACKITEM.mml(this.mmlData())}
         return this.parse[this.end].call(this.parse,this,this.data);
       }
       if (item.hasType('stop'))
-        {TEX.Error(["EnvMissingEnd","Missing \\end{%1}",this.name])}
+        {throw new TexError(["EnvMissingEnd","Missing \\end{%1}",this.name])}
       return this.SUPER(arguments).checkItem.call(this,item);
     }
   });
@@ -278,7 +277,7 @@ imp.NEW = process.TEST_NEW;
     type: "position",
     checkItem: function (item) {
       imp.printMethod('Checkitem position');
-      if (item.isClose) {TEX.Error(["MissingBoxFor","Missing box for %1",this.name])}
+      if (item.isClose) {throw new TexError(["MissingBoxFor","Missing box for %1",this.name])}
       if (item.isNotStack) {
         var mml = item.mmlData();
         switch (this.move) {
@@ -335,7 +334,7 @@ imp.NEW = process.TEST_NEW;
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
           if (item.hasType('close')) {return mml}
-          TEX.Error(["MissingCloseBrace","Missing close brace"]);
+          throw new TexError(["MissingCloseBrace","Missing close brace"]);
         }
         return [mml,item];
       }
@@ -690,11 +689,11 @@ imp.NEW = process.TEST_NEW;
     //
     csUndefined: function (name) {
     imp.printMethod("csUndefined");
-      TEX.Error(["UndefinedControlSequence","Undefined control sequence %1",'\\' + name]);
+      throw new TexError(["UndefinedControlSequence","Undefined control sequence %1",'\\' + name]);
     },
     envUndefined: function(env) {
     imp.printMethod("envUndefined");
-      TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
+      throw new TexError(["UnknownEnv", "Unknown environment '%1'", env]);
     },
     
     /*
@@ -803,7 +802,7 @@ imp.NEW = process.TEST_NEW;
       if ((imp.isType(base, "msubsup") && imp.getChildAt(base, base.sup)) ||
           (imp.isType(base, "munderover") && imp.getChildAt(base, base.over) && !imp.getProperty(base, 'subsupOK'))) {
         // @test Double-super-error, Double-over-error
-        TEX.Error(["DoubleExponent","Double exponent: use braces to clarify"]);
+        throw new TexError(["DoubleExponent","Double exponent: use braces to clarify"]);
       }
       if (!imp.isType(base, "msubsup")) {
         imp.printSimple('Case 1');
@@ -867,7 +866,7 @@ imp.NEW = process.TEST_NEW;
           (imp.isType(base, "munderover") && imp.getChildAt(base, base.under) &&
            !imp.getProperty(base, 'subsupOK'))) {
         // @test Double-sub-error, Double-under-error
-        TEX.Error(["DoubleSubscripts","Double subscripts: use braces to clarify"]);
+        throw new TexError(["DoubleSubscripts","Double subscripts: use braces to clarify"]);
       }
       if (!imp.isType(base, "msubsup")) {
         if (movesupsub) {
@@ -907,7 +906,7 @@ imp.NEW = process.TEST_NEW;
       }
       if (imp.isType(base, "msubsup") && imp.getChildAt(base, base.sup)) {
         // @test Double Prime Error
-        TEX.Error(["DoubleExponentPrime",
+        throw new TexError(["DoubleExponentPrime",
                    "Prime causes double exponent: use braces to clarify"]);
       }
       var sup = ""; this.i--;
@@ -948,7 +947,7 @@ imp.NEW = process.TEST_NEW;
     Hash: function (c) {
     imp.printMethod("Hash");
       // @test Hash Error
-      TEX.Error(["CantUseHash1",
+      throw new TexError(["CantUseHash1",
                  "You can't use 'macro parameter character #' in math mode"]);
     },
     
@@ -1046,7 +1045,7 @@ imp.NEW = process.TEST_NEW;
       this.Push(node);
       if (!this.stack.Top().hasType('left')) {
         // @test Orphan Middle, Middle with Right
-        TEX.Error(["MisplacedMiddle","%1 must be within \\left and \\right",name]);
+        throw new TexError(["MisplacedMiddle","%1 must be within \\left and \\right",name]);
       }
       var textNode = imp.createText(delim);
       node = imp.createNode('mo', [], {stretchy:true}, textNode);
@@ -1099,7 +1098,7 @@ imp.NEW = process.TEST_NEW;
       if (!op || (imp.getTexClass(op) !== TEXCLASS.OP &&
                   imp.getProperty(op, 'movesupsub') == null)) {
         // @test Limits Error
-        TEX.Error(["MisplacedLimits","%1 is allowed only on operators",name]);
+        throw new TexError(["MisplacedLimits","%1 is allowed only on operators",name]);
       }
       var top = this.stack.Top();
       if (imp.isType(op, "munderover") && !limits) {
@@ -1229,16 +1228,16 @@ imp.NEW = process.TEST_NEW;
       // @test Tweaked Root
       if (!this.stack.env.inRoot) {
         // @test Misplaced Move Root
-        TEX.Error(["MisplacedMoveRoot","%1 can appear only within a root",name]);
+        throw new TexError(["MisplacedMoveRoot","%1 can appear only within a root",name]);
       }
       if (this.stack.global[id]) {
         // @test Multiple Move Root
-        TEX.Error(["MultipleMoveRoot","Multiple use of %1",name]);
+        throw new TexError(["MultipleMoveRoot","Multiple use of %1",name]);
       }
       var n = this.GetArgument(name);
       if (!n.match(/-?[0-9]+/)) {
         // @test Incorrect Move Root
-        TEX.Error(["IntegerArg","The argument to %1 must be an integer",name]);
+        throw new TexError(["IntegerArg","The argument to %1 must be an integer",name]);
       }
       n = (n/15)+"em";
       if (n.substr(0,1) !== "-") {n = "+"+n}
@@ -1403,17 +1402,17 @@ imp.NEW = process.TEST_NEW;
       }
       if (!node || !node.isToken) {
         // @test Token Illegal Type, Token Wrong Type
-        TEX.Error(["NotMathMLToken","%1 is not a token element",type]);
+        throw new TexError(["NotMathMLToken","%1 is not a token element",type]);
       }
       while (attr !== "") {
         match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
         if (!match) {
           // @test Token Invalid Attribute
-          TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
+          throw new TexError(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
         }
         if (node.attributes.getAllDefaults()[match[1]] == null && !this.MmlTokenAllow[match[1]]) {
           // @test Token Unknown Attribute, Token Wrong Attribute
-          TEX.Error(["UnknownAttrForElement",
+          throw new TexError(["UnknownAttrForElement",
                      "%1 is not a recognized attribute for %2",
                      match[1],type]);
         }
@@ -1441,16 +1440,16 @@ imp.NEW = process.TEST_NEW;
       imp.printSimple("Start mmlToken: type: " + type + " data: " + data);
       if (!imp.MML[type] || !imp.MML[type].prototype.isToken) {
         // @test Token Illegal Type, Token Wrong Type
-        TEX.Error(["NotMathMLToken","%1 is not a token element",type])}
+        throw new TexError(["NotMathMLToken","%1 is not a token element",type])}
       while (attr !== "") {
         match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
         if (!match) {
           // @test Token Invalid Attribute
-          TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
+          throw new TexError(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
         }
         if (imp.MML[type].prototype.defaults[match[1]] == null && !this.MmlTokenAllow[match[1]]) {
           // @test Token Unknown Attribute, Token Wrong Attribute
-          TEX.Error(["UnknownAttrForElement",
+          throw new TexError(["UnknownAttrForElement",
                      "%1 is not a recognized attribute for %2",
                      match[1],type]);
         }
@@ -1741,7 +1740,7 @@ imp.NEW = process.TEST_NEW;
       this.string = this.AddArgs(macro,this.string.slice(this.i));
       this.i = 0;
       if (++this.macroCount > TEX.config.MAXMACROS) {
-        TEX.Error(["MaxMacroSub1",
+        throw new TexError(["MaxMacroSub1",
                    "MathJax maximum macro substitution count exceeded; " +
                    "is there a recursive macro call?"]);
       }
@@ -1752,7 +1751,7 @@ imp.NEW = process.TEST_NEW;
       // imp.untested(36);
       var c = this.GetNext();
       if (c === "")
-        {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
+        {throw new TexError(["MissingArgFor","Missing argument for %1",name])}
       if (c === "{") {this.i++} else {this.string = c+"}"+this.string.slice(this.i+1); this.i = 0}
       var array = STACKITEM.array().With({
         requireClose: true,
@@ -1814,7 +1813,7 @@ imp.NEW = process.TEST_NEW;
             //
             //  Extra alignment tabs are not allowed in cases
             //
-            TEX.Error(["ExtraAlignTab","Extra alignment tab in \\cases text"]);
+            throw new TexError(["ExtraAlignTab","Extra alignment tab in \\cases text"]);
           } else if (c === "\\") {
             //
             //  If the macro is \cr or \\, end the search, otherwise skip the macro
@@ -1854,7 +1853,7 @@ imp.NEW = process.TEST_NEW;
       if (this.string.charAt(this.i) === "[") {
         n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
         if (n && !this.matchDimen(n)) {
-          TEX.Error(["BracketMustBeDimension",
+          throw new TexError(["BracketMustBeDimension",
                      "Bracket argument to %1 must be a dimension",name]);
         }
       }
@@ -1916,7 +1915,7 @@ imp.NEW = process.TEST_NEW;
       if (style == null) {style = "solid"}
       var top = this.stack.Top();
       if (!top.isa(STACKITEM.array) || top.data.length)
-        {TEX.Error(["Misplaced","Misplaced %1",name])}
+        {throw new TexError(["Misplaced","Misplaced %1",name])}
       if (top.table.length == 0) {
         top.frame.push("top");
       } else {
@@ -1933,7 +1932,7 @@ imp.NEW = process.TEST_NEW;
     imp.printMethod("HFill");
       var top = this.stack.Top();
       if (top.isa(STACKITEM.array)) top.hfill.push(top.data.length);
-        else TEX.Error(["UnsupportedHFill","Unsupported use of %1",name]);
+        else throw new TexError(["UnsupportedHFill","Unsupported use of %1",name]);
     },
     
 
@@ -1947,13 +1946,13 @@ imp.NEW = process.TEST_NEW;
       imp.printMethod("BeginEnd");
       var env = this.GetArgument(name);
       if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
-      if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
+      if (env.match(/\\/i)) {throw new TexError(["InvalidEnv","Invalid environment name '%1'",env])}
       if (name === "\\end") {
         var mml = STACKITEM.end().With({name: env});
         this.Push(mml);
       } else {
         if (++this.macroCount > TEX.config.MAXMACROS) {
-          TEX.Error(["MaxMacroSub2",
+          throw new TexError(["MaxMacroSub2",
                      "MathJax maximum substitution count exceeded; " +
                      "is there a recursive latex environment?"]);
         }
@@ -2075,11 +2074,11 @@ imp.NEW = process.TEST_NEW;
     imp.printMethod("GetArgument");
       switch (this.GetNext()) {
        case "":
-        if (!noneOK) {TEX.Error(["MissingArgFor","Missing argument for %1",name])}
+        if (!noneOK) {throw new TexError(["MissingArgFor","Missing argument for %1",name])}
         return null;
        case '}':
         if (!noneOK) {
-          TEX.Error(["ExtraCloseMissingOpen",
+          throw new TexError(["ExtraCloseMissingOpen",
                      "Extra close brace or missing open brace"]);
         }
         return null;
@@ -2096,7 +2095,7 @@ imp.NEW = process.TEST_NEW;
             break;
           }
         }
-        TEX.Error(["MissingCloseBrace","Missing close brace"]);
+        throw new TexError(["MissingCloseBrace","Missing close brace"]);
         break;
       }        
       return this.string.charAt(this.i++);
@@ -2115,7 +2114,7 @@ imp.NEW = process.TEST_NEW;
          case '\\':  this.i++; break;
          case '}':
           if (parens-- <= 0) {
-            TEX.Error(["ExtraCloseLooking",
+            throw new TexError(["ExtraCloseLooking",
                        "Extra close brace while looking for %1","']'"]);
           }
           break;   
@@ -2124,7 +2123,7 @@ imp.NEW = process.TEST_NEW;
           break;
         }
       }
-      TEX.Error(["MissingCloseBracket",
+      throw new TexError(["MissingCloseBracket",
                  "Couldn't find closing ']' for argument to %1",name]);
     },
   
@@ -2146,7 +2145,7 @@ imp.NEW = process.TEST_NEW;
           return this.convertDelimiter(c);
         }
       }
-      TEX.Error(["MissingOrUnrecognizedDelim",
+      throw new TexError(["MissingOrUnrecognizedDelim",
                  "Missing or unrecognized delimiter for %1",name]);
     },
 
@@ -2169,7 +2168,7 @@ imp.NEW = process.TEST_NEW;
           return match[1].replace(/ /g,"").replace(/,/,".");
         }
       }
-      TEX.Error(["MissingDimOrUnits",
+      throw new TexError(["MissingDimOrUnits",
                  "Missing dimension or its units for %1",name]);
     },
     
@@ -2187,7 +2186,7 @@ imp.NEW = process.TEST_NEW;
          case '{':   parens++; break;
          case '}':
           if (parens == 0) {
-            TEX.Error(["ExtraCloseLooking",
+            throw new TexError(["ExtraCloseLooking",
                        "Extra close brace while looking for %1",token])
           }
           parens--;
@@ -2195,7 +2194,7 @@ imp.NEW = process.TEST_NEW;
         }
         if (parens == 0 && c == token) {return this.string.slice(j,k)}
       }
-      TEX.Error(["TokenNotFoundForCommand",
+      throw new TexError(["TokenNotFoundForCommand",
                  "Couldn't find %1 for %2",token,name]);
     },
 
@@ -2264,7 +2263,7 @@ imp.NEW = process.TEST_NEW;
             }
           }
         }
-        if (match !== '') TEX.Error(["MathNotTerminated","Math not terminated in text box"]);
+        if (match !== '') throw new TexError(["MathNotTerminated","Math not terminated in text box"]);
       }
       if (k < text.length) mml.push(this.InternalText(text.slice(k),def));
       if (level != null) {
@@ -2303,7 +2302,7 @@ imp.NEW = process.TEST_NEW;
           c = string.charAt(i++);
           if (c === '#') {text += c} else {
             if (!c.match(/[1-9]/) || c > args.length) {
-              TEX.Error(["IllegalMacroParam",
+              throw new TexError(["IllegalMacroParam",
                          "Illegal macro parameter reference"]);
             }
             newstring = this.AddArgs(this.AddArgs(newstring,text),args[c-1]);
@@ -2322,7 +2321,7 @@ imp.NEW = process.TEST_NEW;
     imp.printMethod("AddArgs");
       if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
       if (s1.length + s2.length > TEX.config.MAXBUFFER) {
-        TEX.Error(["MaxBufferSize",
+        throw new TexError(["MaxBufferSize",
                    "MathJax internal buffer size exceeded; is there a recursive macro call?"]);
       }
       return s1+s2;
@@ -2412,10 +2411,8 @@ imp.NEW = process.TEST_NEW;
     //
     //  Produce an error and stop processing this equation
     //
+    // TODO: Kept for extenions only.
     Error: function (message) {
-      //
-      //  Translate message if it is ["id","message",args]
-      //
       throw new TexError(message);
     },
     
