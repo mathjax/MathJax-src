@@ -37,6 +37,7 @@ let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
 require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
 let TexError = require('./TexError.js').TexError;
+let stack = require('./Stack.js');
 
 
 // This is only necessary for the legacy tests.
@@ -47,55 +48,9 @@ imp.NEW = process.TEST_NEW;
 (function (TEX) {
 
   var NBSP = "\u00A0"; 
-  
-  var STACK = MathJax.Object.Subclass({
-    Init: function (env,inner) {
-      this.global = {isInner: inner};
-      this.data = [STACKITEM.start(this.global)];
-      if (env) {this.data[0].env = env}
-      this.env = this.data[0].env;
-    },
-    Push: function () {
-      var i, m, item, top;
-      for (i = 0, m = arguments.length; i < m; i++) {
-        item = arguments[i]; if (!item) continue;
-        if (imp.isNode(item)) {
-          item = STACKITEM.mml(item);
-        }
-        item.global = this.global;
-        
-        top = (this.data.length ? this.Top().checkItem(item) : true);
-        if (top instanceof Array) {this.Pop(); this.Push.apply(this,top)}
-        else if (top instanceof STACKITEM) {this.Pop(); this.Push(top)}
-        else if (top) {
-          this.data.push(item);
-          if (item.env) {
-            if (item.copyEnv !== false) {
-              for (var id in this.env)
-                {if (this.env.hasOwnProperty(id)) {item.env[id] = this.env[id]}}
-            }
-            this.env = item.env;
-          } else {item.env = this.env}
-        }
-      }
-    },
-    Pop: function () {
-      var item = this.data.pop(); if (!item.isOpen) {delete item.env}
-      this.env = (this.data.length ? this.Top().env : {});
-      return item;
-    },
-    Top: function (n) {
-      if (n == null) {n = 1}
-      if (this.data.length < n) {return null}
-      return this.data[this.data.length-n];
-    },
-    Prev: function (noPop) {
-      var top = this.Top();
-      if (noPop) {return top.data[top.data.length-1]}
-            else {return top.Pop()}
-    },
-    toString: function () {return "stack[\n  "+this.data.join("\n  ")+"\n]"}
-  });
+
+  // Retained to move STACK.Item to extensions.
+  var STACK = {};
   
   var STACKITEM = STACK.Item = MathJax.Object.Subclass({
     type: "base",
@@ -591,6 +546,7 @@ imp.NEW = process.TEST_NEW;
     }
   };
   
+
   /************************************************************************/
   /*
    *   The TeX Parser
@@ -603,7 +559,7 @@ imp.NEW = process.TEST_NEW;
     imp.printMethod("Init");
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
-      this.stack = TEX.Stack(ENV,!!env);
+      this.stack = new stack.Stack(ENV,!!env,STACKITEM);
       NewParser.setup(this);
       TEXDEF.configurations.forEach(NewParser.append.bind(NewParser));
       this.Parse(); this.Push(STACKITEM.stop());
