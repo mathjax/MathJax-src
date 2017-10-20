@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/error.js
+ *  MathJax/jax/input/TeX/TexError.js
  *  
  *  Implements the TeX InputJax that reads mathematics in
  *  TeX and LaTeX format and converts it to the MML ElementJax

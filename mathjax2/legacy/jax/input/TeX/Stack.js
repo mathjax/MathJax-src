@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/error.js
+ *  MathJax/jax/input/TeX/Stack.js
  *
  *  Implements the TeX InputJax that reads mathematics in
  *  TeX and LaTeX format and converts it to the MML ElementJax
@@ -40,6 +40,7 @@ export class Stack {
     }
     this.env = this.data[0].env;
   }
+
 
   Push() {
     var i, m, item, top;
@@ -108,6 +109,7 @@ export class Stack {
       return top.Pop();
     }
   }
+
 
   toString() {
     return 'stack[\n  ' + this.data.join('\n  ') + '\n]';
