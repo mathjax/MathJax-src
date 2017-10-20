@@ -29,7 +29,7 @@ import {MmlFactory} from 'mathjax3/core/MmlTree/MmlFactory.js';
 import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 
 // Intermediate parser namespace
-var imp = {};
+export let imp = {};
 
 imp.NEW = false;
 imp.MML = null;
@@ -345,4 +345,3 @@ imp.isNode = function(item) {
     item instanceof imp.MML.mbase;
 };
 
-export {imp};

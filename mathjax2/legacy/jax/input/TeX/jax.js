@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = true;
+process.TEST_NEW = false;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -37,6 +37,8 @@ require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
 let TexError = require('./TexError.js').TexError;
 let stack = require('./Stack.js');
+let stackitem = require('./StackItem.js');
+let ParserUtil = require("./ParserUtil.js").ParserUtil;
 
 
 // This is only necessary for the legacy tests.
@@ -215,7 +217,7 @@ imp.NEW = process.TEST_NEW;
           // @test Choose
           // mml.texWithDelims = true;
           imp.setProperties(mml, {'texWithDelims': true});
-          mml = TEX.fixedFence(this.open,mml,this.close);
+          mml = ParserUtil.fixedFence(this.open,mml,this.close, this.parse);
         }
         return [STACKITEM.mml(mml), item];
       }
@@ -230,8 +232,9 @@ imp.NEW = process.TEST_NEW;
     checkItem: function (item) {
       // @test Missing Right
       imp.printMethod('Checkitem left');
-      if (item.hasType('right'))
-        {return STACKITEM.mml(TEX.fenced(this.delim,this.mmlData(),item.delim))}
+      if (item.hasType('right')) {
+        return STACKITEM.mml(ParserUtil.fenced(this.delim,this.mmlData(),item.delim));
+      }
       return this.SUPER(arguments).checkItem.call(this,item);
     }
   });
@@ -330,7 +333,9 @@ imp.NEW = process.TEST_NEW;
           // VS: OLD
           // mml = MML.mstyle(mml).With({scriptlevel: scriptlevel})}
         }
-        if (this.open || this.close) {mml = TEX.fenced(this.open,mml,this.close)}
+        if (this.open || this.close) {
+          mml = ParserUtil.fenced(this.open,mml,this.close);
+        }
         mml = STACKITEM.mml(mml);
         if (this.requireClose) {
           if (item.hasType('close')) {return mml}
@@ -1129,7 +1134,7 @@ imp.NEW = process.TEST_NEW;
     Over: function (name,open,close) {
       imp.printMethod("Over");
       // @test Over
-      var mml = STACKITEM.over().With({name: name});
+      var mml = STACKITEM.over().With({name: name, parse: TEX.Parse});
       if (open || close) {
         // @test Choose
         mml.open = open; mml.close = close;
@@ -2423,71 +2428,7 @@ imp.NEW = process.TEST_NEW;
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
       TEXDEF.macros[name].isUser = true;
     },
-    
-    /*
-     *  Create an mrow that has stretchy delimiters at either end, as needed
-     */
-    fenced: function (open,mml,close) {
-      imp.printMethod('fenced');
-      // @test Fenced, Fenced3
-      var mrow = imp.createNode('mrow', [], {open:open, close:close, texClass:TEXCLASS.INNER});
-      var openNode = imp.createText(open);
-      var mo = imp.createNode('mo', [],
-                          {fence:true, stretchy:true, symmetric:true, texClass:TEXCLASS.OPEN},
-                          openNode);
-      imp.appendChildren(mrow, [mo]);
-      // VS: OLD
-      // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
-      // mrow.Append(
-      //   MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
-      // );
-      // TODO: Rewrite the inferred and mml.data
-      if (imp.isType(mml, "mrow") && mml.inferred) {
-        // @test Fenced
-        imp.appendChildren(mrow, mml.data);
-      } else {
-        // @test Fenced3
-        imp.appendChildren(mrow, [mml]);
-      }
-      var closeNode = imp.createText(close);
-      mo = imp.createNode('mo', [],
-                      {fence:true, stretchy:true, symmetric:true, texClass:TEXCLASS.CLOSE},
-                      closeNode);
-      imp.appendChildren(mrow, [mo]);
-      // VS: OLD
-      // mrow.Append(
-      //   MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
-      // );
-      return mrow;
-    },
-    /*
-     *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
-     */
-    fixedFence: function (open,mml,close) {
-      // @test Choose, Over With Delims, Above with Delims
-      imp.printMethod('fixedFence');
-      var mrow = imp.createNode('mrow', [], {open:open, close:close, texClass:TEXCLASS.ORD});
-      // VS: OLD
-      // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
-      if (open) {
-        imp.appendChildren(mrow, [this.mathPalette(open,"l")]);
-      }
-      if (imp.isType(mml, "mrow")) {
-        imp.appendChildren(mrow, [mrow, mml.data]);
-      } else {
-        imp.appendChildren(mrow, [mml]);
-      }
-      if (close) {
-        imp.appendChildren(mrow, [this.mathPalette(close,"r")]);
-      }
-      return mrow;
-    },
-    mathPalette: function (fence,side) {
-      imp.printMethod('mathPalette');
-      if (fence === '{' || fence === '}') {fence = "\\"+fence}
-      var D = '{\\bigg'+side+' '+fence+'}', T = '{\\big'+side+' '+fence+'}';
-      return TEX.Parse('\\mathchoice'+D+T+T+T,{}).mml();
-    },
+
     
     //
     //  Combine adjacent <mo> elements that are relations
