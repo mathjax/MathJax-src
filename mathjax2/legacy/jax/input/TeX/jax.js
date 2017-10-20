@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = true;
+process.TEST_NEW = false;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -36,6 +36,7 @@ let MmlEntities = require("mathjax3/input/mathml/MmlEntities.js").MmlEntities;
 let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
 require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
+let TexError = require('./error.js').TexError;
 
 
 imp.MML = MathJax.ElementJax.mml;
@@ -1464,7 +1465,7 @@ imp.NEW = process.TEST_NEW;
           // @test Token Invalid Attribute
           TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
         }
-        if (node.getAllDefaults()[match[1]] == null && !this.MmlTokenAllow[match[1]]) {
+        if (node.attributes.getAllDefaults()[match[1]] == null && !this.MmlTokenAllow[match[1]]) {
           // @test Token Unknown Attribute, Token Wrong Attribute
           TEX.Error(["UnknownAttrForElement",
                      "%1 is not a recognized attribute for %2",
@@ -2431,7 +2432,8 @@ imp.NEW = process.TEST_NEW;
         mml = TEX.Parse(math).mml();
         imp.printSimple(mml.toString());
       } catch(err) {
-        if (!err.texError) {throw err}
+        console.log(err);
+        if (!err instanceof TexError) {throw err}
         mml = this.formatError(err,math,display,script);
         isError = true;
       }
@@ -2473,8 +2475,10 @@ imp.NEW = process.TEST_NEW;
       //
       //  Translate message if it is ["id","message",args]
       //
-      if (isArray(message)) {message = _.apply(_,message);}
-      throw HUB.Insert(Error(message),{texError: true});
+      // if (isArray(message)) {message = _.apply(_,message);}
+      // throw HUB.Insert(Error(message),{texError: true});
+      // console.log("ARe we here?");
+      throw new TexError(message);
     },
     
     //
