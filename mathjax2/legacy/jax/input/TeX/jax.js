@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = true;
+process.TEST_NEW = false;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -36,7 +36,7 @@ let MmlEntities = require("mathjax3/input/mathml/MmlEntities.js").MmlEntities;
 let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
 require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
-let TexError = require('./error.js').TexError;
+let TexError = require('./TexError.js').TexError;
 
 
 // This is only necessary for the legacy tests.
