@@ -959,4 +959,255 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+
+parserTest.runTest(
+  'Token Illegal Type', '\\mmlToken{mk}[]{}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "mk is not a token element"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Token Wrong Type', '\\mmlToken{mrow}[]{}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "mrow is not a token element"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Token Invalid Attribute', '\\mmlToken{mi}[m1=true]{}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Invalid MathML attribute: m1=true"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Token Unknown Attribute', '\\mmlToken{mo}[nothing="something"]{}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+              "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "nothing is not a recognized attribute for mo"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Token Wrong Attribute', '\\mmlToken{mi}[movablelimit=true]{}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": false,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"display": "block",
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"display": "block",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"display": "block",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "movablelimit is not a recognized attribute for mi"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+
 parserTest.printTime();

@@ -7569,7 +7569,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Lower', 'x\\lower{2pt}{y}z',
+  'Lower 2', 'x\\lower{2pt}{y}z',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
