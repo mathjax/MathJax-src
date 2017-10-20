@@ -90,3 +90,9 @@
 *** Delimiters-left-right seems to have one mrow too many in the expected value
 
 *** Dots The mo elements seem to be getting the wrong texclass.
+
+** AMS methods already done:
+   EndEntry, EndTable, fixInitialMO
+
+**** For Davide: How does With with nested dictionary work.
+

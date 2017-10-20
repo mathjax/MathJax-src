@@ -514,9 +514,15 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     fixInitialMO: function (data) {
       imp.printMethod('AMS-fixInitialMO');
       for (var i = 0, m = data.length; i < m; i++) {
-        if (data[i] && (data[i].type !== "mspace" &&
-           (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
-          if (data[i].isEmbellished()) data.unshift(MML.mi());
+        var child = data[i];
+        if (child && (!imp.isType(child, 'mspace') &&
+                        (!imp.isType(child, 'TeXAtom') ||
+                         (imp.getChildren(child)[0] &&
+                          imp.getChildren(imp.getChildren(child)[0]).length)))) {
+          if (imp.isEmbellished(child)) {
+            var mi = imp.createNode('mi', [], {});
+            data.unshift(mi);
+          }
           break;
         }
       }
@@ -589,23 +595,30 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     EndEntry: function () {
       imp.printMethod('AMS-EndEntry');
-      if (this.row.length) {this.fixInitialMO(this.data)}
-      this.row.push(MML.mtd.apply(MML,this.data));
+      // @test Cubic Binomial
+      if (this.row.length) {this.fixInitialMO(this.data);}
+      var node = imp.createNode('mtd', this.data, {});
+      // VS: OLD
+      // var node = MML.mtd.apply(MML,this.data);
+      this.row.push(node);
       this.data = [];
     },
     EndRow: function () {
       imp.printMethod('AMS-EndRow');
-      var mtr = MML.mtr;
+      // @test Cubic Binomial
+      var mtr = 'mtr'; // MML.mtr;
       if (!this.global.tag && this.numbered) {this.autoTag()}
       if (this.global.tag && !this.global.notags) {
         this.row = [this.getTag()].concat(this.row);
-        mtr = MML.mlabeledtr;
-      } else {this.clearTag()}
-      if (this.numbered) {delete this.global.notag}
-      this.table.push(mtr.apply(MML,this.row)); this.row = [];
+        mtr = 'mlabeledtr'; // MML.mlabeledtr;
+      } else {this.clearTag();}
+      if (this.numbered) {delete this.global.notag;}
+      var node = imp.createNode(mtr, this.row, {});
+      this.table.push(node); this.row = [];
     },
     EndTable: function () {
       imp.printMethod('AMS-EndTable');
+      // @test Cubic Binomial
       this.SUPER(arguments).EndTable.call(this);
       this.global.notags = this.save.notags;
       this.global.notag  = this.save.notag;

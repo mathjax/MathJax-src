@@ -26,7 +26,7 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = false;
+process.TEST_NEW = true;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
@@ -39,11 +39,12 @@ let imp = require("./imp.js").imp;
 let TexError = require('./error.js').TexError;
 
 
+// This is only necessary for the legacy tests.
 imp.MML = MathJax.ElementJax.mml;
 imp.NEW = process.TEST_NEW;
 
 
-(function (TEX,HUB,AJAX) {
+(function (TEX) {
 
   var NBSP = "\u00A0"; 
   
@@ -571,22 +572,18 @@ imp.NEW = process.TEST_NEW;
           else if (!dst[id] || !dst[id].isUser || !nouser) {dst[id] = src[id]}
       }}
       return dst;
-    }
+    },
+    number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
+    p_height: 1.2 / .85,   // cmex10 height plus depth over .85
+    // TODO (VS): Retained these for AMScd.js.
+    macros: {},
+    special: {},
+    environment: {},
+    // TODO (VS): Temporary to collect configurations from extensions.
+    configurations: []
   };
-  var STARTUP = function () {
-    // MML = MathJax.ElementJax.mml;
 
-    HUB.Insert(TEXDEF,{
-      number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
-      p_height: 1.2 / .85,   // cmex10 height plus depth over .85
-      // TODO (VS): Retained these for AMScd.js.
-      macros: {},
-      special: {},
-      environment: {},
-      // TODO (VS): Temporary to collect configurations from extensions.
-      configurations: []
-    });
-    
+  var STARTUP = function () {
     //
     //  Add macros defined in the configuration
     //
@@ -1126,15 +1123,16 @@ imp.NEW = process.TEST_NEW;
     },
     NamedOp: function (name,id) {
       imp.printMethod("NamedOp");
-      // imp.untested(220);
+      // @test Limit
       if (!id) {id = name.substr(1)};
       id = id.replace(/&thinsp;/,"\u2006");
-      var mml = imp.createNode('mo', [id], {
+      var text = imp.createText(id);
+      var mml = imp.createNode('mo', [], {
         movablelimits: true,
         movesupsub: true,
         form: TexConstant.Form.PREFIX,
         texClass: TEXCLASS.OP
-      });
+      }, text);
       // VS: OLD
       // var mml = MML.mo(id).With({
       //   movablelimits: true,
@@ -1143,7 +1141,7 @@ imp.NEW = process.TEST_NEW;
       //   texClass: MML.TEXCLASS.OP
       // });
       // TODO: Sort this out with get('form');
-      mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
+      // mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
       this.Push(this.mmlToken(mml));
     },
     Limits: function (name,limits) {
@@ -1779,10 +1777,6 @@ imp.NEW = process.TEST_NEW;
       if (name && !typeof(name) === "string") {name = name.name}
       file = TEX.extensionDir+"/"+file;
       if (!file.match(/\.js$/)) {file += ".js"}
-      if (!AJAX.loaded[AJAX.fileURL(file)]) {
-        if (name != null) {delete TEXDEF[array || 'macros'][name.replace(/^\\/,"")]}
-        HUB.RestartAfter(AJAX.Require(file));
-      }
     },
     
     Macro: function (name,macro,argcount,def) {
@@ -2464,7 +2458,6 @@ imp.NEW = process.TEST_NEW;
     },
     formatError: function (err,math,display,script) {
       var message = err.message.replace(/\n.*/,"");
-      HUB.signal.Post(["TeX Jax - parse error",message,math,display,script]);
       return imp.createError(message);
     },
 
@@ -2475,9 +2468,6 @@ imp.NEW = process.TEST_NEW;
       //
       //  Translate message if it is ["id","message",args]
       //
-      // if (isArray(message)) {message = _.apply(_,message);}
-      // throw HUB.Insert(Error(message),{texError: true});
-      // console.log("ARe we here?");
       throw new TexError(message);
     },
     
@@ -2601,6 +2591,6 @@ imp.NEW = process.TEST_NEW;
   });
 
   TEX.loadComplete("jax.js");
-  MathJax.Ajax.loadComplete("TeX_Parser");
+  // MathJax.Ajax.loadComplete("TeX_Parser");
   
-})(MathJax.InputJax.TeX,MathJax.Hub,MathJax.Ajax);
+})(MathJax.InputJax.TeX);
