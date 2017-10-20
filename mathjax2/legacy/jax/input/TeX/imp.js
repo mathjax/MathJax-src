@@ -25,15 +25,16 @@
 
 
 import {AbstractMmlNode, AbstractMmlEmptyNode} from 'mathjax3/core/MmlTree/MmlNode.js';
+import {MmlFactory} from 'mathjax3/core/MmlTree/MmlFactory.js';
+import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 
 // Intermediate parser namespace
 var imp = {};
-console.log("Loading imp!");
 
 imp.NEW = false;
 imp.MML = null;
-imp.factory = null;
-imp.visitor = null;
+imp.factory = new MmlFactory();
+imp.visitor = new JsonMmlVisitor();
 imp.attrs = ['autoOP',
              'fnOP',
              'movesupsub',
@@ -127,7 +128,7 @@ imp.getChildren = function(node) {
 
 
 imp.getText = function(node) {
-  return imp.NEW ? node.getText() : node.data.join("");
+  return imp.NEW ? node.getText() : node.data.join('');
 };
 
 

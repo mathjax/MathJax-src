@@ -26,34 +26,25 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = false;
+process.TEST_NEW = true;
 
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
-let MmlFactory = require("mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
 let TEXCLASS = require("mathjax3/core/MmlTree/MmlNode.js").TEXCLASS;
 let TexConstant = require("mathjax3/input/tex/TexConstants.js").TexConstant;
 let MmlEntities = require("mathjax3/input/mathml/MmlEntities.js").MmlEntities;
-// TODO: That currently does not work as the entities directory is relative to
-//       the mathjax-v3 top directory.
-// require("mathjax3/input/mathml/AllEntities.js");
-let JsonMmlVisitor = require('mathjax3/core/MmlTree/JsonMmlVisitor.js');
 let mmlNode = require('mathjax3/core/MmlTree/MmlNode.js');
 require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
 
 
-var MML = MathJax.ElementJax.mml;
-imp.MML = MML;
+imp.MML = MathJax.ElementJax.mml;
 imp.NEW = process.TEST_NEW;
-imp.factory = new MmlFactory();
-imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
 
 
 (function (TEX,HUB,AJAX) {
 
   var NBSP = "\u00A0"; 
-  var MML = MathJax.ElementJax.mml;
   
   var _ = function (id) {
     console.log("In localiseation?" + id);
@@ -1444,19 +1435,74 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
 
     // VS: This method is only called during a macro call: AMS Math and \\mod.
     MmlToken: function (name) {
+      if (imp.NEW) {
+        this.MmlTokenNew(name);
+      } else {
+        this.MmlTokenOld(name);
+      }
+    },
+    MmlTokenNew: function (name) {
     imp.printMethod("MmlToken");
+      // @test Modulo
+      var type = this.GetArgument(name),
+          attr = this.GetBrackets(name,"").replace(/^\s+/,""),
+          data = this.GetArgument(name),
+          def = {}, match;
+      var node;
+      try {
+        node = imp.createNode(type, [], {});
+      } catch (e) {
+        node = null;
+      }
+      if (!node || !node.isToken) {
+        // @test Token Illegal Type, Token Wrong Type
+        TEX.Error(["NotMathMLToken","%1 is not a token element",type]);
+      }
+      while (attr !== "") {
+        match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
+        if (!match) {
+          // @test Token Invalid Attribute
+          TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
+        }
+        if (node.getAllDefaults()[match[1]] == null && !this.MmlTokenAllow[match[1]]) {
+          // @test Token Unknown Attribute, Token Wrong Attribute
+          TEX.Error(["UnknownAttrForElement",
+                     "%1 is not a recognized attribute for %2",
+                     match[1],type]);
+        }
+        var value = this.MmlFilterAttribute(match[1],match[2].replace(/^(['"])(.*)\1$/,"$2"));
+        if (value) {
+          if (value.toLowerCase() === "true") {value = true}
+            else if (value.toLowerCase() === "false") {value = false}
+          def[match[1]] = value;
+        }
+        attr = attr.substr(match[0].length);
+      }
+      imp.printSimple("End mmlToken: type: " + type + " data: " + data + ' def: ');
+      var textNode = imp.createText(data);
+      node.appendChild(textNode);
+      imp.setProperties(node, def);
+      this.Push(this.mmlToken(node));
+    },
+    MmlTokenOld: function (name) {
+      imp.printMethod("MmlToken");
+      // @test Modulo
       var type = this.GetArgument(name),
           attr = this.GetBrackets(name,"").replace(/^\s+/,""),
           data = this.GetArgument(name),
           def = {attrNames:[]}, match;
       imp.printSimple("Start mmlToken: type: " + type + " data: " + data);
-      if (!MML[type] || !MML[type].prototype.isToken)
-        {TEX.Error(["NotMathMLToken","%1 is not a token element",type])}
+      if (!imp.MML[type] || !imp.MML[type].prototype.isToken) {
+        // @test Token Illegal Type, Token Wrong Type
+        TEX.Error(["NotMathMLToken","%1 is not a token element",type])}
       while (attr !== "") {
         match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
-        if (!match)
-          {TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr])}
-        if (MML[type].prototype.defaults[match[1]] == null && !this.MmlTokenAllow[match[1]]) {
+        if (!match) {
+          // @test Token Invalid Attribute
+          TEX.Error(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
+        }
+        if (imp.MML[type].prototype.defaults[match[1]] == null && !this.MmlTokenAllow[match[1]]) {
+          // @test Token Unknown Attribute, Token Wrong Attribute
           TEX.Error(["UnknownAttrForElement",
                      "%1 is not a recognized attribute for %2",
                      match[1],type]);
@@ -1471,7 +1517,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
         attr = attr.substr(match[0].length);
       }
       imp.printSimple("End mmlToken: type: " + type + " data: " + data);
-      this.Push(this.mmlToken(MML[type](data).With(def)));
+      this.Push(this.mmlToken(imp.MML[type](data).With(def)));
     },
     MmlFilterAttribute: function (name,value) {return value},
     MmlTokenAllow: {
@@ -2427,11 +2473,7 @@ imp.visitor = new JsonMmlVisitor.JsonMmlVisitor();
       //
       //  Translate message if it is ["id","message",args]
       //
-      console.log('Original error');
-      console.log(message);
       if (isArray(message)) {message = _.apply(_,message);}
-      console.log('Localised error');
-      console.log(message);
       throw HUB.Insert(Error(message),{texError: true});
     },
     
