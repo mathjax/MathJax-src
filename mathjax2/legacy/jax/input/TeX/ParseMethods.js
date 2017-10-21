@@ -3,11 +3,18 @@ import {imp} from './imp.js';
 import {TexError} from './TexError.js';
 import {TEXCLASS} from 'mathjax3/core/MmlTree/MmlNode.js';
 import {TexConstant} from 'mathjax3/input/tex/TexConstants.js';
+import {ParserUtil} from './ParserUtil.js';
 
 
 // Namespace
 export let ParseMethods = {};
 ParseMethods.STACKITEM = null;
+
+ParseMethods.PRIME = "\u2032";
+ParseMethods.SMARTQUOTE = "\u2019";
+ParseMethods.NUMBER = /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/;
+ParseMethods.NBSP = "\u00A0"; 
+ParseMethods.P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
 
 
 /************************************************************************/
@@ -131,7 +138,7 @@ ParseMethods.Variable = function(parser, c) {
  */
 ParseMethods.Number = function(parser, c) {
   imp.printMethod("Number");
-  var mml, n = parser.string.slice(parser.i-1).match(TEXDEF.number);
+  var mml, n = parser.string.slice(parser.i-1).match(ParseMethods.NUMBER);
   var def = {};
   if (parser.stack.env.font) {
     // @test Integer Font
@@ -173,7 +180,7 @@ ParseMethods.Tilde = function(parser, c) {
   // 
   // TODO: Once we can properly load AllEntities, this should be the line.
   // var textNode = imp.createText(MmlEntities.ENTITIES.nbsp);
-  var textNode = imp.createText(NBSP);
+  var textNode = imp.createText(ParseMethods.NBSP);
   var node = imp.createNode('mtext', [], {}, textNode);
   // VS: OLD
   // node = MML.mtext(MML.chars(NBSP))
@@ -229,7 +236,7 @@ ParseMethods.Superscript = function(parser, c) {
         imp.printSimple('Case 3');
         if (imp.getProperty(base, 'movablelimits') && imp.isType(base, 'mi')) {
           // @test Mathop Super
-          base = parser.mi2mo(base);
+          base = ParseMethods.mi2mo(base);
         }
         // @test Large Operator
         base = imp.createNode('munderover', [base], {movesupsub:true});
@@ -294,7 +301,7 @@ ParseMethods.Subscript = function(parser, c) {
       if (!imp.isType(base, "munderover") || imp.getChildAt(base, base.under)) {
         if (imp.getProperty(base, 'movablelimits') && imp.isType(base, 'mi')) {
           // @test Mathop Sub
-          base = parser.mi2mo(base);
+          base = ParseMethods.mi2mo(base);
         }
         // @test Move Superscript
         base = imp.createNode('munderover', [base], {movesupsub:true});
@@ -319,9 +326,6 @@ ParseMethods.Subscript = function(parser, c) {
             }));
 };
 
-ParseMethods.PRIME = "\u2032";
-ParseMethods.SMARTQUOTE = "\u2019";
-
 ParseMethods.Prime = function(parser, c) {
   // @test Prime
   var base = parser.stack.Prev();
@@ -337,8 +341,8 @@ ParseMethods.Prime = function(parser, c) {
                         "Prime causes double exponent: use braces to clarify"]);
   }
   var sup = ""; parser.i--;
-  do {sup += parser.PRIME; parser.i++, c = parser.GetNext()}
-  while (c === "'" || c === parser.SMARTQUOTE);
+  do {sup += ParseMethods.PRIME; parser.i++, c = parser.GetNext()}
+  while (c === "'" || c === ParseMethods.SMARTQUOTE);
   sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
   var textNode = imp.createText(sup);
   var node = imp.createNode('mo', [], {}, textNode);
@@ -349,19 +353,6 @@ ParseMethods.Prime = function(parser, c) {
   parser.Push(imp.STACKS ?
             new sitem.PrimeItem(base, parser.mmlToken(node)) :
             ParseMethods.STACKITEM.prime(base, parser.mmlToken(node)));
-};
-ParseMethods.mi2mo = function(parser, mi) {
-  imp.printMethod("mi2mo");
-  // @test Mathop Sub, Mathop Super
-  var mo = imp.createNode('mo', [], {});
-  imp.copyChildren(mi, mo);
-  // TODO: Figure out how to copy these attributes.
-  imp.copyAttributes(mi, mo);
-  // TODO: Do this with get('lspace') etc.
-  imp.setProperties(mo, {lspace: '0', rspace: '0'});
-  // mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
-  // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
-  return mo;
 };
 
 /*
@@ -536,6 +527,7 @@ ParseMethods.NamedOp = function(parser, name,id) {
   // mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
   parser.Push(parser.mmlToken(mml));
 };
+
 ParseMethods.Limits = function(parser, name,limits) {
   imp.printMethod("Limits");
   // @test Limits
@@ -575,8 +567,8 @@ ParseMethods.Over = function(parser, name,open,close) {
   imp.printMethod("Over");
   // @test Over
   var mml = imp.STACKS ?
-      new sitem.OverItem().With({name: name, parse: TEX.Parse}) :
-      ParseMethods.STACKITEM.over().With({name: name, parse: TEX.Parse});
+      new sitem.OverItem().With({name: name, parse: parser.Parse}) :
+      ParseMethods.STACKITEM.over().With({name: name, parse: parser.Parse});
   if (open || close) {
     // @test Choose
     mml.open = open; mml.close = close;
@@ -831,9 +823,9 @@ ParseMethods.TeXAtom = function(parser, name,mclass) {
 // VS: This method is only called during a macro call: AMS Math and \\mod.
 ParseMethods.MmlToken = function(parser, name) {
   if (imp.NEW) {
-    parser.MmlTokenNew(name);
+    ParseMethods.MmlTokenNew(parser, name);
   } else {
-    parser.MmlTokenOld(name);
+    ParseMethods.MmlTokenOld(parser, name);
   }
 };
 ParseMethods.MmlTokenNew = function(parser, name) {
@@ -859,7 +851,7 @@ ParseMethods.MmlTokenNew = function(parser, name) {
       // @test Token Invalid Attribute
       throw new TexError(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
     }
-    if (node.attributes.getAllDefaults()[match[1]] == null && !parser.MmlTokenAllow[match[1]]) {
+    if (node.attributes.getAllDefaults()[match[1]] == null && !ParseMethods.MmlTokenAllow[match[1]]) {
       // @test Token Unknown Attribute, Token Wrong Attribute
       throw new TexError(["UnknownAttrForElement",
                           "%1 is not a recognized attribute for %2",
@@ -896,13 +888,13 @@ ParseMethods.MmlTokenOld = function(parser, name) {
       // @test Token Invalid Attribute
       throw new TexError(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
     }
-    if (imp.MML[type].prototype.defaults[match[1]] == null && !parser.MmlTokenAllow[match[1]]) {
+    if (imp.MML[type].prototype.defaults[match[1]] == null && !ParseMethods.MmlTokenAllow[match[1]]) {
       // @test Token Unknown Attribute, Token Wrong Attribute
       throw new TexError(["UnknownAttrForElement",
                           "%1 is not a recognized attribute for %2",
                           match[1],type]);
     }
-    var value = parser.MmlFilterAttribute(match[1],match[2].replace(/^(['"])(.*)\1$/,"$2"));
+    var value = ParseMethods.MmlFilterAttribute(match[1],match[2].replace(/^(['"])(.*)\1$/,"$2"));
     if (value) {
       if (value.toLowerCase() === "true") {value = true}
       else if (value.toLowerCase() === "false") {value = false}
@@ -914,13 +906,15 @@ ParseMethods.MmlTokenOld = function(parser, name) {
   imp.printSimple("End mmlToken: type: " + type + " data: " + data);
   parser.Push(parser.mmlToken(imp.MML[type](data).With(def)));
 };
-ParseMethods.MmlFilterAttribute = function(parser, name,value) {return value};
 
+// Utilities?
+ParseMethods.MmlFilterAttribute = function(parser, name,value) {return value};
 ParseMethods.MmlTokenAllow = {
   fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
   color:1, background:1,
   id:1, "class":1, href:1, style:1
 };
+// End Utilities?
 
 ParseMethods.Strut = function(parser, name) {
   imp.printMethod("Strut");
@@ -1092,7 +1086,7 @@ ParseMethods.rule = function(parser, name) {
 ParseMethods.MakeBig = function(parser, name,mclass,size) {
   imp.printMethod("MakeBig");
   // @test Choose, Over With Delims, Above With Delims
-  size *= TEXDEF.p_height;
+  size *= ParseMethods.P_HEIGHT;
   size = String(size).replace(/(\.\d\d\d).+/,'$1')+"em";
   var delim = parser.GetDelimiter(name,true);
   var text = imp.createText(delim);
@@ -1314,6 +1308,7 @@ ParseMethods.Entry = function(parser, name) {
 
 ParseMethods.Cr = function(parser, name) {
   imp.printMethod("Cr");
+  imp.untested(15);
   parser.Push(imp.STACKS ?
             new sitem.CellItem().With({isCR: true, name: name}) :
             ParseMethods.STACKITEM.cell().With({isCR: true, name: name}));
@@ -1324,7 +1319,7 @@ ParseMethods.CrLaTeX = function(parser, name) {
   var n;
   if (parser.string.charAt(parser.i) === "[") {
     n = parser.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
-    if (n && !parser.matchDimen(n)) {
+    if (n && !ParserUtil.matchDimen(n)) {
       throw new TexError(["BracketMustBeDimension",
                           "Bracket argument to %1 must be a dimension",name]);
     }
@@ -1337,9 +1332,9 @@ ParseMethods.CrLaTeX = function(parser, name) {
     // @test Array
     if (n && top.arraydef.rowspacing) {
       var rows = top.arraydef.rowspacing.split(/ /);
-      if (!top.rowspacing) {top.rowspacing = parser.dimen2em(rows[0])}
-      while (rows.length < top.table.length) {rows.push(parser.Em(top.rowspacing))}
-      rows[top.table.length-1] = parser.Em(Math.max(0,top.rowspacing+parser.dimen2em(n)));
+      if (!top.rowspacing) {top.rowspacing = ParserUtil.dimen2em(rows[0])}
+      while (rows.length < top.table.length) {rows.push(ParserUtil.Em(top.rowspacing))}
+      rows[top.table.length-1] = ParserUtil.Em(Math.max(0,top.rowspacing+ParserUtil.dimen2em(n)));
       top.arraydef.rowspacing = rows.join(' ');
     }
   } else {
@@ -1477,3 +1472,20 @@ ParseMethods.setArrayAlign = function(parser, array,align) {
   else if (align) {array.arraydef.align = align} // FIXME: should be an error?
   return array;
 };
+
+// Utilities:
+
+ParseMethods.mi2mo = function(mi) {
+  imp.printMethod("mi2mo");
+  // @test Mathop Sub, Mathop Super
+  var mo = imp.createNode('mo', [], {});
+  imp.copyChildren(mi, mo);
+  // TODO: Figure out how to copy these attributes.
+  imp.copyAttributes(mi, mo);
+  // TODO: Do this with get('lspace') etc.
+  imp.setProperties(mo, {lspace: '0', rspace: '0'});
+  // mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
+  // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
+  return mo;
+};
+
