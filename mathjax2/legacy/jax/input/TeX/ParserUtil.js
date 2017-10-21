@@ -34,6 +34,40 @@ import {imp} from './imp.js';
 export let ParserUtil = {};
 
 
+ParserUtil.emPerInch = 7.2;
+ParserUtil.pxPerInch = 72;
+
+
+ParserUtil.matchDimen = function (dim) {
+  // imp.printMethod("matchDimen");
+  return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
+};
+
+
+ParserUtil.dimen2em = function (dim) {
+  // imp.printMethod("dimen2em");
+  var match = ParserUtil.matchDimen(dim);
+  var m = parseFloat(match[1]||"1"), unit = match[2];
+  if (unit === "em") {return m}
+  if (unit === "ex") {return m * .43}
+  if (unit === "pt") {return m / 10}                    // 10 pt to an em
+  if (unit === "pc") {return m * 1.2}                   // 12 pt to a pc
+  if (unit === "px") {return m * ParserUtil.emPerInch / ParserUtil.pxPerInch}
+  if (unit === "in") {return m * ParserUtil.emPerInch}
+  if (unit === "cm") {return m * ParserUtil.emPerInch / 2.54} // 2.54 cm to an inch
+  if (unit === "mm") {return m * ParserUtil.emPerInch / 25.4} // 10 mm to a cm
+  if (unit === "mu") {return m / 18}
+  return 0;
+};
+
+
+ParserUtil.Em = function (m) {
+  // imp.printMethod("Em");
+  if (Math.abs(m) < .0006) {return "0em"}
+  return m.toFixed(3).replace(/\.?0+$/,"") + "em";
+};
+
+
 /**
  *  Create an mrow that has stretchy delimiters at either end, as needed
  */

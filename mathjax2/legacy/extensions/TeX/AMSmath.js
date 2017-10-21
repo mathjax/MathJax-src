@@ -57,7 +57,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var COLS = function (W) {
     var WW = [];
     for (var i = 0, m = W.length; i < m; i++) 
-      {WW[i] = TEX.Parse.prototype.Em(W[i])}
+      {WW[i] = ParserUtil.Em(W[i])}
     return WW.join(" ");
   };
   

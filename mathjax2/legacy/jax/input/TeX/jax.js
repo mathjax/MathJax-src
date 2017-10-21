@@ -1915,7 +1915,7 @@ imp.NEW = process.TEST_NEW;
       var n;
       if (this.string.charAt(this.i) === "[") {
         n = this.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
-        if (n && !this.matchDimen(n)) {
+        if (n && !ParserUtil.matchDimen(n)) {
           throw new TexError(["BracketMustBeDimension",
                      "Bracket argument to %1 must be a dimension",name]);
         }
@@ -1928,9 +1928,9 @@ imp.NEW = process.TEST_NEW;
         // @test Array
         if (n && top.arraydef.rowspacing) {
           var rows = top.arraydef.rowspacing.split(/ /);
-          if (!top.rowspacing) {top.rowspacing = this.dimen2em(rows[0])}
-          while (rows.length < top.table.length) {rows.push(this.Em(top.rowspacing))}
-          rows[top.table.length-1] = this.Em(Math.max(0,top.rowspacing+this.dimen2em(n)));
+          if (!top.rowspacing) {top.rowspacing = ParserUtil.dimen2em(rows[0])}
+          while (rows.length < top.table.length) {rows.push(ParserUtil.Em(top.rowspacing))}
+          rows[top.table.length-1] = ParserUtil.Em(Math.max(0,top.rowspacing+ParserUtil.dimen2em(n)));
           top.arraydef.rowspacing = rows.join(' ');
         }
       } else {
@@ -1947,32 +1947,6 @@ imp.NEW = process.TEST_NEW;
         // node = MML.mspace().With({linebreak:MML.LINEBREAK.NEWLINE});
         this.Push(node);
       }
-    },
-    emPerInch: 7.2,
-    pxPerInch: 72,
-    matchDimen: function (dim) {
-    // imp.printMethod("matchDimen");
-      return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
-    },
-    dimen2em: function (dim) {
-    // imp.printMethod("dimen2em");
-      var match = this.matchDimen(dim);
-      var m = parseFloat(match[1]||"1"), unit = match[2];
-      if (unit === "em") {return m}
-      if (unit === "ex") {return m * .43}
-      if (unit === "pt") {return m / 10}                    // 10 pt to an em
-      if (unit === "pc") {return m * 1.2}                   // 12 pt to a pc
-      if (unit === "px") {return m * this.emPerInch / this.pxPerInch}
-      if (unit === "in") {return m * this.emPerInch}
-      if (unit === "cm") {return m * this.emPerInch / 2.54} // 2.54 cm to an inch
-      if (unit === "mm") {return m * this.emPerInch / 25.4} // 10 mm to a cm
-      if (unit === "mu") {return m / 18}
-      return 0;
-    },
-    Em: function (m) {
-    // imp.printMethod("Em");
-      if (Math.abs(m) < .0006) {return "0em"}
-      return m.toFixed(3).replace(/\.?0+$/,"") + "em";
     },
     
     HLine: function (name,style) {
