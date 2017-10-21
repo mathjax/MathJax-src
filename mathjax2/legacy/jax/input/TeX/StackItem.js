@@ -50,7 +50,6 @@ export class BaseItem {
 
 
   constructor(...args) {
-    console.log(args);
     this.endError =   /*_()*/ ['ExtraOpenMissingClose',
                          'Extra open brace or missing close brace'];
     this.closeError = /*_()*/ ['ExtraCloseMissingOpen',
@@ -62,7 +61,6 @@ export class BaseItem {
       this._env = {};
     }
     this.data = [];
-    console.log("here?");
     this.Push.apply(this, args);
   }
 
@@ -157,7 +155,6 @@ export class BaseItem {
 
 
   toString() {
-    console.log(this.data);
     return this.getType() + '[' + this.data.join('; ') + ']';
   }
 }
@@ -668,9 +665,7 @@ export class CellItem extends BaseItem {
 export class MmlItem extends BaseItem {
 
   constructor(...args) {
-    console.log(args);
     super(...args);
-    console.log("We are past the super class call");
     this.type = 'mml';
     this.isNotStack = true;
   }
@@ -748,9 +743,6 @@ export class NotItem extends BaseItem {
       c = imp.getText(mml);
       if (c.length === 1 && !imp.getProperty(mml, 'movesupsub') &&
           imp.getChildren(mml).length === 1) {
-        console.log('IN NOT');
-        console.log(c);
-        console.log(this.remap.contains(c));
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
           var textNode = imp.createText(this.remap.lookup(c).char);
