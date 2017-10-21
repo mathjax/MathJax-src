@@ -2445,9 +2445,6 @@ imp.NEW = process.TEST_NEW;
       imp.printSimple(script);
       var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
-      // var data = {math:math, display:display, script:script};
-      // var callback = this.prefilterHooks.Execute(data); if (callback) return callback;
-      // math = data.math;
       try {
         mml = TEX.Parse(math).mml();
         imp.printSimple(mml.toString());
@@ -2472,15 +2469,8 @@ imp.NEW = process.TEST_NEW;
       if (isError) {
         mathNode.texError = true;
       }
-      this.combineRelations(root);
+      ParserUtil.combineRelations(root);
       return mathNode;
-    },
-    prefilterMath: function (math,displaystyle,script) {
-      return math;
-    },
-    postfilterMath: function (math,displaystyle,script) {
-      this.combineRelations(math.root);
-      return math;
     },
     formatError: function (err,math,display,script) {
       var message = err.message.replace(/\n.*/,"");
@@ -2501,53 +2491,9 @@ imp.NEW = process.TEST_NEW;
     Macro: function (name,def,argn) {
       TEXDEF.macros[name] = ['Macro'].concat([].slice.call(arguments,1));
       TEXDEF.macros[name].isUser = true;
-    },
-
-    
-    //
-    //  Combine adjacent <mo> elements that are relations
-    //    (since MathML treats the spacing very differently)
-    //
-    combineRelations: function (mml) {
-      imp.printMethod('combineRelations: ');
-      var i, m, m1, m2;
-      var children = imp.getChildren(mml);
-      for (i = 0, m = children.length; i < m; i++) {
-        if (children[i]) {
-          if (imp.isType(mml, 'mrow')) {
-            while (i+1 < m && (m1 = children[i]) && (m2 = children[i+1]) &&
-                   imp.isType(m1, 'mo') && imp.isType(m2, 'mo') &&
-                   imp.getTexClass(m1) === TEXCLASS.REL &&
-                   imp.getTexClass(m2) === TEXCLASS.REL) {
-              if (imp.getProperty(m1, 'variantForm') == imp.getProperty(m2, 'variantForm') &&
-                  imp.getAttribute(m1, 'mathvariant') == imp.getAttribute(m2, 'mathvariant')) {
-                imp.appendChildren(m1, imp.getChildren(m2));
-                children.splice(i+1,1);
-                m--;
-              } else {
-                imp.untested('Combine Relations Case 2');
-                imp.setAttribute(m1, 'rspace', '0pt');
-                imp.setAttribute(m2, 'lspace', '0pt');
-                i++;
-              }
-            }
-          }
-          if (!children[i].isToken) {
-            this.combineRelations(children[i]);
-          }
-        }
-      }
     }
-  });
 
-  //
-  //  Add the default filters
-  //
-  TEX.prefilterHooks.Add(function (data) {
-    data.math = TEX.prefilterMath(data.math,data.display,data.script);
-  });
-  TEX.postfilterHooks.Add(function (data) {
-    data.math = TEX.postfilterMath(data.math,data.display,data.script);
+
   });
 
   TEX.loadComplete("jax.js");

@@ -112,6 +112,43 @@ ParserUtil.mathPalette = function (fence, side, parser) {
 };
 
 
+//
+//  Combine adjacent <mo> elements that are relations
+//    (since MathML treats the spacing very differently)
+//
+ParserUtil.combineRelations = function (mml) {
+  imp.printMethod('combineRelations: ');
+  var i, m, m1, m2;
+  var children = imp.getChildren(mml);
+  for (i = 0, m = children.length; i < m; i++) {
+    if (children[i]) {
+      if (imp.isType(mml, 'mrow')) {
+        while (i+1 < m && (m1 = children[i]) && (m2 = children[i+1]) &&
+               imp.isType(m1, 'mo') && imp.isType(m2, 'mo') &&
+               imp.getTexClass(m1) === TEXCLASS.REL &&
+               imp.getTexClass(m2) === TEXCLASS.REL) {
+          if (imp.getProperty(m1, 'variantForm') == imp.getProperty(m2, 'variantForm') &&
+              imp.getAttribute(m1, 'mathvariant') == imp.getAttribute(m2, 'mathvariant')) {
+            // @test Shift Left, Less Equal
+            imp.appendChildren(m1, imp.getChildren(m2));
+            children.splice(i+1,1);
+            m--;
+          } else {
+            imp.untested('Combine Relations Case 2');
+            imp.setAttribute(m1, 'rspace', '0pt');
+            imp.setAttribute(m2, 'lspace', '0pt');
+            i++;
+          }
+        }
+      }
+      if (!children[i].isToken) {
+        ParserUtil.combineRelations(children[i]);
+      }
+    }
+  }
+};
+
+
 // AMS
 
 /**
@@ -136,3 +173,5 @@ ParserUtil.fixInitialMO = function (data) {
     }
   }
 };
+
+
