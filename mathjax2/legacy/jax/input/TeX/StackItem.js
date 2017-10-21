@@ -57,13 +57,22 @@ export class BaseItem {
     this.rightError = /*_()*/ ['MissingLeftExtraRight',
                          'Missing \\left or extra \\right'];
     this.type = 'base';
-    if (this.isOpen()) {
-      this.env = {};
+    if (this.isOpen) {
+      this._env = {};
     }
     this.data = [];
     this.Push.apply(this, arguments);
   }
 
+  get env() {
+    return this._env;
+  }
+
+  set env(value) {
+    this._env = value;
+  }
+  
+  
   get isOpen() {
     return false;
   }
@@ -146,6 +155,7 @@ export class BaseItem {
 
 
   toString() {
+    console.log(this.data);
     return this.getType() + '[' + this.data.join('; ') + ']';
   }
 }
@@ -153,7 +163,7 @@ export class BaseItem {
 export class StartItem extends BaseItem {
 
   constructor(global) {
-    super(arguments);
+    super(global);
     this.type = 'start';
     this.global = global;
   }
@@ -174,7 +184,7 @@ export class StartItem extends BaseItem {
 export class StopItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'stop';
   }
 
@@ -187,7 +197,7 @@ export class StopItem extends BaseItem {
 export class OpenItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.stopError = /*_()*/ ['ExtraOpenMissingClose',
                               'Extra open brace or missing close brace'];
     this.type = 'open';
@@ -218,7 +228,7 @@ export class OpenItem extends BaseItem {
 export class CloseItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'close';
   }
 
@@ -232,7 +242,7 @@ export class CloseItem extends BaseItem {
 export class PrimeItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'prime';
   }
 
@@ -253,7 +263,7 @@ export class PrimeItem extends BaseItem {
 export class SubsupItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'subsup';
     this.stopError = /*_()*/ ['MissingScript',
                               'Missing superscript or subscript argument'];
@@ -303,7 +313,7 @@ export class SubsupItem extends BaseItem {
 export class OverItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'over';
     this.name = '\\over';
   }
@@ -348,7 +358,7 @@ export class OverItem extends BaseItem {
 export class LeftItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'left';
     this.delim = '(',
     this.stopError = /*_()*/ ['ExtraLeftMissingRight',
@@ -376,7 +386,7 @@ export class LeftItem extends BaseItem {
 export class RightItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'right';
     this.delim = ')';
   }
@@ -390,7 +400,7 @@ export class RightItem extends BaseItem {
 export class BeginItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'begin';
   }
 
@@ -421,7 +431,7 @@ export class BeginItem extends BaseItem {
 export class EndItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'end';
   }
 
@@ -434,7 +444,7 @@ export class EndItem extends BaseItem {
 export class StyleItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'style';
   }
 
@@ -455,7 +465,7 @@ export class StyleItem extends BaseItem {
 export class PositionItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'position';
   }
 
@@ -643,7 +653,7 @@ export class ArrayItem extends BaseItem {
 export class CellItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'cell';
   }
 
@@ -656,7 +666,7 @@ export class CellItem extends BaseItem {
 export class MmlItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'mml';
     this.isNotStack = true;
   }
@@ -671,7 +681,7 @@ export class MmlItem extends BaseItem {
 export class FnItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'fn';
   }
 
@@ -717,7 +727,7 @@ export class FnItem extends BaseItem {
 export class NotItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'not';
     this.remap = MapHandler.getInstance().getMap('not_remap');
   }
@@ -767,7 +777,7 @@ export class NotItem extends BaseItem {
 export class DotsItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'dots';
   }
 

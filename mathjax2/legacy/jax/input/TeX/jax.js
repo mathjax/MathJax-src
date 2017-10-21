@@ -37,7 +37,7 @@ require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
 let TexError = require('./TexError.js').TexError;
 let stack = require('./Stack.js');
-let stackitem = require('./StackItem.js');
+let item = require('./StackItem.js');
 let ParserUtil = require("./ParserUtil.js").ParserUtil;
 
 
@@ -59,6 +59,8 @@ imp.NEW = process.TEST_NEW;
     closeError: /*_()*/ ["ExtraCloseMissingOpen","Extra close brace or missing open brace"],
     rightError: /*_()*/ ["MissingLeftExtraRight","Missing \\left or extra \\right"],
     Init: function () {
+      console.log("Arguments: ");
+      console.log(arguments);
       if (this.isOpen) {this.env = {}}
       this.data = [];
       this.Push.apply(this,arguments);
@@ -566,7 +568,8 @@ imp.NEW = process.TEST_NEW;
       this.stack = new stack.Stack(ENV,!!env,STACKITEM);
       NewParser.setup(this);
       TEXDEF.configurations.forEach(NewParser.append.bind(NewParser));
-      this.Parse(); this.Push(STACKITEM.stop());
+      this.Parse();
+      this.Push(imp.STACKS ? new item.StopItem() : STACKITEM.stop());
     },
     Parse: function () {
     imp.printMethod("Parse");
@@ -751,8 +754,12 @@ imp.NEW = process.TEST_NEW;
     /*
      *  Handle { and }
      */
-    Open: function (c) {this.Push(STACKITEM.open())},
-    Close: function (c) {this.Push(STACKITEM.close())},
+    Open: function (c) {
+      this.Push(imp.STACKS ? new item.OpenItem() : STACKITEM.open());
+    },
+    Close: function (c) {
+      this.Push(imp.STACKS ? new item.CloseItem() : STACKITEM.close());
+    },
     
     /*
      *  Handle tilde and spaces
@@ -835,9 +842,13 @@ imp.NEW = process.TEST_NEW;
           position = base.sup;
         }
       }
-      this.Push(STACKITEM.subsup(base).With({
-        position: position, primes: primes, movesupsub: movesupsub
-      }));
+      this.Push(imp.STACKS ?
+                new item.SubsupItem().With({
+                  position: position, primes: primes, movesupsub: movesupsub
+                }) :
+                STACKITEM.subsup(base).With({
+                  position: position, primes: primes, movesupsub: movesupsub
+                }));
     },
     Subscript: function (c) {
     imp.printMethod("Subscript");
@@ -895,9 +906,13 @@ imp.NEW = process.TEST_NEW;
           position = base.sub;
         }
       }
-      this.Push(STACKITEM.subsup(base).With({
-        position: position, primes: primes, movesupsub: movesupsub
-      }));
+      this.Push(imp.STACKS ?
+                new item.SubsupItem().With({
+                  position: position, primes: primes, movesupsub: movesupsub
+                }) :
+                STACKITEM.subsup(base).With({
+                  position: position, primes: primes, movesupsub: movesupsub
+                }));
     },
     PRIME: "\u2032", SMARTQUOTE: "\u2019",
     Prime: function (c) {
@@ -922,7 +937,9 @@ imp.NEW = process.TEST_NEW;
       var node = imp.createNode('mo', [], {}, textNode);
       // VS: OLD
       // var node = MML.mo(sup);
-      this.Push(STACKITEM.prime(base, this.mmlToken(node)));
+      this.Push(imp.STACKS ?
+                new item.PrimeItem(base, this.mmlToken(node)) :
+                STACKITEM.prime(base, this.mmlToken(node)));
     },
     mi2mo: function (mi) {
     imp.printMethod("mi2mo");
@@ -1002,12 +1019,16 @@ imp.NEW = process.TEST_NEW;
       imp.printMethod("SetStyle: " + name + " texStyle: " + texStyle +
                 " style: " + style + " level: " + level);
       this.stack.env.style = texStyle; this.stack.env.level = level;
-      this.Push(STACKITEM.style().With({styles: {displaystyle: style, scriptlevel: level}}));
+      this.Push(imp.STACKS ?
+                new item.StyleItem().With({styles: {displaystyle: style, scriptlevel: level}}) :
+                STACKITEM.style().With({styles: {displaystyle: style, scriptlevel: level}}));
     },
     SetSize: function (name,size) {
     imp.printMethod("SetSize");
       this.stack.env.size = size;
-      this.Push(STACKITEM.style().With({styles: {mathsize: size+"em"}})); // convert to absolute?
+      this.Push(imp.STACKS ?
+                new item.StyleItem().With({styles: {mathsize: size+"em"}}) :
+                STACKITEM.style().With({styles: {mathsize: size+"em"}})); // convert to absolute?
     },
 
     // Look at color extension!
@@ -1037,7 +1058,10 @@ imp.NEW = process.TEST_NEW;
     LeftRight: function (name) {
       imp.printMethod("LeftRight");
       // @test Fenced, Fenced3
-      this.Push(STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
+      this.Push(imp.STACKS ?
+                // TODO: Sort this out: Uppercase the first character and add Item!
+                new item[name.substr(1) + 'Item']().With({delim: this.GetDelimiter(name)}) :
+                STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
     },
     
     Middle: function (name) {
@@ -1071,7 +1095,8 @@ imp.NEW = process.TEST_NEW;
       var mml = imp.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
       // VS: OLD
       // var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
-      this.Push(STACKITEM.fn(this.mmlToken(mml)));
+      this.Push(imp.STACKS ? new item.FnItem(this.mmlToken(mml)) :
+                STACKITEM.fn(this.mmlToken(mml)));
     },
     NamedOp: function (name,id) {
       imp.printMethod("NamedOp");
@@ -1134,7 +1159,8 @@ imp.NEW = process.TEST_NEW;
     Over: function (name,open,close) {
       imp.printMethod("Over");
       // @test Over
-      var mml = STACKITEM.over().With({name: name, parse: TEX.Parse});
+      var mml = imp.STACKS ? new item.OverItem().With({name: name, parse: TEX.Parse}) :
+          STACKITEM.over().With({name: name, parse: TEX.Parse});
       if (open || close) {
         // @test Choose
         mml.open = open; mml.close = close;
@@ -1365,14 +1391,15 @@ imp.NEW = process.TEST_NEW;
           node = imp.createNode('mi', [], def, textNode);
           // VS: OLD
           // node = MML.mi(match[1]).With(def);
-          mml = STACKITEM.fn(this.mmlToken(node));
+          mml = imp.STACKS ? new item.FnItem(this.mmlToken(node)) :
+            STACKITEM.fn(this.mmlToken(node));
         } else {
           // @test Mathop Cal
           var parsed = TEX.Parse(arg,this.stack.env).mml();
           node = imp.createNode('TeXAtom', [parsed], def);
           // VS: OLD
           // node = MML.TeXAtom(parsed).With(def);
-          mml = STACKITEM.fn(node);
+          mml = imp.STACKS ? new item.FnItem(node) : STACKITEM.fn(node);
         }
       } else {
         // @test Mathrel
@@ -1548,7 +1575,9 @@ imp.NEW = process.TEST_NEW;
       imp.printMethod("RaiseLower");
       // @test Raise, Lower, Raise Negative, Lower Negative
       var h = this.GetDimen(name);
-      var item = STACKITEM.position().With({name: name, move: 'vertical'});
+      var item = imp.STACKS ?
+          new item.PositionItem().With({name: name, move: 'vertical'}) :
+          STACKITEM.position().With({name: name, move: 'vertical'});
       if (h.charAt(0) === '-') {
         // @test Raise Negative, Lower Negative
         h = h.slice(1);
@@ -1574,14 +1603,18 @@ imp.NEW = process.TEST_NEW;
         h = nh;
         nh = tmp;
       }
-      this.Push(STACKITEM.position().With({
-        name: name, move: 'horizontal',
-        left:  imp.createNode('mspace', [], {width: h, mathsize: TexConstant.Size.NORMAL}),
-        right: imp.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})
+      this.Push(imp.STACKS ?
+                new item.PositionItem().With({
+                  name: name, move: 'horizontal',
+                  left:  imp.createNode('mspace', [], {width: h, mathsize: TexConstant.Size.NORMAL}),
+                  right: imp.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}) :
+                STACKITEM.position().With({
+                  name: name, move: 'horizontal',
+                  left:  imp.createNode('mspace', [], {width: h, mathsize: TexConstant.Size.NORMAL}),
+                  right: imp.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}));
         // VS: OLD
         // left:  MML.mspace().With({width: h, mathsize: MML.SIZE.NORMAL}),
         // right: MML.mspace().With({width: nh, mathsize: MML.SIZE.NORMAL})
-      }));
     },
     
     Hskip: function (name) {
@@ -1697,7 +1730,7 @@ imp.NEW = process.TEST_NEW;
       imp.printMethod("Not");
       // @test Negation Simple, Negation Complex, Negation Explicit,
       //       Negation Large
-      this.Push(STACKITEM.not());
+      this.Push(imp.STACKS ? new item.NotItem() : STACKITEM.not());
     },
     
     Dots: function (name) {
@@ -1710,10 +1743,15 @@ imp.NEW = process.TEST_NEW;
       // VS: OLD
       // var ldots = MML.mo(MML.entity("#x2026")).With({stretchy:false});
       // var cdots = MML.mo(MML.entity("#x22EF")).With({stretchy:false});
-      this.Push(STACKITEM.dots().With({
-        ldots: this.mmlToken(ldots),
-        cdots: this.mmlToken(cdots)
-      }));
+      this.Push(imp.STACKS ?
+                new item.DotsItem().With({
+                  ldots: this.mmlToken(ldots),
+                  cdots: this.mmlToken(cdots)
+                }) :
+                STACKITEM.dots().With({
+                  ldots: this.mmlToken(ldots),
+                  cdots: this.mmlToken(cdots)
+                }));
     },
     
     Require: function (name) {
@@ -1758,13 +1796,20 @@ imp.NEW = process.TEST_NEW;
       if (c === "")
         {throw new TexError(["MissingArgFor","Missing argument for %1",name])}
       if (c === "{") {this.i++} else {this.string = c+"}"+this.string.slice(this.i+1); this.i = 0}
-      var array = STACKITEM.array().With({
-        requireClose: true,
-        arraydef: {
-          rowspacing: (vspacing||"4pt"),
-          columnspacing: (spacing||"1em")
-        }
-      });
+      var array = imp.STACKS ?
+          new item.ArrayItem().With({
+            requireClose: true,
+            arraydef: {
+              rowspacing: (vspacing||"4pt"),
+              columnspacing: (spacing||"1em")
+            }}) :
+            STACKITEM.array().With({
+              requireClose: true,
+              arraydef: {
+                rowspacing: (vspacing||"4pt"),
+                columnspacing: (spacing||"1em")
+              }
+            });
       if (cases)         {array.isCases = true}
       if (numbered)      {array.isNumbered = true; array.arraydef.side = numbered}
       if (open || close) {array.open = open; array.close = close}
@@ -1776,7 +1821,9 @@ imp.NEW = process.TEST_NEW;
     Entry: function (name) {
     imp.printMethod("Entry");
       // imp.untested(20);
-      this.Push(STACKITEM.cell().With({isEntry: true, name: name}));
+      this.Push(imp.STACKS ?
+                new item.CellItem().With({isEntry: true, name: name}) :
+                STACKITEM.cell().With({isEntry: true, name: name}));
       if (this.stack.Top().isCases) {
         //
         //  Make second column be in \text{...} (unless it is already
@@ -1849,7 +1896,9 @@ imp.NEW = process.TEST_NEW;
     
     Cr: function (name) {
     imp.printMethod("Cr");
-      this.Push(STACKITEM.cell().With({isCR: true, name: name}));
+      this.Push(imp.STACKS ?
+                new item.CellItem().With({isCR: true, name: name}) :
+                STACKITEM.cell().With({isCR: true, name: name}));
     },
     
     CrLaTeX: function (name) {
@@ -1862,9 +1911,11 @@ imp.NEW = process.TEST_NEW;
                      "Bracket argument to %1 must be a dimension",name]);
         }
       }
-      this.Push(STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
+      this.Push(imp.STACKS ?
+                new item.CellItem().With({isCR: true, name: name, linebreak: true}) :
+                STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
       var top = this.stack.Top();
-      if (top instanceof STACKITEM.array) {
+      if (imp.STACKS ? top instanceof item.ArrayItem : top instanceof STACKITEM.array) {
         // @test Array
         if (n && top.arraydef.rowspacing) {
           var rows = top.arraydef.rowspacing.split(/ /);
@@ -1919,7 +1970,8 @@ imp.NEW = process.TEST_NEW;
     imp.printMethod("HLine");
       if (style == null) {style = "solid"}
       var top = this.stack.Top();
-      if (!top.isa(STACKITEM.array) || top.data.length)
+      if (!(imp.STACKS ? top instanceof item.ArrayItem : top instanceof STACKITEM.array) ||
+          top.data.length)
         {throw new TexError(["Misplaced","Misplaced %1",name])}
       if (top.table.length == 0) {
         top.frame.push("top");
@@ -1936,7 +1988,8 @@ imp.NEW = process.TEST_NEW;
     HFill: function (name) {
     imp.printMethod("HFill");
       var top = this.stack.Top();
-      if (top.isa(STACKITEM.array)) top.hfill.push(top.data.length);
+      if ((imp.STACKS ? top instanceof item.ArrayItem : top instanceof STACKITEM.array))
+        top.hfill.push(top.data.length);
         else throw new TexError(["UnsupportedHFill","Unsupported use of %1",name]);
     },
     
@@ -1953,7 +2006,9 @@ imp.NEW = process.TEST_NEW;
       if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
       if (env.match(/\\/i)) {throw new TexError(["InvalidEnv","Invalid environment name '%1'",env])}
       if (name === "\\end") {
-        var mml = STACKITEM.end().With({name: env});
+        var mml = imp.STACKS ?
+            new item.EndItem().With({name: env}) :
+            STACKITEM.end().With({name: env});
         this.Push(mml);
       } else {
         if (++this.macroCount > TEX.config.MAXMACROS) {
@@ -1967,7 +2022,9 @@ imp.NEW = process.TEST_NEW;
     BeginEnvironment: function (func, env, args) {
       imp.printMethod("BeginEnvironment");
       var end = args[0];
-      var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
+      var mml = imp.STACKS ?
+          new item.BeginItem().With({name: env, end: end, parse:this}) :
+          STACKITEM.begin().With({name: env, end: end, parse:this});
       mml = func.apply(this,[mml].concat(args.slice(1)));
       this.Push(mml);
     },
@@ -1982,13 +2039,21 @@ imp.NEW = process.TEST_NEW;
       var lines = ("c"+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
       align = align.replace(/[^clr]/g,'').split('').join(' ');
       align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-      var array = STACKITEM.array().With({
-        arraydef: {
-          columnalign: align,
-          columnspacing: (spacing||"1em"),
-          rowspacing: (vspacing||"4pt")
-        }
-      });
+      var array = imp.STACKS ?
+          new item.ArrayItem().With({
+            arraydef: {
+              columnalign: align,
+              columnspacing: (spacing||"1em"),
+              rowspacing: (vspacing||"4pt")
+            }
+          }) :
+          STACKITEM.array().With({
+            arraydef: {
+              columnalign: align,
+              columnspacing: (spacing||"1em"),
+              rowspacing: (vspacing||"4pt")
+            }
+          });
       if (lines.match(/[|:]/)) {
         if (lines.charAt(0).match(/[|:]/)) {array.frame.push("left"); array.frame.dashed = lines.charAt(0) === ":"}
         if (lines.charAt(lines.length-1).match(/[|:]/)) {array.frame.push("right")}

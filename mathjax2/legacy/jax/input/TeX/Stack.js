@@ -25,6 +25,7 @@
 
 
 import {imp} from './imp.js';
+import {BaseItem, StartItem, MmlItem} from './StackItem.js';
 
 // Stack class for the parser.
 
@@ -34,7 +35,18 @@ export class Stack {
   constructor(env, inner, stackitem) {
     this.STACKITEM = stackitem;
     this.global = {isInner: inner};
-    this.data = [this.STACKITEM.start(this.global)];
+    console.log(StartItem);
+    let item = new StartItem(this.global);
+    console.log(item.isOpen);
+    console.log(item.Push);
+    console.log(item.toString());
+    this.data = [
+      imp.STACKS ?
+        new StartItem(this.global) :
+        this.STACKITEM.start(this.global)
+    ];
+    // this.data = [new StartItem(this.global)];
+    console.log(this.data);
     if (env) {
       this.data[0].env = env;
     }
@@ -47,7 +59,8 @@ export class Stack {
     for (i = 0, m = arguments.length; i < m; i++) {
       item = arguments[i]; if (!item) continue;
       if (imp.isNode(item)) {
-        item = this.STACKITEM.mml(item);
+        item = imp.STACKS ? MmlItem(item) : this.STACKITEM.mml(item);
+        // item = new MmlItem(item);
       }
       item.global = this.global;
 
@@ -56,7 +69,9 @@ export class Stack {
         this.Pop();
         this.Push.apply(this, top);
       }
-      else if (top instanceof this.STACKITEM) {
+      else if (imp.STACKS ?
+               top instanceof BaseItem :
+               top instanceof this.STACKITEM) {
         this.Pop();
         this.Push(top);
       }

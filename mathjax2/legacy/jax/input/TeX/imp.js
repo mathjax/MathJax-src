@@ -32,6 +32,7 @@ import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 export let imp = {};
 
 imp.NEW = false;
+imp.STACKS = false;
 imp.MML = null;
 imp.factory = new MmlFactory();
 imp.visitor = new JsonMmlVisitor();
