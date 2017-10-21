@@ -24,7 +24,7 @@
  */
 
 
-import {MapHandler} from 'mathjax3/input/tex/MapHandler.js';
+import MapHandler from 'mathjax3/input/tex/MapHandler.js';
 import {MmlEntities} from 'mathjax3/input/mathml/MmlEntities.js';
 import {TEXCLASS} from 'mathjax3/core/MmlTree/MmlNode.js';
 import {TexConstant} from 'mathjax3/input/tex/TexConstants.js';
@@ -49,7 +49,8 @@ import {imp} from './imp.js';
 export class BaseItem {
 
 
-  constructor() {
+  constructor(...args) {
+    console.log(args);
     this.endError =   /*_()*/ ['ExtraOpenMissingClose',
                          'Extra open brace or missing close brace'];
     this.closeError = /*_()*/ ['ExtraCloseMissingOpen',
@@ -61,7 +62,8 @@ export class BaseItem {
       this._env = {};
     }
     this.data = [];
-    this.Push.apply(this, arguments);
+    console.log("here?");
+    this.Push.apply(this, args);
   }
 
   get env() {
@@ -163,7 +165,7 @@ export class BaseItem {
 export class StartItem extends BaseItem {
 
   constructor(global) {
-    super(global);
+    super();
     this.type = 'start';
     this.global = global;
   }
@@ -241,8 +243,8 @@ export class CloseItem extends BaseItem {
 
 export class PrimeItem extends BaseItem {
 
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.type = 'prime';
   }
 
@@ -262,8 +264,8 @@ export class PrimeItem extends BaseItem {
 
 export class SubsupItem extends BaseItem {
 
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.type = 'subsup';
     this.stopError = /*_()*/ ['MissingScript',
                               'Missing superscript or subscript argument'];
@@ -496,7 +498,7 @@ export class PositionItem extends BaseItem {
 export class ArrayItem extends BaseItem {
 
   constructor() {
-    super(arguments);
+    super();
     this.type = 'array';
     this.table = [];
     this.row = [];
@@ -665,8 +667,10 @@ export class CellItem extends BaseItem {
 
 export class MmlItem extends BaseItem {
 
-  constructor() {
-    super();
+  constructor(...args) {
+    console.log(args);
+    super(...args);
+    console.log("We are past the super class call");
     this.type = 'mml';
     this.isNotStack = true;
   }
@@ -680,8 +684,8 @@ export class MmlItem extends BaseItem {
 
 export class FnItem extends BaseItem {
 
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.type = 'fn';
   }
 
@@ -744,6 +748,9 @@ export class NotItem extends BaseItem {
       c = imp.getText(mml);
       if (c.length === 1 && !imp.getProperty(mml, 'movesupsub') &&
           imp.getChildren(mml).length === 1) {
+        console.log('IN NOT');
+        console.log(c);
+        console.log(this.remap.contains(c));
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
           var textNode = imp.createText(this.remap.lookup(c).char);

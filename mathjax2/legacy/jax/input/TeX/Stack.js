@@ -55,11 +55,14 @@ export class Stack {
 
 
   Push() {
+    console.log("PUSHING onto stack: ");
+    console.log(arguments);
     var i, m, item, top;
     for (i = 0, m = arguments.length; i < m; i++) {
       item = arguments[i]; if (!item) continue;
+      console.log(imp.isNode(item));
       if (imp.isNode(item)) {
-        item = imp.STACKS ? MmlItem(item) : this.STACKITEM.mml(item);
+        item = imp.STACKS ? new MmlItem(item) : this.STACKITEM.mml(item);
         // item = new MmlItem(item);
       }
       item.global = this.global;

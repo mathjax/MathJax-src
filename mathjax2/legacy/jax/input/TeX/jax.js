@@ -37,7 +37,7 @@ require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
 let TexError = require('./TexError.js').TexError;
 let stack = require('./Stack.js');
-let item = require('./StackItem.js');
+let sitem = require('./StackItem.js');
 let ParserUtil = require("./ParserUtil.js").ParserUtil;
 
 
@@ -569,7 +569,7 @@ imp.NEW = process.TEST_NEW;
       NewParser.setup(this);
       TEXDEF.configurations.forEach(NewParser.append.bind(NewParser));
       this.Parse();
-      this.Push(imp.STACKS ? new item.StopItem() : STACKITEM.stop());
+      this.Push(imp.STACKS ? new sitem.StopItem() : STACKITEM.stop());
     },
     Parse: function () {
     imp.printMethod("Parse");
@@ -755,10 +755,10 @@ imp.NEW = process.TEST_NEW;
      *  Handle { and }
      */
     Open: function (c) {
-      this.Push(imp.STACKS ? new item.OpenItem() : STACKITEM.open());
+      this.Push(imp.STACKS ? new sitem.OpenItem() : STACKITEM.open());
     },
     Close: function (c) {
-      this.Push(imp.STACKS ? new item.CloseItem() : STACKITEM.close());
+      this.Push(imp.STACKS ? new sitem.CloseItem() : STACKITEM.close());
     },
     
     /*
@@ -843,7 +843,7 @@ imp.NEW = process.TEST_NEW;
         }
       }
       this.Push(imp.STACKS ?
-                new item.SubsupItem().With({
+                new sitem.SubsupItem(base).With({
                   position: position, primes: primes, movesupsub: movesupsub
                 }) :
                 STACKITEM.subsup(base).With({
@@ -907,7 +907,7 @@ imp.NEW = process.TEST_NEW;
         }
       }
       this.Push(imp.STACKS ?
-                new item.SubsupItem().With({
+                new sitem.SubsupItem(base).With({
                   position: position, primes: primes, movesupsub: movesupsub
                 }) :
                 STACKITEM.subsup(base).With({
@@ -937,8 +937,10 @@ imp.NEW = process.TEST_NEW;
       var node = imp.createNode('mo', [], {}, textNode);
       // VS: OLD
       // var node = MML.mo(sup);
+      console.log('BASE:');
+      console.log(base);
       this.Push(imp.STACKS ?
-                new item.PrimeItem(base, this.mmlToken(node)) :
+                new sitem.PrimeItem(base, this.mmlToken(node)) :
                 STACKITEM.prime(base, this.mmlToken(node)));
     },
     mi2mo: function (mi) {
@@ -1020,14 +1022,14 @@ imp.NEW = process.TEST_NEW;
                 " style: " + style + " level: " + level);
       this.stack.env.style = texStyle; this.stack.env.level = level;
       this.Push(imp.STACKS ?
-                new item.StyleItem().With({styles: {displaystyle: style, scriptlevel: level}}) :
+                new sitem.StyleItem().With({styles: {displaystyle: style, scriptlevel: level}}) :
                 STACKITEM.style().With({styles: {displaystyle: style, scriptlevel: level}}));
     },
     SetSize: function (name,size) {
     imp.printMethod("SetSize");
       this.stack.env.size = size;
       this.Push(imp.STACKS ?
-                new item.StyleItem().With({styles: {mathsize: size+"em"}}) :
+                new sitem.StyleItem().With({styles: {mathsize: size+"em"}}) :
                 STACKITEM.style().With({styles: {mathsize: size+"em"}})); // convert to absolute?
     },
 
@@ -1058,10 +1060,15 @@ imp.NEW = process.TEST_NEW;
     LeftRight: function (name) {
       imp.printMethod("LeftRight");
       // @test Fenced, Fenced3
+      console.log("The fence name!");
+      console.log(name);
+      console.log(name.substr(1));
+      var alpha = name.substr(1);
       this.Push(imp.STACKS ?
                 // TODO: Sort this out: Uppercase the first character and add Item!
-                new item[name.substr(1) + 'Item']().With({delim: this.GetDelimiter(name)}) :
-                STACKITEM[name.substr(1)]().With({delim: this.GetDelimiter(name)}));
+                new sitem[alpha[0].toUpperCase() + alpha.slice(1) + 'Item']()
+                  .With({delim: this.GetDelimiter(name)}) :
+                STACKITEM[alpha]().With({delim: this.GetDelimiter(name)}));
     },
     
     Middle: function (name) {
@@ -1095,7 +1102,7 @@ imp.NEW = process.TEST_NEW;
       var mml = imp.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
       // VS: OLD
       // var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
-      this.Push(imp.STACKS ? new item.FnItem(this.mmlToken(mml)) :
+      this.Push(imp.STACKS ? new sitem.FnItem(this.mmlToken(mml)) :
                 STACKITEM.fn(this.mmlToken(mml)));
     },
     NamedOp: function (name,id) {
@@ -1159,7 +1166,8 @@ imp.NEW = process.TEST_NEW;
     Over: function (name,open,close) {
       imp.printMethod("Over");
       // @test Over
-      var mml = imp.STACKS ? new item.OverItem().With({name: name, parse: TEX.Parse}) :
+      var mml = imp.STACKS ?
+          new sitem.OverItem().With({name: name, parse: TEX.Parse}) :
           STACKITEM.over().With({name: name, parse: TEX.Parse});
       if (open || close) {
         // @test Choose
@@ -1391,7 +1399,8 @@ imp.NEW = process.TEST_NEW;
           node = imp.createNode('mi', [], def, textNode);
           // VS: OLD
           // node = MML.mi(match[1]).With(def);
-          mml = imp.STACKS ? new item.FnItem(this.mmlToken(node)) :
+          mml = imp.STACKS ?
+            new sitem.FnItem(this.mmlToken(node)) :
             STACKITEM.fn(this.mmlToken(node));
         } else {
           // @test Mathop Cal
@@ -1399,7 +1408,7 @@ imp.NEW = process.TEST_NEW;
           node = imp.createNode('TeXAtom', [parsed], def);
           // VS: OLD
           // node = MML.TeXAtom(parsed).With(def);
-          mml = imp.STACKS ? new item.FnItem(node) : STACKITEM.fn(node);
+          mml = imp.STACKS ? new sitem.FnItem(node) : STACKITEM.fn(node);
         }
       } else {
         // @test Mathrel
@@ -1576,7 +1585,7 @@ imp.NEW = process.TEST_NEW;
       // @test Raise, Lower, Raise Negative, Lower Negative
       var h = this.GetDimen(name);
       var item = imp.STACKS ?
-          new item.PositionItem().With({name: name, move: 'vertical'}) :
+          new sitem.PositionItem().With({name: name, move: 'vertical'}) :
           STACKITEM.position().With({name: name, move: 'vertical'});
       if (h.charAt(0) === '-') {
         // @test Raise Negative, Lower Negative
@@ -1604,7 +1613,7 @@ imp.NEW = process.TEST_NEW;
         nh = tmp;
       }
       this.Push(imp.STACKS ?
-                new item.PositionItem().With({
+                new sitem.PositionItem().With({
                   name: name, move: 'horizontal',
                   left:  imp.createNode('mspace', [], {width: h, mathsize: TexConstant.Size.NORMAL}),
                   right: imp.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}) :
@@ -1730,7 +1739,7 @@ imp.NEW = process.TEST_NEW;
       imp.printMethod("Not");
       // @test Negation Simple, Negation Complex, Negation Explicit,
       //       Negation Large
-      this.Push(imp.STACKS ? new item.NotItem() : STACKITEM.not());
+      this.Push(imp.STACKS ? new sitem.NotItem() : STACKITEM.not());
     },
     
     Dots: function (name) {
@@ -1744,7 +1753,7 @@ imp.NEW = process.TEST_NEW;
       // var ldots = MML.mo(MML.entity("#x2026")).With({stretchy:false});
       // var cdots = MML.mo(MML.entity("#x22EF")).With({stretchy:false});
       this.Push(imp.STACKS ?
-                new item.DotsItem().With({
+                new sitem.DotsItem().With({
                   ldots: this.mmlToken(ldots),
                   cdots: this.mmlToken(cdots)
                 }) :
@@ -1797,7 +1806,7 @@ imp.NEW = process.TEST_NEW;
         {throw new TexError(["MissingArgFor","Missing argument for %1",name])}
       if (c === "{") {this.i++} else {this.string = c+"}"+this.string.slice(this.i+1); this.i = 0}
       var array = imp.STACKS ?
-          new item.ArrayItem().With({
+          new sitem.ArrayItem().With({
             requireClose: true,
             arraydef: {
               rowspacing: (vspacing||"4pt"),
@@ -1822,7 +1831,7 @@ imp.NEW = process.TEST_NEW;
     imp.printMethod("Entry");
       // imp.untested(20);
       this.Push(imp.STACKS ?
-                new item.CellItem().With({isEntry: true, name: name}) :
+                new sitem.CellItem().With({isEntry: true, name: name}) :
                 STACKITEM.cell().With({isEntry: true, name: name}));
       if (this.stack.Top().isCases) {
         //
@@ -1897,7 +1906,7 @@ imp.NEW = process.TEST_NEW;
     Cr: function (name) {
     imp.printMethod("Cr");
       this.Push(imp.STACKS ?
-                new item.CellItem().With({isCR: true, name: name}) :
+                new sitem.CellItem().With({isCR: true, name: name}) :
                 STACKITEM.cell().With({isCR: true, name: name}));
     },
     
@@ -1912,10 +1921,10 @@ imp.NEW = process.TEST_NEW;
         }
       }
       this.Push(imp.STACKS ?
-                new item.CellItem().With({isCR: true, name: name, linebreak: true}) :
+                new sitem.CellItem().With({isCR: true, name: name, linebreak: true}) :
                 STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
       var top = this.stack.Top();
-      if (imp.STACKS ? top instanceof item.ArrayItem : top instanceof STACKITEM.array) {
+      if (imp.STACKS ? top instanceof sitem.ArrayItem : top instanceof STACKITEM.array) {
         // @test Array
         if (n && top.arraydef.rowspacing) {
           var rows = top.arraydef.rowspacing.split(/ /);
@@ -1970,7 +1979,7 @@ imp.NEW = process.TEST_NEW;
     imp.printMethod("HLine");
       if (style == null) {style = "solid"}
       var top = this.stack.Top();
-      if (!(imp.STACKS ? top instanceof item.ArrayItem : top instanceof STACKITEM.array) ||
+      if (!(imp.STACKS ? top instanceof sitem.ArrayItem : top instanceof STACKITEM.array) ||
           top.data.length)
         {throw new TexError(["Misplaced","Misplaced %1",name])}
       if (top.table.length == 0) {
@@ -1988,7 +1997,7 @@ imp.NEW = process.TEST_NEW;
     HFill: function (name) {
     imp.printMethod("HFill");
       var top = this.stack.Top();
-      if ((imp.STACKS ? top instanceof item.ArrayItem : top instanceof STACKITEM.array))
+      if ((imp.STACKS ? top instanceof sitem.ArrayItem : top instanceof STACKITEM.array))
         top.hfill.push(top.data.length);
         else throw new TexError(["UnsupportedHFill","Unsupported use of %1",name]);
     },
@@ -2007,7 +2016,7 @@ imp.NEW = process.TEST_NEW;
       if (env.match(/\\/i)) {throw new TexError(["InvalidEnv","Invalid environment name '%1'",env])}
       if (name === "\\end") {
         var mml = imp.STACKS ?
-            new item.EndItem().With({name: env}) :
+            new sitem.EndItem().With({name: env}) :
             STACKITEM.end().With({name: env});
         this.Push(mml);
       } else {
@@ -2023,7 +2032,7 @@ imp.NEW = process.TEST_NEW;
       imp.printMethod("BeginEnvironment");
       var end = args[0];
       var mml = imp.STACKS ?
-          new item.BeginItem().With({name: env, end: end, parse:this}) :
+          new sitem.BeginItem().With({name: env, end: end, parse:this}) :
           STACKITEM.begin().With({name: env, end: end, parse:this});
       mml = func.apply(this,[mml].concat(args.slice(1)));
       this.Push(mml);
@@ -2040,7 +2049,7 @@ imp.NEW = process.TEST_NEW;
       align = align.replace(/[^clr]/g,'').split('').join(' ');
       align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
       var array = imp.STACKS ?
-          new item.ArrayItem().With({
+          new sitem.ArrayItem().With({
             arraydef: {
               columnalign: align,
               columnspacing: (spacing||"1em"),
