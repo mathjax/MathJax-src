@@ -804,3 +804,76 @@ export class DotsItem extends BaseItem {
     return [dots, item];
   }
 }
+
+
+// AMS
+
+
+export class AMSarrayItem extends ArrayItem {
+
+  constructor() {
+    super();
+    this.type = 'array';
+    this.table = [];
+    this.row = [];
+    this.frame = [];
+    this.hfill = [];
+    this.copyEnv = false;
+    this.arraydef = {};
+  }
+
+  constructor(name, numbered, taggable, stack) {
+    super();
+    this.type = 'AMSarray';
+    // Omitted configuration: && CONFIG.autoNumber !== "none";
+    this.numbered = numbered;
+    this.save = {notags: stack.global.notags, notag: stack.global.notag};
+    stack.global.notags = (taggable ? null : name);
+    // prevent automatic tagging in starred environments
+    stack.global.tagged = !numbered && !stack.global.forcetag;
+  }
+
+  // TODO: Temporary!
+  autoTag() {}
+  getTag() {}
+  clearTag() {}
+
+  EndEntry() {
+    imp.printMethod('AMS-EndEntry');
+    // @test Cubic Binomial
+    if (this.row.length) {
+      ParserUtil.fixInitialMO(this.data);
+    }
+    var node = imp.createNode('mtd', this.data, {});
+    // VS: OLD
+    // var node = MML.mtd.apply(MML,this.data);
+    this.row.push(node);
+    this.data = [];
+  }
+  
+  EndRow() {
+    imp.printMethod('AMS-EndRow');
+    // @test Cubic Binomial
+    var mtr = 'mtr'; // MML.mtr;
+    if (!this.global.tag && this.numbered) {
+      this.autoTag();
+    }
+    if (this.global.tag && !this.global.notags) {
+      this.row = [this.getTag()].concat(this.row);
+      mtr = 'mlabeledtr'; // MML.mlabeledtr;
+    } else {
+      this.clearTag();
+    }
+    if (this.numbered) {delete this.global.notag;}
+    var node = imp.createNode(mtr, this.row, {});
+    this.table.push(node); this.row = [];
+  }
+  
+  EndTable() {
+    imp.printMethod('AMS-EndTable');
+    // @test Cubic Binomial
+    super.EndTable();
+    this.global.notags = this.save.notags;
+    this.global.notag  = this.save.notag;
+  }
+}

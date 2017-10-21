@@ -110,3 +110,29 @@ ParserUtil.mathPalette = function (fence, side, parser) {
   let T = '{\\big' + side + ' ' + fence + '}';
   return parser('\\mathchoice' + D + T + T + T, {}).mml();
 };
+
+
+// AMS
+
+/**
+ *  If the initial child, skipping any initial space or
+ *  empty braces (TeXAtom with child being an empty inferred row),
+ *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
+ *  be infix.
+ */
+ParserUtil.fixInitialMO = function (data) {
+  imp.printMethod('AMS-fixInitialMO');
+  for (var i = 0, m = data.length; i < m; i++) {
+    var child = data[i];
+    if (child && (!imp.isType(child, 'mspace') &&
+                  (!imp.isType(child, 'TeXAtom') ||
+                   (imp.getChildren(child)[0] &&
+                    imp.getChildren(imp.getChildren(child)[0]).length)))) {
+      if (imp.isEmbellished(child)) {
+        var mi = imp.createNode('mi', [], {});
+        data.unshift(mi);
+      }
+      break;
+    }
+  }
+};

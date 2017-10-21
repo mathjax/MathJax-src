@@ -28,6 +28,8 @@ let sm = require('mathjax3/input/tex/SymbolMap.js');
 let tc = require('mathjax3/input/tex/TexConstants.js');
 let BaseMethods = require('mathjax3/input/tex/BaseMethods.js').default;
 let imp = require("../../jax/input/TeX/imp.js").imp;
+let sitem = require('../../jax/input/TeX/StackItem.js');
+let ParserUtil = require("../../jax/input/TeX/ParserUtil.js").ParserUtil;
 
 
 MathJax.Extension["TeX/AMSmath"] = {
@@ -336,7 +338,19 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.Push(begin); if (taggable) {this.checkEqnEnv()}
       align = align.replace(/[^clr]/g,'').split('').join(' ');
       align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-      return STACKITEM.AMSarray(begin.name,numbered,taggable,this.stack).With({
+      return imp.STACKS ?
+        new sitem.AMSarrayItem(begin.name,numbered,taggable,this.stack).With({
+          arraydef: {
+            displaystyle: true,
+            rowspacing: ".5em",
+            columnalign: align,
+            columnspacing: (spacing||"1em"),
+            rowspacing: "3pt",
+            side: TEX.config.TagSide,
+            minlabelspacing: TEX.config.TagIndent
+          }
+        }) :
+        STACKITEM.AMSarray(begin.name,numbered,taggable,this.stack).With({
         arraydef: {
           displaystyle: true,
           rowspacing: ".5em",
@@ -503,32 +517,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       imp.printMethod('AMS-clearTag');
       var global = this.global;
       delete global.tag; delete global.tagID; delete global.label;
-    },
-
-    /*
-     *  If the initial child, skipping any initial space or
-     *  empty braces (TeXAtom with child being an empty inferred row),
-     *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
-     *  be infix.
-     */
-    fixInitialMO: function (data) {
-      imp.printMethod('AMS-fixInitialMO');
-      for (var i = 0, m = data.length; i < m; i++) {
-        var child = data[i];
-        if (child && (!imp.isType(child, 'mspace') &&
-                        (!imp.isType(child, 'TeXAtom') ||
-                         (imp.getChildren(child)[0] &&
-                          imp.getChildren(imp.getChildren(child)[0]).length)))) {
-          if (imp.isEmbellished(child)) {
-            var mi = imp.createNode('mi', [], {});
-            data.unshift(mi);
-          }
-          break;
-        }
-      }
     }
   });
-  
+
+    
   /*
    *  Implement multline environment via a STACKITEM
    */
@@ -543,7 +535,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     },
     EndEntry: function () {
       imp.printMethod('AMS-EndEntry');
-      if (this.table.length) {this.fixInitialMO(this.data)}
+      if (this.table.length) {ParserUtil.fixInitialMO(this.data)}
       var mtd = MML.mtd.apply(MML,this.data);
       if (this.data.shove) {mtd.columnalign = this.data.shove}
       this.row.push(mtd);
@@ -596,7 +588,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     EndEntry: function () {
       imp.printMethod('AMS-EndEntry');
       // @test Cubic Binomial
-      if (this.row.length) {this.fixInitialMO(this.data);}
+      if (this.row.length) {ParserUtil.fixInitialMO(this.data);}
       var node = imp.createNode('mtd', this.data, {});
       // VS: OLD
       // var node = MML.mtd.apply(MML,this.data);
