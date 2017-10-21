@@ -26,8 +26,6 @@
  *  limitations under the License.
  */
 
-process.TEST_NEW = false;
-
 let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
 let TEXCLASS = require("mathjax3/core/MmlTree/MmlNode.js").TEXCLASS;
@@ -43,7 +41,6 @@ require("./old-stackitem.js");
 
 // This is only necessary for the legacy tests.
 imp.MML = MathJax.ElementJax.mml;
-imp.NEW = process.TEST_NEW;
 
 
 (function (TEX) {

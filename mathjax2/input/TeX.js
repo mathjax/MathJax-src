@@ -29,10 +29,11 @@ require("../legacy/extensions/TeX/HTML.js");
 require("../legacy/jax/element/MmlNode.js");
 
 
+var imp = require("../legacy/jax/input/TeX/imp.js").imp;
+
 var MmlFactory = require("../../mathjax3/core/MmlTree/MmlFactory.js").MmlFactory;
 var factory = new MmlFactory();
 
-var NEW = process.TEST_NEW || false;
 
 exports.LegacyTeX = {
   Compile: function (tex,display) {
@@ -42,7 +43,7 @@ exports.LegacyTeX = {
       MathJax: {}
     };
     // VS: OLD
-    if (NEW) {
+    if (imp.NEW) {
       var node = MathJax.InputJax.TeX.Translate(script);
     } else {
       var node = MathJax.InputJax.TeX.Translate(script).root.toMmlNode(factory); 
