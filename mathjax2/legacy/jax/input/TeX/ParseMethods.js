@@ -30,6 +30,7 @@ ParseMethods.ControlSequence = function(parser, c) {
   var name = parser.GetCS();
   NewParser.parse('macro', [name, this]);
 };
+
 //
 //  Look up a macro in the macros list
 //  (overridden in begingroup extension)
@@ -48,6 +49,7 @@ ParseMethods.csMathchar0mi = function(parser, mchar) {
   // var node = parser.mmlToken(MML.mi(mchar.char).With(def));
   parser.Push(parser.mmlToken(node));
 };
+
 //
 //  Handle normal mathchar (as an mo)
 //
@@ -1232,7 +1234,7 @@ ParseMethods.Matrix = function(parser, name,open,close,align,spacing,vspacing,st
 
 ParseMethods.Entry = function(parser, name) {
   imp.printMethod("Entry");
-  // imp.untested(20);
+  // @ test Label, Array, Cross Product Formula
   parser.Push(imp.STACKS ?
             new sitem.CellItem().With({isEntry: true, name: name}) :
             ParseMethods.STACKITEM.cell().With({isEntry: true, name: name}));
