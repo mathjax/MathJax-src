@@ -107,7 +107,7 @@ imp.createMath = function(math) {
       mathNode = imp.createNode('math', [], {});
       var inferredMrow = mathNode.childNodes[0];
       inferredMrow.attributes = math.attributes;
-      inferredMrow.properties = math.properties;
+      imp.setProperties(inferredMrow, math.getAllProperties());
       mathNode.setChildren(math.childNodes);
     } else if (!math.isKind('math')) {
       mathNode = imp.createNode('math', [math], {});
@@ -271,7 +271,7 @@ imp.cleanSubSup = function(node) {
   let rewrite = [];
   node.walkTree((n, d) => {
     const children = n.childNodes;
-    if ((n.kind === 'msubsup' && (!children[n.sub] || !children[n.sup])) ||
+    if ((n.isKind('msubsup') && (!children[n.sub] || !children[n.sup])) ||
         (n.isKind('munderover') && (!children[n.under] || !children[n.over]))) {
       d.unshift(n);
     }
