@@ -24,188 +24,195 @@
  */
 
 
-import {TEXCLASS} from 'mathjax3/core/MmlTree/MmlNode.js';
-import {imp} from './imp.js';
+import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {TreeHelper} from './TreeHelper.js';
+import TexParser from './TexParser.js';
 
 // A namespace for utility functions for the TeX Parser.
 //
 // Will become a Typescript namespace.
 
-export let ParserUtil = {};
+export namespace ParserUtil {
 
 
-ParserUtil.emPerInch = 7.2;
-ParserUtil.pxPerInch = 72;
+  const emPerInch = 7.2;
+  const pxPerInch = 72;
+  const UNIT_CASES: {[key: string]: ((m: number) => number)}  = {
+    'em': m => m,
+    'ex': m => m * .43,
+    'pt': m => m / 10,                    // 10 pt to an em
+    'pc': m => m * 1.2,                   // 12 pt to a pc
+    'px': m => m * emPerInch / pxPerInch,
+    'in': m => m * emPerInch,
+    'cm': m => m * emPerInch / 2.54, // 2.54 cm to an inch
+    'mm': m => m * emPerInch / 25.4, // 10 mm to a cm
+    'mu': m => m / 18,
+  };
 
 
-ParserUtil.matchDimen = function (dim) {
-  // imp.printMethod("matchDimen");
-  return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
-};
+  export function matchDimen(dim: string): string[] {
+    return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
+  };
 
 
-ParserUtil.dimen2em = function (dim) {
-  // imp.printMethod("dimen2em");
-  var match = ParserUtil.matchDimen(dim);
-  var m = parseFloat(match[1]||"1"), unit = match[2];
-  if (unit === "em") {return m}
-  if (unit === "ex") {return m * .43}
-  if (unit === "pt") {return m / 10}                    // 10 pt to an em
-  if (unit === "pc") {return m * 1.2}                   // 12 pt to a pc
-  if (unit === "px") {return m * ParserUtil.emPerInch / ParserUtil.pxPerInch}
-  if (unit === "in") {return m * ParserUtil.emPerInch}
-  if (unit === "cm") {return m * ParserUtil.emPerInch / 2.54} // 2.54 cm to an inch
-  if (unit === "mm") {return m * ParserUtil.emPerInch / 25.4} // 10 mm to a cm
-  if (unit === "mu") {return m / 18}
-  return 0;
-};
+  export function dimen2em(dim: string) {
+    let match = matchDimen(dim);
+    let m = parseFloat(match[1] || '1'), unit = match[2];
+    let func = UNIT_CASES[unit];
+    return func ? func(m) : 0;
+  };
 
 
-ParserUtil.Em = function (m) {
-  // imp.printMethod("Em");
-  if (Math.abs(m) < .0006) {return "0em"}
-  return m.toFixed(3).replace(/\.?0+$/,"") + "em";
-};
+  export function Em(m: number) {
+    if (Math.abs(m) < .0006) {
+      return '0em';
+    }
+    return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
+  };
 
 
-/**
- *  Create an mrow that has stretchy delimiters at either end, as needed
- */
-ParserUtil.fenced = function (open, mml, close) {
-  imp.printMethod('fenced');
-  // @test Fenced, Fenced3
-  var mrow = imp.createNode(
-    'mrow', [], {open: open, close: close, texClass: TEXCLASS.INNER});
-  var openNode = imp.createText(open);
-  var mo = imp.createNode(
-    'mo', [],
-    {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
-    openNode);
-  imp.appendChildren(mrow, [mo]);
-  // VS: OLD
-  // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
-  // mrow.Append(
-  //   MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
-  // );
-  // TODO: Rewrite the inferred and mml.data
-  if (imp.isType(mml, 'mrow') && mml.inferred) {
-    // @test Fenced
-    imp.appendChildren(mrow, mml.data);
-  } else {
-    // @test Fenced3
-    imp.appendChildren(mrow, [mml]);
-  }
-  var closeNode = imp.createText(close);
-  mo = imp.createNode(
-    'mo', [],
-    {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
-    closeNode);
-  imp.appendChildren(mrow, [mo]);
-  // VS: OLD
-  // mrow.Append(
-  //   MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
-  // );
-  return mrow;
-};
+  /**
+   *  Create an mrow that has stretchy delimiters at either end, as needed
+   */
+  export function fenced(open: string, mml: MmlNode, close: string) {
+    TreeHelper.printMethod('fenced');
+    // @test Fenced, Fenced3
+    let mrow = TreeHelper.createNode(
+      'mrow', [], {open: open, close: close, texClass: TEXCLASS.INNER});
+    let openNode = TreeHelper.createText(open);
+    let mo = TreeHelper.createNode(
+      'mo', [],
+      {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
+      openNode);
+    TreeHelper.appendChildren(mrow, [mo]);
+    // VS: OLD
+    // let mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
+    // mrow.Append(
+    //   MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
+    // );
+    // TODO: Rewrite the inferred and mml.data
+    if (TreeHelper.isType(mml, 'mrow') && TreeHelper.isInferred(mml)) {
+      // @test Fenced, Middle
+      // Don't work with new structure yet.
+      TreeHelper.appendChildren(mrow, TreeHelper.getChildren(mml));
+    } else {
+      // @test Fenced3
+      TreeHelper.appendChildren(mrow, [mml]);
+    }
+    let closeNode = TreeHelper.createText(close);
+    mo = TreeHelper.createNode(
+      'mo', [],
+      {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
+      closeNode);
+    TreeHelper.appendChildren(mrow, [mo]);
+    // VS: OLD
+    // mrow.Append(
+    //   MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
+    // );
+    return mrow;
+  };
 
 
-/**
- *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
- */
-ParserUtil.fixedFence = function (open, mml, close, parser) {
-  // @test Choose, Over With Delims, Above with Delims
-  imp.printMethod('fixedFence');
-  var mrow = imp.createNode(
-    'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
-  // VS: OLD
-  // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
-  if (open) {
-    imp.appendChildren(mrow, [ParserUtil.mathPalette(open, 'l', parser)]);
-  }
-  if (imp.isType(mml, 'mrow')) {
-    imp.appendChildren(mrow, [mrow, mml.data]);
-  } else {
-    imp.appendChildren(mrow, [mml]);
-  }
-  if (close) {
-    imp.appendChildren(mrow, [ParserUtil.mathPalette(close, 'r', parser)]);
-  }
-  return mrow;
-};
+  /**
+   *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
+   */
+  export function fixedFence(open: string, mml: MmlNode, close: string, parser: TexParser) {
+    // @test Choose, Over With Delims, Above with Delims
+    TreeHelper.printMethod('fixedFence');
+    let mrow = TreeHelper.createNode(
+      'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
+    // VS: OLD
+    // let mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
+    if (open) {
+      TreeHelper.appendChildren(mrow, [mathPalette(open, 'l', parser)]);
+    }
+    if (TreeHelper.isType(mml, 'mrow')) {
+      TreeHelper.appendChildren(mrow, TreeHelper.getChildren(mml));
+    } else {
+      TreeHelper.appendChildren(mrow, [mml]);
+    }
+    if (close) {
+      TreeHelper.appendChildren(mrow, [mathPalette(close, 'r', parser)]);
+    }
+    return mrow;
+  };
 
 
-// TODO: Handling the parser here is a bit awkward!
-ParserUtil.mathPalette = function (fence, side, parser) {
-  imp.printMethod('mathPalette');
-  if (fence === '{' || fence === '}') {
-    fence = '\\' + fence;
-  }
-  let D = '{\\bigg' + side + ' ' + fence + '}';
-  let T = '{\\big' + side + ' ' + fence + '}';
-  return parser('\\mathchoice' + D + T + T + T, {}).mml();
-};
+  // TODO: Handling the parser here is a bit awkward!
+  //       This and the previous method should go into the ParseMethods.
+  export function mathPalette(fence: string, side: string, parser: TexParser) {
+    TreeHelper.printMethod('mathPalette');
+    if (fence === '{' || fence === '}') {
+      fence = '\\' + fence;
+    }
+    let D = '{\\bigg' + side + ' ' + fence + '}';
+    let T = '{\\big' + side + ' ' + fence + '}';
+    // return parser('\\mathchoice' + D + T + T + T, {}).mml();
+    let parser = new TexParser();
+    return parser.parse('\\mathchoice' + D + T + T + T, {}).mml();
+  };
 
 
-//
-//  Combine adjacent <mo> elements that are relations
-//    (since MathML treats the spacing very differently)
-//
-ParserUtil.combineRelations = function (mml) {
-  imp.printMethod('combineRelations: ');
-  var i, m, m1, m2;
-  var children = imp.getChildren(mml);
-  for (i = 0, m = children.length; i < m; i++) {
-    if (children[i]) {
-      if (imp.isType(mml, 'mrow')) {
-        while (i+1 < m && (m1 = children[i]) && (m2 = children[i+1]) &&
-               imp.isType(m1, 'mo') && imp.isType(m2, 'mo') &&
-               imp.getTexClass(m1) === TEXCLASS.REL &&
-               imp.getTexClass(m2) === TEXCLASS.REL) {
-          if (imp.getProperty(m1, 'variantForm') == imp.getProperty(m2, 'variantForm') &&
-              imp.getAttribute(m1, 'mathvariant') == imp.getAttribute(m2, 'mathvariant')) {
-            // @test Shift Left, Less Equal
-            imp.appendChildren(m1, imp.getChildren(m2));
-            children.splice(i+1,1);
-            m--;
-          } else {
-            imp.untested('Combine Relations Case 2');
-            imp.setAttribute(m1, 'rspace', '0pt');
-            imp.setAttribute(m2, 'lspace', '0pt');
-            i++;
+  //
+  //  Combine adjacent <mo> elements that are relations
+  //    (since MathML treats the spacing very differently)
+  //
+  export function combineRelations(mml) {
+    TreeHelper.printMethod('combineRelations: ');
+    let i, m, m1, m2;
+    let children = TreeHelper.getChildren(mml);
+    for (i = 0, m = children.length; i < m; i++) {
+      if (children[i]) {
+        if (TreeHelper.isType(mml, 'mrow')) {
+          while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
+                 TreeHelper.isType(m1, 'mo') && TreeHelper.isType(m2, 'mo') &&
+                 TreeHelper.getTexClass(m1) === TEXCLASS.REL &&
+                 TreeHelper.getTexClass(m2) === TEXCLASS.REL) {
+            if (TreeHelper.getProperty(m1, 'variantForm') === TreeHelper.getProperty(m2, 'variantForm') &&
+                TreeHelper.getAttribute(m1, 'mathvariant') === TreeHelper.getAttribute(m2, 'mathvariant')) {
+              // @test Shift Left, Less Equal
+              TreeHelper.appendChildren(m1, TreeHelper.getChildren(m2));
+              children.splice(i + 1, 1);
+              m--;
+            } else {
+              TreeHelper.untested('Combine Relations Case 2');
+              TreeHelper.setAttribute(m1, 'rspace', '0pt');
+              TreeHelper.setAttribute(m2, 'lspace', '0pt');
+              i++;
+            }
           }
         }
-      }
-      if (!children[i].isToken) {
-        ParserUtil.combineRelations(children[i]);
+        if (!children[i].isToken) {
+          combineRelations(children[i]);
+        }
       }
     }
-  }
-};
+  };
 
 
-// AMS
+  // AMS
 
-/**
- *  If the initial child, skipping any initial space or
- *  empty braces (TeXAtom with child being an empty inferred row),
- *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
- *  be infix.
- */
-ParserUtil.fixInitialMO = function (data) {
-  imp.printMethod('AMS-fixInitialMO');
-  for (var i = 0, m = data.length; i < m; i++) {
-    var child = data[i];
-    if (child && (!imp.isType(child, 'mspace') &&
-                  (!imp.isType(child, 'TeXAtom') ||
-                   (imp.getChildren(child)[0] &&
-                    imp.getChildren(imp.getChildren(child)[0]).length)))) {
-      if (imp.isEmbellished(child)) {
-        var mi = imp.createNode('mi', [], {});
-        data.unshift(mi);
+  /**
+   *  If the initial child, skipping any initial space or
+   *  empty braces (TeXAtom with child being an empty inferred row),
+   *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
+   *  be infix.
+   */
+  export function fixInitialMO(data: MmlNode[]) {
+    TreeHelper.printMethod('AMS-fixInitialMO');
+    for (let i = 0, m = data.length; i < m; i++) {
+      let child = data[i];
+      if (child && (!TreeHelper.isType(child, 'mspace') &&
+                    (!TreeHelper.isType(child, 'TeXAtom') ||
+                     (TreeHelper.getChildren(child)[0] &&
+                      TreeHelper.getChildren(TreeHelper.getChildren(child)[0]).length)))) {
+        if (TreeHelper.isEmbellished(child)) {
+          let mi = TreeHelper.createNode('mi', [], {});
+          data.unshift(mi);
+        }
+        break;
       }
-      break;
     }
-  }
-};
+  };
 
-
+}

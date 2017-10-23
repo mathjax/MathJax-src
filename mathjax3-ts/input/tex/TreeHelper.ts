@@ -330,5 +330,10 @@ export namespace TreeHelper {
   };
 
   
+  export function isInferred(node: MmlNode): boolean {
+    return node.isInferred;
+  };
+
+
 }
 
