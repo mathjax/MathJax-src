@@ -27,6 +27,7 @@
 let sm = require('mathjax3/input/tex/SymbolMap.js');
 let tc = require('mathjax3/input/tex/TexConstants.js');
 let BaseMethods = require('mathjax3/input/tex/BaseMethods.js').default;
+let ParseMethods = require('../../jax/input/TeX/ParseMethods.js').ParseMethods;
 let imp = require("../../jax/input/TeX/imp.js").imp;
 let sitem = require('../../jax/input/TeX/StackItem.js');
 let ParserUtil = require("../../jax/input/TeX/ParserUtil.js").ParserUtil;
@@ -233,27 +234,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Handle \DeclareMathOperator
      */
-    HandleDeclareOp: function (name) {
-      imp.printMethod('AMS-HandleDeclareOp');
-      var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
-      var cs = this.trimSpaces(this.GetArgument(name));
-      if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
-      var op = this.GetArgument(name);
-      op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
-      TEX.Definitions.macros[cs] = ['Macro','\\mathop{\\rm '+op+'}'+limits];
-    },
+    HandleDeclareOp: ParseMethods.HandleDeclareOp,
     
-    HandleOperatorName: function (name) {
-      imp.printMethod('AMS-HandleOperatorName');
-      var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
-      var op = this.trimSpaces(this.GetArgument(name));
-      op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
-      this.string = '\\mathop{\\rm '+op+'}'+limits+" "+this.string.slice(this.i);
-      this.i = 0;
-    },
+    HandleOperatorName: ParseMethods.HandleOperatorName,
     
-    SkipLimits: function (name) {
+    SkipLimits: function (parser, name) {
       imp.printMethod('AMS-SkipLimits');
+      // @test Operatorname
       var c = this.GetNext(), i = this.i;
       if (c === "\\" && ++this.i && this.GetCS() !== "limits") this.i = i;
     },
@@ -318,6 +305,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      */
     Multline: function (begin,numbered) {
       imp.printMethod('AMS-Multline');
+      imp.untested(11);
       this.Push(begin); this.checkEqnEnv();
       return STACKITEM.multline(numbered,this.stack).With({
         arraydef: {
@@ -334,35 +322,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle AMS aligned environments
      */
     // VS: That's the only rewritten function so far!
-    AMSarray: function (parser, begin,numbered,taggable,align,spacing) {
-      imp.printMethod('AMS-AMSarray');
-      this.Push(begin); if (taggable) {this.checkEqnEnv()}
-      align = align.replace(/[^clr]/g,'').split('').join(' ');
-      align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-      return imp.STACKS ?
-        new sitem.AMSarrayItem(begin.name,numbered,taggable,this.stack).With({
-          arraydef: {
-            displaystyle: true,
-            rowspacing: ".5em",
-            columnalign: align,
-            columnspacing: (spacing||"1em"),
-            rowspacing: "3pt",
-            side: TEX.config.TagSide,
-            minlabelspacing: TEX.config.TagIndent
-          }
-        }) :
-        STACKITEM.AMSarray(begin.name,numbered,taggable,this.stack).With({
-        arraydef: {
-          displaystyle: true,
-          rowspacing: ".5em",
-          columnalign: align,
-          columnspacing: (spacing||"1em"),
-          rowspacing: "3pt",
-          side: TEX.config.TagSide,
-          minlabelspacing: TEX.config.TagIndent
-        }
-      });
-    },
+    AMSarray: ParseMethods.AMSarray,
     
     AlignedAMSArray: function (begin) {
       imp.printMethod('AMS-AlignedAMSArray');

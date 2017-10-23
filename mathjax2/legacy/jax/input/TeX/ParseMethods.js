@@ -1575,3 +1575,72 @@ ParseMethods.AddArgs = function (s1,s2) {
   return s1+s2;
 };
 
+
+// AMS Math
+ParseMethods.TAG_SIDE = 'right';
+ParseMethods.TAG_INDENT = '0.8em';
+
+ParseMethods.AMSarray = function(parser, begin,numbered,taggable,align,spacing) {
+  imp.printMethod('AMS-AMSarray');
+  // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
+  parser.Push(begin);
+  if (taggable) {
+    ParseMethods.checkEqnEnv(parser);
+  }
+  align = align.replace(/[^clr]/g,'').split('').join(' ');
+  align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
+  return imp.STACKS ?
+    new sitem.AMSarrayItem(begin.name,numbered,taggable, parser.stack).With({
+      arraydef: {
+        displaystyle: true,
+        rowspacing: ".5em",
+        columnalign: align,
+        columnspacing: (spacing||"1em"),
+        rowspacing: "3pt",
+        side: ParseMethods.TAG_SIDE,
+        minlabelspacing: ParseMethods.TAG_INDENT
+      }
+    }) :
+  ParseMethods.STACKITEM.AMSarray(begin.name,numbered,taggable,parser.stack).With({
+    arraydef: {
+      displaystyle: true,
+      rowspacing: ".5em",
+      columnalign: align,
+      columnspacing: (spacing||"1em"),
+      rowspacing: "3pt",
+      side: ParseMethods.TAG_SIDE,
+      minlabelspacing: ParseMethods.TAG_INDENT
+    }
+  });
+};
+
+
+/**
+ *  Check for bad nesting of equation environments
+ */
+ParseMethods.checkEqnEnv = function (parser) {
+  imp.printMethod('AMS-checkEqnEnv');
+  if (parser.stack.global.eqnenv) {
+    throw TexError(["ErroneousNestingEq","Erroneous nesting of equation structures"]);
+  }
+  parser.stack.global.eqnenv = true;
+};
+
+
+ParseMethods.HandleOperatorName = function (parser, name) {
+  imp.printMethod('AMS-HandleOperatorName');
+  // @test Operatorname
+  var limits = (parser.GetStar() ? "" : "\\nolimits\\SkipLimits");
+  var op = parser.trimSpaces(parser.GetArgument(name));
+  op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
+  parser.string = '\\mathop{\\rm '+op+'}'+limits+" "+parser.string.slice(parser.i);
+  parser.i = 0;
+};
+    
+
+ParseMethods.SkipLimits = function (parser, name) {
+  imp.printMethod('AMS-SkipLimits');
+  // @test Operatorname
+  var c = parser.GetNext(), i = parser.i;
+  if (c === "\\" && ++parser.i && parser.GetCS() !== "limits") parser.i = i;
+};
