@@ -88,9 +88,10 @@ ParserUtil.fenced = function (open, mml, close) {
   //   MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
   // );
   // TODO: Rewrite the inferred and mml.data
-  if (imp.isType(mml, 'mrow') && mml.inferred) {
-    // @test Fenced
-    imp.appendChildren(mrow, mml.data);
+  if (imp.isType(mml, 'mrow') && imp.isInferred(mml)) {
+    // @test Fenced, Middle
+    // Don't work with new structure yet.
+    imp.appendChildren(mrow, imp.getChildren(mml));
   } else {
     // @test Fenced3
     imp.appendChildren(mrow, [mml]);
@@ -123,7 +124,7 @@ ParserUtil.fixedFence = function (open, mml, close, parser) {
     imp.appendChildren(mrow, [ParserUtil.mathPalette(open, 'l', parser)]);
   }
   if (imp.isType(mml, 'mrow')) {
-    imp.appendChildren(mrow, [mrow, mml.data]);
+    imp.appendChildren(mrow, imp.getChildren(mml));
   } else {
     imp.appendChildren(mrow, [mml]);
   }

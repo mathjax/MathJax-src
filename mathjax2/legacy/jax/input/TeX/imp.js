@@ -340,9 +340,14 @@ imp.printDef = function(def) {
   }
 };
 
+
 imp.isNode = function(item) {
   return imp.NEW ?
     (item instanceof AbstractMmlNode || item instanceof AbstractMmlEmptyNode) :
     item instanceof imp.MML.mbase;
 };
 
+
+imp.isInferred = function(node) {
+  return imp.NEW ? node.isInferred : node.inferred;
+};

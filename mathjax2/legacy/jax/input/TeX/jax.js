@@ -105,7 +105,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = new stack.Stack(ENV,!!env,STACKITEM);
-      NewParser.setup(this);
+      NewParser.setup(ParseMethods);
       TEXDEF.configurations.forEach(NewParser.append.bind(NewParser));
       this.Parse();
       this.Push(imp.STACKS ? new sitem.StopItem() : STACKITEM.stop());
