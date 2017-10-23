@@ -240,7 +240,7 @@ class SubHandler {
       }
     }
     let [symbol, env] = input;
-    return this._fallback.bind(env)(symbol);
+    return this._fallback.bind(env)(env, symbol);
   }
 
 

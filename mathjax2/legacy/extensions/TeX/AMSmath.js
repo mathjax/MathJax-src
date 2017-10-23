@@ -333,7 +333,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Handle AMS aligned environments
      */
-    AMSarray: function (begin,numbered,taggable,align,spacing) {
+    // VS: That's the only rewritten function so far!
+    AMSarray: function (parser, begin,numbered,taggable,align,spacing) {
       imp.printMethod('AMS-AMSarray');
       this.Push(begin); if (taggable) {this.checkEqnEnv()}
       align = align.replace(/[^clr]/g,'').split('').join(' ');

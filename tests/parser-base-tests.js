@@ -3925,7 +3925,7 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  'Array test', '\\left( \\begin{array}{ccc}a & b & c \\\\d & e & f \\\\g & h & i \\end{array} \\right)',
+  'Array Test', '\\left( \\begin{array}{ccc}a & b & c \\\\d & e & f \\\\g & h & i \\end{array} \\right)',
   {"kind":"math",
    "texClass":7,
    "attributes":{"display":"block"},

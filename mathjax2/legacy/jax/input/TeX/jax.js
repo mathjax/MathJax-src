@@ -97,6 +97,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
    */
 
   var NewParser = new TeXParser();
+  ParseMethods.NEW_PARSER = NewParser;
   var PARSE = MathJax.Object.Subclass({
     remap:   MapHandler.getInstance().getMap('remap'),
     Init: function (string,env) {
@@ -161,6 +162,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
     /*
      *  Trim spaces from a string
      */
+    // static
     trimSpaces: function (text) {
     imp.printMethod("trimSpaces");
       if (typeof(text) != 'string') {return text}
@@ -418,567 +420,86 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
       // return MML.mtext(MML.chars(text)).With(def);
     },
 
-    /*
-     *  Replace macro paramters with their values
-     */
-    SubstituteArgs: function (args,string) {
-    imp.printMethod("SubstituteArgs");
-      var text = ''; var newstring = ''; var c; var i = 0;
-      while (i < string.length) {
-        c = string.charAt(i++);
-        if (c === "\\") {text += c + string.charAt(i++)}
-        else if (c === '#') {
-          c = string.charAt(i++);
-          if (c === '#') {text += c} else {
-            if (!c.match(/[1-9]/) || c > args.length) {
-              throw new TexError(["IllegalMacroParam",
-                         "Illegal macro parameter reference"]);
-            }
-            newstring = this.AddArgs(this.AddArgs(newstring,text),args[c-1]);
-            text = '';
-          }
-        } else {text += c}
-      }
-      return this.AddArgs(newstring,text);
-    },
-    
-    /*
-     *  Make sure that macros are followed by a space if their names
-     *  could accidentally be continued into the following text.
-     */
-    AddArgs: function (s1,s2) {
-    imp.printMethod("AddArgs");
-      if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
-      if (s1.length + s2.length > TEX.config.MAXBUFFER) {
-        throw new TexError(["MaxBufferSize",
-                   "MathJax internal buffer size exceeded; is there a recursive macro call?"]);
-      }
-      return s1+s2;
-    },
-    
+
     // VS: End of the actual Parser methods.
 
-    
-    /************************************************************************/
-    /*
-     *   Handle various token classes
-     */
-
-    /*
-     *  Lookup a control-sequence and process it
-     */
-    ControlSequence: function (c) {
-    imp.printMethod("ControlSequence");
-      var name = this.GetCS();
-      NewParser.parse('macro', [name, this]);
-    },
-    //
-    //  Look up a macro in the macros list
-    //  (overridden in begingroup extension)
-    //
-    // csFindMacro: function (name) {return TEXDEF.macros[name]},
-    //
-    //  Handle normal mathchar (as an mi)
-    //
-    csMathchar0mi: function (mchar) {
-      ParseMethods.csMathchar0mi(this, mchar);
-    },
-    //
-    //  Handle normal mathchar (as an mo)
-    //
-    csMathchar0mo: function (mchar) {
-      ParseMethods.csMathchar0mo(this, mchar);
-    },
-    //
-    //  Handle mathchar in current family
-    //
-    csMathchar7: function (mchar) {
-      ParseMethods.csMathchar7(this, mchar);
-    },
-    //
-    //  Handle delimiter
-    //
-    csDelimiter: function (delim) {
-      ParseMethods.csDelimiter(this, delim);
-    },
-    //
-    //  Handle undefined control sequence
-    //  (overridden in noUndefined extension)
-    //
-    csUndefined: function (name) {
-      ParseMethods.csUndefined(this, name);
-    },
-    envUndefined: function(env) {
-      ParseMethods.envUndefined(this, env);
-    },
-    
-    /*
-     *  Handle a variable (a single letter)
-     */
-    Variable: function (c) {
-      ParseMethods.Variable(this, c);
-    },
-
-    /*
-     *  Determine the extent of a number (pattern may need work)
-     */
-    Number: function (c) {
-      ParseMethods.Number(this, c);
-    },
-    
-    /*
-     *  Handle { and }
-     */
-    Open: function (c) {
-      ParseMethods.Open(this, c);
-    },
-    Close: function (c) {
-      ParseMethods.Close(this, c);
-    },
-    
-    /*
-     *  Handle tilde and spaces
-     */
-    Tilde: function (c) {
-      ParseMethods.Tilde(this, c);
-    },
-    Space: function (c) {
-      ParseMethods.Space(this, c);
-    },
-    
-    /*
-     *  Handle ^, _, and '
-     */
-    Superscript: function (c) {
-      ParseMethods.Superscript(this, c);
-    },
-    Subscript: function (c) {
-      ParseMethods.Subscript(this, c);
-    },
-    Prime: function (c) {
-      ParseMethods.Prime(this, c);
-    },
-    /*
-     *  Handle comments
-     */
-    Comment: function (c) {
-      ParseMethods.Comment(this, c);
-    },
-    
-    /*
-     *  Handle hash marks outside of definitions
-     */
-    Hash: function (c) {
-      ParseMethods.Hash(this, c);
-    },
-    
-    /*
-     *  Handle other characters (as <mo> elements)
-     */
-    Other: function (c) {
-      ParseMethods.Other(this, c);
-    },
-    
-    /************************************************************************/
-    /*
-     *   Macros
-     */
-    
-    SetFont: function (name,font) {
-      ParseMethods.SetFont(this, name,font);
-    },
-    SetStyle: function (name,texStyle,style,level) {
-      ParseMethods.SetStyle(this, name,texStyle,style,level);
-    },
-    SetSize: function (name,size) {
-      ParseMethods.SetSize(this, name,size);
-    },
-
-    // Look at color extension!
-    Color: function (name) {
-      ParseMethods.Color(this, name);
-    },
-    
-    Spacer: function (name,space) {
-      ParseMethods.Spacer(this, name,space);
-    },
-    
-    LeftRight: function (name) {
-      ParseMethods.LeftRight(this, name);
-    },
-    
-    Middle: function (name) {
-      ParseMethods.Middle(this, name);
-    },
-    
-    NamedFn: function (name,id) {
-      ParseMethods.NamedFn(this, name,id);
-    },
-    NamedOp: function (name,id) {
-      ParseMethods.NamedOp(this, name,id);
-    },
-    Limits: function (name,limits) {
-      ParseMethods.Limits(this, name,limits);
-    },
-    
-    Over: function (name,open,close) {
-      imp.printMethod("Over");
-      // @test Over
-      var mml = imp.STACKS ?
-          new sitem.OverItem().With({name: name, parse: TEX.Parse}) :
-          STACKITEM.over().With({name: name, parse: TEX.Parse});
-      if (open || close) {
-        // @test Choose
-        mml.open = open; mml.close = close;
-      } else if (name.match(/withdelims$/)) {
-        // @test Over With Delims, Above With Delims
-        mml.open  = this.GetDelimiter(name);
-        mml.close = this.GetDelimiter(name);
-      }
-      if (name.match(/^\\above/)) {
-        // @test Above, Above With Delims
-        mml.thickness = this.GetDimen(name);
-      }
-      else if (name.match(/^\\atop/) || open || close) {
-        // @test Choose
-        mml.thickness = 0;
-      }
-      this.Push(mml);
-    },
-
-    Frac: function (name) {
-      ParseMethods.Frac(this, name);
-    },
-
-    Sqrt: function (name) {
-      imp.printMethod("Sqrt");
-      var n = this.GetBrackets(name), arg = this.GetArgument(name);
-      if (arg === "\\frac") {arg += "{"+this.GetArgument(arg)+"}{"+this.GetArgument(arg)+"}"}
-      var mml = TEX.Parse(arg,this.stack.env).mml();
-      if (!n) {
-        // @test Square Root
-        // mml = imp.createNode('msqrt', imp.NEW ? [mml] : mml.array(), {});
-        // .array call never seemed to be necessary!
-        mml = imp.createNode('msqrt', [mml], {});
-        // VS: OLD
-        // mml = MML.msqrt.apply(MML,mml.array());
-      } else {
-        // @test General Root
-        mml = imp.createNode('mroot', [mml, this.parseRoot(n)], {});
-        // VS: OLD
-        // mml = MML.mroot(mml,this.parseRoot(n));
-      }
-      this.Push(mml);
-    },
-    Root: function (name) {
-      imp.printMethod("Root");
-      var n = this.GetUpTo(name,"\\of");
-      var arg = this.ParseArg(name);
-      var node = imp.createNode('mroot', [arg ,this.parseRoot(n)], {});
-      // VS: OLD
-      // var node = MML.mroot(arg,this.parseRoot(n));
-      this.Push(node);
-    },
-    parseRoot: function (n) {
-    imp.printMethod("parseRoot");
-      // @test General Root, Explicit Root
-      var env = this.stack.env, inRoot = env.inRoot; env.inRoot = true;
-      // TODO: This parser call might change!
-      var parser = TEX.Parse(n,env);
-      n = parser.mml();
-      imp.printJSON(n);
-      var global = parser.stack.global;
-      if (global.leftRoot || global.upRoot) {
-        // @test Tweaked Root
-        var def = {};
-        if (global.leftRoot) {
-          def.width = global.leftRoot;
-        }
-        if (global.upRoot) {
-          def.voffset = global.upRoot;
-          def.height = global.upRoot;
-        }
-        
-        n = imp.createNode('mpadded', [n], def);
-        // VS: OLD
-        // n = MML.mpadded(n);
-        // if (global.leftRoot) {
-        //   n.width = global.leftRoot;
-        // }
-        // if (global.upRoot) {
-        //   n.voffset = global.upRoot;
-        //   n.height = global.upRoot;
-        // }
-      }
-      env.inRoot = inRoot;
-      return n;
-    },
-    MoveRoot: function (name,id) {
-      ParseMethods.MoveRoot(this, name,id);
-    },
-    
-    Accent: function (name,accent,stretchy) {
-      ParseMethods.Accent(this, name,accent,stretchy);
-    },
-    
-    UnderOver: function (name,c,stack,noaccent) {
-      ParseMethods.UnderOver(this, name,c,stack,noaccent);
-    },
-    
-    Overset: function (name) {
-      ParseMethods.Overset(this, name);
-    },
-    Underset: function (name) {
-      ParseMethods.Underset(this, name);
-    },
-    
-    TeXAtom: function (name,mclass) {
-      imp.printMethod("TeXAtom");
-      var def = {texClass: mclass}, mml, node;
-      if (mclass == TEXCLASS.OP) {
-        def.movesupsub = def.movablelimits = true;
-        var arg = this.GetArgument(name);
-        var match = arg.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
-        if (match) {
-          // @test Mathop
-          def.mathvariant = TexConstant.Variant.NORMAL;
-          var textNode = imp.createText(match[1]);
-          node = imp.createNode('mi', [], def, textNode);
-          // VS: OLD
-          // node = MML.mi(match[1]).With(def);
-          mml = imp.STACKS ?
-            new sitem.FnItem(this.mmlToken(node)) :
-            STACKITEM.fn(this.mmlToken(node));
-        } else {
-          // @test Mathop Cal
-          var parsed = TEX.Parse(arg,this.stack.env).mml();
-          node = imp.createNode('TeXAtom', [parsed], def);
-          // VS: OLD
-          // node = MML.TeXAtom(parsed).With(def);
-          mml = imp.STACKS ? new sitem.FnItem(node) : STACKITEM.fn(node);
-        }
-      } else {
-        // @test Mathrel
-        parsed = this.ParseArg(name);
-        mml = imp.createNode('TeXAtom', [parsed], def);
-        // VS: OLD
-        // mml = MML.TeXAtom(parsed).With(def);
-      }
-      this.Push(mml);
-    },
-
+    // VS: Currently only kept for setting Parsing methods.
+    ControlSequence: ParseMethods.ControlSequence,
+    csMathchar0mi: ParseMethods.csMathchar0mi,
+    csMathchar0mo: ParseMethods.csMathchar0mo,
+    csMathchar7: ParseMethods.csMathchar7,
+    csDelimiter: ParseMethods.csDelimiter,
+    csUndefined: ParseMethods.csUndefined,
+    envUndefined: ParseMethods.envUndefined,
+    Variable: ParseMethods.Variable,
+    Number: ParseMethods.Number,
+    Open: ParseMethods.Open,
+    Close: ParseMethods.Close,
+    Tilde: ParseMethods.Tilde,
+    Space: ParseMethods.Space,
+    Superscript: ParseMethods.Superscript,
+    Subscript: ParseMethods.Subscript,
+    Prime: ParseMethods.Prime,
+    Comment: ParseMethods.Comment,
+    Hash: ParseMethods.Hash,
+    Other: ParseMethods.Other,
+    SetFont: ParseMethods.SetFont,
+    SetStyle: ParseMethods.SetStyle,
+    SetSize: ParseMethods.SetSize,
+    Color: ParseMethods.Color,
+    Spacer: ParseMethods.Spacer,
+    LeftRight: ParseMethods.LeftRight,
+    Middle: ParseMethods.Middle,
+    NamedFn: ParseMethods.NamedFn,
+    NamedOp: ParseMethods.NamedOp,
+    Limits: ParseMethods.Limits,
+    Over: ParseMethods.Over,
+    Frac: ParseMethods.Frac,
+    Sqrt: ParseMethods.Sqrt,
+    Root: ParseMethods.Root,
+    MoveRoot: ParseMethods.MoveRoot,
+    Accent: ParseMethods.Accent,
+    UnderOver: ParseMethods.UnderOver,
+    Overset: ParseMethods.Overset,
+    Underset: ParseMethods.Underset,
+    TeXAtom: ParseMethods.TeXAtom,
     // VS: This method is only called during a macro call: AMS Math and \\mod.
-    MmlToken: function (name) {
-      ParseMethods.MmlToken(this, name);
-    },
-    
-    Strut: function (name) {
-      ParseMethods.Strut(this, name);
-    },
-    
-    Phantom: function (name,v,h) {
-      ParseMethods.Phantom(this, name,v,h);
-    },
-    
-    Smash: function (name) {
-      ParseMethods.Smash(this, name);
-    },
-    
-    Lap: function (name) {
-      ParseMethods.Lap(this, name);
-    },
-    
-    RaiseLower: function (name) {
-      ParseMethods.RaiseLower(this, name);
-    },
-    
-    MoveLeftRight: function (name) {
-      ParseMethods.MoveLeftRight(this, name);
-    },
-    
-    Hskip: function (name) {
-      ParseMethods.Hskip(this, name);
-    },
-    
-    Rule: function (name,style) {
-      ParseMethods.Rule(this, name,style);
-    },
-    rule: function (name) {
-      ParseMethods.rule(this, name);
-    },
-    
-    MakeBig: function (name,mclass,size) {
-      ParseMethods.MakeBig(this, name,mclass,size);
-    },
-    
-    BuildRel: function (name) {
-      ParseMethods.BuildRel(this, name);
-    },
-    
-    HBox: function (name,style) {
-      ParseMethods.HBox(this, name,style);
-    },
-    
-    FBox: function (name) {
-      ParseMethods.FBox(this, name);
-    },
-    
-    Not: function (name) {
-      ParseMethods.Not(this, name);
-    },
-    
-    Dots: function (name) {
-      ParseMethods.Dots(this, name);
-    },
-    
-    Require: function (name) {
-    imp.printMethod("Require");
-      var file = this.GetArgument(name)
-        .replace(/.*\//,"")            // remove any leading path
-        .replace(/[^a-z0-9_.-]/ig,""); // remove illegal characters
-      this.Extension(null,file);
-    },
-    
-    Extension: function (name,file,array) {
-    imp.printMethod("Extension");
-      if (name && !typeof(name) === "string") {name = name.name}
-      file = TEX.extensionDir+"/"+file;
-      if (!file.match(/\.js$/)) {file += ".js"}
-    },
-    
-    Macro: function (name,macro,argcount,def) {
-    imp.printMethod("Macro");
-      if (argcount) {
-        var args = [];
-        if (def != null) {
-          var optional = this.GetBrackets(name);
-          args.push(optional == null ? def : optional);
-        }
-        for (var i = args.length; i < argcount; i++) {args.push(this.GetArgument(name))}
-        macro = this.SubstituteArgs(args,macro);
-      }
-      this.string = this.AddArgs(macro,this.string.slice(this.i));
-      this.i = 0;
-      if (++this.macroCount > TEX.config.MAXMACROS) {
-        throw new TexError(["MaxMacroSub1",
-                   "MathJax maximum macro substitution count exceeded; " +
-                   "is there a recursive macro call?"]);
-      }
-    },
-    
-    Matrix: function (name,open,close,align,spacing,vspacing,style,cases,numbered) {
-      ParseMethods.Matrix(this, name,open,close,align,spacing,vspacing,style,cases,numbered);
-    },
-    
-    Entry: function (name) {
-      ParseMethods.Entry(this, name);
-    },
-    
-    Cr: function (name) {
-      ParseMethods.Cr(this, name);
-    },
-    
-    CrLaTeX: function (name) {
-      ParseMethods.CrLaTeX(this, name);
-    },
-    
-    HLine: function (name,style) {
-      ParseMethods.HLine(this, name,style);
-    },
-    
-    HFill: function (name) {
-      ParseMethods.HFill(this, name);
-    },
-    
-
-    
-   /************************************************************************/
-   /*
-    *   LaTeX environments
-    */
-
-    BeginEnd: function (name) {
-      imp.printMethod("BeginEnd");
-      var env = this.GetArgument(name);
-      if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
-      if (env.match(/\\/i)) {throw new TexError(["InvalidEnv","Invalid environment name '%1'",env])}
-      if (name === "\\end") {
-        var mml = imp.STACKS ?
-            new sitem.EndItem().With({name: env}) :
-            STACKITEM.end().With({name: env});
-        this.Push(mml);
-      } else {
-        if (++this.macroCount > TEX.config.MAXMACROS) {
-          throw new TexError(["MaxMacroSub2",
-                     "MathJax maximum substitution count exceeded; " +
-                     "is there a recursive latex environment?"]);
-        }
-        NewParser.parse('environment', [env, this]);
-      }
-    },
-    BeginEnvironment: function (func, env, args) {
-      ParseMethods.BeginEnvironment(this, func, env, args);
-    },
-
-    Equation: function (begin,row) {return row},
-    
-    ExtensionEnv: function (begin,file) {this.Extension(begin.name,file,"environment")},
-    
-    Array: function (begin,open,close,align,spacing,vspacing,style,raggedHeight) {
-    imp.printMethod("Array");
-      if (!align) {align = this.GetArgument("\\begin{"+begin.name+"}")}
-      var lines = ("c"+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
-      align = align.replace(/[^clr]/g,'').split('').join(' ');
-      align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-      var array = imp.STACKS ?
-          new sitem.ArrayItem().With({
-            arraydef: {
-              columnalign: align,
-              columnspacing: (spacing||"1em"),
-              rowspacing: (vspacing||"4pt")
-            }
-          }) :
-          STACKITEM.array().With({
-            arraydef: {
-              columnalign: align,
-              columnspacing: (spacing||"1em"),
-              rowspacing: (vspacing||"4pt")
-            }
-          });
-      if (lines.match(/[|:]/)) {
-        if (lines.charAt(0).match(/[|:]/)) {array.frame.push("left"); array.frame.dashed = lines.charAt(0) === ":"}
-        if (lines.charAt(lines.length-1).match(/[|:]/)) {array.frame.push("right")}
-        lines = lines.substr(1,lines.length-2);
-        array.arraydef.columnlines =
-          lines.split('').join(' ').replace(/[^|: ]/g,'none').replace(/\|/g,'solid').replace(/:/g,'dashed');
-      }
-      if (open)  {array.open  = this.convertDelimiter(open)}
-      if (close) {array.close = this.convertDelimiter(close)}
-      if (style === "D") {array.arraydef.displaystyle = true}
-         else if (style) {array.arraydef.displaystyle = false}
-      if (style === "S") {array.arraydef.scriptlevel = 1} // FIXME: should use mstyle?
-      if (raggedHeight)  {array.arraydef.useHeight = false}
-      this.Push(begin);
-      return array;
-    },
-    
-    AlignedArray: function (begin) {
-    imp.printMethod("AlignedArray");
-      var align = this.GetBrackets("\\begin{"+begin.name+"}");
-      return this.setArrayAlign(this.Array.apply(this,arguments),align);
-    },
-    setArrayAlign: function (array,align) {
-    imp.printMethod("setArrayAlign");
-      align = this.trimSpaces(align||"");
-      if (align === "t") {array.arraydef.align = "baseline 1"}
-      else if (align === "b") {array.arraydef.align = "baseline -1"}
-      else if (align === "c") {array.arraydef.align = "center"}
-      else if (align) {array.arraydef.align = align} // FIXME: should be an error?
-      return array;
-    },
+    MmlToken: ParseMethods.MmlToken,
+    Strut: ParseMethods.Strut,
+    Phantom: ParseMethods.Phantom,
+    Smash: ParseMethods.Smash,
+    Lap: ParseMethods.Lap,
+    RaiseLower: ParseMethods.RaiseLower,
+    MoveLeftRight: ParseMethods.MoveLeftRight,
+    Hskip: ParseMethods.Hskip,
+    Rule: ParseMethods.Rule,
+    rule: ParseMethods.rule,
+    MakeBig: ParseMethods.MakeBig,
+    BuildRel: ParseMethods.BuildRel,
+    HBox: ParseMethods.HBox,
+    FBox: ParseMethods.FBox,
+    Not: ParseMethods.Not,
+    Dots: ParseMethods.Dots,
+    Require: ParseMethods.Require,
+    Extension: ParseMethods.Extension,
+    Macro: ParseMethods.Macro,
+    Matrix: ParseMethods.Matrix,
+    Entry: ParseMethods.Entry,
+    Cr: ParseMethods.Cr,
+    CrLaTeX: ParseMethods.CrLaTeX,
+    HLine: ParseMethods.HLine,
+    HFill: ParseMethods.HFill,
+    BeginEnd: ParseMethods.BeginEnd,
+    BeginEnvironment: ParseMethods.BeginEnvironment,
+    Equation: ParseMethods.Equation,
+    ExtensionEnv: ParseMethods.ExtensionEnv,
+    Array: ParseMethods.Array,
+    AlignedArray: ParseMethods.AlignedArray,
+    setArrayAlign: ParseMethods.setArrayAlign
     
   });
   
+  ParseMethods.OLD_PARSER = PARSE;
   /************************************************************************/
 
   TEX.Augment({

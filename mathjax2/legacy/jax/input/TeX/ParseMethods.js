@@ -8,7 +8,10 @@ import {ParserUtil} from './ParserUtil.js';
 
 // Namespace
 export let ParseMethods = {};
+// Legacy objects.
 ParseMethods.STACKITEM = null;
+ParseMethods.OLD_PARSER = null;
+ParseMethods.NEW_PARSER = null;
 
 ParseMethods.PRIME = "\u2032";
 ParseMethods.SMARTQUOTE = "\u2019";
@@ -28,7 +31,7 @@ ParseMethods.P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
 ParseMethods.ControlSequence = function(parser, c) {
   imp.printMethod("ControlSequence");
   var name = parser.GetCS();
-  NewParser.parse('macro', [name, this]);
+  ParseMethods.NEW_PARSER.parse('macro', [name, this]);
 };
 
 //
@@ -569,8 +572,8 @@ ParseMethods.Over = function(parser, name,open,close) {
   imp.printMethod("Over");
   // @test Over
   var mml = imp.STACKS ?
-      new sitem.OverItem().With({name: name, parse: parser.Parse}) :
-      ParseMethods.STACKITEM.over().With({name: name, parse: parser.Parse});
+      new sitem.OverItem().With({name: name, parse: ParseMethods.OLD_PARSER}) :
+      ParseMethods.STACKITEM.over().With({name: name, parse: ParseMethods.OLD_PARSER});
   if (open || close) {
     // @test Choose
     mml.open = open; mml.close = close;
@@ -605,7 +608,7 @@ ParseMethods.Sqrt = function(parser, name) {
   imp.printMethod("Sqrt");
   var n = parser.GetBrackets(name), arg = parser.GetArgument(name);
   if (arg === "\\frac") {arg += "{"+parser.GetArgument(arg)+"}{"+parser.GetArgument(arg)+"}"}
-  var mml = TEX.Parse(arg,parser.stack.env).mml();
+  var mml = ParseMethods.OLD_PARSER(arg,parser.stack.env).mml();
   if (!n) {
     // @test Square Root
     // mml = imp.createNode('msqrt', imp.NEW ? [mml] : mml.array(), {});
@@ -615,7 +618,7 @@ ParseMethods.Sqrt = function(parser, name) {
     // mml = MML.msqrt.apply(MML,mml.array());
   } else {
     // @test General Root
-    mml = imp.createNode('mroot', [mml, parser.parseRoot(n)], {});
+    mml = imp.createNode('mroot', [mml, ParseMethods.parseRoot(parser, n)], {});
     // VS: OLD
     // mml = MML.mroot(mml,parser.parseRoot(n));
   }
@@ -625,17 +628,20 @@ ParseMethods.Root = function(parser, name) {
   imp.printMethod("Root");
   var n = parser.GetUpTo(name,"\\of");
   var arg = parser.ParseArg(name);
-  var node = imp.createNode('mroot', [arg ,parser.parseRoot(n)], {});
+  var node = imp.createNode('mroot', [arg, ParseMethods.parseRoot(parser, n)], {});
   // VS: OLD
   // var node = MML.mroot(arg,parser.parseRoot(n));
   parser.Push(node);
 };
+
+
+// Utility?
 ParseMethods.parseRoot = function(parser, n) {
   imp.printMethod("parseRoot");
   // @test General Root, Explicit Root
   var env = parser.stack.env, inRoot = env.inRoot; env.inRoot = true;
   // TODO: This parser call might change!
-  var parser = TEX.Parse(n,env);
+  var parser = ParseMethods.OLD_PARSER(n,env);
   n = parser.mml();
   imp.printJSON(n);
   var global = parser.stack.global;
@@ -806,7 +812,7 @@ ParseMethods.TeXAtom = function(parser, name,mclass) {
         ParseMethods.STACKITEM.fn(parser.mmlToken(node));
     } else {
       // @test Mathop Cal
-      var parsed = TEX.Parse(arg,parser.stack.env).mml();
+      var parsed = ParseMethods.OLD_PARSER(arg,parser.stack.env).mml();
       node = imp.createNode('TeXAtom', [parsed], def);
       // VS: OLD
       // node = MML.TeXAtom(parsed).With(def);
@@ -1168,41 +1174,6 @@ ParseMethods.Dots = function(parser, name) {
             }));
 };
 
-ParseMethods.Require = function(parser, name) {
-  imp.printMethod("Require");
-  var file = parser.GetArgument(name)
-      .replace(/.*\//,"")            // remove any leading path
-      .replace(/[^a-z0-9_.-]/ig,""); // remove illegal characters
-  parser.Extension(null,file);
-};
-
-ParseMethods.Extension = function(parser, name,file,array) {
-  imp.printMethod("Extension");
-  if (name && !typeof(name) === "string") {name = name.name}
-  file = TEX.extensionDir+"/"+file;
-  if (!file.match(/\.js$/)) {file += ".js"}
-};
-
-ParseMethods.Macro = function(parser, name,macro,argcount,def) {
-  imp.printMethod("Macro");
-  if (argcount) {
-    var args = [];
-    if (def != null) {
-      var optional = parser.GetBrackets(name);
-      args.push(optional == null ? def : optional);
-    }
-    for (var i = args.length; i < argcount; i++) {args.push(parser.GetArgument(name))}
-    macro = parser.SubstituteArgs(args,macro);
-  }
-  parser.string = parser.AddArgs(macro,parser.string.slice(parser.i));
-  parser.i = 0;
-  if (++parser.macroCount > TEX.config.MAXMACROS) {
-    throw new TexError(["MaxMacroSub1",
-                        "MathJax maximum macro substitution count exceeded; " +
-                        "is there a recursive macro call?"]);
-  }
-};
-
 ParseMethods.Matrix = function(parser, name,open,close,align,spacing,vspacing,style,cases,numbered) {
   imp.printMethod("Matrix");
   // imp.untested(36);
@@ -1234,7 +1205,7 @@ ParseMethods.Matrix = function(parser, name,open,close,align,spacing,vspacing,st
 
 ParseMethods.Entry = function(parser, name) {
   imp.printMethod("Entry");
-  // @ test Label, Array, Cross Product Formula
+  // @test Label, Array, Cross Product Formula
   parser.Push(imp.STACKS ?
             new sitem.CellItem().With({isEntry: true, name: name}) :
             ParseMethods.STACKITEM.cell().With({isEntry: true, name: name}));
@@ -1383,47 +1354,81 @@ ParseMethods.HFill = function(parser, name) {
 };
 
 
+// Utilities:
+
+ParseMethods.mi2mo = function(mi) {
+  imp.printMethod("mi2mo");
+  // @test Mathop Sub, Mathop Super
+  var mo = imp.createNode('mo', [], {});
+  imp.copyChildren(mi, mo);
+  // TODO: Figure out how to copy these attributes.
+  imp.copyAttributes(mi, mo);
+  // TODO: Do this with get('lspace') etc.
+  imp.setProperties(mo, {lspace: '0', rspace: '0'});
+  // mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
+  // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
+  return mo;
+};
+
+
+
+
+
 
 /************************************************************************/
 /*
  *   LaTeX environments
  */
 
+ParseMethods.MAXMACROS = 10000;    // maximum number of macro substitutions per equation
+ParseMethods.MAXBUFFER = 5*1024;   // maximum size of TeX string to process
+
+
 ParseMethods.BeginEnd = function(parser, name) {
   imp.printMethod("BeginEnd");
+  // @test Array1, Array2, Array Test
   var env = parser.GetArgument(name);
   if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
-  if (env.match(/\\/i)) {throw new TexError(["InvalidEnv","Invalid environment name '%1'",env])}
+  if (env.match(/\\/i)) {
+    throw new TexError(["InvalidEnv","Invalid environment name '%1'",env]);
+  }
   if (name === "\\end") {
     var mml = imp.STACKS ?
         new sitem.EndItem().With({name: env}) :
         ParseMethods.STACKITEM.end().With({name: env});
     parser.Push(mml);
   } else {
-    if (++parser.macroCount > TEX.config.MAXMACROS) {
+    if (++parser.macroCount > ParseMethods.MAXMACROS) {
       throw new TexError(["MaxMacroSub2",
                           "MathJax maximum substitution count exceeded; " +
                           "is there a recursive latex environment?"]);
     }
-    NewParser.parse('environment', [env, this]);
+    ParseMethods.NEW_PARSER.parse('environment', [env, this]);
   }
 };
+
+
 ParseMethods.BeginEnvironment = function(parser, func, env, args) {
   imp.printMethod("BeginEnvironment");
   var end = args[0];
   var mml = imp.STACKS ?
       new sitem.BeginItem().With({name: env, end: end, parse:this}) :
       ParseMethods.STACKITEM.begin().With({name: env, end: end, parse:this});
-  mml = func.apply(this,[mml].concat(args.slice(1)));
+  mml = func.apply(this,[parser, mml].concat(args.slice(1)));
   parser.Push(mml);
 };
 
-ParseMethods.Equation = function(parser, begin,row) {return row};
+ParseMethods.Equation = function(parser, begin,row) {
+  return row;
+};
 
-ParseMethods.ExtensionEnv = function(parser, begin,file) {parser.Extension(begin.name,file,"environment")};
+ParseMethods.ExtensionEnv = function(parser, begin,file) {
+  parser.Extension(begin.name,file,"environment");
+};
 
 ParseMethods.Array = function(parser, begin,open,close,align,spacing,vspacing,style,raggedHeight) {
   imp.printMethod("Array");
+  // @test Array1, Array2, Array Test
   if (!align) {align = parser.GetArgument("\\begin{"+begin.name+"}")}
   var lines = ("c"+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
   align = align.replace(/[^clr]/g,'').split('').join(' ');
@@ -1460,13 +1465,19 @@ ParseMethods.Array = function(parser, begin,open,close,align,spacing,vspacing,st
   return array;
 };
 
+
 ParseMethods.AlignedArray = function(parser, begin) {
   imp.printMethod("AlignedArray");
+  // @test Array1, Array2, Array Test
   var align = parser.GetBrackets("\\begin{"+begin.name+"}");
-  return parser.setArrayAlign(parser.Array.apply(this,arguments),align);
+  return ParseMethods.setArrayAlign(parser,
+                                    parser.Array.apply(parser,arguments),align);
 };
+
+
 ParseMethods.setArrayAlign = function(parser, array,align) {
   imp.printMethod("setArrayAlign");
+  // @test Array1, Array2, Array Test
   align = parser.trimSpaces(align||"");
   if (align === "t") {array.arraydef.align = "baseline 1"}
   else if (align === "b") {array.arraydef.align = "baseline -1"}
@@ -1475,19 +1486,92 @@ ParseMethods.setArrayAlign = function(parser, array,align) {
   return array;
 };
 
-// Utilities:
 
-ParseMethods.mi2mo = function(mi) {
-  imp.printMethod("mi2mo");
-  // @test Mathop Sub, Mathop Super
-  var mo = imp.createNode('mo', [], {});
-  imp.copyChildren(mi, mo);
-  // TODO: Figure out how to copy these attributes.
-  imp.copyAttributes(mi, mo);
-  // TODO: Do this with get('lspace') etc.
-  imp.setProperties(mo, {lspace: '0', rspace: '0'});
-  // mo.lspace = mo.rspace = "0";  // prevent mo from having space in NativeMML
-  // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
-  return mo;
+/**************
+ * Macros and Extension functionality.
+ *************/
+// TODO: 
+// Most of this is untested and should probably go into a separate file.
+// We should probably loose require.
+
+ParseMethods.EXTENSION_DIR = "";
+
+
+ParseMethods.Require = function(parser, name) {
+  imp.printMethod("Require");
+  var file = parser.GetArgument(name)
+      .replace(/.*\//,"")            // remove any leading path
+      .replace(/[^a-z0-9_.-]/ig,""); // remove illegal characters
+  ParseMethods.Extension(null,file);
+};
+
+
+ParseMethods.Extension = function(parser, name,file,array) {
+  imp.printMethod("Extension");
+  if (name && !typeof(name) === "string") {name = name.name}
+  // file = TEX.extensionDir+"/"+file;
+  file = ParseMethods.EXTENSION_DIR + "/" + file;
+  if (!file.match(/\.js$/)) {file += ".js"}
+};
+
+
+ParseMethods.Macro = function(parser, name,macro,argcount,def) {
+  imp.printMethod("Macro");
+  if (argcount) {
+    var args = [];
+    if (def != null) {
+      var optional = parser.GetBrackets(name);
+      args.push(optional == null ? def : optional);
+    }
+    for (var i = args.length; i < argcount; i++) {args.push(parser.GetArgument(name))}
+    macro = ParseMethods.SubstituteArgs(args,macro);
+  }
+  parser.string = ParseMethods.AddArgs(macro,parser.string.slice(parser.i));
+  parser.i = 0;
+  if (++parser.macroCount > ParseMethods.MAXMACROS) {
+    throw new TexError(["MaxMacroSub1",
+                        "MathJax maximum macro substitution count exceeded; " +
+                        "is there a recursive macro call?"]);
+  }
+};
+
+
+// These two are Macro Utility functions
+/**
+ *  Replace macro paramters with their values
+ */
+ParseMethods.SubstituteArgs = function (args,string) {
+  imp.printMethod("SubstituteArgs");
+  var text = ''; var newstring = ''; var c; var i = 0;
+  while (i < string.length) {
+    c = string.charAt(i++);
+    if (c === "\\") {text += c + string.charAt(i++)}
+    else if (c === '#') {
+      c = string.charAt(i++);
+      if (c === '#') {text += c} else {
+        if (!c.match(/[1-9]/) || c > args.length) {
+          throw new TexError(["IllegalMacroParam",
+                              "Illegal macro parameter reference"]);
+        }
+        newstring = ParseMethods.AddArgs(this.AddArgs(newstring,text),args[c-1]);
+        text = '';
+      }
+    } else {text += c}
+  }
+  return this.AddArgs(newstring,text);
+};
+
+/**
+ *  Make sure that macros are followed by a space if their names
+ *  could accidentally be continued into the following text.
+ */
+ParseMethods.AddArgs = function (s1,s2) {
+  imp.printMethod("AddArgs");
+  if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
+  if (s1.length + s2.length > ParseMethods.MAXBUFFER) {
+    throw new TexError(["MaxBufferSize",
+                        "MathJax internal buffer size exceeded; is there a recursive macro call?"]);
+  }
+  return s1+s2;
 };
 
