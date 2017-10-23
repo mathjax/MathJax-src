@@ -803,17 +803,6 @@ export class DotsItem extends BaseItem {
 
 export class AMSarrayItem extends ArrayItem {
 
-  constructor() {
-    super();
-    this.type = 'array';
-    this.table = [];
-    this.row = [];
-    this.frame = [];
-    this.hfill = [];
-    this.copyEnv = false;
-    this.arraydef = {};
-  }
-
   constructor(name, numbered, taggable, stack) {
     super();
     this.type = 'AMSarray';
