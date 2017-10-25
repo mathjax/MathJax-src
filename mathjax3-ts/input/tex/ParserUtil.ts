@@ -116,7 +116,7 @@ export namespace ParserUtil {
   /**
    *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
    */
-  export function fixedFence(open: string, mml: MmlNode, close: string, parser: TexParser) {
+  export function fixedFence(open: string, mml: MmlNode, close: string, parser: Function) {
     // @test Choose, Over With Delims, Above with Delims
     TreeHelper.printMethod('fixedFence');
     let mrow = TreeHelper.createNode(
@@ -140,16 +140,16 @@ export namespace ParserUtil {
 
   // TODO: Handling the parser here is a bit awkward!
   //       This and the previous method should go into the ParseMethods.
-  export function mathPalette(fence: string, side: string, parser: TexParser) {
+  export function mathPalette(fence: string, side: string, parser: Function) {
     TreeHelper.printMethod('mathPalette');
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
-    // return parser('\\mathchoice' + D + T + T + T, {}).mml();
-    let parser = new TexParser();
-    return parser.parse('\\mathchoice' + D + T + T + T, {}).mml();
+    return parser('\\mathchoice' + D + T + T + T, {}).mml();
+    // let parser = new TexParser();
+    // return parser.parse('\\mathchoice' + D + T + T + T, {}).mml();
   };
 
 
@@ -157,11 +157,11 @@ export namespace ParserUtil {
   //  Combine adjacent <mo> elements that are relations
   //    (since MathML treats the spacing very differently)
   //
-  export function combineRelations(mml) {
+  export function combineRelations(mml: MmlNode) {
     TreeHelper.printMethod('combineRelations: ');
-    let i, m, m1, m2;
+    let m1: MmlNode, m2: MmlNode;
     let children = TreeHelper.getChildren(mml);
-    for (i = 0, m = children.length; i < m; i++) {
+    for (let i = 0, m = children.length; i < m; i++) {
       if (children[i]) {
         if (TreeHelper.isType(mml, 'mrow')) {
           while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&

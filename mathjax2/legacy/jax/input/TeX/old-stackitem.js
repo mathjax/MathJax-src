@@ -2,7 +2,7 @@ let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TEXCLASS = require("mathjax3/core/MmlTree/MmlNode.js").TEXCLASS;
 let MmlEntities = require("mathjax3/input/mathml/MmlEntities.js").MmlEntities;
 let ParserUtil = require("./ParserUtil.js").ParserUtil;
-let TexError = require('./TexError.js').TexError;
+let TexError = require('mathjax3/input/tex/TexError.js').default;
 let imp = require("./imp.js").imp;
 
 (function (TEX) {

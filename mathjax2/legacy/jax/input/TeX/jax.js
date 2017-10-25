@@ -33,7 +33,7 @@ let TexConstant = require("mathjax3/input/tex/TexConstants.js").TexConstant;
 let MmlEntities = require("mathjax3/input/mathml/MmlEntities.js").MmlEntities;
 require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
-let TexError = require('./TexError.js').TexError;
+let TexError = require('mathjax3/input/tex/TexError.js').default;
 let stack = require('./Stack.js');
 let sitem = require('./StackItem.js');
 let ParserUtil = require("./ParserUtil.js").ParserUtil;
