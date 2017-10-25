@@ -353,8 +353,6 @@ ParseMethods.Prime = function(parser, c) {
   var node = imp.createNode('mo', [], {}, textNode);
   // VS: OLD
   // var node = MML.mo(sup);
-  console.log('BASE:');
-  console.log(base);
   parser.Push(imp.STACKS ?
             new sitem.PrimeItem(base, parser.mmlToken(node)) :
             ParseMethods.STACKITEM.prime(base, parser.mmlToken(node)));
@@ -464,9 +462,6 @@ ParseMethods.Spacer = function(parser, name,space) {
 ParseMethods.LeftRight = function(parser, name) {
   imp.printMethod("LeftRight");
   // @test Fenced, Fenced3
-  console.log("The fence name!");
-  console.log(name);
-  console.log(name.substr(1));
   var alpha = name.substr(1);
   parser.Push(imp.STACKS ?
             // TODO: Sort this out: Uppercase the first character and add Item!
