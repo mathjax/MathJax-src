@@ -45,6 +45,7 @@ export class OldParser {
     imp.printMethod("Init (Old Parser Object)");
     this.STACKITEM = STACKITEM;
     this.NewParser = new TeXParser();
+    ParseMethods.NEW_PARSER = this.NewParser;
     this.remap =  MapHandler.getInstance().getMap('remap');
     this.string = string; this.i = 0; this.macroCount = 0;
     var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
