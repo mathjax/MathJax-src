@@ -38,6 +38,7 @@ let stack = require('./Stack.js');
 let sitem = require('./StackItem.js');
 let ParserUtil = require("./ParserUtil.js").ParserUtil;
 let ParseMethods = require('./ParseMethods.js').ParseMethods;
+let OldParser = require('./Parser.js').OldParser;
 require("./old-stackitem.js");
 
 // This is only necessary for the legacy tests.
@@ -101,7 +102,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
   var PARSE = MathJax.Object.Subclass({
     remap:   MapHandler.getInstance().getMap('remap'),
     Init: function (string,env) {
-    imp.printMethod("Init");
+    imp.printMethod("Init (Legacy Parser)");
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = new stack.Stack(ENV,!!env,STACKITEM);
@@ -111,7 +112,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
       this.Push(imp.STACKS ? new sitem.StopItem() : STACKITEM.stop());
     },
     Parse: function () {
-    imp.printMethod("Parse");
+    imp.printMethod("Parse (Legacy Parser)");
       var c, n;
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
@@ -120,17 +121,17 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
       }
     },
     Push: function (arg) {
-    imp.printMethod("Push");
+    imp.printMethod("Push (Legacy Parser)");
       this.stack.Push(arg);
     },
     PushAll: function (args) {
-      imp.printMethod("PushAll");
+      imp.printMethod("PushAll (Legacy Parser)");
       for(var i = 0, m = args.length; i < m; i++) {
         this.stack.Push(args[i]);
       } 
     },
     mml: function () {
-      imp.printMethod("mml");
+      imp.printMethod("mml (Legacy Parser)");
       if (!this.stack.Top().hasType('mml')) {
         return null;
       }
@@ -155,7 +156,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
-    imp.printMethod("convertDelimiter");
+    imp.printMethod("convertDelimiter (Legacy Parser)");
       return NewParser.lookup('delimiter', c).char || null;
     },
 
@@ -164,7 +165,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      */
     // static
     trimSpaces: function (text) {
-    imp.printMethod("trimSpaces");
+    imp.printMethod("trimSpaces (Legacy Parser)");
       if (typeof(text) != 'string') {return text}
       var TEXT = text.replace(/^\s+|\s+$/g,'');
       if (TEXT.match(/\\$/) && text.match(/ $/)) TEXT += " ";
@@ -175,7 +176,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *   Check if the next character is a space
      */
     nextIsSpace: function () {
-    imp.printMethod("nextIsSpace");
+    imp.printMethod("nextIsSpace (Legacy Parser)");
       return this.string.charAt(this.i).match(/\s/);
     },
     
@@ -183,7 +184,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  Get the next non-space character
      */
     GetNext: function () {
-    imp.printMethod("GetNext");
+    imp.printMethod("GetNext (Legacy Parser)");
       while (this.nextIsSpace()) {this.i++}
       return this.string.charAt(this.i);
     },
@@ -192,7 +193,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  Get and return a control-sequence name
      */
     GetCS: function () {
-    imp.printMethod("GetCS");
+    imp.printMethod("GetCS (Legacy Parser)");
       var CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
       if (CS) {this.i += CS[1].length; return CS[1]} else {this.i++; return " "}
     },
@@ -202,7 +203,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  or the contents of the next set of braces).
      */
     GetArgument: function (name,noneOK) {
-    imp.printMethod("GetArgument");
+    imp.printMethod("GetArgument (Legacy Parser)");
       switch (this.GetNext()) {
        case "":
         if (!noneOK) {throw new TexError(["MissingArgFor","Missing argument for %1",name])}
@@ -236,7 +237,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  Get an optional LaTeX argument in brackets
      */
     GetBrackets: function (name,def) {
-    imp.printMethod("GetBrackets");
+    imp.printMethod("GetBrackets (Legacy Parser)");
       if (this.GetNext() != '[') {return def};
       var j = ++this.i, parens = 0;
       while (this.i < this.string.length) {
@@ -262,7 +263,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  Get the name of a delimiter (check it in the delimiter list).
      */
     GetDelimiter: function (name,braceOK) {
-    imp.printMethod("GetDelimiter");
+    imp.printMethod("GetDelimiter (Legacy Parser)");
       while (this.nextIsSpace()) {this.i++}
       var c = this.string.charAt(this.i); this.i++;
       if (this.i <= this.string.length) {
@@ -284,7 +285,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  Get a dimension (including its units).
      */
     GetDimen: function (name) {
-    imp.printMethod("GetDimen");
+    imp.printMethod("GetDimen (Legacy Parser)");
       var dimen;
       if (this.nextIsSpace()) {this.i++}
       if (this.string.charAt(this.i) == '{') {
@@ -307,7 +308,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  Get everything up to the given control sequence (token)
      */
     GetUpTo: function (name,token) {
-    imp.printMethod("GetUpTo");
+    imp.printMethod("GetUpTo (Legacy Parser)");
       while (this.nextIsSpace()) {this.i++}
       var j = this.i, k, c, parens = 0;
       while (this.i < this.string.length) {
@@ -339,7 +340,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
      *  Break up a string into text and math blocks
      */
     InternalMath: function (text,level) {
-    imp.printMethod("InternalMath");
+    imp.printMethod("InternalMath (Legacy Parser)");
       var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
       var mml = [], i = 0, k = 0, c, node, match = '', braces = 0;
       if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
@@ -412,7 +413,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
     },
     InternalText: function (text,def) {
       // @test Label, Fbox, Hbox
-      imp.printMethod("InternalText");
+      imp.printMethod("InternalText (Legacy Parser)");
       text = text.replace(/^\s+/,NBSP).replace(/\s+$/,NBSP);
       var textNode = imp.createText(text);
       return imp.createNode('mtext', [], def, textNode);
@@ -538,7 +539,8 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
       var mml, isError = false, math = MathJax.HTML.getScript(script);
       var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
       try {
-        mml = TEX.Parse(math).mml();
+        mml = new OldParser(math, null, TEXDEF.configurations, STACKITEM).mml();
+        // mml = TEX.Parse(math).mml();
         imp.printSimple(mml.toString());
       } catch(err) {
         console.log(err);

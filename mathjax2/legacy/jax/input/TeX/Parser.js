@@ -285,12 +285,14 @@ export class OldParser {
      */
   ParseArg(name) {
     imp.printMethod("ParseArg (Old Parser Object)");
-    return (new OldParser(this.GetArgument(name),this.stack.env)).mml();
+    let object = new OldParser(this.GetArgument(name),this.stack.env, [], this.STACKITEM);
+    console.log(object);
+    return object.mml();
   }
 
   ParseUpTo(name,token) {
     imp.printMethod("ParseUpTo (Old Parser Object)");
-    return (new OldParser(this.GetUpTo(name,token),this.stack.env)).mml();
+    return new OldParser(this.GetUpTo(name,token),this.stack.env, [], this.STACKITEM).mml();
   }
 
     
@@ -307,7 +309,7 @@ export class OldParser {
           if (c === '$') {
             if (match === '$' && braces === 0) {
               // @test Interspersed Text
-              node = imp.createNode('TeXAtom', [(new OldParser(text.slice(k,i-1),{})).mml()], {});
+              node = imp.createNode('TeXAtom', [(new OldParser(text.slice(k,i-1),{}, [], this.STACKITEM)).mml()], {});
               // VS: OLD
               // node = MML.TeXAtom((new OldParser(text.slice(k,i-1),{})).mml());
               mml.push(node);
@@ -322,7 +324,7 @@ export class OldParser {
           } else if (c === '}') {
             if (match === '}' && braces === 0) {
               imp.untested(12);
-              node = imp.createNode('TeXAtom', [(new OldParser(text.slice(k,i),{})).mml()], def);
+              node = imp.createNode('TeXAtom', [(new OldParser(text.slice(k,i),{}, [], this.STACKITEM)).mml()], def);
               // VS: OLD
               // node = MML.TeXAtom((new OldParser(text.slice(k,i),{})).mml().With(def));
               mml.push(node);
@@ -342,7 +344,7 @@ export class OldParser {
                 match = ')'; k = i;
               } else if (c === ')' && match === ')' && braces === 0) {
                 imp.untested(13);
-                node = imp.createNode('TeXAtom', [(new OldParser(text.slice(k,i-2),{})).mml()], {});
+                node = imp.createNode('TeXAtom', [(new OldParser(text.slice(k,i-2),{}, [], this.STACKITEM)).mml()], {});
                 // VS: OLD
                 // node = MML.TeXAtom((new OldParser(text.slice(k,i-2),{})).mml());
                 mml.push(node);
@@ -380,4 +382,29 @@ export class OldParser {
       // return MML.mtext(MML.chars(text)).With(def);
     }
 
+  // AMS
+  
+    /*
+     *  Get a delimiter or empty argument
+     */
+    GetDelimiterArg(name) {
+      imp.printMethod('AMS-GetDelimiterArg (Old Parser Object)');
+      var c = this.trimSpaces(this.GetArgument(name));
+      if (c == "") return null;
+      if (this.NewParser.contains('delimiter', c)) {
+        return c;
+      }
+      // if (c in TEXDEF.delimiter) return c;
+      throw new TexError(["MissingOrUnrecognizedDelim","Missing or unrecognized delimiter for %1",name]);
+    }
+    
+    /*
+     *  Get a star following a control sequence name, if any
+     */
+    GetStar() {
+      imp.printMethod('AMS-GetStar (Old Parser Object)');
+      var star = (this.GetNext() === "*");
+      if (star) {this.i++}
+      return star;
+    }
 }

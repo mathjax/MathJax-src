@@ -1466,7 +1466,7 @@ ParseMethods.AlignedArray = function(parser, begin) {
   // @test Array1, Array2, Array Test
   var align = parser.GetBrackets("\\begin{"+begin.name+"}");
   return ParseMethods.setArrayAlign(parser,
-                                    parser.Array.apply(parser,arguments),align);
+                                    ParseMethods.Array.apply(parser,arguments),align);
 };
 
 
