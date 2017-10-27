@@ -287,7 +287,6 @@ export class OldParser {
   ParseArg(name) {
     imp.printMethod("ParseArg (Old Parser Object)");
     let object = new OldParser(this.GetArgument(name),this.stack.env, [], this.STACKITEM);
-    console.log(object);
     return object.mml();
   }
 

@@ -42,8 +42,6 @@ let OldParser = require('./Parser.js').OldParser;
 let Translate = require('./Translate.js').default;
 require("./old-stackitem.js");
 
-console.log(Translate);
-
 
 // This is only necessary for the legacy tests.
 imp.MML = MathJax.ElementJax.mml;

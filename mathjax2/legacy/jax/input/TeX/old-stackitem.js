@@ -16,8 +16,6 @@ let imp = require("./imp.js").imp;
     closeError: /*_()*/ ["ExtraCloseMissingOpen","Extra close brace or missing open brace"],
     rightError: /*_()*/ ["MissingLeftExtraRight","Missing \\left or extra \\right"],
     Init: function () {
-      console.log("Arguments: ");
-      console.log(arguments);
       if (this.isOpen) {this.env = {}}
       this.data = [];
       this.Push.apply(this,arguments);

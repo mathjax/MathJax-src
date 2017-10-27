@@ -47,10 +47,10 @@ imp.attrs = ['autoOP',
              'open',
              'close'
             ];
-imp.methodOut = true;
+imp.methodOut = false;
 imp.defOut = false;
 imp.jsonOut = false;
-imp.simpleOut = true;
+imp.simpleOut = false;
 
 
 imp.createNode = function(type, children, def, text) {

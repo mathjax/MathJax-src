@@ -35,18 +35,13 @@ export class Stack {
   constructor(env, inner, stackitem) {
     this.STACKITEM = stackitem;
     this.global = {isInner: inner};
-    console.log(StartItem);
     let item = new StartItem(this.global);
-    console.log(item.isOpen);
-    console.log(item.Push);
-    console.log(item.toString());
     this.data = [
       imp.STACKS ?
         new StartItem(this.global) :
         this.STACKITEM.start(this.global)
     ];
     // this.data = [new StartItem(this.global)];
-    console.log(this.data);
     if (env) {
       this.data[0].env = env;
     }
@@ -55,12 +50,11 @@ export class Stack {
 
 
   Push() {
-    console.log("PUSHING onto stack: ");
-    console.log(arguments);
+    imp.printSimple("PUSHING onto stack: ");
+    imp.printSimple(arguments);
     var i, m, item, top;
     for (i = 0, m = arguments.length; i < m; i++) {
       item = arguments[i]; if (!item) continue;
-      console.log(imp.isNode(item));
       if (imp.isNode(item)) {
         item = imp.STACKS ? new MmlItem(item) : this.STACKITEM.mml(item);
         // item = new MmlItem(item);
