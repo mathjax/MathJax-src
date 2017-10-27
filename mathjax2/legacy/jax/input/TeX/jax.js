@@ -500,7 +500,7 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
     
   });
   
-  ParseMethods.OLD_PARSER = PARSE;
+  // ParseMethods.OLD_PARSER = PARSE;
   /************************************************************************/
 
   TEX.Augment({

@@ -4,6 +4,7 @@ import TexError from 'mathjax3/input/tex/TexError.js';
 import {TEXCLASS} from 'mathjax3/core/MmlTree/MmlNode.js';
 import {TexConstant} from 'mathjax3/input/tex/TexConstants.js';
 import {ParserUtil} from './ParserUtil.js';
+import {OldParser} from './Parser.js';
 
 
 // Namespace
@@ -603,7 +604,7 @@ ParseMethods.Sqrt = function(parser, name) {
   imp.printMethod("Sqrt");
   var n = parser.GetBrackets(name), arg = parser.GetArgument(name);
   if (arg === "\\frac") {arg += "{"+parser.GetArgument(arg)+"}{"+parser.GetArgument(arg)+"}"}
-  var mml = ParseMethods.OLD_PARSER(arg,parser.stack.env).mml();
+  var mml = new OldParser(arg,parser.stack.env, [], {}).mml();
   if (!n) {
     // @test Square Root
     // mml = imp.createNode('msqrt', imp.NEW ? [mml] : mml.array(), {});
@@ -636,7 +637,7 @@ ParseMethods.parseRoot = function(parser, n) {
   // @test General Root, Explicit Root
   var env = parser.stack.env, inRoot = env.inRoot; env.inRoot = true;
   // TODO: This parser call might change!
-  var parser = ParseMethods.OLD_PARSER(n,env);
+  var parser = new OldParser(n,env, [], {});
   n = parser.mml();
   imp.printJSON(n);
   var global = parser.stack.global;
@@ -807,7 +808,7 @@ ParseMethods.TeXAtom = function(parser, name,mclass) {
         ParseMethods.STACKITEM.fn(parser.mmlToken(node));
     } else {
       // @test Mathop Cal
-      var parsed = ParseMethods.OLD_PARSER(arg,parser.stack.env).mml();
+      var parsed = new OldParser(arg,parser.stack.env, [], {}).mml();
       node = imp.createNode('TeXAtom', [parsed], def);
       // VS: OLD
       // node = MML.TeXAtom(parsed).With(def);
