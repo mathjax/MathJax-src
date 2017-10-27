@@ -343,7 +343,7 @@ export class OverItem extends BaseItem {
         // @test Choose
         imp.setProperties(mml, {'texWithDelims': true});
         // TODO: What to do about TEX?
-        mml = ParserUtil.fixedFence(this.open, mml, this.close, this.parse);
+        mml = ParserUtil.fixedFence(this.open, mml, this.close);
       }
       return [new MmlItem(mml), item];
     }
@@ -418,6 +418,11 @@ export class BeginItem extends BaseItem {
       if (!this.end) {
         return new MmlItem(this.mmlData());
       }
+      // TODO: This case currently does not work!
+      // 
+      //       The problem: It needs to call a particular Parse Method. It is
+      //       only used in equation(*) anyway and should therefore probably
+      //       handled in a special case.
       return this.parse[this.end].call(this.parse, this, this.data);
     }
     if (item.hasType('stop')) {

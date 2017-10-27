@@ -567,8 +567,8 @@ ParseMethods.Over = function(parser, name,open,close) {
   imp.printMethod("Over");
   // @test Over
   var mml = imp.STACKS ?
-      new sitem.OverItem().With({name: name, parse: ParseMethods.OLD_PARSER}) :
-      ParseMethods.STACKITEM.over().With({name: name, parse: ParseMethods.OLD_PARSER});
+      new sitem.OverItem().With({name: name}) :
+      ParseMethods.STACKITEM.over().With({name: name});
   if (open || close) {
     // @test Choose
     mml.open = open; mml.close = close;
@@ -1407,8 +1407,8 @@ ParseMethods.BeginEnvironment = function(parser, func, env, args) {
   imp.printMethod("BeginEnvironment");
   var end = args[0];
   var mml = imp.STACKS ?
-      new sitem.BeginItem().With({name: env, end: end, parse:this}) :
-      ParseMethods.STACKITEM.begin().With({name: env, end: end, parse:this});
+      new sitem.BeginItem().With({name: env, end: end}) :
+      ParseMethods.STACKITEM.begin().With({name: env, end: end});
   mml = func.apply(this,[parser, mml].concat(args.slice(1)));
   parser.Push(mml);
 };

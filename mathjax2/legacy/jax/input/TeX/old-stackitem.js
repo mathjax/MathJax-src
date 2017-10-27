@@ -176,7 +176,7 @@ let imp = require("./imp.js").imp;
           // @test Choose
           // mml.texWithDelims = true;
           imp.setProperties(mml, {'texWithDelims': true});
-          mml = ParserUtil.fixedFence(this.open,mml,this.close, this.parse);
+          mml = ParserUtil.fixedFence(this.open,mml,this.close);
         }
         return [STACKITEM.mml(mml), item];
       }

@@ -26,6 +26,7 @@
 
 import {TEXCLASS} from 'mathjax3/core/MmlTree/MmlNode.js';
 import {imp} from './imp.js';
+import {OldParser} from './Parser.js';
 
 // A namespace for utility functions for the TeX Parser.
 //
@@ -113,7 +114,7 @@ ParserUtil.fenced = function (open, mml, close) {
 /**
  *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
  */
-ParserUtil.fixedFence = function (open, mml, close, parser) {
+ParserUtil.fixedFence = function (open, mml, close) {
   // @test Choose, Over With Delims, Above with Delims
   imp.printMethod('fixedFence');
   var mrow = imp.createNode(
@@ -121,7 +122,7 @@ ParserUtil.fixedFence = function (open, mml, close, parser) {
   // VS: OLD
   // var mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
   if (open) {
-    imp.appendChildren(mrow, [ParserUtil.mathPalette(open, 'l', parser)]);
+    imp.appendChildren(mrow, [ParserUtil.mathPalette(open, 'l')]);
   }
   if (imp.isType(mml, 'mrow')) {
     imp.appendChildren(mrow, imp.getChildren(mml));
@@ -129,21 +130,22 @@ ParserUtil.fixedFence = function (open, mml, close, parser) {
     imp.appendChildren(mrow, [mml]);
   }
   if (close) {
-    imp.appendChildren(mrow, [ParserUtil.mathPalette(close, 'r', parser)]);
+    imp.appendChildren(mrow, [ParserUtil.mathPalette(close, 'r')]);
   }
   return mrow;
 };
 
 
 // TODO: Handling the parser here is a bit awkward!
-ParserUtil.mathPalette = function (fence, side, parser) {
+ParserUtil.mathPalette = function (fence, side) {
   imp.printMethod('mathPalette');
   if (fence === '{' || fence === '}') {
     fence = '\\' + fence;
   }
   let D = '{\\bigg' + side + ' ' + fence + '}';
   let T = '{\\big' + side + ' ' + fence + '}';
-  return parser('\\mathchoice' + D + T + T + T, {}).mml();
+  // TODO: This only works with new stack item!
+  return new OldParser('\\mathchoice' + D + T + T + T, {}, [], {}).mml();
 };
 
 
