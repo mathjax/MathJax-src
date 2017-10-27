@@ -34,7 +34,8 @@ import TexParser from './TexParser.js';
 
 export namespace ParserUtil {
 
-
+  export let OldParser = (x:any, {}) => x;
+  
   const emPerInch = 7.2;
   const pxPerInch = 72;
   const UNIT_CASES: {[key: string]: ((m: number) => number)}  = {
@@ -116,7 +117,7 @@ export namespace ParserUtil {
   /**
    *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
    */
-  export function fixedFence(open: string, mml: MmlNode, close: string, parser: Function) {
+  export function fixedFence(open: string, mml: MmlNode, close: string) {
     // @test Choose, Over With Delims, Above with Delims
     TreeHelper.printMethod('fixedFence');
     let mrow = TreeHelper.createNode(
@@ -124,7 +125,7 @@ export namespace ParserUtil {
     // VS: OLD
     // let mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
     if (open) {
-      TreeHelper.appendChildren(mrow, [mathPalette(open, 'l', parser)]);
+      TreeHelper.appendChildren(mrow, [mathPalette(open, 'l')]);
     }
     if (TreeHelper.isType(mml, 'mrow')) {
       TreeHelper.appendChildren(mrow, TreeHelper.getChildren(mml));
@@ -132,7 +133,7 @@ export namespace ParserUtil {
       TreeHelper.appendChildren(mrow, [mml]);
     }
     if (close) {
-      TreeHelper.appendChildren(mrow, [mathPalette(close, 'r', parser)]);
+      TreeHelper.appendChildren(mrow, [mathPalette(close, 'r')]);
     }
     return mrow;
   };
@@ -140,14 +141,14 @@ export namespace ParserUtil {
 
   // TODO: Handling the parser here is a bit awkward!
   //       This and the previous method should go into the ParseMethods.
-  export function mathPalette(fence: string, side: string, parser: Function) {
+  export function mathPalette(fence: string, side: string) {
     TreeHelper.printMethod('mathPalette');
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
-    return parser('\\mathchoice' + D + T + T + T, {}).mml();
+    return ParserUtil.OldParser('\\mathchoice' + D + T + T + T, {});
     // let parser = new TexParser();
     // return parser.parse('\\mathchoice' + D + T + T + T, {}).mml();
   };

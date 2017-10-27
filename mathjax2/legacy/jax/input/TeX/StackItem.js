@@ -324,7 +324,7 @@ export class OverItem extends BaseItem {
   }
 
 
-  checkItem(item, stack) {
+  checkItem(item) {
     imp.printMethod('Checkitem over');
     if (item.hasType('over')) {
       // @test Double Over
