@@ -39,7 +39,11 @@ let sitem = require('./StackItem.js');
 let ParserUtil = require("./ParserUtil.js").ParserUtil;
 let ParseMethods = require('./ParseMethods.js').ParseMethods;
 let OldParser = require('./Parser.js').OldParser;
+let Translate = require('./Translate.js').default;
 require("./old-stackitem.js");
+
+console.log(Translate);
+
 
 // This is only necessary for the legacy tests.
 imp.MML = MathJax.ElementJax.mml;
@@ -533,42 +537,8 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
     //
     //  Convert TeX to ElementJax
     //
-    Translate: function (script) {
-      imp.printMethod('Translate');
-      imp.printSimple(script);
-      var mml, isError = false, math = MathJax.HTML.getScript(script);
-      var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
-      try {
-        mml = new OldParser(math, null, TEXDEF.configurations, STACKITEM).mml();
-        // mml = TEX.Parse(math).mml();
-        imp.printSimple(mml.toString());
-      } catch(err) {
-        console.log(err);
-        if (!err instanceof TexError) {throw err}
-        mml = this.formatError(err,math,display,script);
-        isError = true;
-      }
-      mml = imp.cleanSubSup(mml);
-      if (imp.isType(mml, 'mtable') &&
-          imp.getAttribute(mml, 'displaystyle') === 'inherit') {
-        // for tagged equations
-        imp.untested('Tagged equations');
-        imp.setAttribute(mml, 'displaystyle', display);
-      }
-      let mathNode = imp.createMath(mml);
-      let root = imp.getRoot(mathNode);
-      if (display) {
-        imp.setAttribute(root, 'display', 'block');
-      }
-      if (isError) {
-        mathNode.texError = true;
-      }
-      ParserUtil.combineRelations(root);
-      return mathNode;
-    },
-    formatError: function (err,math,display,script) {
-      var message = err.message.replace(/\n.*/,"");
-      return imp.createError(message);
+    Translate: function(script) {
+      return Translate(script, TEXDEF.configurations, STACKITEM);
     },
 
     //
