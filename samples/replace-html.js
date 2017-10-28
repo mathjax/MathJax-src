@@ -4,7 +4,7 @@ import {AbstractMathItem} from "mathjax3/core/MathItem.js";
 import {AbstractMathDocument} from "mathjax3/core/MathDocument.js";
 import {handleRetriesFor} from "mathjax3/util/Retries.js";
 
-import {myHTMLNodes} from "./lib/myHTMLnodes.js";
+import {myHTMLNodes} from "./lib/myHTMLNodes.js";
 import {myDocument} from "./lib/myDOM.js";
 
 /*
