@@ -177,7 +177,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     }
 
     /*
-     * Get the separation and offset for undercripts (TeXBoox Appendix G 13, 13a)
+     * Get the separation and offset for underscripts (TeXBoox Appendix G 13, 13a)
      *
      * @param{BBox} basebox   The bounding box of the base
      * @param{BBox} underbox  The bounding box of the underscript
