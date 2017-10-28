@@ -42,7 +42,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     /*
      * @return{CHTMLWrapper}  The base element's wrapper
      */
-    public get base() {
+    public get baseChild() {
         return this.childNodes[(this.node as MmlMsubsup).base];
     }
 
@@ -61,9 +61,9 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      */
     public toCHTML(parent: HTMLElement) {
         this.chtml = this.standardCHTMLnode(parent);
-        const v = this.getOffset(this.base.getBBox(), this.script.getBBox());
+        const v = this.getOffset(this.baseChild.getBBox(), this.script.getBBox());
         const style = {'vertical-align': this.em(v)};
-        this.base.toCHTML(this.chtml);
+        this.baseChild.toCHTML(this.chtml);
         this.script.toCHTML(this.chtml.appendChild(this.html('mjx-script', {style})));
     }
 
@@ -74,7 +74,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      * @override
      */
     public computeBBox(bbox: BBox) {
-        const basebox = this.base.getBBox();
+        const basebox = this.baseChild.getBBox();
         const scriptbox = this.script.getBBox();
         bbox.append(basebox);
         bbox.combine(scriptbox, bbox.w, this.getOffset(basebox, scriptbox));
@@ -133,7 +133,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      * @return{boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
      */
     protected isCharBase() {
-        let base = this.base;
+        let base = this.baseChild;
         if ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
             base = base.childNodes[0];
         }
