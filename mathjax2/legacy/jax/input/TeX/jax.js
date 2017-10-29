@@ -26,19 +26,10 @@
  *  limitations under the License.
  */
 
-let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
-let TEXCLASS = require("mathjax3/core/MmlTree/MmlNode.js").TEXCLASS;
-let TexConstant = require("mathjax3/input/tex/TexConstants.js").TexConstant;
-let MmlEntities = require("mathjax3/input/mathml/MmlEntities.js").MmlEntities;
-require("../../element/MmlNode.js");
 let imp = require("./imp.js").imp;
 let TexError = require('mathjax3/input/tex/TexError.js').default;
-let stack = require('./Stack.js');
-let sitem = require('./StackItem.js');
-let ParserUtil = require("./ParserUtil.js").ParserUtil;
 let ParseMethods = require('./ParseMethods.js').ParseMethods;
-let OldParser = require('./Parser.js').OldParser;
 let Translate = require('./Translate.js').default;
 require("./old-stackitem.js");
 

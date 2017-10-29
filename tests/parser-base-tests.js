@@ -7479,7 +7479,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Raise', 'x\\raise{2pt}{y}z',
+  'Raise In Line', 'x\\raise{2pt}{y}z',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},

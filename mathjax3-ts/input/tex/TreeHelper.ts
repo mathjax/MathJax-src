@@ -53,10 +53,10 @@ export namespace TreeHelper {
                          'close'
                         ];
 
-  const methodOut: boolean = true;
+  const methodOut: boolean = false;
   const defOut: boolean = false;
   const jsonOut: boolean = false;
-  const simpleOut: boolean = true;
+  const simpleOut: boolean = false;
 
 
   export function createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {

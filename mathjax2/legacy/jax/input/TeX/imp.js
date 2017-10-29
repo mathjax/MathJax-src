@@ -31,7 +31,7 @@ import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 // Intermediate parser namespace
 export let imp = {};
 
-imp.NEW = false;
+imp.NEW = true;
 imp.STACKS = true;
 imp.MML = null;
 imp.factory = new MmlFactory();
