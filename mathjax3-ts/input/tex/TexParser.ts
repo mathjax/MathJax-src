@@ -27,6 +27,8 @@ import * as sm from './SymbolMap.js';
 import MapHandler from './MapHandler.js';
 import {HandlerType, Configuration, ParseInput, ParseResult, ParseMethod} from './Types.js';
 import {BaseMappings} from './BaseMappings.js';
+import {AmsMappings} from './AmsMappings.js';
+import {AmsSymbols} from './AmsSymbols.js';
 
 
 /**
@@ -45,6 +47,8 @@ export default class TexParser {
    */
   constructor() {
     this.configure(BaseMappings.CONFIGURATION);
+    // this.configure(AmsMappings.CONFIGURATION);
+    // this.configure(AmsSymbols.CONFIGURATION);
   }
 
 

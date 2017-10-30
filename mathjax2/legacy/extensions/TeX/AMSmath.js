@@ -29,7 +29,6 @@ let tc = require('mathjax3/input/tex/TexConstants.js');
 let BaseMethods = require('mathjax3/input/tex/BaseMethods.js').default;
 let ParseMethods = require('../../jax/input/TeX/ParseMethods.js').ParseMethods;
 let imp = require("../../jax/input/TeX/imp.js").imp;
-let sitem = require('../../jax/input/TeX/StackItem.js');
 let ParserUtil = require("../../jax/input/TeX/ParserUtil.js").ParserUtil;
 
 
