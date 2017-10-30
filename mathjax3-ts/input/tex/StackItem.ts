@@ -68,6 +68,8 @@ export type CheckType = boolean | StackItem | (MmlNode | StackItem)[];
 export interface StackItem {
   checkItem(item: StackItem): CheckType;
   mmlData(inferred?: boolean, forceRow?: boolean): MmlNode;
+  Pop(): MmlNode | void;
+  Push(...args: MmlNode[]): void;
   hasType(kind: string): boolean;
   getType(): string;
   getProperty(key: string): Prop;
@@ -77,6 +79,7 @@ export interface StackItem {
   data: MmlNode[];
   global: EnvList;
   getName(): string;
+  env: EnvList;
 }
 
 export class BaseItem implements StackItem {

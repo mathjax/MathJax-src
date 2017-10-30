@@ -24,23 +24,25 @@
  */
 
 
-import {imp} from './imp.js';
-// import {BaseItem, StartItem, MmlItem} from './StackItem.js';
-import {BaseItem, StartItem, MmlItem} from 'mathjax3/input/tex/StackItem.js';
+import {TreeHelper} from './TreeHelper.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {StackItem, EnvList, BaseItem, StartItem, MmlItem} from './StackItem.js';
+// import {BaseItem, StartItem, MmlItem} from 'mathjax3/input/tex/StackItem.js';
 
 // Stack class for the parser.
 
 
-export class Stack {
+export default class Stack {
 
-  constructor(env, inner, stackitem) {
-    this.STACKITEM = stackitem;
+  data: StackItem[] = [];
+  env: EnvList = {};
+  global = {};
+  
+  constructor(env: EnvList, inner: boolean) {
     this.global = {isInner: inner};
     let item = new StartItem(this.global);
     this.data = [
-      imp.STACKS ?
-        new StartItem(this.global) :
-        this.STACKITEM.start(this.global)
+        new StartItem(this.global)
     ];
     // this.data = [new StartItem(this.global)];
     if (env) {
@@ -50,26 +52,23 @@ export class Stack {
   }
 
 
-  Push() {
-    imp.printSimple("PUSHING onto stack: ");
-    imp.printSimple(arguments);
-    var i, m, item, top;
-    for (i = 0, m = arguments.length; i < m; i++) {
-      item = arguments[i]; if (!item) continue;
-      if (imp.isNode(item)) {
-        item = imp.STACKS ? new MmlItem(item) : this.STACKITEM.mml(item);
+  Push(...args: StackItem[]) {
+    TreeHelper.printSimple("PUSHING onto stack: ");
+    TreeHelper.printSimple(args.toString());
+    for (let i = 0, m = args.length; i < m; i++) {
+      let item = arguments[i]; if (!item) continue;
+      if (TreeHelper.isNode(item)) {
+        item = new MmlItem(item);
         // item = new MmlItem(item);
       }
       item.global = this.global;
 
-      top = (this.data.length ? this.Top().checkItem(item) : true);
+      let top = (this.data.length ? this.Top().checkItem(item) : true);
       if (top instanceof Array) {
         this.Pop();
         this.Push.apply(this, top);
       }
-      else if (imp.STACKS ?
-               top instanceof BaseItem :
-               top instanceof this.STACKITEM) {
+      else if (top instanceof BaseItem) {
         this.Pop();
         this.Push(top);
       }
@@ -102,7 +101,7 @@ export class Stack {
   }
 
 
-  Top(n) {
+  Top(n?: number): StackItem {
     if (n == null) {
       n = 1;
     }
@@ -113,7 +112,7 @@ export class Stack {
   }
 
 
-  Prev(noPop) {
+  Prev(noPop?: boolean): MmlNode | void {
     var top = this.Top();
     if (noPop) {
       return top.data[top.data.length - 1];

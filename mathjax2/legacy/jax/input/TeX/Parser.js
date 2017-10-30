@@ -25,9 +25,10 @@
 
 
 import {imp} from './imp.js';
-import {StopItem} from './StackItem.js';
-// import {StopItem} from 'mathjax3/input/tex/StackItem.js';
-import {Stack} from './Stack.js';
+// import {StopItem} from './StackItem.js';
+// import {Stack} from './Stack.js';
+import {StopItem} from 'mathjax3/input/tex/StackItem.js';
+import Stack from 'mathjax3/input/tex/Stack.js';
 import MapHandler from 'mathjax3/input/tex/MapHandler.js';
 import TeXParser from 'mathjax3/input/tex/TexParser.js';
 import {ParseMethods} from './ParseMethods.js';
