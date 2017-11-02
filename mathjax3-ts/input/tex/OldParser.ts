@@ -106,7 +106,7 @@ export class OldParser {
   }
 
   // VS: Forget this for now!
-  mmlToken(token: MmlNode): MmlNode {return token} // used by boldsymbol extension
+  mmlToken(token: MmlNode): StackItem {return token as any} // used by boldsymbol extension
 
 
   /************************************************************************/

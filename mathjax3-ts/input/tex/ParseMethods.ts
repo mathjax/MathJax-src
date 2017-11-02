@@ -24,20 +24,21 @@
 
 // import * as sitem from './StackItem.js';
 import * as sitem from './StackItem.js';
+import {Symbol} from './Symbol.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexError from './TexError.js';
 import TexParser from './TexParser.js';
-import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {TexConstant} from './TexConstants.js';
 import {ParserUtil} from './ParserUtil.js';
 import {OldParser} from './OldParser.js';
+import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
+import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 
 
 // Namespace
 export namespace ParseMethods {
 
   // Legacy objects.
-  let STACKITEM = null;
   let OLD_PARSER = null;
   export let NEW_PARSER: TexParser = null;
 
@@ -56,7 +57,7 @@ export namespace ParseMethods {
   /*
    *  Lookup a control-sequence and process it
    */
-  export function ControlSequence(parser: OldParser, c) {
+  export function ControlSequence(parser: OldParser, c: string) {
     TreeHelper.printMethod("ControlSequence");
     var name = parser.GetCS();
     ParseMethods.NEW_PARSER.parse('macro', [name, this]);
@@ -70,21 +71,19 @@ export namespace ParseMethods {
   //
   //  Handle normal mathchar (as an mi)
   //
-  export function csMathchar0mi(parser: OldParser, mchar) {
+  export function csMathchar0mi(parser: OldParser, mchar: Symbol) {
     TreeHelper.printMethod("csMathchar0mi");
     var def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
     var textNode = TreeHelper.createText(mchar.char);
     var node = TreeHelper.createNode('mi', [], def, textNode);
-    // VS: OLD
-    // var node = parser.mmlToken(MML.mi(mchar.char).With(def));
     parser.Push(parser.mmlToken(node));
   };
 
   //
   //  Handle normal mathchar (as an mo)
   //
-  export function csMathchar0mo(parser: OldParser, mchar) {
+  export function csMathchar0mo(parser: OldParser, mchar: Symbol) {
     TreeHelper.printMethod("csMathchar0mo");
     var def = mchar.attributes || {};
     def.stretchy = false;
@@ -92,19 +91,17 @@ export namespace ParseMethods {
     var textNode = TreeHelper.createText(mchar.char);
     var node = TreeHelper.createNode('mo', [], def, textNode);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
-    // VS: OLD
-    // var node = parser.mmlToken(MML.mo(mchar.char).With(def))
     parser.Push(parser.mmlToken(node));
   };
   //
   //  Handle mathchar in current family
   //
-  export function csMathchar7(parser: OldParser, mchar) {
+  export function csMathchar7(parser: OldParser, mchar: Symbol) {
     TreeHelper.printMethod("csMathchar7");
     var def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
-    if (parser.stack.env.font) {
+    if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
-      def.mathvariant = parser.stack.env.font;
+      def.mathvariant = parser.stack.env['font'];
     }
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
     var textNode = TreeHelper.createText(mchar.char);
@@ -115,14 +112,12 @@ export namespace ParseMethods {
     // for (var x in def) {
     //   node.attributes.set(x, def[x]);
     // }
-    // VS: OLD
-    // var node = MML.mi(mchar.char).With(def);
     parser.Push(parser.mmlToken(node));
   };
   //
   //  Handle delimiter
   //
-  export function csDelimiter(parser: OldParser, delim) {
+  export function csDelimiter(parser: OldParser, delim: Symbol) {
     TreeHelper.printMethod("csDelimiter");
     var def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
@@ -130,20 +125,18 @@ export namespace ParseMethods {
     var textNode = TreeHelper.createText(delim.char);
     var node = TreeHelper.createNode('mo', [], def, textNode);
     // var node = MML.mo(textNode).With({fence: false, stretchy: false}).With(def); 
-    // VS: OLD
-    // var node = MML.mo(delim.char).With({fence: false, stretchy: false}).With(def); 
     parser.Push(parser.mmlToken(node));
   };
   //
   //  Handle undefined control sequence
   //  (overridden in noUndefined extension)
   //
-  export function csUndefined(parser: OldParser, name) {
+  export function csUndefined(parser: OldParser, name: string) {
     TreeHelper.printMethod("csUndefined");
     throw new TexError(["UndefinedControlSequence","Undefined control sequence %1",'\\' + name]);
   };
 
-  export function envUndefined(parser: OldParser, env) {
+  export function envUndefined(parser: OldParser, env: string) {
     TreeHelper.printMethod("envUndefined");
     throw new TexError(["UnknownEnv", "Unknown environment '%1'", env]);
   };
@@ -151,31 +144,29 @@ export namespace ParseMethods {
   /*
    *  Handle a variable (a single letter)
    */
-  export function Variable(parser: OldParser, c) {
+  export function Variable(parser: OldParser, c: string) {
     TreeHelper.printMethod("Variable");
     var def = {};
-    if (parser.stack.env.font) {
+    if (parser.stack.env['font']) {
       // @test Identifier Font
-      def.mathvariant = parser.stack.env.font;
+      def.mathvariant = parser.stack.env['font'];
     }
     // @test Identifier
     var textNode = TreeHelper.createText(c);
     var node = TreeHelper.createNode('mi', [], def, textNode);
-    // VS: OLD
-    // node = MML.mi(MML.chars(c)).With(def);
     parser.Push(parser.mmlToken(node));
   };
 
   /*
    *  Determine the extent of a number (pattern may need work)
    */
-  export function Number(parser: OldParser, c) {
+  export function Number(parser: OldParser, c: string) {
     TreeHelper.printMethod("Number");
-    var mml, n = parser.string.slice(parser.i-1).match(ParseMethods.NUMBER);
+    var mml, n = parser.string.slice(parser.i-1).match(NUMBER);
     var def = {};
-    if (parser.stack.env.font) {
+    if (parser.stack.env['font']) {
       // @test Integer Font
-      def.mathvariant = parser.stack.env.font;
+      def.mathvariant = parser.stack.env['font'];
     }
     if (n) {
       // @test Integer, Number
@@ -188,8 +179,6 @@ export namespace ParseMethods {
       mml = TreeHelper.createNode('mo', [], def, textNode);
     }
     parser.Push(parser.mmlToken(mml));
-    // VS: OLD
-    // if (n) {mml = MML.mn(n[0].replace(/[{}]/g,"")); parser.i += n[0].length - 1}
     // else {mml = MML.mo(MML.chars(c))}
     // if (parser.stack.env.font) {mml.mathvariant = parser.stack.env.font}
     // parser.Push(parser.mmlToken(mml));
@@ -198,39 +187,37 @@ export namespace ParseMethods {
   /*
    *  Handle { and }
    */
-  export function Open(parser: OldParser, c) {
-    parser.Push(TreeHelper.STACKS ? new sitem.OpenItem() : ParseMethods.STACKITEM.open());
+  export function Open(parser: OldParser, c: string) {
+    parser.Push( new sitem.OpenItem() );
   };
-  export function Close(parser: OldParser, c) {
-    parser.Push(TreeHelper.STACKS ? new sitem.CloseItem() : ParseMethods.STACKITEM.close());
+  export function Close(parser: OldParser, c: string) {
+    parser.Push( new sitem.CloseItem() );
   };
 
   /*
    *  Handle tilde and spaces
    */
-  export function Tilde(parser: OldParser, c) {
+  export function Tilde(parser: OldParser, c: string) {
     // @test Tilde, Tilde2
     // 
     // TODO: Once we can properly load AllEntities, this should be the line.
     // var textNode = TreeHelper.createText(MmlEntities.ENTITIES.nbsp);
-    var textNode = TreeHelper.createText(ParseMethods.NBSP);
+    var textNode = TreeHelper.createText(NBSP);
     var node = TreeHelper.createNode('mtext', [], {}, textNode);
-    // VS: OLD
-    // node = MML.mtext(MML.chars(NBSP))
-    parser.Push(node);
+    parser.Push(node as any);
   };
-  export function Space(parser: OldParser, c) {};
+  export function Space(parser: OldParser, c: string) {};
 
   /*
    *  Handle ^, _, and '
    */
-  export function Superscript(parser: OldParser, c) {
+  export function Superscript(parser: OldParser, c: string) {
     TreeHelper.printMethod("Superscript");
     if (parser.GetNext().match(/\d/)) {
       // don't treat numbers as a unit
       parser.string = parser.string.substr(0,parser.i+1)+" "+parser.string.substr(parser.i+1);
     }
-    var primes, base, top = parser.stack.Top();
+    var primes: MmlNode, base: MmlNode|void, top = parser.stack.Top();
     if (top.hasType('prime')) {
       // @test Prime on Prime
       base = top.data[0];
@@ -243,8 +230,6 @@ export namespace ParseMethods {
         // @test Empty base
         var textNode = TreeHelper.createText("");
         base = TreeHelper.createNode('mi', [], {}, textNode);
-        // VS: OLD
-        // base = MML.mi("");
       }
     }
     if (base.isEmbellishedWrapper) {
@@ -253,10 +238,11 @@ export namespace ParseMethods {
       base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
     }
     var movesupsub = TreeHelper.getProperty(base, 'movesupsub');
-    var position = TreeHelper.isType(base, "msubsup") ? base.sup : base.over;
+    var position = TreeHelper.isType(base, "msubsup") ? (base as MmlMsubsup).sup : base.over;
     // var movesupsub = base.movesupsub, position = base.sup;
     if ((TreeHelper.isType(base, "msubsup") && TreeHelper.getChildAt(base, base.sup)) ||
-        (TreeHelper.isType(base, "munderover") && TreeHelper.getChildAt(base, base.over) && !TreeHelper.getProperty(base, 'subsupOK'))) {
+        (TreeHelper.isType(base, "munderover") && TreeHelper.getChildAt(base, base.over) &&
+         !TreeHelper.getProperty(base, 'subsupOK'))) {
       // @test Double-super-error, Double-over-error
       throw new TexError(["DoubleExponent","Double exponent: use braces to clarify"]);
     }
@@ -273,28 +259,21 @@ export namespace ParseMethods {
           }
           // @test Large Operator
           base = TreeHelper.createNode('munderover', [base], {movesupsub:true});
-          // VS: OLD
-          // base = MML.munderover(base,null,null).With({movesupsub:true});
         }
         position = base.over;
       } else {
         TreeHelper.printSimple('Case 4');
         // @test Empty base, Empty base2, Square, Cube
         base = TreeHelper.createNode('msubsup', [base], {});
-        // VS: OLD
-        // base = MML.msubsup(base,null,null);
         position = base.sup;
       }
     }
-    parser.Push(TreeHelper.STACKS ?
+    parser.Push(
                 new sitem.SubsupItem(base).With({
                   position: position, primes: primes, movesupsub: movesupsub
-                }) :
-                ParseMethods.STACKITEM.subsup(base).With({
-                  position: position, primes: primes, movesupsub: movesupsub
-                }));
+                }) );
   };
-  export function Subscript(parser: OldParser, c) {
+  export function Subscript(parser: OldParser, c: string) {
     TreeHelper.printMethod("Subscript");
     if (parser.GetNext().match(/\d/)) {
       // don't treat numbers as a unit
@@ -311,8 +290,6 @@ export namespace ParseMethods {
         // @test Empty Base Indes
         var textNode = TreeHelper.createText("");
         base = TreeHelper.createNode('mi', [], {}, textNode);
-        // VS: OLD
-        // base = MML.mi("");
       }
     }
     if (base.isEmbellishedWrapper) {
@@ -338,35 +315,26 @@ export namespace ParseMethods {
           }
           // @test Move Superscript
           base = TreeHelper.createNode('munderover', [base], {movesupsub:true});
-          // VS: OLD
-          // base = MML.munderover(base,null,null).With({movesupsub:true});
         }
         position = base.under;
       } else {
         // @test Empty Base Index, Empty, Base Index2, Index
         base = TreeHelper.createNode('msubsup', [base], {});
-        // VS: OLD
-        // base = MML.msubsup(base,null,null);
         position = base.sub;
       }
     }
-    parser.Push(TreeHelper.STACKS ?
+    parser.Push(
                 new sitem.SubsupItem(base).With({
                   position: position, primes: primes, movesupsub: movesupsub
-                }) :
-                ParseMethods.STACKITEM.subsup(base).With({
-                  position: position, primes: primes, movesupsub: movesupsub
-                }));
+                }) );
   };
 
-  export function Prime(parser: OldParser, c) {
+  export function Prime(parser: OldParser, c: string) {
     // @test Prime
     var base = parser.stack.Prev();
     if (!base) {
       // @test PrimeSup, PrePrime, Prime on Sup
       base = TreeHelper.createNode('mi', [], {});
-      // VS: OLD
-      // base = MML.mi();
     }
     if (TreeHelper.isType(base, "msubsup") && TreeHelper.getChildAt(base, base.sup)) {
       // @test Double Prime Error
@@ -374,22 +342,19 @@ export namespace ParseMethods {
                           "Prime causes double exponent: use braces to clarify"]);
     }
     var sup = ""; parser.i--;
-    do {sup += ParseMethods.PRIME; parser.i++, c = parser.GetNext()}
-    while (c === "'" || c === ParseMethods.SMARTQUOTE);
+    do {sup += PRIME; parser.i++, c = parser.GetNext()}
+    while (c === "'" || c === SMARTQUOTE);
     sup = ["","\u2032","\u2033","\u2034","\u2057"][sup.length] || sup;
     var textNode = TreeHelper.createText(sup);
     var node = TreeHelper.createNode('mo', [], {}, textNode);
-    // VS: OLD
-    // var node = MML.mo(sup);
-    parser.Push(TreeHelper.STACKS ?
-                new sitem.PrimeItem(base, parser.mmlToken(node)) :
-                ParseMethods.STACKITEM.prime(base, parser.mmlToken(node)));
+    parser.Push(
+                new sitem.PrimeItem(base, parser.mmlToken(node) as MmlNode) );
   };
 
   /*
    *  Handle comments
    */
-  export function Comment(parser: OldParser, c) {
+  export function Comment(parser: OldParser, c: string) {
     TreeHelper.printMethod("Comment");
     while (parser.i < parser.string.length && parser.string.charAt(parser.i) != "\n") {parser.i++}
   };
@@ -397,7 +362,7 @@ export namespace ParseMethods {
   /*
    *  Handle hash marks outside of definitions
    */
-  export function Hash(parser: OldParser, c) {
+  export function Hash(parser: OldParser, c: string) {
     TreeHelper.printMethod("Hash");
     // @test Hash Error
     throw new TexError(["CantUseHash1",
@@ -407,7 +372,7 @@ export namespace ParseMethods {
   /*
    *  Handle other characters (as <mo> elements)
    */
-  export function Other(parser: OldParser, c) {
+  export function Other(parser: OldParser, c: string) {
     TreeHelper.printMethod("Other");
     var def = {}, mo;
     if (parser.stack.env.font) {
@@ -420,8 +385,6 @@ export namespace ParseMethods {
     // @test Other Remap
     var textNode = TreeHelper.createText(remap ? remap.char : c);
     mo = TreeHelper.createNode('mo', [], def, textNode);
-    // VS: OLD
-    // mo = remap ? MML.mo(remap.char).With(def) : MML.mo(c).With(def);
     // VS: Question: What do these autoDefault methods do exactly.
     //     Is there a modern equivalent in v3?
     // 
@@ -435,8 +398,6 @@ export namespace ParseMethods {
     if (!TreeHelper.NEW && mo.autoDefault("texClass",true) == "") {
       // @test A Rogers-Ramanujan Identity
       mo = TreeHelper.createNode('TeXAtom', [mo], {});
-      // VS: OLD
-      // mo = MML.TeXAtom(mo);
     }
     parser.Push(parser.mmlToken(mo));
   };
@@ -451,16 +412,14 @@ export namespace ParseMethods {
     TreeHelper.printMethod("SetStyle: " + name + " texStyle: " + texStyle +
                     " style: " + style + " level: " + level);
     parser.stack.env.style = texStyle; parser.stack.env.level = level;
-    parser.Push(TreeHelper.STACKS ?
-                new sitem.StyleItem().With({styles: {displaystyle: style, scriptlevel: level}}) :
-                ParseMethods.STACKITEM.style().With({styles: {displaystyle: style, scriptlevel: level}}));
+    parser.Push(
+                new sitem.StyleItem().With({styles: {displaystyle: style, scriptlevel: level}}) );
   };
   export function SetSize(parser: OldParser, name,size) {
     TreeHelper.printMethod("SetSize");
     parser.stack.env.size = size;
-    parser.Push(TreeHelper.STACKS ?
-                new sitem.StyleItem().With({styles: {mathsize: size+"em"}}) :
-                ParseMethods.STACKITEM.style().With({styles: {mathsize: size+"em"}})); // convert to absolute?
+    parser.Push(
+                new sitem.StyleItem().With({styles: {mathsize: size+"em"}}) ); // convert to absolute?
   };
 
   // Look at color extension!
@@ -473,8 +432,6 @@ export namespace ParseMethods {
     var math = parser.ParseArg(name);
     if (old) {parser.stack.env.color} else {delete parser.stack.env.color}
     var node = TreeHelper.createNode('mstyle', [math], {mathcolor: color});
-    // VS: OLD
-    // var node = MML.mstyle(math).With({mathcolor: color});
     parser.Push(node);
   };
 
@@ -482,8 +439,6 @@ export namespace ParseMethods {
     // @test Positive Spacing, Negative Spacing
     var node = TreeHelper.createNode('mspace', [],
                               {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel:0});
-    // VS: OLD
-    // var node = MML.mspace().With({width: space, mathsize: MML.SIZE.NORMAL, scriptlevel:0});
     parser.Push(node);
   };
 
@@ -491,11 +446,10 @@ export namespace ParseMethods {
     TreeHelper.printMethod("LeftRight");
     // @test Fenced, Fenced3
     var alpha = name.substr(1);
-    parser.Push(TreeHelper.STACKS ?
+    parser.Push(
                 // TODO: Sort this out: Uppercase the first character and add Item!
                 new sitem[alpha[0].toUpperCase() + alpha.slice(1) + 'Item']()
-                .With({delim: parser.GetDelimiter(name)}) :
-                ParseMethods.STACKITEM[alpha]().With({delim: parser.GetDelimiter(name)}));
+                .With({delim: parser.GetDelimiter(name)}) );
   };
 
   export function Middle(parser: OldParser, name) {
@@ -503,8 +457,6 @@ export namespace ParseMethods {
     // @test Middle
     var delim = parser.GetDelimiter(name);
     var node = TreeHelper.createNode('TeXAtom', [], {texClass:TEXCLASS.CLOSE});
-    // VS: OLD
-    // var node = MML.TeXAtom().With({texClass:TEXCLASS.CLOSE});
     parser.Push(node);
     if (!parser.stack.Top().hasType('left')) {
       // @test Orphan Middle, Middle with Right
@@ -512,12 +464,8 @@ export namespace ParseMethods {
     }
     var textNode = TreeHelper.createText(delim);
     node = TreeHelper.createNode('mo', [], {stretchy:true}, textNode);
-    // VS: OLD
-    // node = MML.mo(delim).With({stretchy:true});
     parser.Push(node);
     node = TreeHelper.createNode('TeXAtom', [], {texClass:TEXCLASS.OPEN});
-    // VS: OLD
-    // node = MML.TeXAtom().With({texClass:MML.TEXCLASS.OPEN});
     parser.Push(node);
   };
 
@@ -527,10 +475,7 @@ export namespace ParseMethods {
     if (!id) {id = name.substr(1)};
     var textNode = TreeHelper.createText(id);
     var mml = TreeHelper.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
-    // VS: OLD
-    // var mml = MML.mi(id).With({texClass: MML.TEXCLASS.OP});
-    parser.Push(TreeHelper.STACKS ? new sitem.FnItem(parser.mmlToken(mml)) :
-                ParseMethods.STACKITEM.fn(parser.mmlToken(mml)));
+    parser.Push( new sitem.FnItem(parser.mmlToken(mml)) );
   };
   export function NamedOp(parser: OldParser, name,id) {
     TreeHelper.printMethod("NamedOp");
@@ -544,13 +489,6 @@ export namespace ParseMethods {
       form: TexConstant.Form.PREFIX,
       texClass: TEXCLASS.OP
     }, text);
-    // VS: OLD
-    // var mml = MML.mo(id).With({
-    //   movablelimits: true,
-    //   movesupsub: true,
-    //   form: MML.FORM.PREFIX,
-    //   texClass: MML.TEXCLASS.OP
-    // });
     // TODO: Sort this out with get('form');
     // mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
     parser.Push(parser.mmlToken(mml));
@@ -570,8 +508,6 @@ export namespace ParseMethods {
       // @test Limits UnderOver
       var node = TreeHelper.createNode('msubsup', [], {});
       TreeHelper.copyChildren(op, node);
-      // VS: OLD
-      // var node = MML.msubsup.apply(MML.subsup,op.data);
       op = top.data[top.data.length-1] = node;
     } else if (TreeHelper.isType(op, "msubsup") && limits) {
       // @test Limits SubSup
@@ -579,8 +515,6 @@ export namespace ParseMethods {
       // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
       node = TreeHelper.createNode('munderover', [], {});
       TreeHelper.copyChildren(op, node);
-      // VS: OLD
-      // node = MML.munderover.apply(MML.underover,op.data);
       op = top.data[top.data.length-1] = node;
     }
     // TODO: Turns this into properties.
@@ -594,9 +528,8 @@ export namespace ParseMethods {
   export function Over(parser: OldParser, name,open,close) {
     TreeHelper.printMethod("Over");
     // @test Over
-    var mml = TreeHelper.STACKS ?
-      new sitem.OverItem().With({name: name}) :
-    ParseMethods.STACKITEM.over().With({name: name});
+    var mml = 
+      new sitem.OverItem().With({name: name}) ;
     if (open || close) {
       // @test Choose
       mml.open = open; mml.close = close;
@@ -622,8 +555,6 @@ export namespace ParseMethods {
     var num = parser.ParseArg(name);
     var den = parser.ParseArg(name);
     var node = TreeHelper.createNode('mfrac', [num, den], {});
-    // VS: OLD
-    // var node = MML.mfrac(num, den);
     parser.Push(node);
   };
 
@@ -637,13 +568,9 @@ export namespace ParseMethods {
       // mml = TreeHelper.createNode('msqrt', TreeHelper.NEW ? [mml] : mml.array(), {});
       // .array call never seemed to be necessary!
       mml = TreeHelper.createNode('msqrt', [mml], {});
-      // VS: OLD
-      // mml = MML.msqrt.apply(MML,mml.array());
     } else {
       // @test General Root
       mml = TreeHelper.createNode('mroot', [mml, ParseMethods.parseRoot(parser, n)], {});
-      // VS: OLD
-      // mml = MML.mroot(mml,parser.parseRoot(n));
     }
     parser.Push(mml);
   };
@@ -652,8 +579,6 @@ export namespace ParseMethods {
     var n = parser.GetUpTo(name,"\\of");
     var arg = parser.ParseArg(name);
     var node = TreeHelper.createNode('mroot', [arg, ParseMethods.parseRoot(parser, n)], {});
-    // VS: OLD
-    // var node = MML.mroot(arg,parser.parseRoot(n));
     parser.Push(node);
   };
 
@@ -681,7 +606,6 @@ export namespace ParseMethods {
       
       n = TreeHelper.createNode('mpadded', [n], def);
       // VS: OLD
-      // n = MML.mpadded(n);
       // if (global.leftRoot) {
       //   n.width = global.leftRoot;
       // }
@@ -725,9 +649,6 @@ export namespace ParseMethods {
     }
     var entity = TreeHelper.createEntity(accent);
     var moNode = TreeHelper.createNode('mo', [], def, entity);
-    // VS: OLD
-    // var entity = MML.entity("#x"+accent);
-    // var moNode = MML.mo(entity).With(def);
     var mml = parser.mmlToken(moNode);
     // TODO: This should be property?
     TreeHelper.setProperties(mml, {stretchy: (stretchy ? true : false)});
@@ -743,9 +664,6 @@ export namespace ParseMethods {
     TreeHelper.setData(muoNode, 1, null);
     TreeHelper.setData(muoNode, 2, mml);
     var texAtom = TreeHelper.createNode('TeXAtom', [muoNode], {});
-    // VS: OLD
-    // var muoNode = MML.munderover(c,null,mml).With({accent: true});
-    // var texAtom = MML.TeXAtom(muoNode);
     parser.Push(texAtom);
   };
 
@@ -765,25 +683,16 @@ export namespace ParseMethods {
       TreeHelper.setProperties(TreeHelper.getCore(base), {lspace:0,rspace:0}); // get spacing right for NativeMML
       var mo = TreeHelper.createNode('mo', [], {rspace:0});
       base = TreeHelper.createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
-      // VS: OLD
-      // var mo = MML.mo().With({rspace:0});
-      // base = MML.mrow(mo,base);  // add an empty <mi> so it's not embellished any more
     }
     var mml = TreeHelper.createNode('munderover', [base], {});
     var entity = TreeHelper.createEntity(c);
     mo = TreeHelper.createNode('mo', [], {stretchy:true, accent:!noaccent}, entity);
-    // VS: OLD
-    // var mml = MML.munderover(base,null,null);
-    // var entity = MML.entity("#x"+c);
-    // mo = MML.mo(entity).With({stretchy:true, accent:!noaccent});
 
     TreeHelper.setData(mml, mml[pos], parser.mmlToken(mo));
 
     if (stack) {
       TreeHelper.untested(8);
       mml = TreeHelper.createNode('TeXAtom', [mml], {texClass:TEXCLASS.OP, movesupsub:true});
-      // VS: OLD
-      // mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.OP, movesupsub:true});
     }
     // TODO: Sort these properties out!
     TreeHelper.setProperties(mml, {subsupOK: true});
@@ -798,8 +707,6 @@ export namespace ParseMethods {
       TreeHelper.setProperties(base, {'movablelimits': false});
     }
     var node = TreeHelper.createNode('mover', [base, top], {});
-    // VS: OLD
-    // var node = MML.mover(base,top); 
     parser.Push(node);
   };
   export function Underset(parser: OldParser, name) {
@@ -811,8 +718,6 @@ export namespace ParseMethods {
       TreeHelper.setProperties(base, {'movablelimits': false});
     }
     var node = TreeHelper.createNode('munder', [base, bot], {});
-    // VS: OLD
-    // var node = MML.munder(base,bot);
     parser.Push(node);
   };
 
@@ -828,25 +733,18 @@ export namespace ParseMethods {
         def.mathvariant = TexConstant.Variant.NORMAL;
         var textNode = TreeHelper.createText(match[1]);
         node = TreeHelper.createNode('mi', [], def, textNode);
-        // VS: OLD
-        // node = MML.mi(match[1]).With(def);
-        mml = TreeHelper.STACKS ?
-          new sitem.FnItem(parser.mmlToken(node)) :
-          ParseMethods.STACKITEM.fn(parser.mmlToken(node));
+        mml = 
+          new sitem.FnItem(parser.mmlToken(node)) ;
       } else {
         // @test Mathop Cal
         var parsed = new OldParser(arg,parser.stack.env, [], {}).mml();
         node = TreeHelper.createNode('TeXAtom', [parsed], def);
-        // VS: OLD
-        // node = MML.TeXAtom(parsed).With(def);
-        mml = TreeHelper.STACKS ? new sitem.FnItem(node) : ParseMethods.STACKITEM.fn(node);
+        mml =  new sitem.FnItem(node) ;
       }
     } else {
       // @test Mathrel
       parsed = parser.ParseArg(name);
       mml = TreeHelper.createNode('TeXAtom', [parsed], def);
-      // VS: OLD
-      // mml = MML.TeXAtom(parsed).With(def);
     }
     parser.Push(mml);
   };
@@ -955,8 +853,6 @@ export namespace ParseMethods {
     var row = TreeHelper.createNode('mrow', [], {});
     var padded = TreeHelper.createNode('mpadded', [row],
                                 {height: "8.6pt", depth: "3pt", width: 0});
-    // VS: OLD
-    // var padded = MML.mpadded(MML.mrow()).With({height: "8.6pt", depth: "3pt", width: 0});
     parser.Push(padded);
   };
 
@@ -977,8 +873,6 @@ export namespace ParseMethods {
     }
     var atom = TreeHelper.createNode('TeXAtom', [box], {});
     parser.Push(atom);
-    // VS: OLD
-    // parser.Push(MML.TeXAtom(box));
   };
 
   export function Smash(parser: OldParser, name) {
@@ -986,8 +880,6 @@ export namespace ParseMethods {
     // @test Smash, Smash Top, Smash Bottom
     var bt = parser.trimSpaces(parser.GetBrackets(name,""));
     var smash = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {});
-    // VS: OLD
-    // var smash = MML.mpadded(parser.ParseArg(name));
     switch (bt) {
     case "b": smash.depth = 0; break;
     case "t": smash.height = 0; break;
@@ -995,33 +887,26 @@ export namespace ParseMethods {
     }
     var atom = TreeHelper.createNode('TeXAtom', [smash], {});
     parser.Push(atom);
-    // VS: OLD
-    // parser.Push(MML.TeXAtom(smash));
   };
 
   export function Lap(parser: OldParser, name) {
     TreeHelper.printMethod("Lap");
     // @test Llap, Rlap
     var mml = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {width: 0});
-    // VS: OLD
-    // var mml = MML.mpadded(parser.ParseArg(name)).With({width: 0});
     if (name === "\\llap") {
       // @test Llap
       TreeHelper.setAttribute(mml, 'lspace', '-1width');
     }
     var atom = TreeHelper.createNode('TeXAtom', [mml], {});
     parser.Push(atom);
-    // VS: OLD
-    // parser.Push(MML.TeXAtom(mml));
   };
 
   export function RaiseLower(parser: OldParser, name) {
     TreeHelper.printMethod("RaiseLower");
     // @test Raise, Lower, Raise Negative, Lower Negative
     var h = parser.GetDimen(name);
-    var item = TreeHelper.STACKS ?
-      new sitem.PositionItem().With({name: name, move: 'vertical'}) :
-    ParseMethods.STACKITEM.position().With({name: name, move: 'vertical'});
+    var item = 
+      new sitem.PositionItem().With({name: name, move: 'vertical'}) ;
     if (h.charAt(0) === '-') {
       // @test Raise Negative, Lower Negative
       h = h.slice(1);
@@ -1047,18 +932,11 @@ export namespace ParseMethods {
       h = nh;
       nh = tmp;
     }
-    parser.Push(TreeHelper.STACKS ?
+    parser.Push(
                 new sitem.PositionItem().With({
                   name: name, move: 'horizontal',
                   left:  TreeHelper.createNode('mspace', [], {width: h, mathsize: TexConstant.Size.NORMAL}),
-                  right: TreeHelper.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}) :
-                ParseMethods.STACKITEM.position().With({
-                  name: name, move: 'horizontal',
-                  left:  TreeHelper.createNode('mspace', [], {width: h, mathsize: TexConstant.Size.NORMAL}),
-                  right: TreeHelper.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}));
-    // VS: OLD
-    // left:  MML.mspace().With({width: h, mathsize: MML.SIZE.NORMAL}),
-    // right: MML.mspace().With({width: nh, mathsize: MML.SIZE.NORMAL})
+                  right: TreeHelper.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}) );
   };
 
   export function Hskip(parser: OldParser, name) {
@@ -1067,8 +945,6 @@ export namespace ParseMethods {
     var node = TreeHelper.createNode('mspace', [],
                               {width: parser.GetDimen(name),
                                mathsize: TexConstant.Size.NORMAL});
-    // VS: OLD
-    // var node = MML.mspace().With({width: parser.GetDimen(name), mathsize: TexConstant.Size.NORMAL});
     parser.Push(node);
   };
 
@@ -1083,8 +959,6 @@ export namespace ParseMethods {
       def.mathbackground = (parser.stack.env.color || "black");
     }
     var node = TreeHelper.createNode('mspace', [], def);
-    // VS: OLD
-    // var node = MML.mspace().With(def);
     parser.Push(node);
   };
   export function rule(parser: OldParser, name) {
@@ -1096,15 +970,8 @@ export namespace ParseMethods {
     var mml = TreeHelper.createNode('mspace', [], {
       width: w, height:h,
       mathbackground: (parser.stack.env.color || "black") });
-    // VS: OLD
-    // var mml = MML.mspace().With({
-    //   width: w, height:h,
-    //   mathbackground: (parser.stack.env.color || "black")
-    // });
     if (v) {
       mml = TreeHelper.createNode('mpadded', [mml], {voffset: v});
-      // VS: OLD
-      // mml = MML.mpadded(mml).With({voffset: v});
       if (v.match(/^\-/)) {
         mml.height = v;
         mml.depth = '+' + v.substr(1);
@@ -1112,7 +979,7 @@ export namespace ParseMethods {
         mml.height = '+' + v;
       }
     }
-    parser.Push(mml);
+    parser.Push(mml as any);
   };
 
   export function MakeBig(parser: OldParser, name,mclass,size) {
@@ -1127,11 +994,6 @@ export namespace ParseMethods {
       fence: true, stretchy: true, symmetric: true
     }, text);
     var node = TreeHelper.createNode('TeXAtom', [mo], {texClass: mclass});
-    // VS: OLD
-    // var node = MML.TeXAtom(MML.mo(delim).With({
-    //   minsize: size, maxsize: size,
-    //   fence: true, stretchy: true, symmetric: true
-    // })).With({texClass: mclass});
     parser.Push(node);
   };
 
@@ -1146,17 +1008,12 @@ export namespace ParseMethods {
     TreeHelper.setData(node, 1, null);
     TreeHelper.setData(node, 2, top);
     var atom = TreeHelper.createNode('TeXAtom', [node], {texClass: TEXCLASS.REL});
-    // VS: OLD
-    // parser.Push(MML.TeXAtom(MML.munderover(bot,null,top)).With({texClass: MML.TEXCLASS.REL}));
     parser.Push(atom);
   };
 
   export function HBox(parser: OldParser, name,style) {
     TreeHelper.printMethod("HBox");
     // @test Hbox
-    // VS: OLD
-    // parser.PushAll(parser.InternalMath(parser.GetArgument(name),style));
-    // TODO: Sort out internal math first!
     parser.PushAll(parser.InternalMath(parser.GetArgument(name),style));
   };
 
@@ -1165,8 +1022,6 @@ export namespace ParseMethods {
     // @test Fbox
     var internal = parser.InternalMath(parser.GetArgument(name));
     var node = TreeHelper.createNode('menclose', internal, {notation:"box"});
-    // VS: OLD
-    // parser.Push(MML.menclose.apply(MML,parser.InternalMath(parser.GetArgument(name))).With({notation:"box"}));
     parser.Push(node);
   };
 
@@ -1174,7 +1029,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod("Not");
     // @test Negation Simple, Negation Complex, Negation Explicit,
     //       Negation Large
-    parser.Push(TreeHelper.STACKS ? new sitem.NotItem() : ParseMethods.STACKITEM.not());
+    parser.Push( new sitem.NotItem() );
   };
 
   export function Dots(parser: OldParser, name) {
@@ -1184,18 +1039,11 @@ export namespace ParseMethods {
     var cdotsEntity = TreeHelper.createEntity('22EF');
     var ldots = TreeHelper.createNode('mo', [], {stretchy:false}, ldotsEntity);
     var cdots = TreeHelper.createNode('mo', [], {stretchy:false}, cdotsEntity);
-    // VS: OLD
-    // var ldots = MML.mo(MML.entity("#x2026")).With({stretchy:false});
-    // var cdots = MML.mo(MML.entity("#x22EF")).With({stretchy:false});
-    parser.Push(TreeHelper.STACKS ?
+    parser.Push(
                 new sitem.DotsItem().With({
                   ldots: parser.mmlToken(ldots),
                   cdots: parser.mmlToken(cdots)
-                }) :
-                ParseMethods.STACKITEM.dots().With({
-                  ldots: parser.mmlToken(ldots),
-                  cdots: parser.mmlToken(cdots)
-                }));
+                }) );
   };
 
   export function Matrix(parser: OldParser, name,open,close,align,spacing,vspacing,style,cases,numbered) {
@@ -1205,20 +1053,13 @@ export namespace ParseMethods {
     if (c === "")
     {throw new TexError(["MissingArgFor","Missing argument for %1",name])}
     if (c === "{") {parser.i++} else {parser.string = c+"}"+parser.string.slice(parser.i+1); parser.i = 0}
-    var array = TreeHelper.STACKS ?
+    var array = 
       new sitem.ArrayItem().With({
         requireClose: true,
         arraydef: {
           rowspacing: (vspacing||"4pt"),
           columnspacing: (spacing||"1em")
-        }}) :
-    ParseMethods.STACKITEM.array().With({
-      requireClose: true,
-      arraydef: {
-        rowspacing: (vspacing||"4pt"),
-        columnspacing: (spacing||"1em")
-      }
-    });
+        }}) ;
     if (cases)         {array.isCases = true}
     if (numbered)      {array.isNumbered = true; array.arraydef.side = numbered}
     if (open || close) {array.open = open; array.close = close}
@@ -1230,9 +1071,8 @@ export namespace ParseMethods {
   export function Entry(parser: OldParser, name) {
     TreeHelper.printMethod("Entry");
     // @test Label, Array, Cross Product Formula
-    parser.Push(TreeHelper.STACKS ?
-                new sitem.CellItem().With({isEntry: true, name: name}) :
-                ParseMethods.STACKITEM.cell().With({isEntry: true, name: name}));
+    parser.Push(
+                new sitem.CellItem().With({isEntry: true, name: name}) );
     if (parser.stack.Top().isCases) {
       //
       //  Make second column be in \text{...} (unless it is already
@@ -1306,9 +1146,8 @@ export namespace ParseMethods {
   export function Cr(parser: OldParser, name) {
     TreeHelper.printMethod("Cr");
     TreeHelper.untested(15);
-    parser.Push(TreeHelper.STACKS ?
-                new sitem.CellItem().With({isCR: true, name: name}) :
-                ParseMethods.STACKITEM.cell().With({isCR: true, name: name}));
+    parser.Push(
+                new sitem.CellItem().With({isCR: true, name: name}) );
   };
 
   export function CrLaTeX(parser: OldParser, name) {
@@ -1321,11 +1160,10 @@ export namespace ParseMethods {
                             "Bracket argument to %1 must be a dimension",name]);
       }
     }
-    parser.Push(TreeHelper.STACKS ?
-                new sitem.CellItem().With({isCR: true, name: name, linebreak: true}) :
-                ParseMethods.STACKITEM.cell().With({isCR: true, name: name, linebreak: true}));
+    parser.Push(
+                new sitem.CellItem().With({isCR: true, name: name, linebreak: true}) );
     var top = parser.stack.Top();
-    if (TreeHelper.STACKS ? top instanceof sitem.ArrayItem : top instanceof ParseMethods.STACKITEM.array) {
+    if (top instanceof sitem.ArrayItem) {
       // @test Array
       if (n && top.arraydef.rowspacing) {
         var rows = top.arraydef.rowspacing.split(/ /);
@@ -1338,14 +1176,10 @@ export namespace ParseMethods {
       if (n) {
         // @test Custom Linebreak
         var node = TreeHelper.createNode('mspace', [], {depth:n});
-        // VS: OLD
-        // var node = MML.mspace().With({depth:n});
         parser.Push(node);
       }
       // @test Linebreak
       node = TreeHelper.createNode('mspace', [], {linebreak:TexConstant.LineBreak.NEWLINE});
-      // VS: OLD
-      // node = MML.mspace().With({linebreak:MML.LINEBREAK.NEWLINE});
       parser.Push(node);
     }
   };
@@ -1354,8 +1188,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod("HLine");
     if (style == null) {style = "solid"}
     var top = parser.stack.Top();
-    if (!(TreeHelper.STACKS ? top instanceof sitem.ArrayItem : top instanceof ParseMethods.STACKITEM.array) ||
-        top.data.length)
+    if (!(top instanceof sitem.ArrayItem) || top.data.length)
     {throw new TexError(["Misplaced","Misplaced %1",name])}
     if (top.table.length == 0) {
       top.frame.push("top");
@@ -1372,9 +1205,11 @@ export namespace ParseMethods {
   export function HFill(parser: OldParser, name) {
     TreeHelper.printMethod("HFill");
     var top = parser.stack.Top();
-    if ((TreeHelper.STACKS ? top instanceof sitem.ArrayItem : top instanceof ParseMethods.STACKITEM.array))
+    if (top instanceof sitem.ArrayItem) {
       top.hfill.push(top.data.length);
-    else throw new TexError(["UnsupportedHFill","Unsupported use of %1",name]);
+    } else {
+      throw new TexError(["UnsupportedHFill","Unsupported use of %1",name]);
+    }
   };
 
 
@@ -1420,9 +1255,8 @@ export namespace ParseMethods {
       throw new TexError(["InvalidEnv","Invalid environment name '%1'",env]);
     }
     if (name === "\\end") {
-      var mml = TreeHelper.STACKS ?
-        new sitem.EndItem().With({name: env}) :
-      ParseMethods.STACKITEM.end().With({name: env});
+      var mml = 
+        new sitem.EndItem().With({name: env}) ;
       parser.Push(mml);
     } else {
       if (++parser.macroCount > ParseMethods.MAXMACROS) {
@@ -1438,9 +1272,8 @@ export namespace ParseMethods {
   export function BeginEnvironment(parser: OldParser, func, env, args) {
     TreeHelper.printMethod("BeginEnvironment");
     var end = args[0];
-    var mml = TreeHelper.STACKS ?
-      new sitem.BeginItem().With({name: env, end: end}) :
-    ParseMethods.STACKITEM.begin().With({name: env, end: end});
+    var mml = 
+      new sitem.BeginItem().With({name: env, end: end}) ;
     mml = func.apply(this,[parser, mml].concat(args.slice(1)));
     parser.Push(mml);
   };
@@ -1460,21 +1293,14 @@ export namespace ParseMethods {
     var lines = ("c"+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
     align = align.replace(/[^clr]/g,'').split('').join(' ');
     align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-    var array = TreeHelper.STACKS ?
+    var array = 
       new sitem.ArrayItem().With({
         arraydef: {
           columnalign: align,
           columnspacing: (spacing||"1em"),
           rowspacing: (vspacing||"4pt")
         }
-      }) :
-    ParseMethods.STACKITEM.array().With({
-      arraydef: {
-        columnalign: align,
-        columnspacing: (spacing||"1em"),
-        rowspacing: (vspacing||"4pt")
-      }
-    });
+      }) ;
     if (lines.match(/[|:]/)) {
       if (lines.charAt(0).match(/[|:]/)) {array.frame.push("left"); array.frame.dashed = lines.charAt(0) === ":"}
       if (lines.charAt(lines.length-1).match(/[|:]/)) {array.frame.push("right")}
@@ -1567,7 +1393,7 @@ export namespace ParseMethods {
   /**
    *  Replace macro paramters with their values
    */
-  SubstituteArgs = function (args,string) {
+  export function SubstituteArgs(args,string) {
     TreeHelper.printMethod("SubstituteArgs");
     var text = ''; var newstring = ''; var c; var i = 0;
     while (i < string.length) {
@@ -1592,7 +1418,7 @@ export namespace ParseMethods {
    *  Make sure that macros are followed by a space if their names
    *  could accidentally be continued into the following text.
    */
-  AddArgs = function (s1,s2) {
+  export function AddArgs(s1,s2) {
     TreeHelper.printMethod("AddArgs");
     if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
     if (s1.length + s2.length > ParseMethods.MAXBUFFER) {
@@ -1616,7 +1442,7 @@ export namespace ParseMethods {
     }
     align = align.replace(/[^clr]/g,'').split('').join(' ');
     align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-    return TreeHelper.STACKS ?
+    return 
       new sitem.AMSarrayItem(begin.name,numbered,taggable, parser.stack).With({
         arraydef: {
           displaystyle: true,
@@ -1628,34 +1454,23 @@ export namespace ParseMethods {
           side: TAG_SIDE,
           minlabelspacing: TAG_INDENT
         }
-      }) :
-    ParseMethods.STACKITEM.AMSarray(begin.name,numbered,taggable,parser.stack).With({
-      arraydef: {
-        displaystyle: true,
-        rowspacing: ".5em",
-        columnalign: align,
-        columnspacing: (spacing||"1em"),
-        rowspacing: "3pt",
-        side: ParseMethods.TAG_SIDE,
-        minlabelspacing: ParseMethods.TAG_INDENT
-      }
-    });
+      }) ;
   };
 
 
   /**
    *  Check for bad nesting of equation environments
    */
-  checkEqnEnv = function (parser) {
+  export function checkEqnEnv(parser: OldParser) {
     TreeHelper.printMethod('AMS-checkEqnEnv');
     if (parser.stack.global.eqnenv) {
-      throw TexError(["ErroneousNestingEq","Erroneous nesting of equation structures"]);
+      throw new TexError(["ErroneousNestingEq","Erroneous nesting of equation structures"]);
     }
     parser.stack.global.eqnenv = true;
   };
 
 
-  HandleOperatorName = function (parser: OldParser, name) {
+  export function HandleOperatorName(parser: OldParser, name: string) {
     TreeHelper.printMethod('AMS-HandleOperatorName');
     // @test Operatorname
     var limits = (parser.GetStar() ? "" : "\\nolimits\\SkipLimits");
@@ -1666,7 +1481,7 @@ export namespace ParseMethods {
   };
   
 
-  SkipLimits = function (parser: OldParser, name) {
+  export function SkipLimits(parser: OldParser, name: string) {
     TreeHelper.printMethod('AMS-SkipLimits');
     // @test Operatorname
     var c = parser.GetNext(), i = parser.i;
