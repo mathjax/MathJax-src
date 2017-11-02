@@ -1385,7 +1385,8 @@ ParseMethods.BeginEnd = function(parser, name) {
   imp.printMethod("BeginEnd");
   // @test Array1, Array2, Array Test
   var env = parser.GetArgument(name);
-  if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
+  var regexp = /^\\end\\/;
+  if (env.match(regexp)) {env = env.substr(5)} // special \end{} for \newenvironment environments
   if (env.match(/\\/i)) {
     throw new TexError(["InvalidEnv","Invalid environment name '%1'",env]);
   }
