@@ -46,9 +46,10 @@ export default class TexParser {
    * @constructor
    */
   constructor() {
+    // TODO: Move this into a configuration object.
     this.configure(BaseMappings.CONFIGURATION);
-    // this.configure(AmsMappings.CONFIGURATION);
-    // this.configure(AmsSymbols.CONFIGURATION);
+    this.append(AmsMappings.CONFIGURATION);
+    this.append(AmsSymbols.CONFIGURATION);
   }
 
 

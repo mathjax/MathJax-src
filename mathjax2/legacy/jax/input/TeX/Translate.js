@@ -42,7 +42,8 @@ export default function Translate(script, configurations, stackitem) {
   var mml, isError = false, math = script.innerText;
   var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
   try {
-    mml = new OldParser(math, null, configurations, stackitem).mml();
+    // mml = new OldParser(math, null, configurations, stackitem).mml();
+    mml = new OldParser(math, null, [], stackitem).mml();
     // mml = TEX.Parse(math).mml();
     imp.printSimple(mml.toString());
   } catch(err) {
