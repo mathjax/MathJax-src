@@ -837,14 +837,16 @@ export namespace ParseMethods {
     // @test Phantom
     var box = TreeHelper.createNode('mphantom', [parser.ParseArg(name)], {});
     if (v || h) {
+      // TEMP: Changes here
       box = TreeHelper.createNode('mpadded', [box], {});
       if (h) {
         // @test Horizontal Phantom
-        box.height = box.depth = 0;
+        TreeHelper.setAttribute(box, 'height', 0);
+        TreeHelper.setAttribute(box, 'depth', 0);
       }
       if (v) {
         // @test Vertical Phantom
-        box.width = 0;
+        TreeHelper.setAttribute(box, 'width', 0);
       }
     }
     var atom = TreeHelper.createNode('TeXAtom', [box], {});
