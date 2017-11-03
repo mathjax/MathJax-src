@@ -938,9 +938,9 @@ export namespace ParseMethods {
     var w = parser.GetDimen(name),
     h = parser.GetDimen(name),
     d = parser.GetDimen(name);
-    var def = {width:w, height:h, depth:d};
+    let def: sitem.EnvList = {width:w, height:h, depth:d};
     if (style !== 'blank') {
-      def.mathbackground = (parser.stack.env['color'] || "black");
+      def['mathbackground'] = (parser.stack.env['color'] || "black");
     }
     var node = TreeHelper.createNode('mspace', [], def);
     parser.Push(node);
@@ -957,13 +957,13 @@ export namespace ParseMethods {
     if (v) {
       mml = TreeHelper.createNode('mpadded', [mml], {voffset: v});
       if (v.match(/^\-/)) {
-        mml.height = v;
-        mml.depth = '+' + v.substr(1);
+        TreeHelper.setAttribute(mml, 'height', v);
+        TreeHelper.setAttribute(mml, 'depth', '+' + v.substr(1));
       } else {
-        mml.height = '+' + v;
+        TreeHelper.setAttribute(mml, 'height', '+' + v);
       }
     }
-    parser.Push(mml as any);
+    parser.Push(mml);
   };
 
   export function MakeBig(parser: OldParser, name: string, mclass: number, size: number) {
