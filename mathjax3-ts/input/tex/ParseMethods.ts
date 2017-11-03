@@ -585,7 +585,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod("Sqrt");
     var n = parser.GetBrackets(name), arg = parser.GetArgument(name);
     if (arg === "\\frac") {arg += "{"+parser.GetArgument(arg)+"}{"+parser.GetArgument(arg)+"}"}
-    var mml = new OldParser(arg, parser.stack.env, ParseMethods).mml();
+    var mml = new OldParser(arg, parser.stack.env, parser.ParseMethods).mml();
     if (!n) {
       // @test Square Root
       mml = TreeHelper.createNode('msqrt', [mml], {});
@@ -610,19 +610,19 @@ export namespace ParseMethods {
     // @test General Root, Explicit Root
     var env = parser.stack.env, inRoot = env['inRoot']; env['inRoot'] = true;
     // TODO: This parser call might change!
-    var parser = new OldParser(n, env, ParseMethods);
+    var parser = new OldParser(n, env, parser.ParseMethods);
     let node = parser.mml();
     TreeHelper.printJSON(node);
     var global = parser.stack.global;
     if (global['leftRoot'] || global['upRoot']) {
       // @test Tweaked Root
-      var def = {};
+      var def: sitem.EnvList = {};
       if (global['leftRoot']) {
-        def.width = global['leftRoot'];
+        def['width'] = global['leftRoot'];
       }
       if (global['upRoot']) {
-        def.voffset = global['upRoot'];
-        def.height = global['upRoot'];
+        def['voffset'] = global['upRoot'];
+        def['height'] = global['upRoot'];
       }
       
       node = TreeHelper.createNode('mpadded', [node], def);
@@ -747,7 +747,7 @@ export namespace ParseMethods {
   export function TeXAtom(parser: OldParser, name: string, mclass: number) {
     TreeHelper.printMethod("TeXAtom");
     let def: sitem.EnvList = {texClass: mclass};
-    let mml: sitem.StackItem;
+    let mml: sitem.StackItem|MmlNode;
     let node: MmlNode;
     if (mclass == TEXCLASS.OP) {
       def['movesupsub'] = def['movablelimits'] = true;
@@ -761,7 +761,7 @@ export namespace ParseMethods {
         mml = new sitem.FnItem(parser.mmlToken(node));
       } else {
         // @test Mathop Cal
-        var parsed = new OldParser(arg,parser.stack.env, ParseMethods).mml();
+        var parsed = new OldParser(arg,parser.stack.env, parser.ParseMethods).mml();
         node = TreeHelper.createNode('TeXAtom', [parsed], def);
         mml = new sitem.FnItem(node);
       }

@@ -571,12 +571,12 @@ export class PositionItem extends BaseItem {
 
 export class ArrayItem extends BaseItem {
 
-  protected table: MmlNode[] = [];
-  protected row: MmlNode[] = [];
-  protected frame: string[] = [];
-  protected hfill: number[] = [];
-  protected copyEnv = false;
-  protected arraydef: {[key: string]: string}= {};
+  public table: MmlNode[] = [];
+  public row: MmlNode[] = [];
+  public frame: string[] = [];
+  public hfill: number[] = [];
+  public copyEnv = false;
+  public arraydef: {[key: string]: string}= {};
 
   constructor() {
     super();
