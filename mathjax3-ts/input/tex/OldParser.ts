@@ -82,12 +82,12 @@ export class OldParser {
     }
   }
 
-  Push(arg: StackItem) {
+  Push(arg: StackItem|MmlNode) {
     TreeHelper.printMethod("Push (Old Parser Object)");
     this.stack.Push(arg);
   }
 
-  PushAll(args: StackItem[]) {
+  PushAll(args: (StackItem|MmlNode)[]) {
     TreeHelper.printMethod("PushAll (Old Parser Object)");
     for(var i = 0, m = args.length; i < m; i++) {
       this.stack.Push(args[i]);

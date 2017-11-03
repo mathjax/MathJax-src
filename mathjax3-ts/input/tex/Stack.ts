@@ -52,7 +52,7 @@ export default class Stack {
   }
 
 
-  Push(...args: StackItem[]) {
+  Push(...args: (StackItem|MmlNode)[]) {
     TreeHelper.printSimple("PUSHING onto stack: ");
     TreeHelper.printSimple(args.toString());
     for (let i = 0, m = args.length; i < m; i++) {
