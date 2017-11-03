@@ -24,8 +24,10 @@
  */
 
 import {imp} from './imp.js';
-import {OldParser} from './Parser.js';
-import {ParserUtil} from './ParserUtil.js';
+// import {OldParser} from './Parser.js';
+import {OldParser} from 'mathjax3/input/tex/OldParser.js';
+import {ParserUtil} from 'mathjax3/input/tex/ParserUtil.js';
+import {ParseMethods} from './ParseMethods.js';
 import TexError from 'mathjax3/input/tex/TexError.js';
 
 // A wrapper for translating scripts with LaTeX content.
@@ -43,7 +45,8 @@ export default function Translate(script, configurations, stackitem) {
   var display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
   try {
     // mml = new OldParser(math, null, configurations, stackitem).mml();
-    mml = new OldParser(math, null, [], stackitem).mml();
+    // mml = new OldParser(math, null, [], stackitem).mml();
+    mml = new OldParser(math, null, ParseMethods).mml();
     // mml = TEX.Parse(math).mml();
     imp.printSimple(mml.toString());
   } catch(err) {
