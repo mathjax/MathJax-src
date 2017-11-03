@@ -780,7 +780,7 @@ export namespace ParseMethods {
     var type = parser.GetArgument(name),
     attr = parser.GetBrackets(name,"").replace(/^\s+/,""),
     data = parser.GetArgument(name),
-    def = {};
+    def: sitem.EnvList = {};
     var node: MmlNode;
     try {
       node = TreeHelper.createNode(type, [], {});
@@ -1047,9 +1047,18 @@ export namespace ParseMethods {
           rowspacing: (vspacing||"4pt"),
           columnspacing: (spacing||"1em")
         }}) ;
-    if (cases)         {array.isCases = true}
-    if (numbered)      {array.isNumbered = true; array.arraydef.side = numbered}
-    if (open || close) {array.open = open; array.close = close}
+    // TEMP: Changes here:
+    if (cases) {
+      array.setProperty('isCases', true);
+    }
+    if (numbered) {
+      array.setProperty('isNumbered', true);
+      array.arraydef.side = numbered;
+    }
+    if (open || close) {
+      array.setProperty('open', open);
+      array.setProperty('close', close);
+    }
     if (style === "D") {array.arraydef.displaystyle = true}
     if (align != null) {array.arraydef.columnalign = align}
     parser.Push(array);
@@ -1060,7 +1069,7 @@ export namespace ParseMethods {
     // @test Label, Array, Cross Product Formula
     parser.Push(
                 new sitem.CellItem().With({isEntry: true, name: name}) );
-    if (parser.stack.Top().isCases) {
+    if (parser.stack.Top().getProperty('isCases')) {
       //
       //  Make second column be in \text{...} (unless it is already
       //  in a \text{...}, for backward compatibility).
