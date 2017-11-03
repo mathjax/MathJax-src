@@ -1307,14 +1307,20 @@ export namespace ParseMethods {
         }
       }) ;
     if (lines.match(/[|:]/)) {
-      if (lines.charAt(0).match(/[|:]/)) {array.frame.push("left"); array.frame.dashed = lines.charAt(0) === ":"}
-      if (lines.charAt(lines.length-1).match(/[|:]/)) {array.frame.push("right")}
+      if (lines.charAt(0).match(/[|:]/)) {
+        array.frame.push("left");
+        array.dashed = lines.charAt(0) === ":";
+      }
+      if (lines.charAt(lines.length-1).match(/[|:]/)) {
+        array.frame.push("right");
+      }
       lines = lines.substr(1,lines.length-2);
       array.arraydef.columnlines =
         lines.split('').join(' ').replace(/[^|: ]/g,'none').replace(/\|/g,'solid').replace(/:/g,'dashed');
     }
-    if (open)  {array.open  = parser.convertDelimiter(open)}
-    if (close) {array.close = parser.convertDelimiter(close)}
+    // TEMP: Changes here;
+    if (open)  {array.setProperty('open', parser.convertDelimiter(open));}
+    if (close) {array.setProperty('close', parser.convertDelimiter(close));}
     if (style === "D") {array.arraydef.displaystyle = true}
     else if (style) {array.arraydef.displaystyle = false}
     if (style === "S") {array.arraydef.scriptlevel = 1} // FIXME: should use mstyle?

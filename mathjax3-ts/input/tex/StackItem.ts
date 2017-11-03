@@ -577,7 +577,8 @@ export class ArrayItem extends BaseItem {
   public hfill: number[] = [];
   public copyEnv = false;
   public arraydef: {[key: string]: string|number|boolean}= {};
-
+  public dashed: boolean = false;
+  
   constructor() {
     super();
     this.kind = 'array';
@@ -612,7 +613,7 @@ export class ArrayItem extends BaseItem {
       // var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
       if (this.frame.length === 4) {
         // TODO: Untested case that currently does not work!
-        // mml.frame = (this.frame.dashed ? 'dashed' : 'solid');
+        TreeHelper.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
       } else if (this.frame.length) {
         // mml.hasFrame = true;
         if (this.arraydef['rowlines']) {
