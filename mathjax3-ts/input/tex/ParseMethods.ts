@@ -51,11 +51,11 @@ export namespace ParseMethods {
   const P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
 
   // Utilities?
-  export function MmlFilterAttribute(parser: OldParser, name: string, value: string) {
+  export function MmlFilterAttribute(parser: OldParser, name: string, value: string): string {
     return value
   };
 
-  let MmlTokenAllow = {
+  let MmlTokenAllow: {[key: string]: number} = {
     fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
     color:1, background:1,
     id:1, "class":1, href:1, style:1
@@ -775,8 +775,8 @@ export namespace ParseMethods {
     var type = parser.GetArgument(name),
     attr = parser.GetBrackets(name,"").replace(/^\s+/,""),
     data = parser.GetArgument(name),
-    def = {}, match;
-    var node;
+    def = {};
+    var node: MmlNode;
     try {
       node = TreeHelper.createNode(type, [], {});
     } catch (e) {
@@ -787,7 +787,7 @@ export namespace ParseMethods {
       throw new TexError(["NotMathMLToken","%1 is not a token element",type]);
     }
     while (attr !== "") {
-      match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
+      let match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
       if (!match) {
         // @test Token Invalid Attribute
         throw new TexError(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
@@ -798,10 +798,13 @@ export namespace ParseMethods {
                             "%1 is not a recognized attribute for %2",
                             match[1],type]);
       }
-      var value = parser.MmlFilterAttribute(match[1],match[2].replace(/^(['"])(.*)\1$/,"$2"));
+      var value: string | boolean = ParseMethods.MmlFilterAttribute(parser, match[1],
+                                                                    match[2].replace(/^(['"])(.*)\1$/,"$2"));
       if (value) {
-        if (value.toLowerCase() === "true") {value = true}
-        else if (value.toLowerCase() === "false") {value = false}
+        if (value.toLowerCase() === "true") {
+          value = true}
+        else if (value.toLowerCase() === "false") {
+          value = false}
         def[match[1]] = value;
       }
       attr = attr.substr(match[0].length);
@@ -1384,11 +1387,12 @@ export namespace ParseMethods {
       else if (c === '#') {
         c = string.charAt(i++);
         if (c === '#') {text += c} else {
-          if (!c.match(/[1-9]/) || c > args.length) {
+          if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
             throw new TexError(["IllegalMacroParam",
                                 "Illegal macro parameter reference"]);
           }
-          newstring = ParseMethods.AddArgs(this.AddArgs(newstring,text),args[c - 1]);
+          newstring = ParseMethods.AddArgs(this.AddArgs(newstring,text),
+                                           args[parseInt(c, 10) - 1]);
           text = '';
         }
       } else {text += c}
