@@ -55,7 +55,7 @@ export type EnvProp = string | number | boolean;
 export type EnvList = {[key: string]: EnvProp};
 
 // This is the type for all fields that used to be set with With.
-export type Prop = string | number | boolean | MmlNode;
+export type Prop = string | number | boolean | MmlNode | PropList;
 
 export type PropList = {[key: string]: Prop};
 
