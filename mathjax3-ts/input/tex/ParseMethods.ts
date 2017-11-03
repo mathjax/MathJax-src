@@ -1195,12 +1195,12 @@ export namespace ParseMethods {
     if (top.table.length == 0) {
       top.frame.push("top");
     } else {
-      var lines = (top.arraydef.rowlines ? top.arraydef.rowlines.split(/ /) : []);
+      var lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
       while (lines.length < top.table.length) {
         lines.push("none");
       }
       lines[top.table.length-1] = style;
-      top.arraydef.rowlines = lines.join(' ');
+      top.arraydef['rowlines'] = lines.join(' ');
     }
   };
 
