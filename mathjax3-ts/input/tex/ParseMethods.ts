@@ -1040,13 +1040,11 @@ export namespace ParseMethods {
     if (c === "")
     {throw new TexError(["MissingArgFor","Missing argument for %1",name])}
     if (c === "{") {parser.i++} else {parser.string = c+"}"+parser.string.slice(parser.i+1); parser.i = 0}
-    var array = 
-      new sitem.ArrayItem().With({
-        requireClose: true,
-        arraydef: {
-          rowspacing: (vspacing||"4pt"),
-          columnspacing: (spacing||"1em")
-        }}) ;
+    var array = new sitem.ArrayItem().With({requireClose: true});
+    array.arraydef = {
+      rowspacing: (vspacing||"4pt"),
+      columnspacing: (spacing||"1em")
+    };
     // TEMP: Changes here:
     if (cases) {
       array.setProperty('isCases', true);
@@ -1298,14 +1296,12 @@ export namespace ParseMethods {
     var lines = ("c"+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
     align = align.replace(/[^clr]/g,'').split('').join(' ');
     align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-    var array = 
-      new sitem.ArrayItem().With({
-        arraydef: {
-          columnalign: align,
-          columnspacing: (spacing||"1em"),
-          rowspacing: (vspacing||"4pt")
-        }
-      }) ;
+    var array = new sitem.ArrayItem();
+    array.arraydef = {
+      columnalign: align,
+      columnspacing: (spacing||"1em"),
+      rowspacing: (vspacing||"4pt")
+    };
     if (lines.match(/[|:]/)) {
       if (lines.charAt(0).match(/[|:]/)) {
         array.frame.push("left");
@@ -1366,12 +1362,12 @@ export namespace ParseMethods {
     var file = parser.GetArgument(name)
       .replace(/.*\//,"")            // remove any leading path
       .replace(/[^a-z0-9_.-]/ig,""); // remove illegal characters
-    ParseMethods.Extension(null,file);
+    ParseMethods.Extension(parser, null,file);
   };
 
 
   export function Extension(parser: OldParser, name: string|sitem.StackItem,
-                            file: string, array: any) {
+                            file: string, array?: any) {
     TreeHelper.printMethod("Extension");
     if (name && !(typeof(name) === "string")) {name = name.getName();}
     // file = TEX.extensionDir+"/"+file;
@@ -1464,8 +1460,8 @@ export namespace ParseMethods {
     }
     align = align.replace(/[^clr]/g,'').split('').join(' ');
     align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-    return new sitem.AMSarrayItem(begin.getName(), numbered, taggable, parser.stack.global).With({
-      arraydef: {
+    let newItem = new sitem.AMSarrayItem(begin.getName(), numbered, taggable, parser.stack.global);
+    newItem.arraydef = {
         displaystyle: true,
         rowspacing: ".5em",
         columnalign: align,
@@ -1474,8 +1470,8 @@ export namespace ParseMethods {
         // rowspacing: "3pt",
         side: TAG_SIDE,
         minlabelspacing: TAG_INDENT
-      }
-    }) ;
+    };
+    return newItem;
   };
 
 
