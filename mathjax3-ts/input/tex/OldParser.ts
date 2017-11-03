@@ -47,7 +47,7 @@ export class OldParser {
   NewParser: TexParser;
   macroCount: number = 0;
   i: number = 0;
-  remap: SymbolMap =  MapHandler.getInstance().getMap('remap');
+  remap: SymbolMap = MapHandler.getInstance().getMap('remap');
   stack: Stack;
   
 
@@ -106,7 +106,7 @@ export class OldParser {
   }
 
   // VS: Forget this for now!
-  mmlToken(token: MmlNode): StackItem {return token as any} // used by boldsymbol extension
+  mmlToken(token: MmlNode): MmlNode {return token} // used by boldsymbol extension
 
 
   /************************************************************************/
@@ -208,7 +208,7 @@ export class OldParser {
   /*
    *  Get an optional LaTeX argument in brackets
    */
-  GetBrackets(name: string, def: string): string {
+  GetBrackets(name: string, def?: string): string {
     TreeHelper.printMethod("GetBrackets (Old Parser Object)");
     if (this.GetNext() != '[') {return def};
     var j = ++this.i, parens = 0;
@@ -326,8 +326,8 @@ export class OldParser {
    */
   InternalMath(text: string, level: string) {
     TreeHelper.printMethod("InternalMath (Old Parser Object)");
-    var def = (this.stack.env.font ? {mathvariant: this.stack.env.font} : {});
-    var mml = [], i = 0, k = 0, c, node, match = '', braces = 0;
+    var def = (this.stack.env['font'] ? {mathvariant: this.stack.env['font']} : {});
+    var mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
     if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
       while (i < text.length) {
         c = text.charAt(i++);

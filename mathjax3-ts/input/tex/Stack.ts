@@ -36,7 +36,7 @@ export default class Stack {
 
   data: StackItem[] = [];
   env: EnvList = {};
-  global = {};
+  global: EnvList = {};
   
   constructor(env: EnvList, inner: boolean) {
     this.global = {isInner: inner};
