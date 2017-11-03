@@ -858,10 +858,13 @@ export namespace ParseMethods {
     // @test Smash, Smash Top, Smash Bottom
     var bt = parser.trimSpaces(parser.GetBrackets(name,""));
     var smash = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {});
+    // TEMP: Changes here:
     switch (bt) {
-    case "b": smash.depth = 0; break;
-    case "t": smash.height = 0; break;
-    default: smash.height = smash.depth = 0;
+    case "b": TreeHelper.setAttribute(smash, 'depth', 0); break;
+    case "t": TreeHelper.setAttribute(smash, 'height', 0); break;
+    default:
+      TreeHelper.setAttribute(smash, 'height', 0);
+      TreeHelper.setAttribute(smash, 'depth', 0);
     }
     var atom = TreeHelper.createNode('TeXAtom', [smash], {});
     parser.Push(atom);
