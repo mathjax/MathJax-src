@@ -35,7 +35,7 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
 export type Script = {type: string, innerText: string, MathJax: any};
 
-let formatError = function (err: Error, math: string, display: boolean, script: Script) {
+let formatError = function (err: TexError, math: string, display: boolean, script: Script) {
   var message = err.message.replace(/\n.*/,"");
   return TreeHelper.createError(message);
 };
@@ -71,7 +71,7 @@ export default function Translate(script: Script, configurations: string[] = [],
   }
   // TODO: Should not be necessary anymore!
   // if (isError) {
-  //   mathNode.texError = true;
+  //   (mathNode as any).texError = true;
   // }
   ParserUtil.combineRelations(root);
   return mathNode;

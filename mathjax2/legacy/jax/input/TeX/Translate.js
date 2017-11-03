@@ -51,7 +51,6 @@ export default function Translate(script, configurations, stackitem) {
     // mml = TEX.Parse(math).mml();
     imp.printSimple(mml.toString());
   } catch(err) {
-    // console.log(err);
     if (!err instanceof TexError) {throw err}
     mml = formatError(err,math,display,script);
     isError = true;

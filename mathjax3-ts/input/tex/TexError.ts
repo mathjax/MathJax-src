@@ -30,12 +30,12 @@
 const pattern =
         /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%\{\d+\}|%.|[^\}])*)+\}|.)/g;
 
-export default class TexError extends Error {
+export default class TexError {
 
   id: string;
+  message: string;
   
   constructor(input: string[]) {
-    super();
     if (!(input.length > 1)) {
       this.message = '';
       return;
