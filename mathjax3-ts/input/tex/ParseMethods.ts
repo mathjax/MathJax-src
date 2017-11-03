@@ -655,7 +655,7 @@ export namespace ParseMethods {
       // @test Incorrect Move Root
       throw new TexError(["IntegerArg","The argument to %1 must be an integer",name]);
     }
-    n = (n/15)+"em";
+    n = (parseInt(n, 10)/15)+"em";
     if (n.substr(0,1) !== "-") {n = "+"+n}
     parser.stack.global[id] = n;
   };
@@ -664,10 +664,10 @@ export namespace ParseMethods {
     TreeHelper.printMethod("Accent");
     // @test Vector
     var c = parser.ParseArg(name);
-    var def = {accent: true};
+    var def: sitem.EnvList = {accent: true};
     if (parser.stack.env['font']) {
       // @test Vector Font
-      def.mathvariant = parser.stack.env['font'];
+      def['mathvariant'] = parser.stack.env['font'];
     }
     var entity = TreeHelper.createEntity(accent);
     var moNode = TreeHelper.createNode('mo', [], def, entity);
@@ -692,9 +692,7 @@ export namespace ParseMethods {
   export function UnderOver(parser: OldParser, name: string, c: string, stack: boolean, noaccent: boolean) {
     TreeHelper.printMethod("UnderOver");
     // @test Overline
-    var pos = {o: "over", u: "under"}[name.charAt(1)];
     var base = parser.ParseArg(name);
-    // TODO: Sort this one out!
     if (TreeHelper.getProperty(base, 'movablelimits')) {
       // @test Overline Sum
       TreeHelper.setProperties(base, {'movablelimits': false});
@@ -706,19 +704,21 @@ export namespace ParseMethods {
       var mo = TreeHelper.createNode('mo', [], {rspace:0});
       base = TreeHelper.createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
     }
-    var mml = TreeHelper.createNode('munderover', [base], {});
+    var mml = TreeHelper.createNode('munderover', [base], {}) as MmlMunderover;
     var entity = TreeHelper.createEntity(c);
     mo = TreeHelper.createNode('mo', [], {stretchy:true, accent:!noaccent}, entity);
 
-    TreeHelper.setData(mml, mml[pos], parser.mmlToken(mo));
-
+    // TEMP: Changes here:
+    TreeHelper.setData(mml, name.charAt(1) === "o" ?  mml.over : mml.under,
+                       parser.mmlToken(mo));
+    let node: MmlNode = mml;
     if (stack) {
       TreeHelper.untested(8);
-      mml = TreeHelper.createNode('TeXAtom', [mml], {texClass:TEXCLASS.OP, movesupsub:true});
+      node = TreeHelper.createNode('TeXAtom', [mml], {texClass:TEXCLASS.OP, movesupsub:true});
     }
     // TODO: Sort these properties out!
-    TreeHelper.setProperties(mml, {subsupOK: true});
-    parser.Push(mml);
+    TreeHelper.setProperties(node, {subsupOK: true});
+    parser.Push(node);
   };
 
   export function Overset(parser: OldParser, name: string) {
