@@ -324,7 +324,7 @@ export class OldParser {
   /*
    *  Break up a string into text and math blocks
    */
-  InternalMath(text: string, level?: string) {
+  InternalMath(text: string, level?: number|string) {
     TreeHelper.printMethod("InternalMath (Old Parser Object)");
     var def = (this.stack.env['font'] ? {mathvariant: this.stack.env['font']} : {});
     var mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;

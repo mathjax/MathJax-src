@@ -576,7 +576,7 @@ export class ArrayItem extends BaseItem {
   public frame: string[] = [];
   public hfill: number[] = [];
   public copyEnv = false;
-  public arraydef: {[key: string]: string}= {};
+  public arraydef: {[key: string]: string|number|boolean}= {};
 
   constructor() {
     super();
@@ -617,7 +617,7 @@ export class ArrayItem extends BaseItem {
         // mml.hasFrame = true;
         if (this.arraydef['rowlines']) {
           this.arraydef['rowlines'] =
-            this.arraydef['rowlines'].replace(/none( none) + $/, 'none');
+            (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
         // @test Array2
         mml = TreeHelper.createNode('menclose', [mml],
@@ -702,7 +702,7 @@ export class ArrayItem extends BaseItem {
 
   checkLines() {
     if (this.arraydef['rowlines']) {
-      var lines = this.arraydef['rowlines'].split(/ /);
+      var lines = (this.arraydef['rowlines'] as string).split(/ /);
       if (lines.length === this.table.length) {
         this.frame.push('bottom'); lines.pop();
         this.arraydef['rowlines'] = lines.join(' ');
@@ -711,7 +711,7 @@ export class ArrayItem extends BaseItem {
       }
     }
     if (this.getProperty('rowspacing')) {
-      var rows = this.arraydef['rowspacing'].split(/ /);
+      var rows = (this.arraydef['rowspacing'] as string).split(/ /);
       while (rows.length < this.table.length) {
         rows.push(this.getProperty('rowspacing') + 'em');
       }

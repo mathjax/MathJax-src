@@ -998,7 +998,7 @@ export namespace ParseMethods {
   export function HBox(parser: OldParser, name: string, style: string) {
     TreeHelper.printMethod("HBox");
     // @test Hbox
-    parser.PushAll(parser.InternalMath(parser.GetArgument(name),style));
+    parser.PushAll(parser.InternalMath(parser.GetArgument(name), style));
   };
 
   export function FBox(parser: OldParser, name: string) {
@@ -1132,7 +1132,7 @@ export namespace ParseMethods {
       //
       var text = string.substr(parser.i,i-parser.i);
       if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/,'').length - 1) {
-        var internal = parser.InternalMath(text,0);
+        var internal = parser.InternalMath(text, 0);
         parser.PushAll(internal);
         parser.i = i;
       }
@@ -1148,7 +1148,7 @@ export namespace ParseMethods {
 
   export function CrLaTeX(parser: OldParser, name: string) {
     TreeHelper.printMethod("CrLaTeX");
-    var n;
+    let n: string;
     if (parser.string.charAt(parser.i) === "[") {
       n = parser.GetBrackets(name,"").replace(/ /g,"").replace(/,/,".");
       if (n && !ParserUtil.matchDimen(n)) {
@@ -1160,13 +1160,19 @@ export namespace ParseMethods {
                 new sitem.CellItem().With({isCR: true, name: name, linebreak: true}) );
     var top = parser.stack.Top();
     if (top instanceof sitem.ArrayItem) {
+      // TEMP: Changes here:
       // @test Array
-      if (n && top.arraydef.rowspacing) {
-        var rows = top.arraydef.rowspacing.split(/ /);
-        if (!top.rowspacing) {top.rowspacing = ParserUtil.dimen2em(rows[0])}
-        while (rows.length < top.table.length) {rows.push(ParserUtil.Em(top.rowspacing))}
-        rows[top.table.length-1] = ParserUtil.Em(Math.max(0,top.rowspacing+ParserUtil.dimen2em(n)));
-        top.arraydef.rowspacing = rows.join(' ');
+      if (n && top.arraydef['rowspacing']) {
+        var rows = (top.arraydef['rowspacing'] as string).split(/ /);
+        if (!top.getProperty('rowspacing')) {
+          top.setProperty('rowspacing', ParserUtil.dimen2em(rows[0]));
+        }
+        while (rows.length < top.table.length) {
+          rows.push(ParserUtil.Em(top.getProperty('rowspacing')));
+        }
+        rows[top.table.length - 1] = ParserUtil.Em(
+          Math.max(0, top.getProperty('rowspacing') + ParserUtil.dimen2em(n)));
+        top.arraydef['rowspacing'] = rows.join(' ');
       }
     } else {
       if (n) {
