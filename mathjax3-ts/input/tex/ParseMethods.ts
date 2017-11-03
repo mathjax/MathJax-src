@@ -246,11 +246,13 @@ export namespace ParseMethods {
         base = TreeHelper.createNode('mi', [], {}, textNode);
       }
     }
-    if (base.isEmbellishedWrapper) {
-      // TODO: Warning, those are childNodes now!
-      // base = base.data[0].data[0];
-      base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
-    }
+    // TODO: This does not seem to be used. Check with Davide.
+    // 
+    // if (base.isEmbellishedWrapper) {
+    //   // TODO: Warning, those are childNodes now!
+    //   // base = base.data[0].data[0];
+    //   base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
+    // }
     var movesupsub = TreeHelper.getProperty(base, 'movesupsub');
     var position = TreeHelper.isType(base, "msubsup") ? (base as MmlMsubsup).sup :
       (base as MmlMunderover).over;
@@ -308,10 +310,12 @@ export namespace ParseMethods {
         base = TreeHelper.createNode('mi', [], {}, textNode);
       }
     }
-    if (base.isEmbellishedWrapper) {
-      // TODO: Warning, those are childNodes now!
-      base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
-    }
+    // TODO: This does not seem to be used. Check with Davide.
+    // 
+    // if (base.isEmbellishedWrapper) {
+    //   // TODO: Warning, those are childNodes now!
+    //   base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
+    // }
     var movesupsub = TreeHelper.getProperty(base, 'movesupsub');
     var position = TreeHelper.isType(base, "msubsup") ? (base as MmlMsubsup).sub : (base as MmlMunderover).under;
     // var movesupsub = base.movesupsub, position = base.sub;
@@ -550,19 +554,20 @@ export namespace ParseMethods {
     var mml = new sitem.OverItem().With({name: name}) ;
     if (open || close) {
       // @test Choose
-      mml.open = open; mml.close = close;
+      mml.setProperty('open', open);
+      mml.setProperty('close', close);
     } else if (name.match(/withdelims$/)) {
       // @test Over With Delims, Above With Delims
-      mml.open  = parser.GetDelimiter(name);
-      mml.close = parser.GetDelimiter(name);
+      mml.setProperty('open', parser.GetDelimiter(name));
+      mml.setProperty('close', parser.GetDelimiter(name));
     }
     if (name.match(/^\\above/)) {
       // @test Above, Above With Delims
-      mml.thickness = parser.GetDimen(name);
+      mml.setProperty('thickness', parser.GetDimen(name));
     }
     else if (name.match(/^\\atop/) || open || close) {
       // @test Choose
-      mml.thickness = 0;
+      mml.setProperty('thickness', 0);
     }
     parser.Push(mml);
   };
