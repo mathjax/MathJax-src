@@ -25,6 +25,7 @@
 // import * as sitem from './StackItem.js';
 import * as sitem from './StackItem.js';
 import {Symbol} from './Symbol.js';
+import {CharacterMap} from './SymbolMap.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexError from './TexError.js';
 import TexParser from './TexParser.js';
@@ -33,6 +34,7 @@ import {ParserUtil} from './ParserUtil.js';
 import {OldParser} from './OldParser.js';
 import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
+import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 
 
 // Namespace
@@ -48,6 +50,17 @@ export namespace ParseMethods {
   const NBSP = "\u00A0"; 
   const P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
 
+  // Utilities?
+  export function MmlFilterAttribute(parser: OldParser, name: string, value: string) {
+    return value
+  };
+
+  let MmlTokenAllow = {
+    fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
+    color:1, background:1,
+    id:1, "class":1, href:1, style:1
+  };
+  // End Utilities?
 
   /************************************************************************/
   /*
@@ -146,10 +159,10 @@ export namespace ParseMethods {
    */
   export function Variable(parser: OldParser, c: string) {
     TreeHelper.printMethod("Variable");
-    var def = {};
+    var def: sitem.EnvList = {};
     if (parser.stack.env['font']) {
       // @test Identifier Font
-      def.mathvariant = parser.stack.env['font'];
+      def['mathvariant'] = parser.stack.env['font'];
     }
     // @test Identifier
     var textNode = TreeHelper.createText(c);
@@ -162,11 +175,12 @@ export namespace ParseMethods {
    */
   export function Number(parser: OldParser, c: string) {
     TreeHelper.printMethod("Number");
-    var mml, n = parser.string.slice(parser.i-1).match(NUMBER);
-    var def = {};
+    let mml: MmlNode;
+    let n = parser.string.slice(parser.i-1).match(NUMBER);
+    let def: sitem.EnvList = {};
     if (parser.stack.env['font']) {
       // @test Integer Font
-      def.mathvariant = parser.stack.env['font'];
+      def['mathvariant'] = parser.stack.env['font'];
     }
     if (n) {
       // @test Integer, Number
@@ -217,7 +231,7 @@ export namespace ParseMethods {
       // don't treat numbers as a unit
       parser.string = parser.string.substr(0,parser.i+1)+" "+parser.string.substr(parser.i+1);
     }
-    var primes: MmlNode, base: MmlNode|void, top = parser.stack.Top();
+    var primes: MmlNode, base: MmlNode | void, top = parser.stack.Top();
     if (top.hasType('prime')) {
       // @test Prime on Prime
       base = top.data[0];
@@ -238,10 +252,11 @@ export namespace ParseMethods {
       base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
     }
     var movesupsub = TreeHelper.getProperty(base, 'movesupsub');
-    var position = TreeHelper.isType(base, "msubsup") ? (base as MmlMsubsup).sup : base.over;
+    var position = TreeHelper.isType(base, "msubsup") ? (base as MmlMsubsup).sup :
+      (base as MmlMunderover).over;
     // var movesupsub = base.movesupsub, position = base.sup;
-    if ((TreeHelper.isType(base, "msubsup") && TreeHelper.getChildAt(base, base.sup)) ||
-        (TreeHelper.isType(base, "munderover") && TreeHelper.getChildAt(base, base.over) &&
+    if ((TreeHelper.isType(base, "msubsup") && TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) ||
+        (TreeHelper.isType(base, "munderover") && TreeHelper.getChildAt(base, (base as MmlMunderover).over) &&
          !TreeHelper.getProperty(base, 'subsupOK'))) {
       // @test Double-super-error, Double-over-error
       throw new TexError(["DoubleExponent","Double exponent: use braces to clarify"]);
@@ -251,7 +266,7 @@ export namespace ParseMethods {
       if (movesupsub) {
         TreeHelper.printSimple('Case 2');
         // @test Move Superscript, Large Operator
-        if (!TreeHelper.isType(base, "munderover") || TreeHelper.getChildAt(base, base.over)) {
+        if (!TreeHelper.isType(base, "munderover") || TreeHelper.getChildAt(base, (base as MmlMunderover).over)) {
           TreeHelper.printSimple('Case 3');
           if (TreeHelper.getProperty(base, 'movablelimits') && TreeHelper.isType(base, 'mi')) {
             // @test Mathop Super
@@ -260,12 +275,12 @@ export namespace ParseMethods {
           // @test Large Operator
           base = TreeHelper.createNode('munderover', [base], {movesupsub:true});
         }
-        position = base.over;
+        position = (base as MmlMunderover).over;
       } else {
         TreeHelper.printSimple('Case 4');
         // @test Empty base, Empty base2, Square, Cube
         base = TreeHelper.createNode('msubsup', [base], {});
-        position = base.sup;
+        position = (base as MmlMsubsup).sup;
       }
     }
     parser.Push(
@@ -273,6 +288,7 @@ export namespace ParseMethods {
                   position: position, primes: primes, movesupsub: movesupsub
                 }) );
   };
+  
   export function Subscript(parser: OldParser, c: string) {
     TreeHelper.printMethod("Subscript");
     if (parser.GetNext().match(/\d/)) {
@@ -297,10 +313,10 @@ export namespace ParseMethods {
       base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
     }
     var movesupsub = TreeHelper.getProperty(base, 'movesupsub');
-    var position = TreeHelper.isType(base, "msubsup") ? base.sub : base.under;
+    var position = TreeHelper.isType(base, "msubsup") ? (base as MmlMsubsup).sub : (base as MmlMunderover).under;
     // var movesupsub = base.movesupsub, position = base.sub;
-    if ((TreeHelper.isType(base, "msubsup") && TreeHelper.getChildAt(base, base.sub)) ||
-        (TreeHelper.isType(base, "munderover") && TreeHelper.getChildAt(base, base.under) &&
+    if ((TreeHelper.isType(base, "msubsup") && TreeHelper.getChildAt(base, (base as MmlMsubsup).sub)) ||
+        (TreeHelper.isType(base, "munderover") && TreeHelper.getChildAt(base, (base as MmlMunderover).under) &&
          !TreeHelper.getProperty(base, 'subsupOK'))) {
       // @test Double-sub-error, Double-under-error
       throw new TexError(["DoubleSubscripts","Double subscripts: use braces to clarify"]);
@@ -308,7 +324,7 @@ export namespace ParseMethods {
     if (!TreeHelper.isType(base, "msubsup")) {
       if (movesupsub) {
         // @test Large Operator, Move Superscript
-        if (!TreeHelper.isType(base, "munderover") || TreeHelper.getChildAt(base, base.under)) {
+        if (!TreeHelper.isType(base, "munderover") || TreeHelper.getChildAt(base, (base as MmlMunderover).under)) {
           if (TreeHelper.getProperty(base, 'movablelimits') && TreeHelper.isType(base, 'mi')) {
             // @test Mathop Sub
             base = ParseMethods.mi2mo(base);
@@ -316,11 +332,11 @@ export namespace ParseMethods {
           // @test Move Superscript
           base = TreeHelper.createNode('munderover', [base], {movesupsub:true});
         }
-        position = base.under;
+        position = (base as MmlMunderover).under;
       } else {
         // @test Empty Base Index, Empty, Base Index2, Index
         base = TreeHelper.createNode('msubsup', [base], {});
-        position = base.sub;
+        position = (base as MmlMsubsup).sub;
       }
     }
     parser.Push(
@@ -336,7 +352,7 @@ export namespace ParseMethods {
       // @test PrimeSup, PrePrime, Prime on Sup
       base = TreeHelper.createNode('mi', [], {});
     }
-    if (TreeHelper.isType(base, "msubsup") && TreeHelper.getChildAt(base, base.sup)) {
+    if (TreeHelper.isType(base, "msubsup") && TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) {
       // @test Double Prime Error
       throw new TexError(["DoubleExponentPrime",
                           "Prime causes double exponent: use braces to clarify"]);
@@ -348,7 +364,7 @@ export namespace ParseMethods {
     var textNode = TreeHelper.createText(sup);
     var node = TreeHelper.createNode('mo', [], {}, textNode);
     parser.Push(
-                new sitem.PrimeItem(base, parser.mmlToken(node) as MmlNode) );
+                new sitem.PrimeItem(base, parser.mmlToken(node)) );
   };
 
   /*
@@ -374,31 +390,31 @@ export namespace ParseMethods {
    */
   export function Other(parser: OldParser, c: string) {
     TreeHelper.printMethod("Other");
-    var def = {}, mo;
-    if (parser.stack.env.font) {
+    let def = {};
+    if (parser.stack.env['font']) {
       // @test Other Font
-      def = {mathvariant: parser.stack.env.font};
+      def = {mathvariant: parser.stack.env['font']};
     }
 
-    var remap = parser.remap.lookup(c);
+    var remap = (parser.remap as CharacterMap).lookup(c);
     // @test Other
     // @test Other Remap
     var textNode = TreeHelper.createText(remap ? remap.char : c);
-    mo = TreeHelper.createNode('mo', [], def, textNode);
+    let mo = TreeHelper.createNode('mo', [], def, textNode);
     // VS: Question: What do these autoDefault methods do exactly.
     //     Is there a modern equivalent in v3?
     // 
     //   This changes the operator class, when fences are put around it. Just
     //   propagate from the inherited attributes or properties.
     // TODO: Currently just omitted!
-    if (!TreeHelper.NEW && mo.autoDefault("stretchy",true)) {
-      // @test A Rogers-Ramanujan Identity
-      mo.stretchy = false;
-    }
-    if (!TreeHelper.NEW && mo.autoDefault("texClass",true) == "") {
-      // @test A Rogers-Ramanujan Identity
-      mo = TreeHelper.createNode('TeXAtom', [mo], {});
-    }
+    // if (!TreeHelper.NEW && mo.autoDefault("stretchy",true)) {
+    //   // @test A Rogers-Ramanujan Identity
+    //   mo.stretchy = false;
+    // }
+    // if (!TreeHelper.NEW && mo.autoDefault("texClass",true) == "") {
+    //   // @test A Rogers-Ramanujan Identity
+    //   mo = TreeHelper.createNode('TeXAtom', [mo], {});
+    // }
     parser.Push(parser.mmlToken(mo));
   };
 
@@ -407,52 +423,55 @@ export namespace ParseMethods {
    *   Macros
    */
 
-  export function SetFont(parser: OldParser, name,font) {parser.stack.env.font = font};
-  export function SetStyle(parser: OldParser, name,texStyle,style,level) {
+  export function SetFont(parser: OldParser, name: string, font: string) {
+    parser.stack.env['font'] = font;
+  };
+  
+  export function SetStyle(parser: OldParser, name: string, texStyle: string, style: string, level: string) {
     TreeHelper.printMethod("SetStyle: " + name + " texStyle: " + texStyle +
                     " style: " + style + " level: " + level);
-    parser.stack.env.style = texStyle; parser.stack.env.level = level;
+    parser.stack.env['style'] = texStyle; parser.stack.env['level'] = level;
     parser.Push(
                 new sitem.StyleItem().With({styles: {displaystyle: style, scriptlevel: level}}) );
   };
-  export function SetSize(parser: OldParser, name,size) {
+  export function SetSize(parser: OldParser, name: string, size: string) {
     TreeHelper.printMethod("SetSize");
-    parser.stack.env.size = size;
+    parser.stack.env['size'] = size;
     parser.Push(
                 new sitem.StyleItem().With({styles: {mathsize: size+"em"}}) ); // convert to absolute?
   };
 
   // Look at color extension!
-  export function Color(parser: OldParser, name) {
+  export function Color(parser: OldParser, name: string) {
     TreeHelper.printMethod("Color");
     // @test Color Frac
     var color = parser.GetArgument(name);
-    var old = parser.stack.env.color;
-    parser.stack.env.color = color;
+    var old = parser.stack.env['color'];
+    parser.stack.env['color'] = color;
     var math = parser.ParseArg(name);
-    if (old) {parser.stack.env.color} else {delete parser.stack.env.color}
+    if (old) {parser.stack.env['color']} else {delete parser.stack.env['color']}
     var node = TreeHelper.createNode('mstyle', [math], {mathcolor: color});
     parser.Push(node);
   };
 
-  export function Spacer(parser: OldParser, name,space) {
+  export function Spacer(parser: OldParser, name: string, space: string) {
     // @test Positive Spacing, Negative Spacing
     var node = TreeHelper.createNode('mspace', [],
                               {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel:0});
     parser.Push(node);
   };
 
-  export function LeftRight(parser: OldParser, name) {
+  export function LeftRight(parser: OldParser, name: string) {
     TreeHelper.printMethod("LeftRight");
     // @test Fenced, Fenced3
     var alpha = name.substr(1);
     parser.Push(
-                // TODO: Sort this out: Uppercase the first character and add Item!
-                new sitem[alpha[0].toUpperCase() + alpha.slice(1) + 'Item']()
+      // TODO: Sort this out: Uppercase the first character and add Item!
+      new (sitem as any)[alpha[0].toUpperCase() + alpha.slice(1) + 'Item']()
                 .With({delim: parser.GetDelimiter(name)}) );
   };
 
-  export function Middle(parser: OldParser, name) {
+  export function Middle(parser: OldParser, name: string) {
     TreeHelper.printMethod("Middle");
     // @test Middle
     var delim = parser.GetDelimiter(name);
@@ -469,7 +488,7 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function NamedFn(parser: OldParser, name,id) {
+  export function NamedFn(parser: OldParser, name: string, id: string) {
     TreeHelper.printMethod("NamedFn");
     // @test Named Function
     if (!id) {id = name.substr(1)};
@@ -477,7 +496,7 @@ export namespace ParseMethods {
     var mml = TreeHelper.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
     parser.Push( new sitem.FnItem(parser.mmlToken(mml)) );
   };
-  export function NamedOp(parser: OldParser, name,id) {
+  export function NamedOp(parser: OldParser, name: string, id: string) {
     TreeHelper.printMethod("NamedOp");
     // @test Limit
     if (!id) {id = name.substr(1)};
@@ -494,10 +513,10 @@ export namespace ParseMethods {
     parser.Push(parser.mmlToken(mml));
   };
 
-  export function Limits(parser: OldParser, name,limits) {
+  export function Limits(parser: OldParser, name: string, limits: string) {
     TreeHelper.printMethod("Limits");
     // @test Limits
-    var op = parser.stack.Prev("nopop");
+    var op = parser.stack.Prev(true);
     if (!op || (TreeHelper.getTexClass(op) !== TEXCLASS.OP &&
                 TreeHelper.getProperty(op, 'movesupsub') == null)) {
       // @test Limits Error
@@ -525,11 +544,10 @@ export namespace ParseMethods {
     }
   };
 
-  export function Over(parser: OldParser, name,open,close) {
+  export function Over(parser: OldParser, name: string, open: string, close: string) {
     TreeHelper.printMethod("Over");
     // @test Over
-    var mml = 
-      new sitem.OverItem().With({name: name}) ;
+    var mml = new sitem.OverItem().With({name: name}) ;
     if (open || close) {
       // @test Choose
       mml.open = open; mml.close = close;
@@ -549,7 +567,7 @@ export namespace ParseMethods {
     parser.Push(mml);
   };
 
-  export function Frac(parser: OldParser, name) {
+  export function Frac(parser: OldParser, name: string) {
     TreeHelper.printMethod("Frac");
     // @test Frac
     var num = parser.ParseArg(name);
@@ -558,15 +576,13 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function Sqrt(parser: OldParser, name) {
+  export function Sqrt(parser: OldParser, name: string) {
     TreeHelper.printMethod("Sqrt");
     var n = parser.GetBrackets(name), arg = parser.GetArgument(name);
     if (arg === "\\frac") {arg += "{"+parser.GetArgument(arg)+"}{"+parser.GetArgument(arg)+"}"}
-    var mml = new OldParser(arg,parser.stack.env, [], {}).mml();
+    var mml = new OldParser(arg, parser.stack.env, ParseMethods).mml();
     if (!n) {
       // @test Square Root
-      // mml = TreeHelper.createNode('msqrt', TreeHelper.NEW ? [mml] : mml.array(), {});
-      // .array call never seemed to be necessary!
       mml = TreeHelper.createNode('msqrt', [mml], {});
     } else {
       // @test General Root
@@ -574,7 +590,7 @@ export namespace ParseMethods {
     }
     parser.Push(mml);
   };
-  export function Root(parser: OldParser, name) {
+  export function Root(parser: OldParser, name: string) {
     TreeHelper.printMethod("Root");
     var n = parser.GetUpTo(name,"\\of");
     var arg = parser.ParseArg(name);
@@ -584,27 +600,27 @@ export namespace ParseMethods {
 
 
   // Utility?
-  export function parseRoot(parser: OldParser, n) {
+  export function parseRoot(parser: OldParser, n: string) {
     TreeHelper.printMethod("parseRoot");
     // @test General Root, Explicit Root
-    var env = parser.stack.env, inRoot = env.inRoot; env.inRoot = true;
+    var env = parser.stack.env, inRoot = env['inRoot']; env['inRoot'] = true;
     // TODO: This parser call might change!
-    var parser = new OldParser(n,env, [], {});
-    n = parser.mml();
-    TreeHelper.printJSON(n);
+    var parser = new OldParser(n, env, ParseMethods);
+    let node = parser.mml();
+    TreeHelper.printJSON(node);
     var global = parser.stack.global;
-    if (global.leftRoot || global.upRoot) {
+    if (global['leftRoot'] || global['upRoot']) {
       // @test Tweaked Root
       var def = {};
-      if (global.leftRoot) {
-        def.width = global.leftRoot;
+      if (global['leftRoot']) {
+        def.width = global['leftRoot'];
       }
-      if (global.upRoot) {
-        def.voffset = global.upRoot;
-        def.height = global.upRoot;
+      if (global['upRoot']) {
+        def.voffset = global['upRoot'];
+        def.height = global['upRoot'];
       }
       
-      n = TreeHelper.createNode('mpadded', [n], def);
+      node = TreeHelper.createNode('mpadded', [node], def);
       // VS: OLD
       // if (global.leftRoot) {
       //   n.width = global.leftRoot;
@@ -614,13 +630,14 @@ export namespace ParseMethods {
       //   n.height = global.upRoot;
       // }
     }
-    env.inRoot = inRoot;
-    return n;
+    env['inRoot'] = inRoot;
+    return node;
   };
-  export function MoveRoot(parser: OldParser, name,id) {
+  
+  export function MoveRoot(parser: OldParser, name: string, id: string) {
     TreeHelper.printMethod("MoveRoot");
     // @test Tweaked Root
-    if (!parser.stack.env.inRoot) {
+    if (!parser.stack.env['inRoot']) {
       // @test Misplaced Move Root
       throw new TexError(["MisplacedMoveRoot","%1 can appear only within a root",name]);
     }
@@ -638,14 +655,14 @@ export namespace ParseMethods {
     parser.stack.global[id] = n;
   };
 
-  export function Accent(parser: OldParser, name,accent,stretchy) {
+  export function Accent(parser: OldParser, name: string, accent: string, stretchy: boolean) {
     TreeHelper.printMethod("Accent");
     // @test Vector
     var c = parser.ParseArg(name);
     var def = {accent: true};
-    if (parser.stack.env.font) {
+    if (parser.stack.env['font']) {
       // @test Vector Font
-      def.mathvariant = parser.stack.env.font;
+      def.mathvariant = parser.stack.env['font'];
     }
     var entity = TreeHelper.createEntity(accent);
     var moNode = TreeHelper.createNode('mo', [], def, entity);
@@ -663,11 +680,11 @@ export namespace ParseMethods {
     TreeHelper.setData(muoNode, 0, c);
     TreeHelper.setData(muoNode, 1, null);
     TreeHelper.setData(muoNode, 2, mml);
-    var texAtom = TreeHelper.createNode('TeXAtom', [muoNode], {});
+    let texAtom = TreeHelper.createNode('TeXAtom', [muoNode], {});
     parser.Push(texAtom);
   };
 
-  export function UnderOver(parser: OldParser, name,c,stack,noaccent) {
+  export function UnderOver(parser: OldParser, name: string, c: string, stack: boolean, noaccent: boolean) {
     TreeHelper.printMethod("UnderOver");
     // @test Overline
     var pos = {o: "over", u: "under"}[name.charAt(1)];
@@ -699,7 +716,7 @@ export namespace ParseMethods {
     parser.Push(mml);
   };
 
-  export function Overset(parser: OldParser, name) {
+  export function Overset(parser: OldParser, name: string) {
     TreeHelper.printMethod("Overset");
     // @test Overset
     var top = parser.ParseArg(name), base = parser.ParseArg(name);
@@ -709,7 +726,8 @@ export namespace ParseMethods {
     var node = TreeHelper.createNode('mover', [base, top], {});
     parser.Push(node);
   };
-  export function Underset(parser: OldParser, name) {
+  
+  export function Underset(parser: OldParser, name: string) {
     TreeHelper.printMethod("Underset");
     // @test Underset
     var bot = parser.ParseArg(name), base = parser.ParseArg(name);
@@ -721,25 +739,26 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function TeXAtom(parser: OldParser, name,mclass) {
+  export function TeXAtom(parser: OldParser, name: string, mclass: number) {
     TreeHelper.printMethod("TeXAtom");
-    var def = {texClass: mclass}, mml, node;
+    let def: sitem.EnvList = {texClass: mclass};
+    let mml: sitem.StackItem;
+    let node: MmlNode;
     if (mclass == TEXCLASS.OP) {
-      def.movesupsub = def.movablelimits = true;
+      def['movesupsub'] = def['movablelimits'] = true;
       var arg = parser.GetArgument(name);
       var match = arg.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
       if (match) {
         // @test Mathop
-        def.mathvariant = TexConstant.Variant.NORMAL;
+        def['mathvariant'] = TexConstant.Variant.NORMAL;
         var textNode = TreeHelper.createText(match[1]);
         node = TreeHelper.createNode('mi', [], def, textNode);
-        mml = 
-          new sitem.FnItem(parser.mmlToken(node)) ;
+        mml = new sitem.FnItem(parser.mmlToken(node));
       } else {
         // @test Mathop Cal
-        var parsed = new OldParser(arg,parser.stack.env, [], {}).mml();
+        var parsed = new OldParser(arg,parser.stack.env, ParseMethods).mml();
         node = TreeHelper.createNode('TeXAtom', [parsed], def);
-        mml =  new sitem.FnItem(node) ;
+        mml = new sitem.FnItem(node);
       }
     } else {
       // @test Mathrel
@@ -750,15 +769,7 @@ export namespace ParseMethods {
   };
 
   // VS: This method is only called during a macro call: AMS Math and \\mod.
-  export function MmlToken(parser: OldParser, name) {
-    if (TreeHelper.NEW) {
-      ParseMethods.MmlTokenNew(parser, name);
-    } else {
-      ParseMethods.MmlTokenOld(parser, name);
-    }
-  };
-  
-  export function MmlTokenNew(parser: OldParser, name) {
+  export function MmlToken(parser: OldParser, name: string) {
     TreeHelper.printMethod("MmlToken");
     // @test Modulo
     var type = parser.GetArgument(name),
@@ -781,7 +792,7 @@ export namespace ParseMethods {
         // @test Token Invalid Attribute
         throw new TexError(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
       }
-      if (node.attributes.getAllDefaults()[match[1]] == null && !ParseMethods.MmlTokenAllow[match[1]]) {
+      if (node.attributes.getAllDefaults()[match[1]] == null && !MmlTokenAllow[match[1]]) {
         // @test Token Unknown Attribute, Token Wrong Attribute
         throw new TexError(["UnknownAttrForElement",
                             "%1 is not a recognized attribute for %2",
@@ -801,52 +812,9 @@ export namespace ParseMethods {
     TreeHelper.setProperties(node, def);
     parser.Push(parser.mmlToken(node));
   };
-  export function MmlTokenOld(parser: OldParser, name) {
-    TreeHelper.printMethod("MmlToken");
-    // @test Modulo
-    var type = parser.GetArgument(name),
-    attr = parser.GetBrackets(name,"").replace(/^\s+/,""),
-    data = parser.GetArgument(name),
-    def = {attrNames:[]}, match;
-    TreeHelper.printSimple("Start mmlToken: type: " + type + " data: " + data);
-    if (!TreeHelper.MML[type] || !TreeHelper.MML[type].prototype.isToken) {
-      // @test Token Illegal Type, Token Wrong Type
-      throw new TexError(["NotMathMLToken","%1 is not a token element",type])}
-    while (attr !== "") {
-      match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
-      if (!match) {
-        // @test Token Invalid Attribute
-        throw new TexError(["InvalidMathMLAttr","Invalid MathML attribute: %1",attr]);
-      }
-      if (TreeHelper.MML[type].prototype.defaults[match[1]] == null && !ParseMethods.MmlTokenAllow[match[1]]) {
-        // @test Token Unknown Attribute, Token Wrong Attribute
-        throw new TexError(["UnknownAttrForElement",
-                            "%1 is not a recognized attribute for %2",
-                            match[1],type]);
-      }
-      var value = ParseMethods.MmlFilterAttribute(match[1],match[2].replace(/^(['"])(.*)\1$/,"$2"));
-      if (value) {
-        if (value.toLowerCase() === "true") {value = true}
-        else if (value.toLowerCase() === "false") {value = false}
-        def[match[1]] = value;
-        def.attrNames.push(match[1]);
-      }
-      attr = attr.substr(match[0].length);
-    }
-    TreeHelper.printSimple("End mmlToken: type: " + type + " data: " + data);
-    parser.Push(parser.mmlToken(TreeHelper.MML[type](data).With(def)));
-  };
 
-  // Utilities?
-  export function MmlFilterAttribute(parser: OldParser, name,value) {return value};
-  ParseMethods.MmlTokenAllow = {
-    fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
-    color:1, background:1,
-    id:1, "class":1, href:1, style:1
-  };
-  // End Utilities?
 
-  export function Strut(parser: OldParser, name) {
+  export function Strut(parser: OldParser, name: string) {
     TreeHelper.printMethod("Strut");
     // @test Strut
     // TODO: Do we still need this row as it is implicit?
@@ -856,7 +824,7 @@ export namespace ParseMethods {
     parser.Push(padded);
   };
 
-  export function Phantom(parser: OldParser, name,v,h) {
+  export function Phantom(parser: OldParser, name: string, v: string, h: string) {
     TreeHelper.printMethod("Phantom");
     // @test Phantom
     var box = TreeHelper.createNode('mphantom', [parser.ParseArg(name)], {});
@@ -875,7 +843,7 @@ export namespace ParseMethods {
     parser.Push(atom);
   };
 
-  export function Smash(parser: OldParser, name) {
+  export function Smash(parser: OldParser, name: string) {
     TreeHelper.printMethod("Smash");
     // @test Smash, Smash Top, Smash Bottom
     var bt = parser.trimSpaces(parser.GetBrackets(name,""));
@@ -889,7 +857,7 @@ export namespace ParseMethods {
     parser.Push(atom);
   };
 
-  export function Lap(parser: OldParser, name) {
+  export function Lap(parser: OldParser, name: string) {
     TreeHelper.printMethod("Lap");
     // @test Llap, Rlap
     var mml = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {width: 0});
@@ -901,7 +869,7 @@ export namespace ParseMethods {
     parser.Push(atom);
   };
 
-  export function RaiseLower(parser: OldParser, name) {
+  export function RaiseLower(parser: OldParser, name: string) {
     TreeHelper.printMethod("RaiseLower");
     // @test Raise, Lower, Raise Negative, Lower Negative
     var h = parser.GetDimen(name);
@@ -922,7 +890,7 @@ export namespace ParseMethods {
     parser.Push(item);
   };
 
-  export function MoveLeftRight(parser: OldParser, name) {
+  export function MoveLeftRight(parser: OldParser, name: string) {
     TreeHelper.printMethod("MoveLeftRight");
     // @test Move Left, Move Right, Move Left Negative, Move Right Negative
     var h = parser.GetDimen(name);
@@ -939,7 +907,7 @@ export namespace ParseMethods {
                   right: TreeHelper.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}) );
   };
 
-  export function Hskip(parser: OldParser, name) {
+  export function Hskip(parser: OldParser, name: string) {
     TreeHelper.printMethod("Hskip");
     // @test Modulo
     var node = TreeHelper.createNode('mspace', [],
@@ -948,7 +916,7 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function Rule(parser: OldParser, name,style) {
+  export function Rule(parser: OldParser, name: string, style: string) {
     TreeHelper.printMethod("Rule");
     // @test Rule 3D, Space 3D
     var w = parser.GetDimen(name),
@@ -956,12 +924,12 @@ export namespace ParseMethods {
     d = parser.GetDimen(name);
     var def = {width:w, height:h, depth:d};
     if (style !== 'blank') {
-      def.mathbackground = (parser.stack.env.color || "black");
+      def.mathbackground = (parser.stack.env['color'] || "black");
     }
     var node = TreeHelper.createNode('mspace', [], def);
     parser.Push(node);
   };
-  export function rule(parser: OldParser, name) {
+  export function rule(parser: OldParser, name: string) {
     TreeHelper.printMethod("rule");
     // @test Rule 2D
     var v = parser.GetBrackets(name),
@@ -969,7 +937,7 @@ export namespace ParseMethods {
     h = parser.GetDimen(name);
     var mml = TreeHelper.createNode('mspace', [], {
       width: w, height:h,
-      mathbackground: (parser.stack.env.color || "black") });
+      mathbackground: (parser.stack.env['color'] || "black") });
     if (v) {
       mml = TreeHelper.createNode('mpadded', [mml], {voffset: v});
       if (v.match(/^\-/)) {
@@ -982,22 +950,22 @@ export namespace ParseMethods {
     parser.Push(mml as any);
   };
 
-  export function MakeBig(parser: OldParser, name,mclass,size) {
+  export function MakeBig(parser: OldParser, name: string, mclass: number, size: number) {
     TreeHelper.printMethod("MakeBig");
     // @test Choose, Over With Delims, Above With Delims
-    size *= ParseMethods.P_HEIGHT;
-    size = String(size).replace(/(\.\d\d\d).+/,'$1')+"em";
-    var delim = parser.GetDelimiter(name,true);
+    size *= P_HEIGHT;
+    let sizeStr = String(size).replace(/(\.\d\d\d).+/,'$1')+"em";
+    var delim = parser.GetDelimiter(name, true);
     var text = TreeHelper.createText(delim);
     var mo = TreeHelper.createNode('mo', [], {
-      minsize: size, maxsize: size,
+      minsize: sizeStr, maxsize: sizeStr,
       fence: true, stretchy: true, symmetric: true
     }, text);
     var node = TreeHelper.createNode('TeXAtom', [mo], {texClass: mclass});
     parser.Push(node);
   };
 
-  export function BuildRel(parser: OldParser, name) {
+  export function BuildRel(parser: OldParser, name: string) {
     TreeHelper.printMethod("BuildRel");
     // @test BuildRel, BuildRel Expression
     var top = parser.ParseUpTo(name,"\\over");
@@ -1011,13 +979,13 @@ export namespace ParseMethods {
     parser.Push(atom);
   };
 
-  export function HBox(parser: OldParser, name,style) {
+  export function HBox(parser: OldParser, name: string, style: string) {
     TreeHelper.printMethod("HBox");
     // @test Hbox
     parser.PushAll(parser.InternalMath(parser.GetArgument(name),style));
   };
 
-  export function FBox(parser: OldParser, name) {
+  export function FBox(parser: OldParser, name: string) {
     TreeHelper.printMethod("FBox");
     // @test Fbox
     var internal = parser.InternalMath(parser.GetArgument(name));
@@ -1025,14 +993,14 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function Not(parser: OldParser, name) {
+  export function Not(parser: OldParser, name: string) {
     TreeHelper.printMethod("Not");
     // @test Negation Simple, Negation Complex, Negation Explicit,
     //       Negation Large
     parser.Push( new sitem.NotItem() );
   };
 
-  export function Dots(parser: OldParser, name) {
+  export function Dots(parser: OldParser, name: string) {
     TreeHelper.printMethod("Dots");
     // @test Operator Dots
     var ldotsEntity = TreeHelper.createEntity('2026');
@@ -1046,7 +1014,10 @@ export namespace ParseMethods {
                 }) );
   };
 
-  export function Matrix(parser: OldParser, name,open,close,align,spacing,vspacing,style,cases,numbered) {
+  export function Matrix(parser: OldParser, name: string,
+                         open: string, close: string, align: string,
+                         spacing: string, vspacing: string, style: string,
+                         cases: boolean, numbered: boolean) {
     TreeHelper.printMethod("Matrix");
     // TreeHelper.untested(36);
     var c = parser.GetNext();
@@ -1068,7 +1039,7 @@ export namespace ParseMethods {
     parser.Push(array);
   };
 
-  export function Entry(parser: OldParser, name) {
+  export function Entry(parser: OldParser, name: string) {
     TreeHelper.printMethod("Entry");
     // @test Label, Array, Cross Product Formula
     parser.Push(
@@ -1143,14 +1114,14 @@ export namespace ParseMethods {
     }
   };
 
-  export function Cr(parser: OldParser, name) {
+  export function Cr(parser: OldParser, name: string) {
     TreeHelper.printMethod("Cr");
     TreeHelper.untested(15);
     parser.Push(
                 new sitem.CellItem().With({isCR: true, name: name}) );
   };
 
-  export function CrLaTeX(parser: OldParser, name) {
+  export function CrLaTeX(parser: OldParser, name: string) {
     TreeHelper.printMethod("CrLaTeX");
     var n;
     if (parser.string.charAt(parser.i) === "[") {
@@ -1184,7 +1155,7 @@ export namespace ParseMethods {
     }
   };
 
-  export function HLine(parser: OldParser, name,style) {
+  export function HLine(parser: OldParser, name: string, style: string) {
     TreeHelper.printMethod("HLine");
     if (style == null) {style = "solid"}
     var top = parser.stack.Top();
@@ -1202,7 +1173,7 @@ export namespace ParseMethods {
     }
   };
 
-  export function HFill(parser: OldParser, name) {
+  export function HFill(parser: OldParser, name: string) {
     TreeHelper.printMethod("HFill");
     var top = parser.stack.Top();
     if (top instanceof sitem.ArrayItem) {
@@ -1215,7 +1186,7 @@ export namespace ParseMethods {
 
   // Utilities:
 
-  export function mi2mo(mi) {
+  export function mi2mo(mi: MmlNode) {
     TreeHelper.printMethod("mi2mo");
     // @test Mathop Sub, Mathop Super
     var mo = TreeHelper.createNode('mo', [], {});
@@ -1239,11 +1210,11 @@ export namespace ParseMethods {
    *   LaTeX environments
    */
 
-  MAXMACROS = 10000;    // maximum number of macro substitutions per equation
-  MAXBUFFER = 5*1024;   // maximum size of TeX string to process
+  let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
+  let MAXBUFFER = 5*1024;   // maximum size of TeX string to process
 
 
-  export function BeginEnd(parser: OldParser, name) {
+  export function BeginEnd(parser: OldParser, name: string) {
     TreeHelper.printMethod("BeginEnd");
     // @test Array1, Array2, Array Test
     var env = parser.GetArgument(name);
@@ -1259,7 +1230,7 @@ export namespace ParseMethods {
         new sitem.EndItem().With({name: env}) ;
       parser.Push(mml);
     } else {
-      if (++parser.macroCount > ParseMethods.MAXMACROS) {
+      if (++parser.macroCount > MAXMACROS) {
         throw new TexError(["MaxMacroSub2",
                             "MathJax maximum substitution count exceeded; " +
                             "is there a recursive latex environment?"]);
@@ -1269,7 +1240,7 @@ export namespace ParseMethods {
   };
 
 
-  export function BeginEnvironment(parser: OldParser, func, env, args) {
+  export function BeginEnvironment(parser: OldParser, func: Function, env: string, args: any[]) {
     TreeHelper.printMethod("BeginEnvironment");
     var end = args[0];
     var mml = 
@@ -1278,18 +1249,21 @@ export namespace ParseMethods {
     parser.Push(mml);
   };
 
-  export function Equation(parser: OldParser, begin,row) {
+  export function Equation(parser: OldParser, begin: string, row: MmlNode[]) {
     return row;
   };
 
-  export function ExtensionEnv(parser: OldParser, begin,file) {
-    parser.Extension(begin.name,file,"environment");
-  };
+  // export function ExtensionEnv(parser: OldParser, begin,file) {
+  //   parser.Extension(begin.name,file,"environment");
+  // };
 
-  export function Array(parser: OldParser, begin,open,close,align,spacing,vspacing,style,raggedHeight) {
+  export function Array(parser: OldParser, begin: sitem.StackItem,
+                        open: string, close: string, align: string,
+                        spacing: string, vspacing: string, style: string,
+                        raggedHeight: boolean) {
     TreeHelper.printMethod("Array");
     // @test Array1, Array2, Array Test
-    if (!align) {align = parser.GetArgument("\\begin{"+begin.name+"}")}
+    if (!align) {align = parser.GetArgument("\\begin{"+begin.getName()+"}")}
     var lines = ("c"+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
     align = align.replace(/[^clr]/g,'').split('').join(' ');
     align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
@@ -1319,16 +1293,16 @@ export namespace ParseMethods {
   };
 
 
-  export function AlignedArray(parser: OldParser, begin) {
+  export function AlignedArray(parser: OldParser, begin: sitem.StackItem) {
     TreeHelper.printMethod("AlignedArray");
     // @test Array1, Array2, Array Test
-    var align = parser.GetBrackets("\\begin{"+begin.name+"}");
+    var align = parser.GetBrackets("\\begin{"+begin.getName()+"}");
     return ParseMethods.setArrayAlign(parser,
                                       ParseMethods.Array.apply(parser,arguments),align);
   };
 
 
-  export function setArrayAlign(parser: OldParser, array,align) {
+  export function setArrayAlign(parser: OldParser, array: sitem.ArrayItem, align: string) {
     TreeHelper.printMethod("setArrayAlign");
     // @test Array1, Array2, Array Test
     align = parser.trimSpaces(align||"");
@@ -1347,10 +1321,10 @@ export namespace ParseMethods {
   // Most of this is untested and should probably go into a separate file.
   // We should probably loose require.
 
-  EXTENSION_DIR = "";
+  let EXTENSION_DIR = "";
 
 
-  export function Require(parser: OldParser, name) {
+  export function Require(parser: OldParser, name: string) {
     TreeHelper.printMethod("Require");
     var file = parser.GetArgument(name)
       .replace(/.*\//,"")            // remove any leading path
@@ -1359,29 +1333,35 @@ export namespace ParseMethods {
   };
 
 
-  export function Extension(parser: OldParser, name,file,array) {
+  export function Extension(parser: OldParser, name: string|sitem.StackItem,
+                            file: string, array: any) {
     TreeHelper.printMethod("Extension");
-    if (name && !typeof(name) === "string") {name = name.name}
+    if (name && !(typeof(name) === "string")) {name = name.getName();}
     // file = TEX.extensionDir+"/"+file;
-    file = ParseMethods.EXTENSION_DIR + "/" + file;
+    file = EXTENSION_DIR + "/" + file;
     if (!file.match(/\.js$/)) {file += ".js"}
   };
 
 
-  export function Macro(parser: OldParser, name,macro,argcount,def) {
+  export function Macro(parser: OldParser, name: string,
+                        macro: string, argcount: number,
+                        // TODO: The final argument seems never to be used.
+                        def?: string) {
     TreeHelper.printMethod("Macro");
     if (argcount) {
-      var args = [];
+      var args: string[] = [];
       if (def != null) {
         var optional = parser.GetBrackets(name);
         args.push(optional == null ? def : optional);
       }
-      for (var i = args.length; i < argcount; i++) {args.push(parser.GetArgument(name))}
+      for (var i = args.length; i < argcount; i++) {
+        args.push(parser.GetArgument(name));
+      }
       macro = ParseMethods.SubstituteArgs(args,macro);
     }
     parser.string = ParseMethods.AddArgs(macro,parser.string.slice(parser.i));
     parser.i = 0;
-    if (++parser.macroCount > ParseMethods.MAXMACROS) {
+    if (++parser.macroCount > MAXMACROS) {
       throw new TexError(["MaxMacroSub1",
                           "MathJax maximum macro substitution count exceeded; " +
                           "is there a recursive macro call?"]);
@@ -1393,11 +1373,13 @@ export namespace ParseMethods {
   /**
    *  Replace macro paramters with their values
    */
-  export function SubstituteArgs(args,string) {
+  export function SubstituteArgs(args: string[],string: string) {
     TreeHelper.printMethod("SubstituteArgs");
-    var text = ''; var newstring = ''; var c; var i = 0;
+    let text = '';
+    let newstring = '';
+    let i = 0;
     while (i < string.length) {
-      c = string.charAt(i++);
+      let c = string.charAt(i++);
       if (c === "\\") {text += c + string.charAt(i++)}
       else if (c === '#') {
         c = string.charAt(i++);
@@ -1406,7 +1388,7 @@ export namespace ParseMethods {
             throw new TexError(["IllegalMacroParam",
                                 "Illegal macro parameter reference"]);
           }
-          newstring = ParseMethods.AddArgs(this.AddArgs(newstring,text),args[c-1]);
+          newstring = ParseMethods.AddArgs(this.AddArgs(newstring,text),args[c - 1]);
           text = '';
         }
       } else {text += c}
@@ -1418,10 +1400,10 @@ export namespace ParseMethods {
    *  Make sure that macros are followed by a space if their names
    *  could accidentally be continued into the following text.
    */
-  export function AddArgs(s1,s2) {
+  export function AddArgs(s1: string, s2: string) {
     TreeHelper.printMethod("AddArgs");
     if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
-    if (s1.length + s2.length > ParseMethods.MAXBUFFER) {
+    if (s1.length + s2.length > MAXBUFFER) {
       throw new TexError(["MaxBufferSize",
                           "MathJax internal buffer size exceeded; is there a recursive macro call?"]);
     }
@@ -1433,7 +1415,9 @@ export namespace ParseMethods {
   let TAG_SIDE = 'right';
   let TAG_INDENT = '0.8em';
 
-  export function AMSarray(parser: OldParser, begin,numbered,taggable,align,spacing) {
+  export function AMSarray(parser: OldParser, begin: sitem.StackItem,
+                           numbered: boolean, taggable: boolean, align: string,
+                           spacing: string) {
     TreeHelper.printMethod('AMS-AMSarray');
     // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
     parser.Push(begin);
@@ -1442,19 +1426,18 @@ export namespace ParseMethods {
     }
     align = align.replace(/[^clr]/g,'').split('').join(' ');
     align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-    return 
-      new sitem.AMSarrayItem(begin.name,numbered,taggable, parser.stack).With({
-        arraydef: {
-          displaystyle: true,
-          rowspacing: ".5em",
-          columnalign: align,
-          columnspacing: (spacing||"1em"),
-          // TODO: Which one is correct?
-          // rowspacing: "3pt",
-          side: TAG_SIDE,
-          minlabelspacing: TAG_INDENT
-        }
-      }) ;
+    return new sitem.AMSarrayItem(begin.getName(), numbered, taggable, parser.stack.global).With({
+      arraydef: {
+        displaystyle: true,
+        rowspacing: ".5em",
+        columnalign: align,
+        columnspacing: (spacing||"1em"),
+        // TODO: Which one is correct?
+        // rowspacing: "3pt",
+        side: TAG_SIDE,
+        minlabelspacing: TAG_INDENT
+      }
+    }) ;
   };
 
 
