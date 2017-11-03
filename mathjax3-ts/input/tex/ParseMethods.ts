@@ -886,19 +886,22 @@ export namespace ParseMethods {
     TreeHelper.printMethod("RaiseLower");
     // @test Raise, Lower, Raise Negative, Lower Negative
     var h = parser.GetDimen(name);
-    var item = 
+    let item = 
       new sitem.PositionItem().With({name: name, move: 'vertical'}) ;
+    // TEMP: Changes here:
     if (h.charAt(0) === '-') {
       // @test Raise Negative, Lower Negative
       h = h.slice(1);
-      name = {raise: "\\lower", lower: "\\raise"}[name.substr(1)];
+      name = name.substr(1) === 'raise' ? '\\lower' : '\\raise';
     }
-    if (name === "\\lower") {
+    if (name === '\\lower') {
       // @test Raise, Raise Negative
-      item.dh = '-'+h; item.dd = '+'+h;
+      item.setProperty('dh', '-' + h);
+      item.setProperty('dd', '+' + h);
     } else {
       // @test Lower, Lower Negative
-      item.dh = '+'+h; item.dd = '-'+h;
+      item.setProperty('dh', '+' + h);
+      item.setProperty('dd', '-' + h);
     }
     parser.Push(item);
   };
@@ -907,7 +910,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod("MoveLeftRight");
     // @test Move Left, Move Right, Move Left Negative, Move Right Negative
     var h = parser.GetDimen(name);
-    var nh = (h.charAt(0) === '-' ? h.slice(1) : '-'+h);
+    var nh = (h.charAt(0) === '-' ? h.slice(1) : '-' + h);
     if (name === "\\moveleft") {
       var tmp = h;
       h = nh;
