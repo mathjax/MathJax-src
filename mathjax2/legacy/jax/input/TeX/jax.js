@@ -27,16 +27,16 @@
  */
 
 let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
-let imp = require("./imp.js").imp;
+// let imp = require("./imp.js").imp;
 let TexError = require('mathjax3/input/tex/TexError.js').default;
-let ParseMethods = require('./ParseMethods.js').ParseMethods;
+// let ParseMethods = require('./ParseMethods.js').ParseMethods;
 let Translate = require('./Translate.js').default;
 require("./old-stackitem.js");
 
 
 // This is only necessary for the legacy tests.
-imp.MML = MathJax.ElementJax.mml;
-ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
+// imp.MML = MathJax.ElementJax.mml;
+// ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
 
 (function (TEX) {
 
@@ -134,9 +134,9 @@ ParseMethods.STACKITEM = MathJax.InputJax.TeX.Stack.Item;
     //  Produce an error and stop processing this equation
     //
     // TODO: Kept for extenions only.
-    Error: function (message) {
-      throw new TexError(message);
-    },
+    // Error: function (message) {
+    //   throw new TexError(message);
+    // },
     
     //
     //  Add a user-defined macro to the macro list
