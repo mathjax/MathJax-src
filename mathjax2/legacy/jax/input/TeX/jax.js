@@ -30,7 +30,7 @@ let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
 // let imp = require("./imp.js").imp;
 // let TexError = require('mathjax3/input/tex/TexError.js').default;
 // let ParseMethods = require('./ParseMethods.js').ParseMethods;
-let Translate = require('mathjax3/input/tex/Translate.js').default;
+let NewTex = require('mathjax3/input/tex/Translate.js').NewTex;
 // let Translate = require('./Translate.js').default;
 require("./old-stackitem.js");
 
@@ -128,7 +128,7 @@ require("./old-stackitem.js");
     //  Convert TeX to ElementJax
     //
     Translate: function(script) {
-      return Translate(script, TEXDEF.configurations, STACKITEM);
+      return NewTex.Translate(script, TEXDEF.configurations, STACKITEM);
     },
 
     //
