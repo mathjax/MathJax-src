@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLMsqrt wrapper for the MmlMsqrt object
+ * @fileoverview  Implements the CHTMLmsqrt wrapper for the MmlMsqrt object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -32,7 +32,7 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLMsqrt wrapper for the Msqrt object
+ *  The CHTMLmsqrt wrapper for the MmlMsqrt object
  */
 
 export class CHTMLmsqrt extends CHTMLWrapper {
@@ -53,6 +53,10 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         },
         'mjx-sqrt > mjx-box': {
             'border-top': '.07em solid'
+        },
+        'mjx-sqrt.mjx-tall > mjx-box': {
+            'padding-left': '.3em',
+            'margin-left': '-.3em'
         }
     };
 
@@ -126,7 +130,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        const surd = this.childNodes[this.surd];
+        const surd = this.childNodes[this.surd] as CHTMLmo;
         const base = this.childNodes[this.base];
         //
         //  Get the parameters for the spacing of the parts
@@ -153,6 +157,9 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         this.addRoot(ROOT, root, sbox);
         surd.toCHTML(SURD);
         base.toCHTML(BASE);
+        if (surd.size < 0) {
+            SQRT.classList.add('mjx-tall');
+        }
     }
 
     /*
@@ -168,29 +175,27 @@ export class CHTMLmsqrt extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
-        const BBOX = this.bbox.empty();
-        const sbox = this.childNodes[this.surd].getBBox();
-        const bbox = new BBox(this.childNodes[this.base].getBBox());
-        const [p, q] = this.getPQ(sbox);
-        const [x] = this.getRootDimens(sbox);
+    public computeBBox(bbox: BBox) {
+        const surdbox = this.childNodes[this.surd].getBBox();
+        const basebox = new BBox(this.childNodes[this.base].getBBox());
+        const [p, q] = this.getPQ(surdbox);
+        const [x] = this.getRootDimens(surdbox);
         const t = this.font.params.rule_thickness;
         const H = bbox.h + q + t;
         bbox.h = H + t;
-        this.combineRootBBox(BBOX, sbox);
-        BBOX.combine(sbox, x, H - sbox.h);
-        BBOX.combine(bbox, x + sbox.w, 0);
-        BBOX.clean();
-        return BBOX;
+        this.combineRootBBox(bbox, surdbox);
+        bbox.combine(surdbox, x, H - surdbox.h);
+        bbox.combine(basebox, x + surdbox.w, 0);
+        bbox.clean();
     }
 
     /*
      * Combine the bounding box of the root (overridden in mroot)
      *
-     * @param{BBox} box   The bounding box so far
+     * @param{BBox} bbox  The bounding box so far
      * @param{BBox} sbox  The bounding box of the surd
      */
-    protected combineRootBBox(box: BBox, sbox: BBox) {
+    protected combineRootBBox(bbox: BBox, sbox: BBox) {
     }
 
     /*

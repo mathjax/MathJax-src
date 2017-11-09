@@ -33,7 +33,7 @@ import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
-import {FontData, DIRECTION} from './FontData.js';
+import {FontData, DelimiterData, DIRECTION, NOSTRETCH} from './FontData.js';
 import {StyleList} from './CssStyles.js';
 
 /*****************************************************************/
@@ -57,6 +57,12 @@ export const FONTSIZE: StringMap = {
     '173%': 'LG',
     '207%': 'hg',
     '249%': 'HG'
+};
+
+export const SPACE: StringMap = {
+    [LENGTHS.em(3/18)]: '1',
+    [LENGTHS.em(4/18)]: '2',
+    [LENGTHS.em(5/18)]: '3',
 };
 
 /*
@@ -99,14 +105,19 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         'mjx-chtml [size="hg"]': {'font-size': '207%'},
         'mjx-chtml [size="HG"]': {'font-size': '249%'},
 
+        'mjx-chtml [width="full"]': {
+            width: '100%'
+        },
+
         'mjx-box': {display: 'inline-block'},
         'mjx-block': {display: 'block'},
         'mjx-itable': {display: 'inline-table'},
+        'mjx-row': {display: 'table-row'},
+        'mjx-row > *': {display: 'table-cell'},
 
         //
         //  These don't have Wrapper subclasses, so add their styles here
         //
-        'mjx-mi': {display: 'inline-block'},
         'mjx-mn': {display: 'inline-block'},
         'mjx-mtext': {display: 'inline-block'},
         'mjx-merror': {
@@ -115,15 +126,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             'background-color': 'yellow'
         },
 
-        'mjx-mphantom': {visibility: 'hidden'},
-
-        'mjx-math': {
-            //
-            //  There will be more here when the math wrapper is written
-            //
-            display: 'inline-block',
-            'line-height': '0px'
-        }
+        'mjx-mphantom': {visibility: 'hidden'}
 
     };
 
@@ -223,9 +226,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     protected bboxComputed: boolean = false;
 
     /*
-     * Direction this node can be stretched (null means not yet determined)
+     * Delimiter data for stretching this node (NOSTRETCH means not yet determined)
      */
-    public stretch: DIRECTION = DIRECTION.None;
+    public stretch: DelimiterData = NOSTRETCH;
 
     /*
      * Easy access to the font parameters
@@ -304,24 +307,21 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (this.bboxComputed) {
             return this.bbox;
         }
-        let bbox = this.computeBBox();
-        if (save) {
-            this.bbox = bbox;
-            this.bboxComputed = true;
-        }
+        const bbox = (save ? this.bbox : BBox.zero());
+        this.computeBBox(bbox);
+        this.bboxComputed = save;
         return bbox;
     }
 
     /*
-     * @return{BBox}  The computed bounding box for the wrapped node
+     * @param{BBox} bbox  The bounding box to modify (either this.bbox, or an empty one)
      */
-    protected computeBBox() {
-        const bbox = this.bbox.empty();
+    protected computeBBox(bbox: BBox) {
+        bbox.empty();
         for (const child of this.childNodes) {
             bbox.append(child.getBBox());
         }
         bbox.clean();
-        return bbox;
     }
 
     /*******************************************************************/
@@ -405,7 +405,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         let attributes = this.node.attributes;
         let scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
         let fontsize = attributes.get('fontsize');
-        let mathsize = (parent && !this.node.isToken ? parent : this).node.attributes.get('mathsize');
+        let mathsize = (this.node.isToken || this.node.isKind('mstyle') ?
+                        attributes.get('mathsize') : attributes.getInherited('mathsize'));
         //
         // If scriptsize is non-zero, set scale based on scriptsizemultiplier
         //
@@ -507,15 +508,25 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Set the (relative) scaling factor for the node
      */
     protected handleScale() {
-        const scale = (Math.abs(this.bbox.rscale - 1) < .001 ? 1 : this.bbox.rscale);
-        if (this.chtml && scale !== 1) {
+        this.setScale(this.chtml, this.bbox.rscale);
+    }
+
+    /*
+     * @param{HTMLElement} chtml  The HTML node to scale
+     * @param{number} rscale      The relatie scale to apply
+     * @return{HTMLElement}       The HTML node (for chaining)
+     */
+    protected setScale(chtml: HTMLElement, rscale: number) {
+        const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
+        if (chtml && scale !== 1) {
             const size = this.percent(scale);
             if (FONTSIZE[size]) {
-                this.chtml.setAttribute('size', FONTSIZE[size]);
+                chtml.setAttribute('size', FONTSIZE[size]);
             } else {
-                this.chtml.style.fontSize = size;
+                chtml.style.fontSize = size;
             }
         }
+        return chtml;
     }
 
     /*
@@ -524,7 +535,12 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleSpace() {
         if (this.bbox.L) {
-            this.chtml.setAttribute('space', (this.bbox.L * 18 - 2).toString());
+            const space = this.em(this.bbox.L);
+            if (SPACE[space]) {
+                this.chtml.setAttribute('space', SPACE[space]);
+            } else {
+                this.chtml.style.marginLeft = space;
+            }
         }
     }
 
@@ -604,16 +620,16 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{boolean}             Whether the node can stretch in that direction
      */
     public canStretch(direction: DIRECTION): boolean {
-        this.stretch = DIRECTION.None;
+        this.stretch = NOSTRETCH;
         if (this.node.isEmbellished) {
             let core = this.core();
             if (core && core.node !== this.node) {
                 if (core.canStretch(direction)) {
-                    this.stretch = direction;
+                    this.stretch = core.stretch;
                 }
             }
         }
-        return this.stretch !== DIRECTION.None;
+        return this.stretch.dir !== DIRECTION.None;
     }
 
     /*******************************************************************/
@@ -624,7 +640,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     public drawBBox() {
         const bbox = this.getBBox();
         const box = this.html('mjx-box', {style: {
-            opacity: .25, 'margin-left': this.em(-bbox.w)
+            opacity: .25, 'margin-left': this.em(-bbox.w - bbox.R)
         }}, [
             this.html('mjx-box', {style: {
                 height: this.em(bbox.h),
@@ -640,7 +656,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             }})
         ]);
         const node = this.chtml || this.parent.chtml;
-        node.appendChild(box);
+        node.parentNode.appendChild(box);
         node.style.backgroundColor = '#FFEE00';
     }
 

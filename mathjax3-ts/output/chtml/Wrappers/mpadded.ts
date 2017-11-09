@@ -92,7 +92,7 @@ export class CHTMLmpadded extends CHTMLWrapper {
      */
     protected getDimens() {
         const values = this.node.attributes.getList('width', 'height', 'depth', 'lspace', 'voffset');
-        const bbox = super.computeBBox();  // get unmodified bbox of children
+        const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
         let {w, h, d} = bbox;
         let W = w, H = h, D = d, x = 0, y = 0;
         if (values.width !== '')   w = this.dimen(values.width, bbox, 'w', 0);
@@ -130,13 +130,11 @@ export class CHTMLmpadded extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
+    public computeBBox(bbox: BBox) {
         const [H, D, W, dh, dd, dw, x, y] = this.getDimens();
-        const bbox = this.bbox;
         bbox.w = W + dw;
         bbox.h = H + dh;
         bbox.d = D + dd;
-        return bbox;
     }
 
 }

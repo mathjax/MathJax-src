@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLsemantics wrapper for the Mmlsemantics object
+ * @fileoverview  Implements the CHTMLsemantics wrapper for the MmlSemantics object
  *                and the associated wrappers for annotations
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -50,15 +50,13 @@ export class CHTMLsemantics extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
-        const bbox = this.bbox;
+    public computeBBox(bbox: BBox) {
         if (this.childNodes.length) {
             const {w, h, d} = this.childNodes[0].getBBox();
             bbox.w = w;
             bbox.h = h;
             bbox.d = d;
         }
-        return bbox;
     }
 
 }

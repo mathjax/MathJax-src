@@ -59,13 +59,11 @@ export class CHTMLmspace extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
+    public computeBBox(bbox: BBox) {
         const attributes = this.node.attributes;
-        const bbox = this.bbox;
         bbox.w = this.length2em(attributes.get('width'), 0);
         bbox.h = this.length2em(attributes.get('height'), 0);
         bbox.d = this.length2em(attributes.get('depth'), 0);
-        return bbox;
     }
 
     /*

@@ -30,7 +30,7 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLMroot wrapper for the Mroot object (extends CHTMLmsqrt)
+ *  The CHTMLmroot wrapper for the MmlMroot object (extends CHTMLmsqrt)
  */
 
 export class CHTMLmroot extends CHTMLmsqrt {

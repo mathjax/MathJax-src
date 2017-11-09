@@ -105,7 +105,7 @@ export class CHTML extends AbstractOutputJax {
         this.math = math;
         this.nodes.document = html.document;
         math.root.setTeXclass(null);
-        let node = this.html('mjx-chtml', {'class': 'MathJax_CHTML MJX-TEX'});
+        let node = this.html('mjx-chtml', {'class': 'MathJax MJX-CHTML MJX-TEX'});
         const scale = math.metrics.scale * this.options.scale;
         if (scale !== 1) {
             node.style.fontSize = percent(scale);
