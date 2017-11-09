@@ -1505,4 +1505,14 @@ export namespace ParseMethods {
     if (c === "\\" && ++parser.i && parser.GetCS() !== "limits") parser.i = i;
   };
 
+  // mathchoice
+  export function MathChoice(parser: OldParser, name: string) {
+    let D  = parser.ParseArg(name);
+    let T  = parser.ParseArg(name);
+    let S  = parser.ParseArg(name);
+    let SS = parser.ParseArg(name);
+    parser.Push(D);
+    // parser.Push(MML.TeXmathchoice(D,T,S,SS));
+  }
+  
 }
