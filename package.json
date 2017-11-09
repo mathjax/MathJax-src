@@ -1,8 +1,15 @@
 {
   "name": "mathjax3",
-  "version": "0.1.0",
-  "description": "MathJax version 3 testbed",
-  "main": "load.js",
+  "version": "3.0.0-alpha.0",
+  "maintainers": [
+    "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
+  ],
+  "description": "MathJax version 3 alpha release testbed",
+  "main": "./mathjax3/mathjax.js",
+  "types": "./mathjax3/mathjax.d.ts",
+  "scripts": {
+    "prepublishOnly": "npx tsc"
+  },
   "dependencies": {
     "jsdom": "10.*",
     "typedoc": "^0.9.0"
@@ -19,8 +26,20 @@
     "type": "git",
     "url": "https://github.com/mathjax/mathjax-v3/"
   },
+  "bugs": {
+    "url": "http://github.com/mathjax/mathjax-v3/issues"
+  },
   "keywords": [
-    "MathJax"
-  ],
-  "license": "Apache-2.0"
+    "MathJax",
+    "math",
+    "svg",
+    "mathml",
+    "tex",
+    "latex",
+    "asciimath",
+    "browser",
+    "nodejs",
+    "equations",
+    "formula"
+  ],  "license": "Apache-2.0"
 }
