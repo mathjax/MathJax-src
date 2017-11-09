@@ -52,6 +52,7 @@ MathJax.ElementJax.mml.Augment({
     }
   }
 },{
+  // VS Q: These two do what?
   INHERIT: "_inherit_",
   AUTO: "_auto_",
   SIZE: {
@@ -214,6 +215,9 @@ MathJax.ElementJax.mml.Augment({
     NONE:   -1
   },
   TEXCLASSNAMES: ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"],
+
+  // VS Q: What do these do?
+  
   skipAttributes: {
     texClass:true, useHeight:true, texprimestyle:true
   },
@@ -1394,6 +1398,7 @@ MathJax.ElementJax.mml.Augment({
     }
   });
   
+  // VS Q: This is a list of characters? Why?
   MML.chars = MML.mbase.Subclass({
     type: "chars",
     Append: function () {this.data.push.apply(this.data,arguments)},
@@ -1413,8 +1418,7 @@ MathJax.ElementJax.mml.Augment({
       var n = this.value();
       if (n <= 0xFFFF) {return String.fromCharCode(n)}
       n -= 0x10000;
-      return String.fromCharCode((n>>10)+0xD800)
-           + String.fromCharCode((n&0x3FF)+0xDC00);
+      return String.fromCharCode((n>>10)+0xD800, (n&0x3FF)+0xDC00);
     }
   });
   

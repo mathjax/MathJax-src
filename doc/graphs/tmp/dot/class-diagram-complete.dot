@@ -1,0 +1,252 @@
+digraph structs {
+  edge [dir=back];
+  node [shape=record];
+FindMath [color=green, label="{ interface FindMath | findMath\nfindMath}"];
+AbstractFindMath [color=blue, label="{ abstract class AbstractFindMath | findMath}"];
+FindMath -> AbstractFindMath[label="implements"]
+Handler [color=green, label="{ interface Handler | handlesDocument\ncreate}"];
+DefaultMathDocument [label="{ class DefaultMathDocument | }"];
+AbstractMathDocument -> DefaultMathDocument[label="extends"]
+AbstractHandler [color=blue, label="{ abstract class AbstractHandler | handlesDocument\ncreate}"];
+Handler -> AbstractHandler[label="implements"]
+HandlerList [label="{ class HandlerList | register\nunregister\nhandlesDocument\ndocument}"];
+PrioritizedList -> HandlerList[label="extends"]
+InputJax [color=green, label="{ interface InputJax | findMath\ncompile}"];
+AbstractInputJax [color=blue, label="{ abstract class AbstractInputJax | findMath\nabstract compile\nprotected executeFilters}"];
+InputJax -> AbstractInputJax[label="implements"]
+MathDocument [color=green, label="{ interface MathDocument | findMath\ncompile\ngetMetrics\ntypeset\naddEventHandlers\nupdateDocument\nremoveFromDocument\nstate\nreset\nclear\nconcat}"];
+DefaultInputJax [label="{ class DefaultInputJax | compile}"];
+AbstractInputJax -> DefaultInputJax[label="extends"]
+DefaultOutputJax [label="{ class DefaultOutputJax | typeset\nescaped}"];
+AbstractOutputJax -> DefaultOutputJax[label="extends"]
+DefaultMathList [label="{ class DefaultMathList | }"];
+AbstractMathList -> DefaultMathList[label="extends"]
+AbstractMathDocument [color=blue, label="{ abstract class AbstractMathDocument | findMath\ncompile\ncompileError\ntypeset\ntypesetError\ngetMetrics\naddEventHandlers\nupdateDocument\nremoveFromDocument\nstate\nreset\nclear\nconcat}"];
+MathDocument -> AbstractMathDocument[label="implements"]
+MathItem [color=green, label="{ interface MathItem | compile\ntypeset\naddEventHandlers\nupdateDocument\nremoveFromDocument\nsetMetrics\nstate}"];
+AbstractMathItem [color=blue, label="{ abstract class AbstractMathItem | compile\ntypeset\naddEventHandlers\nupdateDocument\nremoveFromDocument\nsetMetrics\nstate}"];
+MathItem -> AbstractMathItem[label="implements"]
+MathList [color=green, label="{ interface MathList | isBefore}"];
+LinkedList -> MathList[label="extends"]
+AbstractMathList [color=blue, label="{ abstract class AbstractMathList | isBefore}"];
+LinkedList -> AbstractMathList[label="extends"]
+MathList -> AbstractMathList[label="implements"]
+Attributes [label="{ class Attributes | set\nsetList\nget\ngetExplicit\ngetList\nsetInherited\ngetInherited\ngetDefault\nisSet\nhasDefault\ngetExplicitNames\ngetInheritedNames\ngetDefaultNames\ngetGlobalNames\ngetAllAttributes\ngetAllInherited\ngetAllDefaults\ngetAllGlobals}"];
+JsonMmlVisitor [label="{ class JsonMmlVisitor | visitTree\nvisitTextNode\nvisitXMLNode\nvisitDefault\ngetChildren\ngetAttributes\ngetInherited\ngetProperties}"];
+MmlVisitor -> JsonMmlVisitor[label="extends"]
+LegacyMmlVisitor [label="{ class LegacyMmlVisitor | visitTree\nvisitTextNode\nvisitXMLNode\nvisitInferredMrowNode\nvisitDefault\naddAttributes\naddProperties}"];
+MmlVisitor -> LegacyMmlVisitor[label="extends"]
+MathMLVisitor [label="{ class MathMLVisitor | visitTree\nvisitTextNode\nvisitXMLNode\nvisitInferredMrowNode\nvisitDefault\naddAttributes}"];
+MmlVisitor -> MathMLVisitor[label="extends"]
+MmlFactory [label="{ class MmlFactory | }"];
+AbstractNodeFactory -> MmlFactory[label="extends"]
+MmlNode [color=green, label="{ interface MmlNode | }"];
+"Node" -> MmlNode[label="extends"]
+MmlNodeClass [color=green, label="{ interface MmlNodeClass | }"];
+NodeClass -> MmlNodeClass[label="extends"]
+AbstractMmlNode [color=blue, label="{ abstract class AbstractMmlNode | setChildren\nappendChild\nreplaceChild\ncore\ncoreMO\ncoreIndex\nchildPosition\nsetTeXclass\nprotected updateTeXclass\nprotected getPrevClass\ntexSpacing\nsetInheritedAttributes\nprotected setChildInheritedAttributes\nprotected addInheritedAttributes\nverifyTree\nprotected verifyAttributes\nprotected verifyChildren\nmError}"];
+AbstractNode -> AbstractMmlNode[label="extends"]
+MmlNode -> AbstractMmlNode[label="implements"]
+AbstractMmlTokenNode [color=blue, label="{ abstract class AbstractMmlTokenNode | getText\nprotected setChildInheritedAttributes\nwalkTree}"];
+AbstractMmlNode -> AbstractMmlTokenNode[label="extends"]
+AbstractMmlLayoutNode [color=blue, label="{ abstract class AbstractMmlLayoutNode | core\ncoreMO\nsetTeXclass}"];
+AbstractMmlNode -> AbstractMmlLayoutNode[label="extends"]
+AbstractMmlBaseNode [color=blue, label="{ abstract class AbstractMmlBaseNode | core\ncoreMO\nsetTeXclass}"];
+AbstractMmlNode -> AbstractMmlBaseNode[label="extends"]
+AbstractMmlEmptyNode [color=blue, label="{ abstract class AbstractMmlEmptyNode | core\ncoreMO\ncoreIndex\nchildPosition\nsetTeXclass\ntexSpacing\nsetInheritedAttributes\nverifyTree\nmError}"];
+AbstractEmptyNode -> AbstractMmlEmptyNode[label="extends"]
+MmlNode -> AbstractMmlEmptyNode[label="implements"]
+TextNode [label="{ class TextNode | getText\nsetText\ntoString}"];
+AbstractMmlEmptyNode -> TextNode[label="extends"]
+XMLNode [label="{ class XMLNode | getXML\nsetXML\ntoString}"];
+AbstractMmlEmptyNode -> XMLNode[label="extends"]
+TeXAtom [label="{ class TeXAtom | setTeXclass\nadjustTeXclass}"];
+AbstractMmlBaseNode -> TeXAtom[label="extends"]
+MmlMaction [label="{ class MmlMaction | core\ncoreMO\nsetTeXclass}"];
+AbstractMmlNode -> MmlMaction[label="extends"]
+MmlMaligngroup [label="{ class MmlMaligngroup | protected setChildInheritedAttributes}"];
+AbstractMmlNode -> MmlMaligngroup[label="extends"]
+MmlMalignmark [label="{ class MmlMalignmark | }"];
+AbstractMmlNode -> MmlMalignmark[label="extends"]
+MmlMath [label="{ class MmlMath | protected setChildInheritedAttributes}"];
+AbstractMmlLayoutNode -> MmlMath[label="extends"]
+MmlMenclose [label="{ class MmlMenclose | setTeXclass}"];
+AbstractMmlNode -> MmlMenclose[label="extends"]
+MmlMerror [label="{ class MmlMerror | }"];
+AbstractMmlNode -> MmlMerror[label="extends"]
+MmlMfrac [label="{ class MmlMfrac | setTeXclass\nprotected setChildInheritedAttributes}"];
+AbstractMmlBaseNode -> MmlMfrac[label="extends"]
+MmlMi [label="{ class MmlMi | setInheritedAttributes\nsetTeXclass}"];
+AbstractMmlTokenNode -> MmlMi[label="extends"]
+MmlMmultiscripts [label="{ class MmlMmultiscripts | protected setChildInheritedAttributes\nprotected verifyChildren}"];
+MmlMsubsup -> MmlMmultiscripts[label="extends"]
+MmlMprescripts [label="{ class MmlMprescripts | verifyTree}"];
+AbstractMmlNode -> MmlMprescripts[label="extends"]
+MmlNone [label="{ class MmlNone | verifyTree}"];
+AbstractMmlNode -> MmlNone[label="extends"]
+MmlMn [label="{ class MmlMn | }"];
+AbstractMmlTokenNode -> MmlMn[label="extends"]
+MmlMo [label="{ class MmlMo | coreParent\ncoreText\nsetTeXclass\nadjustTeXclass\nsetInheritedAttributes\nprotected getForms\nprotected getRange}"];
+AbstractMmlTokenNode -> MmlMo[label="extends"]
+MmlMphantom [label="{ class MmlMphantom | }"];
+AbstractMmlLayoutNode -> MmlMphantom[label="extends"]
+MmlMroot [label="{ class MmlMroot | protected setChildInheritedAttributes}"];
+AbstractMmlNode -> MmlMroot[label="extends"]
+MmlMrow [label="{ class MmlMrow | core\ncoreMO\nnonSpaceLength\nfirstNonSpace\nlastNonSpace\nsetTeXclass}"];
+AbstractMmlNode -> MmlMrow[label="extends"]
+MmlInferredMrow [label="{ class MmlInferredMrow | toString}"];
+MmlMrow -> MmlInferredMrow[label="extends"]
+MmlMs [label="{ class MmlMs | }"];
+AbstractMmlTokenNode -> MmlMs[label="extends"]
+MmlMspace [label="{ class MmlMspace | }"];
+AbstractMmlTokenNode -> MmlMspace[label="extends"]
+MmlMsqrt [label="{ class MmlMsqrt | setTeXclass\nprotected setChildInheritedAttributes}"];
+AbstractMmlNode -> MmlMsqrt[label="extends"]
+MmlMstyle [label="{ class MmlMstyle | protected setChildInheritedAttributes}"];
+AbstractMmlLayoutNode -> MmlMstyle[label="extends"]
+MmlMsubsup [label="{ class MmlMsubsup | protected setChildInheritedAttributes}"];
+AbstractMmlBaseNode -> MmlMsubsup[label="extends"]
+MmlMsub [label="{ class MmlMsub | }"];
+MmlMsubsup -> MmlMsub[label="extends"]
+MmlMsup [label="{ class MmlMsup | }"];
+MmlMsubsup -> MmlMsup[label="extends"]
+MmlMtable [label="{ class MmlMtable | protected setChildInheritedAttributes\nprotected verifyChildren\nsetTeXclass}"];
+AbstractMmlNode -> MmlMtable[label="extends"]
+MmlMtext [label="{ class MmlMtext | }"];
+AbstractMmlTokenNode -> MmlMtext[label="extends"]
+MmlMtr [label="{ class MmlMtr | protected setChildInheritedAttributes\nprotected verifyChildren\nsetTeXclass}"];
+AbstractMmlNode -> MmlMtr[label="extends"]
+MmlMlabeledtr [label="{ class MmlMlabeledtr | }"];
+MmlMtr -> MmlMlabeledtr[label="extends"]
+MmlMunderover [label="{ class MmlMunderover | protected setChildInheritedAttributes\nprotected getScriptlevel\nprotected setInheritedAccent}"];
+AbstractMmlBaseNode -> MmlMunderover[label="extends"]
+MmlMunder [label="{ class MmlMunder | }"];
+MmlMunderover -> MmlMunder[label="extends"]
+MmlMover [label="{ class MmlMover | }"];
+MmlMunderover -> MmlMover[label="extends"]
+MmlSemantics [label="{ class MmlSemantics | }"];
+AbstractMmlBaseNode -> MmlSemantics[label="extends"]
+MmlAnnotationXML [label="{ class MmlAnnotationXML | protected setChildInheritedAttributes}"];
+AbstractMmlNode -> MmlAnnotationXML[label="extends"]
+MmlAnnotation [label="{ class MmlAnnotation | }"];
+MmlAnnotationXML -> MmlAnnotation[label="extends"]
+MmlVisitor [label="{ class MmlVisitor | visitTextNode\nvisitXMLNode}"];
+AbstractVisitor -> MmlVisitor[label="extends"]
+SerializedMmlVisitor [label="{ class SerializedMmlVisitor | visitTree\nvisitTextNode\nvisitXMLNode\nvisitInferredMrowNode\nvisitDefault\nprotected getAttributes\nprotected quoteAttribute}"];
+MmlVisitor -> SerializedMmlVisitor[label="extends"]
+TestMmlVisitor [label="{ class TestMmlVisitor | visitDefault\nprotected getAttributes\nprotected getInherited\nprotected getProperties\nprotected attributeString}"];
+SerializedMmlVisitor -> TestMmlVisitor[label="extends"]
+OutputJax [color=green, label="{ interface OutputJax | typeset\nescaped\ngetMetrics\nstyleSheet}"];
+AbstractOutputJax [color=blue, label="{ abstract class AbstractOutputJax | abstract typeset\nabstract escaped\ngetMetrics\nstyleSheet}"];
+OutputJax -> AbstractOutputJax[label="implements"]
+FactoryNode [color=green, label="{ interface FactoryNode | }"];
+FactoryNodeClass [color=green, label="{ interface FactoryNodeClass | }"];
+Factory [color=green, label="{ interface Factory | create\nsetNodeClass\ngetNodeClass\ndeleteNodeClass\nnodeIsKind\ngetKinds}"];
+AbstractFactoryClass [color=green, label="{ interface AbstractFactoryClass | }"];
+Function -> AbstractFactoryClass[label="extends"]
+AbstractFactory [color=blue, label="{ abstract class AbstractFactory | create\nsetNodeClass\ngetNodeClass\ndeleteNodeClass\nnodeIsKind\ngetKinds}"];
+Factory -> AbstractFactory[label="implements"]
+"Node" [color=green, label="{ interface Node | }"];
+NodeClass [color=green, label="{ interface NodeClass | }"];
+AbstractNode [color=blue, label="{ abstract class AbstractNode | setProperty\ngetProperty\ngetPropertyNames\ngetAllProperties\nremoveProperty\nisKind\nsetChildren\nappendChild\nreplaceChild\nchildIndex\nfindNodes\nwalkTree\ntoString}"];
+"Node" -> AbstractNode[label="implements"]
+AbstractEmptyNode [color=blue, label="{ abstract class AbstractEmptyNode | setChildren\nappendChild\nreplaceChild\nchildIndex\nwalkTree\ntoString}"];
+AbstractNode -> AbstractEmptyNode[label="extends"]
+NodeFactory [color=green, label="{ interface NodeFactory | create}"];
+Factory -> NodeFactory[label="extends"]
+AbstractNodeFactory [color=blue, label="{ abstract class AbstractNodeFactory | create}"];
+AbstractFactory -> AbstractNodeFactory[label="extends"]
+Visitor [color=green, label="{ interface Visitor | visitTree\nvisitNode\nvisitDefault\nsetNodeHandler\nremoveNodeHandler}"];
+AbstractVisitor [color=blue, label="{ abstract class AbstractVisitor | protected static methodName\nvisitTree\nvisitNode\nvisitDefault\nsetNodeHandler\nremoveNodeHandler}"];
+Visitor -> AbstractVisitor[label="implements"]
+Wrapper [color=green, label="{ interface Wrapper | }"];
+WrapperClass [color=green, label="{ interface WrapperClass | }"];
+AbstractWrapper [label="{ class AbstractWrapper | wrap}"];
+Wrapper -> AbstractWrapper[label="implements"]
+WrapperFactory [color=green, label="{ interface WrapperFactory | wrap}"];
+Factory -> WrapperFactory[label="extends"]
+AbstractWrapperFactory [color=blue, label="{ abstract class AbstractWrapperFactory | wrap}"];
+AbstractFactory -> AbstractWrapperFactory[label="extends"]
+WrapperFactory -> AbstractWrapperFactory[label="implements"]
+HTMLDocument [label="{ class HTMLDocument | protected findPosition\nprotected mathItem\nprotected getElements\nfindMath\nupdateDocument\nremoveFromDocument\ndocumentStyleSheet\nTestMath}"];
+AbstractMathDocument -> HTMLDocument[label="extends"]
+HTMLDomStrings [label="{ class HTMLDomStrings | protected init\nprotected getPatterns\nprotected pushString\nprotected extendString\nprotected handleText\nprotected handleTag\nprotected handleContainer\nfind}"];
+HTMLHandler [label="{ class HTMLHandler | handlesDocument\ncreate}"];
+AbstractHandler -> HTMLHandler[label="extends"]
+HTMLMathItem [label="{ class HTMLMathItem | addEventHandlers\nupdateDocument\nremoveFromDocument}"];
+AbstractMathItem -> HTMLMathItem[label="extends"]
+HTMLMathList [label="{ class HTMLMathList | }"];
+AbstractMathList -> HTMLMathList[label="extends"]
+FindAsciiMath [label="{ class FindAsciiMath | protected getPatterns\nprotected addPattern\nprotected findEnd\nprotected findMathInString\nfindMath}"];
+AbstractFindMath -> FindAsciiMath[label="extends"]
+AsciiMath [label="{ class AsciiMath | compile\nfindMath}"];
+AbstractInputJax -> AsciiMath[label="extends"]
+FindMathML [label="{ class FindMathML | findMath\nprotected findMathNodes\nprotected findMathPrefixed\nprotected findMathNS\nprotected processMath}"];
+AbstractFindMath -> FindMathML[label="extends"]
+MathMLCompile [label="{ class MathMLCompile | compile\nmakeNode\nprotected addAttributes\nprotected filterAttribute\nprotected addChildren\nprotected addText\nprotected checkClass\nprotected texAtom\nprotected markMrows\nprotected trimSpace\nprotected error}"];
+MmlEntities [label="{ class MmlEntities | static add\nstatic remove\ntranslate\nprotected replace}"];
+MathML [label="{ class MathML | compile\nprotected checkForErrors\nprotected error\nfindMath}"];
+AbstractInputJax -> MathML[label="extends"]
+FindTeX [label="{ class FindTeX | protected getPatterns\nprotected addPattern\nprotected endPattern\nprotected findEnd\nprotected findMathInString\nfindMath}"];
+AbstractFindMath -> FindTeX[label="extends"]
+MapHandler [label="{ class MapHandler | static getInstance\nregister\ngetMap\nallMaps}"];
+Symbol [label="{ class Symbol | abstract static parse}"];
+Macro [label="{ class Macro | }"];
+SymbolMap [color=green, label="{ interface SymbolMap | contains\nparserFor\nparse}"];
+AbstractSymbolMap [color=blue, label="{ abstract class AbstractSymbolMap | abstract contains\nparserFor\nparse\nabstract lookup}"];
+SymbolMap -> AbstractSymbolMap[label="implements"]
+RegExpMap [label="{ class RegExpMap | static create\ncontains\nlookup}"];
+AbstractSymbolMap -> RegExpMap[label="extends"]
+AbstractParseMap [color=blue, label="{ abstract class AbstractParseMap | lookup\ncontains\nprotected add\nabstract addElement}"];
+AbstractSymbolMap -> AbstractParseMap[label="extends"]
+CharacterMap [label="{ class CharacterMap | protected static addCharacters\nstatic create\naddElement}"];
+AbstractParseMap -> CharacterMap[label="extends"]
+DelimiterMap [label="{ class DelimiterMap | static create\nparse}"];
+CharacterMap -> DelimiterMap[label="extends"]
+MacroMap [label="{ class MacroMap | protected static addCommands\nstatic create\nparserFor\naddElement}"];
+AbstractParseMap -> MacroMap[label="extends"]
+CommandMap [label="{ class CommandMap | static create\nparse}"];
+MacroMap -> CommandMap[label="extends"]
+EnvironmentMap [label="{ class EnvironmentMap | static create\nparse}"];
+MacroMap -> EnvironmentMap[label="extends"]
+TexParser [label="{ class TexParser | process\nsetup\nconfigure\nappend\nparse\nlookup\nfallback\ncontains\ntoString}"];
+SubHandler [label="{ class SubHandler | fallback\nadd\nparse\nlookup\ncontains\ntoString\nabstract applicable\nabstract warn}"];
+ParseMethod [color=green, label="{ interface ParseMethod | }"];
+TeX [label="{ class TeX | compile\nfindMath}"];
+AbstractInputJax -> TeX[label="extends"]
+BBox [label="{ class BBox | static zero\nstatic empty\nclean\nrescale\ncombine\nappend\nupdateFrom}"];
+FontData [label="{ class FontData | createVariant\ncreateVariants\ndefineChars\ndefineDelimiters\ngetDelimiter\ngetSizeVariant\ngetChar\ngetVariant}"];
+CSSStyle [color=green, label="{ interface CSSStyle | }"];
+CSSStyleDeclaration -> CSSStyle[label="extends"]
+CHTMLWrapper [label="{ class CHTMLWrapper | wrap\ntoCHTML\ngetBBox\nprotected computeBBox\nprotected getStyles\nprotected getVariant\nprotected explicitVariant\nprotected getScale\nprotected standardCHTMLnode\nprotected createCHTMLnode\nprotected handleStyles\nprotected handleVariant\nprotected handleScale\nprotected handleSpace\nprotected handleColor\nprotected handleAttributes\ncore\ncoreMO\ngetText\ncanStretch\nprotected percent\nprotected em\nprotected length2em\nprotected unicodeChars\nprotected char\nhtml\ntext}"];
+AbstractWrapper -> CHTMLWrapper[label="extends"]
+CHTMLWrapperFactory [label="{ class CHTMLWrapperFactory | }"];
+AbstractWrapperFactory -> CHTMLWrapperFactory[label="extends"]
+CHTMLTextNode [label="{ class CHTMLTextNode | toCHTML\ncomputeBBox\ngetStyles\ngetVariant\ngetScale}"];
+CHTMLWrapper -> CHTMLTextNode[label="extends"]
+CHTMLmfrac [label="{ class CHTMLmfrac | toCHTML\ncomputeBBox\ncanStretch}"];
+CHTMLWrapper -> CHTMLmfrac[label="extends"]
+CHTMLmo [label="{ class CHTMLmo | toCHTML\nprotected stretchHTML\ncomputeBBox\nprotected getVariant\ncanStretch\ngetStretchedVariant\nprotected getSize\nprotected getWH\nprotected getStretchBBox\nprotected getBaseline}"];
+CHTMLWrapper -> CHTMLmo[label="extends"]
+CHTMLmrow [label="{ class CHTMLmrow | toCHTML\nprotected stretchChildren}"];
+CHTMLWrapper -> CHTMLmrow[label="extends"]
+CHTMLinferredMrow [label="{ class CHTMLinferredMrow | protected getScale}"];
+CHTMLmrow -> CHTMLinferredMrow[label="extends"]
+CHTMLmspace [label="{ class CHTMLmspace | toCHTML\ncomputeBBox\nprotected handleVariant}"];
+CHTMLWrapper -> CHTMLmspace[label="extends"]
+TeXFont [label="{ class TeXFont | }"];
+FontData -> TeXFont[label="extends"]
+CHTML [label="{ class CHTML | typeset\ngetBBox\nescaped\ngetMetrics\nstyleSheet\ntoCHTML\nhtml\ntext}"];
+AbstractOutputJax -> CHTML[label="extends"]
+FunctionListItem [color=green, label="{ interface FunctionListItem | }"];
+PrioritizedListItem -> FunctionListItem[label="extends"]
+FunctionList [label="{ class FunctionList | execute\nasyncExecute}"];
+PrioritizedList -> FunctionList[label="extends"]
+HTMLNodes [label="{ class HTMLNodes | node\ntext\nsetProperties}"];
+ListItem [label="{ class ListItem | }"];
+LinkedList [label="{ class LinkedList | toArray\nisBefore\npush\npop\nunshift\nshift\nclear\nundefined\nreversed\ninsert\nsort\nmerge}"];
+PrioritizedListItem [color=green, label="{ interface PrioritizedListItem | }"];
+PrioritizedList [label="{ class PrioritizedList | undefined\nadd\nremove\ntoArray}"];
+RetryError [color=green, label="{ interface RetryError | }"];
+Error -> RetryError[label="extends"]
+}

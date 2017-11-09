@@ -22,9 +22,11 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {LegacyTeX} from '../../mathjax2/input/TeX.js';
+// import {LegacyTeX} from '../../mathjax2/input/TeX.js';
+import {NewTex} from './tex/Translate.js';
 import {separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
+import {MmlNode} from '../core/MmlTree/MmlNode.js'
 
 import {FindTeX} from './tex/FindTeX.js';
 
@@ -60,8 +62,9 @@ export class TeX extends AbstractInputJax {
      *
      * @override
      */
-    public compile(math: MathItem) {
-        return LegacyTeX.Compile(math.math, math.display);
+    public compile(math: MathItem): MmlNode {
+        // return LegacyTeX.Compile(math.math, math.display);
+        return NewTex.Compile(math.math, math.display);
     }
 
     /*
