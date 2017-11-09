@@ -1,0 +1,12 @@
+sudo: false
+script:
+- npm install
+- npm run prepublishOnly
+deploy:
+  provider: npm
+  email: manager@mathjax.org
+  api_key:
+    secure: EU7f5SngvG32fR2D9gEyTk1Wu1ikh8bm6HEGKXz4GCecwJ2HyRjBOAlrubDc0Gl+0qttaWhuXycyB54B/OWNuZWm79adPop7aw3BQIPlCmvyO16Rr/0OLgZrCVq1+58VWdxSbcC4u29ODlIoLMW6WJ/VpS6qaG72FvvyNwo/uE/YQdDVI0FZoLFEKiXMWMwJxoShIvlTP0j2BR+ofrbrM1FJ234A6ZYf0YyzoO3Nml4l36xnpMTC/bnaNgxFg5V2i/CuMyyVlIWmIX0Ir/5cbeVNOAu8mjzwhnWXCBQr+Ik5ZhwKE7mr9H6+VLFxYSmTWKZBzM3THpMjh6GwsF55DOk8Mx5jmierI4LjeSg8jcQjAO46tTZ3o9DR+esoLSUa8qMOEiAenQ8r/qqy+IpEQLYgTlok9sauwTeuEfMlq7zfJcdWg5S6h4VpmdHu0R2Bj/PsUatXshgVWaXUx/+Zwjz1yRCCk5QxdZdweyE/h49uVc5VjHevUNrqyGToMFMuiRoeGyzJkpejdvh/xOnInxoU/aXCmSqxcNP17gZKaXBCga4VhS2sC8K2UhcB/FxO/tVoB+aZ6SeY4Ar/RsacHXTcRYLAN2czBQrIPYPWLf55IXZA2TbHlWUn3qVEUIEDfI/JWJJE5henwXfwUIFIEM4aw3MHAJIDsSCuKLJEW4w=
+  on:
+    tags: true
+    repo: mathjax/mathjax-v3
