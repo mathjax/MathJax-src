@@ -4,7 +4,7 @@ node_js:
 sudo: false
 script:
 - npm install
-- npm run prepublishOnly
+- npm run compile
 deploy:
   provider: npm
   email: manager@mathjax.org
