@@ -8,7 +8,7 @@
   "main": "./mathjax3/mathjax.js",
   "types": "./mathjax3/mathjax.d.ts",
   "scripts": {
-    "prepublishOnly": "npx tsc"
+    "compile": "tsc"
   },
   "dependencies": {
     "jsdom": "10.*",
