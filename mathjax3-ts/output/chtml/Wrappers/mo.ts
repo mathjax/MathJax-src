@@ -68,7 +68,7 @@ export class CHTMLmo extends CHTMLWrapper {
             width: '100%'
         },
         'mjx-stretchy-h > mjx-ext > mjx-c': {
-            transform: 'scalex(1000)'
+            transform: 'scalex(500)'
         },
         'mjx-stretchy-h > mjx-beg > mjx-c': {
             'margin-right': '-.1em'
@@ -101,7 +101,7 @@ export class CHTMLmo extends CHTMLWrapper {
             overflow: 'hidden'
         },
         'mjx-stretchy-v > mjx-ext > mjx-c': {
-            transform: 'scaleY(1000) translateY(.5em)'
+            transform: 'scaleY(500) translateY(.1em)'
         },
         'mjx-mark': {
             display: 'inline-block',
