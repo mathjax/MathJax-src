@@ -34,8 +34,6 @@ import {OldParser} from './OldParser.js';
 
 export namespace ParserUtil {
 
-  // export let OldParser = (x:any, {}) => x;
-  
   const emPerInch = 7.2;
   const pxPerInch = 72;
   const UNIT_CASES: {[key: string]: ((m: number) => number)}  = {
