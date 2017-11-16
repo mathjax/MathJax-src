@@ -26,7 +26,7 @@
 
 import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {TreeHelper} from './TreeHelper.js';
-import TexParser from './TexParser.js';
+import {OldParser} from './OldParser.js';
 
 // A namespace for utility functions for the TeX Parser.
 //
@@ -34,8 +34,6 @@ import TexParser from './TexParser.js';
 
 export namespace ParserUtil {
 
-  export let OldParser = (x:any, {}) => x;
-  
   const emPerInch = 7.2;
   const pxPerInch = 72;
   const UNIT_CASES: {[key: string]: ((m: number) => number)}  = {
@@ -148,7 +146,7 @@ export namespace ParserUtil {
     }
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
-    return ParserUtil.OldParser('\\mathchoice' + D + T + T + T, {});
+    return new OldParser('\\mathchoice' + D + T + T + T, {}, {}).mml();
     // let parser = new TexParser();
     // return parser.parse('\\mathchoice' + D + T + T + T, {}).mml();
   };

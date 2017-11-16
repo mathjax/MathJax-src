@@ -37,6 +37,8 @@ export namespace NewTex {
   
   export type Script = {type: string, innerText: string, MathJax: any};
 
+  export let display: boolean = false;
+  
   export function Compile(tex: string, display: boolean): MmlNode {
     let script = {
       type:"math/tex"+(display?"; mode=display":""),
@@ -60,7 +62,7 @@ export namespace NewTex {
     let mml: MmlNode;
     let isError = false;
     let math = script.innerText;
-    let display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
+    display = (script.type.replace(/\n/g," ").match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null);
     try {
       mml = new OldParser(math, null, ParseMethods as any).mml();
       TreeHelper.printSimple(mml.toString());

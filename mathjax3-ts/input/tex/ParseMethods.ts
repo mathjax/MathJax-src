@@ -24,6 +24,7 @@
 
 // import * as sitem from './StackItem.js';
 import * as sitem from './StackItem.js';
+import {NewTex} from './Translate.js';
 import {Symbol} from './Symbol.js';
 import {CharacterMap} from './SymbolMap.js';
 import {TreeHelper} from './TreeHelper.js';
@@ -1511,7 +1512,7 @@ export namespace ParseMethods {
     let T  = parser.ParseArg(name);
     let S  = parser.ParseArg(name);
     let SS = parser.ParseArg(name);
-    parser.Push(D);
+    parser.Push(NewTex.display ? D : T);
     // parser.Push(MML.TeXmathchoice(D,T,S,SS));
   }
   
