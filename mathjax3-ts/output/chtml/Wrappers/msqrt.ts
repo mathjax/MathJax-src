@@ -175,7 +175,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         const [p, q] = this.getPQ(sbox);
         const [x] = this.getRootDimens(sbox);
         const t = this.font.params.rule_thickness;
-        const H = bbox.h + q + t;
+        const H = basebox.h + q + t;
         bbox.h = H + t;
         this.combineRootBBox(BBOX, sbox);
         BBOX.combine(sbox, x, H - sbox.h);
