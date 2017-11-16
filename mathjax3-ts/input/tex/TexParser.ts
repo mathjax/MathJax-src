@@ -29,6 +29,7 @@ import {HandlerType, Configuration, ParseInput, ParseResult, ParseMethod} from '
 import {BaseMappings} from './BaseMappings.js';
 import {AmsMappings} from './AmsMappings.js';
 import {AmsSymbols} from './AmsSymbols.js';
+import {ParseMethods} from './ParseMethods.js';
 
 
 /**
@@ -50,6 +51,7 @@ export default class TexParser {
     this.configure(BaseMappings.CONFIGURATION);
     this.append(AmsMappings.CONFIGURATION);
     this.append(AmsSymbols.CONFIGURATION);
+    this.setup(ParseMethods as any);
   }
 
 

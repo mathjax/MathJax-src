@@ -66,7 +66,6 @@ export class OldParser {
       }
     }
     this.stack = new Stack(ENV, !!env);
-    this.NewParser.setup(this.ParseMethods);
     // configurations.forEach(this.NewParser.append.bind(this.NewParser));
     this.Parse();
     this.Push(new StopItem());
