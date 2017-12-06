@@ -2,6 +2,7 @@
   var MML = MathJax.ElementJax.mml;
   
   var PROPERTY = [
+    'texWithDelims',
     'movesupsub',
     'subsupOK',
     'primes',
@@ -12,21 +13,24 @@
     'isError',
     'multiline',
     'variantForm',
-    'autoOP'
+    'autoOP',
+    'fnOP'  
   ];
+  var RENAME = {
+      texWithDelims: 'withDelims'
+  };
 
   MML.mbase.Augment({
     toMmlNode: function (factory) {
       var kind = this.type;
       if (kind === 'texatom') kind = 'TeXAtom';
-      if (this.inferred) kind = 'inferredMrow';
       var node = this.nodeMake(factory, kind);
       if ("texClass" in this) node.texClass = this.texClass;
       return node;
     },
     nodeMake: function (factory,kind) {
       var node = factory.MML[kind]();
-      var data = (this.data[0] && this.data[0].inferred ? this.data[0].data : this.data);
+      var data = (this.data[0] && this.data[0].inferred && this.inferRow ? this.data[0].data : this.data);
       for (var i = 0, m = data.length; i < m; i++) {
         var child = data[i];
         if (child) node.appendChild(child.toMmlNode(factory));
@@ -62,7 +66,7 @@
         var name = PROPERTY[i];
         if (this[name] != null &&
             (this.defaults[name] == null || this.defaults[name] === MML.AUTO)) {
-          node.setProperty(name, this[name]);
+          node.setProperty(RENAME[name] || name, this[name]);
         }
       }
     }
