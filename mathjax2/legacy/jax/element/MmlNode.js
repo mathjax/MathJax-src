@@ -13,7 +13,8 @@
     'isError',
     'multiline',
     'variantForm',
-    'autoOP'
+    'autoOP',
+    'fnOP'  
   ];
   var RENAME = {
       texWithDelims: 'withDelims'

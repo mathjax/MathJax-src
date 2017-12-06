@@ -88,7 +88,7 @@ export class CHTMLmtable extends CHTMLWrapper {
         const attributes = this.node.attributes;
         const frame = attributes.get('frame') !== 'none';
         const lines = frame || attributes.get('columnlines') !== 'none' || attributes.get('rowlines') !== 'none';
-        const fspacing = (lines ? this.convertLengths(this.getAttributeArray('framespacing')) : ['0', '0']);
+        const fspacing = (lines ? this.convertLengths(this.getAttributeArray('framespacing')) : []);
         //
         //  Pad the rows of the table, if needed
         //  Then set the column and row attributes for alignment, spacing, and lines
@@ -96,10 +96,10 @@ export class CHTMLmtable extends CHTMLWrapper {
         //
         this.padRows();
         this.handleColumnAlign();
-        this.handleColumnSpacing(lines, fspacing[0]);
+        this.handleColumnSpacing(lines, fspacing[0] || '0');
         this.handleColumnLines();
         this.handleRowAlign();
-        this.handleRowSpacing(lines, fspacing[1]);
+        this.handleRowSpacing(lines, fspacing[1] || '0');
         this.handleRowLines();
         this.handleFrame(frame);
     }
@@ -129,16 +129,16 @@ export class CHTMLmtable extends CHTMLWrapper {
         const cSpace = this.convertLengths(this.getColumnAttributes('columnspacing')).slice(0, cMax);
         const rSpace = this.convertLengths(this.getRowAttributes('rowspacing')).slice(0, rMax);
         const frame = this.node.attributes.get('frame') !== 'none';
-        const fSpace = (frame ? this.convertLengths(this.getAttributeArray('framespacing')) : ['0', '0']);
+        const fSpace = (frame ? this.convertLengths(this.getAttributeArray('framespacing')) : []);
         const cLines = this.getColumnAttributes('columnlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
         const rLines = this.getColumnAttributes('rowlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
         const a = this.font.params.axis_height;
         const h = H.concat(D, rLines).reduce((a, b) => a + b) + (frame ? .14 : 0) +
-            rSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1]);
+        rSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1] || '0');
         bbox.h = h / 2 + a;
         bbox.d = h / 2 - a;
         bbox.w = W.concat(cLines).reduce((a, b) => a + b) +
-            cSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1]);
+        cSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1] || '0');
     }
 
     /******************************************************************/
@@ -155,7 +155,7 @@ export class CHTMLmtable extends CHTMLWrapper {
     }
 
     /*
-     * Set the cell aligmentsbased on the table, row, or cell columnalign attributes
+     * Set the cell aligments based on the table, row, or cell columnalign attributes
      */
     protected handleColumnAlign() {
         const colAlign = this.getColumnAttributes('columnalign') || [];
@@ -318,7 +318,7 @@ export class CHTMLmtable extends CHTMLWrapper {
     }
 
     /*
-     * Add a frame to the mjx-itable, if needed
+     * Add a frame to the mtable, if needed
      */
     protected handleFrame(frame: boolean) {
         if (frame) {
