@@ -233,7 +233,8 @@ export class CHTMLscriptbase extends CHTMLWrapper {
 
     /*
      * @param{BBox[]} boxes  The bounding boxes whose offsets are to be computed
-     * @param{number[]}      The x offsets of the boxes to center them in a vertical stack
+     * @param{number[]}      The initial x offsets of the boxes
+     * @return{number[]}     The actual offsets needed to center the boxes in the stack
      */
     protected getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]) {
         const widths = boxes.map(box => box.w * box.rscale);
