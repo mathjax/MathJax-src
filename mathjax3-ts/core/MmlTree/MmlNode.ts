@@ -207,6 +207,8 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     public static defaults: PropertyList = {
         mathbackground: INHERIT,
         mathcolor: INHERIT,
+        mathsize: INHERIT,  // technically only for token elements, but <mstyle mathsize="..."> should
+                            //    scale all spaces, fractions, etc.
         dir: INHERIT
     };
     /*
@@ -500,7 +502,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
                            display: boolean = false, level: number = 0, prime: boolean = false) {
         let defaults = this.attributes.getAllDefaults();
         for (const key of Object.keys(attributes)) {
-            if (key in defaults) {
+            if (defaults.hasOwnProperty(key)) {
                 let [node, value] = attributes[key];
                 let noinherit = (AbstractMmlNode.noInherit[node] || {})[this.kind] || {};
                 if (!noinherit[key]) {

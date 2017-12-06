@@ -57,9 +57,8 @@ export class CHTMLTextNode extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
+    public computeBBox(bbox: BBox) {
         const variant = this.parent.variant;
-        let bbox = this.bbox;
         if (variant === '-explicitFont') {
             // FIXME:  measure this using DOM, if possible
         } else {
@@ -75,7 +74,6 @@ export class CHTMLTextNode extends CHTMLWrapper {
                 if (d > bbox.d) bbox.d = d;
             }
         }
-        return bbox;
     }
 
     /******************************************************/
