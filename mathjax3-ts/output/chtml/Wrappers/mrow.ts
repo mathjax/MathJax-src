@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmfracr wrapper for the MmlMrow object
+ * @fileoverview  Implements the CHTMLmrow wrapper for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

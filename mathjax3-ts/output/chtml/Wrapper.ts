@@ -59,6 +59,12 @@ export const FONTSIZE: StringMap = {
     '249%': 'HG'
 };
 
+export const SPACE: StringMap = {
+    [LENGTHS.em(3/18)]: '1',
+    [LENGTHS.em(4/18)]: '2',
+    [LENGTHS.em(5/18)]: '3',
+};
+
 /*
  * Needed to access node.style[id] using variable id
  */
@@ -102,6 +108,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         'mjx-box': {display: 'inline-block'},
         'mjx-block': {display: 'block'},
         'mjx-itable': {display: 'inline-table'},
+        'mjx-row': {display: 'table-row'},
+        'mjx-row > *': {display: 'table-cell'},
 
         //
         //  These don't have Wrapper subclasses, so add their styles here
@@ -304,24 +312,21 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (this.bboxComputed) {
             return this.bbox;
         }
-        let bbox = this.computeBBox();
-        if (save) {
-            this.bbox = bbox;
-            this.bboxComputed = true;
-        }
+        const bbox = (save ? this.bbox : BBox.zero());
+        this.computeBBox(bbox);
+        this.bboxComputed = save;
         return bbox;
     }
 
     /*
-     * @return{BBox}  The computed bounding box for the wrapped node
+     * @param{BBox} bbox  The bounding box to modify (either this.bbox, or an empty one)
      */
-    protected computeBBox() {
-        const bbox = this.bbox.empty();
+    protected computeBBox(bbox: BBox) {
+        bbox.empty();
         for (const child of this.childNodes) {
             bbox.append(child.getBBox());
         }
         bbox.clean();
-        return bbox;
     }
 
     /*******************************************************************/
@@ -405,7 +410,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         let attributes = this.node.attributes;
         let scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
         let fontsize = attributes.get('fontsize');
-        let mathsize = (parent && !this.node.isToken ? parent : this).node.attributes.get('mathsize');
+        let mathsize = (this.node.isToken || this.node.isKind('mstyle') ?
+                        attributes.get('mathsize') : attributes.getInherited('mathsize'));
         //
         // If scriptsize is non-zero, set scale based on scriptsizemultiplier
         //
@@ -507,15 +513,25 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Set the (relative) scaling factor for the node
      */
     protected handleScale() {
-        const scale = (Math.abs(this.bbox.rscale - 1) < .001 ? 1 : this.bbox.rscale);
-        if (this.chtml && scale !== 1) {
+        this.setScale(this.chtml, this.bbox.rscale);
+    }
+
+    /*
+     * @param{HTMLElement} chtml  The HTML node to scale
+     * @param{number} rscale      The relatie scale to apply
+     * @return{HTMLElement}       The HTML node (for chaining)
+     */
+    setScale(chtml: HTMLElement, rscale: number) {
+        const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
+        if (chtml && scale !== 1) {
             const size = this.percent(scale);
             if (FONTSIZE[size]) {
-                this.chtml.setAttribute('size', FONTSIZE[size]);
+                chtml.setAttribute('size', FONTSIZE[size]);
             } else {
-                this.chtml.style.fontSize = size;
+                chtml.style.fontSize = size;
             }
         }
+        return chtml;
     }
 
     /*
@@ -524,7 +540,12 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleSpace() {
         if (this.bbox.L) {
-            this.chtml.setAttribute('space', (this.bbox.L * 18 - 2).toString());
+            const space = this.em(this.bbox.L);
+            if (SPACE[space]) {
+                this.chtml.setAttribute('space', SPACE[space]);
+            } else {
+                this.chtml.style.marginLeft = space;
+            }
         }
     }
 
@@ -624,7 +645,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     public drawBBox() {
         const bbox = this.getBBox();
         const box = this.html('mjx-box', {style: {
-            opacity: .25, 'margin-left': this.em(-bbox.w)
+            opacity: .25, 'margin-left': this.em(-bbox.w - bbox.R)
         }}, [
             this.html('mjx-box', {style: {
                 height: this.em(bbox.h),
@@ -640,7 +661,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             }})
         ]);
         const node = this.chtml || this.parent.chtml;
-        node.appendChild(box);
+        node.parentNode.appendChild(box);
         node.style.backgroundColor = '#FFEE00';
     }
 

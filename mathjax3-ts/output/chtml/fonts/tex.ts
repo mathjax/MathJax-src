@@ -434,7 +434,7 @@ export class TeXFont extends FontData {
                 css.width = this.em(w);
             }
             if (options.css & CSS.padding) {
-                css.padding = this.em(h) + ' 0 ' + this.em(d);
+                css.padding = this.em(Math.max(0, h)) + ' 0 ' + this.em(Math.max(0, d));
             }
             if (options.css & CSS.content) {
                 css.content = '"' + (options.c || this.char(n, true)) + '"';
