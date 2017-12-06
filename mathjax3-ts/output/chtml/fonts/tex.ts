@@ -24,6 +24,7 @@
 import {FontData, DelimiterData, CharData, CharOptions, DelimiterMap, CharMapMap, CSS, V, H} from '../FontData.js';
 import {StyleList, StyleData} from '../CssStyles.js';
 import {em} from '../../../util/lengths.js';
+import {OptionList, defaultOptions, userOptions} from '../../../util/Options.js';
 import {StringMap} from '../Wrapper.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -59,6 +60,14 @@ import {delimiters} from './tex/delimiters.js';
  *  The TeXFont class
  */
 export class TeXFont extends FontData {
+
+    /*
+     * Default options
+     */
+    public static OPTIONS = {
+        fontURL: 'mathjax2/css/'
+    };
+
     /*
      *  Add the extra variants for the TeX fonts
      */
@@ -241,118 +250,136 @@ export class TeXFont extends FontData {
 
         '.MJX-TEX mjx-stretchy-v mjx-c, .MJX-TEX mjx-stretchy-h mjx-c': {
             'font-family': 'MJXZERO, MJXTEX, MJXTEX-S4 ! important'
-        },
+        }
+    };
 
+    protected static defaultFonts = {
         '@font-face /* 0 */': {
             'font-family': 'MJXZERO',
-            src: 'url("mathjax2/css/otf/MathJax_Zero.otf") format("opentype")'
+            src: 'url("%%URL%%/otf/MathJax_Zero.otf") format("opentype")'
         },
 
         '@font-face /* 1 */': {
             'font-family': 'MJXTEX',
-            src: 'url("mathjax2/css/woff/MathJax_Main-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Main-Regular.woff") format("woff")'
         },
 
         '@font-face /* 2 */': {
             'font-family': 'MJXTEX-B',
-            src: 'url("mathjax2/css/woff/MathJax_Main-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Main-Bold.woff") format("woff")'
         },
 
         '@font-face /* 3 */': {
             'font-family': 'MJXTEX-MI',
-            src: 'url("mathjax2/css/woff/MathJax_Main-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Main-Italic.woff") format("woff")'
         },
 
         '@font-face /* 4 */': {
             'font-family': 'MJXTEX-I',
-            src: 'url("mathjax2/css/woff/MathJax_Math-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Math-Italic.woff") format("woff")'
         },
 
         '@font-face /* 5 */': {
             'font-family': 'MJXTEX-BI',
-            src: 'url("mathjax2/css/woff/MathJax_Math-BoldItalic.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Math-BoldItalic.woff") format("woff")'
         },
 
         '@font-face /* 6 */': {
             'font-family': 'MJXTEX-S1',
-            src: 'url("mathjax2/css/woff/MathJax_Size1-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Size1-Regular.woff") format("woff")'
         },
 
         '@font-face /* 7 */': {
             'font-family': 'MJXTEX-S2',
-            src: 'url("mathjax2/css/woff/MathJax_Size2-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Size2-Regular.woff") format("woff")'
         },
 
         '@font-face /* 8 */': {
             'font-family': 'MJXTEX-S3',
-            src: 'url("mathjax2/css/woff/MathJax_Size3-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Size3-Regular.woff") format("woff")'
         },
 
         '@font-face /* 9 */': {
             'font-family': 'MJXTEX-S4',
-            src: 'url("mathjax2/css/woff/MathJax_Size4-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Size4-Regular.woff") format("woff")'
         },
 
         '@font-face /* 10 */': {
             'font-family': 'MJXTEX-A',
-            src: 'url("mathjax2/css/woff/MathJax_AMS-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_AMS-Regular.woff") format("woff")'
         },
 
         '@font-face /* 11 */': {
             'font-family': 'MJXTEX-C',
-            src: 'url("mathjax2/css/woff/MathJax_Caligraphic-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Caligraphic-Regular.woff") format("woff")'
         },
 
         '@font-face /* 12 */': {
             'font-family': 'MJXTEX-C-B',
-            src: 'url("mathjax2/css/woff/MathJax_Caligraphic-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Caligraphic-Bold.woff") format("woff")'
         },
 
         '@font-face /* 13 */': {
             'font-family': 'MJXTEX-FR',
-            src: 'url("mathjax2/css/woff/MathJax_Fraktur-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Fraktur-Regular.woff") format("woff")'
         },
 
         '@font-face /* 14 */': {
             'font-family': 'MJXTEX-FR-B',
-            src: 'url("mathjax2/css/woff/MathJax_Fraktur-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Fraktur-Bold.woff") format("woff")'
         },
 
         '@font-face /* 15 */': {
             'font-family': 'MJXTEX-SS',
-            src: 'url("mathjax2/css/woff/MathJax_SansSerif-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_SansSerif-Regular.woff") format("woff")'
         },
 
         '@font-face /* 16 */': {
             'font-family': 'MJXTEX-SS-B',
-            src: 'url("mathjax2/css/woff/MathJax_SansSerif-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_SansSerif-Bold.woff") format("woff")'
         },
 
         '@font-face /* 17 */': {
             'font-family': 'MJXTEX-SS-I',
-            src: 'url("mathjax2/css/woff/MathJax_SansSerif-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_SansSerif-Italic.woff") format("woff")'
         },
 
         '@font-face /* 18 */': {
             'font-family': 'MJXTEX-SC',
-            src: 'url("mathjax2/css/woff/MathJax_Script-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Script-Regular.woff") format("woff")'
         },
 
         '@font-face /* 19 */': {
             'font-family': 'MJXTEX-T',
-            src: 'url("mathjax2/css/woff/MathJax_Typewriter-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Typewriter-Regular.woff") format("woff")'
         },
     };
+
+    protected options: OptionList;
+
+    /*
+     * @override
+     */
+    constructor(options: OptionList = null) {
+        super();
+        let CLASS = this.constructor as typeof TeXFont;
+        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
+    }
 
     /*
      * @return{StyleList}  The (computed) styles for this font
      *                     (could be used to limit styles to those actually used, for example)
      */
     get styles() {
+        const CLASS = this.constructor as typeof TeXFont;
         //
         //  Include the default styles
         //
-        let styles: StyleList = {...(this.constructor as typeof TeXFont).defaultStyles};
+        let styles: StyleList = {...CLASS.defaultStyles};
+        //
+        //  Add fonts with proper URL
+        //
+        this.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
         //
         //  Create styles needed for the delimiters
         //
@@ -363,6 +390,17 @@ export class TeXFont extends FontData {
         //
         //  Create styles needed for the characters in each variant
         //
+        this.addVariantChars(styles);
+        //
+        //  Return the final style sheet
+        //
+        return styles;
+    }
+
+    /*
+     * @param{StyleList} styles  The style list to add characters to
+     */
+    protected addVariantChars(styles: StyleList) {
         for (const name of Object.keys(this.variant)) {
             const variant = this.variant[name];
             const vclass = (name === 'normal' ? '' : ' .' + variant.classes.replace(/ /g, '.'));
@@ -373,7 +411,19 @@ export class TeXFont extends FontData {
                 }
             }
         }
-        return styles;
+    }
+
+    /*
+     * @param{StyleList} styles    The style object to add styles to
+     * @param{StyleList} fonts     The default font-face directives with %%URL%% where the url should go
+     * @param{string} url          The actual URL to insert into the src strings
+     */
+    protected addFontURLs(styles: StyleList, fonts: StyleList, url: string) {
+        for (const name of Object.keys(fonts)) {
+            const font = {...fonts[name]};
+            font.src = (font.src as string).replace(/%%URL%%/,url);
+            styles[name] = font;
+        }
     }
 
     /*
