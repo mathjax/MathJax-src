@@ -85,9 +85,9 @@ export class CHTMLmunder extends CHTMLmsub {
         this.chtml = this.standardCHTMLnode(parent);
         const base = this.chtml.appendChild(this.html('mjx-row')).appendChild(this.html('mjx-base'));
         const under = this.chtml.appendChild(this.html('mjx-row')).appendChild(this.html('mjx-under'));
-        this.base.toCHTML(base);
+        this.baseChild.toCHTML(base);
         this.script.toCHTML(under);
-        const basebox = this.base.getBBox();
+        const basebox = this.baseChild.getBBox();
         const underbox = this.script.getBBox();
         const [k, v] = this.getUnderKV(basebox, underbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
@@ -104,7 +104,7 @@ export class CHTMLmunder extends CHTMLmsub {
             return;
         }
         bbox.empty();
-        const basebox = this.base.getBBox();
+        const basebox = this.baseChild.getBBox();
         const underbox = this.script.getBBox();
         const [k, v] = this.getUnderKV(basebox, underbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
@@ -166,9 +166,9 @@ export class CHTMLmover extends CHTMLmsup {
         const over = this.chtml.appendChild(this.html('mjx-over'));
         const base = this.chtml.appendChild(this.html('mjx-base'));
         this.script.toCHTML(over);
-        this.base.toCHTML(base);
+        this.baseChild.toCHTML(base);
         const overbox = this.script.getBBox();
-        const basebox = this.base.getBBox();
+        const basebox = this.baseChild.getBBox();
         const [k, u] = this.getOverKU(basebox, overbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
         over.style.paddingBottom = this.em(k);
@@ -187,7 +187,7 @@ export class CHTMLmover extends CHTMLmsup {
             return;
         }
         bbox.empty();
-        const basebox = this.base.getBBox();
+        const basebox = this.baseChild.getBBox();
         const overbox = this.script.getBBox();
         const [k, u] = this.getOverKU(basebox, overbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
@@ -222,14 +222,14 @@ export class CHTMLmunderover extends CHTMLmsubsup {
     /*
      * @return{CHTMLWrapper)   The wrapped under node
      */
-    public get under() {
+    public get underChild() {
         return this.childNodes[(this.node as MmlMunderover).under];
     }
 
     /*
      * @return{CHTMLWrapper)   The wrapped overder node
      */
-    public get over() {
+    public get overChild() {
         return this.childNodes[(this.node as MmlMunderover).over];
     }
 
@@ -238,8 +238,8 @@ export class CHTMLmunderover extends CHTMLmsubsup {
      *
      * @override
      */
-    public get sub() {
-        return this.under;
+    public get subChild() {
+        return this.underChild;
     }
 
     /*
@@ -247,8 +247,8 @@ export class CHTMLmunderover extends CHTMLmsubsup {
      *
      * @override
      */
-    public get sup() {
-        return this.over;
+    public get supChild() {
+        return this.overChild;
     }
 
     /*
@@ -274,12 +274,12 @@ export class CHTMLmunderover extends CHTMLmsubsup {
         const table = this.chtml.appendChild(this.html('mjx-box')).appendChild(this.html('mjx-munder'));
         const base = table.appendChild(this.html('mjx-row')).appendChild(this.html('mjx-base'));
         const under = table.appendChild(this.html('mjx-row')).appendChild(this.html('mjx-under'));
-        this.over.toCHTML(over);
-        this.base.toCHTML(base);
-        this.under.toCHTML(under);
-        const overbox = this.over.getBBox();
-        const basebox = this.base.getBBox();
-        const underbox = this.under.getBBox();
+        this.overChild.toCHTML(over);
+        this.baseChild.toCHTML(base);
+        this.underChild.toCHTML(under);
+        const overbox = this.overChild.getBBox();
+        const basebox = this.baseChild.getBBox();
+        const underbox = this.underChild.getBBox();
         const [ok, u] = this.getOverKU(basebox, overbox);
         const [uk, v] = this.getUnderKV(basebox, underbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
@@ -300,9 +300,9 @@ export class CHTMLmunderover extends CHTMLmsubsup {
             return;
         }
         bbox.empty();
-        const overbox = this.over.getBBox();
-        const basebox = this.base.getBBox();
-        const underbox = this.under.getBBox();
+        const overbox = this.overChild.getBBox();
+        const basebox = this.baseChild.getBBox();
+        const underbox = this.underChild.getBBox();
         const [ok, u] = this.getOverKU(basebox, overbox);
         const [uk, v] = this.getUnderKV(basebox, underbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;

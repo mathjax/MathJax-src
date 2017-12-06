@@ -55,7 +55,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     /*
      * @return{CHTMLWrapper}  The base element's wrapper
      */
-    public get base() {
+    public get baseChild() {
         return this.childNodes[(this.node as MmlMsubsup).base];
     }
 
@@ -98,12 +98,12 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      */
     public toCHTML(parent: HTMLElement) {
         this.chtml = this.standardCHTMLnode(parent);
-        const [x, v] = this.getOffset(this.base.getBBox(), this.script.getBBox());
+        const [x, v] = this.getOffset(this.baseChild.getBBox(), this.script.getBBox());
         const style: StyleData = {'vertical-align': this.em(v)};
         if (x) {
             style['margin-left'] = this.em(x);
         }
-        this.base.toCHTML(this.chtml);
+        this.baseChild.toCHTML(this.chtml);
         this.script.toCHTML(this.chtml.appendChild(this.html('mjx-script', {style})));
     }
 
@@ -114,7 +114,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      * @override
      */
     public computeBBox(bbox: BBox) {
-        const basebox = this.base.getBBox();
+        const basebox = this.baseChild.getBBox();
         const scriptbox = this.script.getBBox();
         const [x, y] = this.getOffset(basebox, scriptbox);
         bbox.append(basebox);
@@ -127,7 +127,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      * @return{boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
      */
     protected isCharBase() {
-        let base = this.base;
+        let base = this.baseChild;
         if ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
             base = base.childNodes[0];
         }
@@ -200,7 +200,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
         const display = this.node.attributes.get('displaystyle');
         return (!display && (this.node.getProperty('movablelimits') ||
                              this.node.attributes.get('movablelimits') ||
-                             this.base.coreMO().node.attributes.get('movablelimits')));
+                             this.baseChild.coreMO().node.attributes.get('movablelimits')));
     }
 
     /*
@@ -218,7 +218,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     }
 
     /*
-     * Get the separation and offset for undercripts (TeXBoox Appendix G 13, 13a)
+     * Get the separation and offset for underscripts (TeXBoox Appendix G 13, 13a)
      *
      * @param{BBox} basebox   The bounding box of the base
      * @param{BBox} underbox  The bounding box of the underscript

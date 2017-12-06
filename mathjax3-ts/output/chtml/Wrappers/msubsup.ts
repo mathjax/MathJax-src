@@ -113,14 +113,14 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
     /*
      * @return{CHTMLWrapper}  The wrapper for the subscript
      */
-    public get sub() {
+    public get subChild() {
         return this.childNodes[(this.node as MmlMsubsup).sub];
     }
 
     /*
      * @return{CHTMLWrapper}  The wrapper for the superscript
      */
-    public get sup() {
+    public get supChild() {
         return this.childNodes[(this.node as MmlMsubsup).sup];
     }
 
@@ -129,16 +129,16 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
      */
     public toCHTML(parent: HTMLElement) {
         this.chtml = this.standardCHTMLnode(parent);
-        const [u, v, q] = this.getUVQ(this.base.getBBox(), this.sub.getBBox(), this.sup.getBBox());
+        const [u, v, q] = this.getUVQ(this.baseChild.getBBox(), this.subChild.getBBox(), this.supChild.getBBox());
         const style = {'vertical-align': this.em(v)};
-        this.base.toCHTML(this.chtml);
+        this.baseChild.toCHTML(this.chtml);
         const stack = this.chtml.appendChild(this.html('mjx-script', {style}));
-        this.sup.toCHTML(stack);
+        this.supChild.toCHTML(stack);
         stack.appendChild(this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
-        this.sub.toCHTML(stack);
+        this.subChild.toCHTML(stack);
         const corebox = this.baseCore.bbox;
         if (corebox.ic) {
-            this.sup.chtml.style.marginLeft = this.em((1.2 * corebox.ic + .05) / this.sup.bbox.rscale);
+            this.supChild.chtml.style.marginLeft = this.em((1.2 * corebox.ic + .05) / this.supChild.bbox.rscale);
         }
     }
 
@@ -146,9 +146,9 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
      * @override
      */
     public computeBBox(bbox: BBox) {
-        const basebox = this.base.getBBox();
-        const subbox  = this.sub.getBBox();
-        const supbox  = this.sup.getBBox();
+        const basebox = this.baseChild.getBBox();
+        const subbox  = this.subChild.getBBox();
+        const supbox  = this.supChild.getBBox();
         bbox.empty();
         bbox.append(basebox);
         const w = bbox.w;
