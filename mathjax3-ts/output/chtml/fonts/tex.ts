@@ -404,8 +404,9 @@ export class TeXFont extends FontData {
         const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
         this.addDelimiterVPart(styles, c, 'ext', ext);
         const He = this.addDelimiterVPart(styles, c, 'end', end);
+        let Hm;
         if (mid) {
-            this.addDelimiterVPart(styles, c, 'mid', mid);
+            Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
             styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext'] = {height: '50%'}
         }
         const css: StyleData = {};
@@ -414,10 +415,11 @@ export class TeXFont extends FontData {
         }
         if (He) {
             css['border-bottom-width'] = this.em0(He - .03);
-            css['margin-bottom'] = this.em(-He);
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-end'] = {'margin-top': this.em(-He)};
             if (mid) {
-                styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext:last-of-type'] = {
-                    'margin-top': this.em(-He)
+                styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
+                    'margin-top': this.em(-Hm/2),
+                    'margin-bottom': this.em(-Hm/2)
                 };
             }
         }
