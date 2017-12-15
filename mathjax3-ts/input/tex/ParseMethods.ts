@@ -100,7 +100,7 @@ export namespace ParseMethods {
   export function csMathchar0mo(parser: OldParser, mchar: Symbol) {
     TreeHelper.printMethod("csMathchar0mo");
     var def = mchar.attributes || {};
-    def.stretchy = false;
+    def['stretchy'] = false;
     // @test Large Set
     var textNode = TreeHelper.createText(mchar.char);
     var node = TreeHelper.createNode('mo', [], def, textNode);
