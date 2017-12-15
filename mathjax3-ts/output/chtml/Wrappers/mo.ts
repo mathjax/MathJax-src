@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmfracr wrapper for the MmlMrow object
+ * @fileoverview  Implements the CHTMLmo wrapper for the MmlMo object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -26,6 +26,16 @@ import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {DelimiterData} from '../FontData.js';
+import {StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
+
+/*
+ * Convert direction to letter
+ */
+const DirectionVH: {[n: number]: string} = {
+    [DIRECTION.Vertical]: 'v',
+    [DIRECTION.Horizontal]: 'h'
+};
 
 /*****************************************************************/
 /*
@@ -34,11 +44,71 @@ import {DelimiterData} from '../FontData.js';
 export class CHTMLmo extends CHTMLWrapper {
     public static kind = MmlMo.prototype.kind;
 
+    public static styles: StyleList = {
+        'mjx-symmetric': {
+            'vertical-align': '.25em'
+        },
+        'mjx-symmetric > mjx-c': {
+            'vertical-align': 'middle'
+        },
+
+        'mjx-stretchy-h': {
+            display: 'inline-table',
+            width: '100%',
+            'min-width': '1.2em'
+        },
+        'mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-end': {
+            display: 'table-cell',
+            width: 0
+        },
+        'mjx-stretchy-h > mjx-ext': {
+            display: 'table-cell',
+            overflow: 'hidden',
+            width: '100%'
+        },
+        'mjx-stretchy-h > mjx-ext > mjx-c': {
+            transform: 'scalex(1000)',
+            margin: '0 -1em'
+        },
+
+        'mjx-stretchy-v': {
+            display: 'inline-block'
+        },
+        'mjx-stretchy-v > mjx-beg': {
+            display: 'block',
+            height: 0
+        },
+        'mjx-stretchy-v > mjx-end': {
+            display: 'block'
+        },
+        'mjx-stretchy-v > mjx-end > mjx-c': {
+            display: 'block'
+        },
+        'mjx-stretchy-v > mjx-beg > mjx-c, mjx-stretchy-v > mjx-end > mjx-c': {
+            overflow: 'hidden'
+        },
+        'mjx-stretchy-v > mjx-ext': {
+            display: 'block',
+            height: '100%',
+            'box-sizing': 'border-box',
+            border: '0px solid transparent',
+            overflow: 'hidden'
+        },
+        'mjx-stretchy-v > mjx-ext > mjx-c': {
+            transform: 'scaleY(1000) translateY(.5em)'
+        },
+        'mjx-mark': {
+            display: 'inline-block',
+            height: '0px'
+        }
+
+    };
+
     /*
      * The font size that a stretched operator uses.
      * If -1, then stretch arbitrarily, and bbox gives the actual height, depth, width
      */
-    protected size: number = null;
+    public size: number = null;
 
     /*
      * @override
@@ -97,7 +167,7 @@ export class CHTMLmo extends CHTMLWrapper {
         //
         const styles: StringMap = {};
         const {h, d, w} = this.bbox;
-        if (this.stretch === 'V') {
+        if (this.stretch === DIRECTION.Vertical) {
             //
             //  Vertical needs an extra (empty) element to get vertical position right
             //  in some browsers (e.g., Safari)
@@ -111,30 +181,25 @@ export class CHTMLmo extends CHTMLWrapper {
         //
         //  Make the main element and add it to the parent
         //
-        const html = this.html('mjx-stretchy-' + this.stretch.toLowerCase(),
-                               {c: this.char(c), style: styles}, content);
+        const dir = DirectionVH[this.stretch];
+        const html = this.html('mjx-stretchy-' + dir, {c: this.char(c), style: styles}, content);
         chtml.appendChild(html);
     }
 
     /*
      * @override
      */
-    public computeBBox() {
-        const attributes = this.node.attributes;
-        const symmetric = attributes.get('symmetric');
+    public computeBBox(bbox: BBox) {
+        const symmetric = this.node.attributes.get('symmetric');
         if (this.stretch && this.size === null) {
             this.getStretchedVariant([0]);
         }
-        if (this.stretch && this.size < 0) {
-            return this.bbox;
-        } else {
-            const bbox = super.computeBBox();
-            if (symmetric) {
-                const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
-                bbox.h += d;
-                bbox.d += d;
-            }
-            return bbox;
+        if (this.stretch && this.size < 0) return;
+        super.computeBBox(bbox);
+        if (symmetric) {
+            const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
+            bbox.h += d;
+            bbox.d += d;
         }
     }
 
@@ -152,22 +217,23 @@ export class CHTMLmo extends CHTMLWrapper {
     /*
      * @override
      */
-    public canStretch(direction: string) {
+    public canStretch(direction: DIRECTION) {
         const attributes = this.node.attributes;
         if (!attributes.get('stretchy')) return false;
         const c = this.getText();
         if (c.length !== 1) return false;
-        const C = this.font.getDelimiter(c.charCodeAt(0));
-        this.stretch = (C && C.dir === direction.substr(0, 1) ? C.dir : '');
-        return this.stretch !== '';
+        const delim = this.font.getDelimiter(c.charCodeAt(0));
+        this.stretch = (delim && delim.dir === direction ? delim.dir : DIRECTION.None);
+        return this.stretch !== DIRECTION.None;
     }
 
     /*
      * Determint variant for vertically/horizontally stretched character
      *
      * @param{number[]} WH  size to stretch to, either [W] or [H, D]
+     * @param{boolean} exact  True if not allowed to use delimiter factor and shortfall
      */
-    public getStretchedVariant(WH: number[]) {
+    public getStretchedVariant(WH: number[], exact: boolean = false) {
         if (this.stretch) {
             let D = this.getWH(WH);
             const min = this.getSize('minsize', 0);
@@ -177,8 +243,8 @@ export class CHTMLmo extends CHTMLWrapper {
             //  then get the minimum size via TeX rules
             //
             D = Math.max(min, Math.min(max, D));
-            const m = (min ? D : Math.max(D * this.font.params.delimiterfactor / 1000,
-                                          D - this.font.params.delimitershortfall));
+            const m = (min || exact ? D : Math.max(D * this.font.params.delimiterfactor / 1000,
+                                                   D - this.font.params.delimitershortfall));
             //
             //  Look through the delimiter sizes for one that matches
             //
@@ -237,7 +303,7 @@ export class CHTMLmo extends CHTMLWrapper {
      */
     protected getStretchBBox(WHD: number[], D: number, C: DelimiterData) {
         let [h, d, w] = C.HDW;
-        if (this.stretch === 'V') {
+        if (this.stretch === DIRECTION.Vertical) {
             [h, d] = this.getBaseline(WHD, D, C);
         } else {
             w = D;

@@ -38,9 +38,7 @@ export class CHTMLmspace extends CHTMLWrapper {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        let chtml = this.html('mjx-space');
-        this.chtml = parent.appendChild(chtml);
-        this.handleScale();
+        let chtml = this.standardCHTMLnode(parent);
         let {w, h, d} = this.getBBox();
         if (w < 0) {
             chtml.style.marginRight = this.em(w);
@@ -51,7 +49,7 @@ export class CHTMLmspace extends CHTMLWrapper {
         }
         h = Math.max(0, h + d);
         if (h) {
-            chtml.style.height = this.em(Math.max(0, h + d));
+            chtml.style.height = this.em(Math.max(0, h));
         }
         if (d) {
             chtml.style.verticalAlign = this.em(-d);
@@ -61,13 +59,11 @@ export class CHTMLmspace extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
+    public computeBBox(bbox: BBox) {
         const attributes = this.node.attributes;
-        const bbox = this.bbox;
         bbox.w = this.length2em(attributes.get('width'), 0);
         bbox.h = this.length2em(attributes.get('height'), 0);
         bbox.d = this.length2em(attributes.get('depth'), 0);
-        return bbox;
     }
 
     /*

@@ -207,6 +207,8 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     public static defaults: PropertyList = {
         mathbackground: INHERIT,
         mathcolor: INHERIT,
+        mathsize: INHERIT,  // technically only for token elements, but <mstyle mathsize="..."> should
+                            //    scale all spaces, fractions, etc.
         dir: INHERIT
     };
     /*
@@ -221,22 +223,6 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         mstyle: {
             mpadded: {width: true, height: true, depth: true, lspace: true, voffset: true},
             mtable:  {width: true, height: true, depth: true, align: true}
-        },
-        mtable: {
-            mover: {align: true},
-            munder: {align: true},
-            munderover: {align: true},
-            mtable: {
-                align: true, rowalign: true, columnalign: true, groupalign: true,
-                alignmentscope: true, columnwidth: true, width: true, rowspacing: true,
-                columnspacing: true, rowlines: true, columnlines: true, frame: true,
-                framespacing: true, equalrows: true, equalcolumns: true, displaystyle: true,
-                side: true, minlabelspacing: true
-            }
-        },
-        mtr: {
-            mrow: {rowalign: true, columnalign: true, groupalign: true},
-            mtable: {rowalign: true, columnalign: true, groupalign: true}
         },
         maligngroup: {
             mrow: {groupalign: true},
@@ -291,6 +277,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             factory.getNodeClass(this.kind).defaults,
             factory.getNodeClass('math').defaults
         );
+        this.attributes.setList(attributes);
     }
 
     /*
@@ -515,7 +502,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
                            display: boolean = false, level: number = 0, prime: boolean = false) {
         let defaults = this.attributes.getAllDefaults();
         for (const key of Object.keys(attributes)) {
-            if (key in defaults) {
+            if (defaults.hasOwnProperty(key)) {
                 let [node, value] = attributes[key];
                 let noinherit = (AbstractMmlNode.noInherit[node] || {})[this.kind] || {};
                 if (!noinherit[key]) {

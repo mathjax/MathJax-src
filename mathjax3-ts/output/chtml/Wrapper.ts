@@ -22,8 +22,8 @@
  */
 
 import {AbstractWrapper} from '../../core/Tree/Wrapper.js';
-import {Node} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
+import {Node, PropertyList} from '../../core/Tree/Node.js';
+import {MmlNode, TextNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
@@ -33,7 +33,8 @@ import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
-import {FontData} from './FontData.js';
+import {FontData, DIRECTION} from './FontData.js';
+import {StyleList} from './CssStyles.js';
 
 /*****************************************************************/
 
@@ -43,41 +44,8 @@ import {FontData} from './FontData.js';
 export type StringMap = {[key: string]: string};
 
 /*
- * The classes to use for each variant
+ * Some standard sizes to use in predefind CSS properties
  */
-export const VARIANT: StringMap = {
-    normal: 'mjx-n',
-    bold: 'mjx-b',
-    italic: 'mjx-i',
-    'bold-italic': 'mjx-b mjx-i',
-    'double-struck': 'mjx-ds',
-    'fraktur': 'mjx-fr',
-    'bold-fraktur': 'mjx-fr mjx-b',
-    'script': 'mjx-sc',
-    'bold-script': 'mjx-sc mjx-b',
-    'sans-serif': 'mjx-ss',
-    'bold-sans-serif': 'mjx-ss mjx-b',
-    'sans-serif-italic': 'mjx-ss mjx-i',
-    'bold-sans-serif-italic': 'mjx-ss mjx-b mjx-i',
-    monospace: 'mjx-ty',
-    '-tex-caligraphic': 'mjx-cal',
-    '-tex-oldstyle': 'mjx-os',
-    '-tex-mathit': 'mjx-mit',
-    '-smallop': 'mjx-sop',
-    '-largeop': 'mjx-lop',
-    '-size3': 'mjx-s3',
-    '-size4': 'mjx-s4',
-};
-
-/*
- * The value to use for each spacing size
- */
-export const SPACE: StringMap = {
-    thinmathspace: '1',
-    mediummathspace: '2',
-    thickmathspace: '3'
-};
-
 export const FONTSIZE: StringMap = {
     '70.7%': 's',
     '70%': 's',
@@ -89,6 +57,12 @@ export const FONTSIZE: StringMap = {
     '173%': 'LG',
     '207%': 'hg',
     '249%': 'HG'
+};
+
+export const SPACE: StringMap = {
+    [LENGTHS.em(3/18)]: '1',
+    [LENGTHS.em(4/18)]: '2',
+    [LENGTHS.em(5/18)]: '3',
 };
 
 /*
@@ -106,6 +80,60 @@ interface CSSStyle extends CSSStyleDeclaration {
 export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
 
     public static kind: string = 'unknown';
+
+    /*
+     * If true, this causes a style for the node type to be generated automatically
+     * that sets display:inline-block (as needed for the output for MmlNodes).
+     */
+    public static autoStyle = true;
+
+    /*
+     *  The default styles for CommonHTML
+     */
+    public static styles: StyleList = {
+        'mjx-chtml [space="1"]': {'margin-left': '.167em'},
+        'mjx-chtml [space="2"]': {'margin-left': '.222em'},
+        'mjx-chtml [space="3"]': {'margin-left': '.278em'},
+
+        'mjx-chtml [size="s"]' : {'font-size': '70.7%'},
+        'mjx-chtml [size="ss"]': {'font-size': '50%'},
+        'mjx-chtml [size="Tn"]': {'font-size': '60%'},
+        'mjx-chtml [size="sm"]': {'font-size': '85%'},
+        'mjx-chtml [size="lg"]': {'font-size': '120%'},
+        'mjx-chtml [size="Lg"]': {'font-size': '144%'},
+        'mjx-chtml [size="LG"]': {'font-size': '173%'},
+        'mjx-chtml [size="hg"]': {'font-size': '207%'},
+        'mjx-chtml [size="HG"]': {'font-size': '249%'},
+
+        'mjx-box': {display: 'inline-block'},
+        'mjx-block': {display: 'block'},
+        'mjx-itable': {display: 'inline-table'},
+        'mjx-row': {display: 'table-row'},
+        'mjx-row > *': {display: 'table-cell'},
+
+        //
+        //  These don't have Wrapper subclasses, so add their styles here
+        //
+        'mjx-mi': {display: 'inline-block'},
+        'mjx-mn': {display: 'inline-block'},
+        'mjx-mtext': {display: 'inline-block'},
+        'mjx-merror': {
+            display: 'inline-block',
+            color: 'red',
+            'background-color': 'yellow'
+        },
+
+        'mjx-mphantom': {visibility: 'hidden'},
+
+        'mjx-math': {
+            //
+            //  There will be more here when the math wrapper is written
+            //
+            display: 'inline-block',
+            'line-height': '0px'
+        }
+
+    };
 
     /*
      * Styles that should not be passed on from style attribute
@@ -205,7 +233,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * Direction this node can be stretched (null means not yet determined)
      */
-    public stretch: string = null;
+    public stretch: DIRECTION = DIRECTION.None;
 
     /*
      * Easy access to the font parameters
@@ -239,6 +267,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         this.getStyles();
         this.getVariant();
         this.getScale();
+        this.getSpace();
         this.childNodes = node.childNodes.map((child: Node) => {
             return this.wrap(child as MmlNode);
         });
@@ -283,24 +312,21 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (this.bboxComputed) {
             return this.bbox;
         }
-        let bbox = this.computeBBox();
-        if (save) {
-            this.bbox = bbox;
-            this.bboxComputed = true;
-        }
+        const bbox = (save ? this.bbox : BBox.zero());
+        this.computeBBox(bbox);
+        this.bboxComputed = save;
         return bbox;
     }
 
     /*
-     * @return{BBox}  The computed bounding box for the wrapped node
+     * @param{BBox} bbox  The bounding box to modify (either this.bbox, or an empty one)
      */
-    protected computeBBox() {
-        const bbox = BBox.empty();
+    protected computeBBox(bbox: BBox) {
+        bbox.empty();
         for (const child of this.childNodes) {
             bbox.append(child.getBBox());
         }
         bbox.clean();
-        return bbox;
     }
 
     /*******************************************************************/
@@ -384,7 +410,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         let attributes = this.node.attributes;
         let scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
         let fontsize = attributes.get('fontsize');
-        let mathsize = (parent && !this.node.isToken ? parent : this).node.attributes.get('mathsize');
+        let mathsize = (this.node.isToken || this.node.isKind('mstyle') ?
+                        attributes.get('mathsize') : attributes.getInherited('mathsize'));
         //
         // If scriptsize is non-zero, set scale based on scriptsizemultiplier
         //
@@ -424,6 +451,12 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         this.bbox.rscale = scale / pscale;
     }
 
+    protected getSpace() {
+        const space = this.node.texSpacing();
+        if (space) {
+            this.bbox.L = this.length2em(space);
+        }
+    }
     /*******************************************************************/
 
     /*
@@ -472,7 +505,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleVariant() {
         if (this.node.isToken && this.variant !== '-explicitFont') {
-            this.chtml.className = VARIANT[this.variant] || VARIANT.normal;
+            this.chtml.className = (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes;
         }
     }
 
@@ -480,15 +513,25 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Set the (relative) scaling factor for the node
      */
     protected handleScale() {
-        const scale = (Math.abs(this.bbox.rscale - 1) < .001 ? 1 : this.bbox.rscale);
-        if (this.chtml && scale !== 1) {
+        this.setScale(this.chtml, this.bbox.rscale);
+    }
+
+    /*
+     * @param{HTMLElement} chtml  The HTML node to scale
+     * @param{number} rscale      The relatie scale to apply
+     * @return{HTMLElement}       The HTML node (for chaining)
+     */
+    setScale(chtml: HTMLElement, rscale: number) {
+        const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
+        if (chtml && scale !== 1) {
             const size = this.percent(scale);
             if (FONTSIZE[size]) {
-                this.chtml.setAttribute('size', FONTSIZE[size]);
+                chtml.setAttribute('size', FONTSIZE[size]);
             } else {
-                this.chtml.style.fontSize = size;
+                chtml.style.fontSize = size;
             }
         }
+        return chtml;
     }
 
     /*
@@ -496,10 +539,13 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      *   FIXME:  still need to handle MathML spacing
      */
     protected handleSpace() {
-        const space = this.node.texSpacing();
-        if (space) {
-            this.bbox.L = this.length2em(space);
-            this.chtml.setAttribute('space', SPACE[space]);
+        if (this.bbox.L) {
+            const space = this.em(this.bbox.L);
+            if (SPACE[space]) {
+                this.chtml.setAttribute('space', SPACE[space]);
+            } else {
+                this.chtml.style.marginLeft = space;
+            }
         }
     }
 
@@ -575,20 +621,48 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
-     * @param{string} direction  The direction to stretch this node
-     * @return{boolean}  Whether the node can stretch in that direction
+     * @param{DIRECTION} direction  The direction to stretch this node
+     * @return{boolean}             Whether the node can stretch in that direction
      */
-    public canStretch(direction: string): boolean {
-        this.stretch = '';
+    public canStretch(direction: DIRECTION): boolean {
+        this.stretch = DIRECTION.None;
         if (this.node.isEmbellished) {
             let core = this.core();
             if (core && core.node !== this.node) {
                 if (core.canStretch(direction)) {
-                    this.stretch = direction.substr(0,1);
+                    this.stretch = direction;
                 }
             }
         }
-        return this.stretch !== '';
+        return this.stretch !== DIRECTION.None;
+    }
+
+    /*******************************************************************/
+    /*
+     * For debugging
+     */
+
+    public drawBBox() {
+        const bbox = this.getBBox();
+        const box = this.html('mjx-box', {style: {
+            opacity: .25, 'margin-left': this.em(-bbox.w - bbox.R)
+        }}, [
+            this.html('mjx-box', {style: {
+                height: this.em(bbox.h),
+                width: this.em(bbox.w),
+                'background-color': 'red'
+            }}),
+            this.html('mjx-box', {style: {
+                height: this.em(bbox.d),
+                width: this.em(bbox.w),
+                'margin-left': this.em(-bbox.w),
+                'vertical-align': this.em(-bbox.d),
+                'background-color': 'green'
+            }})
+        ]);
+        const node = this.chtml || this.parent.chtml;
+        node.parentNode.appendChild(box);
+        node.style.backgroundColor = '#FFEE00';
     }
 
     /*******************************************************************/
@@ -610,6 +684,15 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected em(m: number) {
         return LENGTHS.em(m);
+    }
+
+    /*
+     * @param{number} m   A number of em's to be shown as pixels
+     * @param{number} M   The minimum number of pixels to allow
+     * @return{string}  The number with units of px
+     */
+    protected px(m: number, M: number = -LENGTHS.BIGDIMEN) {
+        return LENGTHS.px(m, M, this.metrics.em);
     }
 
     /*
@@ -640,8 +723,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{string}  The character as a properly encoded string.
      */
     protected char(n: number, escape: boolean = false) {
-        return (n >= 0x20 && n <= 0x7E && n !== 0x22 && n !== 0x5C ?
-                String.fromCharCode(n) : (escape ? '\\' : '') + n.toString(16).toUpperCase());
+        return this.font.char(n, escape);
     }
 
     /*
@@ -660,6 +742,24 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     public text(text: string) {
         return this.factory.chtml.text(text);
+    }
+
+    /*
+     * @param{string} text  The text from which to create a TextNode object
+     * @return{CHTMLTextNode}  The TextNode with the given text
+     */
+    public mmlText(text: string) {
+        return ((this.node as AbstractMmlNode).factory.create('text') as TextNode).setText(text);
+    }
+
+    /*
+     * @param{string} kind  The kind of MmlNode to create
+     * @paramProperyList} properties  The properties to set initially
+     * @param{MmlNode[]} children  The child nodes to add to the created node
+     * @return{MmlNode}  The newly created MmlNode
+     */
+    public mmlNode(kind: string, properties: PropertyList = {}, children: MmlNode[] = []) {
+        return (this.node as AbstractMmlNode).factory.create(kind, properties, children);
     }
 
 }
