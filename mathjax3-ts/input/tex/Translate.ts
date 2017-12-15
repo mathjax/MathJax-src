@@ -87,7 +87,7 @@ export namespace NewTex {
     // if (isError) {
     //   (mathNode as any).texError = true;
     // }
-    ParserUtil.combineRelations(root);
+    // ParserUtil.combineRelations(root);
     return mathNode;
   }
 
