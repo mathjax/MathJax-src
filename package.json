@@ -4,14 +4,14 @@
   "description": "MathJax version 3 testbed",
   "main": "load.js",
   "dependencies": {
-    "jsdom": "10.*"
+    "jsdom": "10.*",
+    "webpack": "^3.10.0"
   },
   "devDependencies": {
-    "typescript": "2.1.*",
+    "typescript": "2.3.*",
     "tslint": "^3.15.0",
     "tslint-jsdoc-rules": "*",
-    "tslint-unix-formatter": "*",
-    "typescript": "2.3.*"
+    "tslint-unix-formatter": "*"
   },
   "repository": {
     "type": "git",
