@@ -34,11 +34,11 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 // A wrapper for translating scripts with LaTeX content.
 
 export namespace NewTex {
-  
+
   export type Script = {type: string, innerText: string, MathJax: any};
 
   export let display: boolean = false;
-  
+
   export function Compile(tex: string, display: boolean): MmlNode {
     let script = {
       type: 'math/tex' + (display ? '; mode=display' : ''),
