@@ -32,7 +32,7 @@ import MapHandler from './MapHandler.js';
 import {SymbolMap} from './SymbolMap.js';
 import {Symbol} from './Symbol.js';
 import TexParser from './TexParser.js';
-// import {ParseMethods} from './ParseMethods.js';
+import {ParseMethods} from './ParseMethods.js';
 import TexError from './TexError.js';
 import {ParseMethod} from './Types.js';
 
@@ -218,7 +218,7 @@ export class OldParser {
       case '}':
         if (parens-- <= 0) {
           throw new TexError(['ExtraCloseLooking',
-                              'Extra close brace while looking for %1','']'']);
+                              'Extra close brace while looking for %1','\']\'']);
         }
         break;   
       case ']':
@@ -229,7 +229,7 @@ export class OldParser {
       }
     }
     throw new TexError(['MissingCloseBracket',
-                        'Could not find closing ']' for argument to %1',name]);
+                        'Could not find closing \']\' for argument to %1', name]);
   }
   
   /**
@@ -335,8 +335,6 @@ export class OldParser {
             // @test Interspersed Text
             node = TreeHelper.createNode('TeXAtom',
                                          [(new OldParser(text.slice(k,i-1),{}, this.ParseMethods)).mml()], {});
-            // VS: OLD
-            // node = MML.TeXAtom((new OldParser(text.slice(k,i-1),{})).mml());
             mml.push(node);
             match = ''; k = i;
           } else if (match === '') {
@@ -350,8 +348,6 @@ export class OldParser {
           if (match === '}' && braces === 0) {
             TreeHelper.untested(12);
             node = TreeHelper.createNode('TeXAtom', [(new OldParser(text.slice(k,i),{}, this.ParseMethods)).mml()], def);
-            // VS: OLD
-            // node = MML.TeXAtom((new OldParser(text.slice(k,i),{})).mml().With(def));
             mml.push(node);
             match = ''; k = i;
           } else if (match !== '') {
@@ -371,8 +367,6 @@ export class OldParser {
             } else if (c === ')' && match === ')' && braces === 0) {
               TreeHelper.untested(13);
               node = TreeHelper.createNode('TeXAtom', [(new OldParser(text.slice(k,i-2),{}, this.ParseMethods)).mml()], {});
-              // VS: OLD
-              // node = MML.TeXAtom((new OldParser(text.slice(k,i-2),{})).mml());
               mml.push(node);
               match = ''; k = i;
             } else if (c.match(/[${}\\]/) && match === '')  {

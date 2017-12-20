@@ -1253,7 +1253,7 @@ export namespace ParseMethods {
       env = env.substr(5); 
     } // special \end{} for \newenvironment environments
     if (env.match(/\\/i)) {
-      throw new TexError(['InvalidEnv','Invalid environment name '%1'',env]);
+      throw new TexError(['InvalidEnv','Invalid environment name \'%1\'',env]);
     }
     if (name === '\\end') {
       var mml = 
