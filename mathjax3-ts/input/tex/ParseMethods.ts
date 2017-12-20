@@ -22,11 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-// import * as sitem from './StackItem.js';
 import * as sitem from './StackItem.js';
 import {NewTex} from './Translate.js';
 import {Symbol} from './Symbol.js';
-import {CharacterMap} from './SymbolMap.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexError from './TexError.js';
 import TexParser from './TexParser.js';
@@ -39,9 +37,6 @@ import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 
 // Namespace
 export namespace ParseMethods {
-
-  // Legacy objects.
-  export let NEW_PARSER: TexParser = null;
 
   const PRIME = '\u2032';
   const SMARTQUOTE = '\u2019';
@@ -72,7 +67,7 @@ export namespace ParseMethods {
   export function ControlSequence(parser: TexParser, c: string) {
     TreeHelper.printMethod('ControlSequence');
     var name = parser.GetCS();
-    ParseMethods.NEW_PARSER.parse('macro', [name, this]);
+    parser.parse('macro', [name, this]);
   };
 
   //
@@ -399,7 +394,7 @@ export namespace ParseMethods {
       def = {mathvariant: parser.stack.env['font']};
     }
 
-    var remap = (parser.remap as CharacterMap).lookup(c);
+    var remap = parser.GetRemap(c);
     // @test Other
     // @test Other Remap
     var textNode = TreeHelper.createText(remap ? remap.char : c);
@@ -1263,7 +1258,7 @@ export namespace ParseMethods {
                             'MathJax maximum substitution count exceeded; ' +
                             'is there a recursive latex environment?']);
       }
-      ParseMethods.NEW_PARSER.parse('environment', [env, this]);
+      parser.parse('environment', [env, this]);
     }
   };
 

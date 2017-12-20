@@ -53,9 +53,8 @@ export default class TexParser {
   // From OLD Parser
   NBSP = '\u00A0'; 
   string: string;
-  NewParser: TexParser;
   i: number = 0;
-  remap: sm.SymbolMap = MapHandler.getInstance().getMap('remap');
+  remap: sm.CharacterMap = MapHandler.getInstance().getMap('remap') as sm.CharacterMap;
   stack: Stack;
   
   
@@ -69,7 +68,6 @@ export default class TexParser {
     this.append(AmsSymbols.CONFIGURATION);
     this.setup(ParseMethods as any);
 
-    ParseMethods.NEW_PARSER = this;
     this.string = str;
     let ENV: EnvList;
     if (env) {
@@ -573,6 +571,10 @@ export default class TexParser {
     let star = (this.GetNext() === '*');
     if (star) {this.i++}
     return star;
+  }
+
+  GetRemap(char: string): Symbol {
+    return this.remap.lookup(char);
   }
   
 }
