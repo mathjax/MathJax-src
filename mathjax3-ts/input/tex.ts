@@ -43,12 +43,12 @@ export class TeX extends AbstractInputJax {
         FindTeX: null
     };
 
-    /*
+    /**
      * The FindTeX instance used for locating TeX in strings
      */
     protected findTeX: FindTeX;
 
-    /*
+    /**
      * @override
      */
     constructor(options: OptionList) {
@@ -57,17 +57,14 @@ export class TeX extends AbstractInputJax {
         this.findTeX = this.options['FindTeX'] || new FindTeX(find);
     }
 
-    /*
-     * Use the legacy TeX input jax for now
-     *
+    /**
      * @override
      */
     public compile(math: MathItem): MmlNode {
-        // return LegacyTeX.Compile(math.math, math.display);
         return NewTex.Compile(math.math, math.display);
     }
 
-    /*
+    /**
      * @override
      */
     public findMath(strings: string[]) {
