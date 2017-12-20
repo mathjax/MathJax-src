@@ -24,10 +24,8 @@
  */
 
 import {TreeHelper} from './TreeHelper.js';
-import {OldParser} from './OldParser.js';
+import TexParser from './TexParser.js';
 import {ParserUtil} from './ParserUtil.js';
-// import {ParseMethods} from './ParseMethods.js';
-import {ParseMethods} from './ParseMethods.js';
 import TexError from './TexError.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
@@ -65,7 +63,7 @@ export namespace NewTex {
       display = script.type.replace(/\n/g, ' ').
         match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
       try {
-        mml = new OldParser(math, null).mml();
+        mml = new TexParser(math, null).mml();
         TreeHelper.printSimple(mml.toString());
       } catch (err) {
         if (!(err instanceof TexError)) {

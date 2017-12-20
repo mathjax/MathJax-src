@@ -53,7 +53,7 @@ export class OldParser {
 
   constructor(str: string, env: EnvList) {
     TreeHelper.printMethod('Init (Old Parser Object)');
-    this.NewParser = new TexParser();
+//    this.NewParser = new TexParser();
     ParseMethods.NEW_PARSER = this.NewParser;
     this.string = str;
     let ENV: EnvList;

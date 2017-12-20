@@ -32,7 +32,6 @@ import TexError from './TexError.js';
 import TexParser from './TexParser.js';
 import {TexConstant} from './TexConstants.js';
 import {ParserUtil} from './ParserUtil.js';
-import {OldParser} from './OldParser.js';
 import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
@@ -42,7 +41,6 @@ import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 export namespace ParseMethods {
 
   // Legacy objects.
-  let OLD_PARSER = null;
   export let NEW_PARSER: TexParser = null;
 
   const PRIME = '\u2032';
@@ -52,7 +50,7 @@ export namespace ParseMethods {
   const P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
 
   // Utilities?
-  export function MmlFilterAttribute(parser: OldParser, name: string, value: string): string {
+  export function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
     return value
   };
 
@@ -71,7 +69,7 @@ export namespace ParseMethods {
   /*
    *  Lookup a control-sequence and process it
    */
-  export function ControlSequence(parser: OldParser, c: string) {
+  export function ControlSequence(parser: TexParser, c: string) {
     TreeHelper.printMethod('ControlSequence');
     var name = parser.GetCS();
     ParseMethods.NEW_PARSER.parse('macro', [name, this]);
@@ -85,7 +83,7 @@ export namespace ParseMethods {
   //
   //  Handle normal mathchar (as an mi)
   //
-  export function csMathchar0mi(parser: OldParser, mchar: Symbol) {
+  export function csMathchar0mi(parser: TexParser, mchar: Symbol) {
     TreeHelper.printMethod('csMathchar0mi');
     var def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
@@ -97,7 +95,7 @@ export namespace ParseMethods {
   //
   //  Handle normal mathchar (as an mo)
   //
-  export function csMathchar0mo(parser: OldParser, mchar: Symbol) {
+  export function csMathchar0mo(parser: TexParser, mchar: Symbol) {
     TreeHelper.printMethod('csMathchar0mo');
     var def = mchar.attributes || {};
     def['stretchy'] = false;
@@ -110,7 +108,7 @@ export namespace ParseMethods {
   //
   //  Handle mathchar in current family
   //
-  export function csMathchar7(parser: OldParser, mchar: Symbol) {
+  export function csMathchar7(parser: TexParser, mchar: Symbol) {
     TreeHelper.printMethod('csMathchar7');
     var def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
     if (parser.stack.env['font']) {
@@ -131,7 +129,7 @@ export namespace ParseMethods {
   //
   //  Handle delimiter
   //
-  export function csDelimiter(parser: OldParser, delim: Symbol) {
+  export function csDelimiter(parser: TexParser, delim: Symbol) {
     TreeHelper.printMethod('csDelimiter');
     var def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
@@ -145,12 +143,12 @@ export namespace ParseMethods {
   //  Handle undefined control sequence
   //  (overridden in noUndefined extension)
   //
-  export function csUndefined(parser: OldParser, name: string) {
+  export function csUndefined(parser: TexParser, name: string) {
     TreeHelper.printMethod('csUndefined');
     throw new TexError(['UndefinedControlSequence','Undefined control sequence %1','\\' + name]);
   };
 
-  export function envUndefined(parser: OldParser, env: string) {
+  export function envUndefined(parser: TexParser, env: string) {
     TreeHelper.printMethod('envUndefined');
     throw new TexError(['UnknownEnv', 'Unknown environment \'%1\'', env]);
   };
@@ -158,7 +156,7 @@ export namespace ParseMethods {
   /*
    *  Handle a variable (a single letter)
    */
-  export function Variable(parser: OldParser, c: string) {
+  export function Variable(parser: TexParser, c: string) {
     TreeHelper.printMethod('Variable');
     var def: sitem.EnvList = {};
     if (parser.stack.env['font']) {
@@ -174,7 +172,7 @@ export namespace ParseMethods {
   /*
    *  Determine the extent of a number (pattern may need work)
    */
-  export function Number(parser: OldParser, c: string) {
+  export function Number(parser: TexParser, c: string) {
     TreeHelper.printMethod('Number');
     let mml: MmlNode;
     let n = parser.string.slice(parser.i-1).match(NUMBER);
@@ -202,17 +200,17 @@ export namespace ParseMethods {
   /*
    *  Handle { and }
    */
-  export function Open(parser: OldParser, c: string) {
+  export function Open(parser: TexParser, c: string) {
     parser.Push( new sitem.OpenItem() );
   };
-  export function Close(parser: OldParser, c: string) {
+  export function Close(parser: TexParser, c: string) {
     parser.Push( new sitem.CloseItem() );
   };
 
   /*
    *  Handle tilde and spaces
    */
-  export function Tilde(parser: OldParser, c: string) {
+  export function Tilde(parser: TexParser, c: string) {
     // @test Tilde, Tilde2
     // 
     // TODO: Once we can properly load AllEntities, this should be the line.
@@ -221,12 +219,12 @@ export namespace ParseMethods {
     var node = TreeHelper.createNode('mtext', [], {}, textNode);
     parser.Push(node as any);
   };
-  export function Space(parser: OldParser, c: string) {};
+  export function Space(parser: TexParser, c: string) {};
 
   /*
    *  Handle ^, _, and '
    */
-  export function Superscript(parser: OldParser, c: string) {
+  export function Superscript(parser: TexParser, c: string) {
     TreeHelper.printMethod('Superscript');
     if (parser.GetNext().match(/\d/)) {
       // don't treat numbers as a unit
@@ -292,7 +290,7 @@ export namespace ParseMethods {
                 }) );
   };
   
-  export function Subscript(parser: OldParser, c: string) {
+  export function Subscript(parser: TexParser, c: string) {
     TreeHelper.printMethod('Subscript');
     if (parser.GetNext().match(/\d/)) {
       // don't treat numbers as a unit
@@ -350,7 +348,7 @@ export namespace ParseMethods {
                 }) );
   };
 
-  export function Prime(parser: OldParser, c: string) {
+  export function Prime(parser: TexParser, c: string) {
     // @test Prime
     var base = parser.stack.Prev();
     if (!base) {
@@ -375,7 +373,7 @@ export namespace ParseMethods {
   /*
    *  Handle comments
    */
-  export function Comment(parser: OldParser, c: string) {
+  export function Comment(parser: TexParser, c: string) {
     TreeHelper.printMethod('Comment');
     while (parser.i < parser.string.length && parser.string.charAt(parser.i) != '\n') {parser.i++}
   };
@@ -383,7 +381,7 @@ export namespace ParseMethods {
   /*
    *  Handle hash marks outside of definitions
    */
-  export function Hash(parser: OldParser, c: string) {
+  export function Hash(parser: TexParser, c: string) {
     TreeHelper.printMethod('Hash');
     // @test Hash Error
     throw new TexError(['CantUseHash1',
@@ -393,7 +391,7 @@ export namespace ParseMethods {
   /*
    *  Handle other characters (as <mo> elements)
    */
-  export function Other(parser: OldParser, c: string) {
+  export function Other(parser: TexParser, c: string) {
     TreeHelper.printMethod('Other');
     let def = {};
     if (parser.stack.env['font']) {
@@ -428,18 +426,18 @@ export namespace ParseMethods {
    *   Macros
    */
 
-  export function SetFont(parser: OldParser, name: string, font: string) {
+  export function SetFont(parser: TexParser, name: string, font: string) {
     parser.stack.env['font'] = font;
   };
   
-  export function SetStyle(parser: OldParser, name: string, texStyle: string, style: string, level: string) {
+  export function SetStyle(parser: TexParser, name: string, texStyle: string, style: string, level: string) {
     TreeHelper.printMethod('SetStyle: ' + name + ' texStyle: ' + texStyle +
                     ' style: ' + style + ' level: ' + level);
     parser.stack.env['style'] = texStyle; parser.stack.env['level'] = level;
     parser.Push(
                 new sitem.StyleItem().With({styles: {displaystyle: style, scriptlevel: level}}) );
   };
-  export function SetSize(parser: OldParser, name: string, size: string) {
+  export function SetSize(parser: TexParser, name: string, size: string) {
     TreeHelper.printMethod('SetSize');
     parser.stack.env['size'] = size;
     parser.Push(
@@ -447,7 +445,7 @@ export namespace ParseMethods {
   };
 
   // Look at color extension!
-  export function Color(parser: OldParser, name: string) {
+  export function Color(parser: TexParser, name: string) {
     TreeHelper.printMethod('Color');
     // @test Color Frac
     var color = parser.GetArgument(name);
@@ -459,14 +457,14 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function Spacer(parser: OldParser, name: string, space: string) {
+  export function Spacer(parser: TexParser, name: string, space: string) {
     // @test Positive Spacing, Negative Spacing
     var node = TreeHelper.createNode('mspace', [],
                               {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel:0});
     parser.Push(node);
   };
 
-  export function LeftRight(parser: OldParser, name: string) {
+  export function LeftRight(parser: TexParser, name: string) {
     TreeHelper.printMethod('LeftRight');
     // @test Fenced, Fenced3
     var alpha = name.substr(1);
@@ -476,7 +474,7 @@ export namespace ParseMethods {
                 .With({delim: parser.GetDelimiter(name)}) );
   };
 
-  export function Middle(parser: OldParser, name: string) {
+  export function Middle(parser: TexParser, name: string) {
     TreeHelper.printMethod('Middle');
     // @test Middle
     var delim = parser.GetDelimiter(name);
@@ -493,7 +491,7 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function NamedFn(parser: OldParser, name: string, id: string) {
+  export function NamedFn(parser: TexParser, name: string, id: string) {
     TreeHelper.printMethod('NamedFn');
     // @test Named Function
     if (!id) {id = name.substr(1)};
@@ -501,7 +499,7 @@ export namespace ParseMethods {
     var mml = TreeHelper.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
     parser.Push( new sitem.FnItem(parser.mmlToken(mml)) );
   };
-  export function NamedOp(parser: OldParser, name: string, id: string) {
+  export function NamedOp(parser: TexParser, name: string, id: string) {
     TreeHelper.printMethod('NamedOp');
     // @test Limit
     if (!id) {id = name.substr(1)};
@@ -518,7 +516,7 @@ export namespace ParseMethods {
     parser.Push(parser.mmlToken(mml));
   };
 
-  export function Limits(parser: OldParser, name: string, limits: string) {
+  export function Limits(parser: TexParser, name: string, limits: string) {
     TreeHelper.printMethod('Limits');
     // @test Limits
     var op = parser.stack.Prev(true);
@@ -549,7 +547,7 @@ export namespace ParseMethods {
     }
   };
 
-  export function Over(parser: OldParser, name: string, open: string, close: string) {
+  export function Over(parser: TexParser, name: string, open: string, close: string) {
     TreeHelper.printMethod('Over');
     // @test Over
     var mml = new sitem.OverItem().With({name: name}) ;
@@ -573,7 +571,7 @@ export namespace ParseMethods {
     parser.Push(mml);
   };
 
-  export function Frac(parser: OldParser, name: string) {
+  export function Frac(parser: TexParser, name: string) {
     TreeHelper.printMethod('Frac');
     // @test Frac
     var num = parser.ParseArg(name);
@@ -582,11 +580,11 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function Sqrt(parser: OldParser, name: string) {
+  export function Sqrt(parser: TexParser, name: string) {
     TreeHelper.printMethod('Sqrt');
     var n = parser.GetBrackets(name), arg = parser.GetArgument(name);
     if (arg === '\\frac') {arg += '{'+parser.GetArgument(arg)+'}{'+parser.GetArgument(arg)+'}'}
-    var mml = new OldParser(arg, parser.stack.env).mml();
+    var mml = new TexParser(arg, parser.stack.env).mml();
     if (!n) {
       // @test Square Root
       mml = TreeHelper.createNode('msqrt', [mml], {});
@@ -596,7 +594,7 @@ export namespace ParseMethods {
     }
     parser.Push(mml);
   };
-  export function Root(parser: OldParser, name: string) {
+  export function Root(parser: TexParser, name: string) {
     TreeHelper.printMethod('Root');
     var n = parser.GetUpTo(name,'\\of');
     var arg = parser.ParseArg(name);
@@ -606,12 +604,12 @@ export namespace ParseMethods {
 
 
   // Utility?
-  export function parseRoot(parser: OldParser, n: string) {
+  export function parseRoot(parser: TexParser, n: string) {
     TreeHelper.printMethod('parseRoot');
     // @test General Root, Explicit Root
     var env = parser.stack.env, inRoot = env['inRoot']; env['inRoot'] = true;
     // TODO: This parser call might change!
-    var parser = new OldParser(n, env);
+    var parser = new TexParser(n, env);
     let node = parser.mml();
     TreeHelper.printJSON(node);
     var global = parser.stack.global;
@@ -640,7 +638,7 @@ export namespace ParseMethods {
     return node;
   };
   
-  export function MoveRoot(parser: OldParser, name: string, id: string) {
+  export function MoveRoot(parser: TexParser, name: string, id: string) {
     TreeHelper.printMethod('MoveRoot');
     // @test Tweaked Root
     if (!parser.stack.env['inRoot']) {
@@ -661,7 +659,7 @@ export namespace ParseMethods {
     parser.stack.global[id] = n;
   };
 
-  export function Accent(parser: OldParser, name: string, accent: string, stretchy: boolean) {
+  export function Accent(parser: TexParser, name: string, accent: string, stretchy: boolean) {
     TreeHelper.printMethod('Accent');
     // @test Vector
     var c = parser.ParseArg(name);
@@ -690,7 +688,7 @@ export namespace ParseMethods {
     parser.Push(texAtom);
   };
 
-  export function UnderOver(parser: OldParser, name: string, c: string, stack: boolean, noaccent: boolean) {
+  export function UnderOver(parser: TexParser, name: string, c: string, stack: boolean, noaccent: boolean) {
     TreeHelper.printMethod('UnderOver');
     // @test Overline
     var base = parser.ParseArg(name);
@@ -722,7 +720,7 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function Overset(parser: OldParser, name: string) {
+  export function Overset(parser: TexParser, name: string) {
     TreeHelper.printMethod('Overset');
     // @test Overset
     var top = parser.ParseArg(name), base = parser.ParseArg(name);
@@ -733,7 +731,7 @@ export namespace ParseMethods {
     parser.Push(node);
   };
   
-  export function Underset(parser: OldParser, name: string) {
+  export function Underset(parser: TexParser, name: string) {
     TreeHelper.printMethod('Underset');
     // @test Underset
     var bot = parser.ParseArg(name), base = parser.ParseArg(name);
@@ -745,7 +743,7 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function TeXAtom(parser: OldParser, name: string, mclass: number) {
+  export function TeXAtom(parser: TexParser, name: string, mclass: number) {
     TreeHelper.printMethod('TeXAtom');
     let def: sitem.EnvList = {texClass: mclass};
     let mml: sitem.StackItem|MmlNode;
@@ -762,7 +760,7 @@ export namespace ParseMethods {
         mml = new sitem.FnItem(parser.mmlToken(node));
       } else {
         // @test Mathop Cal
-        var parsed = new OldParser(arg,parser.stack.env).mml();
+        var parsed = new TexParser(arg,parser.stack.env).mml();
         node = TreeHelper.createNode('TeXAtom', [parsed], def);
         mml = new sitem.FnItem(node);
       }
@@ -775,7 +773,7 @@ export namespace ParseMethods {
   };
 
   // VS: This method is only called during a macro call: AMS Math and \\mod.
-  export function MmlToken(parser: OldParser, name: string) {
+  export function MmlToken(parser: TexParser, name: string) {
     TreeHelper.printMethod('MmlToken');
     // @test Modulo
     var type = parser.GetArgument(name),
@@ -823,7 +821,7 @@ export namespace ParseMethods {
   };
 
 
-  export function Strut(parser: OldParser, name: string) {
+  export function Strut(parser: TexParser, name: string) {
     TreeHelper.printMethod('Strut');
     // @test Strut
     // TODO: Do we still need this row as it is implicit?
@@ -833,7 +831,7 @@ export namespace ParseMethods {
     parser.Push(padded);
   };
 
-  export function Phantom(parser: OldParser, name: string, v: string, h: string) {
+  export function Phantom(parser: TexParser, name: string, v: string, h: string) {
     TreeHelper.printMethod('Phantom');
     // @test Phantom
     var box = TreeHelper.createNode('mphantom', [parser.ParseArg(name)], {});
@@ -854,7 +852,7 @@ export namespace ParseMethods {
     parser.Push(atom);
   };
 
-  export function Smash(parser: OldParser, name: string) {
+  export function Smash(parser: TexParser, name: string) {
     TreeHelper.printMethod('Smash');
     // @test Smash, Smash Top, Smash Bottom
     var bt = parser.trimSpaces(parser.GetBrackets(name,''));
@@ -871,7 +869,7 @@ export namespace ParseMethods {
     parser.Push(atom);
   };
 
-  export function Lap(parser: OldParser, name: string) {
+  export function Lap(parser: TexParser, name: string) {
     TreeHelper.printMethod('Lap');
     // @test Llap, Rlap
     var mml = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {width: 0});
@@ -883,7 +881,7 @@ export namespace ParseMethods {
     parser.Push(atom);
   };
 
-  export function RaiseLower(parser: OldParser, name: string) {
+  export function RaiseLower(parser: TexParser, name: string) {
     TreeHelper.printMethod('RaiseLower');
     // @test Raise, Lower, Raise Negative, Lower Negative
     var h = parser.GetDimen(name);
@@ -907,7 +905,7 @@ export namespace ParseMethods {
     parser.Push(item);
   };
 
-  export function MoveLeftRight(parser: OldParser, name: string) {
+  export function MoveLeftRight(parser: TexParser, name: string) {
     TreeHelper.printMethod('MoveLeftRight');
     // @test Move Left, Move Right, Move Left Negative, Move Right Negative
     var h = parser.GetDimen(name);
@@ -924,7 +922,7 @@ export namespace ParseMethods {
                   right: TreeHelper.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}) );
   };
 
-  export function Hskip(parser: OldParser, name: string) {
+  export function Hskip(parser: TexParser, name: string) {
     TreeHelper.printMethod('Hskip');
     // @test Modulo
     var node = TreeHelper.createNode('mspace', [],
@@ -933,7 +931,7 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function Rule(parser: OldParser, name: string, style: string) {
+  export function Rule(parser: TexParser, name: string, style: string) {
     TreeHelper.printMethod('Rule');
     // @test Rule 3D, Space 3D
     var w = parser.GetDimen(name),
@@ -946,7 +944,7 @@ export namespace ParseMethods {
     var node = TreeHelper.createNode('mspace', [], def);
     parser.Push(node);
   };
-  export function rule(parser: OldParser, name: string) {
+  export function rule(parser: TexParser, name: string) {
     TreeHelper.printMethod('rule');
     // @test Rule 2D
     var v = parser.GetBrackets(name),
@@ -967,7 +965,7 @@ export namespace ParseMethods {
     parser.Push(mml);
   };
 
-  export function MakeBig(parser: OldParser, name: string, mclass: number, size: number) {
+  export function MakeBig(parser: TexParser, name: string, mclass: number, size: number) {
     TreeHelper.printMethod('MakeBig');
     // @test Choose, Over With Delims, Above With Delims
     size *= P_HEIGHT;
@@ -982,7 +980,7 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function BuildRel(parser: OldParser, name: string) {
+  export function BuildRel(parser: TexParser, name: string) {
     TreeHelper.printMethod('BuildRel');
     // @test BuildRel, BuildRel Expression
     var top = parser.ParseUpTo(name,'\\over');
@@ -996,13 +994,13 @@ export namespace ParseMethods {
     parser.Push(atom);
   };
 
-  export function HBox(parser: OldParser, name: string, style: string) {
+  export function HBox(parser: TexParser, name: string, style: string) {
     TreeHelper.printMethod('HBox');
     // @test Hbox
     parser.PushAll(parser.InternalMath(parser.GetArgument(name), style));
   };
 
-  export function FBox(parser: OldParser, name: string) {
+  export function FBox(parser: TexParser, name: string) {
     TreeHelper.printMethod('FBox');
     // @test Fbox
     var internal = parser.InternalMath(parser.GetArgument(name));
@@ -1010,14 +1008,14 @@ export namespace ParseMethods {
     parser.Push(node);
   };
 
-  export function Not(parser: OldParser, name: string) {
+  export function Not(parser: TexParser, name: string) {
     TreeHelper.printMethod('Not');
     // @test Negation Simple, Negation Complex, Negation Explicit,
     //       Negation Large
     parser.Push( new sitem.NotItem() );
   };
 
-  export function Dots(parser: OldParser, name: string) {
+  export function Dots(parser: TexParser, name: string) {
     TreeHelper.printMethod('Dots');
     // @test Operator Dots
     var ldotsEntity = TreeHelper.createEntity('2026');
@@ -1031,7 +1029,7 @@ export namespace ParseMethods {
                 }) );
   };
 
-  export function Matrix(parser: OldParser, name: string,
+  export function Matrix(parser: TexParser, name: string,
                          open: string, close: string, align: string,
                          spacing: string, vspacing: string, style: string,
                          cases: boolean, numbered: boolean) {
@@ -1063,7 +1061,7 @@ export namespace ParseMethods {
     parser.Push(array);
   };
 
-  export function Entry(parser: OldParser, name: string) {
+  export function Entry(parser: TexParser, name: string) {
     TreeHelper.printMethod('Entry');
     // @test Label, Array, Cross Product Formula
     parser.Push(
@@ -1138,14 +1136,14 @@ export namespace ParseMethods {
     }
   };
 
-  export function Cr(parser: OldParser, name: string) {
+  export function Cr(parser: TexParser, name: string) {
     TreeHelper.printMethod('Cr');
     TreeHelper.untested(15);
     parser.Push(
                 new sitem.CellItem().With({isCR: true, name: name}) );
   };
 
-  export function CrLaTeX(parser: OldParser, name: string) {
+  export function CrLaTeX(parser: TexParser, name: string) {
     TreeHelper.printMethod('CrLaTeX');
     let n: string;
     if (parser.string.charAt(parser.i) === '[') {
@@ -1185,7 +1183,7 @@ export namespace ParseMethods {
     }
   };
 
-  export function HLine(parser: OldParser, name: string, style: string) {
+  export function HLine(parser: TexParser, name: string, style: string) {
     TreeHelper.printMethod('HLine');
     if (style == null) {style = 'solid'}
     var top = parser.stack.Top();
@@ -1203,7 +1201,7 @@ export namespace ParseMethods {
     }
   };
 
-  export function HFill(parser: OldParser, name: string) {
+  export function HFill(parser: TexParser, name: string) {
     TreeHelper.printMethod('HFill');
     var top = parser.stack.Top();
     if (top instanceof sitem.ArrayItem) {
@@ -1244,7 +1242,7 @@ export namespace ParseMethods {
   let MAXBUFFER = 5*1024;   // maximum size of TeX string to process
 
 
-  export function BeginEnd(parser: OldParser, name: string) {
+  export function BeginEnd(parser: TexParser, name: string) {
     TreeHelper.printMethod('BeginEnd');
     // @test Array1, Array2, Array Test
     var env = parser.GetArgument(name);
@@ -1270,7 +1268,7 @@ export namespace ParseMethods {
   };
 
 
-  export function BeginEnvironment(parser: OldParser, func: Function, env: string, args: any[]) {
+  export function BeginEnvironment(parser: TexParser, func: Function, env: string, args: any[]) {
     TreeHelper.printMethod('BeginEnvironment');
     var end = args[0];
     var mml = new sitem.BeginItem().With({name: env, end: end});
@@ -1278,15 +1276,15 @@ export namespace ParseMethods {
     parser.Push(mml);
   };
 
-  export function Equation(parser: OldParser, begin: string, row: MmlNode[]) {
+  export function Equation(parser: TexParser, begin: string, row: MmlNode[]) {
     return row;
   };
 
-  // export function ExtensionEnv(parser: OldParser, begin,file) {
+  // export function ExtensionEnv(parser: TexParser, begin,file) {
   //   parser.Extension(begin.name,file,'environment');
   // };
 
-  export function Array(parser: OldParser, begin: sitem.StackItem,
+  export function Array(parser: TexParser, begin: sitem.StackItem,
                         open: string, close: string, align: string,
                         spacing: string, vspacing: string, style: string,
                         raggedHeight: boolean) {
@@ -1326,7 +1324,7 @@ export namespace ParseMethods {
   };
 
 
-  export function AlignedArray(parser: OldParser, begin: sitem.StackItem) {
+  export function AlignedArray(parser: TexParser, begin: sitem.StackItem) {
     TreeHelper.printMethod('AlignedArray');
     // @test Array1, Array2, Array Test
     var align = parser.GetBrackets('\\begin{'+begin.getName()+'}');
@@ -1335,7 +1333,7 @@ export namespace ParseMethods {
   };
 
 
-  export function setArrayAlign(parser: OldParser, array: sitem.ArrayItem, align: string) {
+  export function setArrayAlign(parser: TexParser, array: sitem.ArrayItem, align: string) {
     TreeHelper.printMethod('setArrayAlign');
     // @test Array1, Array2, Array Test
     align = parser.trimSpaces(align||'');
@@ -1357,7 +1355,7 @@ export namespace ParseMethods {
   let EXTENSION_DIR = '';
 
 
-  export function Require(parser: OldParser, name: string) {
+  export function Require(parser: TexParser, name: string) {
     TreeHelper.printMethod('Require');
     var file = parser.GetArgument(name)
       .replace(/.*\//,'')            // remove any leading path
@@ -1366,7 +1364,7 @@ export namespace ParseMethods {
   };
 
 
-  export function Extension(parser: OldParser, name: string|sitem.StackItem,
+  export function Extension(parser: TexParser, name: string|sitem.StackItem,
                             file: string, array?: any) {
     TreeHelper.printMethod('Extension');
     if (name && !(typeof(name) === 'string')) {name = name.getName();}
@@ -1376,7 +1374,7 @@ export namespace ParseMethods {
   };
 
 
-  export function Macro(parser: OldParser, name: string,
+  export function Macro(parser: TexParser, name: string,
                         macro: string, argcount: number,
                         // TODO: The final argument seems never to be used.
                         def?: string) {
@@ -1449,7 +1447,7 @@ export namespace ParseMethods {
   let TAG_SIDE = 'right';
   let TAG_INDENT = '0.8em';
 
-  export function AMSarray(parser: OldParser, begin: sitem.StackItem,
+  export function AMSarray(parser: TexParser, begin: sitem.StackItem,
                            numbered: boolean, taggable: boolean, align: string,
                            spacing: string) {
     TreeHelper.printMethod('AMS-AMSarray');
@@ -1478,7 +1476,7 @@ export namespace ParseMethods {
   /**
    *  Check for bad nesting of equation environments
    */
-  export function checkEqnEnv(parser: OldParser) {
+  export function checkEqnEnv(parser: TexParser) {
     TreeHelper.printMethod('AMS-checkEqnEnv');
     if (parser.stack.global.eqnenv) {
       throw new TexError(['ErroneousNestingEq','Erroneous nesting of equation structures']);
@@ -1487,7 +1485,7 @@ export namespace ParseMethods {
   };
 
 
-  export function HandleOperatorName(parser: OldParser, name: string) {
+  export function HandleOperatorName(parser: TexParser, name: string) {
     TreeHelper.printMethod('AMS-HandleOperatorName');
     // @test Operatorname
     var limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
@@ -1498,7 +1496,7 @@ export namespace ParseMethods {
   };
   
 
-  export function SkipLimits(parser: OldParser, name: string) {
+  export function SkipLimits(parser: TexParser, name: string) {
     TreeHelper.printMethod('AMS-SkipLimits');
     // @test Operatorname
     var c = parser.GetNext(), i = parser.i;
@@ -1506,7 +1504,7 @@ export namespace ParseMethods {
   };
 
   // mathchoice
-  export function MathChoice(parser: OldParser, name: string) {
+  export function MathChoice(parser: TexParser, name: string) {
     let D  = parser.ParseArg(name);
     let T  = parser.ParseArg(name);
     let S  = parser.ParseArg(name);
