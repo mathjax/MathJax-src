@@ -586,7 +586,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Sqrt');
     var n = parser.GetBrackets(name), arg = parser.GetArgument(name);
     if (arg === '\\frac') {arg += '{'+parser.GetArgument(arg)+'}{'+parser.GetArgument(arg)+'}'}
-    var mml = new OldParser(arg, parser.stack.env, parser.ParseMethods).mml();
+    var mml = new OldParser(arg, parser.stack.env).mml();
     if (!n) {
       // @test Square Root
       mml = TreeHelper.createNode('msqrt', [mml], {});
@@ -611,7 +611,7 @@ export namespace ParseMethods {
     // @test General Root, Explicit Root
     var env = parser.stack.env, inRoot = env['inRoot']; env['inRoot'] = true;
     // TODO: This parser call might change!
-    var parser = new OldParser(n, env, parser.ParseMethods);
+    var parser = new OldParser(n, env);
     let node = parser.mml();
     TreeHelper.printJSON(node);
     var global = parser.stack.global;
@@ -762,7 +762,7 @@ export namespace ParseMethods {
         mml = new sitem.FnItem(parser.mmlToken(node));
       } else {
         // @test Mathop Cal
-        var parsed = new OldParser(arg,parser.stack.env, parser.ParseMethods).mml();
+        var parsed = new OldParser(arg,parser.stack.env).mml();
         node = TreeHelper.createNode('TeXAtom', [parsed], def);
         mml = new sitem.FnItem(node);
       }

@@ -146,7 +146,7 @@ export namespace ParserUtil {
     }
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
-    return new OldParser('\\mathchoice' + D + T + T + T, {}, {}).mml();
+    return new OldParser('\\mathchoice' + D + T + T + T, {}).mml();
     // let parser = new TexParser();
     // return parser.parse('\\mathchoice' + D + T + T + T, {}).mml();
   };

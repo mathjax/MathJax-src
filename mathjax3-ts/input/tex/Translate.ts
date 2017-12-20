@@ -65,7 +65,7 @@ export namespace NewTex {
       display = script.type.replace(/\n/g, ' ').
         match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
       try {
-        mml = new OldParser(math, null, ParseMethods as any).mml();
+        mml = new OldParser(math, null).mml();
         TreeHelper.printSimple(mml.toString());
       } catch (err) {
         if (!(err instanceof TexError)) {

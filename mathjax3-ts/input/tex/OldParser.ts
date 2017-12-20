@@ -51,11 +51,10 @@ export class OldParser {
   stack: Stack;
   
 
-  constructor(str: string, env: EnvList,
-              readonly ParseMethods: Record<string, ParseMethod>) {
+  constructor(str: string, env: EnvList) {
     TreeHelper.printMethod('Init (Old Parser Object)');
     this.NewParser = new TexParser();
-    (ParseMethods as any).NEW_PARSER = this.NewParser;
+    ParseMethods.NEW_PARSER = this.NewParser;
     this.string = str;
     let ENV: EnvList;
     if (env) {
@@ -310,13 +309,13 @@ export class OldParser {
    */
   ParseArg(name: string) {
     TreeHelper.printMethod('ParseArg (Old Parser Object)');
-    let object = new OldParser(this.GetArgument(name), this.stack.env, this.ParseMethods);
+    let object = new OldParser(this.GetArgument(name), this.stack.env);
     return object.mml();
   }
 
   ParseUpTo(name: string, token: string) {
     TreeHelper.printMethod('ParseUpTo (Old Parser Object)');
-    return new OldParser(this.GetUpTo(name,token), this.stack.env, this.ParseMethods).mml();
+    return new OldParser(this.GetUpTo(name,token), this.stack.env).mml();
   }
 
   
@@ -334,7 +333,7 @@ export class OldParser {
           if (match === '$' && braces === 0) {
             // @test Interspersed Text
             node = TreeHelper.createNode('TeXAtom',
-                                         [(new OldParser(text.slice(k,i-1),{}, this.ParseMethods)).mml()], {});
+                                         [(new OldParser(text.slice(k,i-1),{})).mml()], {});
             mml.push(node);
             match = ''; k = i;
           } else if (match === '') {
@@ -347,7 +346,7 @@ export class OldParser {
         } else if (c === '}') {
           if (match === '}' && braces === 0) {
             TreeHelper.untested(12);
-            node = TreeHelper.createNode('TeXAtom', [(new OldParser(text.slice(k,i),{}, this.ParseMethods)).mml()], def);
+            node = TreeHelper.createNode('TeXAtom', [(new OldParser(text.slice(k,i),{})).mml()], def);
             mml.push(node);
             match = ''; k = i;
           } else if (match !== '') {
@@ -366,7 +365,7 @@ export class OldParser {
               match = ')'; k = i;
             } else if (c === ')' && match === ')' && braces === 0) {
               TreeHelper.untested(13);
-              node = TreeHelper.createNode('TeXAtom', [(new OldParser(text.slice(k,i-2),{}, this.ParseMethods)).mml()], {});
+              node = TreeHelper.createNode('TeXAtom', [(new OldParser(text.slice(k,i-2),{})).mml()], {});
               mml.push(node);
               match = ''; k = i;
             } else if (c.match(/[${}\\]/) && match === '')  {
