@@ -137,8 +137,6 @@ export namespace ParserUtil {
   };
 
 
-  // TODO: Handling the parser here is a bit awkward!
-  //       This and the previous method should go into the ParseMethods.
   export function mathPalette(fence: string, side: string) {
     TreeHelper.printMethod('mathPalette');
     if (fence === '{' || fence === '}') {
@@ -147,8 +145,6 @@ export namespace ParserUtil {
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
     return new TexParser('\\mathchoice' + D + T + T + T, {}).mml();
-    // let parser = new TexParser();
-    // return parser.parse('\\mathchoice' + D + T + T + T, {}).mml();
   };
 
 
