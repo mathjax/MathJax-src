@@ -80,9 +80,9 @@ export class CHTMLmunder extends CHTMLmsub {
         const basebox = this.base.getBBox();
         const underbox = this.script.getBBox();
         const [k, v] = this.getUnderKV(basebox, underbox);
-        const delta = DELTA * this.baseCore.bbox.ic / 2;
+        const del = DELTA * this.baseCore.bbox.ic / 2;
         under.style.paddingTop = this.em(k);
-        this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -delta]));
+        this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -del]));
     }
 
     /*

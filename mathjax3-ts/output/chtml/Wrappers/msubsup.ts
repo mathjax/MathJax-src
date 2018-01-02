@@ -173,7 +173,19 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
         const t = 3 * tex.rule_thickness;
         const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
         const drop = (this.isCharBase() ? 0 : basebox.d + tex.sub_drop * subbox.rscale);
+        //
+        // u and v are the veritcal shifts of the scripts, initially set to minimum values and then adjusted
+        //
         let [u, v] = [this.getU(basebox, supbox), Math.max(drop, subscriptshift)];
+        //
+        // q is the space currently between the super- and subscripts.
+        // If it is less than 3 rule thicknesses,
+        //   increase the subscript offset to make the space 3 rule thicknesses
+        //   If the bottom of the superscript is below 4/5 of the x-height
+        //     raise both the super- and subscripts by the difference
+        //     (make the bottom of the superscript be at 4/5 the x-height, and the
+        //      subscript 3 rule thickness below that).
+        //
         let q = (u - supbox.d * supbox.rscale) - (subbox.h * subbox.rscale - v);
         if (q < t) {
             v += t - q;
@@ -183,6 +195,10 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
                 v -= p;
             }
         }
+        //
+        // Make sure the shifts are at least the minimum amounts and
+        // return the shifts and the space between the scripts
+        //
         u = Math.max(this.length2em(this.node.attributes.get('superscriptshift'), u), u);
         v = Math.max(this.length2em(this.node.attributes.get('subscriptshift'), v), v);
         q = (u - supbox.d * supbox.rscale) - (subbox.h * subbox.rscale - v);

@@ -444,8 +444,9 @@ export class TeXFont extends FontData {
         const char = vclass + ' mjx-c[c="' + this.char(n) + '"]';
         styles['.MJX-TEX' + char + '::before'] = css;
         if (options.ic) {
-            styles['.MJX-TEX mjx-mi:not([noIC="true"])' + char.substr(1) + ':last-child::before'] =
-            styles['.MJX-TEX mjx-mo:not([noIC="true"])' + char.substr(1) + ':last-child::before'] = {
+            const [MJX, noIC] = ['.MJX-TEX mjx-', ':not([noIC="true"])' + char.substr(1) + ':last-child::before'];
+            styles[MJX + 'mi' + noIC] =
+            styles[MJX + 'mo' + noIC] = {
                 width: this.em(w + options.ic)
             };
         }
