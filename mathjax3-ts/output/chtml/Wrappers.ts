@@ -22,6 +22,7 @@
  */
 
 import {CHTMLWrapper} from './Wrapper.js';
+import {CHTMLmath} from './Wrappers/math.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {CHTMLms} from './Wrappers/ms.js';
 import {CHTMLmspace} from './Wrappers/mspace.js';
@@ -40,6 +41,7 @@ import {CHTMLTeXAtom} from './Wrappers/TeXAtom.js';
 import {CHTMLTextNode} from './Wrappers/TextNode.js';
 
 export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
+    [CHTMLmath.kind]: CHTMLmath,
     [CHTMLmrow.kind]: CHTMLmrow,
     [CHTMLinferredMrow.kind]: CHTMLinferredMrow,
     [CHTMLmo.kind]: CHTMLmo,
