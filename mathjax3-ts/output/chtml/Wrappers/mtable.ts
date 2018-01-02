@@ -39,10 +39,15 @@ export class CHTMLmtable extends CHTMLWrapper {
 
     public static styles: StyleList = {
         'mjx-mtable': {
-            'vertical-align': '.25em'
+            'vertical-align': '.25em',
+            'text-align': 'center'
         },
         'mjx-mtable > mjx-itable': {
-            'vertical-align': 'middle'
+            'vertical-align': 'middle',
+            'text-align': 'left'
+        },
+        'mjx-mtable[width="%"] > mjx-itable': {
+            width: '100%'
         }
     };
 
@@ -102,6 +107,7 @@ export class CHTMLmtable extends CHTMLWrapper {
         this.handleRowSpacing(lines, fspacing[1] || '0');
         this.handleRowLines();
         this.handleFrame(frame);
+        this.handleWidth();
     }
 
     /******************************************************************/
@@ -147,7 +153,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      * Pad any short rows with extra cells
      */
     protected padRows() {
-        for (const row of Array.from(this.chtml.childNodes)) {
+        for (const row of Array.from((this.chtml.firstChild as HTMLElement).childNodes)) {
             while (row.childNodes.length < this.numCols) {
                 row.appendChild(this.html('mjx-mtd'));
             }
@@ -324,6 +330,21 @@ export class CHTMLmtable extends CHTMLWrapper {
         if (frame) {
             (this.chtml.firstChild as HTMLElement).style.border = '.07em ' + this.node.attributes.get('frame');
         }
+    }
+
+    /*
+     * Handle percentage widths and fixed widths
+     */
+    protected handleWidth() {
+        let w = this.node.attributes.get('width') as string;
+        if (w === 'auto') return;
+        if (w.match(/%$/)) {
+            this.bbox.pwidth = w;
+            this.chtml.setAttribute('width','%');
+        } else {
+            w = this.em(this.length2em(w));
+        }
+        this.chtml.style.width = w;
     }
 
     /******************************************************************/

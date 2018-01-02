@@ -49,15 +49,18 @@ export class CHTMLmrow extends CHTMLWrapper {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        let chtml = parent;
+        let chtml = this.chtml = parent;
         if (!this.node.isInferred) {
             chtml = this.standardCHTMLnode(parent);
         }
         let hasNegative = false;
         for (const child of this.childNodes) {
             child.toCHTML(chtml);
-            if (child.bbox && child.bbox.w < 0) {
+            if (child.bbox.w < 0) {
                 hasNegative = true;
+            }
+            if (child.bbox.pwidth) {
+                this.makeFullWidth();
             }
         }
         // FIXME:  handle line breaks
@@ -69,8 +72,14 @@ export class CHTMLmrow extends CHTMLWrapper {
     }
 
     /*
-     * @return{number}  The number of stretchable child nodes
+     * Handle the case where a child has a percentage width by
+     * marking the parent as 100% width.
      */
+    protected makeFullWidth() {
+        this.bbox.pwidth = '100%';
+        this.chtml.setAttribute('width', 'full');
+    }
+
     /*
      * Handle vertical stretching of children to match height of
      *  other nodes in the row.

@@ -105,6 +105,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         'mjx-chtml [size="hg"]': {'font-size': '207%'},
         'mjx-chtml [size="HG"]': {'font-size': '249%'},
 
+        'mjx-chtml [width="full"]': {
+            width: '100%'
+        },
+
         'mjx-box': {display: 'inline-block'},
         'mjx-block': {display: 'block'},
         'mjx-itable': {display: 'inline-table'},
@@ -123,15 +127,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             'background-color': 'yellow'
         },
 
-        'mjx-mphantom': {visibility: 'hidden'},
-
-        'mjx-math': {
-            //
-            //  There will be more here when the math wrapper is written
-            //
-            display: 'inline-block',
-            'line-height': '0px'
-        }
+        'mjx-mphantom': {visibility: 'hidden'}
 
     };
 
@@ -521,7 +517,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @param{number} rscale      The relatie scale to apply
      * @return{HTMLElement}       The HTML node (for chaining)
      */
-    setScale(chtml: HTMLElement, rscale: number) {
+    protected setScale(chtml: HTMLElement, rscale: number) {
         const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
         if (chtml && scale !== 1) {
             const size = this.percent(scale);
