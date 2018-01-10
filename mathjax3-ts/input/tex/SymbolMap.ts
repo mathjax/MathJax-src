@@ -379,6 +379,20 @@ export class MacroMap extends AbstractParseMap<Macro> {
     this.add(symbol, character);
   }
 
+  // TODO: Refactor the parse methods for this and the following subclasses.
+  /**
+   * @override
+   */
+  public parse([symbol, env]: ParseInput) {
+    let macro = this.lookup(symbol);
+    let parser = this.parserFor(symbol);
+    if (!macro || !parser) {
+      return null;
+    }
+    let args = [env, symbol].concat(macro.args as string[]);
+    return parser ? (parser.bind(env).apply(env, args) || true) : null;
+  }
+
 }
 
 

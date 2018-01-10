@@ -174,10 +174,9 @@ export class BaseItem implements StackItem {
       return this.data[0];
     }
     // @test Two Identifiers
-    var node = TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this.data, {});
+    return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this.data, {});
     // VS: OLD
     // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
-    return node;
   }
 
 
@@ -192,7 +191,8 @@ export class BaseItem implements StackItem {
         return false;
       }
       // TODO: Test what symbol really does!
-      //throw new TexError(['Misplaced', 'Misplaced %1', item.getProperty('name').symbol]);
+      //throw new TexError(['Misplaced', 'Misplaced %1', item.getProperty('name').symbol]);      
+      // @test Ampersand-error
       throw new TexError(['Misplaced', 'Misplaced %1', item.getName()]);
     }
     if (item.isClose && this.errors[item.getType() + 'Error']) {
