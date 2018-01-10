@@ -16,14 +16,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -31,7 +31,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -49,14 +49,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -64,7 +64,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -72,7 +72,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
               "properties": {},
@@ -80,7 +80,7 @@ parserTest.runTest(
                 {"kind": "mi",
                   "texClass": 0,
                   "attributes": {"mathvariant": "bold"},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -98,14 +98,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -113,7 +113,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -124,7 +124,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -142,14 +142,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -157,7 +157,7 @@ parserTest.runTest(
         {"kind":"mn",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -174,14 +174,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -189,7 +189,7 @@ parserTest.runTest(
         {"kind": "mn",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -204,14 +204,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 6,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 6,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -219,7 +219,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 6,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix",
@@ -240,14 +240,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -255,7 +255,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -263,7 +263,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
               "properties": {},
@@ -271,7 +271,7 @@ parserTest.runTest(
                 {"kind": "mn",
                   "texClass": 0,
                   "attributes": {"mathvariant": "bold"},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -288,14 +288,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -303,7 +303,7 @@ parserTest.runTest(
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -311,7 +311,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "mathvariant":"italic"},
@@ -322,7 +322,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":1,
                          "form":"infix"},
@@ -340,14 +340,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -355,7 +355,7 @@ parserTest.runTest(
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -363,7 +363,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -374,7 +374,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 1},
             "properties": {},
@@ -382,7 +382,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": false,
                     "scriptlevel": 1},
                   "properties": {},
@@ -390,7 +390,7 @@ parserTest.runTest(
                     {"kind": "msup",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 1},
                       "properties": {},
@@ -398,7 +398,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 1},
                           "properties": {},
@@ -406,7 +406,7 @@ parserTest.runTest(
                         {"kind": "mo",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 2,
                             "form": "infix"},
@@ -424,14 +424,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -439,7 +439,7 @@ parserTest.runTest(
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -447,7 +447,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "mathvariant":"italic"},
@@ -458,7 +458,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":6,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":1,
                          "form":"infix"},
@@ -477,14 +477,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -492,7 +492,7 @@ parserTest.runTest(
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -500,7 +500,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -508,7 +508,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":1,
                          "form":"infix"},
@@ -520,7 +520,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -538,14 +538,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -553,7 +553,7 @@ parserTest.runTest(
         {"kind": "merror",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -561,7 +561,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": null,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -569,7 +569,7 @@ parserTest.runTest(
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -587,14 +587,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -602,7 +602,7 @@ parserTest.runTest(
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -610,7 +610,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -621,7 +621,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 1},
             "properties": {},
@@ -629,7 +629,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": false,
                              "scriptlevel": 1},
                "properties": {},
@@ -637,7 +637,7 @@ parserTest.runTest(
                  {"kind": "msubsup",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 1},
                   "properties": {},
@@ -645,7 +645,7 @@ parserTest.runTest(
                     {"kind": "mi",
                      "texClass": 0,
                      "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 1},
                           "properties": {},
@@ -653,7 +653,7 @@ parserTest.runTest(
                         {"kind": "TeXAtom",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 2},
                           "properties": {"texprimestyle": true},
@@ -661,7 +661,7 @@ parserTest.runTest(
                             {"kind": "mrow",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 2},
                               "properties": {"texprimestyle": true},
@@ -669,7 +669,7 @@ parserTest.runTest(
                                 {"kind": "mi",
                                   "texClass": 0,
                                   "attributes": {},
-                                  "inherited": {"display": "block",
+                                  "inherited": {
                                     "displaystyle": false,
                                     "scriptlevel": 2,
                                     "mathvariant": "italic"},
@@ -681,7 +681,7 @@ parserTest.runTest(
                         {"kind": "mo",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 2,
                             "form": "infix"},
@@ -699,14 +699,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -714,7 +714,7 @@ parserTest.runTest(
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -722,7 +722,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -733,7 +733,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 1},
             "properties": {},
@@ -741,7 +741,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": false,
                              "scriptlevel": 1},
                "properties": {},
@@ -749,7 +749,7 @@ parserTest.runTest(
                  {"kind": "msup",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 1},
                   "properties": {},
@@ -757,7 +757,7 @@ parserTest.runTest(
                     {"kind": "mi",
                      "texClass": 0,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 1,
                             "mathvariant": "italic"},
@@ -768,7 +768,7 @@ parserTest.runTest(
                         {"kind": "TeXAtom",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 2},
                           "properties": {},
@@ -776,7 +776,7 @@ parserTest.runTest(
                             {"kind": "mrow",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 2},
                               "properties": {},
@@ -784,7 +784,7 @@ parserTest.runTest(
                                 {"kind": "msup",
                                   "texClass": 0,
                                   "attributes": {},
-                                  "inherited": {"display": "block",
+                                  "inherited": {
                                     "displaystyle": false,
                                     "scriptlevel": 2},
                                   "properties": {},
@@ -792,7 +792,7 @@ parserTest.runTest(
                                     {"kind": "mi",
                                       "texClass": 0,
                                       "attributes": {},
-                                      "inherited": {"display": "block",
+                                      "inherited": {
                                         "displaystyle": false,
                                         "scriptlevel": 2},
                                       "properties": {},
@@ -800,7 +800,7 @@ parserTest.runTest(
                                     {"kind": "mo",
                                       "texClass": 0,
                                       "attributes": {},
-                                      "inherited": {"display": "block",
+                                      "inherited": {
                                         "displaystyle": false,
                                         "scriptlevel": 3,
                                         "form": "infix"},
@@ -820,14 +820,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -835,7 +835,7 @@ parserTest.runTest(
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -843,7 +843,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -854,7 +854,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 1},
             "properties": {},
@@ -862,7 +862,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": false,
                              "scriptlevel": 1},
                "properties": {},
@@ -870,7 +870,7 @@ parserTest.runTest(
                  {"kind": "msup",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 1},
                   "properties": {},
@@ -878,7 +878,7 @@ parserTest.runTest(
                     {"kind": "mi",
                      "texClass": 0,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": false,
                             "scriptlevel": 1},
                           "properties": {},
@@ -886,7 +886,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 2},
                           "properties": {},
@@ -894,7 +894,7 @@ parserTest.runTest(
                             {"kind": "mo",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 2,
                                 "form": "prefix"},
@@ -906,7 +906,7 @@ parserTest.runTest(
                             {"kind": "TeXAtom",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 2},
                               "properties": {},
@@ -914,7 +914,7 @@ parserTest.runTest(
                                 {"kind": "mrow",
                                   "texClass": 0,
                                   "attributes": {},
-                                  "inherited": {"display": "block",
+                                  "inherited": {
                                     "displaystyle": false,
                                     "scriptlevel": 2},
                                   "properties": {},
@@ -922,7 +922,7 @@ parserTest.runTest(
                                     {"kind": "mi",
                                       "texClass": 0,
                                       "attributes": {},
-                                      "inherited": {"display": "block",
+                                      "inherited": {
                                         "displaystyle": false,
                                         "scriptlevel": 2,
                                         "mathvariant": "italic"},
@@ -941,14 +941,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -956,7 +956,7 @@ parserTest.runTest(
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -964,7 +964,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -975,7 +975,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 1},
             "properties": {},
@@ -983,7 +983,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": false,
                              "scriptlevel": 1},
                "properties": {},
@@ -991,7 +991,7 @@ parserTest.runTest(
                  {"kind": "msup",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 1},
                   "properties": {},
@@ -999,7 +999,7 @@ parserTest.runTest(
                     {"kind": "mi",
                      "texClass": 0,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": false,
                                    "scriptlevel": 1},
                      "properties": {},
@@ -1007,7 +1007,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                      "texClass": 0,
                      "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 2},
                           "properties": {},
@@ -1015,7 +1015,7 @@ parserTest.runTest(
                             {"kind": "mo",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 2,
                                 "form": "prefix"},
@@ -1027,7 +1027,7 @@ parserTest.runTest(
                             {"kind": "TeXAtom",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 2},
                               "properties": {},
@@ -1035,7 +1035,7 @@ parserTest.runTest(
                                 {"kind": "mrow",
                                   "texClass": 0,
                                   "attributes": {},
-                                  "inherited": {"display": "block",
+                                  "inherited": {
                                     "displaystyle": false,
                                     "scriptlevel": 2},
                                   "properties": {},
@@ -1043,7 +1043,7 @@ parserTest.runTest(
                                     {"kind": "msup",
                                       "texClass": 0,
                                       "attributes": {},
-                                      "inherited": {"display": "block",
+                                      "inherited": {
                                         "displaystyle": false,
                                         "scriptlevel": 2},
                                       "properties": {},
@@ -1051,7 +1051,7 @@ parserTest.runTest(
                                         {"kind": "mi",
                                           "texClass": 0,
                                           "attributes": {},
-                                          "inherited": {"display": "block",
+                                          "inherited": {
                                             "displaystyle": false,
                                             "scriptlevel": 2},
                                           "properties": {},
@@ -1059,7 +1059,7 @@ parserTest.runTest(
                                         {"kind": "mo",
                                           "texClass": 0,
                                           "attributes": {},
-                                          "inherited": {"display": "block",
+                                          "inherited": {
                                             "displaystyle": false,
                                             "scriptlevel": 3,
                                             "form": "infix"},
@@ -1079,14 +1079,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": null,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": null,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -1094,7 +1094,7 @@ parserTest.runTest(
         {"kind": "mfrac",
          "texClass": null,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1102,7 +1102,7 @@ parserTest.runTest(
            {"kind": "mn",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 0},
               "properties": {},
@@ -1112,7 +1112,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 0},
               "properties": {"texprimestyle": true},
@@ -1127,14 +1127,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -1142,7 +1142,7 @@ parserTest.runTest(
         {"kind": "mrow",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "(",
@@ -1151,7 +1151,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -1159,7 +1159,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -1167,7 +1167,7 @@ parserTest.runTest(
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -1175,7 +1175,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": true,
                                    "scriptlevel": 0},
                      "properties": {},
@@ -1184,7 +1184,7 @@ parserTest.runTest(
                         "texClass": 4,
                         "attributes": {"maxsize": "2.047em",
                                        "minsize": "2.047em"},
-                        "inherited": {"display": "block",
+                        "inherited": {
                                       "displaystyle": true,
                                       "scriptlevel": 0,
                                       "form": "infix",
@@ -1205,7 +1205,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -1213,7 +1213,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -1221,7 +1221,7 @@ parserTest.runTest(
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -1229,7 +1229,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": true,
                                    "scriptlevel": 0},
                      "properties": {},
@@ -1238,7 +1238,7 @@ parserTest.runTest(
                         "texClass": 4,
                         "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1259,7 +1259,7 @@ parserTest.runTest(
             {"kind": "TeXAtom",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -1267,7 +1267,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -1275,7 +1275,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                       "texClass": 4,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -1283,7 +1283,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 4,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -1292,7 +1292,7 @@ parserTest.runTest(
                               "texClass": 4,
                               "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1313,7 +1313,7 @@ parserTest.runTest(
             {"kind": "TeXAtom",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -1321,7 +1321,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -1329,7 +1329,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                       "texClass": 4,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -1337,7 +1337,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 4,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -1346,7 +1346,7 @@ parserTest.runTest(
                               "texClass": 4,
                               "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1372,14 +1372,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -1387,7 +1387,7 @@ parserTest.runTest(
         {"kind": "mrow",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "[",
@@ -1396,7 +1396,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -1404,7 +1404,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -1412,7 +1412,7 @@ parserTest.runTest(
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -1420,7 +1420,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": true,
                                    "scriptlevel": 0},
                      "properties": {},
@@ -1429,7 +1429,7 @@ parserTest.runTest(
                         "texClass": 4,
                         "attributes": {"maxsize": "2.047em",
                                        "minsize": "2.047em"},
-                        "inherited": {"display": "block",
+                        "inherited": {
                                       "displaystyle": true,
                                       "scriptlevel": 0,
                                       "form": "infix",
@@ -1450,7 +1450,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -1458,7 +1458,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -1466,7 +1466,7 @@ parserTest.runTest(
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -1474,7 +1474,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": true,
                                    "scriptlevel": 0},
                      "properties": {},
@@ -1483,7 +1483,7 @@ parserTest.runTest(
                         "texClass": 4,
                         "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1504,7 +1504,7 @@ parserTest.runTest(
             {"kind": "TeXAtom",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -1512,7 +1512,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -1520,7 +1520,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                       "texClass": 4,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -1528,7 +1528,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 4,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -1537,7 +1537,7 @@ parserTest.runTest(
                               "texClass": 4,
                               "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1558,7 +1558,7 @@ parserTest.runTest(
             {"kind": "TeXAtom",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -1566,7 +1566,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -1574,7 +1574,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                       "texClass": 4,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -1582,7 +1582,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 4,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -1591,7 +1591,7 @@ parserTest.runTest(
                               "texClass": 4,
                               "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1617,14 +1617,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": null,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": null,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -1632,7 +1632,7 @@ parserTest.runTest(
         {"kind": "mfrac",
          "texClass": null,
          "attributes": {"linethickness": "1pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1640,7 +1640,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -1651,7 +1651,7 @@ parserTest.runTest(
             {"kind": "mi",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 0,
                 "mathvariant": "italic"},
@@ -1668,14 +1668,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -1683,7 +1683,7 @@ parserTest.runTest(
         {"kind": "mrow",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "[",
@@ -1692,7 +1692,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -1700,7 +1700,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -1708,7 +1708,7 @@ parserTest.runTest(
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -1716,7 +1716,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": true,
                                    "scriptlevel": 0},
                      "properties": {},
@@ -1725,7 +1725,7 @@ parserTest.runTest(
                         "texClass": 4,
                         "attributes": {"maxsize": "2.047em",
                                        "minsize": "2.047em"},
-                        "inherited": {"display": "block",
+                        "inherited": {
                                       "displaystyle": true,
                                       "scriptlevel": 0,
                                       "form": "infix",
@@ -1746,7 +1746,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -1754,7 +1754,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -1762,7 +1762,7 @@ parserTest.runTest(
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -1770,7 +1770,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": true,
                                    "scriptlevel": 0},
                      "properties": {},
@@ -1779,7 +1779,7 @@ parserTest.runTest(
                         "texClass": 4,
                         "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1800,7 +1800,7 @@ parserTest.runTest(
             {"kind": "TeXAtom",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -1808,7 +1808,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -1816,7 +1816,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                       "texClass": 4,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -1824,7 +1824,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 4,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -1833,7 +1833,7 @@ parserTest.runTest(
                               "texClass": 4,
                               "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1854,7 +1854,7 @@ parserTest.runTest(
             {"kind": "TeXAtom",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -1862,7 +1862,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": 4,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -1870,7 +1870,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                       "texClass": 4,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -1878,7 +1878,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 4,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -1887,7 +1887,7 @@ parserTest.runTest(
                               "texClass": 4,
                               "attributes": {"maxsize": "1.2em",
                                 "minsize": "1.2em"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -1914,14 +1914,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -1930,13 +1930,13 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"displaystyle": false,
                         "scriptlevel": 2},
-         "inherited": {"display": "block"},
+         "inherited": {},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 2},
               "properties": {},
@@ -1944,7 +1944,7 @@ parserTest.runTest(
                 {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": false,
                     "scriptlevel": 2,
                     "mathvariant": "italic"},
@@ -1962,14 +1962,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -1978,7 +1978,7 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"rowspacing": "4pt",
                         "columnspacing": "1em"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"useHeight": 1},
@@ -1986,7 +1986,7 @@ parserTest.runTest(
            {"kind": "mtr",
             "texClass": null,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 0},
             "properties": {},
@@ -1994,7 +1994,7 @@ parserTest.runTest(
               {"kind": "mtd",
                "texClass": null,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": false,
                     "scriptlevel": 0},
                   "properties": {},
@@ -2002,7 +2002,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 0},
                       "properties": {},
@@ -2010,7 +2010,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -2028,14 +2028,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2043,7 +2043,7 @@ parserTest.runTest(
         {"kind": "menclose",
          "texClass": 0,
          "attributes": {"notation": "left right"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2051,7 +2051,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -2061,7 +2061,7 @@ parserTest.runTest(
                "attributes": {"rowspacing": "4pt",
                               "columnspacing": "1em",
                               "columnlines": ""},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {"useHeight": 1},
@@ -2069,7 +2069,7 @@ parserTest.runTest(
                  {"kind": "mtr",
                   "texClass": null,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 0},
                       "properties": {},
@@ -2077,7 +2077,7 @@ parserTest.runTest(
                         {"kind": "mtd",
                           "texClass": null,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 0},
                           "properties": {},
@@ -2085,7 +2085,7 @@ parserTest.runTest(
                             {"kind": "mrow",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 0},
                               "properties": {},
@@ -2093,7 +2093,7 @@ parserTest.runTest(
                                 {"kind": "mi",
                                   "texClass": 0,
                                   "attributes": {},
-                                  "inherited": {"display": "block",
+                                  "inherited": {
                                     "displaystyle": false,
                                     "scriptlevel": 0,
                                     "mathvariant": "italic"},
@@ -2118,14 +2118,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2136,14 +2136,14 @@ parserTest.runTest(
                         "rowspacing": ".5em",
                         "columnspacing": "thickmathspace",
                         "displaystyle": true},
-         "inherited": {"display": "block",
+         "inherited": {
                        "scriptlevel": 0},
          "properties": {"useHeight": 1},
          "childNodes": [
            {"kind": "mlabeledtr",
             "texClass": null,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "columnalign": "right left",
                           "displaystyle": true,
                           "scriptlevel": 0},
@@ -2152,7 +2152,7 @@ parserTest.runTest(
               {"kind": "mtd",
                "texClass": null,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "columnalign": "right left",
                              "displaystyle": true,
                              "scriptlevel": 0},
@@ -2161,7 +2161,7 @@ parserTest.runTest(
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -2169,7 +2169,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                      "texClass": 0,
                      "attributes": {},
-                     "inherited": {"display": "block",
+                     "inherited": {
                                    "displaystyle": true,
                                    "scriptlevel": 0},
                      "properties": {},
@@ -2177,7 +2177,7 @@ parserTest.runTest(
                        {"kind": "mrow",
                         "texClass": 0,
                         "attributes": {},
-                        "inherited": {"display": "block",
+                        "inherited": {
                                       "displaystyle": true,
                                       "scriptlevel": 0},
                         "properties": {},
@@ -2186,13 +2186,13 @@ parserTest.runTest(
                            "texClass": 0,
                            "attributes": {"displaystyle": false,
                                           "scriptlevel": 0},
-                           "inherited": {"display": "block"},
+                           "inherited": {},
                                   "properties": {},
                                   "childNodes": [
                                     {"kind": "mrow",
                                       "texClass": 0,
                                       "attributes": {},
-                                      "inherited": {"display": "block",
+                                      "inherited": {
                                         "displaystyle": false,
                                         "scriptlevel": 0},
                                       "properties": {},
@@ -2200,7 +2200,7 @@ parserTest.runTest(
                                         {"kind": "mtext",
                                           "texClass": 0,
                                           "attributes": {},
-                                          "inherited": {"display": "block",
+                                          "inherited": {
                                             "displaystyle": false,
                                             "scriptlevel": 0},
                                           "properties": {},
@@ -2217,7 +2217,7 @@ parserTest.runTest(
                 {"kind": "mtd",
                   "texClass": null,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "columnalign": "right left",
                     "displaystyle": true,
                     "scriptlevel": 0},
@@ -2226,7 +2226,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -2234,7 +2234,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -2246,7 +2246,7 @@ parserTest.runTest(
                 {"kind": "mtd",
                   "texClass": null,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "columnalign": "right left",
                     "displaystyle": true,
                     "scriptlevel": 0},
@@ -2255,7 +2255,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": null,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -2276,14 +2276,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2291,7 +2291,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"fnOP": true},
@@ -2301,7 +2301,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": -1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
@@ -2313,7 +2313,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -2330,14 +2330,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2345,7 +2345,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
             "form": "infix"},
@@ -2365,14 +2365,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2380,7 +2380,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
             "form": "infix"},
@@ -2400,14 +2400,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2415,7 +2415,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2423,7 +2423,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -2431,7 +2431,7 @@ parserTest.runTest(
               {"kind": "mo",
                   "texClass": 0,
                   "attributes": {"mathvariant": "bold"},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "form": "infix"},
@@ -2454,14 +2454,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2469,7 +2469,7 @@ parserTest.runTest(
         {"kind": "msqrt",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2477,7 +2477,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {"texprimestyle": true},
@@ -2485,7 +2485,7 @@ parserTest.runTest(
                 {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -2503,14 +2503,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2518,7 +2518,7 @@ parserTest.runTest(
         {"kind": "mroot",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2526,7 +2526,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -2537,7 +2537,7 @@ parserTest.runTest(
             {"kind": "mi",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 2,
                 "mathvariant": "italic"},
@@ -2554,14 +2554,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2569,7 +2569,7 @@ parserTest.runTest(
         {"kind": "mroot",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2577,7 +2577,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -2588,7 +2588,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 2},
               "properties": {},
@@ -2604,14 +2604,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2619,7 +2619,7 @@ parserTest.runTest(
         {"kind": "mroot",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2627,7 +2627,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -2640,7 +2640,7 @@ parserTest.runTest(
             "attributes": {"width": "-0.13333333333333333em",
                            "height": "+0.13333333333333333em",
                            "voffset": "+0.13333333333333333em"},
-            "inherited": {"display": "block",
+            "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 2},
               "properties": {},
@@ -2648,7 +2648,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": null,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": false,
                     "scriptlevel": 2},
                   "properties": {},
@@ -2656,7 +2656,7 @@ parserTest.runTest(
                     {"kind": "mi",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 2,
                         "mathvariant": "italic"},
@@ -2673,14 +2673,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":null,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":null,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -2688,7 +2688,7 @@ parserTest.runTest(
         {"kind":"mfrac",
          "texClass":null,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -2696,7 +2696,7 @@ parserTest.runTest(
            {"kind":"TeXAtom",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":0},
             "properties":{},
@@ -2704,7 +2704,7 @@ parserTest.runTest(
               {"kind":"mrow",
                "texClass":0,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":false,
                             "scriptlevel":0},
                "properties":{},
@@ -2712,7 +2712,7 @@ parserTest.runTest(
                  {"kind":"mstyle",
                   "texClass":0,
                   "attributes":{"mathcolor":"red"},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "displaystyle":false,
                                "scriptlevel":0},
                   "properties":{},
@@ -2720,7 +2720,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "mathcolor":"red",
                                   "displaystyle":false,
                                   "scriptlevel":0},
@@ -2729,7 +2729,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{"mathvariant":"-tex-caligraphic"},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "mathcolor":"red",
                                      "displaystyle":false,
                                      "scriptlevel":0,
@@ -2743,7 +2743,7 @@ parserTest.runTest(
            {"kind":"mstyle",
             "texClass":0,
             "attributes":{"mathcolor":"blue"},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":0},
             "properties":{"texprimestyle":true},
@@ -2751,7 +2751,7 @@ parserTest.runTest(
               {"kind":"mrow",
                "texClass":0,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "mathcolor":"blue",
                             "displaystyle":false,
                             "scriptlevel":0},
@@ -2760,7 +2760,7 @@ parserTest.runTest(
                  {"kind":"mi",
                   "texClass":0,
                   "attributes":{"mathvariant":"sans-serif"},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "mathcolor":"blue",
                                "displaystyle":false,
                                "scriptlevel":0,
@@ -2780,14 +2780,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -2795,7 +2795,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -2806,7 +2806,7 @@ parserTest.runTest(
         {"kind":"mo",
          "texClass":3,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "form":"infix"},
@@ -2818,7 +2818,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -2835,14 +2835,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -2850,7 +2850,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -2861,7 +2861,7 @@ parserTest.runTest(
         {"kind":"mo",
          "texClass":3,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "form":"infix"},
@@ -2873,7 +2873,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -2884,7 +2884,7 @@ parserTest.runTest(
         {"kind":"mo",
          "texClass":3,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "form":"infix"},
@@ -2896,7 +2896,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -2907,7 +2907,7 @@ parserTest.runTest(
         {"kind":"mo",
          "texClass":2,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "form":"infix"},
@@ -2919,7 +2919,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -2937,14 +2937,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 3,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 3,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2952,7 +2952,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
@@ -2974,14 +2974,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 3,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 3,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -2989,7 +2989,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2997,7 +2997,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -3005,7 +3005,7 @@ parserTest.runTest(
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"width": 0},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -3013,7 +3013,7 @@ parserTest.runTest(
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -3021,7 +3021,7 @@ parserTest.runTest(
                         {"kind": "mtext",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -3037,7 +3037,7 @@ parserTest.runTest(
         {"kind": "mn",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -3056,14 +3056,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -3071,7 +3071,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -3087,14 +3087,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -3102,7 +3102,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix",
@@ -3124,14 +3124,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":7,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":7,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -3139,7 +3139,7 @@ parserTest.runTest(
         {"kind":"mrow",
          "texClass":7,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{"open":"(",
@@ -3148,7 +3148,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":4,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "form":"prefix",
@@ -3163,7 +3163,7 @@ parserTest.runTest(
            {"kind":"mfrac",
             "texClass":null,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{},
@@ -3171,7 +3171,7 @@ parserTest.runTest(
               {"kind":"mi",
                "texClass":0,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":false,
                             "scriptlevel":0,
                             "mathvariant":"italic"},
@@ -3182,7 +3182,7 @@ parserTest.runTest(
               {"kind":"mrow",
                "texClass":7,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":false,
                             "scriptlevel":0},
                "properties":{"open":"[",
@@ -3192,7 +3192,7 @@ parserTest.runTest(
                  {"kind":"mo",
                   "texClass":4,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "displaystyle":false,
                                "scriptlevel":0,
                                "form":"prefix",
@@ -3207,7 +3207,7 @@ parserTest.runTest(
                  {"kind":"mi",
                   "texClass":0,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "displaystyle":false,
                                "scriptlevel":0,
                                "mathvariant":"italic"},
@@ -3218,7 +3218,7 @@ parserTest.runTest(
                  {"kind":"mi",
                   "texClass":0,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "displaystyle":false,
                                "scriptlevel":0,
                                "mathvariant":"italic"},
@@ -3229,7 +3229,7 @@ parserTest.runTest(
                  {"kind":"mo",
                   "texClass":5,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "displaystyle":false,
                                "scriptlevel":0,
                                "form":"postfix",
@@ -3244,7 +3244,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":5,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "form":"postfix",
@@ -3267,14 +3267,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":4,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":4,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -3283,7 +3283,7 @@ parserTest.runTest(
          "texClass":4,
          "attributes":{"fence":false,
                        "stretchy":false},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "form":"prefix",
@@ -3298,7 +3298,7 @@ parserTest.runTest(
         {"kind":"mfrac",
          "texClass":null,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -3306,7 +3306,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":0,
                          "mathvariant":"italic"},
@@ -3317,7 +3317,7 @@ parserTest.runTest(
            {"kind":"mrow",
             "texClass":3,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":0},
             "properties":{"texprimestyle":true},
@@ -3325,7 +3325,7 @@ parserTest.runTest(
               {"kind":"mo",
                "texClass":3,
                "attributes":{"stretchy":false},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":false,
                             "scriptlevel":0,
                             "form":"prefix",
@@ -3338,7 +3338,7 @@ parserTest.runTest(
               {"kind":"mi",
                "texClass":0,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":false,
                             "scriptlevel":0,
                             "mathvariant":"italic"},
@@ -3349,7 +3349,7 @@ parserTest.runTest(
               {"kind":"mi",
                "texClass":0,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":false,
                             "scriptlevel":0,
                             "mathvariant":"italic"},
@@ -3360,7 +3360,7 @@ parserTest.runTest(
               {"kind":"mo",
                "texClass":3,
                "attributes":{"stretchy":false},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":false,
                             "scriptlevel":0,
                             "form":"postfix",
@@ -3375,7 +3375,7 @@ parserTest.runTest(
          "texClass":5,
          "attributes":{"fence":false,
                        "stretchy":false},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "form":"postfix",
@@ -3395,14 +3395,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":7,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":7,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -3410,7 +3410,7 @@ parserTest.runTest(
         {"kind":"mrow",
          "texClass":7,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{"open":"{",
@@ -3419,7 +3419,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":4,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "form":"prefix",
@@ -3434,7 +3434,7 @@ parserTest.runTest(
            {"kind":"mrow",
             "texClass":4,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{"open":"|",
@@ -3443,7 +3443,7 @@ parserTest.runTest(
               {"kind":"mo",
                "texClass":4,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":true,
                             "scriptlevel":0,
                             "form":"prefix",
@@ -3458,7 +3458,7 @@ parserTest.runTest(
               {"kind":"mrow",
                "texClass":4,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":true,
                             "scriptlevel":0},
                "properties":{"open":"[",
@@ -3467,7 +3467,7 @@ parserTest.runTest(
                  {"kind":"mo",
                   "texClass":4,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "displaystyle":true,
                                "scriptlevel":0,
                                "form":"prefix",
@@ -3482,7 +3482,7 @@ parserTest.runTest(
                  {"kind":"mrow",
                   "texClass":4,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "displaystyle":true,
                                "scriptlevel":0},
                   "properties":{"open":"∥"},
@@ -3490,7 +3490,7 @@ parserTest.runTest(
                     {"kind":"mo",
                      "texClass":4,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":true,
                                   "scriptlevel":0,
                                   "form":"prefix",
@@ -3505,7 +3505,7 @@ parserTest.runTest(
                     {"kind":"mi",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":true,
                                   "scriptlevel":0,
                                   "mathvariant":"italic"},
@@ -3518,7 +3518,7 @@ parserTest.runTest(
                      "attributes":{"fence":true,
                                    "stretchy":true,
                                    "symmetric":true},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":true,
                                   "scriptlevel":0,
                                   "form":"postfix"},
@@ -3528,7 +3528,7 @@ parserTest.runTest(
                  {"kind":"mo",
                   "texClass":5,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "displaystyle":true,
                                "scriptlevel":0,
                                "form":"postfix",
@@ -3543,7 +3543,7 @@ parserTest.runTest(
               {"kind":"mo",
                "texClass":5,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "displaystyle":true,
                             "scriptlevel":0,
                             "form":"postfix",
@@ -3558,7 +3558,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":5,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "form":"postfix",
@@ -3578,14 +3578,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 7,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 7,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -3593,7 +3593,7 @@ parserTest.runTest(
         {"kind": "mrow",
          "texClass": 7,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "(",
@@ -3602,7 +3602,7 @@ parserTest.runTest(
            {"kind": "mo",
             "texClass": 4,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "form": "prefix",
@@ -3617,7 +3617,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -3628,7 +3628,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 5,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -3636,7 +3636,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": null,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -3646,7 +3646,7 @@ parserTest.runTest(
            {"kind": "mo",
             "texClass": 0,
             "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0,
                 "form": "infix",
@@ -3661,7 +3661,7 @@ parserTest.runTest(
             {"kind": "TeXAtom",
               "texClass": 4,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -3669,7 +3669,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": null,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -3679,7 +3679,7 @@ parserTest.runTest(
             {"kind": "mi",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0,
                 "mathvariant": "italic"},
@@ -3690,7 +3690,7 @@ parserTest.runTest(
             {"kind": "mo",
               "texClass": 5,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0,
                 "form": "postfix",
@@ -3712,14 +3712,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -3727,7 +3727,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {"mathvariant": "normal"},
-         "inherited": {"display": "block",
+         "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -3744,14 +3744,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -3759,7 +3759,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -3767,7 +3767,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
               "properties": {},
@@ -3775,7 +3775,7 @@ parserTest.runTest(
                 {"kind": "mi",
                   "texClass": 0,
                   "attributes": {"mathvariant": "bold"},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -3792,14 +3792,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":3,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":3,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -3807,7 +3807,7 @@ parserTest.runTest(
         {"kind":"mo",
          "texClass":3,
          "attributes":{"stretchy":false},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "form":"infix",
@@ -3829,14 +3829,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -3844,7 +3844,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -3855,7 +3855,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -3866,7 +3866,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -3877,7 +3877,7 @@ parserTest.runTest(
         {"kind":"mo",
          "texClass":3,
          "attributes":{"stretchy":false},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "form":"infix",
@@ -3891,7 +3891,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -3902,7 +3902,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -3913,7 +3913,7 @@ parserTest.runTest(
         {"kind":"mi",
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0,
                       "mathvariant":"italic"},
@@ -3929,14 +3929,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":7,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":7,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -3944,7 +3944,7 @@ parserTest.runTest(
         {"kind":"mrow",
          "texClass":7,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{"open":"(",
@@ -3953,7 +3953,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":4,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "form":"prefix",
@@ -3970,7 +3970,7 @@ parserTest.runTest(
             "attributes":{"columnalign":"center center center",
                           "rowspacing":"4pt",
                           "columnspacing":"1em"},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0},
             "properties":{"useHeight":1},
@@ -3978,7 +3978,7 @@ parserTest.runTest(
               {"kind":"mtr",
                "texClass":null,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "columnalign":"center center center",
                             "displaystyle":false,
                             "scriptlevel":0},
@@ -3987,7 +3987,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -3996,7 +3996,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4004,7 +4004,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4016,7 +4016,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -4025,7 +4025,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4033,7 +4033,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4045,7 +4045,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -4054,7 +4054,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4062,7 +4062,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4074,7 +4074,7 @@ parserTest.runTest(
               {"kind":"mtr",
                "texClass":null,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "columnalign":"center center center",
                             "displaystyle":false,
                             "scriptlevel":0},
@@ -4083,7 +4083,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -4092,7 +4092,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4100,7 +4100,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4112,7 +4112,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -4121,7 +4121,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4129,7 +4129,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4141,7 +4141,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -4150,7 +4150,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4158,7 +4158,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4170,7 +4170,7 @@ parserTest.runTest(
               {"kind":"mtr",
                "texClass":null,
                "attributes":{},
-               "inherited":{"display":"block",
+               "inherited":{
                             "columnalign":"center center center",
                             "displaystyle":false,
                             "scriptlevel":0},
@@ -4179,7 +4179,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -4188,7 +4188,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4196,7 +4196,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4208,7 +4208,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -4217,7 +4217,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4225,7 +4225,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4237,7 +4237,7 @@ parserTest.runTest(
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
-                  "inherited":{"display":"block",
+                  "inherited":{
                                "columnalign":"center center center",
                                "displaystyle":false,
                                "scriptlevel":0},
@@ -4246,7 +4246,7 @@ parserTest.runTest(
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
-                     "inherited":{"display":"block",
+                     "inherited":{
                                   "displaystyle":false,
                                   "scriptlevel":0},
                      "properties":{},
@@ -4254,7 +4254,7 @@ parserTest.runTest(
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
-                        "inherited":{"display":"block",
+                        "inherited":{
                                      "displaystyle":false,
                                      "scriptlevel":0,
                                      "mathvariant":"italic"},
@@ -4266,7 +4266,7 @@ parserTest.runTest(
            {"kind":"mo",
             "texClass":5,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "form":"postfix",
@@ -4287,14 +4287,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -4302,7 +4302,7 @@ parserTest.runTest(
         {"kind": "mtext",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -4320,14 +4320,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -4335,7 +4335,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -4346,7 +4346,7 @@ parserTest.runTest(
         {"kind": "mtext",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
           "properties": {},
@@ -4357,7 +4357,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -4374,14 +4374,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -4389,7 +4389,7 @@ parserTest.runTest(
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -4397,7 +4397,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -4407,7 +4407,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {},
@@ -4422,14 +4422,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": -1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": -1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -4437,7 +4437,7 @@ parserTest.runTest(
         {"kind": "msup",
          "texClass": -1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -4445,7 +4445,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -4453,7 +4453,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": null,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -4463,7 +4463,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {},
@@ -4478,14 +4478,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -4493,7 +4493,7 @@ parserTest.runTest(
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -4501,7 +4501,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "mathvariant":"italic"},
@@ -4512,7 +4512,7 @@ parserTest.runTest(
            {"kind":"mn",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":1},
             "properties":{},
@@ -4529,14 +4529,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -4544,7 +4544,7 @@ parserTest.runTest(
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -4552,7 +4552,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "mathvariant":"italic"},
@@ -4563,7 +4563,7 @@ parserTest.runTest(
            {"kind":"mn",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":1},
             "properties":{},
@@ -4579,14 +4579,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -4594,7 +4594,7 @@ parserTest.runTest(
         {"kind": "munderover",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"movesupsub": true},
@@ -4602,7 +4602,7 @@ parserTest.runTest(
            {"kind": "mo",
             "texClass": 1,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "form": "infix",
@@ -4618,7 +4618,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {"texprimestyle": true},
@@ -4628,7 +4628,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {},
@@ -4647,14 +4647,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": -1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": -1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -4662,7 +4662,7 @@ parserTest.runTest(
         {"kind": "msup",
          "texClass": -1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -4670,7 +4670,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 7,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {"open": "(",
@@ -4679,7 +4679,7 @@ parserTest.runTest(
               {"kind": "mo",
                "texClass": 4,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0,
                              "form": "prefix",
@@ -4694,7 +4694,7 @@ parserTest.runTest(
               {"kind": "munderover",
                "texClass": 1,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {"movesupsub": true},
@@ -4702,7 +4702,7 @@ parserTest.runTest(
                  {"kind": "mo",
                   "texClass": 1,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -4718,7 +4718,7 @@ parserTest.runTest(
                     {"kind": "mn",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 1},
                       "properties": {"texprimestyle": true},
@@ -4728,7 +4728,7 @@ parserTest.runTest(
                     {"kind": "mi",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 1,
                         "mathvariant": "italic"},
@@ -4740,7 +4740,7 @@ parserTest.runTest(
                 {"kind": "mo",
                   "texClass": 5,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "form": "postfix",
@@ -4755,7 +4755,7 @@ parserTest.runTest(
             {"kind": "TeXAtom",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {},
@@ -4763,7 +4763,7 @@ parserTest.runTest(
                 {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": false,
                     "scriptlevel": 1},
                   "properties": {},
@@ -4771,7 +4771,7 @@ parserTest.runTest(
                     {"kind": "mn",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 1},
                       "properties": {},
@@ -4787,14 +4787,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -4802,7 +4802,7 @@ parserTest.runTest(
         {"kind": "msub",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -4810,7 +4810,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
               "properties": {},
@@ -4820,7 +4820,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {"texprimestyle": true},
@@ -4835,14 +4835,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": -1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": -1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -4850,7 +4850,7 @@ parserTest.runTest(
         {"kind": "msub",
          "texClass": -1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -4858,7 +4858,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -4866,7 +4866,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": null,
                "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -4876,7 +4876,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {"texprimestyle": true},
@@ -4891,14 +4891,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -4906,7 +4906,7 @@ parserTest.runTest(
         {"kind":"msub",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -4914,7 +4914,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "mathvariant":"italic"},
@@ -4925,7 +4925,7 @@ parserTest.runTest(
            {"kind":"mn",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":1},
             "properties":{"texprimestyle":true},
@@ -4942,14 +4942,14 @@ parserTest.runTest(
   {"kind":"math",
    "texClass":0,
    "attributes":{"display":"block"},
-   "inherited":{"displaystyle":false,
+   "inherited":{"displaystyle":true,
                 "scriptlevel":0},
    "properties":{},
    "childNodes":[
      {"kind":"mrow",
       "texClass":0,
       "attributes":{},
-      "inherited":{"display":"block",
+      "inherited":{
                    "displaystyle":true,
                    "scriptlevel":0},
       "properties":{},
@@ -4957,7 +4957,7 @@ parserTest.runTest(
         {"kind":"msubsup",
          "texClass":0,
          "attributes":{},
-         "inherited":{"display":"block",
+         "inherited":{
                       "displaystyle":true,
                       "scriptlevel":0},
          "properties":{},
@@ -4965,7 +4965,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":true,
                          "scriptlevel":0,
                          "mathvariant":"italic"},
@@ -4976,7 +4976,7 @@ parserTest.runTest(
            {"kind":"mn",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":1},
             "properties":{"texprimestyle":true},
@@ -4986,7 +4986,7 @@ parserTest.runTest(
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
-            "inherited":{"display":"block",
+            "inherited":{
                          "displaystyle":false,
                          "scriptlevel":1,
                          "mathvariant":"italic"},
@@ -5003,14 +5003,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5018,7 +5018,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -5029,7 +5029,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"width": "1em"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
             "scriptlevel": 0},
           "properties": {"scriptlevel": 0},
@@ -5038,7 +5038,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -5055,14 +5055,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5070,7 +5070,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -5081,7 +5081,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"width": "negativethinmathspace"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"scriptlevel": 0},
@@ -5090,7 +5090,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"width": "negativethinmathspace"},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {"scriptlevel": 0},
@@ -5099,7 +5099,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -5116,14 +5116,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5132,7 +5132,7 @@ parserTest.runTest(
          "texClass": 1,
          "attributes": {"movablelimits": true,
                         "form": "prefix"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
@@ -5153,14 +5153,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5168,7 +5168,7 @@ parserTest.runTest(
         {"kind": "munderover",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"movesupsub": true},
@@ -5176,7 +5176,7 @@ parserTest.runTest(
            {"kind": "mo",
             "texClass": 1,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "form": "infix",
@@ -5191,7 +5191,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {"texprimestyle": true},
@@ -5201,7 +5201,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {},
@@ -5220,14 +5220,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5235,7 +5235,7 @@ parserTest.runTest(
         {"kind": "msubsup",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"movesupsub": false},
@@ -5243,7 +5243,7 @@ parserTest.runTest(
            {"kind": "mo",
             "texClass": 1,
             "attributes": {"form": "prefix"},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "form": "infix"},
@@ -5256,7 +5256,7 @@ parserTest.runTest(
            {"kind": "mn",
             "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {"texprimestyle": true},
@@ -5266,7 +5266,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {},
@@ -5285,14 +5285,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5300,7 +5300,7 @@ parserTest.runTest(
         {"kind": "munderover",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"movesupsub": true},
@@ -5308,7 +5308,7 @@ parserTest.runTest(
            {"kind": "mo",
             "texClass": 1,
             "attributes": {"movablelimits": false},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "form": "infix",
@@ -5325,7 +5325,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {"texprimestyle": true},
@@ -5335,7 +5335,7 @@ parserTest.runTest(
             {"kind": "mn",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1},
               "properties": {},
@@ -5354,14 +5354,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": null,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": null,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5369,7 +5369,7 @@ parserTest.runTest(
         {"kind": "mfrac",
          "texClass": null,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -5377,7 +5377,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -5388,7 +5388,7 @@ parserTest.runTest(
             {"kind": "mi",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 0,
                 "mathvariant": "italic"},
@@ -5405,14 +5405,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5422,7 +5422,7 @@ parserTest.runTest(
          "attributes": {"height": "+1em",
                         "depth": "-1em",
                         "voffset": "+1em"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -5430,7 +5430,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -5438,7 +5438,7 @@ parserTest.runTest(
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -5446,7 +5446,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -5454,7 +5454,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -5473,14 +5473,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5490,7 +5490,7 @@ parserTest.runTest(
          "attributes": {"height": "-1em",
                         "depth": "+1em",
                         "voffset": "-1em"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -5498,7 +5498,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -5506,7 +5506,7 @@ parserTest.runTest(
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -5514,7 +5514,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -5522,7 +5522,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -5541,14 +5541,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5556,7 +5556,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "form": "prefix"},
@@ -5568,7 +5568,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 7,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
             "form": "infix"},
@@ -5580,7 +5580,7 @@ parserTest.runTest(
         {"kind": "mo",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "form": "postfix"},
@@ -5598,14 +5598,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5613,7 +5613,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -5624,7 +5624,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -5632,7 +5632,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -5640,7 +5640,7 @@ parserTest.runTest(
               {"kind": "mspace",
                "texClass": 0,
                "attributes": {"width": "18mu"},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -5651,7 +5651,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -5659,7 +5659,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -5667,7 +5667,7 @@ parserTest.runTest(
               {"kind": "mspace",
                "texClass": 0,
                "attributes": {"width": "12mu"},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -5678,7 +5678,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -5686,7 +5686,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -5694,7 +5694,7 @@ parserTest.runTest(
               {"kind": "mspace",
                "texClass": 0,
                "attributes": {"width": "12mu"},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -5705,7 +5705,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -5713,7 +5713,7 @@ parserTest.runTest(
             {"kind": "mrow",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -5721,7 +5721,7 @@ parserTest.runTest(
                 {"kind": "mspace",
                   "texClass": 0,
                   "attributes": {"width": "12mu"},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -5732,7 +5732,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 1,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {"autoOP": true},
@@ -5742,7 +5742,7 @@ parserTest.runTest(
         {"kind": "mspace",
           "texClass": 0,
           "attributes": {"width": "thinmathspace"},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {"scriptlevel": 0},
@@ -5751,7 +5751,7 @@ parserTest.runTest(
         {"kind": "mspace",
           "texClass": 0,
           "attributes": {"width": "thinmathspace"},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {"scriptlevel": 0},
@@ -5760,7 +5760,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -5777,14 +5777,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5792,7 +5792,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -5803,7 +5803,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"movesupsub": false,
@@ -5815,7 +5815,7 @@ parserTest.runTest(
         {"kind": "mo",
           "texClass": -1,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "form": "infix"},
@@ -5827,7 +5827,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -5844,14 +5844,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5859,7 +5859,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 1,
          "attributes": {"mathvariant": "normal"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -5872,7 +5872,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": -1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
             "scriptlevel": 0,
             "form": "infix"},
@@ -5884,7 +5884,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -5901,14 +5901,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 3,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 3,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5916,7 +5916,7 @@ parserTest.runTest(
         {"kind": "mover",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"movesupsub": true},
@@ -5926,7 +5926,7 @@ parserTest.runTest(
             "attributes": {"lspace": "0",
                            "rspace": "0",
                            "movablelimits": true},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "form": "infix"},
@@ -5939,7 +5939,7 @@ parserTest.runTest(
             {"kind": "mi",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1,
                 "mathvariant": "italic"},
@@ -5959,14 +5959,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 3,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 3,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -5974,7 +5974,7 @@ parserTest.runTest(
         {"kind": "munder",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"movesupsub": true},
@@ -5984,7 +5984,7 @@ parserTest.runTest(
             "attributes": {"lspace": "0",
                            "rspace": "0",
                            "movablelimits": true},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "form": "infix"},
@@ -5996,7 +5996,7 @@ parserTest.runTest(
             {"kind": "mi",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1,
                 "mathvariant": "italic"},
@@ -6016,14 +6016,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6031,7 +6031,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"movesupsub": true,
@@ -6040,7 +6040,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
               "properties": {},
@@ -6048,7 +6048,7 @@ parserTest.runTest(
                 {"kind": "mi",
                   "texClass": 0,
                   "attributes": {"mathvariant": "-tex-caligraphic"},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -6065,14 +6065,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 3,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 3,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6080,7 +6080,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6088,7 +6088,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
               "properties": {},
@@ -6096,7 +6096,7 @@ parserTest.runTest(
                 {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -6113,14 +6113,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6128,7 +6128,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6136,7 +6136,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -6144,7 +6144,7 @@ parserTest.runTest(
               {"kind": "mover",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0,
                              "accent": true},
@@ -6153,7 +6153,7 @@ parserTest.runTest(
                     {"kind": "mi",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0,
                         "mathvariant": "italic"},
@@ -6164,7 +6164,7 @@ parserTest.runTest(
                     {"kind": "mo",
                       "texClass": 3,
                       "attributes": {"stretchy": false},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0,
                         "form": "infix",
@@ -6184,14 +6184,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6199,7 +6199,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6207,7 +6207,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -6215,7 +6215,7 @@ parserTest.runTest(
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -6223,7 +6223,7 @@ parserTest.runTest(
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -6231,7 +6231,7 @@ parserTest.runTest(
                     {"kind": "mover",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "accent": true},
@@ -6240,7 +6240,7 @@ parserTest.runTest(
                             {"kind": "mi",
                               "texClass": 0,
                               "attributes": {"mathvariant": "normal"},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "mathvariant": "italic"},
@@ -6251,7 +6251,7 @@ parserTest.runTest(
                             {"kind": "mo",
                               "texClass": 3,
                               "attributes": {"stretchy": false},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "form": "infix",
@@ -6272,14 +6272,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6287,7 +6287,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6295,7 +6295,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -6303,7 +6303,7 @@ parserTest.runTest(
               {"kind": "mover",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0,
                              "accent": true},
@@ -6312,7 +6312,7 @@ parserTest.runTest(
                  {"kind": "mo",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0,
                         "form": "infix"},
@@ -6325,7 +6325,7 @@ parserTest.runTest(
                     {"kind": "mo",
                       "texClass": 3,
                       "attributes": {"stretchy": false},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0,
                         "form": "infix",
@@ -6351,14 +6351,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6366,7 +6366,7 @@ parserTest.runTest(
         {"kind": "mover",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "accent": false},
@@ -6375,7 +6375,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -6386,7 +6386,7 @@ parserTest.runTest(
             {"kind": "mo",
               "texClass": 0,
               "attributes": {"accent": false},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1,
                 "form": "infix",
@@ -6406,14 +6406,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": -1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": -1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6421,7 +6421,7 @@ parserTest.runTest(
         {"kind": "mover",
          "texClass": -1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "accent": false},
@@ -6430,7 +6430,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {"texprimestyle": true},
@@ -6438,7 +6438,7 @@ parserTest.runTest(
               {"kind": "mo",
                "texClass": 0,
                "attributes": {"rspace": 0},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0,
                              "form": "prefix"},
@@ -6448,7 +6448,7 @@ parserTest.runTest(
               {"kind": "mover",
                "texClass": 1,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {"movesupsub": true,
@@ -6458,7 +6458,7 @@ parserTest.runTest(
                   "texClass": 1,
                   "attributes": {"lspace": 0,
                         "rspace": 0},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0,
                         "form": "postfix",
@@ -6474,7 +6474,7 @@ parserTest.runTest(
                     {"kind": "mn",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 1},
                       "properties": {"texprimestyle": true},
@@ -6485,7 +6485,7 @@ parserTest.runTest(
             {"kind": "mo",
               "texClass": 0,
               "attributes": {"accent": false},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1,
                 "form": "infix",
@@ -6505,14 +6505,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 1,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 1,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6520,7 +6520,7 @@ parserTest.runTest(
         {"kind": "mover",
          "texClass": 1,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "accent": false},
@@ -6529,7 +6529,7 @@ parserTest.runTest(
            {"kind": "mo",
             "texClass": 1,
             "attributes": {"movablelimits": false},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "form": "infix",
@@ -6546,7 +6546,7 @@ parserTest.runTest(
             {"kind": "mo",
               "texClass": 0,
               "attributes": {"accent": false},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1,
                 "form": "infix",
@@ -6569,14 +6569,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6584,7 +6584,7 @@ parserTest.runTest(
         {"kind": "mover",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6592,7 +6592,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -6603,7 +6603,7 @@ parserTest.runTest(
             {"kind": "mi",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1,
                 "mathvariant": "italic"},
@@ -6620,14 +6620,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6635,7 +6635,7 @@ parserTest.runTest(
         {"kind": "munder",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6643,7 +6643,7 @@ parserTest.runTest(
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0,
                           "mathvariant": "italic"},
@@ -6654,7 +6654,7 @@ parserTest.runTest(
             {"kind": "mi",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": false,
                 "scriptlevel": 1,
                 "mathvariant": "italic"},
@@ -6671,14 +6671,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": null,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": null,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6688,7 +6688,7 @@ parserTest.runTest(
          "attributes": {"width": 0,
                         "height": "8.6pt",
                         "depth": "3pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6696,7 +6696,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": null,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -6704,7 +6704,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": null,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -6716,7 +6716,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -6724,7 +6724,7 @@ parserTest.runTest(
             {"kind": "mrow",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -6732,7 +6732,7 @@ parserTest.runTest(
                 {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -6750,14 +6750,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6765,7 +6765,7 @@ parserTest.runTest(
         {"kind": "menclose",
          "texClass": 0,
          "attributes": {"notation": "box"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6773,7 +6773,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
               "properties": {},
@@ -6781,7 +6781,7 @@ parserTest.runTest(
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -6800,14 +6800,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6816,13 +6816,13 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"displaystyle": false,
                         "scriptlevel": 0},
-         "inherited": {"display": "block"},
+         "inherited": {},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": false,
                           "scriptlevel": 0},
             "properties": {},
@@ -6830,7 +6830,7 @@ parserTest.runTest(
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": false,
                     "scriptlevel": 0},
                   "properties": {},
@@ -6852,14 +6852,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6867,7 +6867,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -6878,7 +6878,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6886,7 +6886,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -6894,7 +6894,7 @@ parserTest.runTest(
               {"kind": "mphantom",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -6902,7 +6902,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -6910,7 +6910,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -6923,7 +6923,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -6940,14 +6940,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -6955,7 +6955,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -6966,7 +6966,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -6974,7 +6974,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -6982,7 +6982,7 @@ parserTest.runTest(
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"width": 0},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -6990,7 +6990,7 @@ parserTest.runTest(
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                   "properties": {},
@@ -6998,7 +6998,7 @@ parserTest.runTest(
                         {"kind": "mphantom",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -7006,7 +7006,7 @@ parserTest.runTest(
                             {"kind": "mrow",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                               "properties": {},
@@ -7014,7 +7014,7 @@ parserTest.runTest(
                                 {"kind": "mi",
                                   "texClass": 0,
                                   "attributes": {},
-                                  "inherited": {"display": "block",
+                                  "inherited": {
                                     "displaystyle": true,
                                     "scriptlevel": 0,
                                     "mathvariant": "italic"},
@@ -7028,7 +7028,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -7045,14 +7045,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7060,7 +7060,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -7071,7 +7071,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7079,7 +7079,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7088,7 +7088,7 @@ parserTest.runTest(
                "texClass": 0,
                "attributes": {"height": 0,
                               "depth": 0},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -7096,7 +7096,7 @@ parserTest.runTest(
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                       "properties": {},
@@ -7104,7 +7104,7 @@ parserTest.runTest(
                         {"kind": "mphantom",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0},
                           "properties": {},
@@ -7112,7 +7112,7 @@ parserTest.runTest(
                             {"kind": "mrow",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0},
                               "properties": {},
@@ -7120,7 +7120,7 @@ parserTest.runTest(
                                 {"kind": "mi",
                                   "texClass": 0,
                                   "attributes": {},
-                                  "inherited": {"display": "block",
+                                  "inherited": {
                                     "displaystyle": true,
                                     "scriptlevel": 0,
                                     "mathvariant": "italic"},
@@ -7134,7 +7134,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -7151,14 +7151,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7166,7 +7166,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7174,7 +7174,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7183,7 +7183,7 @@ parserTest.runTest(
                "texClass": 0,
                "attributes": {"height": 0,
                               "depth": 0},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -7191,7 +7191,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7199,7 +7199,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7218,14 +7218,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7233,7 +7233,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7241,7 +7241,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7249,7 +7249,7 @@ parserTest.runTest(
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"depth": 0},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                   "properties": {},
@@ -7257,7 +7257,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7265,7 +7265,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7284,14 +7284,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7299,7 +7299,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7307,7 +7307,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7315,7 +7315,7 @@ parserTest.runTest(
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"height": 0},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                   "properties": {},
@@ -7323,7 +7323,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7331,7 +7331,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7350,14 +7350,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7365,7 +7365,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7373,7 +7373,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7382,7 +7382,7 @@ parserTest.runTest(
                "texClass": 0,
                "attributes": {"width": 0,
                               "lspace": "-1width"},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -7390,7 +7390,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7398,7 +7398,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7417,14 +7417,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7432,7 +7432,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7440,7 +7440,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7448,7 +7448,7 @@ parserTest.runTest(
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"width": 0},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                   "properties": {},
@@ -7456,7 +7456,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7464,7 +7464,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7483,14 +7483,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7498,7 +7498,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -7511,7 +7511,7 @@ parserTest.runTest(
          "attributes": {"height": "+2pt",
                         "depth": "-2pt",
                         "voffset": "+2pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7519,7 +7519,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7527,7 +7527,7 @@ parserTest.runTest(
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                   "properties": {},
@@ -7535,7 +7535,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7543,7 +7543,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7556,7 +7556,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -7573,14 +7573,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7588,7 +7588,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -7601,7 +7601,7 @@ parserTest.runTest(
          "attributes": {"height": "-2pt",
                         "depth": "+2pt",
                         "voffset": "-2pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7609,7 +7609,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7617,7 +7617,7 @@ parserTest.runTest(
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                   "properties": {},
@@ -7625,7 +7625,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7633,7 +7633,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7646,7 +7646,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -7663,14 +7663,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7678,7 +7678,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -7691,7 +7691,7 @@ parserTest.runTest(
          "attributes": {"height": "-2pt",
                         "depth": "+2pt",
                         "voffset": "-2pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7699,7 +7699,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7707,7 +7707,7 @@ parserTest.runTest(
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                   "properties": {},
@@ -7715,7 +7715,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7723,7 +7723,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7736,7 +7736,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -7753,14 +7753,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7768,7 +7768,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -7781,7 +7781,7 @@ parserTest.runTest(
          "attributes": {"height": "+2pt",
                         "depth": "-2pt",
                         "voffset": "+2pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7789,7 +7789,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7797,7 +7797,7 @@ parserTest.runTest(
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                   "properties": {},
@@ -7805,7 +7805,7 @@ parserTest.runTest(
                     {"kind": "mrow",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0},
                       "properties": {},
@@ -7813,7 +7813,7 @@ parserTest.runTest(
                         {"kind": "mi",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": true,
                             "scriptlevel": 0,
                             "mathvariant": "italic"},
@@ -7826,7 +7826,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -7843,14 +7843,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7858,7 +7858,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -7869,7 +7869,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"width": "-2pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7878,7 +7878,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7886,7 +7886,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7894,7 +7894,7 @@ parserTest.runTest(
               {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -7906,7 +7906,7 @@ parserTest.runTest(
         {"kind": "mspace",
           "texClass": 0,
           "attributes": {"width": "2pt"},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -7915,7 +7915,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -7932,14 +7932,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -7947,7 +7947,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -7958,7 +7958,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"width": "2pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7967,7 +7967,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -7975,7 +7975,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -7983,7 +7983,7 @@ parserTest.runTest(
               {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -7995,7 +7995,7 @@ parserTest.runTest(
         {"kind": "mspace",
           "texClass": 0,
           "attributes": {"width": "-2pt"},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -8004,7 +8004,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -8021,14 +8021,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8036,7 +8036,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -8047,7 +8047,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"width": "2pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -8056,7 +8056,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -8064,7 +8064,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -8072,7 +8072,7 @@ parserTest.runTest(
               {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -8084,7 +8084,7 @@ parserTest.runTest(
         {"kind": "mspace",
           "texClass": 0,
           "attributes": {"width": "-2pt"},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -8093,7 +8093,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -8110,14 +8110,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8125,7 +8125,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -8136,7 +8136,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"width": "-2pt"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -8145,7 +8145,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -8153,7 +8153,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -8161,7 +8161,7 @@ parserTest.runTest(
               {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0,
                     "mathvariant": "italic"},
@@ -8173,7 +8173,7 @@ parserTest.runTest(
         {"kind": "mspace",
           "texClass": 0,
           "attributes": {"width": "2pt"},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -8182,7 +8182,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -8199,14 +8199,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8216,7 +8216,7 @@ parserTest.runTest(
          "attributes": {"mathbackground": "black",
                         "width": "2cm",
                         "height": "1cm"},
-         "inherited": {"display": "block",
+         "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -8233,14 +8233,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8251,7 +8251,7 @@ parserTest.runTest(
                         "width": "2cm",
                         "height": "2cm",
                         "depth": "1cm"},
-         "inherited": {"display": "block",
+         "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -8268,14 +8268,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8285,7 +8285,7 @@ parserTest.runTest(
          "attributes": {"width": "2cm",
                         "height": "2cm",
                         "depth": "1cm"},
-         "inherited": {"display": "block",
+         "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -8302,14 +8302,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 3,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 3,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8317,7 +8317,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -8325,7 +8325,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -8333,7 +8333,7 @@ parserTest.runTest(
               {"kind": "mover",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -8341,7 +8341,7 @@ parserTest.runTest(
                  {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "mathvariant": "italic"},
@@ -8352,7 +8352,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 1},
                       "properties": {},
@@ -8360,7 +8360,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 1},
                           "properties": {},
@@ -8368,7 +8368,7 @@ parserTest.runTest(
                             {"kind": "mi",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 1,
                                 "mathvariant": "italic"},
@@ -8387,14 +8387,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8402,7 +8402,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -8413,7 +8413,7 @@ parserTest.runTest(
         {"kind": "TeXAtom",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -8421,7 +8421,7 @@ parserTest.runTest(
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -8429,7 +8429,7 @@ parserTest.runTest(
               {"kind": "mover",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                              "displaystyle": true,
                              "scriptlevel": 0},
                "properties": {},
@@ -8437,7 +8437,7 @@ parserTest.runTest(
                  {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
-                  "inherited": {"display": "block",
+                  "inherited": {
                                 "displaystyle": true,
                                 "scriptlevel": 0,
                                 "mathvariant": "italic"},
@@ -8448,7 +8448,7 @@ parserTest.runTest(
                     {"kind": "TeXAtom",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": false,
                         "scriptlevel": 1},
                       "properties": {},
@@ -8456,7 +8456,7 @@ parserTest.runTest(
                         {"kind": "mrow",
                           "texClass": 0,
                           "attributes": {},
-                          "inherited": {"display": "block",
+                          "inherited": {
                             "displaystyle": false,
                             "scriptlevel": 1},
                           "properties": {},
@@ -8464,7 +8464,7 @@ parserTest.runTest(
                             {"kind": "mi",
                               "texClass": 0,
                               "attributes": {},
-                              "inherited": {"display": "block",
+                              "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 1,
                                 "mathvariant": "italic"},
@@ -8477,7 +8477,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -8494,14 +8494,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8509,7 +8509,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -8520,7 +8520,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
@@ -8534,7 +8534,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -8551,14 +8551,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8566,7 +8566,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -8577,7 +8577,7 @@ parserTest.runTest(
         {"kind": "mo",
          "texClass": 3,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
@@ -8591,7 +8591,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -8608,14 +8608,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8623,7 +8623,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -8634,7 +8634,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"linebreak": "newline"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -8643,7 +8643,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -8660,14 +8660,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8675,7 +8675,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -8686,7 +8686,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"depth": "2ex"},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -8695,7 +8695,7 @@ parserTest.runTest(
         {"kind": "mspace",
          "texClass": 0,
           "attributes": {"linebreak": "newline"},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0},
           "properties": {},
@@ -8704,7 +8704,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
@@ -8721,14 +8721,14 @@ parserTest.runTest(
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
-   "inherited": {"displaystyle": false,
+   "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
       "texClass": 0,
       "attributes": {},
-      "inherited": {"display": "block",
+      "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
@@ -8736,7 +8736,7 @@ parserTest.runTest(
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0,
                        "mathvariant": "italic"},
@@ -8747,7 +8747,7 @@ parserTest.runTest(
         {"kind": "mrow",
          "texClass": 0,
          "attributes": {},
-         "inherited": {"display": "block",
+         "inherited": {
                        "displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -8755,7 +8755,7 @@ parserTest.runTest(
            {"kind": "mtext",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -8766,7 +8766,7 @@ parserTest.runTest(
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
-            "inherited": {"display": "block",
+            "inherited": {
                           "displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
@@ -8774,7 +8774,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"display": "block",
+               "inherited": {
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
@@ -8782,7 +8782,7 @@ parserTest.runTest(
                     {"kind": "mi",
                       "texClass": 0,
                       "attributes": {},
-                      "inherited": {"display": "block",
+                      "inherited": {
                         "displaystyle": true,
                         "scriptlevel": 0,
                         "mathvariant": "italic"},
@@ -8794,7 +8794,7 @@ parserTest.runTest(
             {"kind": "mtext",
               "texClass": 0,
               "attributes": {},
-              "inherited": {"display": "block",
+              "inherited": {
                 "displaystyle": true,
                 "scriptlevel": 0},
               "properties": {},
@@ -8805,7 +8805,7 @@ parserTest.runTest(
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
-          "inherited": {"display": "block",
+          "inherited": {
             "displaystyle": true,
             "scriptlevel": 0,
             "mathvariant": "italic"},
