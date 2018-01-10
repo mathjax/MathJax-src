@@ -45,11 +45,12 @@ export namespace NewTex {
     };
     let node = Translate(script, [], {});
     (node as any).setInheritedAttributes();
+    (node as any).setTeXclass();
     return node;
   }
 
   let formatError = function (err: TexError, math: string, display: boolean, script: Script) {
-    let message = err.message.replace(/\n.*/,'');
+    let message = err.message.replace(/\n.*/, '');
     return TreeHelper.createError(message);
   };
 
