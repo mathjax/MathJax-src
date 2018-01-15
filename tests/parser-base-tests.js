@@ -24,17 +24,17 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -57,38 +57,38 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {"mathvariant": "bold"},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}]}],
-              "isInferred": true}]}],
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mi",
+               "texClass": 0,
+               "attributes": {"mathvariant": "bold"},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "x"}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -106,17 +106,17 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -125,9 +125,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -150,16 +150,16 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mn",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -182,20 +182,20 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mn",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "3.14"}]}],
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "3.14"}]}],
       "isInferred": true}]}
 );
 
@@ -212,26 +212,26 @@ parserTest.runTest(
       "texClass": 6,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mo",
          "texClass": 6,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "form": "infix",
-            "separator": true},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "."}],
-          "isEmbellished": true}],
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix",
+           "separator": true},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "."}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -248,37 +248,37 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mn",
-                  "texClass": 0,
-                  "attributes": {"mathvariant": "bold"},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "2"}]}],
-              "isInferred": true}]}],
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mn",
+               "texClass": 0,
+               "attributes": {"mathvariant": "bold"},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "2"}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -296,25 +296,25 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "mathvariant":"italic"},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "mathvariant":"italic"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -323,9 +323,9 @@ parserTest.runTest(
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":1,
-                         "form":"infix"},
+              "displaystyle":false,
+              "scriptlevel":1,
+              "form":"infix"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -348,25 +348,25 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
             "properties": {},
             "childNodes": [
               {"kind": "text",
@@ -375,47 +375,47 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 1},
+              "displaystyle": false,
+              "scriptlevel": 1},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": false,
+                 "displaystyle": false,
+                 "scriptlevel": 1},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "msup",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": false,
                     "scriptlevel": 1},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "msup",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 1},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 1},
-                          "properties": {},
-                          "childNodes": []},
-                        {"kind": "mo",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 2,
-                            "form": "infix"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "′"}],
-                          "isEmbellished": true}]}],
-                  "isInferred": true}]}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 1},
+                     "properties": {},
+                     "childNodes": []},
+                    {"kind": "mo",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 2,
+                       "form": "infix"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "′"}],
+                     "isEmbellished": true}]}],
+               "isInferred": true}]}]}],
       "isInferred": true}]}
 );
 
@@ -432,25 +432,25 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "mathvariant":"italic"},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "mathvariant":"italic"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -459,9 +459,9 @@ parserTest.runTest(
             "texClass":6,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":1,
-                         "form":"infix"},
+              "displaystyle":false,
+              "scriptlevel":1,
+              "form":"infix"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -485,33 +485,33 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0},
+              "displaystyle":true,
+              "scriptlevel":0},
             "properties":{},
             "childNodes":[]},
            {"kind":"mo",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":1,
-                         "form":"infix"},
+              "displaystyle":false,
+              "scriptlevel":1,
+              "form":"infix"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -521,9 +521,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -546,39 +546,39 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": null,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
-              "childNodes": [
-                {"kind": "mtext",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "Missing open brace for superscript"}],
-                  "isSpacelike": true}],
-              "isInferred": true,
-              "isSpacelike": true}]}],
+            "childNodes": [
+              {"kind": "mtext",
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "Missing open brace for superscript"}],
+               "isSpacelike": true}],
+            "isInferred": true,
+            "isSpacelike": true}]}],
       "isInferred": true}]}
 );
 
@@ -595,25 +595,25 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
             "properties": {},
             "childNodes": [
               {"kind": "text",
@@ -622,75 +622,75 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 1},
+              "displaystyle": false,
+              "scriptlevel": 1},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": false,
-                             "scriptlevel": 1},
+                 "displaystyle": false,
+                 "scriptlevel": 1},
                "properties": {},
                "childNodes": [
                  {"kind": "msubsup",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 1},
+                    "displaystyle": false,
+                    "scriptlevel": 1},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mi",
                      "texClass": 0,
                      "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 1},
-                          "properties": {},
-                          "childNodes": []},
-                        {"kind": "TeXAtom",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 2},
-                          "properties": {"texprimestyle": true},
-                          "childNodes": [
-                            {"kind": "mrow",
-                              "texClass": 0,
-                              "attributes": {},
-                              "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 2},
-                              "properties": {"texprimestyle": true},
-                              "childNodes": [
-                                {"kind": "mi",
-                                  "texClass": 0,
-                                  "attributes": {},
-                                  "inherited": {
-                                    "displaystyle": false,
-                                    "scriptlevel": 2,
-                                    "mathvariant": "italic"},
-                                  "properties": {"texprimestyle": true},
-                                  "childNodes": [
-                                    {"kind": "text",
-                                      "text": "a"}]}],
-                              "isInferred": true}]},
-                        {"kind": "mo",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 2,
-                            "form": "infix"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "\u2032"}],
-                          "isEmbellished": true}]}],
-                  "isInferred": true}]}]}],
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 1},
+                     "properties": {},
+                     "childNodes": []},
+                    {"kind": "TeXAtom",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 2},
+                     "properties": {"texprimestyle": true},
+                     "childNodes": [
+                       {"kind": "mrow",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 2},
+                        "properties": {"texprimestyle": true},
+                        "childNodes": [
+                          {"kind": "mi",
+                           "texClass": 0,
+                           "attributes": {},
+                           "inherited": {
+                             "displaystyle": false,
+                             "scriptlevel": 2,
+                             "mathvariant": "italic"},
+                           "properties": {"texprimestyle": true},
+                           "childNodes": [
+                             {"kind": "text",
+                              "text": "a"}]}],
+                        "isInferred": true}]},
+                    {"kind": "mo",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 2,
+                       "form": "infix"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "\u2032"}],
+                     "isEmbellished": true}]}],
+               "isInferred": true}]}]}],
       "isInferred": true}]}
 );
 
@@ -707,25 +707,25 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
             "properties": {},
             "childNodes": [
               {"kind": "text",
@@ -734,83 +734,83 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 1},
+              "displaystyle": false,
+              "scriptlevel": 1},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": false,
-                             "scriptlevel": 1},
+                 "displaystyle": false,
+                 "scriptlevel": 1},
                "properties": {},
                "childNodes": [
                  {"kind": "msup",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 1},
+                    "displaystyle": false,
+                    "scriptlevel": 1},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mi",
                      "texClass": 0,
                      "attributes": {},
                      "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 1,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "a"}]},
-                        {"kind": "TeXAtom",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 2},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mrow",
+                       "displaystyle": false,
+                       "scriptlevel": 1,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "a"}]},
+                    {"kind": "TeXAtom",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 2},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mrow",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 2},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "msup",
+                           "texClass": 0,
+                           "attributes": {},
+                           "inherited": {
+                             "displaystyle": false,
+                             "scriptlevel": 2},
+                           "properties": {},
+                           "childNodes": [
+                             {"kind": "mi",
                               "texClass": 0,
                               "attributes": {},
                               "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 2},
                               "properties": {},
+                              "childNodes": []},
+                             {"kind": "mo",
+                              "texClass": 0,
+                              "attributes": {},
+                              "inherited": {
+                                "displaystyle": false,
+                                "scriptlevel": 3,
+                                "form": "infix"},
+                              "properties": {},
                               "childNodes": [
-                                {"kind": "msup",
-                                  "texClass": 0,
-                                  "attributes": {},
-                                  "inherited": {
-                                    "displaystyle": false,
-                                    "scriptlevel": 2},
-                                  "properties": {},
-                                  "childNodes": [
-                                    {"kind": "mi",
-                                      "texClass": 0,
-                                      "attributes": {},
-                                      "inherited": {
-                                        "displaystyle": false,
-                                        "scriptlevel": 2},
-                                      "properties": {},
-                                      "childNodes": []},
-                                    {"kind": "mo",
-                                      "texClass": 0,
-                                      "attributes": {},
-                                      "inherited": {
-                                        "displaystyle": false,
-                                        "scriptlevel": 3,
-                                        "form": "infix"},
-                                      "properties": {},
-                                      "childNodes": [
-                                        {"kind": "text",
-                                          "text": "\u2032"}],
-                                      "isEmbellished": true}]}],
-                              "isInferred": true}]}]}],
-                  "isInferred": true}]}]}],
+                                {"kind": "text",
+                                 "text": "\u2032"}],
+                              "isEmbellished": true}]}],
+                        "isInferred": true}]}]}],
+               "isInferred": true}]}]}],
       "isInferred": true}]}
 );
 
@@ -828,25 +828,25 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
             "properties": {},
             "childNodes": [
               {"kind": "text",
@@ -855,83 +855,83 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 1},
+              "displaystyle": false,
+              "scriptlevel": 1},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": false,
-                             "scriptlevel": 1},
+                 "displaystyle": false,
+                 "scriptlevel": 1},
                "properties": {},
                "childNodes": [
                  {"kind": "msup",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 1},
+                    "displaystyle": false,
+                    "scriptlevel": 1},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mi",
                      "texClass": 0,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": false,
-                            "scriptlevel": 1},
-                          "properties": {},
-                          "childNodes": []},
-                        {"kind": "mrow",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 2},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mo",
+                       "displaystyle": false,
+                       "scriptlevel": 1},
+                     "properties": {},
+                     "childNodes": []},
+                    {"kind": "mrow",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 2},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mo",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 2,
+                          "form": "prefix"},
+                        "properties": {"variantForm": true},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "\u2032"}],
+                        "isEmbellished": true},
+                       {"kind": "TeXAtom",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 2},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "mrow",
+                           "texClass": 0,
+                           "attributes": {},
+                           "inherited": {
+                             "displaystyle": false,
+                             "scriptlevel": 2},
+                           "properties": {},
+                           "childNodes": [
+                             {"kind": "mi",
                               "texClass": 0,
                               "attributes": {},
                               "inherited": {
                                 "displaystyle": false,
                                 "scriptlevel": 2,
-                                "form": "prefix"},
-                              "properties": {"variantForm": true},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "\u2032"}],
-                              "isEmbellished": true},
-                            {"kind": "TeXAtom",
-                              "texClass": 0,
-                              "attributes": {},
-                              "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 2},
+                                "mathvariant": "italic"},
                               "properties": {},
                               "childNodes": [
-                                {"kind": "mrow",
-                                  "texClass": 0,
-                                  "attributes": {},
-                                  "inherited": {
-                                    "displaystyle": false,
-                                    "scriptlevel": 2},
-                                  "properties": {},
-                                  "childNodes": [
-                                    {"kind": "mi",
-                                      "texClass": 0,
-                                      "attributes": {},
-                                      "inherited": {
-                                        "displaystyle": false,
-                                        "scriptlevel": 2,
-                                        "mathvariant": "italic"},
-                                      "properties": {},
-                                      "childNodes": [
-                                        {"kind": "text",
-                                          "text": "a"}]}],
-                                  "isInferred": true}]}]}]}],
-                  "isInferred": true}]}]}],
+                                {"kind": "text",
+                                 "text": "a"}]}],
+                           "isInferred": true}]}]}]}],
+               "isInferred": true}]}]}],
       "isInferred": true}]}
 );
 
@@ -949,25 +949,25 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
             "properties": {},
             "childNodes": [
               {"kind": "text",
@@ -976,55 +976,71 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 1},
+              "displaystyle": false,
+              "scriptlevel": 1},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": false,
-                             "scriptlevel": 1},
+                 "displaystyle": false,
+                 "scriptlevel": 1},
                "properties": {},
                "childNodes": [
                  {"kind": "msup",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 1},
+                    "displaystyle": false,
+                    "scriptlevel": 1},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mi",
                      "texClass": 0,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": false,
-                                   "scriptlevel": 1},
+                       "displaystyle": false,
+                       "scriptlevel": 1},
                      "properties": {},
                      "childNodes": []},
                     {"kind": "mrow",
                      "texClass": 0,
                      "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 2},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mo",
-                              "texClass": 0,
-                              "attributes": {},
-                              "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 2,
-                                "form": "prefix"},
-                              "properties": {"variantForm": true},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "\u2032"}],
-                              "isEmbellished": true},
-                            {"kind": "TeXAtom",
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 2},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mo",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 2,
+                          "form": "prefix"},
+                        "properties": {"variantForm": true},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "\u2032"}],
+                        "isEmbellished": true},
+                       {"kind": "TeXAtom",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 2},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "mrow",
+                           "texClass": 0,
+                           "attributes": {},
+                           "inherited": {
+                             "displaystyle": false,
+                             "scriptlevel": 2},
+                           "properties": {},
+                           "childNodes": [
+                             {"kind": "msup",
                               "texClass": 0,
                               "attributes": {},
                               "inherited": {
@@ -1032,44 +1048,28 @@ parserTest.runTest(
                                 "scriptlevel": 2},
                               "properties": {},
                               "childNodes": [
-                                {"kind": "mrow",
-                                  "texClass": 0,
-                                  "attributes": {},
-                                  "inherited": {
-                                    "displaystyle": false,
-                                    "scriptlevel": 2},
-                                  "properties": {},
-                                  "childNodes": [
-                                    {"kind": "msup",
-                                      "texClass": 0,
-                                      "attributes": {},
-                                      "inherited": {
-                                        "displaystyle": false,
-                                        "scriptlevel": 2},
-                                      "properties": {},
-                                      "childNodes": [
-                                        {"kind": "mi",
-                                          "texClass": 0,
-                                          "attributes": {},
-                                          "inherited": {
-                                            "displaystyle": false,
-                                            "scriptlevel": 2},
-                                          "properties": {},
-                                          "childNodes": []},
-                                        {"kind": "mo",
-                                          "texClass": 0,
-                                          "attributes": {},
-                                          "inherited": {
-                                            "displaystyle": false,
-                                            "scriptlevel": 3,
-                                            "form": "infix"},
-                                          "properties": {},
-                                          "childNodes": [
-                                            {"kind": "text",
-                                              "text": "\u2032"}],
-                                          "isEmbellished": true}]}],
-                                  "isInferred": true}]}]}]}],
-                  "isInferred": true}]}]}],
+                                {"kind": "mi",
+                                 "texClass": 0,
+                                 "attributes": {},
+                                 "inherited": {
+                                   "displaystyle": false,
+                                   "scriptlevel": 2},
+                                 "properties": {},
+                                 "childNodes": []},
+                                {"kind": "mo",
+                                 "texClass": 0,
+                                 "attributes": {},
+                                 "inherited": {
+                                   "displaystyle": false,
+                                   "scriptlevel": 3,
+                                   "form": "infix"},
+                                 "properties": {},
+                                 "childNodes": [
+                                   {"kind": "text",
+                                    "text": "\u2032"}],
+                                 "isEmbellished": true}]}],
+                           "isInferred": true}]}]}]}],
+               "isInferred": true}]}]}],
       "isInferred": true}]}
 );
 
@@ -1087,38 +1087,38 @@ parserTest.runTest(
       "texClass": null,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mfrac",
          "texClass": null,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mn",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "1"}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 0},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "2"}]}]}],
+              "displaystyle": false,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "1"}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 0},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "2"}]}]}],
       "isInferred": true}]}
 );
 
@@ -1135,16 +1135,16 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mrow",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"open": "(",
                         "close": ")"},
          "childNodes": [
@@ -1152,32 +1152,32 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": true,
-                                   "scriptlevel": 0},
+                       "displaystyle": true,
+                       "scriptlevel": 0},
                      "properties": {},
                      "childNodes": [
                        {"kind": "mo",
@@ -1185,12 +1185,12 @@ parserTest.runTest(
                         "attributes": {"maxsize": "2.047em",
                                        "minsize": "2.047em"},
                         "inherited": {
-                                      "displaystyle": true,
-                                      "scriptlevel": 0,
-                                      "form": "infix",
-                                      "fence": true,
-                                      "stretchy": true,
-                                      "symmetric": true},
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
                         "properties": {},
                         "childNodes": [
                           {"kind": "text",
@@ -1206,65 +1206,73 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": true,
-                                   "scriptlevel": 0},
+                       "displaystyle": true,
+                       "scriptlevel": 0},
                      "properties": {},
                      "childNodes": [
                        {"kind": "mo",
                         "texClass": 4,
                         "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "("}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "("}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true},
-            {"kind": "TeXAtom",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true},
+           {"kind": "TeXAtom",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": 4,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
@@ -1272,53 +1280,53 @@ parserTest.runTest(
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "TeXAtom",
-                      "texClass": 4,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mrow",
-                          "texClass": 4,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mo",
-                              "texClass": 4,
-                              "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "("}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                    {"kind": "mrow",
+                     "texClass": 4,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mo",
+                        "texClass": 4,
+                        "attributes": {"maxsize": "1.2em",
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "("}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true},
-            {"kind": "TeXAtom",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true},
+           {"kind": "TeXAtom",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": 4,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
@@ -1326,47 +1334,39 @@ parserTest.runTest(
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "TeXAtom",
-                      "texClass": 4,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mrow",
-                          "texClass": 4,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mo",
-                              "texClass": 4,
-                              "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "("}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                    {"kind": "mrow",
+                     "texClass": 4,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mo",
+                        "texClass": 4,
+                        "attributes": {"maxsize": "1.2em",
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "("}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true}]}],
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true}]}],
       "isInferred": true}]}
 );
-  
+
 parserTest.runTest(
   'Over With Delims', '1 \\overwithdelims [ ] 2',
   {"kind": "math",
@@ -1380,16 +1380,16 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mrow",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"open": "[",
                         "close": "]"},
          "childNodes": [
@@ -1397,32 +1397,32 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": true,
-                                   "scriptlevel": 0},
+                       "displaystyle": true,
+                       "scriptlevel": 0},
                      "properties": {},
                      "childNodes": [
                        {"kind": "mo",
@@ -1430,12 +1430,12 @@ parserTest.runTest(
                         "attributes": {"maxsize": "2.047em",
                                        "minsize": "2.047em"},
                         "inherited": {
-                                      "displaystyle": true,
-                                      "scriptlevel": 0,
-                                      "form": "infix",
-                                      "fence": true,
-                                      "stretchy": true,
-                                      "symmetric": true},
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
                         "properties": {},
                         "childNodes": [
                           {"kind": "text",
@@ -1451,65 +1451,73 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": true,
-                                   "scriptlevel": 0},
+                       "displaystyle": true,
+                       "scriptlevel": 0},
                      "properties": {},
                      "childNodes": [
                        {"kind": "mo",
                         "texClass": 4,
                         "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "["}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "["}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true},
-            {"kind": "TeXAtom",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true},
+           {"kind": "TeXAtom",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": 4,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
@@ -1517,53 +1525,53 @@ parserTest.runTest(
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "TeXAtom",
-                      "texClass": 4,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mrow",
-                          "texClass": 4,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mo",
-                              "texClass": 4,
-                              "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "["}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                    {"kind": "mrow",
+                     "texClass": 4,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mo",
+                        "texClass": 4,
+                        "attributes": {"maxsize": "1.2em",
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "["}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true},
-            {"kind": "TeXAtom",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true},
+           {"kind": "TeXAtom",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": 4,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
@@ -1571,44 +1579,36 @@ parserTest.runTest(
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "TeXAtom",
-                      "texClass": 4,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mrow",
-                          "texClass": 4,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mo",
-                              "texClass": 4,
-                              "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "["}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                    {"kind": "mrow",
+                     "texClass": 4,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mo",
+                        "texClass": 4,
+                        "attributes": {"maxsize": "1.2em",
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "["}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true}]}],
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true}]}],
       "isInferred": true}]}
 );
 
@@ -1625,40 +1625,40 @@ parserTest.runTest(
       "texClass": null,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mfrac",
          "texClass": null,
          "attributes": {"linethickness": "1pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "a"}]},
-            {"kind": "mi",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 0,
-                "mathvariant": "italic"},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "b"}]}]}],
+              "displaystyle": false,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}]},
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "b"}]}]}],
       "isInferred": true}]}
 );
 
@@ -1676,16 +1676,16 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mrow",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"open": "[",
                         "close": "]"},
          "childNodes": [
@@ -1693,32 +1693,32 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": true,
-                                   "scriptlevel": 0},
+                       "displaystyle": true,
+                       "scriptlevel": 0},
                      "properties": {},
                      "childNodes": [
                        {"kind": "mo",
@@ -1726,12 +1726,12 @@ parserTest.runTest(
                         "attributes": {"maxsize": "2.047em",
                                        "minsize": "2.047em"},
                         "inherited": {
-                                      "displaystyle": true,
-                                      "scriptlevel": 0,
-                                      "form": "infix",
-                                      "fence": true,
-                                      "stretchy": true,
-                                      "symmetric": true},
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
                         "properties": {},
                         "childNodes": [
                           {"kind": "text",
@@ -1747,65 +1747,73 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 4,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mrow",
                      "texClass": 4,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": true,
-                                   "scriptlevel": 0},
+                       "displaystyle": true,
+                       "scriptlevel": 0},
                      "properties": {},
                      "childNodes": [
                        {"kind": "mo",
                         "texClass": 4,
                         "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "["}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "["}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true},
-            {"kind": "TeXAtom",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true},
+           {"kind": "TeXAtom",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": 4,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
@@ -1813,53 +1821,53 @@ parserTest.runTest(
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "TeXAtom",
-                      "texClass": 4,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mrow",
-                          "texClass": 4,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mo",
-                              "texClass": 4,
-                              "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "["}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                    {"kind": "mrow",
+                     "texClass": 4,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mo",
+                        "texClass": 4,
+                        "attributes": {"maxsize": "1.2em",
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "["}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true},
-            {"kind": "TeXAtom",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true},
+           {"kind": "TeXAtom",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": 4,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "TeXAtom",
                   "texClass": 4,
                   "attributes": {},
                   "inherited": {
@@ -1867,44 +1875,36 @@ parserTest.runTest(
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "TeXAtom",
-                      "texClass": 4,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mrow",
-                          "texClass": 4,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mo",
-                              "texClass": 4,
-                              "attributes": {"maxsize": "1.2em",
-                                "minsize": "1.2em"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "fence": true,
-                                "stretchy": true,
-                                "symmetric": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "["}],
-                              "isEmbellished": true}],
-                          "isInferred": true,
-                          "isEmbellished": true}],
-                      "isEmbellished": true}],
-                  "isInferred": true,
+                    {"kind": "mrow",
+                     "texClass": 4,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mo",
+                        "texClass": 4,
+                        "attributes": {"maxsize": "1.2em",
+                                       "minsize": "1.2em"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "["}],
+                        "isEmbellished": true}],
+                     "isInferred": true,
+                     "isEmbellished": true}],
                   "isEmbellished": true}],
-              "isEmbellished": true}]}],
+               "isInferred": true,
+               "isEmbellished": true}],
+            "isEmbellished": true}]}],
       "isInferred": true}]}
 );
 
@@ -1922,8 +1922,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mstyle",
@@ -1937,22 +1937,22 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 2},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": false,
-                    "scriptlevel": 2,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "a"}]}],
-              "isInferred": true}]}],
+              "displaystyle": false,
+              "scriptlevel": 2},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mi",
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": false,
+                 "scriptlevel": 2,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "a"}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -1970,8 +1970,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mtable",
@@ -1979,46 +1979,46 @@ parserTest.runTest(
          "attributes": {"rowspacing": "4pt",
                         "columnspacing": "1em"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"useHeight": 1},
          "childNodes": [
            {"kind": "mtr",
             "texClass": null,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 0},
+              "displaystyle": false,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mtd",
                "texClass": null,
                "attributes": {},
                "inherited": {
-                             "displaystyle": false,
+                 "displaystyle": false,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": false,
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "a"}]}],
-                      "isInferred": true}]}]}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "a"}]}],
+                  "isInferred": true}]}]}]}],
       "isInferred": true}]}
 );
 
@@ -2036,24 +2036,24 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "menclose",
          "texClass": 0,
          "attributes": {"notation": "left right"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mtable",
@@ -2062,47 +2062,47 @@ parserTest.runTest(
                               "columnspacing": "1em",
                               "columnlines": ""},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {"useHeight": 1},
                "childNodes": [
                  {"kind": "mtr",
                   "texClass": null,
                   "attributes": {},
                   "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mtd",
-                          "texClass": null,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mrow",
-                              "texClass": 0,
-                              "attributes": {},
-                              "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 0},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "mi",
-                                  "texClass": 0,
-                                  "attributes": {},
-                                  "inherited": {
-                                    "displaystyle": false,
-                                    "scriptlevel": 0,
-                                    "mathvariant": "italic"},
-                                  "properties": {},
-                                  "childNodes": [
-                                    {"kind": "text",
-                                      "text": "a"}]}],
-                              "isInferred": true}]}]}]}],
-              "isInferred": true}]}],
+                    "displaystyle": false,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "mtd",
+                     "texClass": null,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mrow",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 0},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "mi",
+                           "texClass": 0,
+                           "attributes": {},
+                           "inherited": {
+                             "displaystyle": false,
+                             "scriptlevel": 0,
+                             "mathvariant": "italic"},
+                           "properties": {},
+                           "childNodes": [
+                             {"kind": "text",
+                              "text": "a"}]}],
+                        "isInferred": true}]}]}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -2126,8 +2126,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mtable",
@@ -2137,49 +2137,49 @@ parserTest.runTest(
                         "columnspacing": "thickmathspace",
                         "displaystyle": true},
          "inherited": {
-                       "scriptlevel": 0},
+           "scriptlevel": 0},
          "properties": {"useHeight": 1},
          "childNodes": [
            {"kind": "mlabeledtr",
             "texClass": null,
             "attributes": {},
             "inherited": {
-                          "columnalign": "right left",
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "columnalign": "right left",
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mtd",
                "texClass": null,
                "attributes": {},
                "inherited": {
-                             "columnalign": "right left",
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "columnalign": "right left",
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
                     {"kind": "TeXAtom",
                      "texClass": 0,
                      "attributes": {},
                      "inherited": {
-                                   "displaystyle": true,
-                                   "scriptlevel": 0},
+                       "displaystyle": true,
+                       "scriptlevel": 0},
                      "properties": {},
                      "childNodes": [
                        {"kind": "mrow",
                         "texClass": 0,
                         "attributes": {},
                         "inherited": {
-                                      "displaystyle": true,
-                                      "scriptlevel": 0},
+                          "displaystyle": true,
+                          "scriptlevel": 0},
                         "properties": {},
                         "childNodes": [
                           {"kind": "mstyle",
@@ -2187,81 +2187,81 @@ parserTest.runTest(
                            "attributes": {"displaystyle": false,
                                           "scriptlevel": 0},
                            "inherited": {},
-                                  "properties": {},
-                                  "childNodes": [
-                                    {"kind": "mrow",
-                                      "texClass": 0,
-                                      "attributes": {},
-                                      "inherited": {
-                                        "displaystyle": false,
-                                        "scriptlevel": 0},
-                                      "properties": {},
-                                      "childNodes": [
-                                        {"kind": "mtext",
-                                          "texClass": 0,
-                                          "attributes": {},
-                                          "inherited": {
-                                            "displaystyle": false,
-                                            "scriptlevel": 0},
-                                          "properties": {},
-                                          "childNodes": [
-                                            {"kind": "text",
-                                              "text": "(3)"}],
-                                          "isSpacelike": true}],
-                                      "isInferred": true,
-                                      "isSpacelike": true}],
-                                  "isSpacelike": true}],
+                           "properties": {},
+                           "childNodes": [
+                             {"kind": "mrow",
+                              "texClass": 0,
+                              "attributes": {},
+                              "inherited": {
+                                "displaystyle": false,
+                                "scriptlevel": 0},
+                              "properties": {},
+                              "childNodes": [
+                                {"kind": "mtext",
+                                 "texClass": 0,
+                                 "attributes": {},
+                                 "inherited": {
+                                   "displaystyle": false,
+                                   "scriptlevel": 0},
+                                 "properties": {},
+                                 "childNodes": [
+                                   {"kind": "text",
+                                    "text": "(3)"}],
+                                 "isSpacelike": true}],
                               "isInferred": true,
-                              "isSpacelike": true}]}],
-                      "isInferred": true}]},
-                {"kind": "mtd",
-                  "texClass": null,
+                              "isSpacelike": true}],
+                           "isSpacelike": true}],
+                        "isInferred": true,
+                        "isSpacelike": true}]}],
+                  "isInferred": true}]},
+              {"kind": "mtd",
+               "texClass": null,
+               "attributes": {},
+               "inherited": {
+                 "columnalign": "right left",
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                    "columnalign": "right left",
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "a"}]}],
-                      "isInferred": true}]},
-                {"kind": "mtd",
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "a"}]}],
+                  "isInferred": true}]},
+              {"kind": "mtd",
+               "texClass": null,
+               "attributes": {},
+               "inherited": {
+                 "columnalign": "right left",
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
                   "texClass": null,
                   "attributes": {},
                   "inherited": {
-                    "columnalign": "right left",
                     "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
-                  "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": null,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [],
-                      "isInferred": true,
-                      "isSpacelike": true}]}]}]}],
+                  "childNodes": [],
+                  "isInferred": true,
+                  "isSpacelike": true}]}]}]}],
       "isInferred": true}]}
 );
 
@@ -2284,16 +2284,16 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"fnOP": true},
          "childNodes": [
            {"kind": "text",
@@ -2302,25 +2302,25 @@ parserTest.runTest(
          "texClass": -1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "⁡"}],
-          "isEmbellished": true},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "⁡"}],
+         "isEmbellished": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "x"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "x"}]}],
       "isInferred": true}]}
 );
 
@@ -2338,25 +2338,25 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mo",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-            "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "+"}],
-          "isEmbellished": true}],
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "+"}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -2373,25 +2373,25 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mo",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-            "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "\u2212"}],
-          "isEmbellished": true}],
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "\u2212"}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -2408,44 +2408,44 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mo",
-                  "texClass": 0,
-                  "attributes": {"mathvariant": "bold"},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "form": "infix"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "+"}],
-                  "isEmbellished": true}],
-              "isInferred": true,
-              "isEmbellished": true}],
-          "isEmbellished": true}],
+               "texClass": 0,
+               "attributes": {"mathvariant": "bold"},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "form": "infix"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "+"}],
+               "isEmbellished": true}],
+            "isInferred": true,
+            "isEmbellished": true}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -2462,38 +2462,38 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msqrt",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {"texprimestyle": true},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}]}],
-              "isInferred": true}]}],
+            "childNodes": [
+              {"kind": "mi",
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {"texprimestyle": true},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "x"}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -2511,40 +2511,40 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mroot",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "x"}]},
-            {"kind": "mi",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 2,
-                "mathvariant": "italic"},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "n"}]}]}],
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "x"}]},
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 2,
+              "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "n"}]}]}],
       "isInferred": true}]}
 );
 
@@ -2562,39 +2562,39 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mroot",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "x"}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 2},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "4"}]}]}],
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "x"}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 2},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "4"}]}]}],
       "isInferred": true}]}
 );
 
@@ -2612,25 +2612,25 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mroot",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
             "properties": {"texprimestyle": true},
             "childNodes": [
               {"kind": "text",
@@ -2641,30 +2641,30 @@ parserTest.runTest(
                            "height": "+0.13333333333333333em",
                            "voffset": "+0.13333333333333333em"},
             "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 2},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
-                  "texClass": null,
+              "displaystyle": false,
+              "scriptlevel": 2},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": null,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": false,
+                 "scriptlevel": 2},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mi",
+                  "texClass": 0,
                   "attributes": {},
                   "inherited": {
                     "displaystyle": false,
-                    "scriptlevel": 2},
+                    "scriptlevel": 2,
+                    "mathvariant": "italic"},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mi",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 2,
-                        "mathvariant": "italic"},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "\u03b2"}]}],
-                  "isInferred": true}]}]}],
+                    {"kind": "text",
+                     "text": "\u03b2"}]}],
+               "isInferred": true}]}]}],
       "isInferred": true}]}
 );
 
@@ -2681,59 +2681,59 @@ parserTest.runTest(
       "texClass":null,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mfrac",
          "texClass":null,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"TeXAtom",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":0},
+              "displaystyle":false,
+              "scriptlevel":0},
             "properties":{},
             "childNodes":[
               {"kind":"mrow",
                "texClass":0,
                "attributes":{},
                "inherited":{
-                            "displaystyle":false,
-                            "scriptlevel":0},
+                 "displaystyle":false,
+                 "scriptlevel":0},
                "properties":{},
                "childNodes":[
                  {"kind":"mstyle",
                   "texClass":0,
                   "attributes":{"mathcolor":"red"},
                   "inherited":{
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "mathcolor":"red",
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "mathcolor":"red",
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{"mathvariant":"-tex-caligraphic"},
                         "inherited":{
-                                     "mathcolor":"red",
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "mathcolor":"red",
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -2744,27 +2744,27 @@ parserTest.runTest(
             "texClass":0,
             "attributes":{"mathcolor":"blue"},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":0},
+              "displaystyle":false,
+              "scriptlevel":0},
             "properties":{"texprimestyle":true},
             "childNodes":[
               {"kind":"mrow",
                "texClass":0,
                "attributes":{},
                "inherited":{
-                            "mathcolor":"blue",
-                            "displaystyle":false,
-                            "scriptlevel":0},
+                 "mathcolor":"blue",
+                 "displaystyle":false,
+                 "scriptlevel":0},
                "properties":{"texprimestyle":true},
                "childNodes":[
                  {"kind":"mi",
                   "texClass":0,
                   "attributes":{"mathvariant":"sans-serif"},
                   "inherited":{
-                               "mathcolor":"blue",
-                               "displaystyle":false,
-                               "scriptlevel":0,
-                               "mathvariant":"italic"},
+                    "mathcolor":"blue",
+                    "displaystyle":false,
+                    "scriptlevel":0,
+                    "mathvariant":"italic"},
                   "properties":{"texprimestyle":true},
                   "childNodes":[
                     {"kind":"text",
@@ -2788,17 +2788,17 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2807,9 +2807,9 @@ parserTest.runTest(
          "texClass":3,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "form":"infix"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"infix"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2819,9 +2819,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2843,17 +2843,17 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mi",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2862,9 +2862,9 @@ parserTest.runTest(
          "texClass":3,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "form":"infix"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"infix"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2874,9 +2874,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2885,9 +2885,9 @@ parserTest.runTest(
          "texClass":3,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "form":"infix"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"infix"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2897,9 +2897,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2908,9 +2908,9 @@ parserTest.runTest(
          "texClass":2,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "form":"infix"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"infix"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2920,9 +2920,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2945,27 +2945,27 @@ parserTest.runTest(
       "texClass": 3,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mo",
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "⟶"},
-            {"kind": "text",
-              "text": "̸"}],
-          "isEmbellished": true}],
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "⟶"},
+           {"kind": "text",
+            "text": "̸"}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -2982,68 +2982,68 @@ parserTest.runTest(
       "texClass": 3,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"width": 0},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mtext",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "⧸"}],
-                          "isSpacelike": true}],
-                      "isInferred": true,
-                      "isSpacelike": true}],
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "mtext",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "⧸"}],
+                     "isSpacelike": true}],
+                  "isInferred": true,
                   "isSpacelike": true}],
-              "isInferred": true,
-              "isSpacelike": true}]},
+               "isSpacelike": true}],
+            "isInferred": true,
+            "isSpacelike": true}]},
         {"kind": "mn",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "3"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "3"}]}],
       "isInferred": true}]}
 );
 
@@ -3064,21 +3064,21 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "α"}]}],
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "α"}]}],
       "isInferred": true}]}
 );
 
@@ -3095,28 +3095,28 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mo",
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "form": "infix",
-                       "largeop": true,
-            "movablelimits": true,
-            "symmetric": true},
-          "properties": {"movesupsub": true},
-          "childNodes": [
-            {"kind": "text",
-              "text": "⋃"}],
-          "isEmbellished": true}],
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix",
+           "largeop": true,
+           "movablelimits": true,
+           "symmetric": true},
+         "properties": {"movesupsub": true},
+         "childNodes": [
+           {"kind": "text",
+            "text": "⋃"}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 parserTest.runTest(
@@ -3132,16 +3132,16 @@ parserTest.runTest(
       "texClass":7,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mrow",
          "texClass":7,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{"open":"(",
                        "close":")"},
          "childNodes":[
@@ -3149,12 +3149,12 @@ parserTest.runTest(
             "texClass":4,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "form":"prefix",
-                         "fence":true,
-                         "stretchy":true,
-                         "symmetric":true},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "form":"prefix",
+              "fence":true,
+              "stretchy":true,
+              "symmetric":true},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -3164,17 +3164,17 @@ parserTest.runTest(
             "texClass":null,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0},
+              "displaystyle":true,
+              "scriptlevel":0},
             "properties":{},
             "childNodes":[
               {"kind":"mi",
                "texClass":0,
                "attributes":{},
                "inherited":{
-                            "displaystyle":false,
-                            "scriptlevel":0,
-                            "mathvariant":"italic"},
+                 "displaystyle":false,
+                 "scriptlevel":0,
+                 "mathvariant":"italic"},
                "properties":{},
                "childNodes":[
                  {"kind":"text",
@@ -3183,8 +3183,8 @@ parserTest.runTest(
                "texClass":7,
                "attributes":{},
                "inherited":{
-                            "displaystyle":false,
-                            "scriptlevel":0},
+                 "displaystyle":false,
+                 "scriptlevel":0},
                "properties":{"open":"[",
                              "close":"]",
                              "texprimestyle":true},
@@ -3193,12 +3193,12 @@ parserTest.runTest(
                   "texClass":4,
                   "attributes":{},
                   "inherited":{
-                               "displaystyle":false,
-                               "scriptlevel":0,
-                               "form":"prefix",
-                               "fence":true,
-                               "stretchy":true,
-                               "symmetric":true},
+                    "displaystyle":false,
+                    "scriptlevel":0,
+                    "form":"prefix",
+                    "fence":true,
+                    "stretchy":true,
+                    "symmetric":true},
                   "properties":{"texprimestyle":true},
                   "childNodes":[
                     {"kind":"text",
@@ -3208,9 +3208,9 @@ parserTest.runTest(
                   "texClass":0,
                   "attributes":{},
                   "inherited":{
-                               "displaystyle":false,
-                               "scriptlevel":0,
-                               "mathvariant":"italic"},
+                    "displaystyle":false,
+                    "scriptlevel":0,
+                    "mathvariant":"italic"},
                   "properties":{"texprimestyle":true},
                   "childNodes":[
                     {"kind":"text",
@@ -3219,9 +3219,9 @@ parserTest.runTest(
                   "texClass":0,
                   "attributes":{},
                   "inherited":{
-                               "displaystyle":false,
-                               "scriptlevel":0,
-                               "mathvariant":"italic"},
+                    "displaystyle":false,
+                    "scriptlevel":0,
+                    "mathvariant":"italic"},
                   "properties":{"texprimestyle":true},
                   "childNodes":[
                     {"kind":"text",
@@ -3230,12 +3230,12 @@ parserTest.runTest(
                   "texClass":5,
                   "attributes":{},
                   "inherited":{
-                               "displaystyle":false,
-                               "scriptlevel":0,
-                               "form":"postfix",
-                               "fence":true,
-                               "stretchy":true,
-                               "symmetric":true},
+                    "displaystyle":false,
+                    "scriptlevel":0,
+                    "form":"postfix",
+                    "fence":true,
+                    "stretchy":true,
+                    "symmetric":true},
                   "properties":{"texprimestyle":true},
                   "childNodes":[
                     {"kind":"text",
@@ -3245,12 +3245,12 @@ parserTest.runTest(
             "texClass":5,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "form":"postfix",
-                         "fence":true,
-                         "stretchy":true,
-                         "symmetric":true},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "form":"postfix",
+              "fence":true,
+              "stretchy":true,
+              "symmetric":true},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -3275,8 +3275,8 @@ parserTest.runTest(
       "texClass":4,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mo",
@@ -3284,12 +3284,12 @@ parserTest.runTest(
          "attributes":{"fence":false,
                        "stretchy":false},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "form":"prefix",
-                      "fence":true,
-                      "stretchy":true,
-                      "symmetric":true},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"prefix",
+           "fence":true,
+           "stretchy":true,
+           "symmetric":true},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3299,17 +3299,17 @@ parserTest.runTest(
          "texClass":null,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":0,
-                         "mathvariant":"italic"},
+              "displaystyle":false,
+              "scriptlevel":0,
+              "mathvariant":"italic"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -3318,18 +3318,18 @@ parserTest.runTest(
             "texClass":3,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":0},
+              "displaystyle":false,
+              "scriptlevel":0},
             "properties":{"texprimestyle":true},
             "childNodes":[
               {"kind":"mo",
                "texClass":3,
                "attributes":{"stretchy":false},
                "inherited":{
-                            "displaystyle":false,
-                            "scriptlevel":0,
-                            "form":"prefix",
-                            "stretchy":true},
+                 "displaystyle":false,
+                 "scriptlevel":0,
+                 "form":"prefix",
+                 "stretchy":true},
                "properties":{"texprimestyle":true},
                "childNodes":[
                  {"kind":"text",
@@ -3339,9 +3339,9 @@ parserTest.runTest(
                "texClass":0,
                "attributes":{},
                "inherited":{
-                            "displaystyle":false,
-                            "scriptlevel":0,
-                            "mathvariant":"italic"},
+                 "displaystyle":false,
+                 "scriptlevel":0,
+                 "mathvariant":"italic"},
                "properties":{"texprimestyle":true},
                "childNodes":[
                  {"kind":"text",
@@ -3350,9 +3350,9 @@ parserTest.runTest(
                "texClass":0,
                "attributes":{},
                "inherited":{
-                            "displaystyle":false,
-                            "scriptlevel":0,
-                            "mathvariant":"italic"},
+                 "displaystyle":false,
+                 "scriptlevel":0,
+                 "mathvariant":"italic"},
                "properties":{"texprimestyle":true},
                "childNodes":[
                  {"kind":"text",
@@ -3361,10 +3361,10 @@ parserTest.runTest(
                "texClass":3,
                "attributes":{"stretchy":false},
                "inherited":{
-                            "displaystyle":false,
-                            "scriptlevel":0,
-                            "form":"postfix",
-                            "stretchy":true},
+                 "displaystyle":false,
+                 "scriptlevel":0,
+                 "form":"postfix",
+                 "stretchy":true},
                "properties":{"texprimestyle":true},
                "childNodes":[
                  {"kind":"text",
@@ -3376,12 +3376,12 @@ parserTest.runTest(
          "attributes":{"fence":false,
                        "stretchy":false},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "form":"postfix",
-                      "fence":true,
-                      "stretchy":true,
-                      "symmetric":true},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"postfix",
+           "fence":true,
+           "stretchy":true,
+           "symmetric":true},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3403,16 +3403,16 @@ parserTest.runTest(
       "texClass":7,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mrow",
          "texClass":7,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{"open":"{",
                        "close":"}"},
          "childNodes":[
@@ -3420,12 +3420,12 @@ parserTest.runTest(
             "texClass":4,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "form":"prefix",
-                         "fence":true,
-                         "stretchy":true,
-                         "symmetric":true},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "form":"prefix",
+              "fence":true,
+              "stretchy":true,
+              "symmetric":true},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -3435,8 +3435,8 @@ parserTest.runTest(
             "texClass":4,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0},
+              "displaystyle":true,
+              "scriptlevel":0},
             "properties":{"open":"|",
                           "close":"]"},
             "childNodes":[
@@ -3444,12 +3444,12 @@ parserTest.runTest(
                "texClass":4,
                "attributes":{},
                "inherited":{
-                            "displaystyle":true,
-                            "scriptlevel":0,
-                            "form":"prefix",
-                            "fence":true,
-                            "stretchy":true,
-                            "symmetric":true},
+                 "displaystyle":true,
+                 "scriptlevel":0,
+                 "form":"prefix",
+                 "fence":true,
+                 "stretchy":true,
+                 "symmetric":true},
                "properties":{},
                "childNodes":[
                  {"kind":"text",
@@ -3459,8 +3459,8 @@ parserTest.runTest(
                "texClass":4,
                "attributes":{},
                "inherited":{
-                            "displaystyle":true,
-                            "scriptlevel":0},
+                 "displaystyle":true,
+                 "scriptlevel":0},
                "properties":{"open":"[",
                              "close":"|"},
                "childNodes":[
@@ -3468,12 +3468,12 @@ parserTest.runTest(
                   "texClass":4,
                   "attributes":{},
                   "inherited":{
-                               "displaystyle":true,
-                               "scriptlevel":0,
-                               "form":"prefix",
-                               "fence":true,
-                               "stretchy":true,
-                               "symmetric":true},
+                    "displaystyle":true,
+                    "scriptlevel":0,
+                    "form":"prefix",
+                    "fence":true,
+                    "stretchy":true,
+                    "symmetric":true},
                   "properties":{},
                   "childNodes":[
                     {"kind":"text",
@@ -3483,20 +3483,20 @@ parserTest.runTest(
                   "texClass":4,
                   "attributes":{},
                   "inherited":{
-                               "displaystyle":true,
-                               "scriptlevel":0},
+                    "displaystyle":true,
+                    "scriptlevel":0},
                   "properties":{"open":"∥"},
                   "childNodes":[
                     {"kind":"mo",
                      "texClass":4,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":true,
-                                  "scriptlevel":0,
-                                  "form":"prefix",
-                                  "fence":true,
-                                  "stretchy":true,
-                                  "symmetric":true},
+                       "displaystyle":true,
+                       "scriptlevel":0,
+                       "form":"prefix",
+                       "fence":true,
+                       "stretchy":true,
+                       "symmetric":true},
                      "properties":{},
                      "childNodes":[
                        {"kind":"text",
@@ -3506,9 +3506,9 @@ parserTest.runTest(
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":true,
-                                  "scriptlevel":0,
-                                  "mathvariant":"italic"},
+                       "displaystyle":true,
+                       "scriptlevel":0,
+                       "mathvariant":"italic"},
                      "properties":{},
                      "childNodes":[
                        {"kind":"text",
@@ -3519,9 +3519,9 @@ parserTest.runTest(
                                    "stretchy":true,
                                    "symmetric":true},
                      "inherited":{
-                                  "displaystyle":true,
-                                  "scriptlevel":0,
-                                  "form":"postfix"},
+                       "displaystyle":true,
+                       "scriptlevel":0,
+                       "form":"postfix"},
                      "properties":{},
                      "childNodes":[],
                      "isEmbellished":true}]},
@@ -3529,12 +3529,12 @@ parserTest.runTest(
                   "texClass":5,
                   "attributes":{},
                   "inherited":{
-                               "displaystyle":true,
-                               "scriptlevel":0,
-                               "form":"postfix",
-                               "fence":true,
-                               "stretchy":true,
-                               "symmetric":true},
+                    "displaystyle":true,
+                    "scriptlevel":0,
+                    "form":"postfix",
+                    "fence":true,
+                    "stretchy":true,
+                    "symmetric":true},
                   "properties":{},
                   "childNodes":[
                     {"kind":"text",
@@ -3544,12 +3544,12 @@ parserTest.runTest(
                "texClass":5,
                "attributes":{},
                "inherited":{
-                            "displaystyle":true,
-                            "scriptlevel":0,
-                            "form":"postfix",
-                            "fence":true,
-                            "stretchy":true,
-                            "symmetric":true},
+                 "displaystyle":true,
+                 "scriptlevel":0,
+                 "form":"postfix",
+                 "fence":true,
+                 "stretchy":true,
+                 "symmetric":true},
                "properties":{},
                "childNodes":[
                  {"kind":"text",
@@ -3559,12 +3559,12 @@ parserTest.runTest(
             "texClass":5,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "form":"postfix",
-                         "fence":true,
-                         "stretchy":true,
-                         "symmetric":true},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "form":"postfix",
+              "fence":true,
+              "stretchy":true,
+              "symmetric":true},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -3586,16 +3586,16 @@ parserTest.runTest(
       "texClass": 7,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mrow",
          "texClass": 7,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"open": "(",
                         "close": ")"},
          "childNodes": [
@@ -3603,12 +3603,12 @@ parserTest.runTest(
             "texClass": 4,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "form": "prefix",
-                          "fence": true,
-                          "stretchy": true,
-                          "symmetric": true},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "prefix",
+              "fence": true,
+              "stretchy": true,
+              "symmetric": true},
             "properties": {},
             "childNodes": [
               {"kind": "text",
@@ -3618,9 +3618,9 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
             "properties": {},
             "childNodes": [
               {"kind": "text",
@@ -3629,16 +3629,16 @@ parserTest.runTest(
             "texClass": 5,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": null,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [],
                "isInferred": true,
@@ -3646,62 +3646,62 @@ parserTest.runTest(
            {"kind": "mo",
             "texClass": 0,
             "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0,
-                "form": "infix",
-                "fence": true,
-                "stretchy": true,
-                "symmetric": true},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "|"}],
-              "isEmbellished": true},
-            {"kind": "TeXAtom",
-              "texClass": 4,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
-                  "texClass": null,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [],
-                  "isInferred": true,
-                  "isSpacelike": true}]},
-            {"kind": "mi",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0,
-                "mathvariant": "italic"},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "b"}]},
-            {"kind": "mo",
-              "texClass": 5,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0,
-                "form": "postfix",
-                "fence": true,
-                "stretchy": true,
-                "symmetric": true},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": ")"}],
-              "isEmbellished": true}]}],
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "infix",
+              "fence": true,
+              "stretchy": true,
+              "symmetric": true},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "|"}],
+            "isEmbellished": true},
+           {"kind": "TeXAtom",
+            "texClass": 4,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": null,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [],
+               "isInferred": true,
+               "isSpacelike": true}]},
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "b"}]},
+           {"kind": "mo",
+            "texClass": 5,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "postfix",
+              "fence": true,
+              "stretchy": true,
+              "symmetric": true},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": ")"}],
+            "isEmbellished": true}]}],
       "isInferred": true}]}
 );
 
@@ -3720,21 +3720,21 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {"mathvariant": "normal"},
          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "\u03a5"}]}],
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "\u03a5"}]}],
       "isInferred": true}]}
 );
 
@@ -3752,38 +3752,38 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {"mathvariant": "bold"},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "\u03a5"}]}],
-              "isInferred": true}]}],
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mi",
+               "texClass": 0,
+               "attributes": {"mathvariant": "bold"},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "\u03a5"}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -3800,19 +3800,19 @@ parserTest.runTest(
       "texClass":3,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mo",
          "texClass":3,
          "attributes":{"stretchy":false},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "form":"infix",
-                      "accent":true,
-                      "stretchy":true},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"infix",
+           "accent":true,
+           "stretchy":true},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3837,17 +3837,17 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mi",
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3856,9 +3856,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3867,9 +3867,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3878,11 +3878,11 @@ parserTest.runTest(
          "texClass":3,
          "attributes":{"stretchy":false},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "form":"infix",
-                      "accent":true,
-                      "stretchy":true},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"infix",
+           "accent":true,
+           "stretchy":true},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3892,9 +3892,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3903,9 +3903,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3914,9 +3914,9 @@ parserTest.runTest(
          "texClass":0,
          "attributes":{"mathvariant":"normal"},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0,
-                      "mathvariant":"italic"},
+           "displaystyle":true,
+           "scriptlevel":0,
+           "mathvariant":"italic"},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -3937,16 +3937,16 @@ parserTest.runTest(
       "texClass":7,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"mrow",
          "texClass":7,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{"open":"(",
                        "close":")"},
          "childNodes":[
@@ -3954,12 +3954,12 @@ parserTest.runTest(
             "texClass":4,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "form":"prefix",
-                         "fence":true,
-                         "stretchy":true,
-                         "symmetric":true},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "form":"prefix",
+              "fence":true,
+              "stretchy":true,
+              "symmetric":true},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -3971,43 +3971,43 @@ parserTest.runTest(
                           "rowspacing":"4pt",
                           "columnspacing":"1em"},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0},
+              "displaystyle":true,
+              "scriptlevel":0},
             "properties":{"useHeight":1},
             "childNodes":[
               {"kind":"mtr",
                "texClass":null,
                "attributes":{},
                "inherited":{
-                            "columnalign":"center center center",
-                            "displaystyle":false,
-                            "scriptlevel":0},
+                 "columnalign":"center center center",
+                 "displaystyle":false,
+                 "scriptlevel":0},
                "properties":{},
                "childNodes":[
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4017,26 +4017,26 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4046,26 +4046,26 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4075,35 +4075,35 @@ parserTest.runTest(
                "texClass":null,
                "attributes":{},
                "inherited":{
-                            "columnalign":"center center center",
-                            "displaystyle":false,
-                            "scriptlevel":0},
+                 "columnalign":"center center center",
+                 "displaystyle":false,
+                 "scriptlevel":0},
                "properties":{},
                "childNodes":[
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4113,26 +4113,26 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4142,26 +4142,26 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4171,35 +4171,35 @@ parserTest.runTest(
                "texClass":null,
                "attributes":{},
                "inherited":{
-                            "columnalign":"center center center",
-                            "displaystyle":false,
-                            "scriptlevel":0},
+                 "columnalign":"center center center",
+                 "displaystyle":false,
+                 "scriptlevel":0},
                "properties":{},
                "childNodes":[
                  {"kind":"mtd",
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4209,26 +4209,26 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4238,26 +4238,26 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                               "columnalign":"center center center",
-                               "displaystyle":false,
-                               "scriptlevel":0},
+                    "columnalign":"center center center",
+                    "displaystyle":false,
+                    "scriptlevel":0},
                   "properties":{},
                   "childNodes":[
                     {"kind":"mrow",
                      "texClass":0,
                      "attributes":{},
                      "inherited":{
-                                  "displaystyle":false,
-                                  "scriptlevel":0},
+                       "displaystyle":false,
+                       "scriptlevel":0},
                      "properties":{},
                      "childNodes":[
                        {"kind":"mi",
                         "texClass":0,
                         "attributes":{},
                         "inherited":{
-                                     "displaystyle":false,
-                                     "scriptlevel":0,
-                                     "mathvariant":"italic"},
+                          "displaystyle":false,
+                          "scriptlevel":0,
+                          "mathvariant":"italic"},
                         "properties":{},
                         "childNodes":[
                           {"kind":"text",
@@ -4267,12 +4267,12 @@ parserTest.runTest(
             "texClass":5,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "form":"postfix",
-                         "fence":true,
-                         "stretchy":true,
-                         "symmetric":true},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "form":"postfix",
+              "fence":true,
+              "stretchy":true,
+              "symmetric":true},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -4295,24 +4295,24 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mtext",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "\u00a0"}],
-          "isSpacelike": true}],
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "\u00a0"}],
+         "isSpacelike": true}],
       "isInferred": true,
       "isSpacelike": true}],
-  "isSpacelike": true}
+   "isSpacelike": true}
 );
 
 parserTest.runTest(
@@ -4328,17 +4328,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -4347,24 +4347,24 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "\u00a0"}],
-          "isSpacelike": true},
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "\u00a0"}],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -4382,38 +4382,38 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msup",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": ""}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "2"}]}]}],
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": ""}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "2"}]}]}],
       "isInferred": true}]}
 );
 
@@ -4430,46 +4430,46 @@ parserTest.runTest(
       "texClass": -1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msup",
          "texClass": -1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": null,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [],
-                  "isInferred": true,
-                  "isSpacelike": true}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "2"}]}]}],
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [],
+               "isInferred": true,
+               "isSpacelike": true}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "2"}]}]}],
       "isInferred": true}]}
 );
 
@@ -4486,25 +4486,25 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "mathvariant":"italic"},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "mathvariant":"italic"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -4513,8 +4513,8 @@ parserTest.runTest(
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":1},
+              "displaystyle":false,
+              "scriptlevel":1},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -4537,25 +4537,25 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"msup",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "mathvariant":"italic"},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "mathvariant":"italic"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -4564,8 +4564,8 @@ parserTest.runTest(
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":1},
+              "displaystyle":false,
+              "scriptlevel":1},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -4587,58 +4587,58 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "munderover",
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"movesupsub": true},
          "childNodes": [
            {"kind": "mo",
             "texClass": 1,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "form": "infix",
-                          "largeop": true,
-                          "movablelimits": true,
-                          "symmetric": true},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "infix",
+              "largeop": true,
+              "movablelimits": true,
+              "symmetric": true},
             "properties": {"movesupsub": true,
                            "texprimestyle": true},
             "childNodes": [
               {"kind": "text",
                "text": "\u2211"}],
             "isEmbellished": true},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "1"}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "2"}]}],
-          "isEmbellished": true}],
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "1"}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "2"}]}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 parserTest.runTest(
@@ -4655,24 +4655,24 @@ parserTest.runTest(
       "texClass": -1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msup",
          "texClass": -1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 7,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {"open": "(",
                            "close": ")"},
             "childNodes": [
@@ -4680,12 +4680,12 @@ parserTest.runTest(
                "texClass": 4,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0,
-                             "form": "prefix",
-                             "fence": true,
-                             "stretchy": true,
-                             "symmetric": true},
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "form": "prefix",
+                 "fence": true,
+                 "stretchy": true,
+                 "symmetric": true},
                "properties": {},
                "childNodes": [
                  {"kind": "text",
@@ -4695,72 +4695,80 @@ parserTest.runTest(
                "texClass": 1,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {"movesupsub": true},
                "childNodes": [
                  {"kind": "mo",
                   "texClass": 1,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "largeop": true,
-                                "movablelimits": true,
-                                "symmetric": true},
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "form": "infix",
+                    "largeop": true,
+                    "movablelimits": true,
+                    "symmetric": true},
                   "properties": {"movesupsub": true,
                                  "texprimestyle": true},
                   "childNodes": [
                     {"kind": "text",
                      "text": "\u2211"}],
-                      "isEmbellished": true},
-                    {"kind": "mn",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 1},
-                      "properties": {"texprimestyle": true},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "1"}]},
-                    {"kind": "mi",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 1,
-                        "mathvariant": "italic"},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "n"}]}],
                   "isEmbellished": true},
-                {"kind": "mo",
-                  "texClass": 5,
+                 {"kind": "mn",
+                  "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "form": "postfix",
-                    "fence": true,
-                    "stretchy": true,
-                    "symmetric": true},
+                    "displaystyle": false,
+                    "scriptlevel": 1},
+                  "properties": {"texprimestyle": true},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "1"}]},
+                 {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": false,
+                    "scriptlevel": 1,
+                    "mathvariant": "italic"},
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": ")"}],
-                  "isEmbellished": true}]},
-            {"kind": "TeXAtom",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
+                     "text": "n"}]}],
+               "isEmbellished": true},
+              {"kind": "mo",
+               "texClass": 5,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "form": "postfix",
+                 "fence": true,
+                 "stretchy": true,
+                 "symmetric": true},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": ")"}],
+               "isEmbellished": true}]},
+           {"kind": "TeXAtom",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mrow",
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": false,
+                 "scriptlevel": 1},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mn",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
@@ -4768,17 +4776,9 @@ parserTest.runTest(
                     "scriptlevel": 1},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mn",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 1},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "2"}]}],
-                  "isInferred": true}]}]}],
+                    {"kind": "text",
+                     "text": "2"}]}],
+               "isInferred": true}]}]}],
       "isInferred": true}]}
 );
 
@@ -4795,38 +4795,38 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msub",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": ""}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "3"}]}]}],
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": ""}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "3"}]}]}],
       "isInferred": true}]}
 );
 
@@ -4843,46 +4843,46 @@ parserTest.runTest(
       "texClass": -1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msub",
          "texClass": -1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "TeXAtom",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": null,
                "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [],
-                  "isInferred": true,
-                  "isSpacelike": true}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "3"}]}]}],
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [],
+               "isInferred": true,
+               "isSpacelike": true}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "3"}]}]}],
       "isInferred": true}]}
 );
 
@@ -4899,25 +4899,25 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"msub",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "mathvariant":"italic"},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "mathvariant":"italic"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -4926,8 +4926,8 @@ parserTest.runTest(
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":1},
+              "displaystyle":false,
+              "scriptlevel":1},
             "properties":{"texprimestyle":true},
             "childNodes":[
               {"kind":"text",
@@ -4950,25 +4950,25 @@ parserTest.runTest(
       "texClass":0,
       "attributes":{},
       "inherited":{
-                   "displaystyle":true,
-                   "scriptlevel":0},
+        "displaystyle":true,
+        "scriptlevel":0},
       "properties":{},
       "childNodes":[
         {"kind":"msubsup",
          "texClass":0,
          "attributes":{},
          "inherited":{
-                      "displaystyle":true,
-                      "scriptlevel":0},
+           "displaystyle":true,
+           "scriptlevel":0},
          "properties":{},
          "childNodes":[
            {"kind":"mi",
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":true,
-                         "scriptlevel":0,
-                         "mathvariant":"italic"},
+              "displaystyle":true,
+              "scriptlevel":0,
+              "mathvariant":"italic"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -4977,8 +4977,8 @@ parserTest.runTest(
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":1},
+              "displaystyle":false,
+              "scriptlevel":1},
             "properties":{"texprimestyle":true},
             "childNodes":[
               {"kind":"text",
@@ -4987,9 +4987,9 @@ parserTest.runTest(
             "texClass":0,
             "attributes":{},
             "inherited":{
-                         "displaystyle":false,
-                         "scriptlevel":1,
-                         "mathvariant":"italic"},
+              "displaystyle":false,
+              "scriptlevel":1,
+              "mathvariant":"italic"},
             "properties":{},
             "childNodes":[
               {"kind":"text",
@@ -5011,17 +5011,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -5030,22 +5030,22 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"width": "1em"},
          "inherited": {
-                       "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {"scriptlevel": 0},
-          "childNodes": [],
-          "isSpacelike": true},
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {"scriptlevel": 0},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -5063,17 +5063,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -5082,31 +5082,31 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"width": "negativethinmathspace"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"scriptlevel": 0},
          "childNodes": [],
          "isSpacelike": true},
         {"kind": "mspace",
          "texClass": 0,
          "attributes": {"width": "negativethinmathspace"},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {"scriptlevel": 0},
-          "childNodes": [],
-          "isSpacelike": true},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {"scriptlevel": 0},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -5124,8 +5124,8 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mo",
@@ -5133,18 +5133,18 @@ parserTest.runTest(
          "attributes": {"movablelimits": true,
                         "form": "prefix"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "form": "infix"},
-          "properties": {"movesupsub": true,
-            "movablelimits": true},
-          "childNodes": [
-            {"kind": "text",
-              "text": "lim"}],
-          "isEmbellished": true}],
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {"movesupsub": true,
+                        "movablelimits": true},
+         "childNodes": [
+           {"kind": "text",
+            "text": "lim"}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -5161,57 +5161,57 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "munderover",
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"movesupsub": true},
          "childNodes": [
            {"kind": "mo",
             "texClass": 1,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "form": "infix",
-                          "largeop": true,
-                          "symmetric": true},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "infix",
+              "largeop": true,
+              "symmetric": true},
             "properties": {"movablelimits": false,
                            "texprimestyle": true},
             "childNodes": [
               {"kind": "text",
                "text": "\u222b"}],
             "isEmbellished": true},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "3"}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "2"}]}],
-          "isEmbellished": true}],
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "3"}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "2"}]}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -5228,25 +5228,25 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "msubsup",
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"movesupsub": false},
          "childNodes": [
            {"kind": "mo",
             "texClass": 1,
             "attributes": {"form": "prefix"},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "form": "infix"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "infix"},
             "properties": {"movesupsub": true,
                            "movablelimits": false},
             "childNodes": [
@@ -5255,28 +5255,28 @@ parserTest.runTest(
             "isEmbellished": true},
            {"kind": "mn",
             "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "3"}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "2"}]}],
-          "isEmbellished": true}],
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "3"}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "2"}]}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -5293,59 +5293,59 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "munderover",
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"movesupsub": true},
          "childNodes": [
            {"kind": "mo",
             "texClass": 1,
             "attributes": {"movablelimits": false},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "form": "infix",
-                          "largeop": true,
-                          "movablelimits": true,
-                          "symmetric": true},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "infix",
+              "largeop": true,
+              "movablelimits": true,
+              "symmetric": true},
             "properties": {"movesupsub": true,
                            "movablelimits": false,
                            "texprimestyle": true},
             "childNodes": [
               {"kind": "text",
                "text": "\u2211"}],
-              "isEmbellished": true},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "3"}]},
-            {"kind": "mn",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "2"}]}],
-          "isEmbellished": true}],
+            "isEmbellished": true},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "3"}]},
+           {"kind": "mn",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "2"}]}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -5362,40 +5362,40 @@ parserTest.runTest(
       "texClass": null,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mfrac",
          "texClass": null,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "a"}]},
-            {"kind": "mi",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 0,
-                "mathvariant": "italic"},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "b"}]}]}],
+              "displaystyle": false,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}]},
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "b"}]}]}],
       "isInferred": true}]}
 );
 
@@ -5413,8 +5413,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mpadded",
@@ -5423,47 +5423,47 @@ parserTest.runTest(
                         "depth": "-1em",
                         "voffset": "+1em"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "x"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "x"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -5481,8 +5481,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mpadded",
@@ -5491,47 +5491,47 @@ parserTest.runTest(
                         "depth": "+1em",
                         "voffset": "-1em"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "x"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "x"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -5549,17 +5549,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mo",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "form": "prefix"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "prefix"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -5569,26 +5569,26 @@ parserTest.runTest(
          "texClass": 7,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-            "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "\u22ef"}],
-          "isEmbellished": true},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "\u22ef"}],
+         "isEmbellished": true},
         {"kind": "mo",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "form": "postfix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "+"}],
-          "isEmbellished": true}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "postfix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "+"}],
+         "isEmbellished": true}],
       "isInferred": true}]}
 );
 
@@ -5606,17 +5606,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -5625,24 +5625,24 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mspace",
                "texClass": 0,
                "attributes": {"width": "18mu"},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [],
                "isSpacelike": true}],
@@ -5652,24 +5652,24 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mspace",
                "texClass": 0,
                "attributes": {"width": "12mu"},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [],
                "isSpacelike": true}],
@@ -5679,95 +5679,95 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mspace",
                "texClass": 0,
                "attributes": {"width": "12mu"},
                "inherited": {
-                             "displaystyle": true,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [],
-                  "isSpacelike": true}],
-              "isInferred": true,
-              "isSpacelike": true}]},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [],
+               "isSpacelike": true}],
+            "isInferred": true,
+            "isSpacelike": true}]},
         {"kind": "TeXAtom",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [
-            {"kind": "mrow",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mspace",
-                  "texClass": 0,
-                  "attributes": {"width": "12mu"},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [],
-                  "isSpacelike": true}],
-              "isInferred": true,
-              "isSpacelike": true}]},
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mspace",
+               "texClass": 0,
+               "attributes": {"width": "12mu"},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [],
+               "isSpacelike": true}],
+            "isInferred": true,
+            "isSpacelike": true}]},
         {"kind": "mi",
-          "texClass": 1,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {"autoOP": true},
-          "childNodes": [
-            {"kind": "text",
-              "text": "mod"}]},
+         "texClass": 1,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {"autoOP": true},
+         "childNodes": [
+           {"kind": "text",
+            "text": "mod"}]},
         {"kind": "mspace",
-          "texClass": 0,
-          "attributes": {"width": "thinmathspace"},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {"scriptlevel": 0},
-          "childNodes": [],
-          "isSpacelike": true},
+         "texClass": 0,
+         "attributes": {"width": "thinmathspace"},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {"scriptlevel": 0},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mspace",
-          "texClass": 0,
-          "attributes": {"width": "thinmathspace"},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {"scriptlevel": 0},
-          "childNodes": [],
-          "isSpacelike": true},
+         "texClass": 0,
+         "attributes": {"width": "thinmathspace"},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {"scriptlevel": 0},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -5785,17 +5785,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -5804,8 +5804,8 @@ parserTest.runTest(
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"movesupsub": false,
                         "movablelimits": false,
                         "fnOP": true},
@@ -5813,28 +5813,28 @@ parserTest.runTest(
            {"kind": "text",
             "text": "xyz"}]},
         {"kind": "mo",
-          "texClass": -1,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "\u2061"}],
-          "isEmbellished": true},
+         "texClass": -1,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "\u2061"}],
+         "isEmbellished": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -5852,17 +5852,17 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 1,
          "attributes": {"mathvariant": "normal"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {"movesupsub": true,
                         "movablelimits": true,
                         "fnOP": true},
@@ -5873,25 +5873,25 @@ parserTest.runTest(
          "texClass": -1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-            "scriptlevel": 0,
-            "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "\u2061"}],
-          "isEmbellished": true},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "\u2061"}],
+         "isEmbellished": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -5909,16 +5909,16 @@ parserTest.runTest(
       "texClass": 3,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mover",
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"movesupsub": true},
          "childNodes": [
            {"kind": "mo",
@@ -5927,30 +5927,30 @@ parserTest.runTest(
                            "rspace": "0",
                            "movablelimits": true},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "form": "infix"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "infix"},
             "properties": {"movablelimits": true,
-                "texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "a"}],
-              "isEmbellished": true},
-            {"kind": "mi",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1,
-                "mathvariant": "italic"},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "b"}]}],
-          "isEmbellished": true}],
+                           "texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}],
+            "isEmbellished": true},
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1,
+              "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "b"}]}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -5967,16 +5967,16 @@ parserTest.runTest(
       "texClass": 3,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "munder",
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"movesupsub": true},
          "childNodes": [
            {"kind": "mo",
@@ -5985,29 +5985,29 @@ parserTest.runTest(
                            "rspace": "0",
                            "movablelimits": true},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "form": "infix"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "infix"},
             "properties": {"movablelimits": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "a"}],
-              "isEmbellished": true},
-            {"kind": "mi",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1,
-                "mathvariant": "italic"},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "b"}]}],
-          "isEmbellished": true}],
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}],
+            "isEmbellished": true},
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1,
+              "mathvariant": "italic"},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "b"}]}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -6024,16 +6024,16 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {"movesupsub": true,
                         "movablelimits": true},
          "childNodes": [
@@ -6041,22 +6041,22 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {"mathvariant": "-tex-caligraphic"},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "a"}]}],
-              "isInferred": true}]}],
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mi",
+               "texClass": 0,
+               "attributes": {"mathvariant": "-tex-caligraphic"},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "a"}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -6073,38 +6073,38 @@ parserTest.runTest(
       "texClass": 3,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "R"}]}],
-              "isInferred": true}]}],
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mi",
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "R"}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -6121,61 +6121,61 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mover",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0,
-                             "accent": true},
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "accent": true},
                "properties": {},
                "childNodes": [
-                    {"kind": "mi",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0,
-                        "mathvariant": "italic"},
-                      "properties": {"texprimestyle": true},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "a"}]},
-                    {"kind": "mo",
-                      "texClass": 3,
-                      "attributes": {"stretchy": false},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0,
-                        "form": "infix",
-                        "accent": true,
-                        "stretchy": true},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "\u2192"}],
-                      "isEmbellished": true}]}],
-              "isInferred": true}]}],
+                 {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
+                  "properties": {"texprimestyle": true},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "a"}]},
+                 {"kind": "mo",
+                  "texClass": 3,
+                  "attributes": {"stretchy": false},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "form": "infix",
+                    "accent": true,
+                    "stretchy": true},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "\u2192"}],
+                  "isEmbellished": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -6192,78 +6192,78 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
                     {"kind": "mover",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "accent": true},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mi",
-                              "texClass": 0,
-                              "attributes": {"mathvariant": "normal"},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "mathvariant": "italic"},
-                              "properties": {"texprimestyle": true},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "a"}]},
-                            {"kind": "mo",
-                              "texClass": 3,
-                              "attributes": {"stretchy": false},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "form": "infix",
-                                "accent": true,
-                                "stretchy": true},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "\u2192"}],
-                              "isEmbellished": true}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]}],
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "accent": true},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mi",
+                        "texClass": 0,
+                        "attributes": {"mathvariant": "normal"},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "mathvariant": "italic"},
+                        "properties": {"texprimestyle": true},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "a"}]},
+                       {"kind": "mo",
+                        "texClass": 3,
+                        "attributes": {"stretchy": false},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix",
+                          "accent": true,
+                          "stretchy": true},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "\u2192"}],
+                        "isEmbellished": true}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -6280,69 +6280,69 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mover",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0,
-                             "accent": true},
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "accent": true},
                "properties": {},
                "childNodes": [
                  {"kind": "mo",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0,
-                        "form": "infix"},
-                      "properties": {"movablelimits": false,
-                        "texprimestyle": true},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "+"}],
-                      "isEmbellished": true},
-                    {"kind": "mo",
-                      "texClass": 3,
-                      "attributes": {"stretchy": false},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0,
-                        "form": "infix",
-                        "accent": true,
-                        "stretchy": true},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "\u2192"}],
-                      "isEmbellished": true}],
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "form": "infix"},
+                  "properties": {"movablelimits": false,
+                                 "texprimestyle": true},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "+"}],
+                  "isEmbellished": true},
+                 {"kind": "mo",
+                  "texClass": 3,
+                  "attributes": {"stretchy": false},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "form": "infix",
+                    "accent": true,
+                    "stretchy": true},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "\u2192"}],
                   "isEmbellished": true}],
-              "isInferred": true,
-              "isEmbellished": true}],
-          "isEmbellished": true}],
+               "isEmbellished": true}],
+            "isInferred": true,
+            "isEmbellished": true}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 );
 
 
@@ -6359,44 +6359,44 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mover",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "accent": false},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "accent": false},
          "properties": {"subsupOK": true},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
             "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "a"}]},
-            {"kind": "mo",
-              "texClass": 0,
-              "attributes": {"accent": false},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1,
-                "form": "infix",
-                "accent": true,
-                "stretchy": true},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "\u00af"}],
-              "isEmbellished": true}]}],
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}]},
+           {"kind": "mo",
+            "texClass": 0,
+            "attributes": {"accent": false},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1,
+              "form": "infix",
+              "accent": true,
+              "stretchy": true},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "\u00af"}],
+            "isEmbellished": true}]}],
       "isInferred": true}]}
 )
 
@@ -6414,34 +6414,34 @@ parserTest.runTest(
       "texClass": -1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mover",
          "texClass": -1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "accent": false},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "accent": false},
          "properties": {"subsupOK": true},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {"texprimestyle": true},
             "childNodes": [
               {"kind": "mo",
                "texClass": 0,
                "attributes": {"rspace": 0},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0,
-                             "form": "prefix"},
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "form": "prefix"},
                "properties": {"texprimestyle": true},
                "childNodes": [],
                "isEmbellished": true},
@@ -6449,53 +6449,53 @@ parserTest.runTest(
                "texClass": 1,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {"movesupsub": true,
                               "texprimestyle": true},
                "childNodes": [
                  {"kind": "mo",
                   "texClass": 1,
                   "attributes": {"lspace": 0,
-                        "rspace": 0},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0,
-                        "form": "postfix",
-                        "largeop": true,
-                        "symmetric": true},
-                      "properties": {"movesupsub": true,
-                        "movablelimits": false,
-                        "texprimestyle": true},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "\u222b"}],
-                      "isEmbellished": true},
-                    {"kind": "mn",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 1},
-                      "properties": {"texprimestyle": true},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "2"}]}],
-                  "isEmbellished": true}]},
-            {"kind": "mo",
-              "texClass": 0,
-              "attributes": {"accent": false},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1,
-                "form": "infix",
-                "accent": true,
-                "stretchy": true},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "\u00af"}],
-              "isEmbellished": true}]}],
+                                 "rspace": 0},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "form": "postfix",
+                    "largeop": true,
+                    "symmetric": true},
+                  "properties": {"movesupsub": true,
+                                 "movablelimits": false,
+                                 "texprimestyle": true},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "\u222b"}],
+                  "isEmbellished": true},
+                 {"kind": "mn",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": false,
+                    "scriptlevel": 1},
+                  "properties": {"texprimestyle": true},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "2"}]}],
+               "isEmbellished": true}]},
+           {"kind": "mo",
+            "texClass": 0,
+            "attributes": {"accent": false},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1,
+              "form": "infix",
+              "accent": true,
+              "stretchy": true},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "\u00af"}],
+            "isEmbellished": true}]}],
       "isInferred": true}]}
 )
 
@@ -6513,54 +6513,54 @@ parserTest.runTest(
       "texClass": 1,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mover",
          "texClass": 1,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "accent": false},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "accent": false},
          "properties": {"subsupOK": true},
          "childNodes": [
            {"kind": "mo",
             "texClass": 1,
             "attributes": {"movablelimits": false},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "form": "infix",
-                          "largeop": true,
-                          "movablelimits": true,
-                          "symmetric": true},
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "form": "infix",
+              "largeop": true,
+              "movablelimits": true,
+              "symmetric": true},
             "properties": {"movesupsub": true,
                            "movablelimits": false,
                            "texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "\u2211"}],
-              "isEmbellished": true},
-            {"kind": "mo",
-              "texClass": 0,
-              "attributes": {"accent": false},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1,
-                "form": "infix",
-                "accent": true,
-                "stretchy": true},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "\u00af"}],
-              "isEmbellished": true}],
-          "isEmbellished": true}],
+            "childNodes": [
+              {"kind": "text",
+               "text": "\u2211"}],
+            "isEmbellished": true},
+           {"kind": "mo",
+            "texClass": 0,
+            "attributes": {"accent": false},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1,
+              "form": "infix",
+              "accent": true,
+              "stretchy": true},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "\u00af"}],
+            "isEmbellished": true}],
+         "isEmbellished": true}],
       "isInferred": true,
       "isEmbellished": true}],
-  "isEmbellished": true}
+   "isEmbellished": true}
 )
 
 
@@ -6577,40 +6577,40 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mover",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "b"}]},
-            {"kind": "mi",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1,
-                "mathvariant": "italic"},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "a"}]}]}],
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "b"}]},
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1,
+              "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}]}]}],
       "isInferred": true}]}
 );
 
@@ -6628,40 +6628,40 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "munder",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mi",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0,
-                          "mathvariant": "italic"},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "b"}]},
-            {"kind": "mi",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": false,
-                "scriptlevel": 1,
-                "mathvariant": "italic"},
-              "properties": {"texprimestyle": true},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "a"}]}]}],
+              "displaystyle": true,
+              "scriptlevel": 0,
+              "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "b"}]},
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": false,
+              "scriptlevel": 1,
+              "mathvariant": "italic"},
+            "properties": {"texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}]}]}],
       "isInferred": true}]}
 );
 
@@ -6679,8 +6679,8 @@ parserTest.runTest(
       "texClass": null,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mpadded",
@@ -6689,58 +6689,58 @@ parserTest.runTest(
                         "height": "8.6pt",
                         "depth": "3pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": null,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": null,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [],
                "isSpacelike": true}],
             "isInferred": true,
             "isSpacelike": true}],
-          "isSpacelike": true},
+         "isSpacelike": true},
         {"kind": "TeXAtom",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [
-            {"kind": "mrow",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}]}],
-              "isInferred": true}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mi",
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "x"}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -6758,39 +6758,39 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "menclose",
          "texClass": 0,
          "attributes": {"notation": "box"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mtext",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}],
-                  "isSpacelike": true}],
-              "isInferred": true,
-              "isSpacelike": true}]}],
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mtext",
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "x"}],
+               "isSpacelike": true}],
+            "isInferred": true,
+            "isSpacelike": true}]}],
       "isInferred": true}]}
 );
 
@@ -6808,8 +6808,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mstyle",
@@ -6823,27 +6823,27 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": false,
-                          "scriptlevel": 0},
+              "displaystyle": false,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
-                {"kind": "mtext",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": false,
-                    "scriptlevel": 0},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}],
-                  "isSpacelike": true}],
-              "isInferred": true,
-              "isSpacelike": true}],
-          "isSpacelike": true}],
+              {"kind": "mtext",
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": false,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "x"}],
+               "isSpacelike": true}],
+            "isInferred": true,
+            "isSpacelike": true}],
+         "isSpacelike": true}],
       "isInferred": true,
       "isSpacelike": true}],
-  "isSpacelike": true}
+   "isSpacelike": true}
 );
 
 
@@ -6860,17 +6860,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -6879,58 +6879,58 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mphantom",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "y"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]},
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "y"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -6948,17 +6948,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -6967,75 +6967,75 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"width": 0},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
-                      "childNodes": [
-                        {"kind": "mphantom",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mrow",
-                              "texClass": 0,
-                              "attributes": {},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "mi",
-                                  "texClass": 0,
-                                  "attributes": {},
-                                  "inherited": {
-                                    "displaystyle": true,
-                                    "scriptlevel": 0,
-                                    "mathvariant": "italic"},
-                                  "properties": {},
-                                  "childNodes": [
-                                    {"kind": "text",
-                                      "text": "y"}]}],
-                              "isInferred": true}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]},
+                  "childNodes": [
+                    {"kind": "mphantom",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mrow",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "mi",
+                           "texClass": 0,
+                           "attributes": {},
+                           "inherited": {
+                             "displaystyle": true,
+                             "scriptlevel": 0,
+                             "mathvariant": "italic"},
+                           "properties": {},
+                           "childNodes": [
+                             {"kind": "text",
+                              "text": "y"}]}],
+                        "isInferred": true}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -7053,17 +7053,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -7072,16 +7072,16 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mpadded",
@@ -7089,59 +7089,59 @@ parserTest.runTest(
                "attributes": {"height": 0,
                               "depth": 0},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "mrow",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mphantom",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mrow",
-                              "texClass": 0,
-                              "attributes": {},
-                              "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "mi",
-                                  "texClass": 0,
-                                  "attributes": {},
-                                  "inherited": {
-                                    "displaystyle": true,
-                                    "scriptlevel": 0,
-                                    "mathvariant": "italic"},
-                                  "properties": {},
-                                  "childNodes": [
-                                    {"kind": "text",
-                                      "text": "y"}]}],
-                              "isInferred": true}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]},
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "mphantom",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mrow",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "mi",
+                           "texClass": 0,
+                           "attributes": {},
+                           "inherited": {
+                             "displaystyle": true,
+                             "scriptlevel": 0,
+                             "mathvariant": "italic"},
+                           "properties": {},
+                           "childNodes": [
+                             {"kind": "text",
+                              "text": "y"}]}],
+                        "isInferred": true}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -7159,24 +7159,24 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mpadded",
@@ -7184,31 +7184,31 @@ parserTest.runTest(
                "attributes": {"height": 0,
                               "depth": 0},
                "inherited": {
-                             "displaystyle": true,
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "x"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "x"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -7226,55 +7226,55 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"depth": 0},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "x"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "x"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -7292,55 +7292,55 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"height": 0},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "x"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "x"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -7358,24 +7358,24 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mpadded",
@@ -7383,31 +7383,31 @@ parserTest.runTest(
                "attributes": {"width": 0,
                               "lspace": "-1width"},
                "inherited": {
-                             "displaystyle": true,
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
                     "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "x"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "x"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -7425,55 +7425,55 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mpadded",
                "texClass": 0,
                "attributes": {"width": 0},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "x"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]}],
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "x"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -7491,17 +7491,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -7512,58 +7512,58 @@ parserTest.runTest(
                         "depth": "-2pt",
                         "voffset": "+2pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "y"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]},
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "y"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -7581,17 +7581,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -7602,58 +7602,58 @@ parserTest.runTest(
                         "depth": "+2pt",
                         "voffset": "-2pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "y"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]},
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "y"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -7671,17 +7671,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -7692,58 +7692,58 @@ parserTest.runTest(
                         "depth": "+2pt",
                         "voffset": "-2pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "y"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]},
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "y"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -7761,17 +7761,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -7782,58 +7782,58 @@ parserTest.runTest(
                         "depth": "-2pt",
                         "voffset": "+2pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "TeXAtom",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": true,
+                    "scriptlevel": 0},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mrow",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mi",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": true,
-                            "scriptlevel": 0,
-                            "mathvariant": "italic"},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "text",
-                              "text": "y"}]}],
-                      "isInferred": true}]}],
-              "isInferred": true}]},
+                    {"kind": "mi",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "text",
+                        "text": "y"}]}],
+                  "isInferred": true}]}],
+            "isInferred": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -7851,17 +7851,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -7870,8 +7870,8 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"width": "-2pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [],
          "isSpacelike": true},
@@ -7879,50 +7879,50 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "y"}]}],
-              "isInferred": true}]},
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "y"}]}],
+            "isInferred": true}]},
         {"kind": "mspace",
-          "texClass": 0,
-          "attributes": {"width": "2pt"},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true},
+         "texClass": 0,
+         "attributes": {"width": "2pt"},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -7940,17 +7940,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -7959,8 +7959,8 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"width": "2pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [],
          "isSpacelike": true},
@@ -7968,50 +7968,50 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "y"}]}],
-              "isInferred": true}]},
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "y"}]}],
+            "isInferred": true}]},
         {"kind": "mspace",
-          "texClass": 0,
-          "attributes": {"width": "-2pt"},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true},
+         "texClass": 0,
+         "attributes": {"width": "-2pt"},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -8029,17 +8029,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -8048,8 +8048,8 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"width": "2pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [],
          "isSpacelike": true},
@@ -8057,50 +8057,50 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "y"}]}],
-              "isInferred": true}]},
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "y"}]}],
+            "isInferred": true}]},
         {"kind": "mspace",
-          "texClass": 0,
-          "attributes": {"width": "-2pt"},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true},
+         "texClass": 0,
+         "attributes": {"width": "-2pt"},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -8118,17 +8118,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -8137,8 +8137,8 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"width": "-2pt"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [],
          "isSpacelike": true},
@@ -8146,50 +8146,50 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "y"}]}],
-              "isInferred": true}]},
+               "texClass": 0,
+               "attributes": {},
+               "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0,
+                 "mathvariant": "italic"},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "text",
+                  "text": "y"}]}],
+            "isInferred": true}]},
         {"kind": "mspace",
-          "texClass": 0,
-          "attributes": {"width": "2pt"},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true},
+         "texClass": 0,
+         "attributes": {"width": "2pt"},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "z"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "z"}]}],
       "isInferred": true}]}
 );
 
@@ -8207,8 +8207,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mspace",
@@ -8217,14 +8217,14 @@ parserTest.runTest(
                         "width": "2cm",
                         "height": "1cm"},
          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true}],
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true}],
       "isInferred": true,
       "isSpacelike": true}],
-  "isSpacelike": true}
+   "isSpacelike": true}
 );
 
 
@@ -8241,8 +8241,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mspace",
@@ -8252,14 +8252,14 @@ parserTest.runTest(
                         "height": "2cm",
                         "depth": "1cm"},
          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true}],
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true}],
       "isInferred": true,
       "isSpacelike": true}],
-  "isSpacelike": true}
+   "isSpacelike": true}
 );
 
 
@@ -8276,8 +8276,8 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mspace",
@@ -8286,14 +8286,14 @@ parserTest.runTest(
                         "height": "2cm",
                         "depth": "1cm"},
          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true}],
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true}],
       "isInferred": true,
       "isSpacelike": true}],
-  "isSpacelike": true}
+   "isSpacelike": true}
 );
 
 
@@ -8310,74 +8310,74 @@ parserTest.runTest(
       "texClass": 3,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "TeXAtom",
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mover",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "mathvariant": "italic"},
-                      "properties": {"texprimestyle": true},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "b"}]},
-                    {"kind": "TeXAtom",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 1},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mrow",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 1},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mi",
-                              "texClass": 0,
-                              "attributes": {},
-                              "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 1,
-                                "mathvariant": "italic"},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "a"}]}],
-                          "isInferred": true}]}]}],
-              "isInferred": true}]}],
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
+                  "properties": {"texprimestyle": true},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "b"}]},
+                 {"kind": "TeXAtom",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": false,
+                    "scriptlevel": 1},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "mrow",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 1},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mi",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 1,
+                          "mathvariant": "italic"},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "a"}]}],
+                     "isInferred": true}]}]}],
+            "isInferred": true}]}],
       "isInferred": true}]}
 );
 
@@ -8395,17 +8395,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -8414,77 +8414,77 @@ parserTest.runTest(
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mover",
                "texClass": 0,
                "attributes": {},
                "inherited": {
-                             "displaystyle": true,
-                             "scriptlevel": 0},
+                 "displaystyle": true,
+                 "scriptlevel": 0},
                "properties": {},
                "childNodes": [
                  {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {
-                                "displaystyle": true,
-                                "scriptlevel": 0,
-                                "mathvariant": "italic"},
+                    "displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
                   "properties": {"texprimestyle": true},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "b"}]},
-                    {"kind": "TeXAtom",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": false,
-                        "scriptlevel": 1},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "mrow",
-                          "texClass": 0,
-                          "attributes": {},
-                          "inherited": {
-                            "displaystyle": false,
-                            "scriptlevel": 1},
-                          "properties": {},
-                          "childNodes": [
-                            {"kind": "mi",
-                              "texClass": 0,
-                              "attributes": {},
-                              "inherited": {
-                                "displaystyle": false,
-                                "scriptlevel": 1,
-                                "mathvariant": "italic"},
-                              "properties": {},
-                              "childNodes": [
-                                {"kind": "text",
-                                  "text": "a"}]}],
-                          "isInferred": true}]}]}],
-              "isInferred": true}]},
+                  "childNodes": [
+                    {"kind": "text",
+                     "text": "b"}]},
+                 {"kind": "TeXAtom",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
+                    "displaystyle": false,
+                    "scriptlevel": 1},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "mrow",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {
+                       "displaystyle": false,
+                       "scriptlevel": 1},
+                     "properties": {},
+                     "childNodes": [
+                       {"kind": "mi",
+                        "texClass": 0,
+                        "attributes": {},
+                        "inherited": {
+                          "displaystyle": false,
+                          "scriptlevel": 1,
+                          "mathvariant": "italic"},
+                        "properties": {},
+                        "childNodes": [
+                          {"kind": "text",
+                           "text": "a"}]}],
+                     "isInferred": true}]}]}],
+            "isInferred": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "y"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "y"}]}],
       "isInferred": true}]}
 );
 
@@ -8502,17 +8502,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -8521,27 +8521,27 @@ parserTest.runTest(
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "<"},
-            {"kind": "text",
-              "text": "<"}],
-          "isEmbellished": true},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "<"},
+           {"kind": "text",
+            "text": "<"}],
+         "isEmbellished": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -8559,17 +8559,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -8578,27 +8578,27 @@ parserTest.runTest(
          "texClass": 3,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "form": "infix"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "<"},
-            {"kind": "text",
-              "text": "="}],
-          "isEmbellished": true},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "<"},
+           {"kind": "text",
+            "text": "="}],
+         "isEmbellished": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -8616,17 +8616,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -8635,22 +8635,22 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"linebreak": "newline"},
          "inherited": {
-                       "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true},
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -8668,17 +8668,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -8687,31 +8687,31 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {"depth": "2ex"},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [],
          "isSpacelike": true},
         {"kind": "mspace",
          "texClass": 0,
-          "attributes": {"linebreak": "newline"},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [],
-          "isSpacelike": true},
+         "attributes": {"linebreak": "newline"},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [],
+         "isSpacelike": true},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -8729,17 +8729,17 @@ parserTest.runTest(
       "texClass": 0,
       "attributes": {},
       "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0},
+        "displaystyle": true,
+        "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0,
-                       "mathvariant": "italic"},
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
          "properties": {},
          "childNodes": [
            {"kind": "text",
@@ -8748,16 +8748,16 @@ parserTest.runTest(
          "texClass": 0,
          "attributes": {},
          "inherited": {
-                       "displaystyle": true,
-                       "scriptlevel": 0},
+           "displaystyle": true,
+           "scriptlevel": 0},
          "properties": {},
          "childNodes": [
            {"kind": "mtext",
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "text",
@@ -8767,52 +8767,52 @@ parserTest.runTest(
             "texClass": 0,
             "attributes": {},
             "inherited": {
-                          "displaystyle": true,
-                          "scriptlevel": 0},
+              "displaystyle": true,
+              "scriptlevel": 0},
             "properties": {},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
                "inherited": {
+                 "displaystyle": true,
+                 "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {
                     "displaystyle": true,
-                    "scriptlevel": 0},
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mi",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {
-                        "displaystyle": true,
-                        "scriptlevel": 0,
-                        "mathvariant": "italic"},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "d"}]}],
-                  "isInferred": true}]},
-            {"kind": "mtext",
-              "texClass": 0,
-              "attributes": {},
-              "inherited": {
-                "displaystyle": true,
-                "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "text",
-                  "text": "e"}],
-              "isSpacelike": true}]},
+                    {"kind": "text",
+                     "text": "d"}]}],
+               "isInferred": true}]},
+           {"kind": "mtext",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "e"}],
+            "isSpacelike": true}]},
         {"kind": "mi",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {
-            "displaystyle": true,
-            "scriptlevel": 0,
-            "mathvariant": "italic"},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "b"}]}],
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0,
+           "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "b"}]}],
       "isInferred": true}]}
 );
 
@@ -9195,5 +9195,288 @@ parserTest.runTest(
     "isEmbellished": true
   }
 );
-  
+
+parserTest.runTest(
+  'Other Arrow Infix', 'a⤡b',
+  {
+    "kind": "math",
+    "texClass": 0,
+    "attributes": {
+      "display": "block"
+    },
+    "inherited": {
+      "displaystyle": true,
+      "scriptlevel": 0
+    },
+    "properties": {
+    },
+    "childNodes": [
+      {
+        "kind": "mrow",
+        "texClass": 0,
+        "attributes": {
+        },
+        "inherited": {
+          "displaystyle": true,
+          "scriptlevel": 0
+        },
+        "properties": {
+        },
+        "childNodes": [
+          {
+            "kind": "mrow",
+            "texClass": 0,
+            "attributes": {
+            },
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0
+            },
+            "properties": {
+            },
+            "childNodes": [
+              {
+                "kind": "mi",
+                "texClass": 0,
+                "attributes": {
+                },
+                "inherited": {
+                  "displaystyle": true,
+                  "scriptlevel": 0,
+                  "mathvariant": "italic"
+                },
+                "properties": {
+                },
+                "childNodes": [
+                  {
+                    "kind": "text",
+                    "text": "a"
+                  }
+                ]
+              },
+              {
+                "kind": "mo",
+                "texClass": 3,
+                "attributes": {
+                },
+                "inherited": {
+                  "displaystyle": true,
+                  "scriptlevel": 0,
+                  "form": "infix"
+                },
+                "properties": {
+                },
+                "childNodes": [
+                  {
+                    "kind": "text",
+                    "text": "\u2921"
+                  }
+                ],
+                "isEmbellished": true
+              },
+              {
+                "kind": "mi",
+                "texClass": 0,
+                "attributes": {
+                },
+                "inherited": {
+                  "displaystyle": true,
+                  "scriptlevel": 0,
+                  "mathvariant": "italic"
+                },
+                "properties": {
+                },
+                "childNodes": [
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  }
+                ]
+              }
+            ],
+            "isInferred": true
+          }
+        ],
+        "isInferred": true
+      }
+    ]
+  }
+);
+
+parserTest.runTest(
+  'Other Arrow Prefix', '⤡b',
+  {
+    "kind": "math",
+    "texClass": 3,
+    "attributes": {
+      "display": "block"
+    },
+    "inherited": {
+      "displaystyle": true,
+      "scriptlevel": 0
+    },
+    "properties": {
+    },
+    "childNodes": [
+      {
+        "kind": "mrow",
+        "texClass": 3,
+        "attributes": {
+        },
+        "inherited": {
+          "displaystyle": true,
+          "scriptlevel": 0
+        },
+        "properties": {
+        },
+        "childNodes": [
+          {
+            "kind": "mrow",
+            "texClass": 3,
+            "attributes": {
+            },
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0
+            },
+            "properties": {
+            },
+            "childNodes": [
+              {
+                "kind": "mo",
+                "texClass": 3,
+                "attributes": {
+                },
+                "inherited": {
+                  "displaystyle": true,
+                  "scriptlevel": 0,
+                  "form": "prefix"
+                },
+                "properties": {
+                },
+                "childNodes": [
+                  {
+                    "kind": "text",
+                    "text": "\u2921"
+                  }
+                ],
+                "isEmbellished": true
+              },
+              {
+                "kind": "mi",
+                "texClass": 0,
+                "attributes": {
+                },
+                "inherited": {
+                  "displaystyle": true,
+                  "scriptlevel": 0,
+                  "mathvariant": "italic"
+                },
+                "properties": {
+                },
+                "childNodes": [
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  }
+                ]
+              }
+            ],
+            "isInferred": true
+          }
+        ],
+        "isInferred": true
+      }
+    ]
+  }
+);
+
+parserTest.runTest(
+  'Other Arrow Postfix', 'b⤡',
+  {
+    "kind": "math",
+    "texClass": 0,
+    "attributes": {
+      "display": "block"
+    },
+    "inherited": {
+      "displaystyle": true,
+      "scriptlevel": 0
+    },
+    "properties": {
+    },
+    "childNodes": [
+      {
+        "kind": "mrow",
+        "texClass": 0,
+        "attributes": {
+        },
+        "inherited": {
+          "displaystyle": true,
+          "scriptlevel": 0
+        },
+        "properties": {
+        },
+        "childNodes": [
+          {
+            "kind": "mrow",
+            "texClass": 0,
+            "attributes": {
+            },
+            "inherited": {
+              "displaystyle": true,
+              "scriptlevel": 0
+            },
+            "properties": {
+            },
+            "childNodes": [
+              {
+                "kind": "mi",
+                "texClass": 0,
+                "attributes": {
+                },
+                "inherited": {
+                  "displaystyle": true,
+                  "scriptlevel": 0,
+                  "mathvariant": "italic"
+                },
+                "properties": {
+                },
+                "childNodes": [
+                  {
+                    "kind": "text",
+                    "text": "b"
+                  }
+                ]
+              },
+              {
+                "kind": "mo",
+                "texClass": 3,
+                "attributes": {
+                },
+                "inherited": {
+                  "displaystyle": true,
+                  "scriptlevel": 0,
+                  "form": "postfix"
+                },
+                "properties": {
+                },
+                "childNodes": [
+                  {
+                    "kind": "text",
+                    "text": "\u2921"
+                  }
+                ],
+                "isEmbellished": true
+              }
+            ],
+            "isInferred": true
+          }
+        ],
+        "isInferred": true
+      }
+    ]
+  }
+);
+
 parserTest.printTime();
