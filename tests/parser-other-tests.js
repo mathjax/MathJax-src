@@ -175,6 +175,7 @@ parserTest.runTest(
    "isEmbellished": true}
 );
 
+
 parserTest.runTest(
   'Other Dollar', '$',
   {"kind": "math",
@@ -224,11 +225,56 @@ parserTest.runTest(
    "isEmbellished": true}
 );
 
+
 parserTest.runTest(
   'Other Unicode', '˦',
-  {"kind": "math","texClass": 0,"attributes": {"display": "block"},"inherited": {"displaystyle": true,"scriptlevel": 0},"properties": {},"childNodes": [{"kind": "mrow","texClass": 0,"attributes": {},"inherited": {"displaystyle": true,"scriptlevel": 0},"properties": {},"childNodes": [{"kind": "TeXAtom","texClass": 0,"attributes": {},"inherited": {"displaystyle": true,"scriptlevel": 0},"properties": {},"childNodes": [{"kind": "mrow","texClass": 0,"attributes": {},"inherited": {"displaystyle": true,"scriptlevel": 0},"properties": {},"childNodes": [{"kind": "mo","texClass": 0,"attributes": {},"inherited": {"displaystyle": true,"scriptlevel": 0,"form": "infix"},"properties": {},"childNodes": [{"kind": "text","text": "\u02e6"}],"isEmbellished": true}],"isInferred": true,"isEmbellished": true}],"isEmbellished": true}],"isInferred": true,"isEmbellished": true}],"isEmbellished": true
-  }
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "TeXAtom",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mo",
+               "texClass": 0,
+               "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0,
+                    "form": "infix"},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "\u02e6"}],
+                  "isEmbellished": true}],
+              "isInferred": true,
+              "isEmbellished": true}],
+          "isEmbellished": true}],
+      "isInferred": true,
+      "isEmbellished": true}],
+  "isEmbellished": true}
 );
+
 
 parserTest.runTest(
   'Other Surrogate', '𝐀',
@@ -279,6 +325,7 @@ parserTest.runTest(
    "isEmbellished": true}
 );
 
+
 parserTest.runTest(
   'Other Arrow Range', '⤡',
   {"kind": "math",
@@ -310,6 +357,7 @@ parserTest.runTest(
       "isEmbellished": true}],
    "isEmbellished": true}
 );
+
 
 parserTest.runTest(
   'Other Arrow Infix', 'a⤡b',
@@ -369,6 +417,7 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+
 parserTest.runTest(
   'Other Arrow Prefix', '⤡b',
   {"kind": "math",
@@ -416,6 +465,7 @@ parserTest.runTest(
          "isInferred": true}],
       "isInferred": true}]}
 );
+
 
 parserTest.runTest(
   'Other Arrow Postfix', 'b⤡',
@@ -468,25 +518,203 @@ parserTest.runTest(
 
 parserTest.runTest(
   'Vertical Bar Alone', '|',
-  {}
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mo",
+         "texClass": 0,
+         "attributes": {"stretchy": false},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix",
+                       "fence": true,
+                       "stretchy": true,
+            "symmetric": true},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "|"}],
+          "isEmbellished": true}],
+      "isInferred": true,
+      "isEmbellished": true}],
+  "isEmbellished": true}
 );
 
 
 parserTest.runTest(
   'Vertical Bar Infix', 'a|b',
-  {}
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mrow",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0,
+                          "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}]},
+           {"kind": "mo",
+            "texClass": 0,
+            "attributes": {"stretchy": false},
+            "inherited": {"displaystyle": true,
+                "scriptlevel": 0,
+                "form": "infix",
+                "fence": true,
+                "stretchy": true,
+                "symmetric": true},
+              "properties": {},
+              "childNodes": [
+                {"kind": "text",
+                  "text": "|"}],
+              "isEmbellished": true},
+            {"kind": "mi",
+              "texClass": 0,
+              "attributes": {},
+              "inherited": {"displaystyle": true,
+                "scriptlevel": 0,
+                "mathvariant": "italic"},
+              "properties": {},
+              "childNodes": [
+                {"kind": "text",
+                  "text": "b"}]}],
+          "isInferred": true}],
+      "isInferred": true}]}
 );
 
 
 parserTest.runTest(
   'Vertical Bar Prefix', 'a|',
-  {}
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mrow",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mi",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0,
+                          "mathvariant": "italic"},
+            "properties": {},
+            "childNodes": [
+              {"kind": "text",
+                  "text": "a"}]},
+            {"kind": "mo",
+              "texClass": 5,
+              "attributes": {"stretchy": false},
+              "inherited": {"displaystyle": true,
+                "scriptlevel": 0,
+                "form": "postfix",
+                "fence": true,
+                "stretchy": true,
+                "symmetric": true},
+              "properties": {},
+              "childNodes": [
+                {"kind": "text",
+                  "text": "|"}],
+              "isEmbellished": true}],
+          "isInferred": true}],
+      "isInferred": true}]}
 );
 
 
 parserTest.runTest(
   'Vertical Bar Postfix', '|b',
-  {}
+  {"kind": "math",
+   "texClass": 4,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 4,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mrow",
+         "texClass": 4,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mo",
+            "texClass": 4,
+            "attributes": {"stretchy": false},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "prefix",
+                          "fence": true,
+                          "stretchy": true,
+                          "symmetric": true},
+              "properties": {},
+              "childNodes": [
+                {"kind": "text",
+                  "text": "|"}],
+              "isEmbellished": true},
+            {"kind": "mi",
+              "texClass": 0,
+              "attributes": {},
+              "inherited": {"displaystyle": true,
+                "scriptlevel": 0,
+                "mathvariant": "italic"},
+              "properties": {},
+              "childNodes": [
+                {"kind": "text",
+                  "text": "b"}]}],
+          "isInferred": true}],
+      "isInferred": true}]}
 );
 
 
