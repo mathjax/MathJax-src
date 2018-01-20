@@ -190,7 +190,7 @@ export class HTMLDomStrings {
      *   Check the class to see if it matches the processClass regex
      *   If the node has a child and is not marked as created by MathJax (data-MJX)
      *       and either it is marked as restarting processing or is not a tag to be skipped, then
-     *     Save the current node and whether we are currently ignoring content
+     *     Save the next node (if there is one) and whether we are currently ignoring content
      *     Move to the first child node
      *     Update whether we are ignoring content
      *   Otherwise
@@ -208,7 +208,9 @@ export class HTMLDomStrings {
         let process = this.processClass.exec(cname);
         if (node.firstChild && !node.getAttribute('data-MJX') &&
             (process || !this.skipTags.exec(tname))) {
-            this.stack.push([node.nextSibling as Element, ignore]);
+            if (node.nextSibling) {
+                this.stack.push([node.nextSibling as Element, ignore]);
+            }
             node = node.firstChild as Element;
             ignore = (ignore || this.ignoreClass.exec(cname)) && !process;
         } else {
