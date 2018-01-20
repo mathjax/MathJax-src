@@ -158,6 +158,11 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         surd.toCHTML(SURD);
         base.toCHTML(BASE);
         if (surd.size < 0) {
+            //
+            // size < 0 means surd is multi-character.  The angle glyph at the
+            // top is hard to align with the horizontal line, so overlap them
+            // using CSS.
+            //
             SQRT.classList.add('mjx-tall');
         }
     }

@@ -72,7 +72,7 @@ export class CHTMLmrow extends CHTMLWrapper {
     }
 
     /*
-     * Handle the case where a child as a percentage width by
+     * Handle the case where a child has a percentage width by
      * marking the parent as 100% width.
      */
     protected makeFullWidth() {

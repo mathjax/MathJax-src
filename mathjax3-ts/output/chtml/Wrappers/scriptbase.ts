@@ -243,7 +243,9 @@ export class CHTMLscriptbase extends CHTMLWrapper {
         let m = 0;
         for (const i of widths.keys()) {
             dw[i] = (w - widths[i]) / 2 + delta[i];
-            if (dw[i] < m) m = -dw[i];
+            if (dw[i] < m) {
+                m = -dw[i];
+            }
         }
         if (m) {
             for (const i of dw.keys()) {
