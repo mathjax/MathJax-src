@@ -1,6 +1,6 @@
 {
   "name": "mathjax3",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-alpha.3",
   "maintainers": [
     "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
   ],
@@ -11,16 +11,16 @@
     "compile": "tsc"
   },
   "dependencies": {
-    "jsdom": "10.*",
-    "typedoc": "^0.9.0"
+    "jsdom": "10.*"
   },
   "devDependencies": {
-    "typescript": "2.3.*",
+    "typescript": "2.5.*",
     "tape": "^4.8.0",
     "tslint": "^3.15.0",
     "tslint-jsdoc-rules": "*",
     "tslint-unix-formatter": "*",
-    "typescript-tools": "^0.3.1"
+    "typescript-tools": "^0.3.1",
+    "typedoc": "^0.9.0"
   },
   "repository": {
     "type": "git",
@@ -41,5 +41,6 @@
     "nodejs",
     "equations",
     "formula"
-  ],  "license": "Apache-2.0"
+  ],
+  "license": "Apache-2.0"
 }
