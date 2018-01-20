@@ -56,6 +56,9 @@ export class CHTMLTeXAtom extends CHTMLWrapper {
      */
     public computeBBox(bbox: BBox) {
         super.computeBBox(bbox);
+        if (this.childNodes[0] && this.childNodes[0].bbox.ic) {
+            bbox.ic = this.childNodes[0].bbox.ic;
+        }
         //
         // Center VCENTER atoms vertically
         //

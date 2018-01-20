@@ -118,7 +118,6 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         //
         //  These don't have Wrapper subclasses, so add their styles here
         //
-        'mjx-mi': {display: 'inline-block'},
         'mjx-mn': {display: 'inline-block'},
         'mjx-mtext': {display: 'inline-block'},
         'mjx-merror': {

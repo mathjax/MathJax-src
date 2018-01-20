@@ -65,6 +65,7 @@ export class BBox {
     public L: number;      // extra space on the left
     public R: number;      // extra space on the right
     public pwidth: string; // percentage width (for tables)
+    public ic: number;
 
     /*
      * @return{BBox}  A BBox initialized to zeros
@@ -91,7 +92,7 @@ export class BBox {
         this.w = def.w || 0;
         this.h = ('h' in def ? def.h : -BIGDIMEN);
         this.d = ('d' in def ? def.d : -BIGDIMEN);
-        this.x = this.y = this.L = this.R = 0;
+        this.x = this.y = this.L = this.R = this.ic = 0;
         this.scale = this.rscale = 1;
         this.pwidth = '';
     }

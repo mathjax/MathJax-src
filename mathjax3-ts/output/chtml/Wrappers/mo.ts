@@ -22,6 +22,7 @@
  */
 
 import {CHTMLWrapper, StringMap} from '../Wrapper.js';
+import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
@@ -105,10 +106,16 @@ export class CHTMLmo extends CHTMLWrapper {
     };
 
     /*
+     * True if no italic correction should be used
+     */
+    public noIC: boolean = false;
+
+    /*
      * The font size that a stretched operator uses.
      * If -1, then stretch arbitrarily, and bbox gives the actual height, depth, width
      */
     public size: number = null;
+
 
     /*
      * @override
@@ -121,6 +128,9 @@ export class CHTMLmo extends CHTMLWrapper {
             this.getStretchedVariant([]);
         }
         let chtml = this.standardCHTMLnode(parent);
+        if (this.noIC) {
+            chtml.setAttribute('noIC', 'true');
+        }
         if (this.stretch && this.size < 0) {
             this.stretchHTML(chtml, symmetric);
         } else {
@@ -196,6 +206,11 @@ export class CHTMLmo extends CHTMLWrapper {
         }
         if (this.stretch && this.size < 0) return;
         super.computeBBox(bbox);
+        const child = this.childNodes[this.childNodes.length-1];
+        if (child && child.bbox.ic) {
+            bbox.ic = child.bbox.ic;
+            if (!this.noIC) bbox.w += bbox.ic;
+        }
         if (symmetric) {
             const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
             bbox.h += d;

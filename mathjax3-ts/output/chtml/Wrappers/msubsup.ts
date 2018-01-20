@@ -50,7 +50,7 @@ export class CHTMLmsub extends CHTMLscriptbase {
      * @override
      */
     protected getOffset(bbox: BBox, sbox: BBox) {
-        return -this.getV(bbox, sbox);
+        return [0, -this.getV(bbox, sbox)];
     }
 
 }
@@ -62,6 +62,8 @@ export class CHTMLmsub extends CHTMLscriptbase {
 
 export class CHTMLmsup extends CHTMLscriptbase {
     public static kind = MmlMsup.prototype.kind;
+
+    public static useIC: boolean = true;
 
     /*
      * @override
@@ -76,7 +78,8 @@ export class CHTMLmsup extends CHTMLscriptbase {
      * @override
      */
     public getOffset(bbox: BBox, sbox: BBox) {
-        return this.getU(bbox, sbox);
+        const x = (this.baseCore.bbox.ic ? .2 * this.baseCore.bbox.ic + .05 : 0);
+        return [x, this.getU(bbox, sbox)];
     }
 
 }
@@ -98,6 +101,8 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
             display: 'block'
         }
     };
+
+    public static noIC: boolean = true;
 
     /*
      *  Cached values for the script offsets and separation (so if they are
@@ -131,6 +136,10 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
         this.sup.toCHTML(stack);
         stack.appendChild(this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
         this.sub.toCHTML(stack);
+        const corebox = this.baseCore.bbox;
+        if (corebox.ic) {
+            this.sup.chtml.style.marginLeft = this.em((1.2 * corebox.ic + .05) / this.sup.bbox.rscale);
+        }
     }
 
     /*
@@ -162,8 +171,21 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
         if (this.UVQ) return this.UVQ;
         const tex = this.font.params;
         const t = 3 * tex.rule_thickness;
-        let [u, v] = (this.isCharBase() ? [0, 0] : [this.getU(basebox, supbox),
-                       Math.max(basebox.d + tex.sub_drop * subbox.rscale, tex.sub2)]);
+        const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
+        const drop = (this.isCharBase() ? 0 : basebox.d + tex.sub_drop * subbox.rscale);
+        //
+        // u and v are the veritcal shifts of the scripts, initially set to minimum values and then adjusted
+        //
+        let [u, v] = [this.getU(basebox, supbox), Math.max(drop, subscriptshift)];
+        //
+        // q is the space currently between the super- and subscripts.
+        // If it is less than 3 rule thicknesses,
+        //   increase the subscript offset to make the space 3 rule thicknesses
+        //   If the bottom of the superscript is below 4/5 of the x-height
+        //     raise both the super- and subscripts by the difference
+        //     (make the bottom of the superscript be at 4/5 the x-height, and the
+        //      subscript 3 rule thickness below that).
+        //
         let q = (u - supbox.d * supbox.rscale) - (subbox.h * subbox.rscale - v);
         if (q < t) {
             v += t - q;
@@ -173,6 +195,10 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
                 v -= p;
             }
         }
+        //
+        // Make sure the shifts are at least the minimum amounts and
+        // return the shifts and the space between the scripts
+        //
         u = Math.max(this.length2em(this.node.attributes.get('superscriptshift'), u), u);
         v = Math.max(this.length2em(this.node.attributes.get('subscriptshift'), v), v);
         q = (u - supbox.d * supbox.rscale) - (subbox.h * subbox.rscale - v);

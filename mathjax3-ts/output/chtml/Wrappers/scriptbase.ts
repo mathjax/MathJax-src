@@ -25,10 +25,12 @@
  */
 
 import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLmo} from './mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleData, StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
@@ -38,6 +40,16 @@ import {StyleList} from '../CssStyles.js';
 
 export class CHTMLscriptbase extends CHTMLWrapper {
     public static kind = 'scriptbase';
+
+    /*
+     * Set to true for munderover/munder/mover/msup (Appendix G 13)
+     */
+    public static useIC: boolean = false;
+
+    /*
+     * The core mi or mo of the base (or the base itself if there isn't one)
+     */
+    protected baseCore: CHTMLWrapper;
 
     /*
      * @return{CHTMLWrapper}  The base element's wrapper
@@ -54,6 +66,30 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     }
 
     /*
+     * @override
+     */
+    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+        super(factory, node, parent);
+        //
+        //  Find the base core
+        //
+        let core = this.baseCore = this.childNodes[0];
+        if (!core) return;
+        while (core.childNodes.length === 1 && (core.node.isKind('mrow') || core.node.isKind('TeXAtom'))) {
+            core = core.childNodes[0];
+            if (!core) return;
+        }
+        if (!('noIC' in core)) return;
+        this.baseCore = core;
+        //
+        //  Check if the base is a mi or mo that needs italic correction removed
+        //
+        if (!(this.constructor as typeof CHTMLscriptbase).useIC) {
+            (core as CHTMLmo).noIC = true;
+        }
+    }
+
+    /*
      * This gives the common output for msub and msup.  It is overriden
      * for all the others (msubsup, munder, mover, munderover).
      *
@@ -61,8 +97,11 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      */
     public toCHTML(parent: HTMLElement) {
         this.chtml = this.standardCHTMLnode(parent);
-        const v = this.getOffset(this.base.getBBox(), this.script.getBBox());
-        const style = {'vertical-align': this.em(v)};
+        const [x, v] = this.getOffset(this.base.getBBox(), this.script.getBBox());
+        const style: StyleData = {'vertical-align': this.em(v)};
+        if (x) {
+            style['margin-left'] = this.em(x);
+        }
         this.base.toCHTML(this.chtml);
         this.script.toCHTML(this.chtml.appendChild(this.html('mjx-script', {style})));
     }
@@ -76,8 +115,9 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     public computeBBox(bbox: BBox) {
         const basebox = this.base.getBBox();
         const scriptbox = this.script.getBBox();
+        const [x, y] = this.getOffset(basebox, scriptbox);
         bbox.append(basebox);
-        bbox.combine(scriptbox, bbox.w, this.getOffset(basebox, scriptbox));
+        bbox.combine(scriptbox, bbox.w + x, y);
         bbox.w += this.font.params.scriptspace;
         bbox.clean();
     }
@@ -105,10 +145,10 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      *
      * @param{BBox} bbox   The bounding box of the base element
      * @param{BBox} sbox   The bounding box of the script element
-     * @return{number}     The vertical offset for the script
+     * @return{number[]}   The horizontal and vertical offsets for the script
      */
     protected getOffset(bbox: BBox, sbox: BBox) {
-        return 0;
+        return [0, 0];
     }
 
     /*
@@ -192,12 +232,26 @@ export class CHTMLscriptbase extends CHTMLWrapper {
 
     /*
      * @param{BBox[]} boxes  The bounding boxes whose offsets are to be computed
-     * @param{number[]}      The x offsets of the boxes to center them in a vertical stack
+     * @param{number[]}      The initial x offsets of the boxes
+     * @return{number[]}     The actual offsets needed to center the boxes in the stack
      */
-    protected getDeltaW(boxes: BBox[]) {
+    protected getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]) {
         const widths = boxes.map(box => box.w * box.rscale);
         const w = Math.max(...widths);
-        return widths.map(width => (w - width) / 2);
+        const dw = [];
+        let m = 0;
+        for (const i of widths.keys()) {
+            dw[i] = (w - widths[i]) / 2 + delta[i];
+            if (dw[i] < m) {
+                m = -dw[i];
+            }
+        }
+        if (m) {
+            for (const i of dw.keys()) {
+                dw[i] += m;
+            }
+        }
+        return dw;
     }
 
     /*
