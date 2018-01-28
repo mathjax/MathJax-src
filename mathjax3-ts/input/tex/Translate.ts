@@ -28,7 +28,7 @@ import TexParser from './TexParser.js';
 import {ParserUtil} from './ParserUtil.js';
 import TexError from './TexError.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
+import {MmlMo, OperatorDef} from '../../core/MmlTree/MmlNodes/mo.js';
 
 // A wrapper for translating scripts with LaTeX content.
 
@@ -94,7 +94,7 @@ export namespace NewTex {
       }
       for (let mo of parser.secondPass) {
         let forms = mo.getForms();
-        let symbol;
+        let symbol: OperatorDef;
         for (let form of forms) {
           symbol = MmlMo.OPTABLE[form][mo.getText()];
           if (symbol) {
