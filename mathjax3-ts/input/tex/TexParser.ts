@@ -34,6 +34,7 @@ import {ParseMethods} from './ParseMethods.js';
 // From OLD Parser
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {StackItem, StopItem, EnvList} from './StackItem.js';
 import Stack from './Stack.js';
 import {Symbol} from './Symbol.js';
@@ -45,11 +46,13 @@ import TexError from './TexError.js';
  */
 export default class TexParser {
 
+  public macroCount: number = 0;
+  public secondPass: MmlMo[] = [];
+
   private input: string = '';
   private remainder: string = '';
-  public macroCount: number = 0;
   private configurations: Map<HandlerType, SubHandler> = new Map();
-
+  
   // From OLD Parser
   NBSP = '\u00A0'; 
   string: string;

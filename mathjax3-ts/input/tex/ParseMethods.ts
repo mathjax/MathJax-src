@@ -33,6 +33,7 @@ import {ParserUtil} from './ParserUtil.js';
 import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 
 
 // Namespace
@@ -398,7 +399,9 @@ export namespace ParseMethods {
     // @test Other
     // @test Other Remap
     var textNode = TreeHelper.createText(remap ? remap.char : c);
-    let mo = TreeHelper.createNode('mo', [], def, textNode);
+    let mo = TreeHelper.createNode('mo', [], def, textNode) as MmlMo;
+    parser.secondPass.push(mo);
+    
     // VS: Question: What do these autoDefault methods do exactly.
     //     Is there a modern equivalent in v3?
     // 
@@ -515,6 +518,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Limits');
     // @test Limits
     var op = parser.stack.Prev(true);
+    // TODO: Lookup in Operator Table.
     if (!op || (TreeHelper.getTexClass(op) !== TEXCLASS.OP &&
                 TreeHelper.getProperty(op, 'movesupsub') == null)) {
       // @test Limits Error
@@ -687,6 +691,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod('UnderOver');
     // @test Overline
     var base = parser.ParseArg(name);
+    // TODO: Check via operator table later?
     if (TreeHelper.getProperty(base, 'movablelimits')) {
       // @test Overline Sum
       TreeHelper.setProperties(base, {'movablelimits': false});

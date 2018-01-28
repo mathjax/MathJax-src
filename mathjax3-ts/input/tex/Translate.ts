@@ -28,6 +28,7 @@ import TexParser from './TexParser.js';
 import {ParserUtil} from './ParserUtil.js';
 import TexError from './TexError.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 
 // A wrapper for translating scripts with LaTeX content.
 
@@ -59,12 +60,14 @@ export namespace NewTex {
       TreeHelper.printMethod('Translate');
       TreeHelper.printSimple(script.toString());
       let mml: MmlNode;
+      let parser: TexParser;
       let isError = false;
       let math = script.innerText;
       display = script.type.replace(/\n/g, ' ').
         match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
       try {
-        mml = new TexParser(math, null).mml();
+        parser = new TexParser(math, null);
+        mml = parser.mml();
         TreeHelper.printSimple(mml.toString());
       } catch (err) {
         if (!(err instanceof TexError)) {
@@ -84,6 +87,36 @@ export namespace NewTex {
       let root = TreeHelper.getRoot(mathNode);
       if (display) {
         TreeHelper.setAttribute(root, 'display', 'block');
+      }
+      if (!parser) {
+        // In case we have a caught error, parser will be undefined.
+        return mathNode;
+      }
+      for (let mo of parser.secondPass) {
+        let forms = mo.getForms();
+        let symbol;
+        for (let form of forms) {
+          // console.log(form);
+          // console.log(MmlMo.OPTABLE[form]);
+          // console.log(mo.getText());
+          symbol = MmlMo.OPTABLE[form][mo.getText()];
+          if (symbol) {
+            console.log(form);
+            break;
+          }
+        }
+        if (!symbol) {
+          console.log('No symbol found: ' + mo.getText() + ' for ' + forms);
+        }
+        if (symbol && symbol[3] && symbol[3]['stretchy']) {
+          TreeHelper.setAttribute(mo, 'stretchy', false);
+        }
+        if (symbol) {
+          console.log('Symbol: ' + mo.getText() + ' old: ' + mo.texClass + ' new: ' + symbol[2]);
+        }
+        // console.log(forms);
+        // console.log(mo);
+        // console.log(MmlMo.OPTABLE);
       }
       // TODO: Should not be necessary anymore!
       // if (isError) {
