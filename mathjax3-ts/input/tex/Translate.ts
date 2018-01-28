@@ -96,27 +96,14 @@ export namespace NewTex {
         let forms = mo.getForms();
         let symbol;
         for (let form of forms) {
-          // console.log(form);
-          // console.log(MmlMo.OPTABLE[form]);
-          // console.log(mo.getText());
           symbol = MmlMo.OPTABLE[form][mo.getText()];
           if (symbol) {
-            console.log(form);
             break;
           }
-        }
-        if (!symbol) {
-          console.log('No symbol found: ' + mo.getText() + ' for ' + forms);
         }
         if (symbol && symbol[3] && symbol[3]['stretchy']) {
           TreeHelper.setAttribute(mo, 'stretchy', false);
         }
-        if (symbol) {
-          console.log('Symbol: ' + mo.getText() + ' old: ' + mo.texClass + ' new: ' + symbol[2]);
-        }
-        // console.log(forms);
-        // console.log(mo);
-        // console.log(MmlMo.OPTABLE);
       }
       // TODO: Should not be necessary anymore!
       // if (isError) {
