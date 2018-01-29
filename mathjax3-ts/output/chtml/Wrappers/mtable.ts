@@ -28,6 +28,7 @@ import {BBox} from '../BBox.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
 import {StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
@@ -39,10 +40,15 @@ export class CHTMLmtable extends CHTMLWrapper {
 
     public static styles: StyleList = {
         'mjx-mtable': {
-            'vertical-align': '.25em'
+            'vertical-align': '.25em',
+            'text-align': 'center'
         },
         'mjx-mtable > mjx-itable': {
-            'vertical-align': 'middle'
+            'vertical-align': 'middle',
+            'text-align': 'left'
+        },
+        'mjx-mtable[width="%"] > mjx-itable': {
+            width: '100%'
         }
     };
 
@@ -64,8 +70,60 @@ export class CHTMLmtable extends CHTMLWrapper {
         //
         // Determine the number of columns and rows
         //
-        this.numCols = this.childNodes.map(row => (row as CHTMLmtr).numCells).reduce((a, b) => Math.max(a, b));
+        this.numCols = this.childNodes.map(row => (row as CHTMLmtr).numCells).reduce((a, b) => Math.max(a, b), 0);
         this.numRows = this.childNodes.length;
+        //
+        // Stretch the columns (rows are already taken care of in the CHTMLmtr wrapper)
+        //
+        for (let i = 0; i < this.numCols; i++) {
+            this.stretchColumn(i);
+        }
+    }
+
+    /*
+     * Handle horizontal stretching within the ith column
+     */
+    protected stretchColumn(i: number) {
+        let stretchy: CHTMLWrapper[] = [];
+        //
+        //  Locate and count the stretchy children
+        //
+        for (const row of (this.childNodes as CHTMLmtr[])) {
+            const cell = row.childNodes[i + row.firstCell];
+            if (cell) {
+                const child = cell.childNodes[0];
+                if (child.stretch.dir === DIRECTION.None && child.canStretch(DIRECTION.Horizontal)) {
+                    stretchy.push(child);
+                }
+            }
+        }
+        let count = stretchy.length;
+        let nodeCount = this.childNodes.length;
+        if (count && nodeCount > 1) {
+            let W = 0;
+            //
+            //  If all the children are stretchy, find the largest one,
+            //  otherwise, find the width of the non-stretchy children.
+            //
+            let all = (count > 1 && count === nodeCount);
+            for (const row of (this.childNodes as CHTMLmtr[])) {
+                const cell = row.childNodes[i + row.firstCell];
+                if (cell) {
+                    const child = cell.childNodes[0];
+                    const noStretch = (child.stretch.dir === DIRECTION.None);
+                    if (all || noStretch) {
+                        const {w} = child.getBBox(noStretch);
+                        if (w > W) W = w;
+                    }
+                }
+            }
+            //
+            //  Stretch the stretchable children
+            //
+            for (const child of stretchy) {
+                child.coreMO().getStretchedVariant([W]);
+            }
+        }
     }
 
     /******************************************************************/
@@ -102,6 +160,7 @@ export class CHTMLmtable extends CHTMLWrapper {
         this.handleRowSpacing(lines, fspacing[1] || '0');
         this.handleRowLines();
         this.handleFrame(frame);
+        this.handleWidth();
     }
 
     /******************************************************************/
@@ -133,12 +192,12 @@ export class CHTMLmtable extends CHTMLWrapper {
         const cLines = this.getColumnAttributes('columnlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
         const rLines = this.getColumnAttributes('rowlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
         const a = this.font.params.axis_height;
-        const h = H.concat(D, rLines).reduce((a, b) => a + b) + (frame ? .14 : 0) +
-        rSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1] || '0');
+        const h = H.concat(D, rLines).reduce((a, b) => a + b, 0) + (frame ? .14 : 0) +
+            rSpace.map(x => parseFloat(x)).reduce((a, b) => a + b, 0) + 2 * parseFloat(fSpace[1] || '0');
         bbox.h = h / 2 + a;
         bbox.d = h / 2 - a;
-        bbox.w = W.concat(cLines).reduce((a, b) => a + b) +
-        cSpace.map(x => parseFloat(x)).reduce((a, b) => a + b) + 2 * parseFloat(fSpace[1] || '0');
+        bbox.w = W.concat(cLines).reduce((a, b) => a + b, 0) +
+            cSpace.map(x => parseFloat(x)).reduce((a, b) => a + b, 0) + 2 * parseFloat(fSpace[1] || '0');
     }
 
     /******************************************************************/
@@ -147,7 +206,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      * Pad any short rows with extra cells
      */
     protected padRows() {
-        for (const row of Array.from(this.chtml.childNodes)) {
+        for (const row of Array.from((this.chtml.firstChild as HTMLElement).childNodes)) {
             while (row.childNodes.length < this.numCols) {
                 row.appendChild(this.html('mjx-mtd'));
             }
@@ -324,6 +383,21 @@ export class CHTMLmtable extends CHTMLWrapper {
         if (frame) {
             (this.chtml.firstChild as HTMLElement).style.border = '.07em ' + this.node.attributes.get('frame');
         }
+    }
+
+    /*
+     * Handle percentage widths and fixed widths
+     */
+    protected handleWidth() {
+        let w = this.node.attributes.get('width') as string;
+        if (w === 'auto') return;
+        if (w.match(/%$/)) {
+            this.bbox.pwidth = w;
+            this.chtml.setAttribute('width','%');
+        } else {
+            w = this.em(this.length2em(w));
+        }
+        this.chtml.style.width = w;
     }
 
     /******************************************************************/

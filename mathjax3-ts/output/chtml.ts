@@ -22,7 +22,7 @@
  */
 
 import {AbstractOutputJax} from '../core/OutputJax.js';
-import {OptionList} from '../util/Options.js';
+import {OptionList, separateOptions} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
@@ -73,7 +73,7 @@ export class CHTML extends AbstractOutputJax {
      * wrapper nodes for them (used by functions like core() to locate the wrappers
      * from the core nodes)
      */
-    public nodeMap: Map<MmlNode, CHTMLWrapper> = null;
+    public nodeMap: Map<MmlNode, CHTMLWrapper>;
 
     /*
      * Get the WrapperFactory and connect it to this output jax
@@ -83,12 +83,13 @@ export class CHTML extends AbstractOutputJax {
      * @constructor
      */
     constructor(options: OptionList = null) {
-        super(options);
+        const [chtmlOptions, fontOptions] = separateOptions(options, TeXFont.OPTIONS);
+        super(chtmlOptions);
         this.factory = this.options.CHTMLWrapperFactory || new CHTMLWrapperFactory();
         this.factory.chtml = this;
         this.nodes = new HTMLNodes();
         this.cssStyles = this.options.cssStyles || new CssStyles();
-        this.font = this.options.font || new TeXFont();
+        this.font = this.options.font || new TeXFont(fontOptions);
     }
 
     /*
@@ -105,7 +106,7 @@ export class CHTML extends AbstractOutputJax {
         this.math = math;
         this.nodes.document = html.document;
         math.root.setTeXclass(null);
-        let node = this.html('mjx-chtml', {'class': 'MathJax_CHTML MJX-TEX'});
+        let node = this.html('mjx-chtml', {'class': 'MathJax MJX-CHTML MJX-TEX'});
         const scale = math.metrics.scale * this.options.scale;
         if (scale !== 1) {
             node.style.fontSize = percent(scale);
@@ -152,6 +153,7 @@ export class CHTML extends AbstractOutputJax {
      * @override
      */
     public styleSheet(html: MathDocument) {
+        this.nodes.document = html.document;
         //
         // Gather the CSS from the classes
         //

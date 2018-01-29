@@ -33,7 +33,7 @@ import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
-import {FontData, DIRECTION} from './FontData.js';
+import {FontData, DelimiterData, DIRECTION, NOSTRETCH} from './FontData.js';
 import {StyleList} from './CssStyles.js';
 
 /*****************************************************************/
@@ -105,6 +105,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         'mjx-chtml [size="hg"]': {'font-size': '207%'},
         'mjx-chtml [size="HG"]': {'font-size': '249%'},
 
+        'mjx-chtml [width="full"]': {
+            width: '100%'
+        },
+
         'mjx-box': {display: 'inline-block'},
         'mjx-block': {display: 'block'},
         'mjx-itable': {display: 'inline-table'},
@@ -114,7 +118,6 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         //
         //  These don't have Wrapper subclasses, so add their styles here
         //
-        'mjx-mi': {display: 'inline-block'},
         'mjx-mn': {display: 'inline-block'},
         'mjx-mtext': {display: 'inline-block'},
         'mjx-merror': {
@@ -123,15 +126,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             'background-color': 'yellow'
         },
 
-        'mjx-mphantom': {visibility: 'hidden'},
-
-        'mjx-math': {
-            //
-            //  There will be more here when the math wrapper is written
-            //
-            display: 'inline-block',
-            'line-height': '0px'
-        }
+        'mjx-mphantom': {visibility: 'hidden'}
 
     };
 
@@ -231,9 +226,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     protected bboxComputed: boolean = false;
 
     /*
-     * Direction this node can be stretched (null means not yet determined)
+     * Delimiter data for stretching this node (NOSTRETCH means not yet determined)
      */
-    public stretch: DIRECTION = DIRECTION.None;
+    public stretch: DelimiterData = NOSTRETCH;
 
     /*
      * Easy access to the font parameters
@@ -521,7 +516,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @param{number} rscale      The relatie scale to apply
      * @return{HTMLElement}       The HTML node (for chaining)
      */
-    setScale(chtml: HTMLElement, rscale: number) {
+    protected setScale(chtml: HTMLElement, rscale: number) {
         const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
         if (chtml && scale !== 1) {
             const size = this.percent(scale);
@@ -625,16 +620,16 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @return{boolean}             Whether the node can stretch in that direction
      */
     public canStretch(direction: DIRECTION): boolean {
-        this.stretch = DIRECTION.None;
+        this.stretch = NOSTRETCH;
         if (this.node.isEmbellished) {
             let core = this.core();
             if (core && core.node !== this.node) {
                 if (core.canStretch(direction)) {
-                    this.stretch = direction;
+                    this.stretch = core.stretch;
                 }
             }
         }
-        return this.stretch !== DIRECTION.None;
+        return this.stretch.dir !== DIRECTION.None;
     }
 
     /*******************************************************************/

@@ -24,6 +24,7 @@
 import {FontData, DelimiterData, CharData, CharOptions, DelimiterMap, CharMapMap, CSS, V, H} from '../FontData.js';
 import {StyleList, StyleData} from '../CssStyles.js';
 import {em} from '../../../util/lengths.js';
+import {OptionList, defaultOptions, userOptions} from '../../../util/Options.js';
 import {StringMap} from '../Wrapper.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -59,6 +60,14 @@ import {delimiters} from './tex/delimiters.js';
  *  The TeXFont class
  */
 export class TeXFont extends FontData {
+
+    /*
+     * Default options
+     */
+    public static OPTIONS = {
+        fontURL: 'mathjax2/css/'
+    };
+
     /*
      *  Add the extra variants for the TeX fonts
      */
@@ -241,118 +250,136 @@ export class TeXFont extends FontData {
 
         '.MJX-TEX mjx-stretchy-v mjx-c, .MJX-TEX mjx-stretchy-h mjx-c': {
             'font-family': 'MJXZERO, MJXTEX, MJXTEX-S4 ! important'
-        },
+        }
+    };
 
+    protected static defaultFonts = {
         '@font-face /* 0 */': {
             'font-family': 'MJXZERO',
-            src: 'url("mathjax2/css/otf/MathJax_Zero.otf") format("opentype")'
+            src: 'url("%%URL%%/otf/MathJax_Zero.otf") format("opentype")'
         },
 
         '@font-face /* 1 */': {
             'font-family': 'MJXTEX',
-            src: 'url("mathjax2/css/woff/MathJax_Main-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Main-Regular.woff") format("woff")'
         },
 
         '@font-face /* 2 */': {
             'font-family': 'MJXTEX-B',
-            src: 'url("mathjax2/css/woff/MathJax_Main-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Main-Bold.woff") format("woff")'
         },
 
         '@font-face /* 3 */': {
             'font-family': 'MJXTEX-MI',
-            src: 'url("mathjax2/css/woff/MathJax_Main-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Main-Italic.woff") format("woff")'
         },
 
         '@font-face /* 4 */': {
             'font-family': 'MJXTEX-I',
-            src: 'url("mathjax2/css/woff/MathJax_Math-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Math-Italic.woff") format("woff")'
         },
 
         '@font-face /* 5 */': {
             'font-family': 'MJXTEX-BI',
-            src: 'url("mathjax2/css/woff/MathJax_Math-BoldItalic.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Math-BoldItalic.woff") format("woff")'
         },
 
         '@font-face /* 6 */': {
             'font-family': 'MJXTEX-S1',
-            src: 'url("mathjax2/css/woff/MathJax_Size1-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Size1-Regular.woff") format("woff")'
         },
 
         '@font-face /* 7 */': {
             'font-family': 'MJXTEX-S2',
-            src: 'url("mathjax2/css/woff/MathJax_Size2-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Size2-Regular.woff") format("woff")'
         },
 
         '@font-face /* 8 */': {
             'font-family': 'MJXTEX-S3',
-            src: 'url("mathjax2/css/woff/MathJax_Size3-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Size3-Regular.woff") format("woff")'
         },
 
         '@font-face /* 9 */': {
             'font-family': 'MJXTEX-S4',
-            src: 'url("mathjax2/css/woff/MathJax_Size4-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Size4-Regular.woff") format("woff")'
         },
 
         '@font-face /* 10 */': {
             'font-family': 'MJXTEX-A',
-            src: 'url("mathjax2/css/woff/MathJax_AMS-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_AMS-Regular.woff") format("woff")'
         },
 
         '@font-face /* 11 */': {
             'font-family': 'MJXTEX-C',
-            src: 'url("mathjax2/css/woff/MathJax_Caligraphic-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Caligraphic-Regular.woff") format("woff")'
         },
 
         '@font-face /* 12 */': {
             'font-family': 'MJXTEX-C-B',
-            src: 'url("mathjax2/css/woff/MathJax_Caligraphic-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Caligraphic-Bold.woff") format("woff")'
         },
 
         '@font-face /* 13 */': {
             'font-family': 'MJXTEX-FR',
-            src: 'url("mathjax2/css/woff/MathJax_Fraktur-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Fraktur-Regular.woff") format("woff")'
         },
 
         '@font-face /* 14 */': {
             'font-family': 'MJXTEX-FR-B',
-            src: 'url("mathjax2/css/woff/MathJax_Fraktur-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Fraktur-Bold.woff") format("woff")'
         },
 
         '@font-face /* 15 */': {
             'font-family': 'MJXTEX-SS',
-            src: 'url("mathjax2/css/woff/MathJax_SansSerif-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_SansSerif-Regular.woff") format("woff")'
         },
 
         '@font-face /* 16 */': {
             'font-family': 'MJXTEX-SS-B',
-            src: 'url("mathjax2/css/woff/MathJax_SansSerif-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_SansSerif-Bold.woff") format("woff")'
         },
 
         '@font-face /* 17 */': {
             'font-family': 'MJXTEX-SS-I',
-            src: 'url("mathjax2/css/woff/MathJax_SansSerif-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_SansSerif-Italic.woff") format("woff")'
         },
 
         '@font-face /* 18 */': {
             'font-family': 'MJXTEX-SC',
-            src: 'url("mathjax2/css/woff/MathJax_Script-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Script-Regular.woff") format("woff")'
         },
 
         '@font-face /* 19 */': {
             'font-family': 'MJXTEX-T',
-            src: 'url("mathjax2/css/woff/MathJax_Typewriter-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/woff/MathJax_Typewriter-Regular.woff") format("woff")'
         },
     };
+
+    protected options: OptionList;
+
+    /*
+     * @override
+     */
+    constructor(options: OptionList = null) {
+        super();
+        let CLASS = this.constructor as typeof TeXFont;
+        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
+    }
 
     /*
      * @return{StyleList}  The (computed) styles for this font
      *                     (could be used to limit styles to those actually used, for example)
      */
     get styles() {
+        const CLASS = this.constructor as typeof TeXFont;
         //
         //  Include the default styles
         //
-        let styles: StyleList = {...(this.constructor as typeof TeXFont).defaultStyles};
+        let styles: StyleList = {...CLASS.defaultStyles};
+        //
+        //  Add fonts with proper URL
+        //
+        this.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
         //
         //  Create styles needed for the delimiters
         //
@@ -363,6 +390,17 @@ export class TeXFont extends FontData {
         //
         //  Create styles needed for the characters in each variant
         //
+        this.addVariantChars(styles);
+        //
+        //  Return the final style sheet
+        //
+        return styles;
+    }
+
+    /*
+     * @param{StyleList} styles  The style list to add characters to
+     */
+    protected addVariantChars(styles: StyleList) {
         for (const name of Object.keys(this.variant)) {
             const variant = this.variant[name];
             const vclass = (name === 'normal' ? '' : ' .' + variant.classes.replace(/ /g, '.'));
@@ -373,7 +411,19 @@ export class TeXFont extends FontData {
                 }
             }
         }
-        return styles;
+    }
+
+    /*
+     * @param{StyleList} styles    The style object to add styles to
+     * @param{StyleList} fonts     The default font-face directives with %%URL%% where the url should go
+     * @param{string} url          The actual URL to insert into the src strings
+     */
+    protected addFontURLs(styles: StyleList, fonts: StyleList, url: string) {
+        for (const name of Object.keys(fonts)) {
+            const font = {...fonts[name]};
+            font.src = (font.src as string).replace(/%%URL%%/,url);
+            styles[name] = font;
+        }
     }
 
     /*
@@ -382,23 +432,49 @@ export class TeXFont extends FontData {
      * @param{DelimiterData} data  The data for the delimiter whose CSS is to be added
      */
     protected addDelimiterStyles(styles: StyleList, n: number, data: DelimiterData) {
+        const c = this.char(n);
+        if (data.c && data.c !== n) {
+            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] = {content: '"' + this.char(data.c,true) + '"'};
+        }
         if (!data.stretch) return;
         if (data.dir === DIRECTION.Vertical) {
-            const c = this.char(n);
-            const Hb = this.addDelimiterVPart(styles, c, 'beg', data.stretch[0]);
-            this.addDelimiterVPart(styles, c, 'ext', data.stretch[1]);
-            const He = this.addDelimiterVPart(styles, c, 'end', data.stretch[2]);
-            const css: StyleData = {};
-            if (Hb) {
-                css['border-top-width'] = this.em(Math.max(0, Hb - .03));
-            }
-            if (He) {
-                css['border-bottom-width'] = this.em(Math.max(0, He - .03));
-                css['margin-bottom'] = this.em(-He);
-            }
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css;
+            this.addDelimiterVStyles(styles, c, data);
         } else {
-            //  FIXME: still need to add this
+            this.addDelimiterHStyles(styles, c, data);
+        }
+    }
+
+    /*
+     * @param{StyleList} styles    The style object to add styles to
+     * @param{string} c            The delimiter character string
+     * @param{DelimiterData} data  The data for the delimiter whose CSS is to be added
+     */
+    protected addDelimiterVStyles(styles: StyleList, c: string, data: DelimiterData) {
+        const [beg, ext, end, mid] = data.stretch;
+        const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
+        this.addDelimiterVPart(styles, c, 'ext', ext);
+        const He = this.addDelimiterVPart(styles, c, 'end', end);
+        let Hm;
+        if (mid) {
+            Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext'] = {height: '50%'}
+        }
+        const css: StyleData = {};
+        if (Hb) {
+            css['border-top-width'] = this.em0(Hb - .03);
+        }
+        if (He) {
+            css['border-bottom-width'] = this.em0(He - .03);
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-end'] = {'margin-top': this.em(-He)};
+            if (mid) {
+                styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
+                    'margin-top': this.em(-Hm/2),
+                    'margin-bottom': this.em(-Hm/2)
+                };
+            }
+        }
+        if (Object.keys(css).length) {
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css;
         }
     }
 
@@ -414,10 +490,44 @@ export class TeXFont extends FontData {
         const data = this.getChar('normal', n) || this.getChar('-size4', n);
         const css: StyleData = {content: '"' + this.char(n, true) + '"'};
         if (part !== 'ext') {
-            css.padding = this.em(data[0]) + ' 0 ' + this.em(data[1]);
+            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
         }
         styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
         return data[0] + data[1];
+    }
+
+    /*
+     * @param{StyleList} styles    The style object to add styles to
+     * @param{string} c            The delimiter character string
+     * @param{DelimiterData} data  The data for the delimiter whose CSS is to be added
+     */
+    protected addDelimiterHStyles(styles: StyleList, c: string, data: DelimiterData) {
+        const [beg, ext, end, mid] = data.stretch;
+        this.addDelimiterHPart(styles, c, 'beg', beg);
+        this.addDelimiterHPart(styles, c, 'ext', ext, !(beg || end));
+        this.addDelimiterHPart(styles, c, 'end', end);
+        if (mid) {
+            this.addDelimiterHPart(styles, c, 'mid', mid);
+            styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] > mjx-ext'] = {width: '50%'}
+        }
+    }
+
+    /*
+     * @param{StyleList} styles  The style object to add styles to
+     * @param{string} c          The vertical character whose part is being added
+     * @param{string} part       The name of the part (beg, ext, end, mid) that is being added
+     * @param{number} n          The unicode character to use for the part
+     */
+    protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, force: boolean = false) {
+        if (!n) return 0;
+        const data = this.getChar('normal', n) || this.getChar('-size4', n);
+        const options = data[3] as CharOptions;
+        const C = (options && options.c ? options.c : this.char(n, true));
+        const css: StyleData = {content: '"' + C + '"'};
+        if (part !== 'ext' || force) {
+          css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
+        }
+        styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
     }
 
     /*
@@ -434,14 +544,22 @@ export class TeXFont extends FontData {
                 css.width = this.em(w);
             }
             if (options.css & CSS.padding) {
-                css.padding = this.em(Math.max(0, h)) + ' 0 ' + this.em(Math.max(0, d));
+                css.padding = this.em0(h) + ' 0 ' + this.em0(d);
             }
             if (options.css & CSS.content) {
                 css.content = '"' + (options.c || this.char(n, true)) + '"';
             }
         }
         if (options.f !== undefined) css['font-family'] = 'MJXZERO, MJXTEX' + (options.f ? '-' + options.f : '');
-        styles['.MJX-TEX' + vclass + ' mjx-c[c="' + this.char(n) + '"]::before'] = css;
+        const char = vclass + ' mjx-c[c="' + this.char(n) + '"]';
+        styles['.MJX-TEX' + char + '::before'] = css;
+        if (options.ic) {
+            const [MJX, noIC] = ['.MJX-TEX mjx-', ':not([noIC="true"])' + char.substr(1) + ':last-child::before'];
+            styles[MJX + 'mi' + noIC] =
+            styles[MJX + 'mo' + noIC] = {
+                width: this.em(w + options.ic)
+            };
+        }
     }
 
     /*
@@ -450,6 +568,14 @@ export class TeXFont extends FontData {
      */
     protected em(n: number) {
         return em(n);
+    }
+
+    /*
+     * @param{number} n  The number of ems (will be restricted to non-negative values)
+     * @return{string}   The string representing the number with units of "em"
+     */
+    protected em0(n: number) {
+        return em(Math.max(0, n));
     }
 
 }
