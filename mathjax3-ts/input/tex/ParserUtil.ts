@@ -26,7 +26,7 @@
 
 import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {TreeHelper} from './TreeHelper.js';
-import {OldParser} from './OldParser.js';
+import TexParser from './TexParser.js';
 
 // A namespace for utility functions for the TeX Parser.
 //
@@ -137,8 +137,6 @@ export namespace ParserUtil {
   };
 
 
-  // TODO: Handling the parser here is a bit awkward!
-  //       This and the previous method should go into the ParseMethods.
   export function mathPalette(fence: string, side: string) {
     TreeHelper.printMethod('mathPalette');
     if (fence === '{' || fence === '}') {
@@ -146,9 +144,7 @@ export namespace ParserUtil {
     }
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
-    return new OldParser('\\mathchoice' + D + T + T + T, {}, {}).mml();
-    // let parser = new TexParser();
-    // return parser.parse('\\mathchoice' + D + T + T + T, {}).mml();
+    return new TexParser('\\mathchoice' + D + T + T + T, {}).mml();
   };
 
 

@@ -174,11 +174,9 @@ export class BaseItem implements StackItem {
       return this.data[0];
     }
     // @test Two Identifiers
-    var node = TreeHelper.createNode('mrow', this.data,
-                              inferred ? {inferred: true} : {});
+    return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this.data, {});
     // VS: OLD
     // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
-    return node;
   }
 
 
@@ -193,7 +191,8 @@ export class BaseItem implements StackItem {
         return false;
       }
       // TODO: Test what symbol really does!
-      //throw new TexError(['Misplaced', 'Misplaced %1', item.getProperty('name').symbol]);
+      //throw new TexError(['Misplaced', 'Misplaced %1', item.getProperty('name').symbol]);      
+      // @test Ampersand-error
       throw new TexError(['Misplaced', 'Misplaced %1', item.getName()]);
     }
     if (item.isClose && this.errors[item.getType() + 'Error']) {
@@ -789,6 +788,8 @@ export class FnItem extends BaseItem {
           TreeHelper.printSimple('case 5');
           mml = TreeHelper.getCoreMO(mml);
         }
+        // TODO: Look this up in the operator table either as
+        //       infix/postfix/prefix.
         if ([0, 0, 1, 1, 0, 1, 1, 0, 0, 0][TreeHelper.getTexClass(mml)]) {
           return [this.data[0], item];
         }
@@ -874,6 +875,7 @@ export class DotsItem extends BaseItem {
     var dots = this.getProperty('ldots') as MmlNode;
     // @test Operator Dots
     if (item.hasType('mml') && TreeHelper.isEmbellished(item.data[0])) {
+      // TODO: Lookup in Operator Table.
       var tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(item.data[0]));
       if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
         dots = this.getProperty('cdots') as MmlNode;
