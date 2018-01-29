@@ -28,7 +28,8 @@ import TexParser from './TexParser.js';
 import {ParserUtil} from './ParserUtil.js';
 import TexError from './TexError.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {MmlMo, OperatorDef} from '../../core/MmlTree/MmlNodes/mo.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
+import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 
 // A wrapper for translating scripts with LaTeX content.
 
