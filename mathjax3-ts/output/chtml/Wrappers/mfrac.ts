@@ -116,12 +116,12 @@ export class CHTMLmfrac extends CHTMLWrapper {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        this.chtml = this.standardCHTMLnode(parent);
+        const chtml = this.standardCHTMLnode(parent);
         const attr = this.node.attributes.getList('displaystyle', 'scriptlevel');
         const style = (attr.displaystyle && attr.scriptlevel === 0 ? {type: 'd'} : {});
         const fstyle = (this.node.getProperty('withDelims') ? {...style, delims: 'true'} : style);
         let num, den;
-        this.chtml.appendChild(this.html('mjx-frac', fstyle, [
+        this.nodes.appendChild(chtml, this.html('mjx-frac', fstyle, [
             num = this.html('mjx-num', {}, [this.html('mjx-nstrut', style)]),
             this.html('mjx-dbox', {}, [
                 this.html('mjx-dtable', {}, [

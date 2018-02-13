@@ -139,8 +139,8 @@ export class CHTMLmtable extends CHTMLWrapper {
         //
         //  Create the rows inside an mjx-itable (which will be used to center the table on the math axis)
         //
-        let chtml = this.standardCHTMLnode(parent);
-        const table = chtml.appendChild(this.html('mjx-itable'));
+        const chtml = this.standardCHTMLnode(parent);
+        const table = this.nodes.appendChild(chtml, this.html('mjx-itable'));
         for (const child of this.childNodes) {
             child.toCHTML(table);
         }
@@ -215,9 +215,9 @@ export class CHTMLmtable extends CHTMLWrapper {
      * Pad any short rows with extra cells
      */
     protected padRows() {
-        for (const row of Array.from((this.chtml.firstChild as HTMLElement).childNodes)) {
+        for (const row of this.nodes.childNodes(this.nodes.firstChild(this.chtml))) {
             while (row.childNodes.length < this.numCols) {
-                row.appendChild(this.html('mjx-mtd'));
+                this.nodes.appendChild(row, this.html('mjx-mtd'));
             }
         }
     }
@@ -233,7 +233,7 @@ export class CHTMLmtable extends CHTMLWrapper {
             for (const cell of row.childNodes) {
                 let align = (cell.node.attributes.get('columnalign') as string) || aligns[i++];
                 if (align !== 'center') {
-                    cell.chtml.style.textAlign = align;
+                    this.nodes.setStyle(cell.chtml, 'textAlign', align);
                 }
             }
         }
@@ -274,12 +274,12 @@ export class CHTMLmtable extends CHTMLWrapper {
                 //  Set the style for the spacing, if it is needed, and isn't the
                 //  default already set in the mtd styles
                 //
-                const style = (cell ? cell.chtml : row.chtml.childNodes[i] as HTMLElement).style;
+                const styleNode = (cell ? cell.chtml : this.nodes.childNodes(row.chtml)[i]);
                 if ((i > 1 || frame) && lspace !== '.5em') {
-                    style.paddingLeft = lspace;
+                    this.nodes.setStyle(styleNode, 'paddingLeft', lspace);
                 }
                 if ((i < this.numCols || frame) && rspace !== '.5em') {
-                    style.paddingRight = rspace;
+                    this.nodes.setStyle(styleNode, 'paddingRight', rspace);
                 }
             }
         }
@@ -294,10 +294,10 @@ export class CHTMLmtable extends CHTMLWrapper {
         if (!lines) return;
         for (const row of this.childNodes) {
             let i = 0;
-            for (const cell of (Array.from(row.chtml.childNodes) as HTMLElement[]).slice(1)) {
+            for (const cell of this.nodes.childNodes(row.chtml).slice(1)) {
                 const line = lines[i++];
                 if (line === 'none') continue;
-                cell.style.borderLeft = '.07em ' + line;
+                this.nodes.setStyle(cell, 'borderLeft', '.07em ' + line);
             }
         }
     }
@@ -311,12 +311,12 @@ export class CHTMLmtable extends CHTMLWrapper {
         for (const row of this.childNodes) {
             const align = (row.node.attributes.get('rowalign') as string) || rowAlign[i++];
             if (align !== 'baseline') {
-                row.chtml.style.verticalAlign = align;
+                this.nodes.setStyle(row.chtml, 'verticalAlign', align);
             }
             for (const cell of row.childNodes) {
                 const calign = cell.node.attributes.get('rowalign') as string;
                 if (calign && calign !== align) {
-                    cell.chtml.style.verticalAlign = calign;
+                    this.nodes.setStyle(cell.chtml, 'verticalAlign', calign);
                 }
             }
         }
@@ -357,12 +357,11 @@ export class CHTMLmtable extends CHTMLWrapper {
                 //  Set the style for the spacing, if it is needed, and isn't the
                 //  default already set in the mtd styles
                 //
-                const style = cell.chtml.style;
                 if ((i > 1 || frame) && tspace !== '.125em') {
-                    style.paddingTop = tspace;
+                    this.nodes.setStyle(cell.chtml, 'paddingTop', tspace);
                 }
                 if ((i < this.numRows || frame) && bspace !== '.125em') {
-                    style.paddingBottom = bspace;
+                    this.nodes.setStyle(cell.chtml, 'paddingBottom', bspace);
                 }
             }
         }
@@ -379,8 +378,8 @@ export class CHTMLmtable extends CHTMLWrapper {
         for (const row of this.childNodes.slice(1)) {
             const line = lines[i++];
             if (line === 'none') continue;
-            for (const cell of Array.from(row.chtml.childNodes) as HTMLElement[]) {
-                cell.style.borderTop = '.07em ' + line;
+            for (const cell of this.nodes.childNodes(row.chtml)) {
+                this.nodes.setStyle(cell, 'borderTop', '.07em ' + line);
             }
         }
     }
@@ -390,7 +389,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      */
     protected handleFrame(frame: boolean) {
         if (frame) {
-            (this.chtml.firstChild as HTMLElement).style.border = '.07em ' + this.node.attributes.get('frame');
+            this.nodes.setStyle(this.nodes.firstChild(this.chtml), 'border', '.07em ' + this.node.attributes.get('frame'));
         }
     }
 
@@ -402,11 +401,11 @@ export class CHTMLmtable extends CHTMLWrapper {
         if (w === 'auto') return;
         if (w.match(/%$/)) {
             this.bbox.pwidth = w;
-            this.chtml.setAttribute('width','%');
+            this.nodes.setAttribute(this.chtml, 'width', '%');
         } else {
             w = this.em(this.length2em(w));
         }
-        this.chtml.style.width = w;
+        this.nodes.setStyle(this.chtml, 'width', w);
     }
 
     /******************************************************************/

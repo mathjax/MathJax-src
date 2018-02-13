@@ -111,7 +111,7 @@ export class CHTMLxml extends CHTMLWrapper {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        parent.appendChild(((this.node as XMLNode).getXML() as HTMLElement).cloneNode(true));
+        this.nodes.appendChild(parent, this.nodes.cloneNode((this.node as XMLNode).getXML() as HTMLElement));
     }
 
     /*

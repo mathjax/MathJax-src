@@ -137,13 +137,13 @@ export class CHTMLmo extends CHTMLWrapper {
         }
         let chtml = this.standardCHTMLnode(parent);
         if (this.noIC) {
-            chtml.setAttribute('noIC', 'true');
+            this.nodes.setAttribute(chtml, 'noIC', 'true');
         }
         if (stretchy && this.size < 0) {
             this.stretchHTML(chtml, symmetric);
         } else {
             if (symmetric || attributes.get('largeop')) {
-                chtml = chtml.appendChild(this.html('mjx-symmetric'));
+                chtml = this.nodes.appendChild(chtml, this.html('mjx-symmetric'));
             }
             for (const child of this.childNodes) {
                 child.toCHTML(chtml);
@@ -203,7 +203,7 @@ export class CHTMLmo extends CHTMLWrapper {
         const dir = DirectionVH[delim.dir];
         const properties = {c: this.char(delim.c || c), style: styles};
         const html = this.html('mjx-stretchy-' + dir, properties, content);
-        chtml.appendChild(html);
+        this.nodes.appendChild(chtml, html);
     }
 
     /*
@@ -216,7 +216,7 @@ export class CHTMLmo extends CHTMLWrapper {
         }
         if (stretchy && this.size < 0) return;
         super.computeBBox(bbox);
-        const child = this.childNodes[this.childNodes.length-1];
+        const child = this.childNodes[this.childNodes.length - 1];
         if (child && child.bbox.ic) {
             bbox.ic = child.bbox.ic;
             if (!this.noIC) bbox.w += bbox.ic;

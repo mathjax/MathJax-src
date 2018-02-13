@@ -43,7 +43,7 @@ export class CHTMLmi extends CHTMLWrapper {
     public toCHTML(parent: HTMLElement) {
         super.toCHTML(parent);
         if (this.noIC) {
-            this.chtml.setAttribute('noIC', 'true');
+            this.nodes.setAttribute(this.chtml, 'noIC', 'true');
         }
     }
 
@@ -52,7 +52,7 @@ export class CHTMLmi extends CHTMLWrapper {
      */
     public computeBBox(bbox: BBox) {
         super.computeBBox(bbox);
-        const child = this.childNodes[this.childNodes.length-1];
+        const child = this.childNodes[this.childNodes.length - 1];
         if (child && child.bbox.ic) {
             bbox.ic = child.bbox.ic;
             bbox.w += bbox.ic;

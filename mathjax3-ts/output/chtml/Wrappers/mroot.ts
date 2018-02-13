@@ -57,9 +57,11 @@ export class CHTMLmroot extends CHTMLmsqrt {
         root.toCHTML(ROOT);
         const [x, h, dx] = this.getRootDimens(sbox);
         const bbox = root.getBBox();
-        ROOT.style.verticalAlign = this.em(h);
-        ROOT.style.width = this.em(x);
-        if (dx) (ROOT.firstChild as HTMLElement).style.paddingLeft = this.em(dx);
+        this.nodes.setStyle(ROOT, 'verticalAlign', this.em(h));
+        this.nodes.setStyle(ROOT, 'width', this.em(x));
+        if (dx) {
+            this.nodes.setStyle(this.nodes.firstChild(ROOT), 'paddingLeft', this.em(dx));
+        }
     }
 
     /*

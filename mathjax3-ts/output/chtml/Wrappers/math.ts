@@ -67,8 +67,8 @@ export class CHTMLmath extends CHTMLWrapper {
     public toCHTML(parent: HTMLElement) {
         super.toCHTML(parent);
         if (this.node.attributes.get('display') === 'block') {
-            this.chtml.setAttribute('display', 'true');
-            parent.classList.add('MJX-DISPLAY');
+            this.nodes.setAttribute(this.chtml, 'display', 'true');
+            this.nodes.addClass(parent, 'MJX-DISPLAY');
         }
     }
 

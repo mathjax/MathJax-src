@@ -109,7 +109,7 @@ export class CHTML extends AbstractOutputJax {
         let node = this.html('mjx-chtml', {'class': 'MathJax MJX-CHTML MJX-TEX'});
         const scale = math.metrics.scale * this.options.scale;
         if (scale !== 1) {
-            node.style.fontSize = percent(scale);
+            this.nodes.setStyle(node, 'fontSize', percent(scale));
         }
         this.nodeMap = new Map<MmlNode, CHTMLWrapper>();
         this.toCHTML(math.root, node);
@@ -171,10 +171,9 @@ export class CHTML extends AbstractOutputJax {
         //
         // Create the stylesheet for the CSS
         //
-        const sheet = this.html('style') as HTMLStyleElement;
-        sheet.id = 'CHTML-styles';
-        sheet.innerHTML = '\n' + this.cssStyles.cssText + '\n';
-        return sheet;
+        const sheet = this.html('style', {id: 'CHTML-styles'},
+                                [this.text('\n' + this.cssStyles.cssText + '\n')]) as HTMLStyleElement;
+        return sheet as HTMLElement;
     }
 
     /*

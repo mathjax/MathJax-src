@@ -49,10 +49,7 @@ export class CHTMLmrow extends CHTMLWrapper {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        let chtml = this.chtml = parent;
-        if (!this.node.isInferred) {
-            chtml = this.standardCHTMLnode(parent);
-        }
+        const chtml = (this.node.isInferred ? (this.chtml = parent) : this.standardCHTMLnode(parent));
         let hasNegative = false;
         for (const child of this.childNodes) {
             child.toCHTML(chtml);
@@ -66,8 +63,12 @@ export class CHTMLmrow extends CHTMLWrapper {
         // FIXME:  handle line breaks
         if (hasNegative) {
             const {w} = this.getBBox();
-            if (w) chtml.style.width = this.em(Math.max(0, w));
-            if (w < 0) chtml.style.marginRight = this.em(w);
+            if (w) {
+                this.nodes.setStyle(chtml, 'width', this.em(Math.max(0, w)));
+                if (w < 0) {
+                    this.nodes.setStyle(chtml, 'marginRight', this.em(w));
+                }
+            }
         }
     }
 
@@ -77,7 +78,7 @@ export class CHTMLmrow extends CHTMLWrapper {
      */
     protected makeFullWidth() {
         this.bbox.pwidth = '100%';
-        this.chtml.setAttribute('width', 'full');
+        this.nodes.setAttribute(this.chtml, 'width', 'full');
     }
 
     /*

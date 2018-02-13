@@ -128,17 +128,18 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
      * @override
      */
     public toCHTML(parent: HTMLElement) {
-        this.chtml = this.standardCHTMLnode(parent);
+        const chtml = this.standardCHTMLnode(parent);
         const [u, v, q] = this.getUVQ(this.baseChild.getBBox(), this.subChild.getBBox(), this.supChild.getBBox());
         const style = {'vertical-align': this.em(v)};
-        this.baseChild.toCHTML(this.chtml);
-        const stack = this.chtml.appendChild(this.html('mjx-script', {style}));
+        this.baseChild.toCHTML(chtml);
+        const stack = this.nodes.appendChild(chtml, this.html('mjx-script', {style}));
         this.supChild.toCHTML(stack);
-        stack.appendChild(this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
+        this.nodes.appendChild(stack, this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
         this.subChild.toCHTML(stack);
         const corebox = this.baseCore.bbox;
         if (corebox.ic) {
-            this.supChild.chtml.style.marginLeft = this.em((1.2 * corebox.ic + .05) / this.supChild.bbox.rscale);
+            this.nodes.setStyle(this.supChild.chtml, 'marginLeft',
+                                this.em((1.2 * corebox.ic + .05) / this.supChild.bbox.rscale));
         }
     }
 
