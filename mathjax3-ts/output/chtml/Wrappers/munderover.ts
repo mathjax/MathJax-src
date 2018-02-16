@@ -23,6 +23,7 @@
  */
 
 import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {CHTMLmsubsup, CHTMLmsub, CHTMLmsup} from './msubsup.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
@@ -61,6 +62,15 @@ export class CHTMLmunder extends CHTMLmsub {
      */
     public get script() {
         return this.childNodes[(this.node as MmlMunder).under];
+    }
+
+    /*
+     * @override
+     * @constructor
+     */
+    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+        super(factory, node, parent);
+        this.stretchChildren();
     }
 
     /*
@@ -132,6 +142,15 @@ export class CHTMLmover extends CHTMLmsup {
      */
     public get script() {
         return this.childNodes[(this.node as MmlMover).over];
+    }
+
+    /*
+     * @override
+     * @constructor
+     */
+    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+        super(factory, node, parent);
+        this.stretchChildren();
     }
 
     /*
@@ -230,6 +249,15 @@ export class CHTMLmunderover extends CHTMLmsubsup {
      */
     public get supChild() {
         return this.overChild;
+    }
+
+    /*
+     * @override
+     * @constructor
+     */
+    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+        super(factory, node, parent);
+        this.stretchChildren();
     }
 
     /*

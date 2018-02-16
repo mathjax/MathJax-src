@@ -48,6 +48,8 @@ export class CHTMLTextNode extends CHTMLWrapper {
         let text = (this.node as TextNode).getText();
         if (this.parent.variant === '-explicitFont') {
             parent.appendChild(this.text(text));
+        } else if (this.parent.stretch.c) {
+            parent.appendChild(this.html('mjx-c', {c: this.char(this.parent.stretch.c)}));
         } else {
             for (const n of this.unicodeChars(text)) {
                 parent.appendChild(this.html('mjx-c', {c: this.char(n)}));
@@ -63,7 +65,8 @@ export class CHTMLTextNode extends CHTMLWrapper {
         if (variant === '-explicitFont') {
             // FIXME:  measure this using DOM, if possible
         } else {
-            const chars = this.unicodeChars((this.node as TextNode).getText());
+            const c = this.parent.stretch.c;
+            const chars = (c ? [c] : this.unicodeChars((this.node as TextNode).getText()));
             let [h, d, w, data] = this.getChar(variant, chars[0]);
             bbox.h = h;
             bbox.d = d;
