@@ -153,6 +153,7 @@ export class CHTML extends AbstractOutputJax {
      * @override
      */
     public styleSheet(html: MathDocument) {
+        this.nodes.document = html.document;
         //
         // Gather the CSS from the classes
         //
