@@ -384,7 +384,8 @@ export class TeXFont extends FontData {
     protected addDelimiterStyles(styles: StyleList, n: number, data: DelimiterData) {
         const c = this.char(n);
         if (data.c && data.c !== n) {
-            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] = {content: '"' + this.char(data.c,true) + '"'};
+            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] =
+                {content: '"' + this.char(data.c,true) + '"'};
         }
         if (!data.stretch) return;
         if (data.dir === DIRECTION.Vertical) {
@@ -456,7 +457,9 @@ export class TeXFont extends FontData {
      * @param{number} n          The unicode character to use for the part
      */
     protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, force: boolean = false) {
-        if (!n) return 0;
+        if (!n) {
+            return 0;
+        }
         const data = this.getChar('normal', n) || this.getChar('-size4', n);
         const options = data[3] as CharOptions;
         const C = (options && options.c ? options.c : this.char(n, true));

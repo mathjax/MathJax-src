@@ -219,7 +219,8 @@ export class CHTMLmo extends CHTMLWrapper {
             bbox.ic = child.bbox.ic;
             if (!this.noIC) bbox.w += bbox.ic;
         }
-        if (this.node.attributes.get('symmetric') && this.stretch.dir !== DIRECTION.Horizontal) {
+        if (this.node.attributes.get('symmetric') &&
+            this.stretch.dir !== DIRECTION.Horizontal) {
             const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
             bbox.h += d;
             bbox.d += d;
