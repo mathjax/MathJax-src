@@ -25,7 +25,7 @@ MathJax.handleRetriesFor(function () {
     let chtml = html.options.OutputJax;
     chtml.document = html;
     chtml.math = math;
-    chtml.nodes.document(html.document);
+    chtml.nodes.document = html.document;
     chtml.nodeMap = new Map();
     let wrap = chtml.factory.wrap(math.root);
 

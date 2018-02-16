@@ -26,7 +26,9 @@ import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {BBox} from '../BBox.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../CssStyles.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
@@ -50,10 +52,74 @@ export class CHTMLmtr extends CHTMLWrapper {
     }
 
     /*
+     * @return{number}   The index of the first table cell (overridden in mlabeledtr)
+     */
+    get firstCell() {
+        return 0;
+    }
+
+    /*
      * @return{BBox[]}  An array of the bounding boxes for the mtd's in the row
      */
     public getChildBBoxes() {
         return this.childNodes.map(cell => cell.getBBox());
+    }
+
+    /*
+     * @override
+     * @constructor
+     */
+    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+        super(factory, node, parent);
+        this.stretchChildren();
+    }
+
+    /*
+     * Handle vertical stretching of cells to match height of
+     *  other cells in the row.
+     */
+    protected stretchChildren() {
+        let stretchy: CHTMLWrapper[] = [];
+        let children = (this.firstCell ? this.childNodes.slice(this.firstCell) : this.childNodes);
+        //
+        //  Locate and count the stretchy children
+        //
+        for (const mtd of children) {
+            const child = mtd.childNodes[0];
+            if (child.canStretch(DIRECTION.Vertical)) {
+                stretchy.push(child);
+            }
+        }
+        let count = stretchy.length;
+        let nodeCount = this.childNodes.length;
+        if (count && nodeCount > 1) {
+            let H = 0, D = 0;
+            //
+            //  If all the children are stretchy, find the largest one,
+            //  otherwise, find the height and depth of the non-stretchy
+            //  children.
+            //
+            let all = (count > 1 && count === nodeCount);
+            for (const mtd of children) {
+                const child = mtd.childNodes[0];
+                const noStretch = (child.stretch.dir === DIRECTION.None);
+                if (all || noStretch) {
+                    const {h, d} = child.getBBox(noStretch);
+                    if (h > H) {
+                        H = h;
+                    }
+                    if (d > D) {
+                        D = d;
+                    }
+                }
+            }
+            //
+            //  Stretch the stretchable children
+            //
+            for (const child of stretchy) {
+                child.coreMO().getStretchedVariant([H, D]);
+            }
+        }
     }
 
 }
@@ -94,6 +160,13 @@ export class CHTMLmlabeledtr extends CHTMLWrapper {
         //  Don't include the label mtd
         //
         return Math.max(0, this.childNodes.length - 1);
+    }
+
+    /*
+     * @override
+     */
+    get firstCell() {
+        return 1;
     }
 
     /*

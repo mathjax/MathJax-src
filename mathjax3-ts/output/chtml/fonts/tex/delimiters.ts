@@ -42,7 +42,7 @@ const DELIM23DC = {c: 0x23DC, dir: H, sizes: [.778, 1], schar: [0x2322, 0x2322],
 const DELIM23DD = {c: 0x23DD, dir: H, sizes: [.778, 1], schar: [0x2323, 0x2323], stretch: [0xE152, 0xE154, 0xE153],
                    HDW: [.32, .2, .5]};
 const DELIM23DE = {c: 0x23DE, dir: H, stretch: [0xE150, 0xE154, 0xE151, 0xE155], HDW: [.32, .2, .5], min: .9};
-const DELIM23DF = {c: 0x23DF, dir: H, stretch: [0xE152, 0xE154, 0xE153, 0xE155], HDW: [.32, .2, .5], min: .9};
+const DELIM23DF = {c: 0x23DF, dir: H, stretch: [0xE152, 0xE154, 0xE153, 0xE156], HDW: [.32, .2, .5], min: .9};
 const DELIM27E8 = {c: 0x27E8, dir: V, sizes: VSIZES};
 const DELIM27E9 = {c: 0x27E9, dir: V, sizes: VSIZES};
 const DELIM2906 = {c: 0x2906, dir: H, stretch: [0x21D0, 0x3D, 0x2223], HDW: [.367, -0.133, .5], min: 1};

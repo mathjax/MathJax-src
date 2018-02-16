@@ -105,7 +105,7 @@ export class CHTMLmrow extends CHTMLWrapper {
             //
             let all = (count > 1 && count === nodeCount);
             for (const child of this.childNodes) {
-                const noStretch = !child.stretch;
+                const noStretch = (child.stretch.dir === DIRECTION.None);
                 if (all || noStretch) {
                     const {h, d} = child.getBBox(noStretch);
                     if (h > H) H = h;

@@ -107,6 +107,8 @@ export type DelimiterMap = {
     [n: number]: DelimiterData;
 };
 
+export const NOSTRETCH: DelimiterData = {dir: DIRECTION.None};
+
 /*
  * Font parameters (for TeX typesetting rules)
  */
