@@ -92,7 +92,8 @@ export class CHTMLmtable extends CHTMLWrapper {
             const cell = row.childNodes[i + row.firstCell];
             if (cell) {
                 const child = cell.childNodes[0];
-                if (child.stretch.dir === DIRECTION.None && child.canStretch(DIRECTION.Horizontal)) {
+                if (child.stretch.dir === DIRECTION.None &&
+                    child.canStretch(DIRECTION.Horizontal)) {
                     stretchy.push(child);
                 }
             }
@@ -113,7 +114,9 @@ export class CHTMLmtable extends CHTMLWrapper {
                     const noStretch = (child.stretch.dir === DIRECTION.None);
                     if (all || noStretch) {
                         const {w} = child.getBBox(noStretch);
-                        if (w > W) W = w;
+                        if (w > W) {
+                            W = w;
+                        }
                     }
                 }
             }

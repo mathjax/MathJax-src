@@ -356,7 +356,9 @@ export class CHTMLmo extends CHTMLWrapper {
             //  Center on the math axis
             //
             const a = this.font.params.axis_height;
-            if (hasWHD) h = 2 * Math.max(H - a, D + a);
+            if (hasWHD) {
+                h = 2 * Math.max(H - a, D + a);
+            }
             d = h / 2 - a;
         } else if (hasWHD) {
             //
