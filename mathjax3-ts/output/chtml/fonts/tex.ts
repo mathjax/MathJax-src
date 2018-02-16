@@ -404,27 +404,24 @@ export class TeXFont extends FontData {
         const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
         this.addDelimiterVPart(styles, c, 'ext', ext);
         const He = this.addDelimiterVPart(styles, c, 'end', end);
-        let Hm;
-        if (mid) {
-            Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext'] = {height: '50%'}
-        }
         const css: StyleData = {};
+        if (mid) {
+            const Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
+            css.height = '50%';
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
+                'margin-top': this.em(-Hm/2),
+                'margin-bottom': this.em(-Hm/2)
+            };
+        }
         if (Hb) {
             css['border-top-width'] = this.em0(Hb - .03);
         }
         if (He) {
             css['border-bottom-width'] = this.em0(He - .03);
             styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-end'] = {'margin-top': this.em(-He)};
-            if (mid) {
-                styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
-                    'margin-top': this.em(-Hm/2),
-                    'margin-bottom': this.em(-Hm/2)
-                };
-            }
         }
         if (Object.keys(css).length) {
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css;
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext'] = css;
         }
     }
 
