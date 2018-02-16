@@ -70,7 +70,8 @@ export class CHTMLmtable extends CHTMLWrapper {
         //
         // Determine the number of columns and rows
         //
-        this.numCols = this.childNodes.map(row => (row as CHTMLmtr).numCells).reduce((a, b) => Math.max(a, b), 0);
+        this.numCols = this.childNodes.map(row => (row as CHTMLmtr).numCells)
+                                      .reduce((a, b) => Math.max(a, b), 0);
         this.numRows = this.childNodes.length;
         //
         // Stretch the columns (rows are already taken care of in the CHTMLmtr wrapper)
@@ -192,12 +193,17 @@ export class CHTMLmtable extends CHTMLWrapper {
         const cLines = this.getColumnAttributes('columnlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
         const rLines = this.getColumnAttributes('rowlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
         const a = this.font.params.axis_height;
-        const h = H.concat(D, rLines).reduce((a, b) => a + b, 0) + (frame ? .14 : 0) +
-            rSpace.map(x => parseFloat(x)).reduce((a, b) => a + b, 0) + 2 * parseFloat(fSpace[1]);
+        const h = H.concat(D, rLines).reduce((a, b) => a + b, 0)
+                + (frame ? .14 : 0)
+                + rSpace.map(x => parseFloat(x))
+                        .reduce((a, b) => a + b, 0)
+                + 2 * parseFloat(fSpace[1]);
         bbox.h = h / 2 + a;
         bbox.d = h / 2 - a;
-        bbox.w = W.concat(cLines).reduce((a, b) => a + b, 0) +
-            cSpace.map(x => parseFloat(x)).reduce((a, b) => a + b, 0) + 2 * parseFloat(fSpace[1]);
+        bbox.w = W.concat(cLines).reduce((a, b) => a + b, 0)
+               + cSpace.map(x => parseFloat(x))
+                       .reduce((a, b) => a + b, 0)
+               + 2 * parseFloat(fSpace[1]);
     }
 
     /******************************************************************/
