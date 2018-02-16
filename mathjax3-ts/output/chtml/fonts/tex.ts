@@ -401,9 +401,14 @@ export class TeXFont extends FontData {
      * @param{DelimiterData} data  The data for the delimiter whose CSS is to be added
      */
     protected addDelimiterVStyles(styles: StyleList, c: string, data: DelimiterData) {
-        const Hb = this.addDelimiterVPart(styles, c, 'beg', data.stretch[0]);
-        this.addDelimiterVPart(styles, c, 'ext', data.stretch[1]);
-        const He = this.addDelimiterVPart(styles, c, 'end', data.stretch[2]);
+        const [beg, ext, end, mid] = data.stretch;
+        const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
+        this.addDelimiterVPart(styles, c, 'ext', ext);
+        const He = this.addDelimiterVPart(styles, c, 'end', end);
+        if (mid) {
+            this.addDelimiterVPart(styles, c, 'mid', mid);
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext'] = {height: '50%'}
+        }
         const css: StyleData = {};
         if (Hb) {
             css['border-top-width'] = this.em0(Hb - .03);
@@ -411,6 +416,11 @@ export class TeXFont extends FontData {
         if (He) {
             css['border-bottom-width'] = this.em0(He - .03);
             css['margin-bottom'] = this.em(-He);
+            if (mid) {
+                styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext:last-of-type'] = {
+                    'margin-top': this.em(-He)
+                };
+            }
         }
         if (Object.keys(css).length) {
             styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css;
@@ -441,11 +451,12 @@ export class TeXFont extends FontData {
      * @param{DelimiterData} data  The data for the delimiter whose CSS is to be added
      */
     protected addDelimiterHStyles(styles: StyleList, c: string, data: DelimiterData) {
-        this.addDelimiterHPart(styles, c, 'beg', data.stretch[0]);
-        this.addDelimiterHPart(styles, c, 'ext', data.stretch[1], !(data.stretch[0] || data.stretch[2]));
-        this.addDelimiterHPart(styles, c, 'end', data.stretch[2]);
-        if (data.stretch[3]) {
-            this.addDelimiterHPart(styles, c, 'mid', data.stretch[3]);
+        const [beg, ext, end, mid] = data.stretch;
+        this.addDelimiterHPart(styles, c, 'beg', beg);
+        this.addDelimiterHPart(styles, c, 'ext', ext, !(beg || end));
+        this.addDelimiterHPart(styles, c, 'end', end);
+        if (mid) {
+            this.addDelimiterHPart(styles, c, 'mid', mid);
             styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] > mjx-ext'] = {width: '50%'}
         }
     }

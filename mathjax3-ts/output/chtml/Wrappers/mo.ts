@@ -68,7 +68,7 @@ export class CHTMLmo extends CHTMLWrapper {
             width: '100%'
         },
         'mjx-stretchy-h > mjx-ext > mjx-c': {
-            transform: 'scalex(1000)'
+            transform: 'scalex(500)'
         },
         'mjx-stretchy-h > mjx-beg > mjx-c': {
             'margin-right': '-.1em'
@@ -101,7 +101,7 @@ export class CHTMLmo extends CHTMLWrapper {
             overflow: 'hidden'
         },
         'mjx-stretchy-v > mjx-ext > mjx-c': {
-            transform: 'scaleY(1000) translateY(.5em)'
+            transform: 'scaleY(500) translateY(.1em)'
         },
         'mjx-mark': {
             display: 'inline-block',
@@ -348,8 +348,8 @@ export class CHTMLmo extends CHTMLWrapper {
      * @return{number[]}        The height and depth for the vertically stretched delimiter
      */
     protected getBaseline(WHD: number[], HD: number, C: DelimiterData) {
-        const hasWHD = (WHD.length === 2);
-        const symmetric = (hasWHD && this.node.attributes.get('symmetric'));
+        const hasWHD = (WHD.length === 2 && WHD[0] + WHD[1] === HD);
+        const symmetric = this.node.attributes.get('symmetric');
         const [H, D] = (hasWHD ? WHD : [HD, 0]);
         let [h, d] = [H + D, 0];
         if (symmetric) {
@@ -357,7 +357,9 @@ export class CHTMLmo extends CHTMLWrapper {
             //  Center on the math axis
             //
             const a = this.font.params.axis_height;
-            h = 2 * Math.max(H - a, D + a);
+            if (hasWHD) {
+                h = 2 * Math.max(H - a, D + a);
+            }
             d = h / 2 - a;
         } else if (hasWHD) {
             //
