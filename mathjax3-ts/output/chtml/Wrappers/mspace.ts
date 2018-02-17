@@ -41,18 +41,18 @@ export class CHTMLmspace extends CHTMLWrapper {
         let chtml = this.standardCHTMLnode(parent);
         let {w, h, d} = this.getBBox();
         if (w < 0) {
-            this.nodes.setStyle(chtml, 'marginRight', this.em(w));
+            this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
             w = 0;
         }
         if (w) {
-            this.nodes.setStyle(chtml, 'width', this.em(w));
+            this.adaptor.setStyle(chtml, 'width', this.em(w));
         }
         h = Math.max(0, h + d);
         if (h) {
-            this.nodes.setStyle(chtml, 'height', this.em(Math.max(0, h)));
+            this.adaptor.setStyle(chtml, 'height', this.em(Math.max(0, h)));
         }
         if (d) {
-            this.nodes.setStyle(chtml, 'verticalAlign', this.em(-d));
+            this.adaptor.setStyle(chtml, 'verticalAlign', this.em(-d));
         }
     }
 

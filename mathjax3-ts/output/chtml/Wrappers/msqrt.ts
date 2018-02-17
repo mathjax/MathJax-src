@@ -144,13 +144,13 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         const CHTML = this.standardCHTMLnode(parent);
         let SURD, BASE, ROOT, root;
         if (this.root != null) {
-            ROOT = this.nodes.appendChild(CHTML, this.html('mjx-root'));
+            ROOT = this.adaptor.appendChild(CHTML, this.html('mjx-root')) as HTMLElement;
             root = this.childNodes[this.root];
         }
-        const SQRT = this.nodes.appendChild(CHTML, this.html('mjx-sqrt', {}, [
+        const SQRT = this.adaptor.appendChild(CHTML, this.html('mjx-sqrt', {}, [
             SURD = this.html('mjx-surd'),
             BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
-        ]));
+        ])) as HTMLElement;
         //
         //  Add the child content
         //
@@ -163,7 +163,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
             // top is hard to align with the horizontal line, so overlap them
             // using CSS.
             //
-            this.nodes.addClass(SQRT, 'mjx-tall');
+            this.adaptor.addClass(SQRT, 'mjx-tall');
         }
     }
 

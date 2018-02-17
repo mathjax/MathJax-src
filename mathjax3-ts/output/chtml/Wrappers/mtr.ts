@@ -147,9 +147,9 @@ export class CHTMLmlabeledtr extends CHTMLWrapper {
         //  FIXME: for now, remove label
         //
         const row = this.chtml;
-        const child = this.nodes.firstChild(row);
+        const child = this.adaptor.firstChild(row);
         if (child) {
-            this.nodes.removeChild(row, child);
+            this.adaptor.removeChild(row, child);
         }
     }
 

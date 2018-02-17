@@ -64,9 +64,9 @@ export class CHTMLmrow extends CHTMLWrapper {
         if (hasNegative) {
             const {w} = this.getBBox();
             if (w) {
-                this.nodes.setStyle(chtml, 'width', this.em(Math.max(0, w)));
+                this.adaptor.setStyle(chtml, 'width', this.em(Math.max(0, w)));
                 if (w < 0) {
-                    this.nodes.setStyle(chtml, 'marginRight', this.em(w));
+                    this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
                 }
             }
         }
@@ -78,7 +78,7 @@ export class CHTMLmrow extends CHTMLWrapper {
      */
     protected makeFullWidth() {
         this.bbox.pwidth = '100%';
-        this.nodes.setAttribute(this.chtml, 'width', 'full');
+        this.adaptor.setAttribute(this.chtml, 'width', 'full');
     }
 
     /*

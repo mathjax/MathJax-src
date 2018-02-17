@@ -104,7 +104,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
             style['margin-left'] = this.em(x);
         }
         this.baseChild.toCHTML(this.chtml);
-        this.script.toCHTML(this.nodes.appendChild(this.chtml, this.html('mjx-script', {style})));
+        this.script.toCHTML(this.adaptor.appendChild(this.chtml, this.html('mjx-script', {style})) as HTMLElement);
     }
 
     /*
@@ -262,7 +262,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     protected setDeltaW(nodes: HTMLElement[], dx: number[]) {
         for (let i = 0; i < dx.length; i++) {
             if (dx[i]) {
-                this.nodes.setStyle(nodes[i], 'paddingLeft', this.em(dx[i]));
+                this.adaptor.setStyle(nodes[i], 'paddingLeft', this.em(dx[i]));
             }
         }
     }

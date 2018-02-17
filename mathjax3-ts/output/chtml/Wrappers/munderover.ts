@@ -79,21 +79,25 @@ export class CHTMLmunder extends CHTMLmsub {
     public toCHTML(parent: HTMLElement) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
-            this.nodes.setAttribute(this.chtml, 'limits', 'false');
+            this.adaptor.setAttribute(this.chtml, 'limits', 'false');
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const base = this.nodes.appendChild(this.nodes.appendChild(this.chtml, this.html('mjx-row')),
-                                            this.html('mjx-base'));
-        const under = this.nodes.appendChild(this.nodes.appendChild(this.chtml, this.html('mjx-row')),
-                                             this.html('mjx-under'));
+        const base = this.adaptor.appendChild(
+            this.adaptor.appendChild(this.chtml, this.html('mjx-row')) as HTMLElement,
+            this.html('mjx-base')
+        ) as HTMLElement;
+        const under = this.adaptor.appendChild(
+            this.adaptor.appendChild(this.chtml, this.html('mjx-row')) as HTMLElement,
+            this.html('mjx-under')
+        ) as HTMLElement;
         this.baseChild.toCHTML(base);
         this.script.toCHTML(under);
         const basebox = this.baseChild.getBBox();
         const underbox = this.script.getBBox();
         const [k, v] = this.getUnderKV(basebox, underbox);
         const del = DELTA * this.baseCore.bbox.ic / 2;
-        this.nodes.setStyle(under, 'paddingTop', this.em(k));
+        this.adaptor.setStyle(under, 'paddingTop', this.em(k));
         this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -del]));
     }
 
@@ -161,22 +165,22 @@ export class CHTMLmover extends CHTMLmsup {
     public toCHTML(parent: HTMLElement) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
-            this.nodes.setAttribute(this.chtml, 'limits', 'false');
+            this.adaptor.setAttribute(this.chtml, 'limits', 'false');
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const over = this.nodes.appendChild(this.chtml, this.html('mjx-over'));
-        const base = this.nodes.appendChild(this.chtml, this.html('mjx-base'));
+        const over = this.adaptor.appendChild(this.chtml, this.html('mjx-over')) as HTMLElement;
+        const base = this.adaptor.appendChild(this.chtml, this.html('mjx-base')) as HTMLElement;
         this.script.toCHTML(over);
         this.baseChild.toCHTML(base);
         const overbox = this.script.getBBox();
         const basebox = this.baseChild.getBBox();
         const [k, u] = this.getOverKU(basebox, overbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
-        this.nodes.setStyle(over, 'paddingBottom', this.em(k));
+        this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
         this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
         if (overbox.d < 0) {
-            this.nodes.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
+            this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
         }
     }
 
@@ -268,17 +272,23 @@ export class CHTMLmunderover extends CHTMLmsubsup {
     public toCHTML(parent: HTMLElement) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
-            this.nodes.setAttribute(this.chtml, 'limits', 'false');
+            this.adaptor.setAttribute(this.chtml, 'limits', 'false');
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const over = this.nodes.appendChild(this.chtml, this.html('mjx-over'));
-        const table = this.nodes.appendChild(this.nodes.appendChild(this.chtml, this.html('mjx-box')),
-                                             this.html('mjx-munder'));
-        const base = this.nodes.appendChild(this.nodes.appendChild(table, this.html('mjx-row')),
-                                            this.html('mjx-base'));
-        const under = this.nodes.appendChild(this.nodes.appendChild(table, this.html('mjx-row')),
-                                             this.html('mjx-under'));
+        const over = this.adaptor.appendChild(this.chtml, this.html('mjx-over')) as HTMLElement;
+        const table = this.adaptor.appendChild(
+            this.adaptor.appendChild(this.chtml, this.html('mjx-box')) as HTMLElement,
+            this.html('mjx-munder')
+        ) as HTMLElement;
+        const base = this.adaptor.appendChild(
+            this.adaptor.appendChild(table, this.html('mjx-row')) as HTMLElement,
+            this.html('mjx-base')
+        ) as HTMLElement;
+        const under = this.adaptor.appendChild(
+            this.adaptor.appendChild(table, this.html('mjx-row')) as HTMLElement,
+            this.html('mjx-under')
+        ) as HTMLElement;
         this.overChild.toCHTML(over);
         this.baseChild.toCHTML(base);
         this.underChild.toCHTML(under);
@@ -288,11 +298,11 @@ export class CHTMLmunderover extends CHTMLmsubsup {
         const [ok, u] = this.getOverKU(basebox, overbox);
         const [uk, v] = this.getUnderKV(basebox, underbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
-        this.nodes.setStyle(over, 'paddingBottom', this.em(ok));
-        this.nodes.setStyle(under, 'paddingTop', this.em(uk));
+        this.adaptor.setStyle(over, 'paddingBottom', this.em(ok));
+        this.adaptor.setStyle(under, 'paddingTop', this.em(uk));
         this.setDeltaW([base, under, over], this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]));
         if (overbox.d < 0) {
-            this.nodes.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
+            this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
         }
     }
 

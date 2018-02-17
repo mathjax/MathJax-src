@@ -121,7 +121,7 @@ export class CHTMLmfrac extends CHTMLWrapper {
         const style = (attr.displaystyle && attr.scriptlevel === 0 ? {type: 'd'} : {});
         const fstyle = (this.node.getProperty('withDelims') ? {...style, delims: 'true'} : style);
         let num, den;
-        this.nodes.appendChild(chtml, this.html('mjx-frac', fstyle, [
+        this.adaptor.appendChild(chtml, this.html('mjx-frac', fstyle, [
             num = this.html('mjx-num', {}, [this.html('mjx-nstrut', style)]),
             this.html('mjx-dbox', {}, [
                 this.html('mjx-dtable', {}, [

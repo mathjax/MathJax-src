@@ -137,13 +137,13 @@ export class CHTMLmo extends CHTMLWrapper {
         }
         let chtml = this.standardCHTMLnode(parent);
         if (this.noIC) {
-            this.nodes.setAttribute(chtml, 'noIC', 'true');
+            this.adaptor.setAttribute(chtml, 'noIC', 'true');
         }
         if (stretchy && this.size < 0) {
             this.stretchHTML(chtml, symmetric);
         } else {
             if (symmetric || attributes.get('largeop')) {
-                chtml = this.nodes.appendChild(chtml, this.html('mjx-symmetric'));
+                chtml = this.adaptor.appendChild(chtml, this.html('mjx-symmetric')) as HTMLElement;
             }
             for (const child of this.childNodes) {
                 child.toCHTML(chtml);
@@ -203,7 +203,7 @@ export class CHTMLmo extends CHTMLWrapper {
         const dir = DirectionVH[delim.dir];
         const properties = {c: this.char(delim.c || c), style: styles};
         const html = this.html('mjx-stretchy-' + dir, properties, content);
-        this.nodes.appendChild(chtml, html);
+        this.adaptor.appendChild(chtml, html);
     }
 
     /*

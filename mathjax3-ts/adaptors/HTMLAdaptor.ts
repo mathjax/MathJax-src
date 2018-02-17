@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from './Options.js';
+import {OptionList} from '../util/Options.js';
 import {AttributeData, AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
 
 
@@ -31,7 +31,7 @@ import {AttributeData, AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
  *  (subclass of AbstractDOMAdaptor)
  */
 
-export class HTMLNodes extends AbstractDOMAdaptor<HTMLElement, Text, Document> {
+export class HTMLAdaptor extends AbstractDOMAdaptor<HTMLElement, Text, Document> {
 
     /*
      * @override

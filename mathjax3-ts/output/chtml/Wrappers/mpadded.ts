@@ -77,7 +77,7 @@ export class CHTMLmpadded extends CHTMLWrapper {
         //
         //  Create the HTML with the proper styles and content
         //
-        chtml = this.nodes.appendChild(chtml, this.html('mjx-block', {style: style}, content));
+        chtml = this.adaptor.appendChild(chtml, this.html('mjx-block', {style: style}, content)) as HTMLElement;
         for (const child of this.childNodes) {
             child.toCHTML(content[0] || chtml);
         }

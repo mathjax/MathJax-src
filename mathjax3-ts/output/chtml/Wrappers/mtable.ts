@@ -140,7 +140,7 @@ export class CHTMLmtable extends CHTMLWrapper {
         //  Create the rows inside an mjx-itable (which will be used to center the table on the math axis)
         //
         const chtml = this.standardCHTMLnode(parent);
-        const table = this.nodes.appendChild(chtml, this.html('mjx-itable'));
+        const table = this.adaptor.appendChild(chtml, this.html('mjx-itable')) as HTMLElement;
         for (const child of this.childNodes) {
             child.toCHTML(table);
         }
@@ -215,9 +215,9 @@ export class CHTMLmtable extends CHTMLWrapper {
      * Pad any short rows with extra cells
      */
     protected padRows() {
-        for (const row of this.nodes.childNodes(this.nodes.firstChild(this.chtml))) {
-            while (row.childNodes.length < this.numCols) {
-                this.nodes.appendChild(row, this.html('mjx-mtd'));
+        for (const row of this.adaptor.childNodes(this.adaptor.firstChild(this.chtml) as HTMLElement) as HTMLElement[]) {
+            while (this.adaptor.childNodes(row).length < this.numCols) {
+                this.adaptor.appendChild(row, this.html('mjx-mtd'));
             }
         }
     }
@@ -233,7 +233,7 @@ export class CHTMLmtable extends CHTMLWrapper {
             for (const cell of row.childNodes) {
                 let align = (cell.node.attributes.get('columnalign') as string) || aligns[i++];
                 if (align !== 'center') {
-                    this.nodes.setStyle(cell.chtml, 'textAlign', align);
+                    this.adaptor.setStyle(cell.chtml, 'textAlign', align);
                 }
             }
         }
@@ -274,12 +274,12 @@ export class CHTMLmtable extends CHTMLWrapper {
                 //  Set the style for the spacing, if it is needed, and isn't the
                 //  default already set in the mtd styles
                 //
-                const styleNode = (cell ? cell.chtml : this.nodes.childNodes(row.chtml)[i]);
+                const styleNode = (cell ? cell.chtml : this.adaptor.childNodes(row.chtml)[i]) as HTMLElement;
                 if ((i > 1 || frame) && lspace !== '.5em') {
-                    this.nodes.setStyle(styleNode, 'paddingLeft', lspace);
+                    this.adaptor.setStyle(styleNode, 'paddingLeft', lspace);
                 }
                 if ((i < this.numCols || frame) && rspace !== '.5em') {
-                    this.nodes.setStyle(styleNode, 'paddingRight', rspace);
+                    this.adaptor.setStyle(styleNode, 'paddingRight', rspace);
                 }
             }
         }
@@ -294,10 +294,10 @@ export class CHTMLmtable extends CHTMLWrapper {
         if (!lines) return;
         for (const row of this.childNodes) {
             let i = 0;
-            for (const cell of this.nodes.childNodes(row.chtml).slice(1)) {
+            for (const cell of this.adaptor.childNodes(row.chtml).slice(1) as HTMLElement[]) {
                 const line = lines[i++];
                 if (line === 'none') continue;
-                this.nodes.setStyle(cell, 'borderLeft', '.07em ' + line);
+                this.adaptor.setStyle(cell, 'borderLeft', '.07em ' + line);
             }
         }
     }
@@ -311,12 +311,12 @@ export class CHTMLmtable extends CHTMLWrapper {
         for (const row of this.childNodes) {
             const align = (row.node.attributes.get('rowalign') as string) || rowAlign[i++];
             if (align !== 'baseline') {
-                this.nodes.setStyle(row.chtml, 'verticalAlign', align);
+                this.adaptor.setStyle(row.chtml, 'verticalAlign', align);
             }
             for (const cell of row.childNodes) {
                 const calign = cell.node.attributes.get('rowalign') as string;
                 if (calign && calign !== align) {
-                    this.nodes.setStyle(cell.chtml, 'verticalAlign', calign);
+                    this.adaptor.setStyle(cell.chtml, 'verticalAlign', calign);
                 }
             }
         }
@@ -358,10 +358,10 @@ export class CHTMLmtable extends CHTMLWrapper {
                 //  default already set in the mtd styles
                 //
                 if ((i > 1 || frame) && tspace !== '.125em') {
-                    this.nodes.setStyle(cell.chtml, 'paddingTop', tspace);
+                    this.adaptor.setStyle(cell.chtml, 'paddingTop', tspace);
                 }
                 if ((i < this.numRows || frame) && bspace !== '.125em') {
-                    this.nodes.setStyle(cell.chtml, 'paddingBottom', bspace);
+                    this.adaptor.setStyle(cell.chtml, 'paddingBottom', bspace);
                 }
             }
         }
@@ -378,8 +378,8 @@ export class CHTMLmtable extends CHTMLWrapper {
         for (const row of this.childNodes.slice(1)) {
             const line = lines[i++];
             if (line === 'none') continue;
-            for (const cell of this.nodes.childNodes(row.chtml)) {
-                this.nodes.setStyle(cell, 'borderTop', '.07em ' + line);
+            for (const cell of this.adaptor.childNodes(row.chtml) as HTMLElement[]) {
+                this.adaptor.setStyle(cell, 'borderTop', '.07em ' + line);
             }
         }
     }
@@ -389,7 +389,8 @@ export class CHTMLmtable extends CHTMLWrapper {
      */
     protected handleFrame(frame: boolean) {
         if (frame) {
-            this.nodes.setStyle(this.nodes.firstChild(this.chtml), 'border', '.07em ' + this.node.attributes.get('frame'));
+            this.adaptor.setStyle(this.adaptor.firstChild(this.chtml) as HTMLElement,
+                                  'border', '.07em ' + this.node.attributes.get('frame'));
         }
     }
 
@@ -401,11 +402,11 @@ export class CHTMLmtable extends CHTMLWrapper {
         if (w === 'auto') return;
         if (w.match(/%$/)) {
             this.bbox.pwidth = w;
-            this.nodes.setAttribute(this.chtml, 'width', '%');
+            this.adaptor.setAttribute(this.chtml, 'width', '%');
         } else {
             w = this.em(this.length2em(w));
         }
-        this.nodes.setStyle(this.chtml, 'width', w);
+        this.adaptor.setStyle(this.chtml, 'width', w);
     }
 
     /******************************************************************/

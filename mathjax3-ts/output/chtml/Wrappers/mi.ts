@@ -43,7 +43,7 @@ export class CHTMLmi extends CHTMLWrapper {
     public toCHTML(parent: HTMLElement) {
         super.toCHTML(parent);
         if (this.noIC) {
-            this.nodes.setAttribute(this.chtml, 'noIC', 'true');
+            this.adaptor.setAttribute(this.chtml, 'noIC', 'true');
         }
     }
 

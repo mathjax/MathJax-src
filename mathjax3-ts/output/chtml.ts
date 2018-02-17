@@ -26,7 +26,7 @@ import {OptionList, separateOptions} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {HTMLNodes} from '../util/HTMLNodes.js';
+import {HTMLAdaptor} from '../adaptors/HTMLAdaptor.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {FontData} from './chtml/FontData.js';
@@ -56,7 +56,7 @@ export class CHTML extends AbstractOutputJax {
      *  Used to store the HTMLNodes factory, the CHTMLWrapper factory,
      *  the FontData object, and the CssStyles object.
      */
-    public nodes: HTMLNodes;
+    public adaptor: HTMLAdaptor;
     public factory: CHTMLWrapperFactory;
     public font: FontData;
     public cssStyles: CssStyles;
@@ -87,7 +87,7 @@ export class CHTML extends AbstractOutputJax {
         super(chtmlOptions);
         this.factory = this.options.CHTMLWrapperFactory || new CHTMLWrapperFactory();
         this.factory.chtml = this;
-        this.nodes = new HTMLNodes();
+        this.adaptor = new HTMLAdaptor();
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new TeXFont(fontOptions);
     }
@@ -104,12 +104,12 @@ export class CHTML extends AbstractOutputJax {
     public typeset(math: MathItem, html: MathDocument) {
         this.document = html;
         this.math = math;
-        this.nodes.document = html.document;
+        this.adaptor.document = html.document;
         math.root.setTeXclass(null);
         let node = this.html('mjx-chtml', {'class': 'MathJax MJX-CHTML MJX-TEX'});
         const scale = math.metrics.scale * this.options.scale;
         if (scale !== 1) {
-            this.nodes.setStyle(node, 'fontSize', percent(scale));
+            this.adaptor.setStyle(node, 'fontSize', percent(scale));
         }
         this.nodeMap = new Map<MmlNode, CHTMLWrapper>();
         this.toCHTML(math.root, node);
@@ -124,7 +124,7 @@ export class CHTML extends AbstractOutputJax {
     public getBBox(math: MathItem, html: MathDocument) {
         this.document = html;
         this.math = math;
-        this.nodes.document = html.document;
+        this.adaptor.document = html.document;
         math.root.setTeXclass(null);
         this.nodeMap = new Map<MmlNode, CHTMLWrapper>();
         let bbox = this.factory.wrap(math.root).getBBox();
@@ -136,7 +136,7 @@ export class CHTML extends AbstractOutputJax {
      * @override
      */
     public escaped(math: MathItem, html: MathDocument) {
-        this.nodes.document = html.document;
+        this.adaptor.document = html.document;
         return this.html('span', {}, [this.text(math.math)]);
     }
 
@@ -153,7 +153,7 @@ export class CHTML extends AbstractOutputJax {
      * @override
      */
     public styleSheet(html: MathDocument) {
-        this.nodes.document = html.document;
+        this.adaptor.document = html.document;
         //
         // Gather the CSS from the classes
         //
@@ -192,7 +192,7 @@ export class CHTML extends AbstractOutputJax {
      * @return{HTMLElement} The newly created HTML tree
      */
     public html(type: string, def: OptionList = {}, content: (HTMLElement | Text)[] = []) {
-        return this.nodes.node(type, def, content);
+        return this.adaptor.node(type, def, content);
     }
 
     /*
@@ -201,7 +201,7 @@ export class CHTML extends AbstractOutputJax {
      * @return{HTMLElement}  A text node with the given text
      */
     public text(text: string) {
-        return this.nodes.text(text);
+        return this.adaptor.text(text);
     }
 
 }

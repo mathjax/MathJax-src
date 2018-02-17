@@ -47,7 +47,7 @@ export class CHTMLTeXAtom extends CHTMLWrapper {
             const {h, d} = bbox;
             const a = this.font.params.axis_height;
             const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-            this.nodes.setStyle(this.chtml, 'verticalAlign', this.em(dh));
+            this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(dh));
         }
     }
 

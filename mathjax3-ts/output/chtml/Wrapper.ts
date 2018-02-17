@@ -28,7 +28,7 @@ import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {HTMLNodes} from '../../util/HTMLNodes.js';
+import {HTMLAdaptor} from '../../adaptors/HTMLAdaptor.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
@@ -243,10 +243,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
-     * Easy access to the HTMLNodes object
+     * Easy access to the HTMLAdaptor object
      */
-    get nodes() {
-        return this.factory.chtml.nodes;
+    get adaptor() {
+        return this.factory.chtml.adaptor;
     }
 
     /*
@@ -488,9 +488,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     protected createCHTMLnode(parent: HTMLElement) {
         const href = this.node.attributes.get('href');
         if (href) {
-            parent = this.nodes.appendChild(parent, this.html('a', {href: href}));
+            parent = this.adaptor.appendChild(parent, this.html('a', {href: href})) as HTMLElement;
         }
-        this.chtml = this.nodes.appendChild(parent, this.html('mjx-' + this.node.kind));
+        this.chtml = this.adaptor.appendChild(parent, this.html('mjx-' + this.node.kind)) as HTMLElement;
         return this.chtml;
     }
 
@@ -501,7 +501,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (!this.styles) return;
         const styles = this.styles.cssText;
         if (styles) {
-            this.nodes.setAttribute(this.chtml, 'style', styles);
+            this.adaptor.setAttribute(this.chtml, 'style', styles);
         }
     }
 
@@ -510,7 +510,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleVariant() {
         if (this.node.isToken && this.variant !== '-explicitFont') {
-            this.nodes.setAttribute(this.chtml, 'class',
+            this.adaptor.setAttribute(this.chtml, 'class',
                                     (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes);
         }
     }
@@ -532,9 +532,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (chtml && scale !== 1) {
             const size = this.percent(scale);
             if (FONTSIZE[size]) {
-                this.nodes.setAttribute(chtml, 'size', FONTSIZE[size]);
+                this.adaptor.setAttribute(chtml, 'size', FONTSIZE[size]);
             } else {
-                this.nodes.setStyle(chtml, 'fontSize', size);
+                this.adaptor.setStyle(chtml, 'fontSize', size);
             }
         }
         return chtml;
@@ -548,9 +548,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (this.bbox.L) {
             const space = this.em(this.bbox.L);
             if (SPACE[space]) {
-                this.nodes.setAttribute(this.chtml, 'space', SPACE[space]);
+                this.adaptor.setAttribute(this.chtml, 'space', SPACE[space]);
             } else {
-                this.nodes.setStyle(this.chtml, 'marginLeft', space);
+                this.adaptor.setStyle(this.chtml, 'marginLeft', space);
             }
         }
     }
@@ -567,10 +567,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         const mathbackground = attributes.getExplicit('mathbackground') as string;
         const background = attributes.getExplicit('background') as string;
         if (mathcolor || color) {
-            this.nodes.setStyle(this.chtml, 'color', mathcolor || color);
+            this.adaptor.setStyle(this.chtml, 'color', mathcolor || color);
         }
         if (mathbackground || background) {
-            this.nodes.setStyle(this.chtml, 'backgroundColor', mathbackground || background);
+            this.adaptor.setStyle(this.chtml, 'backgroundColor', mathbackground || background);
         }
     }
 
@@ -586,12 +586,12 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         const defaults = attributes.getAllDefaults();
         const skip = CHTMLWrapper.skipAttributes;
         for (const name of attributes.getExplicitNames()) {
-            if (skip[name] === false || (!(name in defaults) && !skip[name] && !this.nodes.hasAttribute(this.chtml, name))) {
-                this.nodes.setAttribute(this.chtml, name, attributes.getExplicit(name) as string);
+            if (skip[name] === false || (!(name in defaults) && !skip[name] && !this.adaptor.hasAttribute(this.chtml, name))) {
+                this.adaptor.setAttribute(this.chtml, name, attributes.getExplicit(name) as string);
             }
         }
         if (attributes.get('class')) {
-            this.nodes.addClass(this.chtml, attributes.get('class') as string);
+            this.adaptor.addClass(this.chtml, attributes.get('class') as string);
         }
     }
 
@@ -667,8 +667,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
             }})
         ]);
         const node = this.chtml || this.parent.chtml;
-        this.nodes.appendChild(this.nodes.parentNode(node), box);
-        this.nodes.setStyle(node, 'backgroundColor', '#FFEE00');
+        this.adaptor.appendChild(this.adaptor.parentNode(node), box);
+        this.adaptor.setStyle(node, 'backgroundColor', '#FFEE00');
     }
 
     /*******************************************************************/
