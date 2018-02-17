@@ -187,11 +187,11 @@ export class CHTML extends AbstractOutputJax {
     /*
      * @param{string} type  The type of HTML node to create
      * @param{OptionList} def  The properties to set on the HTML node
-     * @param{Node[]} content  Array of child nodes to set for the HTML node
+     * @param{HTMLElement[]} content  Array of child nodes to set for the HTML node
      *
      * @return{HTMLElement} The newly created HTML tree
      */
-    public html(type: string, def: OptionList = {}, content: Node[] = []) {
+    public html(type: string, def: OptionList = {}, content: (HTMLElement | Text)[] = []) {
         return this.nodes.node(type, def, content);
     }
 
