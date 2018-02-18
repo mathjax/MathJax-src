@@ -56,7 +56,7 @@ export class CHTML extends AbstractOutputJax {
      *  Used to store the HTMLNodes factory, the CHTMLWrapper factory,
      *  the FontData object, and the CssStyles object.
      */
-    public adaptor: HTMLAdaptor;
+    public adaptor: HTMLAdaptor<HTMLElement, Text, Document>;
     public factory: CHTMLWrapperFactory;
     public font: FontData;
     public cssStyles: CssStyles;
@@ -87,7 +87,7 @@ export class CHTML extends AbstractOutputJax {
         super(chtmlOptions);
         this.factory = this.options.CHTMLWrapperFactory || new CHTMLWrapperFactory();
         this.factory.chtml = this;
-        this.adaptor = new HTMLAdaptor();
+        this.adaptor = new HTMLAdaptor<HTMLElement, Text, Document>();
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new TeXFont(fontOptions);
     }

@@ -333,7 +333,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public removeChild(node: N, child: N | T) {
-        return null as N;
+        return null as N | T;
     }
 
     /*
