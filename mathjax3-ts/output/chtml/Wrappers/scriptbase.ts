@@ -39,7 +39,7 @@ import {DIRECTION} from '../FontData.js';
  *  wrapper implementations
  */
 
-export class CHTMLscriptbase extends CHTMLWrapper {
+export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = 'scriptbase';
 
     /*
@@ -50,7 +50,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     /*
      * The core mi or mo of the base (or the base itself if there isn't one)
      */
-    protected baseCore: CHTMLWrapper;
+    protected baseCore: CHTMLWrapper<N, T, D>;
 
     /*
      * @return{CHTMLWrapper}  The base element's wrapper
@@ -69,7 +69,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     /*
      * @override
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         //
         //  Find the base core
@@ -86,7 +86,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
         //  Check if the base is a mi or mo that needs italic correction removed
         //
         if (!(this.constructor as typeof CHTMLscriptbase).useIC) {
-            (core as CHTMLmo).noIC = true;
+            (core as CHTMLmo<N, T, D>).noIC = true;
         }
     }
 
@@ -96,7 +96,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      *
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         this.chtml = this.standardCHTMLnode(parent);
         const [x, v] = this.getOffset(this.baseChild.getBBox(), this.script.getBBox());
         const style: StyleData = {'vertical-align': this.em(v)};
@@ -104,7 +104,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
             style['margin-left'] = this.em(x);
         }
         this.baseChild.toCHTML(this.chtml);
-        this.script.toCHTML(this.adaptor.appendChild(this.chtml, this.html('mjx-script', {style})) as HTMLElement);
+        this.script.toCHTML(this.adaptor.appendChild(this.chtml, this.html('mjx-script', {style})) as N);
     }
 
     /*
@@ -256,10 +256,10 @@ export class CHTMLscriptbase extends CHTMLWrapper {
     }
 
     /*
-     * @param{HTMLElement[]} nodes  The HTML elements to be centered in a stack
-     * @param{number[]} dx          The x offsets needed to center the elements
+     * @param{N[]} nodes    The HTML elements to be centered in a stack
+     * @param{number[]} dx  The x offsets needed to center the elements
      */
-    protected setDeltaW(nodes: HTMLElement[], dx: number[]) {
+    protected setDeltaW(nodes: N[], dx: number[]) {
         for (let i = 0; i < dx.length; i++) {
             if (dx[i]) {
                 this.adaptor.setStyle(nodes[i], 'paddingLeft', this.em(dx[i]));
@@ -272,7 +272,7 @@ export class CHTMLscriptbase extends CHTMLWrapper {
      *  of all children
      */
     protected stretchChildren() {
-        let stretchy: CHTMLWrapper[] = [];
+        let stretchy: CHTMLWrapper<N, T, D>[] = [];
         //
         //  Locate and count the stretchy children
         //

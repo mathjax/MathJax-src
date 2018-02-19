@@ -31,13 +31,13 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
  *  The CHTMLmspace wrapper for the MmlMspace object
  */
 
-export class CHTMLmspace extends CHTMLWrapper {
+export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMspace.prototype.kind;
 
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         let chtml = this.standardCHTMLnode(parent);
         let {w, h, d} = this.getBBox();
         if (w < 0) {

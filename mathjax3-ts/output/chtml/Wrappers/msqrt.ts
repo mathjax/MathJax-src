@@ -35,7 +35,7 @@ import {DIRECTION} from '../FontData.js';
  *  The CHTMLmsqrt wrapper for the MmlMsqrt object
  */
 
-export class CHTMLmsqrt extends CHTMLWrapper {
+export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMsqrt.prototype.kind;
 
     public static styles: StyleList = {
@@ -91,7 +91,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
      *
      * @override
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         const surd = this.createMo('\u221A');
         surd.canStretch(DIRECTION.Vertical);
@@ -120,7 +120,7 @@ export class CHTMLmsqrt extends CHTMLWrapper {
             mathsize: ['math', attributes.get('mathsize')]
         };
         mml.setInheritedAttributes(defaults, display, scriptlevel, false);
-        const node = this.wrap(mml) as CHTMLmo;
+        const node = this.wrap(mml) as CHTMLmo<N, T, D>;
         node.parent = this;
         this.childNodes.push(node);
         return node;
@@ -129,8 +129,8 @@ export class CHTMLmsqrt extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
-        const surd = this.childNodes[this.surd] as CHTMLmo;
+    public toCHTML(parent: N) {
+        const surd = this.childNodes[this.surd] as CHTMLmo<N, T, D>;
         const base = this.childNodes[this.base];
         //
         //  Get the parameters for the spacing of the parts
@@ -144,13 +144,13 @@ export class CHTMLmsqrt extends CHTMLWrapper {
         const CHTML = this.standardCHTMLnode(parent);
         let SURD, BASE, ROOT, root;
         if (this.root != null) {
-            ROOT = this.adaptor.appendChild(CHTML, this.html('mjx-root')) as HTMLElement;
+            ROOT = this.adaptor.appendChild(CHTML, this.html('mjx-root')) as N;
             root = this.childNodes[this.root];
         }
         const SQRT = this.adaptor.appendChild(CHTML, this.html('mjx-sqrt', {}, [
             SURD = this.html('mjx-surd'),
             BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
-        ])) as HTMLElement;
+        ])) as N;
         //
         //  Add the child content
         //
@@ -170,11 +170,11 @@ export class CHTMLmsqrt extends CHTMLWrapper {
     /*
      * Add root HTML (overridden in mroot)
      *
-     * @param{HTMLElement} ROOT   The container for the root
+     * @param{N} ROOT   The container for the root
      * @param{CHTMLWrapper} root  The wrapped MML root content
      * @param{BBox} sbox          The bounding box of the surd
      */
-    protected addRoot(ROOT: HTMLElement, root: CHTMLWrapper, sbox: BBox) {
+    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox) {
     }
 
     /*

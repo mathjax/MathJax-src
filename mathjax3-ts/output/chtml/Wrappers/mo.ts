@@ -42,7 +42,7 @@ const DirectionVH: {[n: number]: string} = {
 /*
  *  The CHTMLmo wrapper for the MmlMo object
  */
-export class CHTMLmo extends CHTMLWrapper {
+export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMo.prototype.kind;
 
     public static styles: StyleList = {
@@ -127,7 +127,7 @@ export class CHTMLmo extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         // eventually handle centering, largop, etc.
         const attributes = this.node.attributes;
         const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
@@ -143,7 +143,7 @@ export class CHTMLmo extends CHTMLWrapper {
             this.stretchHTML(chtml, symmetric);
         } else {
             if (symmetric || attributes.get('largeop')) {
-                chtml = this.adaptor.appendChild(chtml, this.html('mjx-symmetric')) as HTMLElement;
+                chtml = this.adaptor.appendChild(chtml, this.html('mjx-symmetric')) as N;
             }
             for (const child of this.childNodes) {
                 child.toCHTML(chtml);
@@ -154,14 +154,14 @@ export class CHTMLmo extends CHTMLWrapper {
     /*
      * Create the HTML for a multi-character stretchy delimiter
      *
-     * @param{HTMLElement} chtml  The parent element in which to put the delimiter
+     * @param{N} chtml  The parent element in which to put the delimiter
      * @param{boolean} symmetric  Whether delimiter should be symmetric about the math axis
      */
-    protected stretchHTML(chtml: HTMLElement, symmetric: boolean) {
+    protected stretchHTML(chtml: N, symmetric: boolean) {
         const c = this.getText().charCodeAt(0);
         const delim = this.stretch;
         const stretch = delim.stretch;
-        const content: HTMLElement[] = [];
+        const content: N[] = [];
         //
         //  Set up the beginning, extension, and end pieces
         //

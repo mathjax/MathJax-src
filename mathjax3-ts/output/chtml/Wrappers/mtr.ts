@@ -35,7 +35,7 @@ import {DIRECTION} from '../FontData.js';
  *  The CHTMLmtr wrapper for the MmlMtr object
  */
 
-export class CHTMLmtr extends CHTMLWrapper {
+export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMtr.prototype.kind;
 
     public static styles: StyleList = {
@@ -69,7 +69,7 @@ export class CHTMLmtr extends CHTMLWrapper {
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -79,7 +79,7 @@ export class CHTMLmtr extends CHTMLWrapper {
      *  other cells in the row.
      */
     protected stretchChildren() {
-        let stretchy: CHTMLWrapper[] = [];
+        let stretchy: CHTMLWrapper<N, T, D>[] = [];
         let children = (this.firstCell ? this.childNodes.slice(this.firstCell) : this.childNodes);
         //
         //  Locate and count the stretchy children
@@ -129,7 +129,7 @@ export class CHTMLmtr extends CHTMLWrapper {
  *  The CHTMLlabeledmtr wrapper for the MmlMlabeledtr object
  */
 
-export class CHTMLmlabeledtr extends CHTMLWrapper {
+export class CHTMLmlabeledtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMlabeledtr.prototype.kind;
 
     public static styles: StyleList = {
@@ -141,7 +141,7 @@ export class CHTMLmlabeledtr extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         super.toCHTML(parent);
         //
         //  FIXME: for now, remove label

@@ -35,7 +35,7 @@ import {DIRECTION} from '../FontData.js';
  *  The CHTMLmtable wrapper for the MmlMtable object
  */
 
-export class CHTMLmtable extends CHTMLWrapper {
+export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMtable.prototype.kind;
 
     public static styles: StyleList = {
@@ -65,12 +65,12 @@ export class CHTMLmtable extends CHTMLWrapper {
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         //
         // Determine the number of columns and rows
         //
-        this.numCols = this.childNodes.map(row => (row as CHTMLmtr).numCells)
+        this.numCols = this.childNodes.map(row => (row as CHTMLmtr<N, T, D>).numCells)
                                       .reduce((a, b) => Math.max(a, b), 0);
         this.numRows = this.childNodes.length;
         //
@@ -85,11 +85,11 @@ export class CHTMLmtable extends CHTMLWrapper {
      * Handle horizontal stretching within the ith column
      */
     protected stretchColumn(i: number) {
-        let stretchy: CHTMLWrapper[] = [];
+        let stretchy: CHTMLWrapper<N, T, D>[] = [];
         //
         //  Locate and count the stretchy children
         //
-        for (const row of (this.childNodes as CHTMLmtr[])) {
+        for (const row of (this.childNodes as CHTMLmtr<N, T, D>[])) {
             const cell = row.childNodes[i + row.firstCell];
             if (cell) {
                 const child = cell.childNodes[0];
@@ -108,7 +108,7 @@ export class CHTMLmtable extends CHTMLWrapper {
             //  otherwise, find the width of the non-stretchy children.
             //
             let all = (count > 1 && count === nodeCount);
-            for (const row of (this.childNodes as CHTMLmtr[])) {
+            for (const row of (this.childNodes as CHTMLmtr<N, T, D>[])) {
                 const cell = row.childNodes[i + row.firstCell];
                 if (cell) {
                     const child = cell.childNodes[0];
@@ -135,12 +135,12 @@ export class CHTMLmtable extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         //
         //  Create the rows inside an mjx-itable (which will be used to center the table on the math axis)
         //
         const chtml = this.standardCHTMLnode(parent);
-        const table = this.adaptor.appendChild(chtml, this.html('mjx-itable')) as HTMLElement;
+        const table = this.adaptor.appendChild(chtml, this.html('mjx-itable')) as N;
         for (const child of this.childNodes) {
             child.toCHTML(table);
         }
@@ -177,7 +177,7 @@ export class CHTMLmtable extends CHTMLWrapper {
         const D = new Array(this.numRows).fill(0);
         const W = new Array(this.numCols).fill(0);
         for (let j = 0; j < this.numRows; j++) {
-            const row = this.childNodes[j] as CHTMLmtr;
+            const row = this.childNodes[j] as CHTMLmtr<N, T, D>;
             for (let i = 0; i < row.childNodes.length; i++) {
                 const cbox = row.childNodes[i].getBBox();
                 const h = Math.max(cbox.h, .75);
@@ -215,7 +215,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      * Pad any short rows with extra cells
      */
     protected padRows() {
-        for (const row of this.adaptor.childNodes(this.adaptor.firstChild(this.chtml) as HTMLElement) as HTMLElement[]) {
+        for (const row of this.adaptor.childNodes(this.adaptor.firstChild(this.chtml) as N) as N[]) {
             while (this.adaptor.childNodes(row).length < this.numCols) {
                 this.adaptor.appendChild(row, this.html('mjx-mtd'));
             }
@@ -274,7 +274,7 @@ export class CHTMLmtable extends CHTMLWrapper {
                 //  Set the style for the spacing, if it is needed, and isn't the
                 //  default already set in the mtd styles
                 //
-                const styleNode = (cell ? cell.chtml : this.adaptor.childNodes(row.chtml)[i]) as HTMLElement;
+                const styleNode = (cell ? cell.chtml : this.adaptor.childNodes(row.chtml)[i] as N);
                 if ((i > 1 || frame) && lspace !== '.5em') {
                     this.adaptor.setStyle(styleNode, 'paddingLeft', lspace);
                 }
@@ -294,7 +294,7 @@ export class CHTMLmtable extends CHTMLWrapper {
         if (!lines) return;
         for (const row of this.childNodes) {
             let i = 0;
-            for (const cell of this.adaptor.childNodes(row.chtml).slice(1) as HTMLElement[]) {
+            for (const cell of this.adaptor.childNodes(row.chtml).slice(1) as N[]) {
                 const line = lines[i++];
                 if (line === 'none') continue;
                 this.adaptor.setStyle(cell, 'borderLeft', '.07em ' + line);
@@ -378,7 +378,7 @@ export class CHTMLmtable extends CHTMLWrapper {
         for (const row of this.childNodes.slice(1)) {
             const line = lines[i++];
             if (line === 'none') continue;
-            for (const cell of this.adaptor.childNodes(row.chtml) as HTMLElement[]) {
+            for (const cell of this.adaptor.childNodes(row.chtml) as N[]) {
                 this.adaptor.setStyle(cell, 'borderTop', '.07em ' + line);
             }
         }
@@ -389,7 +389,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      */
     protected handleFrame(frame: boolean) {
         if (frame) {
-            this.adaptor.setStyle(this.adaptor.firstChild(this.chtml) as HTMLElement,
+            this.adaptor.setStyle(this.adaptor.firstChild(this.chtml) as N,
                                   'border', '.07em ' + this.node.attributes.get('frame'));
         }
     }
@@ -417,7 +417,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      * @return{string[]}             The array of values in the given attribute, split at spaces,
      *                                 padded to the number of table columns by repeating the last entry
      */
-    protected getColumnAttributes(name: string, wrapper: CHTMLWrapper = null) {
+    protected getColumnAttributes(name: string, wrapper: CHTMLWrapper<N, T, D> = null) {
         const columns = this.getAttributeArray(name, wrapper);
         if (columns.length === 0) return;
         while (columns.length < this.numCols) {
@@ -432,7 +432,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      * @return{string[]}             The array of values in the given attribute, split at spaces,
      *                                 padded to the number of table rows by repeating the last entry
      */
-    protected getRowAttributes(name: string, wrapper: CHTMLWrapper = null) {
+    protected getRowAttributes(name: string, wrapper: CHTMLWrapper<N, T, D> = null) {
         const rows = this.getAttributeArray(name, wrapper);
         if (rows.length === 0) return;
         while (rows.length < this.numRows) {
@@ -448,7 +448,7 @@ export class CHTMLmtable extends CHTMLWrapper {
      *                                 (after leading and trailing spaces are removed, and multiple
      *                                  spaces have been collapsed to one).
      */
-    protected getAttributeArray(name: string, wrapper: CHTMLWrapper = null) {
+    protected getAttributeArray(name: string, wrapper: CHTMLWrapper<N, T, D> = null) {
         const value = ((wrapper || this).node.attributes.get(name) as string);
         if (!value) return [];
         return value.replace(/^\s+/, '').replace(/\s+$/, '').replace(/\s+/g, ' ').split(/ /);

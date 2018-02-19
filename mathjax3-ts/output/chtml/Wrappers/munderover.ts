@@ -40,7 +40,7 @@ const DELTA = 1.1;
  *  The CHTMLmunder wrapper for the MmlMunder object
  */
 
-export class CHTMLmunder extends CHTMLmsub {
+export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
     public static kind = MmlMunder.prototype.kind;
 
     public static useIC: boolean = true;
@@ -68,7 +68,7 @@ export class CHTMLmunder extends CHTMLmsub {
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -76,7 +76,7 @@ export class CHTMLmunder extends CHTMLmsub {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
             this.adaptor.setAttribute(this.chtml, 'limits', 'false');
@@ -84,13 +84,13 @@ export class CHTMLmunder extends CHTMLmsub {
         }
         this.chtml = this.standardCHTMLnode(parent);
         const base = this.adaptor.appendChild(
-            this.adaptor.appendChild(this.chtml, this.html('mjx-row')) as HTMLElement,
+            this.adaptor.appendChild(this.chtml, this.html('mjx-row')) as N,
             this.html('mjx-base')
-        ) as HTMLElement;
+        ) as N;
         const under = this.adaptor.appendChild(
-            this.adaptor.appendChild(this.chtml, this.html('mjx-row')) as HTMLElement,
+            this.adaptor.appendChild(this.chtml, this.html('mjx-row')) as N,
             this.html('mjx-under')
-        ) as HTMLElement;
+        ) as N;
         this.baseChild.toCHTML(base);
         this.script.toCHTML(under);
         const basebox = this.baseChild.getBBox();
@@ -128,7 +128,7 @@ export class CHTMLmunder extends CHTMLmsub {
  *  The CHTMLmover wrapper for the MmlMover object
  */
 
-export class CHTMLmover extends CHTMLmsup {
+export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
     public static kind = MmlMover.prototype.kind;
 
     public static useIC: boolean = true;
@@ -154,7 +154,7 @@ export class CHTMLmover extends CHTMLmsup {
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -162,15 +162,15 @@ export class CHTMLmover extends CHTMLmsup {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
             this.adaptor.setAttribute(this.chtml, 'limits', 'false');
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const over = this.adaptor.appendChild(this.chtml, this.html('mjx-over')) as HTMLElement;
-        const base = this.adaptor.appendChild(this.chtml, this.html('mjx-base')) as HTMLElement;
+        const over = this.adaptor.appendChild(this.chtml, this.html('mjx-over')) as N;
+        const base = this.adaptor.appendChild(this.chtml, this.html('mjx-base')) as N;
         this.script.toCHTML(over);
         this.baseChild.toCHTML(base);
         const overbox = this.script.getBBox();
@@ -211,7 +211,7 @@ export class CHTMLmover extends CHTMLmsup {
  *  The CHTMLmunderover wrapper for the MmlMunderover object
  */
 
-export class CHTMLmunderover extends CHTMLmsubsup {
+export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
     public static kind = MmlMunderover.prototype.kind;
 
     public static useIC: boolean = true;
@@ -261,7 +261,7 @@ export class CHTMLmunderover extends CHTMLmsubsup {
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -269,26 +269,26 @@ export class CHTMLmunderover extends CHTMLmsubsup {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
             this.adaptor.setAttribute(this.chtml, 'limits', 'false');
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const over = this.adaptor.appendChild(this.chtml, this.html('mjx-over')) as HTMLElement;
+        const over = this.adaptor.appendChild(this.chtml, this.html('mjx-over')) as N;
         const table = this.adaptor.appendChild(
-            this.adaptor.appendChild(this.chtml, this.html('mjx-box')) as HTMLElement,
+            this.adaptor.appendChild(this.chtml, this.html('mjx-box')) as N,
             this.html('mjx-munder')
-        ) as HTMLElement;
+        ) as N;
         const base = this.adaptor.appendChild(
-            this.adaptor.appendChild(table, this.html('mjx-row')) as HTMLElement,
+            this.adaptor.appendChild(table, this.html('mjx-row')) as N,
             this.html('mjx-base')
-        ) as HTMLElement;
+        ) as N;
         const under = this.adaptor.appendChild(
-            this.adaptor.appendChild(table, this.html('mjx-row')) as HTMLElement,
+            this.adaptor.appendChild(table, this.html('mjx-row')) as N,
             this.html('mjx-under')
-        ) as HTMLElement;
+        ) as N;
         this.overChild.toCHTML(over);
         this.baseChild.toCHTML(base);
         this.underChild.toCHTML(under);

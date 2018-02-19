@@ -34,7 +34,7 @@ import {StyleList} from '../CssStyles.js';
  *  The CHTMLmsub wrapper for the MmlMsub object
  */
 
-export class CHTMLmsub extends CHTMLscriptbase {
+export class CHTMLmsub<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsub.prototype.kind;
 
     /*
@@ -60,7 +60,7 @@ export class CHTMLmsub extends CHTMLscriptbase {
  *  The CHTMLmsup wrapper for the MmlMsup object
  */
 
-export class CHTMLmsup extends CHTMLscriptbase {
+export class CHTMLmsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsup.prototype.kind;
 
     public static useIC: boolean = true;
@@ -89,7 +89,7 @@ export class CHTMLmsup extends CHTMLscriptbase {
  *  The CHTMLmsubsup wrapper for the MmlMsubsup object
  */
 
-export class CHTMLmsubsup extends CHTMLscriptbase {
+export class CHTMLmsubsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsubsup.prototype.kind;
 
     public static styles: StyleList = {
@@ -127,12 +127,12 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
         const [u, v, q] = this.getUVQ(this.baseChild.getBBox(), this.subChild.getBBox(), this.supChild.getBBox());
         const style = {'vertical-align': this.em(v)};
         this.baseChild.toCHTML(chtml);
-        const stack = this.adaptor.appendChild(chtml, this.html('mjx-script', {style})) as HTMLElement;
+        const stack = this.adaptor.appendChild(chtml, this.html('mjx-script', {style})) as N;
         this.supChild.toCHTML(stack);
         this.adaptor.appendChild(stack, this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
         this.subChild.toCHTML(stack);

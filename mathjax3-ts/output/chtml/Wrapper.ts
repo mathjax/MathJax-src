@@ -28,7 +28,7 @@ import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {HTMLAdaptor} from '../../adaptors/HTMLAdaptor.js';
+import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
@@ -77,7 +77,7 @@ interface CSSStyle extends CSSStyleDeclaration {
  *  The base CHTMLWrapper class
  */
 
-export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
+export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper<N, T, D>> {
 
     public static kind: string = 'unknown';
 
@@ -191,18 +191,18 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * The factory used to create more CHTMLWrappers
      */
-    protected factory: CHTMLWrapperFactory;
+    protected factory: CHTMLWrapperFactory<N, T, D>;
 
     /*
      * The parent and children of this node
      */
-    public parent: CHTMLWrapper = null;
-    public childNodes: CHTMLWrapper[];
+    public parent: CHTMLWrapper<N, T, D> = null;
+    public childNodes: CHTMLWrapper<N, T, D>[];
 
     /*
      * The HTML element generated for this wrapped node
      */
-    public chtml: HTMLElement = null;
+    public chtml: N = null;
 
     /*
      * Styles that must be handled directly by CHTML (mostly having to do with fonts)
@@ -243,7 +243,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
-     * Easy access to the HTMLAdaptor object
+     * Easy access to the DOMAdaptor object
      */
     get adaptor() {
         return this.factory.chtml.adaptor;
@@ -261,7 +261,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * @override
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node);
         this.parent = parent;
         this.font = factory.chtml.font;
@@ -280,7 +280,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @param{CHTMLWrapper} parent  The wrapped parent node
      * @return{CHTMLWrapper}  The newly wrapped node
      */
-    public wrap(node: MmlNode, parent: CHTMLWrapper = null) {
+    public wrap(node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         const wrapped = this.factory.wrap(node, parent || this);
         if (parent) {
             parent.childNodes.push(wrapped);
@@ -293,9 +293,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * Create the HTML for the wrapped node.
      *
-     * @param{HTMLElement} parent  The HTML node where the output is added
+     * @param{N} parent  The HTML node where the output is added
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
         for (const child of this.childNodes) {
             child.toCHTML(chtml);
@@ -340,7 +340,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     protected getStyles() {
         const styleString = this.node.attributes.getExplicit('style') as string;
         if (!styleString) return;
-        this.styles = this.html('span').style;
+        this.styles = {} as CSSStyleDeclaration; //this.html('span').style;  // FIXME: work out a substitute
         const style = this.styles as CSSStyle;
         style.cssText = styleString;
         for (let i = 0, m = CHTMLWrapper.removeStyles.length; i < m; i++) {
@@ -394,7 +394,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected explicitVariant(fontFamily: string, fontWeight: string, fontStyle: string) {
         let style = this.styles;
-        if (!style) style = this.styles = this.html('span').style;
+        if (!style) style = this.styles = {} as CSSStyleDeclaration; // this.html('span').style; // FIXME: work out replacement
         style.fontFamily = fontFamily;
         if (fontWeight) style.fontWeight = fontWeight;
         if (fontStyle)  style.fontStyle = fontStyle;
@@ -467,10 +467,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * Create the standard CHTML element for the given wrapped node.
      *
-     * @param{HTMLElement} parent  The HTML element in which the node is to be created
-     * @returns{HTMLElement}  The root of the HTML tree for the wrapped node's output
+     * @param{N} parent  The HTML element in which the node is to be created
+     * @returns{N}  The root of the HTML tree for the wrapped node's output
      */
-    protected standardCHTMLnode(parent: HTMLElement) {
+    protected standardCHTMLnode(parent: N) {
         const chtml = this.createCHTMLnode(parent);
         this.handleStyles();
         this.handleVariant();
@@ -482,15 +482,15 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
-     * @param{HTMLElement} parent  The HTML element in which the node is to be created
-     * @returns{HTMLElement}  The root of the HTML tree for the wrapped node's output
+     * @param{N} parent  The HTML element in which the node is to be created
+     * @returns{N}  The root of the HTML tree for the wrapped node's output
      */
-    protected createCHTMLnode(parent: HTMLElement) {
+    protected createCHTMLnode(parent: N) {
         const href = this.node.attributes.get('href');
         if (href) {
-            parent = this.adaptor.appendChild(parent, this.html('a', {href: href})) as HTMLElement;
+            parent = this.adaptor.appendChild(parent, this.html('a', {href: href})) as N;
         }
-        this.chtml = this.adaptor.appendChild(parent, this.html('mjx-' + this.node.kind)) as HTMLElement;
+        this.chtml = this.adaptor.appendChild(parent, this.html('mjx-' + this.node.kind)) as N;
         return this.chtml;
     }
 
@@ -523,11 +523,11 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
-     * @param{HTMLElement} chtml  The HTML node to scale
+     * @param{N} chtml  The HTML node to scale
      * @param{number} rscale      The relatie scale to apply
-     * @return{HTMLElement}       The HTML node (for chaining)
+     * @return{N}       The HTML node (for chaining)
      */
-    protected setScale(chtml: HTMLElement, rscale: number) {
+    protected setScale(chtml: N, rscale: number) {
         const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
         if (chtml && scale !== 1) {
             const size = this.percent(scale);
@@ -607,8 +607,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * @return{CHTMLWrapper}  The wrapper for this node's core <mo> node
      */
-    public coreMO(): CHTMLmo {
-        return this.CHTML.nodeMap.get(this.node.coreMO()) as CHTMLmo;
+    public coreMO(): CHTMLmo<N, T, D> {
+        return this.CHTML.nodeMap.get(this.node.coreMO()) as CHTMLmo<N, T, D>;
     }
 
     /*
@@ -665,7 +665,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
                 'vertical-align': this.em(-bbox.d),
                 'background-color': 'green'
             }})
-        ]);
+        ] as N[]);
         const node = this.chtml || this.parent.chtml;
         this.adaptor.appendChild(this.adaptor.parentNode(node), box);
         this.adaptor.setStyle(node, 'backgroundColor', '#FFEE00');
@@ -735,16 +735,16 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * @param{string} type  The tag name of the HTML node to be created
      * @param{OptionList} def  The properties to set for the created node
-     * @param{HTMLElement[]} content  The child nodes for the created HTML node
-     * @return{HTMLElement}   The generated HTML tree
+     * @param{N[]} content  The child nodes for the created HTML node
+     * @return{N}   The generated HTML tree
      */
-    public html(type: string, def: OptionList = {}, content: HTMLElement[] = []) {
+    public html(type: string, def: OptionList = {}, content: N[] = []) {
         return this.factory.chtml.html(type, def, content);
     }
 
     /*
      * @param{string} text  The text from which to create an HTML text node
-     * @return{HTMLElement}  The generated text node with the given text
+     * @return{T}  The generated text node with the given text
      */
     public text(text: string) {
         return this.factory.chtml.text(text);

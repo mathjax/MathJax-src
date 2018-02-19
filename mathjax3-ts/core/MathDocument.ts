@@ -86,7 +86,7 @@ export interface MathDocument {
     /*
      * The output jax to use for the document
      */
-    outputJax: OutputJax;
+    outputJax: OutputJax<HTMLElement>;
 
     /*
      * Locates the math in the document and constructs the MathList
@@ -200,12 +200,12 @@ class DefaultInputJax extends AbstractInputJax {
         return null as MmlNode;
     }
 }
-class DefaultOutputJax extends AbstractOutputJax {
+class DefaultOutputJax extends AbstractOutputJax<HTMLElement> {
     public typeset(math: MathItem, document: MathDocument = null) {
-        return null as Element;
+        return null as HTMLElement;
     }
     public escaped(math: MathItem, document?: MathDocument) {
-        return null as Element;
+        return null as HTMLElement;
     }
 }
 class DefaultMathList extends AbstractMathList {}
@@ -239,7 +239,7 @@ export abstract class AbstractMathDocument implements MathDocument {
     public math: MathList;
     public processed: MathProcessed;
     public inputJax: InputJax[];
-    public outputJax: OutputJax;
+    public outputJax: OutputJax<HTMLElement>;
 
     /*
      * @param{any} document        The document (HTML string, parsed DOM, etc.) to be processed

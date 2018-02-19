@@ -32,7 +32,7 @@ import {StyleList} from '../CssStyles.js';
  *  The CHTMLmtd wrapper for the MmlMtd object
  */
 
-export class CHTMLmtd extends CHTMLWrapper {
+export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMtd.prototype.kind;
 
     public static styles: StyleList = {
@@ -63,7 +63,7 @@ export class CHTMLmtd extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         super.toCHTML(parent);
         //
         // Include a strut to force minimum height and depth

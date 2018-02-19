@@ -32,7 +32,7 @@ import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
  *  The CHTMLsemantics wrapper for the MmlSemantics object
  */
 
-export class CHTMLsemantics extends CHTMLWrapper {
+export class CHTMLsemantics<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlSemantics.prototype.kind;
 
     /*
@@ -40,7 +40,7 @@ export class CHTMLsemantics extends CHTMLWrapper {
      *
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
         if (this.childNodes.length) {
             this.childNodes[0].toCHTML(chtml);
@@ -67,13 +67,13 @@ export class CHTMLsemantics extends CHTMLWrapper {
  *  The CHTMLannotation wrapper for the MmlAnnotation object
  */
 
-export class CHTMLannotation extends CHTMLWrapper {
+export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlAnnotation.prototype.kind;
 
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         // FIXME:  output as plain text
         super.toCHTML(parent);
     }
@@ -93,7 +93,7 @@ export class CHTMLannotation extends CHTMLWrapper {
  *  The CHTMLannotationXML wrapper for the MmlAnnotationXML object
  */
 
-export class CHTMLannotationXML extends CHTMLWrapper {
+export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlAnnotationXML.prototype.kind;
 }
 
@@ -102,7 +102,7 @@ export class CHTMLannotationXML extends CHTMLWrapper {
  *  The CHTMLxml wrapper for the XMLNode object
  */
 
-export class CHTMLxml extends CHTMLWrapper {
+export class CHTMLxml<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = XMLNode.prototype.kind;
 
     public static autoStyle = false;
@@ -110,8 +110,8 @@ export class CHTMLxml extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
-        this.adaptor.appendChild(parent, this.adaptor.cloneNode((this.node as XMLNode).getXML() as HTMLElement));
+    public toCHTML(parent: N) {
+        this.adaptor.appendChild(parent, this.adaptor.cloneNode((this.node as XMLNode).getXML() as N));
     }
 
     /*

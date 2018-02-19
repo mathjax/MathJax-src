@@ -33,14 +33,14 @@ import {DIRECTION} from '../FontData.js';
  *  The CHTMLmrow wrapper for the MmlMrow object
  */
 
-export class CHTMLmrow extends CHTMLWrapper {
+export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMrow.prototype.kind;
 
     /*
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -48,7 +48,7 @@ export class CHTMLmrow extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         const chtml = (this.node.isInferred ? (this.chtml = parent) : this.standardCHTMLnode(parent));
         let hasNegative = false;
         for (const child of this.childNodes) {
@@ -86,7 +86,7 @@ export class CHTMLmrow extends CHTMLWrapper {
      *  other nodes in the row.
      */
     protected stretchChildren() {
-        let stretchy: CHTMLWrapper[] = [];
+        let stretchy: CHTMLWrapper<N, T, D>[] = [];
         //
         //  Locate and count the stretchy children
         //
@@ -129,7 +129,7 @@ export class CHTMLmrow extends CHTMLWrapper {
  *  The CHTMLinferredMrow wrapper for the MmlInferredMrow object
  */
 
-export class CHTMLinferredMrow extends CHTMLmrow {
+export class CHTMLinferredMrow<N, T, D> extends CHTMLmrow<N, T, D> {
     public static kind = MmlInferredMrow.prototype.kind;
 
     /*

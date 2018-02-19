@@ -29,7 +29,7 @@ import {BBox} from '../BBox.js';
 /*
  *  The CHTMLmi wrapper for the MmlMi object
  */
-export class CHTMLmi extends CHTMLWrapper {
+export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMi.prototype.kind;
 
     /*
@@ -40,7 +40,7 @@ export class CHTMLmi extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         super.toCHTML(parent);
         if (this.noIC) {
             this.adaptor.setAttribute(this.chtml, 'noIC', 'true');

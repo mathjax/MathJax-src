@@ -33,7 +33,7 @@ import {StyleList} from '../CssStyles.js';
  *  The CHTMLmpadded wrapper for the MmlMpadded object
  */
 
-export class CHTMLmpadded extends CHTMLWrapper {
+export class CHTMLmpadded<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMpadded.prototype.kind;
 
     public static styles: StyleList = {
@@ -49,9 +49,9 @@ export class CHTMLmpadded extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         let chtml = this.standardCHTMLnode(parent);
-        const content: HTMLElement[] = [];
+        const content: N[] = [];
         const style: StringMap = {};
         const [H, D, W, dh, dd, dw, x, y] = this.getDimens();
         //
@@ -77,7 +77,7 @@ export class CHTMLmpadded extends CHTMLWrapper {
         //
         //  Create the HTML with the proper styles and content
         //
-        chtml = this.adaptor.appendChild(chtml, this.html('mjx-block', {style: style}, content)) as HTMLElement;
+        chtml = this.adaptor.appendChild(chtml, this.html('mjx-block', {style: style}, content)) as N;
         for (const child of this.childNodes) {
             child.toCHTML(content[0] || chtml);
         }

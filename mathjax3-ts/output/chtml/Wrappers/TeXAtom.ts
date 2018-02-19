@@ -31,13 +31,13 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
  *  The CHTMLTeXAtom wrapper for the TeXAtom object
  */
 
-export class CHTMLTeXAtom extends CHTMLWrapper {
+export class CHTMLTeXAtom<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = TeXAtom.prototype.kind;
 
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         super.toCHTML(parent);
         //
         // Center VCENTER atoms vertically

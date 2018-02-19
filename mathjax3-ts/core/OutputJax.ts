@@ -30,7 +30,7 @@ import {MathItem, Metrics} from './MathItem.js';
  *  The OutputJax interface
  */
 
-export interface OutputJax {
+export interface OutputJax<N> {
     /*
      * The name of this output jax class
      */
@@ -47,7 +47,7 @@ export interface OutputJax {
      * @param{MathDocument} document  The MathDocument in which the typesetting should occur
      * @return{Element}               The DOM tree for the typeset math
      */
-    typeset(math: MathItem, document?: MathDocument): Element;
+    typeset(math: MathItem, document?: MathDocument): N;
 
     /*
      * Handle an escaped character (e.g., \$ from the TeX input jax preventing it from being a delimiter)
@@ -56,7 +56,7 @@ export interface OutputJax {
      * @param{MathDocument} document  The MathDocument in which the math occurs
      * @return{Element}               The DOM tree for the escaped item
      */
-    escaped(math: MathItem, document?: MathDocument): Element;
+    escaped(math: MathItem, document?: MathDocument): N;
 
     /*
      * Get the metric information for all math in the given document
@@ -70,7 +70,7 @@ export interface OutputJax {
      *
      * @param{MathDocument} document  The MathDocument being processed
      */
-    styleSheet(document: MathDocument): Element;
+    styleSheet(document: MathDocument): N;
 }
 
 
@@ -79,7 +79,7 @@ export interface OutputJax {
  *  The OutputJax abstract class
  */
 
-export abstract class AbstractOutputJax implements OutputJax {
+export abstract class AbstractOutputJax<N> implements OutputJax<N> {
 
     public static NAME: string = 'generic';
     public static OPTIONS: OptionList = {};
@@ -104,12 +104,12 @@ export abstract class AbstractOutputJax implements OutputJax {
     /*
      * @override
      */
-    public abstract typeset(math: MathItem, document?: MathDocument): Element;
+    public abstract typeset(math: MathItem, document?: MathDocument): N;
 
     /*
      * @override
      */
-    public abstract escaped(math: MathItem, document?: MathDocument): Element;
+    public abstract escaped(math: MathItem, document?: MathDocument): N;
 
     /*
      * @override
@@ -121,7 +121,7 @@ export abstract class AbstractOutputJax implements OutputJax {
      * @override
      */
     public styleSheet(document: MathDocument) {
-        return null as Element;
+        return null as N;
     }
 
 }

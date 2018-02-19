@@ -33,7 +33,7 @@ import {DIRECTION} from '../FontData.js';
  *  The CHTMLmfrac wrapper for the MmlMfrac object
  */
 
-export class CHTMLmfrac extends CHTMLWrapper {
+export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMfrac.prototype.kind;
 
     public static styles: StyleList = {
@@ -115,7 +115,7 @@ export class CHTMLmfrac extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
         const attr = this.node.attributes.getList('displaystyle', 'scriptlevel');
         const style = (attr.displaystyle && attr.scriptlevel === 0 ? {type: 'd'} : {});
