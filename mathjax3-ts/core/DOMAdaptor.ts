@@ -111,7 +111,7 @@ export interface DOMAdaptor<N, T, D> {
      * @param{T} node    The HTML text node to be split
      * @param{number} n  The index of the character where the split will occur
      */
-    splitText(node: T, n: number): void;
+    splitText(node: T, n: number): T;
 
     /*
      * @param{N|T} node   The HTML node whose sibling is to be obtained
@@ -307,7 +307,9 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public abstract ownerDocument(node: N): D;
+    public ownerDocument(node: N) {
+        return this.document;
+    };
 
     /*
      * @override
@@ -338,7 +340,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public abstract splitText(node: T, n: number): void;
+    public abstract splitText(node: T, n: number): T;
 
     /*
      * @override

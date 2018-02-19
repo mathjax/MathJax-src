@@ -64,6 +64,7 @@ export interface MinText<N, T> {
     parentNode: N | Node;
     nextSibling: N | T | Node;
     previousSibling: N | T | Node;
+    splitText(n: number): T;
 };
 
 
@@ -80,7 +81,8 @@ export interface MinText<N, T> {
 
 export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
                          T extends MinText<N, T>,
-                         D extends MinDocument<N, T>> extends AbstractDOMAdaptor<N, T, D> {
+                         D extends MinDocument<N, T>> extends AbstractDOMAdaptor<N, T, D>
+{
 
     /*
      * @override
@@ -129,6 +131,13 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
      */
     public cloneNode(node: N) {
         return node.cloneNode(true) as N;
+    }
+
+    /*
+     * @override
+     */
+    public splitText(node: T, n: number) {
+        return node.splitText(n);
     }
 
     /*
