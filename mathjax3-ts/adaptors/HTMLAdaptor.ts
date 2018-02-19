@@ -48,6 +48,7 @@ export interface MinHTMLElement<N, T> {
     lastChild: N | T | Node;
     appendChild(child: N | T): N | T | Node;
     removeChild(child: N | T): N | T  | Node;
+    replaceChild(nnode: N | T, onode: N | T): N | T  | Node;
     insertBefore(nchild: N | T, ochild: N | T): void;
     cloneNode(deep: boolean): N | Node;
     setAttribute(name: string, value: string): void;
@@ -124,6 +125,13 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
      */
     public removeChild(node: N, child: N | T) {
         return node.removeChild(child) as N | T;
+    }
+
+    /*
+     * @override
+     */
+    public replaceChild(parent: N, nnode: N | T, onode: N | T) {
+        return parent.replaceChild(nnode, onode) as N | T;
     }
 
     /*

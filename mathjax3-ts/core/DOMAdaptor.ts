@@ -102,6 +102,14 @@ export interface DOMAdaptor<N, T, D> {
     removeChild(node: N, child: N | T): N | T;
 
     /*
+     * @param{N} parent   The node whose child is to be replaced
+     * @param{N|T} nnode  The node to replace with
+     * @param{N|T} onode  The child to be replaced
+     * @return{N|T}       The removed node
+     */
+    replaceChild(parent: N, nnode: N | T, onode: N | T): N | T;
+
+    /*
      * @param{N} node   The HTML node to be cloned
      * @return{N}       The copied node
      */
@@ -331,6 +339,15 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public abstract removeChild(node: N, child: N | T): N | T;
+
+    /*
+     * @override
+     */
+    public replaceChild(parent: N, nnode: N | T, onode: N | T) {
+        this.insertBefore(parent, nnode, onode);
+        this.removeChild(parent, onode);
+        return onode;
+    }
 
     /*
      * @override
