@@ -108,6 +108,12 @@ export interface DOMAdaptor<N, T, D> {
     cloneNode(node: N): N;
 
     /*
+     * @param{T} node    The HTML text node to be split
+     * @param{number} n  The index of the character where the split will occur
+     */
+    splitText(node: T, n: number): void;
+
+    /*
      * @param{N|T} node   The HTML node whose sibling is to be obtained
      * @return{N|T}       The node following the given one (or null)
      */
@@ -269,16 +275,12 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @param{string} type  The type of the node to create
      * @return{N}           The created node
      */
-    protected create(type: string) {
-        return null as N;
-    }
+    protected abstract create(type: string): N;
 
     /*
      * @override
      */
-    public text(text: string) {
-        return null as T;
-    }
+    public abstract text(text: string): T;
 
     /*
      * @param{N} node           The HTML element whose attributes are to be set
@@ -305,78 +307,63 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public ownerDocument(node: N) {
-        return this.document;
-    }
+    public abstract ownerDocument(node: N): D;
 
     /*
      * @override
      */
-    public parentNode(node: N | T) {
-        return null as N;
-    }
+    public abstract parentNode(node: N | T): N;
+
 
     /*
      * @override
      */
-    public appendChild(node: N, child: N | T) {
-        return null as N | T;
-    }
+    public abstract appendChild(node: N, child: N | T): N | T;
 
     /*
      * @override
      */
-    public insertBefore(node: N, nchild: N | T, ochild: N | T) {
-    }
+    public abstract insertBefore(node: N, nchild: N | T, ochild: N | T): void;
 
     /*
      * @override
      */
-    public removeChild(node: N, child: N | T) {
-        return null as N | T;
-    }
+    public abstract removeChild(node: N, child: N | T): N | T;
 
     /*
      * @override
      */
-    public cloneNode(node: N) {
-        return null as N;
-    }
+    public abstract cloneNode(node: N):  N;
 
     /*
      * @override
      */
-    public nextSibling(node: N | T) {
-        return null as N | T;
-    }
+    public abstract splitText(node: T, n: number): void;
 
     /*
      * @override
      */
-    public previousSibling(node: N | T) {
-        return null as N | T;
-    }
+    public abstract nextSibling(node: N | T): N | T;
 
     /*
      * @override
      */
-    public firstChild(node: N) {
-        return null as N | T;
-    }
+    public abstract previousSibling(node: N | T): N | T;
 
     /*
      * @override
      */
-    public lastChild(node: N) {
-        return null as N | T;
-    }
+    public abstract firstChild(node: N): N | T;
 
     /*
      * @override
      */
-    public childNodes(node: N) {
-        return Array() as (N | T)[];
-    }
+    public abstract lastChild(node: N): N | T;
+
+    /*
+     * @override
+     */
+    public abstract childNodes(node: N): (N | T)[];
 
     /*
      * @override
@@ -388,16 +375,12 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public tagName(node: N) {
-        return "unknown";
-    }
+    public abstract tagName(node: N): string;
 
     /*
      * @override
      */
-    public nodeValue(node: N | T) {
-        return "";
-    }
+    public abstract nodeValue(node: N | T): string;
 
     /*
      * @override
@@ -435,66 +418,52 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public setAttribute(node: N, name: string, value: string) {
-    }
+    public abstract setAttribute(node: N, name: string, value: string): void;
 
     /*
      * @override
      */
-    public getAttribute(node: N, name: string) {
-        return "";
-    }
+    public abstract getAttribute(node: N, name: string): string;
 
     /*
      * @override
      */
-    public removeAttribute(node: N, name: string) {
-    }
+    public abstract removeAttribute(node: N, name: string): void;
 
     /*
      * @override
      */
-    public hasAttribute(node: N, name: string) {
-        return false;
-    }
+    public abstract hasAttribute(node: N, name: string): boolean;
+
 
     /*
      * @override
      */
-    public allAttributes(node: N) {
-        return [] as AttributeData[];
-    }
+    public abstract allAttributes(node: N): AttributeData[];
 
     /*
      * @override
      */
-    public addClass(node: N, name: string) {
-    }
+    public abstract addClass(node: N, name: string): void;
 
     /*
      * @override
      */
-    public removeClass(node: N, name: string) {
-    }
+    public abstract removeClass(node: N, name: string): void;
 
     /*
      * @override
      */
-    public setStyle(node: N, name: string, value: string) {
-    }
+    public abstract setStyle(node: N, name: string, value: string): void;
 
     /*
      * @override
      */
-    public getStyle(node: N, name: string) {
-        return "";
-    }
+    public abstract getStyle(node: N, name: string): string;
 
     /*
      * @override
      */
-    public allStyles(node: N) {
-        return {} as any;
-    }
+    public abstract allStyles(node: N): OptionList;
 
 }
