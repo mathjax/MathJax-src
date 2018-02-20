@@ -25,10 +25,9 @@ import {OptionList} from '../util/Options.js';
 import {AttributeData, AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
 
 
-
 /*****************************************************************/
 /*
- * The minimum fields needed for an HTML Element
+ * The minimum fields needed for a Document
  */
 export interface MinDocument<N, T> {
     documentElement: N;
@@ -38,8 +37,12 @@ export interface MinDocument<N, T> {
     createTextNode(text: string): T;
 }
 
+/*****************************************************************/
+/*
+ * The minimum fields needed for an HTML Element
+ */
 export interface MinHTMLElement<N, T> {
-    tagName: string;
+    nodeName: string;
     nodeValue: string;
     textContent: string;
     innerHTML: string;
@@ -68,7 +71,12 @@ export interface MinHTMLElement<N, T> {
     hasAttribute(name: string): boolean;
 }
 
+/*****************************************************************/
+/*
+ * The minimum fields needed for a Text element
+ */
 export interface MinText<N, T> {
+    nodeName: string;
     nodeValue: string;
     parentNode: N | Node;
     nextSibling: N | T | Node;
@@ -76,6 +84,13 @@ export interface MinText<N, T> {
     splitText(n: number): T;
 }
 
+/*****************************************************************/
+/*
+ * The minimum fields needed for a DOMParser
+ */
+export interface MinDOMParser<D> {
+    parseFromString(text: string, format?: string): D;
+}
 
 
 /*****************************************************************/
@@ -88,16 +103,30 @@ export interface MinText<N, T> {
  *  D = Document class
  */
 
-export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
+export abstract class HTMLAdaptor<N extends MinHTMLElement<N, T>,
                          T extends MinText<N, T>,
                          D extends MinDocument<N, T>> extends AbstractDOMAdaptor<N, T, D>
 {
 
     /*
+     * The DOMParser used to parse a string into a DOM tree
+     */
+    parser: MinDOMParser<D>;
+
+    /*
+     * @override
+     * @constructor
+     */
+    constructor(parser: MinDOMParser<D>) {
+        super();
+        this.parser = parser;
+    }
+
+    /*
      * @override
      */
-    public parseFromString(text: string, format: string = 'text/html') {
-        return null as D;
+    public parse(text: string, format: string = 'text/html') {
+        return this.parser.parseFromString(text, format);
     }
 
     /*
@@ -117,31 +146,30 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
     /*
      * @override
      */
-    public documentHead(doc: D) {
+    public head(doc: D) {
         return doc.head;
     }
 
     /*
      * @override
      */
-    public documentBody(doc: D) {
+    public body(doc: D) {
         return doc.body;
     }
 
     /*
      * @override
      */
-    public documentElement(doc: D) {
+    public root(doc: D) {
         return doc.documentElement;
     }
 
     /*
      * @override
      */
-
-    public getElementsByTagName(node: N, name: string, ns: string = null) {
+    public tags(node: N, name: string, ns: string = null) {
         let nodes = (ns ? node.getElementsByTagNameNS(ns, name) : node.getElementsByTagName(name));
-        return Array.from(nodes) as N[];
+        return Array.from(nodes as N[]) as N[];
     }
 
     /*
@@ -166,63 +194,63 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
     /*
      * @override
      */
-    public parentNode(node: N | T) {
+    public parent(node: N | T) {
         return node.parentNode as N;
     }
 
     /*
      * @override
      */
-    public appendChild(node: N, child: N | T) {
+    public append(node: N, child: N | T) {
         return node.appendChild(child) as N | T;
     }
 
     /*
      * @override
      */
-    public insertBefore(node: N, nchild: N | T, ochild: N | T) {
-        return node.insertBefore(nchild, ochild);
+    public insert(nchild: N | T, ochild: N | T) {
+        return this.parent(ochild).insertBefore(nchild, ochild);
     }
 
     /*
      * @override
      */
-    public removeChild(node: N, child: N | T) {
-        return node.removeChild(child) as N | T;
+    public remove(child: N | T) {
+        return this.parent(child).removeChild(child) as N | T;
     }
 
     /*
      * @override
      */
-    public replaceChild(parent: N, nnode: N | T, onode: N | T) {
-        return parent.replaceChild(nnode, onode) as N | T;
+    public replace(nnode: N | T, onode: N | T) {
+        return this.parent(onode).replaceChild(nnode, onode) as N | T;
     }
 
     /*
      * @override
      */
-    public cloneNode(node: N) {
+    public clone(node: N) {
         return node.cloneNode(true) as N;
     }
 
     /*
      * @override
      */
-    public splitText(node: T, n: number) {
+    public split(node: T, n: number) {
         return node.splitText(n);
     }
 
     /*
      * @override
      */
-    public nextSibling(node: N | T) {
+    public next(node: N | T) {
         return node.nextSibling as N | T;
     }
 
     /*
      * @override
      */
-    public previousSibling(node: N | T) {
+    public previous(node: N | T) {
         return node.previousSibling as N | T;
     }
 
@@ -257,14 +285,14 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
     /*
      * @override
      */
-    public tagName(node: N) {
-        return node.tagName;
+    public kind(node: N | T) {
+        return node.nodeName.toLowerCase();
     }
 
     /*
      * @override
      */
-    public nodeValue(node: N | T) {
+    public value(node: N | T) {
         return node.nodeValue;
     }
 
@@ -340,6 +368,13 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
      */
     public removeClass(node: N, name: string) {
         return node.classList.remove(name);
+    }
+
+    /*
+     * @override
+     */
+    public hasClass(node: N, name: string) {
+        return node.classList.contains(name);
     }
 
     /*

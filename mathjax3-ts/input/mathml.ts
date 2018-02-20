@@ -114,15 +114,15 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         let mml = math.start.node;
         if (!mml || this.options['forceReparse']) {
             let mathml = this.executeFilters(this.preFilters, math, math.math || '<math></math>');
-            let doc = this.checkForErrors(this.adaptor.parseFromString(mathml, 'text/' + this.options['parseAs']));
-            let body = this.adaptor.documentBody(doc);
+            let doc = this.checkForErrors(this.adaptor.parse(mathml, 'text/' + this.options['parseAs']));
+            let body = this.adaptor.body(doc);
             if (this.adaptor.childNodes(body).length !== 1) {
                 this.error('MathML must consist of a single element');
             }
-            mml = this.adaptor.removeChild(body, this.adaptor.firstChild(body)) as N;
-            if (this.adaptor.tagName(mml).replace(/^[a-z]+:/, '') !== 'math') {
+            mml = this.adaptor.remove(this.adaptor.firstChild(body)) as N;
+            if (this.adaptor.kind(mml).replace(/^[a-z]+:/, '') !== 'math') {
                 this.error('MathML must be formed by a <math> element, not <' +
-                           this.adaptor.tagName(mml) + '>');
+                           this.adaptor.kind(mml) + '>');
             }
         }
         mml = this.executeFilters(this.mmlFilters, math, mml);
@@ -136,7 +136,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
      * @return{Document}     The document
      */
     protected checkForErrors(doc: D) {
-        let err = this.adaptor.getElementsByTagName(this.adaptor.documentBody(doc), 'parsererror')[0];
+        let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
         if (err) {
             if (this.adaptor.textContent(err) === '') {
                 this.error('Error processing MathML');

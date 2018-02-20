@@ -140,7 +140,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //  Create the rows inside an mjx-itable (which will be used to center the table on the math axis)
         //
         const chtml = this.standardCHTMLnode(parent);
-        const table = this.adaptor.appendChild(chtml, this.html('mjx-itable')) as N;
+        const table = this.adaptor.append(chtml, this.html('mjx-itable')) as N;
         for (const child of this.childNodes) {
             child.toCHTML(table);
         }
@@ -217,7 +217,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected padRows() {
         for (const row of this.adaptor.childNodes(this.adaptor.firstChild(this.chtml) as N) as N[]) {
             while (this.adaptor.childNodes(row).length < this.numCols) {
-                this.adaptor.appendChild(row, this.html('mjx-mtd'));
+                this.adaptor.append(row, this.html('mjx-mtd'));
             }
         }
     }

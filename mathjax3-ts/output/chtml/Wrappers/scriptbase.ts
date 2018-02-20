@@ -104,7 +104,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
             style['margin-left'] = this.em(x);
         }
         this.baseChild.toCHTML(this.chtml);
-        this.script.toCHTML(this.adaptor.appendChild(this.chtml, this.html('mjx-script', {style})) as N);
+        this.script.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
     }
 
     /*

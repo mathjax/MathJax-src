@@ -47,12 +47,12 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
     public toCHTML(parent: N) {
         let text = (this.node as TextNode).getText();
         if (this.parent.variant === '-explicitFont') {
-            this.adaptor.appendChild(parent, this.text(text));
+            this.adaptor.append(parent, this.text(text));
         } else if (this.parent.stretch.c) {
-            this.adaptor.appendChild(parent, this.html('mjx-c', {c: this.char(this.parent.stretch.c)}));
+            this.adaptor.append(parent, this.html('mjx-c', {c: this.char(this.parent.stretch.c)}));
         } else {
             for (const n of this.unicodeChars(text)) {
-                this.adaptor.appendChild(parent, this.html('mjx-c', {c: this.char(n)}));
+                this.adaptor.append(parent, this.html('mjx-c', {c: this.char(n)}));
             }
         }
     }

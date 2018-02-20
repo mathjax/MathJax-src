@@ -144,10 +144,10 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
         const CHTML = this.standardCHTMLnode(parent);
         let SURD, BASE, ROOT, root;
         if (this.root != null) {
-            ROOT = this.adaptor.appendChild(CHTML, this.html('mjx-root')) as N;
+            ROOT = this.adaptor.append(CHTML, this.html('mjx-root')) as N;
             root = this.childNodes[this.root];
         }
-        const SQRT = this.adaptor.appendChild(CHTML, this.html('mjx-sqrt', {}, [
+        const SQRT = this.adaptor.append(CHTML, this.html('mjx-sqrt', {}, [
             SURD = this.html('mjx-surd'),
             BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
         ])) as N;

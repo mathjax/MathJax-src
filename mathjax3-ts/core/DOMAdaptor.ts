@@ -24,13 +24,6 @@
 import {OptionList} from '../util/Options.js';
 
 /*
- * A style declaration
- */
-export type StyleData = {
-    [property: string]: string | number;
-};
-
-/*
  * The data for an attribute
  */
 export type AttributeData = {
@@ -59,7 +52,7 @@ export interface DOMAdaptor<N, T, D> {
      * @param{string} format  The format (e.g., 'text/html' or 'text/xhtml')
      * @return{D}             The parsed document
      */
-    parseFromString(text: string, format?: string): D;
+    parse(text: string, format?: string): D;
 
     /*
      * @param{string} type      The tag name of the HTML node to be created
@@ -76,28 +69,25 @@ export interface DOMAdaptor<N, T, D> {
     text(text: string): T;
 
     /*
-     * @param{N} node   The HTML node whose document is to be obtained
-     * @return{D}       The document where the node was created
-     */
-    ownerDocument(node: N | T): D;
-
-    /*
-     * @param{D} doc   The document whose document.head is to be obtained
+     * @param{D} doc   The document whose head is to be obtained
      * @return{N}      The document.head element
      */
-    documentHead(doc: D): N;
+    head(doc: D): N;
+//    documentHead(doc: D): N;
 
     /*
-     * @param{D} doc   The document whose document.body is to be obtained
+     * @param{D} doc   The document whose body is to be obtained
      * @return{N}      The document.body element
      */
-    documentBody(doc: D): N;
+    body(doc: D): N;
+//    documentBody(doc: D): N;
 
     /*
      * @param{D} doc   The document whose documentElement is to be obtained
      * @return{N}      The documentElement
      */
-    documentElement(doc: D): N;
+    root(doc: D): N;
+//    documentElement(doc: D): N;
 
     /*
      * @param{N} node        The node to search for tags
@@ -105,7 +95,8 @@ export interface DOMAdaptor<N, T, D> {
      * @param{string} ns     The namespace to search in (or null for no namespace)
      * @return{N[]}          The list of tags found
      */
-    getElementsByTagName(node: N, name: string, ns?: string): N[];
+    tags(node: N, name: string, ns?: string): N[];
+//    getElementsByTagName(node: N, name: string, ns?: string): N[];
 
     /*
      * Get a list of containers (to be searched for math).  These can be
@@ -121,60 +112,66 @@ export interface DOMAdaptor<N, T, D> {
      * @param{N|T} node  The HTML node whose parent is to be obtained
      * @return{N}        The parent node of the given one
      */
-    parentNode(node: N | T): N;
+    parent(node: N | T): N;
+//    parentNode(node: N | T): N;
 
     /*
      * @param{N} node     The HTML node to be appended to
      * @param{N|T} child  The node or text to be appended
      * @return{N|T}       The appended node
      */
-    appendChild(node: N, child: N | T): N | T;
+    append(node: N, child: N | T): N | T;
+//    appendChild(node: N, child: N | T): N | T;
 
     /*
-     * @param{N} node      The HTML node to be appended to
      * @param{N|T} nchild  The node or text to be inserted
-     * @param{N|T} ochild  The node or text where the new child is to be added before it (or null if appended)
+     * @param{N|T} ochild  The node or text where the new child is to be added before it
      */
-    insertBefore(node: N, nchild: N | T, ochild: N | T): void;
+    insert(nchild: N | T, ochild: N | T): void;
+//  insertBefore(node: N, nchild: N | T, ochild: N | T): void;
 
     /*
-     * @param{N} node     The HTML node whose child is to be removed
-     * @param{N|T} child  The node or text to be removed
+     * @param{N|T} child  The node or text to be removed from its parent
      * @return{N|T}       The removed node
      */
-    removeChild(node: N, child: N | T): N | T;
+    remove(child: N | T): N | T;
+//    removeChild(node: N, child: N | T): N | T;
 
     /*
-     * @param{N} parent   The node whose child is to be replaced
      * @param{N|T} nnode  The node to replace with
      * @param{N|T} onode  The child to be replaced
      * @return{N|T}       The removed node
      */
-    replaceChild(parent: N, nnode: N | T, onode: N | T): N | T;
+    replace(nnode: N | T, onode: N | T): N | T;
+//    replaceChild(parent: N, nnode: N | T, onode: N | T): N | T;
 
     /*
      * @param{N} node   The HTML node to be cloned
      * @return{N}       The copied node
      */
-    cloneNode(node: N): N;
+    clone(node: N): N;
+//    cloneNode(node: N): N;
 
     /*
      * @param{T} node    The HTML text node to be split
      * @param{number} n  The index of the character where the split will occur
      */
-    splitText(node: T, n: number): T;
+    split(node: T, n: number): T;
+//    splitText(node: T, n: number): T;
 
     /*
      * @param{N|T} node   The HTML node whose sibling is to be obtained
      * @return{N|T}       The node following the given one (or null)
      */
-    nextSibling(node: N | T): N | T;
+    next(node: N | T): N | T;
+//    nextSibling(node: N | T): N | T;
 
     /*
      * @param{N|T} node   The HTML node whose sibling is to be obtained
      * @return{N|T}       The node preceding the given one (or null)
      */
-    previousSibling(node: N | T): N | T;
+    previous(node: N | T): N | T;
+//    previousSibling(node: N | T): N | T;
 
     /*
      * @param{N} node   The HTML node whose child is to be obtained
@@ -202,16 +199,18 @@ export interface DOMAdaptor<N, T, D> {
     childNode(node: N, i: number): N | T;
 
     /*
-     * @param{N | T} node   The HTML node whose tag name is to be obtained
+     * @param{N | T} node   The HTML node whose tag or node name is to be obtained
      * @return{string}      The tag or node name of the given node
      */
-    tagName(node: N | T): string;
+    kind(node: N | T): string;
+//    tagName(node: N | T): string;
 
     /*
      * @param{N|T} node  The HTML node whose value is to be obtained
      * @return{string}   The value of the given node
      */
-    nodeValue(node: N | T): string;
+    value(node: N | T): string;
+//    nodeValue(node: N | T): string;
 
     /*
      * @param{N} node    The HTML node whose text content is to be obtained
@@ -277,6 +276,14 @@ export interface DOMAdaptor<N, T, D> {
     removeClass(node: N, name: string): void;
 
     /*
+     * @param{N} node        The HTML node whose class is to be tested
+     * @param{string} name   The class to test
+     * @return{boolean}      True if the node has the given class
+     */
+    hasClass(node: N, name: string): void;
+//
+
+    /*
      * @param{N} node        The HTML node whose class list is needed
      * @return{string[]}     An array of the class names for this node
      */
@@ -309,6 +316,7 @@ export interface DOMAdaptor<N, T, D> {
  */
 
 export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D> {
+
     /*
      * The document in which the HTML nodes will be created
      */
@@ -325,7 +333,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public abstract parseFromString(text: string, format?: string): D;
+    public abstract parse(text: string, format?: string): D;
 
     /*
      * @override
@@ -334,7 +342,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
         const node = this.create(type);
         this.setAttributes(node, def);
         for (const child of children) {
-            this.appendChild(node, child);
+            this.append(node, child);
         }
         return node as N;
     }
@@ -375,29 +383,22 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public ownerDocument(node: N | T) {
-        return this.document;
-    }
+    public abstract head(doc: D): N;
 
     /*
      * @override
      */
-    public abstract documentHead(doc: D): N;
+    public abstract body(doc: D): N;
 
     /*
      * @override
      */
-    public abstract documentBody(doc: D): N;
+    public abstract root(doc: D): N;
 
     /*
      * @override
      */
-    public abstract documentElement(doc: D): N;
-
-    /*
-     * @override
-     */
-    public abstract getElementsByTagName(node: N, name: string, ns?: string): N[];
+    public abstract tags(node: N, name: string, ns?: string): N[];
 
     /*
      * @override
@@ -407,51 +408,51 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public abstract parentNode(node: N | T): N;
+    public abstract parent(node: N | T): N;
 
     /*
      * @override
      */
-    public abstract appendChild(node: N, child: N | T): N | T;
+    public abstract append(node: N, child: N | T): N | T;
 
     /*
      * @override
      */
-    public abstract insertBefore(node: N, nchild: N | T, ochild: N | T): void;
+    public abstract insert(nchild: N | T, ochild: N | T): void;
 
     /*
      * @override
      */
-    public abstract removeChild(node: N, child: N | T): N | T;
+    public abstract remove(child: N | T): N | T;
 
     /*
      * @override
      */
-    public replaceChild(parent: N, nnode: N | T, onode: N | T) {
-        this.insertBefore(parent, nnode, onode);
-        this.removeChild(parent, onode);
+    public replace(nnode: N | T, onode: N | T) {
+        this.insert(nnode, onode);
+        this.remove(onode);
         return onode;
     }
 
     /*
      * @override
      */
-    public abstract cloneNode(node: N):  N;
+    public abstract clone(node: N):  N;
 
     /*
      * @override
      */
-    public abstract splitText(node: T, n: number): T;
+    public abstract split(node: T, n: number): T;
 
     /*
      * @override
      */
-    public abstract nextSibling(node: N | T): N | T;
+    public abstract next(node: N | T): N | T;
 
     /*
      * @override
      */
-    public abstract previousSibling(node: N | T): N | T;
+    public abstract previous(node: N | T): N | T;
 
     /*
      * @override
@@ -478,12 +479,12 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public abstract tagName(node: N | T): string;
+    public abstract kind(node: N | T): string;
 
     /*
      * @override
      */
-    public abstract nodeValue(node: N | T): string;
+    public abstract value(node: N | T): string;
 
     /*
      * @override
@@ -501,7 +502,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public outerHTML(node: N) {
-        const tag = this.tagName(node);
+        const tag = this.kind(node);
         const attributes = this.allAttributes(node).map(
             (x: AttributeData) => x.name + '="' + this.protectHTML(x.value) + '"'
         ).join(' ');
@@ -558,6 +559,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public abstract removeClass(node: N, name: string): void;
+
+    /*
+     * @override
+     */
+    public abstract hasClass(node: N, name: string): boolean;
 
     /*
      * @override

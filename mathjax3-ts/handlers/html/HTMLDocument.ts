@@ -130,7 +130,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      */
     public findMath(options: OptionList) {
         if (!this.processed.findMath) {
-            options = userOptions({elements: [this.adaptor.documentBody(this.document)]}, options);
+            options = userOptions({elements: [this.adaptor.body(this.document)]}, options);
             for (const container of this.adaptor.getElements(options['elements'], this.document)) {
                 let [strings, nodes] = [null, null] as [string[], HTMLNodeArray<N, T>];
                 for (const jax of this.inputJax) {
@@ -164,12 +164,12 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
             super.updateDocument();
             const sheet = this.documentStyleSheet();
             if (sheet) {
-                const head = this.adaptor.documentHead(this.adaptor.ownerDocument(sheet));
+                const head = this.adaptor.head(this.document);
                 let styles = this.findSheet(head, this.adaptor.getAttribute(sheet, 'id'));
                 if (styles) {
-                    this.adaptor.replaceChild(this.adaptor.parentNode(styles), sheet, styles);
+                    this.adaptor.replace(sheet, styles);
                 } else {
-                    this.adaptor.appendChild(head, sheet);
+                    this.adaptor.append(head, sheet);
                 }
             }
             this.processed.updateDocument = true;
@@ -179,7 +179,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
     protected findSheet(head: N, id: string) {
         if (id) {
-            for (const sheet of this.adaptor.getElementsByTagName(head, 'style')) {
+            for (const sheet of this.adaptor.tags(head, 'style')) {
                 if (this.adaptor.getAttribute(sheet, 'id') === id) {
                     return sheet;
                 }

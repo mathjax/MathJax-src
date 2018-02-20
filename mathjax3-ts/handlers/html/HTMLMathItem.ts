@@ -77,30 +77,30 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
             if (this.inputJax.processStrings) {
                 let node = this.start.node as T;
                 if (node === this.end.node) {
-                    if (this.end.n < this.adaptor.nodeValue(this.end.node).length) {
-                        this.adaptor.splitText(this.end.node, this.end.n);
+                    if (this.end.n < this.adaptor.value(this.end.node).length) {
+                        this.adaptor.split(this.end.node, this.end.n);
                     }
                     if (this.start.n) {
-                        node = this.adaptor.splitText(this.start.node as T, this.start.n);
+                        node = this.adaptor.split(this.start.node as T, this.start.n);
                     }
-                    this.adaptor.replaceChild(this.adaptor.parentNode(node), this.typesetRoot, node);
+                    this.adaptor.replace(this.typesetRoot, node);
                 } else {
                     if (this.start.n) {
-                        node = this.adaptor.splitText(node, this.start.n);
+                        node = this.adaptor.split(node, this.start.n);
                     }
                     while (node !== this.end.node) {
-                        let next = this.adaptor.nextSibling(node) as T;
-                        this.adaptor.removeChild(this.adaptor.parentNode(node), node);
+                        let next = this.adaptor.next(node) as T;
+                        this.adaptor.remove(node);
                         node = next;
                     }
-                    this.adaptor.insertBefore(this.adaptor.parentNode(node), this.typesetRoot, node);
-                    if (this.end.n < this.adaptor.nodeValue(node).length) {
-                        this.adaptor.splitText(node, this.end.n);
+                    this.adaptor.insert(this.typesetRoot, node);
+                    if (this.end.n < this.adaptor.value(node).length) {
+                        this.adaptor.split(node, this.end.n);
                     }
-                    this.adaptor.removeChild(this.adaptor.parentNode(node), node);
+                    this.adaptor.remove(node);
                 }
             } else {
-                this.adaptor.replaceChild(this.adaptor.parentNode(this.start.node), this.typesetRoot, this.start.node);
+                this.adaptor.replace(this.typesetRoot, this.start.node);
             }
             this.start.node = this.end.node = this.typesetRoot;
             this.start.n = this.end.n = 0;
@@ -123,12 +123,12 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
                 if (this.inputJax.processStrings) {
                     math = this.adaptor.text(text);
                 } else {
-                    const doc = this.adaptor.parseFromString(text, 'text/html');
-                    math = this.adaptor.firstChild(this.adaptor.documentBody(doc));
+                    const doc = this.adaptor.parse(text, 'text/html');
+                    math = this.adaptor.firstChild(this.adaptor.body(doc));
                 }
-                this.adaptor.insertBefore(this.adaptor.parentNode(node), math, node);
+                this.adaptor.insert(math, node);
             }
-            this.adaptor.removeChild(this.adaptor.parentNode(node), node);
+            this.adaptor.remove(node);
         }
     }
 

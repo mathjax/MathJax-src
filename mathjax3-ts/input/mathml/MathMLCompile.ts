@@ -107,7 +107,7 @@ export class MathMLCompile<N, T, D> {
      */
     public makeNode(node: N) {
         let limits = false, texClass = '';
-        let type = this.adaptor.tagName(node).replace(/^.*:/, '');
+        let type = this.adaptor.kind(node).replace(/^.*:/, '');
         for (const name of this.adaptor.allClasses(node)) {
             if (name.match(/^MJX-TeXAtom-/)) {
                 texClass = name.substr(12);
@@ -172,7 +172,7 @@ export class MathMLCompile<N, T, D> {
             return;
         }
         for (const child of this.adaptor.childNodes((node)) as N[]) {
-            const name = this.adaptor.tagName(child);
+            const name = this.adaptor.kind(child);
             if (name === '#comment') {
                 continue;
             }
@@ -201,7 +201,7 @@ export class MathMLCompile<N, T, D> {
      * @param{N} child      The text node whose contents is to be copied
      */
     protected addText(mml: MmlNode, child: N) {
-        let text = this.adaptor.nodeValue(child);
+        let text = this.adaptor.value(child);
         if ((mml.isToken || mml.getProperty('isChars')) && mml.arity) {
             if (mml.isToken) {
                 text = this.entities.translate(text);

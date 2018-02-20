@@ -68,7 +68,7 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         // Include a strut to force minimum height and depth
         //
-        this.adaptor.appendChild(this.chtml, this.html('mjx-tstrut'));
+        this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
     }
 
 }

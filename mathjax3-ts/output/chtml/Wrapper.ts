@@ -488,9 +488,9 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     protected createCHTMLnode(parent: N) {
         const href = this.node.attributes.get('href');
         if (href) {
-            parent = this.adaptor.appendChild(parent, this.html('a', {href: href})) as N;
+            parent = this.adaptor.append(parent, this.html('a', {href: href})) as N;
         }
-        this.chtml = this.adaptor.appendChild(parent, this.html('mjx-' + this.node.kind)) as N;
+        this.chtml = this.adaptor.append(parent, this.html('mjx-' + this.node.kind)) as N;
         return this.chtml;
     }
 
@@ -667,7 +667,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
             }})
         ] as N[]);
         const node = this.chtml || this.parent.chtml;
-        this.adaptor.appendChild(this.adaptor.parentNode(node), box);
+        this.adaptor.append(this.adaptor.parent(node), box);
         this.adaptor.setStyle(node, 'backgroundColor', '#FFEE00');
     }
 

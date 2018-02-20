@@ -83,12 +83,12 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const base = this.adaptor.appendChild(
-            this.adaptor.appendChild(this.chtml, this.html('mjx-row')) as N,
+        const base = this.adaptor.append(
+            this.adaptor.append(this.chtml, this.html('mjx-row')) as N,
             this.html('mjx-base')
         ) as N;
-        const under = this.adaptor.appendChild(
-            this.adaptor.appendChild(this.chtml, this.html('mjx-row')) as N,
+        const under = this.adaptor.append(
+            this.adaptor.append(this.chtml, this.html('mjx-row')) as N,
             this.html('mjx-under')
         ) as N;
         this.baseChild.toCHTML(base);
@@ -169,8 +169,8 @@ export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const over = this.adaptor.appendChild(this.chtml, this.html('mjx-over')) as N;
-        const base = this.adaptor.appendChild(this.chtml, this.html('mjx-base')) as N;
+        const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
+        const base = this.adaptor.append(this.chtml, this.html('mjx-base')) as N;
         this.script.toCHTML(over);
         this.baseChild.toCHTML(base);
         const overbox = this.script.getBBox();
@@ -276,17 +276,17 @@ export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const over = this.adaptor.appendChild(this.chtml, this.html('mjx-over')) as N;
-        const table = this.adaptor.appendChild(
-            this.adaptor.appendChild(this.chtml, this.html('mjx-box')) as N,
+        const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
+        const table = this.adaptor.append(
+            this.adaptor.append(this.chtml, this.html('mjx-box')) as N,
             this.html('mjx-munder')
         ) as N;
-        const base = this.adaptor.appendChild(
-            this.adaptor.appendChild(table, this.html('mjx-row')) as N,
+        const base = this.adaptor.append(
+            this.adaptor.append(table, this.html('mjx-row')) as N,
             this.html('mjx-base')
         ) as N;
-        const under = this.adaptor.appendChild(
-            this.adaptor.appendChild(table, this.html('mjx-row')) as N,
+        const under = this.adaptor.append(
+            this.adaptor.append(table, this.html('mjx-row')) as N,
             this.html('mjx-under')
         ) as N;
         this.overChild.toCHTML(over);

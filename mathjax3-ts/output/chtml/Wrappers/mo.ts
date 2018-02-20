@@ -143,7 +143,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
             this.stretchHTML(chtml, symmetric);
         } else {
             if (symmetric || attributes.get('largeop')) {
-                chtml = this.adaptor.appendChild(chtml, this.html('mjx-symmetric')) as N;
+                chtml = this.adaptor.append(chtml, this.html('mjx-symmetric')) as N;
             }
             for (const child of this.childNodes) {
                 child.toCHTML(chtml);
@@ -203,7 +203,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
         const dir = DirectionVH[delim.dir];
         const properties = {c: this.char(delim.c || c), style: styles};
         const html = this.html('mjx-stretchy-' + dir, properties, content);
-        this.adaptor.appendChild(chtml, html);
+        this.adaptor.append(chtml, html);
     }
 
     /*

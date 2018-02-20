@@ -54,8 +54,8 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
         let set = new Set<N>();
         this.findMathNodes(node, set);
         this.findMathPrefixed(node, set);
-        const html = this.adaptor.documentElement(this.adaptor.ownerDocument(node));
-        if (this.adaptor.tagName(html) === 'html' &&  set.size === 0) {
+        const html = this.adaptor.root(this.adaptor.document);
+        if (this.adaptor.kind(html) === 'html' &&  set.size === 0) {
             this.findMathNS(node, set);
         }
         return this.processMath(set);
@@ -68,7 +68,7 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
      * @param{Set<N>} set   The set in which to store the math nodes
      */
     protected findMathNodes(node: N, set: Set<N>) {
-        for (const math of this.adaptor.getElementsByTagName(node, 'math')) {
+        for (const math of this.adaptor.tags(node, 'math')) {
             set.add(math);
         }
     }
@@ -80,11 +80,11 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
      * @param{NodeSet} set   The set in which to store the math nodes
      */
     protected findMathPrefixed(node: N, set: Set<N>) {
-        let html = this.adaptor.documentElement(this.adaptor.ownerDocument(node));
+        let html = this.adaptor.root(this.adaptor.document);
         for (const attr of this.adaptor.allAttributes(html)) {
             if (attr.name.substr(0, 6) === 'xmlns:' && attr.value === NAMESPACE) {
                 let prefix = attr.name.substr(6);
-                for (const math of this.adaptor.getElementsByTagName(node, prefix + ':math')) {
+                for (const math of this.adaptor.tags(node, prefix + ':math')) {
                     set.add(math);
                 }
             }
@@ -98,7 +98,7 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
      * @param{NodeSet} set   The set in which to store the math nodes
      */
     protected findMathNS(node: N, set: Set<N>) {
-        for (const math of this.adaptor.getElementsByTagName(node, 'math', NAMESPACE)) {
+        for (const math of this.adaptor.tags(node, 'math', NAMESPACE)) {
             set.add(math);
         }
     }

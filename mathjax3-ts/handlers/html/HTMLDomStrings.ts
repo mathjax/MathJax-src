@@ -171,9 +171,9 @@ export class HTMLDomStrings<N, T, D> {
      */
     protected handleText(node: T, ignore: boolean) {
         if (!ignore) {
-            this.extendString(node, this.adaptor.nodeValue(node));
+            this.extendString(node, this.adaptor.value(node));
         }
-        return this.adaptor.nextSibling(node);
+        return this.adaptor.next(node);
     }
 
     /*
@@ -185,10 +185,10 @@ export class HTMLDomStrings<N, T, D> {
      */
     protected handleTag(node: N, ignore: boolean) {
         if (!ignore) {
-            let text = this.options['includeTags'][this.adaptor.tagName(node)];
+            let text = this.options['includeTags'][this.adaptor.kind(node)];
             this.extendString(node, text);
         }
-        return this.adaptor.nextSibling(node);
+        return this.adaptor.next(node);
     }
 
     /*
@@ -210,18 +210,18 @@ export class HTMLDomStrings<N, T, D> {
     protected handleContainer(node: N, ignore: boolean) {
         this.pushString();
         const cname = this.adaptor.getAttribute(node, 'class') || '';
-        const tname = this.adaptor.tagName(node) || '';
+        const tname = this.adaptor.kind(node) || '';
         const process = this.processClass.exec(cname);
         let next: N | T = node;
         if (this.adaptor.firstChild(node) && !this.adaptor.getAttribute(node, 'data-MJX') &&
             (process || !this.skipTags.exec(tname))) {
-            if (this.adaptor.nextSibling(node)) {
-                this.stack.push([this.adaptor.nextSibling(node), ignore]);
+            if (this.adaptor.next(node)) {
+                this.stack.push([this.adaptor.next(node), ignore]);
             }
             next = this.adaptor.firstChild(node);
             ignore = (ignore || this.ignoreClass.exec(cname)) && !process;
         } else {
-            next = this.adaptor.nextSibling(node);
+            next = this.adaptor.next(node);
         }
         return [next, ignore] as [N | T, boolean];
     }
@@ -246,14 +246,14 @@ export class HTMLDomStrings<N, T, D> {
      */
     public find(node: N | T) {
         this.init();
-        let stop = this.adaptor.nextSibling(node);
+        let stop = this.adaptor.next(node);
         let ignore = false;
         let include = this.options['includeTags'];
 
         while (node && node !== stop) {
-            if (this.adaptor.tagName(node) === '#text') {
+            if (this.adaptor.kind(node) === '#text') {
                 node = this.handleText(node as T, ignore);
-            } else if (include[this.adaptor.tagName(node)] !== undefined) {
+            } else if (include[this.adaptor.kind(node)] !== undefined) {
                 node = this.handleTag(node as N, ignore);
             } else {
                 [node, ignore] = this.handleContainer(node as N, ignore);
