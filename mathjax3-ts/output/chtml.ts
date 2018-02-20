@@ -53,7 +53,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     };
 
     /*
-     *  Used to store the HTMLNodes factory, the CHTMLWrapper factory,
+     *  Used to store the CHTMLWrapper factory,
      *  the FontData object, and the CssStyles object.
      */
     public factory: CHTMLWrapperFactory<N, T, D>;
@@ -76,7 +76,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
 
     /*
      * Get the WrapperFactory and connect it to this output jax
-     * Get the HTMLNodes instance
+     * Get the cssStyle and font objects
      *
      * @param{OptionList} options  The configuration options
      * @constructor
@@ -92,8 +92,8 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
 
     /*
      * Save the math document and the math item
-     * Set the document where HTMLNodes will be created
-     * Recusrively set the TeX classes for the nodes
+     * Set the document where HTML nodes will be created via the adaptor
+     * Recursively set the TeX classes for the nodes
      * Create the container mjx-chtml node
      * Create the CHTML output for the root MathML node in the container
      *

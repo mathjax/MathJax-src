@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLNodes DOM adaptor
+ * @fileoverview  Implements the HTML DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -95,7 +95,7 @@ export interface MinDOMParser<D> {
 
 /*****************************************************************/
 /*
- *  Implements the HTMLNodes class for manipulating HTML elements
+ *  Abstract HTMLAdaptor class for manipulating HTML elements
  *  (subclass of AbstractDOMAdaptor)
  *
  *  N = HTMLElement node class
