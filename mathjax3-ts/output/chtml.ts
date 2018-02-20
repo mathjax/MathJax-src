@@ -26,7 +26,6 @@ import {OptionList, separateOptions} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {FontData} from './chtml/FontData.js';
@@ -41,7 +40,7 @@ import {BBox} from './chtml/BBox.js';
  *  Implements the CHTML class (extends AbstractOutputJax)
  */
 
-export class CHTML<N, T, D> extends AbstractOutputJax<N> {
+export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
 
     public static NAME: string = 'CHTML';
     public static OPTIONS: OptionList = {
@@ -57,7 +56,6 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N> {
      *  Used to store the HTMLNodes factory, the CHTMLWrapper factory,
      *  the FontData object, and the CssStyles object.
      */
-    public adaptor: DOMAdaptor<N, T, D>;
     public factory: CHTMLWrapperFactory<N, T, D>;
     public font: FontData;
     public cssStyles: CssStyles;
@@ -66,8 +64,8 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N> {
      * The MathDocument for the math we find
      * and the MathItem currently being processed
      */
-    public document: MathDocument;
-    public math: MathItem;
+    public document: MathDocument<N, T, D>;
+    public math: MathItem<N, T, D>;
 
     /*
      * A map from the nodes in the expression currently being processed to the
@@ -88,7 +86,6 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N> {
         super(chtmlOptions);
         this.factory = this.options.CHTMLWrapperFactory || new CHTMLWrapperFactory<N, T, D>();
         this.factory.chtml = this;
-//        this.adaptor = new HTMLAdaptor<N, T, D>();
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new TeXFont(fontOptions);
     }
@@ -102,7 +99,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N> {
      *
      * @override
      */
-    public typeset(math: MathItem, html: MathDocument) {
+    public typeset(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
         this.document = html;
         this.math = math;
         this.adaptor.document = html.document;
@@ -122,7 +119,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N> {
      * @param{MathItem} math      The MathItem to get the bounding box for
      * @param{MathDocument} html  The MathDocument for the math
      */
-    public getBBox(math: MathItem, html: MathDocument) {
+    public getBBox(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
         this.document = html;
         this.math = math;
         this.adaptor.document = html.document;
@@ -136,7 +133,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N> {
     /*
      * @override
      */
-    public escaped(math: MathItem, html: MathDocument) {
+    public escaped(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
         this.adaptor.document = html.document;
         return this.html('span', {}, [this.text(math.math)]);
     }
@@ -144,7 +141,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N> {
     /*
      * @override
      */
-    public getMetrics(html: MathDocument) {
+    public getMetrics(html: MathDocument<N, T, D>) {
         for (const math of html.math) {
             math.setMetrics(16, 8, 1000000, 1000000, 1);
         }
@@ -153,7 +150,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N> {
     /*
      * @override
      */
-    public styleSheet(html: MathDocument) {
+    public styleSheet(html: MathDocument<N, T, D>) {
         this.adaptor.document = html.document;
         //
         // Gather the CSS from the classes

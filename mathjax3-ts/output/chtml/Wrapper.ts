@@ -340,7 +340,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     protected getStyles() {
         const styleString = this.node.attributes.getExplicit('style') as string;
         if (!styleString) return;
-        this.styles = {} as CSSStyleDeclaration; //this.html('span').style;  // FIXME: work out a substitute
+        this.styles = {} as CSSStyleDeclaration; // this.html('span').style;  // FIXME: work out a substitute
         const style = this.styles as CSSStyle;
         style.cssText = styleString;
         for (let i = 0, m = CHTMLWrapper.removeStyles.length; i < m; i++) {

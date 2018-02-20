@@ -26,6 +26,7 @@ import {MmlEntities} from './MmlEntities.js';
 import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
     from '../../core/MmlTree/MmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
+import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 
 /********************************************************************/
 /*
@@ -33,7 +34,7 @@ import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
  *  internal MmlNode conversion.
  */
 
-export class MathMLCompile {
+export class MathMLCompile<N, T, D> {
 
     /*
      *  The default options for this object
@@ -54,6 +55,8 @@ export class MathMLCompile {
     public static VERIFY: OptionList = {
         ...AbstractMmlNode.verifyDefaults
     };
+
+    public adaptor: DOMAdaptor<N, T, D>;
 
     /*
      *  The instances of the MmlFactory and MmlEntities objects,
@@ -82,10 +85,10 @@ export class MathMLCompile {
     /*
      * Convert a MathML DOM tree to internal MmlNodes
      *
-     * @param {HTMLElement} node  The <math> node to convert to MmlNodes
+     * @param {N} node  The <math> node to convert to MmlNodes
      * @return {MmlNode}          The MmlNode at the root of the converted tree
      */
-    public compile(node: HTMLElement) {
+    public compile(node: N) {
         let mml = this.makeNode(node);
         mml.verifyTree(this.options['verify']);
         mml.setInheritedAttributes({}, false, 0, false);
@@ -99,13 +102,13 @@ export class MathMLCompile {
      *
      *  FIXME: we should use data-* attributes rather than classes for these
      *
-     * @param {HTMLElement} node   The node to convert to an MmlNode
+     * @param {N} node   The node to convert to an MmlNode
      * @return {MmlNode}           The converted MmlNode
      */
-    public makeNode(node: HTMLElement) {
+    public makeNode(node: N) {
         let limits = false, texClass = '';
-        let type = node.nodeName.toLowerCase().replace(/^.*:/, '');
-        for (const name of Array.from(node.classList)) {
+        let type = this.adaptor.tagName(node).replace(/^.*:/, '');
+        for (const name of this.adaptor.allClasses(node)) {
             if (name.match(/^MJX-TeXAtom-/)) {
                 texClass = name.substr(12);
                 type = 'TeXAtom';
@@ -128,10 +131,10 @@ export class MathMLCompile {
      * Copy the attributes from a MathML node to an MmlNode.
      *
      * @param{MmlNode} mml       The MmlNode to which attributes will be added
-     * @param{HTMLElement} node  The MathML node whose attributes to copy
+     * @param{N} node  The MathML node whose attributes to copy
      */
-    protected addAttributes(mml: MmlNode, node: HTMLElement) {
-        for (const attr of Array.from(node.attributes)) {
+    protected addAttributes(mml: MmlNode, node: N) {
+        for (const attr of this.adaptor.allAttributes(node)) {
             let name = attr.name;
             if (name !== 'class') {
                 let value = this.filterAttribute(name, attr.value);
@@ -162,23 +165,24 @@ export class MathMLCompile {
      * Convert the children of the MathML node and add them to the MmlNode
      *
      * @param{MmlNode} mml       The MmlNode to which children will be added
-     * @param{HTMLElement} node  The MathML node whose children are to be copied
+     * @param{N} node  The MathML node whose children are to be copied
      */
-    protected addChildren(mml: MmlNode, node: HTMLElement) {
+    protected addChildren(mml: MmlNode, node: N) {
         if (mml.arity === 0) {
             return;
         }
-        for (const child of (Array.from(node.childNodes) as HTMLElement[])) {
-            if (child.nodeName === '#comment') {
+        for (const child of this.adaptor.childNodes((node)) as N[]) {
+            const name = this.adaptor.tagName(child);
+            if (name === '#comment') {
                 continue;
             }
-            if (child.nodeName === '#text') {
+            if (name === '#text') {
                 this.addText(mml, child);
             } else if (mml.isKind('annotation-xml')) {
                 mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child));
             } else {
                 let childMml = mml.appendChild(this.makeNode(child)) as MmlNode;
-                if (childMml.arity === 0 && child.childNodes.length) {
+                if (childMml.arity === 0 && this.adaptor.childNodes(child).length) {
                     if (this.options['fixMisplacedChildren']) {
                         this.addChildren(mml, child);
                     } else {
@@ -193,11 +197,11 @@ export class MathMLCompile {
     /*
      * Add text to a token node
      *
-     * @param{MmlNode} mml        The MmlNode to which text will be added
-     * @param{HTMLElement} child  The text node whose contents is to be copied
+     * @param{MmlNode} mml  The MmlNode to which text will be added
+     * @param{N} child      The text node whose contents is to be copied
      */
-    protected addText(mml: MmlNode, child: HTMLElement) {
-        let text = child.nodeValue;
+    protected addText(mml: MmlNode, child: N) {
+        let text = this.adaptor.nodeValue(child);
         if ((mml.isToken || mml.getProperty('isChars')) && mml.arity) {
             if (mml.isToken) {
                 text = this.entities.translate(text);
@@ -213,11 +217,11 @@ export class MathMLCompile {
      * Check for special MJX values in the class and process them
      *
      * @param{MmlNode} mml       The MmlNode to be modified according to the class markers
-     * @param{HTMLElement} node  The MathML node whose class is to be processed
+     * @param{N} node  The MathML node whose class is to be processed
      */
-    protected checkClass(mml: MmlNode, node: HTMLElement) {
+    protected checkClass(mml: MmlNode, node: N) {
         let classList = [];
-        for (const name of Array.from(node.classList)) {
+        for (const name of this.adaptor.allClasses(node)) {
             if (name.substr(0, 4) === 'MJX-') {
                 if (name === 'MJX-variant') {
                     mml.setProperty('variantForm', true);

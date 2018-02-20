@@ -55,12 +55,19 @@ export interface DOMAdaptor<N, T, D> {
     document: D;
 
     /*
+     * @param{string} text    The serialized document to be parsed
+     * @param{string} format  The format (e.g., 'text/html' or 'text/xhtml')
+     * @return{D}             The parsed document
+     */
+    parseFromString(text: string, format?: string): D;
+
+    /*
      * @param{string} type      The tag name of the HTML node to be created
      * @param{OptionList} def   The properties to set for the created node
      * @param{(N|T)[]} content  The child nodes for the created HTML node
      * @return{N}               The generated HTML tree
      */
-    node(type: string, def: OptionList, children: (N | T)[]): N;
+    node(type: string, def?: OptionList, children?: (N | T)[]): N;
 
     /*
      * @param{string} text   The text from which to create an HTML text node
@@ -72,7 +79,43 @@ export interface DOMAdaptor<N, T, D> {
      * @param{N} node   The HTML node whose document is to be obtained
      * @return{D}       The document where the node was created
      */
-    ownerDocument(node: N): D;
+    ownerDocument(node: N | T): D;
+
+    /*
+     * @param{D} doc   The document whose document.head is to be obtained
+     * @return{N}      The document.head element
+     */
+    documentHead(doc: D): N;
+
+    /*
+     * @param{D} doc   The document whose document.body is to be obtained
+     * @return{N}      The document.body element
+     */
+    documentBody(doc: D): N;
+
+    /*
+     * @param{D} doc   The document whose documentElement is to be obtained
+     * @return{N}      The documentElement
+     */
+    documentElement(doc: D): N;
+
+    /*
+     * @param{N} node        The node to search for tags
+     * @param{string} name   The name of the tag to search for
+     * @param{string} ns     The namespace to search in (or null for no namespace)
+     * @return{N[]}          The list of tags found
+     */
+    getElementsByTagName(node: N, name: string, ns?: string): N[];
+
+    /*
+     * Get a list of containers (to be searched for math).  These can be
+     *  specified by CSS selector, or as actual DOM elements or arrays of such.
+     *
+     * @param{(string | N | N[])[]} nodes  The array of items to make into a container list
+     * @param{D} document                  The document in which to search
+     * @return{N[]}                        The array of containers to search
+     */
+    getElements(nodes: (string | N | N[])[], document: D): N[];
 
     /*
      * @param{N|T} node  The HTML node whose parent is to be obtained
@@ -159,16 +202,22 @@ export interface DOMAdaptor<N, T, D> {
     childNode(node: N, i: number): N | T;
 
     /*
-     * @param{N} node   The HTML node whose tag name is to be obtained
-     * @return{string}  The tag name of the given node
+     * @param{N | T} node   The HTML node whose tag name is to be obtained
+     * @return{string}      The tag or node name of the given node
      */
-    tagName(node: N): string;
+    tagName(node: N | T): string;
 
     /*
      * @param{N|T} node  The HTML node whose value is to be obtained
      * @return{string}   The value of the given node
      */
     nodeValue(node: N | T): string;
+
+    /*
+     * @param{N} node    The HTML node whose text content is to be obtained
+     * @return{string}   The text content of the given node
+     */
+    textContent(node: N): string;
 
     /*
      * @param{N} node   The HTML node whose inner HTML string is to be obtained
@@ -228,6 +277,12 @@ export interface DOMAdaptor<N, T, D> {
     removeClass(node: N, name: string): void;
 
     /*
+     * @param{N} node        The HTML node whose class list is needed
+     * @return{string[]}     An array of the class names for this node
+     */
+    allClasses(node: N): string[];
+
+    /*
      * @param{N} node        The HTML node whose style is to be changed
      * @param{string} name   The style to be set
      * @param{string} name   The new value of the style
@@ -266,6 +321,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     constructor(document: D = null) {
         this.document = document;
     }
+
+    /*
+     * @override
+     */
+    public abstract parseFromString(text: string, format?: string): D;
 
     /*
      * @override
@@ -315,15 +375,39 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public ownerDocument(node: N) {
+    public ownerDocument(node: N | T) {
         return this.document;
-    };
+    }
+
+    /*
+     * @override
+     */
+    public abstract documentHead(doc: D): N;
+
+    /*
+     * @override
+     */
+    public abstract documentBody(doc: D): N;
+
+    /*
+     * @override
+     */
+    public abstract documentElement(doc: D): N;
+
+    /*
+     * @override
+     */
+    public abstract getElementsByTagName(node: N, name: string, ns?: string): N[];
+
+    /*
+     * @override
+     */
+    public abstract getElements(nodes: (string | N | N[])[], document: D): N[];
 
     /*
      * @override
      */
     public abstract parentNode(node: N | T): N;
-
 
     /*
      * @override
@@ -394,12 +478,17 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public abstract tagName(node: N): string;
+    public abstract tagName(node: N | T): string;
 
     /*
      * @override
      */
     public abstract nodeValue(node: N | T): string;
+
+    /*
+     * @override
+     */
+    public abstract textContent(node: N): string;
 
     /*
      * @override
@@ -469,6 +558,14 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public abstract removeClass(node: N, name: string): void;
+
+    /*
+     * @override
+     */
+    public allClasses(node: N) {
+        const classes = this.getAttribute(node, 'class');
+        return classes.replace(/  +/g, ' ').replace(/^ /, '').replace(/ $/, '').split(/ /);
+    }
 
     /*
      * @override

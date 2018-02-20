@@ -39,7 +39,7 @@ export type Delims = [string, string];
  *  Locates TeX expressions within strings
  */
 
-export class FindTeX extends AbstractFindMath {
+export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
 
     public static OPTIONS: OptionList = {
         inlineMath: [              // The start/end delimiter pairs for in-line math
@@ -168,8 +168,8 @@ export class FindTeX extends AbstractFindMath {
         let match: RegExpExecArray, braces: number = 0;
         while ((match = pattern.exec(text))) {
             if (match[0] === close && braces === 0) {
-                return protoItem(start[0], text.substr(i, match.index - i), match[0],
-                                 n, start.index, match.index + match[0].length, display);
+                return protoItem<N, T>(start[0], text.substr(i, match.index - i), match[0],
+                                       n, start.index, match.index + match[0].length, display);
             } else if (match[0] === '{') {
                 braces++;
             } else if (match[0] === '}' && braces) {
@@ -187,7 +187,7 @@ export class FindTeX extends AbstractFindMath {
      * @param{number} n          The index of the string being searched
      * @param{string} text       The string being searched
      */
-    protected findMathInString(math: ProtoItem[], n: number, text: string) {
+    protected findMathInString(math: ProtoItem<N, T>[], n: number, text: string) {
         let start, match;
         this.start.lastIndex = 0;
         while ((start = this.start.exec(text))) {
@@ -202,9 +202,9 @@ export class FindTeX extends AbstractFindMath {
                 let math = start[this.sub];
                 let end = start.index + start[this.sub].length;
                 if (math.length === 2) {
-                    match = protoItem('', math.substr(1), '', n, start.index, end);
+                    match = protoItem<N, T>('', math.substr(1), '', n, start.index, end);
                 } else {
-                    match = protoItem('', math, '', n, start.index, end, false);
+                    match = protoItem<N, T>('', math, '', n, start.index, end, false);
                 }
             } else {
                 match = this.findEnd(text, n, start, this.end[start[0]]);
@@ -222,7 +222,7 @@ export class FindTeX extends AbstractFindMath {
      * @override
      */
     public findMath(strings: string[]) {
-        let math: ProtoItem[] = [];
+        let math: ProtoItem<N, T>[] = [];
         if (this.hasPatterns) {
             for (let i = 0, m = strings.length; i < m; i++) {
                 this.findMathInString(math, i, strings[i]);

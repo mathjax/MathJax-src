@@ -28,5 +28,5 @@ import {AbstractMathList} from '../../core/MathList.js';
  *  Implement the HTMLMathList class (extends AbstractMathList)
  */
 
-export class HTMLMathList extends AbstractMathList {
+export class HTMLMathList<N, T, D> extends AbstractMathList<N, T, D> {
 }

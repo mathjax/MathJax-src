@@ -31,21 +31,32 @@ import {AttributeData, AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
  * The minimum fields needed for an HTML Element
  */
 export interface MinDocument<N, T> {
+    documentElement: N;
+    head: N;
+    body: N;
     createElement(type: string): N;
     createTextNode(text: string): T;
-};
+}
 
 export interface MinHTMLElement<N, T> {
     tagName: string;
     nodeValue: string;
+    textContent: string;
     innerHTML: string;
     outerHTML: string;
     parentNode: N | Node;
     nextSibling: N | T | Node;
     previousSibling: N | T | Node;
+
+    attributes: AttributeData[] | NamedNodeMap;
+    classList: DOMTokenList;
+    style: OptionList;
+
     childNodes: (N | T)[] | NodeList;
     firstChild: N | T | Node;
     lastChild: N | T | Node;
+    getElementsByTagName(name: string): N[] | HTMLCollectionOf<Element>;
+    getElementsByTagNameNS(ns: string, name: string): N[] | HTMLCollectionOf<Element>;
     appendChild(child: N | T): N | T | Node;
     removeChild(child: N | T): N | T  | Node;
     replaceChild(nnode: N | T, onode: N | T): N | T  | Node;
@@ -55,10 +66,7 @@ export interface MinHTMLElement<N, T> {
     getAttribute(name: string): string;
     removeAttribute(name: string): void;
     hasAttribute(name: string): boolean;
-    attributes: AttributeData[] | NamedNodeMap;
-    classList: DOMTokenList;
-    style: OptionList;
-};
+}
 
 export interface MinText<N, T> {
     nodeValue: string;
@@ -66,7 +74,7 @@ export interface MinText<N, T> {
     nextSibling: N | T | Node;
     previousSibling: N | T | Node;
     splitText(n: number): T;
-};
+}
 
 
 
@@ -88,6 +96,13 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
     /*
      * @override
      */
+    public parseFromString(text: string, format: string = 'text/html') {
+        return null as D;
+    }
+
+    /*
+     * @override
+     */
     protected create(type: string) {
         return this.document.createElement(type);
     }
@@ -97,6 +112,55 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
      */
     public text(text: string) {
         return this.document.createTextNode(text);
+    }
+
+    /*
+     * @override
+     */
+    public documentHead(doc: D) {
+        return doc.head;
+    }
+
+    /*
+     * @override
+     */
+    public documentBody(doc: D) {
+        return doc.body;
+    }
+
+    /*
+     * @override
+     */
+    public documentElement(doc: D) {
+        return doc.documentElement;
+    }
+
+    /*
+     * @override
+     */
+
+    public getElementsByTagName(node: N, name: string, ns: string = null) {
+        let nodes = (ns ? node.getElementsByTagNameNS(ns, name) : node.getElementsByTagName(name));
+        return Array.from(nodes) as N[];
+    }
+
+    /*
+     * @override
+     */
+    public getElements(nodes: (string | N | N[])[], document: D) {
+        let containers: N[] = [];
+        for (const node of nodes) {
+            if (typeof(node) === 'string') {
+//                containers = containers.concat(Array.from(document.querySelectorAll(node)));
+            } else if (Array.isArray(node)) {
+                containers = containers.concat(Array.from(node) as N[]);
+//            } else if (node instanceof window.NodeList || node instanceof window.HTMLCollection) {
+//                containers = containers.concat(Array.from(node) as N[]);
+            } else {
+                containers.push(node);
+            }
+        }
+        return containers;
     }
 
     /*
@@ -207,6 +271,13 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
     /*
      * @override
      */
+    public textContent(node: N) {
+        return node.textContent;
+    }
+
+    /*
+     * @override
+     */
     public innerHTML(node: N) {
         return node.innerHTML;
     }
@@ -251,7 +322,9 @@ export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
      */
     public allAttributes(node: N) {
         return Array.from(node.attributes).map(
-            (x: AttributeData) => {return {name: x.name, value: x.value} as AttributeData}
+            (x: AttributeData) => {
+                return {name: x.name, value: x.value} as AttributeData;
+            }
         );
     }
 

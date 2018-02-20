@@ -22,6 +22,7 @@
  */
 
 import {AbstractHandler} from '../../core/Handler.js';
+import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {HTMLDocument} from './HTMLDocument.js';
 import {OptionList} from '../../util/Options.js';
 import {DOM} from '../../util/DOM.js';
@@ -31,7 +32,7 @@ import {DOM} from '../../util/DOM.js';
  *  Implements the HTMLHandler class (extends AbstractHandler)
  */
 
-export class HTMLHandler extends AbstractHandler {
+export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
 
     /*
      * A DOMParser instance used to create new documents if they are specified
@@ -72,7 +73,7 @@ export class HTMLHandler extends AbstractHandler {
      *
      * @override
      */
-    public create(document: any, options: OptionList) {
+    public create(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
         if (typeof(document) === 'string') {
             document = this.parser.parseFromString(document, 'text/html');
         } else if (document instanceof DOM.window.HTMLElement ||
@@ -81,7 +82,7 @@ export class HTMLHandler extends AbstractHandler {
             document = this.parser.parseFromString('', 'text/html');
             document.body.appendChild(child);
         }
-        return new HTMLDocument(document, options);
+        return new HTMLDocument<N, T, D>(document, adaptor, options);
     }
 
 }

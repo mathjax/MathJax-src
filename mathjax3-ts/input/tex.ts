@@ -33,7 +33,7 @@ import {FindTeX} from './tex/FindTeX.js';
  *  Implements the TeX class (extends AbstractInputJax)
  */
 
-export class TeX extends AbstractInputJax {
+export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
     public static NAME: string = 'TeX';
     public static OPTIONS: OptionList = {
@@ -44,7 +44,7 @@ export class TeX extends AbstractInputJax {
     /*
      * The FindTeX instance used for locating TeX in strings
      */
-    protected findTeX: FindTeX;
+    protected findTeX: FindTeX<N, T, D>;
 
     /*
      * @override
@@ -60,7 +60,7 @@ export class TeX extends AbstractInputJax {
      *
      * @override
      */
-    public compile(math: MathItem) {
+    public compile(math: MathItem<N, T, D>) {
         return LegacyTeX.Compile(math.math, math.display);
     }
 
