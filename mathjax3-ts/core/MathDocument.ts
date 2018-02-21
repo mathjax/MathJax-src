@@ -230,7 +230,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     public static OPTIONS: OptionList = {
         OutputJax: null,           // instance of an OutputJax for the document
         InputJax: null,            // instance of an InputJax or an array of them
-        MathList: null,            // instance of a MathList to use for the document
+        MathList: DefaultMathList, // instance of a MathList to use for the document
         compileError: (doc: AbstractMathDocument<any, any, any>, math: MathItem<any, any, any>, err: Error) => {
             doc.compileError(math, err);
         },
@@ -258,7 +258,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         let CLASS = this.constructor as typeof AbstractMathDocument;
         this.document = document;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-        this.math = this.options['MathList'] || new DefaultMathList<N, T, D>();
+        this.math = new (this.options['MathList'] || DefaultMathList)();
         this.processed = {
             findMath: false,
             compile: false,
@@ -267,8 +267,8 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             addEventHandlers: false,
             updateDocument: false
         };
-        this.outputJax = this.options['OutputJax'] || new DefaultOutputJax();
-        let inputJax = this.options['InputJax'] || [new DefaultInputJax()];
+        this.outputJax = this.options['OutputJax'] || new DefaultOutputJax<N, T, D>();
+        let inputJax = this.options['InputJax'] || [new DefaultInputJax<N, T, D>()];
         if (!Array.isArray(inputJax)) {
             inputJax = [inputJax];
         }

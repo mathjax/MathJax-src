@@ -50,7 +50,7 @@ export abstract class AbstractMathList<N, T, D>
     /*
      * @override
      */
-        public isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>) {
+    public isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>) {
         return (a.start.i < b.start.i || (a.start.i === b.start.i && a.start.n < b.start.n));
     }
 

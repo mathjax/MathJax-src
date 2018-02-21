@@ -73,21 +73,18 @@ export interface DOMAdaptor<N, T, D> {
      * @return{N}      The document.head element
      */
     head(doc: D): N;
-//    documentHead(doc: D): N;
 
     /*
      * @param{D} doc   The document whose body is to be obtained
      * @return{N}      The document.body element
      */
     body(doc: D): N;
-//    documentBody(doc: D): N;
 
     /*
      * @param{D} doc   The document whose documentElement is to be obtained
      * @return{N}      The documentElement
      */
     root(doc: D): N;
-//    documentElement(doc: D): N;
 
     /*
      * @param{N} node        The node to search for tags
@@ -96,7 +93,6 @@ export interface DOMAdaptor<N, T, D> {
      * @return{N[]}          The list of tags found
      */
     tags(node: N, name: string, ns?: string): N[];
-//    getElementsByTagName(node: N, name: string, ns?: string): N[];
 
     /*
      * Get a list of containers (to be searched for math).  These can be
@@ -113,7 +109,6 @@ export interface DOMAdaptor<N, T, D> {
      * @return{N}        The parent node of the given one
      */
     parent(node: N | T): N;
-//    parentNode(node: N | T): N;
 
     /*
      * @param{N} node     The HTML node to be appended to
@@ -121,21 +116,18 @@ export interface DOMAdaptor<N, T, D> {
      * @return{N|T}       The appended node
      */
     append(node: N, child: N | T): N | T;
-//    appendChild(node: N, child: N | T): N | T;
 
     /*
      * @param{N|T} nchild  The node or text to be inserted
      * @param{N|T} ochild  The node or text where the new child is to be added before it
      */
     insert(nchild: N | T, ochild: N | T): void;
-//  insertBefore(node: N, nchild: N | T, ochild: N | T): void;
 
     /*
      * @param{N|T} child  The node or text to be removed from its parent
      * @return{N|T}       The removed node
      */
     remove(child: N | T): N | T;
-//    removeChild(node: N, child: N | T): N | T;
 
     /*
      * @param{N|T} nnode  The node to replace with
@@ -143,35 +135,30 @@ export interface DOMAdaptor<N, T, D> {
      * @return{N|T}       The removed node
      */
     replace(nnode: N | T, onode: N | T): N | T;
-//    replaceChild(parent: N, nnode: N | T, onode: N | T): N | T;
 
     /*
      * @param{N} node   The HTML node to be cloned
      * @return{N}       The copied node
      */
     clone(node: N): N;
-//    cloneNode(node: N): N;
 
     /*
      * @param{T} node    The HTML text node to be split
      * @param{number} n  The index of the character where the split will occur
      */
     split(node: T, n: number): T;
-//    splitText(node: T, n: number): T;
 
     /*
      * @param{N|T} node   The HTML node whose sibling is to be obtained
      * @return{N|T}       The node following the given one (or null)
      */
     next(node: N | T): N | T;
-//    nextSibling(node: N | T): N | T;
 
     /*
      * @param{N|T} node   The HTML node whose sibling is to be obtained
      * @return{N|T}       The node preceding the given one (or null)
      */
     previous(node: N | T): N | T;
-//    previousSibling(node: N | T): N | T;
 
     /*
      * @param{N} node   The HTML node whose child is to be obtained
@@ -203,14 +190,12 @@ export interface DOMAdaptor<N, T, D> {
      * @return{string}      The tag or node name of the given node
      */
     kind(node: N | T): string;
-//    tagName(node: N | T): string;
 
     /*
      * @param{N|T} node  The HTML node whose value is to be obtained
      * @return{string}   The value of the given node
      */
     value(node: N | T): string;
-//    nodeValue(node: N | T): string;
 
     /*
      * @param{N} node    The HTML node whose text content is to be obtained
@@ -281,7 +266,6 @@ export interface DOMAdaptor<N, T, D> {
      * @return{boolean}      True if the node has the given class
      */
     hasClass(node: N, name: string): void;
-//
 
     /*
      * @param{N} node        The HTML node whose class list is needed
@@ -569,7 +553,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public allClasses(node: N) {
-        const classes = this.getAttribute(node, 'class');
+        const classes = this.getAttribute(node, 'class') || '';
         return classes.replace(/  +/g, ' ').replace(/^ /, '').replace(/ $/, '').split(/ /);
     }
 

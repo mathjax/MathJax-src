@@ -37,6 +37,11 @@ export interface Handler<N, T, D> {
     name: string;
 
     /*
+     * The DOM Adaptor to use for managing HTML elements
+     */
+    adaptor: DOMAdaptor<N, T, D>;
+
+    /*
      * The priority for the handler when handlers are polled
      *   to see which one can process a given document.
      */
@@ -81,6 +86,11 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     public static NAME: string = 'generic';
 
     /*
+     * The DOM Adaptor to use for managing HTML elements
+     */
+    public adaptor: DOMAdaptor<N, T, D>;
+
+    /*
      * The priority for this handler
      */
     public priority: number;
@@ -90,7 +100,8 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
      *
      * @constructor
      */
-    constructor(priority: number = 5) {
+    constructor(adaptor: DOMAdaptor<N, T, D>, priority: number = 5) {
+        this.adaptor = adaptor;
         this.priority = priority;
     }
 
@@ -111,8 +122,8 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     /*
      * @override
      */
-    public create(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
-        return new DefaultMathDocument<N, T, D>(document, adaptor, options) as MathDocument<N, T, D>;
+    public create(document: any, options: OptionList) {
+        return new DefaultMathDocument<N, T, D>(document, this.adaptor, options) as MathDocument<N, T, D>;
     }
 
 }

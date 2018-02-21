@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,25 +16,14 @@
  */
 
 /**
- * @fileoverview  Registers the HTML document type
+ * @fileoverview  Implements the jdsom DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax} from '../mathjax.js';
-import {HTMLHandler} from './html/HTMLHandler.js';
-import {MinHTMLElement, MinText, MinDocument} from '../adaptors/HTMLadaptor.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
+import {HTMLAdaptor} from './HTMLAdaptor.js';
 
-/*
- * Create the HTML handler object and register it with MathJax.
- *
- * @param{DOMAdaptor} adaptor  The DOM adaptor to use with HTML
- */
-export function RegisterHTMLHandler<
-    N extends MinHTMLElement<N, T>,
-    T extends MinText<N, T>,
-    D extends MinDocument<N, T>
->(adaptor: DOMAdaptor<N, T, D>) {
-    MathJax.handlers.register(new HTMLHandler<N, T, D>(adaptor));
+export function browserAdaptor() {
+    return new HTMLAdaptor<HTMLElement, Text, Document>(window);
 }
+

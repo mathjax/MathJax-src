@@ -24,7 +24,6 @@
 import {OptionList} from '../util/Options.js';
 import {AttributeData, AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
 
-
 /*****************************************************************/
 /*
  * The minimum fields needed for a Document
@@ -35,6 +34,7 @@ export interface MinDocument<N, T> {
     body: N;
     createElement(type: string): N;
     createTextNode(text: string): T;
+    querySelectorAll(selector: string): N[];
 }
 
 /*****************************************************************/
@@ -92,6 +92,21 @@ export interface MinDOMParser<D> {
     parseFromString(text: string, format?: string): D;
 }
 
+/*****************************************************************/
+/*
+ * The minimum fields needed for a Window
+ */
+export interface MinWindow<D> {
+    DOMParser: {
+        new(): MinDOMParser<D>
+    };
+    NodeList: any;
+    HTMLCollection: any;
+    HTMLElement: any;
+    DocumentFragment: any;
+    Document: any;
+}
+
 
 /*****************************************************************/
 /*
@@ -103,10 +118,14 @@ export interface MinDOMParser<D> {
  *  D = Document class
  */
 
-export abstract class HTMLAdaptor<N extends MinHTMLElement<N, T>,
+export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
                          T extends MinText<N, T>,
-                         D extends MinDocument<N, T>> extends AbstractDOMAdaptor<N, T, D>
-{
+                         D extends MinDocument<N, T>>
+extends AbstractDOMAdaptor<N, T, D> {
+    /*
+     * The window object for this adaptor
+     */
+    window: MinWindow<D>;
 
     /*
      * The DOMParser used to parse a string into a DOM tree
@@ -117,9 +136,10 @@ export abstract class HTMLAdaptor<N extends MinHTMLElement<N, T>,
      * @override
      * @constructor
      */
-    constructor(parser: MinDOMParser<D>) {
+    constructor(window: MinWindow<D>) {
         super();
-        this.parser = parser;
+        this.window = window;
+        this.parser = new (window.DOMParser as any)();
     }
 
     /*
@@ -179,11 +199,11 @@ export abstract class HTMLAdaptor<N extends MinHTMLElement<N, T>,
         let containers: N[] = [];
         for (const node of nodes) {
             if (typeof(node) === 'string') {
-//                containers = containers.concat(Array.from(document.querySelectorAll(node)));
+                containers = containers.concat(Array.from(this.document.querySelectorAll(node)));
             } else if (Array.isArray(node)) {
                 containers = containers.concat(Array.from(node) as N[]);
-//            } else if (node instanceof window.NodeList || node instanceof window.HTMLCollection) {
-//                containers = containers.concat(Array.from(node) as N[]);
+            } else if (node instanceof this.window.NodeList || node instanceof this.window.HTMLCollection) {
+                containers = containers.concat(Array.from(node as any as N[]));
             } else {
                 containers.push(node);
             }

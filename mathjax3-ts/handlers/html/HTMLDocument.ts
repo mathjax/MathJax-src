@@ -215,7 +215,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      */
     public TestMath(text: string, display: boolean = true) {
         if (!this.processed['TestMath']) {
-            let math = new HTMLMathItem(text, this.inputJax[0], display);
+            let math = new HTMLMathItem<N, T, D>(text, this.inputJax[0], display);
             math.setMetrics(16, 8, 1000000, 1000000, 1);
             this.math.push(math);
             this.processed['TestMath'] = true;
