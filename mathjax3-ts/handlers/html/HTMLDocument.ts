@@ -29,7 +29,6 @@ import {HTMLDomStrings} from './HTMLDomStrings.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {InputJax} from '../../core/InputJax.js';
 import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
-import {DOM} from '../../util/DOM.js';
 
 /*****************************************************************/
 /*

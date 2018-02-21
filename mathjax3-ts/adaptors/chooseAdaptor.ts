@@ -16,14 +16,29 @@
  */
 
 /**
- * @fileoverview  Implements the browser DOM adaptor
+ * @fileoverview  Chooses between jdsom and browser DOM adaptors
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {HTMLAdaptor} from './HTMLAdaptor.js';
+import {jsdomAdaptor} from './jsdomAdaptor.js';
+import {browserAdaptor} from './browserAdaptor.js';
 
-export function browserAdaptor() {
-    return new HTMLAdaptor<HTMLElement, Text, Document>(window);
+/*
+ * Declare the global variables used here
+ */
+declare var System: {nodeRequire: Function};
+
+let choose;
+
+try {
+    document;  // errors if not in browser
+    choose = browserAdaptor;
+} catch(e) {
+    const JSDOM = (typeof(System) === 'undefined' ? require : System.nodeRequire)('jsdom').JSDOM;
+    choose = function () {
+        return jsdomAdaptor(JSDOM);
+    }
 }
 
+export const chooseAdaptor = choose;

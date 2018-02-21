@@ -25,7 +25,6 @@ import {AbstractHandler} from '../../core/Handler.js';
 import {HTMLAdaptor, MinHTMLElement, MinText, MinDocument} from '../../adaptors/HTMLAdaptor.js';
 import {HTMLDocument} from './HTMLDocument.js';
 import {OptionList} from '../../util/Options.js';
-import {DOM} from '../../util/DOM.js';
 
 /*****************************************************************/
 /*

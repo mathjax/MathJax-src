@@ -26,7 +26,6 @@ import {defaultOptions, separateOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {MathItem} from '../core/MathItem.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
-import {DOM} from '../util/DOM.js';
 
 import {FindMathML} from './mathml/FindMathML.js';
 import {MathMLCompile} from './mathml/MathMLCompile.js';
