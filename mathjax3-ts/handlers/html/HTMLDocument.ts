@@ -129,6 +129,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      */
     public findMath(options: OptionList) {
         if (!this.processed.findMath) {
+            this.adaptor.document = this.document;
             options = userOptions({elements: [this.adaptor.body(this.document)]}, options);
             for (const container of this.adaptor.getElements(options['elements'], this.document)) {
                 let [strings, nodes] = [null, null] as [string[], HTMLNodeArray<N, T>];

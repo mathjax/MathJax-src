@@ -97,6 +97,7 @@ export interface MinDOMParser<D> {
  * The minimum fields needed for a Window
  */
 export interface MinWindow<D> {
+    document: D;
     DOMParser: {
         new(): MinDOMParser<D>
     };
@@ -137,7 +138,7 @@ extends AbstractDOMAdaptor<N, T, D> {
      * @constructor
      */
     constructor(window: MinWindow<D>) {
-        super();
+        super(window.document);
         this.window = window;
         this.parser = new (window.DOMParser as any)();
     }
