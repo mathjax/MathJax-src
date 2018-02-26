@@ -347,7 +347,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @param{OptionList} def   The attributes to set on that node
      */
     public setAttributes(node: N, def: OptionList) {
-        if (def.style) {
+        if (def.style && typeof(def.style) !== 'string') {
             for (let key of Object.keys(def.style)) {
                 this.setStyle(node, key.replace(/-([a-z])/g, (m, c) => c.toUpperCase()), def.style[key]);
             }
@@ -358,7 +358,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
             }
         }
         for (let key of Object.keys(def)) {
-            if (key !== 'style' && key !== 'properties') {
+            if ((key !== 'style' || typeof(def.style) === 'string') && key !== 'properties') {
                 this.setAttribute(node, key, def[key]);
             }
         }
@@ -478,35 +478,12 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public innerHTML(node: N) {
-        return this.childNodes(node).map(x => this.outerHTML(node)).join('');
-    }
+    public abstract innerHTML(node: N): string;
 
     /*
      * @override
      */
-    public outerHTML(node: N) {
-        const tag = this.kind(node);
-        const attributes = this.allAttributes(node).map(
-            (x: AttributeData) => x.name + '="' + this.protectHTML(x.value) + '"'
-        ).join(' ');
-        const html: string =
-            '<' + tag + (attributes ? ' ' + attributes : '') + '>'
-            + this.innerHTML(node)
-            + '</' + tag + '>';
-        return html;
-    }
-
-    /*
-     * @param{string} text  The text to be HTML escaped
-     * @return{string}      The string with &, <, >, and " replaced by entities
-     */
-    protected protectHTML(text: string) {
-        return text.replace(/&/g, '&amp;')
-                   .replace(/</g, '&lt;')
-                   .replace(/>/g, '&gt;')
-                   .replace(/"/, '&quot;');
-    }
+    public abstract outerHTML(node: N): string; 
 
     /*
      * @override

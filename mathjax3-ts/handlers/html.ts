@@ -23,7 +23,6 @@
 
 import {MathJax} from '../mathjax.js';
 import {HTMLHandler} from './html/HTMLHandler.js';
-import {MinHTMLElement, MinText, MinDocument} from '../adaptors/HTMLadaptor.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 
 /*
@@ -31,10 +30,6 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  *
  * @param{DOMAdaptor} adaptor  The DOM adaptor to use with HTML
  */
-export function RegisterHTMLHandler<
-    N extends MinHTMLElement<N, T>,
-    T extends MinText<N, T>,
-    D extends MinDocument<N, T>
->(adaptor: DOMAdaptor<N, T, D>) {
+export function RegisterHTMLHandler<N, T, D>(adaptor: DOMAdaptor<N, T, D>) {
     MathJax.handlers.register(new HTMLHandler<N, T, D>(adaptor));
 }

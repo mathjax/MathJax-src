@@ -22,7 +22,7 @@
  */
 
 import {OptionList} from '../util/Options.js';
-import {AttributeData, AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
+import {AttributeData, AbstractDOMAdaptor, DOMAdaptor} from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /*
@@ -108,6 +108,13 @@ export interface MinWindow<D> {
     Document: any;
 }
 
+/*****************************************************************/
+/*
+ * The minimum needed for an HTML Adaptor
+ */
+export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
+    window: MinWindow<D>
+}
 
 /*****************************************************************/
 /*
@@ -122,7 +129,7 @@ export interface MinWindow<D> {
 export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
                          T extends MinText<N, T>,
                          D extends MinDocument<N, T>>
-extends AbstractDOMAdaptor<N, T, D> {
+extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /*
      * The window object for this adaptor
      */
@@ -342,6 +349,7 @@ extends AbstractDOMAdaptor<N, T, D> {
      * @override
      */
     public setAttribute(node: N, name: string, value: string) {
+        name = name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
         return node.setAttribute(name, value);
     }
 

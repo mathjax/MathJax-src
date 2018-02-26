@@ -22,7 +22,7 @@
  */
 
 import {AbstractHandler} from '../../core/Handler.js';
-import {HTMLAdaptor, MinHTMLElement, MinText, MinDocument} from '../../adaptors/HTMLAdaptor.js';
+import {MinHTMLAdaptor} from '../../adaptors/HTMLAdaptor.js';
 import {HTMLDocument} from './HTMLDocument.js';
 import {OptionList} from '../../util/Options.js';
 
@@ -31,12 +31,9 @@ import {OptionList} from '../../util/Options.js';
  *  Implements the HTMLHandler class (extends AbstractHandler)
  */
 
-export class HTMLHandler<N extends MinHTMLElement<N, T>,
-                         T extends MinText<N, T>,
-                         D extends MinDocument<N, T>>
-extends AbstractHandler<N, T, D> {
+export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
 
-    adaptor: HTMLAdaptor<N, T, D>;
+    adaptor: MinHTMLAdaptor<N, T, D>;
 
     /*
      * @override

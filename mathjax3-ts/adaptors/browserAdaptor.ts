@@ -23,6 +23,20 @@
 
 import {HTMLAdaptor} from './HTMLAdaptor.js';
 
+//
+//  Let Typescript know about these
+//
+declare global {
+    interface Window {
+        Document: typeof Document;
+        DOMParser: typeof DOMParser;
+        HTMLElement: typeof HTMLElement;
+        HTMLCollection: typeof HTMLCollection;
+        NodeList: typeof NodeList;
+        DocumentFragment: typeof DocumentFragment;
+    }
+}
+
 export function browserAdaptor() {
     return new HTMLAdaptor<HTMLElement, Text, Document>(window);
 }
