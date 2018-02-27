@@ -517,7 +517,7 @@ export class MmlEntities {
      * @return {string}      The text with entiries replaced
      */
     public translate(text: string) {
-        return text.replace(/&([a-z][a-z0-9]*);/ig, this.REPLACE);
+        return text.replace(/&([a-z][a-z0-9]*|#(?:[0-9]+|x[0-9a-f]+));/ig, this.REPLACE);
     }
 
     /*
@@ -530,6 +530,9 @@ export class MmlEntities {
      * @return {string}        The unicode character for the entity, or the entity name (if none found)
      */
     protected replace(match: string, entity: string) {
+        if (entity.charAt(0) === '#') {
+            return this.replaceNumeric(entity.slice(1));
+        }
         let entities = this.entities;
         if (entities[entity]) {
             return entities[entity];
@@ -543,5 +546,28 @@ export class MmlEntities {
             }
         }
         return match;
+    }
+
+    /*
+     * @param{string} entity  The character code point as a string
+     * @return{srting}        The character(s) with the given code point
+     */
+    protected replaceNumeric(entity: string) {
+        let n = (entity.charAt(0) === 'x' ?
+                 parseInt(entity.slice(1), 16) :
+                 parseInt(entity));
+        //
+        // For BMP only one character needed
+        //
+        if (n < 0x10000) {
+            return String.fromCharCode(n);
+        }
+        //
+        // Use surrogate pair for values outside the BMP0
+        //
+        n -= 0x10000;
+        const hi = (n >> 10) + 0xD800;
+        const lo = (n & 0x3FF) + 0xDC00;
+        return String.fromCharCode(hi) + String.fromCharCode(lo);
     }
 }
