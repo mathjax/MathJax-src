@@ -424,7 +424,7 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
      * @override
      */
     public allStyles(node: N) {
-        return node.style;
+        return node.style.cssText;
     }
 
 }

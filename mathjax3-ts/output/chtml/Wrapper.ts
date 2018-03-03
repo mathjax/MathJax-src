@@ -28,6 +28,7 @@ import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
+import {Styles} from '../../util/Styles.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
@@ -212,7 +213,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     /*
      * The explicit styles set by the node
      */
-    protected styles: CSSStyleDeclaration = null;
+    protected styles: Styles = null;
 
     /*
      * The mathvariant for this node
@@ -340,15 +341,13 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     protected getStyles() {
         const styleString = this.node.attributes.getExplicit('style') as string;
         if (!styleString) return;
-        this.styles = {} as CSSStyleDeclaration; // this.html('span').style;  // FIXME: work out a substitute
-        const style = this.styles as CSSStyle;
-        style.cssText = styleString;
+        const style = this.styles = new Styles(styleString);
         for (let i = 0, m = CHTMLWrapper.removeStyles.length; i < m; i++) {
             const id = CHTMLWrapper.removeStyles[i];
-            if (style[id]) {
+            if (style.get(id)) {
                 if (!this.removedStyles) this.removedStyles = {};
-                this.removedStyles[id] = style[id] as string;
-                style[id] = '';
+                this.removedStyles[id] = style.get(id);
+                style.set(id, '');
             }
         }
     }
@@ -394,10 +393,10 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      */
     protected explicitVariant(fontFamily: string, fontWeight: string, fontStyle: string) {
         let style = this.styles;
-        if (!style) style = this.styles = {} as CSSStyleDeclaration; // this.html('span').style; // FIXME: work out replacement
-        style.fontFamily = fontFamily;
-        if (fontWeight) style.fontWeight = fontWeight;
-        if (fontStyle)  style.fontStyle = fontStyle;
+        if (!style) style = this.styles = new Styles();
+        style.set('fontFamily', fontFamily);
+        if (fontWeight) style.set('fontWeight', fontWeight);
+        if (fontStyle)  style.set('fontStyle', fontStyle);
         return '-explicitFont';
     }
 

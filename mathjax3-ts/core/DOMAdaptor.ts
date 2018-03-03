@@ -243,8 +243,8 @@ export interface DOMAdaptor<N, T, D> {
     hasAttribute(node: N, name: string): boolean;
 
     /*
-     * @param{N} node        The HTML node whose attributes are to be returned
-     * @return{any}          The list of attributes (FIXME: work out the format)
+     * @param{N} node           The HTML node whose attributes are to be returned
+     * @return{AttributeData[]} The list of attributes
      */
     allAttributes(node: N): AttributeData[];
 
@@ -289,9 +289,9 @@ export interface DOMAdaptor<N, T, D> {
 
     /*
      * @param{N} node        The HTML node whose styles are to be returned
-     * @return{OptionList}   The list of style values (FIXME: work out the format)
+     * @return{string}       The cssText for the styles
      */
-    allStyles(node: N): OptionList;
+    allStyles(node: N): string;
 }
 
 /*****************************************************************/
@@ -547,6 +547,6 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public abstract allStyles(node: N): OptionList;
+    public abstract allStyles(node: N): string;
 
 }

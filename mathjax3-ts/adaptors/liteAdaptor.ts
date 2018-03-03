@@ -24,6 +24,7 @@
 import {AttributeData, AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
 import {MinHTMLAdaptor, MinDOMParser} from './HTMLAdaptor.js';
 import {OptionList} from '../util/Options.js';
+import {Styles} from '../util/Styles.js';
 import {MmlEntities} from '../input/mathml/MmlEntities.js';
 
 /*
@@ -63,6 +64,11 @@ export class LiteElement {
     public parent: LiteElement;
 
     /*
+     * The styles for the element
+     */
+    public styles: Styles;
+
+    /*
      * @param{string} kind  The type of node to create
      * @param{LiteAttributeList} attributes  The list of attributes to set (if any)
      * @param{LiteNode[]} children  The children for the node (if any)
@@ -75,6 +81,7 @@ export class LiteElement {
         for (const child of this.children) {
             child.parent = this;
         }
+        this.styles = null;
     }
 }
 
@@ -925,6 +932,9 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     public setAttribute(node: LiteElement, name: string, value: string) {
         name = name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
         node.attributes[name] = value;
+        if (name === 'style') {
+            node.styles = null;
+        }
     }
 
     /*
@@ -995,30 +1005,32 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
      * @override
      */
     public setStyle(node: LiteElement, name: string, value: string) {
-        const styles = (node.attributes['style'] as string || '').split(/; */);
-        const i = styles.findIndex(n => n === name);
-        if (i >= 0) {
-            styles.splice(i, 1);
+        if (!node.styles) {
+            node.styles = new Styles(this.getAttribute(node, 'style'));
         }
-        styles.push(name + ': ' + value);
-        node.attributes['style'] = styles.join('; ');
+        node.styles.set(name, value);
+        node.attributes['style'] = node.styles.cssText;
     }
 
     /*
      * @override
      */
     public getStyle(node: LiteElement, name: string) {
-        const styles = (node.attributes['style'] as string || '').split(/; */);
-        const i = styles.findIndex(n => n === name);
-        return (i >= 0 ? styles[i] : '');
+        if (!node.styles) {
+            const style = this.getAttribute(node, 'style');
+            if (!style) {
+                return '';
+            }
+            node.styles = new Styles(style);
+        }
+        return node.styles.get(name);
     }
 
     /*
      * @override
      */
     public allStyles(node: LiteElement) {
-        // FIXME:  parse options properly
-        return {} as OptionList;
+        return this.getAttribute(node, 'style');
     }
 }
 
