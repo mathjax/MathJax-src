@@ -80,17 +80,18 @@ export class CHTMLmo extends CHTMLWrapper {
         'mjx-stretchy-v': {
             display: 'inline-block'
         },
-        'mjx-stretchy-v > mjx-beg': {
-            display: 'block',
-            height: 0
-        },
-        'mjx-stretchy-v > mjx-end': {
+        'mjx-stretchy-v > *': {
             display: 'block'
+        },
+        'mjx-stretchy-v > mjx-beg': {
+            height: 0
         },
         'mjx-stretchy-v > mjx-end > mjx-c': {
             display: 'block'
         },
-        'mjx-stretchy-v > mjx-beg > mjx-c, mjx-stretchy-v > mjx-end > mjx-c': {
+        'mjx-stretchy-v > * > mjx-c': {
+            transform: 'scale(1)',   // improves Firefox positioning
+            'transform-origin': 'left center',
             overflow: 'hidden'
         },
         'mjx-stretchy-v > mjx-ext': {
@@ -101,7 +102,8 @@ export class CHTMLmo extends CHTMLWrapper {
             overflow: 'hidden'
         },
         'mjx-stretchy-v > mjx-ext > mjx-c': {
-            transform: 'scaleY(500) translateY(.1em)'
+            transform: 'scaleY(500) translateY(.1em)',
+            overflow: 'visible'
         },
         'mjx-mark': {
             display: 'inline-block',
