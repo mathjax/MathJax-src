@@ -300,7 +300,7 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
      * @override
      */
     public childNodes(node: N) {
-        return node.childNodes as (N | T)[];
+        return Array.from(node.childNodes as (N | T)[]);
     }
 
     /*
