@@ -87,7 +87,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 //    dddot:      ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}',1],
 //    ddddot:     ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}',1],
       dddot:      ['Accent','20DB'],
-      ddddot:     ['Accent','20DC'],//'20DC'],
+      ddddot:     ['Accent','20DC'],
       
       sideset:    ['Macro','\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1\\!\\mathop{#3}\\nolimits#2}',3],
       
