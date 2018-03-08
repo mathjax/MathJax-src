@@ -42,7 +42,7 @@ export namespace ParseMethods {
   const PRIME = '\u2032';
   const SMARTQUOTE = '\u2019';
   const NUMBER = /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/;
-  const NBSP = '\u00A0'; 
+  const NBSP = '\u00A0';
   const P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
 
   // Utilities?
@@ -67,7 +67,7 @@ export namespace ParseMethods {
    */
   export function ControlSequence(parser: TexParser, c: string) {
     TreeHelper.printMethod('ControlSequence');
-    var name = parser.GetCS();
+    const name = parser.GetCS();
     parser.parse('macro', [name, this]);
   };
 
@@ -81,10 +81,10 @@ export namespace ParseMethods {
   //
   export function csMathchar0mi(parser: TexParser, mchar: Symbol) {
     TreeHelper.printMethod('csMathchar0mi');
-    var def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
+    const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
-    var textNode = TreeHelper.createText(mchar.char);
-    var node = TreeHelper.createNode('mi', [], def, textNode);
+    const textNode = TreeHelper.createText(mchar.char);
+    const node = TreeHelper.createNode('mi', [], def, textNode);
     parser.Push(parser.mmlToken(node));
   };
 
@@ -93,11 +93,11 @@ export namespace ParseMethods {
   //
   export function csMathchar0mo(parser: TexParser, mchar: Symbol) {
     TreeHelper.printMethod('csMathchar0mo');
-    var def = mchar.attributes || {};
+    const def = mchar.attributes || {};
     def['stretchy'] = false;
     // @test Large Set
-    var textNode = TreeHelper.createText(mchar.char);
-    var node = TreeHelper.createNode('mo', [], def, textNode);
+    const textNode = TreeHelper.createText(mchar.char);
+    const node = TreeHelper.createNode('mo', [], def, textNode);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(parser.mmlToken(node));
   };
@@ -106,14 +106,14 @@ export namespace ParseMethods {
   //
   export function csMathchar7(parser: TexParser, mchar: Symbol) {
     TreeHelper.printMethod('csMathchar7');
-    var def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
+    const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
     if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
       def.mathvariant = parser.stack.env['font'];
     }
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
-    var textNode = TreeHelper.createText(mchar.char);
-    var node = TreeHelper.createNode('mi', [], def, textNode);
+    const textNode = TreeHelper.createText(mchar.char);
+    const node = TreeHelper.createNode('mi', [], def, textNode);
     // setVariant(node, def.mathvariant);
     // PROBLEM: Attributes have to be explicitly set, but then interfere with
     // AMS tests. Try setting variant of node!
@@ -127,12 +127,12 @@ export namespace ParseMethods {
   //
   export function csDelimiter(parser: TexParser, delim: Symbol) {
     TreeHelper.printMethod('csDelimiter');
-    var def = delim.attributes || {};
+    let def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({fence: false, stretchy: false}, def);
-    var textNode = TreeHelper.createText(delim.char);
-    var node = TreeHelper.createNode('mo', [], def, textNode);
-    // var node = MML.mo(textNode).With({fence: false, stretchy: false}).With(def); 
+    const textNode = TreeHelper.createText(delim.char);
+    const node = TreeHelper.createNode('mo', [], def, textNode);
+    // var node = MML.mo(textNode).With({fence: false, stretchy: false}).With(def);
     parser.Push(parser.mmlToken(node));
   };
   //
@@ -141,7 +141,8 @@ export namespace ParseMethods {
   //
   export function csUndefined(parser: TexParser, name: string) {
     TreeHelper.printMethod('csUndefined');
-    throw new TexError(['UndefinedControlSequence','Undefined control sequence %1','\\' + name]);
+    throw new TexError(['UndefinedControlSequence',
+                        'Undefined control sequence %1', '\\' + name]);
   };
 
   export function envUndefined(parser: TexParser, env: string) {
@@ -154,14 +155,14 @@ export namespace ParseMethods {
    */
   export function Variable(parser: TexParser, c: string) {
     TreeHelper.printMethod('Variable');
-    var def: sitem.EnvList = {};
+    const def: sitem.EnvList = {};
     if (parser.stack.env['font']) {
       // @test Identifier Font
       def['mathvariant'] = parser.stack.env['font'];
     }
     // @test Identifier
-    var textNode = TreeHelper.createText(c);
-    var node = TreeHelper.createNode('mi', [], def, textNode);
+    const textNode = TreeHelper.createText(c);
+    const node = TreeHelper.createNode('mi', [], def, textNode);
     parser.Push(parser.mmlToken(node));
   };
 
@@ -171,20 +172,20 @@ export namespace ParseMethods {
   export function Number(parser: TexParser, c: string) {
     TreeHelper.printMethod('Number');
     let mml: MmlNode;
-    let n = parser.string.slice(parser.i-1).match(NUMBER);
-    let def: sitem.EnvList = {};
+    const n = parser.string.slice(parser.i-1).match(NUMBER);
+    const def: sitem.EnvList = {};
     if (parser.stack.env['font']) {
       // @test Integer Font
       def['mathvariant'] = parser.stack.env['font'];
     }
     if (n) {
       // @test Integer, Number
-      var textNode = TreeHelper.createText(n[0].replace(/[{}]/g,''));
+      const textNode = TreeHelper.createText(n[0].replace(/[{}]/g,''));
       mml = TreeHelper.createNode('mn', [], def, textNode);
       parser.i += n[0].length - 1;
     } else {
       // @test Decimal
-      var textNode = TreeHelper.createText(c);
+      const textNode = TreeHelper.createText(c);
       mml = TreeHelper.createNode('mo', [], def, textNode);
     }
     parser.Push(parser.mmlToken(mml));
@@ -208,11 +209,11 @@ export namespace ParseMethods {
    */
   export function Tilde(parser: TexParser, c: string) {
     // @test Tilde, Tilde2
-    // 
+    //
     // TODO: Once we can properly load AllEntities, this should be the line.
     // var textNode = TreeHelper.createText(MmlEntities.ENTITIES.nbsp);
-    var textNode = TreeHelper.createText(NBSP);
-    var node = TreeHelper.createNode('mtext', [], {}, textNode);
+    const textNode = TreeHelper.createText(NBSP);
+    const node = TreeHelper.createNode('mtext', [], {}, textNode);
     parser.Push(node as any);
   };
   export function Space(parser: TexParser, c: string) {};
@@ -226,7 +227,9 @@ export namespace ParseMethods {
       // don't treat numbers as a unit
       parser.string = parser.string.substr(0,parser.i+1)+' '+parser.string.substr(parser.i+1);
     }
-    var primes: MmlNode, base: MmlNode | void, top = parser.stack.Top();
+    let primes: MmlNode;
+    let base: MmlNode | void;
+    const top = parser.stack.Top();
     if (top.hasType('prime')) {
       // @test Prime on Prime
       base = top.data[0];
@@ -237,19 +240,19 @@ export namespace ParseMethods {
       base = parser.stack.Prev();
       if (!base) {
         // @test Empty base
-        var textNode = TreeHelper.createText('');
+        const textNode = TreeHelper.createText('');
         base = TreeHelper.createNode('mi', [], {}, textNode);
       }
     }
     // TODO: This does not seem to be used. Check with Davide.
-    // 
+    //
     // if (base.isEmbellishedWrapper) {
     //   // TODO: Warning, those are childNodes now!
     //   // base = base.data[0].data[0];
     //   base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
     // }
-    var movesupsub = TreeHelper.getProperty(base, 'movesupsub');
-    var position = TreeHelper.isType(base, 'msubsup') ? (base as MmlMsubsup).sup :
+    const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
+    let position = TreeHelper.isType(base, 'msubsup') ? (base as MmlMsubsup).sup :
       (base as MmlMunderover).over;
     // var movesupsub = base.movesupsub, position = base.sup;
     if ((TreeHelper.isType(base, 'msubsup') && TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) ||
@@ -285,14 +288,15 @@ export namespace ParseMethods {
                   position: position, primes: primes, movesupsub: movesupsub
                 }) );
   };
-  
+
   export function Subscript(parser: TexParser, c: string) {
     TreeHelper.printMethod('Subscript');
     if (parser.GetNext().match(/\d/)) {
       // don't treat numbers as a unit
       parser.string = parser.string.substr(0,parser.i+1)+' '+parser.string.substr(parser.i+1);
     }
-    var primes, base, top = parser.stack.Top();
+    let primes, base;
+    const top = parser.stack.Top();
     if (top.hasType('prime')) {
       // @test Prime on Sub
       base = top.data[0]; primes = top.data[1];
@@ -301,21 +305,24 @@ export namespace ParseMethods {
       base = parser.stack.Prev();
       if (!base) {
         // @test Empty Base Indes
-        var textNode = TreeHelper.createText('');
+        const textNode = TreeHelper.createText('');
         base = TreeHelper.createNode('mi', [], {}, textNode);
       }
     }
     // TODO: This does not seem to be used. Check with Davide.
-    // 
+    //
     // if (base.isEmbellishedWrapper) {
     //   // TODO: Warning, those are childNodes now!
     //   base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
     // }
-    var movesupsub = TreeHelper.getProperty(base, 'movesupsub');
-    var position = TreeHelper.isType(base, 'msubsup') ? (base as MmlMsubsup).sub : (base as MmlMunderover).under;
+    const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
+    let position = TreeHelper.isType(base, 'msubsup') ?
+        (base as MmlMsubsup).sub : (base as MmlMunderover).under;
     // var movesupsub = base.movesupsub, position = base.sub;
-    if ((TreeHelper.isType(base, 'msubsup') && TreeHelper.getChildAt(base, (base as MmlMsubsup).sub)) ||
-        (TreeHelper.isType(base, 'munderover') && TreeHelper.getChildAt(base, (base as MmlMunderover).under) &&
+    if ((TreeHelper.isType(base, 'msubsup') &&
+         TreeHelper.getChildAt(base, (base as MmlMsubsup).sub)) ||
+        (TreeHelper.isType(base, 'munderover') &&
+         TreeHelper.getChildAt(base, (base as MmlMunderover).under) &&
          !TreeHelper.getProperty(base, 'subsupOK'))) {
       // @test Double-sub-error, Double-under-error
       throw new TexError(['DoubleSubscripts','Double subscripts: use braces to clarify']);
@@ -323,8 +330,10 @@ export namespace ParseMethods {
     if (!TreeHelper.isType(base, 'msubsup')) {
       if (movesupsub) {
         // @test Large Operator, Move Superscript
-        if (!TreeHelper.isType(base, 'munderover') || TreeHelper.getChildAt(base, (base as MmlMunderover).under)) {
-          if (TreeHelper.getProperty(base, 'movablelimits') && TreeHelper.isType(base, 'mi')) {
+        if (!TreeHelper.isType(base, 'munderover') ||
+            TreeHelper.getChildAt(base, (base as MmlMunderover).under)) {
+          if (TreeHelper.getProperty(base, 'movablelimits') &&
+              TreeHelper.isType(base, 'mi')) {
             // @test Mathop Sub
             base = ParseMethods.mi2mo(base);
           }
@@ -346,22 +355,24 @@ export namespace ParseMethods {
 
   export function Prime(parser: TexParser, c: string) {
     // @test Prime
-    var base = parser.stack.Prev();
+    let base = parser.stack.Prev();
     if (!base) {
       // @test PrimeSup, PrePrime, Prime on Sup
       base = TreeHelper.createNode('mi', [], {});
     }
-    if (TreeHelper.isType(base, 'msubsup') && TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) {
+    if (TreeHelper.isType(base, 'msubsup') &&
+        TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) {
       // @test Double Prime Error
       throw new TexError(['DoubleExponentPrime',
                           'Prime causes double exponent: use braces to clarify']);
     }
-    var sup = ''; parser.i--;
+    let sup = '';
+    parser.i--;
     do {sup += PRIME; parser.i++, c = parser.GetNext()}
     while (c === '\'' || c === SMARTQUOTE);
     sup = ['','\u2032','\u2033','\u2034','\u2057'][sup.length] || sup;
-    var textNode = TreeHelper.createText(sup);
-    var node = TreeHelper.createNode('mo', [], {}, textNode);
+    const textNode = TreeHelper.createText(sup);
+    const node = TreeHelper.createNode('mo', [], {}, textNode);
     parser.Push(
                 new sitem.PrimeItem(base, parser.mmlToken(node)) );
   };
@@ -395,16 +406,16 @@ export namespace ParseMethods {
       def = {mathvariant: parser.stack.env['font']};
     }
 
-    var remap = parser.GetRemap(c);
+    const remap = parser.GetRemap(c);
     // @test Other
     // @test Other Remap
-    var textNode = TreeHelper.createText(remap ? remap.char : c);
+    const textNode = TreeHelper.createText(remap ? remap.char : c);
     let mo = TreeHelper.createNode('mo', [], def, textNode) as MmlMo;
     parser.secondPass.push(mo);
-    
+
     // VS: Question: What do these autoDefault methods do exactly.
     //     Is there a modern equivalent in v3?
-    // 
+    //
     //   This changes the operator class, when fences are put around it. Just
     //   propagate from the inherited attributes or properties.
     // TODO: Currently just omitted!
@@ -427,7 +438,7 @@ export namespace ParseMethods {
   export function SetFont(parser: TexParser, name: string, font: string) {
     parser.stack.env['font'] = font;
   };
-  
+
   export function SetStyle(parser: TexParser, name: string, texStyle: string, style: string, level: string) {
     TreeHelper.printMethod('SetStyle: ' + name + ' texStyle: ' + texStyle +
                     ' style: ' + style + ' level: ' + level);
@@ -446,18 +457,18 @@ export namespace ParseMethods {
   export function Color(parser: TexParser, name: string) {
     TreeHelper.printMethod('Color');
     // @test Color Frac
-    var color = parser.GetArgument(name);
-    var old = parser.stack.env['color'];
+    const color = parser.GetArgument(name);
+    const old = parser.stack.env['color'];
     parser.stack.env['color'] = color;
-    var math = parser.ParseArg(name);
+    const math = parser.ParseArg(name);
     if (old) {parser.stack.env['color']} else {delete parser.stack.env['color']}
-    var node = TreeHelper.createNode('mstyle', [math], {mathcolor: color});
+    const node = TreeHelper.createNode('mstyle', [math], {mathcolor: color});
     parser.Push(node);
   };
 
   export function Spacer(parser: TexParser, name: string, space: string) {
     // @test Positive Spacing, Negative Spacing
-    var node = TreeHelper.createNode('mspace', [],
+    const node = TreeHelper.createNode('mspace', [],
                               {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel:0});
     parser.Push(node);
   };
@@ -465,7 +476,7 @@ export namespace ParseMethods {
   export function LeftRight(parser: TexParser, name: string) {
     TreeHelper.printMethod('LeftRight');
     // @test Fenced, Fenced3
-    var alpha = name.substr(1);
+    const alpha = name.substr(1);
     parser.Push(
       // TODO: Sort this out: Uppercase the first character and add Item!
       new (sitem as any)[alpha[0].toUpperCase() + alpha.slice(1) + 'Item']()
@@ -475,14 +486,14 @@ export namespace ParseMethods {
   export function Middle(parser: TexParser, name: string) {
     TreeHelper.printMethod('Middle');
     // @test Middle
-    var delim = parser.GetDelimiter(name);
-    var node = TreeHelper.createNode('TeXAtom', [], {texClass:TEXCLASS.CLOSE});
+    const delim = parser.GetDelimiter(name);
+    let node = TreeHelper.createNode('TeXAtom', [], {texClass:TEXCLASS.CLOSE});
     parser.Push(node);
     if (!parser.stack.Top().hasType('left')) {
       // @test Orphan Middle, Middle with Right
       throw new TexError(['MisplacedMiddle','%1 must be within \\left and \\right',name]);
     }
-    var textNode = TreeHelper.createText(delim);
+    const textNode = TreeHelper.createText(delim);
     node = TreeHelper.createNode('mo', [], {stretchy:true}, textNode);
     parser.Push(node);
     node = TreeHelper.createNode('TeXAtom', [], {texClass:TEXCLASS.OPEN});
@@ -493,8 +504,8 @@ export namespace ParseMethods {
     TreeHelper.printMethod('NamedFn');
     // @test Named Function
     if (!id) {id = name.substr(1)};
-    var textNode = TreeHelper.createText(id);
-    var mml = TreeHelper.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
+    const textNode = TreeHelper.createText(id);
+    const mml = TreeHelper.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
     parser.Push( new sitem.FnItem(parser.mmlToken(mml)) );
   };
   export function NamedOp(parser: TexParser, name: string, id: string) {
@@ -502,8 +513,8 @@ export namespace ParseMethods {
     // @test Limit
     if (!id) {id = name.substr(1)};
     id = id.replace(/&thinsp;/,'\u2006');
-    var text = TreeHelper.createText(id);
-    var mml = TreeHelper.createNode('mo', [], {
+    const text = TreeHelper.createText(id);
+    const mml = TreeHelper.createNode('mo', [], {
       movablelimits: true,
       movesupsub: true,
       form: TexConstant.Form.PREFIX,
@@ -517,17 +528,18 @@ export namespace ParseMethods {
   export function Limits(parser: TexParser, name: string, limits: string) {
     TreeHelper.printMethod('Limits');
     // @test Limits
-    var op = parser.stack.Prev(true);
+    let op = parser.stack.Prev(true);
     // TODO: Lookup in Operator Table.
     if (!op || (TreeHelper.getTexClass(op) !== TEXCLASS.OP &&
                 TreeHelper.getProperty(op, 'movesupsub') == null)) {
       // @test Limits Error
       throw new TexError(['MisplacedLimits','%1 is allowed only on operators',name]);
     }
-    var top = parser.stack.Top();
+    const top = parser.stack.Top();
+    let node;
     if (TreeHelper.isType(op, 'munderover') && !limits) {
       // @test Limits UnderOver
-      var node = TreeHelper.createNode('msubsup', [], {});
+      node = TreeHelper.createNode('msubsup', [], {});
       TreeHelper.copyChildren(op, node);
       op = top.data[top.data.length-1] = node;
     } else if (TreeHelper.isType(op, 'msubsup') && limits) {
@@ -549,7 +561,7 @@ export namespace ParseMethods {
   export function Over(parser: TexParser, name: string, open: string, close: string) {
     TreeHelper.printMethod('Over');
     // @test Over
-    var mml = new sitem.OverItem().With({name: name}) ;
+    const mml = new sitem.OverItem().With({name: name}) ;
     if (open || close) {
       // @test Choose
       mml.setProperty('open', open);
@@ -573,17 +585,18 @@ export namespace ParseMethods {
   export function Frac(parser: TexParser, name: string) {
     TreeHelper.printMethod('Frac');
     // @test Frac
-    var num = parser.ParseArg(name);
-    var den = parser.ParseArg(name);
-    var node = TreeHelper.createNode('mfrac', [num, den], {});
+    const num = parser.ParseArg(name);
+    const den = parser.ParseArg(name);
+    const node = TreeHelper.createNode('mfrac', [num, den], {});
     parser.Push(node);
   };
 
   export function Sqrt(parser: TexParser, name: string) {
     TreeHelper.printMethod('Sqrt');
-    var n = parser.GetBrackets(name), arg = parser.GetArgument(name);
+    const n = parser.GetBrackets(name);
+    let arg = parser.GetArgument(name);
     if (arg === '\\frac') {arg += '{'+parser.GetArgument(arg)+'}{'+parser.GetArgument(arg)+'}'}
-    var mml = new TexParser(arg, parser.stack.env).mml();
+    let mml = new TexParser(arg, parser.stack.env).mml();
     if (!n) {
       // @test Square Root
       mml = TreeHelper.createNode('msqrt', [mml], {});
@@ -595,9 +608,9 @@ export namespace ParseMethods {
   };
   export function Root(parser: TexParser, name: string) {
     TreeHelper.printMethod('Root');
-    var n = parser.GetUpTo(name,'\\of');
-    var arg = parser.ParseArg(name);
-    var node = TreeHelper.createNode('mroot', [arg, ParseMethods.parseRoot(parser, n)], {});
+    const n = parser.GetUpTo(name,'\\of');
+    const arg = parser.ParseArg(name);
+    const node = TreeHelper.createNode('mroot', [arg, ParseMethods.parseRoot(parser, n)], {});
     parser.Push(node);
   };
 
@@ -606,15 +619,17 @@ export namespace ParseMethods {
   export function parseRoot(parser: TexParser, n: string) {
     TreeHelper.printMethod('parseRoot');
     // @test General Root, Explicit Root
-    var env = parser.stack.env, inRoot = env['inRoot']; env['inRoot'] = true;
+    const env = parser.stack.env;
+    const inRoot = env['inRoot'];
+    env['inRoot'] = true;
     // TODO: This parser call might change!
-    var parser = new TexParser(n, env);
-    let node = parser.mml();
+    const newParser = new TexParser(n, env);
+    let node = newParser.mml();
     TreeHelper.printJSON(node);
-    var global = parser.stack.global;
+    const global = newParser.stack.global;
     if (global['leftRoot'] || global['upRoot']) {
       // @test Tweaked Root
-      var def: sitem.EnvList = {};
+      const def: sitem.EnvList = {};
       if (global['leftRoot']) {
         def['width'] = global['leftRoot'];
       }
@@ -622,7 +637,7 @@ export namespace ParseMethods {
         def['voffset'] = global['upRoot'];
         def['height'] = global['upRoot'];
       }
-      
+
       node = TreeHelper.createNode('mpadded', [node], def);
       // VS: OLD
       // if (global.leftRoot) {
@@ -636,7 +651,7 @@ export namespace ParseMethods {
     env['inRoot'] = inRoot;
     return node;
   };
-  
+
   export function MoveRoot(parser: TexParser, name: string, id: string) {
     TreeHelper.printMethod('MoveRoot');
     // @test Tweaked Root
@@ -648,7 +663,7 @@ export namespace ParseMethods {
       // @test Multiple Move Root
       throw new TexError(['MultipleMoveRoot','Multiple use of %1',name]);
     }
-    var n = parser.GetArgument(name);
+    let n = parser.GetArgument(name);
     if (!n.match(/-?[0-9]+/)) {
       // @test Incorrect Move Root
       throw new TexError(['IntegerArg','The argument to %1 must be an integer',name]);
@@ -661,24 +676,24 @@ export namespace ParseMethods {
   export function Accent(parser: TexParser, name: string, accent: string, stretchy: boolean) {
     TreeHelper.printMethod('Accent');
     // @test Vector
-    var c = parser.ParseArg(name);
-    var def: sitem.EnvList = {accent: true};
+    const c = parser.ParseArg(name);
+    const def: sitem.EnvList = {accent: true};
     if (parser.stack.env['font']) {
       // @test Vector Font
       def['mathvariant'] = parser.stack.env['font'];
     }
-    var entity = TreeHelper.createEntity(accent);
-    var moNode = TreeHelper.createNode('mo', [], def, entity);
-    var mml = parser.mmlToken(moNode);
+    const entity = TreeHelper.createEntity(accent);
+    const moNode = TreeHelper.createNode('mo', [], def, entity);
+    const mml = parser.mmlToken(moNode);
     // TODO: This should be property?
     TreeHelper.setProperties(mml, {stretchy: (stretchy ? true : false)});
     // @test Vector Op, Vector
-    var mo = (TreeHelper.isEmbellished(c) ? TreeHelper.getCoreMO(c) : c);
+    const mo = (TreeHelper.isEmbellished(c) ? TreeHelper.getCoreMO(c) : c);
     if (TreeHelper.isType(mo, 'mo')) {
       // @test Vector Op
       TreeHelper.setProperties(mo, {'movablelimits': false});
     }
-    var muoNode = TreeHelper.createNode('munderover', [], {accent: true});
+    const muoNode = TreeHelper.createNode('munderover', [], {accent: true});
     // TODO: This is necessary to get the empty element into the children.
     TreeHelper.setData(muoNode, 0, c);
     TreeHelper.setData(muoNode, 1, null);
@@ -690,21 +705,22 @@ export namespace ParseMethods {
   export function UnderOver(parser: TexParser, name: string, c: string, stack: boolean, noaccent: boolean) {
     TreeHelper.printMethod('UnderOver');
     // @test Overline
-    var base = parser.ParseArg(name);
+    let base = parser.ParseArg(name);
     // TODO: Check via operator table later?
     if (TreeHelper.getProperty(base, 'movablelimits')) {
       // @test Overline Sum
       TreeHelper.setProperties(base, {'movablelimits': false});
     }
+    let mo;
     if (TreeHelper.isType(base, 'munderover') && TreeHelper.isEmbellished(base)) {
       // @test Overline Limits
       // TODO: Sort these properties out!
       TreeHelper.setProperties(TreeHelper.getCore(base), {lspace:0,rspace:0}); // get spacing right for NativeMML
-      var mo = TreeHelper.createNode('mo', [], {rspace:0});
+      mo = TreeHelper.createNode('mo', [], {rspace:0});
       base = TreeHelper.createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
     }
-    var mml = TreeHelper.createNode('munderover', [base], {}) as MmlMunderover;
-    var entity = TreeHelper.createEntity(c);
+    const mml = TreeHelper.createNode('munderover', [base], {}) as MmlMunderover;
+    const entity = TreeHelper.createEntity(c);
     mo = TreeHelper.createNode('mo', [], {stretchy:true, accent:!noaccent}, entity);
 
     // TEMP: Changes here:
@@ -723,23 +739,23 @@ export namespace ParseMethods {
   export function Overset(parser: TexParser, name: string) {
     TreeHelper.printMethod('Overset');
     // @test Overset
-    var top = parser.ParseArg(name), base = parser.ParseArg(name);
+    const top = parser.ParseArg(name), base = parser.ParseArg(name);
     if (TreeHelper.getProperty(base, 'movablelimits')) {
       TreeHelper.setProperties(base, {'movablelimits': false});
     }
-    var node = TreeHelper.createNode('mover', [base, top], {});
+    const node = TreeHelper.createNode('mover', [base, top], {});
     parser.Push(node);
   };
-  
+
   export function Underset(parser: TexParser, name: string) {
     TreeHelper.printMethod('Underset');
     // @test Underset
-    var bot = parser.ParseArg(name), base = parser.ParseArg(name);
+    const bot = parser.ParseArg(name), base = parser.ParseArg(name);
     if (TreeHelper.getProperty(base, 'movablelimits')) {
       // @test Overline Sum
       TreeHelper.setProperties(base, {'movablelimits': false});
     }
-    var node = TreeHelper.createNode('munder', [base, bot], {});
+    const node = TreeHelper.createNode('munder', [base, bot], {});
     parser.Push(node);
   };
 
@@ -748,19 +764,20 @@ export namespace ParseMethods {
     let def: sitem.EnvList = {texClass: mclass};
     let mml: sitem.StackItem|MmlNode;
     let node: MmlNode;
+    let parsed: MmlNode;
     if (mclass == TEXCLASS.OP) {
       def['movesupsub'] = def['movablelimits'] = true;
-      var arg = parser.GetArgument(name);
-      var match = arg.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
+      const arg = parser.GetArgument(name);
+      const match = arg.match(/^\s*\\rm\s+([a-zA-Z0-9 ]+)$/);
       if (match) {
         // @test Mathop
         def['mathvariant'] = TexConstant.Variant.NORMAL;
-        var textNode = TreeHelper.createText(match[1]);
+        const textNode = TreeHelper.createText(match[1]);
         node = TreeHelper.createNode('mi', [], def, textNode);
         mml = new sitem.FnItem(parser.mmlToken(node));
       } else {
         // @test Mathop Cal
-        var parsed = new TexParser(arg,parser.stack.env).mml();
+        parsed = new TexParser(arg,parser.stack.env).mml();
         node = TreeHelper.createNode('TeXAtom', [parsed], def);
         mml = new sitem.FnItem(node);
       }
@@ -776,11 +793,11 @@ export namespace ParseMethods {
   export function MmlToken(parser: TexParser, name: string) {
     TreeHelper.printMethod('MmlToken');
     // @test Modulo
-    var type = parser.GetArgument(name),
-    attr = parser.GetBrackets(name,'').replace(/^\s+/,''),
-    data = parser.GetArgument(name),
-    def: sitem.EnvList = {};
-    var node: MmlNode;
+    const type = parser.GetArgument(name);
+    let attr = parser.GetBrackets(name,'').replace(/^\s+/,'');
+    const data = parser.GetArgument(name);
+    const def: sitem.EnvList = {};
+    let node: MmlNode;
     try {
       node = TreeHelper.createNode(type, [], {});
     } catch (e) {
@@ -791,7 +808,7 @@ export namespace ParseMethods {
       throw new TexError(['NotMathMLToken','%1 is not a token element',type]);
     }
     while (attr !== '') {
-      let match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|'[^']*'|[^ ,]*)\s*,?\s*/i);
+      const match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|'[^']*'|[^ ,]*)\s*,?\s*/i);
       if (!match) {
         // @test Token Invalid Attribute
         throw new TexError(['InvalidMathMLAttr','Invalid MathML attribute: %1',attr]);
@@ -802,7 +819,7 @@ export namespace ParseMethods {
                             '%1 is not a recognized attribute for %2',
                             match[1],type]);
       }
-      var value: string | boolean = ParseMethods.MmlFilterAttribute(parser, match[1],
+      let value: string | boolean = ParseMethods.MmlFilterAttribute(parser, match[1],
                                                                     match[2].replace(/^([''])(.*)\1$/,'$2'));
       if (value) {
         if (value.toLowerCase() === 'true') {
@@ -814,7 +831,7 @@ export namespace ParseMethods {
       attr = attr.substr(match[0].length);
     }
     TreeHelper.printSimple('End mmlToken: type: ' + type + ' data: ' + data + ' def: ');
-    var textNode = TreeHelper.createText(data);
+    const textNode = TreeHelper.createText(data);
     node.appendChild(textNode);
     TreeHelper.setProperties(node, def);
     parser.Push(parser.mmlToken(node));
@@ -825,8 +842,8 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Strut');
     // @test Strut
     // TODO: Do we still need this row as it is implicit?
-    var row = TreeHelper.createNode('mrow', [], {});
-    var padded = TreeHelper.createNode('mpadded', [row],
+    const row = TreeHelper.createNode('mrow', [], {});
+    const padded = TreeHelper.createNode('mpadded', [row],
                                 {height: '8.6pt', depth: '3pt', width: 0});
     parser.Push(padded);
   };
@@ -834,7 +851,7 @@ export namespace ParseMethods {
   export function Phantom(parser: TexParser, name: string, v: string, h: string) {
     TreeHelper.printMethod('Phantom');
     // @test Phantom
-    var box = TreeHelper.createNode('mphantom', [parser.ParseArg(name)], {});
+    let box = TreeHelper.createNode('mphantom', [parser.ParseArg(name)], {});
     if (v || h) {
       // TEMP: Changes here
       box = TreeHelper.createNode('mpadded', [box], {});
@@ -848,15 +865,15 @@ export namespace ParseMethods {
         TreeHelper.setAttribute(box, 'width', 0);
       }
     }
-    var atom = TreeHelper.createNode('TeXAtom', [box], {});
+    const atom = TreeHelper.createNode('TeXAtom', [box], {});
     parser.Push(atom);
   };
 
   export function Smash(parser: TexParser, name: string) {
     TreeHelper.printMethod('Smash');
     // @test Smash, Smash Top, Smash Bottom
-    var bt = parser.trimSpaces(parser.GetBrackets(name,''));
-    var smash = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {});
+    const bt = parser.trimSpaces(parser.GetBrackets(name,''));
+    const smash = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {});
     // TEMP: Changes here:
     switch (bt) {
     case 'b': TreeHelper.setAttribute(smash, 'depth', 0); break;
@@ -865,27 +882,27 @@ export namespace ParseMethods {
       TreeHelper.setAttribute(smash, 'height', 0);
       TreeHelper.setAttribute(smash, 'depth', 0);
     }
-    var atom = TreeHelper.createNode('TeXAtom', [smash], {});
+    const atom = TreeHelper.createNode('TeXAtom', [smash], {});
     parser.Push(atom);
   };
 
   export function Lap(parser: TexParser, name: string) {
     TreeHelper.printMethod('Lap');
     // @test Llap, Rlap
-    var mml = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {width: 0});
+    const mml = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {width: 0});
     if (name === '\\llap') {
       // @test Llap
       TreeHelper.setAttribute(mml, 'lspace', '-1width');
     }
-    var atom = TreeHelper.createNode('TeXAtom', [mml], {});
+    const atom = TreeHelper.createNode('TeXAtom', [mml], {});
     parser.Push(atom);
   };
 
   export function RaiseLower(parser: TexParser, name: string) {
     TreeHelper.printMethod('RaiseLower');
     // @test Raise, Lower, Raise Negative, Lower Negative
-    var h = parser.GetDimen(name);
-    let item = 
+    let h = parser.GetDimen(name);
+    let item =
       new sitem.PositionItem().With({name: name, move: 'vertical'}) ;
     // TEMP: Changes here:
     if (h.charAt(0) === '-') {
@@ -908,10 +925,10 @@ export namespace ParseMethods {
   export function MoveLeftRight(parser: TexParser, name: string) {
     TreeHelper.printMethod('MoveLeftRight');
     // @test Move Left, Move Right, Move Left Negative, Move Right Negative
-    var h = parser.GetDimen(name);
-    var nh = (h.charAt(0) === '-' ? h.slice(1) : '-' + h);
+    let h = parser.GetDimen(name);
+    let nh = (h.charAt(0) === '-' ? h.slice(1) : '-' + h);
     if (name === '\\moveleft') {
-      var tmp = h;
+      let tmp = h;
       h = nh;
       nh = tmp;
     }
@@ -925,32 +942,32 @@ export namespace ParseMethods {
   export function Hskip(parser: TexParser, name: string) {
     TreeHelper.printMethod('Hskip');
     // @test Modulo
-    var node = TreeHelper.createNode('mspace', [],
-                              {width: parser.GetDimen(name),
-                               mathsize: TexConstant.Size.NORMAL});
+    const node = TreeHelper.createNode('mspace', [],
+                                       {width: parser.GetDimen(name),
+                                        mathsize: TexConstant.Size.NORMAL});
     parser.Push(node);
   };
 
   export function Rule(parser: TexParser, name: string, style: string) {
     TreeHelper.printMethod('Rule');
     // @test Rule 3D, Space 3D
-    var w = parser.GetDimen(name),
+    const w = parser.GetDimen(name),
     h = parser.GetDimen(name),
     d = parser.GetDimen(name);
     let def: sitem.EnvList = {width:w, height:h, depth:d};
     if (style !== 'blank') {
       def['mathbackground'] = (parser.stack.env['color'] || 'black');
     }
-    var node = TreeHelper.createNode('mspace', [], def);
+    const node = TreeHelper.createNode('mspace', [], def);
     parser.Push(node);
   };
   export function rule(parser: TexParser, name: string) {
     TreeHelper.printMethod('rule');
     // @test Rule 2D
-    var v = parser.GetBrackets(name),
+    const v = parser.GetBrackets(name),
     w = parser.GetDimen(name),
     h = parser.GetDimen(name);
-    var mml = TreeHelper.createNode('mspace', [], {
+    let mml = TreeHelper.createNode('mspace', [], {
       width: w, height:h,
       mathbackground: (parser.stack.env['color'] || 'black') });
     if (v) {
@@ -970,27 +987,27 @@ export namespace ParseMethods {
     // @test Choose, Over With Delims, Above With Delims
     size *= P_HEIGHT;
     let sizeStr = String(size).replace(/(\.\d\d\d).+/,'$1')+'em';
-    var delim = parser.GetDelimiter(name, true);
-    var text = TreeHelper.createText(delim);
-    var mo = TreeHelper.createNode('mo', [], {
+    const delim = parser.GetDelimiter(name, true);
+    const text = TreeHelper.createText(delim);
+    const mo = TreeHelper.createNode('mo', [], {
       minsize: sizeStr, maxsize: sizeStr,
       fence: true, stretchy: true, symmetric: true
     }, text);
-    var node = TreeHelper.createNode('TeXAtom', [mo], {texClass: mclass});
+    const node = TreeHelper.createNode('TeXAtom', [mo], {texClass: mclass});
     parser.Push(node);
   };
 
   export function BuildRel(parser: TexParser, name: string) {
     TreeHelper.printMethod('BuildRel');
     // @test BuildRel, BuildRel Expression
-    var top = parser.ParseUpTo(name,'\\over');
-    var bot = parser.ParseArg(name);
-    var node = TreeHelper.createNode('munderover', [], {});
+    const top = parser.ParseUpTo(name,'\\over');
+    const bot = parser.ParseArg(name);
+    const node = TreeHelper.createNode('munderover', [], {});
     // TODO: This is necessary to get the empty element into the children.
     TreeHelper.setData(node, 0, bot);
     TreeHelper.setData(node, 1, null);
     TreeHelper.setData(node, 2, top);
-    var atom = TreeHelper.createNode('TeXAtom', [node], {texClass: TEXCLASS.REL});
+    const atom = TreeHelper.createNode('TeXAtom', [node], {texClass: TEXCLASS.REL});
     parser.Push(atom);
   };
 
@@ -1003,8 +1020,8 @@ export namespace ParseMethods {
   export function FBox(parser: TexParser, name: string) {
     TreeHelper.printMethod('FBox');
     // @test Fbox
-    var internal = parser.InternalMath(parser.GetArgument(name));
-    var node = TreeHelper.createNode('menclose', internal, {notation:'box'});
+    const internal = parser.InternalMath(parser.GetArgument(name));
+    const node = TreeHelper.createNode('menclose', internal, {notation:'box'});
     parser.Push(node);
   };
 
@@ -1018,10 +1035,10 @@ export namespace ParseMethods {
   export function Dots(parser: TexParser, name: string) {
     TreeHelper.printMethod('Dots');
     // @test Operator Dots
-    var ldotsEntity = TreeHelper.createEntity('2026');
-    var cdotsEntity = TreeHelper.createEntity('22EF');
-    var ldots = TreeHelper.createNode('mo', [], {stretchy:false}, ldotsEntity);
-    var cdots = TreeHelper.createNode('mo', [], {stretchy:false}, cdotsEntity);
+    const ldotsEntity = TreeHelper.createEntity('2026');
+    const cdotsEntity = TreeHelper.createEntity('22EF');
+    const ldots = TreeHelper.createNode('mo', [], {stretchy:false}, ldotsEntity);
+    const cdots = TreeHelper.createNode('mo', [], {stretchy:false}, cdotsEntity);
     parser.Push(
                 new sitem.DotsItem().With({
                   ldots: parser.mmlToken(ldots),
@@ -1035,11 +1052,11 @@ export namespace ParseMethods {
                          cases: boolean, numbered: boolean) {
     TreeHelper.printMethod('Matrix');
     // TreeHelper.untested(36);
-    var c = parser.GetNext();
+    const c = parser.GetNext();
     if (c === '')
     {throw new TexError(['MissingArgFor','Missing argument for %1',name])}
     if (c === '{') {parser.i++} else {parser.string = c+'}'+parser.string.slice(parser.i+1); parser.i = 0}
-    var array = new sitem.ArrayItem().With({requireClose: true});
+    const array = new sitem.ArrayItem().With({requireClose: true});
     array.arraydef = {
       rowspacing: (vspacing||'4pt'),
       columnspacing: (spacing||'1em')
@@ -1071,13 +1088,13 @@ export namespace ParseMethods {
       //  Make second column be in \text{...} (unless it is already
       //  in a \text{...}, for backward compatibility).
       //
-      var string = parser.string;
-      var braces = 0, close = -1, i = parser.i, m = string.length;
+      const string = parser.string;
+      let braces = 0, close = -1, i = parser.i, m = string.length;
       //
       //  Look through the string character by character...
       //
       while (i < m) {
-        var c = string.charAt(i);
+        const c = string.charAt(i);
         if (c === '{') {
           //
           //  Increase the nested brace count and go on
@@ -1127,9 +1144,9 @@ export namespace ParseMethods {
       //  If not, process the second column as text and continue parsing from there,
       //    (otherwise process the second column as normal, since it is in \text{}
       //
-      var text = string.substr(parser.i,i-parser.i);
+      const text = string.substr(parser.i,i-parser.i);
       if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/,'').length - 1) {
-        var internal = parser.InternalMath(text, 0);
+        const internal = parser.InternalMath(text, 0);
         parser.PushAll(internal);
         parser.i = i;
       }
@@ -1155,12 +1172,13 @@ export namespace ParseMethods {
     }
     parser.Push(
                 new sitem.CellItem().With({isCR: true, name: name, linebreak: true}) );
-    var top = parser.stack.Top();
+    const top = parser.stack.Top();
+    let node: MmlNode;
     if (top instanceof sitem.ArrayItem) {
       // TEMP: Changes here:
       // @test Array
       if (n && top.arraydef['rowspacing']) {
-        var rows = (top.arraydef['rowspacing'] as string).split(/ /);
+        const rows = (top.arraydef['rowspacing'] as string).split(/ /);
         if (!top.getProperty('rowspacing')) {
           top.setProperty('rowspacing', ParserUtil.dimen2em(rows[0]));
         }
@@ -1174,7 +1192,7 @@ export namespace ParseMethods {
     } else {
       if (n) {
         // @test Custom Linebreak
-        var node = TreeHelper.createNode('mspace', [], {depth:n});
+        node = TreeHelper.createNode('mspace', [], {depth:n});
         parser.Push(node);
       }
       // @test Linebreak
@@ -1186,13 +1204,13 @@ export namespace ParseMethods {
   export function HLine(parser: TexParser, name: string, style: string) {
     TreeHelper.printMethod('HLine');
     if (style == null) {style = 'solid'}
-    var top = parser.stack.Top();
+    const top = parser.stack.Top();
     if (!(top instanceof sitem.ArrayItem) || top.data.length)
     {throw new TexError(['Misplaced','Misplaced %1',name])}
     if (top.table.length == 0) {
       top.frame.push('top');
     } else {
-      var lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
+      const lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
       while (lines.length < top.table.length) {
         lines.push('none');
       }
@@ -1203,7 +1221,7 @@ export namespace ParseMethods {
 
   export function HFill(parser: TexParser, name: string) {
     TreeHelper.printMethod('HFill');
-    var top = parser.stack.Top();
+    const top = parser.stack.Top();
     if (top instanceof sitem.ArrayItem) {
       top.hfill.push(top.data.length);
     } else {
@@ -1217,7 +1235,7 @@ export namespace ParseMethods {
   export function mi2mo(mi: MmlNode) {
     TreeHelper.printMethod('mi2mo');
     // @test Mathop Sub, Mathop Super
-    var mo = TreeHelper.createNode('mo', [], {});
+    const mo = TreeHelper.createNode('mo', [], {});
     TreeHelper.copyChildren(mi, mo);
     // TODO: Figure out how to copy these attributes.
     TreeHelper.copyAttributes(mi, mo);
@@ -1245,16 +1263,16 @@ export namespace ParseMethods {
   export function BeginEnd(parser: TexParser, name: string) {
     TreeHelper.printMethod('BeginEnd');
     // @test Array1, Array2, Array Test
-    var env = parser.GetArgument(name);
-    var regexp = /^\\end\\/;
+    let env = parser.GetArgument(name);
+    const regexp = /^\\end\\/;
     if (env.match(regexp)) {
-      env = env.substr(5); 
+      env = env.substr(5);
     } // special \end{} for \newenvironment environments
     if (env.match(/\\/i)) {
       throw new TexError(['InvalidEnv','Invalid environment name \'%1\'',env]);
     }
     if (name === '\\end') {
-      var mml = 
+      const mml =
         new sitem.EndItem().With({name: env}) ;
       parser.Push(mml);
     } else {
@@ -1270,8 +1288,8 @@ export namespace ParseMethods {
 
   export function BeginEnvironment(parser: TexParser, func: Function, env: string, args: any[]) {
     TreeHelper.printMethod('BeginEnvironment');
-    var end = args[0];
-    var mml = new sitem.BeginItem().With({name: env, end: end});
+    const end = args[0];
+    let mml = new sitem.BeginItem().With({name: env, end: end});
     mml = func.apply(this,[parser, mml].concat(args.slice(1)));
     parser.Push(mml);
   };
@@ -1290,11 +1308,11 @@ export namespace ParseMethods {
                         raggedHeight: boolean) {
     TreeHelper.printMethod('Array');
     // @test Array1, Array2, Array Test
-    if (!align) {align = parser.GetArgument('\\begin{'+begin.getName()+'}')}
-    var lines = ('c'+align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g,'$1');
+    if (!align) {align = parser.GetArgument('\\begin{' + begin.getName() + '}')}
+    let lines = ('c' + align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:]) + /g,'$1');
     align = align.replace(/[^clr]/g,'').split('').join(' ');
     align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-    var array = new sitem.ArrayItem();
+    const array = new sitem.ArrayItem();
     array.arraydef = {
       columnalign: align,
       columnspacing: (spacing||'1em'),
@@ -1327,7 +1345,7 @@ export namespace ParseMethods {
   export function AlignedArray(parser: TexParser, begin: sitem.StackItem) {
     TreeHelper.printMethod('AlignedArray');
     // @test Array1, Array2, Array Test
-    var align = parser.GetBrackets('\\begin{'+begin.getName()+'}');
+    const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
     return ParseMethods.setArrayAlign(parser,
                                       ParseMethods.Array.apply(parser,arguments),align);
   };
@@ -1348,7 +1366,7 @@ export namespace ParseMethods {
   /**************
    * Macros and Extension functionality.
    *************/
-  // TODO: 
+  // TODO:
   // Most of this is untested and should probably go into a separate file.
   // We should probably loose require.
 
@@ -1357,7 +1375,7 @@ export namespace ParseMethods {
 
   export function Require(parser: TexParser, name: string) {
     TreeHelper.printMethod('Require');
-    var file = parser.GetArgument(name)
+    const file = parser.GetArgument(name)
       .replace(/.*\//,'')            // remove any leading path
       .replace(/[^a-z0-9_.-]/ig,''); // remove illegal characters
     ParseMethods.Extension(parser, null,file);
@@ -1380,12 +1398,12 @@ export namespace ParseMethods {
                         def?: string) {
     TreeHelper.printMethod('Macro');
     if (argcount) {
-      var args: string[] = [];
+      const args: string[] = [];
       if (def != null) {
-        var optional = parser.GetBrackets(name);
+        const optional = parser.GetBrackets(name);
         args.push(optional == null ? def : optional);
       }
-      for (var i = args.length; i < argcount; i++) {
+      for (let i = args.length; i < argcount; i++) {
         args.push(parser.GetArgument(name));
       }
       macro = ParseMethods.SubstituteArgs(args,macro);
@@ -1456,8 +1474,8 @@ export namespace ParseMethods {
     if (taggable) {
       ParseMethods.checkEqnEnv(parser);
     }
-    align = align.replace(/[^clr]/g,'').split('').join(' ');
-    align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
+    align = align.replace(/[^clr]/g, '').split('').join(' ');
+    align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
     let newItem = new sitem.AMSarrayItem(begin.getName(), numbered, taggable, parser.stack.global);
     newItem.arraydef = {
         displaystyle: true,
@@ -1479,7 +1497,7 @@ export namespace ParseMethods {
   export function checkEqnEnv(parser: TexParser) {
     TreeHelper.printMethod('AMS-checkEqnEnv');
     if (parser.stack.global.eqnenv) {
-      throw new TexError(['ErroneousNestingEq','Erroneous nesting of equation structures']);
+      throw new TexError(['ErroneousNestingEq', 'Erroneous nesting of equation structures']);
     }
     parser.stack.global.eqnenv = true;
   };
@@ -1488,29 +1506,31 @@ export namespace ParseMethods {
   export function HandleOperatorName(parser: TexParser, name: string) {
     TreeHelper.printMethod('AMS-HandleOperatorName');
     // @test Operatorname
-    var limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
-    var op = parser.trimSpaces(parser.GetArgument(name));
-    op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
-    parser.string = '\\mathop{\\rm '+op+'}'+limits+' '+parser.string.slice(parser.i);
+    const limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
+    let op = parser.trimSpaces(parser.GetArgument(name));
+    op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
+    parser.string = '\\mathop{\\rm '+op+'}' + limits + ' ' + parser.string.slice(parser.i);
     parser.i = 0;
   };
-  
+
 
   export function SkipLimits(parser: TexParser, name: string) {
     TreeHelper.printMethod('AMS-SkipLimits');
     // @test Operatorname
-    var c = parser.GetNext(), i = parser.i;
-    if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') parser.i = i;
+    const c = parser.GetNext(), i = parser.i;
+    if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
+      parser.i = i;
+    }
   };
 
   // mathchoice
   export function MathChoice(parser: TexParser, name: string) {
-    let D  = parser.ParseArg(name);
-    let T  = parser.ParseArg(name);
-    let S  = parser.ParseArg(name);
-    let SS = parser.ParseArg(name);
+    const D  = parser.ParseArg(name);
+    const T  = parser.ParseArg(name);
+    const S  = parser.ParseArg(name);
+    const SS = parser.ParseArg(name);
     parser.Push(NewTex.display ? D : T);
     // parser.Push(MML.TeXmathchoice(D,T,S,SS));
   }
-  
+
 }

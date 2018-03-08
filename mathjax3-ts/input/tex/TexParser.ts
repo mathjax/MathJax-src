@@ -218,30 +218,35 @@ export default class TexParser {
   }
 
   // From OLD Parser
-  
-  Parse() {
+  public Parse() {
     TreeHelper.printMethod('Parse (Old Parser Object)');
     let c, n;
     while (this.i < this.string.length) {
       c = this.string.charAt(this.i++); n = c.charCodeAt(0);
-      if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-      this.parse('character', [c, this])
+      if (n >= 0xD800 && n < 0xDC00) {
+        c += this.string.charAt(this.i++);
+      }
+      this.parse('character', [c, this]);
     }
   }
 
-  Push(arg: StackItem|MmlNode) {
+  public Push(arg: StackItem|MmlNode) {
     TreeHelper.printMethod('Push (Old Parser Object)');
     this.stack.Push(arg);
   }
 
-  PushAll(args: (StackItem|MmlNode)[]) {
+  public PushAll(args: (StackItem|MmlNode)[]) {
     TreeHelper.printMethod('PushAll (Old Parser Object)');
-    for(let i = 0, m = args.length; i < m; i++) {
+    for (let i = 0, m = args.length; i < m; i++) {
       this.stack.Push(args[i]);
-    } 
+    }
   }
 
-  mml(): MmlNode {
+
+  /**
+   * @return {MmlNode} The internal Mathml structure. 
+   */
+  public mml(): MmlNode {
     TreeHelper.printMethod('mml (Old Parser Object)');
     if (!this.stack.Top().hasType('mml')) {
       return null;
@@ -253,7 +258,9 @@ export default class TexParser {
   }
 
   // VS: Forget this for now!
-  mmlToken(token: MmlNode): MmlNode {return token} // used by boldsymbol extension
+  public mmlToken(token: MmlNode): MmlNode {
+    return token;
+  } // used by boldsymbol extension
 
 
   /************************************************************************/
@@ -264,7 +271,7 @@ export default class TexParser {
   /**
    *  Convert delimiter to character
    */
-  convertDelimiter(c: string): string {
+  public convertDelimiter(c: string): string {
     TreeHelper.printMethod('convertDelimiter (Old Parser Object)');
     const symbol = this.lookup('delimiter', c) as Symbol;
     return symbol ? symbol.char : null;
@@ -274,7 +281,7 @@ export default class TexParser {
    *  Trim spaces from a string
    */
   // static
-  trimSpaces(text: string): string {
+  public trimSpaces(text: string): string {
     TreeHelper.printMethod('trimSpaces (Old Parser Object)');
     if (typeof(text) != 'string') {return text}
     let TEXT = text.replace(/^\s+|\s+$/g,'');
@@ -285,7 +292,7 @@ export default class TexParser {
   /**
    *   Check if the next character is a space
    */
-  nextIsSpace() {
+  public nextIsSpace() {
     TreeHelper.printMethod('nextIsSpace (Old Parser Object)');
     return this.string.charAt(this.i).match(/\s/);
   }
@@ -294,7 +301,7 @@ export default class TexParser {
   /**
    *  Get the next non-space character
    */
-  GetNext(): string {
+  public GetNext(): string {
     TreeHelper.printMethod('GetNext (Old Parser Object)');
     while (this.nextIsSpace()) {this.i++}
     return this.string.charAt(this.i);
@@ -305,7 +312,7 @@ export default class TexParser {
    */
   // TODO: The argument is given once in GetDelimiter, but never used!
   //       Check with Davide!
-  GetCS(name?: string) {
+  public GetCS(name?: string) {
     TreeHelper.printMethod('GetCS (Old Parser Object)');
     let CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
     if (CS) {
@@ -321,7 +328,7 @@ export default class TexParser {
    *  Get and return a TeX argument (either a single character or control sequence,
    *  or the contents of the next set of braces).
    */
-  GetArgument(name: string, noneOK?: boolean) {
+  public GetArgument(name: string, noneOK?: boolean) {
     TreeHelper.printMethod('GetArgument (Old Parser Object)');
     switch (this.GetNext()) {
     case '':
@@ -355,7 +362,7 @@ export default class TexParser {
   /**
    *  Get an optional LaTeX argument in brackets
    */
-  GetBrackets(name: string, def?: string): string {
+  public GetBrackets(name: string, def?: string): string {
     TreeHelper.printMethod('GetBrackets (Old Parser Object)');
     if (this.GetNext() != '[') {return def};
     let j = ++this.i, parens = 0;
@@ -383,7 +390,7 @@ export default class TexParser {
   /**
    *  Get the name of a delimiter (check it in the delimiter list).
    */
-  GetDelimiter(name: string, braceOK?: boolean) {
+  public GetDelimiter(name: string, braceOK?: boolean) {
     TreeHelper.printMethod('GetDelimiter (Old Parser Object)');
     while (this.nextIsSpace()) {this.i++}
     let c = this.string.charAt(this.i); this.i++;
@@ -405,7 +412,7 @@ export default class TexParser {
   /**
    *  Get a dimension (including its units).
    */
-  GetDimen(name: string) {
+  public GetDimen(name: string) {
     TreeHelper.printMethod('GetDimen (Old Parser Object)');
     if (this.nextIsSpace()) {this.i++}
     if (this.string.charAt(this.i) == '{') {
@@ -428,7 +435,7 @@ export default class TexParser {
   /**
    *  Get everything up to the given control sequence (token)
    */
-  GetUpTo(name: string, token: string) {
+  public GetUpTo(name: string, token: string) {
     TreeHelper.printMethod('GetUpTo (Old Parser Object)');
     while (this.nextIsSpace()) {this.i++}
     let j = this.i;
@@ -555,7 +562,7 @@ export default class TexParser {
   /**
    *  Get a delimiter or empty argument
    */
-  GetDelimiterArg(name: string) {
+  public GetDelimiterArg(name: string) {
     TreeHelper.printMethod('AMS-GetDelimiterArg (Old Parser Object)');
     let c = this.trimSpaces(this.GetArgument(name));
     if (c == '') return null;
@@ -569,14 +576,14 @@ export default class TexParser {
   /**
    *  Get a star following a control sequence name, if any
    */
-  GetStar() {
+  public GetStar() {
     TreeHelper.printMethod('AMS-GetStar (Old Parser Object)');
     let star = (this.GetNext() === '*');
     if (star) {this.i++}
     return star;
   }
 
-  GetRemap(char: string): Symbol {
+  public GetRemap(char: string): Symbol {
     return this.remap.lookup(char);
   }
   

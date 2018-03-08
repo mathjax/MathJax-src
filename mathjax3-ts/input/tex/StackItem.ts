@@ -207,7 +207,7 @@ export class BaseItem implements StackItem {
 
   // TODO: This needs proper changing once we get rid of legacy compatibility!
   With(def: PropList) {
-    for (var id in def) {
+    for (let id in def) {
       if (def.hasOwnProperty(id)) {
         this.setProperty(id, def[id]);
       }
@@ -275,11 +275,11 @@ export class OpenItem extends BaseItem {
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem open');
     if (item.hasType('close')) {
-      var mml = this.mmlData();
+      let mml = this.mmlData();
       // @test PrimeSup
       // TODO: Move that into mmlData?
       mml = TreeHelper.cleanSubSup(mml);
-      var node = TreeHelper.createNode('TeXAtom', [mml], {});
+      const node = TreeHelper.createNode('TeXAtom', [mml], {});
       // VS: OLD
       // var node = MML.TeXAtom(mml);
       return new MmlItem(node); // TeXAtom make it an ORD to prevent spacing
@@ -315,7 +315,7 @@ export class PrimeItem extends BaseItem {
     TreeHelper.printMethod('Checkitem prime');
     if (!TreeHelper.isType(this.data[0], 'msubsup')) {
       // @test Prime, Double Prime
-      var node = TreeHelper.createNode('msup', [this.data[0], this.data[1]], {});
+      const node = TreeHelper.createNode('msup', [this.data[0], this.data[1]], {});
       // VS: OLD
       // var node = MML.msup(this.data[0],this.data[1]);
       return [node, item];
@@ -352,7 +352,7 @@ export class SubsupItem extends BaseItem {
         else {
           // @test Prime on Prime
           TreeHelper.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
-          var node = TreeHelper.createNode('mrow', [this.getProperty('primes') as MmlNode, item.data[0]], {});
+          const node = TreeHelper.createNode('mrow', [this.getProperty('primes') as MmlNode, item.data[0]], {});
           // VS: OLD
           // var node = MML.mrow(this.primes, item.data[0]);
           item.data[0] = node;
@@ -362,7 +362,7 @@ export class SubsupItem extends BaseItem {
       if (this.getProperty('movesupsub') != null) {
         TreeHelper.setProperties(this.data[0], {movesupsub: this.getProperty('movesupsub')} as PropertyList);
       }
-      var result = new MmlItem(this.data[0]);
+      const result = new MmlItem(this.data[0]);
       return result;
     }
     if (super.checkItem(item)) {
@@ -398,7 +398,7 @@ export class OverItem extends BaseItem {
     }
     if (item.isClose) {
       // @test Over
-      var mml = TreeHelper.createNode('mfrac',
+      let mml = TreeHelper.createNode('mfrac',
                                       [this.getProperty('num') as MmlNode, this.mmlData(false)], {});
       // VS: OLD
       // var mml = MML.mfrac(this.num,this.mmlData(false));
@@ -528,7 +528,7 @@ export class StyleItem extends BaseItem {
       return super.checkItem(item);
     }
     // @test Style
-    var mml = TreeHelper.createNode('mstyle', this.data, this.getProperty('styles'));
+    const mml = TreeHelper.createNode('mstyle', this.data, this.getProperty('styles'));
     // VS: OLD
     // var mml = MML.mstyle.apply(MML,this.data).With(this.styles);
     return [new MmlItem(mml), item];
@@ -549,7 +549,7 @@ export class PositionItem extends BaseItem {
       throw new TexError(['MissingBoxFor', 'Missing box for %1', this.getName()]);
     }
     if (item.getProperty('isNotStack')) {
-      var mml = item.mmlData();
+      let mml = item.mmlData();
       switch (this.getProperty('move')) {
       case 'vertical':
         // @test Raise, Lower
@@ -604,10 +604,10 @@ export class ArrayItem extends BaseItem {
       }
       this.EndTable();
       this.clearEnv();
-      var scriptlevel = this.arraydef['scriptlevel'];
+      const scriptlevel = this.arraydef['scriptlevel'];
       delete this.arraydef['scriptlevel'];
       // @test Array1
-      var mml = TreeHelper.createNode('mtable', this.table, this.arraydef);
+      let mml = TreeHelper.createNode('mtable', this.table, this.arraydef);
       // VS: OLD
       // var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
       if (this.frame.length === 4) {
@@ -656,7 +656,7 @@ export class ArrayItem extends BaseItem {
 
   EndEntry() {
     // @test Array1, Array2
-    var mtd = TreeHelper.createNode('mtd', this.data, {});
+    const mtd = TreeHelper.createNode('mtd', this.data, {});
     // VS: OLD
     // var mtd = MML.mtd.apply(MML,this.data);
     if (this.hfill.length) {
@@ -673,11 +673,12 @@ export class ArrayItem extends BaseItem {
 
 
   EndRow() {
+    let node: MmlNode;
     if (this.getProperty('isNumbered') && this.row.length === 3) {
       this.row.unshift(this.row.pop());  // move equation number to first
                                          // position
       // @test Label
-      var node = TreeHelper.createNode('mlabeledtr', this.row, {});
+      node = TreeHelper.createNode('mlabeledtr', this.row, {});
       // VS: OLD
       // var node = MML.mlabeledtr.apply(MML,this.row);
     } else {
@@ -702,7 +703,7 @@ export class ArrayItem extends BaseItem {
 
   checkLines() {
     if (this.arraydef['rowlines']) {
-      var lines = (this.arraydef['rowlines'] as string).split(/ /);
+      const lines = (this.arraydef['rowlines'] as string).split(/ /);
       if (lines.length === this.table.length) {
         this.frame.push('bottom'); lines.pop();
         this.arraydef['rowlines'] = lines.join(' ');
@@ -711,7 +712,7 @@ export class ArrayItem extends BaseItem {
       }
     }
     if (this.getProperty('rowspacing')) {
-      var rows = (this.arraydef['rowspacing'] as string).split(/ /);
+      const rows = (this.arraydef['rowspacing'] as string).split(/ /);
       while (rows.length < this.table.length) {
         rows.push(this.getProperty('rowspacing') + 'em');
       }
@@ -721,7 +722,7 @@ export class ArrayItem extends BaseItem {
 
 
   clearEnv() {
-    for (var id in this.env) {
+    for (let id in this.env) {
       if (this.env.hasOwnProperty(id)) {
         delete this.env[id];
       }
@@ -783,7 +784,7 @@ export class FnItem extends BaseItem {
           TreeHelper.untested(100);
           return [this.data[0], item];
         }
-        var mml = item.data[0];
+        let mml = item.data[0];
         if (TreeHelper.isEmbellished(mml)) {
           TreeHelper.printSimple('case 5');
           mml = TreeHelper.getCoreMO(mml);
@@ -795,9 +796,9 @@ export class FnItem extends BaseItem {
         }
       }
       // @test Named Function
-      var text = TreeHelper.createText(MmlEntities.ENTITIES.ApplyFunction);
+      const text = TreeHelper.createText(MmlEntities.ENTITIES.ApplyFunction);
       // TODO: Texclass should probably be set and not given as attribute!
-      var node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
+      const node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
       // VS: OLD
       // var node = MML.mo(MML.entity('#x2061')).With({texClass:MML.TEXCLASS.NONE});
       return [this.data[0], node, item];
@@ -818,7 +819,9 @@ export class NotItem extends BaseItem {
   // TODO: There is a lot of recasting that should go away!
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem not');
-    let mml: TextNode | MmlNode, c: string;
+    let mml: TextNode | MmlNode;
+    let c: string;
+    let textNode: TextNode;
     if (item.hasType('open') || item.hasType('left')) {
       return true as CheckType;
     }
@@ -832,7 +835,7 @@ export class NotItem extends BaseItem {
           TreeHelper.getChildren(mml).length === 1) {
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
-          var textNode = TreeHelper.createText(this.remap.lookup(c).char);
+          textNode = TreeHelper.createText(this.remap.lookup(c).char);
           TreeHelper.setData(mml, 0, textNode);
           // VS: OLD
           // mml.SetData(0, MML.chars(this.remap.lookup(c).char));
@@ -849,8 +852,8 @@ export class NotItem extends BaseItem {
     //  \mathrel{\rlap{\notChar}}
     // @test Negation Large
     textNode = TreeHelper.createText('\u29F8');
-    var mtextNode = TreeHelper.createNode('mtext', [], {}, textNode);
-    var paddedNode = TreeHelper.createNode('mpadded', [mtextNode], {width: 0});
+    const mtextNode = TreeHelper.createNode('mtext', [], {}, textNode);
+    const paddedNode = TreeHelper.createNode('mpadded', [mtextNode], {width: 0});
     mml = TreeHelper.createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL}) as MmlNode;
     // VS: OLD
     // mml = MML.mpadded(MML.mtext('\u29F8')).With({width:0});
@@ -872,11 +875,11 @@ export class DotsItem extends BaseItem {
     if (item.hasType('open') || item.hasType('left')) {
       return true;
     }
-    var dots = this.getProperty('ldots') as MmlNode;
+    let dots = this.getProperty('ldots') as MmlNode;
     // @test Operator Dots
     if (item.hasType('mml') && TreeHelper.isEmbellished(item.data[0])) {
       // TODO: Lookup in Operator Table.
-      var tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(item.data[0]));
+      const tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(item.data[0]));
       if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
         dots = this.getProperty('cdots') as MmlNode;
       }
@@ -919,7 +922,7 @@ export class AMSarrayItem extends ArrayItem {
     if (this.row.length) {
       ParserUtil.fixInitialMO(this.data);
     }
-    var node = TreeHelper.createNode('mtd', this.data, {});
+    const node = TreeHelper.createNode('mtd', this.data, {});
     // VS: OLD
     // var node = MML.mtd.apply(MML,this.data);
     this.row.push(node);
@@ -929,7 +932,7 @@ export class AMSarrayItem extends ArrayItem {
   EndRow() {
     TreeHelper.printMethod('AMS-EndRow');
     // @test Cubic Binomial
-    var mtr = 'mtr'; // MML.mtr;
+    let mtr = 'mtr'; // MML.mtr;
     if (!this.global['tag'] && this.numbered) {
       this.autoTag();
     }
@@ -940,7 +943,7 @@ export class AMSarrayItem extends ArrayItem {
       this.clearTag();
     }
     if (this.numbered) {delete this.global['notag'];}
-    var node = TreeHelper.createNode(mtr, this.row, {});
+    const node = TreeHelper.createNode(mtr, this.row, {});
     this.table.push(node); this.row = [];
   }
   

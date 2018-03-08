@@ -76,7 +76,7 @@ export default class Stack {
         this.data.push(item);
         if (item.env) {
           if (item.copyEnv !== false) {
-            for (var id in this.env) {
+            for (let id in this.env) {
               if (this.env.hasOwnProperty(id)) {
                 item.env[id] = this.env[id];
               }
@@ -92,7 +92,7 @@ export default class Stack {
 
 
   Pop() {
-    var item = this.data.pop();
+    const item = this.data.pop();
     if (!item.isOpen) {
       delete item.env;
     }
@@ -113,7 +113,7 @@ export default class Stack {
 
 
   Prev(noPop?: boolean): MmlNode | void {
-    var top = this.Top();
+    const top = this.Top();
     if (noPop) {
       return top.data[top.data.length - 1];
     }
