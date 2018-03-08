@@ -69,7 +69,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   /******************************************************************************/
   
   sm.CharacterMap.create('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
-    iiiint:     ['2A0C',{texClass: MML.TEXCLASS.OP}]
+    iiiint:     ['\u2A0C',{texClass: MML.TEXCLASS.OP}]
   });
     
   sm.CommandMap.create('AMSmath-macros', {
@@ -87,7 +87,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 //    dddot:      ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}',1],
 //    ddddot:     ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}',1],
       dddot:      ['Accent','20DB'],
-      ddddot:     ['Accent','20DC'],
+      ddddot:     ['Accent','20DC'],//'20DC'],
       
       sideset:    ['Macro','\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1\\!\\mathop{#3}\\nolimits#2}',3],
       
@@ -156,10 +156,10 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   }).parser = BaseMethods.environment;
   
   sm.EnvironmentMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
-      '\\lvert':     ['007C',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rvert':     ['007C',{texClass:MML.TEXCLASS.CLOSE}],
-      '\\lVert':     ['2016',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rVert':     ['2016',{texClass:MML.TEXCLASS.CLOSE}]
+      '\\lvert':     ['\u007C',{texClass:MML.TEXCLASS.OPEN}],
+      '\\rvert':     ['\u007C',{texClass:MML.TEXCLASS.CLOSE}],
+      '\\lVert':     ['\u2016',{texClass:MML.TEXCLASS.OPEN}],
+      '\\rVert':     ['\u2016',{texClass:MML.TEXCLASS.CLOSE}]
   });
 
   TEXDEF.configurations.push({

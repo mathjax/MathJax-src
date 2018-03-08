@@ -32,6 +32,8 @@ export class Symbol {
 
   private _char: string;
 
+  // TODO: This function should be removed eventually as we are now dealing with
+  //       strings instead of hex codes in the mappings.
   /**
    * Translates a hex code into a unicode character.
    * @param {string} char The hex code of the character.
