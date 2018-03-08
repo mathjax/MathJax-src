@@ -64,8 +64,7 @@ export interface SymbolMap {
   /**
    * @param {string} symbol A symbol to parse.
    * @param {Object} env The current calling object. // (This is temporary!)
-   * @return {ParseResult} The parsed symbol and the rest
-   * string.
+   * @return {ParseResult} The parsed symbol and the rest of the string.
    */
   parse([symbol, env]: ParseInput): ParseResult;
 

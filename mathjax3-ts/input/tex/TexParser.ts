@@ -133,7 +133,7 @@ export default class TexParser {
    *    map handler.
    */
   public configure(config: Configuration): void {
-    for (let key in config) {
+    for (const key of Object.keys(config)) {
       let name = key as HandlerType;
       this.configurations.set(name, new SubHandler(config[name] || []));
     }
@@ -149,7 +149,7 @@ export default class TexParser {
    *    map handler.
    */
   public append(config: Configuration): void {
-    for (let key in config) {
+    for (const key of Object.keys(config)) {
       let name = key as HandlerType;
       for (const map of config[name]) {
         this.configurations.get(name).add(map);

@@ -30,37 +30,14 @@ import {Args, Attributes} from './Types.js';
  */
 export class Symbol {
 
-  private _char: string;
-
-  /**
-   * Translates a hex code into a unicode character.
-   * @param {string} char The hex code of the character.
-   * @return {string} The unicode character.
-   */
-  private static parse(char: string): string {
-    if (char.length < 4) {
-      return char;
-    }
-    let keyValue = parseInt(char, 16);
-    if (keyValue < 0x10000) {
-      return String.fromCharCode(keyValue);
-    }
-    keyValue -= 0x10000;
-    let hiSurrogate = (keyValue >> 10) + 0xD800;
-    let lowSurrogate = (keyValue & 0x3FF) + 0xDC00;
-    return String.fromCharCode(hiSurrogate, lowSurrogate);
-  }
-
-
   /**
    * @constructor
    * @param {string} _symbol The symbol parsed.
    * @param {string} char The corresponding translation.
    * @param {Attributes} _attributes The attributes for the translation.
    */
-  constructor(private _symbol: string, char: string,
+  constructor(private _symbol: string, private _char: string,
               private _attributes: Attributes) {
-    this._char = Symbol.parse(char);
   }
 
   public get symbol(): string {

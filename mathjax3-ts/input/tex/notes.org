@@ -67,6 +67,7 @@
   //
   // Also: How are we to know "outside" what the actual value is?
 
+<<<<<<< HEAD
 * Notes for future refactoring:
 
 ** Why does TextNode not inherit AbstractMmlNode. This hiearchy with empty nodes seems to be odd.
@@ -95,4 +96,27 @@
    EndEntry, EndTable, fixInitialMO
 
 **** For Davide: How does With with nested dictionary work.
+=======
+* Review 1 notes
+
+** TEXCLASSNAMES: 
+   Part of the old attribute handling mechanism. The "real" attributes were not
+   being kept separate from the internal attributes, and so you could not tell
+   which were to be copied into MathML output. This specified a list of ones
+   that should not be (even though they had default values in some objects).
+
+*** They should eventually be removed and used from the operator lookup table.
+
+** MML.chars:
+   The children of token nodes are text nodes. That is what this implements (the
+   equivalent of the HTML #text node). In version v, this is the TextNode node
+   (in core/MmlTree/MmlNode.ts as I recall). The MML.entity type is gone in v3
+   and folded into the TextNode. I originally thought the entity class would
+   keep the original entity name (e.g., pi from &pi;, but the turned out to be a
+   bad idea, and not really possible since the entities were already translated
+   to characters by the browser before MathJax even sees them). So the class
+   ended up being superfluous.
+
+*** This is effectively the new textnode class.
+>>>>>>> initial_parser
 
