@@ -47,13 +47,13 @@ export namespace ParseMethods {
 
   // Utilities?
   export function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
-    return value
+    return value;
   };
 
   let MmlTokenAllow: {[key: string]: number} = {
-    fontfamily:1, fontsize:1, fontweight:1, fontstyle:1,
-    color:1, background:1,
-    id:1, 'class':1, href:1, style:1
+    fontfamily: 1, fontsize: 1, fontweight: 1, fontstyle: 1,
+    color: 1, background: 1,
+    id: 1, 'class': 1, href: 1, style: 1
   };
   // End Utilities?
 
@@ -368,9 +368,10 @@ export namespace ParseMethods {
     }
     let sup = '';
     parser.i--;
-    do {sup += PRIME; parser.i++, c = parser.GetNext()}
-    while (c === '\'' || c === SMARTQUOTE);
-    sup = ['','\u2032','\u2033','\u2034','\u2057'][sup.length] || sup;
+    do {
+      sup += PRIME; parser.i++, c = parser.GetNext();
+    } while (c === '\'' || c === SMARTQUOTE);
+    sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
     const textNode = TreeHelper.createText(sup);
     const node = TreeHelper.createNode('mo', [], {}, textNode);
     parser.Push(
@@ -469,7 +470,7 @@ export namespace ParseMethods {
   export function Spacer(parser: TexParser, name: string, space: string) {
     // @test Positive Spacing, Negative Spacing
     const node = TreeHelper.createNode('mspace', [],
-                              {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel:0});
+                              {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel: 0});
     parser.Push(node);
   };
 
@@ -503,7 +504,9 @@ export namespace ParseMethods {
   export function NamedFn(parser: TexParser, name: string, id: string) {
     TreeHelper.printMethod('NamedFn');
     // @test Named Function
-    if (!id) {id = name.substr(1)};
+    if (!id) {
+      id = name.substr(1);
+    }
     const textNode = TreeHelper.createText(id);
     const mml = TreeHelper.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
     parser.Push( new sitem.FnItem(parser.mmlToken(mml)) );
@@ -1053,13 +1056,19 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Matrix');
     // TreeHelper.untested(36);
     const c = parser.GetNext();
-    if (c === '')
-    {throw new TexError(['MissingArgFor','Missing argument for %1',name])}
-    if (c === '{') {parser.i++} else {parser.string = c+'}'+parser.string.slice(parser.i+1); parser.i = 0}
+    if (c === '') {
+      throw new TexError(['MissingArgFor','Missing argument for %1', name]);
+    }
+    if (c === '{') {
+      parser.i++;
+    } else {
+      parser.string = c + '}' + parser.string.slice(parser.i + 1);
+      parser.i = 0;
+    }
     const array = new sitem.ArrayItem().With({requireClose: true});
     array.arraydef = {
-      rowspacing: (vspacing||'4pt'),
-      columnspacing: (spacing||'1em')
+      rowspacing: (vspacing || '4pt'),
+      columnspacing: (spacing || '1em')
     };
     // TEMP: Changes here:
     if (cases) {
@@ -1073,8 +1082,12 @@ export namespace ParseMethods {
       array.setProperty('open', open);
       array.setProperty('close', close);
     }
-    if (style === 'D') {array.arraydef.displaystyle = true}
-    if (align != null) {array.arraydef.columnalign = align}
+    if (style === 'D') {
+      array.arraydef.displaystyle = true;
+    }
+    if (align != null) {
+      array.arraydef.columnalign = align;
+    }
     parser.Push(array);
   };
 
@@ -1088,13 +1101,13 @@ export namespace ParseMethods {
       //  Make second column be in \text{...} (unless it is already
       //  in a \text{...}, for backward compatibility).
       //
-      const string = parser.string;
-      let braces = 0, close = -1, i = parser.i, m = string.length;
+      const str = parser.string;
+      let braces = 0, close = -1, i = parser.i, m = str.length;
       //
       //  Look through the string character by character...
       //
       while (i < m) {
-        const c = string.charAt(i);
+        const c = str.charAt(i);
         if (c === '{') {
           //
           //  Increase the nested brace count and go on
@@ -1124,14 +1137,18 @@ export namespace ParseMethods {
           //
           //  Extra alignment tabs are not allowed in cases
           //
-          throw new TexError(['ExtraAlignTab','Extra alignment tab in \\cases text']);
+          throw new TexError(['ExtraAlignTab', 'Extra alignment tab in \\cases text']);
         } else if (c === '\\') {
           //
           //  If the macro is \cr or \\, end the search, otherwise skip the macro
           //  (multi-letter names don't matter, as we will skip the rest of the
           //   characters in the main loop)
           //
-          if (string.substr(i).match(/^((\\cr)[^a-zA-Z]|\\\\)/)) {m = 0} else {i += 2}
+          if (str.substr(i).match(/^((\\cr)[^a-zA-Z]|\\\\)/)) {
+            m = 0;
+          } else {
+            i += 2;
+          }
         } else {
           //
           //  Go on to the next character
@@ -1144,8 +1161,8 @@ export namespace ParseMethods {
       //  If not, process the second column as text and continue parsing from there,
       //    (otherwise process the second column as normal, since it is in \text{}
       //
-      const text = string.substr(parser.i,i-parser.i);
-      if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/,'').length - 1) {
+      const text = str.substr(parser.i, i - parser.i);
+      if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/, '').length - 1) {
         const internal = parser.InternalMath(text, 0);
         parser.PushAll(internal);
         parser.i = i;
@@ -1164,10 +1181,10 @@ export namespace ParseMethods {
     TreeHelper.printMethod('CrLaTeX');
     let n: string;
     if (parser.string.charAt(parser.i) === '[') {
-      n = parser.GetBrackets(name,'').replace(/ /g,'').replace(/,/,'.');
+      n = parser.GetBrackets(name, '').replace(/ /g, '').replace(/,/, '.');
       if (n && !ParserUtil.matchDimen(n)) {
         throw new TexError(['BracketMustBeDimension',
-                            'Bracket argument to %1 must be a dimension',name]);
+                            'Bracket argument to %1 must be a dimension', name]);
       }
     }
     parser.Push(
@@ -1192,11 +1209,11 @@ export namespace ParseMethods {
     } else {
       if (n) {
         // @test Custom Linebreak
-        node = TreeHelper.createNode('mspace', [], {depth:n});
+        node = TreeHelper.createNode('mspace', [], {depth: n});
         parser.Push(node);
       }
       // @test Linebreak
-      node = TreeHelper.createNode('mspace', [], {linebreak:TexConstant.LineBreak.NEWLINE});
+      node = TreeHelper.createNode('mspace', [], {linebreak: TexConstant.LineBreak.NEWLINE});
       parser.Push(node);
     }
   };
@@ -1205,16 +1222,17 @@ export namespace ParseMethods {
     TreeHelper.printMethod('HLine');
     if (style == null) {style = 'solid'}
     const top = parser.stack.Top();
-    if (!(top instanceof sitem.ArrayItem) || top.data.length)
-    {throw new TexError(['Misplaced','Misplaced %1',name])}
-    if (top.table.length == 0) {
+    if (!(top instanceof sitem.ArrayItem) || top.data.length) {
+      throw new TexError(['Misplaced','Misplaced %1', name]);
+    }
+    if (!top.table.length) {
       top.frame.push('top');
     } else {
       const lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
       while (lines.length < top.table.length) {
         lines.push('none');
       }
-      lines[top.table.length-1] = style;
+      lines[top.table.length - 1] = style;
       top.arraydef['rowlines'] = lines.join(' ');
     }
   };
@@ -1225,7 +1243,7 @@ export namespace ParseMethods {
     if (top instanceof sitem.ArrayItem) {
       top.hfill.push(top.data.length);
     } else {
-      throw new TexError(['UnsupportedHFill','Unsupported use of %1',name]);
+      throw new TexError(['UnsupportedHFill', 'Unsupported use of %1', name]);
     }
   };
 
@@ -1422,7 +1440,7 @@ export namespace ParseMethods {
   /**
    *  Replace macro paramters with their values
    */
-  export function SubstituteArgs(args: string[],string: string) {
+  export function SubstituteArgs(args: string[], string: string) {
     TreeHelper.printMethod('SubstituteArgs');
     let text = '';
     let newstring = '';
@@ -1432,18 +1450,20 @@ export namespace ParseMethods {
       if (c === '\\') {text += c + string.charAt(i++)}
       else if (c === '#') {
         c = string.charAt(i++);
-        if (c === '#') {text += c} else {
+        if (c === '#') {
+          text += c;
+        } else {
           if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
             throw new TexError(['IllegalMacroParam',
                                 'Illegal macro parameter reference']);
           }
-          newstring = ParseMethods.AddArgs(this.AddArgs(newstring,text),
+          newstring = ParseMethods.AddArgs(this.AddArgs(newstring, text),
                                            args[parseInt(c, 10) - 1]);
           text = '';
         }
       } else {text += c}
     }
-    return this.AddArgs(newstring,text);
+    return this.AddArgs(newstring, text);
   };
 
   /**
