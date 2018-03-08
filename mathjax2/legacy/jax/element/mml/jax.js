@@ -215,9 +215,6 @@ MathJax.ElementJax.mml.Augment({
     NONE:   -1
   },
   TEXCLASSNAMES: ["ORD", "OP", "BIN", "REL", "OPEN", "CLOSE", "PUNCT", "INNER", "VCENTER"],
-
-  // VS Q: What do these do?
-  
   skipAttributes: {
     texClass:true, useHeight:true, texprimestyle:true
   },
@@ -1398,7 +1395,6 @@ MathJax.ElementJax.mml.Augment({
     }
   });
   
-  // VS Q: This is a list of characters? Why?
   MML.chars = MML.mbase.Subclass({
     type: "chars",
     Append: function () {this.data.push.apply(this.data,arguments)},
