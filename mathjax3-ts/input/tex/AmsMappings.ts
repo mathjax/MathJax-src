@@ -42,7 +42,7 @@ export namespace AmsMappings {
 
 
   sm.CharacterMap.create('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
-    iiiint:     ['2A0C',{texClass: TEXCLASS.OP}]
+    iiiint:     ['\u2A0C',{texClass: TEXCLASS.OP}]
   });
 
   sm.CommandMap.create('AMSmath-macros', {
@@ -129,10 +129,10 @@ export namespace AmsMappings {
   }).parser = BaseMethods.environment;
 
   sm.DelimiterMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
-      '\\lvert':     ['007C',{texClass:TEXCLASS.OPEN}],
-      '\\rvert':     ['007C',{texClass:TEXCLASS.CLOSE}],
-      '\\lVert':     ['2016',{texClass:TEXCLASS.OPEN}],
-      '\\rVert':     ['2016',{texClass:TEXCLASS.CLOSE}]
+      '\\lvert':     ['\u007C',{texClass:TEXCLASS.OPEN}],
+      '\\rvert':     ['\u007C',{texClass:TEXCLASS.CLOSE}],
+      '\\lVert':     ['\u2016',{texClass:TEXCLASS.OPEN}],
+      '\\rVert':     ['\u2016',{texClass:TEXCLASS.CLOSE}]
   });
 
   export const CONFIGURATION = {
