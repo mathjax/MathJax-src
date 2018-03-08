@@ -434,7 +434,8 @@ export class TeXFont extends FontData {
     protected addDelimiterStyles(styles: StyleList, n: number, data: DelimiterData) {
         const c = this.char(n);
         if (data.c && data.c !== n) {
-            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] = {content: '"' + this.char(data.c,true) + '"'};
+            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] =
+                {content: '"' + this.char(data.c,true) + '"'};
         }
         if (!data.stretch) return;
         if (data.dir === DIRECTION.Vertical) {
@@ -454,27 +455,24 @@ export class TeXFont extends FontData {
         const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
         this.addDelimiterVPart(styles, c, 'ext', ext);
         const He = this.addDelimiterVPart(styles, c, 'end', end);
-        let Hm;
-        if (mid) {
-            Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext'] = {height: '50%'}
-        }
         const css: StyleData = {};
+        if (mid) {
+            const Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
+            css.height = '50%';
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
+                'margin-top': this.em(-Hm/2),
+                'margin-bottom': this.em(-Hm/2)
+            };
+        }
         if (Hb) {
             css['border-top-width'] = this.em0(Hb - .03);
         }
         if (He) {
             css['border-bottom-width'] = this.em0(He - .03);
             styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-end'] = {'margin-top': this.em(-He)};
-            if (mid) {
-                styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
-                    'margin-top': this.em(-Hm/2),
-                    'margin-bottom': this.em(-Hm/2)
-                };
-            }
         }
         if (Object.keys(css).length) {
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-ext'] = css;
+            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext'] = css;
         }
     }
 
@@ -519,7 +517,9 @@ export class TeXFont extends FontData {
      * @param{number} n          The unicode character to use for the part
      */
     protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, force: boolean = false) {
-        if (!n) return 0;
+        if (!n) {
+            return 0;
+        }
         const data = this.getChar('normal', n) || this.getChar('-size4', n);
         const options = data[3] as CharOptions;
         const C = (options && options.c ? options.c : this.char(n, true));

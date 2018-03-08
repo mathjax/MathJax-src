@@ -105,8 +105,12 @@ export class CHTMLmtr extends CHTMLWrapper {
                 const noStretch = (child.stretch.dir === DIRECTION.None);
                 if (all || noStretch) {
                     const {h, d} = child.getBBox(noStretch);
-                    if (h > H) H = h;
-                    if (d > D) D = d;
+                    if (h > H) {
+                        H = h;
+                    }
+                    if (d > D) {
+                        D = d;
+                    }
                 }
             }
             //
