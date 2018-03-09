@@ -451,7 +451,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod('SetSize');
     parser.stack.env['size'] = size;
     parser.Push(
-                new sitem.StyleItem().With({styles: {mathsize: size+'em'}}) ); // convert to absolute?
+                new sitem.StyleItem().With({styles: {mathsize: size + 'em'}}) ); // convert to absolute?
   };
 
   // Look at color extension!
@@ -488,16 +488,17 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Middle');
     // @test Middle
     const delim = parser.GetDelimiter(name);
-    let node = TreeHelper.createNode('TeXAtom', [], {texClass:TEXCLASS.CLOSE});
+    let node = TreeHelper.createNode('TeXAtom', [], {texClass: TEXCLASS.CLOSE});
     parser.Push(node);
     if (!parser.stack.Top().hasType('left')) {
       // @test Orphan Middle, Middle with Right
-      throw new TexError(['MisplacedMiddle','%1 must be within \\left and \\right',name]);
+      throw new TexError(['MisplacedMiddle',
+                          '%1 must be within \\left and \\right', name]);
     }
     const textNode = TreeHelper.createText(delim);
-    node = TreeHelper.createNode('mo', [], {stretchy:true}, textNode);
+    node = TreeHelper.createNode('mo', [], {stretchy: true}, textNode);
     parser.Push(node);
-    node = TreeHelper.createNode('TeXAtom', [], {texClass:TEXCLASS.OPEN});
+    node = TreeHelper.createNode('TeXAtom', [], {texClass: TEXCLASS.OPEN});
     parser.Push(node);
   };
 

@@ -189,7 +189,6 @@ export namespace TreeHelper {
     if (child) {
       child.parent = node;
     }
-    node.setTeXclass(null);
   };
 
 

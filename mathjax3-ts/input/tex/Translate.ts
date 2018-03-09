@@ -29,7 +29,7 @@ import {ParserUtil} from './ParserUtil.js';
 import TexError from './TexError.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
+import {OperatorDef, RangeDef} from '../../core/MmlTree/OperatorDictionary.js';
 
 // A wrapper for translating scripts with LaTeX content.
 
@@ -89,23 +89,37 @@ export namespace NewTex {
       if (display) {
         TreeHelper.setAttribute(root, 'display', 'block');
       }
-      if (!parser) {
-        // In case we have a caught error, parser will be undefined.
-        return mathNode;
-      }
-      for (let mo of parser.secondPass) {
-        let forms = mo.getForms();
-        let symbol: OperatorDef;
-        for (let form of forms) {
-          symbol = MmlMo.OPTABLE[form][mo.getText()];
-          if (symbol) {
-            break;
-          }
+    (mathNode as any).setInheritedAttributes();
+    (mathNode as any).setTeXclass();
+    if (!parser) {
+      // In case we have a caught error, parser will be undefined.
+      return mathNode;
+    }
+    for (let mo of parser.secondPass) {
+      console.log(TreeHelper.getTexClass(mo));
+      let forms = mo.getForms();
+      let symbol: OperatorDef;
+      // Probably not needed!
+      let range: RangeDef = null;
+      for (let form of forms) {
+        symbol = MmlMo.OPTABLE[form][mo.getText()];
+        if (symbol) {
+          break;
         }
-        if (symbol && symbol[3] && symbol[3]['stretchy']) {
-          TreeHelper.setAttribute(mo, 'stretchy', false);
-        }
       }
+      if (symbol && symbol[3] && symbol[3]['stretchy']) {
+        TreeHelper.setAttribute(mo, 'stretchy', false);
+      }
+      // if (!symbol) {
+      //   range = mo.getRange(mo.getText());
+      // }
+      if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
+        const parent = mo.parent;
+        const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
+        texAtom.parent = parent;
+        parent.childNodes = [texAtom];
+      }
+    }
       // TODO: Should not be necessary anymore!
       // if (isError) {
       //   (mathNode as any).texError = true;
@@ -113,5 +127,5 @@ export namespace NewTex {
       // ParserUtil.combineRelations(root);
       return mathNode;
     }
-
+  
 }
