@@ -174,7 +174,7 @@ export class BaseItem implements StackItem {
       return this.data[0];
     }
     // @test Two Identifiers
-    return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this.data, {});
+    return TreeHelper.createNode('mrow', this.data, {});
     // VS: OLD
     // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
   }
