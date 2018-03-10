@@ -1328,6 +1328,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Array');
     // @test Array1, Array2, Array Test
     if (!align) {align = parser.GetArgument('\\begin{' + begin.getName() + '}')}
+console.log(align);
     let lines = ('c' + align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:]) + /g,'$1');
     align = align.replace(/[^clr]/g,'').split('').join(' ');
     align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');

@@ -1976,8 +1976,9 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mtable",
          "texClass": 0,
-         "attributes": {"rowspacing": "4pt",
-                        "columnspacing": "1em"},
+         "attributes": {"columnalign": "center",
+                        "columnspacing": "1em",
+                        "rowspacing": "4pt"},
          "inherited": {
            "displaystyle": true,
            "scriptlevel": 0},
@@ -2042,7 +2043,9 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "menclose",
          "texClass": 0,
-         "attributes": {"notation": "left right"},
+         "attributes": {"notation": "left right",
+                        "isFrame": true,
+                        "padding": 0},
          "inherited": {
            "displaystyle": true,
            "scriptlevel": 0},
@@ -2058,9 +2061,10 @@ parserTest.runTest(
             "childNodes": [
               {"kind": "mtable",
                "texClass": 0,
-               "attributes": {"rowspacing": "4pt",
+               "attributes": {"columnalign": "center",
                               "columnspacing": "1em",
-                              "columnlines": ""},
+                              "rowspacing": "4pt",
+                              "columnlines": "solid none"},
                "inherited": {
                  "displaystyle": true,
                  "scriptlevel": 0},

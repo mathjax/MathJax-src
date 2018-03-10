@@ -315,7 +315,7 @@ parserTest.runTest(
                "properties": {},
                "childNodes": [
                  {"kind": "text",
-                  "text": "\u1d400"}],
+                  "text": "𝐀"}],
                "isEmbellished": true}],
             "isInferred": true,
             "isEmbellished": true}],

@@ -620,6 +620,7 @@ export class ArrayItem extends BaseItem {
             (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
         // @test Array2
+        console.log(this.frame);
         mml = TreeHelper.createNode('menclose', [mml],
                              {notation: this.frame.join(' '), isFrame: true});
         // VS: OLD
