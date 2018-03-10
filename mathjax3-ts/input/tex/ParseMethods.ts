@@ -1326,17 +1326,19 @@ export namespace ParseMethods {
                         spacing: string, vspacing: string, style: string,
                         raggedHeight: boolean) {
     TreeHelper.printMethod('Array');
+    console.log("HERE");
     // @test Array1, Array2, Array Test
     if (!align) {align = parser.GetArgument('\\begin{' + begin.getName() + '}')}
-console.log(align);
-    let lines = ('c' + align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:]) + /g,'$1');
-    align = align.replace(/[^clr]/g,'').split('').join(' ');
-    align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
+    console.log(align);
+    let lines = ('c' + align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g, '$1');
+    console.log(lines);
+    align = align.replace(/[^clr]/g, '').split('').join(' ');
+    align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
     const array = new sitem.ArrayItem();
     array.arraydef = {
       columnalign: align,
-      columnspacing: (spacing||'1em'),
-      rowspacing: (vspacing||'4pt')
+      columnspacing: (spacing || '1em'),
+      rowspacing: (vspacing || '4pt')
     };
     if (lines.match(/[|:]/)) {
       if (lines.charAt(0).match(/[|:]/)) {
@@ -1350,6 +1352,8 @@ console.log(align);
       array.arraydef.columnlines =
         lines.split('').join(' ').replace(/[^|: ]/g,'none').replace(/\|/g,'solid').replace(/:/g,'dashed');
     }
+    console.log('ArrayDef');
+    console.log(array.arraydef);
     // TEMP: Changes here;
     if (open)  {array.setProperty('open', parser.convertDelimiter(open));}
     if (close) {array.setProperty('close', parser.convertDelimiter(close));}
@@ -1374,7 +1378,7 @@ console.log(align);
   export function setArrayAlign(parser: TexParser, array: sitem.ArrayItem, align: string) {
     TreeHelper.printMethod('setArrayAlign');
     // @test Array1, Array2, Array Test
-    align = parser.trimSpaces(align||'');
+    align = parser.trimSpaces(align || '');
     if (align === 't') {array.arraydef.align = 'baseline 1'}
     else if (align === 'b') {array.arraydef.align = 'baseline -1'}
     else if (align === 'c') {array.arraydef.align = 'center'}

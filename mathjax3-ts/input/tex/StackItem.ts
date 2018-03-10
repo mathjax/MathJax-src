@@ -610,6 +610,7 @@ export class ArrayItem extends BaseItem {
       let mml = TreeHelper.createNode('mtable', this.table, this.arraydef);
       // VS: OLD
       // var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
+        console.log(this.frame);
       if (this.frame.length === 4) {
         // TODO: Untested case that currently does not work!
         TreeHelper.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
@@ -620,7 +621,6 @@ export class ArrayItem extends BaseItem {
             (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
         // @test Array2
-        console.log(this.frame);
         mml = TreeHelper.createNode('menclose', [mml],
                              {notation: this.frame.join(' '), isFrame: true});
         // VS: OLD
