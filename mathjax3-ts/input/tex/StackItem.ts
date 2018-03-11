@@ -620,7 +620,7 @@ export class ArrayItem extends BaseItem {
         // @test Enclosed left right
         // mml.hasFrame = true;
         if (this.arraydef['rowlines']) {
-          TreeHelper.untested(1);
+          // @test Array framed dashed row, Array framed solid row, 
           this.arraydef['rowlines'] =
             (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
@@ -632,8 +632,9 @@ export class ArrayItem extends BaseItem {
         // mml = MML.menclose(mml).With({notation: this.frame.join(' '), isFrame: true});
         if ((this.arraydef['columnlines'] || 'none') != 'none' ||
             (this.arraydef['rowlines'] || 'none') != 'none') {
+          // @test Array framed dashed row, Array framed solid row
+          // @test Array framed dashed column, Array framed solid column
           // HTML-CSS jax implements this
-          TreeHelper.untested(2);
           TreeHelper.setAttribute(mml, 'padding', 0);
         }
       }
