@@ -590,13 +590,17 @@ export class ArrayItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem array');
+    // @test Array Single
     if (item.isClose && !item.hasType('over')) {
+      // @test Array Single
       if (item.getProperty('isEntry')) {
+        // @test Array dashed column, Array solid column
         this.EndEntry();
         this.clearEnv();
         return false;
       }
       if (item.getProperty('isCR')) {
+        // @test Enclosed bottom
         this.EndEntry();
         this.EndRow();
         this.clearEnv();
@@ -606,28 +610,30 @@ export class ArrayItem extends BaseItem {
       this.clearEnv();
       const scriptlevel = this.arraydef['scriptlevel'];
       delete this.arraydef['scriptlevel'];
-      // @test Array1
       let mml = TreeHelper.createNode('mtable', this.table, this.arraydef);
       // VS: OLD
       // var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
-        console.log(this.frame);
       if (this.frame.length === 4) {
-        // TODO: Untested case that currently does not work!
+        // @test Enclosed frame solid, Enclosed frame dashed 
         TreeHelper.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
       } else if (this.frame.length) {
+        // @test Enclosed left right
         // mml.hasFrame = true;
         if (this.arraydef['rowlines']) {
+          TreeHelper.untested(1);
           this.arraydef['rowlines'] =
             (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
-        // @test Array2
+        // @test Enclosed left right
         mml = TreeHelper.createNode('menclose', [mml],
                              {notation: this.frame.join(' '), isFrame: true});
+        console.log(this.arraydef);
         // VS: OLD
         // mml = MML.menclose(mml).With({notation: this.frame.join(' '), isFrame: true});
         if ((this.arraydef['columnlines'] || 'none') != 'none' ||
             (this.arraydef['rowlines'] || 'none') != 'none') {
           // HTML-CSS jax implements this
+          TreeHelper.untested(2);
           TreeHelper.setAttribute(mml, 'padding', 0);
         }
       }
@@ -638,13 +644,15 @@ export class ArrayItem extends BaseItem {
         // mml = MML.mstyle(mml).With({scriptlevel: scriptlevel})}
       }
       if (this.getProperty('open') || this.getProperty('close')) {
-        // TODO: What to do about TEX?
+        // @test Cross Product Formula
         mml = ParserUtil.fenced(this.getProperty('open') as string, mml,
                                 this.getProperty('close') as string);
       }
       let newItem = new MmlItem(mml);
       if (this.getProperty('requireClose')) {
+        // @test: Label
         if (item.hasType('close')) {
+          // @test: Label
           return newItem;
         }
         throw new TexError(['MissingCloseBrace', 'Missing close brace']);
@@ -770,9 +778,7 @@ export class FnItem extends BaseItem {
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem fn');
     if (this.data[0]) {
-      TreeHelper.printSimple('case 1');
       if (item.isOpen) {
-        TreeHelper.printSimple('case 2');
         return true;
       }
       if (!item.hasType('fn')) {

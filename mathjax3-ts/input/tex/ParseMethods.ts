@@ -1326,12 +1326,11 @@ export namespace ParseMethods {
                         spacing: string, vspacing: string, style: string,
                         raggedHeight: boolean) {
     TreeHelper.printMethod('Array');
-    console.log("HERE");
-    // @test Array1, Array2, Array Test
-    if (!align) {align = parser.GetArgument('\\begin{' + begin.getName() + '}')}
-    console.log(align);
+    if (!align) {
+      // @test Array Single
+      align = parser.GetArgument('\\begin{' + begin.getName() + '}');
+    }
     let lines = ('c' + align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g, '$1');
-    console.log(lines);
     align = align.replace(/[^clr]/g, '').split('').join(' ');
     align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
     const array = new sitem.ArrayItem();
@@ -1341,26 +1340,46 @@ export namespace ParseMethods {
       rowspacing: (vspacing || '4pt')
     };
     if (lines.match(/[|:]/)) {
+      // @test Enclosed left right
       if (lines.charAt(0).match(/[|:]/)) {
+        // @test Enclosed left right, Enclosed left
         array.frame.push('left');
         array.dashed = lines.charAt(0) === ':';
       }
       if (lines.charAt(lines.length-1).match(/[|:]/)) {
+        // @test Enclosed left right, Enclosed right
         array.frame.push('right');
       }
+      // @test Enclosed left right
       lines = lines.substr(1,lines.length-2);
       array.arraydef.columnlines =
         lines.split('').join(' ').replace(/[^|: ]/g,'none').replace(/\|/g,'solid').replace(/:/g,'dashed');
     }
-    console.log('ArrayDef');
-    console.log(array.arraydef);
     // TEMP: Changes here;
-    if (open)  {array.setProperty('open', parser.convertDelimiter(open));}
-    if (close) {array.setProperty('close', parser.convertDelimiter(close));}
-    if (style === 'D') {array.arraydef.displaystyle = true}
-    else if (style) {array.arraydef.displaystyle = false}
-    if (style === 'S') {array.arraydef.scriptlevel = 1} // FIXME: should use mstyle?
-    if (raggedHeight)  {array.arraydef.useHeight = false}
+    if (open)  {
+      // @test Cross Product
+      array.setProperty('open', parser.convertDelimiter(open));
+    }
+    if (close) {
+      // @test Cross Product
+      array.setProperty('close', parser.convertDelimiter(close));
+    }
+    if (style === 'D') {
+      TreeHelper.untested(30);
+      array.arraydef.displaystyle = true;
+    }
+    else if (style) {
+      TreeHelper.untested(31);
+      array.arraydef.displaystyle = false;
+    }
+    if (style === 'S') {
+      TreeHelper.untested(32);
+      array.arraydef.scriptlevel = 1;
+    } // FIXME: should use mstyle?
+    if (raggedHeight)  {
+      TreeHelper.untested(33);
+      array.arraydef.useHeight = false;
+    }
     parser.Push(begin);
     return array;
   };
