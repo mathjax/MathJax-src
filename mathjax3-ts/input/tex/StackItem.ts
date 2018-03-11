@@ -174,7 +174,7 @@ export class BaseItem implements StackItem {
       return this.data[0];
     }
     // @test Two Identifiers
-    return TreeHelper.createNode('mrow', this.data, {});
+    return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this.data, {});
     // VS: OLD
     // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
   }
@@ -441,7 +441,6 @@ export class LeftItem extends BaseItem {
     // @test Missing Right
     TreeHelper.printMethod('Checkitem left');
     if (item.hasType('right')) {
-      // TODO: What to do about the TEX.fenced?
       return new MmlItem(
         ParserUtil.fenced(this.getProperty('delim') as string, this.mmlData(),
                           item.getProperty('delim') as string));

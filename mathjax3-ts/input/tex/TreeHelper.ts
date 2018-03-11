@@ -94,24 +94,9 @@ export namespace TreeHelper {
 
 
   export function createMath(math: MmlNode): MmlNode  {
-    let mathNode;
-  if (math.isInferred) {
-    mathNode = createNode('math', [math], {});
-  } else {
-    // TODO: We should not need this case!
-    if (math.isKind('mrow') && !math.isKind('math')) {
-      mathNode = createNode('math', [], {});
-      let inferredMrow = (mathNode.childNodes[0] as MmlNode);
-      inferredMrow.attributes = math.attributes;
-      setProperties(inferredMrow, math.getAllProperties());
-      mathNode.setChildren(math.childNodes);
-    } else if (!math.isKind('math')) {
-      mathNode = createNode('math', [math], {});
-    } else {
-      mathNode = math;
-    }
-  }
-    return mathNode;
+    return math.isKind('math') ? math :
+      createNode('math',
+                 math.isInferred ? TreeHelper.getChildren(math) : [math], {});
   };
 
 
