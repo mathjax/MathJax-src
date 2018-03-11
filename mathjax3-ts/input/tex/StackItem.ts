@@ -620,20 +620,19 @@ export class ArrayItem extends BaseItem {
         // @test Enclosed left right
         // mml.hasFrame = true;
         if (this.arraydef['rowlines']) {
-          // @test Array framed dashed row, Array framed solid row, 
+          // @test Enclosed dashed row, Enclosed solid row, 
           this.arraydef['rowlines'] =
             (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
         // @test Enclosed left right
         mml = TreeHelper.createNode('menclose', [mml],
                              {notation: this.frame.join(' '), isFrame: true});
-        console.log(this.arraydef);
         // VS: OLD
         // mml = MML.menclose(mml).With({notation: this.frame.join(' '), isFrame: true});
-        if ((this.arraydef['columnlines'] || 'none') != 'none' ||
-            (this.arraydef['rowlines'] || 'none') != 'none') {
-          // @test Array framed dashed row, Array framed solid row
-          // @test Array framed dashed column, Array framed solid column
+        if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
+            (this.arraydef['rowlines'] || 'none') !== 'none') {
+          // @test Enclosed dashed row, Enclosed solid row
+          // @test Enclosed dashed column, Enclosed solid column
           // HTML-CSS jax implements this
           TreeHelper.setAttribute(mml, 'padding', 0);
         }

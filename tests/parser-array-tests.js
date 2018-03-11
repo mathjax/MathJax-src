@@ -98,8 +98,7 @@ parserTest.runTest(
         {"kind": "menclose",
          "texClass": 0,
          "attributes": {"notation": "left right",
-                        "isFrame": true,
-                        "padding": 0},
+                        "isFrame": true},
          "inherited": {
            "displaystyle": true,
            "scriptlevel": 0},
@@ -118,7 +117,7 @@ parserTest.runTest(
                "attributes": {"columnalign": "center",
                               "columnspacing": "1em",
                               "rowspacing": "4pt",
-                              "columnlines": "solid none"},
+                              "columnlines": ""},
                "inherited": {
                  "displaystyle": true,
                  "scriptlevel": 0},
@@ -1163,7 +1162,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Array framed dashed row',
+  'Enclosed dashed row',
   "\\begin{array}{|c|}a\\\\\\hdashline b\\end{array}",
   {"kind": "math",
    "texClass": 0,
@@ -1181,7 +1180,9 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "menclose",
          "texClass": 0,
-         "attributes": {"notation": "left right"},
+         "attributes": {"notation": "left right",
+                        "isFrame": true,
+                        "padding": 0},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1197,6 +1198,7 @@ parserTest.runTest(
                "texClass": 0,
                "attributes": {"rowspacing": "4pt",
                               "columnspacing": "1em",
+                              "columnalign": "center",
                               "rowlines": "dashed",
                               "columnlines": ""},
                "inherited": {"displaystyle": true,
@@ -1273,7 +1275,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Array framed solid row',
+  'Enclosed solid row',
   "\\begin{array}{|c|}a\\\\\\hline b\\end{array}",
   {"kind": "math",
    "texClass": 0,
@@ -1291,7 +1293,9 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "menclose",
          "texClass": 0,
-         "attributes": {"notation": "left right"},
+         "attributes": {"notation": "left right",
+                        "isFrame": true,
+                        "padding": 0},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1307,6 +1311,7 @@ parserTest.runTest(
                "texClass": 0,
                "attributes": {"rowspacing": "4pt",
                               "columnspacing": "1em",
+                              "columnalign":"center",
                               "rowlines": "solid",
                               "columnlines": ""},
                "inherited": {"displaystyle": true,
@@ -1383,7 +1388,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Array framed dashed column',
+  'Enclosed dashed column',
   "\\begin{array}{|c:c|}a&c\\\\b&d\\end{array}",
   {"kind": "math",
    "texClass": 0,
@@ -1401,7 +1406,9 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "menclose",
          "texClass": 0,
-         "attributes": {"notation": "left right"},
+         "attributes": {"notation": "left right",
+                        "isFrame": true,
+                        "padding": 0},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1543,7 +1550,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Array framed solid column',
+  'Enclosed solid column',
   "\\begin{array}{|c|c|}a&c\\\\b&d\\end{array}",
   {"kind": "math",
    "texClass": 0,
@@ -1561,7 +1568,9 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "menclose",
          "texClass": 0,
-         "attributes": {"notation": "left right"},
+         "attributes": {"notation": "left right",
+                        "isFrame": true,
+                        "padding": 0},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
