@@ -60,7 +60,7 @@ export namespace TreeHelper {
 
 
   export function createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
-    let node = factory.create(kind, def, children);
+    let node = factory.create(kind, {}, children);
     if (text) {
       node.appendChild(text);
     }

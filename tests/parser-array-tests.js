@@ -30,8 +30,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mtable",
          "texClass": 0,
-         "attributes": {"columnalign": "center",
-                        "columnspacing": "1em",
+         "attributes": {"columnspacing": "1em",
                         "rowspacing": "4pt"},
          "inherited": {
            "displaystyle": true,
@@ -114,8 +113,7 @@ parserTest.runTest(
             "childNodes": [
               {"kind": "mtable",
                "texClass": 0,
-               "attributes": {"columnalign": "center",
-                              "columnspacing": "1em",
+               "attributes": {"columnspacing": "1em",
                               "rowspacing": "4pt",
                               "columnlines": ""},
                "inherited": {
@@ -197,8 +195,7 @@ parserTest.runTest(
             "childNodes": [
               {"kind": "mtable",
                "texClass": 0,
-               "attributes": {"columnalign": "center",
-                              "columnspacing": "1em",
+               "attributes": {"columnspacing": "1em",
                               "rowspacing": "4pt",
                               "columnlines": ""},
                "inherited": {"displaystyle": true,
@@ -275,8 +272,7 @@ parserTest.runTest(
             "childNodes": [
               {"kind": "mtable",
                "texClass": 0,
-               "attributes": {"columnalign": "center",
-                              "columnspacing": "1em",
+               "attributes": {"columnspacing": "1em",
                               "rowspacing": "4pt",
                               "columnlines": ""},
                "inherited": {"displaystyle": true,
@@ -353,8 +349,7 @@ parserTest.runTest(
             "childNodes": [
               {"kind": "mtable",
                "texClass": 0,
-               "attributes": {"columnalign": "center",
-                              "columnspacing": "1em",
+               "attributes": {"columnspacing": "1em",
                               "rowspacing": "4pt"},
                "inherited": {"displaystyle": true,
                              "scriptlevel": 0},
@@ -430,8 +425,7 @@ parserTest.runTest(
             "childNodes": [
               {"kind": "mtable",
                "texClass": 0,
-               "attributes": {"columnalign": "center",
-                              "columnspacing": "1em",
+               "attributes": {"columnspacing": "1em",
                               "rowspacing": "4pt",
                               "rowlines": ""},
                "inherited": {"displaystyle": true,
@@ -508,8 +502,7 @@ parserTest.runTest(
             "childNodes": [
               {"kind": "mtable",
                "texClass": 0,
-               "attributes": {"columnalign": "center",
-                              "columnspacing": "1em",
+               "attributes": {"columnspacing": "1em",
                               "rowspacing": "4pt",
                               "rowlines": ""},
                "inherited": {"displaystyle": true,
@@ -571,8 +564,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mtable",
          "texClass": 0,
-         "attributes": {"columnalign": "center",
-                        "columnspacing": "1em",
+         "attributes": {"columnspacing": "1em",
                         "rowspacing": "4pt",
                         "columnlines": "",
                         "rowlines": "",
@@ -635,8 +627,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mtable",
          "texClass": 0,
-         "attributes": {"columnalign": "center",
-                        "columnspacing": "1em",
+         "attributes": {"columnspacing": "1em",
                         "rowspacing": "4pt",
                         "columnlines": "",
                         "rowlines": "",
@@ -990,8 +981,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mtable",
          "texClass": 0,
-         "attributes": {"columnalign": "center",
-                        "columnspacing": "1em",
+         "attributes": {"columnspacing": "1em",
                         "rowspacing": "4pt",
                         "rowlines": "dashed"},
          "inherited": {"displaystyle": true,
@@ -1085,8 +1075,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mtable",
          "texClass": 0,
-         "attributes": {"columnalign": "center",
-                        "columnspacing": "1em",
+         "attributes": {"columnspacing": "1em",
                         "rowspacing": "4pt",
                         "rowlines": "solid"},
          "inherited": {"displaystyle": true,
@@ -1198,7 +1187,6 @@ parserTest.runTest(
                "texClass": 0,
                "attributes": {"rowspacing": "4pt",
                               "columnspacing": "1em",
-                              "columnalign": "center",
                               "rowlines": "dashed",
                               "columnlines": ""},
                "inherited": {"displaystyle": true,
@@ -1311,7 +1299,6 @@ parserTest.runTest(
                "texClass": 0,
                "attributes": {"rowspacing": "4pt",
                               "columnspacing": "1em",
-                              "columnalign":"center",
                               "rowlines": "solid",
                               "columnlines": ""},
                "inherited": {"displaystyle": true,

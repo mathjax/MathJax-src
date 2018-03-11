@@ -804,7 +804,6 @@ export class FnItem extends BaseItem {
       }
       // @test Named Function
       const text = TreeHelper.createText(MmlEntities.ENTITIES.ApplyFunction);
-      // TODO: Texclass should probably be set and not given as attribute!
       const node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
       // VS: OLD
       // var node = MML.mo(MML.entity('#x2061')).With({texClass:MML.TEXCLASS.NONE});
