@@ -2223,7 +2223,7 @@ parserTest.runTest(
                "childNodes": [
                  {"kind": "mi",
                   "texClass": 0,
-                  "attributes": {},
+                  "attributes": {"mathvariant":"italic"},
                   "inherited": {
                     "displaystyle": false,
                     "scriptlevel": 2,
@@ -2455,7 +2455,8 @@ parserTest.runTest(
          "inherited":{
            "displaystyle":true,
            "scriptlevel":0,
-           "form":"infix"},
+           "form":"infix",
+           "accent":true},
          "properties":{},
          "childNodes":[
            {"kind":"text",
@@ -2473,7 +2474,7 @@ parserTest.runTest(
            {"kind":"text",
             "text":"c"}]},
         {"kind":"mo",
-         "texClass":2,
+         "texClass":3,
          "attributes":{},
          "inherited":{
            "displaystyle":true,
