@@ -360,6 +360,7 @@ export class SubsupItem extends BaseItem {
       }
       TreeHelper.setData(this.data[0], this.getProperty('position') as number, item.data[0]);
       if (this.getProperty('movesupsub') != null) {
+        // @test Limits Subsup (currently does not work! Check again!)
         TreeHelper.setProperties(this.data[0], {movesupsub: this.getProperty('movesupsub')} as PropertyList);
       }
       const result = new MmlItem(this.data[0]);

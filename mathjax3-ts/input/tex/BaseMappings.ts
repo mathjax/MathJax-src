@@ -150,7 +150,7 @@ export namespace BaseMappings {
                             movesupsub: true}],
     bigcup:       ['\u22C3', {texClass: TexConstant.TexClass.OP,
                             movesupsub: true}],
-    'int':        ['222B', {texClass: TexConstant.TexClass.OP}],
+    'int':        ['\u222B', {texClass: TexConstant.TexClass.OP}],
     intop:        ['\u222B', {texClass: TexConstant.TexClass.OP,
                             movesupsub: true, movablelimits: true}],
     iint:         ['\u222C', {texClass: TexConstant.TexClass.OP}],

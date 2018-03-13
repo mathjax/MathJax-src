@@ -57,7 +57,7 @@ export namespace TreeHelper {
   const defOut: boolean = false;
   const jsonOut: boolean = false;
   const simpleOut: boolean = false;
-
+  
 
   export function createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
     let node = factory.create(kind, {}, children);
@@ -65,7 +65,6 @@ export namespace TreeHelper {
       node.appendChild(text);
     }
     setProperties(node, def);
-    printJSON(node);
     return node;
   };
 
@@ -261,7 +260,7 @@ export namespace TreeHelper {
         ms = n as MmlMsubsup;
         newNode = (children[ms.sub] ?
          createNode('msub', [children[ms.base], children[ms.sub]], {}) :
-         createNode('msup', [children[ms.base], children[ms.sup]], {}))
+                   createNode('msup', [children[ms.base], children[ms.sup]], {}));
       } else {
         ms = n as MmlMunderover;
         newNode = (children[ms.under] ?

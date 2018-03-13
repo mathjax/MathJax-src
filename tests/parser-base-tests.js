@@ -2639,7 +2639,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mi",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"mathvariant": "italic"},
          "inherited": {
            "displaystyle": true,
            "scriptlevel": 0,
@@ -3275,6 +3275,44 @@ parserTest.runTest(
 );
 
 
+parserTest.runTest(
+  'MathChar0 Operator', '\\Rightarrow',
+  {"kind":"math",
+   "texClass":3,
+   "attributes":{"display":"block"},
+   "inherited":{"displaystyle":true,
+                "scriptlevel":0},
+   "properties":{},
+   "childNodes":[
+     {"kind":"mrow",
+      "texClass":3,
+      "attributes":{},
+      "inherited":{
+        "displaystyle":true,
+        "scriptlevel":0},
+      "properties":{},
+      "childNodes":[
+        {"kind":"mo",
+         "texClass":3,
+         "attributes":{"stretchy":false},
+         "inherited":{
+           "displaystyle":true,
+           "scriptlevel":0,
+           "form":"infix",
+           "accent":true,
+           "stretchy":true},
+         "properties":{},
+         "childNodes":[
+           {"kind":"text",
+            "text":"⇒"}],
+         "isEmbellished":true}
+      ],
+      "isInferred":true,
+      "isEmbellished":true}],
+   "isEmbellished":true}
+);
+
+
 // Tests for mathchar7.
 parserTest.runTest(
   'MathChar7 Single', '\\Upsilon',
@@ -3357,40 +3395,32 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  'MathChar7 Operator', '\\Rightarrow',
-  {"kind":"math",
-   "texClass":3,
-   "attributes":{"display":"block"},
-   "inherited":{"displaystyle":true,
-                "scriptlevel":0},
-   "properties":{},
-   "childNodes":[
-     {"kind":"mrow",
-      "texClass":3,
-      "attributes":{},
-      "inherited":{
-        "displaystyle":true,
-        "scriptlevel":0},
-      "properties":{},
-      "childNodes":[
-        {"kind":"mo",
-         "texClass":3,
-         "attributes":{"stretchy":false},
-         "inherited":{
-           "displaystyle":true,
-           "scriptlevel":0,
-           "form":"infix",
-           "accent":true,
-           "stretchy":true},
-         "properties":{},
-         "childNodes":[
-           {"kind":"text",
-            "text":"⇒"}],
-         "isEmbellished":true}
-      ],
-      "isInferred":true,
-      "isEmbellished":true}],
-   "isEmbellished":true}
+  'MathChar7 Operator', '\\And',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {"mathvariant": "normal"},
+         "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "&"}]}],
+      "isInferred": true}]}
 );
 
 parserTest.runTest(

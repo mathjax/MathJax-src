@@ -98,6 +98,7 @@ export namespace ParseMethods {
     // @test Large Set
     const textNode = TreeHelper.createText(mchar.char);
     const node = TreeHelper.createNode('mo', [], def, textNode);
+    parser.secondPass.push(node as MmlMo);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(parser.mmlToken(node));
   };
@@ -114,6 +115,7 @@ export namespace ParseMethods {
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
     const textNode = TreeHelper.createText(mchar.char);
     const node = TreeHelper.createNode('mi', [], def, textNode);
+    node.attributes.set('mathvariant', def.mathvariant);
     // setVariant(node, def.mathvariant);
     // PROBLEM: Attributes have to be explicitly set, but then interfere with
     // AMS tests. Try setting variant of node!
@@ -533,11 +535,11 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Limits');
     // @test Limits
     let op = parser.stack.Prev(true);
-    // TODO: Lookup in Operator Table.
-    if (!op || (TreeHelper.getTexClass(op) !== TEXCLASS.OP &&
+    // Get the texclass for the core operator. Q: Davide?
+    if (!op || (TreeHelper.getTexClass(TreeHelper.getCore(op)) !== TEXCLASS.OP &&
                 TreeHelper.getProperty(op, 'movesupsub') == null)) {
       // @test Limits Error
-      throw new TexError(['MisplacedLimits','%1 is allowed only on operators',name]);
+      throw new TexError(['MisplacedLimits', '%1 is allowed only on operators', name]);
     }
     const top = parser.stack.Top();
     let node;
