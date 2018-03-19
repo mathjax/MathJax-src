@@ -780,6 +780,8 @@ export namespace ParseMethods {
         def['mathvariant'] = TexConstant.Variant.NORMAL;
         const textNode = TreeHelper.createText(match[1]);
         node = TreeHelper.createNode('mi', [], def, textNode);
+        // TODO: Check why this is that necessary?
+        node.attributes.set('mathvariant', def['mathvariant']);
         mml = new sitem.FnItem(parser.mmlToken(node));
       } else {
         // @test Mathop Cal

@@ -8,6 +8,9 @@
 
 ** padding="0" should not be there?
 
+*** Add a test for three columns for colums solid node
+
+*** clean isFrame (could be a private data attribute)
 
 * Running test Array framed dashed row	[31mFAIL[37m
   Actual: 
@@ -64,6 +67,7 @@
 
 ** Explicit attribute mathvariant=italic
 
+   Ignore
 
 * Running test Negation Complex	[31mFAIL[37m
   Actual: 
@@ -73,6 +77,8 @@
 
 
 ** texclass of neither-less-than-nor-equal should be 3 not 2
+
+   3 is correct.
 
 ** Why is there an inherited accent=true for the \not\rightarrow?
 
@@ -94,8 +100,12 @@
 
 ** Why is there a double mrow?
 
-** There are extra attributes as in: symmetric, stretchy, fence in the attributes. Should that be the case?
+   Ignore, could be useful for left/right.
 
+** There are extra attributes as in: symmetric, stretchy, fence in the attributes. Should that be the case?
+  
+   They should be there.
+   Always set symmetric etc. true by default. Important for arrows etc.
 
 * Fenced 2 
 
@@ -144,9 +154,19 @@
 * Limits SubSup
 
 ** movablelimits:false also in attributes
+   Only mo s need it. Sort out explicitly in mi to mo.
+   Non mo need it in properties.
 
 ** Check whether taking the coreMO texclass is valid.
 
 * Limits UnderOver
 
 ** movablelimits:false also in attributes
+
+* Modulo
+
+** mathchoice: How are we going to handle this in the future?
+
+* Mathop
+
+

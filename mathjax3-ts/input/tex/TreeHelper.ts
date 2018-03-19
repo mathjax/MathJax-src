@@ -42,16 +42,16 @@ export namespace TreeHelper {
   const visitor: JsonMmlVisitor = new JsonMmlVisitor();
 
   const attrs: String[] = ['autoOP',
-                         'fnOP',
-                         'movesupsub',
-                         'subsupOK',
-                         'texprimestyle',
-                         'useHeight',
-                         'variantForm',
-                         'texWithDelims',
-                         'open',
-                         'close'
-                        ];
+                           'fnOP',
+                           'movesupsub',
+                           'subsupOK',
+                           'texprimestyle',
+                           'useHeight',
+                           'variantForm',
+                           'texWithDelims',
+                           'open',
+                           'close'
+                          ];
 
   const methodOut: boolean = false;
   const defOut: boolean = false;
@@ -129,6 +129,7 @@ export namespace TreeHelper {
   export function setProperties(node: MmlNode, properties: PropertyList): void {
     printDef(properties);
     for (const name of Object.keys(properties)) {
+      console.log(name);
       let value = properties[name];
       if (name === 'texClass') {
         node.texClass = (value as number);
