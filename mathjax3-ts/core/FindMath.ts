@@ -29,6 +29,11 @@ import {ProtoItem} from './MathItem.js';
  *  The FindMath interface
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface FindMath<N, T, D> {
     /*
      * One of two possibilities:  Look through a DOM element,
@@ -41,6 +46,12 @@ export interface FindMath<N, T, D> {
 /*****************************************************************/
 /*
  *  The FindMath abstract class
+ */
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
 

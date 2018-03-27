@@ -30,9 +30,12 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmrow wrapper for the MmlMrow object
+ * The CHTMLmrow wrapper for the MmlMrow object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMrow.prototype.kind;
 

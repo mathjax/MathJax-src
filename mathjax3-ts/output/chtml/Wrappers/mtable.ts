@@ -32,9 +32,12 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmtable wrapper for the MmlMtable object
+ * The CHTMLmtable wrapper for the MmlMtable object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMtable.prototype.kind;
 

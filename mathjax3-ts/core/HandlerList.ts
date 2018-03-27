@@ -36,6 +36,11 @@ import {DOMAdaptor} from './DOMAdaptor.js';
  *  and when one can, it is asked to create its associated MathDocument.
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>>  {
 
     /*

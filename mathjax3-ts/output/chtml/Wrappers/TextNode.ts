@@ -31,6 +31,11 @@ import {CharOptions} from '../FontData.js';
  *  The CHTMLTextNode wrapper for the TextNode object
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = TextNode.prototype.kind;
 

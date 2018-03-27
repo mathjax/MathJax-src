@@ -37,9 +37,12 @@ const DELTA = 1.1;
 
 /*****************************************************************/
 /*
- *  The CHTMLmunder wrapper for the MmlMunder object
+ * The CHTMLmunder wrapper for the MmlMunder object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
     public static kind = MmlMunder.prototype.kind;
 
@@ -125,9 +128,12 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
 
 /*****************************************************************/
 /*
- *  The CHTMLmover wrapper for the MmlMover object
+ * The CHTMLmover wrapper for the MmlMover object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
     public static kind = MmlMover.prototype.kind;
 
@@ -208,9 +214,12 @@ export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
 
 /*****************************************************************/
 /*
- *  The CHTMLmunderover wrapper for the MmlMunderover object
+ * The CHTMLmunderover wrapper for the MmlMunderover object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
     public static kind = MmlMunderover.prototype.kind;
 

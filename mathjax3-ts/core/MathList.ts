@@ -29,6 +29,11 @@ import {MathItem, AbstractMathItem} from './MathItem.js';
  *  The MathList interface (extends LinkedList<MathItem>)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface MathList<N, T, D> extends LinkedList<MathItem<N, T, D>> {
     /*
      * Test if one math item is before the other in the document (a < b)
@@ -44,6 +49,11 @@ export interface MathList<N, T, D> extends LinkedList<MathItem<N, T, D>> {
  *  The MathList abstract class (extends LinkedList<MathItem>)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export abstract class AbstractMathList<N, T, D>
     extends LinkedList<MathItem<N, T, D>> implements MathList<N, T, D> {
 

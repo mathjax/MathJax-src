@@ -40,6 +40,11 @@ import {BBox} from './chtml/BBox.js';
  *  Implements the CHTML class (extends AbstractOutputJax)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
 
     public static NAME: string = 'CHTML';

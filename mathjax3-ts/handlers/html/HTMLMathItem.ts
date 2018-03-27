@@ -31,6 +31,11 @@ import {HTMLDocument} from './HTMLDocument.js';
  *  Implements the HTMLMathItem class (extends AbstractMathItem)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
 
     public static STATE = AbstractMathItem.STATE;

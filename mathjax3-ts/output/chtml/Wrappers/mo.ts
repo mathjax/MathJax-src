@@ -40,7 +40,11 @@ const DirectionVH: {[n: number]: string} = {
 
 /*****************************************************************/
 /*
- *  The CHTMLmo wrapper for the MmlMo object
+ * The CHTMLmo wrapper for the MmlMo object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMo.prototype.kind;

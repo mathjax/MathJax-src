@@ -35,10 +35,13 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  A base class for msup/msub/msubsup and munder/mover/munderover
- *  wrapper implementations
+ * A base class for msup/msub/msubsup and munder/mover/munderover
+ * wrapper implementations
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = 'scriptbase';
 

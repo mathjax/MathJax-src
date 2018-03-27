@@ -23,6 +23,9 @@
 
 import {HTMLAdaptor} from './HTMLAdaptor.js';
 
+/*
+ * Function for creating an HTML adaptor using jsdom
+ */
 export function jsdomAdaptor(JSDOM: any) {
     return new HTMLAdaptor<HTMLElement, Text, Document>(new JSDOM().window);
 }

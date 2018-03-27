@@ -32,6 +32,11 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  *  The InputJax interface
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface InputJax<N, T, D> {
     /*
      * The name of the input jax subclass (e.g,. 'TeX')
@@ -89,6 +94,11 @@ export interface InputJax<N, T, D> {
  *  The abstract InputJax class
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
 
     public static NAME: string = 'generic';

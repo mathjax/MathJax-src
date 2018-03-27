@@ -29,9 +29,12 @@ import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmtd wrapper for the MmlMtd object
+ * The CHTMLmtd wrapper for the MmlMtd object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMtd.prototype.kind;
 

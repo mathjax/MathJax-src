@@ -31,6 +31,11 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  *  The OutputJax interface
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface OutputJax<N, T, D> {
     /*
      * The name of this output jax class
@@ -91,6 +96,11 @@ export interface OutputJax<N, T, D> {
  *  The OutputJax abstract class
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
 
     public static NAME: string = 'generic';

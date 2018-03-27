@@ -37,14 +37,20 @@ import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
  * These represent the Text elements that make up a single
  * string in the list of strings to be searched for math
  * (multiple consecutive Text nodes can form a single string).
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
  */
 export type HTMLNodeArray<N, T> = [N | T, number][][];
 
 /*****************************************************************/
 /*
  *  The HTMLDocument class (extends AbstractMathDocument)
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
     public static KIND: string = 'HTML';

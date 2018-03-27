@@ -38,6 +38,12 @@ export type Delims = [string, string];
  *
  *  Locates AsciiMath expressions within strings
  */
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
 
     public static OPTIONS: OptionList = {

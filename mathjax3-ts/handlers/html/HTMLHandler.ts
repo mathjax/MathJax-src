@@ -31,6 +31,11 @@ import {OptionList} from '../../util/Options.js';
  *  Implements the HTMLHandler class (extends AbstractHandler)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
 
     adaptor: MinHTMLAdaptor<N, T, D>;

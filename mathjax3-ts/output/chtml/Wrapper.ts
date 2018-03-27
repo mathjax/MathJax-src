@@ -78,6 +78,11 @@ interface CSSStyle extends CSSStyleDeclaration {
  *  The base CHTMLWrapper class
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper<N, T, D>> {
 
     public static kind: string = 'unknown';

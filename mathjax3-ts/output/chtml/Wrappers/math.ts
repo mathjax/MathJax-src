@@ -29,9 +29,12 @@ import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmath wrapper for the MmlMath object
+ * The CHTMLmath wrapper for the MmlMath object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMath.prototype.kind;
 

@@ -33,6 +33,11 @@ import {FindTeX} from './tex/FindTeX.js';
  *  Implements the TeX class (extends AbstractInputJax)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
     public static NAME: string = 'TeX';

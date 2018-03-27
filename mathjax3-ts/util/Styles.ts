@@ -159,7 +159,7 @@ function combineSame(name: string) {
  * Patterns for the parts of a boarder
  */
 const BORDER: {[name: string]: RegExp} = {
-    width: /^(?:[\d.]+(?:[a-z]+)|thin|medium|thick|inherti|initial|unset)$/,
+    width: /^(?:[\d.]+(?:[a-z]+)|thin|medium|thick|inherit|initial|unset)$/,
     style: /^(?:none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|inherit|initial|unset)$/
 };
 

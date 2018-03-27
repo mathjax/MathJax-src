@@ -28,9 +28,12 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmspace wrapper for the MmlMspace object
+ * The CHTMLmspace wrapper for the MmlMspace object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMspace.prototype.kind;
 

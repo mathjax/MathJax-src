@@ -514,7 +514,7 @@ export class MmlEntities {
 
     /*
      * @param {string} text  The text whose entities are to be replaced
-     * @return {string}      The text with entiries replaced
+     * @return {string}      The text with entries replaced
      */
     public translate(text: string) {
         return text.replace(/&([a-z][a-z0-9]*|#(?:[0-9]+|x[0-9a-f]+));/ig, this.REPLACE);

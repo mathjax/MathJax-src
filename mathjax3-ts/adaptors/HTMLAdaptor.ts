@@ -28,6 +28,11 @@ import {AttributeData, AbstractDOMAdaptor, DOMAdaptor} from '../core/DOMAdaptor.
 /*
  * The minimum fields needed for a Document
  */
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
 export interface MinDocument<N, T> {
     documentElement: N;
     head: N;
@@ -40,6 +45,11 @@ export interface MinDocument<N, T> {
 /*****************************************************************/
 /*
  * The minimum fields needed for an HTML Element
+ */
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
  */
 export interface MinHTMLElement<N, T> {
     nodeName: string;
@@ -75,6 +85,11 @@ export interface MinHTMLElement<N, T> {
 /*
  * The minimum fields needed for a Text element
  */
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
 export interface MinText<N, T> {
     nodeName: string;
     nodeValue: string;
@@ -88,6 +103,11 @@ export interface MinText<N, T> {
 /*
  * The minimum fields needed for a DOMParser
  */
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
 export interface MinDOMParser<D> {
     parseFromString(text: string, format?: string): D;
 }
@@ -95,6 +115,10 @@ export interface MinDOMParser<D> {
 /*****************************************************************/
 /*
  * The minimum fields needed for a Window
+ */
+
+/*
+ * @template D  The Document class
  */
 export interface MinWindow<D> {
     document: D;
@@ -112,6 +136,12 @@ export interface MinWindow<D> {
 /*
  * The minimum needed for an HTML Adaptor
  */
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
     window: MinWindow<D>
 }
@@ -126,6 +156,11 @@ export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
  *  D = Document class
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class HTMLAdaptor<N extends MinHTMLElement<N, T>,
                          T extends MinText<N, T>,
                          D extends MinDocument<N, T>>
@@ -321,7 +356,7 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
      * @override
      */
     public value(node: N | T) {
-        return node.nodeValue;
+        return node.nodeValue || '';
     }
 
     /*

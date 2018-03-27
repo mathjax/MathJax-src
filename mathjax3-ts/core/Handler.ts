@@ -30,6 +30,11 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  *  The Handler interface
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface Handler<N, T, D> {
     /*
      * The name of the handler class
@@ -71,6 +76,11 @@ export interface Handler<N, T, D> {
  *  The default MathDocument class (subclasses use their own)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 class DefaultMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {}
 
 /*****************************************************************/
@@ -78,6 +88,11 @@ class DefaultMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {}
  *  The Handler interface
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
 
     /*

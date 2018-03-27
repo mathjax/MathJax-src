@@ -35,12 +35,13 @@ export type AttributeData = {
 /*****************************************************************/
 /*
  *  The interface for the DOMAdaptor
- *
- *  N = HTMLElement node class
- *  T = Text node class
- *  D = Document class
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface DOMAdaptor<N, T, D> {
     /*
      * Document in which the nodes are to be created
@@ -299,6 +300,11 @@ export interface DOMAdaptor<N, T, D> {
  *  Abstract DOMAdaptor class for creating HTML elements
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D> {
 
     /*
@@ -483,7 +489,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /*
      * @override
      */
-    public abstract outerHTML(node: N): string; 
+    public abstract outerHTML(node: N): string;
 
     /*
      * @override

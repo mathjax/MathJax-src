@@ -32,9 +32,12 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmsqrt wrapper for the MmlMsqrt object
+ * The CHTMLmsqrt wrapper for the MmlMsqrt object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMsqrt.prototype.kind;
 

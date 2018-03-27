@@ -37,6 +37,9 @@ declare global {
     }
 }
 
+/*
+ * Function to create an HTML adpator for browsers
+ */
 export function browserAdaptor() {
     return new HTMLAdaptor<HTMLElement, Text, Document>(window);
 }

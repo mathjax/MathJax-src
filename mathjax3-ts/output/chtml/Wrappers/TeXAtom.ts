@@ -28,9 +28,12 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLTeXAtom wrapper for the TeXAtom object
+ * The CHTMLTeXAtom wrapper for the TeXAtom object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLTeXAtom<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = TeXAtom.prototype.kind;
 

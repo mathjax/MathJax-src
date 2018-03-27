@@ -32,9 +32,12 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmtr wrapper for the MmlMtr object
+ * The CHTMLmtr wrapper for the MmlMtr object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMtr.prototype.kind;
 
@@ -126,9 +129,12 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
 
 /*****************************************************************/
 /*
- *  The CHTMLlabeledmtr wrapper for the MmlMlabeledtr object
+ * The CHTMLlabeledmtr wrapper for the MmlMlabeledtr object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmlabeledtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMlabeledtr.prototype.kind;
 

@@ -29,9 +29,12 @@ import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLsemantics wrapper for the MmlSemantics object
+ * The CHTMLsemantics wrapper for the MmlSemantics object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLsemantics<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlSemantics.prototype.kind;
 
@@ -64,9 +67,12 @@ export class CHTMLsemantics<N, T, D> extends CHTMLWrapper<N, T, D> {
 
 /*****************************************************************/
 /*
- *  The CHTMLannotation wrapper for the MmlAnnotation object
+ * The CHTMLannotation wrapper for the MmlAnnotation object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlAnnotation.prototype.kind;
 
@@ -90,18 +96,24 @@ export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
 
 /*****************************************************************/
 /*
- *  The CHTMLannotationXML wrapper for the MmlAnnotationXML object
+ * The CHTMLannotationXML wrapper for the MmlAnnotationXML object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlAnnotationXML.prototype.kind;
 }
 
 /*****************************************************************/
 /*
- *  The CHTMLxml wrapper for the XMLNode object
+ * The CHTMLxml wrapper for the XMLNode object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLxml<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = XMLNode.prototype.kind;
 

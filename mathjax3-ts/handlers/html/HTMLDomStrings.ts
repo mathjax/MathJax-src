@@ -26,6 +26,9 @@ import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 
 /*
  *  List of consecutive text nodes and their text lengths
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
  */
 export type HTMLNodeList<N, T> = [N | T, number][];
 
@@ -36,6 +39,11 @@ export type HTMLNodeList<N, T> = [N | T, number][];
  *  A class for extracting the text from DOM trees
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class HTMLDomStrings<N, T, D> {
 
     public static OPTIONS: OptionList = {

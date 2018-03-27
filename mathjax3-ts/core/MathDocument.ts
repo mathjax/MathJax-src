@@ -51,6 +51,11 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  *  interact with MathJax.
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface MathDocument<N, T, D> {
     /*
      * The document being processed (e.g., DOM document, or Markdown string)
@@ -201,11 +206,21 @@ export type MathProcessed = {
 /*
  * Defaults used when input and output jax aren't specified
  */
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 class DefaultInputJax<N, T, D> extends AbstractInputJax<N, T, D> {
     public compile(math: MathItem<N, T, D>) {
         return null as MmlNode;
     }
 }
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 class DefaultOutputJax<N, T, D> extends AbstractOutputJax<N, T, D> {
     public typeset(math: MathItem<N, T, D>, document: MathDocument<N, T, D> = null) {
         return null as N;
@@ -214,6 +229,11 @@ class DefaultOutputJax<N, T, D> extends AbstractOutputJax<N, T, D> {
         return null as N;
     }
 }
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 class DefaultMathList<N, T, D> extends AbstractMathList<N, T, D> {}
 
 let errorFactory = new MmlFactory();
@@ -224,6 +244,11 @@ let errorFactory = new MmlFactory();
  *  Implements the abstract MathDocument class
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T, D> {
 
     public static KIND: string = 'MathDocument';

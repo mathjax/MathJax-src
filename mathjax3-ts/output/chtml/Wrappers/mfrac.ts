@@ -30,9 +30,12 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmfrac wrapper for the MmlMfrac object
+ * The CHTMLmfrac wrapper for the MmlMfrac object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMfrac.prototype.kind;
 

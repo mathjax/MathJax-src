@@ -28,6 +28,10 @@ import {BBox} from '../BBox.js';
 /*****************************************************************/
 /*
  *  The CHTMLmi wrapper for the MmlMi object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMi.prototype.kind;

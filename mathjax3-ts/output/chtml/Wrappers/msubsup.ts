@@ -31,9 +31,12 @@ import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmsub wrapper for the MmlMsub object
+ * The CHTMLmsub wrapper for the MmlMsub object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmsub<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsub.prototype.kind;
 
@@ -57,9 +60,12 @@ export class CHTMLmsub<N, T, D> extends CHTMLscriptbase<N, T, D> {
 
 /*****************************************************************/
 /*
- *  The CHTMLmsup wrapper for the MmlMsup object
+ * The CHTMLmsup wrapper for the MmlMsup object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsup.prototype.kind;
 
@@ -86,9 +92,12 @@ export class CHTMLmsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
 
 /*****************************************************************/
 /*
- *  The CHTMLmsubsup wrapper for the MmlMsubsup object
+ * The CHTMLmsubsup wrapper for the MmlMsubsup object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmsubsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsubsup.prototype.kind;
 

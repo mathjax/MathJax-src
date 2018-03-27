@@ -34,6 +34,10 @@ import {MmlNode} from './MmlTree/MmlNode.js';
  *  the string, and the delimiter at that location).
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
 export type Location<N, T> = {
     i?: number;
     n?: number;
@@ -76,6 +80,11 @@ export type BBox = {
  *  and so on.
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export interface MathItem<N, T, D> {
     /*
      * The string represeting the expression to be processed
@@ -194,6 +203,10 @@ export interface MathItem<N, T, D> {
  *  is translated back into the actual node location in the DOM).
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
 export type ProtoItem<N, T> = {
     math: string;            // The math expression itself
     start: Location<N, T>;   // The starting location of the math
@@ -207,6 +220,11 @@ export type ProtoItem<N, T> = {
 /*
  *  Produce a proto math item that can be turned into a MathItem
  */
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
 export function protoItem<N, T>(open: string, math: string, close: string, n: number,
                                 start: number, end: number, display: boolean = null) {
     let item: ProtoItem<N, T> = {open: open, math: math, close: close,
@@ -219,6 +237,11 @@ export function protoItem<N, T>(open: string, math: string, close: string, n: nu
  *  Implements the MathItem class
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
     public static STATE = {

@@ -28,9 +28,12 @@ import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.
 
 /*****************************************************************/
 /*
- *  The CHTMLms wrapper for the MmlMs object
+ * The CHTMLms wrapper for the MmlMs object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLms<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMs.prototype.kind;
 

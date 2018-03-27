@@ -37,6 +37,11 @@ const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
  *  Implements the FindMathML object (extends AbstractFindMath)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
 
     public static OPTIONS: OptionList = {};

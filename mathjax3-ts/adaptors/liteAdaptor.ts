@@ -160,6 +160,10 @@ export class LiteDocument {
 /*
  * Implements a lightweight DocumentFragment or NodeList replacement
  */
+
+/*
+ * @template N  The HTMLElement node class
+ */
 export class LiteList<N> {
     /*
      * The nodes held in the fragment
@@ -520,8 +524,8 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     public serializeInner(adaptor: LiteAdaptor, node: LiteElement) {
         return adaptor.childNodes(node).map(x => {
             const kind = adaptor.kind(x);
-            return (kind === '#text' ? this.protectHTML(adaptor.value(x as LiteText)) :
-                    kind === '#comment' ? adaptor.value(x as LiteText) :
+            return (kind === '#text' ? this.protectHTML(adaptor.value(x)) :
+                    kind === '#comment' ? adaptor.value(x) :
                     this.serialize(adaptor, x as LiteElement));
         }).join('');
     }
@@ -901,8 +905,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     /*
      * @override
      */
-    public value(node: LiteText) {
-        return node.value;
+    public value(node: LiteNode | LiteText) {
+        return (node.kind === '#text' ? (node as LiteText).value : '');
     }
 
     /*

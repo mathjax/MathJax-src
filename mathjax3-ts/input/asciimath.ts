@@ -33,6 +33,11 @@ import {FindAsciiMath} from './asciimath/FindAsciiMath.js';
  *  Implements the AsciiMath class (extends AbstractInputJax)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
 
     public static NAME: string = 'AsciiMath';

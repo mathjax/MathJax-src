@@ -30,9 +30,12 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmroot wrapper for the MmlMroot object (extends CHTMLmsqrt)
+ * The CHTMLmroot wrapper for the MmlMroot object (extends CHTMLmsqrt)
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
 export class CHTMLmroot<N, T, D> extends CHTMLmsqrt<N, T, D> {
     public static kind = MmlMroot.prototype.kind;
 

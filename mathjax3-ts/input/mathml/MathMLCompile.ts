@@ -34,6 +34,11 @@ import {DOMAdaptor} from '../../core/DOMAdaptor.js';
  *  internal MmlNode conversion.
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class MathMLCompile<N, T, D> {
 
     /*

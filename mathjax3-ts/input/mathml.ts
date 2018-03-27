@@ -35,6 +35,11 @@ import {MathMLCompile} from './mathml/MathMLCompile.js';
  *  Implements the MathML class (extends AbstractInputJax)
  */
 
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
 
     public static NAME: string = 'MathML';

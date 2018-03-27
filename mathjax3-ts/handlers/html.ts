@@ -28,7 +28,11 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
 /*
  * Create the HTML handler object and register it with MathJax.
  *
- * @param{DOMAdaptor} adaptor  The DOM adaptor to use with HTML
+ * @param{DOMAdaptor<N,T,D>} adaptor  The DOM adaptor to use with HTML
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export function RegisterHTMLHandler<N, T, D>(adaptor: DOMAdaptor<N, T, D>) {
     MathJax.handlers.register(new HTMLHandler<N, T, D>(adaptor));
