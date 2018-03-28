@@ -32,7 +32,7 @@ declare function require(name: string): Object;
  */
 export function asyncLoad(name: string) {
     if (name.charAt(0) === '.') {
-        name = __dirname + name.replace(/\.\.?/,'/..');
+        name = __dirname + name.replace(/^\.\.?/,'/..');
     }
     if (typeof(System) !== 'undefined') {
         return System.import(name);
