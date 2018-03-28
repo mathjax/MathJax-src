@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     THORN: '\u00DE',
     TRADE: '\u2122',
     TSHcy: '\u040B',

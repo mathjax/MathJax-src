@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     LJcy: '\u0409',
     LT: '\u003C',
     Lacute: '\u0139',

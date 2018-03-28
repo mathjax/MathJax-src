@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     YAcy: '\u042F',
     YIcy: '\u0407',
     YUcy: '\u042E',

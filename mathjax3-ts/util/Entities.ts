@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {retryAfter} from '../../util/Retries.js';
-import {asyncLoad} from '../../util/AsyncLoad.js';
-import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
+import {retryAfter} from './Retries.js';
+import {asyncLoad} from './AsyncLoad.js';
+import {userOptions, defaultOptions, OptionList} from './Options.js';
 
 /*
  * The type for lists of entities
@@ -36,7 +36,7 @@ export type EntityList = {[name: string]: string};
  *  The class for converting entities to characters
  */
 
-export class MmlEntities {
+export class Entities {
     /*
      *  Options controlling the process of conversion
      */
@@ -46,6 +46,7 @@ export class MmlEntities {
 
     /*
      *  The entity name-to-value translation table
+     *  (basic math entities -- others are loaded from external files)
      */
     public static ENTITIES: EntityList = {
         ApplyFunction: '\u2061',
@@ -494,7 +495,7 @@ export class MmlEntities {
      * @param {OptionList} options  The options to apply to this translator
      */
     public constructor(options: OptionList = {}) {
-        this.options = userOptions(defaultOptions({}, (this.constructor as typeof MmlEntities).OPTIONS), options);
+        this.options = userOptions(defaultOptions({}, (this.constructor as typeof Entities).OPTIONS), options);
         this.REPLACE = this.replace.bind(this);
     }
 
@@ -502,14 +503,14 @@ export class MmlEntities {
      * @return {EntityList}  The entities table
      */
     protected get entities() {
-        return (this.constructor as typeof MmlEntities).ENTITIES;
+        return (this.constructor as typeof Entities).ENTITIES;
     }
 
     /*
      * @return {{[name: string]: boolean}}  The table of loaded files
      */
     protected get loaded() {
-        return (this.constructor as typeof MmlEntities).loaded;
+        return (this.constructor as typeof Entities).loaded;
     }
 
     /*
@@ -542,7 +543,7 @@ export class MmlEntities {
             let loaded = this.loaded;
             if (!loaded[file]) {
                 loaded[file] = true;
-                retryAfter(asyncLoad('mathjax/input/mathml/js/entities/' + file + '.js'));
+                retryAfter(asyncLoad('mathjax3/util/entities/' + file + '.js'));
             }
         }
         return match;

@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     Afr: '\uD835\uDD04',
     Bfr: '\uD835\uDD05',
     Cfr: '\u212D',

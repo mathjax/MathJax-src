@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     DD: '\u2145',
     DDotrahd: '\u2911',
     DJcy: '\u0402',

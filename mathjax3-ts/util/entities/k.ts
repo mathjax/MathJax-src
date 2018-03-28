@@ -15,15 +15,17 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
-    Jcirc: '\u0134',
-    Jcy: '\u0419',
-    Jsercy: '\u0408',
-    Jukcy: '\u0404',
-    jcirc: '\u0135',
-    jcy: '\u0439',
-    jsercy: '\u0458',
-    jukcy: '\u0454'
-}, 'j');
+Entities.add({
+    KHcy: '\u0425',
+    KJcy: '\u040C',
+    Kappa: '\u039A',
+    Kcedil: '\u0136',
+    Kcy: '\u041A',
+    kcedil: '\u0137',
+    kcy: '\u043A',
+    kgreen: '\u0138',
+    khcy: '\u0445',
+    kjcy: '\u045C'
+}, 'k');

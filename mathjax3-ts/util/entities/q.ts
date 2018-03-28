@@ -15,17 +15,14 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
-    KHcy: '\u0425',
-    KJcy: '\u040C',
-    Kappa: '\u039A',
-    Kcedil: '\u0136',
-    Kcy: '\u041A',
-    kcedil: '\u0137',
-    kcy: '\u043A',
-    kgreen: '\u0138',
-    khcy: '\u0445',
-    kjcy: '\u045C'
-}, 'k');
+Entities.add({
+    QUOT: '\u0022',
+    qint: '\u2A0C',
+    qprime: '\u2057',
+    quaternions: '\u210D',
+    quatint: '\u2A16',
+    quest: '\u003F',
+    questeq: '\u225F'
+}, 'q');

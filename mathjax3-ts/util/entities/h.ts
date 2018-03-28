@@ -15,27 +15,32 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
-    xcap: '\u22C2',
-    xcirc: '\u25EF',
-    xcup: '\u22C3',
-    xdtri: '\u25BD',
-    xhArr: '\u27FA',
-    xharr: '\u27F7',
-    xlArr: '\u27F8',
-    xlarr: '\u27F5',
-    xmap: '\u27FC',
-    xnis: '\u22FB',
-    xodot: '\u2A00',
-    xoplus: '\u2A01',
-    xotime: '\u2A02',
-    xrArr: '\u27F9',
-    xrarr: '\u27F6',
-    xsqcup: '\u2A06',
-    xuplus: '\u2A04',
-    xutri: '\u25B3',
-    xvee: '\u22C1',
-    xwedge: '\u22C0'
-}, 'x');
+Entities.add({
+    HARDcy: '\u042A',
+    Hcirc: '\u0124',
+    HilbertSpace: '\u210B',
+    HorizontalLine: '\u2500',
+    Hstrok: '\u0126',
+    hArr: '\u21D4',
+    hairsp: '\u200A',
+    half: '\u00BD',
+    hamilt: '\u210B',
+    hardcy: '\u044A',
+    harr: '\u2194',
+    harrcir: '\u2948',
+    hcirc: '\u0125',
+    hearts: '\u2665',
+    heartsuit: '\u2665',
+    hercon: '\u22B9',
+    hksearow: '\u2925',
+    hkswarow: '\u2926',
+    hoarr: '\u21FF',
+    homtht: '\u223B',
+    horbar: '\u2015',
+    hslash: '\u210F',
+    hstrok: '\u0127',
+    hybull: '\u2043',
+    hyphen: '\u2010'
+}, 'h');

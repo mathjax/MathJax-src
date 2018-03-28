@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     Uacute: '\u00DA',
     Uarr: '\u219F',
     Uarrocir: '\u2949',

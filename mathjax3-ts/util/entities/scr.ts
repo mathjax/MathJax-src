@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     Ascr: '\uD835\uDC9C',
     Bscr: '\u212C',
     Cscr: '\uD835\uDC9E',

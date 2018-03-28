@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     Aopf: '\uD835\uDD38',
     Bopf: '\uD835\uDD39',
     Copf: '\u2102',

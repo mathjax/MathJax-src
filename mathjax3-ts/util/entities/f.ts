@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     Fcy: '\u0424',
     FilledSmallSquare: '\u25FC',
     Fouriertrf: '\u2131',

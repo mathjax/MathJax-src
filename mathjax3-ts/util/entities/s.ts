@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {MmlEntities} from '../MmlEntities.js';
+import {Entities} from '../Entities.js';
 
-MmlEntities.add({
+Entities.add({
     SHCHcy: '\u0429',
     SHcy: '\u0428',
     SOFTcy: '\u042C',
