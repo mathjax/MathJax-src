@@ -543,7 +543,7 @@ export class Entities {
             let loaded = this.loaded;
             if (!loaded[file]) {
                 loaded[file] = true;
-                retryAfter(asyncLoad('mathjax3/util/entities/' + file + '.js'));
+                retryAfter(asyncLoad('./util/entities/' + file + '.js'));
             }
         }
         return match;
