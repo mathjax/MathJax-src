@@ -3,8 +3,12 @@ node_modules
 attic
 doc
 lib
-mathjax2/input
-mathjax2/legacy
+mathjax2/input/TeX.d.ts
+mathjax2/input/TeX.js
+mathjax2/legacy/extensions
+mathjax2/legacy/jax/input/MathML
+mathjax2/legacy/jax/input/TeX
+mathjax2/legacy/jax/output
 mathjax2/output
 samples
 tests
