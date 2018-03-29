@@ -23,7 +23,7 @@
 
 import {AttributeData} from '../../core/DOMAdaptor.js';
 import {MinHTMLAdaptor, MinDOMParser} from '../HTMLAdaptor.js';
-import {MmlEntities} from '../../input/mathml/MmlEntities.js';
+import {Entities} from '../../util/Entities.js';
 import {LiteDocument} from './Document.js';
 import {LiteElement} from './Element.js';
 import {LiteText, LiteComment} from './Text.js';
@@ -113,13 +113,13 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     /*
      * The entity translator object
      */
-    protected entities: MmlEntities;
+    protected entities: Entities;
 
     /*
      * @constructor
      */
     constructor() {
-        this.entities = new MmlEntities({loadMissingEntities: false});
+        this.entities = new Entities({loadMissingEntities: false});
     }
 
     /*
