@@ -6,9 +6,8 @@
 <script src="lib/system.js"></script>
 <script>
 (function () {
-  var argv = ['browser','load.html'].concat(
-    decodeURI(location.search.substr(1) || 'main.js').split(/&/)
-  );
+  var args = (location.search.substr(1) || 'main.js').split(/&/);
+  var argv = ['browser','load.html'].concat(args.map(x => decodeURIComponent(x)));
   window.process = {argv: argv};
   System.import(argv[2])
     .then(function () {document.body.appendChild(document.createTextNode("Done"))})

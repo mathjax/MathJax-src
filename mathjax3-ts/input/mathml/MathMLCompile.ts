@@ -22,10 +22,10 @@
  */
 
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
-import {MmlEntities} from './MmlEntities.js';
 import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
     from '../../core/MmlTree/MmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
+import {Entities} from '../../util/Entities.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 
 /********************************************************************/
@@ -46,7 +46,7 @@ export class MathMLCompile<N, T, D> {
      */
     public static OPTIONS: OptionList = {
         MmlFactory: null,                   // The MmlFactory to use (defaults to a new MmlFactory)
-        MmlEntities: null,                  // The MmlEntity translator (defaults to a new MmlEntity)
+        Entities: null,                     // The entity translator (defaults to a new Entities)
         fixMisplacedChildren: true,         // True if we want to use heuristics to try to fix
                                             //   problems with the tree based on HTML not handling
                                             //   self-closing tags properly
@@ -64,16 +64,16 @@ export class MathMLCompile<N, T, D> {
     public adaptor: DOMAdaptor<N, T, D>;
 
     /*
-     *  The instances of the MmlFactory and MmlEntities objects,
+     *  The instances of the MmlFactory and Entities objects,
      *  and the options (the defaults with the user options merged in)
      */
     protected factory: MmlFactory;
-    protected entities: MmlEntities;
+    protected entities: Entities;
     protected options: OptionList;
 
     /*
      *  Merge the user options into the defaults, and save them
-     *  Create the MmlFactory and MmlEntitis objects
+     *  Create the MmlFactory and Entities objects
      *
      * @param {OptionList} options  The options controlling the conversion
      */
@@ -84,7 +84,7 @@ export class MathMLCompile<N, T, D> {
             this.options['verify'] = userOptions(defaultOptions({}, Class.VERIFY), this.options['verify']);
         }
         this.factory = this.options['MmlFactory'] || new MmlFactory();
-        this.entities = this.options['MmlEntities'] || new MmlEntities();
+        this.entities = this.options['Entities'] || new Entities();
     }
 
     /*

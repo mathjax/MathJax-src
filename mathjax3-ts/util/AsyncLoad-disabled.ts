@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,28 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements asynchronous loading of files
+ * @fileoverview  A disabled version of asyncLoad that always fails
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-declare var System: {import: Function};
-declare function require(name: string): Object;
-
 /*
- * Load a file asynchronously, either using System.js, or node's require().
- *
  * @param{string} name  The name of the file to load
- * @return{Promise}     The promise that is satisfied when the file is loaded
+ * @return{Promise}     The promise that always fails (indicating file not loaded)
  */
 export function asyncLoad(name: string) {
-    if (name.charAt(0) === '.') {
-        name = __dirname + name.replace(/^\.\.?/,'/..');
-    }
-    if (typeof(System) !== 'undefined') {
-        return System.import(name);
-    }
-    return new Promise((ok, fail) => {
-        ok(require(name));
-    });
+    return new Promise((ok, fail) => fail());
 }

@@ -16,28 +16,38 @@
  */
 
 /**
- * @fileoverview  Implements asynchronous loading of files
+ * @fileoverview  Loads all the entity files (used to avoid dynamic loading)
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-declare var System: {import: Function};
-declare function require(name: string): Object;
+import './a.js';
+import './b.js';
+import './c.js';
+import './d.js';
+import './e.js';
+import './f.js';
+import './g.js';
+import './h.js';
+import './i.js';
+import './j.js';
+import './k.js';
+import './l.js';
+import './m.js';
+import './n.js';
+import './o.js';
+import './p.js';
+import './q.js';
+import './r.js';
+import './s.js';
+import './t.js';
+import './u.js';
+import './v.js';
+import './w.js';
+import './x.js';
+import './y.js';
+import './z.js';
 
-/*
- * Load a file asynchronously, either using System.js, or node's require().
- *
- * @param{string} name  The name of the file to load
- * @return{Promise}     The promise that is satisfied when the file is loaded
- */
-export function asyncLoad(name: string) {
-    if (name.charAt(0) === '.') {
-        name = __dirname + name.replace(/^\.\.?/,'/..');
-    }
-    if (typeof(System) !== 'undefined') {
-        return System.import(name);
-    }
-    return new Promise((ok, fail) => {
-        ok(require(name));
-    });
-}
+import './fr.js';
+import './opf.js';
+import './scr.js';
