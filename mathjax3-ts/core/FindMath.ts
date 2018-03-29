@@ -29,20 +29,31 @@ import {ProtoItem} from './MathItem.js';
  *  The FindMath interface
  */
 
-export interface FindMath {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface FindMath<N, T, D> {
     /*
      * One of two possibilities:  Look through a DOM element,
      *   or look through an array of strings for delimited math.
      */
-    findMath(node: Element): ProtoItem[];
-    findMath(strings: string[]): ProtoItem[];
+    findMath(node: N): ProtoItem<N, T>[];
+    findMath(strings: string[]): ProtoItem<N, T>[];
 }
 
 /*****************************************************************/
 /*
  *  The FindMath abstract class
  */
-export abstract class AbstractFindMath implements FindMath {
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
 
     /*
      * The default options for FindMath
@@ -68,8 +79,6 @@ export abstract class AbstractFindMath implements FindMath {
      * @param{Element | string[]} where  The node or string array to search for math
      * @return{ProtoItem[]}              The array of proto math items found
      */
-    public findMath(where: Element | string[]) {
-        return [] as ProtoItem[];
-    }
+    public abstract findMath(where: N | string[]): ProtoItem<N, T>[];
 
 }

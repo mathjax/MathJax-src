@@ -22,32 +22,23 @@
  */
 
 import {AbstractHandler} from '../../core/Handler.js';
+import {MinHTMLAdaptor} from '../../adaptors/HTMLAdaptor.js';
 import {HTMLDocument} from './HTMLDocument.js';
 import {OptionList} from '../../util/Options.js';
-import {DOM} from '../../util/DOM.js';
 
 /*****************************************************************/
 /*
  *  Implements the HTMLHandler class (extends AbstractHandler)
  */
 
-export class HTMLHandler extends AbstractHandler {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
 
-    /*
-     * A DOMParser instance used to create new documents if they are specified
-     * by a serialized HTML document rather than an already parsed one.
-     */
-    protected parser: DOMParser;
-
-    /*
-     * @override
-     * @constructor
-     * @extends{AbstractHandler)
-     */
-    constructor(priority: number = 5) {
-        super(priority);
-        this.parser = new (DOM.DOMParser)();
-    }
+    adaptor: MinHTMLAdaptor<N, T, D>;
 
     /*
      * @override
@@ -55,12 +46,12 @@ export class HTMLHandler extends AbstractHandler {
     public handlesDocument(document: any) {
         if (typeof(document) === 'string') {
             try {
-                document = this.parser.parseFromString(document, 'text/html');
+                document = this.adaptor.parse(document, 'text/html');
             } catch (err) {}
         }
-        if (document instanceof DOM.window.Document ||
-            document instanceof DOM.window.HTMLElement ||
-            document instanceof DOM.window.DocumentFragment) {
+        if (document instanceof this.adaptor.window.Document ||
+            document instanceof this.adaptor.window.HTMLElement ||
+            document instanceof this.adaptor.window.DocumentFragment) {
             return true;
         }
         return false;
@@ -74,14 +65,14 @@ export class HTMLHandler extends AbstractHandler {
      */
     public create(document: any, options: OptionList) {
         if (typeof(document) === 'string') {
-            document = this.parser.parseFromString(document, 'text/html');
-        } else if (document instanceof DOM.window.HTMLElement ||
-                   document instanceof DOM.window.DocumentFragment) {
-            let child = document;
-            document = this.parser.parseFromString('', 'text/html');
-            document.body.appendChild(child);
+            document = this.adaptor.parse(document, 'text/html');
+        } else if (document instanceof this.adaptor.window.HTMLElement ||
+                   document instanceof this.adaptor.window.DocumentFragment) {
+            let child = document as N;
+            document = this.adaptor.parse('', 'text/html');
+            this.adaptor.append(this.adaptor.body(document), child);
         }
-        return new HTMLDocument(document, options);
+        return new HTMLDocument<N, T, D>(document, this.adaptor, options);
     }
 
 }

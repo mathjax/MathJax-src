@@ -31,7 +31,12 @@ import {CharOptions} from '../FontData.js';
  *  The CHTMLTextNode wrapper for the TextNode object
  */
 
-export class CHTMLTextNode extends CHTMLWrapper {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = TextNode.prototype.kind;
 
     public static autoStyle = false;
@@ -44,15 +49,15 @@ export class CHTMLTextNode extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         let text = (this.node as TextNode).getText();
         if (this.parent.variant === '-explicitFont') {
-            parent.appendChild(this.text(text));
+            this.adaptor.append(parent, this.text(text));
         } else if (this.parent.stretch.c) {
-            parent.appendChild(this.html('mjx-c', {c: this.char(this.parent.stretch.c)}));
+            this.adaptor.append(parent, this.html('mjx-c', {c: this.char(this.parent.stretch.c)}));
         } else {
             for (const n of this.unicodeChars(text)) {
-                parent.appendChild(this.html('mjx-c', {c: this.char(n)}));
+                this.adaptor.append(parent, this.html('mjx-c', {c: this.char(n)}));
             }
         }
     }

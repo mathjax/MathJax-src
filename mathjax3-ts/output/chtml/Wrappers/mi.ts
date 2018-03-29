@@ -28,8 +28,12 @@ import {BBox} from '../BBox.js';
 /*****************************************************************/
 /*
  *  The CHTMLmi wrapper for the MmlMi object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-export class CHTMLmi extends CHTMLWrapper {
+export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMi.prototype.kind;
 
     /*
@@ -40,10 +44,10 @@ export class CHTMLmi extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         super.toCHTML(parent);
         if (this.noIC) {
-            this.chtml.setAttribute('noIC', 'true');
+            this.adaptor.setAttribute(this.chtml, 'noIC', 'true');
         }
     }
 
@@ -52,7 +56,7 @@ export class CHTMLmi extends CHTMLWrapper {
      */
     public computeBBox(bbox: BBox) {
         super.computeBBox(bbox);
-        const child = this.childNodes[this.childNodes.length-1];
+        const child = this.childNodes[this.childNodes.length - 1];
         if (child && child.bbox.ic) {
             bbox.ic = child.bbox.ic;
             bbox.w += bbox.ic;

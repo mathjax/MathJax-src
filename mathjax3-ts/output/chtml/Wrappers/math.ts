@@ -29,10 +29,13 @@ import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmath wrapper for the MmlMath object
+ * The CHTMLmath wrapper for the MmlMath object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmath extends CHTMLWrapper {
+export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMath.prototype.kind;
 
     public static styles: StyleList = {
@@ -64,11 +67,11 @@ export class CHTMLmath extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         super.toCHTML(parent);
         if (this.node.attributes.get('display') === 'block') {
-            this.chtml.setAttribute('display', 'true');
-            parent.classList.add('MJX-DISPLAY');
+            this.adaptor.setAttribute(this.chtml, 'display', 'true');
+            this.adaptor.addClass(parent, 'MJX-DISPLAY');
         }
     }
 

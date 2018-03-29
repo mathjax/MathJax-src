@@ -30,10 +30,13 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmroot wrapper for the MmlMroot object (extends CHTMLmsqrt)
+ * The CHTMLmroot wrapper for the MmlMroot object (extends CHTMLmsqrt)
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmroot extends CHTMLmsqrt {
+export class CHTMLmroot<N, T, D> extends CHTMLmsqrt<N, T, D> {
     public static kind = MmlMroot.prototype.kind;
 
     /*
@@ -53,13 +56,15 @@ export class CHTMLmroot extends CHTMLmsqrt {
     /*
      * @override
      */
-    protected addRoot(ROOT: HTMLElement, root: CHTMLWrapper, sbox: BBox) {
+    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox) {
         root.toCHTML(ROOT);
         const [x, h, dx] = this.getRootDimens(sbox);
         const bbox = root.getBBox();
-        ROOT.style.verticalAlign = this.em(h);
-        ROOT.style.width = this.em(x);
-        if (dx) (ROOT.firstChild as HTMLElement).style.paddingLeft = this.em(dx);
+        this.adaptor.setStyle(ROOT, 'verticalAlign', this.em(h));
+        this.adaptor.setStyle(ROOT, 'width', this.em(x));
+        if (dx) {
+            this.adaptor.setStyle(this.adaptor.firstChild(ROOT) as N, 'paddingLeft', this.em(dx));
+        }
     }
 
     /*
@@ -75,7 +80,7 @@ export class CHTMLmroot extends CHTMLmsqrt {
      * @override
      */
     protected getRootDimens(sbox: BBox) {
-        const surd = this.childNodes[this.surd] as CHTMLmo;
+        const surd = this.childNodes[this.surd] as CHTMLmo<N, T, D>;
         const bbox = this.childNodes[this.root].getBBox();
         const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
         const {w, rscale} = bbox;

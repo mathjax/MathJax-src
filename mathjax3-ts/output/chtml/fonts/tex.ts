@@ -421,7 +421,7 @@ export class TeXFont extends FontData {
     protected addFontURLs(styles: StyleList, fonts: StyleList, url: string) {
         for (const name of Object.keys(fonts)) {
             const font = {...fonts[name]};
-            font.src = (font.src as string).replace(/%%URL%%/,url);
+            font.src = (font.src as string).replace(/%%URL%%/, url);
             styles[name] = font;
         }
     }
@@ -434,8 +434,9 @@ export class TeXFont extends FontData {
     protected addDelimiterStyles(styles: StyleList, n: number, data: DelimiterData) {
         const c = this.char(n);
         if (data.c && data.c !== n) {
-            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] =
-                {content: '"' + this.char(data.c,true) + '"'};
+            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] = {
+                content: '"' + this.char(data.c, true) + '"'
+            };
         }
         if (!data.stretch) return;
         if (data.dir === DIRECTION.Vertical) {
@@ -506,7 +507,7 @@ export class TeXFont extends FontData {
         this.addDelimiterHPart(styles, c, 'end', end);
         if (mid) {
             this.addDelimiterHPart(styles, c, 'mid', mid);
-            styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] > mjx-ext'] = {width: '50%'}
+            styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] > mjx-ext'] = {width: '50%'};
         }
     }
 

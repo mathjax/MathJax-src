@@ -30,17 +30,20 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmrow wrapper for the MmlMrow object
+ * The CHTMLmrow wrapper for the MmlMrow object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmrow extends CHTMLWrapper {
+export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMrow.prototype.kind;
 
     /*
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -48,11 +51,8 @@ export class CHTMLmrow extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
-        let chtml = this.chtml = parent;
-        if (!this.node.isInferred) {
-            chtml = this.standardCHTMLnode(parent);
-        }
+    public toCHTML(parent: N) {
+        const chtml = (this.node.isInferred ? (this.chtml = parent) : this.standardCHTMLnode(parent));
         let hasNegative = false;
         for (const child of this.childNodes) {
             child.toCHTML(chtml);
@@ -66,8 +66,12 @@ export class CHTMLmrow extends CHTMLWrapper {
         // FIXME:  handle line breaks
         if (hasNegative) {
             const {w} = this.getBBox();
-            if (w) chtml.style.width = this.em(Math.max(0, w));
-            if (w < 0) chtml.style.marginRight = this.em(w);
+            if (w) {
+                this.adaptor.setStyle(chtml, 'width', this.em(Math.max(0, w)));
+                if (w < 0) {
+                    this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
+                }
+            }
         }
     }
 
@@ -77,7 +81,7 @@ export class CHTMLmrow extends CHTMLWrapper {
      */
     protected makeFullWidth() {
         this.bbox.pwidth = '100%';
-        this.chtml.setAttribute('width', 'full');
+        this.adaptor.setAttribute(this.chtml, 'width', 'full');
     }
 
     /*
@@ -85,7 +89,7 @@ export class CHTMLmrow extends CHTMLWrapper {
      *  other nodes in the row.
      */
     protected stretchChildren() {
-        let stretchy: CHTMLWrapper[] = [];
+        let stretchy: CHTMLWrapper<N, T, D>[] = [];
         //
         //  Locate and count the stretchy children
         //
@@ -128,7 +132,7 @@ export class CHTMLmrow extends CHTMLWrapper {
  *  The CHTMLinferredMrow wrapper for the MmlInferredMrow object
  */
 
-export class CHTMLinferredMrow extends CHTMLmrow {
+export class CHTMLinferredMrow<N, T, D> extends CHTMLmrow<N, T, D> {
     public static kind = MmlInferredMrow.prototype.kind;
 
     /*

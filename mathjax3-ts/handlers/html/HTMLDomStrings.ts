@@ -22,11 +22,15 @@
  */
 
 import {userOptions, defaultOptions, OptionList, makeArray} from '../../util/Options.js';
+import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 
 /*
  *  List of consecutive text nodes and their text lengths
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
  */
-export type HTMLNodeList = [Element, number][];
+export type HTMLNodeList<N, T> = [N | T, number][];
 
 /*****************************************************************/
 /*
@@ -35,7 +39,12 @@ export type HTMLNodeList = [Element, number][];
  *  A class for extracting the text from DOM trees
  */
 
-export class HTMLDomStrings {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class HTMLDomStrings<N, T, D> {
 
     public static OPTIONS: OptionList = {
         skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'annotation', 'annotation-xml'],
@@ -75,18 +84,18 @@ export class HTMLDomStrings {
     /*
      * The list of nodes and lengths for the string being constructed
      */
-    protected snodes: HTMLNodeList;
+    protected snodes: HTMLNodeList<N, T>;
 
     /*
      * The list of node lists corresponding to the strings in this.strings
      */
-    protected nodes: HTMLNodeList[];
+    protected nodes: HTMLNodeList<N, T>[];
 
     /*
      * The container nodes that are currently being traversed, and whether their
      *  contents are being ignored or not
      */
-    protected stack: [Element, boolean][];
+    protected stack: [N | T, boolean][];
 
     /*
      * Regular expressions for the tags to be skipped, and which classes should start/stop
@@ -95,6 +104,11 @@ export class HTMLDomStrings {
     protected skipTags: RegExp;
     protected ignoreClass: RegExp;
     protected processClass: RegExp;
+
+    /*
+     * The DOM Adaptor to managing HTML elements
+     */
+    public adaptor: DOMAdaptor<N, T, D>;
 
     /*
      * @param{OptionList} options  The user-supplied options
@@ -146,12 +160,12 @@ export class HTMLDomStrings {
      * Add more text to the current string, and record the
      * node and its position in the string.
      *
-     * @param{Element} node  The node to be pushed
+     * @param{T} node        The node to be pushed
      * @param{string} text   The text to be added (it may not be the actual text
      *                         of the node, if it is one of the nodes that gets
      *                         translated to text, like <br> to a newline).
      */
-    protected extendString(node: Element, text: string) {
+    protected extendString(node: N | T, text: string) {
         this.snodes.push([node, text.length]);
         this.string += text;
     }
@@ -159,30 +173,30 @@ export class HTMLDomStrings {
     /*
      * Handle a #text node (add its text to the current string)
      *
-     * @param{Element} node    The Text node to process
+     * @param{T} node          The Text node to process
      * @param{boolean} ignore  Whether we are currently ignoring content
-     * @return{Element}        The next element to process
+     * @return{N}              The next element to process
      */
-    protected handleText(node: Element, ignore: boolean) {
+    protected handleText(node: T, ignore: boolean) {
         if (!ignore) {
-            this.extendString(node, node.nodeValue);
+            this.extendString(node, this.adaptor.value(node));
         }
-        return node.nextSibling as Element;
+        return this.adaptor.next(node);
     }
 
     /*
      * Handle a BR, WBR, or #comment element (or others in the includeTag object).
      *
-     * @param{Element} node    The node to process
+     * @param{N} node          The node to process
      * @param{boolean} ignore  Whether we are currently ignoring content
-     * @return{Element}        The next element to process
+     * @return{N}              The next element to process
      */
-    protected handleTag(node: Element, ignore: boolean) {
+    protected handleTag(node: N, ignore: boolean) {
         if (!ignore) {
-            let text = this.options['includeTags'][node.nodeName.toLowerCase()];
+            let text = this.options['includeTags'][this.adaptor.kind(node)];
             this.extendString(node, text);
         }
-        return node.nextSibling as Element;
+        return this.adaptor.next(node);
     }
 
     /*
@@ -197,26 +211,27 @@ export class HTMLDomStrings {
      *     Move on to the next sibling
      *   Return the next node to process and the ignore state
      *
-     * @param{Element} node         The node to process
+     * @param{N} node               The node to process
      * @param{boolean} ignore       Whether we are currently ignoring content
-     * @return{[Element, boolean]}  The next element to process and whether to ignore its content
+     * @return{[N|T, boolean]}      The next element to process and whether to ignore its content
      */
-    protected handleContainer(node: Element, ignore: boolean) {
+    protected handleContainer(node: N, ignore: boolean) {
         this.pushString();
-        let cname = node.className || '';
-        let tname = node.tagName || '';
-        let process = this.processClass.exec(cname);
-        if (node.firstChild && !node.getAttribute('data-MJX') &&
+        const cname = this.adaptor.getAttribute(node, 'class') || '';
+        const tname = this.adaptor.kind(node) || '';
+        const process = this.processClass.exec(cname);
+        let next: N | T = node;
+        if (this.adaptor.firstChild(node) && !this.adaptor.getAttribute(node, 'data-MJX') &&
             (process || !this.skipTags.exec(tname))) {
-            if (node.nextSibling) {
-                this.stack.push([node.nextSibling as Element, ignore]);
+            if (this.adaptor.next(node)) {
+                this.stack.push([this.adaptor.next(node), ignore]);
             }
-            node = node.firstChild as Element;
+            next = this.adaptor.firstChild(node);
             ignore = (ignore || this.ignoreClass.exec(cname)) && !process;
         } else {
-            node = node.nextSibling as Element;
+            next = this.adaptor.next(node);
         }
-        return [node, ignore] as [Element, boolean];
+        return [next, ignore] as [N | T, boolean];
     }
 
     /*
@@ -234,22 +249,22 @@ export class HTMLDomStrings {
      *   Clear the internal values (so the memory can be freed)
      *   Return the strings and node lists
      *
-     * @param{Element} node                 The node to search
+     * @param{N} node                       The node to search
      * @return{[string[], HTMLNodeList[]]}  The array of strings and their associated lists of nodes
      */
-    public find(node: Element) {
+    public find(node: N | T) {
         this.init();
-        let stop = node.nextSibling;
+        let stop = this.adaptor.next(node);
         let ignore = false;
         let include = this.options['includeTags'];
 
         while (node && node !== stop) {
-            if (node.nodeName === '#text') {
-                node = this.handleText(node, ignore);
-            } else if (include[node.nodeName.toLowerCase()] !== undefined) {
-                node = this.handleTag(node, ignore);
+            if (this.adaptor.kind(node) === '#text') {
+                node = this.handleText(node as T, ignore);
+            } else if (include[this.adaptor.kind(node)] !== undefined) {
+                node = this.handleTag(node as N, ignore);
             } else {
-                [node, ignore] = this.handleContainer(node, ignore);
+                [node, ignore] = this.handleContainer(node as N, ignore);
             }
             if (!node && this.stack.length) {
                 this.pushString();
@@ -258,7 +273,7 @@ export class HTMLDomStrings {
         }
 
         this.pushString();
-        let result = [this.strings, this.nodes] as [string[], HTMLNodeList[]];
+        let result = [this.strings, this.nodes] as [string[], HTMLNodeList<N, T>[]];
         this.init(); // free up memory
         return result;
     }

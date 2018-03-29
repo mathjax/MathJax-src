@@ -30,10 +30,13 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmfrac wrapper for the MmlMfrac object
+ * The CHTMLmfrac wrapper for the MmlMfrac object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmfrac extends CHTMLWrapper {
+export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMfrac.prototype.kind;
 
     public static styles: StyleList = {
@@ -115,13 +118,13 @@ export class CHTMLmfrac extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
-        this.chtml = this.standardCHTMLnode(parent);
+    public toCHTML(parent: N) {
+        const chtml = this.standardCHTMLnode(parent);
         const attr = this.node.attributes.getList('displaystyle', 'scriptlevel');
         const style = (attr.displaystyle && attr.scriptlevel === 0 ? {type: 'd'} : {});
         const fstyle = (this.node.getProperty('withDelims') ? {...style, delims: 'true'} : style);
         let num, den;
-        this.chtml.appendChild(this.html('mjx-frac', fstyle, [
+        this.adaptor.append(chtml, this.html('mjx-frac', fstyle, [
             num = this.html('mjx-num', {}, [this.html('mjx-nstrut', style)]),
             this.html('mjx-dbox', {}, [
                 this.html('mjx-dtable', {}, [

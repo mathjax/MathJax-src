@@ -28,31 +28,34 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmspace wrapper for the MmlMspace object
+ * The CHTMLmspace wrapper for the MmlMspace object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmspace extends CHTMLWrapper {
+export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMspace.prototype.kind;
 
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         let chtml = this.standardCHTMLnode(parent);
         let {w, h, d} = this.getBBox();
         if (w < 0) {
-            chtml.style.marginRight = this.em(w);
+            this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
             w = 0;
         }
         if (w) {
-            chtml.style.width = this.em(w);
+            this.adaptor.setStyle(chtml, 'width', this.em(w));
         }
         h = Math.max(0, h + d);
         if (h) {
-            chtml.style.height = this.em(Math.max(0, h));
+            this.adaptor.setStyle(chtml, 'height', this.em(Math.max(0, h)));
         }
         if (d) {
-            chtml.style.verticalAlign = this.em(-d);
+            this.adaptor.setStyle(chtml, 'verticalAlign', this.em(-d));
         }
     }
 

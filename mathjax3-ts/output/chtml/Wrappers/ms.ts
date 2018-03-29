@@ -28,10 +28,13 @@ import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.
 
 /*****************************************************************/
 /*
- *  The CHTMLms wrapper for the MmlMs object
+ * The CHTMLms wrapper for the MmlMs object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLms extends CHTMLWrapper {
+export class CHTMLms<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMs.prototype.kind;
 
     /*
@@ -39,7 +42,7 @@ export class CHTMLms extends CHTMLWrapper {
      *
      * @override
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         const attributes = this.node.attributes;
         let quotes = attributes.getList('lquote', 'rquote');
