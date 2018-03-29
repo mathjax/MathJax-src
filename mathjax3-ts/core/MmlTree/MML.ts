@@ -58,6 +58,7 @@ import {MmlMalignmark}  from './MmlNodes/malignmark.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from './MmlNodes/semantics.js';
 
 import {TeXAtom} from './MmlNodes/TeXAtom.js';
+import {mathchoice} from './MmlNodes/mathchoice.js';
 
 /************************************************************************/
 /*
@@ -113,6 +114,7 @@ export let MML: {[kind: string]: MmlNodeClass} = {
     [MmlAnnotationXML.prototype.kind]: MmlAnnotationXML,
 
     [TeXAtom.prototype.kind]: TeXAtom,
+    [mathchoice.prototype.kind]: mathchoice,
 
     [TextNode.prototype.kind]: TextNode,
     [XMLNode.prototype.kind]: XMLNode
