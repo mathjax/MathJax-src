@@ -59,17 +59,8 @@
 ** padding="0" missing
 
 
-* Running test Tweaked Root	[31mFAIL[37m
-  Actual: 
-  {"kind":"math","texClass":0,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mroot","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"k"}]},{"kind":"mpadded","texClass":null,"attributes":{"width":"-0.13333333333333333em","voffset":"+0.13333333333333333em","height":"+0.13333333333333333em"},"inherited":{"displaystyle":false,"scriptlevel":2},"properties":{},"childNodes":[{"kind":"mrow","texClass":null,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":2},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{"mathvariant":"italic"},"inherited":{"displaystyle":false,"scriptlevel":2,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"β"}]}],"isInferred":true}]}]}],"isInferred":true}]}
-  Expected: 
-  {"kind":"math","texClass":0,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mroot","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"k"}]},{"kind":"mpadded","texClass":null,"attributes":{"width":"-0.13333333333333333em","height":"+0.13333333333333333em","voffset":"+0.13333333333333333em"},"inherited":{"displaystyle":false,"scriptlevel":2},"properties":{},"childNodes":[{"kind":"mrow","texClass":null,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":2},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":2,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"β"}]}],"isInferred":true}]}]}],"isInferred":true}]}
-
-** Explicit attribute mathvariant=italic
-
-   Ignore
-
-* Running test Negation Complex	[31mFAIL[37m
+* Running test Tweaked Root	[FIXED]
+* Running test Negation Complex	[FIXED]
   Actual: 
   {"kind":"math","texClass":0,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"a"}]},{"kind":"mo","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{},"childNodes":[{"kind":"text","text":"≠"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"b"}]},{"kind":"mo","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix","accent":true},"properties":{},"childNodes":[{"kind":"text","text":"↛"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"c"}]},{"kind":"mo","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{},"childNodes":[{"kind":"text","text":"≰"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"d"}]}],"isInferred":true}]}
   Expected: 
@@ -83,7 +74,7 @@
 ** Why is there an inherited accent=true for the \not\rightarrow?
 
 
-* Running test Greek	[31mFAIL[37m
+* Running test Greek	[FIXED]
   Actual: 
   {"kind":"math","texClass":0,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{"mathvariant":"italic"},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"α"}]}],"isInferred":true}]}
   Expected: 
@@ -92,7 +83,7 @@
 ** Explicit attribute mathvariant=italic
 
 
-* Running test Fenced	[31mFAIL[37m
+* Running test Fenced	[FIXED]
   Actual: 
   {"kind":"math","texClass":7,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":7,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":7,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{"open":"(","close":")"},"childNodes":[{"kind":"mo","texClass":4,"attributes":{"fence":true,"stretchy":true,"symmetric":true},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"prefix","fence":true,"stretchy":true,"symmetric":true},"properties":{},"childNodes":[{"kind":"text","text":"("}],"isEmbellished":true},{"kind":"mfrac","texClass":null,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"a"}]},{"kind":"mrow","texClass":7,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":0},"properties":{"open":"[","close":"]","texprimestyle":true},"childNodes":[{"kind":"mo","texClass":4,"attributes":{"fence":true,"stretchy":true,"symmetric":true},"inherited":{"displaystyle":false,"scriptlevel":0,"form":"prefix","fence":true,"stretchy":true,"symmetric":true},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"["}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":0,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"b"}]},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":0,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"c"}]},{"kind":"mo","texClass":5,"attributes":{"fence":true,"stretchy":true,"symmetric":true},"inherited":{"displaystyle":false,"scriptlevel":0,"form":"postfix","fence":true,"stretchy":true,"symmetric":true},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"]"}],"isEmbellished":true}]}]},{"kind":"mo","texClass":5,"attributes":{"fence":true,"stretchy":true,"symmetric":true},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"postfix","fence":true,"stretchy":true,"symmetric":true},"properties":{},"childNodes":[{"kind":"text","text":")"}],"isEmbellished":true}]}],"isInferred":true}]}
   Expected: 
@@ -107,21 +98,21 @@
    They should be there.
    Always set symmetric etc. true by default. Important for arrows etc.
 
-* Fenced 2 
-
+* Fenced 2 	[FIXED]
+`
 ** same as Fenced
 
-* Fenced 3
+* Fenced 3	[FIXED]
 
 ** same as Fenced
 
 ** Empty final element for \right.
 
-* Middle
+* Middle	[FIXED]
 
 ** same as Fenced
 
-* MathChar0 Operator (now fixed!)
+* MathChar0 Operator	[FIXED]
 
 ** Stretchy with arrow characters, is there a way to predict which one could be stretchy?
 
@@ -133,7 +124,7 @@
    There is a duplicate one and I really don't know how to tell it to the
    TeXAtom not to create one, as it is spacelike.
 
-* Move Superscript
+* Move Superscript	[FIXED]
 
 ** same as Fenced
 
@@ -151,7 +142,7 @@
 
 ** same as Positive spacing.
 
-* Limits SubSup
+* Limits SubSup	[FIXED]
 
 ** movablelimits:false also in attributes
    Only mo s need it. Sort out explicitly in mi to mo.
@@ -159,7 +150,7 @@
 
 ** Check whether taking the coreMO texclass is valid.
 
-* Limits UnderOver
+* Limits UnderOver	[FIXED]
 
 ** movablelimits:false also in attributes
 
@@ -168,5 +159,38 @@
 ** mathchoice: How are we going to handle this in the future?
 
 * Mathop
+
+* Running test Operatorname	[FIXED]
+Actual: 
+{"kind":"math","texClass":0,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"a"}]},{"kind":"mi","texClass":1,"attributes":{"mathvariant":"normal"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{"movablelimits":false,"movesupsub":false,"fnOP":true},"childNodes":[{"kind":"text","text":"xyz"}]},{"kind":"mo","texClass":-1,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{},"childNodes":[{"kind":"text","text":"⁡"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"b"}]}],"isInferred":true}]}
+Expected: 
+{"kind":"math","texClass":0,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"a"}]},{"kind":"mi","texClass":1,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{"movesupsub":false,"movablelimits":false,"fnOP":true},"childNodes":[{"kind":"text","text":"xyz"}]},{"kind":"mo","texClass":-1,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{},"childNodes":[{"kind":"text","text":"⁡"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"b"}]}],"isInferred":true}]}
+
+** Additional mathvariant normal
+
+* Running test Mathop Super	[31mFAIL[37m
+Actual: 
+{"kind":"math","texClass":3,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mover","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mo","texClass":3,"attributes":{"mathvariant":"normal","movablelimits":true,"lspace":"0","rspace":"0"},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{"movablelimits":true,"movesupsub":true,"texprimestyle":true},"childNodes":[{"kind":"text","text":"a"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":1,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"b"}]}],"isEmbellished":true}],"isInferred":true,"isEmbellished":true}],"isEmbellished":true}
+Expected: 
+{"kind":"math","texClass":3,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mover","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{"movesupsub":true},"childNodes":[{"kind":"mo","texClass":3,"attributes":{"lspace":"0","rspace":"0","movablelimits":true},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{"movablelimits":true,"texprimestyle":true},"childNodes":[{"kind":"text","text":"a"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":1,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"b"}]}],"isEmbellished":true}],"isInferred":true,"isEmbellished":true}],"isEmbellished":true}
+
+** movesupsub is in the mo rather than the mover
+   It is in the data structure for both. Why is it not output?
+
+* Running test Mathop Sub	[31mFAIL[37m
+Actual: 
+{"kind":"math","texClass":3,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"munder","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mo","texClass":3,"attributes":{"mathvariant":"normal","movablelimits":true,"lspace":"0","rspace":"0"},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{"movablelimits":true,"movesupsub":true},"childNodes":[{"kind":"text","text":"a"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":1,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"b"}]}],"isEmbellished":true}],"isInferred":true,"isEmbellished":true}],"isEmbellished":true}
+Expected: 
+{"kind":"math","texClass":3,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"munder","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{"movesupsub":true},"childNodes":[{"kind":"mo","texClass":3,"attributes":{"lspace":"0","rspace":"0","movablelimits":true},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{"movablelimits":true},"childNodes":[{"kind":"text","text":"a"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":1,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"b"}]}],"isEmbellished":true}],"isInferred":true,"isEmbellished":true}],"isEmbellished":true}
+
+** movesupsub is in the mo rather than the munder
+   It is in the data structure for both. Why is it not output?
+
+
+
+
+parserTest.runTest(
+  'Mathop Sub Super', '\\mathop{\\rm a}_b^c',
+);
 
 
