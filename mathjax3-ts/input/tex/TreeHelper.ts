@@ -127,9 +127,7 @@ export namespace TreeHelper {
 
   // Sets properties and attributes.
   export function setProperties(node: MmlNode, properties: PropertyList): void {
-    printDef(properties);
     for (const name of Object.keys(properties)) {
-      console.log(name);
       let value = properties[name];
       if (name === 'texClass') {
         node.texClass = (value as number);
