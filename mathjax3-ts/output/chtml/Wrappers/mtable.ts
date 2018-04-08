@@ -100,6 +100,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected rSpace: number[];
     protected cLines: number[];
     protected rLines: number[];
+    protected cWidths: string[];
 
     /*
      * The bounding box information for the table rows and columns
@@ -120,14 +121,18 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.numCols = this.childNodes.map(row => (row as CHTMLmtr<N, T, D>).numCells)
                                       .reduce((a, b) => Math.max(a, b), 0);
         this.numRows = this.childNodes.length;
+        //
+        // Get the frame, row, and column parameters
+        //
         const attributes = node.attributes;
-        this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
-        this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
         this.frame = attributes.get('frame') !== 'none';
         this.lines = this.frame || attributes.get('columnlines') !== 'none' || attributes.get('rowlines') !== 'none';
-        this.fSpace = (this.lines ? this.convertLengths(this.getAttributeArray('framespacing')) : []);
+        this.fSpace = (this.lines ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+        this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
+        this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
         this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));
         this.rLines = this.getColumnAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
+        this.cWidths = this.getColumnAttributes('columnwidth');
         //
         // Stretch the columns (rows are already taken care of in the CHTMLmtr wrapper)
         //
@@ -205,12 +210,11 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //  Finally, add the frame, if needed
         //
         this.padRows();
-        this.handleColumnAlign();
         this.handleColumnSpacing();
         this.handleColumnLines();
-        this.handleRowAlign();
         this.handleRowSpacing();
         this.handleRowLines();
+        this.handleEqualRows();
         this.handleFrame();
         this.handleWidth();
         this.drawBBox();
@@ -241,16 +245,14 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
             }
         }
         const w = this.node.attributes.get('width') as string;
-        const height = H.concat(D, this.rLines).reduce((a, b) => a + b, 0)
-                     + this.rSpace.reduce((a, b) => a + b, 0)
+        const height = H.concat(D, this.rLines, this.rSpace).reduce((a, b) => a + b, 0)
                      + (this.frame ? .14 : 0)
-                     + 2 * (this.fSpace[1] || 0);
+                     + 2 * this.fSpace[1];
         let width;
         if (w === 'auto' || w.match(/%$/)) {
-            width = W.concat(this.cLines).reduce((a, b) => a + b, 0)
-                  + this.cSpace.reduce((a, b) => a + b, 0)
+            width = W.concat(this.cLines, this.cSpace).reduce((a, b) => a + b, 0)
                   + (this.frame ? .14 : 0)
-                  + 2 * (this.fSpace[0] || 0);
+                  + 2 * this.fSpace[0];
         } else {
             const cwidth = this.metrics.containerWidth / this.metrics.em;
             width = this.length2em(w, cwidth) + (this.frame ? .14 : 0);
@@ -263,7 +265,13 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @override
      */
     public computeBBox(bbox: BBox) {
-        const {width, height} = this.getTableData();
+        let {width, height} = this.getTableData();
+        if (this.node.attributes.get('equalrows')) {
+            const HD = this.getEqualRowHeight();
+            height = [].concat(this.rLines, this.rSpace).reduce((a, b) => a + b, 0)
+                   + HD * this.numRows
+                   + 2 * this.fSpace[1];
+        }
         const a = this.font.params.axis_height;
         bbox.h = height / 2 + a;
         bbox.d = height / 2 - a;
@@ -284,23 +292,6 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
-     * Set the cell aligments based on the table, row, or cell columnalign attributes
-     */
-    protected handleColumnAlign() {
-        const colAlign = this.getColumnAttributes('columnalign') || [];
-        for (const row of this.childNodes) {
-            const aligns = this.getColumnAttributes('columnalign', row) || colAlign;
-            let i = 0;
-            for (const cell of row.childNodes) {
-                let align = (cell.node.attributes.get('columnalign') as string) || aligns[i++];
-                if (align !== 'center') {
-                    this.adaptor.setStyle(cell.chtml, 'textAlign', align);
-                }
-            }
-        }
-    }
-
-    /*
      * Set the inter-column spacing for all columns
      *  (Use frame spacing on the outsides, if needed, and use half the column spacing on each
      *   neighboring column, so that if column lines are needed, they fall in the middle
@@ -310,7 +301,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         //  Get the column spacing values, and add the frame spacing values at the left and right
         //
-        const fspace = this.em(this.fSpace[0] || 0);
+        const fspace = this.em(this.fSpace[0]);
         const spacing = this.addEm(this.cSpace, 2);
         if (!spacing) return;
         spacing.unshift(fspace);
@@ -363,26 +354,6 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
-     * Add vertical alignment to rows, and override in the cells, if needed
-     */
-    protected handleRowAlign() {
-        const rowAlign = this.getRowAttributes('rowalign') || [];
-        let i = 0;
-        for (const row of this.childNodes) {
-            const align = (row.node.attributes.get('rowalign') as string) || rowAlign[i++];
-            if (align !== 'baseline') {
-                this.adaptor.setAttribute(row.chtml, 'rowalign', align);
-            }
-            for (const cell of row.childNodes) {
-                const calign = cell.node.attributes.get('rowalign') as string;
-                if (calign && calign !== align) {
-                    this.adaptor.setStyle(cell.chtml, 'verticalAlign', calign);
-                }
-            }
-        }
-    }
-
-    /*
      * Set the inter-row spacing for all rows
      *  (Use frame spacing on the outsides, if needed, and use half the row spacing on each
      *   neighboring row, so that if row lines are needed, they fall in the middle
@@ -392,7 +363,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         //  Get the row spacing values, and add the frame spacing values at the left and right
         //
-        const fspacing = this.em(this.fSpace[1] || 0);
+        const fspacing = this.em(this.fSpace[1]);
         const spacing = this.addEm(this.rSpace, 2);
         if (!spacing) return;
         spacing.unshift(fspacing);
@@ -443,6 +414,30 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
+    protected handleEqualRows() {
+        if (!this.node.attributes.get('equalrows')) return;
+        const space = this.rSpace.map(x => x / 2);
+        space.unshift(this.fSpace[1]);
+        space.push(this.fSpace[1]);
+        const {H, D} = this.getTableData();
+        const HD = this.getEqualRowHeight();
+        const HDem = this.em(HD);
+        for (const i of Array.from(this.childNodes.keys())) {
+            const row = this.childNodes[i];
+            this.adaptor.setStyle(row.chtml, 'height', this.em(space[i] + HD + space[i + 1]));
+            const ralign = row.node.attributes.get('rowalign');
+            for (const cell of row.childNodes) {
+                const calign = cell.node.attributes.get('rowalign');
+                if (calign === 'baseline' || calign === 'axis') {
+                    const child = this.adaptor.lastChild(cell.chtml) as N;
+                    this.adaptor.setStyle(child, 'height', HDem);
+                    this.adaptor.setStyle(child, 'verticalAlign', this.em(-((HD - H[i] + D[i]) / 2)));
+                    if (ralign === 'baseline' || ralign === 'axis') break;
+                }
+            }
+        }
+    }
+
     /*
      * Add a frame to the mtable, if needed
      */
@@ -469,6 +464,15 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /******************************************************************/
+
+    /*
+     * Get the maximum height of a row
+     */
+    protected getEqualRowHeight() {
+        const {H, D} = this.getTableData();
+        const HD = Array.from(H.keys()).map(i => H[i] + D[i]);
+        return Math.max.apply(Math, HD);
+    }
 
     /*
      * @param{string} name           The name of the attribute to get as an array

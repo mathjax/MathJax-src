@@ -68,6 +68,14 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public toCHTML(parent: N) {
         super.toCHTML(parent);
+        const ralign = this.node.attributes.get('rowalign') as string;
+        const calign = this.node.attributes.get('columnalign') as string;
+        if (ralign !== 'baseline' && ralign !== 'axis') {
+            this.adaptor.setStyle(this.chtml, 'verticalAlign', (ralign === 'center' ? 'middle' : ralign));
+        }
+        if (calign !== 'center') {
+            this.adaptor.setStyle(this.chtml, 'textAlign', calign);
+        }
         //
         // Include a strut to force minimum height and depth
         //

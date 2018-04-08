@@ -78,6 +78,17 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
+     * @override
+     */
+    public toCHTML(parent: N) {
+        super.toCHTML(parent);
+        const align = this.node.attributes.get('rowalign') as string;
+        if (align !== 'baseline' && align !== 'axis') {
+            this.adaptor.setStyle(this.chtml, 'verticalAlign', (align === 'center' ? 'middle' : align));
+        }
+    }
+
+    /*
      * Handle vertical stretching of cells to match height of
      *  other cells in the row.
      */
