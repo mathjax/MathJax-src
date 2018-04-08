@@ -30,6 +30,19 @@ import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
 import {StyleList} from '../CssStyles.js';
 import {DIRECTION} from '../FontData.js';
 
+
+/*
+ * The heights, depths, and widths of the rows and columns, and the
+ * natural width and height of the table
+ */
+export type TableData = {
+    H: number[];
+    D: number[];
+    W: number[];
+    width: number;
+    height: number;
+};
+
 /*****************************************************************/
 /*
  * The CHTMLmtable wrapper for the MmlMtable object
@@ -48,10 +61,26 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         },
         'mjx-mtable > mjx-itable': {
             'vertical-align': 'middle',
-            'text-align': 'left'
+            'text-align': 'left',
+            'box-sizing': 'border-box'
         },
-        'mjx-mtable[width="%"] > mjx-itable': {
+        'mjx-mtable[width] > mjx-itable': {
             width: '100%'
+        },
+        'mjx-mtr[rowalign="top"] > mjx-mtd, mjx-mlabeledtr[rowalign="top"] > mjx-mtd': {
+            'vertical-align': 'top'
+        },
+        'mjx-mtr[rowalign="center"] > mjx-mtd, mjx-mlabeledtr[rowalign="center"] > mjx-mtd': {
+            'vertical-align': 'middle'
+        },
+        'mjx-mtr[rowalign="bottom"] > mjx-mtd, mjx-mlabeledtr[rowalign="bottom"] > mjx-mtd': {
+            'vertical-align': 'bottom'
+        },
+        'mjx-mtr[rowalign="baseline"] > mjx-mtd, mjx-mlabeledtr[rowalign="baseline"] > mjx-mtd': {
+            'vertical-align': 'baseline'
+        },
+        'mjx-mtr[rowalign="axis"] > mjx-mtd, mjx-mlabeledtr[rowalign="axis"] > mjx-mtd': {
+            'vertical-align': '.25em'
         }
     };
 
@@ -61,6 +90,21 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected numCols: number = 0;
     protected numRows: number = 0;
 
+    /*
+     * The spacing and line data
+     */
+    protected frame: boolean;
+    protected lines: boolean;
+    protected fSpace: number[];
+    protected cSpace: number[];
+    protected rSpace: number[];
+    protected cLines: number[];
+    protected rLines: number[];
+
+    /*
+     * The bounding box information for the table rows and columns
+     */
+    protected data: TableData = null;
 
     /******************************************************************/
 
@@ -76,6 +120,14 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.numCols = this.childNodes.map(row => (row as CHTMLmtr<N, T, D>).numCells)
                                       .reduce((a, b) => Math.max(a, b), 0);
         this.numRows = this.childNodes.length;
+        const attributes = node.attributes;
+        this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
+        this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
+        this.frame = attributes.get('frame') !== 'none';
+        this.lines = this.frame || attributes.get('columnlines') !== 'none' || attributes.get('rowlines') !== 'none';
+        this.fSpace = (this.lines ? this.convertLengths(this.getAttributeArray('framespacing')) : []);
+        this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));
+        this.rLines = this.getColumnAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
         //
         // Stretch the columns (rows are already taken care of in the CHTMLmtr wrapper)
         //
@@ -148,34 +200,32 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
             child.toCHTML(table);
         }
         //
-        //  Check if there is a frame or lines, and get the frame spacing, if so
-        //
-        const attributes = this.node.attributes;
-        const frame = attributes.get('frame') !== 'none';
-        const lines = frame || attributes.get('columnlines') !== 'none' || attributes.get('rowlines') !== 'none';
-        const fspacing = (lines ? this.convertLengths(this.getAttributeArray('framespacing')) : []);
-        //
         //  Pad the rows of the table, if needed
         //  Then set the column and row attributes for alignment, spacing, and lines
         //  Finally, add the frame, if needed
         //
         this.padRows();
         this.handleColumnAlign();
-        this.handleColumnSpacing(lines, fspacing[0] || '0');
+        this.handleColumnSpacing();
         this.handleColumnLines();
         this.handleRowAlign();
-        this.handleRowSpacing(lines, fspacing[1] || '0');
+        this.handleRowSpacing();
         this.handleRowLines();
-        this.handleFrame(frame);
+        this.handleFrame();
         this.handleWidth();
+        this.drawBBox();
     }
 
     /******************************************************************/
 
     /*
-     * @override
+     * Determine the row heights and depths, the column widths,
+     * and the natural width and height of the table.
      */
-    public computeBBox(bbox: BBox) {
+    public getTableData() {
+        if (this.data) {
+            return this.data;
+        }
         const H = new Array(this.numRows).fill(0);
         const D = new Array(this.numRows).fill(0);
         const W = new Array(this.numCols).fill(0);
@@ -190,26 +240,34 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
                 if (cbox.w > W[i]) W[i] = cbox.w;
             }
         }
-        const cMax = Math.max(0, this.numCols - 1);
-        const rMax = Math.max(0, this.numRows - 1);
-        const cSpace = this.convertLengths(this.getColumnAttributes('columnspacing')).slice(0, cMax);
-        const rSpace = this.convertLengths(this.getRowAttributes('rowspacing')).slice(0, rMax);
-        const frame = this.node.attributes.get('frame') !== 'none';
-        const fSpace = (frame ? this.convertLengths(this.getAttributeArray('framespacing')) : []);
-        const cLines = this.getColumnAttributes('columnlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
-        const rLines = this.getColumnAttributes('rowlines').slice(0, cMax).map(x => (x === 'none' ? 0 : .07));
+        const w = this.node.attributes.get('width') as string;
+        const height = H.concat(D, this.rLines).reduce((a, b) => a + b, 0)
+                     + this.rSpace.reduce((a, b) => a + b, 0)
+                     + (this.frame ? .14 : 0)
+                     + 2 * (this.fSpace[1] || 0);
+        let width;
+        if (w === 'auto' || w.match(/%$/)) {
+            width = W.concat(this.cLines).reduce((a, b) => a + b, 0)
+                  + this.cSpace.reduce((a, b) => a + b, 0)
+                  + (this.frame ? .14 : 0)
+                  + 2 * (this.fSpace[0] || 0);
+        } else {
+            const cwidth = this.metrics.containerWidth / this.metrics.em;
+            width = this.length2em(w, cwidth) + (this.frame ? .14 : 0);
+        }
+        this.data = {H, D, W, width, height};
+        return this.data;
+    }
+
+    /*
+     * @override
+     */
+    public computeBBox(bbox: BBox) {
+        const {width, height} = this.getTableData();
         const a = this.font.params.axis_height;
-        const h = H.concat(D, rLines).reduce((a, b) => a + b, 0)
-                + (frame ? .14 : 0)
-                + rSpace.map(x => parseFloat(x))
-                        .reduce((a, b) => a + b, 0)
-                + 2 * parseFloat(fSpace[1] || '0');
-        bbox.h = h / 2 + a;
-        bbox.d = h / 2 - a;
-        bbox.w = W.concat(cLines).reduce((a, b) => a + b, 0)
-               + cSpace.map(x => parseFloat(x))
-                       .reduce((a, b) => a + b, 0)
-               + 2 * parseFloat(fSpace[1] || '0');
+        bbox.h = height / 2 + a;
+        bbox.d = height / 2 - a;
+        bbox.w = width;
     }
 
     /******************************************************************/
@@ -247,18 +305,17 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      *  (Use frame spacing on the outsides, if needed, and use half the column spacing on each
      *   neighboring column, so that if column lines are needed, they fall in the middle
      *   of the column space.)
-     *
-     * @param{boolean} frame  Whether to include frame spacing on the left and right or not
-     * @param{string} fspace  The frame spacing to use, if any
      */
-    protected handleColumnSpacing(frame: boolean, fspace: string) {
+    protected handleColumnSpacing() {
         //
         //  Get the column spacing values, and add the frame spacing values at the left and right
         //
-        const spacing = this.convertLengths(this.getColumnAttributes('columnspacing'), 2);
+        const fspace = this.em(this.fSpace[0] || 0);
+        const spacing = this.addEm(this.cSpace, 2);
         if (!spacing) return;
         spacing.unshift(fspace);
         spacing[this.numCols] = fspace;
+        const frame = this.frame;
         //
         //  For each row...
         //
@@ -314,7 +371,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         for (const row of this.childNodes) {
             const align = (row.node.attributes.get('rowalign') as string) || rowAlign[i++];
             if (align !== 'baseline') {
-                this.adaptor.setStyle(row.chtml, 'verticalAlign', align);
+                this.adaptor.setAttribute(row.chtml, 'rowalign', align);
             }
             for (const cell of row.childNodes) {
                 const calign = cell.node.attributes.get('rowalign') as string;
@@ -330,18 +387,17 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      *  (Use frame spacing on the outsides, if needed, and use half the row spacing on each
      *   neighboring row, so that if row lines are needed, they fall in the middle
      *   of the row space.)
-     *
-     * @param{boolean} frame  Whether to include frame spacing on the top and bottom or not
-     * @param{string} fspace  The frame spacing to use, if any
      */
-    protected handleRowSpacing(frame: boolean, fspacing: string) {
+    protected handleRowSpacing() {
         //
         //  Get the row spacing values, and add the frame spacing values at the left and right
         //
-        const spacing = this.convertLengths(this.getRowAttributes('rowspacing'), 2);
+        const fspacing = this.em(this.fSpace[1] || 0);
+        const spacing = this.addEm(this.rSpace, 2);
         if (!spacing) return;
         spacing.unshift(fspacing);
         spacing[this.numRows] = fspacing;
+        const frame = this.frame;
         //
         //  For each row...
         //
@@ -390,8 +446,8 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     /*
      * Add a frame to the mtable, if needed
      */
-    protected handleFrame(frame: boolean) {
-        if (frame) {
+    protected handleFrame() {
+        if (this.frame) {
             this.adaptor.setStyle(this.adaptor.firstChild(this.chtml) as N,
                                   'border', '.07em ' + this.node.attributes.get('frame'));
         }
@@ -405,11 +461,11 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         if (w === 'auto') return;
         if (w.match(/%$/)) {
             this.bbox.pwidth = w;
-            this.adaptor.setAttribute(this.chtml, 'width', '%');
         } else {
-            w = this.em(this.length2em(w));
+            w = this.em(this.length2em(w) + (this.frame ? .14 : 0));
         }
         this.adaptor.setStyle(this.chtml, 'width', w);
+        this.adaptor.setAttribute(this.chtml, 'width', w);
     }
 
     /******************************************************************/
@@ -418,13 +474,16 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @param{string} name           The name of the attribute to get as an array
      * @param{CHTMLWrapper} wrapper  The wrapper whose attribute is to be used
      * @return{string[]}             The array of values in the given attribute, split at spaces,
-     *                                 padded to the number of table columns by repeating the last entry
+     *                                 padded to the number of table columns (minus 1) by repeating the last entry
      */
     protected getColumnAttributes(name: string, wrapper: CHTMLWrapper<N, T, D> = null) {
         const columns = this.getAttributeArray(name, wrapper);
         if (columns.length === 0) return;
-        while (columns.length < this.numCols) {
+        while (columns.length < this.numCols - 1) {
             columns.push(columns[columns.length - 1]);
+        }
+        if (columns.length >= this.numCols) {
+            columns.splice(this.numCols - 1);
         }
         return columns;
     }
@@ -433,13 +492,16 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @param{string} name           The name of the attribute to get as an array
      * @param{CHTMLWrapper} wrapper  The wrapper whose attribute is to be used
      * @return{string[]}             The array of values in the given attribute, split at spaces,
-     *                                 padded to the number of table rows by repeating the last entry
+     *                                 padded to the number of table rows (minus 1) by repeating the last entry
      */
     protected getRowAttributes(name: string, wrapper: CHTMLWrapper<N, T, D> = null) {
         const rows = this.getAttributeArray(name, wrapper);
         if (rows.length === 0) return;
-        while (rows.length < this.numRows) {
+        while (rows.length < this.numRows - 1) {
             rows.push(rows[rows.length - 1]);
+        }
+        if (rows.length >= this.numRows) {
+            rows.splice(this.numRows - 1);
         }
         return rows;
     }
@@ -458,15 +520,26 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
-     * Converts an array of dimensions (with arbitrary units) to an array of dimensions
-     *   in units of em's, dividing the dimension by n (defaults to 1).
+     * Adds "em" to a list of dimensions, after dividing by n (defaults to 1).
+     *
+     * @param{string[]} list   The array of dimensions (in em's)
+     * @param{nunber} n        The number to divide each dimension by after converted
+     * @return{string[]}       The array of values with "em" added
+     */
+    protected addEm(list: number[], n: number = 1) {
+        if (!list) return;
+        return list.map(x => this.em(x / n));
+    }
+
+    /*
+     * Converts an array of dimensions (with arbitrary units) to an array of numbers
+     *   representing the dimensions in units of em's.
      *
      * @param{string[]} list   The array of dimensions to be turned into em's
-     * @param{nunber} n        The number to divide each dimension by after converted
-     * @return{string[]}       The array of values converted to em's
+     * @return{number[]}       The array of values converted to em's
      */
-    protected convertLengths(list: string[], n: number = 1) {
+    protected convertLengths(list: string[]) {
         if (!list) return;
-        return list.map(x => this.em(this.length2em(x) / n));
+        return list.map(x => this.length2em(x));
     }
 }
