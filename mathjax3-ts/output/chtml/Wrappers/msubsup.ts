@@ -31,10 +31,13 @@ import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmsub wrapper for the MmlMsub object
+ * The CHTMLmsub wrapper for the MmlMsub object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmsub extends CHTMLscriptbase {
+export class CHTMLmsub<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsub.prototype.kind;
 
     /*
@@ -57,10 +60,13 @@ export class CHTMLmsub extends CHTMLscriptbase {
 
 /*****************************************************************/
 /*
- *  The CHTMLmsup wrapper for the MmlMsup object
+ * The CHTMLmsup wrapper for the MmlMsup object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmsup extends CHTMLscriptbase {
+export class CHTMLmsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsup.prototype.kind;
 
     public static useIC: boolean = true;
@@ -86,10 +92,13 @@ export class CHTMLmsup extends CHTMLscriptbase {
 
 /*****************************************************************/
 /*
- *  The CHTMLmsubsup wrapper for the MmlMsubsup object
+ * The CHTMLmsubsup wrapper for the MmlMsubsup object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmsubsup extends CHTMLscriptbase {
+export class CHTMLmsubsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsubsup.prototype.kind;
 
     public static styles: StyleList = {
@@ -127,18 +136,19 @@ export class CHTMLmsubsup extends CHTMLscriptbase {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
-        this.chtml = this.standardCHTMLnode(parent);
+    public toCHTML(parent: N) {
+        const chtml = this.standardCHTMLnode(parent);
         const [u, v, q] = this.getUVQ(this.baseChild.getBBox(), this.subChild.getBBox(), this.supChild.getBBox());
         const style = {'vertical-align': this.em(v)};
-        this.baseChild.toCHTML(this.chtml);
-        const stack = this.chtml.appendChild(this.html('mjx-script', {style}));
+        this.baseChild.toCHTML(chtml);
+        const stack = this.adaptor.append(chtml, this.html('mjx-script', {style})) as N;
         this.supChild.toCHTML(stack);
-        stack.appendChild(this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
+        this.adaptor.append(stack, this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
         this.subChild.toCHTML(stack);
         const corebox = this.baseCore.bbox;
         if (corebox.ic) {
-            this.supChild.chtml.style.marginLeft = this.em((1.2 * corebox.ic + .05) / this.supChild.bbox.rscale);
+            this.adaptor.setStyle(this.supChild.chtml, 'marginLeft',
+                                 this.em((1.2 * corebox.ic + .05) / this.supChild.bbox.rscale));
         }
     }
 

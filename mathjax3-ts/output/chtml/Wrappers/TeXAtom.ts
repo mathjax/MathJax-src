@@ -28,16 +28,19 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLTeXAtom wrapper for the TeXAtom object
+ * The CHTMLTeXAtom wrapper for the TeXAtom object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLTeXAtom extends CHTMLWrapper {
+export class CHTMLTeXAtom<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = TeXAtom.prototype.kind;
 
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         super.toCHTML(parent);
         //
         // Center VCENTER atoms vertically
@@ -47,7 +50,7 @@ export class CHTMLTeXAtom extends CHTMLWrapper {
             const {h, d} = bbox;
             const a = this.font.params.axis_height;
             const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-            this.chtml.style.verticalAlign = this.em(dh);
+            this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(dh));
         }
     }
 

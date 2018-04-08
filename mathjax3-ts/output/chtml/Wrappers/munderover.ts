@@ -37,10 +37,13 @@ const DELTA = 1.1;
 
 /*****************************************************************/
 /*
- *  The CHTMLmunder wrapper for the MmlMunder object
+ * The CHTMLmunder wrapper for the MmlMunder object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmunder extends CHTMLmsub {
+export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
     public static kind = MmlMunder.prototype.kind;
 
     public static useIC: boolean = true;
@@ -68,7 +71,7 @@ export class CHTMLmunder extends CHTMLmsub {
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -76,22 +79,28 @@ export class CHTMLmunder extends CHTMLmsub {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
-            this.chtml.setAttribute('limits', 'false');
+            this.adaptor.setAttribute(this.chtml, 'limits', 'false');
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const base = this.chtml.appendChild(this.html('mjx-row')).appendChild(this.html('mjx-base'));
-        const under = this.chtml.appendChild(this.html('mjx-row')).appendChild(this.html('mjx-under'));
+        const base = this.adaptor.append(
+            this.adaptor.append(this.chtml, this.html('mjx-row')) as N,
+            this.html('mjx-base')
+        ) as N;
+        const under = this.adaptor.append(
+            this.adaptor.append(this.chtml, this.html('mjx-row')) as N,
+            this.html('mjx-under')
+        ) as N;
         this.baseChild.toCHTML(base);
         this.script.toCHTML(under);
         const basebox = this.baseChild.getBBox();
         const underbox = this.script.getBBox();
         const [k, v] = this.getUnderKV(basebox, underbox);
         const del = DELTA * this.baseCore.bbox.ic / 2;
-        under.style.paddingTop = this.em(k);
+        this.adaptor.setStyle(under, 'paddingTop', this.em(k));
         this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -del]));
     }
 
@@ -119,10 +128,13 @@ export class CHTMLmunder extends CHTMLmsub {
 
 /*****************************************************************/
 /*
- *  The CHTMLmover wrapper for the MmlMover object
+ * The CHTMLmover wrapper for the MmlMover object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmover extends CHTMLmsup {
+export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
     public static kind = MmlMover.prototype.kind;
 
     public static useIC: boolean = true;
@@ -148,7 +160,7 @@ export class CHTMLmover extends CHTMLmsup {
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -156,25 +168,25 @@ export class CHTMLmover extends CHTMLmsup {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
-            this.chtml.setAttribute('limits', 'false');
+            this.adaptor.setAttribute(this.chtml, 'limits', 'false');
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const over = this.chtml.appendChild(this.html('mjx-over'));
-        const base = this.chtml.appendChild(this.html('mjx-base'));
+        const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
+        const base = this.adaptor.append(this.chtml, this.html('mjx-base')) as N;
         this.script.toCHTML(over);
         this.baseChild.toCHTML(base);
         const overbox = this.script.getBBox();
         const basebox = this.baseChild.getBBox();
         const [k, u] = this.getOverKU(basebox, overbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
-        over.style.paddingBottom = this.em(k);
+        this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
         this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
         if (overbox.d < 0) {
-            over.style.marginBottom = this.em(overbox.d * overbox.rscale);
+            this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
         }
     }
 
@@ -202,10 +214,13 @@ export class CHTMLmover extends CHTMLmsup {
 
 /*****************************************************************/
 /*
- *  The CHTMLmunderover wrapper for the MmlMunderover object
+ * The CHTMLmunderover wrapper for the MmlMunderover object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmunderover extends CHTMLmsubsup {
+export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
     public static kind = MmlMunderover.prototype.kind;
 
     public static useIC: boolean = true;
@@ -255,7 +270,7 @@ export class CHTMLmunderover extends CHTMLmsubsup {
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -263,17 +278,26 @@ export class CHTMLmunderover extends CHTMLmsubsup {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         if (this.hasMovableLimits()) {
             super.toCHTML(parent);
-            this.chtml.setAttribute('limits', 'false');
+            this.adaptor.setAttribute(this.chtml, 'limits', 'false');
             return;
         }
         this.chtml = this.standardCHTMLnode(parent);
-        const over = this.chtml.appendChild(this.html('mjx-over'));
-        const table = this.chtml.appendChild(this.html('mjx-box')).appendChild(this.html('mjx-munder'));
-        const base = table.appendChild(this.html('mjx-row')).appendChild(this.html('mjx-base'));
-        const under = table.appendChild(this.html('mjx-row')).appendChild(this.html('mjx-under'));
+        const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
+        const table = this.adaptor.append(
+            this.adaptor.append(this.chtml, this.html('mjx-box')) as N,
+            this.html('mjx-munder')
+        ) as N;
+        const base = this.adaptor.append(
+            this.adaptor.append(table, this.html('mjx-row')) as N,
+            this.html('mjx-base')
+        ) as N;
+        const under = this.adaptor.append(
+            this.adaptor.append(table, this.html('mjx-row')) as N,
+            this.html('mjx-under')
+        ) as N;
         this.overChild.toCHTML(over);
         this.baseChild.toCHTML(base);
         this.underChild.toCHTML(under);
@@ -283,11 +307,11 @@ export class CHTMLmunderover extends CHTMLmsubsup {
         const [ok, u] = this.getOverKU(basebox, overbox);
         const [uk, v] = this.getUnderKV(basebox, underbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;
-        over.style.paddingBottom = this.em(ok);
-        under.style.paddingTop = this.em(uk);
+        this.adaptor.setStyle(over, 'paddingBottom', this.em(ok));
+        this.adaptor.setStyle(under, 'paddingTop', this.em(uk));
         this.setDeltaW([base, under, over], this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]));
         if (overbox.d < 0) {
-            over.style.marginBottom = this.em(overbox.d * overbox.rscale);
+            this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
         }
     }
 

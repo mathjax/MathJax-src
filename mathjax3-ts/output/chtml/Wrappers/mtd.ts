@@ -29,10 +29,13 @@ import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmtd wrapper for the MmlMtd object
+ * The CHTMLmtd wrapper for the MmlMtd object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmtd extends CHTMLWrapper {
+export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMtd.prototype.kind;
 
     public static styles: StyleList = {
@@ -63,12 +66,12 @@ export class CHTMLmtd extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         super.toCHTML(parent);
         //
         // Include a strut to force minimum height and depth
         //
-        this.chtml.appendChild(this.html('mjx-tstrut'));
+        this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
     }
 
 }

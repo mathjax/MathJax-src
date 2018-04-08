@@ -25,7 +25,7 @@ import {AbstractInputJax} from '../core/InputJax.js';
 import {defaultOptions, separateOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {MathItem} from '../core/MathItem.js';
-import {DOM} from '../util/DOM.js';
+import {DOMAdaptor} from '../core/DOMAdaptor.js';
 
 import {FindMathML} from './mathml/FindMathML.js';
 import {MathMLCompile} from './mathml/MathMLCompile.js';
@@ -35,7 +35,12 @@ import {MathMLCompile} from './mathml/MathMLCompile.js';
  *  Implements the MathML class (extends AbstractInputJax)
  */
 
-export class MathML extends AbstractInputJax {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
 
     public static NAME: string = 'MathML';
     public static OPTIONS: OptionList = defaultOptions({
@@ -47,7 +52,7 @@ export class MathML extends AbstractInputJax {
         /*
          * The function to use to handle a parsing error (throw an error by default)
          */
-        parseError: function (node: Element) {
+        parseError: function (node: Node) {
             this.error(node.textContent.replace(/\n.*/g, ''));
         }
     }, AbstractInputJax.OPTIONS);
@@ -55,17 +60,12 @@ export class MathML extends AbstractInputJax {
     /*
      * The FindMathML instance used to locate MathML in the document
      */
-    protected findMathML: FindMathML;
+    protected findMathML: FindMathML<N, T, D>;
 
     /*
      * The MathMLCompile instance used to convert the MathML tree to internal format
      */
-    protected mathml: MathMLCompile;
-
-    /*
-     * The DOMParser instance used to parse the MathML string
-     */
-    protected parser: DOMParser;
+    protected mathml: MathMLCompile<N, T, D>;
 
     /*
      * A list of functions to call on the parsed MathML DOM before conversion to internal structure
@@ -78,10 +78,15 @@ export class MathML extends AbstractInputJax {
     constructor(options: OptionList = {}) {
         let [mml, find, compile] = separateOptions(options, FindMathML.OPTIONS, MathMLCompile.OPTIONS);
         super(mml);
-        this.findMathML = this.options['FindMathML'] || new FindMathML(find);
-        this.mathml = this.options['MathMLCompile'] || new MathMLCompile(compile);
-        this.parser = this.options['DOMParser'] || new (DOM.DOMParser)();
+        this.findMathML = this.options['FindMathML'] || new FindMathML<N, T, D>(find);
+        this.mathml = this.options['MathMLCompile'] || new MathMLCompile<N, T, D>(compile);
         this.mmlFilters = new FunctionList();
+    }
+
+    public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
+        super.setAdaptor(adaptor);
+        this.findMathML.adaptor = adaptor;
+        this.mathml.adaptor = adaptor;
     }
 
     /*
@@ -109,27 +114,23 @@ export class MathML extends AbstractInputJax {
      *
      * @override
      */
-    public compile(math: MathItem) {
+    public compile(math: MathItem<N, T, D>) {
         let mml = math.start.node;
         if (!mml || this.options['forceReparse']) {
             let mathml = this.executeFilters(this.preFilters, math, math.math || '<math></math>');
-            let doc = this.parser.parseFromString(mathml, 'text/' + this.options['parseAs']);
-            doc = this.checkForErrors(doc);
-            if (doc.body) {
-                if (doc.body.childNodes.length !== 1) {
-                    this.error('MathML must consist of a single element');
-                }
-                mml = doc.body.removeChild(doc.body.firstChild) as Element;
-            } else {
-                mml = doc.removeChild(doc.firstChild) as Element;
+            let doc = this.checkForErrors(this.adaptor.parse(mathml, 'text/' + this.options['parseAs']));
+            let body = this.adaptor.body(doc);
+            if (this.adaptor.childNodes(body).length !== 1) {
+                this.error('MathML must consist of a single element');
             }
-            if (mml.nodeName.toLowerCase().replace(/^[a-z]+:/, '') !== 'math') {
+            mml = this.adaptor.remove(this.adaptor.firstChild(body)) as N;
+            if (this.adaptor.kind(mml).replace(/^[a-z]+:/, '') !== 'math') {
                 this.error('MathML must be formed by a <math> element, not <' +
-                           mml.nodeName.toLowerCase() + '>');
+                           this.adaptor.kind(mml) + '>');
             }
         }
         mml = this.executeFilters(this.mmlFilters, math, mml);
-        return this.executeFilters(this.postFilters, math, this.mathml.compile(mml as HTMLElement));
+        return this.executeFilters(this.postFilters, math, this.mathml.compile(mml as N));
     }
 
     /*
@@ -138,10 +139,10 @@ export class MathML extends AbstractInputJax {
      * @param{Document} doc  The document returns from the DOMParser
      * @return{Document}     The document
      */
-    protected checkForErrors(doc: Document) {
-        let err = doc.querySelector('parsererror');
+    protected checkForErrors(doc: D) {
+        let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
         if (err) {
-            if (err.textContent === '') {
+            if (this.adaptor.textContent(err) === '') {
                 this.error('Error processing MathML');
             }
             this.options['parseError'].call(this, err);
@@ -161,7 +162,7 @@ export class MathML extends AbstractInputJax {
     /*
      * @override
      */
-    public findMath(node: Element) {
+    public findMath(node: N) {
         return this.findMathML.findMath(node);
     }
 

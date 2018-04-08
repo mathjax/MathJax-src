@@ -38,7 +38,13 @@ export type Delims = [string, string];
  *
  *  Locates AsciiMath expressions within strings
  */
-export class FindAsciiMath extends AbstractFindMath {
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
 
     public static OPTIONS: OptionList = {
         delimiters: [['`', '`']],   // The start/end delimiter pairs for asciimath code
@@ -106,8 +112,8 @@ export class FindAsciiMath extends AbstractFindMath {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match = pattern.exec(text);
-        return (!match ? null : protoItem(start[0], text.substr(i, match.index - i), match[0],
-                                          n, start.index, match.index + match[0].length, display));
+        return (!match ? null : protoItem<N, T>(start[0], text.substr(i, match.index - i), match[0],
+                                                n, start.index, match.index + match[0].length, display));
     }
 
     /*
@@ -117,7 +123,7 @@ export class FindAsciiMath extends AbstractFindMath {
      * @param{number} n          The index of the string being searched
      * @param{string} text       The string being searched
      */
-    protected findMathInString(math: ProtoItem[], n: number, text: string) {
+    protected findMathInString(math: ProtoItem<N, T>[], n: number, text: string) {
         let start, match;
         this.start.lastIndex = 0;
         while ((start = this.start.exec(text))) {
@@ -135,7 +141,7 @@ export class FindAsciiMath extends AbstractFindMath {
      * @override
      */
     public findMath(strings: string[]) {
-        let math: ProtoItem[] = [];
+        let math: ProtoItem<N, T>[] = [];
         if (this.hasPatterns) {
             for (let i = 0, m = strings.length; i < m; i++) {
                 this.findMathInString(math, i, strings[i]);

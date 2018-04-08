@@ -28,7 +28,8 @@ import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {HTMLNodes} from '../../util/HTMLNodes.js';
+import {Styles} from '../../util/Styles.js';
+import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
@@ -77,7 +78,12 @@ interface CSSStyle extends CSSStyleDeclaration {
  *  The base CHTMLWrapper class
  */
 
-export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper<N, T, D>> {
 
     public static kind: string = 'unknown';
 
@@ -191,18 +197,18 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * The factory used to create more CHTMLWrappers
      */
-    protected factory: CHTMLWrapperFactory;
+    protected factory: CHTMLWrapperFactory<N, T, D>;
 
     /*
      * The parent and children of this node
      */
-    public parent: CHTMLWrapper = null;
-    public childNodes: CHTMLWrapper[];
+    public parent: CHTMLWrapper<N, T, D> = null;
+    public childNodes: CHTMLWrapper<N, T, D>[];
 
     /*
      * The HTML element generated for this wrapped node
      */
-    public chtml: HTMLElement = null;
+    public chtml: N = null;
 
     /*
      * Styles that must be handled directly by CHTML (mostly having to do with fonts)
@@ -212,7 +218,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * The explicit styles set by the node
      */
-    protected styles: CSSStyleDeclaration = null;
+    protected styles: Styles = null;
 
     /*
      * The mathvariant for this node
@@ -243,6 +249,13 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
+     * Easy access to the DOMAdaptor object
+     */
+    get adaptor() {
+        return this.factory.chtml.adaptor;
+    }
+
+    /*
      * Easy access to the metric data for this node
      */
     get metrics() {
@@ -254,7 +267,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * @override
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node);
         this.parent = parent;
         this.font = factory.chtml.font;
@@ -273,7 +286,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * @param{CHTMLWrapper} parent  The wrapped parent node
      * @return{CHTMLWrapper}  The newly wrapped node
      */
-    public wrap(node: MmlNode, parent: CHTMLWrapper = null) {
+    public wrap(node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         const wrapped = this.factory.wrap(node, parent || this);
         if (parent) {
             parent.childNodes.push(wrapped);
@@ -286,10 +299,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * Create the HTML for the wrapped node.
      *
-     * @param{HTMLElement} parent  The HTML node where the output is added
+     * @param{N} parent  The HTML node where the output is added
      */
-    public toCHTML(parent: HTMLElement) {
-        let chtml = this.standardCHTMLnode(parent);
+    public toCHTML(parent: N) {
+        const chtml = this.standardCHTMLnode(parent);
         for (const child of this.childNodes) {
             child.toCHTML(chtml);
         }
@@ -333,15 +346,13 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     protected getStyles() {
         const styleString = this.node.attributes.getExplicit('style') as string;
         if (!styleString) return;
-        this.styles = this.html('span').style;
-        const style = this.styles as CSSStyle;
-        style.cssText = styleString;
+        const style = this.styles = new Styles(styleString);
         for (let i = 0, m = CHTMLWrapper.removeStyles.length; i < m; i++) {
             const id = CHTMLWrapper.removeStyles[i];
-            if (style[id]) {
+            if (style.get(id)) {
                 if (!this.removedStyles) this.removedStyles = {};
-                this.removedStyles[id] = style[id] as string;
-                style[id] = '';
+                this.removedStyles[id] = style.get(id);
+                style.set(id, '');
             }
         }
     }
@@ -387,10 +398,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected explicitVariant(fontFamily: string, fontWeight: string, fontStyle: string) {
         let style = this.styles;
-        if (!style) style = this.styles = this.html('span').style;
-        style.fontFamily = fontFamily;
-        if (fontWeight) style.fontWeight = fontWeight;
-        if (fontStyle)  style.fontStyle = fontStyle;
+        if (!style) style = this.styles = new Styles();
+        style.set('fontFamily', fontFamily);
+        if (fontWeight) style.set('fontWeight', fontWeight);
+        if (fontStyle)  style.set('fontStyle', fontStyle);
         return '-explicitFont';
     }
 
@@ -446,6 +457,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         this.bbox.rscale = scale / pscale;
     }
 
+    /*
+     * Sets the spacing based on TeX algorithm
+     */
     protected getSpace() {
         const space = this.node.texSpacing();
         if (space) {
@@ -457,10 +471,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * Create the standard CHTML element for the given wrapped node.
      *
-     * @param{HTMLElement} parent  The HTML element in which the node is to be created
-     * @returns{HTMLElement}  The root of the HTML tree for the wrapped node's output
+     * @param{N} parent  The HTML element in which the node is to be created
+     * @returns{N}  The root of the HTML tree for the wrapped node's output
      */
-    protected standardCHTMLnode(parent: HTMLElement) {
+    protected standardCHTMLnode(parent: N) {
         const chtml = this.createCHTMLnode(parent);
         this.handleStyles();
         this.handleVariant();
@@ -472,15 +486,15 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
-     * @param{HTMLElement} parent  The HTML element in which the node is to be created
-     * @returns{HTMLElement}  The root of the HTML tree for the wrapped node's output
+     * @param{N} parent  The HTML element in which the node is to be created
+     * @returns{N}  The root of the HTML tree for the wrapped node's output
      */
-    protected createCHTMLnode(parent: HTMLElement) {
+    protected createCHTMLnode(parent: N) {
         const href = this.node.attributes.get('href');
         if (href) {
-            parent = parent.appendChild(this.html('a', {href: href}));
+            parent = this.adaptor.append(parent, this.html('a', {href: href})) as N;
         }
-        this.chtml = parent.appendChild(this.html('mjx-' + this.node.kind));
+        this.chtml = this.adaptor.append(parent, this.html('mjx-' + this.node.kind)) as N;
         return this.chtml;
     }
 
@@ -491,7 +505,7 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (!this.styles) return;
         const styles = this.styles.cssText;
         if (styles) {
-            this.chtml.style.cssText = styles;
+            this.adaptor.setAttribute(this.chtml, 'style', styles);
         }
     }
 
@@ -500,7 +514,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      */
     protected handleVariant() {
         if (this.node.isToken && this.variant !== '-explicitFont') {
-            this.chtml.className = (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes;
+            this.adaptor.setAttribute(this.chtml, 'class',
+                                    (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes);
         }
     }
 
@@ -512,18 +527,18 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     }
 
     /*
-     * @param{HTMLElement} chtml  The HTML node to scale
+     * @param{N} chtml  The HTML node to scale
      * @param{number} rscale      The relatie scale to apply
-     * @return{HTMLElement}       The HTML node (for chaining)
+     * @return{N}       The HTML node (for chaining)
      */
-    protected setScale(chtml: HTMLElement, rscale: number) {
+    protected setScale(chtml: N, rscale: number) {
         const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
         if (chtml && scale !== 1) {
             const size = this.percent(scale);
             if (FONTSIZE[size]) {
-                chtml.setAttribute('size', FONTSIZE[size]);
+                this.adaptor.setAttribute(chtml, 'size', FONTSIZE[size]);
             } else {
-                chtml.style.fontSize = size;
+                this.adaptor.setStyle(chtml, 'fontSize', size);
             }
         }
         return chtml;
@@ -537,9 +552,9 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         if (this.bbox.L) {
             const space = this.em(this.bbox.L);
             if (SPACE[space]) {
-                this.chtml.setAttribute('space', SPACE[space]);
+                this.adaptor.setAttribute(this.chtml, 'space', SPACE[space]);
             } else {
-                this.chtml.style.marginLeft = space;
+                this.adaptor.setStyle(this.chtml, 'marginLeft', space);
             }
         }
     }
@@ -556,10 +571,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
         const mathbackground = attributes.getExplicit('mathbackground') as string;
         const background = attributes.getExplicit('background') as string;
         if (mathcolor || color) {
-            this.chtml.style.color = mathcolor || color;
+            this.adaptor.setStyle(this.chtml, 'color', mathcolor || color);
         }
         if (mathbackground || background) {
-            this.chtml.style.backgroundColor = mathbackground || background;
+            this.adaptor.setStyle(this.chtml, 'backgroundColor', mathbackground || background);
         }
     }
 
@@ -568,19 +583,19 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
      * Don't copy those in the skipAttributes list, or anything that already exists
      * as a property of the node (e.g., no "onlick", etc.).  If a name in the
      * skipAttributes object is set to false, then the attribute WILL be copied.
+     * Add the class to anhy other classes already in use.
      */
     protected handleAttributes() {
         const attributes = this.node.attributes;
         const defaults = attributes.getAllDefaults();
         const skip = CHTMLWrapper.skipAttributes;
         for (const name of attributes.getExplicitNames()) {
-            if (skip[name] === false || (!(name in defaults) && !skip[name] &&
-                                         typeof((this.chtml as {[name: string]: any})[name]) === 'undefined')) {
-                this.chtml.setAttribute(name, attributes.getExplicit(name) as string);
+            if (skip[name] === false || (!(name in defaults) && !skip[name] && !this.adaptor.hasAttribute(this.chtml, name))) {
+                this.adaptor.setAttribute(this.chtml, name, attributes.getExplicit(name) as string);
             }
         }
         if (attributes.get('class')) {
-            this.chtml.classList.add(attributes.get('class') as string);
+            this.adaptor.addClass(this.chtml, attributes.get('class') as string);
         }
     }
 
@@ -596,8 +611,8 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * @return{CHTMLWrapper}  The wrapper for this node's core <mo> node
      */
-    public coreMO(): CHTMLmo {
-        return this.CHTML.nodeMap.get(this.node.coreMO()) as CHTMLmo;
+    public coreMO(): CHTMLmo<N, T, D> {
+        return this.CHTML.nodeMap.get(this.node.coreMO()) as CHTMLmo<N, T, D>;
     }
 
     /*
@@ -654,10 +669,10 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
                 'vertical-align': this.em(-bbox.d),
                 'background-color': 'green'
             }})
-        ]);
+        ] as N[]);
         const node = this.chtml || this.parent.chtml;
-        node.parentNode.appendChild(box);
-        node.style.backgroundColor = '#FFEE00';
+        this.adaptor.append(this.adaptor.parent(node), box);
+        this.adaptor.setStyle(node, 'backgroundColor', '#FFEE00');
     }
 
     /*******************************************************************/
@@ -724,16 +739,16 @@ export class CHTMLWrapper extends AbstractWrapper<MmlNode, CHTMLWrapper> {
     /*
      * @param{string} type  The tag name of the HTML node to be created
      * @param{OptionList} def  The properties to set for the created node
-     * @param{HTMLElement[]} content  The child nodes for the created HTML node
-     * @return{HTMLElement}   The generated HTML tree
+     * @param{N[]} content  The child nodes for the created HTML node
+     * @return{N}   The generated HTML tree
      */
-    public html(type: string, def: OptionList = {}, content: HTMLElement[] = []) {
+    public html(type: string, def: OptionList = {}, content: N[] = []) {
         return this.factory.chtml.html(type, def, content);
     }
 
     /*
      * @param{string} text  The text from which to create an HTML text node
-     * @return{HTMLElement}  The generated text node with the given text
+     * @return{T}  The generated text node with the given text
      */
     public text(text: string) {
         return this.factory.chtml.text(text);

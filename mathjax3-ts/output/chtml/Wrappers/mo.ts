@@ -40,9 +40,13 @@ const DirectionVH: {[n: number]: string} = {
 
 /*****************************************************************/
 /*
- *  The CHTMLmo wrapper for the MmlMo object
+ * The CHTMLmo wrapper for the MmlMo object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-export class CHTMLmo extends CHTMLWrapper {
+export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMo.prototype.kind;
 
     public static styles: StyleList = {
@@ -127,7 +131,7 @@ export class CHTMLmo extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         // eventually handle centering, largop, etc.
         const attributes = this.node.attributes;
         const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
@@ -137,13 +141,13 @@ export class CHTMLmo extends CHTMLWrapper {
         }
         let chtml = this.standardCHTMLnode(parent);
         if (this.noIC) {
-            chtml.setAttribute('noIC', 'true');
+            this.adaptor.setAttribute(chtml, 'noIC', 'true');
         }
         if (stretchy && this.size < 0) {
             this.stretchHTML(chtml, symmetric);
         } else {
             if (symmetric || attributes.get('largeop')) {
-                chtml = chtml.appendChild(this.html('mjx-symmetric'));
+                chtml = this.adaptor.append(chtml, this.html('mjx-symmetric')) as N;
             }
             for (const child of this.childNodes) {
                 child.toCHTML(chtml);
@@ -154,14 +158,14 @@ export class CHTMLmo extends CHTMLWrapper {
     /*
      * Create the HTML for a multi-character stretchy delimiter
      *
-     * @param{HTMLElement} chtml  The parent element in which to put the delimiter
+     * @param{N} chtml  The parent element in which to put the delimiter
      * @param{boolean} symmetric  Whether delimiter should be symmetric about the math axis
      */
-    protected stretchHTML(chtml: HTMLElement, symmetric: boolean) {
+    protected stretchHTML(chtml: N, symmetric: boolean) {
         const c = this.getText().charCodeAt(0);
         const delim = this.stretch;
         const stretch = delim.stretch;
-        const content: HTMLElement[] = [];
+        const content: N[] = [];
         //
         //  Set up the beginning, extension, and end pieces
         //
@@ -203,7 +207,7 @@ export class CHTMLmo extends CHTMLWrapper {
         const dir = DirectionVH[delim.dir];
         const properties = {c: this.char(delim.c || c), style: styles};
         const html = this.html('mjx-stretchy-' + dir, properties, content);
-        chtml.appendChild(html);
+        this.adaptor.append(chtml, html);
     }
 
     /*
@@ -216,7 +220,7 @@ export class CHTMLmo extends CHTMLWrapper {
         }
         if (stretchy && this.size < 0) return;
         super.computeBBox(bbox);
-        const child = this.childNodes[this.childNodes.length-1];
+        const child = this.childNodes[this.childNodes.length - 1];
         if (child && child.bbox.ic) {
             bbox.ic = child.bbox.ic;
             if (!this.noIC) bbox.w += bbox.ic;

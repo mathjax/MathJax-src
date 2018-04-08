@@ -29,14 +29,19 @@ import {MathItem, AbstractMathItem} from './MathItem.js';
  *  The MathList interface (extends LinkedList<MathItem>)
  */
 
-export interface MathList extends LinkedList<MathItem> {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface MathList<N, T, D> extends LinkedList<MathItem<N, T, D>> {
     /*
      * Test if one math item is before the other in the document (a < b)
      *
      * @param{MathItem} a   The first MathItem
      * @param{MathItem} b   The second MathItem
      */
-    isBefore(a: MathItem, b: MathItem): boolean;
+    isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>): boolean;
 }
 
 /*****************************************************************/
@@ -44,12 +49,18 @@ export interface MathList extends LinkedList<MathItem> {
  *  The MathList abstract class (extends LinkedList<MathItem>)
  */
 
-export abstract class AbstractMathList extends LinkedList<MathItem> implements MathList {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export abstract class AbstractMathList<N, T, D>
+    extends LinkedList<MathItem<N, T, D>> implements MathList<N, T, D> {
 
     /*
      * @override
      */
-    public isBefore(a: MathItem, b: MathItem) {
+    public isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>) {
         return (a.start.i < b.start.i || (a.start.i === b.start.i && a.start.n < b.start.n));
     }
 

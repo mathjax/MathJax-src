@@ -23,6 +23,7 @@
 
 import {AbstractMathItem, Location} from '../../core/MathItem.js';
 import {InputJax} from '../../core/InputJax.js';
+import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {HTMLDocument} from './HTMLDocument.js';
 
 /*****************************************************************/
@@ -30,16 +31,28 @@ import {HTMLDocument} from './HTMLDocument.js';
  *  Implements the HTMLMathItem class (extends AbstractMathItem)
  */
 
-export class HTMLMathItem extends AbstractMathItem {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
 
     public static STATE = AbstractMathItem.STATE;
 
     /*
+     * Easy access to DOM adaptor
+     */
+    get adaptor() {
+        return this.inputJax.adaptor;
+    }
+
+    /*
      * @override
      */
-    constructor(math: string, jax: InputJax, display: boolean = true,
-                start: Location = {node: null, n: 0, delim: ''},
-                end: Location = {node: null, n: 0, delim: ''}) {
+    constructor(math: string, jax: InputJax<N, T, D>, display: boolean = true,
+                start: Location<N, T> = {node: null, n: 0, delim: ''},
+                end: Location<N, T> = {node: null, n: 0, delim: ''}) {
         super(math, jax, display, start, end);
     }
 
@@ -64,35 +77,35 @@ export class HTMLMathItem extends AbstractMathItem {
      *
      * @override
      */
-    public updateDocument(html: HTMLDocument) {
+    public updateDocument(html: HTMLDocument<N, T, D>) {
         if (this.state() < STATE.INSERTED) {
             if (this.inputJax.processStrings) {
-                let node = this.start.node as Text;
+                let node = this.start.node as T;
                 if (node === this.end.node) {
-                    if (this.end.n < this.end.node.nodeValue.length) {
-                        this.end.node.splitText(this.end.n);
+                    if (this.end.n < this.adaptor.value(this.end.node).length) {
+                        this.adaptor.split(this.end.node, this.end.n);
                     }
                     if (this.start.n) {
-                        node = (this.start.node as Text).splitText(this.start.n);
+                        node = this.adaptor.split(this.start.node as T, this.start.n);
                     }
-                    node.parentNode.replaceChild(this.typesetRoot, node);
+                    this.adaptor.replace(this.typesetRoot, node);
                 } else {
                     if (this.start.n) {
-                        node = node.splitText(this.start.n);
+                        node = this.adaptor.split(node, this.start.n);
                     }
                     while (node !== this.end.node) {
-                        let next = node.nextSibling as Text;
-                        node.parentNode.removeChild(node);
+                        let next = this.adaptor.next(node) as T;
+                        this.adaptor.remove(node);
                         node = next;
                     }
-                    node.parentNode.insertBefore(this.typesetRoot, node);
-                    if (this.end.n < node.nodeValue.length) {
-                        node.splitText(this.end.n);
+                    this.adaptor.insert(this.typesetRoot, node);
+                    if (this.end.n < this.adaptor.value(node).length) {
+                        this.adaptor.split(node, this.end.n);
                     }
-                    node.parentNode.removeChild(node);
+                    this.adaptor.remove(node);
                 }
             } else {
-                this.start.node.parentNode.replaceChild(this.typesetRoot, this.start.node);
+                this.adaptor.replace(this.typesetRoot, this.start.node);
             }
             this.start.node = this.end.node = this.typesetRoot;
             this.start.n = this.end.n = 0;
@@ -110,19 +123,17 @@ export class HTMLMathItem extends AbstractMathItem {
         if (this.state() >= STATE.TYPESET) {
             let node = this.start.node;
             if (restore) {
-                let document = node.ownerDocument;
                 let text = this.start.delim + this.math + this.end.delim;
                 let math;
                 if (this.inputJax.processStrings) {
-                    math = document.createTextNode(text);
+                    math = this.adaptor.text(text);
                 } else {
-                    let span = document.createElement('span');
-                    span.innerHTML = text;
-                    math = span.firstChild;
+                    const doc = this.adaptor.parse(text, 'text/html');
+                    math = this.adaptor.firstChild(this.adaptor.body(doc));
                 }
-                node.parentNode.insertBefore(math, node);
+                this.adaptor.insert(math, node);
             }
-            node.parentNode.removeChild(node);
+            this.adaptor.remove(node);
         }
     }
 

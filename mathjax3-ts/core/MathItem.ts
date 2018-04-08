@@ -34,11 +34,15 @@ import {MmlNode} from './MmlTree/MmlNode.js';
  *  the string, and the delimiter at that location).
  */
 
-export type Location = {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
+export type Location<N, T> = {
     i?: number;
     n?: number;
     delim?: string;
-    node?: Text | Element;
+    node?: N | T;
 };
 
 /*****************************************************************/
@@ -76,7 +80,12 @@ export type BBox = {
  *  and so on.
  */
 
-export interface MathItem {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface MathItem<N, T, D> {
     /*
      * The string represeting the expression to be processed
      */
@@ -85,7 +94,7 @@ export interface MathItem {
     /*
      * The input jax used to process the math
      */
-    inputJax: InputJax;
+    inputJax: InputJax<N, T, D>;
 
     /*
      * Whether the math is in display mode or inline mode
@@ -96,8 +105,8 @@ export interface MathItem {
      * The start and ending locations in the document of
      *   this expression
      */
-    start: Location;
-    end: Location;
+    start: Location<N, T>;
+    end: Location<N, T>;
 
     /*
      * The internal format for this expression (onece compiled)
@@ -107,7 +116,7 @@ export interface MathItem {
     /*
      * The typeset version of the expression (once typeset)
      */
-    typesetRoot: Element;
+    typesetRoot: N;
 
     /*
      * The metric information at the location of the math
@@ -131,14 +140,14 @@ export interface MathItem {
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
-    compile(document: MathDocument): void;
+    compile(document: MathDocument<N, T, D>): void;
 
     /*
      * Converts the internal format to the typeset version by caling the output jax
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
-    typeset(document: MathDocument): void;
+    typeset(document: MathDocument<N, T, D>): void;
 
     /*
      * Adds any needed event handlers to the typeset output
@@ -150,7 +159,7 @@ export interface MathItem {
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
-    updateDocument(document: MathDocument): void;
+    updateDocument(document: MathDocument<N, T, D>): void;
 
     /*
      * Removes the typeset version from the document, optionally replacing the original
@@ -194,23 +203,32 @@ export interface MathItem {
  *  is translated back into the actual node location in the DOM).
  */
 
-export type ProtoItem = {
-    math: string;      // The math expression itself
-    start: Location;   // The starting location of the math
-    end: Location;     // The ending location of the math
-    open?: string;     // The opening delimiter
-    close?: string;    // The closing delimiter
-    n?: number;        // The index of the string in which this math is found
-    display: boolean;  // True means display mode, false is inline mode
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
+export type ProtoItem<N, T> = {
+    math: string;            // The math expression itself
+    start: Location<N, T>;   // The starting location of the math
+    end: Location<N, T>;     // The ending location of the math
+    open?: string;           // The opening delimiter
+    close?: string;          // The closing delimiter
+    n?: number;              // The index of the string in which this math is found
+    display: boolean;        // True means display mode, false is inline mode
 };
 
 /*
  *  Produce a proto math item that can be turned into a MathItem
  */
-export function protoItem(open: string, math: string, close: string, n: number,
-                        start: number, end: number, display: boolean = null) {
-    let item: ProtoItem = {open: open, math: math, close: close,
-                           n: n, start: {n: start}, end: {n: end}, display: display};
+
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ */
+export function protoItem<N, T>(open: string, math: string, close: string, n: number,
+                                start: number, end: number, display: boolean = null) {
+    let item: ProtoItem<N, T> = {open: open, math: math, close: close,
+                                 n: n, start: {n: start}, end: {n: end}, display: display};
     return item;
 }
 
@@ -219,7 +237,12 @@ export function protoItem(open: string, math: string, close: string, n: number,
  *  Implements the MathItem class
  */
 
-export abstract class AbstractMathItem implements MathItem {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
     public static STATE = {
         UNPROCESSED: 0,
@@ -229,12 +252,12 @@ export abstract class AbstractMathItem implements MathItem {
     };
 
     public math: string;
-    public inputJax: InputJax;
+    public inputJax: InputJax<N, T, D>;
     public display: boolean;
-    public start: Location;
-    public end: Location;
+    public start: Location<N, T>;
+    public end: Location<N, T>;
     public root: MmlNode = null;
-    public typesetRoot: Element = null;
+    public typesetRoot: N = null;
     protected _state: number = STATE.UNPROCESSED;
     public metrics: Metrics = {} as Metrics;
     public bbox: BBox = {};
@@ -249,9 +272,9 @@ export abstract class AbstractMathItem implements MathItem {
      * @param{Location} end     The ending position of the math in the document
      * @constructor
      */
-    constructor (math: string, jax: InputJax, display: boolean = true,
-                 start: Location = {i: 0, n: 0, delim: ''},
-                 end: Location = {i: 0, n: 0, delim: ''}) {
+    constructor (math: string, jax: InputJax<N, T, D>, display: boolean = true,
+                 start: Location<N, T> = {i: 0, n: 0, delim: ''},
+                 end: Location<N, T> = {i: 0, n: 0, delim: ''}) {
         this.math = math;
         this.inputJax = jax;
         this.display = display;
@@ -268,7 +291,7 @@ export abstract class AbstractMathItem implements MathItem {
     /*
      * @override
      */
-    public compile(document: MathDocument) {
+    public compile(document: MathDocument<N, T, D>) {
         if (this.state() < STATE.COMPILED) {
             this.root = this.inputJax.compile(this);
             this.state(STATE.COMPILED);
@@ -278,7 +301,7 @@ export abstract class AbstractMathItem implements MathItem {
     /*
      * @override
      */
-    public typeset(document: MathDocument) {
+    public typeset(document: MathDocument<N, T, D>) {
         if (this.state() < STATE.TYPESET) {
             this.typesetRoot = document.outputJax[this.display === null ? 'escaped' : 'typeset'](this, document);
             this.state(STATE.TYPESET);
@@ -293,7 +316,7 @@ export abstract class AbstractMathItem implements MathItem {
     /*
      * @override
      */
-    public updateDocument(document: MathDocument) {}
+    public updateDocument(document: MathDocument<N, T, D>) {}
 
     /*
      * @override

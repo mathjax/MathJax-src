@@ -25,13 +25,19 @@ import {MathItem, ProtoItem} from './MathItem.js';
 import {MmlNode} from './MmlTree/MmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
+import {DOMAdaptor} from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /*
  *  The InputJax interface
  */
 
-export interface InputJax {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface InputJax<N, T, D> {
     /*
      * The name of the input jax subclass (e.g,. 'TeX')
      */
@@ -55,14 +61,24 @@ export interface InputJax {
     postFilters: FunctionList;
 
     /*
+     * The DOM adaptor for managing HTML elements
+     */
+    adaptor: DOMAdaptor<N, T, D>;
+
+    /*
+     * @param{DOMAdaptor}  The adaptor to use in this jax
+     */
+    setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
+
+    /*
      * Finds the math within the DOM or the list of strings
      *
-     * @param{Element | string[]} which  The element or array of strings to be searched for math
-     * @param{OptionList} options        The options for the search, if any
-     * @return{ProtoItem[]}              Array of proto math items found (further processed by the
-     *                                     handler to produce actual MathItem objects)
+     * @param{N | string[]} which   The element or array of strings to be searched for math
+     * @param{OptionList} options   The options for the search, if any
+     * @return{ProtoItem[]}         Array of proto math items found (further processed by the
+     *                                handler to produce actual MathItem objects)
      */
-    findMath(which: Element | string[], options?: OptionList): ProtoItem[];
+    findMath(which: N | string[], options?: OptionList): ProtoItem<N, T>[];
 
     /*
      * Convert the math in a math item into the internal format
@@ -70,7 +86,7 @@ export interface InputJax {
      * @param{MathItem} math  The MathItem whose math content is to processed
      * @return{MmlNode}       The resulting internal node tree for the math
      */
-    compile(math: MathItem): MmlNode;
+    compile(math: MathItem<N, T, D>): MmlNode;
 }
 
 /*****************************************************************/
@@ -78,7 +94,12 @@ export interface InputJax {
  *  The abstract InputJax class
  */
 
-export abstract class AbstractInputJax implements InputJax {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
 
     public static NAME: string = 'generic';
     public static OPTIONS: OptionList = {};
@@ -86,6 +107,7 @@ export abstract class AbstractInputJax implements InputJax {
     public options: OptionList;
     public preFilters: FunctionList;
     public postFilters: FunctionList;
+    public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
 
     /*
      * @param{OptionList} options  The options to applyt to this input jax
@@ -107,6 +129,13 @@ export abstract class AbstractInputJax implements InputJax {
     }
 
     /*
+     * @override
+     */
+    public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
+        this.adaptor = adaptor;
+    }
+
+    /*
      * @return{boolean}  True means find math in string array, false means in DOM element
      */
     public get processStrings() {
@@ -116,14 +145,14 @@ export abstract class AbstractInputJax implements InputJax {
     /*
      * @override
      */
-    public findMath(node: Element | string[], options: OptionList) {
-        return [] as ProtoItem[];
+    public findMath(node: N | string[], options?: OptionList) {
+        return [] as ProtoItem<N, T>[];
     }
 
     /*
      * @override
      */
-    public abstract compile(math: MathItem): MmlNode;
+    public abstract compile(math: MathItem<N, T, D>): MmlNode;
 
     /*
      * Execute a set of filters, passing them the MathItem and any needed data,
@@ -134,7 +163,7 @@ export abstract class AbstractInputJax implements InputJax {
      * @param{any} data              Whatever other data is needed
      * @return{any}                  The (possibly modidied) data
      */
-    protected executeFilters(filters: FunctionList, math: MathItem, data: any) {
+    protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>, data: any) {
         let args = {math: math, data: data};
         filters.execute(args);
         return args.data;
