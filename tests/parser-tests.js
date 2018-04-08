@@ -1,12 +1,13 @@
 import {MathJax} from 'mathjax3/mathjax.js';
 
-import 'mathjax3/handlers/html.js';
 import {TeX} from 'mathjax3/input/tex.js';
-
+import {RegisterHTMLHandler} from "mathjax3/handlers/html.js";
+import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
 import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 
 import {Test} from './tests.js';
 
+RegisterHTMLHandler(chooseAdaptor());
 
 export class ParserTest extends Test {
 
