@@ -32,15 +32,12 @@ import {DIRECTION} from '../FontData.js';
 
 
 /*
- * The heights, depths, and widths of the rows and columns, and the
- * natural width and height of the table
+ * The heights, depths, and widths of the rows and columns
  */
 export type TableData = {
     H: number[];
     D: number[];
     W: number[];
-    width: number;
-    height: number;
 };
 
 /*****************************************************************/
@@ -85,7 +82,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected rSpace: number[];
     protected cLines: number[];
     protected rLines: number[];
-    protected cWidths: string[];
+    protected cWidths: (number | string)[];
 
     /*
      * The bounding box information for the table rows and columns
@@ -117,7 +114,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
         this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));
         this.rLines = this.getColumnAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
-        this.cWidths = this.getColumnAttributes('columnwidth');
+        this.cWidths = this.getColumnWidths();
         //
         // Stretch the columns (rows are already taken care of in the CHTMLmtr wrapper)
         //
@@ -197,6 +194,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.padRows();
         this.handleColumnSpacing();
         this.handleColumnLines();
+        this.handleColumnWidths();
         this.handleRowSpacing();
         this.handleRowLines();
         this.handleEqualRows();
@@ -230,19 +228,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
             }
         }
         const w = this.node.attributes.get('width') as string;
-        const height = H.concat(D, this.rLines, this.rSpace).reduce((a, b) => a + b, 0)
-                     + (this.frame ? .14 : 0)
-                     + 2 * this.fSpace[1];
-        let width;
-        if (w === 'auto' || w.match(/%$/)) {
-            width = W.concat(this.cLines, this.cSpace).reduce((a, b) => a + b, 0)
-                  + (this.frame ? .14 : 0)
-                  + 2 * this.fSpace[0];
-        } else {
-            const cwidth = this.metrics.containerWidth / this.metrics.em;
-            width = this.length2em(w, cwidth) + (this.frame ? .14 : 0);
-        }
-        this.data = {H, D, W, width, height};
+        this.data = {H, D, W};
         return this.data;
     }
 
@@ -250,13 +236,45 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @override
      */
     public computeBBox(bbox: BBox) {
-        let {width, height} = this.getTableData();
+        const {H, D, W} = this.getTableData();
+        let height, width;
+        //
+        // For equal rows, use the common height and depth for all rows
+        // Otherwise, use the height and depths for each row separately.
+        // Add in the spacing, line widths, and frame size.
+        //
         if (this.node.attributes.get('equalrows')) {
             const HD = this.getEqualRowHeight();
             height = [].concat(this.rLines, this.rSpace).reduce((a, b) => a + b, 0)
-                   + HD * this.numRows
-                   + 2 * this.fSpace[1];
+                   + HD * this.numRows;
+        } else {
+            height = H.concat(D, this.rLines, this.rSpace).reduce((a, b) => a + b, 0);
         }
+        height += (this.frame ? .14 : 0) + 2 * this.fSpace[1];
+        //
+        //  Get the widths of all columns (explicit width or computed width)
+        //
+        const CW = Array.from(W.keys()).map(i => {
+            return (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : W[i]);
+        });
+        //
+        //  Get the expected width of the table
+        //
+        width = CW.concat(this.cLines, this.cSpace).reduce((a, b) => a + b, 0)
+              + (this.frame ? .14 : 0)
+              + 2 * this.fSpace[0];
+        //
+        //  If the table width is not 'auto', determine the specified width
+        //    and pick the larger of the specified and computed widths.
+        //
+        const w = this.node.attributes.get('width') as string;
+        if (w !== 'auto') {
+            const cwidth = this.metrics.containerWidth / this.metrics.em;
+            width = Math.max(this.length2em(w, cwidth) + (this.frame ? .14 : 0), width);
+        }
+        //
+        //  Return the bbounding box information
+        //
         const a = this.font.params.axis_height;
         bbox.h = height / 2 + a;
         bbox.d = height / 2 - a;
@@ -334,6 +352,24 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
                 const line = lines[i++];
                 if (line === 'none') continue;
                 this.adaptor.setStyle(cell, 'borderLeft', '.07em ' + line);
+            }
+        }
+    }
+
+    /*
+     * Add widths to the cells for the column widths
+     */
+    protected handleColumnWidths() {
+        for (const row of this.childNodes) {
+            let i = 0;
+            for (const cell of this.adaptor.childNodes(row.chtml) as N[]) {
+                const w = this.cWidths[i++];
+                if (w !== null) {
+                    const width = (typeof w === 'number' ? this.em(w) : w);
+                    this.adaptor.setStyle(cell, 'width', width);
+                    this.adaptor.setStyle(cell, 'maxWidth', width);
+                    this.adaptor.setStyle(cell, 'minWidth', width);
+                }
             }
         }
     }
@@ -444,7 +480,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         } else {
             w = this.em(this.length2em(w) + (this.frame ? .14 : 0));
         }
-        this.adaptor.setStyle(this.chtml, 'width', w);
+        this.adaptor.setStyle(this.chtml, 'minWidth', w);
         this.adaptor.setAttribute(this.chtml, 'width', w);
     }
 
@@ -460,50 +496,151 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
+     * Determine the column widths that can be computed (and need to be set).
+     * The resulting arrays will have numbers for fixed-size arrays,
+     *   strings for percentage sizes that can't be determined now,
+     *   and null for stretchy columns tht will expand to fill the extra space.
+     * Depending on the width specified for the table, different column
+     *  values can be determined.
+     *
+     * @return{(string|number|null)[]}  The array of widths
+     */
+    protected getColumnWidths() {
+        const width = this.node.attributes.get('width') as string;
+        const swidths = this.getColumnAttributes('columnwidth', 0);
+        if (width === 'auto') {
+            return this.getColumnWidthsAuto(swidths);
+        }
+        if (width.match(/%$/)) {
+            return this.getColumnWidthsPercent(swidths, width);
+        }
+        return this.getColumnWidthsFixed(swidths, this.length2em(width));
+    }
+
+    /*
+     * For tables with width="auto", auto and fit columns
+     * will end up being natural width, so don't need to
+     * set those explicitly.
+     *
+     * @return{(string|number|null)[]}  The array of widths
+     */
+    protected getColumnWidthsAuto(swidths: string[]) {
+        return swidths.map(x => {
+            if (x === 'auto' || x === 'fit') return null;
+            if (x.match(/%$/)) return x;
+            return this.length2em(x);
+        });
+    }
+
+    /*
+     * For tables with percentage widths, let 'fit' columns (or 'auto'
+     * columns if there are not 'fit' ones) will stretch automatically,
+     * but for 'auto' columns (when there are 'fit' ones), set the size
+     * to the natural size of the column.
+     *
+     * @return{(string|number|null)[]}  The array of widths
+     */
+    protected getColumnWidthsPercent(swidths: string[], width: string) {
+        const hasFit = swidths.indexOf('fit') >= 0;
+        const {W} = (hasFit ? this.getTableData() : {W: null});
+        return Array.from(swidths.keys()).map(i => {
+            const x = swidths[i];
+            if (x === 'fit') return null;
+            if (x === 'auto') return (hasFit ? W[i] : null);
+            if (x.match(/%$/)) return x;
+            return this.length2em(x);
+        });
+    }
+
+    /*
+     * For fixed-width tables, compute the column widths of all columns.
+     *
+     * @return{(string|number|null)[]}  The array of widths
+     */
+    protected getColumnWidthsFixed(swidths: string[], width: number) {
+        //
+        // Get the indices of the fit and auto columns, and the number of fit or auto entries.
+        // If there are fit or auto columns, get the column widths.
+        //
+        const indices = Array.from(swidths.keys());
+        const fit = indices.filter(i => swidths[i] === 'fit');
+        const auto = indices.filter(i => swidths[i] === 'auto');
+        const n = fit.length || auto.length;
+        const {W} = (n ? this.getTableData() : {W: null});
+        //
+        // Determine the space remaining from the fixed width after the
+        //   separation and lines have been removed (cwidth), and
+        //   after the width of the columns have been removed (dw).
+        //
+        const cwidth = width - [].concat(this.cLines, this.cSpace).reduce((a, b) => a + b, 0) - 2 * this.fSpace[0];
+        let dw = cwidth;
+        indices.forEach(i => {
+            const x = swidths[i];
+            dw -= (x === 'fit' || x === 'auto' ? W[i] : this.length2em(x, width));
+        });
+        //
+        // Get the amount of extra space per column, or 0 (fw)
+        //
+        const fw = (n && dw > 0 ? dw / n : 0);
+        //
+        // Return the column widths (plus extr space for those that are stretching
+        //
+        return indices.map(i => {
+            const x = swidths[i];
+            if (x === 'fit') return W[i] + fw;
+            if (x === 'auto') return W[i] + (fit.length === 0 ? fw : 0);
+            return this.length2em(x, cwidth);
+        });
+    }
+
+    /******************************************************************/
+
+    /*
      * @param{string} name           The name of the attribute to get as an array
-     * @param{CHTMLWrapper} wrapper  The wrapper whose attribute is to be used
+     * @param{number} i              Return this many fewer than numCols entries
      * @return{string[]}             The array of values in the given attribute, split at spaces,
      *                                 padded to the number of table columns (minus 1) by repeating the last entry
      */
-    protected getColumnAttributes(name: string, wrapper: CHTMLWrapper<N, T, D> = null) {
-        const columns = this.getAttributeArray(name, wrapper);
+    protected getColumnAttributes(name: string, i: number = 1) {
+        const n = this.numCols - i;
+        const columns = this.getAttributeArray(name);
         if (columns.length === 0) return;
-        while (columns.length < this.numCols - 1) {
+        while (columns.length < n) {
             columns.push(columns[columns.length - 1]);
         }
-        if (columns.length >= this.numCols) {
-            columns.splice(this.numCols - 1);
+        if (columns.length > n) {
+            columns.splice(n);
         }
         return columns;
     }
 
     /*
      * @param{string} name           The name of the attribute to get as an array
-     * @param{CHTMLWrapper} wrapper  The wrapper whose attribute is to be used
+     * @param{number} i              Return this many fewer than numRows entries
      * @return{string[]}             The array of values in the given attribute, split at spaces,
      *                                 padded to the number of table rows (minus 1) by repeating the last entry
      */
-    protected getRowAttributes(name: string, wrapper: CHTMLWrapper<N, T, D> = null) {
-        const rows = this.getAttributeArray(name, wrapper);
+    protected getRowAttributes(name: string, i: number = 1) {
+        const n = this.numRows - i;
+        const rows = this.getAttributeArray(name);
         if (rows.length === 0) return;
-        while (rows.length < this.numRows - 1) {
+        while (rows.length < n) {
             rows.push(rows[rows.length - 1]);
         }
-        if (rows.length >= this.numRows) {
-            rows.splice(this.numRows - 1);
+        if (rows.length > n) {
+            rows.splice(n);
         }
         return rows;
     }
 
     /*
      * @param{string} name           The name of the attribute to get as an array
-     * @param{CHTMLWrapper} wrapper  The wrapper whose attribute is to be used
      * @return{string[]}             The array of values in the given attribute, split at spaces
      *                                 (after leading and trailing spaces are removed, and multiple
      *                                  spaces have been collapsed to one).
      */
-    protected getAttributeArray(name: string, wrapper: CHTMLWrapper<N, T, D> = null) {
-        const value = ((wrapper || this).node.attributes.get(name) as string);
+    protected getAttributeArray(name: string) {
+        const value = this.node.attributes.get(name) as string;
         if (!value) return [];
         return value.replace(/^\s+/, '').replace(/\s+$/, '').replace(/\s+/g, ' ').split(/ /);
     }
