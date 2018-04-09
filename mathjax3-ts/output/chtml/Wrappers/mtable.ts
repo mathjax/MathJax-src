@@ -76,7 +76,6 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * The spacing and line data
      */
     protected frame: boolean;
-    protected lines: boolean;
     protected fSpace: number[];
     protected cSpace: number[];
     protected rSpace: number[];
@@ -108,8 +107,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         const attributes = node.attributes;
         this.frame = attributes.get('frame') !== 'none';
-        this.lines = this.frame || attributes.get('columnlines') !== 'none' || attributes.get('rowlines') !== 'none';
-        this.fSpace = (this.lines ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+        this.fSpace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
         this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
         this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
         this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));
@@ -434,6 +432,10 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
+    /*
+     * Set the heights of all rows to be the same, and properly center
+     * baseline or axis rows within the newly sized
+     */
     protected handleEqualRows() {
         if (!this.node.attributes.get('equalrows')) return;
         const space = this.rSpace.map(x => x / 2);
@@ -442,17 +444,27 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         const {H, D} = this.getTableData();
         const HD = this.getEqualRowHeight();
         const HDem = this.em(HD);
+        //
+        // Loop through the rows and set their heights
+        //
         for (const i of Array.from(this.childNodes.keys())) {
             const row = this.childNodes[i];
-            this.adaptor.setStyle(row.chtml, 'height', this.em(space[i] + HD + space[i + 1]));
-            const ralign = row.node.attributes.get('rowalign');
-            for (const cell of row.childNodes) {
-                const calign = cell.node.attributes.get('rowalign');
-                if (calign === 'baseline' || calign === 'axis') {
-                    const child = this.adaptor.lastChild(cell.chtml) as N;
-                    this.adaptor.setStyle(child, 'height', HDem);
-                    this.adaptor.setStyle(child, 'verticalAlign', this.em(-((HD - H[i] + D[i]) / 2)));
-                    if (ralign === 'baseline' || ralign === 'axis') break;
+            if (HD !== H[i] + D[i]) {
+                this.adaptor.setStyle(row.chtml, 'height', this.em(space[i] + HD + space[i + 1]));
+                const ralign = row.node.attributes.get('rowalign');
+                //
+                //  Loop through the cells and set the strut height and depth to spread
+                //    the extra height equally above and below the baseline.  The strut
+                //    is the last element in the cell.
+                //
+                for (const cell of row.childNodes) {
+                    const calign = cell.node.attributes.get('rowalign');
+                    if (calign === 'baseline' || calign === 'axis') {
+                        const child = this.adaptor.lastChild(cell.chtml) as N;
+                        this.adaptor.setStyle(child, 'height', HDem);
+                        this.adaptor.setStyle(child, 'verticalAlign', this.em(-((HD - H[i] + D[i]) / 2)));
+                        if (ralign === 'baseline' || ralign === 'axis') break;
+                    }
                 }
             }
         }
