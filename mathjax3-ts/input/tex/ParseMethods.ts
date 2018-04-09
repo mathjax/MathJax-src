@@ -1578,7 +1578,8 @@ export namespace ParseMethods {
     const T  = parser.ParseArg(name);
     const S  = parser.ParseArg(name);
     const SS = parser.ParseArg(name);
-    parser.Push(NewTex.display ? D : T);
+    // parser.Push(NewTex.display ? D : T);
+    parser.Push(TreeHelper.createNode('mathchoice', [D, T, S, SS], {}));
     // parser.Push(MML.TeXmathchoice(D,T,S,SS));
   }
 
