@@ -250,7 +250,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         } else {
             height = H.concat(D, this.rLines, this.rSpace).reduce((a, b) => a + b, 0);
         }
-        height += (this.frame ? .14 : 0) + 2 * this.fSpace[1];
+        height += (this.frame ? .14 + 2 * this.fSpace[1] : 0);
         //
         //  Get the widths of all columns (explicit width or computed width)
         //
@@ -261,8 +261,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //  Get the expected width of the table
         //
         width = CW.concat(this.cLines, this.cSpace).reduce((a, b) => a + b, 0)
-              + (this.frame ? .14 : 0)
-              + 2 * this.fSpace[0];
+              + (this.frame ? .14 + 2 * this.fSpace[0] : 0);
         //
         //  If the table width is not 'auto', determine the specified width
         //    and pick the larger of the specified and computed widths.
