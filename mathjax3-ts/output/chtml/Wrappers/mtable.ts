@@ -40,6 +40,27 @@ export type TableData = {
     W: number[];
 };
 
+/*
+ * Sum the elements of an array
+ */
+function SUM(A: number[]) {
+    return A.reduce((a, b) => a + b, 0);
+}
+
+/*
+ * Get the maximum value from an array
+ */
+function MAX(A: number[]) {
+    return A.reduce((a, b) => Math.max(a, b), 0);
+}
+
+/*
+ * Test if a value is a percentage
+ */
+function isPercent(x: string) {
+    return x.match(/%\s*$/);
+}
+
 /*****************************************************************/
 /*
  * The CHTMLmtable wrapper for the MmlMtable object
@@ -99,8 +120,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         // Determine the number of columns and rows
         //
-        this.numCols = this.childNodes.map(row => (row as CHTMLmtr<N, T, D>).numCells)
-                                      .reduce((a, b) => Math.max(a, b), 0);
+        this.numCols = MAX(this.childNodes.map(row => (row as CHTMLmtr<N, T, D>).numCells));
         this.numRows = this.childNodes.length;
         //
         // Get the frame, row, and column parameters
@@ -243,10 +263,9 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         if (this.node.attributes.get('equalrows')) {
             const HD = this.getEqualRowHeight();
-            height = [].concat(this.rLines, this.rSpace).reduce((a, b) => a + b, 0)
-                   + HD * this.numRows;
+            height = SUM([].concat(this.rLines, this.rSpace)) + HD * this.numRows;
         } else {
-            height = H.concat(D, this.rLines, this.rSpace).reduce((a, b) => a + b, 0);
+            height = SUM(H.concat(D, this.rLines, this.rSpace));
         }
         height += (this.frame ? .14 + 2 * this.fSpace[1] : 0);
         //
@@ -258,8 +277,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         //  Get the expected width of the table
         //
-        width = CW.concat(this.cLines, this.cSpace).reduce((a, b) => a + b, 0)
-              + (this.frame ? .14 + 2 * this.fSpace[0] : 0);
+        width = SUM(CW.concat(this.cLines, this.cSpace)) + (this.frame ? .14 + 2 * this.fSpace[0] : 0);
         //
         //  If the table width is not 'auto', determine the specified width
         //    and pick the larger of the specified and computed widths.
@@ -486,7 +504,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected handleWidth() {
         let w = this.node.attributes.get('width') as string;
         if (w === 'auto') return;
-        if (w.match(/%$/)) {
+        if (isPercent(w)) {
             this.bbox.pwidth = w;
         } else {
             w = this.em(this.length2em(w) + (this.frame ? .14 : 0));
@@ -518,14 +536,37 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     protected getColumnWidths() {
         const width = this.node.attributes.get('width') as string;
+        if (this.node.attributes.get('equalcolumns')) {
+            return this.getEqualColumns(width);
+        }
         const swidths = this.getColumnAttributes('columnwidth', 0);
         if (width === 'auto') {
             return this.getColumnWidthsAuto(swidths);
         }
-        if (width.match(/%$/)) {
+        if (isPercent(width)) {
             return this.getColumnWidthsPercent(swidths, width);
         }
         return this.getColumnWidthsFixed(swidths, this.length2em(width));
+    }
+
+    /*
+     * For tables with equal columns, get the proper amount per row.
+     *
+     * @return{(string|number|null)[]}  The array of widths
+     */
+    protected getEqualColumns(width: string) {
+        const n = Math.max(1, this.numCols);
+        let cwidth;
+        if (width === 'auto') {
+            const {W} = this.getTableData();
+            cwidth = MAX(W);
+        } else if (isPercent(width)) {
+            cwidth = this.percent(1 / n);
+        } else {
+            const w = SUM([].concat(this.cLines, this.cSpace)) + 2 * this.fSpace[0];
+            cwidth = Math.max(0, this.length2em(width) - w) / n;
+        }
+        return Array(this.numCols).fill(cwidth);
     }
 
     /*
@@ -538,7 +579,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected getColumnWidthsAuto(swidths: string[]) {
         return swidths.map(x => {
             if (x === 'auto' || x === 'fit') return null;
-            if (x.match(/%$/)) return x;
+            if (isPercent(x)) return x;
             return this.length2em(x);
         });
     }
@@ -558,7 +599,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
             const x = swidths[i];
             if (x === 'fit') return null;
             if (x === 'auto') return (hasFit ? W[i] : null);
-            if (x.match(/%$/)) return x;
+            if (isPercent(x)) return x;
             return this.length2em(x);
         });
     }
@@ -583,7 +624,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //   separation and lines have been removed (cwidth), and
         //   after the width of the columns have been removed (dw).
         //
-        const cwidth = width - [].concat(this.cLines, this.cSpace).reduce((a, b) => a + b, 0) - 2 * this.fSpace[0];
+        const cwidth = width - SUM([].concat(this.cLines, this.cSpace)) - 2 * this.fSpace[0];
         let dw = cwidth;
         indices.forEach(i => {
             const x = swidths[i];
