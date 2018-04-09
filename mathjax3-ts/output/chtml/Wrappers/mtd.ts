@@ -60,6 +60,21 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
             display: 'inline-block',
             height: '1em',
             'vertical-align': '-.25em'
+        },
+        'mjx-mtr mjx-mtd[rowalign="top"], mjx-mlabeledtr mjx-mtd[rowalign="top"]': {
+            'vertical-align': 'top'
+        },
+        'mjx-mtr mjx-mtd[rowalign="center"], mjx-mlabeledtr mjx-mtd[rowalign="center"]': {
+            'vertical-align': 'middle'
+        },
+        'mjx-mtr mjx-mtd[rowalign="bottom"], mjx-mlabeledtr mjx-mtd[rowalign="bottom"]': {
+            'vertical-align': 'bottom'
+        },
+        'mjx-mtr mjx-mtd[rowalign="baseline"], mjx-mlabeledtr mjx-mtd[rowalign="baseline"]': {
+            'vertical-align': 'baseline'
+        },
+        'mjx-mtr mjx-mtd[rowalign="axis"], mjx-mlabeledtr mjx-mtd[rowalign="axis"]': {
+            'vertical-align': '.25em'
         }
     };
 
@@ -70,8 +85,9 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         super.toCHTML(parent);
         const ralign = this.node.attributes.get('rowalign') as string;
         const calign = this.node.attributes.get('columnalign') as string;
-        if (ralign !== 'baseline' && ralign !== 'axis') {
-            this.adaptor.setStyle(this.chtml, 'verticalAlign', (ralign === 'center' ? 'middle' : ralign));
+        const palign = this.parent.node.attributes.get('rowalign') as string;
+        if (ralign !== palign) {
+            this.adaptor.setAttribute(this.chtml, 'rowalign', ralign);
         }
         if (calign !== 'center') {
             this.adaptor.setStyle(this.chtml, 'textAlign', calign);

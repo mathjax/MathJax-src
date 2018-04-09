@@ -44,6 +44,21 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static styles: StyleList = {
         'mjx-mtr': {
             display: 'table-row',
+        },
+        'mjx-mtr[rowalign="top"] > mjx-mtd, mjx-mlabeledtr[rowalign="top"] > mjx-mtd': {
+            'vertical-align': 'top'
+        },
+        'mjx-mtr[rowalign="center"] > mjx-mtd, mjx-mlabeledtr[rowalign="center"] > mjx-mtd': {
+            'vertical-align': 'middle'
+        },
+        'mjx-mtr[rowalign="bottom"] > mjx-mtd, mjx-mlabeledtr[rowalign="bottom"] > mjx-mtd': {
+            'vertical-align': 'bottom'
+        },
+        'mjx-mtr[rowalign="baseline"] > mjx-mtd, mjx-mlabeledtr[rowalign="baseline"] > mjx-mtd': {
+            'vertical-align': 'baseline'
+        },
+        'mjx-mtr[rowalign="axis"] > mjx-mtd, mjx-mlabeledtr[rowalign="axis"] > mjx-mtd': {
+            'vertical-align': '.25em'
         }
     };
 
@@ -83,9 +98,7 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     public toCHTML(parent: N) {
         super.toCHTML(parent);
         const align = this.node.attributes.get('rowalign') as string;
-        if (align !== 'baseline' && align !== 'axis') {
-            this.adaptor.setStyle(this.chtml, 'verticalAlign', (align === 'center' ? 'middle' : align));
-        }
+        this.adaptor.setAttribute(this.chtml, 'rowalign', align);
     }
 
     /*
