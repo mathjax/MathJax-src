@@ -75,10 +75,10 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         },
 
         'mjx-den[align="right"], mjx-num[align="right"]': {
-            align: 'right'
+            'text-align': 'right'
         },
         'mjx-den[align="left"], mjx-num[align="left"]': {
-            align: 'left'
+            'text-align': 'left'
         },
 
         'mjx-nstrut': {
@@ -120,17 +120,20 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
-        const attr = this.node.attributes.getList('displaystyle', 'scriptlevel');
-        const style = (attr.displaystyle && attr.scriptlevel === 0 ? {type: 'd'} : {});
-        const fstyle = (this.node.getProperty('withDelims') ? {...style, delims: 'true'} : style);
+        const {displaystyle, scriptlevel, numalign, denomalign, withDelims}
+            = this.node.attributes.getList('displaystyle', 'scriptlevel', 'numalign', 'denomalign', 'withDelims');
+        const attr = (displaystyle && scriptlevel === 0 ? {type: 'd'} : {});
+        const fattr = (withDelims ? {...attr, delims: 'true'} : attr);
+        const nattr = (numalign !== 'center' ? {align: numalign} : {});
+        const dattr = (denomalign !== 'center' ? {align: denomalign} : {});
         let num, den;
-        this.adaptor.append(chtml, this.html('mjx-frac', fstyle, [
-            num = this.html('mjx-num', {}, [this.html('mjx-nstrut', style)]),
+        this.adaptor.append(chtml, this.html('mjx-frac', fattr, [
+            num = this.html('mjx-num', nattr, [this.html('mjx-nstrut', attr)]),
             this.html('mjx-dbox', {}, [
                 this.html('mjx-dtable', {}, [
-                    this.html('mjx-line', style),
+                    this.html('mjx-line', attr),
                     this.html('mjx-row', {}, [
-                        den = this.html('mjx-den', {}, [this.html('mjx-dstrut', style)])
+                        den = this.html('mjx-den', dattr, [this.html('mjx-dstrut', attr)])
                     ])
                 ])
             ])
