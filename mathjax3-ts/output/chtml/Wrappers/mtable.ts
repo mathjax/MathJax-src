@@ -134,17 +134,39 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.rLines = this.getColumnAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
         this.cWidths = this.getColumnWidths();
         //
-        // Stretch the columns (rows are already taken care of in the CHTMLmtr wrapper)
+        // Stretch the rows and columns
         //
+        this.stretchRows();
+        this.stretchColumns();
+    }
+
+    /*
+     * Stretch the rows to the equal height or natural height
+     */
+    protected stretchRows() {
+        const equal = this.node.attributes.get('equalrows') as boolean;
+        const HD = (equal ? this.getEqualRowHeight() : 0);
+        const {H, D} = (equal ? this.getTableData() : {H: [0], D: [0]});
+        for (let i = 0; i < this.numRows; i++) {
+            const hd = (equal ? [(HD + H[i] - D[i]) / 2, (HD - H[i] + D[i]) / 2] : null);
+            (this.childNodes[i] as CHTMLmtr<N, T, D>).stretchChildren(hd);
+        }
+    }
+
+    /*
+     * Stretch the columns to their proper widths
+     */
+    protected stretchColumns() {
         for (let i = 0; i < this.numCols; i++) {
-            this.stretchColumn(i);
+            const width = (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : null);
+            this.stretchColumn(i, width);
         }
     }
 
     /*
      * Handle horizontal stretching within the ith column
      */
-    protected stretchColumn(i: number) {
+    protected stretchColumn(i: number, W: number) {
         let stretchy: CHTMLWrapper<N, T, D>[] = [];
         //
         //  Locate and count the stretchy children
@@ -162,21 +184,23 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         let count = stretchy.length;
         let nodeCount = this.childNodes.length;
         if (count && nodeCount > 1) {
-            let W = 0;
-            //
-            //  If all the children are stretchy, find the largest one,
-            //  otherwise, find the width of the non-stretchy children.
-            //
-            let all = (count > 1 && count === nodeCount);
-            for (const row of (this.childNodes as CHTMLmtr<N, T, D>[])) {
-                const cell = row.childNodes[i + row.firstCell];
-                if (cell) {
-                    const child = cell.childNodes[0];
-                    const noStretch = (child.stretch.dir === DIRECTION.None);
-                    if (all || noStretch) {
-                        const {w} = child.getBBox(noStretch);
-                        if (w > W) {
-                            W = w;
+            if (W === null) {
+                W = 0;
+                //
+                //  If all the children are stretchy, find the largest one,
+                //  otherwise, find the width of the non-stretchy children.
+                //
+                let all = (count > 1 && count === nodeCount);
+                for (const row of (this.childNodes as CHTMLmtr<N, T, D>[])) {
+                    const cell = row.childNodes[i + row.firstCell];
+                    if (cell) {
+                        const child = cell.childNodes[0];
+                        const noStretch = (child.stretch.dir === DIRECTION.None);
+                        if (all || noStretch) {
+                            const {w} = child.getBBox(noStretch);
+                            if (w > W) {
+                                W = w;
+                            }
                         }
                     }
                 }

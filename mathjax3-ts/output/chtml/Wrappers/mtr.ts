@@ -85,15 +85,6 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /*
      * @override
-     * @constructor
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        this.stretchChildren();
-    }
-
-    /*
-     * @override
      */
     public toCHTML(parent: N) {
         super.toCHTML(parent);
@@ -104,8 +95,12 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     /*
      * Handle vertical stretching of cells to match height of
      *  other cells in the row.
+     *
+     * @param{number[]} HD   The total height and depth for the row [H, D]
+     *
+     * If this isn't specified, the maximum height and depth is computed.
      */
-    protected stretchChildren() {
+    public stretchChildren(HD: number[] = null) {
         let stretchy: CHTMLWrapper<N, T, D>[] = [];
         let children = (this.firstCell ? this.childNodes.slice(this.firstCell) : this.childNodes);
         //
@@ -120,31 +115,34 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
         let count = stretchy.length;
         let nodeCount = this.childNodes.length;
         if (count && nodeCount > 1) {
-            let H = 0, D = 0;
-            //
-            //  If all the children are stretchy, find the largest one,
-            //  otherwise, find the height and depth of the non-stretchy
-            //  children.
-            //
-            let all = (count > 1 && count === nodeCount);
-            for (const mtd of children) {
-                const child = mtd.childNodes[0];
-                const noStretch = (child.stretch.dir === DIRECTION.None);
-                if (all || noStretch) {
-                    const {h, d} = child.getBBox(noStretch);
-                    if (h > H) {
-                        H = h;
-                    }
-                    if (d > D) {
-                        D = d;
+            if (HD === null) {
+                let H = 0, D = 0;
+                //
+                //  If all the children are stretchy, find the largest one,
+                //  otherwise, find the height and depth of the non-stretchy
+                //  children.
+                //
+                let all = (count > 1 && count === nodeCount);
+                for (const mtd of children) {
+                    const child = mtd.childNodes[0];
+                    const noStretch = (child.stretch.dir === DIRECTION.None);
+                    if (all || noStretch) {
+                        const {h, d} = child.getBBox(noStretch);
+                        if (h > H) {
+                            H = h;
+                        }
+                        if (d > D) {
+                            D = d;
+                        }
                     }
                 }
+                HD = [H, D];
             }
             //
             //  Stretch the stretchable children
             //
             for (const child of stretchy) {
-                child.coreMO().getStretchedVariant([H, D]);
+                child.coreMO().getStretchedVariant(HD);
             }
         }
     }
