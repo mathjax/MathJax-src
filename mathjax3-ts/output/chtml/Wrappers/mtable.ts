@@ -61,6 +61,13 @@ function isPercent(x: string) {
     return x.match(/%\s*$/);
 }
 
+/*
+ * Split a space-separated string of values
+ */
+function SPLIT(x: string) {
+    return x.trim().split(/\s+/);
+}
+
 /*****************************************************************/
 /*
  * The CHTMLmtable wrapper for the MmlMtable object
@@ -84,6 +91,21 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         },
         'mjx-mtable[width] > mjx-itable': {
             width: '100%'
+        },
+        'mjx-mtable[align]': {
+            'vertical-align': 'baseline'
+        },
+        'mjx-mtable[align="top"] > mjx-itable': {
+            'vertical-align': 'top'
+        },
+        'mjx-mtable[align="bottom"] > mjx-itable': {
+            'vertical-align': 'bottom'
+        },
+        'mjx-mtable[align="center"] > mjx-itable': {
+            'vertical-align': 'middle'
+        },
+        'mjx-mtable[align="baseline"] > mjx-itable': {
+            'vertical-align': 'middle'
         }
     };
 
@@ -131,7 +153,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
         this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
         this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));
-        this.rLines = this.getColumnAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
+        this.rLines = this.getRowAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
         this.cWidths = this.getColumnWidths();
         //
         // Stretch the rows and columns
@@ -242,6 +264,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.handleEqualRows();
         this.handleFrame();
         this.handleWidth();
+        this.handleAlign();
         this.drawBBox();
     }
 
@@ -285,7 +308,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         // Otherwise, use the height and depths for each row separately.
         // Add in the spacing, line widths, and frame size.
         //
-        if (this.node.attributes.get('equalrows')) {
+        if (this.node.attributes.get('equalrows') as boolean) {
             const HD = this.getEqualRowHeight();
             height = SUM([].concat(this.rLines, this.rSpace)) + HD * this.numRows;
         } else {
@@ -312,12 +335,34 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
             width = Math.max(this.length2em(w, cwidth) + (this.frame ? .14 : 0), width);
         }
         //
-        //  Return the bbounding box information
+        //  Return the bounding box information
         //
-        const a = this.font.params.axis_height;
-        bbox.h = height / 2 + a;
-        bbox.d = height / 2 - a;
+        let [h, d] = this.getBBoxHD(height);
+        bbox.h = h;
+        bbox.d = d;
         bbox.w = width;
+    }
+
+    /*
+     * @param{number} height   The total height of the table
+     * @return{number[]}       The [height, depth] for the aligned table
+     */
+    protected getBBoxHD(height: number) {
+        const [align, row] = this.getAlignmentRow();
+        if (row === null) {
+            const a = this.font.params.axis_height;
+            const h2 = height / 2;
+            return ({
+                top: [0, height],
+                center: [h2, h2],
+                bottom: [height, 0],
+                baseline: [h2, h2],
+                axis: [h2 + a, h2 - a]
+            } as {[key: string]: number[]})[align] || [h2, h2];
+        } else {
+            const y = this.getVerticalPosition(row, align);
+            return [y, height - y];
+        }
     }
 
     /******************************************************************/
@@ -537,6 +582,22 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.adaptor.setAttribute(this.chtml, 'width', w);
     }
 
+    /*
+     * Handle alignment of table to surrounding baseline
+     */
+    protected handleAlign() {
+        const [align, row] = this.getAlignmentRow();
+        if (row === null) {
+            if (align !== 'axis') {
+                this.adaptor.setAttribute(this.chtml, 'align', align);
+            }
+        } else {
+            const y = this.getVerticalPosition(row, align);
+            this.adaptor.setAttribute(this.chtml, 'align', 'top');
+            this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(y));
+        }
+    }
+
     /******************************************************************/
 
     /*
@@ -560,7 +621,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     protected getColumnWidths() {
         const width = this.node.attributes.get('width') as string;
-        if (this.node.attributes.get('equalcolumns')) {
+        if (this.node.attributes.get('equalcolumns') as boolean) {
             return this.getEqualColumns(width);
         }
         const swidths = this.getColumnAttributes('columnwidth', 0);
@@ -669,7 +730,61 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         });
     }
 
+    /*
+     * @param{number} i      The row number (starting at 0)
+     * @param{string} align  The alignment on that row
+     * @return{number}       The offest of the alignment position from the top of the table
+     */
+    protected getVerticalPosition(i: number, align: string) {
+        const equal = this.node.attributes.get('equalrows') as boolean;
+        const {H, D} = this.getTableData();
+        const HD = (equal ? this.getEqualRowHeight() : 0);
+        //
+        //  Use half spaces in each row, with frame spacing at top and bottom
+        //
+        const space = this.rSpace.map(x => x / 2);
+        space.unshift(this.fSpace[1]);
+        space.push(this.fSpace[1]);
+        //
+        //  Start with frame size and add in spacing, height and depth,
+        //    and line thickness for each row.
+        //
+        let y = (this.frame ? .07 : 0);
+        for (let j = 0; j < i; j++) {
+            y += space[j] + (equal ? HD : H[j] + D[j]) + space[j + 1] + this.rLines[j];
+        }
+        //
+        //  For equal rows, get updated height and depth
+        //
+        const [h, d] = (equal ? [(HD + H[i] - D[i]) / 2, (HD - H[i] + D[i])/2] : [H[i], D[i]]);
+        //
+        //  Add the offset into the specified row
+        //
+        y += ({
+            top: 0,
+            center: space[i] + (h + d) / 2,
+            bottom: space[i] + h + d + space[i + 1],
+            baseline: space[i] + h,
+            axis: space[i] + h - .25
+        } as {[name: string]: number} )[align] || 0;
+        //
+        //  Return the final result
+        //
+        return y;
+    }
+
     /******************************************************************/
+
+    /*
+     * @return{[string,number|null]}  The alignment and row number (based at 0) or null
+     */
+    protected getAlignmentRow(): [string, number] {
+        const [align, row] = SPLIT(this.node.attributes.get('align') as string);
+        if (row == null) return [align, null];
+        let i = parseInt(row);
+        if (i < 0) i += this.numRows;
+        return [align, i < 1 || i > this.numRows ? null : i - 1];
+    }
 
     /*
      * @param{string} name           The name of the attribute to get as an array
@@ -718,7 +833,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected getAttributeArray(name: string) {
         const value = this.node.attributes.get(name) as string;
         if (!value) return [];
-        return value.replace(/^\s+/, '').replace(/\s+$/, '').replace(/\s+/g, ' ').split(/ /);
+        return SPLIT(value);
     }
 
     /*
