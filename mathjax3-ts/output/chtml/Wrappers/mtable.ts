@@ -265,7 +265,6 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.handleFrame();
         this.handleWidth();
         this.handleAlign();
-        this.drawBBox();
     }
 
     /******************************************************************/
