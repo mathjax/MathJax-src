@@ -26,6 +26,7 @@ import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {StyleList} from '../CssStyles.js';
+import {OptionList} from '../../../util/Options.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -120,26 +121,51 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
-        const {displaystyle, scriptlevel, numalign, denomalign, withDelims}
-            = this.node.attributes.getList('displaystyle', 'scriptlevel', 'numalign', 'denomalign', 'withDelims');
-        const attr = (displaystyle && scriptlevel === 0 ? {type: 'd'} : {});
-        const fattr = (withDelims ? {...attr, delims: 'true'} : attr);
-        const nattr = (numalign !== 'center' ? {align: numalign} : {});
-        const dattr = (denomalign !== 'center' ? {align: denomalign} : {});
+        const {displaystyle, scriptlevel, linethickness, numalign, denomalign} =
+            this.node.attributes.getList('displaystyle', 'scriptlevel', 'linethickness', 'numalign', 'denomalign');
+        const withDelims = this.node.getProperty('withDelims');
+        const display = (displaystyle && scriptlevel === 0);
+        //
+        // Attributes to set for the different elements making up the fraction
+        //
+        const attr = (display ? {type: 'd'} : {}) as OptionList;
+        const fattr = (withDelims ? {...attr, delims: 'true'} : {...attr}) as OptionList;
+        const nattr = (numalign !== 'center' ? {align: numalign} : {}) as OptionList;
+        const dattr = (denomalign !== 'center' ? {align: denomalign} : {}) as OptionList;
+        const dsattr = {...attr}, nsattr = {...attr};
+        //
+        // Set the styles to handle the linethickness, if needed
+        //
+        const t = this.length2em(linethickness);
+        const fparam = this.font.params;
+        if (t !== .06) {
+            const a = fparam.axis_height;
+            const tEm = this.em(t), T = (display ? 3.5 : 1.5) * t;
+            const m = (display ? this.em(3 * t) : tEm) + ' -.1em';
+            attr.style = {height: tEm, 'border-top': tEm + ' solid', margin: m};
+            const nh = this.em(Math.max(0, (display ? fparam.num1 : fparam.num2) - a - T));
+            nsattr.style = {height: nh, 'vertical-align': '-' + nh};
+            dsattr.style = {height: this.em(Math.max(0, (display ? fparam.denom1 : fparam.denom2) + a - T))};
+            fattr.style  = {'vertical-align': this.em(a - T)};
+        }
+        //
+        // Create the DOM tree
+        //
         let num, den;
         this.adaptor.append(chtml, this.html('mjx-frac', fattr, [
-            num = this.html('mjx-num', nattr, [this.html('mjx-nstrut', attr)]),
+            num = this.html('mjx-num', nattr, [this.html('mjx-nstrut', nsattr)]),
             this.html('mjx-dbox', {}, [
                 this.html('mjx-dtable', {}, [
                     this.html('mjx-line', attr),
                     this.html('mjx-row', {}, [
-                        den = this.html('mjx-den', dattr, [this.html('mjx-dstrut', attr)])
+                        den = this.html('mjx-den', dattr, [this.html('mjx-dstrut', dsattr)])
                     ])
                 ])
             ])
         ]));
         this.childNodes[0].toCHTML(num);
         this.childNodes[1].toCHTML(den);
+        this.drawBBox();
     }
 
     /*
@@ -147,15 +173,18 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public computeBBox(bbox: BBox) {
         bbox.empty();
-        const attr = this.node.attributes.getList('displaystyle', 'scriptlevel');
-        const display = attr.displaystyle && attr.scriptlevel === 0;
+        const {displaystyle, scriptlevel, linethickness} =
+            this.node.attributes.getList('displaystyle', 'scriptlevel', 'linethickness');
+        const display = displaystyle && scriptlevel === 0;
         const nbox = this.childNodes[0].getBBox();
         const dbox = this.childNodes[1].getBBox();
-        const pad = (this.node.getProperty('withDelims') as boolean ? 0 : this.font.params.nulldelimiterspace);
-        const a = this.font.params.axis_height;
-        const T = (display ? 3.5 : 1.5) * this.font.params.rule_thickness;
-        bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, display ? .217 : .054));
-        bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, display ? .726 : .505));
+        const fparam = this.font.params;
+        const pad = (this.node.getProperty('withDelims') as boolean ? 0 : fparam.nulldelimiterspace);
+        const a = fparam.axis_height;
+        const t = this.length2em(linethickness);
+        const T = (display ? 3.5 : 1.5) * t;
+        bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, (display ? fparam.num1 : fparam.num2) - a - T));
+        bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, (display ? fparam.denom1 : fparam.denom2) + a - T));
         bbox.w += 2 * pad + .2;
         bbox.clean();
     }
