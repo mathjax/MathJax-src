@@ -22,6 +22,8 @@
  */
 
 import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLmo} from './mo.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
@@ -122,32 +124,75 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     };
 
+    protected bevel: CHTMLmo<N, T, D> = null;
+
+    /************************************************/
+
+    /*
+     * @override
+     * @constructor
+     */
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
+        super(factory, node, parent);
+        //
+        //  create internal bevel mo element
+        //
+        if (this.node.attributes.get('bevelled')) {
+            const {H} = this.getBevelData(this.isDisplay());
+            const bevel = this.bevel = this.createMo('/');
+            bevel.canStretch(DIRECTION.Vertical);
+            bevel.getStretchedVariant([H], true);
+        }
+    }
+
     /*
      * @override
      */
     public toCHTML(parent: N) {
         this.standardCHTMLnode(parent);
         const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
+        const display = this.isDisplay();
         if (bevelled) {
-            this.makeBevelled();
+            this.makeBevelled(display);
         } else {
             const thickness = this.length2em(String(linethickness));
             if (thickness === 0) {
-                this.makeAtop();
+                this.makeAtop(display);
             } else {
-                this.makeFraction(thickness);
+                this.makeFraction(display, thickness);
             }
         }
     }
 
     /*
-     * @param{number} t   The rule line thickness
+     * @override
      */
-    protected makeFraction(t: number) {
-        const {displaystyle, scriptlevel, numalign, denomalign} =
-            this.node.attributes.getList('displaystyle', 'scriptlevel', 'numalign', 'denomalign');
+    public computeBBox(bbox: BBox) {
+        bbox.empty();
+        const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
+        const display = this.isDisplay();
+        if (bevelled) {
+            this.getBevelledBBox(bbox, display);
+        } else {
+            const thickness = this.length2em(String(linethickness));
+            if (thickness === 0) {
+                this.getAtopBBox(bbox, display);
+            } else {
+                this.getFractionBBox(bbox, display, thickness);
+            }
+        }
+        bbox.clean();
+    }
+
+    /************************************************/
+
+    /*
+     * @param{boolean} display  True when fraction is in display mode
+     * @param{number} t         The rule line thickness
+     */
+    protected makeFraction(display: boolean, t: number) {
+        const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
         const withDelims = this.node.getProperty('texWithDelims');
-        const display = (displaystyle && scriptlevel === 0);
         //
         // Attributes to set for the different elements making up the fraction
         //
@@ -189,11 +234,31 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.childNodes[1].toCHTML(den);
     }
 
-    protected makeAtop() {
-        const {displaystyle, scriptlevel, numalign, denomalign} =
-            this.node.attributes.getList('displaystyle', 'scriptlevel', 'numalign', 'denomalign');
+    /*
+     * @param{BBox} bbox        The buonding box to modify
+     * @param{boolean} display  True for display-mode fractions
+     * @param{number} t         The thickness of the line
+     */
+    protected getFractionBBox(bbox: BBox, display: boolean, t: number) {
+        const nbox = this.childNodes[0].getBBox();
+        const dbox = this.childNodes[1].getBBox();
+        const fparam = this.font.params;
+        const pad = (this.node.getProperty('texWithDelims') as boolean ? 0 : fparam.nulldelimiterspace);
+        const a = fparam.axis_height;
+        const T = (display ? 3.5 : 1.5) * t;
+        bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, (display ? fparam.num1 : fparam.num2) - a - T));
+        bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, (display ? fparam.denom1 : fparam.denom2) + a - T));
+        bbox.w += 2 * pad + .2;
+    }
+
+    /************************************************/
+
+    /*
+     * @param{boolean} display  True when fraction is in display mode
+     */
+    protected makeAtop(display: boolean) {
+        const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
         const withDelims = this.node.getProperty('texWithDelims');
-        const display = (displaystyle && scriptlevel === 0);
         //
         // Attributes to set for the different elements making up the fraction
         //
@@ -217,7 +282,19 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         ]));
         this.childNodes[0].toCHTML(num);
         this.childNodes[1].toCHTML(den);
-        this.drawBBox();
+    }
+
+    /*
+     * @param{BBox} bbox        The bounding box to modify
+     * @param{boolean} display  True for display-mode fractions
+     */
+    protected getAtopBBox(bbox: BBox, display: boolean) {
+        const fparam = this.font.params;
+        const pad = (this.node.getProperty('texWithDelims') as boolean ? 0 : fparam.nulldelimiterspace);
+        const {u, v, nbox, dbox} = this.getUVQ(display);
+        bbox.combine(nbox, 0, u);
+        bbox.combine(dbox, 0, -v);
+        bbox.w += 2 * pad;
     }
 
     /*
@@ -249,61 +326,80 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         return {u, v, q, nbox, dbox};
     }
 
-    protected makeBevelled() {
-    }
-
+    /************************************************/
 
     /*
-     * @override
+     * @param{boolean} display  True when fraction is in display mode
      */
-    public computeBBox(bbox: BBox) {
-        bbox.empty();
-        const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
-        if (bevelled) {
-            this.getBevelledBBox(bbox);
-        } else {
-            const thickness = this.length2em(String(linethickness));
-            if (thickness === 0) {
-                this.getAtopBBox(bbox);
-            } else {
-                this.getFractionBBox(bbox, thickness);
-            }
+    protected makeBevelled(display: boolean) {
+        const adaptor = this.adaptor;
+        //
+        //  Create HTML tree
+        //
+        this.childNodes[0].toCHTML(this.chtml);
+        this.bevel.toCHTML(this.chtml);
+        this.childNodes[1].toCHTML(this.chtml);
+        //
+        //  Place the parts
+        //
+        const {u, v, delta, nbox, dbox} = this.getBevelData(display);
+        if (u) {
+            const num = this.childNodes[0].chtml;
+            adaptor.setStyle(num, 'verticalAlign', this.em(u / nbox.scale));
         }
-        bbox.clean();
+        if (v) {
+            const denom = this.childNodes[1].chtml;
+            adaptor.setStyle(denom, 'verticalAlign', this.em(v / dbox.scale));
+        }
+        const dx = this.em(-delta / 2);
+        adaptor.setStyle(this.bevel.chtml, 'marginLeft', dx);
+        adaptor.setStyle(this.bevel.chtml, 'marginRight', dx);
     }
 
-    protected getFractionBBox(bbox: BBox, t: number) {
-        const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');
-        const display = displaystyle && scriptlevel === 0;
+    /*
+     * @param{BBox} bbox        The boundng box to modify
+     * @param{boolean} display  True for display-mode fractions
+     */
+    protected getBevelledBBox(bbox: BBox, display: boolean) {
+        const {u, v, delta, nbox, dbox} = this.getBevelData(display);
+        const lbox = this.bevel.getBBox();
+        bbox.combine(nbox, 0, u);
+        bbox.combine(lbox, bbox.w - delta / 2, 0);
+        bbox.combine(dbox, bbox.w - delta / 2, v);
+    }
+
+    /*
+     * @param{boolean} display  True for display-style fractions
+     * @return{Object}          The height (H) of the bevel, horizontal offest (delta)
+     *                             vertical offsets (u and v) of the parts, and
+     *                             bounding boxes of the parts.
+     */
+    protected getBevelData(display: boolean) {
         const nbox = this.childNodes[0].getBBox();
         const dbox = this.childNodes[1].getBBox();
-        const fparam = this.font.params;
-        const pad = (this.node.getProperty('texWithDelims') as boolean ? 0 : fparam.nulldelimiterspace);
-        const a = fparam.axis_height;
-        const T = (display ? 3.5 : 1.5) * t;
-        bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, (display ? fparam.num1 : fparam.num2) - a - T));
-        bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, (display ? fparam.denom1 : fparam.denom2) + a - T));
-        bbox.w += 2 * pad + .2;
+        const delta = (display ? .4 : .15);
+        const H = Math.max(nbox.scale * (nbox.h + nbox.d), dbox.scale * (dbox.h + dbox.d)) + 2 * delta;
+        const a = this.font.params.axis_height;
+        const u = nbox.scale * (nbox.d - nbox.h) / 2 + a + delta;
+        const v = dbox.scale * (dbox.d - dbox.h) / 2 + a - delta;
+        return {H, delta, u, v, nbox, dbox};
     }
 
-    protected getAtopBBox(bbox: BBox) {
-        const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');
-        const display = displaystyle && scriptlevel === 0;
-        const fparam = this.font.params;
-        const pad = (this.node.getProperty('texWithDelims') as boolean ? 0 : fparam.nulldelimiterspace);
-        const {u, v, nbox, dbox} = this.getUVQ(display);
-        bbox.combine(nbox, 0, u);
-        bbox.combine(dbox, 0, -v);
-        bbox.w += 2 * pad;
-    }
 
-    protected getBevelledBBox(bbox: BBox) {
-    }
+    /************************************************/
 
     /*
      * @override
      */
     public canStretch(direction: DIRECTION) {
         return false;
+    }
+
+    /*
+     * @return{boolean}   True if in display mode, false otherwise
+     */
+    protected isDisplay() {
+        const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');
+        return displaystyle && scriptlevel === 0;
     }
 }
