@@ -194,3 +194,6 @@ parserTest.runTest(
 );
 
 
+* With delims:
+
+** texWithDelims vs withDelims: This  seems to have changed.

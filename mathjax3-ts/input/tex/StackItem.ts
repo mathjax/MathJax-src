@@ -409,7 +409,7 @@ export class OverItem extends BaseItem {
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Choose
-        TreeHelper.setProperties(mml, {'texWithDelims': true});
+        TreeHelper.setProperties(mml, {'withDelims': true});
         mml = ParserUtil.fixedFence(this.getProperty('open') as string, mml,
                                     this.getProperty('close') as string);
       }

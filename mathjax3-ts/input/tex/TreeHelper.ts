@@ -48,7 +48,7 @@ export namespace TreeHelper {
                            'texprimestyle',
                            'useHeight',
                            'variantForm',
-                           'texWithDelims',
+                           'withDelims',
                            'open',
                            'close'
                           ];
