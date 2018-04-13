@@ -49,8 +49,14 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-frac[type="d"]': {
             'vertical-align': '.04em'    // axis_height - 3.5 * rule_thickness
         },
-        'mjx-frac[delims="true"]': {
+        'mjx-frac[delims]': {
             padding: '0 .1em'            // .1 (for line's -.1em margin)
+        },
+        'mjx-frac[atop]': {
+            padding: '0 .12em'           // nulldelimiterspace
+        },
+        'mjx-frac[atop][delims]': {
+            padding: '0'
         },
         'mjx-dtable': {
             display: 'inline-table',
@@ -120,10 +126,27 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-        const chtml = this.standardCHTMLnode(parent);
-        const {displaystyle, scriptlevel, linethickness, numalign, denomalign} =
-            this.node.attributes.getList('displaystyle', 'scriptlevel', 'linethickness', 'numalign', 'denomalign');
-        const withDelims = this.node.getProperty('withDelims');
+        this.standardCHTMLnode(parent);
+        const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
+        if (bevelled) {
+            this.makeBevelled();
+        } else {
+            const thickness = this.length2em(String(linethickness));
+            if (thickness === 0) {
+                this.makeAtop();
+            } else {
+                this.makeFraction(thickness);
+            }
+        }
+    }
+
+    /*
+     * @param{number} t   The rule line thickness
+     */
+    protected makeFraction(t: number) {
+        const {displaystyle, scriptlevel, numalign, denomalign} =
+            this.node.attributes.getList('displaystyle', 'scriptlevel', 'numalign', 'denomalign');
+        const withDelims = this.node.getProperty('texWithDelims');
         const display = (displaystyle && scriptlevel === 0);
         //
         // Attributes to set for the different elements making up the fraction
@@ -136,7 +159,6 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         // Set the styles to handle the linethickness, if needed
         //
-        const t = this.length2em(linethickness);
         const fparam = this.font.params;
         if (t !== .06) {
             const a = fparam.axis_height;
@@ -152,7 +174,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         // Create the DOM tree
         //
         let num, den;
-        this.adaptor.append(chtml, this.html('mjx-frac', fattr, [
+        this.adaptor.append(this.chtml, this.html('mjx-frac', fattr, [
             num = this.html('mjx-num', nattr, [this.html('mjx-nstrut', nsattr)]),
             this.html('mjx-dbox', {}, [
                 this.html('mjx-dtable', {}, [
@@ -165,28 +187,117 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         ]));
         this.childNodes[0].toCHTML(num);
         this.childNodes[1].toCHTML(den);
+    }
+
+    protected makeAtop() {
+        const {displaystyle, scriptlevel, numalign, denomalign} =
+            this.node.attributes.getList('displaystyle', 'scriptlevel', 'numalign', 'denomalign');
+        const withDelims = this.node.getProperty('texWithDelims');
+        const display = (displaystyle && scriptlevel === 0);
+        //
+        // Attributes to set for the different elements making up the fraction
+        //
+        const attr = (display ? {type: 'd', atop: true} : {atop: true}) as OptionList;
+        const fattr = (withDelims ? {...attr, delims: true} : {...attr}) as OptionList;
+        const nattr = (numalign !== 'center' ? {align: numalign} : {}) as OptionList;
+        const dattr = (denomalign !== 'center' ? {align: denomalign} : {}) as OptionList;
+        //
+        // Determine sparation and positioning
+        //
+        const {v, q} = this.getUVQ(display);
+        nattr.style = {'padding-bottom': this.em(q)};
+        fattr.style = {'vertical-align': this.em(-v)};
+        //
+        // Create the DOM tree
+        //
+        let num, den;
+        this.adaptor.append(this.chtml, this.html('mjx-frac', fattr, [
+            num = this.html('mjx-num', nattr),
+            den = this.html('mjx-den', dattr)
+        ]));
+        this.childNodes[0].toCHTML(num);
+        this.childNodes[1].toCHTML(den);
         this.drawBBox();
     }
+
+    /*
+     * @param{boolean} display  True for diplay-mode fractions
+     * @return{Object}
+     *    The vertical offsets of the numerator (u), the denominator (v),
+     *    the separation between the two, and the bboxes themselves.
+     */
+    protected getUVQ(display: boolean) {
+        const nbox = this.childNodes[0].getBBox();
+        const dbox = this.childNodes[1].getBBox();
+        const fparam = this.font.params;
+        //
+        //  Initial offsets (u, v)
+        //  Minimum separation (p)
+        //  Actual separation with initial positions (q)
+        //
+        let [u, v] = (display ? [fparam.num1, fparam.denom1] : [fparam.num3, fparam.denom2]);
+        let p = (display ? 7 : 3) * fparam.rule_thickness;
+        let q = (u - nbox.d * nbox.scale) - (dbox.h * dbox.scale - v);
+        //
+        //  If actual separation is less than minimum, move them farther apart
+        //
+        if (q < p) {
+            u += (p - q)/2;
+            v += (p - q)/2;
+            q = p;
+        }
+        return {u, v, q, nbox, dbox};
+    }
+
+    protected makeBevelled() {
+    }
+
 
     /*
      * @override
      */
     public computeBBox(bbox: BBox) {
         bbox.empty();
-        const {displaystyle, scriptlevel, linethickness} =
-            this.node.attributes.getList('displaystyle', 'scriptlevel', 'linethickness');
+        const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
+        if (bevelled) {
+            this.getBevelledBBox(bbox);
+        } else {
+            const thickness = this.length2em(String(linethickness));
+            if (thickness === 0) {
+                this.getAtopBBox(bbox);
+            } else {
+                this.getFractionBBox(bbox, thickness);
+            }
+        }
+        bbox.clean();
+    }
+
+    protected getFractionBBox(bbox: BBox, t: number) {
+        const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');
         const display = displaystyle && scriptlevel === 0;
         const nbox = this.childNodes[0].getBBox();
         const dbox = this.childNodes[1].getBBox();
         const fparam = this.font.params;
-        const pad = (this.node.getProperty('withDelims') as boolean ? 0 : fparam.nulldelimiterspace);
+        const pad = (this.node.getProperty('texWithDelims') as boolean ? 0 : fparam.nulldelimiterspace);
         const a = fparam.axis_height;
-        const t = this.length2em(linethickness);
         const T = (display ? 3.5 : 1.5) * t;
         bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, (display ? fparam.num1 : fparam.num2) - a - T));
         bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, (display ? fparam.denom1 : fparam.denom2) + a - T));
         bbox.w += 2 * pad + .2;
-        bbox.clean();
+    }
+
+    protected getAtopBBox(bbox: BBox) {
+        const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');
+        const display = displaystyle && scriptlevel === 0;
+        const fparam = this.font.params;
+        const pad = (this.node.getProperty('texWithDelims') as boolean ? 0 : fparam.nulldelimiterspace);
+        const {u, v, nbox, dbox} = this.getUVQ(display);
+        bbox.combine(nbox, 0, u);
+        bbox.combine(dbox, 0, -v);
+        bbox.w += 2 * pad;
+    }
+
+    protected getBevelledBBox(bbox: BBox) {
     }
 
     /*
