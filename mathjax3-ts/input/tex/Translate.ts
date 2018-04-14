@@ -48,6 +48,8 @@ export namespace NewTex {
     let node = Translate(script, [], {});
     (node as any).setInheritedAttributes();
     (node as any).setTeXclass();
+    // Cleanup:
+    traverse(node);
     return node;
   }
 
@@ -96,7 +98,6 @@ export namespace NewTex {
       return mathNode;
     }
     for (let mo of parser.secondPass) {
-      console.log(mo);
       let forms = mo.getForms();
       let symbol: OperatorDef;
       // Probably not needed!
@@ -120,12 +121,30 @@ export namespace NewTex {
         parent.childNodes = [texAtom];
       }
     }
-      // TODO: Should not be necessary anymore!
-      // if (isError) {
-      //   (mathNode as any).texError = true;
-      // }
-      // ParserUtil.combineRelations(root);
-      return mathNode;
+    // TODO: Should not be necessary anymore!
+    // if (isError) {
+    //   (mathNode as any).texError = true;
+    // }
+    // ParserUtil.combineRelations(root);
+    return mathNode;
     }
+
+  function traverse(mml: MmlNode) {
+    let attribs = mml.attributes as any;
+    let keys = Object.keys(attribs.attributes);
+    for (let i = 0, key; key = keys[i]; i++) {
+      if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
+        // console.log('Same: ' + key + ': ' + attribs.attributes[key]);
+        delete attribs.attributes[key];
+      }
+    }
+    if (!mml.isToken) {
+      let children = TreeHelper.getChildren(mml);
+      for (let i = 0, m = children.length; i < m; i++) {
+        traverse(children[i]);
+      }
+    }
+  };
+
   
 }

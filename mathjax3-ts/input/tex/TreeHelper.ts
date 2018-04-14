@@ -143,7 +143,6 @@ export namespace TreeHelper {
       } else {
         // TODO: Check with Davide if this is correct.
         let inherited = node.attributes.getInherited(name);
-        console.log('attr: ' + name + ' ' + inherited + ' ' + value);
         if (inherited !== value) {
           node.attributes.set(name, value);
         }
