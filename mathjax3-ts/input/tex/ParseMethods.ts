@@ -110,18 +110,11 @@ export namespace ParseMethods {
     const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
     if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
-      def.mathvariant = parser.stack.env['font'];
+      def['mathvariant'] = parser.stack.env['font'];
     }
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
     const textNode = TreeHelper.createText(mchar.char);
     const node = TreeHelper.createNode('mi', [], def, textNode);
-    node.attributes.set('mathvariant', def.mathvariant);
-    // setVariant(node, def.mathvariant);
-    // PROBLEM: Attributes have to be explicitly set, but then interfere with
-    // AMS tests. Try setting variant of node!
-    // for (var x in def) {
-    //   node.attributes.set(x, def[x]);
-    // }
     parser.Push(parser.mmlToken(node));
   };
   //
@@ -691,15 +684,14 @@ export namespace ParseMethods {
     const entity = TreeHelper.createEntity(accent);
     const moNode = TreeHelper.createNode('mo', [], def, entity);
     const mml = parser.mmlToken(moNode);
-    // TODO: This should be property?
-    TreeHelper.setProperties(mml, {stretchy: (stretchy ? true : false)});
+    TreeHelper.setAttribute(mml, 'stretchy', stretchy ? true : false);
     // @test Vector Op, Vector
     const mo = (TreeHelper.isEmbellished(c) ? TreeHelper.getCoreMO(c) : c);
     if (TreeHelper.isType(mo, 'mo')) {
       // @test Vector Op
       TreeHelper.setProperties(mo, {'movablelimits': false});
     }
-    const muoNode = TreeHelper.createNode('munderover', [], {accent: true});
+    const muoNode = TreeHelper.createNode('munderover', [], {});
     // TODO: This is necessary to get the empty element into the children.
     TreeHelper.setData(muoNode, 0, c);
     TreeHelper.setData(muoNode, 1, null);
@@ -780,8 +772,6 @@ export namespace ParseMethods {
         def['mathvariant'] = TexConstant.Variant.NORMAL;
         const textNode = TreeHelper.createText(match[1]);
         node = TreeHelper.createNode('mi', [], def, textNode);
-        // TODO: Check why this is that necessary?
-        node.attributes.set('mathvariant', def['mathvariant']);
         mml = new sitem.FnItem(parser.mmlToken(node));
       } else {
         // @test Mathop Cal

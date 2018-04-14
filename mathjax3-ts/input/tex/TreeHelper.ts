@@ -141,11 +141,7 @@ export namespace TreeHelper {
       } else if (attrs.indexOf(name) !== -1) {
         node.setProperty(name, value);
       } else {
-        // TODO: Check with Davide if this is correct.
-        let inherited = node.attributes.getInherited(name);
-        if (inherited !== value) {
-          node.attributes.set(name, value);
-        }
+        node.attributes.set(name, value);
       }
     }
   };
