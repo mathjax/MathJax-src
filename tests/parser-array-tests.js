@@ -1735,7 +1735,6 @@ parserTest.runTest(
             "texClass": null,
             "attributes": {},
             "inherited": {
-              "columnalign": "right left",
               "displaystyle": true,
               "scriptlevel": 0},
             "properties": {},
@@ -1744,7 +1743,6 @@ parserTest.runTest(
                "texClass": null,
                "attributes": {},
                "inherited": {
-                 "columnalign": "right left",
                  "displaystyle": true,
                  "scriptlevel": 0},
                "properties": {},
@@ -1809,7 +1807,6 @@ parserTest.runTest(
                "texClass": null,
                "attributes": {},
                "inherited": {
-                 "columnalign": "right left",
                  "displaystyle": true,
                  "scriptlevel": 0},
                "properties": {},
@@ -1838,7 +1835,6 @@ parserTest.runTest(
                "texClass": null,
                "attributes": {},
                "inherited": {
-                 "columnalign": "right left",
                  "displaystyle": true,
                  "scriptlevel": 0},
                "properties": {},
@@ -3115,7 +3111,6 @@ parserTest.runTest(
                "texClass":null,
                "attributes":{},
                "inherited":{
-                 "columnalign":"center center center",
                  "displaystyle":false,
                  "scriptlevel":0},
                "properties":{},
@@ -3124,7 +3119,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},
@@ -3153,7 +3147,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},
@@ -3182,7 +3175,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},
@@ -3211,7 +3203,6 @@ parserTest.runTest(
                "texClass":null,
                "attributes":{},
                "inherited":{
-                 "columnalign":"center center center",
                  "displaystyle":false,
                  "scriptlevel":0},
                "properties":{},
@@ -3220,7 +3211,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},
@@ -3249,7 +3239,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},
@@ -3278,7 +3267,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},
@@ -3307,7 +3295,6 @@ parserTest.runTest(
                "texClass":null,
                "attributes":{},
                "inherited":{
-                 "columnalign":"center center center",
                  "displaystyle":false,
                  "scriptlevel":0},
                "properties":{},
@@ -3316,7 +3303,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},
@@ -3345,7 +3331,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},
@@ -3374,7 +3359,6 @@ parserTest.runTest(
                   "texClass":null,
                   "attributes":{},
                   "inherited":{
-                    "columnalign":"center center center",
                     "displaystyle":false,
                     "scriptlevel":0},
                   "properties":{},

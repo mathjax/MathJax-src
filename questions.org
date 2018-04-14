@@ -142,3 +142,13 @@ parserTest.runTest(
 * With delims:
 
 ** texWithDelims vs withDelims: This  seems to have changed.
+
+* Output weakness: Stretchies with Choose etc. in subscripts do not look good.
+
+* Arrays: Which elements have to inherit the alignment attributes? 
+** mtr from mtable etc.
+** In the old data structure the inherit elements were there
+** In the new data structure mtr has INHERIT set but it does not show up in the JSON.
+* Mathsize normal problem in various base tests. 
+** Mathsize does not occur in the original JSON output, but now it does.
+
