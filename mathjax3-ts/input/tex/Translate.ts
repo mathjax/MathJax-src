@@ -96,6 +96,7 @@ export namespace NewTex {
       return mathNode;
     }
     for (let mo of parser.secondPass) {
+      console.log(mo);
       let forms = mo.getForms();
       let symbol: OperatorDef;
       // Probably not needed!

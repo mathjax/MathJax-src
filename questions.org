@@ -157,6 +157,7 @@
 * Modulo
 
 ** mathchoice: How are we going to handle this in the future?
+   mml mathchoice node
 
 * Mathop
 
