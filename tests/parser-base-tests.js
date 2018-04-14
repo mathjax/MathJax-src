@@ -4270,6 +4270,70 @@ parserTest.runTest(
 
 
 parserTest.runTest(
+  'Mathop Sub Super', '\\mathop{\\rm a}_b^c',
+  {"kind": "math",
+   "texClass": 3,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 3,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "munderover",
+         "texClass": 3,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {"movesupsub": true},
+         "childNodes": [
+           {"kind": "mo",
+            "texClass": 3,
+            "attributes": {"lspace": "0",
+                           "rspace": "0",
+                           "movablelimits": true},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0,
+                          "form": "infix"},
+            "properties": {"movablelimits": true,
+                           "texprimestyle": true},
+            "childNodes": [
+              {"kind": "text",
+               "text": "a"}],
+            "isEmbellished": true},
+           {"kind": "mi",
+            "texClass": 0,
+              "attributes": {},
+              "inherited": {"displaystyle": false,
+                "scriptlevel": 1,
+                "mathvariant": "italic"},
+              "properties": {"texprimestyle": true},
+              "childNodes": [
+                {"kind": "text",
+                  "text": "b"}]},
+            {"kind": "mi",
+              "texClass": 0,
+              "attributes": {},
+              "inherited": {"displaystyle": false,
+                "scriptlevel": 1,
+                "mathvariant": "italic"},
+              "properties": {},
+              "childNodes": [
+                {"kind": "text",
+                  "text": "c"}]}],
+          "isEmbellished": true}],
+      "isInferred": true,
+      "isEmbellished": true}],
+  "isEmbellished": true}
+);
+
+
+parserTest.runTest(
   'Mathop Cal', '\\mathop{\\cal a}',
   {"kind": "math",
    "texClass": 1,

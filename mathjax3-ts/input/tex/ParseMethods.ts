@@ -306,7 +306,7 @@ export namespace ParseMethods {
     } else {
       base = parser.stack.Prev();
       if (!base) {
-        // @test Empty Base Indes
+        // @test Empty Base Index
         const textNode = TreeHelper.createText('');
         base = TreeHelper.createNode('mi', [], {}, textNode);
       }
@@ -344,7 +344,7 @@ export namespace ParseMethods {
         }
         position = (base as MmlMunderover).under;
       } else {
-        // @test Empty Base Index, Empty, Base Index2, Index
+        // @test Empty Base Index, Empty Base Index2, Index
         base = TreeHelper.createNode('msubsup', [base], {});
         position = (base as MmlMsubsup).sub;
       }
