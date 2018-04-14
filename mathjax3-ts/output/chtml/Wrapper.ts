@@ -653,24 +653,32 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      */
 
     public drawBBox() {
-        const bbox = this.getBBox();
+        let {w, h, d, R}  = this.getBBox();
         const box = this.html('mjx-box', {style: {
-            opacity: .25, 'margin-left': this.em(-bbox.w - bbox.R)
+            opacity: .25, 'margin-left': this.em(-w - R)
         }}, [
             this.html('mjx-box', {style: {
-                height: this.em(bbox.h),
-                width: this.em(bbox.w),
+                height: this.em(h),
+                width: this.em(w),
                 'background-color': 'red'
             }}),
             this.html('mjx-box', {style: {
-                height: this.em(bbox.d),
-                width: this.em(bbox.w),
-                'margin-left': this.em(-bbox.w),
-                'vertical-align': this.em(-bbox.d),
+                height: this.em(d),
+                width: this.em(w),
+                'margin-left': this.em(-w),
+                'vertical-align': this.em(-d),
                 'background-color': 'green'
             }})
         ] as N[]);
         const node = this.chtml || this.parent.chtml;
+        const size = this.adaptor.getAttribute(node, 'size');
+        if (size) {
+            this.adaptor.setAttribute(box, 'size', size);
+        }
+        const fontsize = this.adaptor.getStyle(node, 'fontSize');
+        if (fontsize) {
+            this.adaptor.setStyle(box, 'fontSize', fontsize);
+        }
         this.adaptor.append(this.adaptor.parent(node), box);
         this.adaptor.setStyle(node, 'backgroundColor', '#FFEE00');
     }
