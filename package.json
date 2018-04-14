@@ -4,7 +4,8 @@
   "description": "MathJax version 3 testbed",
   "main": "load.js",
   "dependencies": {
-    "jsdom": "10.*"
+    "jsdom": "10.*",
+    "webpack": "^3.10.0"
   },
   "devDependencies": {
     "typescript": "2.3.*",

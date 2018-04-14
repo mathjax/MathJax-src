@@ -23,17 +23,28 @@
 
 import {MathDocument, AbstractMathDocument} from './MathDocument.js';
 import {OptionList} from '../util/Options.js';
+import {DOMAdaptor} from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /*
  *  The Handler interface
  */
 
-export interface Handler {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface Handler<N, T, D> {
     /*
      * The name of the handler class
      */
     name: string;
+
+    /*
+     * The DOM Adaptor to use for managing HTML elements
+     */
+    adaptor: DOMAdaptor<N, T, D>;
 
     /*
      * The priority for the handler when handlers are polled
@@ -53,10 +64,11 @@ export interface Handler {
      * Creates a MathDocument for the given handler
      *
      * @param{any} document        The document to be handled
+     * @param{DOMAdaptor} adaptor  The DOM adaptor for managing HTML elements
      * @param{OptionList} options  The options for the handling of the document
      * @return{MathDocument}       The MathDocument object that manages the processing
      */
-    create(document: any, options: OptionList): MathDocument;
+    create(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList): MathDocument<N, T, D>;
 }
 
 /*****************************************************************/
@@ -64,19 +76,34 @@ export interface Handler {
  *  The default MathDocument class (subclasses use their own)
  */
 
-class DefaultMathDocument extends AbstractMathDocument {}
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+class DefaultMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {}
 
 /*****************************************************************/
 /*
  *  The Handler interface
  */
 
-export abstract class AbstractHandler implements Handler {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
 
     /*
      * The name of this class
      */
     public static NAME: string = 'generic';
+
+    /*
+     * The DOM Adaptor to use for managing HTML elements
+     */
+    public adaptor: DOMAdaptor<N, T, D>;
 
     /*
      * The priority for this handler
@@ -88,7 +115,8 @@ export abstract class AbstractHandler implements Handler {
      *
      * @constructor
      */
-    constructor(priority: number = 5) {
+    constructor(adaptor: DOMAdaptor<N, T, D>, priority: number = 5) {
+        this.adaptor = adaptor;
         this.priority = priority;
     }
 
@@ -110,7 +138,7 @@ export abstract class AbstractHandler implements Handler {
      * @override
      */
     public create(document: any, options: OptionList) {
-        return new DefaultMathDocument(document, options) as MathDocument;
+        return new DefaultMathDocument<N, T, D>(document, this.adaptor, options) as MathDocument<N, T, D>;
     }
 
 }

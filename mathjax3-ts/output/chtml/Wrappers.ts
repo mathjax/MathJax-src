@@ -22,18 +22,52 @@
  */
 
 import {CHTMLWrapper} from './Wrapper.js';
+import {CHTMLmath} from './Wrappers/math.js';
+import {CHTMLmi} from './Wrappers/mi.js';
 import {CHTMLmo} from './Wrappers/mo.js';
+import {CHTMLms} from './Wrappers/ms.js';
 import {CHTMLmspace} from './Wrappers/mspace.js';
+import {CHTMLmpadded} from './Wrappers/mpadded.js';
 import {CHTMLmrow, CHTMLinferredMrow} from './Wrappers/mrow.js';
 import {CHTMLmfrac} from './Wrappers/mfrac.js';
+import {CHTMLmsqrt} from './Wrappers/msqrt.js';
+import {CHTMLmroot} from './Wrappers/mroot.js';
+import {CHTMLmsub, CHTMLmsup, CHTMLmsubsup} from './Wrappers/msubsup.js';
+import {CHTMLmover, CHTMLmunder, CHTMLmunderover} from './Wrappers/munderover.js';
+import {CHTMLmtable} from './Wrappers/mtable.js';
+import {CHTMLmtr, CHTMLmlabeledtr} from './Wrappers/mtr.js';
+import {CHTMLmtd} from './Wrappers/mtd.js';
+import {CHTMLsemantics, CHTMLannotation, CHTMLannotationXML, CHTMLxml} from './Wrappers/semantics.js';
+import {CHTMLTeXAtom} from './Wrappers/TeXAtom.js';
 import {CHTMLTextNode} from './Wrappers/TextNode.js';
 
 export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
+    [CHTMLmath.kind]: CHTMLmath,
     [CHTMLmrow.kind]: CHTMLmrow,
     [CHTMLinferredMrow.kind]: CHTMLinferredMrow,
+    [CHTMLmi.kind]: CHTMLmi,
     [CHTMLmo.kind]: CHTMLmo,
+    [CHTMLms.kind]: CHTMLms,
     [CHTMLmspace.kind]: CHTMLmspace,
+    [CHTMLmpadded.kind]: CHTMLmpadded,
     [CHTMLmfrac.kind]: CHTMLmfrac,
+    [CHTMLmsqrt.kind]: CHTMLmsqrt,
+    [CHTMLmroot.kind]: CHTMLmroot,
+    [CHTMLmsub.kind]: CHTMLmsub,
+    [CHTMLmsup.kind]: CHTMLmsup,
+    [CHTMLmsubsup.kind]: CHTMLmsubsup,
+    [CHTMLmunder.kind]: CHTMLmunder,
+    [CHTMLmover.kind]: CHTMLmover,
+    [CHTMLmunderover.kind]: CHTMLmunderover,
+    [CHTMLmtable.kind]: CHTMLmtable,
+    [CHTMLmtr.kind]: CHTMLmtr,
+    [CHTMLmlabeledtr.kind]: CHTMLmlabeledtr,
+    [CHTMLmtd.kind]: CHTMLmtd,
+    [CHTMLsemantics.kind]: CHTMLsemantics,
+    [CHTMLannotation.kind]: CHTMLannotation,
+    [CHTMLannotationXML.kind]: CHTMLannotationXML,
+    [CHTMLxml.kind]: CHTMLxml,
+    [CHTMLTeXAtom.kind]: CHTMLTeXAtom,
     [CHTMLTextNode.kind]: CHTMLTextNode,
     [CHTMLWrapper.kind]: CHTMLWrapper
 };

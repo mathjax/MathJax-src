@@ -87,9 +87,13 @@ export class MmlMath extends AbstractMmlLayoutNode {
      * @override
      */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+        if (this.attributes.get('mode') === 'display') {
+            this.attributes.setInherited('display', 'block');
+        }
         attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         display = (!!this.attributes.get('displaystyle') ||
                    (!this.attributes.get('displaystyle') && this.attributes.get('display') === 'block'));
+        this.attributes.setInherited('displaystyle', display);
         level = (this.attributes.get('scriptlevel') ||
                  (this.constructor as typeof MmlMath).defaults['scriptlevel']) as number;
         super.setChildInheritedAttributes(attributes, display, level, prime);

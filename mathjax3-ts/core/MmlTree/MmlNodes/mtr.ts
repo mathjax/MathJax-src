@@ -64,7 +64,6 @@ export class MmlMtr extends AbstractMmlNode {
                     .appendChild(child);
             }
         }
-        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 

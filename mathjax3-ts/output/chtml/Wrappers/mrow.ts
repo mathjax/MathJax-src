@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmfracr wrapper for the MmlMrow object
+ * @fileoverview  Implements the CHTMLmrow wrapper for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -26,20 +26,24 @@ import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmrow wrapper for the MmlMrow object
+ * The CHTMLmrow wrapper for the MmlMrow object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmrow extends CHTMLWrapper {
+export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMrow.prototype.kind;
 
     /*
      * @override
      * @constructor
      */
-    constructor(factory: CHTMLWrapperFactory, node: MmlNode, parent: CHTMLWrapper = null) {
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
     }
@@ -47,40 +51,50 @@ export class CHTMLmrow extends CHTMLWrapper {
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
-        let chtml = parent;
-        if (!this.node.isInferred) {
-            chtml = this.standardCHTMLnode(parent);
-        }
+    public toCHTML(parent: N) {
+        const chtml = (this.node.isInferred ? (this.chtml = parent) : this.standardCHTMLnode(parent));
         let hasNegative = false;
         for (const child of this.childNodes) {
             child.toCHTML(chtml);
-            if (child.bbox && child.bbox.w < 0) {
+            if (child.bbox.w < 0) {
                 hasNegative = true;
+            }
+            if (child.bbox.pwidth) {
+                this.makeFullWidth();
             }
         }
         // FIXME:  handle line breaks
         if (hasNegative) {
             const {w} = this.getBBox();
-            if (w) chtml.style.width = this.em(Math.max(0, w));
-            if (w < 0) chtml.style.marginRight = this.em(w);
+            if (w) {
+                this.adaptor.setStyle(chtml, 'width', this.em(Math.max(0, w)));
+                if (w < 0) {
+                    this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
+                }
+            }
         }
     }
 
     /*
-     * @return{number}  The number of stretchable child nodes
+     * Handle the case where a child has a percentage width by
+     * marking the parent as 100% width.
      */
+    protected makeFullWidth() {
+        this.bbox.pwidth = '100%';
+        this.adaptor.setAttribute(this.chtml, 'width', 'full');
+    }
+
     /*
      * Handle vertical stretching of children to match height of
      *  other nodes in the row.
      */
     protected stretchChildren() {
-        let stretchy: CHTMLWrapper[] = [];
+        let stretchy: CHTMLWrapper<N, T, D>[] = [];
         //
         //  Locate and count the stretchy children
         //
         for (const child of this.childNodes) {
-            if (child.canStretch('Vertical')) {
+            if (child.canStretch(DIRECTION.Vertical)) {
                 stretchy.push(child);
             }
         }
@@ -95,7 +109,7 @@ export class CHTMLmrow extends CHTMLWrapper {
             //
             let all = (count > 1 && count === nodeCount);
             for (const child of this.childNodes) {
-                const noStretch = !child.stretch;
+                const noStretch = (child.stretch.dir === DIRECTION.None);
                 if (all || noStretch) {
                     const {h, d} = child.getBBox(noStretch);
                     if (h > H) H = h;
@@ -118,7 +132,7 @@ export class CHTMLmrow extends CHTMLWrapper {
  *  The CHTMLinferredMrow wrapper for the MmlInferredMrow object
  */
 
-export class CHTMLinferredMrow extends CHTMLmrow {
+export class CHTMLinferredMrow<N, T, D> extends CHTMLmrow<N, T, D> {
     public static kind = MmlInferredMrow.prototype.kind;
 
     /*

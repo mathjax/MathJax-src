@@ -31,6 +31,9 @@ declare function require(name: string): Object;
  * @return{Promise}     The promise that is satisfied when the file is loaded
  */
 export function asyncLoad(name: string) {
+    if (name.charAt(0) === '.') {
+        name = __dirname + name.replace(/^\.\.?/,'/..');
+    }
     if (typeof(System) !== 'undefined') {
         return System.import(name);
     }

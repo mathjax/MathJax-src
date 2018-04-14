@@ -26,9 +26,9 @@ import {userOptions, separateOptions, OptionList} from '../../util/Options.js';
 import {HTMLMathItem} from './HTMLMathItem.js';
 import {HTMLMathList} from './HTMLMathList.js';
 import {HTMLDomStrings} from './HTMLDomStrings.js';
+import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {InputJax} from '../../core/InputJax.js';
 import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
-import {DOM} from '../../util/DOM.js';
 
 /*****************************************************************/
 /*
@@ -37,15 +37,21 @@ import {DOM} from '../../util/DOM.js';
  * These represent the Text elements that make up a single
  * string in the list of strings to be searched for math
  * (multiple consecutive Text nodes can form a single string).
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
  */
-export type HTMLNodeArray = [Element, number][][];
+export type HTMLNodeArray<N, T> = [N | T, number][][];
 
 /*****************************************************************/
 /*
  *  The HTMLDocument class (extends AbstractMathDocument)
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class HTMLDocument extends AbstractMathDocument {
+export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
     public static KIND: string = 'HTML';
     public static OPTIONS: OptionList = {
@@ -58,17 +64,18 @@ export class HTMLDocument extends AbstractMathDocument {
     /*
      * The DomString parser for locating the text in DOM trees
      */
-    public domStrings: HTMLDomStrings;
+    public domStrings: HTMLDomStrings<N, T, D>;
 
     /*
      * @override
      * @constructor
      * @extends{AbstractMathDocument}
      */
-    constructor(document: any, options: OptionList) {
+    constructor(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
         let [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
-        super(document, html);
-        this.domStrings = this.options['DomStrings'] || new HTMLDomStrings(dom);
+        super(document, adaptor, html);
+        this.domStrings = this.options['DomStrings'] || new HTMLDomStrings<N, T, D>(dom);
+        this.domStrings.adaptor = adaptor;
     }
 
     /*
@@ -82,7 +89,7 @@ export class HTMLDocument extends AbstractMathDocument {
      * @param{HTMLNodeArray} nodes  The list of node lists representing the string array
      * @return{Location}            The Location object for the position of the delimiter in the document
      */
-    protected findPosition(N: number, index: number, delim: string, nodes: HTMLNodeArray): Location {
+    protected findPosition(N: number, index: number, delim: string, nodes: HTMLNodeArray<N, T>): Location<N, T> {
         for (const list of nodes[N]) {
             let [node, n] = list;
             if (index <= n) {
@@ -102,37 +109,11 @@ export class HTMLDocument extends AbstractMathDocument {
      * @param{HTMLNodeArray} nodes  The array of node lists that produced the string array
      * @return{HTMLMathItem}        The MathItem for the given proto item
      */
-    protected mathItem(item: ProtoItem, jax: InputJax, nodes: HTMLNodeArray) {
+    protected mathItem(item: ProtoItem<N, T>, jax: InputJax<N, T, D>, nodes: HTMLNodeArray<N, T>) {
         let math = item.math;
         let start = this.findPosition(item.n, item.start.n, item.open, nodes);
         let end = this.findPosition(item.n, item.end.n, item.close, nodes);
         return new HTMLMathItem(math, jax, item.display, start, end);
-    }
-
-    /*
-     * Get a list of containers (DOM nodes) to be searched for math.  These can be
-     *  specified by CSS selector, or as actual DOM elements or arrays of such.
-     *
-     * @param{(string | Element | Element[])[]} nodes  The array of items to make into a container list
-     * @param{Document} document                       The document in which to search
-     * @return{Element[]}                              The array of containers to search
-     */
-    protected getElements(nodes: (string | Element | Element[])[], document: Document) {
-        let containers: Element[] = [];
-        let window = document.defaultView || DOM.window;
-        for (const node of nodes) {
-            if (typeof(node) === 'string') {
-                containers = containers.concat(Array.from(document.querySelectorAll(node)));
-            } else if (Array.isArray(node)) {
-                containers = containers.concat(node);
-                containers = containers.concat(Array.from(node) as Element[]);
-            } else if (node instanceof window.NodeList || node instanceof window.HTMLCollection) {
-                containers = containers.concat(Array.from(node) as Element[]);
-            } else {
-                containers.push(node);
-            }
-        }
-        return containers;
     }
 
     /*
@@ -154,9 +135,10 @@ export class HTMLDocument extends AbstractMathDocument {
      */
     public findMath(options: OptionList) {
         if (!this.processed.findMath) {
-            options = userOptions({elements: [this.document.body]}, options);
-            for (const container of this.getElements(options['elements'], this.document)) {
-                let [strings, nodes] = [null, null] as [string[], HTMLNodeArray];
+            this.adaptor.document = this.document;
+            options = userOptions({elements: [this.adaptor.body(this.document)]}, options);
+            for (const container of this.adaptor.getElements(options['elements'], this.document)) {
+                let [strings, nodes] = [null, null] as [string[], HTMLNodeArray<N, T>];
                 for (const jax of this.inputJax) {
                     let list = new (this.options['MathList'])();
                     if (jax.processStrings) {
@@ -186,18 +168,30 @@ export class HTMLDocument extends AbstractMathDocument {
     public updateDocument() {
         if (!this.processed.updateDocument) {
             super.updateDocument();
-            let sheet = this.documentStyleSheet();
+            const sheet = this.documentStyleSheet();
             if (sheet) {
-                let styles = this.document.getElementById(sheet.id);
+                const head = this.adaptor.head(this.document);
+                let styles = this.findSheet(head, this.adaptor.getAttribute(sheet, 'id'));
                 if (styles) {
-                    styles.parentNode.replaceChild(sheet, styles);
+                    this.adaptor.replace(sheet, styles);
                 } else {
-                    this.document.head.appendChild(sheet);
+                    this.adaptor.append(head, sheet);
                 }
             }
             this.processed.updateDocument = true;
         }
         return this;
+    }
+
+    protected findSheet(head: N, id: string) {
+        if (id) {
+            for (const sheet of this.adaptor.tags(head, 'style')) {
+                if (this.adaptor.getAttribute(sheet, 'id') === id) {
+                    return sheet;
+                }
+            }
+        }
+        return null as N;
     }
 
     /*
@@ -227,7 +221,7 @@ export class HTMLDocument extends AbstractMathDocument {
      */
     public TestMath(text: string, display: boolean = true) {
         if (!this.processed['TestMath']) {
-            let math = new HTMLMathItem(text, this.inputJax[0], display);
+            let math = new HTMLMathItem<N, T, D>(text, this.inputJax[0], display);
             math.setMetrics(16, 8, 1000000, 1000000, 1);
             this.math.push(math);
             this.processed['TestMath'] = true;

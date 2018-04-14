@@ -25,6 +25,7 @@ import {PrioritizedList, PrioritizedListItem} from '../util/PrioritizedList.js';
 import {OptionList} from '../util/Options.js';
 import {Handler} from './Handler.js';
 import {MathDocument} from './MathDocument.js';
+import {DOMAdaptor} from './DOMAdaptor.js';
 
 /*****************************************************************/
 /*
@@ -35,20 +36,25 @@ import {MathDocument} from './MathDocument.js';
  *  and when one can, it is asked to create its associated MathDocument.
  */
 
-export class HandlerList extends PrioritizedList<Handler>  {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>>  {
 
     /*
      * @param{Handler} handler  The handler to register
      * @return{PrioritizedListItem<Handler>}  The list item created for the handler
      */
-    public register(handler: Handler) {
+    public register(handler: Handler<N, T, D>) {
         return this.add(handler, handler.priority);
     }
 
     /*
      * @param{Handler} Handler  The handler to remove from the list
      */
-    public unregister(handler: Handler) {
+    public unregister(handler: Handler<N, T, D>) {
         this.remove(handler);
     }
 
@@ -71,8 +77,8 @@ export class HandlerList extends PrioritizedList<Handler>  {
      * @param{OptionList} options  The options for the handler
      * @return{MathDocument}       The MathDocument created by the handler for this document
      */
-    public document(document: any, options: OptionList = null) {
-        return this.handlesDocument(document).create(document, options);
+    public document(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList = null) {
+        return this.handlesDocument(document).create(document, adaptor, options);
     }
 
 }

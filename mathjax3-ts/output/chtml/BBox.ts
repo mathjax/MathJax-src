@@ -65,6 +65,7 @@ export class BBox {
     public L: number;      // extra space on the left
     public R: number;      // extra space on the right
     public pwidth: string; // percentage width (for tables)
+    public ic: number;
 
     /*
      * @return{BBox}  A BBox initialized to zeros
@@ -91,9 +92,19 @@ export class BBox {
         this.w = def.w || 0;
         this.h = ('h' in def ? def.h : -BIGDIMEN);
         this.d = ('d' in def ? def.d : -BIGDIMEN);
-        this.x = this.y = this.L = this.R = 0;
+        this.x = this.y = this.L = this.R = this.ic = 0;
         this.scale = this.rscale = 1;
         this.pwidth = '';
+    }
+
+    /*
+     * Set up a bbox for append() and combine() operations
+     * @return{BBOX}  the boox itself (for chaining calls)
+     */
+    public empty() {
+        this.w = 0;
+        this.h = this.d = -BIGDIMEN;
+        return this;
     }
 
     /*
@@ -123,15 +134,12 @@ export class BBox {
         cbox.x = x;
         cbox.x = y;
         let rscale = cbox.rscale;
-        if (x + rscale * (cbox.w + cbox.L + cbox.R) > this.w) {
-            this.w  = x + rscale * (cbox.w + cbox.L + cbox.R);
-        }
-        if (y + rscale * cbox.h > this.h) {
-            this.h = y + rscale * cbox.h;
-        }
-        if (rscale * cbox.d - y > this.d) {
-            this.d = rscale * cbox.d - y;
-        }
+        let w = x + rscale * (cbox.w + cbox.L + cbox.R);
+        let h = y + rscale * cbox.h;
+        let d = rscale * cbox.d - y;
+        if (w > this.w) this.w = w;
+        if (h > this.h) this.h = h;
+        if (d > this.d) this.d = d;
     }
 
     /*

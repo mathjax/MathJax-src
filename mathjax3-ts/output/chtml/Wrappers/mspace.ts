@@ -28,46 +28,45 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmspace wrapper for the MmlMspace object
+ * The CHTMLmspace wrapper for the MmlMspace object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-
-export class CHTMLmspace extends CHTMLWrapper {
+export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMspace.prototype.kind;
 
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
-        let chtml = this.html('mjx-space');
-        this.chtml = parent.appendChild(chtml);
-        this.handleScale();
+    public toCHTML(parent: N) {
+        let chtml = this.standardCHTMLnode(parent);
         let {w, h, d} = this.getBBox();
         if (w < 0) {
-            chtml.style.marginRight = this.em(w);
+            this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
             w = 0;
         }
         if (w) {
-            chtml.style.width = this.em(w);
+            this.adaptor.setStyle(chtml, 'width', this.em(w));
         }
         h = Math.max(0, h + d);
         if (h) {
-            chtml.style.height = this.em(Math.max(0, h + d));
+            this.adaptor.setStyle(chtml, 'height', this.em(Math.max(0, h)));
         }
         if (d) {
-            chtml.style.verticalAlign = this.em(-d);
+            this.adaptor.setStyle(chtml, 'verticalAlign', this.em(-d));
         }
     }
 
     /*
      * @override
      */
-    public computeBBox() {
+    public computeBBox(bbox: BBox) {
         const attributes = this.node.attributes;
-        const bbox = this.bbox;
         bbox.w = this.length2em(attributes.get('width'), 0);
         bbox.h = this.length2em(attributes.get('height'), 0);
         bbox.d = this.length2em(attributes.get('depth'), 0);
-        return bbox;
     }
 
     /*

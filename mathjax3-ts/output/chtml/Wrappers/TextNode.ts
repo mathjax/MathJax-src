@@ -24,25 +24,40 @@
 import {CHTMLWrapper} from '../Wrapper.js';
 import {BBox} from '../BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {CharOptions} from '../FontData.js';
 
 /*****************************************************************/
 /*
  *  The CHTMLTextNode wrapper for the TextNode object
  */
 
-export class CHTMLTextNode extends CHTMLWrapper {
+/*
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = TextNode.prototype.kind;
+
+    public static autoStyle = false;
+    public static styles = {
+        'mjx-c, mjx-c::before': {
+            display: 'inline-block'
+        }
+    };
 
     /*
      * @override
      */
-    public toCHTML(parent: HTMLElement) {
+    public toCHTML(parent: N) {
         let text = (this.node as TextNode).getText();
         if (this.parent.variant === '-explicitFont') {
-            parent.appendChild(this.text(text));
+            this.adaptor.append(parent, this.text(text));
+        } else if (this.parent.stretch.c) {
+            this.adaptor.append(parent, this.html('mjx-c', {c: this.char(this.parent.stretch.c)}));
         } else {
             for (const n of this.unicodeChars(text)) {
-                parent.appendChild(this.html('mjx-c', {c: this.char(n)}));
+                this.adaptor.append(parent, this.html('mjx-c', {c: this.char(n)}));
             }
         }
     }
@@ -50,25 +65,36 @@ export class CHTMLTextNode extends CHTMLWrapper {
     /*
      * @override
      */
-    public computeBBox() {
+    public computeBBox(bbox: BBox) {
         const variant = this.parent.variant;
-        let bbox = this.bbox;
         if (variant === '-explicitFont') {
             // FIXME:  measure this using DOM, if possible
         } else {
-            const chars = this.unicodeChars((this.node as TextNode).getText());
-            let [h, d, w] = this.font.getChar(variant, chars[0]);
+            const c = this.parent.stretch.c;
+            const chars = (c ? [c] : this.unicodeChars((this.node as TextNode).getText()));
+            let [h, d, w, data] = this.getChar(variant, chars[0]);
             bbox.h = h;
             bbox.d = d;
             bbox.w = w;
+            bbox.ic = data.ic || 0;
             for (let i = 1, m = chars.length; i < m; i++) {
-                [h, d, w] = this.font.getChar(variant, chars[i]);
+                [h, d, w, data] = this.getChar(variant, chars[i]);
                 bbox.w += w;
                 if (h > bbox.h) bbox.h = h;
                 if (d > bbox.d) bbox.d = d;
+                bbox.ic = data.ic || 0;
             }
         }
-        return bbox;
+    }
+
+    /*
+     * @param{string} variant   The variant in which to look for the character
+     * @param{number} n         The number of the character to look up
+     * @return{CharData}        The full CharData object, with CharOptions guaranteed to be defined
+     */
+    protected getChar(variant: string, n: number) {
+        const char = this.font.getChar(variant, n) || [0, 0, 0, null];
+        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CharOptions];
     }
 
     /******************************************************/

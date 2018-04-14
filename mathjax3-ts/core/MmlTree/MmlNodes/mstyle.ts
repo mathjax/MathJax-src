@@ -65,9 +65,9 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
                 level = parseInt(scriptlevel);
             }
         }
-        let displaystyle = this.attributes.getExplicit('displaystyle') as string;
+        let displaystyle = this.attributes.getExplicit('displaystyle') as boolean;
         if (displaystyle != null) {
-            display = (displaystyle === 'true');
+            display = (displaystyle === true);
         }
         attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
