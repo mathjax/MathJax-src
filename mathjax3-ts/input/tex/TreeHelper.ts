@@ -161,6 +161,11 @@ export namespace TreeHelper {
   }
 
 
+  export function removeProperties(node: MmlNode, ...properties: string[]): void {
+    node.removeProperty(...properties);
+  }
+
+  
   export function getChildAt(node: MmlNode, position: number): MmlNode|TextNode {
     return (node.childNodes[position] as MmlNode|TextNode) ;
   };
@@ -266,6 +271,7 @@ export namespace TreeHelper {
                    createNode('munder', [children[ms.base], children[ms.under]], {}) :
                    createNode('mover', [children[ms.base], children[ms.over]], {}));
       }
+      copyAttributes(n, newNode);
       if (parent) {
         parent.replaceChild(newNode, n);
       } else {

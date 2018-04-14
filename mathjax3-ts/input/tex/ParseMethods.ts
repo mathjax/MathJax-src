@@ -1264,6 +1264,7 @@ export namespace ParseMethods {
     TreeHelper.copyAttributes(mi, mo);
     // TODO: Do this with get('lspace') etc.
     TreeHelper.setProperties(mo, {lspace: '0', rspace: '0'});
+    TreeHelper.removeProperties(mo, 'movesupsub');
     // mo.lspace = mo.rspace = '0';  // prevent mo from having space in NativeMML
     // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
     return mo;

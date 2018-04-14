@@ -111,15 +111,7 @@
 
 * Mathop
 
-* Running test Operatorname	[FIXED]
-Actual: 
-{"kind":"math","texClass":0,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"a"}]},{"kind":"mi","texClass":1,"attributes":{"mathvariant":"normal"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{"movablelimits":false,"movesupsub":false,"fnOP":true},"childNodes":[{"kind":"text","text":"xyz"}]},{"kind":"mo","texClass":-1,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{},"childNodes":[{"kind":"text","text":"⁡"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"b"}]}],"isInferred":true}]}
-Expected: 
-{"kind":"math","texClass":0,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"a"}]},{"kind":"mi","texClass":1,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{"movesupsub":false,"movablelimits":false,"fnOP":true},"childNodes":[{"kind":"text","text":"xyz"}]},{"kind":"mo","texClass":-1,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{},"childNodes":[{"kind":"text","text":"⁡"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"b"}]}],"isInferred":true}]}
-
-** Additional mathvariant normal
-
-* Running test Mathop Super	[31mFAIL[37m
+* Running test Mathop Super	[31mFAIL[37m  [FIXED]
 Actual: 
 {"kind":"math","texClass":3,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mover","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mo","texClass":3,"attributes":{"mathvariant":"normal","movablelimits":true,"lspace":"0","rspace":"0"},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{"movablelimits":true,"movesupsub":true,"texprimestyle":true},"childNodes":[{"kind":"text","text":"a"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":1,"mathvariant":"italic"},"properties":{},"childNodes":[{"kind":"text","text":"b"}]}],"isEmbellished":true}],"isInferred":true,"isEmbellished":true}],"isEmbellished":true}
 Expected: 
@@ -128,17 +120,19 @@ Expected:
 ** movesupsub is in the mo rather than the mover
    It is in the data structure for both. Why is it not output?
 
-* Running test Mathop Sub	[31mFAIL[37m
+   Removed movesupsub explicitly in mi2mo.
+
+
+* Running test Mathop Sub	[31mFAIL[37m [FIXED]
 Actual: 
 {"kind":"math","texClass":3,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"munder","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mo","texClass":3,"attributes":{"mathvariant":"normal","movablelimits":true,"lspace":"0","rspace":"0"},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{"movablelimits":true,"movesupsub":true},"childNodes":[{"kind":"text","text":"a"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":1,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"b"}]}],"isEmbellished":true}],"isInferred":true,"isEmbellished":true}],"isEmbellished":true}
 Expected: 
 {"kind":"math","texClass":3,"attributes":{"display":"block"},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"mrow","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{},"childNodes":[{"kind":"munder","texClass":3,"attributes":{},"inherited":{"displaystyle":true,"scriptlevel":0},"properties":{"movesupsub":true},"childNodes":[{"kind":"mo","texClass":3,"attributes":{"lspace":"0","rspace":"0","movablelimits":true},"inherited":{"displaystyle":true,"scriptlevel":0,"form":"infix"},"properties":{"movablelimits":true},"childNodes":[{"kind":"text","text":"a"}],"isEmbellished":true},{"kind":"mi","texClass":0,"attributes":{},"inherited":{"displaystyle":false,"scriptlevel":1,"mathvariant":"italic"},"properties":{"texprimestyle":true},"childNodes":[{"kind":"text","text":"b"}]}],"isEmbellished":true}],"isInferred":true,"isEmbellished":true}],"isEmbellished":true}
 
-** movesupsub is in the mo rather than the munder
-   It is in the data structure for both. Why is it not output?
+** see Mathop Super
 
 
-
+** Added and working:
 
 parserTest.runTest(
   'Mathop Sub Super', '\\mathop{\\rm a}_b^c',
