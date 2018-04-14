@@ -26,7 +26,12 @@
  *  limitations under the License.
  */
 
+
+let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
+let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
+
 (function (TEX,HUB,AJAX) {
+
   var MML, NBSP = "\u00A0"; 
   
   var _ = function (id) {
@@ -103,7 +108,7 @@
       if (item.type === "over" && this.isOpen) {item.num = this.mmlData(false); this.data = []}
       if (item.type === "cell" && this.isOpen) {
         if (item.linebreak) {return false}
-        TEX.Error(["Misplaced","Misplaced %1",item.name]);
+        TEX.Error(["Misplaced","Misplaced %1",item.name.symbol]);
       }
       if (item.isClose && this[item.type+"Error"]) {TEX.Error(this[item.type+"Error"])}
       if (!item.isNotStack) {return true}
@@ -368,9 +373,11 @@
       if (item.type === "mml" && item.data[0].type.match(/^(mo|mi|mtext)$/)) {
         mml = item.data[0], c = mml.data.join("");
         if (c.length === 1 && !mml.movesupsub && mml.data.length === 1) {
-          c = STACKITEM.not.remap[c.charCodeAt(0)];
-          if (c) {mml.SetData(0,MML.chars(String.fromCharCode(c)))}
-            else {mml.Append(MML.chars("\u0338"))}
+          if (STACKITEM.not.remap.contains(c)) {
+            mml.SetData(0, MML.chars(STACKITEM.not.remap.lookup(c).char));
+          } else {
+            mml.Append(MML.chars("\u0338"));
+          }
           return item;
         }
       }
@@ -380,20 +387,7 @@
       return [mml,item];
     }
   });
-  STACKITEM.not.remap = {
-    0x2190:0x219A, 0x2192:0x219B, 0x2194:0x21AE,
-    0x21D0:0x21CD, 0x21D2:0x21CF, 0x21D4:0x21CE,
-    0x2208:0x2209, 0x220B:0x220C, 0x2223:0x2224, 0x2225:0x2226,
-    0x223C:0x2241, 0x007E:0x2241, 0x2243:0x2244, 0x2245:0x2247,
-    0x2248:0x2249, 0x224D:0x226D, 0x003D:0x2260, 0x2261:0x2262,
-    0x003C:0x226E, 0x003E:0x226F, 0x2264:0x2270, 0x2265:0x2271,
-    0x2272:0x2274, 0x2273:0x2275, 0x2276:0x2278, 0x2277:0x2279,
-    0x227A:0x2280, 0x227B:0x2281, 0x2282:0x2284, 0x2283:0x2285,
-    0x2286:0x2288, 0x2287:0x2289, 0x22A2:0x22AC, 0x22A8:0x22AD,
-    0x22A9:0x22AE, 0x22AB:0x22AF, 0x227C:0x22E0, 0x227D:0x22E1,
-    0x2291:0x22E2, 0x2292:0x22E3, 0x22B2:0x22EA, 0x22B3:0x22EB,
-    0x22B4:0x22EC, 0x22B5:0x22ED, 0x2203:0x2204
-  };
+  STACKITEM.not.remap = MapHandler.getInstance().getMap('not_remap');
   
   STACKITEM.dots = STACKITEM.Subclass({
     type: "dots",
@@ -427,633 +421,20 @@
   var STARTUP = function () {
     MML = MathJax.ElementJax.mml;
     HUB.Insert(TEXDEF,{
-  
-      // patterns for letters and numbers
-      letter:  /[a-z]/i,
-      digit:   /[0-9.]/,
       number:  /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/,
-    
-      special: {
-        '\\':  'ControlSequence',
-        '{':   'Open',
-        '}':   'Close',
-        '~':   'Tilde',
-        '^':   'Superscript',
-        '_':   'Subscript',
-        ' ':   'Space',
-        "\t":  'Space',
-        "\r":  'Space',
-        "\n":  'Space',
-        "'":   'Prime',
-        '%':   'Comment',
-        '&':   'Entry',
-        '#':   'Hash',
-        '\u00A0': 'Space',
-        '\u2019': 'Prime'
-      },
-      
-      remap: {
-        '-':   '2212',
-        '*':   '2217',
-        '`':   '2018'   // map ` to back quote
-      },
-    
-      mathchar0mi: {
-	// Lower-case greek
-	alpha:        '03B1',
-	beta:         '03B2',
-	gamma:        '03B3',
-	delta:        '03B4',
-	epsilon:      '03F5',
-	zeta:         '03B6',
-	eta:          '03B7',
-	theta:        '03B8',
-	iota:         '03B9',
-	kappa:        '03BA',
-	lambda:       '03BB',
-	mu:           '03BC',
-	nu:           '03BD',
-	xi:           '03BE',
-	omicron:      '03BF', // added for completeness
-	pi:           '03C0',
-	rho:          '03C1',
-	sigma:        '03C3',
-	tau:          '03C4',
-	upsilon:      '03C5',
-	phi:          '03D5',
-	chi:          '03C7',
-	psi:          '03C8',
-	omega:        '03C9',
-	varepsilon:   '03B5',
-	vartheta:     '03D1',
-	varpi:        '03D6',
-	varrho:       '03F1',
-	varsigma:     '03C2',
-	varphi:       '03C6',
-        
-        // Ord symbols
-        S:            ['00A7',{mathvariant: MML.VARIANT.NORMAL}],
-        aleph:        ['2135',{mathvariant: MML.VARIANT.NORMAL}],
-        hbar:         ['210F',{variantForm:true}],
-        imath:        '0131',
-        jmath:        '0237',
-        ell:          '2113',
-        wp:           ['2118',{mathvariant: MML.VARIANT.NORMAL}],
-        Re:           ['211C',{mathvariant: MML.VARIANT.NORMAL}],
-        Im:           ['2111',{mathvariant: MML.VARIANT.NORMAL}],
-        partial:      ['2202',{mathvariant: MML.VARIANT.NORMAL}],
-        infty:        ['221E',{mathvariant: MML.VARIANT.NORMAL}],
-        prime:        ['2032',{mathvariant: MML.VARIANT.NORMAL, variantForm:true}],
-        emptyset:     ['2205',{mathvariant: MML.VARIANT.NORMAL}],
-        nabla:        ['2207',{mathvariant: MML.VARIANT.NORMAL}],
-        top:          ['22A4',{mathvariant: MML.VARIANT.NORMAL}],
-        bot:          ['22A5',{mathvariant: MML.VARIANT.NORMAL}],
-        angle:        ['2220',{mathvariant: MML.VARIANT.NORMAL}],
-        triangle:     ['25B3',{mathvariant: MML.VARIANT.NORMAL}],
-        backslash:    ['2216',{mathvariant: MML.VARIANT.NORMAL, variantForm:true}],
-        forall:       ['2200',{mathvariant: MML.VARIANT.NORMAL}],
-        exists:       ['2203',{mathvariant: MML.VARIANT.NORMAL}],
-        neg:          ['00AC',{mathvariant: MML.VARIANT.NORMAL}],
-        lnot:         ['00AC',{mathvariant: MML.VARIANT.NORMAL}],
-        flat:         ['266D',{mathvariant: MML.VARIANT.NORMAL}],
-        natural:      ['266E',{mathvariant: MML.VARIANT.NORMAL}],
-        sharp:        ['266F',{mathvariant: MML.VARIANT.NORMAL}],
-        clubsuit:     ['2663',{mathvariant: MML.VARIANT.NORMAL}],
-        diamondsuit:  ['2662',{mathvariant: MML.VARIANT.NORMAL}],
-        heartsuit:    ['2661',{mathvariant: MML.VARIANT.NORMAL}],
-        spadesuit:    ['2660',{mathvariant: MML.VARIANT.NORMAL}]
-      },
-        
-      mathchar0mo: {
-        surd:         '221A',
-
-        // big ops
-        coprod:       ['2210',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        bigvee:       ['22C1',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        bigwedge:     ['22C0',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        biguplus:     ['2A04',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        bigcap:       ['22C2',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        bigcup:       ['22C3',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        'int':        ['222B',{texClass: MML.TEXCLASS.OP}],
-        intop:        ['222B',{texClass: MML.TEXCLASS.OP, movesupsub:true, movablelimits:true}],
-        iint:         ['222C',{texClass: MML.TEXCLASS.OP}],
-        iiint:        ['222D',{texClass: MML.TEXCLASS.OP}],
-        prod:         ['220F',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        sum:          ['2211',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        bigotimes:    ['2A02',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        bigoplus:     ['2A01',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        bigodot:      ['2A00',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        oint:         ['222E',{texClass: MML.TEXCLASS.OP}],
-        bigsqcup:     ['2A06',{texClass: MML.TEXCLASS.OP, movesupsub:true}],
-        smallint:     ['222B',{largeop:false}],
-        
-        // binary operations
-        triangleleft:      '25C3',
-        triangleright:     '25B9',
-        bigtriangleup:     '25B3',
-        bigtriangledown:   '25BD',
-        wedge:        '2227',
-        land:         '2227',
-        vee:          '2228',
-        lor:          '2228',
-        cap:          '2229',
-        cup:          '222A',
-        ddagger:      '2021',
-        dagger:       '2020',
-        sqcap:        '2293',
-        sqcup:        '2294',
-        uplus:        '228E',
-        amalg:        '2A3F',
-        diamond:      '22C4',
-        bullet:       '2219',
-        wr:           '2240',
-        div:          '00F7',
-        odot:         ['2299',{largeop: false}],
-        oslash:       ['2298',{largeop: false}],
-        otimes:       ['2297',{largeop: false}],
-        ominus:       ['2296',{largeop: false}],
-        oplus:        ['2295',{largeop: false}],
-        mp:           '2213',
-        pm:           '00B1',
-        circ:         '2218',
-        bigcirc:      '25EF',
-        setminus:     ['2216',{variantForm:true}],
-        cdot:         '22C5',
-        ast:          '2217',
-        times:        '00D7',
-        star:         '22C6',
-        
-        // Relations
-        propto:       '221D',
-        sqsubseteq:   '2291',
-        sqsupseteq:   '2292',
-        parallel:     '2225',
-        mid:          '2223',
-        dashv:        '22A3',
-        vdash:        '22A2',
-        leq:          '2264',
-        le:           '2264',
-        geq:          '2265',
-        ge:           '2265',
-        lt:           '003C',
-        gt:           '003E',
-        succ:         '227B',
-        prec:         '227A',
-        approx:       '2248',
-        succeq:       '2AB0',  // or '227C',
-        preceq:       '2AAF',  // or '227D',
-        supset:       '2283',
-        subset:       '2282',
-        supseteq:     '2287',
-        subseteq:     '2286',
-        'in':         '2208',
-        ni:           '220B',
-        notin:        '2209',
-        owns:         '220B',
-        gg:           '226B',
-        ll:           '226A',
-        sim:          '223C',
-        simeq:        '2243',
-        perp:         '22A5',
-        equiv:        '2261',
-        asymp:        '224D',
-        smile:        '2323',
-        frown:        '2322',
-        ne:           '2260',
-        neq:          '2260',
-        cong:         '2245',
-        doteq:        '2250',
-        bowtie:       '22C8',
-        models:       '22A8',
-        
-        notChar:      '29F8',
-        
-        
-        // Arrows
-        Leftrightarrow:     '21D4',
-        Leftarrow:          '21D0',
-        Rightarrow:         '21D2',
-        leftrightarrow:     '2194',
-        leftarrow:          '2190',
-        gets:               '2190',
-        rightarrow:         '2192',
-        to:                 '2192',
-        mapsto:             '21A6',
-        leftharpoonup:      '21BC',
-        leftharpoondown:    '21BD',
-        rightharpoonup:     '21C0',
-        rightharpoondown:   '21C1',
-        nearrow:            '2197',
-        searrow:            '2198',
-        nwarrow:            '2196',
-        swarrow:            '2199',
-        rightleftharpoons:  '21CC',
-        hookrightarrow:     '21AA',
-        hookleftarrow:      '21A9',
-        longleftarrow:      '27F5',
-        Longleftarrow:      '27F8',
-        longrightarrow:     '27F6',
-        Longrightarrow:     '27F9',
-        Longleftrightarrow: '27FA',
-        longleftrightarrow: '27F7',
-        longmapsto:         '27FC',
-        
-        
-        // Misc.
-        ldots:            '2026',
-        cdots:            '22EF',
-        vdots:            '22EE',
-        ddots:            '22F1',
-        dotsc:            '2026',  // dots with commas
-        dotsb:            '22EF',  // dots with binary ops and relations
-        dotsm:            '22EF',  // dots with multiplication
-        dotsi:            '22EF',  // dots with integrals
-        dotso:            '2026',  // other dots
-        
-        ldotp:            ['002E', {texClass: MML.TEXCLASS.PUNCT}],
-        cdotp:            ['22C5', {texClass: MML.TEXCLASS.PUNCT}],
-        colon:            ['003A', {texClass: MML.TEXCLASS.PUNCT}]
-      },
-      
-      mathchar7: {
-        Gamma:        '0393',
-        Delta:        '0394',
-        Theta:        '0398',
-        Lambda:       '039B',
-        Xi:           '039E',
-        Pi:           '03A0',
-        Sigma:        '03A3',
-        Upsilon:      '03A5',
-        Phi:          '03A6',
-        Psi:          '03A8',
-        Omega:        '03A9',
-        
-        '_':          '005F',
-        '#':          '0023',
-        '$':          '0024',
-        '%':          '0025',
-        '&':          '0026',
-        And:          '0026'
-      },
-      
-      delimiter: {
-        '(':                '(',
-        ')':                ')',
-        '[':                '[',
-        ']':                ']',
-        '<':                '27E8',
-        '>':                '27E9',
-        '\\lt':             '27E8',
-        '\\gt':             '27E9',
-        '/':                '/',
-        '|':                ['|',{texClass:MML.TEXCLASS.ORD}],
-        '.':                '',
-        '\\\\':             '\\',
-        '\\lmoustache':     '23B0',  // non-standard
-        '\\rmoustache':     '23B1',  // non-standard
-        '\\lgroup':         '27EE',  // non-standard
-        '\\rgroup':         '27EF',  // non-standard
-        '\\arrowvert':      '23D0',
-        '\\Arrowvert':      '2016',
-        '\\bracevert':      '23AA',  // non-standard
-        '\\Vert':           ['2016',{texClass:MML.TEXCLASS.ORD}],
-        '\\|':              ['2016',{texClass:MML.TEXCLASS.ORD}],
-        '\\vert':           ['|',{texClass:MML.TEXCLASS.ORD}],
-        '\\uparrow':        '2191',
-        '\\downarrow':      '2193',
-        '\\updownarrow':    '2195',
-        '\\Uparrow':        '21D1',
-        '\\Downarrow':      '21D3',
-        '\\Updownarrow':    '21D5',
-        '\\backslash':      '\\',
-        '\\rangle':         '27E9',
-        '\\langle':         '27E8',
-        '\\rbrace':         '}',
-        '\\lbrace':         '{',
-        '\\}':              '}',
-        '\\{':              '{',
-        '\\rceil':          '2309',
-        '\\lceil':          '2308',
-        '\\rfloor':         '230B',
-        '\\lfloor':         '230A',
-        '\\lbrack':         '[',
-        '\\rbrack':         ']'
-      },
-      
-      macros: {
-        displaystyle:      ['SetStyle','D',true,0],
-        textstyle:         ['SetStyle','T',false,0],
-        scriptstyle:       ['SetStyle','S',false,1],
-        scriptscriptstyle: ['SetStyle','SS',false,2],
-        
-        rm:                ['SetFont',MML.VARIANT.NORMAL],
-        mit:               ['SetFont',MML.VARIANT.ITALIC],
-        oldstyle:          ['SetFont',MML.VARIANT.OLDSTYLE],
-        cal:               ['SetFont',MML.VARIANT.CALIGRAPHIC],
-        it:                ['SetFont',"-tex-mathit"], // needs special handling
-        bf:                ['SetFont',MML.VARIANT.BOLD],
-        bbFont:            ['SetFont',MML.VARIANT.DOUBLESTRUCK],
-        scr:               ['SetFont',MML.VARIANT.SCRIPT],
-        frak:              ['SetFont',MML.VARIANT.FRAKTUR],
-        sf:                ['SetFont',MML.VARIANT.SANSSERIF],
-        tt:                ['SetFont',MML.VARIANT.MONOSPACE],
-
-//      font:
-        
-        tiny:              ['SetSize',0.5],
-        Tiny:              ['SetSize',0.6],  // non-standard
-        scriptsize:        ['SetSize',0.7],
-        small:             ['SetSize',0.85],
-        normalsize:        ['SetSize',1.0],
-        large:             ['SetSize',1.2],
-        Large:             ['SetSize',1.44],
-        LARGE:             ['SetSize',1.73],
-        huge:              ['SetSize',2.07],
-        Huge:              ['SetSize',2.49],
-        
-        arcsin:            ['NamedFn'],
-        arccos:            ['NamedFn'],
-        arctan:            ['NamedFn'],
-        arg:               ['NamedFn'],
-        cos:               ['NamedFn'],
-        cosh:              ['NamedFn'],
-        cot:               ['NamedFn'],
-        coth:              ['NamedFn'],
-        csc:               ['NamedFn'],
-        deg:               ['NamedFn'],
-        det:                'NamedOp',
-        dim:               ['NamedFn'],
-        exp:               ['NamedFn'],
-        gcd:                'NamedOp',
-        hom:               ['NamedFn'],
-        inf:                'NamedOp',
-        ker:               ['NamedFn'],
-        lg:                ['NamedFn'],
-        lim:                'NamedOp',
-        liminf:            ['NamedOp','lim&thinsp;inf'],
-        limsup:            ['NamedOp','lim&thinsp;sup'],
-        ln:                ['NamedFn'],
-        log:               ['NamedFn'],
-        max:                'NamedOp',
-        min:                'NamedOp',
-        Pr:                 'NamedOp',
-        sec:               ['NamedFn'],
-        sin:               ['NamedFn'],
-        sinh:              ['NamedFn'],
-        sup:                'NamedOp',
-        tan:               ['NamedFn'],
-        tanh:              ['NamedFn'],
-        
-        limits:            ['Limits',1],
-        nolimits:          ['Limits',0],
-
-        overline:            ['UnderOver','00AF',null,1],
-        underline:           ['UnderOver','005F'],
-        overbrace:           ['UnderOver','23DE',1],
-        underbrace:          ['UnderOver','23DF',1],
-        overparen:           ['UnderOver','23DC'],
-        underparen:          ['UnderOver','23DD'],
-        overrightarrow:      ['UnderOver','2192'],
-        underrightarrow:     ['UnderOver','2192'],
-        overleftarrow:       ['UnderOver','2190'],
-        underleftarrow:      ['UnderOver','2190'],
-        overleftrightarrow:  ['UnderOver','2194'],
-        underleftrightarrow: ['UnderOver','2194'],
-
-        overset:            'Overset',
-        underset:           'Underset',
-        stackrel:           ['Macro','\\mathrel{\\mathop{#2}\\limits^{#1}}',2],
-          
-        over:               'Over',
-        overwithdelims:     'Over',
-        atop:               'Over',
-        atopwithdelims:     'Over',
-        above:              'Over',
-        abovewithdelims:    'Over',
-        brace:             ['Over','{','}'],
-        brack:             ['Over','[',']'],
-        choose:            ['Over','(',')'],
-        
-        frac:               'Frac',
-        sqrt:               'Sqrt',
-        root:               'Root',
-        uproot:            ['MoveRoot','upRoot'],
-        leftroot:          ['MoveRoot','leftRoot'],
-        
-        left:               'LeftRight',
-        right:              'LeftRight',
-        middle:             'Middle',
-
-        llap:               'Lap',
-        rlap:               'Lap',
-        raise:              'RaiseLower',
-        lower:              'RaiseLower',
-        moveleft:           'MoveLeftRight',
-        moveright:          'MoveLeftRight',
-
-        ',':               ['Spacer',MML.LENGTH.THINMATHSPACE],
-        ':':               ['Spacer',MML.LENGTH.MEDIUMMATHSPACE],  // for LaTeX
-        '>':               ['Spacer',MML.LENGTH.MEDIUMMATHSPACE],
-        ';':               ['Spacer',MML.LENGTH.THICKMATHSPACE],
-        '!':               ['Spacer',MML.LENGTH.NEGATIVETHINMATHSPACE],
-        enspace:           ['Spacer',".5em"],
-        quad:              ['Spacer',"1em"],
-        qquad:             ['Spacer',"2em"],
-        thinspace:         ['Spacer',MML.LENGTH.THINMATHSPACE],
-        negthinspace:      ['Spacer',MML.LENGTH.NEGATIVETHINMATHSPACE],
-    
-        hskip:              'Hskip',
-        hspace:             'Hskip',
-        kern:               'Hskip',
-        mskip:              'Hskip',
-        mspace:             'Hskip',
-        mkern:              'Hskip',
-        rule:               'rule',
-        Rule:              ['Rule'],
-        Space:             ['Rule','blank'],
-    
-        big:               ['MakeBig',MML.TEXCLASS.ORD,0.85],
-        Big:               ['MakeBig',MML.TEXCLASS.ORD,1.15],
-        bigg:              ['MakeBig',MML.TEXCLASS.ORD,1.45],
-        Bigg:              ['MakeBig',MML.TEXCLASS.ORD,1.75],
-        bigl:              ['MakeBig',MML.TEXCLASS.OPEN,0.85],
-        Bigl:              ['MakeBig',MML.TEXCLASS.OPEN,1.15],
-        biggl:             ['MakeBig',MML.TEXCLASS.OPEN,1.45],
-        Biggl:             ['MakeBig',MML.TEXCLASS.OPEN,1.75],
-        bigr:              ['MakeBig',MML.TEXCLASS.CLOSE,0.85],
-        Bigr:              ['MakeBig',MML.TEXCLASS.CLOSE,1.15],
-        biggr:             ['MakeBig',MML.TEXCLASS.CLOSE,1.45],
-        Biggr:             ['MakeBig',MML.TEXCLASS.CLOSE,1.75],
-        bigm:              ['MakeBig',MML.TEXCLASS.REL,0.85],
-        Bigm:              ['MakeBig',MML.TEXCLASS.REL,1.15],
-        biggm:             ['MakeBig',MML.TEXCLASS.REL,1.45],
-        Biggm:             ['MakeBig',MML.TEXCLASS.REL,1.75],
-
-        mathord:           ['TeXAtom',MML.TEXCLASS.ORD],
-        mathop:            ['TeXAtom',MML.TEXCLASS.OP],
-        mathopen:          ['TeXAtom',MML.TEXCLASS.OPEN],
-        mathclose:         ['TeXAtom',MML.TEXCLASS.CLOSE],
-        mathbin:           ['TeXAtom',MML.TEXCLASS.BIN],
-        mathrel:           ['TeXAtom',MML.TEXCLASS.REL],
-        mathpunct:         ['TeXAtom',MML.TEXCLASS.PUNCT],
-        mathinner:         ['TeXAtom',MML.TEXCLASS.INNER],
-
-        vcenter:           ['TeXAtom',MML.TEXCLASS.VCENTER],
-
-        mathchoice:        ['Extension','mathchoice'],
-        buildrel:           'BuildRel',
-    
-        hbox:               ['HBox',0],
-        text:               'HBox',
-        mbox:               ['HBox',0],
-        fbox:               'FBox',
-
-        strut:              'Strut',
-        mathstrut:         ['Macro','\\vphantom{(}'],
-        phantom:            'Phantom',
-        vphantom:          ['Phantom',1,0],
-        hphantom:          ['Phantom',0,1],
-        smash:              'Smash',
-    
-        acute:             ['Accent', "00B4"],  // or 0301 or 02CA
-        grave:             ['Accent', "0060"],  // or 0300 or 02CB
-        ddot:              ['Accent', "00A8"],  // or 0308
-        tilde:             ['Accent', "007E"],  // or 0303 or 02DC
-        bar:               ['Accent', "00AF"],  // or 0304 or 02C9
-        breve:             ['Accent', "02D8"],  // or 0306
-        check:             ['Accent', "02C7"],  // or 030C
-        hat:               ['Accent', "005E"],  // or 0302 or 02C6
-        vec:               ['Accent', "2192"],  // or 20D7
-        dot:               ['Accent', "02D9"],  // or 0307
-        widetilde:         ['Accent', "007E",1], // or 0303 or 02DC
-        widehat:           ['Accent', "005E",1], // or 0302 or 02C6
-
-        matrix:             'Matrix',
-        array:              'Matrix',
-        pmatrix:           ['Matrix','(',')'],
-        cases:             ['Matrix','{','',"left left",null,".1em",null,true],
-        eqalign:           ['Matrix',null,null,"right left",MML.LENGTH.THICKMATHSPACE,".5em",'D'],
-        displaylines:      ['Matrix',null,null,"center",null,".5em",'D'],
-        cr:                 'Cr',
-        '\\':               'CrLaTeX',
-        newline:            'Cr',
-        hline:             ['HLine','solid'],
-        hdashline:         ['HLine','dashed'],
-//      noalign:            'HandleNoAlign',
-        eqalignno:         ['Matrix',null,null,"right left",MML.LENGTH.THICKMATHSPACE,".5em",'D',null,"right"],
-        leqalignno:        ['Matrix',null,null,"right left",MML.LENGTH.THICKMATHSPACE,".5em",'D',null,"left"],
-        hfill:              'HFill',
-        hfil:               'HFill',   // \hfil treated as \hfill for now
-        hfilll:             'HFill',   // \hfilll treated as \hfill for now
-
-        //  TeX substitution macros
-        bmod:              ['Macro','\\mmlToken{mo}[lspace="thickmathspace" rspace="thickmathspace"]{mod}'],
-        pmod:              ['Macro','\\pod{\\mmlToken{mi}{mod}\\kern 6mu #1}',1],
-        mod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern12mu}{\\kern12mu}{\\kern12mu}\\mmlToken{mi}{mod}\\,\\,#1',1],
-        pod:               ['Macro','\\mathchoice{\\kern18mu}{\\kern8mu}{\\kern8mu}{\\kern8mu}(#1)',1],
-        iff:               ['Macro','\\;\\Longleftrightarrow\\;'],
-        skew:              ['Macro','{{#2{#3\\mkern#1mu}\\mkern-#1mu}{}}',3],
-        mathcal:           ['Macro','{\\cal #1}',1],
-        mathscr:           ['Macro','{\\scr #1}',1],
-        mathrm:            ['Macro','{\\rm #1}',1],
-        mathbf:            ['Macro','{\\bf #1}',1],
-        mathbb:            ['Macro','{\\bbFont #1}',1],
-        Bbb:               ['Macro','{\\bbFont #1}',1],
-        mathit:            ['Macro','{\\it #1}',1],
-        mathfrak:          ['Macro','{\\frak #1}',1],
-        mathsf:            ['Macro','{\\sf #1}',1],
-        mathtt:            ['Macro','{\\tt #1}',1],
-        textrm:            ['Macro','\\mathord{\\rm\\text{#1}}',1],
-        textit:            ['Macro','\\mathord{\\it\\text{#1}}',1],
-        textbf:            ['Macro','\\mathord{\\bf\\text{#1}}',1],
-        textsf:            ['Macro','\\mathord{\\sf\\text{#1}}',1],
-        texttt:            ['Macro','\\mathord{\\tt\\text{#1}}',1],
-        pmb:               ['Macro','\\rlap{#1}\\kern1px{#1}',1],
-        TeX:               ['Macro','T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],
-        LaTeX:             ['Macro','L\\kern-.325em\\raise.21em{\\scriptstyle{A}}\\kern-.17em\\TeX'],
-        ' ':               ['Macro','\\text{ }'],
-
-        //  Specially handled
-        not:                'Not',
-        dots:               'Dots',
-        space:              'Tilde',
-        '\u00A0':           'Tilde',
-        
-
-        //  LaTeX
-        begin:              'BeginEnd',
-        end:                'BeginEnd',
-
-        newcommand:        ['Extension','newcommand'],
-        renewcommand:      ['Extension','newcommand'],
-        newenvironment:    ['Extension','newcommand'],
-        renewenvironment:  ['Extension','newcommand'],
-        def:               ['Extension','newcommand'],
-        let:               ['Extension','newcommand'],
-        
-        verb:              ['Extension','verb'],
-        
-        boldsymbol:        ['Extension','boldsymbol'],
-        
-        tag:               ['Extension','AMSmath'],
-        notag:             ['Extension','AMSmath'],
-        label:             ['Extension','AMSmath'],
-        ref:               ['Extension','AMSmath'],
-        eqref:             ['Extension','AMSmath'],
-        nonumber:          ['Macro','\\notag'],
-
-        //  Extensions to TeX
-        unicode:           ['Extension','unicode'],
-        color:              'Color',
-        
-        href:              ['Extension','HTML'],
-        'class':           ['Extension','HTML'],
-        style:             ['Extension','HTML'],
-        cssId:             ['Extension','HTML'],
-        bbox:              ['Extension','bbox'],
-    
-        mmlToken:           'MmlToken',
-
-        require:            'Require'
-
-      },
-      
-      environment: {
-        array:        ['AlignedArray'],
-        matrix:       ['Array',null,null,null,'c'],
-        pmatrix:      ['Array',null,'(',')','c'],
-        bmatrix:      ['Array',null,'[',']','c'],
-        Bmatrix:      ['Array',null,'\\{','\\}','c'],
-        vmatrix:      ['Array',null,'\\vert','\\vert','c'],
-        Vmatrix:      ['Array',null,'\\Vert','\\Vert','c'],
-        cases:        ['Array',null,'\\{','.','ll',null,".2em",'T'],
-
-        equation:     [null,'Equation'],
-        'equation*':  [null,'Equation'],
-
-        eqnarray:     ['ExtensionEnv',null,'AMSmath'],
-        'eqnarray*':  ['ExtensionEnv',null,'AMSmath'],
-
-        align:        ['ExtensionEnv',null,'AMSmath'],
-        'align*':     ['ExtensionEnv',null,'AMSmath'],
-        aligned:      ['ExtensionEnv',null,'AMSmath'],
-        multline:     ['ExtensionEnv',null,'AMSmath'],
-        'multline*':  ['ExtensionEnv',null,'AMSmath'],
-        split:        ['ExtensionEnv',null,'AMSmath'],
-        gather:       ['ExtensionEnv',null,'AMSmath'],
-        'gather*':    ['ExtensionEnv',null,'AMSmath'],
-        gathered:     ['ExtensionEnv',null,'AMSmath'],
-        alignat:      ['ExtensionEnv',null,'AMSmath'],
-        'alignat*':   ['ExtensionEnv',null,'AMSmath'],
-        alignedat:    ['ExtensionEnv',null,'AMSmath']
-      },
-      
-      p_height: 1.2 / .85   // cmex10 height plus depth over .85
-
+      p_height: 1.2 / .85,   // cmex10 height plus depth over .85
+      // TODO (VS): Retained these for AMScd.js.
+      macros: {},
+      special: {},
+      environment: {},
+      // TODO (VS): Temporary to collect configurations from extensions.
+      configurations: []
     });
     
     //
     //  Add macros defined in the configuration
+    //
+    // TODO (VS): This needs to be moved and rewritten!
     //
     if (this.config.Macros) {
       var MACROS = this.config.Macros;
@@ -1070,11 +451,15 @@
    *   The TeX Parser
    */
 
+  var NewParser = new TeXParser();
   var PARSE = MathJax.Object.Subclass({
+    remap:   MapHandler.getInstance().getMap('remap'),
     Init: function (string,env) {
       this.string = string; this.i = 0; this.macroCount = 0;
       var ENV; if (env) {ENV = {}; for (var id in env) {if (env.hasOwnProperty(id)) {ENV[id] = env[id]}}}
       this.stack = TEX.Stack(ENV,!!env);
+      NewParser.setup(this);
+      TEXDEF.configurations.forEach(NewParser.append.bind(NewParser));
       this.Parse(); this.Push(STACKITEM.stop());
     },
     Parse: function () {
@@ -1082,13 +467,17 @@
       while (this.i < this.string.length) {
         c = this.string.charAt(this.i++); n = c.charCodeAt(0);
         if (n >= 0xD800 && n < 0xDC00) {c += this.string.charAt(this.i++)}
-        if (TEXDEF.special[c]) {this[TEXDEF.special[c]](c)}
-        else if (TEXDEF.letter.test(c)) {this.Variable(c)}
-        else if (TEXDEF.digit.test(c)) {this.Number(c)}
-        else {this.Other(c)}
+        NewParser.parse('character', [c, this])
       }
     },
-    Push: function () {this.stack.Push.apply(this.stack,arguments)},
+    Push: function (arg) {
+      this.stack.Push(arg);
+    },
+    PushAll: function (args) {
+      for(var i = 0, m = args.length; i < m; i++) {
+        this.stack.Push(args[i]);
+      } 
+    },
     mml: function () {
       if (this.stack.Top().type !== "mml") {return null}
       return this.stack.Top().data[0];
@@ -1104,64 +493,55 @@
      *  Lookup a control-sequence and process it
      */
     ControlSequence: function (c) {
-      var name = this.GetCS(), macro = this.csFindMacro(name);
-      if (macro) {
-        if (!isArray(macro)) {macro = [macro]}
-        var fn = macro[0]; if (!(fn instanceof Function)) {fn = this[fn]}
-        fn.apply(this,[c+name].concat(macro.slice(1)));
-      } else if (TEXDEF.mathchar0mi[name])            {this.csMathchar0mi(name,TEXDEF.mathchar0mi[name])}
-        else if (TEXDEF.mathchar0mo[name])            {this.csMathchar0mo(name,TEXDEF.mathchar0mo[name])}
-        else if (TEXDEF.mathchar7[name])              {this.csMathchar7(name,TEXDEF.mathchar7[name])}
-        else if (TEXDEF.delimiter["\\"+name] != null) {this.csDelimiter(name,TEXDEF.delimiter["\\"+name])}
-        else                                          {this.csUndefined(c+name)}
+      var name = this.GetCS();
+      NewParser.parse('macro', [name, this]);
     },
     //
     //  Look up a macro in the macros list
     //  (overridden in begingroup extension)
     //
-    csFindMacro: function (name) {return TEXDEF.macros[name]},
+    // csFindMacro: function (name) {return TEXDEF.macros[name]},
     //
     //  Handle normal mathchar (as an mi)
     //
-    csMathchar0mi: function (name,mchar) {
-      var def = {mathvariant: MML.VARIANT.ITALIC};
-      if (isArray(mchar)) {def = mchar[1]; mchar = mchar[0]}
-      this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
+    csMathchar0mi: function (mchar) {
+      var def = mchar.attributes || {mathvariant: MML.VARIANT.ITALIC};
+      this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
     },
     //
     //  Handle normal mathchar (as an mo)
     //
-    csMathchar0mo: function (name,mchar) {
-      var def = {stretchy: false};
-      if (isArray(mchar)) {def = mchar[1]; def.stretchy = false; mchar = mchar[0]}
-      this.Push(this.mmlToken(MML.mo(MML.entity("#x"+mchar)).With(def)));
+    csMathchar0mo: function (mchar) {
+      var def = mchar.attributes || {};
+      def.stretchy = false;
+      this.Push(this.mmlToken(MML.mo(mchar.char).With(def)));
     },
     //
     //  Handle mathchar in current family
     //
-    csMathchar7: function (name,mchar) {
-      var def = {mathvariant: MML.VARIANT.NORMAL};
-      if (isArray(mchar)) {def = mchar[1]; mchar = mchar[0]}
+    csMathchar7: function (mchar) {
+      var def = mchar.attributes || {mathvariant: MML.VARIANT.NORMAL};
       if (this.stack.env.font) {def.mathvariant = this.stack.env.font}
-      this.Push(this.mmlToken(MML.mi(MML.entity("#x"+mchar)).With(def)));
+      this.Push(this.mmlToken(MML.mi(mchar.char).With(def)));
     },
     //
     //  Handle delimiter
     //
-    csDelimiter: function (name,delim) {
-      var def = {};
-      if (isArray(delim)) {def = delim[1]; delim = delim[0]}
-      if (delim.length === 4) {delim = MML.entity('#x'+delim)} else {delim = MML.chars(delim)}
-      this.Push(this.mmlToken(MML.mo(delim).With({fence: false, stretchy: false}).With(def)));
+    csDelimiter: function (delim) {
+      var def = delim.attributes || {};
+      this.Push(this.mmlToken(MML.mo(delim.char).With({fence: false, stretchy: false}).With(def)));
     },
     //
     //  Handle undefined control sequence
     //  (overridden in noUndefined extension)
     //
     csUndefined: function (name) {
-      TEX.Error(["UndefinedControlSequence","Undefined control sequence %1",name]);
+      TEX.Error(["UndefinedControlSequence","Undefined control sequence %1",'\\' + name]);
     },
-
+    envUndefined: function(env) {
+      TEX.Error(["UnknownEnv", "Unknown environment '%1'", env]);
+    },
+    
     /*
      *  Handle a variable (a single letter)
      */
@@ -1295,13 +675,8 @@
     Other: function (c) {
       var def, mo;
       if (this.stack.env.font) {def = {mathvariant: this.stack.env.font}}
-      if (TEXDEF.remap[c]) {
-        c = TEXDEF.remap[c];
-        if (isArray(c)) {def = c[1]; c = c[0]}
-        mo = MML.mo(MML.entity('#x'+c)).With(def);
-      } else {
-        mo = MML.mo(c).With(def);
-      }
+      var remap = this.remap.lookup(c);
+      mo = remap ? MML.mo(remap.char).With(def) : MML.mo(c).With(def);
       if (mo.autoDefault("stretchy",true)) {mo.stretchy = false}
       if (mo.autoDefault("texClass",true) == "") {mo = MML.TeXAtom(mo)}
       this.Push(this.mmlToken(mo));
@@ -1624,7 +999,7 @@
     },
     
     HBox: function (name,style) {
-      this.Push.apply(this,this.InternalMath(this.GetArgument(name),style));
+      this.PushAll(this.InternalMath(this.GetArgument(name),style));
     },
     
     FBox: function (name) {
@@ -1763,7 +1138,8 @@
         //
         var text = string.substr(this.i,i-this.i);
         if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/,'').length - 1) {
-          this.Push.apply(this,this.InternalMath(text,0));
+          var internal = this.InternalMath(text,0);
+          this.PushAll(internal);
           this.i = i;
         }
       }
@@ -1850,32 +1226,28 @@
     */
 
     BeginEnd: function (name) {
-      var env = this.GetArgument(name), isEnd = false;
-      if (env.match(/^\\end\\/)) {isEnd = true; env = env.substr(5)} // special \end{} for \newenvironment environments
+      var env = this.GetArgument(name);
+      if (env.match(/^\\end\\/)) {env = env.substr(5)} // special \end{} for \newenvironment environments
       if (env.match(/\\/i)) {TEX.Error(["InvalidEnv","Invalid environment name '%1'",env])}
-      var cmd = this.envFindName(env);
-      if (!cmd) {TEX.Error(["UnknownEnv","Unknown environment '%1'",env])}
-      if (!isArray(cmd)) {cmd = [cmd]}
-      var end = (isArray(cmd[1]) ? cmd[1][0] : cmd[1]);
-      var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
       if (name === "\\end") {
-        if (!isEnd && isArray(cmd[1]) && this[cmd[1][1]]) {
-          mml = this[cmd[1][1]].apply(this,[mml].concat(cmd.slice(2)));
-        } else {
-          mml = STACKITEM.end().With({name: env});
-        }
+        var mml = STACKITEM.end().With({name: env});
+        this.Push(mml);
       } else {
         if (++this.macroCount > TEX.config.MAXMACROS) {
           TEX.Error(["MaxMacroSub2",
                      "MathJax maximum substitution count exceeded; " +
                      "is there a recursive latex environment?"]);
         }
-        if (cmd[0] && this[cmd[0]]) {mml = this[cmd[0]].apply(this,[mml].concat(cmd.slice(2)))}
+        NewParser.parse('environment', [env, this]);
       }
+    },
+    BeginEnvironment: function (func, env, args) {
+      var end = args[0];
+      var mml = STACKITEM.begin().With({name: env, end: end, parse:this});
+      mml = func.apply(this,[mml].concat(args.slice(1)));
       this.Push(mml);
     },
-    envFindName: function (name) {return TEXDEF.environment[name]},
-    
+
     Equation: function (begin,row) {return row},
     
     ExtensionEnv: function (begin,file) {this.Extension(begin.name,file,"environment")},
@@ -1931,11 +1303,7 @@
      *  Convert delimiter to character
      */
     convertDelimiter: function (c) {
-      if (c) {c = TEXDEF.delimiter[c]}
-      if (c == null) {return null}
-      if (isArray(c)) {c = c[0]}
-      if (c.length === 4) {c = String.fromCharCode(parseInt(c,16))}
-      return c;
+      return NewParser.lookup('delimiter', c).char || null;
     },
 
     /*
@@ -2037,9 +1405,15 @@
       while (this.nextIsSpace()) {this.i++}
       var c = this.string.charAt(this.i); this.i++;
       if (this.i <= this.string.length) {
-        if (c == "\\") {c += this.GetCS(name)}
-        else if (c === "{" && braceOK) {this.i--; c = this.GetArgument(name)}
-        if (TEXDEF.delimiter[c] != null) {return this.convertDelimiter(c)}
+        if (c == "\\") {
+          c += this.GetCS(name);
+        } else if (c === "{" && braceOK) {
+          this.i--;
+          c = this.GetArgument(name);
+        }
+        if (NewParser.contains('delimiter', c)) {
+          return this.convertDelimiter(c);
+        }
       }
       TEX.Error(["MissingOrUnrecognizedDelim",
                  "Missing or unrecognized delimiter for %1",name]);
@@ -2353,5 +1727,6 @@
   });
 
   TEX.loadComplete("jax.js");
+  MathJax.Ajax.loadComplete("TeX_Parser");
   
 })(MathJax.InputJax.TeX,MathJax.Hub,MathJax.Ajax);

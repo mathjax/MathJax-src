@@ -3,7 +3,7 @@
 
 /*************************************************************
  *
- *  MathJax/extensions/TeX/AMSmath.js
+ *  MathJax/extensions/Tex/AMSmath.js
  *
  *  Implements AMS math environments and macros.
  *  
@@ -23,6 +23,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
+let sm = require('mathjax3/input/tex/SymbolMap.js');
+let tc = require('mathjax3/input/tex/TexConstants.js');
+let BaseMethods = require('mathjax3/input/tex/BaseMethods.js').default;
+
 
 MathJax.Extension["TeX/AMSmath"] = {
   version: "2.7.0",
@@ -63,14 +68,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   /******************************************************************************/
   
-  TEXDEF.Add({
-    mathchar0mo: {
-      iiiint:     ['2A0C',{texClass: MML.TEXCLASS.OP}]
-    },
+  sm.CharacterMap.create('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
+    iiiint:     ['\u2A0C',{texClass: MML.TEXCLASS.OP}]
+  });
     
-    macros: {
-      mathring:   ['Accent','2DA'],  // or 0x30A
-      
+  sm.CommandMap.create('AMSmath-macros', {
+    mathring:   ['Accent','2DA'],  // or 0x30A
       nobreakspace: 'Tilde',
       negmedspace:    ['Spacer',MML.LENGTH.NEGATIVEMEDIUMMATHSPACE],
       negthickspace:  ['Spacer',MML.LENGTH.NEGATIVETHICKMATHSPACE],
@@ -124,9 +127,9 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       
       xrightarrow: ['xArrow',0x2192,5,6],
       xleftarrow:  ['xArrow',0x2190,7,3]
-    },
-    
-    environment: {
+  });
+
+  sm.EnvironmentMap.create('AMSmath-environment', {
       align:         ['AMSarray',null,true,true,  'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0])],
       'align*':      ['AMSarray',null,false,true, 'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0])],
       multline:      ['Multline',null,true],
@@ -150,16 +153,21 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
 
       eqnarray:      ['AMSarray',null,true,true, 'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"],
       'eqnarray*':   ['AMSarray',null,false,true,'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"]
-    },
-    
-    delimiter: {
-      '\\lvert':     ['007C',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rvert':     ['007C',{texClass:MML.TEXCLASS.CLOSE}],
-      '\\lVert':     ['2016',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rVert':     ['2016',{texClass:MML.TEXCLASS.CLOSE}]
-    }
-  },null,true);
-    
+  }).parser = BaseMethods.environment;
+  
+  sm.EnvironmentMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
+      '\\lvert':     ['\u007C',{texClass:MML.TEXCLASS.OPEN}],
+      '\\rvert':     ['\u007C',{texClass:MML.TEXCLASS.CLOSE}],
+      '\\lVert':     ['\u2016',{texClass:MML.TEXCLASS.OPEN}],
+      '\\rVert':     ['\u2016',{texClass:MML.TEXCLASS.CLOSE}]
+  });
+
+  TEXDEF.configurations.push({
+    delimiter: ['AMSmath-delimiter'],
+    macro: ['AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
+    environment: ['AMSmath-environment']
+  });
+  
 
   /******************************************************************************/
   
