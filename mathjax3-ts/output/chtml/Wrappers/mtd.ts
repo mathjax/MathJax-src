@@ -42,7 +42,7 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-mtd': {
             display: 'table-cell',
             'text-align': 'center',
-            'padding': '.25em .5em'
+            'padding': '.215em .4em'
         },
         'mjx-mtd:first-child': {
             'padding-left': 0
@@ -60,6 +60,27 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
             display: 'inline-block',
             height: '1em',
             'vertical-align': '-.25em'
+        },
+        'mjx-labels[align="left"] > mjx-mtr > mjx-mtd': {
+            'text-align': 'left'
+        },
+        'mjx-labels[align="right"] > mjx-mtr > mjx-mtd': {
+            'text-align': 'right'
+        },
+        'mjx-mtr mjx-mtd[rowalign="top"], mjx-mlabeledtr mjx-mtd[rowalign="top"]': {
+            'vertical-align': 'top'
+        },
+        'mjx-mtr mjx-mtd[rowalign="center"], mjx-mlabeledtr mjx-mtd[rowalign="center"]': {
+            'vertical-align': 'middle'
+        },
+        'mjx-mtr mjx-mtd[rowalign="bottom"], mjx-mlabeledtr mjx-mtd[rowalign="bottom"]': {
+            'vertical-align': 'bottom'
+        },
+        'mjx-mtr mjx-mtd[rowalign="baseline"], mjx-mlabeledtr mjx-mtd[rowalign="baseline"]': {
+            'vertical-align': 'baseline'
+        },
+        'mjx-mtr mjx-mtd[rowalign="axis"], mjx-mlabeledtr mjx-mtd[rowalign="axis"]': {
+            'vertical-align': '.25em'
         }
     };
 
@@ -68,6 +89,17 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public toCHTML(parent: N) {
         super.toCHTML(parent);
+        const ralign = this.node.attributes.get('rowalign') as string;
+        const calign = this.node.attributes.get('columnalign') as string;
+        const palign = this.parent.node.attributes.get('rowalign') as string;
+        if (ralign !== palign) {
+            this.adaptor.setAttribute(this.chtml, 'rowalign', ralign);
+        }
+        if (calign !== 'center' &&
+            (this.parent.kind !== 'mlabeledtr' || this !== this.parent.childNodes[0] ||
+             calign !== this.parent.parent.node.attributes.get('side'))) {
+            this.adaptor.setStyle(this.chtml, 'textAlign', calign);
+        }
         //
         // Include a strut to force minimum height and depth
         //

@@ -84,7 +84,16 @@ export class MmlMtable extends AbstractMmlNode {
             }
         }
         display = !!(this.attributes.getExplicit('displaystyle') || this.attributes.getDefault('displaystyle'));
-        super.setChildInheritedAttributes(attributes, display, level, prime);
+        attributes = this.addInheritedAttributes(attributes, {
+            columnalign: this.attributes.get('columnalign'),
+            rowalign: 'center'
+        });
+        const ralign = (this.attributes.get('rowalign') as string)
+                     .replace(/^\s+/, '').replace(/\s+$/, '').split(/ +/);
+        for (const child of this.childNodes) {
+            attributes.rowalign[1] = ralign.shift() || attributes.rowalign[1];
+            child.setInheritedAttributes(attributes, display, level, prime);
+        }
     }
 
     /*

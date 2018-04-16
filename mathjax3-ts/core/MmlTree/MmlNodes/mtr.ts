@@ -64,7 +64,19 @@ export class MmlMtr extends AbstractMmlNode {
                     .appendChild(child);
             }
         }
-        super.setChildInheritedAttributes(attributes, display, level, prime);
+        const calign = (this.attributes.get('columnalign') as string)
+                       .replace(/^\s+/, '').replace(/\s+$/, '').split(/ +/);
+        if (this.arity === 1) {
+            calign.unshift(this.parent.attributes.get('side') as string);
+        }
+        attributes = this.addInheritedAttributes(attributes, {
+            rowalign: this.attributes.get('rowalign'),
+            columnalign: 'center'
+        });
+        for (const child of this.childNodes) {
+            attributes.columnalign[1] = calign.shift() || attributes.columnalign[1];
+            child.setInheritedAttributes(attributes, display, level, prime);
+        }
     }
 
     /*
