@@ -33,11 +33,16 @@ import {DIRECTION} from '../FontData.js';
 
 /*
  * The heights, depths, and widths of the rows and columns
+ * Plus the natural height and depth (i.e., without the labels)
+ * Plus the label column width
  */
 export type TableData = {
     H: number[];
     D: number[];
     W: number[];
+    NH: number[];
+    ND: number[];
+    L: number;
 };
 
 /*
@@ -82,15 +87,18 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static styles: StyleList = {
         'mjx-mtable': {
             'vertical-align': '.25em',
-            'text-align': 'center'
+            'text-align': 'center',
+            'position': 'relative'
         },
         'mjx-mtable > mjx-itable': {
             'vertical-align': 'middle',
             'text-align': 'left',
             'box-sizing': 'border-box'
         },
-        'mjx-mtable[width] > mjx-itable': {
-            width: '100%'
+        'mjx-labels': {
+            display: 'inline-table',
+            position: 'absolute',
+            top: 0
         },
         'mjx-mtable[align]': {
             'vertical-align': 'baseline'
@@ -108,6 +116,11 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
             'vertical-align': 'middle'
         }
     };
+
+    /*
+     * The column for labels
+     */
+    public labels: N;
 
     /*
      * The number of columns and rows in the table
@@ -139,6 +152,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
+        this.labels = this.html('mjx-labels', {align: node.attributes.get('side')});
         //
         // Determine the number of columns and rows
         //
@@ -264,6 +278,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.handleEqualRows();
         this.handleFrame();
         this.handleWidth();
+        this.handleLabels();
         this.handleAlign();
     }
 
@@ -280,20 +295,43 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         const H = new Array(this.numRows).fill(0);
         const D = new Array(this.numRows).fill(0);
         const W = new Array(this.numCols).fill(0);
+        const NH = new Array(this.numRows);
+        const ND = new Array(this.numRows);
+        const LW = [0];
         for (let j = 0; j < this.numRows; j++) {
             const row = this.childNodes[j] as CHTMLmtr<N, T, D>;
-            for (let i = 0; i < row.childNodes.length; i++) {
-                const cbox = row.childNodes[i].getBBox();
-                const h = Math.max(cbox.h, .75);
-                const d = Math.max(cbox.d, .25);
-                if (h > H[j]) H[j] = h;
-                if (d > D[j]) D[j] = d;
-                if (cbox.w > W[i]) W[i] = cbox.w;
+            const cellCount = row.numCells;
+            const firstCell = row.firstCell;
+            for (let i = 0; i < cellCount; i++) {
+                this.updateHDW(row.childNodes[i + firstCell], i, j, H, D, W);
+            }
+            NH[j] = H[j];
+            ND[j] = D[j];
+            if (firstCell > 0) {
+                this.updateHDW(row.childNodes[0], 0, j, H, D, LW);
             }
         }
         const w = this.node.attributes.get('width') as string;
-        this.data = {H, D, W};
+        const L = LW[0];
+        this.data = {H, D, W, NH, ND, L};
         return this.data;
+    }
+
+    /*
+     * @param{CHTMLWrapper} cell    The cell whose height, depth, and width are to be added into the H, D, W arrays
+     * @param{number} i             The column number for the cell
+     * @param{number} j             The row number for the cell
+     * @param{number[]} H           The maximum height for each of the rows
+     * @param{number[]} D           The maximum depth for each of the rows
+     * @param{number[]} W           The maximum width for each column
+     */
+    protected updateHDW(cell: CHTMLWrapper<N, T, D>, i: number, j: number, H: number[], D: number[], W: number[] = null) {
+        let {h, d, w} = cell.getBBox();
+        if (h < .75) h = .75;
+        if (d < .25) d = .25;
+        if (h > H[j]) H[j] = h;
+        if (d > D[j]) D[j] = d;
+        if (W && w > W[i]) W[i] = w;
     }
 
     /*
@@ -396,12 +434,13 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         //  For each row...
         //
-        for (const row of this.childNodes) {
+        for (const row of (this.childNodes as CHTMLmtr<N, T, D>[])) {
             let i = 0;
             //
             //  For each cell in the row...
             //
-            for (const cell of row.childNodes) {
+            const children = (row.firstCell ? row.childNodes.slice(row.firstCell) : row.childNodes);
+            for (const cell of children) {
                 //
                 //  Get the left and right-hand spacing
                 //
@@ -412,10 +451,10 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
                 //  default already set in the mtd styles
                 //
                 const styleNode = (cell ? cell.chtml : this.adaptor.childNodes(row.chtml)[i] as N);
-                if ((i > 1 || frame) && lspace !== '.5em') {
+                if ((i > 1 && lspace !== '0.4em') || (frame && i === 1)) {
                     this.adaptor.setStyle(styleNode, 'paddingLeft', lspace);
                 }
-                if ((i < this.numCols || frame) && rspace !== '.5em') {
+                if ((i < this.numCols && rspace !== '0.4em') || (frame && i === this.numCols)) {
                     this.adaptor.setStyle(styleNode, 'paddingRight', rspace);
                 }
             }
@@ -491,10 +530,10 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
                 //  Set the style for the spacing, if it is needed, and isn't the
                 //  default already set in the mtd styles
                 //
-                if ((i > 1 || frame) && tspace !== '.125em') {
+                if ((i > 1 && tspace !== '0.215em') || (frame && i === 1)) {
                     this.adaptor.setStyle(cell.chtml, 'paddingTop', tspace);
                 }
-                if ((i < this.numRows || frame) && bspace !== '.125em') {
+                if ((i < this.numRows && bspace !== '0.215em') || (frame && i === this.numRows)) {
                     this.adaptor.setStyle(cell.chtml, 'paddingBottom', bspace);
                 }
             }
@@ -533,25 +572,39 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         // Loop through the rows and set their heights
         //
-        for (const i of Array.from(this.childNodes.keys())) {
+        for (let i = 0; i < this.numRows; i++) {
             const row = this.childNodes[i];
             if (HD !== H[i] + D[i]) {
-                this.adaptor.setStyle(row.chtml, 'height', this.em(space[i] + HD + space[i + 1]));
-                const ralign = row.node.attributes.get('rowalign');
-                //
-                //  Loop through the cells and set the strut height and depth to spread
-                //    the extra height equally above and below the baseline.  The strut
-                //    is the last element in the cell.
-                //
-                for (const cell of row.childNodes) {
-                    const calign = cell.node.attributes.get('rowalign');
-                    if (calign === 'baseline' || calign === 'axis') {
-                        const child = this.adaptor.lastChild(cell.chtml) as N;
-                        this.adaptor.setStyle(child, 'height', HDem);
-                        this.adaptor.setStyle(child, 'verticalAlign', this.em(-((HD - H[i] + D[i]) / 2)));
-                        if (ralign === 'baseline' || ralign === 'axis') break;
-                    }
-                }
+                this.setRowHeight(row, HD, (HD - H[i] + D[i]) / 2, space[i] + space[i + 1]);
+            }
+        }
+    }
+
+    /*
+     * Set the height of the row, and make sure that the baseline is in the right position for cells
+     *   that are row aligned to baseline ot axis
+     *
+     * @param{CHTMLWrapper} row   The row to be set
+     * @param{number} HD          The total height+depth for the row
+     * @param{number] D           The new depth for the row
+     * @param{number} space       The total spacing above and below the row
+     */
+    protected setRowHeight(row: CHTMLWrapper<N, T, D>, HD: number, D: number, space: number) {
+        const adaptor = this.adaptor;
+        adaptor.setStyle(row.chtml, 'height', this.em(HD + space));
+        const ralign = row.node.attributes.get('rowalign');
+        //
+        //  Loop through the cells and set the strut height and depth.
+        //    The strut is the last element in the cell.
+        //
+        for (const cell of row.childNodes) {
+            const calign = cell.node.attributes.get('rowalign');
+            if (calign === 'baseline' || calign === 'axis') {
+                const child = adaptor.lastChild(cell.chtml) as N;
+                adaptor.setStyle(child, 'height', this.em(HD));
+                adaptor.setStyle(child, 'verticalAlign', this.em(-D));
+                if ((row.kind !== 'mlabeledtr' || cell !== row.childNodes[0]) &&
+                    (ralign === 'baseline' || ralign === 'axis')) break;
             }
         }
     }
@@ -571,14 +624,16 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     protected handleWidth() {
         let w = this.node.attributes.get('width') as string;
-        if (w === 'auto') return;
-        if (isPercent(w)) {
-            this.bbox.pwidth = w;
+        const hasLabels = (this.adaptor.childNodes(this.labels).length > 0);
+        if (isPercent(w) || hasLabels) {
+            this.bbox.pwidth = (hasLabels ? '100%' : w);
+            this.adaptor.setStyle(this.chtml, 'width', '100%');
         } else {
+            if (w === 'auto') return;
             w = this.em(this.length2em(w) + (this.frame ? .14 : 0));
         }
-        this.adaptor.setStyle(this.chtml, 'minWidth', w);
-        this.adaptor.setAttribute(this.chtml, 'width', w);
+        const table = this.adaptor.firstChild(this.chtml) as N;
+        this.adaptor.setStyle(table, 'minWidth', w);
     }
 
     /*
@@ -594,6 +649,87 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
             const y = this.getVerticalPosition(row, align);
             this.adaptor.setAttribute(this.chtml, 'align', 'top');
             this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(y));
+        }
+    }
+
+    /******************************************************************/
+
+    /*
+     * Handle addition of labels to the table
+     */
+    protected handleLabels() {
+        const labels = this.labels;
+        const adaptor = this.adaptor;
+        if (adaptor.childNodes(labels).length === 0) return;
+        //
+        //  Set the side for the labels
+        //
+        const side = this.node.attributes.get('side') as string;
+        adaptor.setAttribute(labels, 'side', side);
+        adaptor.setStyle(labels, side, '0');
+        //
+        //  Make sure labels don't overlap table
+        //
+        const {L} = this.getTableData();
+        const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
+        const table = adaptor.firstChild(this.chtml) as N;
+        adaptor.setStyle(table, 'margin', '0 ' + this.em(L + sep));  // FIXME, handle indentalign values
+        //
+        // Add the labels to the table
+        //
+        this.updateRowHeights();
+        this.addLabelSpacing();
+        adaptor.append(this.chtml, labels);
+    }
+
+    /*
+     * Update any rows that are not naturally tall enough for the labels
+     */
+    protected updateRowHeights() {
+        if (this.node.attributes.get('equalrows') as boolean) return;
+        let {H, D, NH, ND} = this.getTableData();
+        const space = this.rSpace.map(x => x / 2);
+        space.unshift(this.fSpace[1]);
+        space.push(this.fSpace[1]);
+        for (let i = 0; i < this.numRows; i++) {
+            if (H[i] !== NH[i] || D[i] !== ND[i]) {
+                this.setRowHeight(this.childNodes[i], H[i] + D[i], D[i], space[i] + space[i + 1]);
+            }
+        }
+    }
+
+    /*
+     * Add spacing elements between the label rows so align them with the rest of the table
+     */
+    protected addLabelSpacing() {
+        const adaptor = this.adaptor;
+        const equal = this.node.attributes.get('equalrows') as boolean;
+        const {H, D} = this.getTableData();
+        const HD = (equal ? this.getEqualRowHeight() : 0);
+        //
+        //  Use half spaces in each row, with frame spacing at top and bottom
+        //
+        const space = this.rSpace.map(x => x / 2);
+        space.unshift(this.fSpace[1]);
+        space.push(this.fSpace[1]);
+        //
+        //  Start with frame size and add in spacing, height and depth,
+        //    and line thickness for each non-labeled row.
+        //
+        let h = (this.frame ? .07 : 0);
+        let current = adaptor.firstChild(this.labels) as N;
+        for (let i = 0; i < this.numRows; i++) {
+            const row = this.childNodes[i];
+            if (row.kind === 'mlabeledtr') {
+                if (h) {
+                    adaptor.insert(this.html('mjx-mtr', {style: {height: this.em(h)}}), current);
+                    adaptor.setStyle(current, 'height', this.em((equal ? HD : H[i] + D[i]) + space[i] + space[i+1]));
+                    current = adaptor.next(current) as N;
+                    h = 0;
+                }
+            } else {
+                h += space[i] + (equal ? HD : H[i] + D[i]) + space[i + 1] + this.rLines[i];
+            }
         }
     }
 

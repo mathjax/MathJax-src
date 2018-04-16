@@ -24,6 +24,7 @@
 
 import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLmtable} from './mtable.js';
 import {BBox} from '../BBox.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
@@ -45,19 +46,19 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-mtr': {
             display: 'table-row',
         },
-        'mjx-mtr[rowalign="top"] > mjx-mtd, mjx-mlabeledtr[rowalign="top"] > mjx-mtd': {
+        'mjx-mtr[rowalign="top"] > mjx-mtd': {
             'vertical-align': 'top'
         },
-        'mjx-mtr[rowalign="center"] > mjx-mtd, mjx-mlabeledtr[rowalign="center"] > mjx-mtd': {
+        'mjx-mtr[rowalign="center"] > mjx-mtd': {
             'vertical-align': 'middle'
         },
-        'mjx-mtr[rowalign="bottom"] > mjx-mtd, mjx-mlabeledtr[rowalign="bottom"] > mjx-mtd': {
+        'mjx-mtr[rowalign="bottom"] > mjx-mtd': {
             'vertical-align': 'bottom'
         },
-        'mjx-mtr[rowalign="baseline"] > mjx-mtd, mjx-mlabeledtr[rowalign="baseline"] > mjx-mtd': {
+        'mjx-mtr[rowalign="baseline"] > mjx-mtd': {
             'vertical-align': 'baseline'
         },
-        'mjx-mtr[rowalign="axis"] > mjx-mtd, mjx-mlabeledtr[rowalign="axis"] > mjx-mtd': {
+        'mjx-mtr[rowalign="axis"] > mjx-mtd': {
             'vertical-align': '.25em'
         }
     };
@@ -157,12 +158,27 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmlabeledtr<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmlabeledtr<N, T, D> extends CHTMLmtr<N, T, D> {
     public static kind = MmlMlabeledtr.prototype.kind;
 
     public static styles: StyleList = {
         'mjx-mlabeledtr': {
             display: 'table-row'
+        },
+        'mjx-mlabeledtr[rowalign="top"] > mjx-mtd': {
+            'vertical-align': 'top'
+        },
+        'mjx-mlabeledtr[rowalign="center"] > mjx-mtd': {
+            'vertical-align': 'middle'
+        },
+        'mjx-mlabeledtr[rowalign="bottom"] > mjx-mtd': {
+            'vertical-align': 'bottom'
+        },
+        'mjx-mlabeledtr[rowalign="baseline"] > mjx-mtd': {
+            'vertical-align': 'baseline'
+        },
+        'mjx-mlabeledtr[rowalign="axis"] > mjx-mtd': {
+            'vertical-align': '.25em'
         }
     };
 
@@ -171,12 +187,16 @@ export class CHTMLmlabeledtr<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public toCHTML(parent: N) {
         super.toCHTML(parent);
-        //
-        //  FIXME: for now, remove label
-        //
-        const child = this.adaptor.firstChild(this.chtml);
+        const child = this.adaptor.firstChild(this.chtml) as N;
         if (child) {
+            //
+            // Remove label and put it into the labels box inside a row
+            //
             this.adaptor.remove(child);
+            const align = this.node.attributes.get('rowalign') as string;
+            const attr = (align !== 'baseline' && align !== 'axis' ? {rowalign: align} : {});
+            const row = this.html('mjx-mtr', attr, [child]);
+            this.adaptor.append((this.parent as CHTMLmtable<N, T, D>).labels, row);
         }
     }
 

@@ -42,7 +42,7 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-mtd': {
             display: 'table-cell',
             'text-align': 'center',
-            'padding': '.25em .5em'
+            'padding': '.215em .4em'
         },
         'mjx-mtd:first-child': {
             'padding-left': 0
@@ -60,6 +60,12 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
             display: 'inline-block',
             height: '1em',
             'vertical-align': '-.25em'
+        },
+        'mjx-labels[align="left"] > mjx-mtr > mjx-mtd': {
+            'text-align': 'left'
+        },
+        'mjx-labels[align="right"] > mjx-mtr > mjx-mtd': {
+            'text-align': 'right'
         },
         'mjx-mtr mjx-mtd[rowalign="top"], mjx-mlabeledtr mjx-mtd[rowalign="top"]': {
             'vertical-align': 'top'
@@ -89,7 +95,9 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         if (ralign !== palign) {
             this.adaptor.setAttribute(this.chtml, 'rowalign', ralign);
         }
-        if (calign !== 'center') {
+        if (calign !== 'center' &&
+            (this.parent.kind !== 'mlabeledtr' || this !== this.parent.childNodes[0] ||
+             calign !== this.parent.parent.node.attributes.get('side'))) {
             this.adaptor.setStyle(this.chtml, 'textAlign', calign);
         }
         //
