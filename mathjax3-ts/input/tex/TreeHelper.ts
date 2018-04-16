@@ -60,14 +60,37 @@ export namespace TreeHelper {
   
 
   export function createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
-    let node = factory.create(kind, {}, children);
+    const node = factory.create(kind, {}, []);
+    // If infinity or -1 remove inferred mrow
+    // 
+    // In all other cases replace inferred mrow with a regular mrow, before adding
+    // children.
+    const arity = node.arity;
+    if (arity === Infinity || arity === -1) {
+      if (children.length === 1 && children[0].isInferred) {
+        node.setChildren(TreeHelper.getChildren(children[0]));
+      } else {
+        node.setChildren(children);
+      }
+    } else {
+      let cleanChildren = [];
+      for (let i = 0, child; child = children[i]; i++) {
+        if (child.isInferred) {
+          let mrow = factory.create('mrow', {}, TreeHelper.getChildren(child));
+          TreeHelper.copyAttributes(child, mrow);
+          cleanChildren.push(mrow);
+        } else {
+          cleanChildren.push(child);
+        }
+      }
+      node.setChildren(cleanChildren);
+    }
     if (text) {
       node.appendChild(text);
     }
     setProperties(node, def);
     return node;
   };
-
 
   export function createText(text: string): TextNode  {
     if (text == null) {
@@ -89,13 +112,6 @@ export namespace TreeHelper {
     let mtext = createNode('mtext', [], {}, text);
     let error = createNode('merror', [mtext], {});
     return error;
-  };
-
-
-  export function createMath(math: MmlNode): MmlNode  {
-    return math.isKind('math') ? math :
-      createNode('math',
-                 math.isInferred ? TreeHelper.getChildren(math) : [math], {});
   };
 
 

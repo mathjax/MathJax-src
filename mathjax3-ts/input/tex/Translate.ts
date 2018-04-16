@@ -86,13 +86,13 @@ export namespace NewTex {
         TreeHelper.untested('Tagged equations');
         TreeHelper.setAttribute(mml, 'displaystyle', display);
       }
-      let mathNode = TreeHelper.createMath(mml);
+      let mathNode = TreeHelper.createNode('math', [mml], {});
       let root = TreeHelper.getRoot(mathNode);
       if (display) {
         TreeHelper.setAttribute(root, 'display', 'block');
       }
-    (mathNode as any).setInheritedAttributes();
-    (mathNode as any).setTeXclass();
+    mathNode.setInheritedAttributes({}, false, 0, false);
+    mathNode.setTeXclass(null);
     if (!parser) {
       // In case we have a caught error, parser will be undefined.
       return mathNode;
