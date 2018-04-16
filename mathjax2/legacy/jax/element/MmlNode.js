@@ -29,7 +29,7 @@
       return node;
     },
     nodeMake: function (factory,kind) {
-      var node = factory.MML[kind]();
+      var node = factory.MML[kind === 'TeXmathchoice' ? 'mathchoice' : kind]();
       var data = (this.data[0] && this.data[0].inferred && this.inferRow ? this.data[0].data : this.data);
       for (var i = 0, m = data.length; i < m; i++) {
         var child = data[i];
