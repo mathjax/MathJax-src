@@ -84,8 +84,10 @@ export class MmlMtable extends AbstractMmlNode {
             }
         }
         display = !!(this.attributes.getExplicit('displaystyle') || this.attributes.getDefault('displaystyle'));
-        attributes.columnalign = [this.kind, this.attributes.get('columnalign')];
-        attributes.rowalign = [this.kind, 'center'];
+        attributes = this.addInheritedAttributes(attributes, {
+            columnalign: this.attributes.get('columnalign'),
+            rowalign: 'center'
+        });
         const ralign = (this.attributes.get('rowalign') as string)
                      .replace(/^\s+/, '').replace(/\s+$/, '').split(/ +/);
         for (const child of this.childNodes) {
