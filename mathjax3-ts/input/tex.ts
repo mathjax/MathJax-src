@@ -22,9 +22,11 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {LegacyTeX} from '../../mathjax2/input/TeX.js';
+// import {LegacyTeX} from '../../mathjax2/input/TeX.js';
+import {NewTex} from './tex/Translate.js';
 import {separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
+import {MmlNode} from '../core/MmlTree/MmlNode.js'
 
 import {FindTeX} from './tex/FindTeX.js';
 
@@ -46,12 +48,12 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         FindTeX: null
     };
 
-    /*
+    /**
      * The FindTeX instance used for locating TeX in strings
      */
     protected findTeX: FindTeX<N, T, D>;
 
-    /*
+    /**
      * @override
      */
     constructor(options: OptionList) {
@@ -60,16 +62,14 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         this.findTeX = this.options['FindTeX'] || new FindTeX(find);
     }
 
-    /*
-     * Use the legacy TeX input jax for now
-     *
+    /**
      * @override
      */
-    public compile(math: MathItem<N, T, D>) {
-        return LegacyTeX.Compile(math.math, math.display);
+  public compile(math: MathItem<N, T, D>): MmlNode {
+        return NewTex.Compile(math.math, math.display);
     }
 
-    /*
+    /**
      * @override
      */
     public findMath(strings: string[]) {

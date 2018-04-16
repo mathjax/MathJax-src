@@ -27,6 +27,9 @@
 let sm = require('mathjax3/input/tex/SymbolMap.js');
 let tc = require('mathjax3/input/tex/TexConstants.js');
 let BaseMethods = require('mathjax3/input/tex/BaseMethods.js').default;
+let ParseMethods = require('../../jax/input/TeX/ParseMethods.js').ParseMethods;
+let imp = require("../../jax/input/TeX/imp.js").imp;
+let ParserUtil = require("../../jax/input/TeX/ParserUtil.js").ParserUtil;
 
 
 MathJax.Extension["TeX/AMSmath"] = {
@@ -54,7 +57,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   var COLS = function (W) {
     var WW = [];
     for (var i = 0, m = W.length; i < m; i++) 
-      {WW[i] = TEX.Parse.prototype.Em(W[i])}
+      {WW[i] = ParserUtil.Em(W[i])}
     return WW.join(" ");
   };
   
@@ -68,107 +71,6 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   
   /******************************************************************************/
   
-  sm.CharacterMap.create('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
-    iiiint:     ['\u2A0C',{texClass: MML.TEXCLASS.OP}]
-  });
-    
-  sm.CommandMap.create('AMSmath-macros', {
-    mathring:   ['Accent','2DA'],  // or 0x30A
-      nobreakspace: 'Tilde',
-      negmedspace:    ['Spacer',MML.LENGTH.NEGATIVEMEDIUMMATHSPACE],
-      negthickspace:  ['Spacer',MML.LENGTH.NEGATIVETHICKMATHSPACE],
-      
-//    intI:       ['Macro','\\mathchoice{\\!}{}{}{}\\!\\!\\int'],
-//    iint:       ['MultiIntegral','\\int\\intI'],          // now in core TeX input jax
-//    iiint:      ['MultiIntegral','\\int\\intI\\intI'],    // now in core TeX input jax
-//    iiiint:     ['MultiIntegral','\\int\\intI\\intI\\intI'], // now in mathchar0mo above
-      idotsint:   ['MultiIntegral','\\int\\cdots\\int'],
-      
-//    dddot:      ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}',1],
-//    ddddot:     ['Macro','\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}',1],
-      dddot:      ['Accent','20DB'],
-      ddddot:     ['Accent','20DC'],
-      
-      sideset:    ['Macro','\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1\\!\\mathop{#3}\\nolimits#2}',3],
-      
-      boxed:      ['Macro','\\fbox{$\\displaystyle{#1}$}',1],
-      
-      tag:         'HandleTag',
-      notag:       'HandleNoTag',
-      label:       'HandleLabel',
-      ref:         'HandleRef',
-      eqref:       ['HandleRef',true],
-      
-      substack:   ['Macro','\\begin{subarray}{c}#1\\end{subarray}',1],
-      
-      injlim:     ['NamedOp','inj&thinsp;lim'],
-      projlim:    ['NamedOp','proj&thinsp;lim'],
-      varliminf:  ['Macro','\\mathop{\\underline{\\mmlToken{mi}{lim}}}'],
-      varlimsup:  ['Macro','\\mathop{\\overline{\\mmlToken{mi}{lim}}}'],
-      varinjlim:  ['Macro','\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}}}'],
-      varprojlim: ['Macro','\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}}}'],
-      
-      DeclareMathOperator: 'HandleDeclareOp',
-      operatorname:        'HandleOperatorName',
-      SkipLimits:          'SkipLimits',
-      
-      genfrac:     'Genfrac',
-      frac:       ['Genfrac',"","","",""],
-      tfrac:      ['Genfrac',"","","",1],
-      dfrac:      ['Genfrac',"","","",0],
-      binom:      ['Genfrac',"(",")","0",""],
-      tbinom:     ['Genfrac',"(",")","0",1],
-      dbinom:     ['Genfrac',"(",")","0",0],
-      
-      cfrac:       'CFrac',
-      
-      shoveleft:  ['HandleShove',MML.ALIGN.LEFT],
-      shoveright: ['HandleShove',MML.ALIGN.RIGHT],
-      
-      xrightarrow: ['xArrow',0x2192,5,6],
-      xleftarrow:  ['xArrow',0x2190,7,3]
-  });
-
-  sm.EnvironmentMap.create('AMSmath-environment', {
-      align:         ['AMSarray',null,true,true,  'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0])],
-      'align*':      ['AMSarray',null,false,true, 'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0])],
-      multline:      ['Multline',null,true],
-      'multline*':   ['Multline',null,false],
-      split:         ['AMSarray',null,false,false,'rl',COLS([0])],
-      gather:        ['AMSarray',null,true,true,  'c'],
-      'gather*':     ['AMSarray',null,false,true, 'c'],
-      
-      alignat:       ['AlignAt',null,true,true],
-      'alignat*':    ['AlignAt',null,false,true],
-      alignedat:     ['AlignAt',null,false,false],
-
-      aligned:       ['AlignedAMSArray',null,null,null,'rlrlrlrlrlrl',COLS([0,2,0,2,0,2,0,2,0,2,0]),".5em",'D'],
-      gathered:      ['AlignedAMSArray',null,null,null,'c',null,".5em",'D'],
-
-      subarray:      ['Array',null,null,null,null,COLS([0]),"0.1em",'S',1],
-      smallmatrix:   ['Array',null,null,null,'c',COLS([1/3]),".2em",'S',1],
-      
-      'equation':    ['EquationBegin','Equation',true],
-      'equation*':   ['EquationBegin','EquationStar',false],
-
-      eqnarray:      ['AMSarray',null,true,true, 'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"],
-      'eqnarray*':   ['AMSarray',null,false,true,'rcl',"0 "+MML.LENGTH.THICKMATHSPACE,".5em"]
-  }).parser = BaseMethods.environment;
-  
-  sm.EnvironmentMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
-      '\\lvert':     ['\u007C',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rvert':     ['\u007C',{texClass:MML.TEXCLASS.CLOSE}],
-      '\\lVert':     ['\u2016',{texClass:MML.TEXCLASS.OPEN}],
-      '\\rVert':     ['\u2016',{texClass:MML.TEXCLASS.CLOSE}]
-  });
-
-  TEXDEF.configurations.push({
-    delimiter: ['AMSmath-delimiter'],
-    macro: ['AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-    environment: ['AMSmath-environment']
-  });
-  
-
   /******************************************************************************/
   
   TEX.Parse.Augment({
@@ -177,6 +79,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Add the tag to the environment (to be added to the table row later)
      */
     HandleTag: function (name) {
+      imp.printMethod('AMS-HandleTag');
       var star = this.GetStar();
       var arg = this.trimSpaces(this.GetArgument(name)), tag = arg;
       if (!star) {arg = CONFIG.formatTag(arg)}
@@ -191,6 +94,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
     },
     HandleNoTag: function (name) {
+      imp.printMethod('AMS-HandleNoTag');
       if (this.stack.global.tag) {delete this.stack.global.tag}
       this.stack.global.notag = true;  // prevent auto-tagging
     },
@@ -199,6 +103,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Record a label name for a tag
      */
     HandleLabel: function (name) {
+      imp.printMethod('AMS-HandleLabel');
       var global = this.stack.global, label = this.GetArgument(name);
       if (label === "") return;
       if (!AMS.refUpdate) {
@@ -214,6 +119,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle a label reference
      */
     HandleRef: function (name,eqref) {
+      imp.printMethod('AMS-HandleRef');
       var label = this.GetArgument(name);
       var ref = AMS.labels[label] || AMS.eqlabels[label];
       if (!ref) {ref = {tag:"???",id:""}; AMS.badref = !AMS.refUpdate}
@@ -226,24 +132,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Handle \DeclareMathOperator
      */
-    HandleDeclareOp: function (name) {
-      var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
-      var cs = this.trimSpaces(this.GetArgument(name));
-      if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
-      var op = this.GetArgument(name);
-      op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
-      TEX.Definitions.macros[cs] = ['Macro','\\mathop{\\rm '+op+'}'+limits];
-    },
+    HandleDeclareOp: ParseMethods.HandleDeclareOp,
     
-    HandleOperatorName: function (name) {
-      var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
-      var op = this.trimSpaces(this.GetArgument(name));
-      op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
-      this.string = '\\mathop{\\rm '+op+'}'+limits+" "+this.string.slice(this.i);
-      this.i = 0;
-    },
+    HandleOperatorName: ParseMethods.HandleOperatorName,
     
-    SkipLimits: function (name) {
+    SkipLimits: function (parser, name) {
+      imp.printMethod('AMS-SkipLimits');
+      // @test Operatorname
       var c = this.GetNext(), i = this.i;
       if (c === "\\" && ++this.i && this.GetCS() !== "limits") this.i = i;
     },
@@ -252,6 +147,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Record presence of \shoveleft and \shoveright
      */
     HandleShove: function (name,shove) {
+      imp.printMethod('AMS-HandleShove');
       var top = this.stack.Top();
       if (top.type !== "multline" || top.data.length) {
         TEX.Error(["CommandAtTheBeginingOfLine",
@@ -264,6 +160,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle \cfrac
      */
     CFrac: function (name) {
+      imp.printMethod('AMS-CFrac');
       var lr  = this.trimSpaces(this.GetBrackets(name,"")),
           num = this.GetArgument(name),
           den = this.GetArgument(name);
@@ -280,6 +177,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Implement AMS generalized fraction
      */
     Genfrac: function (name,left,right,thick,style) {
+      imp.printMethod('AMS-Genfrac');
       if (left  == null) {left  = this.GetDelimiterArg(name)}
       if (right == null) {right = this.GetDelimiterArg(name)}
       if (thick == null) {thick = this.GetArgument(name)}
@@ -304,6 +202,8 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Implements multline environment (mostly handled through STACKITEM below)
      */
     Multline: function (begin,numbered) {
+      imp.printMethod('AMS-Multline');
+      imp.untested(11);
       this.Push(begin); this.checkEqnEnv();
       return STACKITEM.multline(numbered,this.stack).With({
         arraydef: {
@@ -319,24 +219,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Handle AMS aligned environments
      */
-    AMSarray: function (begin,numbered,taggable,align,spacing) {
-      this.Push(begin); if (taggable) {this.checkEqnEnv()}
-      align = align.replace(/[^clr]/g,'').split('').join(' ');
-      align = align.replace(/l/g,'left').replace(/r/g,'right').replace(/c/g,'center');
-      return STACKITEM.AMSarray(begin.name,numbered,taggable,this.stack).With({
-        arraydef: {
-          displaystyle: true,
-          rowspacing: ".5em",
-          columnalign: align,
-          columnspacing: (spacing||"1em"),
-          rowspacing: "3pt",
-          side: TEX.config.TagSide,
-          minlabelspacing: TEX.config.TagIndent
-        }
-      });
-    },
+    // VS: That's the only rewritten function so far!
+    AMSarray: ParseMethods.AMSarray,
     
     AlignedAMSArray: function (begin) {
+      imp.printMethod('AMS-AlignedAMSArray');
       var align = this.GetBrackets("\\begin{"+begin.name+"}");
       return this.setArrayAlign(this.AMSarray.apply(this,arguments),align);
     },
@@ -345,6 +232,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle alignat environments
      */
     AlignAt: function (begin,numbered,taggable) {
+      imp.printMethod('AMS-AlignAt');
       var n, valign, align = "", spacing = [];
       if (!taggable) {valign = this.GetBrackets("\\begin{"+begin.name+"}")}
       n = this.GetArgument("\\begin{"+begin.name+"}");
@@ -363,11 +251,13 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle equation environment
      */
     EquationBegin: function (begin,force) {
+      imp.printMethod('AMS-EquationBegin');
       this.checkEqnEnv();
       this.stack.global.forcetag = (force && CONFIG.autoNumber !== "none");
       return begin;
     },
     EquationStar: function (begin,row) {
+      imp.printMethod('AMS-EquationStar');
       this.stack.global.tagged = true; // prevent automatic tagging
       return row;
     },
@@ -376,6 +266,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Check for bad nesting of equation environments
      */
     checkEqnEnv: function () {
+      imp.printMethod('AMS-checkEqnEnv');
       if (this.stack.global.eqnenv)
         {TEX.Error(["ErroneousNestingEq","Erroneous nesting of equation structures"])}
       this.stack.global.eqnenv = true;
@@ -385,6 +276,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle multiple integrals (make a mathop if followed by limits)
      */
     MultiIntegral: function (name,integral) {
+      imp.printMethod('AMS-MultiIntegral');
       var next = this.GetNext();
       if (next === "\\") {
         var i = this.i; next = this.GetArgument(name); this.i = i;
@@ -401,6 +293,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle stretchable arrows
      */
     xArrow: function (name,chr,l,r) {
+      imp.printMethod('AMS-xArrow');
       var def = {width: "+"+(l+r)+"mu", lspace: l+"mu"};
       var bot = this.GetBrackets(name),
           top = this.ParseArg(name);
@@ -420,6 +313,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Get a delimiter or empty argument
      */
     GetDelimiterArg: function (name) {
+      imp.printMethod('AMS-GetDelimiterArg');
       var c = this.trimSpaces(this.GetArgument(name));
       if (c == "") return null;
       if (c in TEXDEF.delimiter) return c;
@@ -430,6 +324,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Get a star following a control sequence name, if any
      */
     GetStar: function () {
+      imp.printMethod('AMS-GetStar');
       var star = (this.GetNext() === "*");
       if (star) {this.i++}
       return star;
@@ -444,6 +339,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Increment equation number and form tag mtd element
      */
     autoTag: function () {
+      imp.printMethod('AMS-autoTag');
       var global = this.global;
       if (!global.notag) {
         AMS.number++; global.tagID = CONFIG.formatNumber(AMS.number.toString());
@@ -456,6 +352,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Get the tag and record the label, if any
      */
     getTag: function () {
+      imp.printMethod('AMS-getTag');
       var global = this.global, tag = global.tag; global.tagged = true;
       if (global.label) {
         if (CONFIG.useLabelIds) {tag.id = CONFIG.formatID(global.label)}
@@ -476,46 +373,35 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       return tag;
     },
     clearTag: function () {
+      imp.printMethod('AMS-clearTag');
       var global = this.global;
       delete global.tag; delete global.tagID; delete global.label;
-    },
-
-    /*
-     *  If the initial child, skipping any initial space or
-     *  empty braces (TeXAtom with child being an empty inferred row),
-     *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
-     *  be infix.
-     */
-    fixInitialMO: function (data) {
-      for (var i = 0, m = data.length; i < m; i++) {
-        if (data[i] && (data[i].type !== "mspace" &&
-           (data[i].type !== "texatom" || (data[i].data[0] && data[i].data[0].data.length)))) {
-          if (data[i].isEmbellished()) data.unshift(MML.mi());
-          break;
-        }
-      }
     }
   });
-  
+
+    
   /*
    *  Implement multline environment via a STACKITEM
    */
   STACKITEM.multline = STACKITEM.array.Subclass({
     type: "multline",
     Init: function (numbered,stack) {
+      imp.printMethod('AMS-Init');
       this.SUPER(arguments).Init.apply(this);
       this.numbered = (numbered && CONFIG.autoNumber !== "none");
       this.save = {notag: stack.global.notag};
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
-      if (this.table.length) {this.fixInitialMO(this.data)}
+      imp.printMethod('AMS-EndEntry');
+      if (this.table.length) {ParserUtil.fixInitialMO(this.data)}
       var mtd = MML.mtd.apply(MML,this.data);
       if (this.data.shove) {mtd.columnalign = this.data.shove}
       this.row.push(mtd);
       this.data = [];
     },
     EndRow: function () {
+      imp.printMethod('AMS-EndRow');
       if (this.row.length != 1) {
         TEX.Error(["MultlineRowsOneCol",
                    "The rows within the %1 environment must have exactly one column",
@@ -524,6 +410,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       this.table.push(this.row); this.row = [];
     },
     EndTable: function () {
+      imp.printMethod('AMS-EndTable');
       this.SUPER(arguments).EndTable.call(this);
       if (this.table.length) {
         var m = this.table.length-1, i, label = -1;
@@ -550,6 +437,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   STACKITEM.AMSarray = STACKITEM.array.Subclass({
     type: "AMSarray",
     Init: function (name,numbered,taggable,stack) {
+      imp.printMethod('AMS-Init');
       this.SUPER(arguments).Init.apply(this);
       this.numbered = (numbered && CONFIG.autoNumber !== "none");
       this.save = {notags: stack.global.notags, notag: stack.global.notag};
@@ -557,21 +445,31 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
       stack.global.tagged = !numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
     },
     EndEntry: function () {
-      if (this.row.length) {this.fixInitialMO(this.data)}
-      this.row.push(MML.mtd.apply(MML,this.data));
+      imp.printMethod('AMS-EndEntry');
+      // @test Cubic Binomial
+      if (this.row.length) {ParserUtil.fixInitialMO(this.data);}
+      var node = imp.createNode('mtd', this.data, {});
+      // VS: OLD
+      // var node = MML.mtd.apply(MML,this.data);
+      this.row.push(node);
       this.data = [];
     },
     EndRow: function () {
-      var mtr = MML.mtr;
+      imp.printMethod('AMS-EndRow');
+      // @test Cubic Binomial
+      var mtr = 'mtr'; // MML.mtr;
       if (!this.global.tag && this.numbered) {this.autoTag()}
       if (this.global.tag && !this.global.notags) {
         this.row = [this.getTag()].concat(this.row);
-        mtr = MML.mlabeledtr;
-      } else {this.clearTag()}
-      if (this.numbered) {delete this.global.notag}
-      this.table.push(mtr.apply(MML,this.row)); this.row = [];
+        mtr = 'mlabeledtr'; // MML.mlabeledtr;
+      } else {this.clearTag();}
+      if (this.numbered) {delete this.global.notag;}
+      var node = imp.createNode(mtr, this.row, {});
+      this.table.push(node); this.row = [];
     },
     EndTable: function () {
+      imp.printMethod('AMS-EndTable');
+      // @test Cubic Binomial
       this.SUPER(arguments).EndTable.call(this);
       this.global.notags = this.save.notags;
       this.global.notag  = this.save.notag;
@@ -584,6 +482,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
   STACKITEM.start.Augment({
     oldCheckItem: STACKITEM.start.prototype.checkItem,
     checkItem: function (item) {
+      imp.printMethod('AMS-checkItem');
       if (item.type === "stop") {
         var mml = this.mmlData(), global = this.global;
         if (AMS.display && !global.tag && !global.tagged && !global.isInner &&

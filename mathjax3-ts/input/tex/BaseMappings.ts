@@ -150,7 +150,7 @@ export namespace BaseMappings {
                             movesupsub: true}],
     bigcup:       ['\u22C3', {texClass: TexConstant.TexClass.OP,
                             movesupsub: true}],
-    'int':        ['222B', {texClass: TexConstant.TexClass.OP}],
+    'int':        ['\u222B', {texClass: TexConstant.TexClass.OP}],
     intop:        ['\u222B', {texClass: TexConstant.TexClass.OP,
                             movesupsub: true, movablelimits: true}],
     iint:         ['\u222C', {texClass: TexConstant.TexClass.OP}],
@@ -493,6 +493,7 @@ export namespace BaseMappings {
     mskip:              'Hskip',
     mspace:             'Hskip',
     mkern:              'Hskip',
+    rule:               'rule',
     Rule:              ['Rule'],
     Space:             ['Rule', 'blank'],
 
@@ -524,7 +525,7 @@ export namespace BaseMappings {
 
     vcenter:           ['TeXAtom', TexConstant.TexClass.VCENTER],
 
-    mathchoice:        ['Extension', 'mathchoice'],
+    // mathchoice:        ['Extension', 'mathchoice'],
     buildrel:           'BuildRel',
 
     hbox:               ['HBox', 0],
@@ -650,8 +651,10 @@ export namespace BaseMappings {
 
     mmlToken:           'MmlToken',
 
-    require:            'Require'
+    require:            'Require',
 
+    // mathchoice
+    mathchoice:         'MathChoice'
   });
 
   const envs = sm.EnvironmentMap.create('environment', {

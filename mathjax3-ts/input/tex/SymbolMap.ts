@@ -116,7 +116,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   public parse([symbol, env]: ParseInput) {
     let parser = this.parserFor(symbol);
     let mapped = this.lookup(symbol);
-    return (parser && mapped) ? (parser.bind(env)(mapped) || true) : null;
+    return (parser && mapped) ? (parser.bind(env)(env, mapped) || true) : null;
   }
 
 
@@ -378,6 +378,20 @@ export class MacroMap extends AbstractParseMap<Macro> {
     this.add(symbol, character);
   }
 
+  // TODO: Refactor the parse methods for this and the following subclasses.
+  /**
+   * @override
+   */
+  public parse([symbol, env]: ParseInput) {
+    let macro = this.lookup(symbol);
+    let parser = this.parserFor(symbol);
+    if (!macro || !parser) {
+      return null;
+    }
+    let args = [env, symbol].concat(macro.args as string[]);
+    return parser ? (parser.bind(env).apply(env, args) || true) : null;
+  }
+
 }
 
 
@@ -411,7 +425,7 @@ export class CommandMap extends MacroMap {
     if (!macro || !parser) {
       return null;
     }
-    let args = ['\\' + symbol].concat(macro.args as string[]);
+    let args = [env, '\\' + symbol].concat(macro.args as string[]);
     return parser ? (parser.bind(env).apply(env, args) || true) : null;
   }
 
@@ -448,7 +462,7 @@ export class EnvironmentMap extends MacroMap {
       return null;
     }
     // TODO: Here we cheat with the type for the time being!
-    this.parser.bind(env)(envParser.bind(env),
+    this.parser.bind(env)(env, envParser.bind(env),
                           symbol, macro.args);
     return true;
   }

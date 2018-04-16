@@ -1,12 +1,13 @@
 import {MathJax} from 'mathjax3/mathjax.js';
 
-import 'mathjax3/handlers/html.js';
 import {TeX} from 'mathjax3/input/tex.js';
-
+import {RegisterHTMLHandler} from "mathjax3/handlers/html.js";
+import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
 import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 
 import {Test} from './tests.js';
 
+RegisterHTMLHandler(chooseAdaptor());
 
 export class ParserTest extends Test {
 
@@ -25,9 +26,7 @@ export class ParserTest extends Test {
           });
           html.TestMath(tex).compile();
           let jv = new JsonMmlVisitor();
-          let math = html.math.pop().root;
-          math.setTeXclass();
-          let actual = jv.visitTree(math);
+          let actual = jv.visitTree(html.math.pop().root);
           t.deepEqual(actual, expected, name);
         }).catch(err => {
           console.log(err.message);
