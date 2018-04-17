@@ -28,7 +28,7 @@ import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {Styles} from '../../util/Styles.js';
+import {Styles} from '../../util/styles.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
