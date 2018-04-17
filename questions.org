@@ -149,6 +149,10 @@ parserTest.runTest(
 ** mtr from mtable etc.
 ** In the old data structure the inherit elements were there
 ** In the new data structure mtr has INHERIT set but it does not show up in the JSON.
-* Mathsize normal problem in various base tests. 
+* Mathsize normal problem in various base tests (in mspace elements)
 ** Mathsize does not occur in the original JSON output, but now it does.
+** It's not incorrect in the mspace elements, but should it be there?
 
+* infix/prefix/postfix: Vertical bar problem. 
+** Mine seem to be correct, but they don't correspond to MJ2 where they all appear infix.
+** Consequently I am missing texatom wrappers.

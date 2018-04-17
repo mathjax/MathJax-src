@@ -97,6 +97,7 @@ export namespace NewTex {
       // In case we have a caught error, parser will be undefined.
       return mathNode;
     }
+    TreeHelper.printJSON(TreeHelper.getChildren(mathNode)[0]);
     for (let mo of parser.secondPass) {
       let forms = mo.getForms();
       let symbol: OperatorDef;
@@ -114,11 +115,14 @@ export namespace NewTex {
       // if (!symbol) {
       //   range = mo.getRange(mo.getText());
       // }
+      console.log(TreeHelper.getTexClass(mo));
+      console.log(symbol);
+      console.log(symbol[2]);
       if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
         const parent = mo.parent;
         const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
         texAtom.parent = parent;
-        parent.childNodes = [texAtom];
+        parent.replaceChild(texAtom, mo);
       }
     }
     // TODO: Should not be necessary anymore!
