@@ -552,7 +552,7 @@ export namespace ParseMethods {
     // TODO: Turns this into properties.
     TreeHelper.setProperties(op, {'movesupsub': limits ? true : false});
     TreeHelper.setProperties(TreeHelper.getCore(op), {'movablelimits': false});
-    if (TreeHelper.getProperty(op, 'movablelimits')) {
+    if (TreeHelper.getAttribute(op, 'movablelimits') || TreeHelper.getProperty(op, 'movablelimits')) {
       TreeHelper.setProperties(op, {'movablelimits': false});
     }
   };
@@ -704,22 +704,27 @@ export namespace ParseMethods {
     TreeHelper.printMethod('UnderOver');
     // @test Overline
     let base = parser.ParseArg(name);
-    // TODO: Check via operator table later?
-    if (TreeHelper.getProperty(base, 'movablelimits')) {
+    // TODO: Can we check this via operator table later?
+    try {
+      base.setInheritedAttributes({}, false, 0, false);
+    } catch (e) {}
+    if (TreeHelper.getAttribute(base, 'movablelimits') || TreeHelper.getProperty(base, 'movablelimits')) {
       // @test Overline Sum
+      console.log('here');
+      console.log(base.kind);
       TreeHelper.setProperties(base, {'movablelimits': false});
     }
     let mo;
     if (TreeHelper.isType(base, 'munderover') && TreeHelper.isEmbellished(base)) {
       // @test Overline Limits
       // TODO: Sort these properties out!
-      TreeHelper.setProperties(TreeHelper.getCore(base), {lspace:0,rspace:0}); // get spacing right for NativeMML
-      mo = TreeHelper.createNode('mo', [], {rspace:0});
-      base = TreeHelper.createNode('mrow', [mo,base], {});  // add an empty <mi> so it's not embellished any more
+      TreeHelper.setProperties(TreeHelper.getCore(base), {lspace: 0, rspace: 0}); // get spacing right for NativeMML
+      mo = TreeHelper.createNode('mo', [], {rspace: 0});
+      base = TreeHelper.createNode('mrow', [mo, base], {});  // add an empty <mi> so it's not embellished any more
     }
     const mml = TreeHelper.createNode('munderover', [base], {}) as MmlMunderover;
     const entity = TreeHelper.createEntity(c);
-    mo = TreeHelper.createNode('mo', [], {stretchy:true, accent:!noaccent}, entity);
+    mo = TreeHelper.createNode('mo', [], {stretchy: true, accent: !noaccent}, entity);
 
     // TEMP: Changes here:
     TreeHelper.setData(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
@@ -727,7 +732,7 @@ export namespace ParseMethods {
     let node: MmlNode = mml;
     if (stack) {
       TreeHelper.untested(8);
-      node = TreeHelper.createNode('TeXAtom', [mml], {texClass:TEXCLASS.OP, movesupsub:true});
+      node = TreeHelper.createNode('TeXAtom', [mml], {texClass: TEXCLASS.OP, movesupsub: true});
     }
     // TODO: Sort these properties out!
     TreeHelper.setProperties(node, {subsupOK: true});
@@ -738,7 +743,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Overset');
     // @test Overset
     const top = parser.ParseArg(name), base = parser.ParseArg(name);
-    if (TreeHelper.getProperty(base, 'movablelimits')) {
+    if (TreeHelper.getAttribute(base, 'movablelimits') || TreeHelper.getProperty(base, 'movablelimits')) {
       TreeHelper.setProperties(base, {'movablelimits': false});
     }
     const node = TreeHelper.createNode('mover', [base, top], {});
@@ -749,7 +754,7 @@ export namespace ParseMethods {
     TreeHelper.printMethod('Underset');
     // @test Underset
     const bot = parser.ParseArg(name), base = parser.ParseArg(name);
-    if (TreeHelper.getProperty(base, 'movablelimits')) {
+    if (TreeHelper.getAttribute(base, 'movablelimits') || TreeHelper.getProperty(base, 'movablelimits')) {
       // @test Overline Sum
       TreeHelper.setProperties(base, {'movablelimits': false});
     }

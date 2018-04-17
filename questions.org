@@ -1,6 +1,6 @@
 * MOVABLELIMITS:false also in attributes
    Only mo s need it. Sort out explicitly in mi to mo.
-   Non mo need it in properties.
+   None mo need it in properties.
 
 
 
