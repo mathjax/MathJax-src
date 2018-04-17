@@ -24,7 +24,7 @@
 
 import {MmlVisitor} from './MmlVisitor.js';
 import {MmlFactory} from './MmlFactory.js';
-import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
+import {MmlNode, TextNode, XMLNode, TEXCLASSNAMES} from './MmlNode.js';
 
 /*****************************************************************/
 /*
@@ -55,19 +55,19 @@ export class SerializedMmlVisitor extends MmlVisitor {
     /*
      * @param {XMLNode} node  The XML node to visit
      * @param {string} space  The amount of indenting for this node
-     * @return {string}  The serialziation of the XML node (not implemented yet).
+     * @return {string}  The serialization of the XML node (not implemented yet).
      */
     public visitXMLNode(node: XMLNode, space: string) {
         return '[XML Node not implemented]';
     }
 
     /*
-     * Vist an inferred mrow, but don't add the inferred row itself (since
+     * Visit an inferred mrow, but don't add the inferred row itself (since
      * it is supposed to be inferred).
      *
      * @param {MmlNode} node  The inferred mrow to visit
      * @param {string} space  The amount of indenting for this node
-     * @return {string}  The serialzied contents of the mrow, properly indented
+     * @return {string}  The serialized contents of the mrow, properly indented
      */
     public visitInferredMrowNode(node: MmlNode, space: string) {
         let mml = [];
@@ -75,6 +75,27 @@ export class SerializedMmlVisitor extends MmlVisitor {
             mml.push(this.visitNode(child, space));
         }
         return mml.join('\n');
+    }
+
+    /**
+     * Visit a TeXAtom node. It is turned into a mrow with the appropriate TeX class
+     * indicator.
+     *
+     * @param {MmlNode} node  The TeXAtom to visit.
+     * @param {string} space  The amount of indenting for this node.
+     * @return {string}  The serialized contents of the mrow, properly indented.
+     */
+    public visitTeXAtomNode(node: MmlNode, space: string) {
+      let texclass = node.texClass < 0 ? 'NONE' : TEXCLASSNAMES[node.texClass];
+      let mml = space + '<mrow class="MJX-TeXAtom-' + texclass + '"' +
+          this.getAttributes(node) + '>\n';
+      const endspace = space;
+      space += '  ';
+      for (const child of node.childNodes) {
+        mml += this.visitNode(child, space);
+      }
+      mml += '\n' + endspace + '</mrow>';
+      return mml;
     }
 
     /*
