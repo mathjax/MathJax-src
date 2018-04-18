@@ -465,7 +465,7 @@ export namespace ParseMethods {
   export function Spacer(parser: TexParser, name: string, space: string) {
     // @test Positive Spacing, Negative Spacing
     const node = TreeHelper.createNode('mspace', [],
-                              {width: space, mathsize: TexConstant.Size.NORMAL, scriptlevel: 0});
+                              {width: space, scriptlevel: 0});
     parser.Push(node);
   };
 
@@ -938,16 +938,15 @@ export namespace ParseMethods {
     parser.Push(
                 new sitem.PositionItem().With({
                   name: name, move: 'horizontal',
-                  left:  TreeHelper.createNode('mspace', [], {width: h, mathsize: TexConstant.Size.NORMAL}),
-                  right: TreeHelper.createNode('mspace', [], {width: nh, mathsize: TexConstant.Size.NORMAL})}) );
+                  left:  TreeHelper.createNode('mspace', [], {width: h}),
+                  right: TreeHelper.createNode('mspace', [], {width: nh})}) );
   };
 
   export function Hskip(parser: TexParser, name: string) {
     TreeHelper.printMethod('Hskip');
     // @test Modulo
     const node = TreeHelper.createNode('mspace', [],
-                                       {width: parser.GetDimen(name),
-                                        mathsize: TexConstant.Size.NORMAL});
+                                       {width: parser.GetDimen(name)});
     parser.Push(node);
   };
 
