@@ -115,9 +115,6 @@ export namespace NewTex {
       // if (!symbol) {
       //   range = mo.getRange(mo.getText());
       // }
-      console.log(TreeHelper.getTexClass(mo));
-      console.log(symbol);
-      console.log(symbol[2]);
       if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
         const parent = mo.parent;
         const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
