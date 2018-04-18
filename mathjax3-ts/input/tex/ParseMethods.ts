@@ -98,7 +98,7 @@ export namespace ParseMethods {
     // @test Large Set
     const textNode = TreeHelper.createText(mchar.char);
     const node = TreeHelper.createNode('mo', [], def, textNode);
-    parser.secondPass.push(node as MmlMo);
+    parser.toClean(node as MmlMo);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(parser.mmlToken(node));
   };
@@ -407,7 +407,7 @@ export namespace ParseMethods {
     // @test Other Remap
     const textNode = TreeHelper.createText(remap ? remap.char : c);
     let mo = TreeHelper.createNode('mo', [], def, textNode) as MmlMo;
-    parser.secondPass.push(mo);
+    parser.toClean(mo);
 
     // VS: Question: What do these autoDefault methods do exactly.
     //     Is there a modern equivalent in v3?

@@ -32,19 +32,25 @@ import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {OperatorDef, RangeDef} from '../../core/MmlTree/OperatorDictionary.js';
 
 // A wrapper for translating scripts with LaTeX content.
+// 
+// TODO: This needs to be put into a proper object, so we can run multiple
+//       translations in parallel, otherwise there might be interference with
+//       the secondPass global variable.
 
 export namespace NewTex {
 
   export type Script = {type: string, innerText: string, MathJax: any};
 
   export let display: boolean = false;
-
+  export let secondPass: MmlMo[] = [];
+  
   export function Compile(tex: string, display: boolean): MmlNode {
     let script = {
       type: 'math/tex' + (display ? '; mode=display' : ''),
       innerText: tex,
       MathJax: {}
     };
+    secondPass = [];
     let node = Translate(script, [], {});
     (node as any).setInheritedAttributes();
     (node as any).setTeXclass();
@@ -98,7 +104,7 @@ export namespace NewTex {
       return mathNode;
     }
     TreeHelper.printJSON(TreeHelper.getChildren(mathNode)[0]);
-    for (let mo of parser.secondPass) {
+    for (let mo of NewTex.secondPass) {
       let forms = mo.getForms();
       let symbol: OperatorDef;
       // Probably not needed!

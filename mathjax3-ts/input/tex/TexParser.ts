@@ -39,6 +39,7 @@ import {StackItem, StopItem, EnvList} from './StackItem.js';
 import Stack from './Stack.js';
 import {Symbol} from './Symbol.js';
 import TexError from './TexError.js';
+import {NewTex} from './Translate.js';
 
 
 /**
@@ -47,7 +48,6 @@ import TexError from './TexError.js';
 export default class TexParser {
 
   public macroCount: number = 0;
-  public secondPass: MmlMo[] = [];
 
   private input: string = '';
   private remainder: string = '';
@@ -192,6 +192,7 @@ export default class TexParser {
     return this.configurations.get(kind).fallback(method);
   }
 
+
   /**
    * Checks if a symbol is contained in one of the symbol mappings of the
    * specified kind.
@@ -202,6 +203,17 @@ export default class TexParser {
    */
   public contains(kind: HandlerType, symbol: string): boolean {
     return this.configurations.get(kind).contains(symbol);
+  }
+
+
+  /**
+   * Adds an operator node to be cleaned up at the end of the translation of the
+   * entire expression.
+   * 
+   * @param {MmlMo} node The mo node.
+   */
+  public toClean(node: MmlMo) {
+    NewTex.secondPass.push(node);
   }
 
 
@@ -676,7 +688,7 @@ class SubHandler {
     return this.applicable(symbol) ? true : false;
   }
 
-
+  
   /**
    * @override
    */
