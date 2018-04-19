@@ -1523,11 +1523,11 @@ export namespace ParseMethods {
     let newItem = new sitem.AMSarrayItem(begin.getName(), numbered, taggable, parser.stack.global);
     newItem.arraydef = {
         displaystyle: true,
-        rowspacing: '.5em',
         columnalign: align,
         columnspacing: (spacing||'1em'),
         // TODO: Which one is correct?
-        // rowspacing: '3pt',
+        rowspacing: '3pt',
+        // rowspacing: '.5em',
         side: TAG_SIDE,
         minlabelspacing: TAG_INDENT
     };
