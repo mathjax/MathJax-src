@@ -56,6 +56,7 @@ export namespace NewTex {
     (node as any).setTeXclass();
     // Cleanup:
     traverse(node);
+    ParserUtil.combineRelations(node);
     return node;
   }
 
@@ -132,7 +133,6 @@ export namespace NewTex {
     // if (isError) {
     //   (mathNode as any).texError = true;
     // }
-    // ParserUtil.combineRelations(root);
     return mathNode;
     }
 
