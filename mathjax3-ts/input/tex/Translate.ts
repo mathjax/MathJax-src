@@ -29,7 +29,7 @@ import {ParserUtil} from './ParserUtil.js';
 import TexError from './TexError.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {OperatorDef, RangeDef} from '../../core/MmlTree/OperatorDictionary.js';
+import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 
 // A wrapper for translating scripts with LaTeX content.
 // 
@@ -67,37 +67,35 @@ export namespace NewTex {
 
   export function Translate(
     script: Script, configurations: string[] = [], stackitem?: any): MmlNode {
-      TreeHelper.printMethod('Translate');
-      TreeHelper.printSimple(script.toString());
-      let mml: MmlNode;
-      let parser: TexParser;
-      let isError = false;
-      let math = script.innerText;
-      display = script.type.replace(/\n/g, ' ').
-        match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
-      try {
-        parser = new TexParser(math, null);
-        mml = parser.mml();
-        TreeHelper.printSimple(mml.toString());
-      } catch (err) {
-        if (!(err instanceof TexError)) {
-          throw err;
-        }
-        mml = formatError(err, math, display, script);
-        isError = true;
+    TreeHelper.printMethod('Translate');
+    TreeHelper.printSimple(script.toString());
+    let mml: MmlNode;
+    let parser: TexParser;
+    let math = script.innerText;
+    display = script.type.replace(/\n/g, ' ').
+      match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
+    try {
+      parser = new TexParser(math, null);
+      mml = parser.mml();
+      TreeHelper.printSimple(mml.toString());
+    } catch (err) {
+      if (!(err instanceof TexError)) {
+        throw err;
       }
-      mml = TreeHelper.cleanSubSup(mml);
-      if (TreeHelper.isType(mml, 'mtable') &&
-          TreeHelper.getAttribute(mml, 'displaystyle') === 'inherit') {
-        // for tagged equations
-        TreeHelper.untested('Tagged equations');
-        TreeHelper.setAttribute(mml, 'displaystyle', display);
-      }
-      let mathNode = TreeHelper.createNode('math', [mml], {});
-      let root = TreeHelper.getRoot(mathNode);
-      if (display) {
-        TreeHelper.setAttribute(root, 'display', 'block');
-      }
+      mml = formatError(err, math, display, script);
+    }
+    mml = TreeHelper.cleanSubSup(mml);
+    if (TreeHelper.isType(mml, 'mtable') &&
+        TreeHelper.getAttribute(mml, 'displaystyle') === 'inherit') {
+      // for tagged equations
+      TreeHelper.untested('Tagged equations');
+      TreeHelper.setAttribute(mml, 'displaystyle', display);
+    }
+    let mathNode = TreeHelper.createNode('math', [mml], {});
+    let root = TreeHelper.getRoot(mathNode);
+    if (display) {
+      TreeHelper.setAttribute(root, 'display', 'block');
+    }
     mathNode.setInheritedAttributes({}, false, 0, false);
     mathNode.setTeXclass(null);
     if (!parser) {
@@ -109,7 +107,6 @@ export namespace NewTex {
       let forms = mo.getForms();
       let symbol: OperatorDef;
       // Probably not needed!
-      let range: RangeDef = null;
       for (let form of forms) {
         symbol = MmlMo.OPTABLE[form][mo.getText()];
         if (symbol) {
@@ -129,12 +126,8 @@ export namespace NewTex {
         parent.replaceChild(texAtom, mo);
       }
     }
-    // TODO: Should not be necessary anymore!
-    // if (isError) {
-    //   (mathNode as any).texError = true;
-    // }
     return mathNode;
-    }
+  }
 
   function traverse(mml: MmlNode) {
     let attribs = mml.attributes as any;
