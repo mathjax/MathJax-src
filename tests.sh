@@ -5,6 +5,8 @@ if [ $# -eq 0 ]; then
     # node load.js tests/tree-tests.js
     node load.js tests/parser-base-tests.js
     node load.js tests/parser-other-tests.js
+    node load.js tests/parser-fenced-tests.js
+    node load.js tests/parser-movlim-tests.js
     node load.js tests/parser-mathchoice-tests.js
     node load.js tests/parser-array-tests.js
     node load.js tests/parser-error-tests.js

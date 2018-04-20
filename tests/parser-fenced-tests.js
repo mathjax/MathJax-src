@@ -672,6 +672,8 @@ parserTest.runTest(
           "isEmbellished": true}],
       "isInferred": true}]}
 );
+
+
 parserTest.runTest(
   "Fenced Noleft", "\\left. ab \\right)",
   {"kind": "math",
@@ -743,6 +745,8 @@ parserTest.runTest(
               "isEmbellished": true}]}],
       "isInferred": true}]}
 );
+
+
 parserTest.runTest(
   "Fenced Noright", "\\left( ab \\right.",
   {"kind": "math",
@@ -814,6 +818,8 @@ parserTest.runTest(
               "isEmbellished": true}]}],
       "isInferred": true}]}
 );
+
+
 parserTest.runTest(
   "Fenced Arrows 5", "\\left\\{\\frac{a}{\\left\\uparrow bc\\right\\downarrow}\\right\\}",
   {"kind": "math",
@@ -940,6 +946,8 @@ parserTest.runTest(
               "isEmbellished": true}]}],
       "isInferred": true}]}
 );
+
+
 parserTest.runTest(
   "Fenced Arrows 1", "\\left\\uparrow \\frac{a}{b} \\right\\downarrow",
   {"kind": "math",
@@ -1019,6 +1027,8 @@ parserTest.runTest(
               "isEmbellished": true}]}],
       "isInferred": true}]}
 );
+
+
 parserTest.runTest(
   "Fenced Arrows 2", "\\uparrow \\frac{a}{b} \\downarrow",
   {"kind": "math",
@@ -1088,6 +1098,8 @@ parserTest.runTest(
           "isEmbellished": true}],
       "isInferred": true}]}
 );
+
+
 parserTest.runTest(
   "Fenced Arrows 3", "\\left\\uparrow \\frac{a}{b}\\middle\\downarrow c \\right\\uparrow",
   {"kind": "math",
