@@ -25,6 +25,7 @@
 
 
 import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
 
@@ -168,6 +169,7 @@ export namespace ParserUtil {
               // @test Shift Left, Less Equal
               TreeHelper.appendChildren(m1, TreeHelper.getChildren(m2));
               children.splice(i + 1, 1);
+              m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
               m--;
             } else {
               TreeHelper.untested('Combine Relations Case 2');

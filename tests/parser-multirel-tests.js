@@ -329,7 +329,7 @@ parserTest.runTest(
          {"kind": "text",
           "text": "a"}]},
       {"kind": "mo",
-          "texClass": 0,
+          "texClass": 3,
           "attributes": {},
           "inherited": {"displaystyle": true,
             "scriptlevel": 0,
