@@ -8,6 +8,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-fenced-tests.js
     node load.js tests/parser-movlim-tests.js
     node load.js tests/parser-mathchoice-tests.js
+    node load.js tests/parser-multirel-tests.js
     node load.js tests/parser-array-tests.js
     node load.js tests/parser-error-tests.js
     node load.js tests/parser-complex-tests.js
