@@ -28,6 +28,7 @@ import {browserAdaptor} from './browserAdaptor.js';
  * Declare the global variables used here
  */
 declare var System: {nodeRequire: Function};
+declare function require(file: string): Object;
 
 let choose;
 
