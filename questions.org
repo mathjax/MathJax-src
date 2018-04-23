@@ -154,11 +154,21 @@ parserTest.runTest(
 ** Mine seem to be correct, but they don't correspond to MJ2 where they all appear infix.
 ** Consequently I am missing texatom wrappers.
 
-* Movablelimits hack!
+*** Solved by going with post/prefix over infix.
+
+*** Why does prefix texclass propagate but postfix texclass does not?
+
+* Movablelimits hack! [DONE]
 
 ** Only in case it is an mo, look it up in the operator table.
+
+*** Solved!
 
 * useHeight vs displaystyle=false in Subarray and smallMatrix
 
 ** Turns off strutting, is it still important?
 ** Can probably go!
+
+** We currently get the old style:
+   useHeight=false, displaystyle=false is inherited, hence omitted from the attributes
+   The master version seems to be wrong.
