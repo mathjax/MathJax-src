@@ -638,7 +638,7 @@ export class ArrayItem extends BaseItem {
         }
       }
       if (scriptlevel) {
-        TreeHelper.untested(3);
+        // @test Subarray, Small Matrix
         mml = TreeHelper.createNode('mstyle', [mml], {scriptlevel: scriptlevel});
         // VS: OLD
         // mml = MML.mstyle(mml).With({scriptlevel: scriptlevel})}

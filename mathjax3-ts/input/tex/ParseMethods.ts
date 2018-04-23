@@ -727,7 +727,7 @@ export namespace ParseMethods {
                        parser.mmlToken(mo));
     let node: MmlNode = mml;
     if (stack) {
-      TreeHelper.untested(8);
+      // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
       node = TreeHelper.createNode('TeXAtom', [mml], {texClass: TEXCLASS.OP, movesupsub: true});
     }
     // TODO: Sort these properties out!
@@ -1350,7 +1350,6 @@ export namespace ParseMethods {
       array.arraydef.columnlines =
         lines.split('').join(' ').replace(/[^|: ]/g,'none').replace(/\|/g,'solid').replace(/:/g,'dashed');
     }
-    // TEMP: Changes here;
     if (open)  {
       // @test Cross Product
       array.setProperty('open', parser.convertDelimiter(open));
@@ -1361,19 +1360,19 @@ export namespace ParseMethods {
     }
     if (style === 'D') {
       TreeHelper.untested(30);
-      array.arraydef.displaystyle = true;
+      array.arraydef['displaystyle'] = true;
     }
     else if (style) {
-      TreeHelper.untested(31);
-      array.arraydef.displaystyle = false;
+      // @test Subarray, Small Matrix
+      array.arraydef['displaystyle'] = false;
     }
     if (style === 'S') {
-      TreeHelper.untested(32);
-      array.arraydef.scriptlevel = 1;
+      // @test Subarray, Small Matrix
+      array.arraydef['scriptlevel'] = 1;
     } // FIXME: should use mstyle?
     if (raggedHeight)  {
-      TreeHelper.untested(33);
-      array.arraydef.useHeight = false;
+      // @test Subarray, Small Matrix
+      array.arraydef['useHeight'] = false;
     }
     parser.Push(begin);
     return array;
