@@ -67,72 +67,61 @@ export namespace NewTex {
 
   export function Translate(
     script: Script, configurations: string[] = [], stackitem?: any): MmlNode {
-    TreeHelper.printMethod('Translate');
-    TreeHelper.printSimple(script.toString());
-    let mml: MmlNode;
-    let parser: TexParser;
-    let math = script.innerText;
-    display = script.type.replace(/\n/g, ' ').
-      match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
-    try {
-      parser = new TexParser(math, null);
-      mml = parser.mml();
-      TreeHelper.printSimple(mml.toString());
-    } catch (err) {
-      if (!(err instanceof TexError)) {
-        throw err;
+      TreeHelper.printMethod('Translate');
+      TreeHelper.printSimple(script.toString());
+      let mml: MmlNode;
+      let parser: TexParser;
+      let math = script.innerText;
+      display = script.type.replace(/\n/g, ' ').
+        match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
+      try {
+        parser = new TexParser(math, null);
+        mml = parser.mml();
+        TreeHelper.printSimple(mml.toString());
+      } catch (err) {
+        if (!(err instanceof TexError)) {
+          throw err;
+        }
+        mml = formatError(err, math, display, script);
       }
-      mml = formatError(err, math, display, script);
-    }
-    mml = TreeHelper.cleanSubSup(mml);
-    if (TreeHelper.isType(mml, 'mtable') &&
-        TreeHelper.getAttribute(mml, 'displaystyle') === 'inherit') {
-      // for tagged equations
-      TreeHelper.untested('Tagged equations');
-      TreeHelper.setAttribute(mml, 'displaystyle', display);
-    }
-    let mathNode = TreeHelper.createNode('math', [mml], {});
-    let root = TreeHelper.getRoot(mathNode);
-    if (display) {
-      TreeHelper.setAttribute(root, 'display', 'block');
-    }
-    mathNode.setInheritedAttributes({}, false, 0, false);
-    mathNode.setTeXclass(null);
-    if (!parser) {
-      // In case we have a caught error, parser will be undefined.
-      return mathNode;
-    }
-    TreeHelper.printJSON(TreeHelper.getChildren(mathNode)[0]);
-    for (let mo of NewTex.secondPass) {
-      let forms = mo.getForms();
-      let symbol: OperatorDef;
-      // Probably not needed!
-      for (let form of forms) {
-        symbol = MmlMo.OPTABLE[form][mo.getText()];
-        if (symbol) {
-          break;
+      mml = TreeHelper.cleanSubSup(mml);
+      if (TreeHelper.isType(mml, 'mtable') &&
+          TreeHelper.getAttribute(mml, 'displaystyle') === 'inherit') {
+        // for tagged equations
+        TreeHelper.untested('Tagged equations');
+        TreeHelper.setAttribute(mml, 'displaystyle', display);
+      }
+      let mathNode = TreeHelper.createNode('math', [mml], {});
+      let root = TreeHelper.getRoot(mathNode);
+      if (display) {
+        TreeHelper.setAttribute(root, 'display', 'block');
+      }
+      mathNode.setInheritedAttributes({}, false, 0, false);
+      mathNode.setTeXclass(null);
+      if (!parser) {
+        // In case we have a caught error, parser will be undefined.
+        return mathNode;
+      }
+      TreeHelper.printJSON(TreeHelper.getChildren(mathNode)[0]);
+      for (let mo of NewTex.secondPass) {
+        let symbol = TreeHelper.getForm(mo);
+        if (symbol && symbol[3] && symbol[3]['stretchy']) {
+          TreeHelper.setAttribute(mo, 'stretchy', false);
+        }
+        if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
+          const parent = mo.parent;
+          const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
+          texAtom.parent = parent;
+          parent.replaceChild(texAtom, mo);
         }
       }
-      if (symbol && symbol[3] && symbol[3]['stretchy']) {
-        TreeHelper.setAttribute(mo, 'stretchy', false);
-      }
-      // if (!symbol) {
-      //   range = mo.getRange(mo.getText());
-      // }
-      if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
-        const parent = mo.parent;
-        const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
-        texAtom.parent = parent;
-        parent.replaceChild(texAtom, mo);
-      }
-    }
-    return mathNode;
-  }
+      return mathNode;
+    };
 
   function traverse(mml: MmlNode) {
     let attribs = mml.attributes as any;
     let keys = Object.keys(attribs.attributes);
-    for (let i = 0, key; key = keys[i]; i++) {
+    for (let i = 0, key: string; key = keys[i]; i++) {
       if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
         // console.log('Same: ' + key + ': ' + attribs.attributes[key]);
         delete attribs.attributes[key];

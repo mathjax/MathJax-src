@@ -28,12 +28,14 @@
 // dissolved.
 
 import {TextNode, MmlNode, AbstractMmlNode, AbstractMmlEmptyNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {JsonMmlVisitor} from '../../core/MmlTree/JsonMmlVisitor.js';
 import {Args} from './Types.js';
+import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 
 
 export namespace TreeHelper {
@@ -99,7 +101,7 @@ export namespace TreeHelper {
     let node = (factory.create('text') as TextNode).setText(text);
     printJSON(node);
     return node;
-};
+  };
 
 
   export function createEntity(code: string): TextNode  {
@@ -275,7 +277,7 @@ export namespace TreeHelper {
       if (n.isKind('msubsup')) {
         ms = n as MmlMsubsup;
         newNode = (children[ms.sub] ?
-         createNode('msub', [children[ms.base], children[ms.sub]], {}) :
+                   createNode('msub', [children[ms.base], children[ms.sub]], {}) :
                    createNode('msup', [children[ms.base], children[ms.sup]], {}));
       } else {
         ms = n as MmlMunderover;
@@ -334,6 +336,20 @@ export namespace TreeHelper {
     return node.isInferred;
   };
 
-
+  export function getForm(node: MmlNode): OperatorDef {
+    if (!TreeHelper.isType(node, 'mo')) {
+      return null;
+    }
+    let mo = node as MmlMo;
+    let forms = mo.getForms();
+    for (let form of forms) {
+      let symbol = MmlMo.OPTABLE[form][mo.getText()];
+      if (symbol) {
+        return symbol;
+      }
+    }
+    return null;
+  };
+  
 }
 

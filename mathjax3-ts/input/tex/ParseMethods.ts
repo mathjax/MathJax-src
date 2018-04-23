@@ -34,7 +34,6 @@ import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 
 
 // Namespace
@@ -705,36 +704,10 @@ export namespace ParseMethods {
     TreeHelper.printMethod('UnderOver');
     // @test Overline
     let base = parser.ParseArg(name);
-    // TODO: Can we check this via operator table later?
-    let symbol: OperatorDef;
-    if (TreeHelper.isType(base, 'mo')){
-        // || TreeHelper.isType(base, 'TeXAtom')) {
-      let mo = (TreeHelper.isType(base, 'TeXAtom') ?
-                TreeHelper.getChildren(TreeHelper.getChildren(base)[0])[0] : base) as MmlMo;
-      let forms = mo.getForms();
-      // Probably not needed!
-      for (let form of forms) {
-        symbol = MmlMo.OPTABLE[form][mo.getText()];
-        if (symbol) {
-          break;
-        }
-      }
-      console.log(symbol);
-    }
-    console.log(TreeHelper.getAttribute(base, 'movablelimits'));
-    console.log(TreeHelper.getProperty(base, 'movablelimits'));
-    // try {
-    //   base.setInheritedAttributes({}, false, 0, false);
-    // } catch (e) {}
-    
-    if (//TreeHelper.getAttribute(base, 'movablelimits')
-      (symbol && symbol[3] && symbol[3]['movablelimits'])
+    let symbol = TreeHelper.getForm(base);
+    if ((symbol && symbol[3] && symbol[3]['movablelimits'])
         || TreeHelper.getProperty(base, 'movablelimits')) {
       // @test Overline Sum
-      console.log('here');
-      console.log(base.kind);
-      console.log(TreeHelper.getAttribute(base, 'movablelimits'));
-      console.log(TreeHelper.getProperty(base, 'movablelimits'));
       TreeHelper.setProperties(base, {'movablelimits': false});
     }
     let mo;
