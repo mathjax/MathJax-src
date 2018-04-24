@@ -265,7 +265,7 @@ export namespace ParseMethods {
           TreeHelper.printSimple('Case 3');
           if (TreeHelper.getProperty(base, 'movablelimits') && TreeHelper.isType(base, 'mi')) {
             // @test Mathop Super
-            base = ParseMethods.mi2mo(base);
+            base = ParserUtil.mi2mo(base);
           }
           // @test Large Operator
           base = TreeHelper.createNode('munderover', [base], {movesupsub:true});
@@ -330,7 +330,7 @@ export namespace ParseMethods {
           if (TreeHelper.getProperty(base, 'movablelimits') &&
               TreeHelper.isType(base, 'mi')) {
             // @test Mathop Sub
-            base = ParseMethods.mi2mo(base);
+            base = ParserUtil.mi2mo(base);
           }
           // @test Move Superscript
           base = TreeHelper.createNode('munderover', [base], {movesupsub:true});
@@ -1241,27 +1241,6 @@ export namespace ParseMethods {
       throw new TexError(['UnsupportedHFill', 'Unsupported use of %1', name]);
     }
   };
-
-
-  // Utilities:
-
-  export function mi2mo(mi: MmlNode) {
-    TreeHelper.printMethod('mi2mo');
-    // @test Mathop Sub, Mathop Super
-    const mo = TreeHelper.createNode('mo', [], {});
-    TreeHelper.copyChildren(mi, mo);
-    // TODO: Figure out how to copy these attributes.
-    TreeHelper.copyAttributes(mi, mo);
-    // TODO: Do this with get('lspace') etc.
-    TreeHelper.setProperties(mo, {lspace: '0', rspace: '0'});
-    TreeHelper.removeProperties(mo, 'movesupsub');
-    // mo.lspace = mo.rspace = '0';  // prevent mo from having space in NativeMML
-    // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
-    return mo;
-  };
-
-
-
 
 
 
