@@ -24,6 +24,7 @@
 import {PropertyList, Node} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
+import {split} from '../../../util/string.js';
 
 /*****************************************************************/
 /*
@@ -64,8 +65,7 @@ export class MmlMtr extends AbstractMmlNode {
                     .appendChild(child);
             }
         }
-        const calign = (this.attributes.get('columnalign') as string)
-                       .replace(/^\s+/, '').replace(/\s+$/, '').split(/ +/);
+        const calign = split(this.attributes.get('columnalign') as string);
         if (this.arity === 1) {
             calign.unshift(this.parent.attributes.get('side') as string);
         }

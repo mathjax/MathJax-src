@@ -25,6 +25,7 @@
 import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {CHTMLmtable} from './mtable.js';
+import {CHTMLmtd} from './mtd.js';
 import {BBox} from '../BBox.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
@@ -71,10 +72,25 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
-     * @return{number}   The index of the first table cell (overridden in mlabeledtr)
+     * @return{boolean}   True if this is a labeled row
      */
-    get firstCell() {
+    get labeled() {
         return 0;
+    }
+
+    /*
+     * @return{CHTMLmtd[]}  The child nodes that are part of the table (no label node)
+     */
+    get tableCells() {
+        return this.childNodes as CHTMLmtd<N, T, D>[];
+    }
+
+    /*
+     * @param{nunber} i   The index of the child to get (skipping labels)
+     * @return{Wrapper}   The ith child node wrapper
+     */
+    public getChild(i: number) {
+        return this.childNodes[i] as CHTMLmtd<N, T, D>;
     }
 
     /*
@@ -103,7 +119,7 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public stretchChildren(HD: number[] = null) {
         let stretchy: CHTMLWrapper<N, T, D>[] = [];
-        let children = (this.firstCell ? this.childNodes.slice(this.firstCell) : this.childNodes);
+        let children = (this.labeled ? this.childNodes.slice(1) : this.childNodes);
         //
         //  Locate and count the stretchy children
         //
@@ -213,8 +229,22 @@ export class CHTMLmlabeledtr<N, T, D> extends CHTMLmtr<N, T, D> {
     /*
      * @override
      */
-    get firstCell() {
-        return 1;
+    get labeled() {
+        return true;
+    }
+
+    /*
+     * @override
+     */
+    get tableCells() {
+        return this.childNodes.slice(1) as CHTMLmtd<N, T, D>[];
+    }
+
+    /*
+     * @override
+     */
+    public getChild(i: number) {
+        return this.childNodes[i + 1] as CHTMLmtd<N, T, D>;
     }
 
     /*

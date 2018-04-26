@@ -23,6 +23,7 @@
 
 import {PropertyList, Node} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {split} from '../../../util/string.js';
 
 /*****************************************************************/
 /*
@@ -88,8 +89,7 @@ export class MmlMtable extends AbstractMmlNode {
             columnalign: this.attributes.get('columnalign'),
             rowalign: 'center'
         });
-        const ralign = (this.attributes.get('rowalign') as string)
-                     .replace(/^\s+/, '').replace(/\s+$/, '').split(/ +/);
+        const ralign = split(this.attributes.get('rowalign') as string);
         for (const child of this.childNodes) {
             attributes.rowalign[1] = ralign.shift() || attributes.rowalign[1];
             child.setInheritedAttributes(attributes, display, level, prime);
