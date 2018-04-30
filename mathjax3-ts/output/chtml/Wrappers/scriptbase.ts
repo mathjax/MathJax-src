@@ -214,9 +214,11 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @return{numner[]}     The separation between their boxes, and the offset of the overscript
      */
     protected getOverKU(basebox: BBox, overbox: BBox) {
+        const accent = this.node.attributes.get('accent') as boolean;
         const tex = this.font.params;
         const d = overbox.d * overbox.rscale;
-        const k = Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d));
+        const k = (accent ? tex.rule_thickness :
+                   Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d)));
         return [k, basebox.h + k + d];
     }
 
@@ -228,9 +230,11 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @return{numner[]}      The separation between their boxes, and the offset of the underscript
      */
     protected getUnderKV(basebox: BBox, underbox: BBox) {
+        const accent = this.node.attributes.get('accentunder') as boolean;
         const tex = this.font.params;
         const h = underbox.h * underbox.rscale;
-        const k = Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h);
+        const k = (accent ? tex.rule_thickness :
+                   Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h));
         return [k, -(basebox.d + k + h)];
     }
 

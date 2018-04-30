@@ -127,12 +127,25 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public size: number = null;
 
+    /*
+     * True if used as an accent in an munderover construct, null if not yet determined
+     */
+    protected accent: boolean | null = null;
+
+    /*
+     * @return{boolean}  True if the mo is an accent in an munderover construction
+     */
+    get isAccent() {
+        if (this.accent === null) {
+            this.accent = (this.node as MmlMo).isAccent;
+        }
+        return this.accent;
+    }
 
     /*
      * @override
      */
     public toCHTML(parent: N) {
-        // eventually handle centering, largop, etc.
         const attributes = this.node.attributes;
         const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
         const stretchy = this.stretch.dir !== DIRECTION.None;

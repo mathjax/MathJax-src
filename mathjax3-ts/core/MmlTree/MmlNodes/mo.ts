@@ -24,6 +24,7 @@
 import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 import {MmlMrow} from './mrow.js';
+import {MmlMover, MmlMunder, MmlMunderover} from './munderover.js';
 import {OperatorList, OPTABLE, RangeDef, RANGES} from '../OperatorDictionary.js';
 
 /*****************************************************************/
@@ -136,6 +137,26 @@ export class MmlMo extends AbstractMmlTokenNode {
             parent = parent.childNodes[0] as MmlNode;
         }
         return (parent.isToken ? (parent as AbstractMmlTokenNode).getText() : '');
+    }
+
+    /*
+     * @return{boolean}  True is this mo is an accent in an munderover construction
+     */
+    get isAccent() {
+        let accent = false;
+        const node = this.coreParent();
+        if (node) {
+            const key = (node.isKind('mover') ? ((node.childNodes[(node as MmlMover).over] as MmlNode).coreMO() ? 'accent' : '') :
+                         node.isKind('munder') ? ((node.childNodes[(node as MmlMunder).under] as MmlNode).coreMO() ? 'accentunder' : '') :
+                         node.isKind('munderover') ?
+                         (this === (node.childNodes[(node as MmlMunderover).over] as MmlNode).coreMO() ? 'accent' :
+                          this === (node.childNodes[(node as MmlMunderover).under] as MmlNode).coreMO() ? 'accentunder' : '') : '');
+            if (key) {
+                const value = node.attributes.getExplicit(key);
+                accent = (value !== undefined ? accent : this.attributes.get('accent')) as boolean;
+            }
+        }
+        return accent;
     }
 
     /*

@@ -25,6 +25,7 @@
 import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {CHTMLmsubsup, CHTMLmsub, CHTMLmsup} from './msubsup.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
@@ -177,9 +178,10 @@ export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
         this.chtml = this.standardCHTMLnode(parent);
         const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
         const base = this.adaptor.append(this.chtml, this.html('mjx-base')) as N;
-        this.script.toCHTML(over);
+        const script = this.script;
+        script.toCHTML(over);
         this.baseChild.toCHTML(base);
-        const overbox = this.script.getBBox();
+        const overbox = script.getBBox();
         const basebox = this.baseChild.getBBox();
         const [k, u] = this.getOverKU(basebox, overbox);
         const delta = DELTA * this.baseCore.bbox.ic / 2;

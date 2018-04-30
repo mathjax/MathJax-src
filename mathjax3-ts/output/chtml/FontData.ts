@@ -47,7 +47,7 @@ export const enum CSS {
 
 /*
  * Data about a character
- *   [height, depth, width, italic-correction, skew, options]
+ *   [height, depth, width, {italic-correction, skew, options}]
  */
 export type CharData =
     [number, number, number] |
