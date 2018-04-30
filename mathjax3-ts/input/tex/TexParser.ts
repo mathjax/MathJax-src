@@ -104,16 +104,16 @@ export default class TexParser {
   public setup(env: Record<string, ParseMethod>) {
     const maps = MapHandler.getInstance().allMaps();
     for (let i = 0, map; map = maps[i]; i++) {
-      if (map instanceof sm.CharacterMap ||
-          map instanceof sm.RegExpMap ||
-          map instanceof sm.EnvironmentMap) {
-        try {
-          let parser = map.parser(null);
-          if (typeof parser === 'string') {
-            map.parser = env[parser];
-          }
-        } catch (e) {}
-      }
+      // if (map instanceof sm.CharacterMap ||
+      //     map instanceof sm.RegExpMap ||
+      //     map instanceof sm.EnvironmentMap) {
+      //   try {
+      //     // let parser = map.parser(null);
+      //     // if (typeof parser === 'string') {
+      //     //   map.parser = env[parser];
+      //     // }
+      //   } catch (e) {}
+      // }
       if (map instanceof sm.MacroMap) {
         map.functionMap = env;
       }

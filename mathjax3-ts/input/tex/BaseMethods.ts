@@ -23,85 +23,141 @@
  */
 
 import * as sitem from './StackItem.js';
+import {Symbol} from './Symbol.js';
 import TexParser from './TexParser.js';
 import {TreeHelper} from './TreeHelper.js';
+import {TexConstant} from './TexConstants.js';
 import {ParseMethod, ParseInput} from './Types.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 
 
-export namespace BaseMethods {
+namespace BaseMethods {
 
-  // export let variable: ParseMethod = function([symbol, rest, stack]) {
-  //   // if () {def.mathvariant = this.stack.env.font}
-  //   let font = stack.env['font'];
-  //   let attributes = font ? {mathvariant: font} : {};
-  //   return {rest: rest, item: {kind: 'mml',
-  //                              content: {type: 'mi',
-  //                                        attributes: attributes,
-  //                                        text: symbol}
-  //                             }}
-  // };
-
-  // export let digit: ParseMethod = function([symbol, rest, stack]) {
-  //   return {rest: '', item: ''};
-  // };
-
-  // export let num: ParseMethod = function([symbol, rest, stack]) {
-  //   return {rest: '', item: ''};
-  // };
-
-  // export let controlSequence: ParseMethod = function([symbol, rest, stack]) {
-  //   return {rest: '', item: ''};
-  // };
-
-  export let variable: ParseMethod = function(input: ParseInput) {
-    return 'Variable';
-  };
-  
-  // /*
-  //  *  Handle a variable (a single letter)
-  //  */
-  // export function variable(parser: TexParser, c: string) {
-  //   TreeHelper.printMethod('Variable');
-  //   const def: sitem.EnvList = {};
-  //   if (parser.stack.env['font']) {
-  //     // @test Identifier Font
-  //     def['mathvariant'] = parser.stack.env['font'];
-  //   }
-  //   // @test Identifier
-  //   const textNode = TreeHelper.createText(c);
-  //   const node = TreeHelper.createNode('mi', [], def, textNode);
-  //   parser.Push(parser.mmlToken(node));
-  // };
-
-  export let digit: ParseMethod = function(input: ParseInput) {
-    return 'Number';
+  /**
+   *  Handle a variable (a single letter)
+   */
+  export function variable(parser: TexParser, c: string) {
+    TreeHelper.printMethod('Variable');
+    const def: sitem.EnvList = {};
+    if (parser.stack.env['font']) {
+      // @test Identifier Font
+      def['mathvariant'] = parser.stack.env['font'];
+    }
+    // @test Identifier
+    const textNode = TreeHelper.createText(c);
+    const node = TreeHelper.createNode('mi', [], def, textNode);
+    parser.Push(parser.mmlToken(node));
   };
 
-  export let controlSequence: ParseMethod = function(input: ParseInput) {
-    return 'ControlSequence';
+
+  /**
+   *  Determine the extent of a number (pattern may need work)
+   */
+  export function digit(parser: TexParser, c: string) {
+    TreeHelper.printMethod('Number');
+    let mml: MmlNode;
+    const n = parser.string.slice(parser.i - 1).match(/^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
+    const def: sitem.EnvList = {};
+    if (parser.stack.env['font']) {
+      // @test Integer Font
+      def['mathvariant'] = parser.stack.env['font'];
+    }
+    if (n) {
+      // @test Integer, Number
+      const textNode = TreeHelper.createText(n[0].replace(/[{}]/g, ''));
+      mml = TreeHelper.createNode('mn', [], def, textNode);
+      parser.i += n[0].length - 1;
+    } else {
+      // @test Decimal
+      const textNode = TreeHelper.createText(c);
+      mml = TreeHelper.createNode('mo', [], def, textNode);
+    }
+    parser.Push(parser.mmlToken(mml));
+    // else {mml = MML.mo(MML.chars(c))}
+    // if (parser.stack.env.font) {mml.mathvariant = parser.stack.env.font}
+    // parser.Push(parser.mmlToken(mml));
   };
 
-  export let mathchar0mi: ParseMethod = function(input: ParseInput) {
-    return 'csMathchar0mi';
+  /**
+   *  Lookup a control-sequence and process it
+   */
+  export function controlSequence(parser: TexParser, c: string) {
+    TreeHelper.printMethod('ControlSequence');
+    const name = parser.GetCS();
+    parser.parse('macro', [name, this]);
   };
 
-  export let mathchar0mo: ParseMethod = function(input: ParseInput) {
-    return 'csMathchar0mo';
+  //
+  //  Look up a macro in the macros list
+  //  (overridden in begingroup extension)
+  //
+  // csFindMacro: function(name) {return TEXDEF.macros[name]},
+  //
+  //  Handle normal mathchar (as an mi)
+  //
+  export function mathchar0mi(parser: TexParser, mchar: Symbol) {
+    TreeHelper.printMethod('csMathchar0mi');
+    const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
+    // @test Greek
+    const textNode = TreeHelper.createText(mchar.char);
+    const node = TreeHelper.createNode('mi', [], def, textNode);
+    parser.Push(parser.mmlToken(node));
   };
 
-  export let mathchar7: ParseMethod = function(input: ParseInput) {
-    return 'csMathchar7';
+  //
+  //  Handle normal mathchar (as an mo)
+  //
+  export function mathchar0mo(parser: TexParser, mchar: Symbol) {
+    TreeHelper.printMethod('csMathchar0mo');
+    const def = mchar.attributes || {};
+    def['stretchy'] = false;
+    // @test Large Set
+    const textNode = TreeHelper.createText(mchar.char);
+    const node = TreeHelper.createNode('mo', [], def, textNode);
+    parser.toClean(node as MmlMo);
+    // PROBLEM: Attributes stop working when Char7 are explicitly set.
+    parser.Push(parser.mmlToken(node));
   };
 
-  export let delimiter: ParseMethod = function(input: ParseInput) {
-    return 'csDelimiter';
+  //
+  //  Handle mathchar in current family
+  //
+  export function mathchar7(parser: TexParser, mchar: Symbol) {
+    TreeHelper.printMethod('csMathchar7');
+    const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
+    if (parser.stack.env['font']) {
+      // @test MathChar7 Single Font
+      def['mathvariant'] = parser.stack.env['font'];
+    }
+    // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
+    const textNode = TreeHelper.createText(mchar.char);
+    const node = TreeHelper.createNode('mi', [], def, textNode);
+    parser.Push(parser.mmlToken(node));
   };
 
-  export let environment: ParseMethod = function(input: ParseInput) {
-    return 'BeginEnvironment';
+  //
+  //  Handle delimiter
+  //
+  export function delimiter(parser: TexParser, delim: Symbol) {
+    TreeHelper.printMethod('csDelimiter');
+    let def = delim.attributes || {};
+    // @test Fenced2, Delimiter (AMS)
+    def = Object.assign({fence: false, stretchy: false}, def);
+    const textNode = TreeHelper.createText(delim.char);
+    const node = TreeHelper.createNode('mo', [], def, textNode);
+    // var node = MML.mo(textNode).With({fence: false, stretchy: false}).With(def);
+    parser.Push(parser.mmlToken(node));
+  };
+
+  export function environment(parser: TexParser, env: string, func: Function, args: any[]) {
+    TreeHelper.printMethod('BeginEnvironment');
+    const end = args[0];
+    let mml = new sitem.BeginItem().With({name: env, end: end});
+    mml = func.apply(this, [parser, mml].concat(args.slice(1)));
+    parser.Push(mml);
   };
 
 }
 
-// TODO: Temporary for importing base methods into MathJax legacy code.
 export default BaseMethods;

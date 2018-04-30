@@ -462,8 +462,7 @@ export class EnvironmentMap extends MacroMap {
       return null;
     }
     // TODO: Here we cheat with the type for the time being!
-    this.parser.bind(env)(env, envParser.bind(env),
-                          symbol, macro.args);
+    this.parser.bind(env)(env, symbol, envParser.bind(env), macro.args);
     return true;
   }
 

@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {Symbol} from './Symbol.js';
 import TexParser from './TexParser.js';
 
 export type Args = boolean|number|string|null;
@@ -38,11 +39,11 @@ export type ParseInput = [string, Object];
 // export type ParseInput = [TexParser, string, any];
 export type ParseResult = boolean|string;
 
-export interface ParseMethod {
-  (input: ParseInput): ParseResult;
-}
+// export interface ParseMethod {
+//   (input: ParseInput): ParseResult;
+// }
 
-// export type ParseMethod = (parser: TexParser, c: string) => void;
+export type ParseMethod = (parser: TexParser, c: string | Symbol, ...rest: any[]) => void;
 // export type ParseMethod: (parser: TexParser, c: string) => void;
 // export type ParseMethod = (parser: TexParser,
 //                            input: string,

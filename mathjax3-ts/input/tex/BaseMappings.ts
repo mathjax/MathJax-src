@@ -24,7 +24,7 @@
 
 import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
-import {BaseMethods} from './BaseMethods.js';
+import BaseMethods from './BaseMethods.js';
 import MapHandler from './MapHandler.js';
 
 
