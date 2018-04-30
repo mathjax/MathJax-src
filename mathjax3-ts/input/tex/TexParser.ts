@@ -25,7 +25,7 @@
 
 import * as sm from './SymbolMap.js';
 import MapHandler from './MapHandler.js';
-import {ParseMethods, testing} from './ParseMethods.js';
+import {ParseMethods} from './ParseMethods.js';
 import FallbackMethods from './FallbackMethods.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 import {HandlerType, Configuration, DefaultConfig} from './Configuration.js';

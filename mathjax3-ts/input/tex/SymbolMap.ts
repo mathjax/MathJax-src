@@ -223,7 +223,7 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   /**
    * Adds the a new element to the map.
    * @param {string} symbol The symbol that is translated.
-   * @param {JSON} object Element given in MathJax's configuration format.
+   ;   * @param {JSON} object Element given in MathJax's configuration format.
    */
   public abstract addElement<K>(symbol: string, object: K): void;
 
@@ -368,7 +368,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
    */
   public parserFor(symbol: string) {
     let macro = this.lookup(symbol);
-    return macro ? this._functionMap[macro.func] : null;
+    return macro ? macro.func : null;
     // return macro ? this._functionMap.get(macro.func) : null;
   }
 
@@ -377,7 +377,8 @@ export class MacroMap extends AbstractParseMap<Macro> {
    * @override
    */
   public addElement(symbol: string, object: Args[]): void {
-    let character = new Macro(symbol, object[0] as string, object.slice(1));
+    let character = new Macro(symbol, this._functionMap[object[0] as string],
+                              object.slice(1));
     this.add(symbol, character);
   }
 
