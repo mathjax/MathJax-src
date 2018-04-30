@@ -25,6 +25,7 @@
 import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
 import BaseMethods from './BaseMethods.js';
+import {ParseMethods} from './ParseMethods.js';
 import MapHandler from './MapHandler.js';
 
 
@@ -58,8 +59,20 @@ export namespace BaseMappings {
     '#':   'Hash',
     '\u00A0': 'Space',
     '\u2019': 'Prime'
-  });
+  }, ParseMethods as any);
 
+  // .functionMap = new Map(
+  //   [['Open', ParseMethods.Open],
+  //    ['Close', ParseMethods.Close],
+  //    ['Tilde', ParseMethods.Tilde],
+  //    ['Superscript', ParseMethods.Superscript],
+  //    ['Subscript', ParseMethods.Subscript],
+  //    ['Space', ParseMethods.Space],
+  //    ['Prime', ParseMethods.Prime],
+  //   ]
+  // );
+
+  
   sm.CharacterMap.create('mathchar0mi', BaseMethods.mathchar0mi, {
     // Lower-case greek
     alpha:        '\u03B1',
@@ -649,7 +662,7 @@ export namespace BaseMappings {
 
     // mathchoice
     mathchoice:         'MathChoice'
-  });
+  }, ParseMethods as any);
 
   const envs = sm.EnvironmentMap.create('environment', {
     array:        ['AlignedArray'],
@@ -681,7 +694,7 @@ export namespace BaseMappings {
     // alignat:      ['ExtensionEnv', null, 'AMSmath'],
     // 'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
     // alignedat:    ['ExtensionEnv', null, 'AMSmath']
-  });
+  }, ParseMethods as any);
   envs.parser = BaseMethods.environment;
 
   sm.CharacterMap.create('not_remap', null, {

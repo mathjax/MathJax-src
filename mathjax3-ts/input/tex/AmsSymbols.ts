@@ -26,6 +26,7 @@ import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import BaseMethods from './BaseMethods.js';
+import {ParseMethods} from './ParseMethods.js';
 import MapHandler from './MapHandler.js';
 
 
@@ -307,7 +308,7 @@ export namespace AmsSymbols {
   sm.CommandMap.create('AMSsymbols-macros', {
     implies:    ['Macro','\\;\\Longrightarrow\\;'],
     impliedby:  ['Macro','\\;\\Longleftarrow\\;']
-  });
+  }, ParseMethods as any);
 
   /**
    * Dummy init function to make sure the mappings are created.

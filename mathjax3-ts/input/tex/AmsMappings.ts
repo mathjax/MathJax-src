@@ -26,6 +26,7 @@ import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import BaseMethods from './BaseMethods.js';
+import {ParseMethods} from './ParseMethods.js';
 import {ParserUtil} from './ParserUtil.js';
 import MapHandler from './MapHandler.js';
 
@@ -100,7 +101,7 @@ export namespace AmsMappings {
 
       xrightarrow: ['xArrow', 0x2192, 5, 6],
       xleftarrow:  ['xArrow', 0x2190, 7, 3]
-  });
+  }, ParseMethods as any);
 
   sm.EnvironmentMap.create('AMSmath-environment', {
       align:         ['AMSarray', null, true, true,  'rlrlrlrlrlrl', COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
@@ -126,7 +127,7 @@ export namespace AmsMappings {
 
       eqnarray:      ['AMSarray', null, true, true, 'rcl', '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em'],
       'eqnarray*':   ['AMSarray', null, false, true, 'rcl', '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
-  }).parser = BaseMethods.environment;
+  }, ParseMethods as any).parser = BaseMethods.environment;
 
   sm.DelimiterMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
       '\\lvert':     ['\u007C', {texClass: TEXCLASS.OPEN}],

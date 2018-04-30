@@ -325,7 +325,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
   // TODO: Currently the record is effectively a MathJax legacy object. This is
   // the correct type:
   //
-  // private functionMap: Map<string, ParseMethod> = new Map();
+  // private _functionMap: Map<string, ParseMethod> = new Map();
   private _functionMap: Record<string, ParseMethod>;
 
   /**
@@ -347,15 +347,17 @@ export class MacroMap extends AbstractParseMap<Macro> {
    * @param {string} name Name of the mapping.
    * @param {JSON} json The JSON representation of the macro map.
    */
-  public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
+  public static create(name: string, json: {[index: string]: string|Args[]},
+                       funcs: Record<string, ParseMethod>): MacroMap {
     let map = new MacroMap(name);
+    map.functionMap = funcs;
     MacroMap.addCommands(map, json);
     return map;
   }
 
 
   // TODO: This needs to be set explicitly from an object.
-  // public setFunctionMap(map: Map<string, ParseMethod>) {
+  // public set functionMap(map: Map<string, ParseMethod>) {
   public set functionMap(map: Record<string, ParseMethod>) {
     this._functionMap = map;
   }
@@ -367,6 +369,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
   public parserFor(symbol: string) {
     let macro = this.lookup(symbol);
     return macro ? this._functionMap[macro.func] : null;
+    // return macro ? this._functionMap.get(macro.func) : null;
   }
 
 
@@ -409,8 +412,10 @@ export class CommandMap extends MacroMap {
    * @param {JSON} json The JSON representation of the command mapping.
    */
   public static create(name: string,
-                       json: {[index: string]: string|Args[]}): MacroMap {
+                       json: {[index: string]: string|Args[]},
+                       funcs: Record<string, ParseMethod>): MacroMap {
     let map = new CommandMap(name);
+    map.functionMap = funcs;
     MacroMap.addCommands(map, json);
     return map;
   }
@@ -445,8 +450,10 @@ export class EnvironmentMap extends MacroMap {
    * @param {string} name Name of the mapping.
    * @param {JSON} json The JSON representation of the environment mapping.
    */
-  public static create(name: string, json: {[index: string]: string|Args[]}): MacroMap {
-   let map = new EnvironmentMap(name);
+  public static create(name: string, json: {[index: string]: string|Args[]},
+                       funcs: Record<string, ParseMethod>): MacroMap {
+    let map = new EnvironmentMap(name);
+    map.functionMap = funcs;
     MacroMap.addCommands(map, json);
     return map;
   }

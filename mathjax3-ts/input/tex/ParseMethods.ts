@@ -43,16 +43,16 @@ export namespace ParseMethods {
   const NBSP = '\u00A0';
   const P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
 
-  // Utilities?
-  export function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
-    return value;
-  };
-
   let MmlTokenAllow: {[key: string]: number} = {
     fontfamily: 1, fontsize: 1, fontweight: 1, fontstyle: 1,
     color: 1, background: 1,
     id: 1, 'class': 1, href: 1, style: 1
   };
+
+  function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
+    return value;
+  };
+
   // End Utilities?
 
   /************************************************************************/
@@ -437,21 +437,22 @@ export namespace ParseMethods {
       mml = TreeHelper.createNode('msqrt', [mml], {});
     } else {
       // @test General Root
-      mml = TreeHelper.createNode('mroot', [mml, ParseMethods.parseRoot(parser, n)], {});
+      mml = TreeHelper.createNode('mroot', [mml, parseRoot(parser, n)], {});
     }
     parser.Push(mml);
   };
+
   export function Root(parser: TexParser, name: string) {
     TreeHelper.printMethod('Root');
     const n = parser.GetUpTo(name,'\\of');
     const arg = parser.ParseArg(name);
-    const node = TreeHelper.createNode('mroot', [arg, ParseMethods.parseRoot(parser, n)], {});
+    const node = TreeHelper.createNode('mroot', [arg, parseRoot(parser, n)], {});
     parser.Push(node);
   };
 
 
   // Utility?
-  export function parseRoot(parser: TexParser, n: string) {
+  function parseRoot(parser: TexParser, n: string) {
     TreeHelper.printMethod('parseRoot');
     // @test General Root, Explicit Root
     const env = parser.stack.env;
@@ -654,8 +655,8 @@ export namespace ParseMethods {
                             '%1 is not a recognized attribute for %2',
                             match[1],type]);
       }
-      let value: string | boolean = ParseMethods.MmlFilterAttribute(parser, match[1],
-                                                                    match[2].replace(/^([''])(.*)\1$/,'$2'));
+      let value: string | boolean = MmlFilterAttribute(parser, match[1],
+                                                       match[2].replace(/^([''])(.*)\1$/,'$2'));
       if (value) {
         if (value.toLowerCase() === 'true') {
           value = true}
@@ -1191,12 +1192,12 @@ export namespace ParseMethods {
     // @test Array1, Array2, Array Test
     const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
     let item = ParseMethods.Array.apply(parser, arguments);
-    return ParseMethods.setArrayAlign(parser, item, align);
+    return setArrayAlign(parser, item, align);
   };
 
 
   // Utility method?
-  export function setArrayAlign(parser: TexParser, array: sitem.ArrayItem, align: string) {
+  function setArrayAlign(parser: TexParser, array: sitem.ArrayItem, align: string) {
     TreeHelper.printMethod('setArrayAlign');
     // @test Array1, Array2, Array Test
     align = parser.trimSpaces(align || '');
@@ -1251,9 +1252,9 @@ export namespace ParseMethods {
       for (let i = args.length; i < argcount; i++) {
         args.push(parser.GetArgument(name));
       }
-      macro = ParseMethods.SubstituteArgs(args,macro);
+      macro = substituteArgs(args,macro);
     }
-    parser.string = ParseMethods.AddArgs(macro,parser.string.slice(parser.i));
+    parser.string = addArgs(macro,parser.string.slice(parser.i));
     parser.i = 0;
     if (++parser.macroCount > MAXMACROS) {
       throw new TexError(['MaxMacroSub1',
@@ -1267,7 +1268,7 @@ export namespace ParseMethods {
   /**
    *  Replace macro paramters with their values
    */
-  export function SubstituteArgs(args: string[], string: string) {
+  function substituteArgs(args: string[], string: string) {
     TreeHelper.printMethod('SubstituteArgs');
     let text = '';
     let newstring = '';
@@ -1284,20 +1285,20 @@ export namespace ParseMethods {
             throw new TexError(['IllegalMacroParam',
                                 'Illegal macro parameter reference']);
           }
-          newstring = ParseMethods.AddArgs(this.AddArgs(newstring, text),
-                                           args[parseInt(c, 10) - 1]);
+          newstring = addArgs(addArgs(newstring, text),
+                              args[parseInt(c, 10) - 1]);
           text = '';
         }
       } else {text += c}
     }
-    return this.AddArgs(newstring, text);
+    return addArgs(newstring, text);
   };
 
   /**
    *  Make sure that macros are followed by a space if their names
    *  could accidentally be continued into the following text.
    */
-  export function AddArgs(s1: string, s2: string) {
+  function addArgs(s1: string, s2: string) {
     TreeHelper.printMethod('AddArgs');
     if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
     if (s1.length + s2.length > MAXBUFFER) {

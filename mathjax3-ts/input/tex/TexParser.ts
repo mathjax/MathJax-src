@@ -25,7 +25,7 @@
 
 import * as sm from './SymbolMap.js';
 import MapHandler from './MapHandler.js';
-import {ParseMethods} from './ParseMethods.js';
+import {ParseMethods, testing} from './ParseMethods.js';
 import FallbackMethods from './FallbackMethods.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 import {HandlerType, Configuration, DefaultConfig} from './Configuration.js';
@@ -64,8 +64,6 @@ export default class TexParser {
   constructor(str: string, env: EnvList, config?: Configuration) {
     // TODO: Move this into a configuration object.
     this.configure(config || DefaultConfig);
-    this.setup(ParseMethods as any);
-
     this.string = str;
     let ENV: EnvList;
     if (env) {
@@ -92,27 +90,8 @@ export default class TexParser {
 
 
   /**
-   * Sets up parsing methods etc. from legacy code.
-   * @param {Record.<string, ParseMethod} env The MathJax legacy object.
-   */
-  // TODO (VS): Temporary for setting up parsing in SymbolMaps.
-  public setup(env: Record<string, ParseMethod>) {
-    const maps = MapHandler.getInstance().allMaps();
-    for (let i = 0, map; map = maps[i]; i++) {
-      if (map instanceof sm.MacroMap) {
-        map.functionMap = env;
-      }
-    }
-  }
-
-
-  /**
    * Sets a new configuration for the map handler.
-   * @param {{character: Array.<string>,
-   *          delimiter: Array.<string>,
-   *          macro: Array.<string>,
-   *          environment: Array.<string>}} configuration A setting for the
-   *    map handler.
+   * @param {Configuration} configuration A setting for the map handler.
    */
   public configure(config: Configuration): void {
     for (const key of Object.keys(config.handler)) {
