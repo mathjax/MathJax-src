@@ -235,17 +235,19 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
-     * @param{BBox[]} boxes  The bounding boxes whose offsets are to be computed
-     * @param{number[]}      The initial x offsets of the boxes
-     * @return{number[]}     The actual offsets needed to center the boxes in the stack
+     * @param{BBox[]} boxes    The bounding boxes whose offsets are to be computed
+     * @param{number[]} delta  The initial x offsets of the boxes
+     * @return{number[]}       The actual offsets needed to center the boxes in the stack
      */
     protected getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]) {
+        const align = this.node.attributes.get('align');
         const widths = boxes.map(box => box.w * box.rscale);
         const w = Math.max(...widths);
         const dw = [];
         let m = 0;
         for (const i of widths.keys()) {
-            dw[i] = (w - widths[i]) / 2 + delta[i];
+            dw[i] = (align === 'center' ? (w - widths[i]) / 2 :
+                     align === 'right' ? w - widths[i] : 0) + delta[i];
             if (dw[i] < m) {
                 m = -dw[i];
             }
