@@ -309,11 +309,8 @@ export namespace AmsSymbols {
     impliedby:  ['Macro','\\;\\Longleftarrow\\;']
   });
 
-  export const CONFIGURATION = {
-    delimiter: ['AMSsymbols-delimiter'],
-    macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
-            'AMSsymbols-delimiter', 'AMSsymbols-macros'],
-  };
-
+  /**
+   * Dummy init function to make sure the mappings are created.
+   */
+  export function init() {};
 }
-

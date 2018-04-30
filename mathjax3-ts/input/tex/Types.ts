@@ -31,27 +31,7 @@ export type Attributes = Record<string, Args>;
 
 export type Environment = Record<string, Args>;
 
-// TODO: These are the future types.
-// export type ParseInput = {symbol: string, rest: string, stack: Stack};
-// export type ParseResult = {rest: string, item: Item};
-
 export type ParseInput = [string, Object];
-// export type ParseInput = [TexParser, string, any];
 export type ParseResult = boolean|string;
 
-// export interface ParseMethod {
-//   (input: ParseInput): ParseResult;
-// }
-
 export type ParseMethod = (parser: TexParser, c: string | Symbol, ...rest: any[]) => void;
-// export type ParseMethod: (parser: TexParser, c: string) => void;
-// export type ParseMethod = (parser: TexParser,
-//                            input: string,
-//                            rest?: any[]) => void;
-
-
-export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
-
-export type Configuration = {
-  [P in HandlerType]?: string[]
-}

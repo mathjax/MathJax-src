@@ -25,12 +25,10 @@
 
 import * as sm from './SymbolMap.js';
 import MapHandler from './MapHandler.js';
-import {HandlerType, Configuration, ParseInput, ParseResult, ParseMethod} from './Types.js';
-import {BaseMappings} from './BaseMappings.js';
-import {AmsMappings} from './AmsMappings.js';
-import {AmsSymbols} from './AmsSymbols.js';
 import {ParseMethods} from './ParseMethods.js';
 import FallbackMethods from './FallbackMethods.js';
+import {ParseInput, ParseResult, ParseMethod} from './Types.js';
+import {HandlerType, Configuration, DefaultConfig} from './Configuration.js';
 // From OLD Parser
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
@@ -65,9 +63,7 @@ export default class TexParser {
    */
   constructor(str: string, env: EnvList) {
     // TODO: Move this into a configuration object.
-    this.configure(BaseMappings.CONFIGURATION);
-    this.append(AmsMappings.CONFIGURATION);
-    this.append(AmsSymbols.CONFIGURATION);
+    this.configure(DefaultConfig);
     this.setup(ParseMethods as any);
 
     this.string = str;
@@ -103,16 +99,6 @@ export default class TexParser {
   public setup(env: Record<string, ParseMethod>) {
     const maps = MapHandler.getInstance().allMaps();
     for (let i = 0, map; map = maps[i]; i++) {
-      // if (map instanceof sm.CharacterMap ||
-      //     map instanceof sm.RegExpMap ||
-      //     map instanceof sm.EnvironmentMap) {
-      //   try {
-      //     // let parser = map.parser(null);
-      //     // if (typeof parser === 'string') {
-      //     //   map.parser = env[parser];
-      //     // }
-      //   } catch (e) {}
-      // }
       if (map instanceof sm.MacroMap) {
         map.functionMap = env;
       }
@@ -129,29 +115,12 @@ export default class TexParser {
    *    map handler.
    */
   public configure(config: Configuration): void {
-    for (const key of Object.keys(config)) {
+    for (const key of Object.keys(config.handler)) {
       let name = key as HandlerType;
-      let subHandler = new SubHandler(config[name] || [],
-                                      FallbackMethods.get(name) as any);
+      let subHandler = new SubHandler(config.handler[name] || [],
+                                      config.fallback[name] ||
+                                      FallbackMethods.get(name));
       this.configurations.set(name, subHandler);
-    }
-  }
-
-
-  /**
-   * Appends configurations to the current map handlers.
-   * @param {{character: Array.<string>,
-   *          delimiter: Array.<string>,
-   *          macro: Array.<string>,
-   *          environment: Array.<string>}} configuration A setting for the
-   *    map handler.
-   */
-  public append(config: Configuration): void {
-    for (const key of Object.keys(config)) {
-      let name = key as HandlerType;
-      for (const map of config[name]) {
-        this.configurations.get(name).add(map);
-      }
     }
   }
 
@@ -582,7 +551,6 @@ export default class TexParser {
   }
   
 }
-
 
 
 

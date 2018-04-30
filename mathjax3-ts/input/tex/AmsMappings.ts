@@ -128,17 +128,18 @@ export namespace AmsMappings {
       'eqnarray*':   ['AMSarray', null, false, true, 'rcl', '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
   }).parser = BaseMethods.environment;
 
+  console.log(
   sm.DelimiterMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
       '\\lvert':     ['\u007C', {texClass: TEXCLASS.OPEN}],
       '\\rvert':     ['\u007C', {texClass: TEXCLASS.CLOSE}],
       '\\lVert':     ['\u2016', {texClass: TEXCLASS.OPEN}],
       '\\rVert':     ['\u2016', {texClass: TEXCLASS.CLOSE}]
-  });
+  }));
 
-  export const CONFIGURATION = {
-    delimiter: ['AMSmath-delimiter'],
-    macro: ['AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-    environment: ['AMSmath-environment']
-  };
+
+  /**
+   * Dummy init function to make sure the mappings are created.
+   */
+  export function init() {};
 
 }

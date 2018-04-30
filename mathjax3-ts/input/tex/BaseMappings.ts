@@ -732,12 +732,10 @@ export namespace BaseMappings {
     '\u2203': '\u2204'
   });
 
-  // TODO: This should be merged with configuration options.
-  export const CONFIGURATION = {
-    character: ['command', 'special', 'letter', 'digit'],
-    delimiter: ['delimiter'],
-    macro: ['macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7', 'delimiter'],
-    environment: ['environment']
-  };
+
+  /**
+   * Dummy init function to make sure the mappings are created.
+   */
+  export function init() {};
 
 }

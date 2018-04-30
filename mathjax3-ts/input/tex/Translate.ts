@@ -31,6 +31,10 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 
+import {BaseMappings} from './BaseMappings.js';
+import {AmsMappings} from './AmsMappings.js';
+import {AmsSymbols} from './AmsSymbols.js';
+
 // A wrapper for translating scripts with LaTeX content.
 // 
 // TODO: This needs to be put into a proper object, so we can run multiple
@@ -45,6 +49,9 @@ export namespace NewTex {
   export let secondPass: MmlMo[] = [];
   
   export function Compile(tex: string, display: boolean): MmlNode {
+    BaseMappings.init();
+    AmsSymbols.init();
+    AmsMappings.init();
     let script = {
       type: 'math/tex' + (display ? '; mode=display' : ''),
       innerText: tex,
