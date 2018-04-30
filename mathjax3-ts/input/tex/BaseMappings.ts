@@ -60,12 +60,6 @@ export namespace BaseMappings {
     '\u2019': 'Prime'
   });
 
-  sm.CharacterMap.create('remap', null, {
-    '-':   '\u2212',
-    '*':   '\u2217',
-    '`':   '\u2018'   // map ` to back quote
-  });
-
   sm.CharacterMap.create('mathchar0mi', BaseMethods.mathchar0mi, {
     // Lower-case greek
     alpha:        '\u03B1',

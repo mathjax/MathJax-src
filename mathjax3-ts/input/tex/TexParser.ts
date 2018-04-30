@@ -57,7 +57,6 @@ export default class TexParser {
   NBSP = '\u00A0'; 
   string: string;
   i: number = 0;
-  remap: sm.CharacterMap = MapHandler.getInstance().getMap('remap') as sm.CharacterMap;
   stack: Stack;
   
   
@@ -580,10 +579,6 @@ export default class TexParser {
     let star = (this.GetNext() === '*');
     if (star) {this.i++}
     return star;
-  }
-
-  public GetRemap(char: string): Symbol {
-    return this.remap.lookup(char);
   }
   
 }

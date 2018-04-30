@@ -22,7 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import MapHandler from './MapHandler.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
+import {CharacterMap} from './SymbolMap.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexError from './TexError.js';
 import TexParser from './TexParser.js';
@@ -30,60 +32,64 @@ import {ParseMethod} from './Types.js';
 
 
 /**
- *  Handle other characters (as <mo> elements)
+ * Remapping some ASCII characters to their Unicode operator equivalent.
  */
-function Other(parser: TexParser, c: string) {
-  TreeHelper.printMethod('Other');
-  let def = {};
-  if (parser.stack.env['font']) {
-    // @test Other Font
-    def = {mathvariant: parser.stack.env['font']};
-  }
+CharacterMap.create('remap', null, {
+  '-':   '\u2212',
+  '*':   '\u2217',
+  '`':   '\u2018'   // map ` to back quote
+});
 
-  const remap = parser.GetRemap(c);
+
+/**
+ * Default handling of characters (as <mo> elements).
+ * @param {TexParser} parser The calling parser.
+ * @param {string} char The character to parse.
+ */
+function Other(parser: TexParser, char: string) {
+  const font = parser.stack.env['font'];
+  let def = font ?
+    // @test Other Font
+    {mathvariant: parser.stack.env['font']} : {};
+  const remap = (MapHandler.getInstance().getMap('remap') as CharacterMap).
+    lookup(char);
   // @test Other
   // @test Other Remap
-  const textNode = TreeHelper.createText(remap ? remap.char : c);
+  const textNode = TreeHelper.createText(remap ? remap.char : char);
   let mo = TreeHelper.createNode('mo', [], def, textNode) as MmlMo;
   parser.toClean(mo);
-
-  // VS: Question: What do these autoDefault methods do exactly.
-  //     Is there a modern equivalent in v3?
-  //
-  //   This changes the operator class, when fences are put around it. Just
-  //   propagate from the inherited attributes or properties.
-  // TODO: Currently just omitted!
-  // if (!TreeHelper.NEW && mo.autoDefault('stretchy',true)) {
-  //   // @test A Rogers-Ramanujan Identity
-  //   mo.stretchy = false;
-  // }
-  // if (!TreeHelper.NEW && mo.autoDefault('texClass',true) == '') {
-  //   // @test A Rogers-Ramanujan Identity
-  //   mo = TreeHelper.createNode('TeXAtom', [mo], {});
-  // }
   parser.Push(parser.mmlToken(mo));
 };
 
-//
-//  Handle undefined control sequence
-//  (overridden in noUndefined extension)
-//
+
+/**
+ * Handle undefined control sequence.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the control sequence.
+ */
 function csUndefined(parser: TexParser, name: string) {
-  TreeHelper.printMethod('csUndefined');
+  // @test Undefined-CS 
   throw new TexError(['UndefinedControlSequence',
                       'Undefined control sequence %1', '\\' + name]);
 };
 
+
+/**
+ * Handle undefined environments.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the control sequence.
+ */
 function envUndefined(parser: TexParser, env: string) {
-  TreeHelper.printMethod('envUndefined');
+  // @test Undefined-Env
   throw new TexError(['UnknownEnv', 'Unknown environment \'%1\'', env]);
 };
 
 
-let FallbackMethods: Map<string, (parser: TexParser, c: string) => void> = new Map([
-  ['character', Other],
-  ['macro', csUndefined],
-  ['environment', envUndefined]]);
+let FallbackMethods: Map<string, (parser: TexParser, c: string) => void> =
+  new Map([
+    ['character', Other],
+    ['macro', csUndefined],
+    ['environment', envUndefined]]);
 
 
 export default FallbackMethods;
