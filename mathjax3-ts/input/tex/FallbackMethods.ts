@@ -74,6 +74,12 @@ function csUndefined(parser: TexParser, name: string) {
 };
 
 
+// This is from the 'no undefined' extension.
+function noUndefined(parser: TexParser, name: string) {
+  const textNode = TreeHelper.createText('\\' + name);
+  parser.Push(TreeHelper.createNode('mtext', [], {mathcolor: 'red'}, textNode));
+};
+
 /**
  * Handle undefined environments.
  * @param {TexParser} parser The calling parser.

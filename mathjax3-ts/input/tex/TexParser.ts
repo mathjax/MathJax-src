@@ -61,9 +61,9 @@ export default class TexParser {
   /**
    * @constructor
    */
-  constructor(str: string, env: EnvList) {
+  constructor(str: string, env: EnvList, config?: Configuration) {
     // TODO: Move this into a configuration object.
-    this.configure(DefaultConfig);
+    this.configure(config || DefaultConfig);
     this.setup(ParseMethods as any);
 
     this.string = str;
