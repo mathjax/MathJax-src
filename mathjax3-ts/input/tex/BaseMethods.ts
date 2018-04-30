@@ -22,7 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {TexConstant} from './TexConstants.js';
+import * as sitem from './StackItem.js';
+import TexParser from './TexParser.js';
+import {TreeHelper} from './TreeHelper.js';
 import {ParseMethod, ParseInput} from './Types.js';
 
 
@@ -54,6 +56,22 @@ export namespace BaseMethods {
   export let variable: ParseMethod = function(input: ParseInput) {
     return 'Variable';
   };
+  
+  // /*
+  //  *  Handle a variable (a single letter)
+  //  */
+  // export function variable(parser: TexParser, c: string) {
+  //   TreeHelper.printMethod('Variable');
+  //   const def: sitem.EnvList = {};
+  //   if (parser.stack.env['font']) {
+  //     // @test Identifier Font
+  //     def['mathvariant'] = parser.stack.env['font'];
+  //   }
+  //   // @test Identifier
+  //   const textNode = TreeHelper.createText(c);
+  //   const node = TreeHelper.createNode('mi', [], def, textNode);
+  //   parser.Push(parser.mmlToken(node));
+  // };
 
   export let digit: ParseMethod = function(input: ParseInput) {
     return 'Number';

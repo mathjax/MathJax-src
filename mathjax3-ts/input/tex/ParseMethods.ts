@@ -23,7 +23,6 @@
  */
 
 import * as sitem from './StackItem.js';
-import {NewTex} from './Translate.js';
 import {Symbol} from './Symbol.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexError from './TexError.js';
@@ -129,20 +128,6 @@ export namespace ParseMethods {
     const node = TreeHelper.createNode('mo', [], def, textNode);
     // var node = MML.mo(textNode).With({fence: false, stretchy: false}).With(def);
     parser.Push(parser.mmlToken(node));
-  };
-  //
-  //  Handle undefined control sequence
-  //  (overridden in noUndefined extension)
-  //
-  export function csUndefined(parser: TexParser, name: string) {
-    TreeHelper.printMethod('csUndefined');
-    throw new TexError(['UndefinedControlSequence',
-                        'Undefined control sequence %1', '\\' + name]);
-  };
-
-  export function envUndefined(parser: TexParser, env: string) {
-    TreeHelper.printMethod('envUndefined');
-    throw new TexError(['UnknownEnv', 'Unknown environment \'%1\'', env]);
   };
 
   /*
@@ -389,41 +374,6 @@ export namespace ParseMethods {
     // @test Hash Error
     throw new TexError(['CantUseHash1',
                         'You can\'t use \'macro parameter character #\' in math mode']);
-  };
-
-  /*
-   *  Handle other characters (as <mo> elements)
-   */
-  export function Other(parser: TexParser, c: string) {
-    TreeHelper.printMethod('Other');
-    let def = {};
-    if (parser.stack.env['font']) {
-      // @test Other Font
-      def = {mathvariant: parser.stack.env['font']};
-    }
-
-    const remap = parser.GetRemap(c);
-    // @test Other
-    // @test Other Remap
-    const textNode = TreeHelper.createText(remap ? remap.char : c);
-    let mo = TreeHelper.createNode('mo', [], def, textNode) as MmlMo;
-    parser.toClean(mo);
-
-    // VS: Question: What do these autoDefault methods do exactly.
-    //     Is there a modern equivalent in v3?
-    //
-    //   This changes the operator class, when fences are put around it. Just
-    //   propagate from the inherited attributes or properties.
-    // TODO: Currently just omitted!
-    // if (!TreeHelper.NEW && mo.autoDefault('stretchy',true)) {
-    //   // @test A Rogers-Ramanujan Identity
-    //   mo.stretchy = false;
-    // }
-    // if (!TreeHelper.NEW && mo.autoDefault('texClass',true) == '') {
-    //   // @test A Rogers-Ramanujan Identity
-    //   mo = TreeHelper.createNode('TeXAtom', [mo], {});
-    // }
-    parser.Push(parser.mmlToken(mo));
   };
 
   /************************************************************************/

@@ -30,7 +30,7 @@ import {BaseMappings} from './BaseMappings.js';
 import {AmsMappings} from './AmsMappings.js';
 import {AmsSymbols} from './AmsSymbols.js';
 import {ParseMethods} from './ParseMethods.js';
-
+import FallbackMethods from './FallbackMethods.js';
 // From OLD Parser
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
@@ -118,9 +118,6 @@ export default class TexParser {
         map.functionMap = env;
       }
     }
-    this.fallback('character', env['Other']);
-    this.fallback('macro', env['csUndefined']);
-    this.fallback('environment', env['envUndefined']);
   }
 
 
@@ -135,7 +132,9 @@ export default class TexParser {
   public configure(config: Configuration): void {
     for (const key of Object.keys(config)) {
       let name = key as HandlerType;
-      this.configurations.set(name, new SubHandler(config[name] || []));
+      let subHandler = new SubHandler(config[name] || [],
+                                      FallbackMethods.get(name) as any);
+      this.configurations.set(name, subHandler);
     }
   }
 
@@ -178,17 +177,6 @@ export default class TexParser {
    */
   public lookup(kind: HandlerType, symbol: string) {
     return this.configurations.get(kind).lookup(symbol);
-  }
-
-
-  /**
-   * Sets a default fallback method for a given handler type.
-   *
-   * @param {HandlerType} kind Configuration name.
-   * @param {ParseMethod} method The fallback parse method.
-   */
-  public fallback(kind: HandlerType, method: ParseMethod) {
-    this.configurations.get(kind).fallback(method);
   }
 
 
@@ -609,26 +597,16 @@ export default class TexParser {
 class SubHandler {
 
   private _configuration: sm.SymbolMap[] = [];
-  private _fallback: ParseMethod = (x => { return null; });
 
   /**
    * @constructor
    * @param {Array.<string>} maps Names of the maps included in this
    *     configuration.
    */
-  constructor(maps: string[]) {
+  constructor(maps: string[], private _fallback: ParseMethod) {
     for (const name of maps) {
       this.add(name);
     }
-  }
-
-
-  /**
-   * Sets the default method to call when parsing fails.
-   * @param {function(string): ParseResult} method The fallback method.
-   */
-  public fallback(method: ParseMethod) {
-    this._fallback = method;
   }
 
 
