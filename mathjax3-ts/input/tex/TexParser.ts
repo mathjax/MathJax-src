@@ -182,14 +182,13 @@ export default class TexParser {
 
 
   /**
-   * Maps a symbol to its "parse value" if it exists.
+   * Sets a default fallback method for a given handler type.
    *
    * @param {HandlerType} kind Configuration name.
-   * @param {string} symbol The symbol to parse.
-   * @return {T} A boolean, Character, or Macro.
+   * @param {ParseMethod} method The fallback parse method.
    */
   public fallback(kind: HandlerType, method: ParseMethod) {
-    return this.configurations.get(kind).fallback(method);
+    this.configurations.get(kind).fallback(method);
   }
 
 

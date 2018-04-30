@@ -167,7 +167,7 @@ export namespace ParseMethods {
   export function Number(parser: TexParser, c: string) {
     TreeHelper.printMethod('Number');
     let mml: MmlNode;
-    const n = parser.string.slice(parser.i-1).match(NUMBER);
+    const n = parser.string.slice(parser.i - 1).match(NUMBER);
     const def: sitem.EnvList = {};
     if (parser.stack.env['font']) {
       // @test Integer Font
@@ -175,7 +175,7 @@ export namespace ParseMethods {
     }
     if (n) {
       // @test Integer, Number
-      const textNode = TreeHelper.createText(n[0].replace(/[{}]/g,''));
+      const textNode = TreeHelper.createText(n[0].replace(/[{}]/g, ''));
       mml = TreeHelper.createNode('mn', [], def, textNode);
       parser.i += n[0].length - 1;
     } else {
@@ -1283,13 +1283,13 @@ export namespace ParseMethods {
     TreeHelper.printMethod('BeginEnvironment');
     const end = args[0];
     let mml = new sitem.BeginItem().With({name: env, end: end});
-    mml = func.apply(this,[parser, mml].concat(args.slice(1)));
+    mml = func.apply(this, [parser, mml].concat(args.slice(1)));
     parser.Push(mml);
   };
 
-  export function Equation(parser: TexParser, begin: string, row: MmlNode[]) {
-    return row;
-  };
+  // export function Equation(parser: TexParser, begin: string, row: MmlNode[]) {
+  //   return row;
+  // };
 
   // export function ExtensionEnv(parser: TexParser, begin,file) {
   //   parser.Extension(begin.name,file,'environment');
@@ -1362,11 +1362,12 @@ export namespace ParseMethods {
     TreeHelper.printMethod('AlignedArray');
     // @test Array1, Array2, Array Test
     const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
-    return ParseMethods.setArrayAlign(parser,
-                                      ParseMethods.Array.apply(parser,arguments),align);
+    let item = ParseMethods.Array.apply(parser, arguments);
+    return ParseMethods.setArrayAlign(parser, item, align);
   };
 
 
+  // Utility method?
   export function setArrayAlign(parser: TexParser, array: sitem.ArrayItem, align: string) {
     TreeHelper.printMethod('setArrayAlign');
     // @test Array1, Array2, Array Test
@@ -1498,7 +1499,7 @@ export namespace ParseMethods {
     newItem.arraydef = {
         displaystyle: true,
         columnalign: align,
-        columnspacing: (spacing||'1em'),
+        columnspacing: (spacing || '1em'),
         // TODO: Which one is correct?
         rowspacing: '3pt',
         // rowspacing: '.5em',
