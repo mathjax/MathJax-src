@@ -32,7 +32,7 @@ import MapHandler from './MapHandler.js';
 
 export namespace AmsSymbols {
 
-  sm.CharacterMap.create('AMSsymbols-mathchar0mi', BaseMethods.mathchar0mi, {
+  new sm.CharacterMap('AMSsymbols-mathchar0mi', BaseMethods.mathchar0mi, {
       // Lowercase Greek letters
       digamma:                '\u03DD',
       varkappa:               '\u03F0',
@@ -90,7 +90,7 @@ export namespace AmsSymbols {
       maltese:                '\u2720'
   });
 
-  sm.CharacterMap.create('AMSsymbols-mathchar0m0', BaseMethods.mathchar0mo, {
+  new sm.CharacterMap('AMSsymbols-mathchar0m0', BaseMethods.mathchar0mo, {
       // Binary operators
       dotplus:                '\u2214',
       ltimes:                 '\u22C9',
@@ -297,7 +297,7 @@ export namespace AmsSymbols {
       nLeftrightarrow:        '\u21CE'
   });
     
-  sm.DelimiterMap.create('AMSsymbols-delimiter', BaseMethods.delimiter, {
+  new sm.DelimiterMap('AMSsymbols-delimiter', BaseMethods.delimiter, {
       // corners
       '\\ulcorner':           '\u231C',
       '\\urcorner':           '\u231D',
@@ -305,7 +305,7 @@ export namespace AmsSymbols {
       '\\lrcorner':           '\u231F'
   });
     
-  sm.CommandMap.create('AMSsymbols-macros', {
+  new sm.CommandMap('AMSsymbols-macros', {
     implies:    ['Macro','\\;\\Longrightarrow\\;'],
     impliedby:  ['Macro','\\;\\Longleftarrow\\;']
   }, ParseMethods as any);

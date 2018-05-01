@@ -42,11 +42,11 @@ export namespace AmsMappings {
   };
 
 
-  sm.CharacterMap.create('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
+  new sm.CharacterMap('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
     iiiint:     ['\u2A0C', {texClass: TEXCLASS.OP}]
   });
 
-  sm.CommandMap.create('AMSmath-macros', {
+  new sm.CommandMap('AMSmath-macros', {
     mathring:   ['Accent', '2DA'],  // or 0x30A
       nobreakspace: 'Tilde',
       negmedspace:    ['Spacer', TexConstant.Length.NEGATIVEMEDIUMMATHSPACE],
@@ -103,7 +103,7 @@ export namespace AmsMappings {
       xleftarrow:  ['xArrow', 0x2190, 7, 3]
   }, ParseMethods as any);
 
-  sm.EnvironmentMap.create('AMSmath-environment', {
+  new sm.EnvironmentMap('AMSmath-environment', BaseMethods.environment, {
       align:         ['AMSarray', null, true, true,  'rlrlrlrlrlrl', COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
       'align*':      ['AMSarray', null, false, true, 'rlrlrlrlrlrl', COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
       multline:      ['Multline', null, true],
@@ -127,9 +127,9 @@ export namespace AmsMappings {
 
       eqnarray:      ['AMSarray', null, true, true, 'rcl', '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em'],
       'eqnarray*':   ['AMSarray', null, false, true, 'rcl', '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
-  }, ParseMethods as any).parser = BaseMethods.environment;
+  }, ParseMethods as any);
 
-  sm.DelimiterMap.create('AMSmath-delimiter', BaseMethods.delimiter, {
+  new sm.DelimiterMap('AMSmath-delimiter', BaseMethods.delimiter, {
       '\\lvert':     ['\u007C', {texClass: TEXCLASS.OPEN}],
       '\\rvert':     ['\u007C', {texClass: TEXCLASS.CLOSE}],
       '\\lVert':     ['\u2016', {texClass: TEXCLASS.OPEN}],

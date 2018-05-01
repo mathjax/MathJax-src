@@ -32,14 +32,14 @@ import MapHandler from './MapHandler.js';
 export namespace BaseMappings {
 
   // TODO: These parsing methods are currently overwritten in the legacy code.
-  sm.RegExpMap.create('letter', BaseMethods.variable, /[a-z]/i);
+  new sm.RegExpMap('letter', BaseMethods.variable, /[a-z]/i);
 
-  sm.RegExpMap.create('digit', BaseMethods.digit, /[0-9.]/);
+  new sm.RegExpMap('digit', BaseMethods.digit, /[0-9.]/);
 
-  sm.RegExpMap.create('command', BaseMethods.controlSequence, /^\\/ );  // )
+  new sm.RegExpMap('command', BaseMethods.controlSequence, /^\\/ );  // )
 
 
-  sm.MacroMap.create('special', {
+  new sm.MacroMap('special', {
 
     // This is now handled with a RegExp!
     // '\\':  'ControlSequence',
@@ -72,8 +72,8 @@ export namespace BaseMappings {
   //   ]
   // );
 
-  
-  sm.CharacterMap.create('mathchar0mi', BaseMethods.mathchar0mi, {
+
+  new sm.CharacterMap('mathchar0mi', BaseMethods.mathchar0mi, {
     // Lower-case greek
     alpha:        '\u03B1',
     beta:         '\u03B2',
@@ -141,7 +141,7 @@ export namespace BaseMappings {
     spadesuit:    ['\u2660', {mathvariant: TexConstant.Variant.NORMAL}]
   });
 
-  sm.CharacterMap.create('mathchar0mo', BaseMethods.mathchar0mo, {
+  new sm.CharacterMap('mathchar0mo', BaseMethods.mathchar0mo, {
     surd:         '\u221A',
 
     // big ops
@@ -305,7 +305,7 @@ export namespace BaseMappings {
     colon:            ['\u003A', {texClass: TexConstant.TexClass.PUNCT}]
   });
 
-  sm.CharacterMap.create('mathchar7', BaseMethods.mathchar7, {
+  new sm.CharacterMap('mathchar7', BaseMethods.mathchar7, {
     Gamma:        '\u0393',
     Delta:        '\u0394',
     Theta:        '\u0398',
@@ -326,7 +326,7 @@ export namespace BaseMappings {
     And:          '\u0026'
   });
 
-  sm.DelimiterMap.create('delimiter', BaseMethods.delimiter, {
+  new sm.DelimiterMap('delimiter', BaseMethods.delimiter, {
     '(':                '(',
     ')':                ')',
     '[':                '[',
@@ -370,7 +370,7 @@ export namespace BaseMappings {
     '\\rbrack':         ']'
   });
 
-  sm.CommandMap.create('macros', {
+  new sm.CommandMap('macros', {
     displaystyle:      ['SetStyle', 'D', true, 0],
     textstyle:         ['SetStyle', 'T', false, 0],
     scriptstyle:       ['SetStyle', 'S', false, 1],
@@ -664,7 +664,7 @@ export namespace BaseMappings {
     mathchoice:         'MathChoice'
   }, ParseMethods as any);
 
-  const envs = sm.EnvironmentMap.create('environment', {
+  const envs = new sm.EnvironmentMap('environment', BaseMethods.environment, {
     array:        ['AlignedArray'],
     matrix:       ['Array', null, null, null, 'c'],
     pmatrix:      ['Array', null, '(', ')', 'c'],
@@ -695,9 +695,8 @@ export namespace BaseMappings {
     // 'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
     // alignedat:    ['ExtensionEnv', null, 'AMSmath']
   }, ParseMethods as any);
-  envs.parser = BaseMethods.environment;
 
-  sm.CharacterMap.create('not_remap', null, {
+  new sm.CharacterMap('not_remap', null, {
     '\u2190': '\u219A',
     '\u2192': '\u219B',
     '\u2194': '\u21AE',

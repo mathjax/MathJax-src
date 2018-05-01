@@ -34,7 +34,7 @@ import {ParseMethod} from './Types.js';
 /**
  * Remapping some ASCII characters to their Unicode operator equivalent.
  */
-CharacterMap.create('remap', null, {
+new CharacterMap('remap', null, {
   '-':   '\u2212',
   '*':   '\u2217',
   '`':   '\u2018'   // map ` to back quote

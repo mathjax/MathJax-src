@@ -31,7 +31,7 @@ export type Attributes = Record<string, Args>;
 
 export type Environment = Record<string, Args>;
 
-export type ParseInput = [string, Object];
+export type ParseInput = [string, TexParser];
 export type ParseResult = boolean|string;
 
 export type ParseMethod = (parser: TexParser, c: string | Symbol, ...rest: any[]) => void;
