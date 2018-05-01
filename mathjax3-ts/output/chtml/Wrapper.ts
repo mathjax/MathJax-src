@@ -762,6 +762,14 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /*
+     * @param{number[]} chars    The array of unicode character numbers to remap
+     * @return{number[]}         The converted array
+     */
+    public remapChars(chars: number[]) {
+        return chars;
+    }
+
+    /*
      * @param{string} type  The tag name of the HTML node to be created
      * @param{OptionList} def  The properties to set for the created node
      * @param{N[]} content  The child nodes for the created HTML node

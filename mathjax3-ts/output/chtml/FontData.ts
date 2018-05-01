@@ -110,6 +110,17 @@ export type DelimiterMap = {
 export const NOSTRETCH: DelimiterData = {dir: DIRECTION.None};
 
 /*
+ * Data for remapping characters
+ */
+export type RemapData = string;
+export type RemapMap = {
+    [key: number]: RemapData;
+}
+export type RemapMapMap = {
+    [key: string]: RemapMap;
+}
+
+/*
  * Font parameters (for TeX typesetting rules)
  */
 export type FontParameters = {
@@ -175,6 +186,49 @@ export class FontData {
     ];
 
     /*
+     *  The default remappings
+     */
+    protected static defaultAccentMap = {
+        0x0300: '\u02CB',  // grave accent
+        0x0301: '\u02CA',  // acute accent
+        0x0302: '\u02C6',  // curcumflex
+        0x0303: '\u02DC',  // tilde accent
+        0x0304: '\u02C9',  // macron
+        0x0306: '\u02D8',  // breve
+        0x0307: '\u02D9',  // dot
+        0x0308: '\u00A8',  // diaresis
+        0x030A: '\u02DA',  // ring above
+        0x030C: '\u02C7',  // caron
+        0x2192: '\u20D7',
+        0x2032: '\'',
+        0x2033: '\'\'',
+        0x2034: '\'\'\'',
+        0x2035: '`',
+        0x2036: '``',
+        0x2037: '```',
+        0x2057: '\'\'\'\'',
+        0x20D0: '\u21BC', // combining left harpoon
+        0x20D1: '\u21C0', // combining right harpoon
+        0x20D6: '\u2190', // combining left arrow
+        0x20E1: '\u2194', // combining left-right arrow
+        0x20F0: '*',      // combining asterisk
+        0x20DB: '...',    // combining three dots above
+        0x20DC: '....',   // combining four dots above
+        0x20EC: '\u21C1', // combining low left harpoon
+        0x20ED: '\u21BD', // combining low right harpoon
+        0x20EE: '\u2190', // combining low left arrows
+        0x20EF: '\u2192'  // combining low right arrows
+    };
+
+    protected static defaultMoMap = {
+        0x002D: '\u2212' // hyphen
+    };
+
+    protected static defaultMnMap = {
+        0x002D: '\u2212' // hyphen
+    }
+
+    /*
      *  The default font parameters for the font
      */
     public static defaultParams: FontParameters = {
@@ -236,6 +290,11 @@ export class FontData {
     protected sizeVariants: string[];
 
     /*
+     * The character maps
+     */
+    protected remapChars: RemapMapMap = {};
+
+    /*
      * The actual font parameters for this font
      */
     public params: FontParameters;
@@ -257,6 +316,9 @@ export class FontData {
         for (const name of Object.keys(CLASS.defaultVariantClasses)) {
             this.variant[name].classes = CLASS.defaultVariantClasses[name];
         }
+        this.defineRemap('accent', CLASS.defaultAccentMap);
+        this.defineRemap('mo', CLASS.defaultMoMap);
+        this.defineRemap('mn', CLASS.defaultMnMap);
     }
 
     /*
@@ -333,12 +395,25 @@ export class FontData {
     }
 
     /*
-     * Defines strety delimiters
+     * Defines stretchy delimiters
      *
      * @param{DelimiterMap} delims  The delimiters to define
      */
     public defineDelimiters(delims: DelimiterMap) {
         Object.assign(this.delimiters, delims);
+    }
+
+    /*
+     * Defines a character remapping map
+     *
+     * @param{string} name     The name of the map to define or augment
+     * @param{RemapMap} remap  The characters to remap
+     */
+    public defineRemap(name: string, remap: RemapMap) {
+        if (!this.remapChars.hasOwnProperty(name)) {
+            this.remapChars[name] = {};
+        }
+        Object.assign(this.remapChars[name], remap);
     }
 
     /*
@@ -376,6 +451,16 @@ export class FontData {
      */
     public getVariant(name: string) {
         return this.variant[name];
+    }
+
+    /*
+     * @param{string} name   The name of the map to query
+     * @param{number} c      The character to remap
+     * @return{number}       The remapped character (or the original)
+     */
+    public getRemappedChar(name: string, c: number) {
+        const map = this.remapChars[name] || {} as RemapMap;
+        return map[c];
     }
 
     /*

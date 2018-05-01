@@ -127,18 +127,16 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     public size: number = null;
 
     /*
-     * True if used as an accent in an munderover construct, null if not yet determined
+     * True if used as an accent in an munderover construct
      */
-    protected accent: boolean | null = null;
+    public isAccent: boolean;
 
     /*
-     * @return{boolean}  True if the mo is an accent in an munderover construction
+     * @override
      */
-    get isAccent() {
-        if (this.accent === null) {
-            this.accent = (this.node as MmlMo).isAccent;
-        }
-        return this.accent;
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
+        super(factory, node, parent);
+        this.isAccent = (this.node as MmlMo).isAccent;
     }
 
     /*
@@ -389,6 +387,20 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
             d = cd * (h / (ch + cd));
         }
         return [h - d, d];
+    }
+
+    /*
+     * @override
+     */
+    public remapChars(chars: number[]) {
+        if (chars.length == 1) {
+            const map = (this.isAccent ? 'accent' : 'mo');
+            const text = this.font.getRemappedChar(map, chars[0]);
+            if (text) {
+                chars = this.unicodeChars(text);
+            }
+        }
+        return chars;
     }
 
 }
