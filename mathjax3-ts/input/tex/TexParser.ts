@@ -74,7 +74,6 @@ export default class TexParser {
       }
     }
     this.stack = new Stack(ENV, !!env);
-    // configurations.forEach(this.NewParser.append.bind(this.NewParser));
     this.Parse();
     this.Push(new StopItem());
   }
@@ -172,7 +171,7 @@ export default class TexParser {
       if (n >= 0xD800 && n < 0xDC00) {
         c += this.string.charAt(this.i++);
       }
-      this.parse('character', [c, this]);
+      this.parse('character', [this, c]);
     }
   }
 
@@ -579,8 +578,8 @@ class SubHandler {
         return result;
       }
     }
-    let [symbol, env] = input;
-    return this._fallback.bind(env)(env, symbol);
+    let [env, symbol] = input;
+    this._fallback(env, symbol);
   }
 
 

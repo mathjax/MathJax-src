@@ -1114,7 +1114,7 @@ ParseMethods.BeginEnd = function(parser: TexParser, name: string) {
                           'MathJax maximum substitution count exceeded; ' +
                           'is there a recursive latex environment?']);
     }
-    parser.parse('environment', [env, parser]);
+    parser.parse('environment', [parser, env]);
   }
 };
 

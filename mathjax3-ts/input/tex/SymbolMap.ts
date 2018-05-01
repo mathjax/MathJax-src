@@ -62,11 +62,11 @@ export interface SymbolMap {
   parserFor(symbol: string): ParseMethod;
 
   /**
+   * @param {TexParser} env The current parser.
    * @param {string} symbol A symbol to parse.
-   * @param {Object} env The current calling object. // (This is temporary!)
    * @return {ParseResult} The parsed symbol and the rest of the string.
    */
-  parse([symbol, env]: ParseInput): ParseResult;
+  parse([env, symbol]: ParseInput): ParseResult;
 
 }
 
@@ -113,7 +113,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   /**
    * @override
    */
-  public parse([symbol, env]: ParseInput) {
+  public parse([env, symbol]: ParseInput) {
     let parser = this.parserFor(symbol);
     let mapped = this.lookup(symbol);
     return (parser && mapped) ?
@@ -250,8 +250,8 @@ export class DelimiterMap extends CharacterMap {
   /**
    * @override
    */
-  public parse([symbol, env]: ParseInput) {
-    return super.parse(['\\' + symbol, env]);
+  public parse([env, symbol]: ParseInput) {
+    return super.parse([env, '\\' + symbol]);
   }
 
 }
@@ -297,7 +297,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
   /**
    * @override
    */
-  public parse([symbol, env]: ParseInput) {
+  public parse([env, symbol]: ParseInput) {
     let macro = this.lookup(symbol);
     let parser = this.parserFor(symbol);
     if (!macro || !parser) {
@@ -321,7 +321,7 @@ export class CommandMap extends MacroMap {
   /**
    * @override
    */
-  public parse([symbol, env]: ParseInput) {
+  public parse([env, symbol]: ParseInput) {
     let macro = this.lookup(symbol);
     let parser = this.parserFor(symbol);
     if (!macro || !parser) {
@@ -364,7 +364,7 @@ export class EnvironmentMap extends MacroMap {
   /**
    * @override
    */
-  public parse([symbol, env]: ParseInput) {
+  public parse([env, symbol]: ParseInput) {
     let macro = this.lookup(symbol);
     let envParser = this.parserFor(symbol);
     if (!macro || !envParser) {

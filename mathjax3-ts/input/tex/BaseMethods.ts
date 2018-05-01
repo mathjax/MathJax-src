@@ -85,7 +85,7 @@ namespace BaseMethods {
   export function controlSequence(parser: TexParser, c: string) {
     TreeHelper.printMethod('ControlSequence');
     const name = parser.GetCS();
-    parser.parse('macro', [name, parser]);
+    parser.parse('macro', [parser, name]);
   };
 
   //
