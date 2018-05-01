@@ -85,7 +85,7 @@ namespace BaseMethods {
   export function controlSequence(parser: TexParser, c: string) {
     TreeHelper.printMethod('ControlSequence');
     const name = parser.GetCS();
-    parser.parse('macro', [name, this]);
+    parser.parse('macro', [name, parser]);
   };
 
   //
@@ -154,7 +154,7 @@ namespace BaseMethods {
     TreeHelper.printMethod('BeginEnvironment');
     const end = args[0];
     let mml = new sitem.BeginItem().With({name: env, end: end});
-    mml = func.apply(this, [parser, mml].concat(args.slice(1)));
+    mml = func.apply(null, [parser, mml].concat(args.slice(1)));
     parser.Push(mml);
   };
 
