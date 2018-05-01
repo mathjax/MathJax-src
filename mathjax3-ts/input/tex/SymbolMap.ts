@@ -207,13 +207,6 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
     this.map.set(symbol, object);
   }
 
-  /**
-   * Adds the a new element to the map.
-   * @param {string} symbol The symbol that is translated.
-   * @param {JSON} object Element given in MathJax's configuration format.
-   */
-  public abstract addElement<K>(symbol: string, object: K): void;
-
 }
 
 
@@ -241,15 +234,6 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
       this.add(key, character);
     }
   };
-
-
-  /**
-   * @override
-   */
-  public addElement(symbol: string, pair: [string, null] | [string, Attributes]): void {
-    let character = new Symbol(symbol, pair[0], pair[1]);
-    this.add(symbol, character);
-  }
 
 }
 
@@ -284,28 +268,20 @@ export class MacroMap extends AbstractParseMap<Macro> {
    * @constructor
    * @param {string} name Name of the mapping.
    * @param {JSON} json The JSON representation of the macro map.
-   * @param {Record<string, ParseMethod>} _functionMap Collection of parse
+   * @param {Record<string, ParseMethod>} functionMap Collection of parse
    *     functions for the single macros.
    */
   constructor(name: string,
               json: {[index: string]: string|Args[]},
-              private _functionMap: Record<string, ParseMethod>) {
+              functionMap: Record<string, ParseMethod>) {
     super(name, null);
     for (let key in json) {
       let value = json[key];
       let [func, ...attrs] = (typeof(value) === 'string') ? [value] : value;
-      let character = new Macro(key, this._functionMap[func as string], attrs);
+      let character = new Macro(key, functionMap[func as string], attrs);
       this.add(key, character);
     }
   };
-
-
-  /**
-   * @return {Record<string, ParseMethod>} The function map.
-   */
-  public get functionMap() {
-    return this._functionMap;
-  }
 
 
   /**
@@ -314,16 +290,6 @@ export class MacroMap extends AbstractParseMap<Macro> {
   public parserFor(symbol: string) {
     let macro = this.lookup(symbol);
     return macro ? macro.func : null;
-  }
-
-
-  /**
-   * @override
-   */
-  public addElement(symbol: string, object: Args[]): void {
-    let character = new Macro(symbol, this._functionMap[object[0] as string],
-                              object.slice(1));
-    this.add(symbol, character);
   }
 
 
