@@ -23,7 +23,8 @@
  */
 
 
-import * as sitem from './StackItem.js';
+import {StackItem} from './StackItem.js';
+import {AmsArrayItem} from './AmsItem.js';
 import {ParseMethod} from './Types.js';
 import ParseMethods from './ParseMethods.js';
 import {TreeHelper} from './TreeHelper.js';
@@ -39,7 +40,7 @@ let AmsMethods: Record<string, ParseMethod> = {};
 let TAG_SIDE = 'right';
 let TAG_INDENT = '0.8em';
 
-AmsMethods.AMSarray = function(parser: TexParser, begin: sitem.StackItem,
+AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
                          numbered: boolean, taggable: boolean, align: string,
                          spacing: string) {
   TreeHelper.printMethod('AMS-AMSarray');
@@ -50,7 +51,7 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: sitem.StackItem,
   }
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  let newItem = new sitem.AMSarrayItem(begin.getName(), numbered, taggable, parser.stack.global);
+  let newItem = new AmsArrayItem(begin.getName(), numbered, taggable, parser.stack.global);
   newItem.arraydef = {
     displaystyle: true,
     columnalign: align,

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/StackItem.js
+ *  MathJax/jax/input/TeX/StackItem.ts
  *
  *  Implements the TeX InputJax that reads mathematics in
  *  TeX and LaTeX format and converts it to the MML ElementJax
@@ -891,73 +891,5 @@ export class DotsItem extends BaseItem {
       }
     }
     return [dots, item] as CheckType;
-  }
-}
-
-
-// AMS
-
-
-export class AMSarrayItem extends ArrayItem {
-
-  private numbered: boolean = false;
-  private save: {[key: string]: string} = {};
-  
-  constructor(name: string, numbered: boolean, taggable: boolean, global: EnvList) {
-    super();
-    this.kind = 'AMSarray';
-    // Omitted configuration: && CONFIG.autoNumber !== "none";
-    this.numbered = numbered;
-    this.save['notags'] = global['notags'] as string;
-    this.save['notag'] = global['notag'] as string;
-    global['notags'] = (taggable ? null : name);
-    // prevent automatic tagging in starred environments
-    global['tagged'] = !numbered && !global['forcetag'];
-  }
-
-  // TODO: Temporary!
-  autoTag() {}
-  getTag(): MmlNode {
-    return;
-  }
-  clearTag() {}
-
-  EndEntry() {
-    TreeHelper.printMethod('AMS-EndEntry');
-    // @test Cubic Binomial
-    if (this.row.length) {
-      ParserUtil.fixInitialMO(this.data);
-    }
-    const node = TreeHelper.createNode('mtd', this.data, {});
-    // VS: OLD
-    // var node = MML.mtd.apply(MML,this.data);
-    this.row.push(node);
-    this.data = [];
-  }
-  
-  EndRow() {
-    TreeHelper.printMethod('AMS-EndRow');
-    // @test Cubic Binomial
-    let mtr = 'mtr'; // MML.mtr;
-    if (!this.global['tag'] && this.numbered) {
-      this.autoTag();
-    }
-    if (this.global['tag'] && !this.global['notags']) {
-      this.row = [this.getTag()].concat(this.row);
-      mtr = 'mlabeledtr'; // MML.mlabeledtr;
-    } else {
-      this.clearTag();
-    }
-    if (this.numbered) {delete this.global['notag'];}
-    const node = TreeHelper.createNode(mtr, this.row, {});
-    this.table.push(node); this.row = [];
-  }
-  
-  EndTable() {
-    TreeHelper.printMethod('AMS-EndTable');
-    // @test Cubic Binomial
-    super.EndTable();
-    this.global['notags'] = this.save['notags'];
-    this.global['notag']  = this.save['notag'];
   }
 }
