@@ -99,6 +99,29 @@ AmsMethods.SkipLimits = function(parser: TexParser, name: string) {
 };
 
 
+AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
+                                    integral: string) {
+  let next = parser.GetNext();
+  if (next === "\\") {
+    let i = parser.i;
+    next = parser.GetArgument(name);
+    parser.i = i;
+    console.log(name);
+    if (next === "\\limits") {
+      if (name === "\\idotsint") {
+        integral = "\\!\\!\\mathop{\\,\\," + integral + "}";
+      }
+      else {
+        // Question: This is not used anymore?
+        integral = "\\!\\!\\!\\mathop{\\,\\,\\," + integral + "}"
+      }
+    }
+  }
+  parser.string = integral + " " + parser.string.slice(parser.i);
+  parser.i = 0;
+};
+
+
 AmsMethods.Macro = ParseMethods.Macro;
 
 AmsMethods.Accent = ParseMethods.Accent;
