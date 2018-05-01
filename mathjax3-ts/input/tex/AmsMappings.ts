@@ -26,7 +26,7 @@ import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import BaseMethods from './BaseMethods.js';
-import {ParseMethods} from './ParseMethods.js';
+import AmsMethods from './AmsMethods.js';
 import {ParserUtil} from './ParserUtil.js';
 
 
@@ -106,7 +106,7 @@ new sm.CommandMap('AMSmath-macros', {
 
   xrightarrow: ['xArrow', 0x2192, 5, 6],
   xleftarrow:  ['xArrow', 0x2190, 7, 3]
-}, ParseMethods as any);
+}, AmsMethods);
 
 
 /**
@@ -142,7 +142,7 @@ new sm.EnvironmentMap('AMSmath-environment', BaseMethods.environment, {
                   '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em'],
   'eqnarray*':   ['AMSarray', null, false, true, 'rcl',
                   '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
-}, ParseMethods as any);
+}, AmsMethods);
 
 
 /**

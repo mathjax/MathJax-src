@@ -25,7 +25,7 @@
 import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
 import BaseMethods from './BaseMethods.js';
-import {ParseMethods} from './ParseMethods.js';
+import AmsMethods from './AmsMethods.js';
 
 
 /**
@@ -320,5 +320,5 @@ new sm.DelimiterMap('AMSsymbols-delimiter', BaseMethods.delimiter, {
 new sm.CommandMap('AMSsymbols-macros', {
   implies:    ['Macro', '\\;\\Longrightarrow\\;'],
   impliedby:  ['Macro', '\\;\\Longleftarrow\\;']
-}, ParseMethods as any);
+}, AmsMethods);
 

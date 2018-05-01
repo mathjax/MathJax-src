@@ -25,7 +25,7 @@
 import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
 import BaseMethods from './BaseMethods.js';
-import {ParseMethods} from './ParseMethods.js';
+import ParseMethods from './ParseMethods.js';
 
 
 /**
@@ -69,7 +69,7 @@ new sm.MacroMap('special', {
   '#':   'Hash',
   '\u00A0': 'Space',
   '\u2019': 'Prime'
-}, ParseMethods as any);
+}, ParseMethods);
 
 
 /**
@@ -680,7 +680,7 @@ new sm.CommandMap('macros', {
 
   // mathchoice
   mathchoice:         'MathChoice'
-}, ParseMethods as any);
+}, ParseMethods);
 
 
 /**
@@ -716,7 +716,7 @@ const envs = new sm.EnvironmentMap('environment', BaseMethods.environment, {
   // alignat:      ['ExtensionEnv', null, 'AMSmath'],
   // 'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
   // alignedat:    ['ExtensionEnv', null, 'AMSmath']
-}, ParseMethods as any);
+}, ParseMethods);
 
 
 /**

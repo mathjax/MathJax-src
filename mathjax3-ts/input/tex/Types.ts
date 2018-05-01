@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {StackItem} from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import TexParser from './TexParser.js';
 
@@ -34,4 +35,4 @@ export type Environment = Record<string, Args>;
 export type ParseInput = [string, TexParser];
 export type ParseResult = boolean|string;
 
-export type ParseMethod = (parser: TexParser, c: string | Symbol, ...rest: any[]) => void;
+export type ParseMethod = (parser: TexParser, c: string | Symbol | StackItem, ...rest: any[]) => void;
