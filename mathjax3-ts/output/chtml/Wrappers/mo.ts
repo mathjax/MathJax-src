@@ -59,8 +59,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
 
         'mjx-stretchy-h': {
             display: 'inline-table',
-            width: '100%',
-            'min-width': '1.2em'
+            width: '100%'
         },
         'mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-end': {
             display: 'table-cell',
@@ -233,11 +232,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
         if (stretchy && this.size < 0) return;
         super.computeBBox(bbox);
-        const child = this.childNodes[this.childNodes.length - 1];
-        if (child && child.bbox.ic) {
-            bbox.ic = child.bbox.ic;
-            if (!this.noIC) bbox.w += bbox.ic;
-        }
+        this.copySkewIC(bbox);
         if (this.node.attributes.get('symmetric') &&
             this.stretch.dir !== DIRECTION.Horizontal) {
             const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;

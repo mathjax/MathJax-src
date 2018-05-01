@@ -56,11 +56,7 @@ export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public computeBBox(bbox: BBox) {
         super.computeBBox(bbox);
-        const child = this.childNodes[this.childNodes.length - 1];
-        if (child && child.bbox.ic) {
-            bbox.ic = child.bbox.ic;
-            bbox.w += bbox.ic;
-        }
+        this.copySkewIC(bbox);
     }
 
 }

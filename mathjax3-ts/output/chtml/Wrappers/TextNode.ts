@@ -77,12 +77,14 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
             bbox.d = d;
             bbox.w = w;
             bbox.ic = data.ic || 0;
+            bbox.sk = data.sk || 0;
             for (let i = 1, m = chars.length; i < m; i++) {
                 [h, d, w, data] = this.getChar(variant, chars[i]);
                 bbox.w += w;
                 if (h > bbox.h) bbox.h = h;
                 if (d > bbox.d) bbox.d = d;
                 bbox.ic = data.ic || 0;
+                bbox.sk = 0;
             }
         }
     }

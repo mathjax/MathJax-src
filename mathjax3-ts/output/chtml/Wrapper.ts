@@ -337,6 +337,23 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         bbox.clean();
     }
 
+    /*
+     * Copy child skew and italic correction
+     *
+     * @param{BBox} bbox  The bounding box to modify
+     */
+    protected copySkewIC(bbox: BBox) {
+        const first = this.childNodes[0];
+        if (first && first.bbox.sk) {
+            bbox.sk = first.bbox.sk;
+        }
+        const last = this.childNodes[this.childNodes.length - 1];
+        if (last && last.bbox.ic) {
+            bbox.ic = last.bbox.ic;
+            bbox.w += bbox.ic;
+        }
+    }
+
     /*******************************************************************/
 
     /*
