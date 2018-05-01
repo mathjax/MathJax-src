@@ -175,14 +175,11 @@ export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
         this.chtml = this.standardCHTMLnode(parent);
         const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
         const base = this.adaptor.append(this.chtml, this.html('mjx-base')) as N;
-        const script = this.script;
-        script.toCHTML(over);
+        this.script.toCHTML(over);
         this.baseChild.toCHTML(base);
-        const overbox = script.getBBox();
+        const overbox = this.script.getBBox();
         const basebox = this.baseChild.getBBox();
         const [k, u] = this.getOverKU(basebox, overbox);
-        const accent = this.node.attributes.get('accent');
-        const ddelta = (accent ? this.baseChild.coreMO().bbox.sk : 0);
         const delta = this.getDelta();
         this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
         this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
