@@ -22,11 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import MapHandler from './MapHandler.js';
-import {BaseMappings} from './BaseMappings.js';
-import {AmsMappings} from './AmsMappings.js';
-import {AmsSymbols} from './AmsSymbols.js';
-import FallbackMethods from './FallbackMethods.js';
 import {ParseMethod} from './Types.js';
 
 

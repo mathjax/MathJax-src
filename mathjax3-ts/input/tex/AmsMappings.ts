@@ -28,118 +28,129 @@ import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import BaseMethods from './BaseMethods.js';
 import {ParseMethods} from './ParseMethods.js';
 import {ParserUtil} from './ParserUtil.js';
-import MapHandler from './MapHandler.js';
 
 
-export namespace AmsMappings {
-
-  let COLS = function(W: number[]) {
-    const WW: string[] = [];
-    for (let i = 0, m = W.length; i < m; i++) {
-      WW[i] = ParserUtil.Em(W[i]);
-    }
-    return WW.join(' ');
-  };
+let COLS = function(W: number[]) {
+  const WW: string[] = [];
+  for (let i = 0, m = W.length; i < m; i++) {
+    WW[i] = ParserUtil.Em(W[i]);
+  }
+  return WW.join(' ');
+};
 
 
-  new sm.CharacterMap('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
-    iiiint:     ['\u2A0C', {texClass: TEXCLASS.OP}]
-  });
-
-  new sm.CommandMap('AMSmath-macros', {
-    mathring:   ['Accent', '2DA'],  // or 0x30A
-      nobreakspace: 'Tilde',
-      negmedspace:    ['Spacer', TexConstant.Length.NEGATIVEMEDIUMMATHSPACE],
-      negthickspace:  ['Spacer', TexConstant.Length.NEGATIVETHICKMATHSPACE],
-
-//    intI:       ['Macro', '\\mathchoice{\\!}{}{}{}\\!\\!\\int'],
-//    iint:       ['MultiIntegral', '\\int\\intI'],          // now in core TeX input jax
-//    iiint:      ['MultiIntegral', '\\int\\intI\\intI'],    // now in core TeX input jax
-//    iiiint:     ['MultiIntegral', '\\int\\intI\\intI\\intI'], // now in mathchar0mo above
-      idotsint:   ['MultiIntegral', '\\int\\cdots\\int'],
-
-//    dddot:      ['Macro', '\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}', 1],
-//    ddddot:     ['Macro', '\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}', 1],
-      dddot:      ['Accent', '20DB'],
-      ddddot:     ['Accent', '20DC'],
-
-      sideset:    ['Macro', '\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1\\!\\mathop{#3}\\nolimits#2}', 3],
-
-      boxed:      ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
-
-      tag:         'HandleTag',
-      notag:       'HandleNoTag',
-      label:       'HandleLabel',
-      ref:         'HandleRef',
-      eqref:       ['HandleRef', true],
-
-      substack:   ['Macro', '\\begin{subarray}{c}#1\\end{subarray}', 1],
-
-      injlim:     ['NamedOp', 'inj&thinsp;lim'],
-      projlim:    ['NamedOp', 'proj&thinsp;lim'],
-      varliminf:  ['Macro', '\\mathop{\\underline{\\mmlToken{mi}{lim}}}'],
-      varlimsup:  ['Macro', '\\mathop{\\overline{\\mmlToken{mi}{lim}}}'],
-      varinjlim:  ['Macro', '\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}}}'],
-      varprojlim: ['Macro', '\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}}}'],
-
-      DeclareMathOperator: 'HandleDeclareOp',
-      operatorname:        'HandleOperatorName',
-      SkipLimits:          'SkipLimits',
-
-      genfrac:     'Genfrac',
-      frac:       ['Genfrac', '', '', '', ''],
-      tfrac:      ['Genfrac', '', '', '', 1],
-      dfrac:      ['Genfrac', '', '', '', 0],
-      binom:      ['Genfrac', '(', ')', '0', ''],
-      tbinom:     ['Genfrac', '(', ')', '0', 1],
-      dbinom:     ['Genfrac', '(', ')', '0', 0],
-
-      cfrac:       'CFrac',
-
-      shoveleft:  ['HandleShove', TexConstant.Align.LEFT],
-      shoveright: ['HandleShove', TexConstant.Align.RIGHT],
-
-      xrightarrow: ['xArrow', 0x2192, 5, 6],
-      xleftarrow:  ['xArrow', 0x2190, 7, 3]
-  }, ParseMethods as any);
-
-  new sm.EnvironmentMap('AMSmath-environment', BaseMethods.environment, {
-      align:         ['AMSarray', null, true, true,  'rlrlrlrlrlrl', COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
-      'align*':      ['AMSarray', null, false, true, 'rlrlrlrlrlrl', COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
-      multline:      ['Multline', null, true],
-      'multline*':   ['Multline', null, false],
-      split:         ['AMSarray', null, false, false, 'rl', COLS([0])],
-      gather:        ['AMSarray', null, true, true,  'c'],
-      'gather*':     ['AMSarray', null, false, true, 'c'],
-
-      alignat:       ['AlignAt', null, true, true],
-      'alignat*':    ['AlignAt', null, false, true],
-      alignedat:     ['AlignAt', null, false, false],
-
-      aligned:       ['AlignedAMSArray', null, null, null, 'rlrlrlrlrlrl', COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0]), '.5em', 'D'],
-      gathered:      ['AlignedAMSArray', null, null, null, 'c', null, '.5em', 'D'],
-
-      subarray:      ['Array', null, null, null, null, COLS([0]), '0.1em', 'S', 1],
-      smallmatrix:   ['Array', null, null, null, 'c', COLS([1 / 3]), '.2em', 'S', 1],
-
-      'equation':    ['EquationBegin', 'Equation', true],
-      'equation*':   ['EquationBegin', 'EquationStar', false],
-
-      eqnarray:      ['AMSarray', null, true, true, 'rcl', '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em'],
-      'eqnarray*':   ['AMSarray', null, false, true, 'rcl', '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
-  }, ParseMethods as any);
-
-  new sm.DelimiterMap('AMSmath-delimiter', BaseMethods.delimiter, {
-      '\\lvert':     ['\u007C', {texClass: TEXCLASS.OPEN}],
-      '\\rvert':     ['\u007C', {texClass: TEXCLASS.CLOSE}],
-      '\\lVert':     ['\u2016', {texClass: TEXCLASS.OPEN}],
-      '\\rVert':     ['\u2016', {texClass: TEXCLASS.CLOSE}]
-  });
+/**
+ * Operators from the AMS Math package.
+ */
+new sm.CharacterMap('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
+  iiiint:     ['\u2A0C', {texClass: TEXCLASS.OP}]
+});
 
 
-  /**
-   * Dummy init function to make sure the mappings are created.
-   */
-  export function init() {};
+/**
+ * Macros from the AMS Math package.
+ */
+new sm.CommandMap('AMSmath-macros', {
+  mathring:   ['Accent', '2DA'],  // or 0x30A
+  nobreakspace: 'Tilde',
+  negmedspace:    ['Spacer', TexConstant.Length.NEGATIVEMEDIUMMATHSPACE],
+  negthickspace:  ['Spacer', TexConstant.Length.NEGATIVETHICKMATHSPACE],
 
-}
+  //    intI:       ['Macro', '\\mathchoice{\\!}{}{}{}\\!\\!\\int'],
+  //    iint:       ['MultiIntegral', '\\int\\intI'],          // now in core TeX input jax
+  //    iiint:      ['MultiIntegral', '\\int\\intI\\intI'],    // now in core TeX input jax
+  //    iiiint:     ['MultiIntegral', '\\int\\intI\\intI\\intI'], // now in mathchar0mo above
+  idotsint:   ['MultiIntegral', '\\int\\cdots\\int'],
+
+  //    dddot:      ['Macro', '\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}', 1],
+  //    ddddot:     ['Macro', '\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}', 1],
+  dddot:      ['Accent', '20DB'],
+  ddddot:     ['Accent', '20DC'],
+
+  sideset:    ['Macro', '\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1' +
+               '\\!\\mathop{#3}\\nolimits#2}', 3],
+
+  boxed:      ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
+
+  tag:         'HandleTag',
+  notag:       'HandleNoTag',
+  label:       'HandleLabel',
+  ref:         'HandleRef',
+  eqref:       ['HandleRef', true],
+
+  substack:   ['Macro', '\\begin{subarray}{c}#1\\end{subarray}', 1],
+
+  injlim:     ['NamedOp', 'inj&thinsp;lim'],
+  projlim:    ['NamedOp', 'proj&thinsp;lim'],
+  varliminf:  ['Macro', '\\mathop{\\underline{\\mmlToken{mi}{lim}}}'],
+  varlimsup:  ['Macro', '\\mathop{\\overline{\\mmlToken{mi}{lim}}}'],
+  varinjlim:  ['Macro', '\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}}}'],
+  varprojlim: ['Macro', '\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}}}'],
+
+  DeclareMathOperator: 'HandleDeclareOp',
+  operatorname:        'HandleOperatorName',
+  SkipLimits:          'SkipLimits',
+
+  genfrac:     'Genfrac',
+  frac:       ['Genfrac', '', '', '', ''],
+  tfrac:      ['Genfrac', '', '', '', 1],
+  dfrac:      ['Genfrac', '', '', '', 0],
+  binom:      ['Genfrac', '(', ')', '0', ''],
+  tbinom:     ['Genfrac', '(', ')', '0', 1],
+  dbinom:     ['Genfrac', '(', ')', '0', 0],
+
+  cfrac:       'CFrac',
+
+  shoveleft:  ['HandleShove', TexConstant.Align.LEFT],
+  shoveright: ['HandleShove', TexConstant.Align.RIGHT],
+
+  xrightarrow: ['xArrow', 0x2192, 5, 6],
+  xleftarrow:  ['xArrow', 0x2190, 7, 3]
+}, ParseMethods as any);
+
+
+/**
+ * Environments from the AMS Math package.
+ */
+new sm.EnvironmentMap('AMSmath-environment', BaseMethods.environment, {
+  align:         ['AMSarray', null, true, true,  'rlrlrlrlrlrl',
+                  COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
+  'align*':      ['AMSarray', null, false, true, 'rlrlrlrlrlrl',
+                  COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
+  multline:      ['Multline', null, true],
+  'multline*':   ['Multline', null, false],
+  split:         ['AMSarray', null, false, false, 'rl', COLS([0])],
+  gather:        ['AMSarray', null, true, true,  'c'],
+  'gather*':     ['AMSarray', null, false, true, 'c'],
+
+  alignat:       ['AlignAt', null, true, true],
+  'alignat*':    ['AlignAt', null, false, true],
+  alignedat:     ['AlignAt', null, false, false],
+
+  aligned:       ['AlignedAMSArray', null, null, null, 'rlrlrlrlrlrl',
+                  COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0]), '.5em', 'D'],
+  gathered:      ['AlignedAMSArray', null, null, null, 'c', null, '.5em', 'D'],
+
+  subarray:      ['Array', null, null, null, null, COLS([0]), '0.1em', 'S', 1],
+  smallmatrix:   ['Array', null, null, null, 'c', COLS([1 / 3]),
+                  '.2em', 'S', 1],
+
+  'equation':    ['EquationBegin', 'Equation', true],
+  'equation*':   ['EquationBegin', 'EquationStar', false],
+
+  eqnarray:      ['AMSarray', null, true, true, 'rcl',
+                  '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em'],
+  'eqnarray*':   ['AMSarray', null, false, true, 'rcl',
+                  '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
+}, ParseMethods as any);
+
+
+/**
+ * Delimiters from the AMS Math package.
+ */
+new sm.DelimiterMap('AMSmath-delimiter', BaseMethods.delimiter, {
+  '\\lvert':     ['\u007C', {texClass: TEXCLASS.OPEN}],
+  '\\rvert':     ['\u007C', {texClass: TEXCLASS.CLOSE}],
+  '\\lVert':     ['\u2016', {texClass: TEXCLASS.OPEN}],
+  '\\rVert':     ['\u2016', {texClass: TEXCLASS.CLOSE}]
+});
