@@ -32,6 +32,9 @@ import {TreeHelper} from './TreeHelper.js';
 import {TexConstant} from './TexConstants.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
+import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
+import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 
 
 // TODO: This is temporary until we find a new place and a better structure.
@@ -175,6 +178,55 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
   // @test MultiInt, MultiInt in Context
   parser.string = integral + ' ' + parser.string.slice(parser.i);
   parser.i = 0;
+};
+
+
+/**
+ *  Handle stretchable arrows
+ */
+AmsMethods.xArrow = function(parser: TexParser, name: string,
+                             chr: number, l: number, r: number) {
+  TreeHelper.printMethod('AMS-xArrow');
+  let def = {width: ' + ' + (l + r) + 'mu', lspace: l + 'mu'};
+  let bot = parser.GetBrackets(name);
+  let top = parser.ParseArg(name);
+  // VS: OLD
+  // 
+  // var arrow = MML.mo(MML.chars(String.fromCharCode(chr))).With({
+  //   stretchy: true, texClass: MML.TEXCLASS.REL
+  // });
+  // var mml = MML.munderover(arrow);
+  let text = TreeHelper.createText(String.fromCharCode(chr));
+  let arrow = TreeHelper.createNode('mo', [],
+                                    {stretchy: true, texClass: TEXCLASS.REL}, text);
+  parser.toClean(arrow as MmlMo);
+  let mml = TreeHelper.createNode('munderover', [arrow], {}) as MmlMunderover;
+  let mpadded = TreeHelper.createNode('mpadded', [top], def);
+  TreeHelper.setProperties(mpadded, {voffset: '.15em'});
+  TreeHelper.setData(mml, mml.over, mpadded);
+  if (bot) {
+    let bottom = new TexParser(bot, parser.stack.env).mml();
+    mpadded = TreeHelper.createNode('mpadded', [bottom], def);
+    TreeHelper.setProperties(mpadded, {voffset: '-.24em'});
+    TreeHelper.setData(mml, mml.under, mpadded);
+  }
+  TreeHelper.setProperties(mml, {subsupOK: true});
+  parser.Push(mml);
+};
+
+
+/**
+ *  Record presence of \shoveleft and \shoveright
+ */
+AmsMethods.HandleShove = function(parser: TexParser, name: string,
+                                  shove: string) {
+  TreeHelper.printMethod('AMS-HandleShove');
+  let top = this.stack.Top();
+  if (top.type !== 'multline' || top.data.length) {
+    throw new TexError(['CommandAtTheBeginingOfLine',
+                        '%1 must come at the beginning of the line', name]);
+  }
+  top.data.shove = shove;
 };
 
 

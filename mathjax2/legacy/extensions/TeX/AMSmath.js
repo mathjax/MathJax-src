@@ -140,19 +140,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Handle \cfrac
      */
-    CFrac: function (name) {
-      imp.printMethod('AMS-CFrac');
-      var lr  = this.trimSpaces(this.GetBrackets(name,"")),
-          num = this.GetArgument(name),
-          den = this.GetArgument(name);
-      var frac = MML.mfrac(TEX.Parse('\\strut\\textstyle{'+num+'}',this.stack.env).mml(),
-                           TEX.Parse('\\strut\\textstyle{'+den+'}',this.stack.env).mml());
-      lr = ({l:MML.ALIGN.LEFT, r:MML.ALIGN.RIGHT,"":""})[lr];
-      if (lr == null)
-        {TEX.Error(["IllegalAlign","Illegal alignment specified in %1",name])}
-      if (lr) {frac.numalign = frac.denomalign = lr}
-      this.Push(frac);
-    },
+    CFrac: AmsMethods.CFrac,
     
     /*
      *  Implement AMS generalized fraction
@@ -236,39 +224,12 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Handle multiple integrals (make a mathop if followed by limits)
      */
-    MultiIntegral: function (name,integral) {
-      imp.printMethod('AMS-MultiIntegral');
-      var next = this.GetNext();
-      if (next === "\\") {
-        var i = this.i; next = this.GetArgument(name); this.i = i;
-        if (next === "\\limits") {
-          if (name === "\\idotsint") {integral = "\\!\\!\\mathop{\\,\\,"+integral+"}"}
-                           else {integral = "\\!\\!\\!\\mathop{\\,\\,\\,"+integral+"}"}
-        }
-      }
-      this.string = integral + " " + this.string.slice(this.i);
-      this.i = 0;
-    },
+    MultiIntegral: AmsMethods.MultiIntegral,
     
     /*
      *  Handle stretchable arrows
      */
-    xArrow: function (name,chr,l,r) {
-      imp.printMethod('AMS-xArrow');
-      var def = {width: "+"+(l+r)+"mu", lspace: l+"mu"};
-      var bot = this.GetBrackets(name),
-          top = this.ParseArg(name);
-      var arrow = MML.mo(MML.chars(String.fromCharCode(chr))).With({
-        stretchy: true, texClass: MML.TEXCLASS.REL
-      });
-      var mml = MML.munderover(arrow);
-      mml.SetData(mml.over,MML.mpadded(top).With(def).With({voffset:".15em"}));
-      if (bot) {
-        bot = TEX.Parse(bot,this.stack.env).mml()
-        mml.SetData(mml.under,MML.mpadded(bot).With(def).With({voffset:"-.24em"}));
-      }
-      this.Push(mml.With({subsupOK:true}));
-    },
+    xArrow: AmsMethods.xArrow,
     
     /*
      *  Get a delimiter or empty argument

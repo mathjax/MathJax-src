@@ -179,3 +179,4 @@ parserTest.runTest(
 * What does SkipLimits do?  I assume that is internal.
 * How do we want to organise the configurations?
 * Can I generate a bevelled fraction with Tex? \Big/?
+* Shoveleft/shoveright: tht only seems to work in multiline.
