@@ -165,8 +165,8 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
     next = parser.GetArgument(name);
     parser.i = i;
     if (next === '\\limits') {
-      if (name === '\\idotsint') {
-        // @test MultiInt with Limits
+      if (name === '\\idotsint') { 
+       // @test MultiInt with Limits
         integral = '\\!\\!\\mathop{\\,\\,' + integral + '}';
       }
       else {
@@ -204,11 +204,14 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   TreeHelper.setProperties(mpadded, {voffset: '.15em'});
   TreeHelper.setData(mml, mml.over, mpadded);
   if (bot) {
+    // @test Above Below Left Arrow, Above Below Right Arrow
     let bottom = new TexParser(bot, parser.stack.env).mml();
     mpadded = TreeHelper.createNode('mpadded', [bottom], def);
     TreeHelper.setProperties(mpadded, {voffset: '-.24em'});
     TreeHelper.setData(mml, mml.under, mpadded);
   }
+  // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
+  //       Above Right Arrow in Context
   TreeHelper.setProperties(mml, {subsupOK: true});
   parser.Push(mml);
 };
@@ -247,32 +250,37 @@ AmsMethods.CFrac = function(parser: TexParser, name: string) {
   let frac = TreeHelper.createNode('mfrac', [numNode, denNode], {});
   lr = lrMap[lr];
   if (lr == null) {
+    // @test Center Fraction Error
     throw new TexError(['IllegalAlign', 'Illegal alignment specified in %1', name]);
   }
   if (lr) {
+    // @test Right Fraction, Left Fraction
     TreeHelper.setProperties(frac, {numalign: lr, denomalign: lr});
   }
+  // @test Center Fraction
   parser.Push(frac);
 };
-    
+
 
 /**
  *  Implement AMS generalized fraction
  */
-// TODO: handle the style more uniformly to avoid casting!
-AmsMethods.Genfrac = function(parser: TexParser, name: string,
-                              left: string, right: string, thick: string,
-                              style: string | number) {
+AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
+                              right: string, thick: string, style: string) {
   if (left  == null) {
+    // @test Genfrac
     left = parser.GetDelimiterArg(name);
   }
   if (right == null) {
+    // @test Genfrac
     right = parser.GetDelimiterArg(name);
   }
   if (thick == null) {
+    // @test Genfrac
     thick = parser.GetArgument(name);
   }
   if (style == null) {
+    // @test Genfrac
     style = parser.trimSpaces(parser.GetArgument(name));
   }
   let num = parser.ParseArg(name);
@@ -281,28 +289,36 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string,
   // var frac = MML.mfrac(num, den);
   let frac = TreeHelper.createNode('mfrac', [num, den], {});
   if (thick !== '') {
+    // @test Normal Binomial, Text Binomial, Display Binomial
     TreeHelper.setAttribute(frac, 'linethickness', thick);
   }
   if (left || right) {
-    // TODO: Sort out the withDelims vs texWithDelims.
+    // @test Normal Binomial, Text Binomial, Display Binomial
     TreeHelper.setProperties(frac, {withDelims: true});
     frac = ParserUtil.fixedFence(left, frac, right);
   }
   if (style !== '') {
-    let STYLE = (['D', 'T', 'S', 'SS'])[style as number];
-    if (STYLE == null) {
+    let styleDigit = parseInt(style, 10);
+    let styleAlpha = ['D', 'T', 'S', 'SS'][styleDigit];
+    if (styleAlpha == null) {
+      // @test Genfrac Error
       throw new TexError(['BadMathStyleFor', 'Bad math style for %1', name]);
     }
     // VS: OLD
     // frac = MML.mstyle(frac);
     frac = TreeHelper.createNode('mstyle', [frac], {});
-    if (STYLE === 'D') {
+    if (styleAlpha === 'D') {
+      // @test Display Fraction, Display Sub Fraction, Display Binomial,
+      //       Display Sub Binomial
       TreeHelper.setProperties(frac, {displaystyle: true, scriptlevel: 0});
     }
     else {
-      TreeHelper.setProperties(frac, {displaystyle: false, scriptlevel: (style as number) - 1});
+      // @test Text Fraction, Text Sub Fraction, Text Binomial, Text Sub Binomial
+      TreeHelper.setProperties(frac, {displaystyle: false,
+                                      scriptlevel: styleDigit - 1});
     }
   }
+  // @test Text Fraction, Normal Sub Binomial, Normal Binomial
   parser.Push(frac);
 };
 

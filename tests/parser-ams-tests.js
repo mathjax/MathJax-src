@@ -377,7 +377,7 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  'Tiny Fraction', '\\tfrac{n}{k}',
+  'Text Fraction', '\\tfrac{n}{k}',
   {"kind": "math",
    "texClass": null,
    "attributes": {"display": "block"},
@@ -562,7 +562,7 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  'Tiny Sub Fraction', 'a_\\tfrac{n}{k}',
+  'Text Sub Fraction', 'a_\\tfrac{n}{k}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -836,7 +836,7 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  'Tiny Binomial', '\\tbinom{n}{k}',
+  'Text Binomial', '\\tbinom{n}{k}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1240,7 +1240,7 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  'Tiny Sub Binomial', 'a_\\tbinom{n}{k}',
+  'Text Sub Binomial', 'a_\\tbinom{n}{k}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -2851,5 +2851,10 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+
+parserTest.runTest(
+  'Genfrac', '\\genfrac{[}{]}{0pt}{3}{a}{b}',
+  {}
+);
 
 parserTest.printTime();

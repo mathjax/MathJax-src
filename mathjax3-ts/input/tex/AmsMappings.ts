@@ -93,11 +93,11 @@ new sm.CommandMap('AMSmath-macros', {
 
   genfrac:     'Genfrac',
   frac:       ['Genfrac', '', '', '', ''],
-  tfrac:      ['Genfrac', '', '', '', 1],
-  dfrac:      ['Genfrac', '', '', '', 0],
+  tfrac:      ['Genfrac', '', '', '', '1'],
+  dfrac:      ['Genfrac', '', '', '', '0'],
   binom:      ['Genfrac', '(', ')', '0', ''],
-  tbinom:     ['Genfrac', '(', ')', '0', 1],
-  dbinom:     ['Genfrac', '(', ')', '0', 0],
+  tbinom:     ['Genfrac', '(', ')', '0', '1'],
+  dbinom:     ['Genfrac', '(', ')', '0', '0'],
 
   cfrac:       'CFrac',
 

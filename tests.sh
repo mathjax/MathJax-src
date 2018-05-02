@@ -14,6 +14,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-complex-tests.js
     node load.js tests/parser-ams-tests.js
     node load.js tests/parser-amsenv-tests.js
+    node load.js tests/parser-amserror-tests.js
     exit 0
 else
     repeat=$1
