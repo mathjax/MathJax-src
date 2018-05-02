@@ -233,7 +233,8 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string,
     TreeHelper.setAttribute(frac, 'linethickness', thick);
   }
   if (left || right) {
-    TreeHelper.setProperties(frac, {texWithDelims: true});
+    // TODO: Sort out the withDelims vs texWithDelims.
+    TreeHelper.setProperties(frac, {withDelims: true});
     frac = ParserUtil.fixedFence(left, frac, right);
   }
   if (style !== '') {

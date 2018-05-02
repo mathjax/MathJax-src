@@ -1136,7 +1136,7 @@ ParseMethods.Array = function(parser: TexParser, begin: sitem.StackItem,
     // @test Array Single
     align = parser.GetArgument('\\begin{' + begin.getName() + '}');
   }
-  let lines = ('c' + align).replace(/[^clr|:]/g,'').replace(/[^|:]([|:])+/g, '$1');
+  let lines = ('c' + align).replace(/[^clr|:]/g, '').replace(/[^|:]([|:])+/g, '$1');
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
   const array = new sitem.ArrayItem();
@@ -1157,7 +1157,7 @@ ParseMethods.Array = function(parser: TexParser, begin: sitem.StackItem,
       array.frame.push('right');
     }
     // @test Enclosed left right
-    lines = lines.substr(1,lines.length-2);
+    lines = lines.substr(1, lines.length - 2);
     array.arraydef.columnlines =
       lines.split('').join(' ').replace(/[^|: ]/g,'none').replace(/\|/g,'solid').replace(/:/g,'dashed');
   }
@@ -1207,7 +1207,7 @@ function setArrayAlign(parser: TexParser, array: sitem.ArrayItem, align: string)
   if (align === 't') {array.arraydef.align = 'baseline 1'}
   else if (align === 'b') {array.arraydef.align = 'baseline -1'}
   else if (align === 'c') {array.arraydef.align = 'center'}
-  else if (align) {array.arraydef.align = align} // FIXME: should be an error?
+  else if (align) {array.arraydef.align = align;} // FIXME: should be an error?
   return array;
 };
 
@@ -1226,18 +1226,22 @@ ParseMethods.Require = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Require');
   const file = parser.GetArgument(name)
     .replace(/.*\//,'')            // remove any leading path
-    .replace(/[^a-z0-9_.-]/ig,''); // remove illegal characters
-  ParseMethods.Extension(parser, null,file);
+    .replace(/[^a-z0-9_.-]/ig, ''); // remove illegal characters
+  ParseMethods.Extension(parser, null, file);
 };
 
 
 ParseMethods.Extension = function(parser: TexParser, name: string|sitem.StackItem,
                           file: string, array?: any) {
   TreeHelper.printMethod('Extension');
-  if (name && !(typeof(name) === 'string')) {name = name.getName();}
+  if (name && !(typeof(name) === 'string')) {
+    name = name.getName();
+  }
   // file = TEX.extensionDir+'/'+file;
   file = EXTENSION_DIR + '/' + file;
-  if (!file.match(/\.js$/)) {file += '.js'}
+  if (!file.match(/\.js$/)) {
+    file += '.js';
+  }
 };
 
 
@@ -1255,9 +1259,9 @@ ParseMethods.Macro = function(parser: TexParser, name: string,
     for (let i = args.length; i < argcount; i++) {
       args.push(parser.GetArgument(name));
     }
-    macro = substituteArgs(args,macro);
+    macro = substituteArgs(args, macro);
   }
-  parser.string = addArgs(macro,parser.string.slice(parser.i));
+  parser.string = addArgs(macro, parser.string.slice(parser.i));
   parser.i = 0;
   if (++parser.macroCount > MAXMACROS) {
     throw new TexError(['MaxMacroSub1',
@@ -1269,18 +1273,20 @@ ParseMethods.Macro = function(parser: TexParser, name: string,
 
 // Utility
 /**
- *  Replace macro paramters with their values
+ *  Replace macro parameters with their values
  */
-function substituteArgs(args: string[], string: string) {
+function substituteArgs(args: string[], str: string) {
   TreeHelper.printMethod('SubstituteArgs');
   let text = '';
   let newstring = '';
   let i = 0;
-  while (i < string.length) {
-    let c = string.charAt(i++);
-    if (c === '\\') {text += c + string.charAt(i++)}
+  while (i < str.length) {
+    let c = str.charAt(i++);
+    if (c === '\\') {
+      text += c + str.charAt(i++);
+    }
     else if (c === '#') {
-      c = string.charAt(i++);
+      c = str.charAt(i++);
       if (c === '#') {
         text += c;
       } else {
@@ -1292,7 +1298,9 @@ function substituteArgs(args: string[], string: string) {
                             args[parseInt(c, 10) - 1]);
         text = '';
       }
-    } else {text += c}
+    } else {
+      text += c;
+    }
   }
   return addArgs(newstring, text);
 };
@@ -1305,12 +1313,15 @@ function substituteArgs(args: string[], string: string) {
  */
 function addArgs(s1: string, s2: string) {
   TreeHelper.printMethod('AddArgs');
-  if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {s1 += ' '}
+  if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
+    s1 += ' ';
+  }
   if (s1.length + s2.length > MAXBUFFER) {
     throw new TexError(['MaxBufferSize',
-                        'MathJax internal buffer size exceeded; is there a recursive macro call?']);
+                        'MathJax internal buffer size exceeded; is there a' +
+                        ' recursive macro call?']);
   }
-  return s1+s2;
+  return s1 + s2;
 };
 
 
