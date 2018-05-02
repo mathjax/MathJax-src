@@ -174,9 +174,36 @@ parserTest.runTest(
    The master version seems to be wrong.
 
 # NEW
-* Does not work: dddot, ddddot
+* Does not work: dddot, ddddot 
+  This works in the latest branch.
 * menclose does not work yet, correct?
+  Indeed.
 * What does SkipLimits do?  I assume that is internal.
 * How do we want to organise the configurations?
 * Can I generate a bevelled fraction with Tex? \Big/?
 * Shoveleft/shoveright: tht only seems to work in multiline.
+
+
+// Do this: Add the mstyle for the MakeBig function. Just around the mo.
+
+I've looked into this, and it has to do with the issue we discussed last week
+concerning the scriptlevel="0" settings on spaces and such.  The problem is that
+in TeX most measurements are not font-size relative, and so something like
+\bigl( would produce the same size character in superscript as it does in the
+main text.  But since MathJax uses em's for its sizing, these are font-relative,
+so the sizes are smaller in scripts than in the main text.  This is technically
+a bug, since it is not strictly in compliance with TeX, but it is sometimes a
+useful one, since it allows scaling of the math more easily.
+
+I think the best way to fix this would be to change how the \big and related
+commands work so that they wrap the current <mo> inside a <mstyle
+scriptlevel="0"> tag (it is unfortunate that you can't use scriptlevel on <mo>
+directly).  This will be redundant most of the time, but will make script
+versions work as expected.  A somewhat slicker version would use the mathchoice
+element to get just the needed <mo> for the display and text versions, but
+include the mstyle wrapper for the script and scriptscript versions.  That would
+reduce the complexity of the resulting MathML (and the HTML that is built from
+it), but I'm not sure it is worth it.
+
+The MakeBig() function in the original TeX input jax is the one that would need
+to be changed.

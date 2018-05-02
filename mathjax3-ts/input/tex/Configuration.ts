@@ -23,6 +23,7 @@
  */
 
 import {ParseMethod} from './Types.js';
+import FallbackMethods from './FallbackMethods.js';
 
 
 export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
@@ -103,6 +104,7 @@ const AmsMathConf = new Configuration({
     environment: ['AMSmath-environment']
 });
 
+// const NoUndef = new Configuration({ }, {macro: FallbackMethods.noUndefined});
 
 export const DefaultConfig = new Configuration({});
 DefaultConfig.append(BaseConfiguration);
