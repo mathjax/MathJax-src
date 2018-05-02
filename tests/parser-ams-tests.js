@@ -2853,7 +2853,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Genfrac', '\\genfrac{[}{]}{0pt}{3}{a}{b}',
+  'Genfrac', '\\genfrac{(}{)}{0pt}{3}{a}{b}',
   {}
 );
 
