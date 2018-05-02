@@ -29,6 +29,7 @@ import {ParseMethod} from './Types.js';
 import ParseMethods from './ParseMethods.js';
 import {ParserUtil} from './ParserUtil.js';
 import {TreeHelper} from './TreeHelper.js';
+import {TexConstant} from './TexConstants.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 
@@ -180,18 +181,28 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
 /**
  *  Handle \cfrac
  */
-// AmsMethods.CFrac = function(parser: TexParser, name: string) {
-//       var lr  = this.trimSpaces(this.GetBrackets(name,"")),
-//           num = this.GetArgument(name),
-//           den = this.GetArgument(name);
-//       var frac = MML.mfrac(TEX.Parse('\\strut\\textstyle{'+num+'}',this.stack.env).mml(),
-//                            TEX.Parse('\\strut\\textstyle{'+den+'}',this.stack.env).mml());
-//       lr = ({l:MML.ALIGN.LEFT, r:MML.ALIGN.RIGHT,"":""})[lr];
-//       if (lr == null)
-//         {TEX.Error(["IllegalAlign","Illegal alignment specified in %1",name])}
-//       if (lr) {frac.numalign = frac.denomalign = lr}
-//       this.Push(frac);
-// };
+AmsMethods.CFrac = function(parser: TexParser, name: string) {
+  let lr  = parser.trimSpaces(parser.GetBrackets(name, ''));
+  let num = parser.GetArgument(name);
+  let den = parser.GetArgument(name);
+  let lrMap: {[key: string]: string} = {
+    l: TexConstant.Align.LEFT, r: TexConstant.Align.RIGHT, '': ''};
+  // VS: OLD
+  // 
+  // var frac = MML.mfrac(TEX.Parse('\\strut\\textstyle{'+num+'}', parser.stack.env).mml(),
+  //                      TEX.Parse('\\strut\\textstyle{'+den+'}', parser.stack.env).mml());
+  let numNode = new TexParser('\\strut\\textstyle{' + num + '}', parser.stack.env).mml();
+  let denNode = new TexParser('\\strut\\textstyle{' + den + '}', parser.stack.env).mml();
+  let frac = TreeHelper.createNode('mfrac', [numNode, denNode], {});
+  lr = lrMap[lr];
+  if (lr == null) {
+    throw new TexError(['IllegalAlign', 'Illegal alignment specified in %1', name]);
+  }
+  if (lr) {
+    TreeHelper.setProperties(frac, {numalign: lr, denomalign: lr});
+  }
+  parser.Push(frac);
+};
     
 
 /**
