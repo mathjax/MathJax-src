@@ -300,6 +300,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
             //
             if (delim.stretch) {
                 this.size = -1;
+                this.invalidateBBox();
                 this.getStretchBBox(WH, D, delim);
             } else {
                 this.variant = this.font.getSizeVariant(c, i - 1);

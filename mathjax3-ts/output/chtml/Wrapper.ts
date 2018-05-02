@@ -337,6 +337,18 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         bbox.clean();
     }
 
+    /*
+     * Mark BBox to be computed again (e.g., when an mo has stretched)
+     */
+    public invalidateBBox() {
+        if (this.bboxComputed) {
+            this.bboxComputed = false;
+            if (this.parent) {
+                this.parent.invalidateBBox();
+            }
+        }
+    }
+
     /*******************************************************************/
 
     /*
