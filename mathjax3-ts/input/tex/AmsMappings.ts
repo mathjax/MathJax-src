@@ -51,7 +51,7 @@ new sm.CharacterMap('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
  * Macros from the AMS Math package.
  */
 new sm.CommandMap('AMSmath-macros', {
-  mathring:   ['Accent', '2DA'],  // or 0x30A
+  mathring:   ['Accent', '02DA'],  // or 0x30A
   nobreakspace: 'Tilde',
   negmedspace:    ['Spacer', TexConstant.Length.NEGATIVEMEDIUMMATHSPACE],
   negthickspace:  ['Spacer', TexConstant.Length.NEGATIVETHICKMATHSPACE],

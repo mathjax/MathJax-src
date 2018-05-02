@@ -172,3 +172,10 @@ parserTest.runTest(
 ** We currently get the old style:
    useHeight=false, displaystyle=false is inherited, hence omitted from the attributes
    The master version seems to be wrong.
+
+# NEW
+* Does not work: dddot, ddddot
+* menclose does not work yet, correct?
+* What does SkipLimits do?  I assume that is internal.
+* How do we want to organise the configurations?
+* Can I generate a bevelled fraction with Tex? \Big/?

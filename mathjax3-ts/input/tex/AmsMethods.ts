@@ -27,9 +27,48 @@ import {StackItem} from './StackItem.js';
 import {AmsArrayItem} from './AmsItem.js';
 import {ParseMethod} from './Types.js';
 import ParseMethods from './ParseMethods.js';
+import {ParserUtil} from './ParserUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
+
+
+// TODO: This is temporary until we find a new place and a better structure.
+//
+let equationNumbers = {
+  number: 0,        // current equation number
+  startNumber: 0,   // current starting equation number (for when equation is restarted)
+  IDs: {},          // IDs used in previous equations
+  eqIDs: {},        // IDs used in this equation
+  labels: {},       // the set of labels
+  eqlabels: {},     // labels in the current equation
+  refs: new Array() // array of jax with unresolved references
+  // I thing we should get rid of the last one!
+};
+
+let equationFormatting = {
+  autoNumber: 'none',  // 'AMS' for standard AMS numbering,
+  //  or 'all' for all displayed equations
+  formatNumber: function (n: number) { return n; },
+  formatTag:    function (n: number) { return '(' + n + ')'; },
+  formatID:     function (n: number) {
+    return 'mjx-eqn-' + String(n).replace(/\s/g, '_');
+  },
+  formatURL:    function (id: string, base: string) {
+    return base + '#' + encodeURIComponent(id);
+  },
+  useLabelIds:  true,
+  //
+  //  Clear the equation numbers and labels
+  //
+  resetEquationNumbers: function (n: number, keepLabels: boolean) {
+    equationNumbers.startNumber = (n || 0);
+    if (!keepLabels) {
+      equationNumbers.labels = {};
+      equationNumbers.IDs = {};
+    }
+  }
+};
 
 
 // Namespace
@@ -78,13 +117,27 @@ AmsMethods.checkEqnEnv = function(parser: TexParser) {
 };
 
 
+// TODO: How to set an extra definition. Probably best to deal with this
+//       together with newcommand, setEnv etc.
+// 
+// AmsMethods.DeclareOperatorName =  function (name) {
+//   var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
+//   var cs = this.trimSpaces(this.GetArgument(name));
+//   if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
+//   var op = this.GetArgument(name);
+//   op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
+//   this.setDef(cs, ['Macro', '\\mathop{\\rm '+op+'}'+limits]);
+// };
+
+
 AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('AMS-HandleOperatorName');
   // @test Operatorname
   const limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
   let op = parser.trimSpaces(parser.GetArgument(name));
   op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
-  parser.string = '\\mathop{\\rm '+op+'}' + limits + ' ' + parser.string.slice(parser.i);
+  parser.string = '\\mathop{\\rm ' + op + '}' + limits + ' ' +
+    parser.string.slice(parser.i);
   parser.i = 0;
 };
 
@@ -124,10 +177,118 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
 };
 
 
+/**
+ *  Handle \cfrac
+ */
+// AmsMethods.CFrac = function(parser: TexParser, name: string) {
+//       var lr  = this.trimSpaces(this.GetBrackets(name,"")),
+//           num = this.GetArgument(name),
+//           den = this.GetArgument(name);
+//       var frac = MML.mfrac(TEX.Parse('\\strut\\textstyle{'+num+'}',this.stack.env).mml(),
+//                            TEX.Parse('\\strut\\textstyle{'+den+'}',this.stack.env).mml());
+//       lr = ({l:MML.ALIGN.LEFT, r:MML.ALIGN.RIGHT,"":""})[lr];
+//       if (lr == null)
+//         {TEX.Error(["IllegalAlign","Illegal alignment specified in %1",name])}
+//       if (lr) {frac.numalign = frac.denomalign = lr}
+//       this.Push(frac);
+// };
+    
+
+/**
+ *  Implement AMS generalized fraction
+ */
+// TODO: handle the style more uniformly to avoid casting!
+AmsMethods.Genfrac = function(parser: TexParser, name: string,
+                              left: string, right: string, thick: string,
+                              style: string | number) {
+  if (left  == null) {
+    left = parser.GetDelimiterArg(name);
+  }
+  if (right == null) {
+    right = parser.GetDelimiterArg(name);
+  }
+  if (thick == null) {
+    thick = parser.GetArgument(name);
+  }
+  if (style == null) {
+    style = parser.trimSpaces(parser.GetArgument(name));
+  }
+  let num = parser.ParseArg(name);
+  let den = parser.ParseArg(name);
+  // VS: OLD
+  // var frac = MML.mfrac(num, den);
+  let frac = TreeHelper.createNode('mfrac', [num, den], {});
+  if (thick !== '') {
+    TreeHelper.setAttribute(frac, 'linethickness', thick);
+  }
+  if (left || right) {
+    TreeHelper.setProperties(frac, {texWithDelims: true});
+    frac = ParserUtil.fixedFence(left, frac, right);
+  }
+  if (style !== '') {
+    let STYLE = (['D', 'T', 'S', 'SS'])[style as number];
+    if (STYLE == null) {
+      throw new TexError(['BadMathStyleFor', 'Bad math style for %1', name]);
+    }
+    // VS: OLD
+    // frac = MML.mstyle(frac);
+    frac = TreeHelper.createNode('mstyle', [frac], {});
+    if (STYLE === 'D') {
+      TreeHelper.setProperties(frac, {displaystyle: true, scriptlevel: 0});
+    }
+    else {
+      TreeHelper.setProperties(frac, {displaystyle: false, scriptlevel: (style as number) - 1});
+    }
+  }
+  parser.Push(frac);
+};
+
+
+
+/**
+ *  Add the tag to the environment (to be added to the table row later)
+ * (Does not work yet!)
+ */
+AmsMethods.HandleTag = function (parser: TexParser, name: string) {
+  TreeHelper.printMethod('AMS-HandleTag');
+  console.log('Handling tag!');
+  let star = parser.GetStar();
+  let arg = parser.trimSpaces(parser.GetArgument(name));
+  let tag = parseInt(arg);
+  if (!star) {
+    arg = equationFormatting.formatTag(tag);
+  }
+  let global = parser.stack.global;
+  global.tagID = tag;
+  if (global.notags) {
+    throw new TexError(['CommandNotAllowedInEnv',
+                        '%1 not allowed in %2 environment',
+                        name, global.notags as string]);
+  }
+  console.log('here');
+  if (global.tag) {
+    throw new TexError(['MultipleCommand', 'Multiple %1', name]);
+  }
+  console.log('here2');
+  // VS: OLD
+  // global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
+  // TODO: These types are wrong!
+  global.tag = TreeHelper.createNode('mtd', parser.InternalMath(arg),
+                                     {id: equationFormatting.formatID(tag)}) as any;
+};
+
+
+
 AmsMethods.Macro = ParseMethods.Macro;
 
 AmsMethods.Accent = ParseMethods.Accent;
 
+AmsMethods.Tilde = ParseMethods.Tilde;
+
 AmsMethods.Array = ParseMethods.Array;
+
+AmsMethods.Spacer = ParseMethods.Spacer;
+
+AmsMethods.NamedOp = ParseMethods.NamedOp;
 
 export default AmsMethods;

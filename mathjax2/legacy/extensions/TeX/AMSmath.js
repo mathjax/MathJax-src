@@ -27,7 +27,7 @@
 let sm = require('mathjax3/input/tex/SymbolMap.js');
 let tc = require('mathjax3/input/tex/TexConstants.js');
 let BaseMethods = require('mathjax3/input/tex/BaseMethods.js').default;
-let ParseMethods = require('../../jax/input/TeX/ParseMethods.js').ParseMethods;
+let AmsMethods = require('../../jax/input/TeX/AmsMethods.js').default;
 let imp = require("../../jax/input/TeX/imp.js").imp;
 let ParserUtil = require("../../jax/input/TeX/ParserUtil.js").ParserUtil;
 
@@ -78,21 +78,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Add the tag to the environment (to be added to the table row later)
      */
-    HandleTag: function (name) {
-      imp.printMethod('AMS-HandleTag');
-      var star = this.GetStar();
-      var arg = this.trimSpaces(this.GetArgument(name)), tag = arg;
-      if (!star) {arg = CONFIG.formatTag(arg)}
-      var global = this.stack.global; global.tagID = tag;
-      if (global.notags) {
-        TEX.Error(["CommandNotAllowedInEnv",
-                   "%1 not allowed in %2 environment",
-                   name,global.notags]
-        );
-      }
-      if (global.tag) {TEX.Error(["MultipleCommand","Multiple %1",name])}
-      global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
-    },
+    HandleTag: AmsMethods.HandleTag,
     HandleNoTag: function (name) {
       imp.printMethod('AMS-HandleNoTag');
       if (this.stack.global.tag) {delete this.stack.global.tag}
@@ -132,16 +118,11 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Handle \DeclareMathOperator
      */
-    HandleDeclareOp: ParseMethods.HandleDeclareOp,
+    HandleDeclareOp: AmsMethods.HandleDeclareOp,
     
-    HandleOperatorName: ParseMethods.HandleOperatorName,
+    HandleOperatorName: AmsMethods.HandleOperatorName,
     
-    SkipLimits: function (parser, name) {
-      imp.printMethod('AMS-SkipLimits');
-      // @test Operatorname
-      var c = this.GetNext(), i = this.i;
-      if (c === "\\" && ++this.i && this.GetCS() !== "limits") this.i = i;
-    },
+    SkipLimits: AmsMethods.SkipLimits,
 
     /*
      *  Record presence of \shoveleft and \shoveright
@@ -176,27 +157,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
     /*
      *  Implement AMS generalized fraction
      */
-    Genfrac: function (name,left,right,thick,style) {
-      imp.printMethod('AMS-Genfrac');
-      if (left  == null) {left  = this.GetDelimiterArg(name)}
-      if (right == null) {right = this.GetDelimiterArg(name)}
-      if (thick == null) {thick = this.GetArgument(name)}
-      if (style == null) {style = this.trimSpaces(this.GetArgument(name))}
-      var num = this.ParseArg(name);
-      var den = this.ParseArg(name);
-      var frac = MML.mfrac(num,den);
-      if (thick !== "") {frac.linethickness = thick}
-      if (left || right) {frac = TEX.fixedFence(left,frac.With({texWithDelims:true}),right)}
-      if (style !== "") {
-        var STYLE = (["D","T","S","SS"])[style];
-        if (STYLE == null)
-          {TEX.Error(["BadMathStyleFor","Bad math style for %1",name])}
-        frac = MML.mstyle(frac);
-        if (STYLE === "D") {frac.displaystyle = true; frac.scriptlevel = 0}
-          else {frac.displaystyle = false; frac.scriptlevel = style - 1}
-      }
-      this.Push(frac);
-    },
+    Genfrac: AmsMethods.Genfrac,
 
     /*
      *  Implements multline environment (mostly handled through STACKITEM below)
@@ -220,7 +181,7 @@ MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
      *  Handle AMS aligned environments
      */
     // VS: That's the only rewritten function so far!
-    AMSarray: ParseMethods.AMSarray,
+    AMSarray: AmsMethods.AMSarray,
     
     AlignedAMSArray: function (begin) {
       imp.printMethod('AMS-AlignedAMSArray');
