@@ -24,42 +24,61 @@
  */
 
 
+/**
+ * @fileoverview The Stack for the TeX parser.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
+
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {StackItem, EnvList, BaseItem, StartItem, MmlItem} from './StackItem.js';
-// import {BaseItem, StartItem, MmlItem} from 'mathjax3/input/tex/StackItem.js';
-
-// Stack class for the parser.
 
 
 export default class Stack {
 
-  data: StackItem[] = [];
-  env: EnvList = {};
-  global: EnvList = {};
-  
-  constructor(env: EnvList, inner: boolean) {
+  /**
+   * @type {EnvList}
+   */
+  public global: EnvList = {};
+  private data: StackItem[] = [];
+
+  /**
+   * @constructor
+   * @param {EnvList} _env The environment.
+   * @param {boolean} inner True if parser has been called recursively.
+   */
+  constructor(private _env: EnvList, inner: boolean) {
     this.global = {isInner: inner};
-    let item = new StartItem(this.global);
-    this.data = [
-        new StartItem(this.global)
-    ];
-    // this.data = [new StartItem(this.global)];
-    if (env) {
-      this.data[0].env = env;
+    this.data = [ new StartItem(this.global) ];
+    if (_env) {
+      this.data[0].env = _env;
     }
     this.env = this.data[0].env;
   }
 
+  public set env(env: EnvList) {
+    this._env = env;
+  }
 
-  Push(...args: (StackItem|MmlNode)[]) {
-    TreeHelper.printSimple("PUSHING onto stack: ");
-    TreeHelper.printSimple(args.toString());
+  public get env(): EnvList {
+    return this._env;
+  }
+
+
+  /**
+   * Pushes items or nodes onto stack.
+   * @param {...StackItem|MmlNode} args A list of items to push.
+   */
+  public Push(...args: (StackItem|MmlNode)[]) {
     for (let i = 0, m = args.length; i < m; i++) {
-      let item = arguments[i]; if (!item) continue;
+      let item = arguments[i];
+      if (!item) {
+        continue;
+      }
       if (TreeHelper.isNode(item)) {
         item = new MmlItem(item);
-        // item = new MmlItem(item);
       }
       item.global = this.global;
 
@@ -91,7 +110,11 @@ export default class Stack {
   }
 
 
-  Pop() {
+  /**
+   * Pop the topmost elements off the stack.
+   * @return {StackItem} A stack item.
+   */
+  public Pop() {
     const item = this.data.pop();
     if (!item.isOpen) {
       delete item.env;
@@ -101,29 +124,34 @@ export default class Stack {
   }
 
 
-  Top(n?: number): StackItem {
+  /**
+   * Lookup the top elements on the stack without removing them.
+   * @param {number=} n Number of elements that should be returned.
+   * @return {StackItem[]} List of items on top of stack.
+   */
+  public Top(n?: number): StackItem {
     if (n == null) {
       n = 1;
     }
-    if (this.data.length < n) {
-      return null;
-    }
-    return this.data[this.data.length - n];
+    return this.data.length < n ? null : this.data[this.data.length - n];
   }
 
 
-  Prev(noPop?: boolean): MmlNode | void {
+  /**
+   * Lookup the topmost element on the stack, optionally popping it.
+   * @param {boolean=} noPop Pop top item if true.
+   * @return {StackItem} The topmost stack item.
+   */
+  public Prev(noPop?: boolean): MmlNode | void {
     const top = this.Top();
-    if (noPop) {
-      return top.data[top.data.length - 1];
-    }
-    else {
-      return top.Pop();
-    }
+    return noPop ? top.data[top.data.length - 1] : top.Pop();
   }
 
 
-  toString() {
+  /**
+   * @override
+   */
+  public toString() {
     return 'stack[\n  ' + this.data.join('\n  ') + '\n]';
   }
 

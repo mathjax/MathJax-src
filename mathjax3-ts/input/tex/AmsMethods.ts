@@ -187,7 +187,7 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
 AmsMethods.xArrow = function(parser: TexParser, name: string,
                              chr: number, l: number, r: number) {
   TreeHelper.printMethod('AMS-xArrow');
-  let def = {width: ' + ' + (l + r) + 'mu', lspace: l + 'mu'};
+  let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
   let top = parser.ParseArg(name);
   // VS: OLD
