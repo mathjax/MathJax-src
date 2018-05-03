@@ -1027,18 +1027,18 @@ ParseMethods.CrLaTeX = function(parser: TexParser, name: string) {
   const top = parser.stack.Top();
   let node: MmlNode;
   if (top instanceof sitem.ArrayItem) {
-    // TEMP: Changes here:
     // @test Array
     if (n && top.arraydef['rowspacing']) {
       const rows = (top.arraydef['rowspacing'] as string).split(/ /);
       if (!top.getProperty('rowspacing')) {
         top.setProperty('rowspacing', ParserUtil.dimen2em(rows[0]));
       }
+      const rowspacing = top.getProperty('rowspacing') as number;
       while (rows.length < top.table.length) {
-        rows.push(ParserUtil.Em(top.getProperty('rowspacing')));
+        rows.push(ParserUtil.Em(rowspacing));
       }
       rows[top.table.length - 1] = ParserUtil.Em(
-        Math.max(0, top.getProperty('rowspacing') + ParserUtil.dimen2em(n)));
+        Math.max(0, rowspacing + ParserUtil.dimen2em(n)));
       top.arraydef['rowspacing'] = rows.join(' ');
     }
   } else {

@@ -119,19 +119,12 @@ export class BaseItem implements StackItem {
     this._env = value;
   }
   
-  getProperty(key: string) {
-    // 
-    // TODO: Right side retained for legacy code!
-    return this._properties[key] || (this as any)[key];
-    // return this._properties[key];
+  getProperty(key: string): Prop {
+    return this._properties[key];
   }
 
   setProperty(key: string, value: Prop) {
     this._properties[key] = value;
-    // (this as {[field: string]: Prop})[key] = value;
-    // 
-    // TODO: Retained for legacy code!
-    (this as any)[key] = value as any;
   }
   
   get isOpen() {
