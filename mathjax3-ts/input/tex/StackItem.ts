@@ -41,6 +41,7 @@ import TexError from './TexError.js';
 import {ParserUtil} from './ParserUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
+import StackItemFactory from './StackItemFactory.js';
 
 // Stack item classes for the parser stack.
 
@@ -89,7 +90,7 @@ export interface StackItem {
 }
 
 export interface StackItemClass {
-  new (args: MmlNode | EnvList): StackItem;
+  new (factory: StackItemFactory, ...args: MmlNode[]): StackItem;
 }
 
 export class BaseItem implements StackItem {
@@ -111,13 +112,16 @@ export class BaseItem implements StackItem {
 
   public data: MmlNode[] = [];
 
-  constructor(...args: MmlNode[]) {
+  constructor(private _factory: StackItemFactory, ...args: MmlNode[]) {
     if (this.isOpen) {
       this._env = {};
     }
     this.Push.apply(this, args);
   }
 
+  public get factory() {
+    return this._factory;
+  }
 
   /**
    * @return {string} The type of the stack item.
@@ -237,9 +241,10 @@ export class BaseItem implements StackItem {
 
 export class StartItem extends BaseItem {
 
-  constructor(global: EnvList) {
-    super();
-    this.global = global;
+  // TODO: Sort out this type!
+  constructor(factory: StackItemFactory, ...global: any[]) {
+    super(factory);
+    this.global = global[0] as EnvList;
   }
 
 
@@ -257,17 +262,13 @@ export class StartItem extends BaseItem {
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem start');
     if (item.hasType('stop')) {
-      return new MmlItem(this.mmlData());
+      return this.factory.create('mml', this.mmlData());
     }
     return super.checkItem(item);
   }
 }
 
 export class StopItem extends BaseItem {
-
-  constructor() {
-    super();
-  }
 
   /**
    * @override
@@ -284,8 +285,8 @@ export class StopItem extends BaseItem {
 
 export class OpenItem extends BaseItem {
 
-  constructor() {
-    super();
+  constructor(factory: StackItemFactory) {
+    super(factory);
     this.errors['stopError'] = ['ExtraOpenMissingClose',
                                 'Extra open brace or missing close brace'];
   }
@@ -311,7 +312,7 @@ export class OpenItem extends BaseItem {
       const node = TreeHelper.createNode('TeXAtom', [mml], {});
       // VS: OLD
       // var node = MML.TeXAtom(mml);
-      return new MmlItem(node); // TeXAtom make it an ORD to prevent spacing
+      return this.factory.create('mml', node); // TeXAtom make it an ORD to prevent spacing
                                 // (FIXME: should be another way)
     }
     return super.checkItem(item);
@@ -320,10 +321,6 @@ export class OpenItem extends BaseItem {
 
 
 export class CloseItem extends BaseItem {
-
-  constructor() {
-    super();
-  }
 
   /**
    * @override
@@ -340,10 +337,6 @@ export class CloseItem extends BaseItem {
 
 
 export class PrimeItem extends BaseItem {
-
-  constructor(...args: MmlNode[]) {
-    super(...args);
-  }
 
   /**
    * @override
@@ -368,8 +361,8 @@ export class PrimeItem extends BaseItem {
 
 export class SubsupItem extends BaseItem {
 
-  constructor(...args: MmlNode[]) {
-    super(...args);
+  constructor(factory: StackItemFactory, ...args: MmlNode[]) {
+    super(factory, ...args);
     this.errors['stopError'] = ['MissingScript',
                                'Missing superscript or subscript argument'];
     this.errors['supError'] =  ['MissingOpenForSup',
@@ -410,7 +403,7 @@ export class SubsupItem extends BaseItem {
         // @test Limits Subsup (currently does not work! Check again!)
         TreeHelper.setProperties(this.data[0], {movesupsub: this.getProperty('movesupsub')} as PropertyList);
       }
-      const result = new MmlItem(this.data[0]);
+      const result = this.factory.create('mml', this.data[0]);
       return result;
     }
     if (super.checkItem(item)) {
@@ -426,8 +419,8 @@ export class SubsupItem extends BaseItem {
 
 export class OverItem extends BaseItem {
 
-  constructor() {
-    super();
+  constructor(factory: StackItemFactory) {
+    super(factory);
     this.setProperty('name', '\\over');
   }
 
@@ -466,7 +459,7 @@ export class OverItem extends BaseItem {
         mml = ParserUtil.fixedFence(this.getProperty('open') as string, mml,
                                     this.getProperty('close') as string);
       }
-      return [new MmlItem(mml), item];
+      return [this.factory.create('mml', mml), item];
     }
     return super.checkItem(item);
   }
@@ -478,8 +471,8 @@ export class OverItem extends BaseItem {
 
 export class LeftItem extends BaseItem {
 
-  constructor() {
-    super();
+  constructor(factory: StackItemFactory) {
+    super(factory);
     this.setProperty('delim', '('),
     this.errors['stopError'] = ['ExtraLeftMissingRight',
                                 'Extra \\left or missing \\right'];
@@ -501,7 +494,7 @@ export class LeftItem extends BaseItem {
     // @test Missing Right
     TreeHelper.printMethod('Checkitem left');
     if (item.hasType('right')) {
-      return new MmlItem(
+      return this.factory.create('mml', 
         ParserUtil.fenced(this.getProperty('delim') as string, this.mmlData(),
                           item.getProperty('delim') as string));
     }
@@ -512,8 +505,8 @@ export class LeftItem extends BaseItem {
 
 export class RightItem extends BaseItem {
 
-  constructor() {
-    super();
+  constructor(factory: StackItemFactory) {
+    super(factory);
     this.setProperty('delim', ')');
   }
 
@@ -531,10 +524,6 @@ export class RightItem extends BaseItem {
 }
 
 export class BeginItem extends BaseItem {
-
-  constructor() {
-    super();
-  }
 
   /**
    * @override
@@ -555,7 +544,7 @@ export class BeginItem extends BaseItem {
                             this.getName(), item.getName()]);
       }
       if (!this.getProperty('end')) {
-        return new MmlItem(this.mmlData());
+        return this.factory.create('mml', this.mmlData());
       }
       // TODO: This case currently does not work!
       //
@@ -575,10 +564,6 @@ export class BeginItem extends BaseItem {
 
 export class EndItem extends BaseItem {
 
-  constructor() {
-    super();
-  }
-
   /**
    * @override
    */
@@ -593,10 +578,6 @@ export class EndItem extends BaseItem {
 }
 
 export class StyleItem extends BaseItem {
-
-  constructor() {
-    super();
-  }
 
   /**
    * @override
@@ -614,16 +595,12 @@ export class StyleItem extends BaseItem {
     const mml = TreeHelper.createNode('mstyle', this.data, this.getProperty('styles'));
     // VS: OLD
     // var mml = MML.mstyle.apply(MML,this.data).With(this.styles);
-    return [new MmlItem(mml), item];
+    return [this.factory.create('mml', mml), item];
   }
 
 }
 
 export class PositionItem extends BaseItem {
-
-  constructor() {
-    super();
-  }
 
   /**
    * @override
@@ -647,10 +624,10 @@ export class PositionItem extends BaseItem {
                                      voffset: this.getProperty('dh')});
         // VS: OLD
         // mml = MML.mpadded(mml).With({height: this.dh, depth: this.dd, voffset: this.dh});
-        return [new MmlItem(mml)];
+        return [this.factory.create('mml', mml)];
       case 'horizontal':
-        return [new MmlItem(this.getProperty('left') as MmlNode), item,
-                new MmlItem(this.getProperty('right') as MmlNode)];
+        return [this.factory.create('mml', this.getProperty('left') as MmlNode), item,
+                this.factory.create('mml', this.getProperty('right') as MmlNode)];
       }
     }
     return super.checkItem(item);
@@ -666,10 +643,6 @@ export class ArrayItem extends BaseItem {
   public copyEnv = false;
   public arraydef: {[key: string]: string|number|boolean}= {};
   public dashed: boolean = false;
-
-  constructor() {
-    super();
-  }
 
   /**
    * @override
@@ -743,7 +716,7 @@ export class ArrayItem extends BaseItem {
         mml = ParserUtil.fenced(this.getProperty('open') as string, mml,
                                 this.getProperty('close') as string);
       }
-      let newItem = new MmlItem(mml);
+      let newItem = this.factory.create('mml', mml);
       if (this.getProperty('requireClose')) {
         // @test: Label
         if (item.hasType('close')) {
@@ -837,10 +810,6 @@ export class ArrayItem extends BaseItem {
 
 export class CellItem extends BaseItem {
 
-  constructor() {
-    super();
-  }
-
   /**
    * @override
    */
@@ -856,8 +825,8 @@ export class CellItem extends BaseItem {
 
 export class MmlItem extends BaseItem {
 
-  constructor(...args: MmlNode[]) {
-    super(...args);
+  constructor(factory: StackItemFactory, ...args: MmlNode[]) {
+    super(factory, ...args);
     this.setProperty('isNotStack', true);
   }
 
@@ -877,8 +846,8 @@ export class MmlItem extends BaseItem {
 
 export class FnItem extends BaseItem {
 
-  constructor(...args: MmlNode[]) {
-    super(...args);
+  constructor(factory: StackItemFactory, ...args: MmlNode[]) {
+    super(factory, ...args);
   }
 
   /**
@@ -929,10 +898,6 @@ export class FnItem extends BaseItem {
 export class NotItem extends BaseItem {
 
   private remap = MapHandler.getInstance().getMap('not_remap') as CharacterMap;
-
-  constructor() {
-    super();
-  }
 
   /**
    * @override
@@ -989,10 +954,6 @@ export class NotItem extends BaseItem {
 
 
 export class DotsItem extends BaseItem {
-
-  constructor() {
-    super();
-  }
 
   /**
    * @override

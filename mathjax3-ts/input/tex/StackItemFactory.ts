@@ -32,6 +32,7 @@
  */
 
 import * as sm from './StackItem.js';
+import * as ams from './AmsItem.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 
 
@@ -63,12 +64,14 @@ export default class StackItemFactory {
     [sm.MmlItem.prototype.kind]: sm.MmlItem,
     [sm.FnItem.prototype.kind]: sm.FnItem,
     [sm.NotItem.prototype.kind]: sm.NotItem,
-    [sm.DotsItem.prototype.kind]: sm.DotsItem
+    [sm.DotsItem.prototype.kind]: sm.DotsItem,
+    // temporary: AMS stuff for testing!
+    // [ams.AmsArrayItem.prototype.kind]: ams.AmsArrayItem
   };
 
   private itemMap: Map<string, sm.StackItemClass> = new Map();
 
-  private item: {[kind: string]: (...args: any[]) => sm.StackItem} = {};
+  private item: {[kind: string]: (factory: StackItemFactory, ...args: any[]) => sm.StackItem} = {};
 
   public defaultKind = 'base';
 
@@ -89,8 +92,8 @@ export default class StackItemFactory {
       this.itemMap.set(kind, stackItems[kind]);
       let THIS = this;
       let KIND = this.itemMap.get(kind);
-      this.item[kind] = (args: MmlNode | sm.EnvList) => {
-        return new KIND(args);
+      this.item[kind] = (factory: StackItemFactory, ...args: any[]) => {
+        return new KIND(factory, ...args);
       };
     }
   }
@@ -113,8 +116,10 @@ export default class StackItemFactory {
    * @return {}
    */
   public create(kind: string, ...parameters: any[]) {
+    let tt1 = [this].concat(...parameters);
+    let tt2 = [this].concat(parameters);
     return (this.item[kind] || this.item[this.defaultKind])
-      .apply(null, parameters);
+      .apply(null, [this].concat(...parameters));
   }
 
 }

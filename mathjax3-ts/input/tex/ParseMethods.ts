@@ -65,10 +65,10 @@ function MmlFilterAttribute(parser: TexParser, name: string, value: string): str
  *  Handle { and }
  */
 ParseMethods.Open = function(parser: TexParser, c: string) {
-  parser.Push( new sitem.OpenItem() );
+  parser.Push( parser.itemFactory.create('open') );
 };
 ParseMethods.Close = function(parser: TexParser, c: string) {
-  parser.Push( new sitem.CloseItem() );
+  parser.Push( parser.itemFactory.create('close') );
 };
 
 /*
@@ -151,7 +151,7 @@ ParseMethods.Superscript = function(parser: TexParser, c: string) {
     }
   }
   parser.Push(
-    new sitem.SubsupItem(base).With({
+    parser.itemFactory.create('subsup', base).With({
       position: position, primes: primes, movesupsub: movesupsub
     }) );
 };
@@ -215,7 +215,7 @@ ParseMethods.Subscript = function(parser: TexParser, c: string) {
     }
   }
   parser.Push(
-    new sitem.SubsupItem(base).With({
+    parser.itemFactory.create('subsup', base).With({
       position: position, primes: primes, movesupsub: movesupsub
     }) );
 };
@@ -242,7 +242,7 @@ ParseMethods.Prime = function(parser: TexParser, c: string) {
   const textNode = TreeHelper.createText(sup);
   const node = TreeHelper.createNode('mo', [], {}, textNode);
   parser.Push(
-    new sitem.PrimeItem(base, parser.mmlToken(node)) );
+    parser.itemFactory.create('prime', base, parser.mmlToken(node)) );
 };
 
 /*
@@ -277,13 +277,13 @@ ParseMethods.SetStyle = function(parser: TexParser, name: string, texStyle: stri
                          ' style: ' + style + ' level: ' + level);
   parser.stack.env['style'] = texStyle; parser.stack.env['level'] = level;
   parser.Push(
-    new sitem.StyleItem().With({styles: {displaystyle: style, scriptlevel: level}}) );
+    parser.itemFactory.create('style').With({styles: {displaystyle: style, scriptlevel: level}}) );
 };
 ParseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
   TreeHelper.printMethod('SetSize');
   parser.stack.env['size'] = size;
   parser.Push(
-    new sitem.StyleItem().With({styles: {mathsize: size + 'em'}}) ); // convert to absolute?
+    parser.itemFactory.create('style').With({styles: {mathsize: size + 'em'}}) ); // convert to absolute?
 };
 
 // Look at color extension!
@@ -312,7 +312,7 @@ ParseMethods.LeftRight = function(parser: TexParser, name: string) {
   const alpha = name.substr(1);
   parser.Push(
     // TODO: Sort this out so there is no need for type casting!
-    new (sitem as any)[alpha[0].toUpperCase() + alpha.slice(1) + 'Item']()
+    parser.itemFactory.create(alpha)
       .With({delim: parser.GetDelimiter(name)}) );
 };
 
@@ -342,7 +342,7 @@ ParseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
   }
   const textNode = TreeHelper.createText(id);
   const mml = TreeHelper.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
-  parser.Push( new sitem.FnItem(parser.mmlToken(mml)) );
+  parser.Push( parser.itemFactory.create('fn', parser.mmlToken(mml)) );
 };
 ParseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
   TreeHelper.printMethod('NamedOp');
@@ -397,7 +397,7 @@ ParseMethods.Limits = function(parser: TexParser, name: string, limits: string) 
 ParseMethods.Over = function(parser: TexParser, name: string, open: string, close: string) {
   TreeHelper.printMethod('Over');
   // @test Over
-  const mml = new sitem.OverItem().With({name: name}) ;
+  const mml = parser.itemFactory.create('over').With({name: name}) ;
   if (open || close) {
     // @test Choose
     mml.setProperty('open', open);
@@ -613,12 +613,12 @@ ParseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number)
       def['mathvariant'] = TexConstant.Variant.NORMAL;
       const textNode = TreeHelper.createText(match[1]);
       node = TreeHelper.createNode('mi', [], def, textNode);
-      mml = new sitem.FnItem(parser.mmlToken(node));
+      mml = parser.itemFactory.create('fn', parser.mmlToken(node));
     } else {
       // @test Mathop Cal
       parsed = new TexParser(arg,parser.stack.env).mml();
       node = TreeHelper.createNode('TeXAtom', [parsed], def);
-      mml = new sitem.FnItem(node);
+      mml = parser.itemFactory.create('fn', node);
     }
   } else {
     // @test Mathrel
@@ -742,7 +742,7 @@ ParseMethods.RaiseLower = function(parser: TexParser, name: string) {
   // @test Raise, Lower, Raise Negative, Lower Negative
   let h = parser.GetDimen(name);
   let item =
-    new sitem.PositionItem().With({name: name, move: 'vertical'}) ;
+    parser.itemFactory.create('position').With({name: name, move: 'vertical'}) ;
   // TEMP: Changes here:
   if (h.charAt(0) === '-') {
     // @test Raise Negative, Lower Negative
@@ -772,7 +772,7 @@ ParseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
     nh = tmp;
   }
   parser.Push(
-    new sitem.PositionItem().With({
+    parser.itemFactory.create('position').With({
       name: name, move: 'horizontal',
       left:  TreeHelper.createNode('mspace', [], {width: h}),
       right: TreeHelper.createNode('mspace', [], {width: nh})}) );
@@ -867,7 +867,7 @@ ParseMethods.Not = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Not');
   // @test Negation Simple, Negation Complex, Negation Explicit,
   //       Negation Large
-  parser.Push( new sitem.NotItem() );
+  parser.Push( parser.itemFactory.create('not') );
 };
 
 ParseMethods.Dots = function(parser: TexParser, name: string) {
@@ -878,7 +878,7 @@ ParseMethods.Dots = function(parser: TexParser, name: string) {
   const ldots = TreeHelper.createNode('mo', [], {stretchy:false}, ldotsEntity);
   const cdots = TreeHelper.createNode('mo', [], {stretchy:false}, cdotsEntity);
   parser.Push(
-    new sitem.DotsItem().With({
+    parser.itemFactory.create('dots').With({
       ldots: parser.mmlToken(ldots),
       cdots: parser.mmlToken(cdots)
     }) );
@@ -900,7 +900,7 @@ ParseMethods.Matrix = function(parser: TexParser, name: string,
     parser.string = c + '}' + parser.string.slice(parser.i + 1);
     parser.i = 0;
   }
-  const array = new sitem.ArrayItem().With({requireClose: true});
+  const array = parser.itemFactory.create('array').With({requireClose: true});
   array.arraydef = {
     rowspacing: (vspacing || '4pt'),
     columnspacing: (spacing || '1em')
@@ -930,7 +930,7 @@ ParseMethods.Entry = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Entry');
   // @test Label, Array, Cross Product Formula
   parser.Push(
-    new sitem.CellItem().With({isEntry: true, name: name}) );
+    parser.itemFactory.create('cell').With({isEntry: true, name: name}) );
   if (parser.stack.Top().getProperty('isCases')) {
     //
     //  Make second column be in \text{...} (unless it is already
@@ -1009,7 +1009,7 @@ ParseMethods.Cr = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Cr');
   TreeHelper.untested(15);
   parser.Push(
-    new sitem.CellItem().With({isCR: true, name: name}) );
+    parser.itemFactory.create('cell').With({isCR: true, name: name}) );
 };
 
 ParseMethods.CrLaTeX = function(parser: TexParser, name: string) {
@@ -1023,7 +1023,7 @@ ParseMethods.CrLaTeX = function(parser: TexParser, name: string) {
     }
   }
   parser.Push(
-    new sitem.CellItem().With({isCR: true, name: name, linebreak: true}) );
+    parser.itemFactory.create('cell').With({isCR: true, name: name, linebreak: true}) );
   const top = parser.stack.Top();
   let node: MmlNode;
   if (top instanceof sitem.ArrayItem) {
@@ -1106,7 +1106,7 @@ ParseMethods.BeginEnd = function(parser: TexParser, name: string) {
   }
   if (name === '\\end') {
     const mml =
-      new sitem.EndItem().With({name: env}) ;
+      parser.itemFactory.create('end').With({name: env}) ;
     parser.Push(mml);
   } else {
     if (++parser.macroCount > MAXMACROS) {
@@ -1139,7 +1139,7 @@ ParseMethods.Array = function(parser: TexParser, begin: sitem.StackItem,
   let lines = ('c' + align).replace(/[^clr|:]/g, '').replace(/[^|:]([|:])+/g, '$1');
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  const array = new sitem.ArrayItem();
+  const array = parser.itemFactory.create('array');
   array.arraydef = {
     columnalign: align,
     columnspacing: (spacing || '1em'),

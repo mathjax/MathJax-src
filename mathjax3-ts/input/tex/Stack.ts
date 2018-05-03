@@ -81,7 +81,6 @@ export default class Stack {
       }
       if (TreeHelper.isNode(item)) {
         item = this._factory.create('mml', item);
-        console.log(item);
       }
       item.global = this.global;
 

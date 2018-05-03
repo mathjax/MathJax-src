@@ -28,6 +28,7 @@ import {ArrayItem, EnvList} from './StackItem.js';
 import {ParserUtil} from './ParserUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import StackItemFactory from './StackItemFactory.js';
 
 
 // AMS
@@ -38,13 +39,16 @@ export class AmsArrayItem extends ArrayItem {
   private numbered: boolean = false;
   private save: {[key: string]: string} = {};
   
-  constructor(name: string, numbered: boolean, taggable: boolean, global: EnvList) {
-    super();
+  constructor(factory: any, ...args: any[]) {
+    super(factory);
     // Omitted configuration: && CONFIG.autoNumber !== "none";
-    this.numbered = numbered;
+    /// name: string, numbered: boolean, taggable: boolean, global: EnvList
+    let global = args[3];
+    let numbered = args[2];
+    this.numbered = args[1];
     this.save['notags'] = global['notags'] as string;
     this.save['notag'] = global['notag'] as string;
-    global['notags'] = (taggable ? null : name);
+    global['notags'] = (numbered ? null : args[0]);
     // prevent automatic tagging in starred environments
     global['tagged'] = !numbered && !global['forcetag'];
   }
@@ -99,3 +103,6 @@ export class AmsArrayItem extends ArrayItem {
     this.global['notag']  = this.save['notag'];
   }
 }
+
+
+// StackItemFactory.DefaultStackItems[AmsArrayItem.prototype.kind] = AmsArrayItem;

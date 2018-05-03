@@ -153,7 +153,7 @@ namespace BaseMethods {
   export function environment(parser: TexParser, env: string, func: Function, args: any[]) {
     TreeHelper.printMethod('BeginEnvironment');
     const end = args[0];
-    let mml = new sitem.BeginItem().With({name: env, end: end});
+    let mml = parser.itemFactory.create('begin').With({name: env, end: end});
     mml = func.apply(null, [parser, mml].concat(args.slice(1)));
     parser.Push(mml);
   };
