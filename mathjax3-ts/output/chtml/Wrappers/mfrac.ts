@@ -192,7 +192,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     protected makeFraction(display: boolean, t: number) {
         const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
-        const withDelims = this.node.getProperty('texWithDelims');
+        const withDelims = this.node.getProperty('withDelims');
         //
         // Attributes to set for the different elements making up the fraction
         //
@@ -204,15 +204,16 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         // Set the styles to handle the linethickness, if needed
         //
-        const fparam = this.font.params;
+        const tex = this.font.params;
         if (t !== .06) {
-            const a = fparam.axis_height;
-            const tEm = this.em(t), T = (display ? 3.5 : 1.5) * t;
+            const a = tex.axis_height;
+            const tEm = this.em(t);
+            const {T, u, v} = this.getTUV(display, t);
             const m = (display ? this.em(3 * t) : tEm) + ' -.1em';
             attr.style = {height: tEm, 'border-top': tEm + ' solid', margin: m};
-            const nh = this.em(Math.max(0, (display ? fparam.num1 : fparam.num2) - a - T));
+            const nh = this.em(Math.max(0, u));
             nsattr.style = {height: nh, 'vertical-align': '-' + nh};
-            dsattr.style = {height: this.em(Math.max(0, (display ? fparam.denom1 : fparam.denom2) + a - T))};
+            dsattr.style = {height: this.em(Math.max(0, v))};
             fattr.style  = {'vertical-align': this.em(a - T)};
         }
         //
@@ -242,13 +243,28 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected getFractionBBox(bbox: BBox, display: boolean, t: number) {
         const nbox = this.childNodes[0].getBBox();
         const dbox = this.childNodes[1].getBBox();
-        const fparam = this.font.params;
-        const pad = (this.node.getProperty('texWithDelims') as boolean ? 0 : fparam.nulldelimiterspace);
-        const a = fparam.axis_height;
-        const T = (display ? 3.5 : 1.5) * t;
-        bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, (display ? fparam.num1 : fparam.num2) - a - T));
-        bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, (display ? fparam.denom1 : fparam.denom2) + a - T));
+        const tex = this.font.params;
+        const pad = (this.node.getProperty('withDelims') as boolean ? 0 : tex.nulldelimiterspace);
+        const a = tex.axis_height;
+        const {T, u, v} = this.getTUV(display, t);
+        bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, u));
+        bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, v));
         bbox.w += 2 * pad + .2;
+    }
+
+    /*
+     * @param{boolean} display  True for display-mode fractions
+     * @param{number} t         The thickness of the line
+     * @return{Object}          The expanded rule thickness (T), and baeline offsets
+     *                             for numerator and denomunator (u and v)
+     */
+    protected getTUV(display: boolean, t: number) {
+        const tex = this.font.params;
+        const a = tex.axis_height;
+        const T = (display ? 3.5 : 1.5) * t;
+        return {T: (display ? 3.5 : 1.5) * t,
+                u: (display ? tex.num1 : tex.num2) - a - T,
+                v: (display ? tex.denom1 : tex.denom2) + a - T};
     }
 
     /************************************************/
@@ -258,7 +274,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     protected makeAtop(display: boolean) {
         const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
-        const withDelims = this.node.getProperty('texWithDelims');
+        const withDelims = this.node.getProperty('withDelims');
         //
         // Attributes to set for the different elements making up the fraction
         //
@@ -289,8 +305,8 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @param{boolean} display  True for display-mode fractions
      */
     protected getAtopBBox(bbox: BBox, display: boolean) {
-        const fparam = this.font.params;
-        const pad = (this.node.getProperty('texWithDelims') as boolean ? 0 : fparam.nulldelimiterspace);
+        const tex = this.font.params;
+        const pad = (this.node.getProperty('withDelims') as boolean ? 0 : tex.nulldelimiterspace);
         const {u, v, nbox, dbox} = this.getUVQ(display);
         bbox.combine(nbox, 0, u);
         bbox.combine(dbox, 0, -v);
@@ -306,14 +322,14 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected getUVQ(display: boolean) {
         const nbox = this.childNodes[0].getBBox();
         const dbox = this.childNodes[1].getBBox();
-        const fparam = this.font.params;
+        const tex = this.font.params;
         //
         //  Initial offsets (u, v)
         //  Minimum separation (p)
         //  Actual separation with initial positions (q)
         //
-        let [u, v] = (display ? [fparam.num1, fparam.denom1] : [fparam.num3, fparam.denom2]);
-        let p = (display ? 7 : 3) * fparam.rule_thickness;
+        let [u, v] = (display ? [tex.num1, tex.denom1] : [tex.num3, tex.denom2]);
+        let p = (display ? 7 : 3) * tex.rule_thickness;
         let q = (u - nbox.d * nbox.scale) - (dbox.h * dbox.scale - v);
         //
         //  If actual separation is less than minimum, move them farther apart
