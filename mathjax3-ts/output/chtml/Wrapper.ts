@@ -23,7 +23,7 @@
 
 import {AbstractWrapper} from '../../core/Tree/Wrapper.js';
 import {Node, PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, TextNode, AbstractMmlNode, AttributeList} from '../../core/MmlTree/MmlNode.js';
 import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
@@ -778,6 +778,29 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      */
     public mmlNode(kind: string, properties: PropertyList = {}, children: MmlNode[] = []) {
         return (this.node as AbstractMmlNode).factory.create(kind, properties, children);
+    }
+
+    /*
+     * Create an mo wrapper with the given text,
+     *   link it in, and give it the right defaults.
+     *
+     * @param{string} text  The text for the wrapped element
+     * @return{CHTMLWrapper}  The wrapped MmlMo node
+     */
+    protected createMo(text: string): CHTMLmo<N, T, D> {
+        const mmlFactory = (this.node as AbstractMmlNode).factory;
+        const textNode = (mmlFactory.create('text') as TextNode).setText(text);
+        const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
+        const attributes = this.node.attributes;
+        const display = attributes.get('display') as boolean;
+        const scriptlevel = attributes.get('scriptlevel') as number;
+        const defaults: AttributeList = {
+            mathsize: ['math', attributes.get('mathsize')]
+        };
+        mml.setInheritedAttributes(defaults, display, scriptlevel, false);
+        const node = this.wrap(mml) as CHTMLmo<N, T, D>;
+        node.parent = this;
+        return node;
     }
 
 }
