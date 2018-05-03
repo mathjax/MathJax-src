@@ -93,9 +93,32 @@ export interface StackItem {
    * @return {MmlNode} The topmost Mml node.
    */
   toMml(inferred?: boolean, forceRow?: boolean): MmlNode;
+
+  /**
+   * @return {MmlNode} The topmost node on the item's node stack.
+   */
   Pop(): MmlNode | void;
-  Push(...args: MmlNode[]): void;
+
+  /**
+   * Pushes new nodes onto the items node stack.
+   * @param {MmlNode[]} ...nodes A list of nodes.
+   */
+  Push(...nodes: MmlNode[]): void;
+
+  /**
+   * Get the top n elements on the node stack without removing them.
+   * @param {number=} n Number of elements that should be returned.
+   * @return {MmlNode[]} List of nodes on top of stack.
+   */
+  Top(n?: number): MmlNode[];
+
+  /**
+   * Tests if item is of the given type.
+   * @param {string} kind The type.
+   * @return {boolean} True if item is of that type.
+   */
   isKind(kind: string): boolean;
+
   getProperty(key: string): Prop;
   setProperty(key: string, value: Prop): void;
 
@@ -103,7 +126,7 @@ export interface StackItem {
 }
 
 export interface StackItemClass {
-  new (factory: StackItemFactory, ...args: MmlNode[]): StackItem;
+  new (factory: StackItemFactory, ...nodes: MmlNode[]): StackItem;
 }
 
 export class BaseItem implements StackItem {
@@ -125,11 +148,11 @@ export class BaseItem implements StackItem {
 
   public data: MmlNode[] = [];
 
-  constructor(private _factory: StackItemFactory, ...args: MmlNode[]) {
+  constructor(private _factory: StackItemFactory, ...nodes: MmlNode[]) {
     if (this.isOpen) {
       this._env = {};
     }
-    this.Push.apply(this, args);
+    this.Push.apply(this, nodes);
   }
 
   public get factory() {
@@ -185,18 +208,39 @@ export class BaseItem implements StackItem {
     return false;
   }
 
-  Push(...args: MmlNode[]) {
+
+  /**
+   * @override
+   */
+  public Push(...nodes: MmlNode[]) {
     TreeHelper.printMethod('StackItem Push arguments: ' + this.data + ' arguments: ');
-    TreeHelper.printSimple(args.toString());
-    this.data.push.apply(this.data, arguments);
+    this.data.push.apply(this.data, nodes);
   }
 
 
-  Pop(): MmlNode | void {
+  /**
+   * @override
+   */
+  public Pop(): MmlNode | void {
     return this.data.pop();
   }
 
-  isKind(kind: string) {
+
+  /**
+   * @override
+   */
+  public Top(n?: number): MmlNode[] {
+    if (n == null) {
+      n = 1;
+    }
+    return this.data.slice(0, n);
+  }
+
+
+  /**
+   * @override
+   */
+  public isKind(kind: string) {
     return kind === this.kind;
   }
 
@@ -417,8 +461,8 @@ export class PrimeItem extends BaseItem {
 
 export class SubsupItem extends BaseItem {
 
-  constructor(factory: StackItemFactory, ...args: MmlNode[]) {
-    super(factory, ...args);
+  constructor(factory: StackItemFactory, ...nodes: MmlNode[]) {
+    super(factory, ...nodes);
     this.errors['stopError'] = ['MissingScript',
                                'Missing superscript or subscript argument'];
     this.errors['supError'] =  ['MissingOpenForSup',
@@ -444,8 +488,7 @@ export class SubsupItem extends BaseItem {
         if (this.getProperty('position') !== 2) {
           // @test Prime on Sub
           TreeHelper.setData(this.data[0], 2, this.getProperty('primes') as MmlNode);
-        }
-        else {
+        } else {
           // @test Prime on Prime
           TreeHelper.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
           const node = TreeHelper.createNode('mrow', [this.getProperty('primes') as MmlNode, item.data[0]], {});
@@ -469,8 +512,6 @@ export class SubsupItem extends BaseItem {
     }
   }
 
-
-  Pop() {}
 }
 
 export class OverItem extends BaseItem {
@@ -927,8 +968,8 @@ export class MmlItem extends BaseItem {
 
 export class FnItem extends BaseItem {
 
-  constructor(factory: StackItemFactory, ...args: MmlNode[]) {
-    super(factory, ...args);
+  constructor(factory: StackItemFactory, ...nodes: MmlNode[]) {
+    super(factory, ...nodes);
   }
 
   /**
@@ -940,21 +981,22 @@ export class FnItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem fn');
-    if (this.data[0]) {
+    const top = this.data[0];
+    if (top) {
       if (item.isOpen) {
         return true;
       }
       if (!item.isKind('fn')) {
         TreeHelper.printSimple('case 3');
-        if (!item.isKind('mml') || !item.data[0]) {
+        let mml = item.data[0];
+        if (!item.isKind('mml') || !mml) {
           TreeHelper.printSimple('case 4');
-          return [this.data[0], item];
+          return [top, item];
         }
         if (TreeHelper.isType(item.data[0], 'mspace')) {
           TreeHelper.untested(100);
-          return [this.data[0], item];
+          return [top, item];
         }
-        let mml = item.data[0];
         if (TreeHelper.isEmbellished(mml)) {
           TreeHelper.printSimple('case 5');
           mml = TreeHelper.getCoreMO(mml);
@@ -962,7 +1004,7 @@ export class FnItem extends BaseItem {
         // TODO: Look this up in the operator table either as
         //       infix/postfix/prefix.
         if ([0, 0, 1, 1, 0, 1, 1, 0, 0, 0][TreeHelper.getTexClass(mml)]) {
-          return [this.data[0], item];
+          return [top, item];
         }
       }
       // @test Named Function
@@ -970,7 +1012,7 @@ export class FnItem extends BaseItem {
       const node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
       // VS: OLD
       // var node = MML.mo(MML.entity('#x2061')).With({texClass:MML.TEXCLASS.NONE});
-      return [this.data[0], node, item];
+      return [top, node, item];
     }
     return super.checkItem.apply(this, arguments);
   }

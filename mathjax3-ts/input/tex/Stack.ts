@@ -132,9 +132,9 @@ export default class Stack {
 
 
   /**
-   * Lookup the top elements on the stack without removing them.
-   * @param {number=} n Number of elements that should be returned.
-   * @return {StackItem[]} List of items on top of stack.
+   * Lookup the nth elements on the stack without removing them.
+   * @param {number=} n Position of element that should be returned. Default 1.
+   * @return {StackItem} Nth item on the stack.
    */
   public Top(n?: number): StackItem {
     if (n == null) {
