@@ -40,7 +40,6 @@ export class AmsArrayItem extends ArrayItem {
   
   constructor(name: string, numbered: boolean, taggable: boolean, global: EnvList) {
     super();
-    this.kind = 'AMSarray';
     // Omitted configuration: && CONFIG.autoNumber !== "none";
     this.numbered = numbered;
     this.save['notags'] = global['notags'] as string;
@@ -50,6 +49,10 @@ export class AmsArrayItem extends ArrayItem {
     global['tagged'] = !numbered && !global['forcetag'];
   }
 
+  get kind() {
+    return 'AMSarray';
+  }
+  
   // TODO: Temporary!
   autoTag() {}
   getTag(): MmlNode {

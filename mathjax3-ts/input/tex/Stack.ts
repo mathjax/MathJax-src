@@ -34,6 +34,7 @@
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {StackItem, EnvList, BaseItem, StartItem, MmlItem} from './StackItem.js';
+import StackItemFactory from './StackItemFactory.js';
 
 
 export default class Stack {
@@ -49,9 +50,10 @@ export default class Stack {
    * @param {EnvList} _env The environment.
    * @param {boolean} inner True if parser has been called recursively.
    */
-  constructor(private _env: EnvList, inner: boolean) {
+  constructor(private _factory: StackItemFactory,
+              private _env: EnvList, inner: boolean) {
     this.global = {isInner: inner};
-    this.data = [ new StartItem(this.global) ];
+    this.data = [ this._factory.create('start', this.global) ];
     if (_env) {
       this.data[0].env = _env;
     }
@@ -78,7 +80,8 @@ export default class Stack {
         continue;
       }
       if (TreeHelper.isNode(item)) {
-        item = new MmlItem(item);
+        item = this._factory.create('mml', item);
+        console.log(item);
       }
       item.global = this.global;
 

@@ -24,6 +24,12 @@
  */
 
 
+/**
+ * @fileoverview Stack items hold information on the TexParser stack.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
 import MapHandler from './MapHandler.js';
 import {CharacterMap} from './SymbolMap.js';
 import {Entities} from '../../util/Entities.js';
@@ -82,6 +88,10 @@ export interface StackItem {
   env: EnvList;
 }
 
+export interface StackItemClass {
+  new (args: MmlNode | EnvList): StackItem;
+}
+
 export class BaseItem implements StackItem {
 
   private _env: EnvList;
@@ -97,18 +107,23 @@ export class BaseItem implements StackItem {
                  'Missing \\left or extra \\right']
   };
 
-  protected kind = 'base';
-
   public global: EnvList = {};
-  
+
   public data: MmlNode[] = [];
-  
+
   constructor(...args: MmlNode[]) {
-    this.kind = 'base';
     if (this.isOpen) {
       this._env = {};
     }
     this.Push.apply(this, args);
+  }
+
+
+  /**
+   * @return {string} The type of the stack item.
+   */
+  public get kind() {
+    return 'base';
   }
 
   get env() {
@@ -118,7 +133,7 @@ export class BaseItem implements StackItem {
   set env(value) {
     this._env = value;
   }
-  
+
   getProperty(key: string): Prop {
     return this._properties[key];
   }
@@ -126,7 +141,7 @@ export class BaseItem implements StackItem {
   setProperty(key: string, value: Prop) {
     this._properties[key] = value;
   }
-  
+
   get isOpen() {
     return false;
   }
@@ -145,7 +160,6 @@ export class BaseItem implements StackItem {
   Pop(): MmlNode | void {
     return this.data.pop();
   }
-
 
   getType() {
     return this.kind;
@@ -173,7 +187,10 @@ export class BaseItem implements StackItem {
   }
 
 
-  checkItem(item: StackItem): CheckType {
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem): CheckType {
     TreeHelper.printMethod('Checkitem base for ' + item.getType() + ' with ' + item);
     if (item.hasType('over') && this.isOpen) {
       item.setProperty('num', this.mmlData(false));
@@ -184,7 +201,7 @@ export class BaseItem implements StackItem {
         return false;
       }
       // TODO: Test what symbol really does!
-      //throw new TexError(['Misplaced', 'Misplaced %1', item.getProperty('name').symbol]);      
+      //throw new TexError(['Misplaced', 'Misplaced %1', item.getProperty('name').symbol]);
       // @test Ampersand-error
       throw new TexError(['Misplaced', 'Misplaced %1', item.getName()]);
     }
@@ -222,8 +239,15 @@ export class StartItem extends BaseItem {
 
   constructor(global: EnvList) {
     super();
-    this.kind = 'start';
     this.global = global;
+  }
+
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'start';
   }
 
   get isOpen() {
@@ -243,7 +267,13 @@ export class StopItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'stop';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'stop';
   }
 
   get isClose() {
@@ -258,7 +288,13 @@ export class OpenItem extends BaseItem {
     super();
     this.errors['stopError'] = ['ExtraOpenMissingClose',
                                 'Extra open brace or missing close brace'];
-    this.kind = 'open';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'open';
   }
 
   get isOpen() {
@@ -287,7 +323,13 @@ export class CloseItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'close';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'close';
   }
 
   get isClose() {
@@ -301,7 +343,13 @@ export class PrimeItem extends BaseItem {
 
   constructor(...args: MmlNode[]) {
     super(...args);
-    this.kind = 'prime';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'prime';
   }
 
   checkItem(item: StackItem) {
@@ -322,13 +370,19 @@ export class SubsupItem extends BaseItem {
 
   constructor(...args: MmlNode[]) {
     super(...args);
-    this.kind = 'subsup';
     this.errors['stopError'] = ['MissingScript',
                                'Missing superscript or subscript argument'];
     this.errors['supError'] =  ['MissingOpenForSup',
                                 'Missing open brace for superscript'];
     this.errors['subError'] =  ['MissingOpenForSub',
                                 'Missing open brace for subscript'];
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'subsup';
   }
 
   checkItem(item: StackItem) {
@@ -374,8 +428,14 @@ export class OverItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'over';
     this.setProperty('name', '\\over');
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'over';
   }
 
 
@@ -420,10 +480,16 @@ export class LeftItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'left';
     this.setProperty('delim', '('),
     this.errors['stopError'] = ['ExtraLeftMissingRight',
                                 'Extra \\left or missing \\right'];
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'left';
   }
 
   get isOpen() {
@@ -448,8 +514,14 @@ export class RightItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'right';
     this.setProperty('delim', ')');
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'right';
   }
 
   get isClose() {
@@ -462,7 +534,13 @@ export class BeginItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'begin';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'begin';
   }
 
   get isOpen() {
@@ -480,7 +558,7 @@ export class BeginItem extends BaseItem {
         return new MmlItem(this.mmlData());
       }
       // TODO: This case currently does not work!
-      // 
+      //
       //       The problem: It needs to call a particular Parse Method. It is
       //       only used in equation(*) anyway and should therefore probably
       //       handled in a special case.
@@ -499,7 +577,13 @@ export class EndItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'end';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'end';
   }
 
   get isClose() {
@@ -512,7 +596,13 @@ export class StyleItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'style';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'style';
   }
 
   checkItem(item: StackItem) {
@@ -533,7 +623,13 @@ export class PositionItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'position';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'position';
   }
 
   checkItem(item: StackItem) {
@@ -570,10 +666,16 @@ export class ArrayItem extends BaseItem {
   public copyEnv = false;
   public arraydef: {[key: string]: string|number|boolean}= {};
   public dashed: boolean = false;
-  
+
   constructor() {
     super();
-    this.kind = 'array';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'array';
   }
 
   get isOpen() {
@@ -607,13 +709,13 @@ export class ArrayItem extends BaseItem {
       // VS: OLD
       // var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
       if (this.frame.length === 4) {
-        // @test Enclosed frame solid, Enclosed frame dashed 
+        // @test Enclosed frame solid, Enclosed frame dashed
         TreeHelper.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
       } else if (this.frame.length) {
         // @test Enclosed left right
         // mml.hasFrame = true;
         if (this.arraydef['rowlines']) {
-          // @test Enclosed dashed row, Enclosed solid row, 
+          // @test Enclosed dashed row, Enclosed solid row,
           this.arraydef['rowlines'] =
             (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
@@ -737,7 +839,13 @@ export class CellItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'cell';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'cell';
   }
 
   get isClose() {
@@ -750,8 +858,14 @@ export class MmlItem extends BaseItem {
 
   constructor(...args: MmlNode[]) {
     super(...args);
-    this.kind = 'mml';
     this.setProperty('isNotStack', true);
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mml';
   }
 
   Add() {
@@ -765,7 +879,13 @@ export class FnItem extends BaseItem {
 
   constructor(...args: MmlNode[]) {
     super(...args);
-    this.kind = 'fn';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'fn';
   }
 
   checkItem(item: StackItem) {
@@ -812,7 +932,13 @@ export class NotItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'not';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'not';
   }
 
   // TODO: There is a lot of recasting that should go away!
@@ -866,7 +992,13 @@ export class DotsItem extends BaseItem {
 
   constructor() {
     super();
-    this.kind = 'dots';
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'dots';
   }
 
   checkItem(item: StackItem) {

@@ -38,6 +38,7 @@ import Stack from './Stack.js';
 import {Symbol} from './Symbol.js';
 import TexError from './TexError.js';
 import {NewTex} from './Translate.js';
+import StackItemFactory from './StackItemFactory.js';
 
 
 /**
@@ -46,10 +47,13 @@ import {NewTex} from './Translate.js';
 export default class TexParser {
 
   public macroCount: number = 0;
-
+  public itemFactory = new StackItemFactory();
+  
   private input: string = '';
   private remainder: string = '';
   private configurations: Map<HandlerType, SubHandler> = new Map();
+
+  
   
   // From OLD Parser
   NBSP = '\u00A0'; 
@@ -73,9 +77,9 @@ export default class TexParser {
           ENV[id] = env[id]}
       }
     }
-    this.stack = new Stack(ENV, !!env);
+    this.stack = new Stack(this.itemFactory, ENV, !!env);
     this.Parse();
-    this.Push(new StopItem());
+    this.Push(this.itemFactory.create('stop'));
   }
 
 
