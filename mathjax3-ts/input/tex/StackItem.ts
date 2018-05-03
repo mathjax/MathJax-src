@@ -77,8 +77,8 @@ export interface StackItem {
   mmlData(inferred?: boolean, forceRow?: boolean): MmlNode;
   Pop(): MmlNode | void;
   Push(...args: MmlNode[]): void;
-  hasType(kind: string): boolean;
-  getType(): string;
+  isKind(kind: string): boolean;
+  kind: string;
   getProperty(key: string): Prop;
   setProperty(key: string, value: Prop): void;
   isClose: boolean;
@@ -165,13 +165,8 @@ export class BaseItem implements StackItem {
     return this.data.pop();
   }
 
-  getType() {
-    return this.kind;
-  }
-
-
-  hasType(kind: string) {
-    return kind === this.getType();
+  isKind(kind: string) {
+    return kind === this.kind;
   }
 
 
@@ -195,12 +190,12 @@ export class BaseItem implements StackItem {
    * @override
    */
   public checkItem(item: StackItem): CheckType {
-    TreeHelper.printMethod('Checkitem base for ' + item.getType() + ' with ' + item);
-    if (item.hasType('over') && this.isOpen) {
+    TreeHelper.printMethod('Checkitem base for ' + item.kind + ' with ' + item);
+    if (item.isKind('over') && this.isOpen) {
       item.setProperty('num', this.mmlData(false));
       this.data = [];
     }
-    if (item.hasType('cell') && this.isOpen) {
+    if (item.isKind('cell') && this.isOpen) {
       if (item.getProperty('linebreak')) {
         return false;
       }
@@ -209,8 +204,8 @@ export class BaseItem implements StackItem {
       // @test Ampersand-error
       throw new TexError(['Misplaced', 'Misplaced %1', item.getName()]);
     }
-    if (item.isClose && this.errors[item.getType() + 'Error']) {
-      throw new TexError(this.errors[item.getType() + 'Error']);
+    if (item.isClose && this.errors[item.kind + 'Error']) {
+      throw new TexError(this.errors[item.kind + 'Error']);
     }
     if (!item.getProperty('isNotStack')) {
       return true;
@@ -230,13 +225,23 @@ export class BaseItem implements StackItem {
   }
 
 
-  toString() {
-    return this.getType() + '[' + this.data.join('; ') + ']';
-  }
 
-  getName() {
+  /**
+   * Convenience method for returning the string property "name".
+   * @return {string} The value for the name property.
+   */
+  public getName() {
     return this.getProperty('name') as string;
   }
+
+
+  /**
+   * @override
+   */
+  public toString() {
+    return this.kind + '[' + this.data.join('; ') + ']';
+  }
+
 }
 
 export class StartItem extends BaseItem {
@@ -261,7 +266,7 @@ export class StartItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem start');
-    if (item.hasType('stop')) {
+    if (item.isKind('stop')) {
       return this.factory.create('mml', this.mmlData());
     }
     return super.checkItem(item);
@@ -304,7 +309,7 @@ export class OpenItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem open');
-    if (item.hasType('close')) {
+    if (item.isKind('close')) {
       let mml = this.mmlData();
       // @test PrimeSup
       // TODO: Move that into mmlData?
@@ -380,10 +385,10 @@ export class SubsupItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem subsup');
-    if (item.hasType('open') || item.hasType('left')) {
+    if (item.isKind('open') || item.isKind('left')) {
       return (true as CheckType);
     }
-    if (item.hasType('mml')) {
+    if (item.isKind('mml')) {
       if (this.getProperty('primes')) {
         if (this.getProperty('position') !== 2) {
           // @test Prime on Sub
@@ -439,7 +444,7 @@ export class OverItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem over');
-    if (item.hasType('over')) {
+    if (item.isKind('over')) {
       // @test Double Over
       throw new TexError(['AmbiguousUseOf', 'Ambiguous use of %1', item.getName()]);
     }
@@ -493,7 +498,7 @@ export class LeftItem extends BaseItem {
   checkItem(item: StackItem) {
     // @test Missing Right
     TreeHelper.printMethod('Checkitem left');
-    if (item.hasType('right')) {
+    if (item.isKind('right')) {
       return this.factory.create('mml', 
         ParserUtil.fenced(this.getProperty('delim') as string, this.mmlData(),
                           item.getProperty('delim') as string));
@@ -538,7 +543,7 @@ export class BeginItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem begin');
-    if (item.hasType('end')) {
+    if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         throw new TexError(['EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
                             this.getName(), item.getName()]);
@@ -554,7 +559,7 @@ export class BeginItem extends BaseItem {
       // return this.parse[this.end].call(this.parse, this, this.data);
       return;
     }
-    if (item.hasType('stop')) {
+    if (item.isKind('stop')) {
       throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
     }
     return super.checkItem(item);
@@ -659,7 +664,7 @@ export class ArrayItem extends BaseItem {
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem array');
     // @test Array Single
-    if (item.isClose && !item.hasType('over')) {
+    if (item.isClose && !item.isKind('over')) {
       // @test Array Single
       if (item.getProperty('isEntry')) {
         // @test Array dashed column, Array solid column
@@ -719,7 +724,7 @@ export class ArrayItem extends BaseItem {
       let newItem = this.factory.create('mml', mml);
       if (this.getProperty('requireClose')) {
         // @test: Label
-        if (item.hasType('close')) {
+        if (item.isKind('close')) {
           // @test: Label
           return newItem;
         }
@@ -863,9 +868,9 @@ export class FnItem extends BaseItem {
       if (item.isOpen) {
         return true;
       }
-      if (!item.hasType('fn')) {
+      if (!item.isKind('fn')) {
         TreeHelper.printSimple('case 3');
-        if (!item.hasType('mml') || !item.data[0]) {
+        if (!item.isKind('mml') || !item.data[0]) {
           TreeHelper.printSimple('case 4');
           return [this.data[0], item];
         }
@@ -912,10 +917,10 @@ export class NotItem extends BaseItem {
     let mml: TextNode | MmlNode;
     let c: string;
     let textNode: TextNode;
-    if (item.hasType('open') || item.hasType('left')) {
+    if (item.isKind('open') || item.isKind('left')) {
       return true as CheckType;
     }
-    if (item.hasType('mml') &&
+    if (item.isKind('mml') &&
         (TreeHelper.isType(item.data[0], 'mo') || TreeHelper.isType(item.data[0], 'mi') ||
          TreeHelper.isType(item.data[0], 'mtext'))) {
       mml = item.data[0] as TextNode;
@@ -964,12 +969,12 @@ export class DotsItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem dots');
-    if (item.hasType('open') || item.hasType('left')) {
+    if (item.isKind('open') || item.isKind('left')) {
       return true;
     }
     let dots = this.getProperty('ldots') as MmlNode;
     // @test Operator Dots
-    if (item.hasType('mml') && TreeHelper.isEmbellished(item.data[0])) {
+    if (item.isKind('mml') && TreeHelper.isEmbellished(item.data[0])) {
       // TODO: Lookup in Operator Table.
       const tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(item.data[0]));
       if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {

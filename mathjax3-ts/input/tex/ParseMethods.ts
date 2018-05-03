@@ -97,7 +97,7 @@ ParseMethods.Superscript = function(parser: TexParser, c: string) {
   let primes: MmlNode;
   let base: MmlNode | void;
   const top = parser.stack.Top();
-  if (top.hasType('prime')) {
+  if (top.isKind('prime')) {
     // @test Prime on Prime
     base = top.data[0];
     primes = top.data[1];
@@ -164,7 +164,7 @@ ParseMethods.Subscript = function(parser: TexParser, c: string) {
   }
   let primes, base;
   const top = parser.stack.Top();
-  if (top.hasType('prime')) {
+  if (top.isKind('prime')) {
     // @test Prime on Sub
     base = top.data[0]; primes = top.data[1];
     parser.stack.Pop();
@@ -322,7 +322,7 @@ ParseMethods.Middle = function(parser: TexParser, name: string) {
   const delim = parser.GetDelimiter(name);
   let node = TreeHelper.createNode('TeXAtom', [], {texClass: TEXCLASS.CLOSE});
   parser.Push(node);
-  if (!parser.stack.Top().hasType('left')) {
+  if (!parser.stack.Top().isKind('left')) {
     // @test Orphan Middle, Middle with Right
     throw new TexError(['MisplacedMiddle',
                         '%1 must be within \\left and \\right', name]);

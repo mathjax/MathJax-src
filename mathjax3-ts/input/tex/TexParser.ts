@@ -197,7 +197,7 @@ export default class TexParser {
    */
   public mml(): MmlNode {
     TreeHelper.printMethod('mml (Old Parser Object)');
-    if (!this.stack.Top().hasType('mml')) {
+    if (!this.stack.Top().isKind('mml')) {
       return null;
     }
     let node = this.stack.Top().data[0];
