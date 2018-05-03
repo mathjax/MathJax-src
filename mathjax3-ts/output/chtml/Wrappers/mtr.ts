@@ -75,7 +75,7 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @return{boolean}   True if this is a labeled row
      */
     get labeled() {
-        return 0;
+        return false;
     }
 
     /*
