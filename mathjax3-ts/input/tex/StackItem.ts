@@ -74,7 +74,16 @@ export type CheckType = boolean | MmlItem | (MmlNode | StackItem)[];
 
 export interface StackItem {
   checkItem(item: StackItem): CheckType;
-  mmlData(inferred?: boolean, forceRow?: boolean): MmlNode;
+
+  /**
+   * Returns nodes on the stack item's node stack as an Mml node. I.e., in case
+   * the item contains more than one node, it creates an mrow.
+   * @param {boolean=} inferred If set the mrow will be an inferred mrow.
+   * @param {boolean=} forceRow If set an mrow will be created, regardless of
+   *     how many nodes the item contains.
+   * @return {MmlNode} The topmost Mml node.
+   */
+  toMml(inferred?: boolean, forceRow?: boolean): MmlNode;
   Pop(): MmlNode | void;
   Push(...args: MmlNode[]): void;
   isKind(kind: string): boolean;
@@ -170,8 +179,11 @@ export class BaseItem implements StackItem {
   }
 
 
-  mmlData(inferred?: boolean, forceRow?: boolean) {
-    TreeHelper.printMethod('mmlData');
+  /**
+   * @override
+   */
+  public toMml(inferred?: boolean, forceRow?: boolean) {
+    TreeHelper.printMethod('toMml');
     if (inferred == null) {
       inferred = true;
     }
@@ -192,7 +204,7 @@ export class BaseItem implements StackItem {
   public checkItem(item: StackItem): CheckType {
     TreeHelper.printMethod('Checkitem base for ' + item.kind + ' with ' + item);
     if (item.isKind('over') && this.isOpen) {
-      item.setProperty('num', this.mmlData(false));
+      item.setProperty('num', this.toMml(false));
       this.data = [];
     }
     if (item.isKind('cell') && this.isOpen) {
@@ -268,7 +280,7 @@ export class StartItem extends BaseItem {
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem start');
     if (item.isKind('stop')) {
-      return this.factory.create('mml', this.mmlData());
+      return this.factory.create('mml', this.toMml());
     }
     return super.checkItem(item);
   }
@@ -311,9 +323,9 @@ export class OpenItem extends BaseItem {
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem open');
     if (item.isKind('close')) {
-      let mml = this.mmlData();
+      let mml = this.toMml();
       // @test PrimeSup
-      // TODO: Move that into mmlData?
+      // TODO: Move that into toMml?
       mml = TreeHelper.cleanSubSup(mml);
       const node = TreeHelper.createNode('TeXAtom', [mml], {});
       // VS: OLD
@@ -452,9 +464,9 @@ export class OverItem extends BaseItem {
     if (item.isClose) {
       // @test Over
       let mml = TreeHelper.createNode('mfrac',
-                                      [this.getProperty('num') as MmlNode, this.mmlData(false)], {});
+                                      [this.getProperty('num') as MmlNode, this.toMml(false)], {});
       // VS: OLD
-      // var mml = MML.mfrac(this.num,this.mmlData(false));
+      // var mml = MML.mfrac(this.num,this.toMml(false));
       if (this.getProperty('thickness') != null) {
         // @test Choose, Above, Above with Delims
         TreeHelper.setAttribute(mml, 'linethickness', this.getProperty('thickness') as string);
@@ -501,7 +513,7 @@ export class LeftItem extends BaseItem {
     TreeHelper.printMethod('Checkitem left');
     if (item.isKind('right')) {
       return this.factory.create('mml', 
-        ParserUtil.fenced(this.getProperty('delim') as string, this.mmlData(),
+        ParserUtil.fenced(this.getProperty('delim') as string, this.toMml(),
                           item.getProperty('delim') as string));
     }
     return super.checkItem(item);
@@ -550,7 +562,7 @@ export class BeginItem extends BaseItem {
                             this.getName(), item.getName()]);
       }
       if (!this.getProperty('end')) {
-        return this.factory.create('mml', this.mmlData());
+        return this.factory.create('mml', this.toMml());
       }
       // TODO: This case currently does not work!
       //
@@ -621,7 +633,7 @@ export class PositionItem extends BaseItem {
       throw new TexError(['MissingBoxFor', 'Missing box for %1', this.getName()]);
     }
     if (item.getProperty('isNotStack')) {
-      let mml = item.mmlData();
+      let mml = item.toMml();
       switch (this.getProperty('move')) {
       case 'vertical':
         // @test Raise, Lower
