@@ -73,6 +73,15 @@ export type ErrorList = {[key: string]: ErrorMsg};
 export type CheckType = boolean | MmlItem | (MmlNode | StackItem)[];
 
 export interface StackItem {
+
+  kind: string;
+  isClose: boolean;
+  isOpen: boolean;
+  isFinal: boolean;
+  data: MmlNode[];
+  global: EnvList;
+  env: EnvList;
+
   checkItem(item: StackItem): CheckType;
 
   /**
@@ -87,15 +96,10 @@ export interface StackItem {
   Pop(): MmlNode | void;
   Push(...args: MmlNode[]): void;
   isKind(kind: string): boolean;
-  kind: string;
   getProperty(key: string): Prop;
   setProperty(key: string, value: Prop): void;
-  isClose: boolean;
-  isOpen: boolean;
-  data: MmlNode[];
-  global: EnvList;
+
   getName(): string;
-  env: EnvList;
 }
 
 export interface StackItemClass {
@@ -155,11 +159,29 @@ export class BaseItem implements StackItem {
     this._properties[key] = value;
   }
 
+
+  /**
+   * @return {boolean} True if item is an opening entity, i.e., it expects a
+   *     closing counterpart on the stack later.
+   */
   get isOpen() {
     return false;
   }
 
+  /**
+   * @return {boolean} True if item is an closing entity, i.e., it needs an
+   *     opening counterpart already on the stack.
+   */
   get isClose() {
+    return false;
+  }
+
+
+  /**
+   * @return {boolean} True if item is final, i.e., it contains one or multiple
+   *      finished parsed nodes.
+   */
+  get isFinal() {
     return false;
   }
 
@@ -219,7 +241,7 @@ export class BaseItem implements StackItem {
     if (item.isClose && this.errors[item.kind + 'Error']) {
       throw new TexError(this.errors[item.kind + 'Error']);
     }
-    if (!item.getProperty('isNotStack')) {
+    if (!item.isFinal) {
       return true;
     }
     this.Push(item.data[0]);
@@ -273,6 +295,10 @@ export class StartItem extends BaseItem {
     return 'start';
   }
 
+
+  /**
+   * @override
+   */
   get isOpen() {
     return true;
   }
@@ -295,6 +321,10 @@ export class StopItem extends BaseItem {
     return 'stop';
   }
 
+
+  /**
+   * @override
+   */
   get isClose() {
     return true;
   }
@@ -316,6 +346,10 @@ export class OpenItem extends BaseItem {
     return 'open';
   }
 
+
+  /**
+   * @override
+   */
   get isOpen() {
     return true;
   }
@@ -347,6 +381,10 @@ export class CloseItem extends BaseItem {
     return 'close';
   }
 
+
+  /**
+   * @override
+   */
   get isClose() {
     return true;
   }
@@ -450,6 +488,9 @@ export class OverItem extends BaseItem {
   }
 
 
+  /**
+   * @override
+   */
   get isClose() {
     return true;
   }
@@ -503,6 +544,10 @@ export class LeftItem extends BaseItem {
     return 'left';
   }
 
+
+  /**
+   * @override
+   */
   get isOpen() {
     return true;
   }
@@ -535,6 +580,10 @@ export class RightItem extends BaseItem {
     return 'right';
   }
 
+
+  /**
+   * @override
+   */
   get isClose() {
     return true;
   }
@@ -550,6 +599,10 @@ export class BeginItem extends BaseItem {
     return 'begin';
   }
 
+
+  /**
+   * @override
+   */
   get isOpen() {
     return true;
   }
@@ -589,6 +642,10 @@ export class EndItem extends BaseItem {
     return 'end';
   }
 
+
+  /**
+   * @override
+   */
   get isClose() {
     return true;
   }
@@ -632,7 +689,7 @@ export class PositionItem extends BaseItem {
     if (item.isClose) {
       throw new TexError(['MissingBoxFor', 'Missing box for %1', this.getName()]);
     }
-    if (item.getProperty('isNotStack')) {
+    if (item.isFinal) {
       let mml = item.toMml();
       switch (this.getProperty('move')) {
       case 'vertical':
@@ -669,6 +726,10 @@ export class ArrayItem extends BaseItem {
     return 'array';
   }
 
+  
+  /**
+   * @override
+   */
   get isOpen() {
     return true;
   }
@@ -835,6 +896,10 @@ export class CellItem extends BaseItem {
     return 'cell';
   }
 
+
+  /**
+   * @override
+   */
   get isClose() {
     return true;
   }
@@ -843,9 +908,11 @@ export class CellItem extends BaseItem {
 
 export class MmlItem extends BaseItem {
 
-  constructor(factory: StackItemFactory, ...args: MmlNode[]) {
-    super(factory, ...args);
-    this.setProperty('isNotStack', true);
+  /**
+   * @override
+   */
+  public get isFinal() {
+    return true;
   }
 
   /**
@@ -855,10 +922,6 @@ export class MmlItem extends BaseItem {
     return 'mml';
   }
 
-  Add() {
-    this.data.push.apply(this.data, arguments);
-    return this;
-  }
 }
 
 
