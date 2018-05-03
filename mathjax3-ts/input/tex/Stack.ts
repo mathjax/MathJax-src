@@ -43,7 +43,12 @@ export default class Stack {
    * @type {EnvList}
    */
   public global: EnvList = {};
-  private data: StackItem[] = [];
+
+  /**
+   * The actual stack, a list of stack items.
+   * @type {Array.<StackItem>}
+   */
+  private stack: StackItem[] = [];
 
   /**
    * @constructor
@@ -53,11 +58,11 @@ export default class Stack {
   constructor(private _factory: StackItemFactory,
               private _env: EnvList, inner: boolean) {
     this.global = {isInner: inner};
-    this.data = [ this._factory.create('start', this.global) ];
+    this.stack = [ this._factory.create('start', this.global) ];
     if (_env) {
-      this.data[0].env = _env;
+      this.stack[0].env = _env;
     }
-    this.env = this.data[0].env;
+    this.env = this.stack[0].env;
   }
 
   public set env(env: EnvList) {
@@ -84,7 +89,7 @@ export default class Stack {
       }
       item.global = this.global;
 
-      let top = (this.data.length ? this.Top().checkItem(item) : true);
+      let top = (this.stack.length ? this.Top().checkItem(item) : true);
       if (top instanceof Array) {
         this.Pop();
         this.Push.apply(this, top);
@@ -94,7 +99,7 @@ export default class Stack {
         this.Push(top);
       }
       else if (top) {
-        this.data.push(item);
+        this.stack.push(item);
         if (item.env) {
           if (item.copyEnv !== false) {
             for (let id in this.env) {
@@ -117,11 +122,11 @@ export default class Stack {
    * @return {StackItem} A stack item.
    */
   public Pop() {
-    const item = this.data.pop();
+    const item = this.stack.pop();
     if (!item.isOpen) {
       delete item.env;
     }
-    this.env = (this.data.length ? this.Top().env : {});
+    this.env = (this.stack.length ? this.Top().env : {});
     return item;
   }
 
@@ -135,14 +140,15 @@ export default class Stack {
     if (n == null) {
       n = 1;
     }
-    return this.data.length < n ? null : this.data[this.data.length - n];
+    return this.stack.length < n ? null : this.stack[this.stack.length - n];
   }
 
 
   /**
-   * Lookup the topmost element on the stack, optionally popping it.
+   * Lookup the topmost element on the stack, returning the Mml node in that
+   * item. Optionally pops the Mml node from that stack item.
    * @param {boolean=} noPop Pop top item if true.
-   * @return {StackItem} The topmost stack item.
+   * @return {MmlNode} The Mml node in the topmost stack item.
    */
   public Prev(noPop?: boolean): MmlNode | void {
     const top = this.Top();
@@ -154,7 +160,7 @@ export default class Stack {
    * @override
    */
   public toString() {
-    return 'stack[\n  ' + this.data.join('\n  ') + '\n]';
+    return 'stack[\n  ' + this.stack.join('\n  ') + '\n]';
   }
 
 }

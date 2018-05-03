@@ -377,14 +377,14 @@ ParseMethods.Limits = function(parser: TexParser, name: string, limits: string) 
     // @test Limits UnderOver
     node = TreeHelper.createNode('msubsup', [], {});
     TreeHelper.copyChildren(op, node);
-    op = top.data[top.data.length-1] = node;
+    op = top.data[top.data.length - 1] = node;
   } else if (TreeHelper.isType(op, 'msubsup') && limits) {
     // @test Limits SubSup
     // node = TreeHelper.createNode('munderover', TreeHelper.getChildren(op), {});
     // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
     node = TreeHelper.createNode('munderover', [], {});
     TreeHelper.copyChildren(op, node);
-    op = top.data[top.data.length-1] = node;
+    op = top.data[top.data.length - 1] = node;
   }
   // TODO: Turns this into properties.
   TreeHelper.setProperties(op, {'movesupsub': limits ? true : false});
