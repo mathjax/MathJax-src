@@ -70,7 +70,7 @@ export type ErrorMsg = string[];
 
 export type ErrorList = {[key: string]: ErrorMsg};
 
-export type CheckType = boolean | StackItem | (MmlNode | StackItem)[];
+export type CheckType = boolean | MmlItem | (MmlNode | StackItem)[];
 
 export interface StackItem {
   checkItem(item: StackItem): CheckType;
@@ -210,7 +210,8 @@ export class BaseItem implements StackItem {
     if (!item.getProperty('isNotStack')) {
       return true;
     }
-    this.Push(item.data[0]); return false;
+    this.Push(item.data[0]);
+    return false;
   }
 
 
@@ -386,7 +387,7 @@ export class SubsupItem extends BaseItem {
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem subsup');
     if (item.isKind('open') || item.isKind('left')) {
-      return (true as CheckType);
+      return true;
     }
     if (item.isKind('mml')) {
       if (this.getProperty('primes')) {
@@ -918,7 +919,7 @@ export class NotItem extends BaseItem {
     let c: string;
     let textNode: TextNode;
     if (item.isKind('open') || item.isKind('left')) {
-      return true as CheckType;
+      return true;
     }
     if (item.isKind('mml') &&
         (TreeHelper.isType(item.data[0], 'mo') || TreeHelper.isType(item.data[0], 'mi') ||
@@ -941,7 +942,7 @@ export class NotItem extends BaseItem {
           // VS: OLD
           // mml.Append(MML.chars('\u0338'));
         }
-        return item as CheckType;
+        return item as MmlItem;
       }
     }
     //  \mathrel{\rlap{\notChar}}
@@ -981,6 +982,6 @@ export class DotsItem extends BaseItem {
         dots = this.getProperty('cdots') as MmlNode;
       }
     }
-    return [dots, item] as CheckType;
+    return [dots, item];
   }
 }
