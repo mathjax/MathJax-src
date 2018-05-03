@@ -88,7 +88,7 @@ export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
      * Handle vertical stretching of children to match height of
      *  other nodes in the row.
      */
-    protected stretchChildren() {
+    public stretchChildren() {
         let stretchy: CHTMLWrapper<N, T, D>[] = [];
         //
         //  Locate and count the stretchy children

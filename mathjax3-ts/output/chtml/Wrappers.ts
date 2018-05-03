@@ -29,6 +29,7 @@ import {CHTMLms} from './Wrappers/ms.js';
 import {CHTMLmspace} from './Wrappers/mspace.js';
 import {CHTMLmpadded} from './Wrappers/mpadded.js';
 import {CHTMLmrow, CHTMLinferredMrow} from './Wrappers/mrow.js';
+import {CHTMLmfenced} from './Wrappers/mfenced.js';
 import {CHTMLmfrac} from './Wrappers/mfrac.js';
 import {CHTMLmsqrt} from './Wrappers/msqrt.js';
 import {CHTMLmroot} from './Wrappers/mroot.js';
@@ -59,6 +60,7 @@ export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
     [CHTMLmunder.kind]: CHTMLmunder,
     [CHTMLmover.kind]: CHTMLmover,
     [CHTMLmunderover.kind]: CHTMLmunderover,
+    [CHTMLmfenced.kind]: CHTMLmfenced,
     [CHTMLmtable.kind]: CHTMLmtable,
     [CHTMLmtr.kind]: CHTMLmtr,
     [CHTMLmlabeledtr.kind]: CHTMLmlabeledtr,
