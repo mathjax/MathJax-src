@@ -31,8 +31,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sm from './StackItem.js';
+import * as sm from './BaseItems.js';
 import * as ams from './AmsItems.js';
+import {StackItemClass, StackItem} from './StackItem.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 
 
@@ -44,7 +45,7 @@ import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
  */
 export default class StackItemFactory {
 
-  public static DefaultStackItems: {[kind: string]: sm.StackItemClass} = {
+  public static DefaultStackItems: {[kind: string]: StackItemClass} = {
     [sm.StartItem.prototype.kind]: sm.StartItem,
     [sm.StopItem.prototype.kind]: sm.StopItem,
     [sm.OpenItem.prototype.kind]: sm.OpenItem,
@@ -68,9 +69,9 @@ export default class StackItemFactory {
     [ams.AmsArrayItem.prototype.kind]: ams.AmsArrayItem
   };
 
-  private itemMap: Map<string, sm.StackItemClass> = new Map();
+  private itemMap: Map<string, StackItemClass> = new Map();
 
-  private item: {[kind: string]: (factory: StackItemFactory, ...args: any[]) => sm.StackItem} = {};
+  private item: {[kind: string]: (factory: StackItemFactory, ...args: any[]) => StackItem} = {};
 
   public defaultKind = 'base';
 
@@ -86,7 +87,7 @@ export default class StackItemFactory {
    * Adds a list of stack items to the current factory.
    * @param {Object.<string, StackItemClass>} stackItems A list of stackitems.
    */
-  public addStackItems(stackItems: {[kind: string]: sm.StackItemClass}) {
+  public addStackItems(stackItems: {[kind: string]: StackItemClass}) {
     for (const kind of Object.keys(stackItems)) {
       this.itemMap.set(kind, stackItems[kind]);
       let THIS = this;

@@ -25,7 +25,6 @@
 
 import * as sm from './SymbolMap.js';
 import MapHandler from './MapHandler.js';
-import ParseMethods from './ParseMethods.js';
 import FallbackMethods from './FallbackMethods.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 import {HandlerType, Configuration, DefaultConfig} from './Configuration.js';
@@ -33,7 +32,7 @@ import {HandlerType, Configuration, DefaultConfig} from './Configuration.js';
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {StackItem, StopItem, EnvList} from './StackItem.js';
+import {StackItem, EnvList} from './StackItem.js';
 import Stack from './Stack.js';
 import {Symbol} from './Symbol.js';
 import TexError from './TexError.js';

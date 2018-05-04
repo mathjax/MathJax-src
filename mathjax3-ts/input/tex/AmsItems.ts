@@ -24,7 +24,7 @@
  */
 
 
-import {ArrayItem, EnvList} from './StackItem.js';
+import {ArrayItem} from './BaseItems.js';
 import ParseUtil from './ParseUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';

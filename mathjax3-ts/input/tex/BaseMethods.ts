@@ -22,7 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sitem from './StackItem.js';
+import * as sitem from './BaseItems.js';
+import {StackItem, EnvList} from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import {ParseMethod} from './Types.js';
 import {TreeHelper} from './TreeHelper.js';
@@ -446,7 +447,7 @@ function parseRoot(parser: TexParser, n: string) {
   const global = newParser.stack.global;
   if (global['leftRoot'] || global['upRoot']) {
     // @test Tweaked Root
-    const def: sitem.EnvList = {};
+    const def: EnvList = {};
     if (global['leftRoot']) {
       def['width'] = global['leftRoot'];
     }
@@ -504,7 +505,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   TreeHelper.printMethod('Accent');
   // @test Vector
   const c = parser.ParseArg(name);
-  const def: sitem.EnvList = {accent: true};
+  const def: EnvList = {accent: true};
   if (parser.stack.env['font']) {
     // @test Vector Font
     def['mathvariant'] = parser.stack.env['font'];
@@ -588,8 +589,8 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
 
 BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) {
   TreeHelper.printMethod('TeXAtom');
-  let def: sitem.EnvList = {texClass: mclass};
-  let mml: sitem.StackItem|MmlNode;
+  let def: EnvList = {texClass: mclass};
+  let mml: StackItem | MmlNode;
   let node: MmlNode;
   let parsed: MmlNode;
   if (mclass == TEXCLASS.OP) {
@@ -623,7 +624,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   const type = parser.GetArgument(name);
   let attr = parser.GetBrackets(name,'').replace(/^\s+/,'');
   const text = parser.GetArgument(name);
-  const def: sitem.EnvList = {};
+  const def: EnvList = {};
   let node: MmlNode;
   try {
     node = TreeHelper.createNode(type, [], {});
@@ -781,7 +782,7 @@ BaseMethods.Rule = function(parser: TexParser, name: string, style: string) {
   const w = parser.GetDimen(name),
   h = parser.GetDimen(name),
   d = parser.GetDimen(name);
-  let def: sitem.EnvList = {width:w, height:h, depth:d};
+  let def: EnvList = {width:w, height:h, depth:d};
   if (style !== 'blank') {
     def['mathbackground'] = (parser.stack.env['color'] || 'black');
   }
@@ -1116,7 +1117,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
 //   parser.Extension(begin.name,file,'environment');
 // };
 
-BaseMethods.Array = function(parser: TexParser, begin: sitem.StackItem,
+BaseMethods.Array = function(parser: TexParser, begin: StackItem,
                       open: string, close: string, align: string,
                       spacing: string, vspacing: string, style: string,
                       raggedHeight: boolean) {
@@ -1179,7 +1180,7 @@ BaseMethods.Array = function(parser: TexParser, begin: sitem.StackItem,
 };
 
 
-BaseMethods.AlignedArray = function(parser: TexParser, begin: sitem.StackItem) {
+BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
   TreeHelper.printMethod('AlignedArray');
   // @test Array1, Array2, Array Test
   const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
@@ -1220,7 +1221,7 @@ BaseMethods.Require = function(parser: TexParser, name: string) {
 };
 
 
-BaseMethods.Extension = function(parser: TexParser, name: string|sitem.StackItem,
+BaseMethods.Extension = function(parser: TexParser, name: string|StackItem,
                           file: string, array?: any) {
   TreeHelper.printMethod('Extension');
   if (name && !(typeof(name) === 'string')) {
