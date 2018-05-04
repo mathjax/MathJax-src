@@ -74,6 +74,9 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-stretchy-h > mjx-ext > mjx-c': {
             transform: 'scalex(500)'
         },
+        'mjx-stretchy-h > mjx-ext > mjx-c::before': {
+            padding: '.001em 0'                  // for blink
+        },
         'mjx-stretchy-h > mjx-beg > mjx-c': {
             'margin-right': '-.1em'
         },
