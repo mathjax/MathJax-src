@@ -327,7 +327,7 @@ export namespace TreeHelper {
     }
   };
 
-  export function isNode(item: Node): boolean  {
+  export function isNode(item: any): boolean  {
     return item instanceof AbstractMmlNode || item instanceof AbstractMmlEmptyNode;
   };
 

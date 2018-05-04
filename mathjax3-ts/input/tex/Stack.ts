@@ -80,16 +80,14 @@ export default class Stack {
    */
   public Push(...args: (StackItem|MmlNode)[]) {
     for (let i = 0, m = args.length; i < m; i++) {
-      let item = arguments[i];
-      if (!item) {
+      const node = args[i];
+      if (!node) {
         continue;
       }
-      if (TreeHelper.isNode(item)) {
-        item = this._factory.create('mml', item);
-      }
+      const item = TreeHelper.isNode(node) ?
+        this._factory.create('mml', node) : node;
       item.global = this.global;
-
-      let top = (this.stack.length ? this.Top().checkItem(item) : true);
+      const top = this.stack.length ? this.Top().checkItem(item) : true;
       if (top instanceof Array) {
         this.Pop();
         this.Push.apply(this, top);
