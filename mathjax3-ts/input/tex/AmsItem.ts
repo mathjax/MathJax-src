@@ -68,14 +68,13 @@ export class AmsArrayItem extends ArrayItem {
     TreeHelper.printMethod('AMS-EndEntry');
     // @test Cubic Binomial
     if (this.row.length) {
-      ParserUtil.fixInitialMO(this.data);
+      ParserUtil.fixInitialMO(this.nodes);
     }
-    const node = TreeHelper.createNode('mtd', this.data, {});
+    const node = TreeHelper.createNode('mtd', this.nodes, {});
     // VS: OLD
     // var node = MML.mtd.apply(MML,this.data);
     this.row.push(node);
-    console.log(this.data.length);
-    this.data = [];
+    this.Clear();
   }
   
   EndRow() {

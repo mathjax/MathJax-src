@@ -69,24 +69,16 @@ export type PropList = {[key: string]: Prop};
 export type CheckType = boolean | MmlItem | (MmlNode | StackItem)[];
 
 
-export interface StackItem {
-
-  kind: string;
-  isClose: boolean;
-  isOpen: boolean;
-  isFinal: boolean;
-  global: EnvList;
-  env: EnvList;
-  data: MmlNode[];
+export interface NodeStack {
 
   /**
-   * Get the topmost elements on the node stack without removing it.
+   * Get or set the topmost element on the node stack without removing it.
    * @return {MmlNode} The topmost node on the stack.
    */
   Top: MmlNode;
 
   /**
-   * Get the topmost elements on the node stack without removing it.
+   * Get or set the last element on the node stack without removing it.
    * @return {MmlNode} The topmost node on the stack.
    */
   Last: MmlNode;
@@ -110,6 +102,16 @@ export interface StackItem {
   TopN(n?: number): MmlNode[];
 
   /**
+   * @return {number} The size of the stack.
+   */
+  Size(): number;
+
+  /**
+   * Clears the stack.
+   */
+  Clear(): void;
+
+  /**
    * Returns nodes on the stack item's node stack as an Mml node. I.e., in case
    * the item contains more than one node, it creates an mrow.
    * @param {boolean=} inferred If set the mrow will be an inferred mrow.
@@ -118,6 +120,122 @@ export interface StackItem {
    * @return {MmlNode} The topmost Mml node.
    */
   toMml(inferred?: boolean, forceRow?: boolean): MmlNode;
+
+}
+
+
+export class MmlStack implements NodeStack {
+  
+  constructor(private _nodes: MmlNode[]) { }
+
+  protected get nodes(): MmlNode[] {
+    return this._nodes;
+  } 
+
+  /**
+   * @override
+   */
+  public Push(...nodes: MmlNode[]) {
+    TreeHelper.printMethod('StackItem Push arguments: ' + this._nodes + ' arguments: ');
+    this._nodes.push.apply(this._nodes, nodes);
+  }
+
+
+  /**
+   * @override
+   */
+  public Pop(): MmlNode {
+    return this._nodes.pop();
+  }
+
+
+  /**
+   * @override
+   */
+  public get Top(): MmlNode {
+    return this._nodes[0];
+  }
+
+
+  /**
+   * @override
+   */
+  public set Top(node: MmlNode) {
+    this._nodes[0] = node;
+  }
+
+
+  /**
+   * @override
+   */
+  public get Last(): MmlNode {
+    return this._nodes[this._nodes.length - 1];
+  }
+
+
+  /**
+   * @override
+   */
+  public set Last(node: MmlNode) {
+    this._nodes[this._nodes.length - 1] = node;
+  }
+
+
+  /**
+   * @override
+   */
+  public TopN(n?: number): MmlNode[] {
+    if (n == null) {
+      n = 1;
+    }
+    return this._nodes.slice(0, n);
+  }
+
+
+  /**
+   * @override
+   */
+  public Size(): number {
+    return this._nodes.length;
+  }
+
+
+  /**
+   * @override
+   */
+  public Clear(): void {
+    this._nodes = [];
+  }
+
+  
+  /**
+   * @override
+   */
+  public toMml(inferred?: boolean, forceRow?: boolean) {
+    TreeHelper.printMethod('toMml');
+    if (inferred == null) {
+      inferred = true;
+    }
+    if (this._nodes.length === 1 && !forceRow) {
+      TreeHelper.printSimple('End 1');
+      return this.Top;
+    }
+    // @test Two Identifiers
+    return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this._nodes, {});
+    // VS: OLD
+    // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
+  }
+
+}
+
+export interface StackItem extends NodeStack {
+
+  kind: string;
+  isClose: boolean;
+  isOpen: boolean;
+  isFinal: boolean;
+  global: EnvList;
+  env: EnvList;
 
   /**
    * Tests if item is of the given type.
@@ -138,7 +256,7 @@ export interface StackItemClass {
   new (factory: StackItemFactory, ...nodes: MmlNode[]): StackItem;
 }
 
-export class BaseItem implements StackItem {
+export abstract class BaseItem extends MmlStack implements StackItem {
 
   private _env: EnvList;
 
@@ -155,13 +273,11 @@ export class BaseItem implements StackItem {
 
   public global: EnvList = {};
 
-  public data: MmlNode[] = [];
-
   constructor(private _factory: StackItemFactory, ...nodes: MmlNode[]) {
+    super(nodes);
     if (this.isOpen) {
       this._env = {};
     }
-    this.Push.apply(this, nodes);
   }
 
   public get factory() {
@@ -221,87 +337,8 @@ export class BaseItem implements StackItem {
   /**
    * @override
    */
-  public Push(...nodes: MmlNode[]) {
-    TreeHelper.printMethod('StackItem Push arguments: ' + this.data + ' arguments: ');
-    this.data.push.apply(this.data, nodes);
-  }
-
-
-  /**
-   * @override
-   */
-  public Pop(): MmlNode {
-    return this.data.pop();
-  }
-
-
-  /**
-   * @override
-   */
-  public get Top(): MmlNode {
-    return this.data[0];
-  }
-
-
-  /**
-   * @override
-   */
-  public set Top(node: MmlNode) {
-    this.data[0] = node;
-  }
-
-
-  /**
-   * @override
-   */
-  public get Last(): MmlNode {
-    return this.data[this.data.length - 1];
-  }
-
-
-  /**
-   * @override
-   */
-  public set Last(node: MmlNode) {
-    this.data[this.data.length - 1] = node;
-  }
-
-
-  /**
-   * @override
-   */
-  public TopN(n?: number): MmlNode[] {
-    if (n == null) {
-      n = 1;
-    }
-    return this.data.slice(0, n);
-  }
-
-
-  /**
-   * @override
-   */
   public isKind(kind: string) {
     return kind === this.kind;
-  }
-
-
-  /**
-   * @override
-   */
-  public toMml(inferred?: boolean, forceRow?: boolean) {
-    TreeHelper.printMethod('toMml');
-    if (inferred == null) {
-      inferred = true;
-    }
-    if (this.data.length === 1 && !forceRow) {
-      TreeHelper.printSimple('End 1');
-      return this.Top;
-    }
-    // @test Two Identifiers
-    return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this.data, {});
-    // VS: OLD
-    // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
   }
 
 
@@ -312,7 +349,7 @@ export class BaseItem implements StackItem {
     TreeHelper.printMethod('Checkitem base for ' + item.kind + ' with ' + item);
     if (item.isKind('over') && this.isOpen) {
       item.setProperty('num', this.toMml(false));
-      this.data = [];
+      this.Clear();
     }
     if (item.isKind('cell') && this.isOpen) {
       if (item.getProperty('linebreak')) {
@@ -359,7 +396,7 @@ export class BaseItem implements StackItem {
    * @override
    */
   public toString() {
-    return this.kind + '[' + this.data.join('; ') + ']';
+    return this.kind + '[' + this.nodes.join('; ') + ']';
   }
 
 }
@@ -525,10 +562,11 @@ export class SubsupItem extends BaseItem {
     if (item.isKind('open') || item.isKind('left')) {
       return true;
     }
-    let top = this.Top;
+    const top = this.Top;
+    const position = this.getProperty('position') as number;
     if (item.isKind('mml')) {
       if (this.getProperty('primes')) {
-        if (this.getProperty('position') !== 2) {
+        if (position !== 2) {
           // @test Prime on Sub
           TreeHelper.setData(top, 2, this.getProperty('primes') as MmlNode);
         } else {
@@ -540,7 +578,7 @@ export class SubsupItem extends BaseItem {
           item.Top = node;
         }
       }
-      TreeHelper.setData(top, this.getProperty('position') as number, item.Top);
+      TreeHelper.setData(top, position, item.Top);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
         TreeHelper.setProperties(top, {movesupsub: this.getProperty('movesupsub')} as PropertyList);
@@ -550,8 +588,7 @@ export class SubsupItem extends BaseItem {
     }
     if (super.checkItem(item)) {
       // @test Brace Superscript Error
-      throw new TexError(this.errors[['', 'subError', 'supError']
-                                     [this.getProperty('position') as number]]);
+      throw new TexError(this.errors[['', 'subError', 'supError'][position]]);
     }
   }
 
@@ -608,7 +645,7 @@ export class OverItem extends BaseItem {
   }
 
 
-  toString() {return 'over[' + this.getProperty('num') + ' / ' + this.data.join('; ') + ']';}
+  toString() {return 'over[' + this.getProperty('num') + ' / ' + this.nodes.join('; ') + ']';}
 
 }
 
@@ -751,7 +788,7 @@ export class StyleItem extends BaseItem {
       return super.checkItem(item);
     }
     // @test Style
-    const mml = TreeHelper.createNode('mstyle', this.data, this.getProperty('styles'));
+    const mml = TreeHelper.createNode('mstyle', this.nodes, this.getProperty('styles'));
     // VS: OLD
     // var mml = MML.mstyle.apply(MML,this.data).With(this.styles);
     return [this.factory.create('mml', mml), item];
@@ -896,19 +933,19 @@ export class ArrayItem extends BaseItem {
 
   EndEntry() {
     // @test Array1, Array2
-    const mtd = TreeHelper.createNode('mtd', this.data, {});
+    const mtd = TreeHelper.createNode('mtd', this.nodes, {});
     // VS: OLD
     // var mtd = MML.mtd.apply(MML,this.data);
     if (this.hfill.length) {
       if (this.hfill[0] === 0) {
         TreeHelper.setAttribute(mtd, 'columnalign', 'right');
       }
-      if (this.hfill[this.hfill.length - 1] === this.data.length) {
+      if (this.hfill[this.hfill.length - 1] === this.Size()) {
         TreeHelper.setAttribute(mtd, 'columnalign',
                                 TreeHelper.getAttribute(mtd, 'columnalign') ? 'center' : 'left');
       }
     }
-    this.row.push(mtd); this.data = []; this.hfill = [];
+    this.row.push(mtd); this.Clear(); this.hfill = [];
   }
 
 
@@ -933,7 +970,7 @@ export class ArrayItem extends BaseItem {
 
 
   EndTable() {
-    if (this.data.length || this.row.length) {
+    if (this.Size() || this.row.length) {
       this.EndEntry();
       this.EndRow();
     }

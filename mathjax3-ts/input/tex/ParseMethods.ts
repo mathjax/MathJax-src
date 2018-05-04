@@ -1046,7 +1046,7 @@ ParseMethods.HLine = function(parser: TexParser, name: string, style: string) {
   TreeHelper.printMethod('HLine');
   if (style == null) {style = 'solid'}
   const top = parser.stack.Top();
-  if (!(top instanceof sitem.ArrayItem) || top.data.length) {
+  if (!(top instanceof sitem.ArrayItem) || top.Size()) {
     throw new TexError(['Misplaced','Misplaced %1', name]);
   }
   if (!top.table.length) {
@@ -1065,7 +1065,7 @@ ParseMethods.HFill = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('HFill');
   const top = parser.stack.Top();
   if (top instanceof sitem.ArrayItem) {
-    top.hfill.push(top.data.length);
+    top.hfill.push(top.Size());
   } else {
     throw new TexError(['UnsupportedHFill', 'Unsupported use of %1', name]);
   }

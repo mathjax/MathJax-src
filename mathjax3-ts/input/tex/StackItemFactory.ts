@@ -45,7 +45,6 @@ import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 export default class StackItemFactory {
 
   public static DefaultStackItems: {[kind: string]: sm.StackItemClass} = {
-    [sm.BaseItem.prototype.kind]: sm.BaseItem,
     [sm.StartItem.prototype.kind]: sm.StartItem,
     [sm.StopItem.prototype.kind]: sm.StopItem,
     [sm.OpenItem.prototype.kind]: sm.OpenItem,
