@@ -26,7 +26,7 @@
 import {StackItem} from './StackItem.js';
 import {AmsArrayItem} from './AmsItem.js';
 import {ParseMethod} from './Types.js';
-import ParseMethods from './ParseMethods.js';
+import BaseMethods from './BaseMethods.js';
 import {ParserUtil} from './ParserUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {TexConstant} from './TexConstants.js';
@@ -358,16 +358,16 @@ AmsMethods.HandleTag = function (parser: TexParser, name: string) {
 
 
 
-AmsMethods.Macro = ParseMethods.Macro;
+AmsMethods.Macro = BaseMethods.Macro;
 
-AmsMethods.Accent = ParseMethods.Accent;
+AmsMethods.Accent = BaseMethods.Accent;
 
-AmsMethods.Tilde = ParseMethods.Tilde;
+AmsMethods.Tilde = BaseMethods.Tilde;
 
-AmsMethods.Array = ParseMethods.Array;
+AmsMethods.Array = BaseMethods.Array;
 
-AmsMethods.Spacer = ParseMethods.Spacer;
+AmsMethods.Spacer = BaseMethods.Spacer;
 
-AmsMethods.NamedOp = ParseMethods.NamedOp;
+AmsMethods.NamedOp = BaseMethods.NamedOp;
 
 export default AmsMethods;

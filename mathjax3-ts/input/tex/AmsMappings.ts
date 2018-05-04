@@ -25,7 +25,7 @@
 import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
-import BaseMethods from './BaseMethods.js';
+import ParseMethods from './ParseMethods.js';
 import AmsMethods from './AmsMethods.js';
 import {ParserUtil} from './ParserUtil.js';
 
@@ -42,7 +42,7 @@ let COLS = function(W: number[]) {
 /**
  * Operators from the AMS Math package.
  */
-new sm.CharacterMap('AMSmath-mathchar0mo', BaseMethods.mathchar0mo, {
+new sm.CharacterMap('AMSmath-mathchar0mo', ParseMethods.mathchar0mo, {
   iiiint:     ['\u2A0C', {texClass: TEXCLASS.OP}]
 });
 
@@ -112,7 +112,7 @@ new sm.CommandMap('AMSmath-macros', {
 /**
  * Environments from the AMS Math package.
  */
-new sm.EnvironmentMap('AMSmath-environment', BaseMethods.environment, {
+new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
   align:         ['AMSarray', null, true, true,  'rlrlrlrlrlrl',
                   COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
   'align*':      ['AMSarray', null, false, true, 'rlrlrlrlrlrl',
@@ -148,7 +148,7 @@ new sm.EnvironmentMap('AMSmath-environment', BaseMethods.environment, {
 /**
  * Delimiters from the AMS Math package.
  */
-new sm.DelimiterMap('AMSmath-delimiter', BaseMethods.delimiter, {
+new sm.DelimiterMap('AMSmath-delimiter', ParseMethods.delimiter, {
   '\\lvert':     ['\u007C', {texClass: TEXCLASS.OPEN}],
   '\\rvert':     ['\u007C', {texClass: TEXCLASS.CLOSE}],
   '\\lVert':     ['\u2016', {texClass: TEXCLASS.OPEN}],

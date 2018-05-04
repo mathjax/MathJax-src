@@ -31,19 +31,19 @@ import ParseMethods from './ParseMethods.js';
 /**
  * Letter pattern for parsing identifiers and operators.
  */
-new sm.RegExpMap('letter', BaseMethods.variable, /[a-z]/i);
+new sm.RegExpMap('letter', ParseMethods.variable, /[a-z]/i);
 
 
 /**
  * Digit pattern for parsing numbers.
  */
-new sm.RegExpMap('digit', BaseMethods.digit, /[0-9.]/);
+new sm.RegExpMap('digit', ParseMethods.digit, /[0-9.]/);
 
 
 /**
  * Pattern for spotting start of commands.
  */
-new sm.RegExpMap('command', BaseMethods.controlSequence, /^\\/ );
+new sm.RegExpMap('command', ParseMethods.controlSequence, /^\\/ );
 
 
 /**
@@ -69,13 +69,13 @@ new sm.MacroMap('special', {
   '#':   'Hash',
   '\u00A0': 'Space',
   '\u2019': 'Prime'
-}, ParseMethods);
+}, BaseMethods);
 
 
 /**
  * Macros for identifiers.
  */
-new sm.CharacterMap('mathchar0mi', BaseMethods.mathchar0mi, {
+new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
   // Lower-case greek
   alpha:        '\u03B1',
   beta:         '\u03B2',
@@ -147,7 +147,7 @@ new sm.CharacterMap('mathchar0mi', BaseMethods.mathchar0mi, {
 /**
  * Macros for operators.
  */
-new sm.CharacterMap('mathchar0mo', BaseMethods.mathchar0mo, {
+new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   surd:         '\u221A',
 
   // big ops
@@ -315,7 +315,7 @@ new sm.CharacterMap('mathchar0mo', BaseMethods.mathchar0mo, {
 /**
  * Macros for special characters and identifiers.
  */
-new sm.CharacterMap('mathchar7', BaseMethods.mathchar7, {
+new sm.CharacterMap('mathchar7', ParseMethods.mathchar7, {
   Gamma:        '\u0393',
   Delta:        '\u0394',
   Theta:        '\u0398',
@@ -340,7 +340,7 @@ new sm.CharacterMap('mathchar7', BaseMethods.mathchar7, {
 /**
  * Macros for delimiters.
  */
-new sm.DelimiterMap('delimiter', BaseMethods.delimiter, {
+new sm.DelimiterMap('delimiter', ParseMethods.delimiter, {
   '(':                '(',
   ')':                ')',
   '[':                '[',
@@ -680,13 +680,13 @@ new sm.CommandMap('macros', {
 
   // mathchoice
   mathchoice:         'MathChoice'
-}, ParseMethods);
+}, BaseMethods);
 
 
 /**
  * Macros for LaTeX environments.
  */
-const envs = new sm.EnvironmentMap('environment', BaseMethods.environment, {
+const envs = new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:        ['AlignedArray'],
   matrix:       ['Array', null, null, null, 'c'],
   pmatrix:      ['Array', null, '(', ')', 'c'],
@@ -716,7 +716,7 @@ const envs = new sm.EnvironmentMap('environment', BaseMethods.environment, {
   // alignat:      ['ExtensionEnv', null, 'AMSmath'],
   // 'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
   // alignedat:    ['ExtensionEnv', null, 'AMSmath']
-}, ParseMethods);
+}, BaseMethods);
 
 
 /**
