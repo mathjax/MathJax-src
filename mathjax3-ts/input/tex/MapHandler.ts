@@ -23,7 +23,6 @@
  */
 
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
-import {ParseMethod, ParseResult, ParseInput} from './Types.js';
 
 
 export default class MapHandler {

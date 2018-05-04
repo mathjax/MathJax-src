@@ -23,7 +23,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sm from './SymbolMap.js';
+import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import MapHandler from './MapHandler.js';
 import FallbackMethods from './FallbackMethods.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
@@ -56,7 +56,6 @@ export default class TexParser {
   
   // From OLD Parser
   NBSP = '\u00A0'; 
-  string: string;
   i: number = 0;
   stack: Stack;
   
@@ -64,10 +63,9 @@ export default class TexParser {
   /**
    * @constructor
    */
-  constructor(str: string, env: EnvList, config?: Configuration) {
+  constructor(private _string: string, env: EnvList, config?: Configuration) {
     // TODO: Move this into a configuration object.
     this.configure(config || DefaultConfig);
-    this.string = str;
     let ENV: EnvList;
     if (env) {
       ENV = {};
@@ -79,6 +77,15 @@ export default class TexParser {
     this.stack = new Stack(this.itemFactory, ENV, !!env);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
+  }
+
+
+  set string(str: string) {
+    this._string = str;
+  }
+
+  get string() {
+    return this._string;
   }
 
 
@@ -99,6 +106,7 @@ export default class TexParser {
     for (const key of Object.keys(config.handler)) {
       let name = key as HandlerType;
       let subHandler = new SubHandler(config.handler[name] || [],
+                                      // TODO (VS): This needs to be cleaner.
                                       config.fallback[name] ||
                                       FallbackMethods.get(name));
       this.configurations.set(name, subHandler);
@@ -540,7 +548,7 @@ export default class TexParser {
  */
 class SubHandler {
 
-  private _configuration: sm.SymbolMap[] = [];
+  private _configuration: SymbolMap[] = [];
 
   /**
    * @constructor
@@ -593,7 +601,7 @@ class SubHandler {
    * @return {T} A boolean, Character, or Macro.
    */
   public lookup<T>(symbol: string): T {
-    let map = this.applicable(symbol) as sm.AbstractSymbolMap<T>;
+    let map = this.applicable(symbol) as AbstractSymbolMap<T>;
     return map ? map.lookup(symbol) : null;
   }
 
@@ -615,7 +623,7 @@ class SubHandler {
    */
   public toString(): string {
     return this._configuration
-      .map(function(x: sm.SymbolMap) {return x.name; })
+      .map(function(x: SymbolMap) {return x.name; })
       .join(', ');
   }
 
@@ -625,7 +633,7 @@ class SubHandler {
    * @param {string} symbol The symbol to parse.
    * @return {SymbolMap} A map that can parse the symbol.
    */
-  private applicable(symbol: string): sm.SymbolMap {
+  private applicable(symbol: string): SymbolMap {
     for (let map of this._configuration) {
       if (map.contains(symbol)) {
         return map;
