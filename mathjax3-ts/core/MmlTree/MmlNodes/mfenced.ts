@@ -41,9 +41,9 @@ export class MmlMfenced extends AbstractMmlNode {
     /*
      *  Storage for "fake" nodes for the delimiters and separators
      */
-    protected separators: MmlNode[] = [];
-    protected open: MmlNode = null;
-    protected close: MmlNode = null;
+    public separators: MmlNode[] = [];
+    public open: MmlNode = null;
+    public close: MmlNode = null;
 
     /*
      * @return {string}  The mfenced kind
