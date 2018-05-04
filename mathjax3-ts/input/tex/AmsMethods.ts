@@ -24,7 +24,7 @@
 
 
 import {StackItem} from './StackItem.js';
-import {AmsArrayItem} from './AmsItem.js';
+import {AmsArrayItem} from './AmsItems.js';
 import {ParseMethod} from './Types.js';
 import BaseMethods from './BaseMethods.js';
 import ParseUtil from './ParseUtil.js';

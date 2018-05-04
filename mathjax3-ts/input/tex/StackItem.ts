@@ -1045,10 +1045,6 @@ export class MmlItem extends BaseItem {
 
 export class FnItem extends BaseItem {
 
-  constructor(factory: StackItemFactory, ...nodes: MmlNode[]) {
-    super(factory, ...nodes);
-  }
-
   /**
    * @override
    */
@@ -1061,21 +1057,22 @@ export class FnItem extends BaseItem {
     const top = this.Top;
     if (top) {
       if (item.isOpen) {
+        console.log('testing');
         return true;
       }
       if (!item.isKind('fn')) {
-        TreeHelper.printSimple('case 3');
+        // @test Named Function
         let mml = item.Top;
         if (!item.isKind('mml') || !mml) {
-          TreeHelper.printSimple('case 4');
+          // @test Mathop Super
           return [top, item];
         }
         if (TreeHelper.isType(mml, 'mspace')) {
-          TreeHelper.untested(100);
+          // @test Fn Pos Space, Fn Neg Space
           return [top, item];
         }
         if (TreeHelper.isEmbellished(mml)) {
-          TreeHelper.printSimple('case 5');
+          // @test MultiInt with Limits
           mml = TreeHelper.getCoreMO(mml);
         }
         // TODO: Look this up in the operator table either as

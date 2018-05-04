@@ -32,7 +32,7 @@
  */
 
 import * as sm from './StackItem.js';
-import * as ams from './AmsItem.js';
+import * as ams from './AmsItems.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 
 
