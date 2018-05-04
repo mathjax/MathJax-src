@@ -74,6 +74,7 @@ export class AmsArrayItem extends ArrayItem {
     // VS: OLD
     // var node = MML.mtd.apply(MML,this.data);
     this.row.push(node);
+    console.log(this.data.length);
     this.data = [];
   }
   

@@ -66,11 +66,8 @@ export type Prop = string | number | boolean | MmlNode | PropList;
 
 export type PropList = {[key: string]: Prop};
 
-export type ErrorMsg = string[];
-
-export type ErrorList = {[key: string]: ErrorMsg};
-
 export type CheckType = boolean | MmlItem | (MmlNode | StackItem)[];
+
 
 export interface StackItem {
 
@@ -78,21 +75,21 @@ export interface StackItem {
   isClose: boolean;
   isOpen: boolean;
   isFinal: boolean;
-  data: MmlNode[];
   global: EnvList;
   env: EnvList;
-
-  checkItem(item: StackItem): CheckType;
+  data: MmlNode[];
 
   /**
-   * Returns nodes on the stack item's node stack as an Mml node. I.e., in case
-   * the item contains more than one node, it creates an mrow.
-   * @param {boolean=} inferred If set the mrow will be an inferred mrow.
-   * @param {boolean=} forceRow If set an mrow will be created, regardless of
-   *     how many nodes the item contains.
-   * @return {MmlNode} The topmost Mml node.
+   * Get the topmost elements on the node stack without removing it.
+   * @return {MmlNode} The topmost node on the stack.
    */
-  toMml(inferred?: boolean, forceRow?: boolean): MmlNode;
+  Top: MmlNode;
+
+  /**
+   * Get the topmost elements on the node stack without removing it.
+   * @return {MmlNode} The topmost node on the stack.
+   */
+  Last: MmlNode;
 
   /**
    * @return {MmlNode} The topmost node on the item's node stack.
@@ -110,7 +107,17 @@ export interface StackItem {
    * @param {number=} n Number of elements that should be returned.
    * @return {MmlNode[]} List of nodes on top of stack.
    */
-  Top(n?: number): MmlNode[];
+  TopN(n?: number): MmlNode[];
+
+  /**
+   * Returns nodes on the stack item's node stack as an Mml node. I.e., in case
+   * the item contains more than one node, it creates an mrow.
+   * @param {boolean=} inferred If set the mrow will be an inferred mrow.
+   * @param {boolean=} forceRow If set an mrow will be created, regardless of
+   *     how many nodes the item contains.
+   * @return {MmlNode} The topmost Mml node.
+   */
+  toMml(inferred?: boolean, forceRow?: boolean): MmlNode;
 
   /**
    * Tests if item is of the given type.
@@ -123,6 +130,8 @@ export interface StackItem {
   setProperty(key: string, value: Prop): void;
 
   getName(): string;
+  checkItem(item: StackItem): CheckType;
+
 }
 
 export interface StackItemClass {
@@ -221,7 +230,7 @@ export class BaseItem implements StackItem {
   /**
    * @override
    */
-  public Pop(): MmlNode | void {
+  public Pop(): MmlNode {
     return this.data.pop();
   }
 
@@ -229,7 +238,39 @@ export class BaseItem implements StackItem {
   /**
    * @override
    */
-  public Top(n?: number): MmlNode[] {
+  public get Top(): MmlNode {
+    return this.data[0];
+  }
+
+
+  /**
+   * @override
+   */
+  public set Top(node: MmlNode) {
+    this.data[0] = node;
+  }
+
+
+  /**
+   * @override
+   */
+  public get Last(): MmlNode {
+    return this.data[this.data.length - 1];
+  }
+
+
+  /**
+   * @override
+   */
+  public set Last(node: MmlNode) {
+    this.data[this.data.length - 1] = node;
+  }
+
+
+  /**
+   * @override
+   */
+  public TopN(n?: number): MmlNode[] {
     if (n == null) {
       n = 1;
     }
@@ -255,7 +296,7 @@ export class BaseItem implements StackItem {
     }
     if (this.data.length === 1 && !forceRow) {
       TreeHelper.printSimple('End 1');
-      return this.data[0];
+      return this.Top;
     }
     // @test Two Identifiers
     return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this.data, {});
@@ -288,7 +329,7 @@ export class BaseItem implements StackItem {
     if (!item.isFinal) {
       return true;
     }
-    this.Push(item.data[0]);
+    this.Push(item.Top);
     return false;
   }
 
@@ -447,15 +488,16 @@ export class PrimeItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem prime');
-    if (!TreeHelper.isType(this.data[0], 'msubsup')) {
+    let [top0, top1] = this.TopN(2);
+    if (!TreeHelper.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
-      const node = TreeHelper.createNode('msup', [this.data[0], this.data[1]], {});
+      const node = TreeHelper.createNode('msup', [top0, top1], {});
       // VS: OLD
-      // var node = MML.msup(this.data[0],this.data[1]);
+      // var node = MML.msup(top0,top1);
       return [node, item];
     }
-    TreeHelper.setData(this.data[0], (this.data[0] as MmlMsubsup).sup, this.data[1]);
-    return [this.data[0], item];
+    TreeHelper.setData(top0, (top0 as MmlMsubsup).sup, top1);
+    return [top0, item];
   }
 }
 
@@ -483,26 +525,27 @@ export class SubsupItem extends BaseItem {
     if (item.isKind('open') || item.isKind('left')) {
       return true;
     }
+    let top = this.Top;
     if (item.isKind('mml')) {
       if (this.getProperty('primes')) {
         if (this.getProperty('position') !== 2) {
           // @test Prime on Sub
-          TreeHelper.setData(this.data[0], 2, this.getProperty('primes') as MmlNode);
+          TreeHelper.setData(top, 2, this.getProperty('primes') as MmlNode);
         } else {
           // @test Prime on Prime
           TreeHelper.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
-          const node = TreeHelper.createNode('mrow', [this.getProperty('primes') as MmlNode, item.data[0]], {});
+          const node = TreeHelper.createNode('mrow', [this.getProperty('primes') as MmlNode, item.Top], {});
           // VS: OLD
           // var node = MML.mrow(this.primes, item.data[0]);
-          item.data[0] = node;
+          item.Top = node;
         }
       }
-      TreeHelper.setData(this.data[0], this.getProperty('position') as number, item.data[0]);
+      TreeHelper.setData(top, this.getProperty('position') as number, item.Top);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
-        TreeHelper.setProperties(this.data[0], {movesupsub: this.getProperty('movesupsub')} as PropertyList);
+        TreeHelper.setProperties(top, {movesupsub: this.getProperty('movesupsub')} as PropertyList);
       }
-      const result = this.factory.create('mml', this.data[0]);
+      const result = this.factory.create('mml', top);
       return result;
     }
     if (super.checkItem(item)) {
@@ -981,19 +1024,19 @@ export class FnItem extends BaseItem {
 
   checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem fn');
-    const top = this.data[0];
+    const top = this.Top;
     if (top) {
       if (item.isOpen) {
         return true;
       }
       if (!item.isKind('fn')) {
         TreeHelper.printSimple('case 3');
-        let mml = item.data[0];
+        let mml = item.Top;
         if (!item.isKind('mml') || !mml) {
           TreeHelper.printSimple('case 4');
           return [top, item];
         }
-        if (TreeHelper.isType(item.data[0], 'mspace')) {
+        if (TreeHelper.isType(mml, 'mspace')) {
           TreeHelper.untested(100);
           return [top, item];
         }
@@ -1039,10 +1082,11 @@ export class NotItem extends BaseItem {
       return true;
     }
     if (item.isKind('mml') &&
-        (TreeHelper.isType(item.data[0], 'mo') || TreeHelper.isType(item.data[0], 'mi') ||
-         TreeHelper.isType(item.data[0], 'mtext'))) {
-      mml = item.data[0] as TextNode;
+        (TreeHelper.isType(item.Top, 'mo') || TreeHelper.isType(item.Top, 'mi') ||
+         TreeHelper.isType(item.Top, 'mtext'))) {
       TreeHelper.printJSON(mml);
+      // TODO: This is the wrong type! That should be a token node!
+      mml = item.Top as TextNode;
       c = TreeHelper.getText(mml as TextNode);
       if (c.length === 1 && !TreeHelper.getProperty(mml, 'movesupsub') &&
           TreeHelper.getChildren(mml).length === 1) {
@@ -1091,10 +1135,11 @@ export class DotsItem extends BaseItem {
       return true;
     }
     let dots = this.getProperty('ldots') as MmlNode;
+    let top = item.Top;
     // @test Operator Dots
-    if (item.isKind('mml') && TreeHelper.isEmbellished(item.data[0])) {
+    if (item.isKind('mml') && TreeHelper.isEmbellished(top)) {
       // TODO: Lookup in Operator Table.
-      const tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(item.data[0]));
+      const tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(top));
       if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
         dots = this.getProperty('cdots') as MmlNode;
       }

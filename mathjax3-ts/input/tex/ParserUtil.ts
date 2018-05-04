@@ -195,17 +195,17 @@ export namespace ParserUtil {
    *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
    *  be infix.
    */
-  export function fixInitialMO(data: MmlNode[]) {
+  export function fixInitialMO(nodes: MmlNode[]) {
     TreeHelper.printMethod('AMS-fixInitialMO');
-    for (let i = 0, m = data.length; i < m; i++) {
-      let child = data[i];
+    for (let i = 0, m = nodes.length; i < m; i++) {
+      let child = nodes[i];
       if (child && (!TreeHelper.isType(child, 'mspace') &&
                     (!TreeHelper.isType(child, 'TeXAtom') ||
                      (TreeHelper.getChildren(child)[0] &&
                       TreeHelper.getChildren(TreeHelper.getChildren(child)[0]).length)))) {
         if (TreeHelper.isEmbellished(child)) {
           let mi = TreeHelper.createNode('mi', [], {});
-          data.unshift(mi);
+          nodes.unshift(mi);
         }
         break;
       }

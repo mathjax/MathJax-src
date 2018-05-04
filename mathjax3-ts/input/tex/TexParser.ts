@@ -200,7 +200,7 @@ export default class TexParser {
     if (!this.stack.Top().isKind('mml')) {
       return null;
     }
-    let node = this.stack.Top().data[0];
+    let node = this.stack.Top().Top;
     // Makes sure TeXclasses are properly set, so none is null.
     node.setTeXclass(null);
     return node;

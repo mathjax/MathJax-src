@@ -99,8 +99,7 @@ ParseMethods.Superscript = function(parser: TexParser, c: string) {
   const top = parser.stack.Top();
   if (top.isKind('prime')) {
     // @test Prime on Prime
-    base = top.data[0];
-    primes = top.data[1];
+    [base, primes] = top.TopN(2);
     parser.stack.Pop();
   } else {
     // @test Empty base2, Square, Cube
@@ -111,13 +110,6 @@ ParseMethods.Superscript = function(parser: TexParser, c: string) {
       base = TreeHelper.createNode('mi', [], {}, textNode);
     }
   }
-  // TODO: This does not seem to be used. Check with Davide.
-  //
-  // if (base.isEmbellishedWrapper) {
-  //   // TODO: Warning, those are childNodes now!
-  //   // base = base.data[0].data[0];
-  //   base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
-  // }
   const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
   let position = TreeHelper.isType(base, 'msubsup') ? (base as MmlMsubsup).sup :
     (base as MmlMunderover).over;
@@ -160,13 +152,15 @@ ParseMethods.Subscript = function(parser: TexParser, c: string) {
   TreeHelper.printMethod('Subscript');
   if (parser.GetNext().match(/\d/)) {
     // don't treat numbers as a unit
-    parser.string = parser.string.substr(0,parser.i+1)+' '+parser.string.substr(parser.i+1);
+    parser.string =
+      parser.string.substr(0, parser.i + 1) + ' ' +
+      parser.string.substr(parser.i + 1);
   }
   let primes, base;
   const top = parser.stack.Top();
   if (top.isKind('prime')) {
     // @test Prime on Sub
-    base = top.data[0]; primes = top.data[1];
+    [base, primes] = top.TopN(2);
     parser.stack.Pop();
   } else {
     base = parser.stack.Prev();
@@ -176,12 +170,6 @@ ParseMethods.Subscript = function(parser: TexParser, c: string) {
       base = TreeHelper.createNode('mi', [], {}, textNode);
     }
   }
-  // TODO: This does not seem to be used. Check with Davide.
-  //
-  // if (base.isEmbellishedWrapper) {
-  //   // TODO: Warning, those are childNodes now!
-  //   base = TreeHelper.getChildAt(TreeHelper.getChildAt(base, 0), 0);
-  // }
   const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
   let position = TreeHelper.isType(base, 'msubsup') ?
     (base as MmlMsubsup).sub : (base as MmlMunderover).under;
@@ -377,14 +365,14 @@ ParseMethods.Limits = function(parser: TexParser, name: string, limits: string) 
     // @test Limits UnderOver
     node = TreeHelper.createNode('msubsup', [], {});
     TreeHelper.copyChildren(op, node);
-    op = top.data[top.data.length - 1] = node;
+    op = top.Last = node;
   } else if (TreeHelper.isType(op, 'msubsup') && limits) {
     // @test Limits SubSup
     // node = TreeHelper.createNode('munderover', TreeHelper.getChildren(op), {});
     // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
     node = TreeHelper.createNode('munderover', [], {});
     TreeHelper.copyChildren(op, node);
-    op = top.data[top.data.length - 1] = node;
+    op = top.Last = node;
   }
   // TODO: Turns this into properties.
   TreeHelper.setProperties(op, {'movesupsub': limits ? true : false});
@@ -634,7 +622,7 @@ ParseMethods.MmlToken = function(parser: TexParser, name: string) {
   // @test Modulo
   const type = parser.GetArgument(name);
   let attr = parser.GetBrackets(name,'').replace(/^\s+/,'');
-  const data = parser.GetArgument(name);
+  const text = parser.GetArgument(name);
   const def: sitem.EnvList = {};
   let node: MmlNode;
   try {
@@ -662,15 +650,16 @@ ParseMethods.MmlToken = function(parser: TexParser, name: string) {
                                                      match[2].replace(/^([''])(.*)\1$/,'$2'));
     if (value) {
       if (value.toLowerCase() === 'true') {
-        value = true}
+        value = true;
+      }
       else if (value.toLowerCase() === 'false') {
-        value = false}
+        value = false;
+      }
       def[match[1]] = value;
     }
     attr = attr.substr(match[0].length);
   }
-  TreeHelper.printSimple('End mmlToken: type: ' + type + ' data: ' + data + ' def: ');
-  const textNode = TreeHelper.createText(data);
+  const textNode = TreeHelper.createText(text);
   node.appendChild(textNode);
   TreeHelper.setProperties(node, def);
   parser.Push(parser.mmlToken(node));
