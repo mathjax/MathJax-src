@@ -1057,7 +1057,7 @@ export class FnItem extends BaseItem {
     const top = this.Top;
     if (top) {
       if (item.isOpen) {
-        console.log('testing');
+        // @test Fn Stretchy
         return true;
       }
       if (!item.isKind('fn')) {
@@ -1077,17 +1077,20 @@ export class FnItem extends BaseItem {
         }
         // TODO: Look this up in the operator table either as
         //       infix/postfix/prefix.
-        if ([0, 0, 1, 1, 0, 1, 1, 0, 0, 0][TreeHelper.getTexClass(mml)]) {
+        const form = TreeHelper.getForm(mml);
+        if (form != null && [0, 0, 1, 1, 0, 1, 1, 0, 0, 0][form[2]]) {
+          // @test Fn Operator
           return [top, item];
         }
       }
-      // @test Named Function
+      // @test Named Function, Named Function Arg
       const text = TreeHelper.createText(Entities.ENTITIES.ApplyFunction);
       const node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
       // VS: OLD
       // var node = MML.mo(MML.entity('#x2061')).With({texClass:MML.TEXCLASS.NONE});
       return [top, node, item];
     }
+    // @test Mathop Super, Mathop Sub
     return super.checkItem.apply(this, arguments);
   }
 }
