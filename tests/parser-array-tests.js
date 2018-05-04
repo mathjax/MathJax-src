@@ -1152,7 +1152,7 @@ parserTest.runTest(
 
 parserTest.runTest(
   'Enclosed dashed row',
-  "\\begin{array}{|c|}a\\\\\\hdashline b\\end{array}",
+  '\\begin{array}{|c|}a\\\\\\hdashline b\\end{array}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1264,7 +1264,7 @@ parserTest.runTest(
 
 parserTest.runTest(
   'Enclosed solid row',
-  "\\begin{array}{|c|}a\\\\\\hline b\\end{array}",
+  '\\begin{array}{|c|}a\\\\\\hline b\\end{array}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1376,7 +1376,7 @@ parserTest.runTest(
 
 parserTest.runTest(
   'Enclosed dashed column',
-  "\\begin{array}{|c:c|}a&c\\\\b&d\\end{array}",
+  '\\begin{array}{|c:c|}a&c\\\\b&d\\end{array}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1538,7 +1538,7 @@ parserTest.runTest(
 
 parserTest.runTest(
   'Enclosed solid column',
-  "\\begin{array}{|c|c|}a&c\\\\b&d\\end{array}",
+  '\\begin{array}{|c|c|}a&c\\\\b&d\\end{array}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
