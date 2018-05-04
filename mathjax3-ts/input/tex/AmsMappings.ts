@@ -17,7 +17,7 @@
 
 
 /**
- * @fileoverview AMS mappings for TeX Parsing.
+ * @fileoverview Mappings for TeX parsing of the AMS math package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -154,3 +154,5 @@ new sm.DelimiterMap('AMSmath-delimiter', ParseMethods.delimiter, {
   '\\lVert':     ['\u2016', {texClass: TEXCLASS.OPEN}],
   '\\rVert':     ['\u2016', {texClass: TEXCLASS.CLOSE}]
 });
+
+
