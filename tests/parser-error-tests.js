@@ -1209,5 +1209,409 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+parserTest.runTest(
+  'ExtraOpenMissingClose End', '\\end{array}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Extra open brace or missing close brace"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'ExtraCloseMissingOpen', 'x}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Extra close brace or missing open brace"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'MissingLeftExtraRight', 'x\\right\\}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Missing \\left or extra \\right"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'ExtraOpenMissingClose Stop', '{x',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Extra open brace or missing close brace"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'MissingScript Sub', 'x_',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Missing superscript or subscript argument"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'MissingScript Sup', 'x^',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Missing superscript or subscript argument"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'MissingOpenForSup', 'x^^',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Missing open brace for superscript"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'MissingOpenForSub', 'x__',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Missing open brace for subscript"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'ExtraLeftMissingRight', '\\left\\{x',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Extra \\left or missing \\right"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}
+);
 
 parserTest.printTime();

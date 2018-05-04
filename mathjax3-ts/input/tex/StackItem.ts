@@ -263,12 +263,12 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   private _properties: PropList = {};
 
   protected errors: {[key: string]: string[]} = {
-    endError:   ['ExtraOpenMissingClose',
-                 'Extra open brace or missing close brace'],
-    closeError: ['ExtraCloseMissingOpen',
-                 'Extra close brace or missing open brace'],
-    rightError: ['MissingLeftExtraRight',
-                 'Missing \\left or extra \\right']
+    // @test ExtraOpenMissingClose End
+    end: ['ExtraOpenMissingClose', 'Extra open brace or missing close brace'],
+    // @test ExtraCloseMissingOpen
+    close: ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'],
+    // @test MissingLeftExtraRight
+    right: ['MissingLeftExtraRight', 'Missing \\left or extra \\right']
   };
 
   public global: EnvList = {};
@@ -360,8 +360,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
       // @test Ampersand-error
       throw new TexError(['Misplaced', 'Misplaced %1', item.getName()]);
     }
-    if (item.isClose && this.errors[item.kind + 'Error']) {
-      throw new TexError(this.errors[item.kind + 'Error']);
+    if (item.isClose && this.errors[item.kind]) {
+      throw new TexError(this.errors[item.kind]);
     }
     if (!item.isFinal) {
       return true;
@@ -457,8 +457,9 @@ export class OpenItem extends BaseItem {
 
   constructor(factory: StackItemFactory) {
     super(factory);
-    this.errors['stopError'] = ['ExtraOpenMissingClose',
-                                'Extra open brace or missing close brace'];
+    // @test ExtraOpenMissingClose Stop
+    this.errors['stop'] = ['ExtraOpenMissingClose',
+                           'Extra open brace or missing close brace'];
   }
 
   /**
@@ -542,12 +543,15 @@ export class SubsupItem extends BaseItem {
 
   constructor(factory: StackItemFactory, ...nodes: MmlNode[]) {
     super(factory, ...nodes);
-    this.errors['stopError'] = ['MissingScript',
-                               'Missing superscript or subscript argument'];
-    this.errors['supError'] =  ['MissingOpenForSup',
-                                'Missing open brace for superscript'];
-    this.errors['subError'] =  ['MissingOpenForSub',
-                                'Missing open brace for subscript'];
+    // @test MissingScript Sub, MissingScript Sup
+    this.errors['stop'] = ['MissingScript',
+                           'Missing superscript or subscript argument'];
+    // @test MissingOpenForSup
+    this.errors['sup'] =  ['MissingOpenForSup',
+                           'Missing open brace for superscript'];
+    // @test MissingOpenForSub
+    this.errors['sub'] =  ['MissingOpenForSub',
+                           'Missing open brace for subscript'];
   }
 
   /**
@@ -587,8 +591,8 @@ export class SubsupItem extends BaseItem {
       return result;
     }
     if (super.checkItem(item)) {
-      // @test Brace Superscript Error
-      throw new TexError(this.errors[['', 'subError', 'supError'][position]]);
+      // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
+      throw new TexError(this.errors[['', 'sub', 'sup'][position]]);
     }
   }
 
@@ -645,7 +649,13 @@ export class OverItem extends BaseItem {
   }
 
 
-  toString() {return 'over[' + this.getProperty('num') + ' / ' + this.nodes.join('; ') + ']';}
+  /**
+   * @override
+   */
+  public toString() {
+    return 'over[' + this.getProperty('num') +
+      ' / ' + this.nodes.join('; ') + ']';
+  }
 
 }
 
@@ -654,8 +664,9 @@ export class LeftItem extends BaseItem {
   constructor(factory: StackItemFactory) {
     super(factory);
     this.setProperty('delim', '('),
-    this.errors['stopError'] = ['ExtraLeftMissingRight',
-                                'Extra \\left or missing \\right'];
+    // @test ExtraLeftMissingRight
+    this.errors['stop'] = ['ExtraLeftMissingRight',
+                           'Extra \\left or missing \\right'];
   }
 
   /**
