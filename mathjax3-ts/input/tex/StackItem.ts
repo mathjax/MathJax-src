@@ -37,26 +37,12 @@ import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {TexConstant} from './TexConstants.js';
 import TexError from './TexError.js';
-// import {TexError} from './TexError.js';
 import {ParserUtil} from './ParserUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import StackItemFactory from './StackItemFactory.js';
 
-// Stack item classes for the parser stack.
-
-// Future Interface:
-// readonly get type,
-// public: push, pop, checkitem,
-// protected: isOpen
-//
-// BaseItem is the abstract class.
-//
-// protected this.data .
-//
-// Errors should go into a proper Error Object.
-
-// TODO: Marry these eventually with Property and PropertyList?
+// Union types for abbreviation.
 export type EnvProp = string | number | boolean;
 
 export type EnvList = {[key: string]: EnvProp};
@@ -125,12 +111,12 @@ export interface NodeStack {
 
 
 export class MmlStack implements NodeStack {
-  
+
   constructor(private _nodes: MmlNode[]) { }
 
   protected get nodes(): MmlNode[] {
     return this._nodes;
-  } 
+  }
 
   /**
    * @override
@@ -207,7 +193,7 @@ export class MmlStack implements NodeStack {
     this._nodes = [];
   }
 
-  
+
   /**
    * @override
    */
@@ -689,7 +675,7 @@ export class LeftItem extends BaseItem {
     // @test Missing Right
     TreeHelper.printMethod('Checkitem left');
     if (item.isKind('right')) {
-      return this.factory.create('mml', 
+      return this.factory.create('mml',
         ParserUtil.fenced(this.getProperty('delim') as string, this.toMml(),
                           item.getProperty('delim') as string));
     }
@@ -858,7 +844,7 @@ export class ArrayItem extends BaseItem {
     return 'array';
   }
 
-  
+
   /**
    * @override
    */
@@ -1159,7 +1145,7 @@ export class NotItem extends BaseItem {
     textNode = TreeHelper.createText('\u29F8');
     const mtextNode = TreeHelper.createNode('mtext', [], {}, textNode);
     const paddedNode = TreeHelper.createNode('mpadded', [mtextNode], {width: 0});
-    mml = TreeHelper.createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL}) as MmlNode;
+    mml = TreeHelper.createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
     // VS: OLD
     // mml = MML.mpadded(MML.mtext('\u29F8')).With({width:0});
     // mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.REL});

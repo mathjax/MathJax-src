@@ -228,37 +228,7 @@ export namespace TreeHelper {
     return node.coreMO();
   };
 
-
-  // export function cleanSubSup(node: MmlNode): MmlNode  {
-  //   let rewrite: MmlNode[] = [];
-  //   node.walkTree((n, d) => {
-  //     const children = n.childNodes;
-  //     if ((n.kind === 'msubsup' && (!children[n.sub] || !children[n.sup])) ||
-  //         (n.isKind('munderover') && (!children[n.under] || !children[n.over]))) {
-  //       d.unshift(n);
-  //     }
-  //   }, rewrite);
-  //   for (const n of rewrite) {
-  //     const children = n.childNodes as (MmlNode|TextNode)[];
-  //     const parent = n.parent;
-  //     let newNode = (n.isKind('msubsup')) ?
-  //           (children[n.sub] ?
-  //            createNode('msub', [children[n.base], children[n.sub]], {}) :
-  //            createNode('msup', [children[n.base], children[n.sup]], {})) :
-  //         (children[n.under] ?
-  //          createNode('munder', [children[n.base], children[n.under]], {}) :
-  //          createNode('mover', [children[n.base], children[n.over]], {}));
-  //     if (parent) {
-  //       parent.replaceChild(newNode, n);
-  //     } else {
-  //       node = newNode;
-  //     }
-  //   }
-  //   return node;
-  // };
-
-
-  // With tons of casting!
+  // TODO: reduce some of the casting.
   export function cleanSubSup(node: MmlNode): MmlNode  {
     let rewrite: MmlNode[] = [];
     node.walkTree((n, d) => {
