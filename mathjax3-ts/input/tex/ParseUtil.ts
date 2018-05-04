@@ -32,8 +32,10 @@
 
 import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
+import {EnvList} from './StackItem.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
+import TexError from './TexError.js';
 
 
 namespace ParseUtil {
@@ -237,6 +239,93 @@ namespace ParseUtil {
     // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
     return mo;
   };
+
+
+  /**
+   *  Break up a string into text and math blocks
+   */
+  export function internalMath(parser: TexParser, text: string, level?: number|string) {
+    TreeHelper.printMethod('InternalMath (Old Parser Object)');
+    let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
+    let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
+    if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
+      while (i < text.length) {
+        c = text.charAt(i++);
+        if (c === '$') {
+          if (match === '$' && braces === 0) {
+            // @test Interspersed Text
+            node = TreeHelper.createNode('TeXAtom',
+                                         [(new TexParser(text.slice(k,i-1),{})).mml()], {});
+            mml.push(node);
+            match = ''; k = i;
+          } else if (match === '') {
+            // @test Interspersed Text
+            if (k < i-1) mml.push(internalText(text.slice(k,i-1),def));
+            match = '$'; k = i;
+          }
+        } else if (c === '{' && match !== '') {
+            TreeHelper.untested(14);
+          braces++;
+        } else if (c === '}') {
+          if (match === '}' && braces === 0) {
+            TreeHelper.untested(12);
+            node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k,i),{})).mml()], def);
+            mml.push(node);
+            match = ''; k = i;
+          } else if (match !== '') {
+            if (braces) braces--;
+          }
+        } else if (c === '\\') {
+          if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
+            // TODO: Sort this out properly. What exactly does it do?
+            let len = ((RegExp as any)['$&'] as string).length;
+            if (k < i-1) mml.push(internalText(text.slice(k,i-1),def));
+            match = '}'; k = i-1; i += len;
+          } else {
+            c = text.charAt(i++);
+            if (c === '(' && match === '') {
+              if (k < i-2) mml.push(internalText(text.slice(k,i-2),def));
+              match = ')'; k = i;
+            } else if (c === ')' && match === ')' && braces === 0) {
+              TreeHelper.untested(13);
+              node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k,i-2),{})).mml()], {});
+              mml.push(node);
+              match = ''; k = i;
+            } else if (c.match(/[${}\\]/) && match === '')  {
+              i--; text = text.substr(0,i-1) + text.substr(i); // remove \ from \$, \{, \}, or \\
+            }
+          }
+        }
+      }
+      if (match !== '') throw new TexError(['MathNotTerminated','Math not terminated in text box']);
+    }
+    if (k < text.length) mml.push(internalText(text.slice(k),def));
+    if (level != null) {
+      // @test Label, Fbox, Hbox
+      mml = [TreeHelper.createNode('mstyle', mml, {displaystyle:false,scriptlevel:level})];
+      // VS: OLD
+      // mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false,scriptlevel:level})];
+    } else if (mml.length > 1) {
+      // @test Interspersed Text
+      mml = [TreeHelper.createNode('mrow', mml, {})];
+      // VS: OLD
+      // mml = [MML.mrow.apply(MML,mml)];
+    }
+    return mml;
+  }
+
+  const NBSP = '\u00A0';
+
+  function internalText(text: string, def: EnvList) {
+    // @test Label, Fbox, Hbox
+    TreeHelper.printMethod('InternalText (Old Parser Object)');
+    text = text.replace(/^\s+/, NBSP).replace(/\s+$/, NBSP);
+    let textNode = TreeHelper.createText(text);
+    return TreeHelper.createNode('mtext', [], def, textNode);
+    // VS: OLD
+    // return MML.mtext(MML.chars(text)).With(def);
+  }
+
 
 }
 

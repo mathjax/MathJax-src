@@ -352,7 +352,7 @@ AmsMethods.HandleTag = function (parser: TexParser, name: string) {
   // VS: OLD
   // global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
   // TODO: These types are wrong!
-  global.tag = TreeHelper.createNode('mtd', parser.InternalMath(arg),
+  global.tag = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, arg),
                                      {id: equationFormatting.formatID(tag)}) as any;
 };
 

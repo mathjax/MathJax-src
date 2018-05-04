@@ -842,13 +842,13 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
 BaseMethods.HBox = function(parser: TexParser, name: string, style: string) {
   TreeHelper.printMethod('HBox');
   // @test Hbox
-  parser.PushAll(parser.InternalMath(parser.GetArgument(name), style));
+  parser.PushAll(ParseUtil.internalMath(parser, parser.GetArgument(name), style));
 };
 
 BaseMethods.FBox = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('FBox');
   // @test Fbox
-  const internal = parser.InternalMath(parser.GetArgument(name));
+  const internal = ParseUtil.internalMath(parser, parser.GetArgument(name));
   const node = TreeHelper.createNode('menclose', internal, {notation:'box'});
   parser.Push(node);
 };
@@ -988,7 +988,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
     //
     const text = str.substr(parser.i, i - parser.i);
     if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/, '').length - 1) {
-      const internal = parser.InternalMath(text, 0);
+      const internal = ParseUtil.internalMath(parser, text, 0);
       parser.PushAll(internal);
       parser.i = i;
     }
