@@ -24,16 +24,19 @@
  */
 
 
+/**
+ * @fileoverview A namespace for utility functions for the TeX Parser.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
 import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
 
-// A namespace for utility functions for the TeX Parser.
-//
-// Will become a Typescript namespace.
 
-export namespace ParserUtil {
+namespace ParseUtil {
 
   const emPerInch = 7.2;
   const pxPerInch = 72;
@@ -51,7 +54,8 @@ export namespace ParserUtil {
 
 
   export function matchDimen(dim: string): string[] {
-    return dim.match(/^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
+    return dim.match(
+      /^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
   };
 
 
@@ -153,6 +157,12 @@ export namespace ParserUtil {
   //  Combine adjacent <mo> elements that are relations
   //    (since MathML treats the spacing very differently)
   //
+
+  /**
+   * Combine adjacent <mo> elements that are relations (since MathML treats the
+   * spacing very differently)
+   * @param {MmlNode} mml The node in which to combine relations.
+   */
   export function combineRelations(mml: MmlNode) {
     TreeHelper.printMethod('combineRelations: ');
     let m1: MmlNode, m2: MmlNode;
@@ -164,8 +174,10 @@ export namespace ParserUtil {
                  TreeHelper.isType(m1, 'mo') && TreeHelper.isType(m2, 'mo') &&
                  TreeHelper.getTexClass(m1) === TEXCLASS.REL &&
                  TreeHelper.getTexClass(m2) === TEXCLASS.REL) {
-            if (TreeHelper.getProperty(m1, 'variantForm') === TreeHelper.getProperty(m2, 'variantForm') &&
-                TreeHelper.getAttribute(m1, 'mathvariant') === TreeHelper.getAttribute(m2, 'mathvariant')) {
+            if (TreeHelper.getProperty(m1, 'variantForm') ===
+                TreeHelper.getProperty(m2, 'variantForm') &&
+                TreeHelper.getAttribute(m1, 'mathvariant') ===
+                TreeHelper.getAttribute(m2, 'mathvariant')) {
               // @test Shift Left, Less Equal
               TreeHelper.appendChildren(m1, TreeHelper.getChildren(m2));
               children.splice(i + 1, 1);
@@ -227,3 +239,5 @@ export namespace ParserUtil {
   };
 
 }
+
+export default ParseUtil;

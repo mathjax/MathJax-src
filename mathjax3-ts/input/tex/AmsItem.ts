@@ -25,7 +25,7 @@
 
 
 import {ArrayItem, EnvList} from './StackItem.js';
-import {ParserUtil} from './ParserUtil.js';
+import ParseUtil from './ParseUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import StackItemFactory from './StackItemFactory.js';
@@ -68,7 +68,7 @@ export class AmsArrayItem extends ArrayItem {
     TreeHelper.printMethod('AMS-EndEntry');
     // @test Cubic Binomial
     if (this.row.length) {
-      ParserUtil.fixInitialMO(this.nodes);
+      ParseUtil.fixInitialMO(this.nodes);
     }
     const node = TreeHelper.createNode('mtd', this.nodes, {});
     // VS: OLD

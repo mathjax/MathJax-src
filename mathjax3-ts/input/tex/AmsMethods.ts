@@ -27,7 +27,7 @@ import {StackItem} from './StackItem.js';
 import {AmsArrayItem} from './AmsItem.js';
 import {ParseMethod} from './Types.js';
 import BaseMethods from './BaseMethods.js';
-import {ParserUtil} from './ParserUtil.js';
+import ParseUtil from './ParseUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {TexConstant} from './TexConstants.js';
 import TexParser from './TexParser.js';
@@ -295,7 +295,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
   if (left || right) {
     // @test Normal Binomial, Text Binomial, Display Binomial
     TreeHelper.setProperties(frac, {withDelims: true});
-    frac = ParserUtil.fixedFence(left, frac, right);
+    frac = ParseUtil.fixedFence(left, frac, right);
   }
   if (style !== '') {
     let styleDigit = parseInt(style, 10);

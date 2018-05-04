@@ -24,14 +24,14 @@
 
 import *  as sm from './SymbolMap.js';
 import {TexConstant} from './TexConstants.js';
-import BaseMethods from './BaseMethods.js';
+import ParseMethods from './ParseMethods.js';
 import AmsMethods from './AmsMethods.js';
 
 
 /**
  * Identifiers from the AMS Symbols package.
  */
-new sm.CharacterMap('AMSsymbols-mathchar0mi', BaseMethods.mathchar0mi, {
+new sm.CharacterMap('AMSsymbols-mathchar0mi', ParseMethods.mathchar0mi, {
   // Lowercase Greek letters
   digamma:                '\u03DD',
   varkappa:               '\u03F0',
@@ -94,7 +94,7 @@ new sm.CharacterMap('AMSsymbols-mathchar0mi', BaseMethods.mathchar0mi, {
 /**
  * Operators from the AMS Symbols package.
  */
-new sm.CharacterMap('AMSsymbols-mathchar0m0', BaseMethods.mathchar0mo, {
+new sm.CharacterMap('AMSsymbols-mathchar0m0', ParseMethods.mathchar0mo, {
   // Binary operators
   dotplus:                '\u2214',
   ltimes:                 '\u22C9',
@@ -305,7 +305,7 @@ new sm.CharacterMap('AMSsymbols-mathchar0m0', BaseMethods.mathchar0mo, {
 /**
  * Delimiters from the AMS Symbols package.
  */
-new sm.DelimiterMap('AMSsymbols-delimiter', BaseMethods.delimiter, {
+new sm.DelimiterMap('AMSsymbols-delimiter', ParseMethods.delimiter, {
   // corners
   '\\ulcorner':           '\u231C',
   '\\urcorner':           '\u231D',

@@ -27,13 +27,13 @@ import {TexConstant} from './TexConstants.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import ParseMethods from './ParseMethods.js';
 import AmsMethods from './AmsMethods.js';
-import {ParserUtil} from './ParserUtil.js';
+import ParseUtil from './ParseUtil.js';
 
 
 let COLS = function(W: number[]) {
   const WW: string[] = [];
   for (let i = 0, m = W.length; i < m; i++) {
-    WW[i] = ParserUtil.Em(W[i]);
+    WW[i] = ParseUtil.Em(W[i]);
   }
   return WW.join(' ');
 };

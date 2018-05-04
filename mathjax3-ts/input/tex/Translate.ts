@@ -25,7 +25,7 @@
 
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
-import {ParserUtil} from './ParserUtil.js';
+import ParseUtil from './ParseUtil.js';
 import TexError from './TexError.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
@@ -60,7 +60,7 @@ export namespace NewTex {
     (node as any).setTeXclass();
     // Cleanup:
     traverse(node);
-    ParserUtil.combineRelations(node);
+    ParseUtil.combineRelations(node);
     return node;
   }
 

@@ -29,7 +29,7 @@ import {TreeHelper} from './TreeHelper.js';
 import TexError from './TexError.js';
 import TexParser from './TexParser.js';
 import {TexConstant} from './TexConstants.js';
-import {ParserUtil} from './ParserUtil.js';
+import ParseUtil from './ParseUtil.js';
 import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
@@ -129,7 +129,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
         TreeHelper.printSimple('Case 3');
         if (TreeHelper.getProperty(base, 'movablelimits') && TreeHelper.isType(base, 'mi')) {
           // @test Mathop Super
-          base = ParserUtil.mi2mo(base);
+          base = ParseUtil.mi2mo(base);
         }
         // @test Large Operator
         base = TreeHelper.createNode('munderover', [base], {movesupsub:true});
@@ -190,7 +190,7 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
         if (TreeHelper.getProperty(base, 'movablelimits') &&
             TreeHelper.isType(base, 'mi')) {
           // @test Mathop Sub
-          base = ParserUtil.mi2mo(base);
+          base = ParseUtil.mi2mo(base);
         }
         // @test Move Superscript
         base = TreeHelper.createNode('munderover', [base], {movesupsub:true});
@@ -1006,7 +1006,7 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
   let n: string;
   if (parser.string.charAt(parser.i) === '[') {
     n = parser.GetBrackets(name, '').replace(/ /g, '').replace(/,/, '.');
-    if (n && !ParserUtil.matchDimen(n)) {
+    if (n && !ParseUtil.matchDimen(n)) {
       throw new TexError(['BracketMustBeDimension',
                           'Bracket argument to %1 must be a dimension', name]);
     }
@@ -1020,14 +1020,14 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
     if (n && top.arraydef['rowspacing']) {
       const rows = (top.arraydef['rowspacing'] as string).split(/ /);
       if (!top.getProperty('rowspacing')) {
-        top.setProperty('rowspacing', ParserUtil.dimen2em(rows[0]));
+        top.setProperty('rowspacing', ParseUtil.dimen2em(rows[0]));
       }
       const rowspacing = top.getProperty('rowspacing') as number;
       while (rows.length < top.table.length) {
-        rows.push(ParserUtil.Em(rowspacing));
+        rows.push(ParseUtil.Em(rowspacing));
       }
-      rows[top.table.length - 1] = ParserUtil.Em(
-        Math.max(0, rowspacing + ParserUtil.dimen2em(n)));
+      rows[top.table.length - 1] = ParseUtil.Em(
+        Math.max(0, rowspacing + ParseUtil.dimen2em(n)));
       top.arraydef['rowspacing'] = rows.join(' ');
     }
   } else {

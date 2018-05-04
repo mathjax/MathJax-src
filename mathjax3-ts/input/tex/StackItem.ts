@@ -37,7 +37,7 @@ import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {TexConstant} from './TexConstants.js';
 import TexError from './TexError.js';
-import {ParserUtil} from './ParserUtil.js';
+import ParseUtil from './ParseUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import StackItemFactory from './StackItemFactory.js';
@@ -626,7 +626,7 @@ export class OverItem extends BaseItem {
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Choose
         TreeHelper.setProperties(mml, {'withDelims': true});
-        mml = ParserUtil.fixedFence(this.getProperty('open') as string, mml,
+        mml = ParseUtil.fixedFence(this.getProperty('open') as string, mml,
                                     this.getProperty('close') as string);
       }
       return [this.factory.create('mml', mml), item];
@@ -676,7 +676,7 @@ export class LeftItem extends BaseItem {
     TreeHelper.printMethod('Checkitem left');
     if (item.isKind('right')) {
       return this.factory.create('mml',
-        ParserUtil.fenced(this.getProperty('delim') as string, this.toMml(),
+        ParseUtil.fenced(this.getProperty('delim') as string, this.toMml(),
                           item.getProperty('delim') as string));
     }
     return super.checkItem(item);
@@ -910,7 +910,7 @@ export class ArrayItem extends BaseItem {
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Cross Product Formula
-        mml = ParserUtil.fenced(this.getProperty('open') as string, mml,
+        mml = ParseUtil.fenced(this.getProperty('open') as string, mml,
                                 this.getProperty('close') as string);
       }
       let newItem = this.factory.create('mml', mml);
