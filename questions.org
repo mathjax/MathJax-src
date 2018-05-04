@@ -207,3 +207,5 @@ it), but I'm not sure it is worth it.
 
 The MakeBig() function in the original TeX input jax is the one that would need
 to be changed.
+
+* Mtable: displaystyle false is not actually set in the json structure.
