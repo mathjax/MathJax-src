@@ -243,8 +243,13 @@ namespace ParseUtil {
 
   /**
    *  Break up a string into text and math blocks
+   * @param {TexParser} parser The calling parser.
+   * @param {string} text The text in the math expression to parse.
+   * @param {number|string=} level The scriptlevel.
    */
+  // TODO: Write test!
   export function internalMath(parser: TexParser, text: string, level?: number|string) {
+    console.log(level);
     TreeHelper.printMethod('InternalMath (Old Parser Object)');
     let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
@@ -255,54 +260,84 @@ namespace ParseUtil {
           if (match === '$' && braces === 0) {
             // @test Interspersed Text
             node = TreeHelper.createNode('TeXAtom',
-                                         [(new TexParser(text.slice(k,i-1),{})).mml()], {});
+                                         [(new TexParser(text.slice(k, i - 1), {})).mml()], {});
             mml.push(node);
-            match = ''; k = i;
+            match = '';
+            k = i;
           } else if (match === '') {
             // @test Interspersed Text
-            if (k < i-1) mml.push(internalText(text.slice(k,i-1),def));
-            match = '$'; k = i;
+            if (k < i - 1) {
+              mml.push(internalText(text.slice(k, i - 1), def));
+            }
+            match = '$';
+            k = i;
           }
         } else if (c === '{' && match !== '') {
-            TreeHelper.untested(14);
+          // TODO: write test: a\mbox{ b $a\mbox{ b c } c$ c } c
           braces++;
         } else if (c === '}') {
           if (match === '}' && braces === 0) {
-            TreeHelper.untested(12);
-            node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k,i),{})).mml()], def);
+            // TODO: test a\mbox{ \eqref{1} } c
+            node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i), {})).mml()], def);
             mml.push(node);
-            match = ''; k = i;
+            match = '';
+            k = i;
           } else if (match !== '') {
-            if (braces) braces--;
+            // TODO: test: a\mbox{ ${ab}$ } c
+            if (braces) {
+              // TODO: test: a\mbox{ ${ab}$ } c
+              braces--;
+            }
           }
         } else if (c === '\\') {
+          // TODO: test a\mbox{aa \\ bb} c
           if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
-            // TODO: Sort this out properly. What exactly does it do?
+            // TODO: test a\mbox{ \eqref{1} } c
+            // (check once eqref is implemented)
             let len = ((RegExp as any)['$&'] as string).length;
-            if (k < i-1) mml.push(internalText(text.slice(k,i-1),def));
-            match = '}'; k = i-1; i += len;
+            if (k < i - 1) {
+              // TODO: test a\mbox{ \eqref{1} } c
+              TreeHelper.untested(17);
+              mml.push(internalText(text.slice(k, i - 1), def));
+            }
+            match = '}';
+            k = i - 1;
+            i += len;
           } else {
             c = text.charAt(i++);
             if (c === '(' && match === '') {
-              if (k < i-2) mml.push(internalText(text.slice(k,i-2),def));
+              TreeHelper.untested(18);
+              if (k < i - 2) {
+                TreeHelper.untested(19);
+                mml.push(internalText(text.slice(k, i - 2), def));
+              }
               match = ')'; k = i;
             } else if (c === ')' && match === ')' && braces === 0) {
-              TreeHelper.untested(13);
-              node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k,i-2),{})).mml()], {});
+              TreeHelper.untested(20);
+              node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i - 2), {})).mml()], {});
               mml.push(node);
-              match = ''; k = i;
+              match = '';
+              k = i;
             } else if (c.match(/[${}\\]/) && match === '')  {
-              i--; text = text.substr(0,i-1) + text.substr(i); // remove \ from \$, \{, \}, or \\
+              // TODO: test  a\mbox{aa \\ bb} c
+              TreeHelper.untested(21);
+              i--;
+              text = text.substr(0, i - 1) + text.substr(i); // remove \ from \$, \{, \}, or \\
             }
           }
         }
       }
-      if (match !== '') throw new TexError(['MathNotTerminated','Math not terminated in text box']);
+      if (match !== '') {
+        // TODO: test a\mbox{$}} c
+        throw new TexError(['MathNotTerminated', 'Math not terminated in text box']);
+      }
     }
-    if (k < text.length) mml.push(internalText(text.slice(k),def));
+    if (k < text.length) {
+      mml.push(internalText(text.slice(k), def));
+    }
     if (level != null) {
       // @test Label, Fbox, Hbox
-      mml = [TreeHelper.createNode('mstyle', mml, {displaystyle:false,scriptlevel:level})];
+      mml = [TreeHelper.createNode('mstyle', mml, {displaystyle: false, scriptlevel: level})];
       // VS: OLD
       // mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false,scriptlevel:level})];
     } else if (mml.length > 1) {
