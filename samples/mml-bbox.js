@@ -5,7 +5,8 @@ import {CHTML} from "mathjax3/output/chtml.js";
 import {RegisterHTMLHandler} from "mathjax3/handlers/html.js";
 import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
 
-RegisterHTMLHandler(chooseAdaptor());
+const adaptor = chooseAdaptor();
+RegisterHTMLHandler(adaptor);
 
 let html = MathJax.document("<html></html>", {
     InputJax: new MathML(),
@@ -33,8 +34,7 @@ MathJax.handleRetriesFor(function () {
     console.log('');
     showBBox(wrap, '');
     console.log('');
-    console.log(math.typesetRoot.outerHTML);
-    
+    console.log(adaptor.outerHTML(math.typesetRoot));
 
 }).catch(err => {
   console.log(err.message);

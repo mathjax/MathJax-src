@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "description": "MathJax version 3 testbed",
   "main": "load.js",
-  "dependencies": {
-    "jsdom": "10.*",
-    "webpack": "^3.10.0"
-  },
   "devDependencies": {
     "typescript": "2.3.*",
     "tape": "^4.8.0",
@@ -20,7 +16,13 @@
     "url": "https://github.com/mathjax/mathjax-v3/"
   },
   "keywords": [
-    "MathJax"
+    "MathJax",
+    "math",
+    "svg",
+    "HTML",
+    "MathML",
+    "TeX",
+    "AsciiMath"
   ],
   "license": "Apache-2.0"
 }
