@@ -115,17 +115,20 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: s
   TreeHelper.printMethod('AMS-Multline');
   TreeHelper.untested(11);
   parser.Push(begin); AmsMethods.checkEqnEnv(parser, '');
-  return parser.itemFactory.create('multline', numbered, parser.stack).With({
-    arraydef: {
+  const item = parser.itemFactory.create('multline', numbered, parser.stack);
+  item.arraydef = {
       displaystyle: true,
       rowspacing: '.5em',
-      columnwidth: '100%'// ,
+      columnwidth: '100%',
       // TODO: Deal with these configuration options!
       // width: TEX.config.MultLineWidth,
       // side: TEX.config.TagSide,
       // minlabelspacing: TEX.config.TagIndent
-    }
-  });
+    //
+    // This is temporary:
+    width: '85%'
+  };
+  return item;
 },
 
 

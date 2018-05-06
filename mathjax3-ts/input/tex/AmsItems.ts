@@ -177,10 +177,10 @@ export class MultlineItem extends ArrayItem {
     if (this.table.length) {
       let m = this.table.length - 1, i, label = -1;
       if (!TreeHelper.getAttribute(this.table[0], 'columnalign')) {
-        TreeHelper.setAttribute(this.table[0], 'columnalign', TexConstant.Align.LEFT);
+        TreeHelper.setAttribute(TreeHelper.getChildren(this.table[0])[0], 'columnalign', TexConstant.Align.LEFT);
       }
       if (!TreeHelper.getAttribute(this.table[m], 'columnalign')) {
-        TreeHelper.setAttribute(this.table[m], 'columnalign', TexConstant.Align.RIGHT);
+        TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0], 'columnalign', TexConstant.Align.RIGHT);
       }
       // if (!this.global.tag && this.numbered) {
       //   this.autoTag();
