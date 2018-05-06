@@ -29,6 +29,9 @@ import ParseUtil from './ParseUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import StackItemFactory from './StackItemFactory.js';
+import {StackItem} from './StackItem.js';
+import TexError from './TexError.js';
+import {TexConstant} from './TexConstants.js';
 
 
 // AMS
@@ -90,7 +93,9 @@ export class AmsArrayItem extends ArrayItem {
     } else {
       this.clearTag();
     }
-    if (this.numbered) {delete this.global['notag'];}
+    if (this.numbered) {
+      delete this.global['notag'];
+    }
     const node = TreeHelper.createNode(mtr, this.row, {});
     this.table.push(node); this.row = [];
   }
@@ -104,5 +109,93 @@ export class AmsArrayItem extends ArrayItem {
   }
 }
 
+
+
+export class MultlineItem extends ArrayItem {
+
+  get kind() {
+    return 'multline';
+  }
+
+  private numbered: boolean = false;
+  private save: {[key: string]: string} = {};
+  
+  
+  constructor(factory: any, ...args: any[]) {
+    super(factory);
+        // Omitted configuration: && CONFIG.autoNumber !== "none";
+    this.numbered = args[0];
+    let stack = args[1];
+    this.save = {notag: stack.global.notag};
+    stack.global.tagged = !this.numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
+  }
+
+  
+  EndEntry() {
+    TreeHelper.printMethod('AMS-EndEntry');
+    if (this.table.length) {
+      ParseUtil.fixInitialMO(this.nodes);
+    }
+    let mtd = TreeHelper.createNode('mtd', this.nodes, {});
+    // if (this.nodes.shove) {mtd.columnalign = this.nodes.shove}
+    this.row.push(mtd);
+    this.Clear();
+  }
+
+  EndRow() {
+    TreeHelper.printMethod('AMS-EndRow');
+    if (this.row.length !== 1) {
+      throw new TexError(['MultlineRowsOneCol',
+                          'The rows within the %1 environment must have exactly one column',
+                          'multline']);
+      }
+    let row = TreeHelper.createNode('mtr', this.row, {});
+    // this.table.push(this.row); this.row = [];
+    this.table.push(row);
+    this.row = [];
+  }
+
+  EndTable() {
+    TreeHelper.printMethod('AMS-EndTable');
+    // super.EndTable();
+    // if (this.table.length) {
+    //   let m = this.table.length - 1, i, label = -1;
+    //   if (!this.table[0][0].columnalign) {this.table[0][0].columnalign = MML.ALIGN.LEFT}
+    //   if (!this.table[m][0].columnalign) {this.table[m][0].columnalign = MML.ALIGN.RIGHT}
+    //   if (!this.global.tag && this.numbered) {this.autoTag()}
+    //   if (this.global.tag && !this.global.notags) {
+    //     label = (this.arraydef.side === 'left' ? 0 : this.table.length - 1);
+    //     this.table[label] = [this.getTag()].concat(this.table[label]);
+    //     }
+    //   for (i = 0, m = this.table.length; i < m; i++) {
+    //     var mtr = (i === label ? MML.mlabeledtr : MML.mtr);
+    //     this.table[i] = mtr.apply(MML,this.table[i]);
+    //   }
+    // }
+    // this.global.notag  = this.save.notag;
+    super.EndTable();
+    if (this.table.length) {
+      let m = this.table.length - 1, i, label = -1;
+      if (!TreeHelper.getAttribute(this.table[0], 'columnalign')) {
+        TreeHelper.setAttribute(this.table[0], 'columnalign', TexConstant.Align.LEFT);
+      }
+      if (!TreeHelper.getAttribute(this.table[m], 'columnalign')) {
+        TreeHelper.setAttribute(this.table[m], 'columnalign', TexConstant.Align.RIGHT);
+      }
+      // if (!this.global.tag && this.numbered) {
+      //   this.autoTag();
+      // }
+      // if (this.global.tag && !this.global.notags) {
+      //   label = (this.arraydef.side === 'left' ? 0 : this.table.length - 1);
+      //   this.table[label] = [this.getTag()].concat(this.table[label]);
+      //   }
+      // for (i = 0, m = this.table.length; i < m; i++) {
+      //   var mtr = (i === label ? MML.mlabeledtr : MML.mtr);
+      //   this.table[i] = mtr.apply(MML,this.table[i]);
+      // }
+    }
+    this.global.notag  = this.save.notag;
+  }
+}
 
 // StackItemFactory.DefaultStackItems[AmsArrayItem.prototype.kind] = AmsArrayItem;

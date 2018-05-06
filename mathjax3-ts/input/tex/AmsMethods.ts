@@ -24,7 +24,6 @@
 
 
 import {StackItem} from './StackItem.js';
-import {AmsArrayItem} from './AmsItems.js';
 import {ParseMethod} from './Types.js';
 import BaseMethods from './BaseMethods.js';
 import ParseUtil from './ParseUtil.js';
@@ -107,6 +106,27 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
   };
   return newItem;
 };
+
+
+/*
+ *  Implements multline environment (mostly handled through STACKITEM below)
+ */
+AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: string) {
+  TreeHelper.printMethod('AMS-Multline');
+  TreeHelper.untested(11);
+  parser.Push(begin); AmsMethods.checkEqnEnv(parser, '');
+  return parser.itemFactory.create('multline', numbered, parser.stack).With({
+    arraydef: {
+      displaystyle: true,
+      rowspacing: '.5em',
+      columnwidth: '100%'// ,
+      // TODO: Deal with these configuration options!
+      // width: TEX.config.MultLineWidth,
+      // side: TEX.config.TagSide,
+      // minlabelspacing: TEX.config.TagIndent
+    }
+  });
+},
 
 
 /**

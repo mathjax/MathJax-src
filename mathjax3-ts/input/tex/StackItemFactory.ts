@@ -66,7 +66,8 @@ export default class StackItemFactory {
     [sm.NotItem.prototype.kind]: sm.NotItem,
     [sm.DotsItem.prototype.kind]: sm.DotsItem,
     // temporary: AMS stuff for testing!
-    [ams.AmsArrayItem.prototype.kind]: ams.AmsArrayItem
+    [ams.AmsArrayItem.prototype.kind]: ams.AmsArrayItem,
+    [ams.MultlineItem.prototype.kind]: ams.MultlineItem
   };
 
   private itemMap: Map<string, StackItemClass> = new Map();
