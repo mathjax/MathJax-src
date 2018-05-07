@@ -110,3 +110,4 @@ export const DefaultConfig = new Configuration({});
 DefaultConfig.append(BaseConfiguration);
 DefaultConfig.append(AmsSymbolsConf);
 DefaultConfig.append(AmsMathConf);
+

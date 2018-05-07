@@ -34,44 +34,7 @@ import TexError from './TexError.js';
 import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
-
-
-// TODO: This is temporary until we find a new place and a better structure.
-//
-let equationNumbers = {
-  number: 0,        // current equation number
-  startNumber: 0,   // current starting equation number (for when equation is restarted)
-  IDs: {},          // IDs used in previous equations
-  eqIDs: {},        // IDs used in this equation
-  labels: {},       // the set of labels
-  eqlabels: {},     // labels in the current equation
-  refs: new Array() // array of jax with unresolved references
-  // I thing we should get rid of the last one!
-};
-
-let equationFormatting = {
-  autoNumber: 'none',  // 'AMS' for standard AMS numbering,
-  //  or 'all' for all displayed equations
-  formatNumber: function (n: number) { return n; },
-  formatTag:    function (n: number) { return '(' + n + ')'; },
-  formatID:     function (n: number) {
-    return 'mjx-eqn-' + String(n).replace(/\s/g, '_');
-  },
-  formatURL:    function (id: string, base: string) {
-    return base + '#' + encodeURIComponent(id);
-  },
-  useLabelIds:  true,
-  //
-  //  Clear the equation numbers and labels
-  //
-  resetEquationNumbers: function (n: number, keepLabels: boolean) {
-    equationNumbers.startNumber = (n || 0);
-    if (!keepLabels) {
-      equationNumbers.labels = {};
-      equationNumbers.IDs = {};
-    }
-  }
-};
+import {DefaultTags} from './Tags.js';
 
 
 // Namespace
@@ -358,7 +321,7 @@ AmsMethods.HandleTag = function (parser: TexParser, name: string) {
   let arg = parser.trimSpaces(parser.GetArgument(name));
   let tag = parseInt(arg);
   if (!star) {
-    arg = equationFormatting.formatTag(tag);
+    arg = DefaultTags.tag(tag);
   }
   let global = parser.stack.global;
   global.tagID = tag;
@@ -376,7 +339,7 @@ AmsMethods.HandleTag = function (parser: TexParser, name: string) {
   // global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
   // TODO: These types are wrong!
   global.tag = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, arg),
-                                     {id: equationFormatting.formatID(tag)}) as any;
+                                     {id: DefaultTags.id(tag)}) as any;
 };
 
 

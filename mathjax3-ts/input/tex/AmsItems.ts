@@ -32,7 +32,7 @@ import StackItemFactory from './StackItemFactory.js';
 import {StackItem} from './StackItem.js';
 import TexError from './TexError.js';
 import {TexConstant} from './TexConstants.js';
-
+import {DefaultTags} from './Tags.js';
 
 // AMS
 
@@ -47,26 +47,19 @@ export class AmsArrayItem extends ArrayItem {
     // Omitted configuration: && CONFIG.autoNumber !== "none";
     /// name: string, numbered: boolean, taggable: boolean, global: EnvList
     let global = args[3];
-    let numbered = args[2];
+    let taggable = args[2];
     this.numbered = args[1];
     this.save['notags'] = global['notags'] as string;
     this.save['notag'] = global['notag'] as string;
-    global['notags'] = (numbered ? null : args[0]);
+    global['notags'] = (taggable ? null : args[0]);
     // prevent automatic tagging in starred environments
-    global['tagged'] = !numbered && !global['forcetag'];
+    global['tagged'] = !taggable && !global['forcetag'];
   }
 
   get kind() {
     return 'AMSarray';
   }
   
-  // TODO: Temporary!
-  autoTag() {}
-  getTag(): MmlNode {
-    return;
-  }
-  clearTag() {}
-
   EndEntry() {
     TreeHelper.printMethod('AMS-EndEntry');
     // @test Cubic Binomial
@@ -85,13 +78,13 @@ export class AmsArrayItem extends ArrayItem {
     // @test Cubic Binomial
     let mtr = 'mtr'; // MML.mtr;
     if (!this.global['tag'] && this.numbered) {
-      this.autoTag();
+      DefaultTags.autoTag(this.global);
     }
     if (this.global['tag'] && !this.global['notags']) {
-      this.row = [this.getTag()].concat(this.row);
+      this.row = [DefaultTags.getTag(this.global)].concat(this.row);
       mtr = 'mlabeledtr'; // MML.mlabeledtr;
     } else {
-      this.clearTag();
+      DefaultTags.clearTag();
     }
     if (this.numbered) {
       delete this.global['notag'];
@@ -177,18 +170,26 @@ export class MultlineItem extends ArrayItem {
     if (this.table.length) {
       let m = this.table.length - 1, i, label = -1;
       if (!TreeHelper.getAttribute(this.table[0], 'columnalign')) {
-        TreeHelper.setAttribute(TreeHelper.getChildren(this.table[0])[0], 'columnalign', TexConstant.Align.LEFT);
+        TreeHelper.setAttribute(TreeHelper.getChildren(this.table[0])[0],
+                                'columnalign', TexConstant.Align.LEFT);
       }
       if (!TreeHelper.getAttribute(this.table[m], 'columnalign')) {
-        TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0], 'columnalign', TexConstant.Align.RIGHT);
+        TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0],
+                                'columnalign', TexConstant.Align.RIGHT);
       }
-      // if (!this.global.tag && this.numbered) {
-      //   this.autoTag();
-      // }
-      // if (this.global.tag && !this.global.notags) {
-      //   label = (this.arraydef.side === 'left' ? 0 : this.table.length - 1);
-      //   this.table[label] = [this.getTag()].concat(this.table[label]);
-      //   }
+      if (!this.global.tag && this.numbered) {
+        DefaultTags.autoTag(this.global);
+      }
+      console.log(this.global.tag);
+      if (this.global.tag && !this.global.notags) {
+        label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
+        console.log(label);
+        // NEW
+        // This needs to be stored in the actual tag object!
+        this.table[label] = this.global.tag as MmlNode;
+        // OLD
+        // this.table[label] = [this.getTag()].concat(this.table[label]);
+        }
       // for (i = 0, m = this.table.length; i < m; i++) {
       //   var mtr = (i === label ? MML.mlabeledtr : MML.mtr);
       //   this.table[i] = mtr.apply(MML,this.table[i]);
