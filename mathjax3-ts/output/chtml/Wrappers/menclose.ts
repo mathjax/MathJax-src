@@ -419,7 +419,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         Notation.Border('left'),
 
         Notation.Border2('actuarial', 'top', 'right'),
-        Notation.Border2('madrawb', 'bottom', 'right'),
+        Notation.Border2('madruwb', 'bottom', 'right'),
 
         Notation.DiagonalStrike('up', 1),
         Notation.DiagonalStrike('down', -1),
