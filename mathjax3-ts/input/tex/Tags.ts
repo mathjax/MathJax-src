@@ -56,7 +56,9 @@ export let TagConfig = new Map<string, string|boolean>([
   // MJ puts in an equation prefix: mjx-eqn
   // When true it uses the label name XXX as mjx-eqn-XXX
   // If false it uses the actual number N that is displayed: mjx-eqn-N
-  ['useLabelIds', true]
+  ['useLabelIds', true],
+
+  ['refUpdate', false]
 ]);
 
 
@@ -68,6 +70,61 @@ let equationNumbers = {
 
 export interface Tags {
 
+  // TODO: The following are all public, but should be protected or private with
+  //       set/getters.
+  /**
+   * Current equation number.
+   * @type {number}
+   */
+  counter: number;
+
+  /**
+   * Current starting equation number (for when equation is restarted).
+   * @type {number}
+   */
+  offset: number;
+
+  /**
+   * IDs used in this equation.
+   * @type {Object.<boolean>}
+   */
+  ids: {[key: string]: boolean};
+
+  /**
+   * IDs used in previous equations.
+   * @type {Object.<boolean>}
+   */
+  allIds: {[key: string]: boolean};
+
+  /**
+   * Labels in the current equation.
+   * @type {Object.<boolean>}
+   */
+  labels: {[key: string]: {tag: string, id: string}};
+
+  /**
+   * Labels in previous equations.
+   * @type {Object.<boolean>}
+   */
+  allLabels: {[key: string]: {tag: string, id: string}};
+
+  /**
+   * Use label names to generate reference ids.
+   * @type {boolean}
+   */
+  useLabelIds: boolean;
+
+  tagged: boolean;
+  
+  /**
+   * Nodes with unresolved references.
+   * @type {MmlNode[]}
+   */
+  // Not sure how to handle this at the moment.
+  refs: MmlNode[]; // array of nodes with unresolved references
+
+  // DONE with properties!
+  
   /**
    * How to format numbers in tags.
    * @param {number} n The tag number.
@@ -106,6 +163,20 @@ export interface Tags {
 
   clearTag(): void;
 
+  ////// Handling current labels/tags.
+  // TODO: Clean that up!
+  label: string;
+  tagId: string;
+  tagNode: MmlNode|void;
+  ///////
+
+  // If the current environment allows tags by default.
+  defaultTag: boolean;
+  // If currently a tag is set explicitly. This is a switch for the tag/notag
+  // commands.
+  setTag: boolean;
+
+
 
   /**
    * Resets the tag structure.
@@ -137,7 +208,7 @@ export class AbstractTags implements Tags {
    * Current starting equation number (for when equation is restarted).
    * @type {number}
    */
-  public offset = 0;
+  public offset: number = 0;
 
   /**
    * IDs used in this equation.
@@ -155,13 +226,13 @@ export class AbstractTags implements Tags {
    * Labels in the current equation.
    * @type {Object.<boolean>}
    */
-  public labels: {[key: string]: boolean} = {};
+  public labels: {[key: string]: {tag: string, id: string}} = {};
 
   /**
    * Labels in previous equations.
    * @type {Object.<boolean>}
    */
-  public allLabels: {[key: string]: boolean} = {};
+  public allLabels: {[key: string]: {tag: string, id: string}} = {};
 
   /**
    * Use label names to generate reference ids.
@@ -169,6 +240,8 @@ export class AbstractTags implements Tags {
    */
   public useLabelIds: boolean =  false;
 
+  public tagged: boolean = false;
+  
   /**
    * Nodes with unresolved references.
    * @type {MmlNode[]}
@@ -182,6 +255,8 @@ export class AbstractTags implements Tags {
   public label: string = '';
   public tagId: string = '';
   public tagNode: MmlNode|void = null;
+  public defaultTag: boolean = false;
+  public setTag: boolean = false;
   ///////
 
   /**
@@ -235,6 +310,8 @@ export class AbstractTags implements Tags {
      *  Get the tag and record the label, if any
      */
   public getTag() {
+    console.log('In getting node from tag');
+    console.log(this.tagNode);
     return this.tagNode;
     // this.tag = global.tag;
     // global.tagged = true;
@@ -282,17 +359,42 @@ export class NoTags extends AbstractTags {
   /**
    * @override
    */
-  public getTag() {}
+  public getTag() {
+    return this.tagNode;
+  }
 
 }
 
+export interface TagsClass {
+  new (): Tags;
+}
+
+
 // Factory needs functionality to create one Tags object from an existing one.
 // Currently it returns fixed objects. I.e., they never change!
-export let TagsFactory = new Map<string, Tags>([
-  ['none', new NoTags()],
-  // ['all', new AllTags()],
-  // ['AMS', new AmsTags()]
-]);
+export namespace TagsFactory {
+
+  let tagsMapping = new Map<string, TagsClass>([
+    ['default', NoTags],
+    ['none', NoTags],
+    // ['all', new AllTags()],
+    // ['AMS', new AmsTags()]
+  ]);
 
 
-export let DefaultTags = TagsFactory.get('none');
+  export let add = function(name: string, constr: TagsClass) {
+    tagsMapping.set(name, constr);
+  };
+
+  export let create = function(name: string): Tags {
+    let constr = tagsMapping.get(name) || tagsMapping.get('default');
+    return new constr();
+  };
+
+  export let setDefault = function(name?: string) {
+    DefaultTags = create(name || 'default');
+  };
+
+}
+
+export let DefaultTags = TagsFactory.create('default');

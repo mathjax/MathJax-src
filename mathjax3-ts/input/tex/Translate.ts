@@ -30,6 +30,7 @@ import TexError from './TexError.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
+import {TagsFactory} from './Tags.js';
 
 import './BaseMappings.js';
 import './AmsMappings.js';
@@ -47,7 +48,7 @@ export namespace NewTex {
 
   export let display: boolean = false;
   export let secondPass: MmlMo[] = [];
-  
+
   export function Compile(tex: string, display: boolean): MmlNode {
     let script = {
       type: 'math/tex' + (display ? '; mode=display' : ''),
@@ -71,6 +72,8 @@ export namespace NewTex {
 
   export function Translate(
     script: Script, configurations: string[] = [], stackitem?: any): MmlNode {
+    // TODO: This has to become a configuration option!
+    TagsFactory.setDefault('default');
       TreeHelper.printMethod('Translate');
       TreeHelper.printSimple(script.toString());
       let mml: MmlNode;

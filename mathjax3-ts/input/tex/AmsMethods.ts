@@ -34,7 +34,7 @@ import TexError from './TexError.js';
 import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
-import {DefaultTags} from './Tags.js';
+import {TagConfig, DefaultTags} from './Tags.js';
 
 
 // Namespace
@@ -48,6 +48,7 @@ let TAG_INDENT = '0.8em';
 AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
                          numbered: boolean, taggable: boolean, align: string,
                          spacing: string) {
+  console.log(numbered);
   TreeHelper.printMethod('AMS-AMSarray');
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
   parser.Push(begin);
@@ -56,7 +57,7 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
   }
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  let newItem = parser.itemFactory.create('AMSarray', begin.kind, numbered, taggable, parser.stack.global);
+  let newItem = parser.itemFactory.create('AMSarray', begin.getName(), numbered, taggable, parser.stack.global);
   newItem.arraydef = {
     displaystyle: true,
     columnalign: align,
@@ -312,34 +313,103 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
 
 /**
  *  Add the tag to the environment (to be added to the table row later)
- * (Does not work yet!)
+ * tag is 
  */
-AmsMethods.HandleTag = function (parser: TexParser, name: string) {
+AmsMethods.HandleTag = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('AMS-HandleTag');
   console.log('Handling tag!');
   let star = parser.GetStar();
-  let tag = parser.trimSpaces(parser.GetArgument(name));
+  let tagId = parser.trimSpaces(parser.GetArgument(name));
+  DefaultTags.tagId = tagId;
   // let tag = parseInt(arg);
-  if (!star) {
-    tag = DefaultTags.formatTag(tag);
-  }
+  let tag = star ? tagId : DefaultTags.formatTag(tagId);
   let global = parser.stack.global;
-  global.tagID = tag;
   if (global.notags) {
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',
                         name, global.notags as string]);
   }
   console.log('here');
-  if (global.tag) {
+  if (DefaultTags.tagNode) {
     throw new TexError(['MultipleCommand', 'Multiple %1', name]);
   }
   console.log('here2');
   // VS: OLD
   // global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
   // TODO: These types are wrong!
-  global.tag = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, tag),
-                                     {id: DefaultTags.formatId(tag)}) as any;
+  DefaultTags.tagNode = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, tag),
+                                              {id: DefaultTags.formatId(tagId)});
+  console.log(DefaultTags.tagNode);
+};
+
+
+AmsMethods.HandleNoTag = function(parser: TexParser, name: string) {
+  console.log(5);
+  if (DefaultTags.tagNode) {
+    console.log(6);
+    // TODO: Should this be a clearTag? Or do we have to save the label?
+    DefaultTags.tagNode = null;
+  }
+  this.stack.global.notag = true;  // prevent auto-tagging
+};
+
+
+/*
+ *  Record a label name for a tag
+ */
+AmsMethods.HandleLabel = function(parser: TexParser, name: string) {
+  console.log(7);
+  let global = this.stack.global;
+  let label = this.GetArgument(name);
+  if (label === '') {
+    console.log(8);
+    return;
+  }
+  // TODO: refUpdate deals with updating references!
+  if (!TagConfig.get('refUpdate')) {
+    console.log(9);
+    if (DefaultTags.label) {
+      console.log(10);
+      throw new TexError(['MultipleCommand', 'Multiple %1', name]);
+    }
+    DefaultTags.label = label;
+    if (DefaultTags.allLabels[label] || DefaultTags.labels[label]) {
+      console.log(11);
+      throw new TexError(['MultipleLabel', 'Label \'%1\' multiply defined', label])}
+    DefaultTags.labels[label] = {tag: '???',  id: ''}; // will be replaced by tag value later
+  }
+};
+
+// TODO: What to do with this?
+let baseURL = (typeof(document) === 'undefined' ||
+               document.getElementsByTagName('base').length === 0) ?
+  '' : String(document.location).replace(/#.*$/, '');
+
+/*
+ *  Handle a label reference
+ */
+AmsMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
+  console.log(12);
+  let label = this.GetArgument(name);
+  let ref = DefaultTags.allLabels[label] || DefaultTags.labels[label];
+  if (!ref) {
+    console.log(13);
+    ref = {tag: '???', id: ''};
+    // TODO: What do we do with bad references?
+    // AMS.badref = !AMS.refUpdate}
+  }
+  let tag = ref.tag;
+  if (eqref) {
+    console.log(14);
+    tag = DefaultTags.formatTag(tag)}
+  // VS: OLD
+  // this.Push(MML.mrow.apply(MML, this.InternalMath(tag)).With({
+  //   href: DefaultTags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
+  // }));
+  let node = TreeHelper.createNode('mrow', ParseUtil.internalMath(parser, tag), {
+    href: DefaultTags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
+  });
+  parser.Push(node);
 };
 
 

@@ -46,9 +46,11 @@ export class AmsArrayItem extends ArrayItem {
     super(factory);
     // Omitted configuration: && CONFIG.autoNumber !== "none";
     /// name: string, numbered: boolean, taggable: boolean, global: EnvList
+    console.log('All arguments');
+    console.log(args);
     let global = args[3];
     let taggable = args[2];
-    this.numbered = args[1];
+    this.numbered = args[1] && DefaultTags.tagged;
     this.save['notags'] = global['notags'] as string;
     this.save['notag'] = global['notag'] as string;
     global['notags'] = (taggable ? null : args[0]);
@@ -79,17 +81,18 @@ export class AmsArrayItem extends ArrayItem {
     let mtr = 'mtr'; // MML.mtr;
     console.log('Starting');
     console.log(this.numbered);
-    console.log(this.global.tag);
-    if (!this.global['tag'] && this.numbered) {
+    if (!DefaultTags.tagNode && this.numbered) {
       DefaultTags.autoTag();
     }
-    console.log('global tag: ' + !!this.global['tag']);
+    console.log('global tag: ' + !!DefaultTags.tagNode);
     let tag = DefaultTags.getTag();
+    console.log('HERE? ' + this.global['notags']);
     // if (this.global['tag'] && !this.global['notags']) {
     if (tag && !this.global['notags']) {
       this.row = [tag].concat(this.row);
       mtr = 'mlabeledtr'; // MML.mlabeledtr;
     } else {
+      console.log('clearing?');
       DefaultTags.clearTag();
     }
     if (this.numbered) {
@@ -123,7 +126,7 @@ export class MultlineItem extends ArrayItem {
   constructor(factory: any, ...args: any[]) {
     super(factory);
         // Omitted configuration: && CONFIG.autoNumber !== "none";
-    this.numbered = args[0];
+    this.numbered = args[0] && DefaultTags.tagged;
     let stack = args[1];
     this.save = {notag: stack.global.notag};
     stack.global.tagged = !this.numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
@@ -183,11 +186,11 @@ export class MultlineItem extends ArrayItem {
         TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0],
                                 'columnalign', TexConstant.Align.RIGHT);
       }
-      if (!this.global.tag && this.numbered) {
+      if (!DefaultTags.tagNode && this.numbered) {
         DefaultTags.autoTag();
       }
       console.log(this.global.tag);
-      if (this.global.tag && !this.global.notags) {
+      if (DefaultTags.tagNode && !this.global.notags) {
         label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
         console.log(label);
         // NEW

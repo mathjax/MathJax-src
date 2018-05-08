@@ -6,6 +6,9 @@ class ParserTagAllTest extends ParserTest {
     super();
   }
 
+  runTest(name, expr, json) {
+    super.runTest(name, expr, json);
+  }
 }
 
 let parserTest = new ParserTagAllTest();
