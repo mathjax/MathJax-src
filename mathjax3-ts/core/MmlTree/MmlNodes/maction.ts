@@ -54,7 +54,9 @@ export class MmlMaction extends AbstractMmlNode {
      * @return {MmlNode}  The selected child node (or an mrow if none selected)
      */
     public get selected(): MmlNode {
-        return this.childNodes[(this.attributes.get('selection') as number) - 1] || this.factory.create('mrow');
+        const selection = this.attributes.get('selection') as number;
+        const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
+        return this.childNodes[i] || this.factory.create('mrow');
     }
 
     /*
@@ -83,6 +85,18 @@ export class MmlMaction extends AbstractMmlNode {
      */
     public coreMO(): MmlNode {
         return this.selected.coreMO();
+    }
+
+    /*
+     * @override
+     */
+    protected verifyAttributes(options: PropertyList) {
+        super.verifyAttributes(options);
+        if (this.attributes.get('actiontype') !== 'toggle' &&
+            this.attributes.getExplicit('selection') !== undefined) {
+            const attributes = this.attributes.getAllAttributes();
+            delete attributes.selection;
+        }
     }
 
     /*
