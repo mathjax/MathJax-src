@@ -117,4 +117,9 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @override
      */
     public getScale() {}
+
+    /*
+     * @override
+     */
+    public getSpace() {}
 }
