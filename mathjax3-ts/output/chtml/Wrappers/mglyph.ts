@@ -93,7 +93,6 @@ export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
         const img = this.html('img', {src: src, style: styles, alt: alt, title: alt});
         this.adaptor.append(chtml, img);
-        this.drawBBox();
     }
 
     /*
