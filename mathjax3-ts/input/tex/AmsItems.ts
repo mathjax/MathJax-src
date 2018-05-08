@@ -77,11 +77,17 @@ export class AmsArrayItem extends ArrayItem {
     TreeHelper.printMethod('AMS-EndRow');
     // @test Cubic Binomial
     let mtr = 'mtr'; // MML.mtr;
+    console.log('Starting');
+    console.log(this.numbered);
+    console.log(this.global.tag);
     if (!this.global['tag'] && this.numbered) {
-      DefaultTags.autoTag(this.global);
+      DefaultTags.autoTag();
     }
-    if (this.global['tag'] && !this.global['notags']) {
-      this.row = [DefaultTags.getTag(this.global)].concat(this.row);
+    console.log('global tag: ' + !!this.global['tag']);
+    let tag = DefaultTags.getTag();
+    // if (this.global['tag'] && !this.global['notags']) {
+    if (tag && !this.global['notags']) {
+      this.row = [tag].concat(this.row);
       mtr = 'mlabeledtr'; // MML.mlabeledtr;
     } else {
       DefaultTags.clearTag();
@@ -178,7 +184,7 @@ export class MultlineItem extends ArrayItem {
                                 'columnalign', TexConstant.Align.RIGHT);
       }
       if (!this.global.tag && this.numbered) {
-        DefaultTags.autoTag(this.global);
+        DefaultTags.autoTag();
       }
       console.log(this.global.tag);
       if (this.global.tag && !this.global.notags) {
@@ -186,7 +192,7 @@ export class MultlineItem extends ArrayItem {
         console.log(label);
         // NEW
         // This needs to be stored in the actual tag object!
-        this.table[label] = this.global.tag as MmlNode;
+        // this.table[label] = this.global.tag as MmlNode;
         // OLD
         // this.table[label] = [this.getTag()].concat(this.table[label]);
         }

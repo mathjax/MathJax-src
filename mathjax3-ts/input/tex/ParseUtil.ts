@@ -249,7 +249,6 @@ namespace ParseUtil {
    */
   // TODO: Write test!
   export function internalMath(parser: TexParser, text: string, level?: number|string) {
-    console.log(level);
     TreeHelper.printMethod('InternalMath (Old Parser Object)');
     let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;

@@ -13,6 +13,9 @@ export class ParserTest extends Test {
 
   constructor() {
     super();
+    console.log('\u001B\u005B\u0033\u0034\u006D' +
+                'Running tests from ' + this.constructor.name +
+                '\u001B\u005B\u0033\u0037\u006D');
   }
 
   // Tests exclusively the timing of the Translate method.

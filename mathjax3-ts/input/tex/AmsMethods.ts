@@ -318,10 +318,10 @@ AmsMethods.HandleTag = function (parser: TexParser, name: string) {
   TreeHelper.printMethod('AMS-HandleTag');
   console.log('Handling tag!');
   let star = parser.GetStar();
-  let arg = parser.trimSpaces(parser.GetArgument(name));
-  let tag = parseInt(arg);
+  let tag = parser.trimSpaces(parser.GetArgument(name));
+  // let tag = parseInt(arg);
   if (!star) {
-    arg = DefaultTags.tag(tag);
+    tag = DefaultTags.formatTag(tag);
   }
   let global = parser.stack.global;
   global.tagID = tag;
@@ -338,8 +338,8 @@ AmsMethods.HandleTag = function (parser: TexParser, name: string) {
   // VS: OLD
   // global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
   // TODO: These types are wrong!
-  global.tag = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, arg),
-                                     {id: DefaultTags.id(tag)}) as any;
+  global.tag = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, tag),
+                                     {id: DefaultTags.formatId(tag)}) as any;
 };
 
 

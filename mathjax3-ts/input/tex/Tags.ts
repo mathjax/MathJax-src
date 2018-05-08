@@ -49,7 +49,8 @@ export let TagConfig = new Map<string, string|boolean>([
 
   // 'AMS' for standard AMS environment numbering,
   //  or 'all' to number all displayed equations
-  ['autoNumber', 'none'],
+  // This is now done in classes!
+  // ['autoNumber', 'none'],
 
   // make element ID's use \label name rather than equation number
   // MJ puts in an equation prefix: mjx-eqn
@@ -59,16 +60,9 @@ export let TagConfig = new Map<string, string|boolean>([
 ]);
 
 
-// TODO: This is temporary until we find a new place and a better structure.
+// TODO: These need to go into the Tags structure.
 //
 let equationNumbers = {
-  number: 0,        // current equation number
-  startNumber: 0,   // current starting equation number (for when equation is restarted)
-  IDs: {},          // IDs used in previous equations
-  eqIDs: {},        // IDs used in this equation
-  labels: {},       // the set of labels
-  eqlabels: {},     // labels in the current equation
-  refs: new Array() // array of jax with unresolved references
   // I think we should get rid of the last one!
 };
 
@@ -79,23 +73,23 @@ export interface Tags {
    * @param {number} n The tag number.
    * @return {string} The formatted number.
    */
-  number(n: number): string;
+  formatNumber(n: number): string;
 
 
   /**
    * How to format tags.
-   * @param {number} n The tag number.
+   * @param {string} tag The tag string.
    * @return {string} The formatted numbered tag.
    */
-  tag(n: number): string;
+  formatTag(tag: string): string;
 
 
   /**
    * How to format ids for labelling equations.
-   * @param {number} n The label number.
-   * @return {string} The formatted label.
+   * @param {string} id The unique part of the id (e.g., label or number).
+   * @return {string} The formatted id.
    */
-  id(n: number): string;
+  formatId(id: string): string;
 
 
   /**
@@ -104,7 +98,21 @@ export interface Tags {
    * @param {string} base The base URL in the reference.
    * @return {}
    */
-  url(id: string, base: string): string;
+  formatUrl(id: string, base: string): string;
+
+  autoTag(): void;
+
+  getTag(): MmlNode | void;
+
+  clearTag(): void;
+
+
+  /**
+   * Resets the tag structure.
+   * @param {number} offset A new offset value to start counting ids from.
+   * @param {boolean} keep If sets, keep all previous labels and ids at reset.
+   */
+  reset(offset: number, keep: boolean): void;
 
 }
 
@@ -113,67 +121,108 @@ export class AbstractTags implements Tags {
   // 'AMS' for standard AMS numbering,
   //  or 'all' for all displayed equations
   // VS: Should this be here?
-  autoNumber: 'none';
-  counter = 0;
-  allTags: string[] = [];
+  // This will be folded into classes!
+  // autoNumber: 'none';
+  //
+
+  // TODO: The following are all public, but should be protected or private with
+  //       set/getters.
+  /**
+   * Current equation number.
+   * @type {number}
+   */
+  public counter: number = 0;
+
+  /**
+   * Current starting equation number (for when equation is restarted).
+   * @type {number}
+   */
+  public offset = 0;
+
+  /**
+   * IDs used in this equation.
+   * @type {Object.<boolean>}
+   */
+  public ids: {[key: string]: boolean} = {};
+
+  /**
+   * IDs used in previous equations.
+   * @type {Object.<boolean>}
+   */
+  public allIds: {[key: string]: boolean} = {};
+
+  /**
+   * Labels in the current equation.
+   * @type {Object.<boolean>}
+   */
+  public labels: {[key: string]: boolean} = {};
+
+  /**
+   * Labels in previous equations.
+   * @type {Object.<boolean>}
+   */
+  public allLabels: {[key: string]: boolean} = {};
+
+  /**
+   * Use label names to generate reference ids.
+   * @type {boolean}
+   */
+  public useLabelIds: boolean =  false;
+
+  /**
+   * Nodes with unresolved references.
+   * @type {MmlNode[]}
+   */
+  // Not sure how to handle this at the moment.
+  public refs: MmlNode[] = new Array(); // array of nodes with unresolved references
+
+
+  ////// Handling current labels/tags.
+  // TODO: Clean that up!
+  public label: string = '';
+  public tagId: string = '';
+  public tagNode: MmlNode|void = null;
+  ///////
 
   /**
    * @override
    */
-  public number(n: number) {
+  public formatNumber(n: number) {
     return n.toString();
   }
-  
+
   /**
    * @override
    */
-  public tag(n: number) {
-    return '(' + n + ')';
+  public formatTag(tag: string) {
+    return '(' + tag + ')';
   }
 
   /**
    * @override
    */
-  public id(n: number) {
-    return 'mjx-eqn-' + String(n).replace(/\s/g, '_');
+  public formatId(id: string) {
+    return 'mjx-eqn-' + id.replace(/\s/g, '_');
   }
 
   /**
    * @override
    */
-  public url(id: string, base: string) {
+  public formatUrl(id: string, base: string) {
     return base + '#' + encodeURIComponent(id);
   }
 
-  useLabelIds =  true;
-  //
-  //  Clear the equation numbers and labels
-  //
-  public resetEquationNumbers(n: number, keepLabels: boolean) {
-    equationNumbers.startNumber = (n || 0);
-    if (!keepLabels) {
-      equationNumbers.labels = {};
-      equationNumbers.IDs = {};
-    }
-  }
-
-  // Handling current labels/tags.
-  public label: string = '';
-  public tagId: string = '';
-  public tagNode: MmlNode = null;
-  
-  
   // Tag handling functions.
   /**
    *  Increment equation number and form tag mtd element
    */
-  public autoTag(global: any) {
-    if (!global.notag) {
-      this.counter++;
-      global.tagID = this.number(this.counter);
-      let mml = new TexParser('\\text{' + this.tag(global.tagID) + '}', {}).mml();
-      global.tag = TreeHelper.createNode('mtd', [mml], {id: this.id(global.tagID)});
-    }
+  public autoTag() {
+    // if (!global.notag) {
+    this.counter++;
+    this.tagId = this.formatNumber(this.counter);
+    let mml = new TexParser('\\text{' + this.formatTag(this.tagId) + '}', {}).mml();
+    this.tagNode = TreeHelper.createNode('mtd', [mml], {id: this.formatId(this.tagId)});
+    // }
   }
 
   public clearTag() {
@@ -181,35 +230,69 @@ export class AbstractTags implements Tags {
     this.tagId = '';
     this.tagNode = null;
   }
-  
+
     /**
      *  Get the tag and record the label, if any
      */
-  public getTag(global: any) {
-    this.tag = global.tag;
-    global.tagged = true;
-    if (global.label) {
-      if (CONFIG.useLabelIds) {tag.id = CONFIG.formatID(global.label)}
-      console.log('TagID');
-      console.log(tag.id);
-      AMS.eqlabels[global.label] = {tag:global.tagID, id:tag.id};        
+  public getTag() {
+    return this.tagNode;
+    // this.tag = global.tag;
+    // global.tagged = true;
+    // if (global.label) {
+    //   if (CONFIG.useLabelIds) {tag.id = this.formatId(global.label)}
+    //   AMS.eqlabels[global.label] = {tag:global.tagID, id:tag.id};
+    // }
+    // //
+    // //  Check for repeated ID's (either in the document or as
+    // //  a previous tag) and find a unique related one. (#240)
+    // //
+    // //  TODO: find tests and sort this out!
+    // //
+    // // if (AMS.IDs[tag.id] || AMS.eqIDs[tag.id]) {
+    // //   var i = 0, ID;
+    // //   do {i++; ID = tag.id+"_"+i}
+    // //   while (document.getElementById(ID) || AMS.IDs[ID] || AMS.eqIDs[ID]);
+    // //   tag.id = ID; if (global.label) {AMS.eqlabels[global.label].id = ID}
+    // // }
+    // AMS.eqIDs[tag.id] = 1;
+    // this.clearTag();
+    // return tag;
+
+    // return global.tag as MmlNode;
+  }
+
+  public reset(n: number, keepLabels: boolean) {
+    this.offset = (n || 0);
+    if (!keepLabels) {
+      this.labels = {};
+      this.ids = {};
     }
-    //
-    //  Check for repeated ID's (either in the document or as
-    //  a previous tag) and find a unique related one. (#240)
-    //
-    if (document.getElementById(tag.id) || AMS.IDs[tag.id] || AMS.eqIDs[tag.id]) {
-      var i = 0, ID;
-      do {i++; ID = tag.id+"_"+i}
-      while (document.getElementById(ID) || AMS.IDs[ID] || AMS.eqIDs[ID]);
-      tag.id = ID; if (global.label) {AMS.eqlabels[global.label].id = ID}
-    }
-    AMS.eqIDs[tag.id] = 1;
-    this.clearTag();
-    return tag;
   }
 
 };
 
 
-export let DefaultTags = new AbstractTags();
+export class NoTags extends AbstractTags {
+
+  /**
+   * @override
+   */
+  public autoTag() {}
+
+  /**
+   * @override
+   */
+  public getTag() {}
+
+}
+
+// Factory needs functionality to create one Tags object from an existing one.
+// Currently it returns fixed objects. I.e., they never change!
+export let TagsFactory = new Map<string, Tags>([
+  ['none', new NoTags()],
+  // ['all', new AllTags()],
+  // ['AMS', new AmsTags()]
+]);
+
+
+export let DefaultTags = TagsFactory.get('none');
