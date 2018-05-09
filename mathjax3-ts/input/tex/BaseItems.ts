@@ -72,7 +72,7 @@ export class StartItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem start');
     if (item.isKind('stop')) {
       return this.factory.create('mml', this.toMml());
@@ -127,7 +127,7 @@ export class OpenItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem open');
     if (item.isKind('close')) {
       let mml = this.toMml();
@@ -177,7 +177,7 @@ export class PrimeItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem prime');
     let [top0, top1] = this.TopN(2);
     if (!TreeHelper.isType(top0, 'msubsup')) {
@@ -217,7 +217,7 @@ export class SubsupItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem subsup');
     if (item.isKind('open') || item.isKind('left')) {
       return true;
@@ -280,7 +280,7 @@ export class OverItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem over');
     if (item.isKind('over')) {
       // @test Double Over
@@ -347,7 +347,7 @@ export class LeftItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     // @test Missing Right
     TreeHelper.printMethod('Checkitem left');
     if (item.isKind('right')) {
@@ -404,7 +404,7 @@ export class BeginItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem begin');
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
@@ -461,7 +461,7 @@ export class StyleItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem style');
     if (!item.isClose) {
       return super.checkItem(item);
@@ -542,7 +542,7 @@ export class ArrayItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem array');
     // @test Array Single
     if (item.isClose && !item.isKind('over')) {
@@ -744,7 +744,7 @@ export class FnItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem fn');
     const top = this.Top;
     if (top) {
@@ -802,7 +802,7 @@ export class NotItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem not');
     let mml: TextNode | MmlNode;
     let c: string;
@@ -861,7 +861,7 @@ export class DotsItem extends BaseItem {
   /**
    * @override
    */
-  public checkitem(item: StackItem) {
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem dots');
     if (item.isKind('open') || item.isKind('left')) {
       return true;
