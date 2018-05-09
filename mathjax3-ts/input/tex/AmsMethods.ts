@@ -324,22 +324,22 @@ AmsMethods.HandleTag = function(parser: TexParser, name: string) {
   // let tag = parseInt(arg);
   let tag = star ? tagId : DefaultTags.formatTag(tagId);
   let global = parser.stack.global;
-  if (global.notags) {
+  console.log('Global');
+  console.log(global);
+  if (!DefaultTags.defaultTag) {
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',
                         name, global.notags as string]);
   }
-  console.log('here');
-  if (DefaultTags.tagNode) {
+  if (DefaultTags.setTag) {
     throw new TexError(['MultipleCommand', 'Multiple %1', name]);
   }
-  console.log('here2');
   // VS: OLD
   // global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
   // TODO: These types are wrong!
   DefaultTags.tagNode = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, tag),
                                               {id: DefaultTags.formatId(tagId)});
-  console.log(DefaultTags.tagNode);
+  DefaultTags.setTag = true;
 };
 
 
@@ -350,7 +350,7 @@ AmsMethods.HandleNoTag = function(parser: TexParser, name: string) {
     // TODO: Should this be a clearTag? Or do we have to save the label?
     DefaultTags.tagNode = null;
   }
-  this.stack.global.notag = true;  // prevent auto-tagging
+  DefaultTags.setTag = false;  // prevent auto-tagging
 };
 
 

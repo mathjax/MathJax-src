@@ -39,8 +39,11 @@ import {DefaultTags} from './Tags.js';
 
 export class AmsArrayItem extends ArrayItem {
 
-  private numbered: boolean = false;
-  private save: {[key: string]: string} = {};
+  // private numbered: boolean = false;
+  // private save: {[key: string]: string|boolean} = {};
+  private save: {node: MmlNode | void, notags: string,
+                 defaultTag: boolean, notag: boolean} =
+    {node: null, notags: '', notag: false, defaultTag: false};
   
   constructor(factory: any, ...args: any[]) {
     super(factory);
@@ -49,12 +52,22 @@ export class AmsArrayItem extends ArrayItem {
     console.log('All arguments');
     console.log(args);
     let global = args[3];
+    console.log('initial global:');
+    console.log(global);
     let taggable = args[2];
-    this.numbered = args[1] && DefaultTags.tagged;
-    this.save['notags'] = global['notags'] as string;
-    this.save['notag'] = global['notag'] as string;
+    this.save = {node: DefaultTags.tagNode,
+                 notags: global['notags'],
+                 defaultTag: DefaultTags.defaultTag,
+                 notag: DefaultTags.setTag};
+    DefaultTags.defaultTag = args[1];
+    DefaultTags.setTag = false;
+    DefaultTags.tagNode = null;
+    // this.save['notags'] = global['notags'] as string;
+    // this.save['notag'] = DefaultTags.defaultTag;
     global['notags'] = (taggable ? null : args[0]);
+    console.log(global['notags']);
     // prevent automatic tagging in starred environments
+    // What is that?
     global['tagged'] = !taggable && !global['forcetag'];
   }
 
@@ -80,24 +93,26 @@ export class AmsArrayItem extends ArrayItem {
     // @test Cubic Binomial
     let mtr = 'mtr'; // MML.mtr;
     console.log('Starting');
-    console.log(this.numbered);
-    if (!DefaultTags.tagNode && this.numbered) {
-      DefaultTags.autoTag();
-    }
-    console.log('global tag: ' + !!DefaultTags.tagNode);
+    // if (!DefaultTags.tagNode && this.numbered) {
+    //   DefaultTags.autoTag();
+    // }
+    console.log('Tag info:\n default: ' + DefaultTags.defaultTag +
+                '\n explicit set: ' + DefaultTags.setTag +
+                '\n tag node: ' + !!DefaultTags.tagNode);
     let tag = DefaultTags.getTag();
     console.log('HERE? ' + this.global['notags']);
     // if (this.global['tag'] && !this.global['notags']) {
     if (tag && !this.global['notags']) {
       this.row = [tag].concat(this.row);
       mtr = 'mlabeledtr'; // MML.mlabeledtr;
-    } else {
-      console.log('clearing?');
-      DefaultTags.clearTag();
+    // } else {
+    //   console.log('clearing?');
     }
-    if (this.numbered) {
-      delete this.global['notag'];
-    }
+    DefaultTags.clearTag();
+    // if (this.numbered) {
+    // if (DefaultTags.defaultTag) {
+    //   delete this.global['notag'];
+    // }
     const node = TreeHelper.createNode(mtr, this.row, {});
     this.table.push(node); this.row = [];
   }
@@ -106,8 +121,11 @@ export class AmsArrayItem extends ArrayItem {
     TreeHelper.printMethod('AMS-EndTable');
     // @test Cubic Binomial
     super.EndTable();
-    this.global['notags'] = this.save['notags'];
-    this.global['notag']  = this.save['notag'];
+    this.global['notags'] = this.save.notags;
+    DefaultTags.defaultTag = this.save.defaultTag;
+    DefaultTags.setTag = this.save.notag;
+    DefaultTags.tagNode = this.save.node;
+    // this.global['notag']  = this.save['notag'];
   }
 }
 
@@ -119,17 +137,18 @@ export class MultlineItem extends ArrayItem {
     return 'multline';
   }
 
-  private numbered: boolean = false;
+  // private numbered: boolean = false;
   private save: {[key: string]: string} = {};
   
   
   constructor(factory: any, ...args: any[]) {
     super(factory);
         // Omitted configuration: && CONFIG.autoNumber !== "none";
-    this.numbered = args[0] && DefaultTags.tagged;
+    // this.numbered = args[0] && DefaultTags.tagged;
+    DefaultTags.defaultTag = args[0];
     let stack = args[1];
     this.save = {notag: stack.global.notag};
-    stack.global.tagged = !this.numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
+    // stack.global.tagged = !this.numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
   }
 
   
@@ -186,11 +205,12 @@ export class MultlineItem extends ArrayItem {
         TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0],
                                 'columnalign', TexConstant.Align.RIGHT);
       }
-      if (!DefaultTags.tagNode && this.numbered) {
-        DefaultTags.autoTag();
-      }
+      // if (!DefaultTags.tagNode && this.numbered) {
+      //   DefaultTags.autoTag();
+      // }
       console.log(this.global.tag);
-      if (DefaultTags.tagNode && !this.global.notags) {
+      let tag = DefaultTags.getTag();
+      if (tag && !this.global.notags) {
         label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
         console.log(label);
         // NEW

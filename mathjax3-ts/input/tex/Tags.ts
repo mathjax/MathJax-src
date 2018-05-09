@@ -114,8 +114,6 @@ export interface Tags {
    */
   useLabelIds: boolean;
 
-  tagged: boolean;
-  
   /**
    * Nodes with unresolved references.
    * @type {MmlNode[]}
@@ -240,8 +238,6 @@ export class AbstractTags implements Tags {
    */
   public useLabelIds: boolean =  false;
 
-  public tagged: boolean = false;
-  
   /**
    * Nodes with unresolved references.
    * @type {MmlNode[]}
@@ -304,15 +300,20 @@ export class AbstractTags implements Tags {
     this.label = '';
     this.tagId = '';
     this.tagNode = null;
+    this.setTag = false;
   }
 
     /**
      *  Get the tag and record the label, if any
      */
   public getTag() {
-    console.log('In getting node from tag');
-    console.log(this.tagNode);
-    return this.tagNode;
+    if (this.defaultTag && this.setTag) {
+      if (!this.tagNode) {
+        this.autoTag();
+      }
+      return this.tagNode;
+    }
+    return null;
     // this.tag = global.tag;
     // global.tagged = true;
     // if (global.label) {
