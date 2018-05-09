@@ -696,12 +696,11 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         for (let i = 0; i < this.numRows; i++) {
             const row = this.childNodes[i];
             if (row.kind === 'mlabeledtr') {
-                if (h) {
-                    adaptor.insert(this.html('mjx-mtr', {style: {height: this.em(h)}}), current);
-                    adaptor.setStyle(current, 'height', this.em((equal ? HD : H[i] + D[i]) + space[i] + space[i+1]));
-                    current = adaptor.next(current) as N;
-                    h = 0;
-                }
+                h && adaptor.insert(this.html('mjx-mtr', {style: {height: this.em(h)}}), current);
+                const cell = adaptor.firstChild(current) as N;
+                adaptor.setStyle(cell, 'height', this.em(equal ? HD : H[i] + D[i]));
+                current = adaptor.next(current) as N;
+                h = this.rLines[i];
             } else {
                 h += space[i] + (equal ? HD : H[i] + D[i]) + space[i + 1] + this.rLines[i];
             }
