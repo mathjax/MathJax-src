@@ -51,24 +51,13 @@ export class AmsArrayItem extends ArrayItem {
     /// name: string, numbered: boolean, taggable: boolean, global: EnvList
     console.log('All arguments');
     console.log(args);
-    let global = args[3];
-    console.log('initial global:');
-    console.log(global);
-    let taggable = args[2];
-    this.save = {node: DefaultTags.tagNode,
-                 notags: global['notags'],
-                 defaultTag: DefaultTags.defaultTag,
-                 notag: DefaultTags.setTag};
-    DefaultTags.defaultTag = args[1];
-    DefaultTags.setTag = false;
-    DefaultTags.tagNode = null;
-    // this.save['notags'] = global['notags'] as string;
-    // this.save['notag'] = DefaultTags.defaultTag;
-    global['notags'] = (taggable ? null : args[0]);
-    console.log(global['notags']);
+    // let global = args[3];
+    // console.log('initial global:');
+    // console.log(global);
+    DefaultTags.start(args[0], args[2], args[1]);
     // prevent automatic tagging in starred environments
     // What is that?
-    global['tagged'] = !taggable && !global['forcetag'];
+    // global['tagged'] = !taggable && !global['forcetag'];
   }
 
   get kind() {
@@ -96,13 +85,14 @@ export class AmsArrayItem extends ArrayItem {
     // if (!DefaultTags.tagNode && this.numbered) {
     //   DefaultTags.autoTag();
     // }
-    console.log('Tag info:\n default: ' + DefaultTags.defaultTag +
-                '\n explicit set: ' + DefaultTags.setTag +
-                '\n tag node: ' + !!DefaultTags.tagNode);
+    // console.log('Tag info:\n default: ' + DefaultTags.defaultTag +
+    //             '\n explicit set: ' + DefaultTags.setTag +
+    //             '\n tag node: ' + !!DefaultTags.tagNode);
     let tag = DefaultTags.getTag();
+    console.log(tag);
     console.log('HERE? ' + this.global['notags']);
     // if (this.global['tag'] && !this.global['notags']) {
-    if (tag && !this.global['notags']) {
+    if (tag) {
       this.row = [tag].concat(this.row);
       mtr = 'mlabeledtr'; // MML.mlabeledtr;
     // } else {
@@ -121,11 +111,7 @@ export class AmsArrayItem extends ArrayItem {
     TreeHelper.printMethod('AMS-EndTable');
     // @test Cubic Binomial
     super.EndTable();
-    this.global['notags'] = this.save.notags;
-    DefaultTags.defaultTag = this.save.defaultTag;
-    DefaultTags.setTag = this.save.notag;
-    DefaultTags.tagNode = this.save.node;
-    // this.global['notag']  = this.save['notag'];
+    DefaultTags.end();
   }
 }
 
@@ -145,9 +131,7 @@ export class MultlineItem extends ArrayItem {
     super(factory);
         // Omitted configuration: && CONFIG.autoNumber !== "none";
     // this.numbered = args[0] && DefaultTags.tagged;
-    DefaultTags.defaultTag = args[0];
-    let stack = args[1];
-    this.save = {notag: stack.global.notag};
+    DefaultTags.start('multline', true, args[0]);
     // stack.global.tagged = !this.numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
   }
 

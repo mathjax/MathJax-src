@@ -34,7 +34,7 @@ import TexError from './TexError.js';
 import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
-import {TagConfig, DefaultTags} from './Tags.js';
+import {Label, TagConfig, DefaultTags} from './Tags.js';
 
 
 // Namespace
@@ -318,39 +318,38 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
 AmsMethods.HandleTag = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('AMS-HandleTag');
   console.log('Handling tag!');
-  let star = parser.GetStar();
-  let tagId = parser.trimSpaces(parser.GetArgument(name));
-  DefaultTags.tagId = tagId;
-  // let tag = parseInt(arg);
-  let tag = star ? tagId : DefaultTags.formatTag(tagId);
-  let global = parser.stack.global;
-  console.log('Global');
-  console.log(global);
-  if (!DefaultTags.defaultTag) {
+  console.log(DefaultTags);
+  if (!DefaultTags.currentTag.taggable) {
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',
-                        name, global.notags as string]);
+                        name, DefaultTags.env]);
   }
-  if (DefaultTags.setTag) {
+  // TODO: sort out empty strings in tagId!
+  if (DefaultTags.currentTag.tag) {
     throw new TexError(['MultipleCommand', 'Multiple %1', name]);
   }
+  let star = parser.GetStar();
+  let tagId = parser.trimSpaces(parser.GetArgument(name));
+  // let tag = parseInt(arg);
   // VS: OLD
   // global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
   // TODO: These types are wrong!
-  DefaultTags.tagNode = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, tag),
-                                              {id: DefaultTags.formatId(tagId)});
-  DefaultTags.setTag = true;
+  // DefaultTags.tagNode = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, tag),
+  //                                             {id: DefaultTags.formatId(tagId)});
+  // DefaultTags.setTag = true;
+  DefaultTags.tag(tagId, star);
 };
 
 
 AmsMethods.HandleNoTag = function(parser: TexParser, name: string) {
   console.log(5);
-  if (DefaultTags.tagNode) {
-    console.log(6);
-    // TODO: Should this be a clearTag? Or do we have to save the label?
-    DefaultTags.tagNode = null;
-  }
-  DefaultTags.setTag = false;  // prevent auto-tagging
+  DefaultTags.notag();
+  // if (DefaultTags.currenttagNode) {
+  //   console.log(6);
+  //   // TODO: Should this be a clearTag? Or do we have to save the label?
+  //   DefaultTags.tagNode = null;
+  // }
+  // DefaultTags.setTag = false;  // prevent auto-tagging
 };
 
 
@@ -366,6 +365,7 @@ AmsMethods.HandleLabel = function(parser: TexParser, name: string) {
     return;
   }
   // TODO: refUpdate deals with updating references!
+  console.log('refupdated: ' + TagConfig.get('refUpdate'));
   if (!TagConfig.get('refUpdate')) {
     console.log(9);
     if (DefaultTags.label) {
@@ -376,7 +376,8 @@ AmsMethods.HandleLabel = function(parser: TexParser, name: string) {
     if (DefaultTags.allLabels[label] || DefaultTags.labels[label]) {
       console.log(11);
       throw new TexError(['MultipleLabel', 'Label \'%1\' multiply defined', label])}
-    DefaultTags.labels[label] = {tag: '???',  id: ''}; // will be replaced by tag value later
+    // TODO: This should be set in the tags structure!
+    DefaultTags.labels[label] = new Label(); // will be replaced by tag value later
   }
 };
 
@@ -394,7 +395,7 @@ AmsMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean)
   let ref = DefaultTags.allLabels[label] || DefaultTags.labels[label];
   if (!ref) {
     console.log(13);
-    ref = {tag: '???', id: ''};
+    ref = new Label();
     // TODO: What do we do with bad references?
     // AMS.badref = !AMS.refUpdate}
   }
