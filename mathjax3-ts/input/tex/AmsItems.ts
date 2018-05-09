@@ -162,22 +162,6 @@ export class MultlineItem extends ArrayItem {
 
   EndTable() {
     TreeHelper.printMethod('AMS-EndTable');
-    // super.EndTable();
-    // if (this.table.length) {
-    //   let m = this.table.length - 1, i, label = -1;
-    //   if (!this.table[0][0].columnalign) {this.table[0][0].columnalign = MML.ALIGN.LEFT}
-    //   if (!this.table[m][0].columnalign) {this.table[m][0].columnalign = MML.ALIGN.RIGHT}
-    //   if (!this.global.tag && this.numbered) {this.autoTag()}
-    //   if (this.global.tag && !this.global.notags) {
-    //     label = (this.arraydef.side === 'left' ? 0 : this.table.length - 1);
-    //     this.table[label] = [this.getTag()].concat(this.table[label]);
-    //     }
-    //   for (i = 0, m = this.table.length; i < m; i++) {
-    //     var mtr = (i === label ? MML.mlabeledtr : MML.mtr);
-    //     this.table[i] = mtr.apply(MML,this.table[i]);
-    //   }
-    // }
-    // this.global.notag  = this.save.notag;
     super.EndTable();
     if (this.table.length) {
       let m = this.table.length - 1, i, label = -1;
@@ -189,27 +173,17 @@ export class MultlineItem extends ArrayItem {
         TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0],
                                 'columnalign', TexConstant.Align.RIGHT);
       }
-      // if (!DefaultTags.tagNode && this.numbered) {
-      //   DefaultTags.autoTag();
-      // }
-      console.log(this.global.tag);
       let tag = DefaultTags.getTag();
-      if (tag && !this.global.notags) {
+      if (tag) {
         label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
         console.log(label);
-        // NEW
-        // This needs to be stored in the actual tag object!
-        // this.table[label] = this.global.tag as MmlNode;
-        // OLD
-        // this.table[label] = [this.getTag()].concat(this.table[label]);
-        }
-      // for (i = 0, m = this.table.length; i < m; i++) {
-      //   var mtr = (i === label ? MML.mlabeledtr : MML.mtr);
-      //   this.table[i] = mtr.apply(MML,this.table[i]);
-      // }
+        const mtr = this.table[label];
+        const mlabel = TreeHelper.createNode(
+          'mlabeledtr', [tag].concat(TreeHelper.getChildren(mtr)), {});
+        TreeHelper.copyAttributes(mtr, mlabel);
+        this.table[label] = mlabel;
+      }
     }
-    this.global.notag  = this.save.notag;
   }
 }
 
-// StackItemFactory.DefaultStackItems[AmsArrayItem.prototype.kind] = AmsArrayItem;

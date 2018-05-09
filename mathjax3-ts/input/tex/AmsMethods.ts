@@ -43,6 +43,7 @@ let AmsMethods: Record<string, ParseMethod> = {};
 
 // AMS Math
 let TAG_SIDE = 'right';
+// let TAG_SIDE = 'left';
 let TAG_INDENT = '0.8em';
 
 AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
