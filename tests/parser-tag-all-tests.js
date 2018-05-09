@@ -1,14 +1,13 @@
 import {ParserTest} from './parser-tests.js';
+import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 
 class ParserTagAllTest extends ParserTest {
 
   constructor() {
+    TagsFactory.setDefault('all');
     super();
   }
 
-  runTest(name, expr, json) {
-    super.runTest(name, expr, json);
-  }
 }
 
 let parserTest = new ParserTagAllTest();

@@ -478,13 +478,20 @@ export class NoTags extends AbstractTags {
 
 }
 
-export class AmsTags extends AbstractTags {
+export class AmsTags extends AbstractTags { }
 
-  constructor() {
-    super();
+export class AllTags extends AbstractTags {
+
+  /**
+   * @override
+   */
+  public getTag() {
+    this.currentTag.noTag = false;
+    return super.getTag();
   }
 
 }
+
 
 export interface TagsClass {
   new (): Tags;
@@ -496,9 +503,9 @@ export interface TagsClass {
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([
-    ['default', AmsTags],
+    ['default', AllTags],
     ['none', NoTags],
-    // ['all', new AllTags()],
+    ['all', AllTags],
     ['AMS', AmsTags]
   ]);
 
@@ -512,8 +519,12 @@ export namespace TagsFactory {
     return new constr();
   };
 
-  export let setDefault = function(name?: string) {
-    DefaultTags = create(name || 'default');
+  export let setDefault = function(name: string) {
+    tagsMapping.set('default', tagsMapping.get(name));
+  };
+
+  export let getDefault = function() {
+    DefaultTags = TagsFactory.create('default');
   };
 
 }
