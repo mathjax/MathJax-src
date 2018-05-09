@@ -69,7 +69,10 @@ export class StartItem extends BaseItem {
     return true;
   }
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem start');
     if (item.isKind('stop')) {
       return this.factory.create('mml', this.toMml());
@@ -121,7 +124,10 @@ export class OpenItem extends BaseItem {
     return true;
   }
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem open');
     if (item.isKind('close')) {
       let mml = this.toMml();
@@ -132,7 +138,7 @@ export class OpenItem extends BaseItem {
       // VS: OLD
       // var node = MML.TeXAtom(mml);
       return this.factory.create('mml', node); // TeXAtom make it an ORD to prevent spacing
-                                // (FIXME: should be another way)
+      // (FIXME: should be another way)
     }
     return super.checkItem(item);
   }
@@ -168,7 +174,10 @@ export class PrimeItem extends BaseItem {
     return 'prime';
   }
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem prime');
     let [top0, top1] = this.TopN(2);
     if (!TreeHelper.isType(top0, 'msubsup')) {
@@ -205,7 +214,10 @@ export class SubsupItem extends BaseItem {
     return 'subsup';
   }
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem subsup');
     if (item.isKind('open') || item.isKind('left')) {
       return true;
@@ -265,7 +277,10 @@ export class OverItem extends BaseItem {
   }
 
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem over');
     if (item.isKind('over')) {
       // @test Double Over
@@ -285,7 +300,7 @@ export class OverItem extends BaseItem {
         // @test Choose
         TreeHelper.setProperties(mml, {'withDelims': true});
         mml = ParseUtil.fixedFence(this.getProperty('open') as string, mml,
-                                    this.getProperty('close') as string);
+                                   this.getProperty('close') as string);
       }
       return [this.factory.create('mml', mml), item];
     }
@@ -329,13 +344,16 @@ export class LeftItem extends BaseItem {
   }
 
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     // @test Missing Right
     TreeHelper.printMethod('Checkitem left');
     if (item.isKind('right')) {
       return this.factory.create('mml',
-        ParseUtil.fenced(this.getProperty('delim') as string, this.toMml(),
-                          item.getProperty('delim') as string));
+                                 ParseUtil.fenced(this.getProperty('delim') as string, this.toMml(),
+                                                  item.getProperty('delim') as string));
     }
     return super.checkItem(item);
   }
@@ -383,7 +401,10 @@ export class BeginItem extends BaseItem {
     return true;
   }
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem begin');
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
@@ -437,7 +458,10 @@ export class StyleItem extends BaseItem {
     return 'style';
   }
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem style');
     if (!item.isClose) {
       return super.checkItem(item);
@@ -460,7 +484,11 @@ export class PositionItem extends BaseItem {
     return 'position';
   }
 
-  checkItem(item: StackItem) {
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem position');
     if (item.isClose) {
       throw new TexError(['MissingBoxFor', 'Missing box for %1', this.getName()]);
@@ -511,7 +539,10 @@ export class ArrayItem extends BaseItem {
   }
 
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem array');
     // @test Array Single
     if (item.isClose && !item.isKind('over')) {
@@ -549,7 +580,7 @@ export class ArrayItem extends BaseItem {
         }
         // @test Enclosed left right
         mml = TreeHelper.createNode('menclose', [mml],
-                             {notation: this.frame.join(' '), isFrame: true});
+                                    {notation: this.frame.join(' '), isFrame: true});
         // VS: OLD
         // mml = MML.menclose(mml).With({notation: this.frame.join(' '), isFrame: true});
         if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
@@ -569,7 +600,7 @@ export class ArrayItem extends BaseItem {
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Cross Product Formula
         mml = ParseUtil.fenced(this.getProperty('open') as string, mml,
-                                this.getProperty('close') as string);
+                               this.getProperty('close') as string);
       }
       let newItem = this.factory.create('mml', mml);
       if (this.getProperty('requireClose')) {
@@ -608,7 +639,7 @@ export class ArrayItem extends BaseItem {
     let node: MmlNode;
     if (this.getProperty('isNumbered') && this.row.length === 3) {
       this.row.unshift(this.row.pop());  // move equation number to first
-                                         // position
+      // position
       // @test Label
       node = TreeHelper.createNode('mlabeledtr', this.row, {});
       // VS: OLD
@@ -710,7 +741,10 @@ export class FnItem extends BaseItem {
     return 'fn';
   }
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem fn');
     const top = this.Top;
     if (top) {
@@ -765,7 +799,10 @@ export class NotItem extends BaseItem {
   }
 
   // TODO: There is a lot of recasting that should go away!
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem not');
     let mml: TextNode | MmlNode;
     let c: string;
@@ -821,7 +858,10 @@ export class DotsItem extends BaseItem {
     return 'dots';
   }
 
-  checkItem(item: StackItem) {
+  /**
+   * @override
+   */
+  public checkitem(item: StackItem) {
     TreeHelper.printMethod('Checkitem dots');
     if (item.isKind('open') || item.isKind('left')) {
       return true;

@@ -39,25 +39,13 @@ import {DefaultTags} from './Tags.js';
 
 export class AmsArrayItem extends ArrayItem {
 
-  // private numbered: boolean = false;
-  // private save: {[key: string]: string|boolean} = {};
   private save: {node: MmlNode | void, notags: string,
                  defaultTag: boolean, notag: boolean} =
     {node: null, notags: '', notag: false, defaultTag: false};
   
   constructor(factory: any, ...args: any[]) {
     super(factory);
-    // Omitted configuration: && CONFIG.autoNumber !== "none";
-    /// name: string, numbered: boolean, taggable: boolean, global: EnvList
-    console.log('All arguments');
-    console.log(args);
-    // let global = args[3];
-    // console.log('initial global:');
-    // console.log(global);
     DefaultTags.start(args[0], args[2], args[1]);
-    // prevent automatic tagging in starred environments
-    // What is that?
-    // global['tagged'] = !taggable && !global['forcetag'];
   }
 
   get kind() {
@@ -80,29 +68,13 @@ export class AmsArrayItem extends ArrayItem {
   EndRow() {
     TreeHelper.printMethod('AMS-EndRow');
     // @test Cubic Binomial
-    let mtr = 'mtr'; // MML.mtr;
-    console.log('Starting');
-    // if (!DefaultTags.tagNode && this.numbered) {
-    //   DefaultTags.autoTag();
-    // }
-    // console.log('Tag info:\n default: ' + DefaultTags.defaultTag +
-    //             '\n explicit set: ' + DefaultTags.setTag +
-    //             '\n tag node: ' + !!DefaultTags.tagNode);
+    let mtr = 'mtr';
     let tag = DefaultTags.getTag();
-    console.log(tag);
-    console.log('HERE? ' + this.global['notags']);
-    // if (this.global['tag'] && !this.global['notags']) {
     if (tag) {
       this.row = [tag].concat(this.row);
-      mtr = 'mlabeledtr'; // MML.mlabeledtr;
-    // } else {
-    //   console.log('clearing?');
+      mtr = 'mlabeledtr';
     }
     DefaultTags.clearTag();
-    // if (this.numbered) {
-    // if (DefaultTags.defaultTag) {
-    //   delete this.global['notag'];
-    // }
     const node = TreeHelper.createNode(mtr, this.row, {});
     this.table.push(node); this.row = [];
   }
@@ -123,16 +95,9 @@ export class MultlineItem extends ArrayItem {
     return 'multline';
   }
 
-  // private numbered: boolean = false;
-  private save: {[key: string]: string} = {};
-  
-  
   constructor(factory: any, ...args: any[]) {
     super(factory);
-        // Omitted configuration: && CONFIG.autoNumber !== "none";
-    // this.numbered = args[0] && DefaultTags.tagged;
     DefaultTags.start('multline', true, args[0]);
-    // stack.global.tagged = !this.numbered && !stack.global.forcetag; // prevent automatic tagging in starred environments
   }
 
   
