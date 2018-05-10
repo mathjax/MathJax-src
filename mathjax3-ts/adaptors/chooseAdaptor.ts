@@ -21,14 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {jsdomAdaptor} from './jsdomAdaptor.js';
+import {liteAdaptor, LiteAdaptor} from './liteAdaptor.js';
 import {browserAdaptor} from './browserAdaptor.js';
-
-/*
- * Declare the global variables used here
- */
-declare var System: {nodeRequire: Function};
-declare function require(file: string): Object;
+import {HTMLAdaptor} from './htmlAdaptor.js';
 
 let choose;
 
@@ -36,10 +31,7 @@ try {
     document;  // errors if not in browser
     choose = browserAdaptor;
 } catch(e) {
-    const JSDOM = (typeof(System) === 'undefined' ? require : System.nodeRequire)('jsdom').JSDOM;
-    choose = function () {
-        return jsdomAdaptor(JSDOM);
-    }
+    choose = liteAdaptor;
 }
 
 /*

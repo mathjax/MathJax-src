@@ -7,7 +7,7 @@ import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document("<html></html>",{
-  InputJax: new TeX()
+    InputJax: new TeX()
 });
 
 // import {TestMmlVisitor as MmlVisitor} from 'mathjax3/core/MmlTree/TestMmlVisitor.js';
@@ -20,7 +20,7 @@ MathJax.handleRetriesFor(function () {
     html.TestMath(process.argv[3] || '').compile();
     let math = html.math.pop().root;
     math.setTeXclass();
-  console.log(toMml(math));
+    console.log(toMml(math));
 
 }).catch(err => {
   console.log(err.message);
