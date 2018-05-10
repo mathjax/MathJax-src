@@ -1,8 +1,11 @@
+// Testing environments without labelling.
 import {ParserTest} from './parser-tests.js';
+import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 
 class ParserAmsenvTest extends ParserTest {
 
   constructor() {
+    TagsFactory.setDefault('none');
     super();
   }
 

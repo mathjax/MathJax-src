@@ -1,8 +1,10 @@
 import {ParserTest} from './parser-tests.js';
+import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 
 class ParserTagNoneTest extends ParserTest {
 
   constructor() {
+    TagsFactory.setDefault('none');
     super();
   }
 
