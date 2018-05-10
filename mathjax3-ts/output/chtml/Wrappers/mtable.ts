@@ -61,7 +61,8 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-mtable': {
             'vertical-align': '.25em',
             'text-align': 'center',
-            'position': 'relative'
+            'position': 'relative',
+            'box-sizing': 'border-box'
         },
         'mjx-mtable > mjx-itable': {
             'vertical-align': 'middle',
@@ -670,8 +671,12 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         const {L} = this.getTableData();
         const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
-        const table = adaptor.firstChild(this.chtml) as N;
-        adaptor.setStyle(table, 'margin', '0 ' + this.em(L + sep));  // FIXME, handle indentalign values
+        let pad = L + sep;   // FIXME, handle indentalign values
+        const [lpad, rpad] = [this.styles.get('padding-left'), this.styles.get('padding-right')];
+        if (lpad || rpad) {
+            pad = Math.max(pad, this.length2em(lpad || '0'), this.length2em(rpad || '0'));
+        }
+        adaptor.setStyle(this.chtml, 'padding', '0 ' + this.em(pad));
         //
         // Add the labels to the table
         //
