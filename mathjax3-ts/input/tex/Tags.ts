@@ -96,8 +96,9 @@ export class TagInfo {
   constructor(readonly env: string = '',
               readonly taggable: boolean = false,
               readonly defaultTags: boolean = false,
-              public tagId: string = '',
               public tag: string = '',
+              public tagId: string = '',
+              public tagFormat: string = '',
               public noTag: boolean = false,
               public labelId: string = '') {}
 
@@ -319,14 +320,14 @@ export class AbstractTags implements Tags {
   }
 
   public end() {
-    let tag = this.stack.pop();
-    this.currentTag = tag;
+    this.currentTag = this.stack.pop();
   }
 
   public tag(tag: string, noFormat: boolean) {
     // TODO: Here goes the uselabelid option!
+    this.currentTag.tag = tag;
     this.currentTag.tagId = this.formatId(this.label || tag);
-    this.currentTag.tag = noFormat ? tag : this.formatTag(tag);
+    this.currentTag.tagFormat = noFormat ? tag : this.formatTag(tag);
     this.currentTag.noTag = false;
   }
 
@@ -402,8 +403,11 @@ export class AbstractTags implements Tags {
 
   private makeTag() {
     console.log(this.label);
+    console.log(this.env);
     this.tagged = true;
-    let mml = new TexParser('\\text{' + this.currentTag.tag + '}', {}).mml();
+    this.labels[this.label] = new Label(this.currentTag.tag, this.currentTag.tagId);
+    console.log(this.labels);
+    let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {}).mml();
     return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
   }
   
