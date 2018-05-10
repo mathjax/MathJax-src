@@ -63,7 +63,9 @@ export let TagConfig = new Map<string, string|boolean>([
 ]);
 
 
-// Aux classes
+/**
+ *  Simple class for label objects.
+ */
 export class Label {
 
   /**
@@ -75,24 +77,25 @@ export class Label {
 }
 
 
+/**
+ * A simple class for keeping track of tag information.
+ */
 export class TagInfo {
 
-  // ////// Handling current labels/tags.
-  // // TODO: Clean that up!
-  // labelId: string;
-  // tagId: string;
-  // tagNode: MmlNode|void;
-  // ///////
-
-  // // If the current environment allows tags by default.
-  // defaultTag: boolean;
-  // // If currently a tag is set explicitly. This is a switch for the tag/notag
-  // // commands.
-  // setTag: boolean;
-  // //env: string;
- 
-  // envname, is taggable (also *), requires default tags (non-*),
-  // tagId, noTag (last element was a \notag), labelId
+  /**
+   * @constructor
+   * @param {string} env The environment name (e.g., align).
+   * @param {boolean} taggable Environment supports tags (e.g., align* does, but
+   *     spit does not.)
+   * @param {boolean} defaultTags Environment is tagged by default (e.g., align
+   *     is, but align* is not).
+   * @param {string} tag The tag name (e.g., 1).
+   * @param {string} tagId The unique id for that tag (e.g., mjx-eqn-1).
+   * @param {string} tagFormat The formatted tag (e.g., "(1)").
+   * @param {boolean} noTag A no tagging command has been set (e.g., \notag,
+   *     \nonumber).
+   * @param {string} labelId The label referring to the tag.
+   */
   constructor(readonly env: string = '',
               readonly taggable: boolean = false,
               readonly defaultTags: boolean = false,
@@ -146,12 +149,6 @@ export interface Tags {
   allLabels: {[key: string]: Label};
 
   /**
-   * Use label names to generate reference ids.
-   * @type {boolean}
-   */
-  useLabelIds: boolean;
-
-  /**
    * Nodes with unresolved references.
    * @type {MmlNode[]}
    */
@@ -198,21 +195,6 @@ export interface Tags {
 
   clearTag(): void;
 
-  ////// Handling current labels/tags.
-  // TODO: Clean that up!
-  // labelId: string;
-  // tagId: string;
-  // tagNode: MmlNode|void;
-  // ///////
-
-  // // If the current environment allows tags by default.
-  // defaultTag: boolean;
-  // // If currently a tag is set explicitly. This is a switch for the tag/notag
-  // // commands.
-  // setTag: boolean;
-  //env: string;
-
-
   /**
    * Resets the tag structure.
    * @param {number} offset A new offset value to start counting ids from.
@@ -228,19 +210,12 @@ export interface Tags {
   notag(): void;
   label: string;
   env: string;
-  tagged: boolean;
   
   currentTag: TagInfo;
 }
 
 
 export class AbstractTags implements Tags {
-  // 'AMS' for standard AMS numbering,
-  //  or 'all' for all displayed equations
-  // VS: Should this be here?
-  // This will be folded into classes!
-  // autoNumber: 'none';
-  //
 
   // TODO: The following are all public, but should be protected or private with
   //       set/getters.
@@ -281,32 +256,24 @@ export class AbstractTags implements Tags {
   public allLabels: {[key: string]: Label} = {};
 
   /**
-   * Use label names to generate reference ids.
-   * @type {boolean}
-   */
-  public useLabelIds: boolean =  false;
-
-  /**
    * Nodes with unresolved references.
    * @type {MmlNode[]}
    */
   // Not sure how to handle this at the moment.
   public refs: MmlNode[] = new Array(); // array of nodes with unresolved references
 
-  public tagged: boolean = false;
-
-  ////// Handling current labels/tags.
-  // TODO: Clean that up!
-  // public labelId: string = '';
-  // public tagId: string = '';
-  // public tagNode: MmlNode|void = null;
-  // public defaultTag: boolean = false;
-  // public setTag: boolean = false;
-  ///////
-
   public currentTag: TagInfo = new TagInfo();
 
+
+  /**
+   * Chronology of all previous tags, in case we need to look something up in
+   * the finalize method.
+   * @type {TagInfo[]}
+   */
+  protected history: TagInfo[] = [];
+
   private stack: TagInfo[] = [];
+
 
   public start(env: string, taggable: boolean, defaultTags: boolean) {
     if (this.currentTag) {
@@ -320,20 +287,20 @@ export class AbstractTags implements Tags {
   }
 
   public end() {
+    this.history.push(this.currentTag);
     this.currentTag = this.stack.pop();
   }
 
   public tag(tag: string, noFormat: boolean) {
-    // TODO: Here goes the uselabelid option!
     this.currentTag.tag = tag;
+    console.log(TagConfig.get('useLabelIds'));
+    console.log(this.label);
     this.currentTag.tagId = this.formatId(this.label || tag);
+    // this.currentTag.tagId = this.formatId(
+    //   TagConfig.get('useLabelIds') ? (this.label || tag) : tag);
     this.currentTag.tagFormat = noFormat ? tag : this.formatTag(tag);
     this.currentTag.noTag = false;
   }
-
-  // protected get tagId(): string {
-  //   return this.currentTag.tagId;
-  // }
 
   public notag() {
     this.tag('', true);
@@ -402,10 +369,9 @@ export class AbstractTags implements Tags {
 
 
   private makeTag() {
-    console.log(this.label);
-    console.log(this.env);
-    this.tagged = true;
-    this.labels[this.label] = new Label(this.currentTag.tag, this.currentTag.tagId);
+    if (this.label) {
+      this.labels[this.label] = new Label(this.currentTag.tag, this.currentTag.tagId);
+    }
     console.log(this.labels);
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {}).mml();
     return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
@@ -429,14 +395,6 @@ export class AbstractTags implements Tags {
       return this.makeTag();
     }
     return null;
-    // if (this.defaultTag) {
-    //   if (!this.tagNode) {
-    //     this.autoTag();
-    //   }
-    //   return this.tagNode;
-    // }
-    // return null;
-
   // this.tag = global.tag;
     // global.tagged = true;
     // if (global.label) {
@@ -464,7 +422,7 @@ export class AbstractTags implements Tags {
 
   public reset(n: number, keepLabels: boolean) {
     this.offset = (n || 0);
-    this.tagged = false;
+    this.history = [];
     if (!keepLabels) {
       this.labels = {};
       this.ids = {};
@@ -513,7 +471,8 @@ export class AllTags extends AbstractTags {
    * @override
    */
   public finalize(node: MmlNode, env: EnvList) {
-    if (!env.display || this.tagged) {
+    if (!env.display || this.history.find(
+      function(x: TagInfo) { return x.taggable; })) {
       return node;
     }
     let cell = TreeHelper.createNode('mtd', [node], {});
@@ -530,17 +489,24 @@ export class AllTags extends AbstractTags {
 }
 
 
+/**
+ * Class interface for factory.
+ * @interface
+ */
 export interface TagsClass {
   new (): Tags;
 }
 
 
-// Factory needs functionality to create one Tags object from an existing one.
-// Currently it returns fixed objects. I.e., they never change!
+// Factory needs functionality to create one Tags object from an existing ones
+// to hand over label values, equation ids etc.
+//
+// 'AMS' for standard AMS numbering,
+//  or 'all' for all displayed equations
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([
-    ['default', NoTags],
+    ['default', AllTags],
     ['none', NoTags],
     ['all', AllTags],
     ['AMS', AmsTags]
