@@ -49,7 +49,6 @@ let TAG_INDENT = '0.8em';
 AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
                          numbered: boolean, taggable: boolean, align: string,
                          spacing: string) {
-  console.log(numbered);
   TreeHelper.printMethod('AMS-AMSarray');
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
   parser.Push(begin);
@@ -318,8 +317,6 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
  */
 AmsMethods.HandleTag = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('AMS-HandleTag');
-  console.log('Handling tag!');
-  console.log(DefaultTags);
   if (!DefaultTags.currentTag.taggable) {
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',

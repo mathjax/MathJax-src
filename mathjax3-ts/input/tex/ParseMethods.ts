@@ -152,8 +152,6 @@ namespace ParseMethods {
 
   export function environment(parser: TexParser, env: string, func: Function, args: any[]) {
     TreeHelper.printMethod('BeginEnvironment');
-    console.log(args);
-    console.log(env);
     const end = args[0];
     let mml = parser.itemFactory.create('begin').With({name: env, end: end});
     mml = func.apply(null, [parser, mml].concat(args.slice(1)));

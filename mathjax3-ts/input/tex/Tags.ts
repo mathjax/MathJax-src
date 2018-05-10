@@ -384,8 +384,10 @@ export class AbstractTags implements Tags {
    *  Increment equation number and form tag mtd element
    */
   public autoTag() {
-    this.counter++;
-    this.tag(this.counter.toString(), false);
+    if (!this.currentTag.tag || !this.currentTag.tagId) {
+      this.counter++;
+      this.tag(this.counter.toString(), false);
+    }
   }
 
 
@@ -393,12 +395,13 @@ export class AbstractTags implements Tags {
    * Clears tagging information.
    */
   public clearTag() {
-    this.label = '';
-    this.tag('', true);
+      this.label = '';
+      this.tag('', true);
   }
 
 
   private makeTag() {
+    console.log(this.label);
     this.tagged = true;
     let mml = new TexParser('\\text{' + this.currentTag.tag + '}', {}).mml();
     return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
@@ -408,22 +411,16 @@ export class AbstractTags implements Tags {
    *  Get the tag and record the label, if any
    */
   public getTag(force: boolean = false) {
-    console.log('Getting the tag!');
+    if (force) {
+      this.autoTag();
+      return this.makeTag();
+    }
     const ct = this.currentTag;
-    console.log(30);
-    console.log(ct);
     if (ct.taggable && !ct.noTag) {
-      console.log(31);
-      if (!ct.tag) {
-        console.log(32);
-        if (ct.defaultTags || force) {
-          console.log(33);
-          console.log('IN default tags.');
-          this.autoTag();
-        } else {
-          console.log(34);
-          return null;
-        }
+      if (ct.defaultTags) {
+        this.autoTag();
+      } else {
+        return null;
       }
       return this.makeTag();
     }
@@ -499,7 +496,7 @@ export class AmsTags extends AbstractTags { }
 /**
  * Tags every display formula. Exceptions are:
  *
- * -- Star environments are not tagged.
+ * -- Star environments are not tagged. (really?)
  * -- If a regular environment has at least one tag, it is not explicitly tagged
  *     anymore.
  * 
@@ -508,7 +505,6 @@ export class AmsTags extends AbstractTags { }
  */
 export class AllTags extends AbstractTags {
 
-
   /**
    * @override
    */
@@ -516,20 +512,14 @@ export class AllTags extends AbstractTags {
     if (!env.display || this.tagged) {
       return node;
     }
-    console.log('HERE????');
     let cell = TreeHelper.createNode('mtd', [node], {});
-    console.log(cell);
     let tag = this.getTag(true);
-    console.log(tag);
     let row = TreeHelper.createNode('mlabeledtr', [tag, cell], {});
-    console.log(row);
     let table = TreeHelper.createNode('mtable', [row], {
       side: TagConfig.get('TagSide'),
       minlabelspacing: TagConfig.get('TagIndent'),
       displaystyle: env.display
-      // replaced by TeX input jax Translate() function with actual value
     });
-    console.log(table);
     return table;
   }
 
