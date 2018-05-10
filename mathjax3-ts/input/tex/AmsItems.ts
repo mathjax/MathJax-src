@@ -149,6 +149,7 @@ export class MultlineItem extends ArrayItem {
         this.table[label] = mlabel;
       }
     }
+    DefaultTags.end();
   }
 }
 
