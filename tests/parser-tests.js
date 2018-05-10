@@ -5,7 +5,7 @@ import {RegisterHTMLHandler} from "mathjax3/handlers/html.js";
 import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
 import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 
-import {DefaultTags} from 'mathjax3/input/tex/Tags.js';
+import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 
 import {Test} from './tests.js';
 
@@ -14,6 +14,7 @@ RegisterHTMLHandler(chooseAdaptor());
 export class ParserTest extends Test {
 
   constructor() {
+    TagsFactory.setDefault('none');
     super();
     console.log('\u001B\u005B\u0033\u0034\u006D' +
                 'Running tests from ' + this.constructor.name +
