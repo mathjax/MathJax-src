@@ -14,8 +14,8 @@ RegisterHTMLHandler(chooseAdaptor());
 export class ParserTest extends Test {
 
   constructor() {
-    TagsFactory.setDefault('none');
     super();
+    TagsFactory.setDefault('none');
     console.log('\u001B\u005B\u0033\u0034\u006D' +
                 'Running tests from ' + this.constructor.name +
                 '\u001B\u005B\u0033\u0037\u006D');

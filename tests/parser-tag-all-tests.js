@@ -4,8 +4,8 @@ import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 class ParserTagAllTest extends ParserTest {
 
   constructor() {
-    TagsFactory.setDefault('all');
     super();
+    TagsFactory.setDefault('all');
   }
 
 }
