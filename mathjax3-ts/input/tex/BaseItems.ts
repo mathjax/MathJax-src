@@ -43,6 +43,7 @@ import {TreeHelper} from './TreeHelper.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import StackItemFactory from './StackItemFactory.js';
 import {BaseItem, StackItem, EnvList} from './StackItem.js';
+import {DefaultTags} from './Tags.js';
 
 
 export class StartItem extends BaseItem {
@@ -75,7 +76,11 @@ export class StartItem extends BaseItem {
   public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem start');
     if (item.isKind('stop')) {
-      return this.factory.create('mml', this.toMml());
+      let node = this.toMml();
+      if (!this.global.isInner) {
+        node = DefaultTags.finalize(node, this.env);
+      }
+      return this.factory.create('mml', node);
     }
     return super.checkItem(item);
   }

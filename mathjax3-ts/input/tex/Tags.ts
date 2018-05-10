@@ -25,6 +25,7 @@
 import TexParser from './TexParser.js';
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {EnvList} from './StackItem.js';
 
 // For the time being here is a configuration object for Tags, equation numbers
 // etc.  This should move somewhere else, once we have decided how to really
@@ -218,6 +219,7 @@ export interface Tags {
    */
   reset(offset: number, keep: boolean): void;
 
+  finalize(node: MmlNode, env: EnvList): MmlNode;
 
   start(env: string, taggable: boolean, defaultTags: boolean): void;
   end(): void;
@@ -225,6 +227,7 @@ export interface Tags {
   notag(): void;
   label: string;
   env: string;
+  tagged: boolean;
   
   currentTag: TagInfo;
 }
@@ -289,6 +292,7 @@ export class AbstractTags implements Tags {
   // Not sure how to handle this at the moment.
   public refs: MmlNode[] = new Array(); // array of nodes with unresolved references
 
+  public tagged: boolean = false;
 
   ////// Handling current labels/tags.
   // TODO: Clean that up!
@@ -299,7 +303,7 @@ export class AbstractTags implements Tags {
   // public setTag: boolean = false;
   ///////
 
-  public currentTag: TagInfo = null;
+  public currentTag: TagInfo = new TagInfo();
 
   private stack: TagInfo[] = [];
 
@@ -316,7 +320,7 @@ export class AbstractTags implements Tags {
 
   public end() {
     let tag = this.stack.pop();
-    this.currentTag = tag || null;
+    this.currentTag = tag;
   }
 
   public tag(tag: string, noFormat: boolean) {
@@ -330,7 +334,6 @@ export class AbstractTags implements Tags {
   //   return this.currentTag.tagId;
   // }
 
-  
   public notag() {
     this.tag('', true);
     this.currentTag.noTag = true;
@@ -395,7 +398,8 @@ export class AbstractTags implements Tags {
   }
 
 
-  protected makeTag() {
+  private makeTag() {
+    this.tagged = true;
     let mml = new TexParser('\\text{' + this.currentTag.tag + '}', {}).mml();
     return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
   }
@@ -403,15 +407,21 @@ export class AbstractTags implements Tags {
   /**
    *  Get the tag and record the label, if any
    */
-  public getTag() {
+  public getTag(force: boolean = false) {
     console.log('Getting the tag!');
     const ct = this.currentTag;
+    console.log(30);
+    console.log(ct);
     if (ct.taggable && !ct.noTag) {
+      console.log(31);
       if (!ct.tag) {
-        if (ct.defaultTags) {
+        console.log(32);
+        if (ct.defaultTags || force) {
+          console.log(33);
           console.log('IN default tags.');
           this.autoTag();
         } else {
+          console.log(34);
           return null;
         }
       }
@@ -453,12 +463,17 @@ export class AbstractTags implements Tags {
 
   public reset(n: number, keepLabels: boolean) {
     this.offset = (n || 0);
+    this.tagged = false;
     if (!keepLabels) {
       this.labels = {};
       this.ids = {};
     }
   }
 
+  public finalize(node: MmlNode, env: EnvList): MmlNode {
+    return node;
+  }
+  
 };
 
 
@@ -480,14 +495,42 @@ export class NoTags extends AbstractTags {
 
 export class AmsTags extends AbstractTags { }
 
+
+/**
+ * Tags every display formula. Exceptions are:
+ *
+ * -- Star environments are not tagged.
+ * -- If a regular environment has at least one tag, it is not explicitly tagged
+ *     anymore.
+ * 
+ * @constructor
+ * @extends {AbstractTags}
+ */
 export class AllTags extends AbstractTags {
+
 
   /**
    * @override
    */
-  public getTag() {
-    this.currentTag.noTag = false;
-    return super.getTag();
+  public finalize(node: MmlNode, env: EnvList) {
+    if (!env.display || this.tagged) {
+      return node;
+    }
+    console.log('HERE????');
+    let cell = TreeHelper.createNode('mtd', [node], {});
+    console.log(cell);
+    let tag = this.getTag(true);
+    console.log(tag);
+    let row = TreeHelper.createNode('mlabeledtr', [tag, cell], {});
+    console.log(row);
+    let table = TreeHelper.createNode('mtable', [row], {
+      side: TagConfig.get('TagSide'),
+      minlabelspacing: TagConfig.get('TagIndent'),
+      displaystyle: env.display
+      // replaced by TeX input jax Translate() function with actual value
+    });
+    console.log(table);
+    return table;
   }
 
 }
@@ -503,7 +546,7 @@ export interface TagsClass {
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([
-    ['default', AllTags],
+    ['default', NoTags],
     ['none', NoTags],
     ['all', AllTags],
     ['AMS', AmsTags]

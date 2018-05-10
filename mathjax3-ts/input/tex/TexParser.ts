@@ -66,15 +66,18 @@ export default class TexParser {
   constructor(private _string: string, env: EnvList, config?: Configuration) {
     // TODO: Move this into a configuration object.
     this.configure(config || DefaultConfig);
+    const inner = env.isInner as boolean;
+    delete env.isInner;
     let ENV: EnvList;
     if (env) {
       ENV = {};
       for (let id in env) {
         if (env.hasOwnProperty(id)) {
-          ENV[id] = env[id]}
+          ENV[id] = env[id];
+        }
       }
     }
-    this.stack = new Stack(this.itemFactory, ENV, !!env);
+    this.stack = new Stack(this.itemFactory, ENV, inner);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
   }

@@ -82,7 +82,7 @@ export namespace NewTex {
       display = script.type.replace(/\n/g, ' ').
         match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
       try {
-        parser = new TexParser(math, null);
+        parser = new TexParser(math, {display: display, isInner: false});
         mml = parser.mml();
         TreeHelper.printSimple(mml.toString());
       } catch (err) {
