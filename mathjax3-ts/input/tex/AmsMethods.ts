@@ -41,11 +41,6 @@ import {Label, TagConfig, DefaultTags} from './Tags.js';
 let AmsMethods: Record<string, ParseMethod> = {};
 
 
-// AMS Math
-let TAG_SIDE = 'right';
-// let TAG_SIDE = 'left';
-let TAG_INDENT = '0.8em';
-
 AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
                          numbered: boolean, taggable: boolean, align: string,
                          spacing: string) {
@@ -65,8 +60,8 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
     // TODO: Which one is correct?
     rowspacing: '3pt',
     // rowspacing: '.5em',
-    side: TAG_SIDE,
-    minlabelspacing: TAG_INDENT
+    side: TagConfig.get('TagSide'),
+    minlabelspacing: TagConfig.get('TagIndent')
   };
   return newItem;
 };
@@ -77,20 +72,16 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
  */
 AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: string) {
   TreeHelper.printMethod('AMS-Multline');
-  TreeHelper.untested(11);
+  // @test Shove*, Multline
   parser.Push(begin); AmsMethods.checkEqnEnv(parser, '');
   const item = parser.itemFactory.create('multline', numbered, parser.stack);
   item.arraydef = {
-      displaystyle: true,
-      rowspacing: '.5em',
-      columnwidth: '100%',
-      // TODO: Deal with these configuration options!
-      // width: TEX.config.MultLineWidth,
-      // side: TEX.config.TagSide,
-      // minlabelspacing: TEX.config.TagIndent
-    //
-    // This is temporary:
-    width: '85%'
+    displaystyle: true,
+    rowspacing: '.5em',
+    columnwidth: '100%',
+    width: TagConfig.get('MultLineWidth'),
+    side: TagConfig.get('TagSide'),
+    minlabelspacing: TagConfig.get('TagIndent')
   };
   return item;
 },
