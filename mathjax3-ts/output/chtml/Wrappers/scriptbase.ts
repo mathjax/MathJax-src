@@ -287,7 +287,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
-     * @return{number}   The offset for under and oveer
+     * @return{number}   The offset for under and over
      */
     protected getDelta(noskew: boolean = false) {
         const accent = this.node.attributes.get('accent');
@@ -339,9 +339,8 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @param{BBox} overbox  The bbox for the overscript
      */
     protected adjustOverDepth(over: N, overbox: BBox) {
-        if (overbox.d < 0) {
-            this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
-        }
+        if (overbox.d >= 0) return;
+        this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
     }
 
     /*
@@ -349,16 +348,15 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @param{BBox} underbox  The bbox for the underscript
      */
     protected adjustUnderDepth(under: N, underbox: BBox) {
-        if (underbox.d < 0) {
-            const adaptor = this.adaptor;
-            const child = adaptor.firstChild(adaptor.firstChild(under) as N) as N;
-            const v = this.em(underbox.d);
-            const box = this.html('mjx-box', {style: {'margin-bottom': v, 'vertical-align': v}});
-            for (const child of adaptor.childNodes(adaptor.firstChild(under) as N) as N[]) {
-                adaptor.append(box, child);
-            }
-            adaptor.append(adaptor.firstChild(under) as N, box);
+        if (underbox.d >= 0) return;
+        const adaptor = this.adaptor;
+        const child = adaptor.firstChild(adaptor.firstChild(under) as N) as N;
+        const v = this.em(underbox.d);
+        const box = this.html('mjx-box', {style: {'margin-bottom': v, 'vertical-align': v}});
+        for (const child of adaptor.childNodes(adaptor.firstChild(under) as N) as N[]) {
+            adaptor.append(box, child);
         }
+        adaptor.append(adaptor.firstChild(under) as N, box);
     }
 
 }

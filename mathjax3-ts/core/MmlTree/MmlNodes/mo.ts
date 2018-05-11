@@ -146,11 +146,18 @@ export class MmlMo extends AbstractMmlTokenNode {
         let accent = false;
         const node = this.coreParent();
         if (node) {
-            const key = (node.isKind('mover') ? ((node.childNodes[(node as MmlMover).over] as MmlNode).coreMO() ? 'accent' : '') :
-                         node.isKind('munder') ? ((node.childNodes[(node as MmlMunder).under] as MmlNode).coreMO() ? 'accentunder' : '') :
+            const key = (node.isKind('mover') ?
+                            ((node.childNodes[(node as MmlMover).over] as MmlNode).coreMO() ?
+                               'accent' : '') :
+                         node.isKind('munder') ?
+                            ((node.childNodes[(node as MmlMunder).under] as MmlNode).coreMO() ?
+                               'accentunder' : '') :
                          node.isKind('munderover') ?
-                         (this === (node.childNodes[(node as MmlMunderover).over] as MmlNode).coreMO() ? 'accent' :
-                          this === (node.childNodes[(node as MmlMunderover).under] as MmlNode).coreMO() ? 'accentunder' : '') : '');
+                           (this === (node.childNodes[(node as MmlMunderover).over] as MmlNode).coreMO() ?
+                               'accent' :
+                            this === (node.childNodes[(node as MmlMunderover).under] as MmlNode).coreMO() ?
+                               'accentunder' : '') :
+                           '');
             if (key) {
                 const value = node.attributes.getExplicit(key);
                 accent = (value !== undefined ? accent : this.attributes.get('accent')) as boolean;
