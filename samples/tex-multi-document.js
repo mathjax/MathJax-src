@@ -5,6 +5,7 @@ import {CHTML} from "mathjax3/output/chtml.js";
 import {RegisterHTMLHandler} from "mathjax3/handlers/html.js";
 import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
 
+const adaptor = chooseAdaptor();
 RegisterHTMLHandler(chooseAdaptor());
 
 let OPTIONS = {
@@ -54,7 +55,7 @@ MathJax.handleRetriesFor(function () {
         .updateDocument()
         .reset();
         
-    console.log(html.document.body.parentNode.outerHTML);
+    console.log(adaptor.outerHTML(adaptor.parent(adaptor.body(html.document))));
 
 }).catch(err => {
   console.log(err.message);

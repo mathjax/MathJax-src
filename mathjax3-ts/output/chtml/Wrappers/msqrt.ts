@@ -26,7 +26,7 @@ import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {CHTMLmo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
-import {MmlNode, AbstractMmlNode, TextNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../CssStyles.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -106,25 +106,10 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
-     * Create an mo wrapper with the given text,
-     *   link it in, and give it the right defaults.
-     *
-     * @param{string} text  The text for the wrapped element
-     * @return{CHTMLWrapper}  The wrapped MmlMo node
+     * @override
      */
     protected createMo(text: string) {
-        const mmlFactory = (this.node as AbstractMmlNode).factory;
-        const textNode = (mmlFactory.create('text') as TextNode).setText(text);
-        const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
-        const attributes = this.node.attributes;
-        const display = attributes.get('display') as boolean;
-        const scriptlevel = attributes.get('scriptlevel') as number;
-        const defaults: AttributeList = {
-            mathsize: ['math', attributes.get('mathsize')]
-        };
-        mml.setInheritedAttributes(defaults, display, scriptlevel, false);
-        const node = this.wrap(mml) as CHTMLmo<N, T, D>;
-        node.parent = this;
+        const node = super.createMo(text);
         this.childNodes.push(node);
         return node;
     }

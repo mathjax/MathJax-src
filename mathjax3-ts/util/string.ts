@@ -59,3 +59,24 @@ export function unicodeChars(text: string) {
     }
     return unicode;
 }
+
+/*
+ * Test if a value is a percentage
+ *
+ * @param{string} x   The string to test
+ * @return{boolean}   True if the string ends with a percent sign
+ */
+export function isPercent(x: string) {
+    return x.match(/%\s*$/);
+}
+
+/*
+ * Split a space-separated string of values
+ *
+ * @param{string} x   The string to be split
+ * @return{string[]}  The list of white-space-separated "words" in the string
+ */
+export function split(x: string) {
+    return x.trim().split(/\s+/);
+}
+
