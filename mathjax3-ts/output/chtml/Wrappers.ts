@@ -25,6 +25,7 @@ import {CHTMLWrapper} from './Wrapper.js';
 import {CHTMLmath} from './Wrappers/math.js';
 import {CHTMLmi} from './Wrappers/mi.js';
 import {CHTMLmo} from './Wrappers/mo.js';
+import {CHTMLmn} from './Wrappers/mn.js';
 import {CHTMLms} from './Wrappers/ms.js';
 import {CHTMLmspace} from './Wrappers/mspace.js';
 import {CHTMLmpadded} from './Wrappers/mpadded.js';
@@ -48,6 +49,7 @@ export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
     [CHTMLinferredMrow.kind]: CHTMLinferredMrow,
     [CHTMLmi.kind]: CHTMLmi,
     [CHTMLmo.kind]: CHTMLmo,
+    [CHTMLmn.kind]: CHTMLmn,
     [CHTMLms.kind]: CHTMLms,
     [CHTMLmspace.kind]: CHTMLmspace,
     [CHTMLmpadded.kind]: CHTMLmpadded,
