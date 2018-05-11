@@ -65,7 +65,7 @@ export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /*
-     * Obtain the widt, height, and voffset.
+     * Obtain the width, height, and voffset.
      * Note:  Currently, the width and height must be specified explicitly, or they default to 1em
      *   Since loading the image may be asynchronous, it would require a restart.
      *   A future extension could implement this either by subclassing this object, or
