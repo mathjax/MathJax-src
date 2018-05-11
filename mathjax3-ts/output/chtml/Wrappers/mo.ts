@@ -74,6 +74,9 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-stretchy-h > mjx-ext > mjx-c': {
             transform: 'scalex(500)'
         },
+        'mjx-stretchy-h > mjx-ext > mjx-c::before': {
+            padding: '.001em 0'                  // for blink
+        },
         'mjx-stretchy-h > mjx-beg > mjx-c': {
             'margin-right': '-.1em'
         },
@@ -248,6 +251,9 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @override
      */
     public canStretch(direction: DIRECTION) {
+        if (this.stretch.dir !== DIRECTION.None) {
+            return this.stretch.dir === direction;
+        }
         const attributes = this.node.attributes;
         if (!attributes.get('stretchy')) return false;
         const c = this.getText();
@@ -297,6 +303,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
             //
             if (delim.stretch) {
                 this.size = -1;
+                this.invalidateBBox();
                 this.getStretchBBox(WH, D, delim);
             } else {
                 this.variant = this.font.getSizeVariant(c, i - 1);

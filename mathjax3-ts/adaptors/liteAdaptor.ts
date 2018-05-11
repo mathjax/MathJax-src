@@ -306,6 +306,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         const text = new LiteText(node.value.slice(n));
         node.value = node.value.slice(0, n);
         node.parent.children.splice(this.childIndex(node) + 1, 0, text);
+        text.parent = node.parent;
         return text;
     }
 

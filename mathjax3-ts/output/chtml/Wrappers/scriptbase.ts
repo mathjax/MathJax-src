@@ -296,8 +296,8 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
             for (const child of this.childNodes) {
                 const noStretch = (child.stretch.dir === DIRECTION.None);
                 if (all || noStretch) {
-                    const {w} = child.getBBox(noStretch);
-                    if (w > W) W = w;
+                    const {w, rscale} = child.getBBox(noStretch);
+                    if (w * rscale > W) W = w * rscale;
                 }
             }
             //
