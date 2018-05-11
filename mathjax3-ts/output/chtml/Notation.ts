@@ -113,8 +113,10 @@ export const diagonalArrowDef = {
     southeast:  [-1,  1, 0,       false, 'top left',     'downdiagonalstrike'],
     northwest:  [ 1,  1, Math.PI, false, 'bottom right', 'downdiagonalstrike'],
     southwest:  [-1, -1, Math.PI, false, 'top right',    'updiagonalstrike'],
-    northeastsouthwest: [ 1, -1, 0, true, 'bottom left', 'updiagonalstrike northeastarrow updiagonalarrow southwestarrow'],
-    northwestsoutheast: [-1,  1, 0, true, 'top left',    'downdiagonalstrike northwestarrow southeastarrow']
+    northeastsouthwest: [ 1, -1, 0, true, 'bottom left',
+                          'updiagonalstrike northeastarrow updiagonalarrow southwestarrow'],
+    northwestsoutheast: [-1,  1, 0, true, 'top left',
+                          'downdiagonalstrike northwestarrow southeastarrow']
 } as {[name: string]: [number, number, number, boolean, string, string]};
 
 /*
