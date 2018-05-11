@@ -110,20 +110,6 @@ export class TagInfo {
 
 export interface Tags {
 
-  // TODO: The following are all public, but should be protected or private with
-  //       set/getters.
-  /**
-   * Current equation number.
-   * @type {number}
-   */
-  counter: number;
-
-  /**
-   * Current starting equation number (for when equation is restarted).
-   * @type {number}
-   */
-  offset: number;
-
   /**
    * IDs used in this equation.
    * @type {Object.<boolean>}
@@ -156,43 +142,20 @@ export interface Tags {
   refs: MmlNode[]; // array of nodes with unresolved references
 
   // DONE with properties!
-  
-  /**
-   * How to format numbers in tags.
-   * @param {number} n The tag number.
-   * @return {string} The formatted number.
-   */
-  formatNumber(n: number): string;
-
 
   /**
-   * How to format tags.
-   * @param {string} tag The tag string.
-   * @return {string} The formatted numbered tag.
+   * Set the tag automatically, by incrementing equation number.
    */
-  formatTag(tag: string): string;
-
-
-  /**
-   * How to format ids for labelling equations.
-   * @param {string} id The unique part of the id (e.g., label or number).
-   * @return {string} The formatted id.
-   */
-  formatId(id: string): string;
-
-
-  /**
-   * How to format URLs for references.
-   * @param {string} id The reference id.
-   * @param {string} base The base URL in the reference.
-   * @return {}
-   */
-  formatUrl(id: string, base: string): string;
-
   autoTag(): void;
 
+  /**
+   * @return {MmlNode|void} Generates and returns the tag node.
+   */
   getTag(): MmlNode | void;
 
+  /**
+   * Clears tagging information.
+   */
   clearTag(): void;
 
   /**
@@ -210,26 +173,24 @@ export interface Tags {
   notag(): void;
   label: string;
   env: string;
-  
+
   currentTag: TagInfo;
 }
 
 
 export class AbstractTags implements Tags {
 
-  // TODO: The following are all public, but should be protected or private with
-  //       set/getters.
   /**
    * Current equation number.
    * @type {number}
    */
-  public counter: number = 0;
+  protected counter: number = 0;
 
   /**
    * Current starting equation number (for when equation is restarted).
    * @type {number}
    */
-  public offset: number = 0;
+  protected offset: number = 0;
 
   /**
    * IDs used in this equation.
@@ -315,36 +276,46 @@ export class AbstractTags implements Tags {
   }
 
   /**
-   * @override
+   * How to format numbers in tags.
+   * @param {number} n The tag number.
+   * @return {string} The formatted number.
    */
-  public formatNumber(n: number) {
+  protected formatNumber(n: number) {
     return n.toString();
   }
 
   /**
-   * @override
+   * How to format tags.
+   * @param {string} tag The tag string.
+   * @return {string} The formatted numbered tag.
    */
-  public formatTag(tag: string) {
+  protected formatTag(tag: string) {
     return '(' + tag + ')';
   }
 
+
   /**
-   * @override
+   * How to format ids for labelling equations.
+   * @param {string} id The unique part of the id (e.g., label or number).
+   * @return {string} The formatted id.
    */
-  public formatId(id: string) {
+  protected formatId(id: string) {
     return 'mjx-eqn-' + id.replace(/\s/g, '_');
   }
 
   /**
-   * @override
+   * How to format URLs for references.
+   * @param {string} id The reference id.
+   * @param {string} base The base URL in the reference.
+   * @return {}
    */
-  public formatUrl(id: string, base: string) {
+  protected formatUrl(id: string, base: string) {
     return base + '#' + encodeURIComponent(id);
   }
 
   // Tag handling functions.
   /**
-   *  Increment equation number and form tag mtd element
+   * @override
    */
   public autoTag() {
     if (this.currentTag.tag == null) {
@@ -355,21 +326,29 @@ export class AbstractTags implements Tags {
 
 
   /**
-   * Clears tagging information.
+   * @override
    */
   public clearTag() {
-      this.label = '';
-      this.tag(null, true);
+    this.label = '';
+    this.tag(null, true);
+    this.currentTag.tagId = '';
   }
 
 
+  /**
+   * Sets the tag id.
+   */
   private makeId() {
-    // this.currentTag.tagId = this.formatId(this.label || this.currentTag.tag);
+    // TODO: Test for uniqueness.
     this.currentTag.tagId = this.formatId(
       TagConfig.get('useLabelIds') ?
         (this.label || this.currentTag.tag) : this.currentTag.tag);
   }
 
+
+  /**
+   * @return {MmlNode} The actual tag node as an mtd.
+   */
   private makeTag() {
     this.makeId();
     if (this.label) {
@@ -378,9 +357,10 @@ export class AbstractTags implements Tags {
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {}).mml();
     return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
   }
-  
+
+
   /**
-   *  Get the tag and record the label, if any
+   * @override
    */
   public getTag(force: boolean = false) {
     if (force) {
@@ -434,10 +414,15 @@ export class AbstractTags implements Tags {
   public finalize(node: MmlNode, env: EnvList): MmlNode {
     return node;
   }
-  
+
 };
 
 
+/**
+ * No tags, except where explicitly set.
+ * @constructor
+ * @extends {AbstractTags}
+ */
 export class NoTags extends AbstractTags {
 
   /**
@@ -454,16 +439,17 @@ export class NoTags extends AbstractTags {
 
 }
 
+
+/**
+ * Standard AMS style tagging.
+ * @constructor
+ * @extends {AbstractTags}
+ */
 export class AmsTags extends AbstractTags { }
 
 
 /**
  * Tags every display formula. Exceptions are:
- *
- * -- Star environments are not tagged. (really?)
- * -- If a regular environment has at least one tag, it is not explicitly tagged
- *     anymore.
- * 
  * @constructor
  * @extends {AbstractTags}
  */
@@ -493,7 +479,7 @@ export interface TagsClass {
 }
 
 
-// Factory needs functionality to create one Tags object from an existing ones
+// Factory needs functionality to create one Tags object from an existing one
 // to hand over label values, equation ids etc.
 //
 // 'AMS' for standard AMS numbering,

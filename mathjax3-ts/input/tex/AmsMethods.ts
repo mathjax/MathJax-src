@@ -243,12 +243,6 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
   let top = parser.ParseArg(name);
-  // VS: OLD
-  // 
-  // var arrow = MML.mo(MML.chars(String.fromCharCode(chr))).With({
-  //   stretchy: true, texClass: MML.TEXCLASS.REL
-  // });
-  // var mml = MML.munderover(arrow);
   let text = TreeHelper.createText(String.fromCharCode(chr));
   let arrow = TreeHelper.createNode('mo', [],
                                     {stretchy: true, texClass: TEXCLASS.REL}, text);
@@ -302,10 +296,6 @@ AmsMethods.CFrac = function(parser: TexParser, name: string) {
   let den = parser.GetArgument(name);
   let lrMap: {[key: string]: string} = {
     l: TexConstant.Align.LEFT, r: TexConstant.Align.RIGHT, '': ''};
-  // VS: OLD
-  // 
-  // var frac = MML.mfrac(TEX.Parse('\\strut\\textstyle{'+num+'}', parser.stack.env).mml(),
-  //                      TEX.Parse('\\strut\\textstyle{'+den+'}', parser.stack.env).mml());
   let numNode = new TexParser('\\strut\\textstyle{' + num + '}', parser.stack.env).mml();
   let denNode = new TexParser('\\strut\\textstyle{' + den + '}', parser.stack.env).mml();
   let frac = TreeHelper.createNode('mfrac', [numNode, denNode], {});
@@ -346,8 +336,6 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
   }
   let num = parser.ParseArg(name);
   let den = parser.ParseArg(name);
-  // VS: OLD
-  // var frac = MML.mfrac(num, den);
   let frac = TreeHelper.createNode('mfrac', [num, den], {});
   if (thick !== '') {
     // @test Normal Binomial, Text Binomial, Display Binomial
@@ -402,25 +390,12 @@ AmsMethods.HandleTag = function(parser: TexParser, name: string) {
   }
   let star = parser.GetStar();
   let tagId = parser.trimSpaces(parser.GetArgument(name));
-  // let tag = parseInt(arg);
-  // VS: OLD
-  // global.tag = MML.mtd.apply(MML,this.InternalMath(arg)).With({id:CONFIG.formatID(tag)});
-  // TODO: These types are wrong!
-  // DefaultTags.tagNode = TreeHelper.createNode('mtd', ParseUtil.internalMath(parser, tag),
-  //                                             {id: DefaultTags.formatId(tagId)});
-  // DefaultTags.setTag = true;
   DefaultTags.tag(tagId, star);
 };
 
 
 AmsMethods.HandleNoTag = function(parser: TexParser, name: string) {
   DefaultTags.notag();
-  // if (DefaultTags.currenttagNode) {
-  //   console.log(6);
-  //   // TODO: Should this be a clearTag? Or do we have to save the label?
-  //   DefaultTags.tagNode = null;
-  // }
-  // DefaultTags.setTag = false;  // prevent auto-tagging
 };
 
 
@@ -428,24 +403,24 @@ AmsMethods.HandleNoTag = function(parser: TexParser, name: string) {
  *  Record a label name for a tag
  */
 AmsMethods.HandleLabel = function(parser: TexParser, name: string) {
-  console.log(7);
+  // @test Label, Label Empty
   let global = this.stack.global;
   let label = this.GetArgument(name);
   if (label === '') {
-    console.log(8);
+    // @test Label Empty
     return;
   }
   // TODO: refUpdate deals with updating references!
   console.log('refupdated: ' + TagConfig.get('refUpdate'));
   if (!TagConfig.get('refUpdate')) {
-    console.log(9);
+    // @test Label, Ref, Ref Unknown
     if (DefaultTags.label) {
-      console.log(10);
+      // @test Double Label Error
       throw new TexError(['MultipleCommand', 'Multiple %1', name]);
     }
     DefaultTags.label = label;
     if (DefaultTags.allLabels[label] || DefaultTags.labels[label]) {
-      console.log(11);
+      // @ Duplicate Label Error
       throw new TexError(['MultipleLabel', 'Label \'%1\' multiply defined', label])}
     // TODO: This should be set in the tags structure!
     DefaultTags.labels[label] = new Label(); // will be replaced by tag value later
@@ -461,29 +436,22 @@ let baseURL = (typeof(document) === 'undefined' ||
  *  Handle a label reference
  */
 AmsMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
-  console.log(12);
+  // @test Ref, Ref Unknown, Eqref, Ref Default, Ref Named
   let label = this.GetArgument(name);
   let ref = DefaultTags.allLabels[label] || DefaultTags.labels[label];
   if (!ref) {
-    console.log(13);
+    // @test Ref Unknown
     ref = new Label();
-    // TODO: What do we do with bad references?
-    // AMS.badref = !AMS.refUpdate}
   }
   let tag = ref.tag;
   if (eqref) {
-    console.log(14);
+    // @test Eqref
     tag = DefaultTags.formatTag(tag)}
-  // VS: OLD
-  // this.Push(MML.mrow.apply(MML, this.InternalMath(tag)).With({
-  //   href: DefaultTags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
-  // }));
   let node = TreeHelper.createNode('mrow', ParseUtil.internalMath(parser, tag), {
     href: DefaultTags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
   });
   parser.Push(node);
 };
-
 
 
 AmsMethods.Macro = BaseMethods.Macro;

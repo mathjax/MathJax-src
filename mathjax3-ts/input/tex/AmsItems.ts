@@ -39,10 +39,6 @@ import {DefaultTags, TagsFactory} from './Tags.js';
 
 export class AmsArrayItem extends ArrayItem {
 
-  private save: {node: MmlNode | void, notags: string,
-                 defaultTag: boolean, notag: boolean} =
-    {node: null, notags: '', notag: false, defaultTag: false};
-
   constructor(factory: any, ...args: any[]) {
     super(factory);
     DefaultTags.start(args[0], args[2], args[1]);
@@ -59,8 +55,6 @@ export class AmsArrayItem extends ArrayItem {
       ParseUtil.fixInitialMO(this.nodes);
     }
     const node = TreeHelper.createNode('mtd', this.nodes, {});
-    // VS: OLD
-    // var node = MML.mtd.apply(MML,this.data);
     this.row.push(node);
     this.Clear();
   }
@@ -121,7 +115,6 @@ export class MultlineItem extends ArrayItem {
                           'multline']);
       }
     let row = TreeHelper.createNode('mtr', this.row, {});
-    // this.table.push(this.row); this.row = [];
     this.table.push(row);
     this.row = [];
   }
