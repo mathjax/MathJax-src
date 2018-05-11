@@ -23,7 +23,7 @@
 
 import {liteAdaptor, LiteAdaptor} from './liteAdaptor.js';
 import {browserAdaptor} from './browserAdaptor.js';
-import {HTMLAdaptor} from './htmlAdaptor.js';
+import {HTMLAdaptor} from './HTMLAdaptor.js';
 
 let choose;
 
