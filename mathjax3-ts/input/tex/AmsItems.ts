@@ -106,8 +106,9 @@ export class MultlineItem extends ArrayItem {
     if (this.table.length) {
       ParseUtil.fixInitialMO(this.nodes);
     }
-    let mtd = TreeHelper.createNode('mtd', this.nodes, {});
-    // if (this.nodes.shove) {mtd.columnalign = this.nodes.shove}
+    const shove = this.getProperty('shove');
+    const mtd = TreeHelper.createNode('mtd', this.nodes, shove ? {columnalign: shove} : {});
+    this.setProperty('shove', null);
     this.row.push(mtd);
     this.Clear();
   }
@@ -130,11 +131,13 @@ export class MultlineItem extends ArrayItem {
     super.EndTable();
     if (this.table.length) {
       let m = this.table.length - 1, i, label = -1;
-      if (!TreeHelper.getAttribute(this.table[0], 'columnalign')) {
+      if (!TreeHelper.getAttribute(
+        TreeHelper.getChildren(this.table[0])[0], 'columnalign')) {
         TreeHelper.setAttribute(TreeHelper.getChildren(this.table[0])[0],
                                 'columnalign', TexConstant.Align.LEFT);
       }
-      if (!TreeHelper.getAttribute(this.table[m], 'columnalign')) {
+      if (!TreeHelper.getAttribute(
+        TreeHelper.getChildren(this.table[m])[0], 'columnalign')) {
         TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0],
                                 'columnalign', TexConstant.Align.RIGHT);
       }

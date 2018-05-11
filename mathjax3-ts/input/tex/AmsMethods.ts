@@ -210,12 +210,20 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
 AmsMethods.HandleShove = function(parser: TexParser, name: string,
                                   shove: string) {
   TreeHelper.printMethod('AMS-HandleShove');
-  let top = this.stack.Top();
-  if (top.type !== 'multline' || top.data.length) {
+  let top = parser.stack.Top();
+  // @test Shove (Left|Right) (Top|Middle|Bottom)
+  if (top.kind !== 'multline') {
+    // @test Shove Error Environment
+    throw new TexError(['CommandOnlyAllowedInEnv',
+                        '%1 only allowed in %2 environment',
+                        name, 'multline']);
+  }
+  if (top.Size()) {
+    // @test Shove Error (Top|Middle|Bottom)
     throw new TexError(['CommandAtTheBeginingOfLine',
                         '%1 must come at the beginning of the line', name]);
   }
-  top.data.shove = shove;
+  top.setProperty('shove', shove);
 };
 
 

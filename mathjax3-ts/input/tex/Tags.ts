@@ -508,7 +508,7 @@ export interface TagsClass {
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([
-    ['default', AllTags],
+    ['default', NoTags],
     ['none', NoTags],
     ['all', AllTags],
     ['AMS', AmsTags]

@@ -21,6 +21,8 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-tag-none-tests.js
     node load.js tests/parser-tag-ams-tests.js
     node load.js tests/parser-tag-all-tests.js
+
+    node load.js tests/parser-multline-shove-tests.js
     exit 0
 else
     repeat=$1
