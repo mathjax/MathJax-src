@@ -99,7 +99,7 @@ export class TagInfo {
   constructor(readonly env: string = '',
               readonly taggable: boolean = false,
               readonly defaultTags: boolean = false,
-              public tag: string = '',
+              public tag: string = null,
               public tagId: string = '',
               public tagFormat: string = '',
               public noTag: boolean = false,
@@ -293,11 +293,6 @@ export class AbstractTags implements Tags {
 
   public tag(tag: string, noFormat: boolean) {
     this.currentTag.tag = tag;
-    console.log(TagConfig.get('useLabelIds'));
-    console.log(this.label);
-    this.currentTag.tagId = this.formatId(this.label || tag);
-    // this.currentTag.tagId = this.formatId(
-    //   TagConfig.get('useLabelIds') ? (this.label || tag) : tag);
     this.currentTag.tagFormat = noFormat ? tag : this.formatTag(tag);
     this.currentTag.noTag = false;
   }
@@ -352,7 +347,7 @@ export class AbstractTags implements Tags {
    *  Increment equation number and form tag mtd element
    */
   public autoTag() {
-    if (!this.currentTag.tag || !this.currentTag.tagId) {
+    if (this.currentTag.tag == null) {
       this.counter++;
       this.tag(this.counter.toString(), false);
     }
@@ -364,15 +359,22 @@ export class AbstractTags implements Tags {
    */
   public clearTag() {
       this.label = '';
-      this.tag('', true);
+      this.tag(null, true);
   }
 
 
+  private makeId() {
+    // this.currentTag.tagId = this.formatId(this.label || this.currentTag.tag);
+    this.currentTag.tagId = this.formatId(
+      TagConfig.get('useLabelIds') ?
+        (this.label || this.currentTag.tag) : this.currentTag.tag);
+  }
+
   private makeTag() {
+    this.makeId();
     if (this.label) {
       this.labels[this.label] = new Label(this.currentTag.tag, this.currentTag.tagId);
     }
-    console.log(this.labels);
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {}).mml();
     return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
   }
