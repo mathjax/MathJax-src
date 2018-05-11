@@ -366,7 +366,6 @@ export class EnvironmentMap extends MacroMap {
    */
   public parse([env, symbol]: ParseInput) {
     let macro = this.lookup(symbol);
-    console.log(macro);
     let envParser = this.parserFor(symbol);
     if (!macro || !envParser) {
       return null;

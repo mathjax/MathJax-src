@@ -144,7 +144,6 @@ export class MultlineItem extends ArrayItem {
       let tag = DefaultTags.getTag();
       if (tag) {
         label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
-        console.log(label);
         const mtr = this.table[label];
         const mlabel = TreeHelper.createNode(
           'mlabeledtr', [tag].concat(TreeHelper.getChildren(mtr)), {});

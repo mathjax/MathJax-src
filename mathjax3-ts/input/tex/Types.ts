@@ -35,4 +35,4 @@ export type Environment = Record<string, Args>;
 export type ParseInput = [TexParser, string];
 export type ParseResult = boolean|string;
 
-export type ParseMethod = (parser: TexParser, c: string | Symbol | StackItem, ...rest: any[]) => void;
+export type ParseMethod = (parser: TexParser, c: string | Symbol | StackItem, ...rest: any[]) => void|StackItem;

@@ -24,6 +24,7 @@
 
 
 import {StackItem} from './StackItem.js';
+import {ArrayItem} from './BaseItems.js';
 import {ParseMethod} from './Types.js';
 import BaseMethods from './BaseMethods.js';
 import ParseUtil from './ParseUtil.js';
@@ -42,8 +43,8 @@ let AmsMethods: Record<string, ParseMethod> = {};
 
 
 AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
-                         numbered: boolean, taggable: boolean, align: string,
-                         spacing: string) {
+                               numbered: boolean, taggable: boolean,
+                               align: string, spacing: string, style: string) {
   TreeHelper.printMethod('AMS-AMSarray');
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
   parser.Push(begin);
@@ -67,6 +68,56 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
 };
 
 
+// Utility method? (same as in BaseMethods)
+function setArrayAlign(parser: TexParser, array: ArrayItem, align: string) {
+  TreeHelper.printMethod('setArrayAlign');
+  // @test Array1, Array2, Array Test
+  align = parser.trimSpaces(align || '');
+  if (align === 't') {
+    array.arraydef.align = 'baseline 1';
+  } else if (align === 'b') {
+    array.arraydef.align = 'baseline -1';
+  } else if (align === 'c') {
+    array.arraydef.align = 'center';
+  } else if (align) {
+    array.arraydef.align = align;
+  } // FIXME: should be an error?
+  console.log(array.arraydef);
+  return array;
+};
+
+
+// TODO: do we really need style?
+AmsMethods.AlignedAMSArray = function(parser: TexParser, begin: StackItem,
+                                      numbered: boolean, taggable: boolean,
+                                      align: string, spacing: string,
+                                      style: string) {
+  const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
+  const array = AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spacing, style);
+  return setArrayAlign(parser, array as ArrayItem, args);
+};
+
+
+/*
+ *  Handle alignat environments
+ */
+// AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
+//                               numbered: boolean, taggable: boolean) {
+//   let n, valign, align = "", spacing = [];
+//   if (!taggable) {valign = this.GetBrackets("\\begin{"+begin.name+"}")}
+//   n = this.GetArgument("\\begin{"+begin.name+"}");
+//   if (n.match(/[^0-9]/)) {
+//     TEX.Error(["PositiveIntegerArg","Argument to %1 must me a positive integer",
+//                "\\begin{"+begin.name+"}"]);
+//   }
+//   while (n > 0) {align += "rl"; spacing.push("0em 0em"); n--}
+//   spacing = spacing.join(" ");
+//   if (taggable) {return this.AMSarray(begin,numbered,taggable,align,spacing)}
+//   var array = this.AMSarray(begin,numbered,taggable,align,spacing);
+//   return this.setArrayAlign(array,valign);
+// };
+    
+
 /*
  *  Implements multline environment (mostly handled through STACKITEM below)
  */
@@ -84,7 +135,7 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: s
     minlabelspacing: TagConfig.get('TagIndent')
   };
   return item;
-},
+};
 
 
 /**
