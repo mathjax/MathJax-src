@@ -16,6 +16,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-ams-tests.js
     node load.js tests/parser-amsenv-tests.js
     node load.js tests/parser-amserror-tests.js
+    node load.js tests/parser-amscomplex-tests.js
 
     # The tag tests.
     node load.js tests/parser-tag-none-tests.js
