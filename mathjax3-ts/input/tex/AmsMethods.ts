@@ -82,7 +82,6 @@ function setArrayAlign(parser: TexParser, array: ArrayItem, align: string) {
   } else if (align) {
     array.arraydef.align = align;
   } // FIXME: should be an error?
-  console.log(array.arraydef);
   return array;
 };
 
@@ -92,39 +91,55 @@ AmsMethods.AlignedAMSArray = function(parser: TexParser, begin: StackItem,
                                       numbered: boolean, taggable: boolean,
                                       align: string, spacing: string,
                                       style: string) {
+  // @test Aligned, Gathered
   const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
   const array = AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spacing, style);
   return setArrayAlign(parser, array as ArrayItem, args);
 };
 
 
-/*
+/**
  *  Handle alignat environments
  */
-// AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
-//                               numbered: boolean, taggable: boolean) {
-//   let n, valign, align = "", spacing = [];
-//   if (!taggable) {valign = this.GetBrackets("\\begin{"+begin.name+"}")}
-//   n = this.GetArgument("\\begin{"+begin.name+"}");
-//   if (n.match(/[^0-9]/)) {
-//     TEX.Error(["PositiveIntegerArg","Argument to %1 must me a positive integer",
-//                "\\begin{"+begin.name+"}"]);
-//   }
-//   while (n > 0) {align += "rl"; spacing.push("0em 0em"); n--}
-//   spacing = spacing.join(" ");
-//   if (taggable) {return this.AMSarray(begin,numbered,taggable,align,spacing)}
-//   var array = this.AMSarray(begin,numbered,taggable,align,spacing);
-//   return this.setArrayAlign(array,valign);
-// };
-    
+AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
+                              numbered: boolean, taggable: boolean) {
+  const name = begin.getName();
+  let n, valign, align = '', spacing = [];
+  if (!taggable) {
+    // @test Alignedat
+    valign = parser.GetBrackets('\\begin{' + name + '}');
+  }
+  n = parser.GetArgument('\\begin{' + name + '}');
+  if (n.match(/[^0-9]/)) {
+    throw new TexError(['PositiveIntegerArg',
+                        'Argument to %1 must me a positive integer',
+                        '\\begin{' + name + '}']);
+  }
+  let count = parseInt(n, 10);
+  while (count > 0) {
+    align  += 'rl';
+    spacing.push('0em 0em');
+    count--;
+  }
+  let spaceStr = spacing.join(' ');
+  if (taggable) {
+    // @test Alignat, Alignat Star
+    return AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spaceStr);
+  }
+  // @test Alignedat
+  let array = AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spaceStr);
+  return setArrayAlign(parser, array as ArrayItem, valign);
+};
 
-/*
+
+/**
  *  Implements multline environment (mostly handled through STACKITEM below)
  */
-AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: string) {
+AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: boolean) {
   TreeHelper.printMethod('AMS-Multline');
   // @test Shove*, Multline
-  parser.Push(begin); AmsMethods.checkEqnEnv(parser, '');
+  parser.Push(begin);
+  AmsMethods.checkEqnEnv(parser, '');
   const item = parser.itemFactory.create('multline', numbered, parser.stack);
   item.arraydef = {
     displaystyle: true,
@@ -139,6 +154,16 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: s
 
 
 /**
+ *  Handle equation environment
+ */
+AmsMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
+  parser.Push(begin);
+  AmsMethods.checkEqnEnv(parser, '');
+  return parser.itemFactory.create('equation', numbered);
+};
+
+
+/**
  *  Check for bad nesting of equation environments
  */
 AmsMethods.checkEqnEnv = function(parser: TexParser) {
@@ -148,7 +173,6 @@ AmsMethods.checkEqnEnv = function(parser: TexParser) {
   }
   parser.stack.global.eqnenv = true;
 };
-
 
 // TODO: How to set an extra definition. Probably best to deal with this
 //       together with newcommand, setEnv etc.
@@ -390,7 +414,6 @@ AmsMethods.HandleTag = function(parser: TexParser, name: string) {
 
 
 AmsMethods.HandleNoTag = function(parser: TexParser, name: string) {
-  console.log(5);
   DefaultTags.notag();
   // if (DefaultTags.currenttagNode) {
   //   console.log(6);

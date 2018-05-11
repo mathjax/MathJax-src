@@ -430,7 +430,7 @@ export default class TexParser {
 
   ParseUpTo(name: string, token: string) {
     TreeHelper.printMethod('ParseUpTo (Old Parser Object)');
-    return new TexParser(this.GetUpTo(name,token), this.stack.env).mml();
+    return new TexParser(this.GetUpTo(name, token), this.stack.env).mml();
   }
 
   

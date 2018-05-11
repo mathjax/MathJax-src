@@ -477,15 +477,8 @@ export class AllTags extends AbstractTags {
       function(x: TagInfo) { return x.taggable; })) {
       return node;
     }
-    let cell = TreeHelper.createNode('mtd', [node], {});
     let tag = this.getTag(true);
-    let row = TreeHelper.createNode('mlabeledtr', [tag, cell], {});
-    let table = TreeHelper.createNode('mtable', [row], {
-      side: TagConfig.get('TagSide'),
-      minlabelspacing: TagConfig.get('TagIndent'),
-      displaystyle: env.display
-    });
-    return table;
+    return TagsFactory.enTag(node, tag);
   }
 
 }
@@ -508,7 +501,7 @@ export interface TagsClass {
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([
-    ['default', NoTags],
+    ['default', AmsTags],
     ['none', NoTags],
     ['all', AllTags],
     ['AMS', AmsTags]
@@ -530,6 +523,17 @@ export namespace TagsFactory {
 
   export let getDefault = function() {
     DefaultTags = TagsFactory.create('default');
+  };
+
+  export let enTag = function(node: MmlNode, tag: MmlNode): MmlNode {
+    let cell = TreeHelper.createNode('mtd', [node], {});
+    let row = TreeHelper.createNode('mlabeledtr', [tag, cell], {});
+    let table = TreeHelper.createNode('mtable', [row], {
+      side: TagConfig.get('TagSide'),
+      minlabelspacing: TagConfig.get('TagIndent'),
+      displaystyle: true
+    });
+    return table;
   };
 
 }

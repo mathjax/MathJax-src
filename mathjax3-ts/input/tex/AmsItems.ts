@@ -29,10 +29,10 @@ import ParseUtil from './ParseUtil.js';
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import StackItemFactory from './StackItemFactory.js';
-import {StackItem} from './StackItem.js';
+import {StackItem, BaseItem} from './StackItem.js';
 import TexError from './TexError.js';
 import {TexConstant} from './TexConstants.js';
-import {DefaultTags} from './Tags.js';
+import {DefaultTags, TagsFactory} from './Tags.js';
 
 // AMS
 
@@ -42,7 +42,7 @@ export class AmsArrayItem extends ArrayItem {
   private save: {node: MmlNode | void, notags: string,
                  defaultTag: boolean, notag: boolean} =
     {node: null, notags: '', notag: false, defaultTag: false};
-  
+
   constructor(factory: any, ...args: any[]) {
     super(factory);
     DefaultTags.start(args[0], args[2], args[1]);
@@ -51,7 +51,7 @@ export class AmsArrayItem extends ArrayItem {
   get kind() {
     return 'AMSarray';
   }
-  
+
   EndEntry() {
     TreeHelper.printMethod('AMS-EndEntry');
     // @test Cubic Binomial
@@ -64,7 +64,7 @@ export class AmsArrayItem extends ArrayItem {
     this.row.push(node);
     this.Clear();
   }
-  
+
   EndRow() {
     TreeHelper.printMethod('AMS-EndRow');
     // @test Cubic Binomial
@@ -78,7 +78,7 @@ export class AmsArrayItem extends ArrayItem {
     const node = TreeHelper.createNode(mtr, this.row, {});
     this.table.push(node); this.row = [];
   }
-  
+
   EndTable() {
     TreeHelper.printMethod('AMS-EndTable');
     // @test Cubic Binomial
@@ -100,7 +100,7 @@ export class MultlineItem extends ArrayItem {
     DefaultTags.start('multline', true, args[0]);
   }
 
-  
+
   EndEntry() {
     TreeHelper.printMethod('AMS-EndEntry');
     if (this.table.length) {
@@ -155,3 +155,36 @@ export class MultlineItem extends ArrayItem {
   }
 }
 
+export class EquationItem extends BaseItem {
+
+  get kind() {
+    return 'equation';
+  }
+
+  /**
+   * @override
+   */
+  get isOpen() {
+    return true;
+  }
+
+
+  constructor(factory: any, ...args: any[]) {
+    super(factory);
+    DefaultTags.start('equation', true, args[0]);
+  }
+
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem) {
+    if (item.isKind('end')) {
+      let mml = this.toMml();
+      let tag = DefaultTags.getTag();
+      return [tag ? TagsFactory.enTag(mml, tag) : mml, item];
+    }
+    return super.checkItem(item);
+  }
+
+}

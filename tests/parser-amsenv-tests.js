@@ -6,8 +6,8 @@ import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 class ParserAmsenvTest extends ParserTest {
 
   constructor() {
-    TagsFactory.setDefault('AMS');
     super();
+    TagsFactory.setDefault('AMS');
   }
 
 }

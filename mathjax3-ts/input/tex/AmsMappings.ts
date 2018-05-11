@@ -135,8 +135,8 @@ new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
   smallmatrix:   ['Array', null, null, null, 'c', COLS([1 / 3]),
                   '.2em', 'S', 1],
 
-  'equation':    ['EquationBegin', 'Equation', true],
-  'equation*':   ['EquationBegin', 'EquationStar', false],
+  equation:      ['Equation', null, true],
+  'equation*':   ['Equation', null, false],
 
   eqnarray:      ['AMSarray', null, true, true, 'rcl',
                   '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em'],

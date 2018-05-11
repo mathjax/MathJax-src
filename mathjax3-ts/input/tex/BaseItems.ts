@@ -84,6 +84,7 @@ export class StartItem extends BaseItem {
     }
     return super.checkItem(item);
   }
+
 }
 
 export class StopItem extends BaseItem {
@@ -410,7 +411,6 @@ export class BeginItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem begin');
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         throw new TexError(['EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
