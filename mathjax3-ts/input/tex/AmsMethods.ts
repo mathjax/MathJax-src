@@ -68,24 +68,6 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
 };
 
 
-// Utility method? (same as in BaseMethods)
-function setArrayAlign(parser: TexParser, array: ArrayItem, align: string) {
-  TreeHelper.printMethod('setArrayAlign');
-  // @test Array1, Array2, Array Test
-  align = ParseUtil.trimSpaces(align || '');
-  if (align === 't') {
-    array.arraydef.align = 'baseline 1';
-  } else if (align === 'b') {
-    array.arraydef.align = 'baseline -1';
-  } else if (align === 'c') {
-    array.arraydef.align = 'center';
-  } else if (align) {
-    array.arraydef.align = align;
-  } // FIXME: should be an error?
-  return array;
-};
-
-
 // TODO: do we really need style?
 AmsMethods.AlignedAMSArray = function(parser: TexParser, begin: StackItem,
                                       numbered: boolean, taggable: boolean,
@@ -94,7 +76,7 @@ AmsMethods.AlignedAMSArray = function(parser: TexParser, begin: StackItem,
   // @test Aligned, Gathered
   const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
   const array = AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spacing, style);
-  return setArrayAlign(parser, array as ArrayItem, args);
+  return ParseUtil.setArrayAlign(array as ArrayItem, args);
 };
 
 
@@ -128,7 +110,7 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
   }
   // @test Alignedat
   let array = AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spaceStr);
-  return setArrayAlign(parser, array as ArrayItem, valign);
+  return ParseUtil.setArrayAlign(array as ArrayItem, valign);
 };
 
 

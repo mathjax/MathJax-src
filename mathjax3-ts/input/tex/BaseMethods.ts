@@ -1085,8 +1085,6 @@ BaseMethods.HFill = function(parser: TexParser, name: string) {
  */
 
 let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
-let MAXBUFFER = 5 * 1024;   // maximum size of TeX string to process
-
 
 BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('BeginEnd');
@@ -1113,14 +1111,6 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   }
 };
 
-
-// BaseMethods.Equation = function(parser: TexParser, begin: string, row: MmlNode[]) {
-//   return row;
-// };
-
-// BaseMethods.ExtensionEnv = function(parser: TexParser, begin,file) {
-//   parser.Extension(begin.name,file, 'environment');
-// };
 
 BaseMethods.Array = function(parser: TexParser, begin: StackItem,
                       open: string, close: string, align: string,
@@ -1189,62 +1179,14 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
   TreeHelper.printMethod('AlignedArray');
   // @test Array1, Array2, Array Test
   const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
-  let item = BaseMethods.Array.apply(parser, arguments);
-  return setArrayAlign(parser, item, align);
-};
-
-
-// Utility method?
-function setArrayAlign(parser: TexParser, array: sitem.ArrayItem, align: string) {
-  TreeHelper.printMethod('setArrayAlign');
-  // @test Array1, Array2, Array Test
-  align = ParseUtil.trimSpaces(align || '');
-  if (align === 't') {
-    array.arraydef.align = 'baseline 1';
-  } else if (align === 'b') {
-    array.arraydef.align = 'baseline -1';
-  } else if (align === 'c') {
-    array.arraydef.align = 'center';
-  } else if (align) {
-    array.arraydef.align = align;
-  } // FIXME: should be an error?
-  return array;
+  let item = BaseMethods.Array(parser, begin);
+  return ParseUtil.setArrayAlign(item as sitem.ArrayItem, align);
 };
 
 
 /**
- * Macros and Extension functionality.
+ * Macros
  */
-// TODO:
-// Most of this is untested and should probably go into a separate file.
-// We should probably loose require.
-
-let EXTENSION_DIR = '';
-
-
-BaseMethods.Require = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Require');
-  const file = parser.GetArgument(name)
-    .replace(/.*\//, '')            // remove any leading path
-    .replace(/[^a-z0-9_.-]/ig, ''); // remove illegal characters
-  BaseMethods.Extension(parser, null, file);
-};
-
-
-BaseMethods.Extension = function(parser: TexParser, name: string|StackItem,
-                          file: string, array?: any) {
-  TreeHelper.printMethod('Extension');
-  if (name && !(typeof(name) === 'string')) {
-    name = name.getName();
-  }
-  // file = TEX.extensionDir+'/'+file;
-  file = EXTENSION_DIR + '/' + file;
-  if (!file.match(/\.js$/)) {
-    file += '.js';
-  }
-};
-
-
 BaseMethods.Macro = function(parser: TexParser, name: string,
                       macro: string, argcount: number,
                       // TODO: The final argument seems never to be used.
@@ -1259,69 +1201,15 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
     for (let i = args.length; i < argcount; i++) {
       args.push(parser.GetArgument(name));
     }
-    macro = substituteArgs(args, macro);
+    macro = ParseUtil.substituteArgs(args, macro);
   }
-  parser.string = addArgs(macro, parser.string.slice(parser.i));
+  parser.string = ParseUtil.addArgs(macro, parser.string.slice(parser.i));
   parser.i = 0;
   if (++parser.macroCount > MAXMACROS) {
     throw new TexError(['MaxMacroSub1',
                         'MathJax maximum macro substitution count exceeded; ' +
                         'is there a recursive macro call?']);
   }
-};
-
-
-// Utility
-/**
- *  Replace macro parameters with their values
- */
-function substituteArgs(args: string[], str: string) {
-  TreeHelper.printMethod('SubstituteArgs');
-  let text = '';
-  let newstring = '';
-  let i = 0;
-  while (i < str.length) {
-    let c = str.charAt(i++);
-    if (c === '\\') {
-      text += c + str.charAt(i++);
-    }
-    else if (c === '#') {
-      c = str.charAt(i++);
-      if (c === '#') {
-        text += c;
-      } else {
-        if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
-          throw new TexError(['IllegalMacroParam',
-                              'Illegal macro parameter reference']);
-        }
-        newstring = addArgs(addArgs(newstring, text),
-                            args[parseInt(c, 10) - 1]);
-        text = '';
-      }
-    } else {
-      text += c;
-    }
-  }
-  return addArgs(newstring, text);
-};
-
-
-// Utility
-/**
- *  Make sure that macros are followed by a space if their names
- *  could accidentally be continued into the following text.
- */
-function addArgs(s1: string, s2: string) {
-  TreeHelper.printMethod('AddArgs');
-  if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
-    s1 += ' ';
-  }
-  if (s1.length + s2.length > MAXBUFFER) {
-    throw new TexError(['MaxBufferSize',
-                        'MathJax internal buffer size exceeded; is there a' +
-                        ' recursive macro call?']);
-  }
-  return s1 + s2;
 };
 
 

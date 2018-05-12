@@ -33,6 +33,7 @@
 import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {EnvList} from './StackItem.js';
+import {ArrayItem} from './BaseItems.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
@@ -66,7 +67,7 @@ namespace ParseUtil {
     let m = parseFloat(match[1] || '1'), unit = match[2];
     let func = UNIT_CASES[unit];
     return func ? func(m) : 0;
-  };
+  }
 
 
   export function Em(m: number) {
@@ -74,7 +75,7 @@ namespace ParseUtil {
       return '0em';
     }
     return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
-  };
+  }
 
 
   /**
@@ -116,7 +117,7 @@ namespace ParseUtil {
     //   MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
     // );
     return mrow;
-  };
+  }
 
 
   /**
@@ -141,7 +142,7 @@ namespace ParseUtil {
       TreeHelper.appendChildren(mrow, [mathPalette(close, 'r')]);
     }
     return mrow;
-  };
+  }
 
 
   export function mathPalette(fence: string, side: string) {
@@ -152,7 +153,7 @@ namespace ParseUtil {
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
     return new TexParser('\\mathchoice' + D + T + T + T, {}).mml();
-  };
+  }
 
 
   //
@@ -198,7 +199,7 @@ namespace ParseUtil {
         }
       }
     }
-  };
+  }
 
 
   // AMS
@@ -224,7 +225,7 @@ namespace ParseUtil {
         break;
       }
     }
-  };
+  }
 
 
   export function mi2mo(mi: MmlNode) {
@@ -238,7 +239,7 @@ namespace ParseUtil {
     // mo.lspace = mo.rspace = '0';  // prevent mo from having space in NativeMML
     // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
     return mo;
-  };
+  }
 
 
   /**
@@ -365,7 +366,6 @@ namespace ParseUtil {
    * @param {string} text The string to clean.
    * @return {string} The string with leading and trailing whitespace removed.
    */
-  // static
   export function trimSpaces(text: string): string {
     TreeHelper.printMethod('trimSpaces (Old Parser Object)');
     if (typeof(text) !== 'string') {
@@ -378,6 +378,78 @@ namespace ParseUtil {
     return TEXT;
   }
 
+  /**
+   * Sets alignment in array definitions.
+   */
+  export function setArrayAlign(array: ArrayItem, align: string) {
+    TreeHelper.printMethod('setArrayAlign');
+    // @test Array1, Array2, Array Test
+    align = ParseUtil.trimSpaces(align || '');
+    if (align === 't') {
+      array.arraydef.align = 'baseline 1';
+    } else if (align === 'b') {
+      array.arraydef.align = 'baseline -1';
+    } else if (align === 'c') {
+      array.arraydef.align = 'center';
+    } else if (align) {
+      array.arraydef.align = align;
+    } // FIXME: should be an error?
+    return array;
+  }
+
+
+  let MAXBUFFER = 5 * 1024;   // maximum size of TeX string to process
+
+  /**
+   *  Replace macro parameters with their values
+   */
+  export function substituteArgs(args: string[], str: string) {
+    TreeHelper.printMethod('SubstituteArgs');
+    let text = '';
+    let newstring = '';
+    let i = 0;
+    while (i < str.length) {
+      let c = str.charAt(i++);
+      if (c === '\\') {
+        text += c + str.charAt(i++);
+      }
+      else if (c === '#') {
+        c = str.charAt(i++);
+        if (c === '#') {
+          text += c;
+        } else {
+          if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
+            throw new TexError(['IllegalMacroParam',
+                                'Illegal macro parameter reference']);
+          }
+          newstring = addArgs(addArgs(newstring, text),
+                              args[parseInt(c, 10) - 1]);
+          text = '';
+        }
+      } else {
+        text += c;
+      }
+    }
+    return addArgs(newstring, text);
+  }
+
+
+  /**
+   *  Make sure that macros are followed by a space if their names
+   *  could accidentally be continued into the following text.
+   */
+  export function addArgs(s1: string, s2: string) {
+    TreeHelper.printMethod('AddArgs');
+    if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
+      s1 += ' ';
+    }
+    if (s1.length + s2.length > MAXBUFFER) {
+      throw new TexError(['MaxBufferSize',
+                          'MathJax internal buffer size exceeded; is there a' +
+                          ' recursive macro call?']);
+    }
+    return s1 + s2;
+  }
 
 }
 
