@@ -518,7 +518,6 @@ export class ArrayItem extends BaseItem {
   public row: MmlNode[] = [];
   public frame: string[] = [];
   public hfill: number[] = [];
-  public copyEnv = false;
   public arraydef: {[key: string]: string|number|boolean}= {};
   public dashed: boolean = false;
 

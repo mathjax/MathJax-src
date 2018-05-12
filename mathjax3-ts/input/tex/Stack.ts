@@ -100,11 +100,9 @@ export default class Stack {
       else if (top) {
         this.stack.push(item);
         if (item.env) {
-          if (item.copyEnv !== false) {
-            for (let id in this.env) {
-              if (this.env.hasOwnProperty(id)) {
-                item.env[id] = this.env[id];
-              }
+          for (let id in this.env) {
+            if (this.env.hasOwnProperty(id)) {
+              item.env[id] = this.env[id];
             }
           }
           this.env = item.env;
