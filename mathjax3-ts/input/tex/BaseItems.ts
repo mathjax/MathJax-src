@@ -419,13 +419,7 @@ export class BeginItem extends BaseItem {
       if (!this.getProperty('end')) {
         return this.factory.create('mml', this.toMml());
       }
-      // TODO: This case currently does not work!
-      //
-      //       The problem: It needs to call a particular Parse Method. It is
-      //       only used in equation(*) anyway and should therefore probably
-      //       handled in a special case.
-      // return this.parse[this.end].call(this.parse, this, this.data);
-      return;
+      return false;
     }
     if (item.isKind('stop')) {
       throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
@@ -625,8 +619,6 @@ export class ArrayItem extends BaseItem {
   EndEntry() {
     // @test Array1, Array2
     const mtd = TreeHelper.createNode('mtd', this.nodes, {});
-    // VS: OLD
-    // var mtd = MML.mtd.apply(MML,this.data);
     if (this.hfill.length) {
       if (this.hfill[0] === 0) {
         TreeHelper.setAttribute(mtd, 'columnalign', 'right');
@@ -643,17 +635,13 @@ export class ArrayItem extends BaseItem {
   EndRow() {
     let node: MmlNode;
     if (this.getProperty('isNumbered') && this.row.length === 3) {
+      // @test Label, Matrix Numbered
       this.row.unshift(this.row.pop());  // move equation number to first
-      // position
-      // @test Label
+                                         // position
       node = TreeHelper.createNode('mlabeledtr', this.row, {});
-      // VS: OLD
-      // var node = MML.mlabeledtr.apply(MML,this.row);
     } else {
       // @test Array1, Array2
       node = TreeHelper.createNode('mtr', this.row, {});
-      // VS: OLD
-      // node = MML.mtr.apply(MML,this.row);
     }
     this.table.push(node);
     this.row = [];

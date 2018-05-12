@@ -882,38 +882,45 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
                        spacing: string, vspacing: string, style: string,
                        cases: boolean, numbered: boolean) {
   TreeHelper.printMethod('Matrix');
-  // TreeHelper.untested(36);
   const c = parser.GetNext();
   if (c === '') {
+    // @test Matrix Error
     throw new TexError(['MissingArgFor', 'Missing argument for %1', name]);
   }
   if (c === '{') {
+    // @test Matrix Braces, Matrix Columns, Matrix Rows.
     parser.i++;
   } else {
+    // @test Matrix Arg
     parser.string = c + '}' + parser.string.slice(parser.i + 1);
     parser.i = 0;
   }
+  // @test Matrix Braces, Matrix Columns, Matrix Rows.
   const array = parser.itemFactory.create('array').With({requireClose: true});
   array.arraydef = {
     rowspacing: (vspacing || '4pt'),
     columnspacing: (spacing || '1em')
   };
-  // TEMP: Changes here:
   if (cases) {
+    // @test Matrix Cases
     array.setProperty('isCases', true);
   }
   if (numbered) {
+    // @test Matrix Numbered
     array.setProperty('isNumbered', true);
     array.arraydef.side = numbered;
   }
   if (open || close) {
+    // @test Matrix Parens, Matrix Parens Subscript, Matrix Cases
     array.setProperty('open', open);
     array.setProperty('close', close);
   }
   if (style === 'D') {
+    // @test Matrix Numbered
     array.arraydef.displaystyle = true;
   }
   if (align != null) {
+    // @test Matrix Cases, Matrix Numbered
     array.arraydef.columnalign = align;
   }
   parser.Push(array);
@@ -1219,9 +1226,7 @@ BaseMethods.MathChoice = function(parser: TexParser, name: string) {
   const T  = parser.ParseArg(name);
   const S  = parser.ParseArg(name);
   const SS = parser.ParseArg(name);
-  // parser.Push(NewTex.display ? D : T);
   parser.Push(TreeHelper.createNode('mathchoice', [D, T, S, SS], {}));
-  // parser.Push(MML.TeXmathchoice(D,T,S,SS));
 };
 
 
