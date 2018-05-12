@@ -55,15 +55,15 @@ export class Configuration {
   public get handler(): HandlerConfig {
     return this._handler;
   }
-  
+
   public get fallback(): FallbackConfig {
     return this._fallback;
   }
-  
+
   /**
    * Appends configurations to this configuration. Note that fallbacks are
    * overwritten.
-   * 
+   *
    * @param {Configuration} configuration A configuration setting for the TeX
    *       parser.
    */
@@ -71,7 +71,7 @@ export class Configuration {
     let handlers = Object.keys(config.handler) as HandlerType[];
     for (const key of handlers) {
       for (const map of config.handler[key]) {
-        this.handler[key].push(map);
+        this.handler[key].unshift(map);
       }
     }
     handlers = Object.keys(config.fallback) as HandlerType[];
@@ -86,10 +86,11 @@ export class Configuration {
 
 // Some concrete definitions.
 const BaseConfiguration = new Configuration({
-    character: ['command', 'special', 'letter', 'digit'],
-    delimiter: ['delimiter'],
-  macro: ['empty', 'macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7', 'delimiter'],
-    environment: ['environment']
+  character: ['command', 'special', 'letter', 'digit'],
+  delimiter: ['delimiter'],
+  // Note, that the position of the delimiters here is important!
+  macro: ['delimiter', 'macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
+  environment: ['environment']
 });
 
 const AmsSymbolsConf = new Configuration({
@@ -99,9 +100,9 @@ const AmsSymbolsConf = new Configuration({
 });
 
 const AmsMathConf = new Configuration({
-    delimiter: ['AMSmath-delimiter'],
-    macro: ['AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-    environment: ['AMSmath-environment']
+  delimiter: ['AMSmath-delimiter'],
+  macro: ['AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
+  environment: ['AMSmath-environment']
 });
 
 // const NoUndef = new Configuration({ }, {macro: FallbackMethods.noUndefined});
@@ -110,4 +111,3 @@ export const DefaultConfig = new Configuration({});
 DefaultConfig.append(BaseConfiguration);
 DefaultConfig.append(AmsSymbolsConf);
 DefaultConfig.append(AmsMathConf);
-

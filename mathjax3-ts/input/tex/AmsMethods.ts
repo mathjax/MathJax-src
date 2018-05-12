@@ -48,7 +48,6 @@ let AmsMethods: Record<string, ParseMethod> = {};
 AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
                                numbered: boolean, taggable: boolean,
                                align: string, spacing: string, style: string) {
-  TreeHelper.printMethod('AMS-AMSarray');
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
   parser.Push(begin);
   if (taggable) {
@@ -61,9 +60,7 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
     displaystyle: true,
     columnalign: align,
     columnspacing: (spacing || '1em'),
-    // TODO: Which one is correct?
     rowspacing: '3pt',
-    // rowspacing: '.5em',
     side: TagConfig.get('TagSide'),
     minlabelspacing: TagConfig.get('TagIndent')
   };
@@ -121,7 +118,6 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
  *  Implements multline environment (mostly handled through STACKITEM below)
  */
 AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: boolean) {
-  TreeHelper.printMethod('AMS-Multline');
   // @test Shove*, Multline
   parser.Push(begin);
   AmsMethods.checkEqnEnv(parser, '');
@@ -152,7 +148,6 @@ AmsMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: b
  *  Check for bad nesting of equation environments
  */
 AmsMethods.checkEqnEnv = function(parser: TexParser) {
-  TreeHelper.printMethod('AMS-checkEqnEnv');
   if (parser.stack.global.eqnenv) {
     throw new TexError(['ErroneousNestingEq', 'Erroneous nesting of equation structures']);
   }
@@ -178,7 +173,6 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
 
 
 AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('AMS-HandleOperatorName');
   // @test Operatorname
   const limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
   let op = ParseUtil.trimSpaces(parser.GetArgument(name));
@@ -190,7 +184,6 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
 
 
 AmsMethods.SkipLimits = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('AMS-SkipLimits');
   // @test Operatorname
   const c = parser.GetNext(), i = parser.i;
   if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
@@ -229,7 +222,6 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
  */
 AmsMethods.xArrow = function(parser: TexParser, name: string,
                              chr: number, l: number, r: number) {
-  TreeHelper.printMethod('AMS-xArrow');
   let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
   let top = parser.ParseArg(name);
@@ -259,7 +251,6 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
  */
 AmsMethods.HandleShove = function(parser: TexParser, name: string,
                                   shove: string) {
-  TreeHelper.printMethod('AMS-HandleShove');
   let top = parser.stack.Top();
   // @test Shove (Left|Right) (Top|Middle|Bottom)
   if (top.kind !== 'multline') {
@@ -308,20 +299,16 @@ AmsMethods.CFrac = function(parser: TexParser, name: string) {
  */
 AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
                               right: string, thick: string, style: string) {
-  if (left  == null) {
-    // @test Genfrac
+  if (left  == null) { // @test Genfrac
     left = parser.GetDelimiterArg(name);
   }
-  if (right == null) {
-    // @test Genfrac
+  if (right == null) { // @test Genfrac
     right = parser.GetDelimiterArg(name);
   }
-  if (thick == null) {
-    // @test Genfrac
+  if (thick == null) { // @test Genfrac
     thick = parser.GetArgument(name);
   }
-  if (style == null) {
-    // @test Genfrac
+  if (style == null) { // @test Genfrac
     style = ParseUtil.trimSpaces(parser.GetArgument(name));
   }
   let num = parser.ParseArg(name);
@@ -343,8 +330,6 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
       // @test Genfrac Error
       throw new TexError(['BadMathStyleFor', 'Bad math style for %1', name]);
     }
-    // VS: OLD
-    // frac = MML.mstyle(frac);
     frac = TreeHelper.createNode('mstyle', [frac], {});
     if (styleAlpha === 'D') {
       // @test Display Fraction, Display Sub Fraction, Display Binomial,
@@ -352,7 +337,8 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
       TreeHelper.setProperties(frac, {displaystyle: true, scriptlevel: 0});
     }
     else {
-      // @test Text Fraction, Text Sub Fraction, Text Binomial, Text Sub Binomial
+      // @test Text Fraction, Text Sub Fraction, Text Binomial,
+      //       Text Sub Binomial
       TreeHelper.setProperties(frac, {displaystyle: false,
                                       scriptlevel: styleDigit - 1});
     }
@@ -368,7 +354,6 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
  * tag is 
  */
 AmsMethods.HandleTag = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('AMS-HandleTag');
   if (!DefaultTags.currentTag.taggable) {
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',
@@ -384,6 +369,10 @@ AmsMethods.HandleTag = function(parser: TexParser, name: string) {
 };
 
 
+
+/**
+ * Handles no tag commands.
+ */
 AmsMethods.HandleNoTag = function(parser: TexParser, name: string) {
   DefaultTags.notag();
 };
@@ -400,8 +389,7 @@ AmsMethods.HandleLabel = function(parser: TexParser, name: string) {
     // @test Label Empty
     return;
   }
-  // TODO: refUpdate deals with updating references!
-  console.log('refupdated: ' + TagConfig.get('refUpdate'));
+  // TODO: refUpdate is currently not implemented.
   if (!TagConfig.get('refUpdate')) {
     // @test Label, Ref, Ref Unknown
     if (DefaultTags.label) {

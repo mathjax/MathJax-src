@@ -8,7 +8,7 @@
  *
  *  ---------------------------------------------------------------------
  *
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,13 @@
  */
 
 
+/**
+ * @fileoverview StackItems needed for parsing AMS math commands.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
+
 import {ArrayItem} from './BaseItems.js';
 import ParseUtil from './ParseUtil.js';
 import {TreeHelper} from './TreeHelper.js';
@@ -34,21 +41,30 @@ import TexError from './TexError.js';
 import {TexConstant} from './TexConstants.js';
 import {DefaultTags, TagsFactory} from './Tags.js';
 
-// AMS
-
 
 export class AmsArrayItem extends ArrayItem {
 
+  /**
+   * @override
+   */
   constructor(factory: any, ...args: any[]) {
     super(factory);
     DefaultTags.start(args[0], args[2], args[1]);
   }
 
+
+  /**
+   * @override
+   */
   get kind() {
     return 'AMSarray';
   }
 
-  EndEntry() {
+
+  /**
+   * @override
+   */
+  public EndEntry() {
     TreeHelper.printMethod('AMS-EndEntry');
     // @test Cubic Binomial
     if (this.row.length) {
@@ -59,7 +75,10 @@ export class AmsArrayItem extends ArrayItem {
     this.Clear();
   }
 
-  EndRow() {
+  /**
+   * @override
+   */
+  public EndRow() {
     TreeHelper.printMethod('AMS-EndRow');
     // @test Cubic Binomial
     let mtr = 'mtr';
@@ -73,7 +92,10 @@ export class AmsArrayItem extends ArrayItem {
     this.table.push(node); this.row = [];
   }
 
-  EndTable() {
+  /**
+   * @override
+   */
+  public EndTable() {
     TreeHelper.printMethod('AMS-EndTable');
     // @test Cubic Binomial
     super.EndTable();
@@ -85,41 +107,59 @@ export class AmsArrayItem extends ArrayItem {
 
 export class MultlineItem extends ArrayItem {
 
-  get kind() {
-    return 'multline';
-  }
-
+  /**
+   * @override
+   */
   constructor(factory: any, ...args: any[]) {
     super(factory);
     DefaultTags.start('multline', true, args[0]);
   }
 
 
-  EndEntry() {
+  /**
+   * @override
+   */
+  get kind() {
+    return 'multline';
+  }
+
+
+  /**
+   * @override
+   */
+  public EndEntry() {
     TreeHelper.printMethod('AMS-EndEntry');
     if (this.table.length) {
       ParseUtil.fixInitialMO(this.nodes);
     }
     const shove = this.getProperty('shove');
-    const mtd = TreeHelper.createNode('mtd', this.nodes, shove ? {columnalign: shove} : {});
+    const mtd = TreeHelper.createNode(
+      'mtd', this.nodes, shove ? {columnalign: shove} : {});
     this.setProperty('shove', null);
     this.row.push(mtd);
     this.Clear();
   }
 
-  EndRow() {
+  /**
+   * @override
+   */
+  public EndRow() {
     TreeHelper.printMethod('AMS-EndRow');
     if (this.row.length !== 1) {
-      throw new TexError(['MultlineRowsOneCol',
-                          'The rows within the %1 environment must have exactly one column',
-                          'multline']);
+      throw new TexError(
+        ['MultlineRowsOneCol',
+         'The rows within the %1 environment must have exactly one column',
+         'multline']);
       }
     let row = TreeHelper.createNode('mtr', this.row, {});
     this.table.push(row);
     this.row = [];
   }
 
-  EndTable() {
+  /**
+   * @override
+   */
+  public EndTable() {
     TreeHelper.printMethod('AMS-EndTable');
     super.EndTable();
     if (this.table.length) {
@@ -150,23 +190,21 @@ export class MultlineItem extends ArrayItem {
 
 export class EquationItem extends BaseItem {
 
-  get kind() {
-    return 'equation';
-  }
-
   /**
    * @override
    */
-  get isOpen() {
-    return true;
-  }
-
-
   constructor(factory: any, ...args: any[]) {
     super(factory);
     DefaultTags.start('equation', true, args[0]);
   }
 
+
+  /**
+   * @override
+   */
+  get kind() {
+    return 'equation';
+  }
 
   /**
    * @override
