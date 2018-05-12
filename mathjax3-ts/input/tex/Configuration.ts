@@ -88,7 +88,7 @@ export class Configuration {
 const BaseConfiguration = new Configuration({
     character: ['command', 'special', 'letter', 'digit'],
     delimiter: ['delimiter'],
-    macro: ['macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7', 'delimiter'],
+  macro: ['empty', 'macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7', 'delimiter'],
     environment: ['environment']
 });
 

@@ -204,7 +204,7 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
    * @param {string} symbol
    * @param {T} object
    */
-  protected add(symbol: string, object: K) {
+  public add(symbol: string, object: K) {
     this.map.set(symbol, object);
   }
 

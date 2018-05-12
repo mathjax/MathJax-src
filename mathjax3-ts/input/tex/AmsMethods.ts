@@ -36,6 +36,9 @@ import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {Label, TagConfig, DefaultTags} from './Tags.js';
+import {Macro} from './Symbol.js';
+import {CommandMap} from './SymbolMap.js';
+import MapHandler from './MapHandler.js';
 
 
 // Namespace
@@ -159,14 +162,19 @@ AmsMethods.checkEqnEnv = function(parser: TexParser) {
 // TODO: How to set an extra definition. Probably best to deal with this
 //       together with newcommand, setEnv etc.
 // 
-// AmsMethods.DeclareOperatorName =  function (name) {
-//   var limits = (this.GetStar() ? "" : "\\nolimits\\SkipLimits");
-//   var cs = this.trimSpaces(this.GetArgument(name));
-//   if (cs.charAt(0) == "\\") {cs = cs.substr(1)}
-//   var op = this.GetArgument(name);
-//   op = op.replace(/\*/g,'\\text{*}').replace(/-/g,'\\text{-}');
-//   this.setDef(cs, ['Macro', '\\mathop{\\rm '+op+'}'+limits]);
-// };
+AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
+  let limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
+  let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
+  if (cs.charAt(0) === '\\') {
+    cs = cs.substr(1);
+  }
+  let op = parser.GetArgument(name);
+  op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
+  // TODO: Use a better dedicated handler.
+  //       What about already defined commands?
+  (MapHandler.getInstance().getMap('empty') as CommandMap).
+    add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
+};
 
 
 AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {

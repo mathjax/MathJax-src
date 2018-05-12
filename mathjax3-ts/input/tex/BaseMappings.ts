@@ -771,3 +771,5 @@ new sm.CharacterMap('not_remap', null, {
   '\u2203': '\u2204'
 });
 
+
+new sm.CommandMap('empty', null, {});
