@@ -68,6 +68,7 @@ function MmlFilterAttribute(parser: TexParser, name: string, value: string): str
 BaseMethods.Open = function(parser: TexParser, c: string) {
   parser.Push( parser.itemFactory.create('open') );
 };
+
 BaseMethods.Close = function(parser: TexParser, c: string) {
   parser.Push( parser.itemFactory.create('close') );
 };
@@ -150,6 +151,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
     }) );
 };
 
+
 BaseMethods.Subscript = function(parser: TexParser, c: string) {
   TreeHelper.printMethod('Subscript');
   if (parser.GetNext().match(/\d/)) {
@@ -175,7 +177,6 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
   const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
   let position = TreeHelper.isType(base, 'msubsup') ?
     (base as MmlMsubsup).sub : (base as MmlMunderover).under;
-  // var movesupsub = base.movesupsub, position = base.sub;
   if ((TreeHelper.isType(base, 'msubsup') &&
        TreeHelper.getChildAt(base, (base as MmlMsubsup).sub)) ||
       (TreeHelper.isType(base, 'munderover') &&
@@ -354,8 +355,6 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
     form: TexConstant.Form.PREFIX,
     texClass: TEXCLASS.OP
   }, text);
-  // TODO: Sort this out with get('form');
-  // mml.useMMLspacing &= ~mml.SPACE_ATTR.form;  // don't count this explicit form setting
   parser.Push(parser.mmlToken(mml));
 };
 
@@ -384,10 +383,10 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
     TreeHelper.copyChildren(op, node);
     op = top.Last = node;
   }
-  // TODO: Turns this into properties.
   TreeHelper.setProperties(op, {'movesupsub': limits ? true : false});
   TreeHelper.setProperties(TreeHelper.getCore(op), {'movablelimits': false});
-  if (TreeHelper.getAttribute(op, 'movablelimits') || TreeHelper.getProperty(op, 'movablelimits')) {
+  if (TreeHelper.getAttribute(op, 'movablelimits') ||
+      TreeHelper.getProperty(op, 'movablelimits')) {
     TreeHelper.setProperties(op, {'movablelimits': false});
   }
 };
@@ -466,16 +465,7 @@ function parseRoot(parser: TexParser, n: string) {
       def['voffset'] = global['upRoot'];
       def['height'] = global['upRoot'];
     }
-
     node = TreeHelper.createNode('mpadded', [node], def);
-    // VS: OLD
-    // if (global.leftRoot) {
-    //   n.width = global.leftRoot;
-    // }
-    // if (global.upRoot) {
-    //   n.voffset = global.upRoot;
-    //   n.height = global.upRoot;
-    // }
   }
   env['inRoot'] = inRoot;
   return node;
@@ -714,7 +704,7 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
 BaseMethods.Smash = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Smash');
   // @test Smash, Smash Top, Smash Bottom
-  const bt = parser.trimSpaces(parser.GetBrackets(name, ''));
+  const bt = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
   const smash = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {});
   // TEMP: Changes here:
   switch (bt) {
@@ -1208,7 +1198,7 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
 function setArrayAlign(parser: TexParser, array: sitem.ArrayItem, align: string) {
   TreeHelper.printMethod('setArrayAlign');
   // @test Array1, Array2, Array Test
-  align = parser.trimSpaces(align || '');
+  align = ParseUtil.trimSpaces(align || '');
   if (align === 't') {
     array.arraydef.align = 'baseline 1';
   } else if (align === 'b') {

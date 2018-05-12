@@ -360,6 +360,24 @@ namespace ParseUtil {
     // return MML.mtext(MML.chars(text)).With(def);
   }
 
+  /**
+   * Trim spaces from a string.
+   * @param {string} text The string to clean.
+   * @return {string} The string with leading and trailing whitespace removed.
+   */
+  // static
+  export function trimSpaces(text: string): string {
+    TreeHelper.printMethod('trimSpaces (Old Parser Object)');
+    if (typeof(text) !== 'string') {
+      return text;
+    }
+    let TEXT = text.replace(/^\s+|\s+$/g, '');
+    if (TEXT.match(/\\$/) && text.match(/ $/)) {
+      TEXT += ' ';
+    }
+    return TEXT;
+  }
+
 
 }
 

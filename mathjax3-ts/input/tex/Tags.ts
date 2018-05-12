@@ -141,7 +141,20 @@ export interface Tags {
   // Not sure how to handle this at the moment.
   refs: MmlNode[]; // array of nodes with unresolved references
 
-  // DONE with properties!
+  /**
+   * How to format tags.
+   * @param {string} tag The tag string.
+   * @return {string} The formatted numbered tag.
+   */
+  formatTag(tag: string): string;
+
+  /**
+   * How to format URLs for references.
+   * @param {string} id The reference id.
+   * @param {string} base The base URL in the reference.
+   * @return {}
+   */
+  formatUrl(id: string, base: string): string;
 
   /**
    * Set the tag automatically, by incrementing equation number.
@@ -276,23 +289,18 @@ export class AbstractTags implements Tags {
   }
 
   /**
-   * How to format numbers in tags.
-   * @param {number} n The tag number.
-   * @return {string} The formatted number.
+   * @override
    */
-  protected formatNumber(n: number) {
-    return n.toString();
+  public formatUrl(id: string, base: string) {
+    return base + '#' + encodeURIComponent(id);
   }
 
   /**
-   * How to format tags.
-   * @param {string} tag The tag string.
-   * @return {string} The formatted numbered tag.
+   * @override
    */
-  protected formatTag(tag: string) {
+  public formatTag(tag: string) {
     return '(' + tag + ')';
   }
-
 
   /**
    * How to format ids for labelling equations.
@@ -304,13 +312,12 @@ export class AbstractTags implements Tags {
   }
 
   /**
-   * How to format URLs for references.
-   * @param {string} id The reference id.
-   * @param {string} base The base URL in the reference.
-   * @return {}
+   * How to format numbers in tags.
+   * @param {number} n The tag number.
+   * @return {string} The formatted number.
    */
-  protected formatUrl(id: string, base: string) {
-    return base + '#' + encodeURIComponent(id);
+  protected formatNumber(n: number) {
+    return n.toString();
   }
 
   // Tag handling functions.

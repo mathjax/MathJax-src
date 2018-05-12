@@ -72,7 +72,7 @@ AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
 function setArrayAlign(parser: TexParser, array: ArrayItem, align: string) {
   TreeHelper.printMethod('setArrayAlign');
   // @test Array1, Array2, Array Test
-  align = parser.trimSpaces(align || '');
+  align = ParseUtil.trimSpaces(align || '');
   if (align === 't') {
     array.arraydef.align = 'baseline 1';
   } else if (align === 'b') {
@@ -191,7 +191,7 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('AMS-HandleOperatorName');
   // @test Operatorname
   const limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
-  let op = parser.trimSpaces(parser.GetArgument(name));
+  let op = ParseUtil.trimSpaces(parser.GetArgument(name));
   op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
   parser.string = '\\mathop{\\rm ' + op + '}' + limits + ' ' +
     parser.string.slice(parser.i);
@@ -291,7 +291,7 @@ AmsMethods.HandleShove = function(parser: TexParser, name: string,
  *  Handle \cfrac
  */
 AmsMethods.CFrac = function(parser: TexParser, name: string) {
-  let lr  = parser.trimSpaces(parser.GetBrackets(name, ''));
+  let lr  = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
   let num = parser.GetArgument(name);
   let den = parser.GetArgument(name);
   let lrMap: {[key: string]: string} = {
@@ -332,7 +332,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
   }
   if (style == null) {
     // @test Genfrac
-    style = parser.trimSpaces(parser.GetArgument(name));
+    style = ParseUtil.trimSpaces(parser.GetArgument(name));
   }
   let num = parser.ParseArg(name);
   let den = parser.ParseArg(name);
@@ -389,7 +389,7 @@ AmsMethods.HandleTag = function(parser: TexParser, name: string) {
     throw new TexError(['MultipleCommand', 'Multiple %1', name]);
   }
   let star = parser.GetStar();
-  let tagId = parser.trimSpaces(parser.GetArgument(name));
+  let tagId = ParseUtil.trimSpaces(parser.GetArgument(name));
   DefaultTags.tag(tagId, star);
 };
 
@@ -446,7 +446,8 @@ AmsMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean)
   let tag = ref.tag;
   if (eqref) {
     // @test Eqref
-    tag = DefaultTags.formatTag(tag)}
+    tag = DefaultTags.formatTag(tag);
+  }
   let node = TreeHelper.createNode('mrow', ParseUtil.internalMath(parser, tag), {
     href: DefaultTags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
   });
