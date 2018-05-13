@@ -643,10 +643,9 @@ new sm.CommandMap('macros', {
   begin:              'BeginEnd',
   end:                'BeginEnd',
 
-  // TODO: Change those three.
-  // label:             ['Extension', 'AMSmath'],
-  // ref:               ['Extension', 'AMSmath'],
-  nonumber:          ['Macro', '\\notag'],
+  label:             'HandleLabel',
+  ref:               'HandleRef',
+  nonumber:          'HandleNoTag',
 
   // TODO: Should be removed once Color is converted.
   color:              'Color',

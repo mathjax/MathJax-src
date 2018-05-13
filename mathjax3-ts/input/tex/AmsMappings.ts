@@ -74,8 +74,6 @@ new sm.CommandMap('AMSmath-macros', {
 
   tag:         'HandleTag',
   notag:       'HandleNoTag',
-  label:       'HandleLabel',
-  ref:         'HandleRef',
   eqref:       ['HandleRef', true],
 
   substack:   ['Macro', '\\begin{subarray}{c}#1\\end{subarray}', 1],

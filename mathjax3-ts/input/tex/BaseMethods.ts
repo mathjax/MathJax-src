@@ -35,7 +35,7 @@ import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {TagConfig} from './Tags.js';
+import {TagConfig, DefaultTags, Label} from './Tags.js';
 
 
 // Namespace
@@ -1077,8 +1077,7 @@ BaseMethods.HFill = function(parser: TexParser, name: string) {
 
 
 
-/************************************************************************/
-/*
+/**
  *   LaTeX environments
  */
 
@@ -1215,6 +1214,69 @@ BaseMethods.AlignedEquation = function(parser: TexParser, begin: StackItem,
 };
 
 
+/**
+ * Handles no tag commands.
+ */
+BaseMethods.HandleNoTag = function(parser: TexParser, name: string) {
+  DefaultTags.notag();
+};
+
+
+/*
+ *  Record a label name for a tag
+ */
+BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
+  // @test Label, Label Empty
+  let global = this.stack.global;
+  let label = this.GetArgument(name);
+  if (label === '') {
+    // @test Label Empty
+    return;
+  }
+  // TODO: refUpdate is currently not implemented.
+  if (!TagConfig.get('refUpdate')) {
+    // @test Label, Ref, Ref Unknown
+    if (DefaultTags.label) {
+      // @test Double Label Error
+      throw new TexError(['MultipleCommand', 'Multiple %1', name]);
+    }
+    DefaultTags.label = label;
+    if (DefaultTags.allLabels[label] || DefaultTags.labels[label]) {
+      // @ Duplicate Label Error
+      throw new TexError(['MultipleLabel', 'Label \'%1\' multiply defined', label])}
+    // TODO: This should be set in the tags structure!
+    DefaultTags.labels[label] = new Label(); // will be replaced by tag value later
+  }
+};
+
+
+// TODO: What to do with this?
+let baseURL = (typeof(document) === 'undefined' ||
+               document.getElementsByTagName('base').length === 0) ?
+  '' : String(document.location).replace(/#.*$/, '');
+
+
+/**
+ *  Handle a label reference
+ */
+BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
+  // @test Ref, Ref Unknown, Eqref, Ref Default, Ref Named
+  let label = this.GetArgument(name);
+  let ref = DefaultTags.allLabels[label] || DefaultTags.labels[label];
+  if (!ref) {
+    // @test Ref Unknown
+    ref = new Label();
+  }
+  let tag = ref.tag;
+  if (eqref) {
+    // @test Eqref
+    tag = DefaultTags.formatTag(tag);
+  }
+  let node = TreeHelper.createNode('mrow', ParseUtil.internalMath(parser, tag), {
+    href: DefaultTags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
+  });
+  parser.Push(node);
+};
 
 
 
