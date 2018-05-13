@@ -46,16 +46,10 @@ const SMARTQUOTE = '\u2019';
 const NBSP = '\u00A0';
 const P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
 
-let MmlTokenAllow: {[key: string]: number} = {
+const MmlTokenAllow: {[key: string]: number} = {
   fontfamily: 1, fontsize: 1, fontweight: 1, fontstyle: 1,
   color: 1, background: 1,
   id: 1, 'class': 1, href: 1, style: 1
-};
-
-
-// Utilities
-function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
-  return value;
 };
 
 
@@ -644,8 +638,8 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
                           '%1 is not a recognized attribute for %2',
                           match[1], kind]);
     }
-    let value: string | boolean = MmlFilterAttribute(parser, match[1],
-                                                     match[2].replace(/^([''])(.*)\1$/, '$2'));
+    let value: string | boolean = ParseUtil.MmlFilterAttribute(
+      parser, match[1], match[2].replace(/^([''])(.*)\1$/, '$2'));
     if (value) {
       if (value.toLowerCase() === 'true') {
         value = true;
@@ -1011,6 +1005,7 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
   let n: string;
   if (parser.string.charAt(parser.i) === '[') {
     n = parser.GetBrackets(name, '').replace(/ /g, '').replace(/,/, '.');
+    // @test Custom Linebreak
     if (n && !ParseUtil.matchDimen(n)) {
       throw new TexError(['BracketMustBeDimension',
                           'Bracket argument to %1 must be a dimension', name]);

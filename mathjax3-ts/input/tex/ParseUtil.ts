@@ -54,14 +54,22 @@ namespace ParseUtil {
     'mm': m => m * emPerInch / 25.4, // 10 mm to a cm
     'mu': m => m / 18,
   };
+  const num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
+  const unit = '(pt|em|ex|mu|px|mm|cm|in|pc)';
+  const dimenSimple = RegExp('^\\s*' + num + '\\s*' + unit + '\\s*$');
+  const dimenRest = RegExp('^\\s*(' + num + '\\s*' + unit + ') ?');
+  
 
-
-  export function matchDimen(dim: string): string[] {
-    return dim.match(
-      /^(-?(?:\.\d+|\d+(?:\.\d*)?))(px|pt|em|ex|mu|pc|in|mm|cm)$/);
-  };
-
-
+  /**
+   * Matches for a dimension argument.
+   * @param {string} dim The argument.
+   * @param {boolean} rest Allow for trailine garbage in the dimension string.
+   * @return {string[]} The match result.
+   */
+  export function matchDimen(dim: string, rest: boolean = false): string[] {
+    return dim.match(rest ? dimenRest : dimenSimple);
+  }
+  
   export function dimen2em(dim: string) {
     let match = matchDimen(dim);
     let m = parseFloat(match[1] || '1'), unit = match[2];
@@ -184,8 +192,6 @@ namespace ParseUtil {
   }
 
 
-  // AMS
-
   /**
    *  If the initial child, skipping any initial space or
    *  empty braces (TeXAtom with child being an empty inferred row),
@@ -228,7 +234,7 @@ namespace ParseUtil {
    * @param {string} text The text in the math expression to parse.
    * @param {number|string=} level The scriptlevel.
    */
-  // TODO: Write test!
+  // TODO: Write tests!
   export function internalMath(parser: TexParser, text: string, level?: number|string) {
     TreeHelper.printMethod('InternalMath (Old Parser Object)');
     let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
@@ -424,6 +430,20 @@ namespace ParseUtil {
     }
     return s1 + s2;
   }
+
+
+  /**
+   * This is a placeholder for future security filtering of attributes.
+   * @param {TexParser} parser The current parser.
+   * @param {string} name The attribute name.
+   * @param {string} value The attribute value to filter.
+   * @return {string} The filtered value.
+   */
+  export function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
+    // TODO: Implement this.
+    return value;
+  };
+
 
 }
 

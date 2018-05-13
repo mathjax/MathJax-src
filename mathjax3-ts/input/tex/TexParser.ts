@@ -365,19 +365,20 @@ export default class TexParser {
    *  Get a dimension (including its units).
    */
   public GetDimen(name: string) {
-    const num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
-    const unit = '(pt|em|ex|mu|px|mm|cm|in|pc)';
     if (this.nextIsSpace()) {
       this.i++;
     }
     if (this.string.charAt(this.i) === '{') {
       let dimen = this.GetArgument(name);
-      if (dimen.match(RegExp('^\\s*' + num + '\\s*' + unit + '\\s*$'))) {
+      if (ParseUtil.matchDimen(dimen)) {
+        // @test Raise In Line, Lower 2, (Raise|Lower) Negative
         return dimen.replace(/ /g, '').replace(/,/, '.');
       }
     } else {
+      // @test Above, Raise, Lower, Modulo, Above With Delims
       let dimen = this.string.slice(this.i);
-      let match = dimen.match(RegExp('^\\s*(' + num + '\\s*' + unit + ') ?'));
+      // let match = dimen.match(RegExp('^\\s*(' + num + '\\s*' + unit + ') ?'));
+      let match = ParseUtil.matchDimen(dimen, true);
       if (match) {
         this.i += match[0].length;
         return match[1].replace(/ /g, '').replace(/,/, '.');
