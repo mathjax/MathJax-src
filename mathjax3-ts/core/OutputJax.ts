@@ -25,6 +25,7 @@ import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {MathDocument} from './MathDocument.js';
 import {MathItem, Metrics} from './MathItem.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
+import {FunctionList} from '../util/FunctionList.js';
 
 /*****************************************************************/
 /*
@@ -46,6 +47,11 @@ export interface OutputJax<N, T, D> {
      * The options for the instance
      */
     options: OptionList;
+
+    /*
+     * Lists of post-filters to call after typesetting the math
+     */
+    postFilters: FunctionList;
 
     /*
      * The DOM adaptor for managing HTML elements
@@ -107,6 +113,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     public static OPTIONS: OptionList = {};
 
     public options: OptionList;
+    public postFilters: FunctionList;
     public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
 
     /*
@@ -115,6 +122,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     constructor(options: OptionList = {}) {
         let CLASS = this.constructor as typeof AbstractOutputJax;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
+        this.postFilters = new FunctionList();
     }
 
     /*
@@ -152,6 +160,21 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
      */
     public styleSheet(document: MathDocument<N, T, D>) {
         return null as N;
+    }
+
+    /*
+     * Execute a set of filters, passing them the MathItem and any needed data,
+     *  and return the (possibly modified) data
+     *
+     * @param{FunctionList} filters  The list of functions to be performed
+     * @param{MathItem} math         The math item that is being processed
+     * @param{any} data              Whatever other data is needed
+     * @return{any}                  The (possibly modidied) data
+     */
+    protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>, data: any) {
+        let args = {math: math, data: data};
+        filters.execute(args);
+        return args.data;
     }
 
 }

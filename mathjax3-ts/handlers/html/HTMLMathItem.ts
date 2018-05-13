@@ -57,13 +57,6 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
     }
 
     /*
-     * Not yet implemented
-     *
-     * @override
-     */
-    public addEventHandlers() {}
-
-    /*
      * Insert the typeset MathItem into the document at the right location
      *   If the starting and ending nodes are the same:
      *     Split the text to isolate the math and its delimiters
