@@ -2164,9 +2164,103 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
-// parserTest.runTest(
-//   'Dots', '... {\\cdot\\cdot\\cdot}^2 {\\ldots}^2', {}
-// );
+
+parserTest.runTest(
+  'Negation Left Paren', '\\not\\left(\\right.',
+  {"kind": "math",
+   "texClass": 3,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 3,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "TeXAtom",
+         "texClass": 3,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mpadded",
+               "texClass": 0,
+               "attributes": {"width": 0},
+               "inherited": {"displaystyle": true,
+                             "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                                "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "mtext",
+                     "texClass": 0,
+                     "attributes": {},
+                     "inherited": {"displaystyle": true,
+                                   "scriptlevel": 0},
+                     "properties": {},
+                          "childNodes": [
+                            {"kind": "text",
+                              "text": "⧸"}],
+                          "isSpacelike": true}],
+                      "isInferred": true,
+                      "isSpacelike": true}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]},
+        {"kind": "mrow",
+          "texClass": 4,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+                        "scriptlevel": 0},
+         "properties": {"open": "(",
+                        "close":""},
+         "childNodes": [
+            {"kind": "mo",
+              "texClass": 4,
+              "attributes": {},
+              "inherited": {"displaystyle": true,
+                "scriptlevel": 0,
+                "form": "prefix",
+                "fence": true,
+                "stretchy": true,
+                "symmetric": true},
+              "properties": {},
+              "childNodes": [
+                {"kind": "text",
+                  "text": "("}],
+              "isEmbellished": true},
+            {"kind": "mo",
+              "texClass": 0,
+              "attributes": {"fence": true,
+                "stretchy": true,
+                "symmetric": true},
+              "inherited": {"displaystyle": true,
+                "scriptlevel": 0,
+                "form": "postfix"},
+              "properties": {},
+             "childNodes": [{"kind":"text",
+                             "text":""}],
+              "isEmbellished": true}]}],
+      "isInferred": true}]}
+);
+
 
 parserTest.runTest(
   'Greek', '\\alpha',

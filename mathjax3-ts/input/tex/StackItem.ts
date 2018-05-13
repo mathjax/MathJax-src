@@ -208,8 +208,6 @@ export class MmlStack implements NodeStack {
     }
     // @test Two Identifiers
     return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this._nodes, {});
-    // VS: OLD
-    // var node = MML.mrow.apply(MML,this.data).With((inferred ? {inferred: true}: {}));
   }
 
 }

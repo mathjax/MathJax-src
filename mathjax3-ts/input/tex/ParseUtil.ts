@@ -92,15 +92,8 @@ namespace ParseUtil {
       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
       openNode);
     TreeHelper.appendChildren(mrow, [mo]);
-    // VS: OLD
-    // let mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.INNER});
-    // mrow.Append(
-    //   MML.mo(open).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.OPEN})
-    // );
-    // TODO: Rewrite the inferred and mml.data
     if (TreeHelper.isType(mml, 'mrow') && TreeHelper.isInferred(mml)) {
       // @test Fenced, Middle
-      // Don't work with new structure yet.
       TreeHelper.appendChildren(mrow, TreeHelper.getChildren(mml));
     } else {
       // @test Fenced3
@@ -112,10 +105,6 @@ namespace ParseUtil {
       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
       closeNode);
     TreeHelper.appendChildren(mrow, [mo]);
-    // VS: OLD
-    // mrow.Append(
-    //   MML.mo(close).With({fence:true, stretchy:true, symmetric:true, texClass:MML.TEXCLASS.CLOSE})
-    // );
     return mrow;
   }
 
@@ -128,8 +117,6 @@ namespace ParseUtil {
     TreeHelper.printMethod('fixedFence');
     let mrow = TreeHelper.createNode(
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
-    // VS: OLD
-    // let mrow = MML.mrow().With({open:open, close:close, texClass:MML.TEXCLASS.ORD});
     if (open) {
       TreeHelper.appendChildren(mrow, [mathPalette(open, 'l')]);
     }
@@ -155,11 +142,6 @@ namespace ParseUtil {
     return new TexParser('\\mathchoice' + D + T + T + T, {}).mml();
   }
 
-
-  //
-  //  Combine adjacent <mo> elements that are relations
-  //    (since MathML treats the spacing very differently)
-  //
 
   /**
    * Combine adjacent <mo> elements that are relations (since MathML treats the
@@ -236,8 +218,6 @@ namespace ParseUtil {
     TreeHelper.copyAttributes(mi, mo);
     TreeHelper.setProperties(mo, {lspace: '0', rspace: '0'});
     TreeHelper.removeProperties(mo, 'movesupsub');
-    // mo.lspace = mo.rspace = '0';  // prevent mo from having space in NativeMML
-    // mo.useMMLspacing &= ~(mo.SPACE_ATTR.lspace | mo.SPACE_ATTR.rspace);  // don't count these explicit settings
     return mo;
   }
 
@@ -338,13 +318,9 @@ namespace ParseUtil {
     if (level != null) {
       // @test Label, Fbox, Hbox
       mml = [TreeHelper.createNode('mstyle', mml, {displaystyle: false, scriptlevel: level})];
-      // VS: OLD
-      // mml = [MML.mstyle.apply(MML,mml).With({displaystyle:false,scriptlevel:level})];
     } else if (mml.length > 1) {
       // @test Interspersed Text
       mml = [TreeHelper.createNode('mrow', mml, {})];
-      // VS: OLD
-      // mml = [MML.mrow.apply(MML,mml)];
     }
     return mml;
   }
@@ -357,8 +333,6 @@ namespace ParseUtil {
     text = text.replace(/^\s+/, NBSP).replace(/\s+$/, NBSP);
     let textNode = TreeHelper.createText(text);
     return TreeHelper.createNode('mtext', [], def, textNode);
-    // VS: OLD
-    // return MML.mtext(MML.chars(text)).With(def);
   }
 
   /**

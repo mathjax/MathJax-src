@@ -48,7 +48,9 @@ import {DefaultTags} from './Tags.js';
 
 export class StartItem extends BaseItem {
 
-  // TODO: Sort out this type!
+  /**
+   * @override
+   */
   constructor(factory: StackItemFactory, ...global: any[]) {
     super(factory);
     this.global = global[0] as EnvList;
@@ -108,6 +110,9 @@ export class StopItem extends BaseItem {
 
 export class OpenItem extends BaseItem {
 
+  /**
+   * @override
+   */
   constructor(factory: StackItemFactory) {
     super(factory);
     // @test ExtraOpenMissingClose Stop
@@ -136,13 +141,9 @@ export class OpenItem extends BaseItem {
   public checkItem(item: StackItem) {
     TreeHelper.printMethod('Checkitem open');
     if (item.isKind('close')) {
-      let mml = this.toMml();
       // @test PrimeSup
-      // TODO: Move that into toMml?
-      mml = TreeHelper.cleanSubSup(mml);
+      let mml = this.toMml();
       const node = TreeHelper.createNode('TeXAtom', [mml], {});
-      // VS: OLD
-      // var node = MML.TeXAtom(mml);
       return this.factory.create('mml', node); // TeXAtom make it an ORD to prevent spacing
       // (FIXME: should be another way)
     }
@@ -189,8 +190,6 @@ export class PrimeItem extends BaseItem {
     if (!TreeHelper.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
       const node = TreeHelper.createNode('msup', [top0, top1], {});
-      // VS: OLD
-      // var node = MML.msup(top0,top1);
       return [node, item];
     }
     TreeHelper.setData(top0, (top0 as MmlMsubsup).sup, top1);
@@ -200,6 +199,9 @@ export class PrimeItem extends BaseItem {
 
 export class SubsupItem extends BaseItem {
 
+  /**
+   * @override
+   */
   constructor(factory: StackItemFactory, ...nodes: MmlNode[]) {
     super(factory, ...nodes);
     // @test MissingScript Sub, MissingScript Sup
@@ -239,8 +241,6 @@ export class SubsupItem extends BaseItem {
           // @test Prime on Prime
           TreeHelper.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
           const node = TreeHelper.createNode('mrow', [this.getProperty('primes') as MmlNode, item.Top], {});
-          // VS: OLD
-          // var node = MML.mrow(this.primes, item.data[0]);
           item.Top = node;
         }
       }
@@ -262,6 +262,9 @@ export class SubsupItem extends BaseItem {
 
 export class OverItem extends BaseItem {
 
+  /**
+   * @override
+   */
   constructor(factory: StackItemFactory) {
     super(factory);
     this.setProperty('name', '\\over');
@@ -290,17 +293,17 @@ export class OverItem extends BaseItem {
     TreeHelper.printMethod('Checkitem over');
     if (item.isKind('over')) {
       // @test Double Over
-      throw new TexError(['AmbiguousUseOf', 'Ambiguous use of %1', item.getName()]);
+      throw new TexError(
+        ['AmbiguousUseOf', 'Ambiguous use of %1', item.getName()]);
     }
     if (item.isClose) {
       // @test Over
-      let mml = TreeHelper.createNode('mfrac',
-                                      [this.getProperty('num') as MmlNode, this.toMml(false)], {});
-      // VS: OLD
-      // var mml = MML.mfrac(this.num,this.toMml(false));
+      let mml = TreeHelper.createNode(
+        'mfrac', [this.getProperty('num') as MmlNode, this.toMml(false)], {});
       if (this.getProperty('thickness') != null) {
         // @test Choose, Above, Above with Delims
-        TreeHelper.setAttribute(mml, 'linethickness', this.getProperty('thickness') as string);
+        TreeHelper.setAttribute(mml, 'linethickness',
+                                this.getProperty('thickness') as string);
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Choose
@@ -325,7 +328,10 @@ export class OverItem extends BaseItem {
 }
 
 export class LeftItem extends BaseItem {
-
+  
+  /**
+   * @override
+   */
   constructor(factory: StackItemFactory) {
     super(factory);
     this.setProperty('delim', '('),
@@ -368,6 +374,9 @@ export class LeftItem extends BaseItem {
 
 export class RightItem extends BaseItem {
 
+  /**
+   * @override
+   */
   constructor(factory: StackItemFactory) {
     super(factory);
     this.setProperty('delim', ')');
@@ -467,8 +476,6 @@ export class StyleItem extends BaseItem {
     }
     // @test Style
     const mml = TreeHelper.createNode('mstyle', this.nodes, this.getProperty('styles'));
-    // VS: OLD
-    // var mml = MML.mstyle.apply(MML,this.data).With(this.styles);
     return [this.factory.create('mml', mml), item];
   }
 
@@ -498,10 +505,9 @@ export class PositionItem extends BaseItem {
       case 'vertical':
         // @test Raise, Lower
         mml = TreeHelper.createNode('mpadded', [mml],
-                                    {height: this.getProperty('dh'), depth: this.getProperty('dd'),
+                                    {height: this.getProperty('dh'),
+                                     depth: this.getProperty('dd'),
                                      voffset: this.getProperty('dh')});
-        // VS: OLD
-        // mml = MML.mpadded(mml).With({height: this.dh, depth: this.dd, voffset: this.dh});
         return [this.factory.create('mml', mml)];
       case 'horizontal':
         return [this.factory.create('mml', this.getProperty('left') as MmlNode), item,
@@ -563,14 +569,11 @@ export class ArrayItem extends BaseItem {
       const scriptlevel = this.arraydef['scriptlevel'];
       delete this.arraydef['scriptlevel'];
       let mml = TreeHelper.createNode('mtable', this.table, this.arraydef);
-      // VS: OLD
-      // var mml = MML.mtable.apply(MML,this.table).With(this.arraydef);
       if (this.frame.length === 4) {
         // @test Enclosed frame solid, Enclosed frame dashed
         TreeHelper.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
       } else if (this.frame.length) {
         // @test Enclosed left right
-        // mml.hasFrame = true;
         if (this.arraydef['rowlines']) {
           // @test Enclosed dashed row, Enclosed solid row,
           this.arraydef['rowlines'] =
@@ -579,21 +582,16 @@ export class ArrayItem extends BaseItem {
         // @test Enclosed left right
         mml = TreeHelper.createNode('menclose', [mml],
                                     {notation: this.frame.join(' '), isFrame: true});
-        // VS: OLD
-        // mml = MML.menclose(mml).With({notation: this.frame.join(' '), isFrame: true});
         if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
             (this.arraydef['rowlines'] || 'none') !== 'none') {
           // @test Enclosed dashed row, Enclosed solid row
           // @test Enclosed dashed column, Enclosed solid column
-          // HTML-CSS jax implements this
           TreeHelper.setAttribute(mml, 'padding', 0);
         }
       }
       if (scriptlevel) {
         // @test Subarray, Small Matrix
         mml = TreeHelper.createNode('mstyle', [mml], {scriptlevel: scriptlevel});
-        // VS: OLD
-        // mml = MML.mstyle(mml).With({scriptlevel: scriptlevel})}
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Cross Product Formula
@@ -615,7 +613,10 @@ export class ArrayItem extends BaseItem {
   }
 
 
-  EndEntry() {
+  /**
+   * Finishes a single cell of the array.
+   */
+  public EndEntry() {
     // @test Array1, Array2
     const mtd = TreeHelper.createNode('mtd', this.nodes, {});
     if (this.hfill.length) {
@@ -623,15 +624,21 @@ export class ArrayItem extends BaseItem {
         TreeHelper.setAttribute(mtd, 'columnalign', 'right');
       }
       if (this.hfill[this.hfill.length - 1] === this.Size()) {
-        TreeHelper.setAttribute(mtd, 'columnalign',
-                                TreeHelper.getAttribute(mtd, 'columnalign') ? 'center' : 'left');
+        TreeHelper.setAttribute(
+          mtd, 'columnalign',
+          TreeHelper.getAttribute(mtd, 'columnalign') ? 'center' : 'left');
       }
     }
-    this.row.push(mtd); this.Clear(); this.hfill = [];
+    this.row.push(mtd);
+    this.Clear();
+    this.hfill = [];
   }
 
 
-  EndRow() {
+  /**
+   * Finishes a single row of the array.
+   */
+  public EndRow() {
     let node: MmlNode;
     if (this.getProperty('isNumbered') && this.row.length === 3) {
       // @test Label, Matrix Numbered
@@ -647,7 +654,10 @@ export class ArrayItem extends BaseItem {
   }
 
 
-  EndTable() {
+  /**
+   * Finishes the table layout.
+   */
+  public EndTable() {
     if (this.Size() || this.row.length) {
       this.EndEntry();
       this.EndRow();
@@ -656,11 +666,15 @@ export class ArrayItem extends BaseItem {
   }
 
 
-  checkLines() {
+  /**
+   * Finishes line layout if not already given.
+   */
+  public checkLines() {
     if (this.arraydef['rowlines']) {
       const lines = (this.arraydef['rowlines'] as string).split(/ /);
       if (lines.length === this.table.length) {
-        this.frame.push('bottom'); lines.pop();
+        this.frame.push('bottom');
+        lines.pop();
         this.arraydef['rowlines'] = lines.join(' ');
       } else if (lines.length < this.table.length - 1) {
         this.arraydef['rowlines'] += ' none';
@@ -759,8 +773,6 @@ export class FnItem extends BaseItem {
           // @test MultiInt with Limits
           mml = TreeHelper.getCoreMO(mml);
         }
-        // TODO: Look this up in the operator table either as
-        //       infix/postfix/prefix.
         const form = TreeHelper.getForm(mml);
         if (form != null && [0, 0, 1, 1, 0, 1, 1, 0, 0, 0][form[2]]) {
           // @test Fn Operator
@@ -770,8 +782,6 @@ export class FnItem extends BaseItem {
       // @test Named Function, Named Function Arg
       const text = TreeHelper.createText(Entities.ENTITIES.ApplyFunction);
       const node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
-      // VS: OLD
-      // var node = MML.mo(MML.entity('#x2061')).With({texClass:MML.TEXCLASS.NONE});
       return [top, node, item];
     }
     // @test Mathop Super, Mathop Sub
@@ -800,14 +810,14 @@ export class NotItem extends BaseItem {
     let c: string;
     let textNode: TextNode;
     if (item.isKind('open') || item.isKind('left')) {
+      // @test Negation Left Paren
       return true;
     }
     if (item.isKind('mml') &&
         (TreeHelper.isType(item.Top, 'mo') || TreeHelper.isType(item.Top, 'mi') ||
          TreeHelper.isType(item.Top, 'mtext'))) {
       TreeHelper.printJSON(mml);
-      // TODO: This is the wrong type! That should be a token node!
-      mml = item.Top as TextNode;
+      mml = item.Top;
       c = TreeHelper.getText(mml as TextNode);
       if (c.length === 1 && !TreeHelper.getProperty(mml, 'movesupsub') &&
           TreeHelper.getChildren(mml).length === 1) {
@@ -815,27 +825,19 @@ export class NotItem extends BaseItem {
           // @test Negation Simple, Negation Complex
           textNode = TreeHelper.createText(this.remap.lookup(c).char);
           TreeHelper.setData(mml, 0, textNode);
-          // VS: OLD
-          // mml.SetData(0, MML.chars(this.remap.lookup(c).char));
         } else {
           // @test Negation Explicit
           textNode = TreeHelper.createText('\u0338');
           TreeHelper.appendChildren(mml, [textNode]);
-          // VS: OLD
-          // mml.Append(MML.chars('\u0338'));
         }
         return item as MmlItem;
       }
     }
-    //  \mathrel{\rlap{\notChar}}
     // @test Negation Large
     textNode = TreeHelper.createText('\u29F8');
     const mtextNode = TreeHelper.createNode('mtext', [], {}, textNode);
     const paddedNode = TreeHelper.createNode('mpadded', [mtextNode], {width: 0});
     mml = TreeHelper.createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
-    // VS: OLD
-    // mml = MML.mpadded(MML.mtext('\u29F8')).With({width:0});
-    // mml = MML.TeXAtom(mml).With({texClass:MML.TEXCLASS.REL});
     return [mml, item];
   }
 }
@@ -862,7 +864,6 @@ export class DotsItem extends BaseItem {
     let top = item.Top;
     // @test Operator Dots
     if (item.isKind('mml') && TreeHelper.isEmbellished(top)) {
-      // TODO: Lookup in Operator Table.
       const tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(top));
       if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
         dots = this.getProperty('cdots') as MmlNode;
