@@ -42,69 +42,6 @@ import {TexConstant} from './TexConstants.js';
 import {DefaultTags, TagsFactory} from './Tags.js';
 
 
-export class AmsArrayItem extends ArrayItem {
-
-  /**
-   * @override
-   */
-  constructor(factory: any, ...args: any[]) {
-    super(factory);
-    DefaultTags.start(args[0], args[2], args[1]);
-  }
-
-
-  /**
-   * @override
-   */
-  get kind() {
-    return 'AMSarray';
-  }
-
-
-  /**
-   * @override
-   */
-  public EndEntry() {
-    TreeHelper.printMethod('AMS-EndEntry');
-    // @test Cubic Binomial
-    if (this.row.length) {
-      ParseUtil.fixInitialMO(this.nodes);
-    }
-    const node = TreeHelper.createNode('mtd', this.nodes, {});
-    this.row.push(node);
-    this.Clear();
-  }
-
-  /**
-   * @override
-   */
-  public EndRow() {
-    TreeHelper.printMethod('AMS-EndRow');
-    // @test Cubic Binomial
-    let mtr = 'mtr';
-    let tag = DefaultTags.getTag();
-    if (tag) {
-      this.row = [tag].concat(this.row);
-      mtr = 'mlabeledtr';
-    }
-    DefaultTags.clearTag();
-    const node = TreeHelper.createNode(mtr, this.row, {});
-    this.table.push(node); this.row = [];
-  }
-
-  /**
-   * @override
-   */
-  public EndTable() {
-    TreeHelper.printMethod('AMS-EndTable');
-    // @test Cubic Binomial
-    super.EndTable();
-    DefaultTags.end();
-  }
-}
-
-
-
 export class MultlineItem extends ArrayItem {
 
   /**
@@ -186,36 +123,4 @@ export class MultlineItem extends ArrayItem {
     }
     DefaultTags.end();
   }
-}
-
-export class EquationItem extends BaseItem {
-
-  /**
-   * @override
-   */
-  constructor(factory: any, ...args: any[]) {
-    super(factory);
-    DefaultTags.start('equation', true, args[0]);
-  }
-
-
-  /**
-   * @override
-   */
-  get kind() {
-    return 'equation';
-  }
-
-  /**
-   * @override
-   */
-  public checkItem(item: StackItem) {
-    if (item.isKind('end')) {
-      let mml = this.toMml();
-      let tag = DefaultTags.getTag();
-      return [tag ? TagsFactory.enTag(mml, tag) : mml, item];
-    }
-    return super.checkItem(item);
-  }
-
 }

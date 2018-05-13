@@ -1201,7 +1201,7 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
   }
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  let newItem = parser.itemFactory.create('AMSarray', begin.getName(), numbered, taggable, parser.stack.global);
+  let newItem = parser.itemFactory.create('eqnarray', begin.getName(), numbered, taggable, parser.stack.global);
   newItem.arraydef = {
     displaystyle: true,
     columnalign: align,

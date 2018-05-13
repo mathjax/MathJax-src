@@ -43,7 +43,7 @@ import {TreeHelper} from './TreeHelper.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import StackItemFactory from './StackItemFactory.js';
 import {BaseItem, StackItem, EnvList} from './StackItem.js';
-import {DefaultTags} from './Tags.js';
+import {TagsFactory, DefaultTags} from './Tags.js';
 
 
 export class StartItem extends BaseItem {
@@ -518,6 +518,180 @@ export class PositionItem extends BaseItem {
   }
 }
 
+
+export class CellItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'cell';
+  }
+
+
+  /**
+   * @override
+   */
+  get isClose() {
+    return true;
+  }
+}
+
+
+export class MmlItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get isFinal() {
+    return true;
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mml';
+  }
+
+}
+
+
+export class FnItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'fn';
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem) {
+    TreeHelper.printMethod('Checkitem fn');
+    const top = this.Top;
+    if (top) {
+      if (item.isOpen) {
+        // @test Fn Stretchy
+        return true;
+      }
+      if (!item.isKind('fn')) {
+        // @test Named Function
+        let mml = item.Top;
+        if (!item.isKind('mml') || !mml) {
+          // @test Mathop Super
+          return [top, item];
+        }
+        if (TreeHelper.isType(mml, 'mspace')) {
+          // @test Fn Pos Space, Fn Neg Space
+          return [top, item];
+        }
+        if (TreeHelper.isEmbellished(mml)) {
+          // @test MultiInt with Limits
+          mml = TreeHelper.getCoreMO(mml);
+        }
+        const form = TreeHelper.getForm(mml);
+        if (form != null && [0, 0, 1, 1, 0, 1, 1, 0, 0, 0][form[2]]) {
+          // @test Fn Operator
+          return [top, item];
+        }
+      }
+      // @test Named Function, Named Function Arg
+      const text = TreeHelper.createText(Entities.ENTITIES.ApplyFunction);
+      const node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
+      return [top, node, item];
+    }
+    // @test Mathop Super, Mathop Sub
+    return super.checkItem.apply(this, arguments);
+  }
+}
+
+export class NotItem extends BaseItem {
+
+  private remap = MapHandler.getInstance().getMap('not_remap') as CharacterMap;
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'not';
+  }
+
+  // TODO: There is a lot of recasting that should go away!
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem) {
+    TreeHelper.printMethod('Checkitem not');
+    let mml: TextNode | MmlNode;
+    let c: string;
+    let textNode: TextNode;
+    if (item.isKind('open') || item.isKind('left')) {
+      // @test Negation Left Paren
+      return true;
+    }
+    if (item.isKind('mml') &&
+        (TreeHelper.isType(item.Top, 'mo') || TreeHelper.isType(item.Top, 'mi') ||
+         TreeHelper.isType(item.Top, 'mtext'))) {
+      mml = item.Top;
+      c = TreeHelper.getText(mml as TextNode);
+      if (c.length === 1 && !TreeHelper.getProperty(mml, 'movesupsub') &&
+          TreeHelper.getChildren(mml).length === 1) {
+        if (this.remap.contains(c)) {
+          // @test Negation Simple, Negation Complex
+          textNode = TreeHelper.createText(this.remap.lookup(c).char);
+          TreeHelper.setData(mml, 0, textNode);
+        } else {
+          // @test Negation Explicit
+          textNode = TreeHelper.createText('\u0338');
+          TreeHelper.appendChildren(mml, [textNode]);
+        }
+        return item as MmlItem;
+      }
+    }
+    // @test Negation Large
+    textNode = TreeHelper.createText('\u29F8');
+    const mtextNode = TreeHelper.createNode('mtext', [], {}, textNode);
+    const paddedNode = TreeHelper.createNode('mpadded', [mtextNode], {width: 0});
+    mml = TreeHelper.createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
+    return [mml, item];
+  }
+}
+
+
+export class DotsItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'dots';
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem) {
+    TreeHelper.printMethod('Checkitem dots');
+    if (item.isKind('open') || item.isKind('left')) {
+      return true;
+    }
+    let dots = this.getProperty('ldots') as MmlNode;
+    let top = item.Top;
+    // @test Operator Dots
+    if (item.isKind('mml') && TreeHelper.isEmbellished(top)) {
+      const tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(top));
+      if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
+        dots = this.getProperty('cdots') as MmlNode;
+      }
+    }
+    return [dots, item];
+  }
+}
+
+
 export class ArrayItem extends BaseItem {
 
   public table: MmlNode[] = [];
@@ -692,174 +866,96 @@ export class ArrayItem extends BaseItem {
 }
 
 
-export class CellItem extends BaseItem {
+export class EqnArrayItem extends ArrayItem {
 
   /**
    * @override
    */
-  public get kind() {
-    return 'cell';
+  constructor(factory: any, ...args: any[]) {
+    super(factory);
+    DefaultTags.start(args[0], args[2], args[1]);
   }
 
 
   /**
    * @override
    */
-  get isClose() {
-    return true;
+  get kind() {
+    return 'eqnarray';
+  }
+
+
+  /**
+   * @override
+   */
+  public EndEntry() {
+    TreeHelper.printMethod('AMS-EndEntry');
+    // @test Cubic Binomial
+    if (this.row.length) {
+      ParseUtil.fixInitialMO(this.nodes);
+    }
+    const node = TreeHelper.createNode('mtd', this.nodes, {});
+    this.row.push(node);
+    this.Clear();
+  }
+
+  /**
+   * @override
+   */
+  public EndRow() {
+    TreeHelper.printMethod('AMS-EndRow');
+    // @test Cubic Binomial
+    let mtr = 'mtr';
+    let tag = DefaultTags.getTag();
+    if (tag) {
+      this.row = [tag].concat(this.row);
+      mtr = 'mlabeledtr';
+    }
+    DefaultTags.clearTag();
+    const node = TreeHelper.createNode(mtr, this.row, {});
+    this.table.push(node); this.row = [];
+  }
+
+  /**
+   * @override
+   */
+  public EndTable() {
+    TreeHelper.printMethod('AMS-EndTable');
+    // @test Cubic Binomial
+    super.EndTable();
+    DefaultTags.end();
   }
 }
 
 
-export class MmlItem extends BaseItem {
+export class EquationItem extends BaseItem {
 
   /**
    * @override
    */
-  public get isFinal() {
-    return true;
+  constructor(factory: any, ...args: any[]) {
+    super(factory);
+    DefaultTags.start('equation', true, args[0]);
   }
 
-  /**
-   * @override
-   */
-  public get kind() {
-    return 'mml';
-  }
-
-}
-
-
-export class FnItem extends BaseItem {
 
   /**
    * @override
    */
-  public get kind() {
-    return 'fn';
+  get kind() {
+    return 'equation';
   }
 
   /**
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem fn');
-    const top = this.Top;
-    if (top) {
-      if (item.isOpen) {
-        // @test Fn Stretchy
-        return true;
-      }
-      if (!item.isKind('fn')) {
-        // @test Named Function
-        let mml = item.Top;
-        if (!item.isKind('mml') || !mml) {
-          // @test Mathop Super
-          return [top, item];
-        }
-        if (TreeHelper.isType(mml, 'mspace')) {
-          // @test Fn Pos Space, Fn Neg Space
-          return [top, item];
-        }
-        if (TreeHelper.isEmbellished(mml)) {
-          // @test MultiInt with Limits
-          mml = TreeHelper.getCoreMO(mml);
-        }
-        const form = TreeHelper.getForm(mml);
-        if (form != null && [0, 0, 1, 1, 0, 1, 1, 0, 0, 0][form[2]]) {
-          // @test Fn Operator
-          return [top, item];
-        }
-      }
-      // @test Named Function, Named Function Arg
-      const text = TreeHelper.createText(Entities.ENTITIES.ApplyFunction);
-      const node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
-      return [top, node, item];
+    if (item.isKind('end')) {
+      let mml = this.toMml();
+      let tag = DefaultTags.getTag();
+      return [tag ? TagsFactory.enTag(mml, tag) : mml, item];
     }
-    // @test Mathop Super, Mathop Sub
-    return super.checkItem.apply(this, arguments);
-  }
-}
-
-export class NotItem extends BaseItem {
-
-  private remap = MapHandler.getInstance().getMap('not_remap') as CharacterMap;
-
-  /**
-   * @override
-   */
-  public get kind() {
-    return 'not';
+    return super.checkItem(item);
   }
 
-  // TODO: There is a lot of recasting that should go away!
-  /**
-   * @override
-   */
-  public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem not');
-    let mml: TextNode | MmlNode;
-    let c: string;
-    let textNode: TextNode;
-    if (item.isKind('open') || item.isKind('left')) {
-      // @test Negation Left Paren
-      return true;
-    }
-    if (item.isKind('mml') &&
-        (TreeHelper.isType(item.Top, 'mo') || TreeHelper.isType(item.Top, 'mi') ||
-         TreeHelper.isType(item.Top, 'mtext'))) {
-      mml = item.Top;
-      c = TreeHelper.getText(mml as TextNode);
-      if (c.length === 1 && !TreeHelper.getProperty(mml, 'movesupsub') &&
-          TreeHelper.getChildren(mml).length === 1) {
-        if (this.remap.contains(c)) {
-          // @test Negation Simple, Negation Complex
-          textNode = TreeHelper.createText(this.remap.lookup(c).char);
-          TreeHelper.setData(mml, 0, textNode);
-        } else {
-          // @test Negation Explicit
-          textNode = TreeHelper.createText('\u0338');
-          TreeHelper.appendChildren(mml, [textNode]);
-        }
-        return item as MmlItem;
-      }
-    }
-    // @test Negation Large
-    textNode = TreeHelper.createText('\u29F8');
-    const mtextNode = TreeHelper.createNode('mtext', [], {}, textNode);
-    const paddedNode = TreeHelper.createNode('mpadded', [mtextNode], {width: 0});
-    mml = TreeHelper.createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
-    return [mml, item];
-  }
-}
-
-
-export class DotsItem extends BaseItem {
-
-  /**
-   * @override
-   */
-  public get kind() {
-    return 'dots';
-  }
-
-  /**
-   * @override
-   */
-  public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem dots');
-    if (item.isKind('open') || item.isKind('left')) {
-      return true;
-    }
-    let dots = this.getProperty('ldots') as MmlNode;
-    let top = item.Top;
-    // @test Operator Dots
-    if (item.isKind('mml') && TreeHelper.isEmbellished(top)) {
-      const tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(top));
-      if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
-        dots = this.getProperty('cdots') as MmlNode;
-      }
-    }
-    return [dots, item];
-  }
 }

@@ -59,16 +59,16 @@ export default class StackItemFactory {
     [sm.EndItem.prototype.kind]: sm.EndItem,
     [sm.StyleItem.prototype.kind]: sm.StyleItem,
     [sm.PositionItem.prototype.kind]: sm.PositionItem,
-    [sm.ArrayItem.prototype.kind]: sm.ArrayItem,
     [sm.CellItem.prototype.kind]: sm.CellItem,
     [sm.MmlItem.prototype.kind]: sm.MmlItem,
     [sm.FnItem.prototype.kind]: sm.FnItem,
     [sm.NotItem.prototype.kind]: sm.NotItem,
     [sm.DotsItem.prototype.kind]: sm.DotsItem,
+    [sm.ArrayItem.prototype.kind]: sm.ArrayItem,
+    [sm.EqnArrayItem.prototype.kind]: sm.EqnArrayItem,
+    [sm.EquationItem.prototype.kind]: sm.EquationItem,
     // temporary: AMS stuff for testing!
-    [ams.AmsArrayItem.prototype.kind]: ams.AmsArrayItem,
-    [ams.MultlineItem.prototype.kind]: ams.MultlineItem,
-    [ams.EquationItem.prototype.kind]: ams.EquationItem
+    [ams.MultlineItem.prototype.kind]: ams.MultlineItem
   };
 
   private itemMap: Map<string, StackItemClass> = new Map();
