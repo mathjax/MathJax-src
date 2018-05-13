@@ -41,6 +41,7 @@ import TexError from './TexError.js';
 
 namespace ParseUtil {
 
+  // TODO (VS): Combine some of this with lengths in util.
   const emPerInch = 7.2;
   const pxPerInch = 72;
   const UNIT_CASES: {[key: string]: ((m: number) => number)}  = {
@@ -56,23 +57,34 @@ namespace ParseUtil {
   };
   const num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
   const unit = '(pt|em|ex|mu|px|mm|cm|in|pc)';
-  const dimenSimple = RegExp('^\\s*' + num + '\\s*' + unit + '\\s*$');
-  const dimenRest = RegExp('^\\s*(' + num + '\\s*' + unit + ') ?');
-  
+  const dimenEnd = RegExp('^\\s*' + num + '\\s*' + unit + '\\s*$');
+  const dimenRest = RegExp('^\\s*' + num + '\\s*' + unit + ' ?');
+
 
   /**
    * Matches for a dimension argument.
    * @param {string} dim The argument.
-   * @param {boolean} rest Allow for trailine garbage in the dimension string.
-   * @return {string[]} The match result.
+   * @param {boolean} rest Allow for trailing garbage in the dimension string.
+   * @return {[string, string, number]} The match result as (Anglosaxon) value,
+   *     unit name, length of matched string. The latter is interesting in the
+   *     case of trailing garbage.
    */
-  export function matchDimen(dim: string, rest: boolean = false): string[] {
-    return dim.match(rest ? dimenRest : dimenSimple);
+  export function matchDimen(
+    dim: string, rest: boolean = false): [string, string, number] {
+    let match = dim.match(rest ? dimenRest : dimenEnd);
+    return match ? [match[1].replace(/,/, '.'), match[4], match[0].length] :
+      [null, null, 0];
   }
-  
+
+
+  /**
+   * Convert a dimension string into standard em dimension.
+   * @param {}
+   * @return {}
+   */
   export function dimen2em(dim: string) {
-    let match = matchDimen(dim);
-    let m = parseFloat(match[1] || '1'), unit = match[2];
+    let [value, unit, _] = matchDimen(dim);
+    let m = parseFloat(value || '1');
     let func = UNIT_CASES[unit];
     return func ? func(m) : 0;
   }

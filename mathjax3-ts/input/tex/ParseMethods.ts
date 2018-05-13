@@ -74,9 +74,6 @@ namespace ParseMethods {
       mml = TreeHelper.createNode('mo', [], def, textNode);
     }
     parser.Push(parser.mmlToken(mml));
-    // else {mml = MML.mo(MML.chars(c))}
-    // if (parser.stack.env.font) {mml.mathvariant = parser.stack.env.font}
-    // parser.Push(parser.mmlToken(mml));
   };
 
   /**

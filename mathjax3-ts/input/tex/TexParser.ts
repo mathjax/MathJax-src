@@ -370,18 +370,18 @@ export default class TexParser {
     }
     if (this.string.charAt(this.i) === '{') {
       let dimen = this.GetArgument(name);
-      if (ParseUtil.matchDimen(dimen)) {
+      let [value, unit, _] = ParseUtil.matchDimen(dimen);
+      if (value) {
         // @test Raise In Line, Lower 2, (Raise|Lower) Negative
-        return dimen.replace(/ /g, '').replace(/,/, '.');
+        return value + unit;
       }
     } else {
       // @test Above, Raise, Lower, Modulo, Above With Delims
       let dimen = this.string.slice(this.i);
-      // let match = dimen.match(RegExp('^\\s*(' + num + '\\s*' + unit + ') ?'));
-      let match = ParseUtil.matchDimen(dimen, true);
-      if (match) {
-        this.i += match[0].length;
-        return match[1].replace(/ /g, '').replace(/,/, '.');
+      let [value, unit, length] = ParseUtil.matchDimen(dimen, true);
+      if (value) {
+        this.i += length;
+        return value + unit;
       }
     }
     throw new TexError(['MissingDimOrUnits',

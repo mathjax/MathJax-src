@@ -995,7 +995,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
 
 BaseMethods.Cr = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Cr');
-  TreeHelper.untested(15);
+  // @test Cr Linebreak, Misplaced Cr
   parser.Push(
     parser.itemFactory.create('cell').setProperties({isCR: true, name: name}) );
 };
@@ -1004,12 +1004,15 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('CrLaTeX');
   let n: string;
   if (parser.string.charAt(parser.i) === '[') {
-    n = parser.GetBrackets(name, '').replace(/ /g, '').replace(/,/, '.');
+    let dim = parser.GetBrackets(name, '');
+    let [value, unit, _] = ParseUtil.matchDimen(dim);
     // @test Custom Linebreak
-    if (n && !ParseUtil.matchDimen(n)) {
+    if (dim && !value) {
+      // @test Dimension Error
       throw new TexError(['BracketMustBeDimension',
                           'Bracket argument to %1 must be a dimension', name]);
     }
+    n = value + unit;
   }
   parser.Push(
     parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true}) );
@@ -1020,7 +1023,9 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
     if (n && top.arraydef['rowspacing']) {
       const rows = (top.arraydef['rowspacing'] as string).split(/ /);
       if (!top.getProperty('rowspacing')) {
-        top.setProperty('rowspacing', ParseUtil.dimen2em(rows[0]));
+        // @test Array Custom Linebreak
+        let dimem = ParseUtil.dimen2em(rows[0]);
+        top.setProperty('rowspacing', dimem);
       }
       const rowspacing = top.getProperty('rowspacing') as number;
       while (rows.length < top.table.length) {
@@ -1151,7 +1156,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     array.setProperty('close', parser.convertDelimiter(close));
   }
   if (style === 'D') {
-    TreeHelper.untested(30);
+    // TODO: This case never seems to occur! No test.
     array.arraydef['displaystyle'] = true;
   }
   else if (style) {
