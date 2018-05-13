@@ -1191,7 +1191,7 @@ BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: 
 };
 
 
-BaseMethods.AlignedEquation = function(parser: TexParser, begin: StackItem,
+BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
                                        numbered: boolean, taggable: boolean,
                                        align: string, spacing: string, style: string) {
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial

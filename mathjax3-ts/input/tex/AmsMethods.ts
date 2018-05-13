@@ -46,13 +46,13 @@ let AmsMethods: Record<string, ParseMethod> = {};
 
 
 // TODO: do we really need style?
-AmsMethods.AmsEquation = function(parser: TexParser, begin: StackItem,
+AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
                                       numbered: boolean, taggable: boolean,
                                       align: string, spacing: string,
                                       style: string) {
   // @test Aligned, Gathered
   const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
-  const array = BaseMethods.AlignedEquation(parser, begin, numbered, taggable, align, spacing, style);
+  const array = BaseMethods.EqnArray(parser, begin, numbered, taggable, align, spacing, style);
   return ParseUtil.setArrayAlign(array as ArrayItem, args);
 };
 
@@ -83,10 +83,10 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
   let spaceStr = spacing.join(' ');
   if (taggable) {
     // @test Alignat, Alignat Star
-    return AmsMethods.AlignedEquation(parser, begin, numbered, taggable, align, spaceStr);
+    return AmsMethods.EqnArray(parser, begin, numbered, taggable, align, spaceStr);
   }
   // @test Alignedat
-  let array = AmsMethods.AlignedEquation(parser, begin, numbered, taggable, align, spaceStr);
+  let array = AmsMethods.EqnArray(parser, begin, numbered, taggable, align, spaceStr);
   return ParseUtil.setArrayAlign(array as ArrayItem, valign);
 };
 
@@ -342,6 +342,6 @@ AmsMethods.Spacer = BaseMethods.Spacer;
 
 AmsMethods.NamedOp = BaseMethods.NamedOp;
 
-AmsMethods.AlignedEquation = BaseMethods.AlignedEquation;
+AmsMethods.EqnArray = BaseMethods.EqnArray;
 
 export default AmsMethods;

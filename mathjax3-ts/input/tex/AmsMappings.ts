@@ -111,25 +111,25 @@ new sm.CommandMap('AMSmath-macros', {
  * Environments from the AMS Math package.
  */
 new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
-  'eqnarray*':   ['AlignedEquation', null, false, true, 'rcl',
+  'eqnarray*':   ['EqnArray', null, false, true, 'rcl',
                   '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em'],
-  align:         ['AlignedEquation', null, true, true,  'rlrlrlrlrlrl',
+  align:         ['EqnArray', null, true, true,  'rlrlrlrlrlrl',
                   COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
-  'align*':      ['AlignedEquation', null, false, true, 'rlrlrlrlrlrl',
+  'align*':      ['EqnArray', null, false, true, 'rlrlrlrlrlrl',
                   COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
   multline:      ['Multline', null, true],
   'multline*':   ['Multline', null, false],
-  split:         ['AlignedEquation', null, false, false, 'rl', COLS([0])],
-  gather:        ['AlignedEquation', null, true, true,  'c'],
-  'gather*':     ['AlignedEquation', null, false, true, 'c'],
+  split:         ['EqnArray', null, false, false, 'rl', COLS([0])],
+  gather:        ['EqnArray', null, true, true,  'c'],
+  'gather*':     ['EqnArray', null, false, true, 'c'],
 
   alignat:       ['AlignAt', null, true, true],
   'alignat*':    ['AlignAt', null, false, true],
   alignedat:     ['AlignAt', null, false, false],
 
-  aligned:       ['AmsEquation', null, null, null, 'rlrlrlrlrlrl',
+  aligned:       ['AmsEqnArray', null, null, null, 'rlrlrlrlrlrl',
                   COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0]), '.5em', 'D'],
-  gathered:      ['AmsEquation', null, null, null, 'c', null, '.5em', 'D'],
+  gathered:      ['AmsEqnArray', null, null, null, 'c', null, '.5em', 'D'],
 
   subarray:      ['Array', null, null, null, null, COLS([0]), '0.1em', 'S', 1],
   smallmatrix:   ['Array', null, null, null, 'c', COLS([1 / 3]),

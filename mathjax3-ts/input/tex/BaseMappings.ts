@@ -663,7 +663,7 @@ const envs = new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:         ['AlignedArray'],
   equation:      ['Equation', null, true],
   'equation*':   ['Equation', null, false],
-  eqnarray:      ['AlignedEquation', null, true, true, 'rcl',
+  eqnarray:      ['EqnArray', null, true, true, 'rcl',
                   '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
 }, BaseMethods);
 
