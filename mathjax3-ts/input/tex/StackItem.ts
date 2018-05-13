@@ -355,6 +355,18 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
 
+  /**
+   * Clears the item's environment.
+   */
+  public clearEnv() {
+    for (let id in this.env) {
+      if (this.env.hasOwnProperty(id)) {
+        delete this.env[id];
+      }
+    }
+  }
+
+
   // TODO: This needs proper changing once we get rid of legacy compatibility!
   With(def: PropList) {
     for (let id in def) {

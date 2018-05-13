@@ -689,14 +689,6 @@ export class ArrayItem extends BaseItem {
     }
   }
 
-
-  clearEnv() {
-    for (let id in this.env) {
-      if (this.env.hasOwnProperty(id)) {
-        delete this.env[id];
-      }
-    }
-  }
 }
 
 

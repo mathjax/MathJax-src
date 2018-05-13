@@ -44,9 +44,28 @@ import {Symbol} from './Symbol.js';
  */
 export default class TexParser {
 
+  /**
+   * Counter for recursive macros.
+   * @type {number}
+   */
   public macroCount: number = 0;
+
+  /**
+   * The factory for stack items.
+   * @type {StackItemFactory}
+   */
   public itemFactory = new StackItemFactory();
+
+  /**
+   * The stack for items and created nodes.
+   * @type {Stack}
+   */
   public stack: Stack;
+
+  /**
+   * Current position in the string that is parsed.
+   * @type {number}
+   */
   public i: number = 0;
 
   private input: string = '';
@@ -56,10 +75,13 @@ export default class TexParser {
 
   /**
    * @constructor
+   * @param {string} _string The string to parse.
+   * @param {EnvList} env The intial environment representing the current parse
+   *     state of the overall expression translation.
+   * @param {Configuration=} config A parser configuration.
    */
   constructor(private _string: string, env: EnvList, config?: Configuration) {
-    // TODO: Move this into a configuration object.
-    this.configure(config || DefaultConfig);
+    this.configure(config);
     const inner = env.isInner as boolean;
     delete env.isInner;
     let ENV: EnvList;
@@ -87,23 +109,17 @@ export default class TexParser {
 
 
   /**
-   * The main parsing method.
-   * @param {string} tex The TeX string.
-   * @return {MmlNode} The parsing result.
-   */
-  // TODO (VS): This will eventually become the actual parsing method.
-  public process(tex: string): void { }
-
-
-  /**
    * Sets a new configuration for the map handler.
    * @param {Configuration} configuration A setting for the map handler.
    */
   public configure(config: Configuration): void {
+    // TODO (VS):
+    // * Defaults for configuration and fallback should be handled cleaner.
+    // * Maybe move the subhandlers in with the maphandler.
+    config = config || DefaultConfig;
     for (const key of Object.keys(config.handler)) {
       let name = key as HandlerType;
       let subHandler = new SubHandler(config.handler[name] || [],
-                                      // TODO (VS): This needs to be cleaner.
                                       config.fallback[name] ||
                                       FallbackMethods.get(name));
       this.configurations.set(name, subHandler);
@@ -491,7 +507,6 @@ class SubHandler {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(input: ParseInput): ParseResult {
-    // TODO: Can't be done with applicable due to delimiter parsing!
     for (let map of this._configuration) {
       const result = map.parse(input);
       if (result) {
