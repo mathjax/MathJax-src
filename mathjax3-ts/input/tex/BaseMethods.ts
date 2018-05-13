@@ -35,6 +35,8 @@ import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
+import {TagConfig} from './Tags.js';
+
 
 // Namespace
 let BaseMethods: Record<string, ParseMethod> = {};
@@ -1178,6 +1180,42 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
   let item = BaseMethods.Array(parser, begin);
   return ParseUtil.setArrayAlign(item as sitem.ArrayItem, align);
 };
+
+
+/**
+ *  Handle equation environment
+ */
+BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
+  parser.Push(begin);
+  ParseUtil.checkEqnEnv(parser);
+  return parser.itemFactory.create('equation', numbered);
+};
+
+
+BaseMethods.AlignedEquation = function(parser: TexParser, begin: StackItem,
+                                       numbered: boolean, taggable: boolean,
+                                       align: string, spacing: string, style: string) {
+  // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
+  parser.Push(begin);
+  if (taggable) {
+    ParseUtil.checkEqnEnv(parser);
+  }
+  align = align.replace(/[^clr]/g, '').split('').join(' ');
+  align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
+  let newItem = parser.itemFactory.create('AMSarray', begin.getName(), numbered, taggable, parser.stack.global);
+  newItem.arraydef = {
+    displaystyle: true,
+    columnalign: align,
+    columnspacing: (spacing || '1em'),
+    rowspacing: '3pt',
+    side: TagConfig.get('TagSide'),
+    minlabelspacing: TagConfig.get('TagIndent')
+  };
+  return newItem;
+};
+
+
+
 
 
 /**

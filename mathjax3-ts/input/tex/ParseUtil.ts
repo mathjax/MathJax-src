@@ -399,6 +399,16 @@ namespace ParseUtil {
 
 
   /**
+   *  Check for bad nesting of equation environments
+   */
+  export function checkEqnEnv(parser: TexParser) {
+    if (parser.stack.global.eqnenv) {
+      throw new TexError(['ErroneousNestingEq', 'Erroneous nesting of equation structures']);
+    }
+    parser.stack.global.eqnenv = true;
+  };
+
+  /**
    * This is a placeholder for future security filtering of attributes.
    * @param {TexParser} parser The current parser.
    * @param {string} name The attribute name.

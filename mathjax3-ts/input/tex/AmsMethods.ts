@@ -45,37 +45,14 @@ import MapHandler from './MapHandler.js';
 let AmsMethods: Record<string, ParseMethod> = {};
 
 
-AmsMethods.AMSarray = function(parser: TexParser, begin: StackItem,
-                               numbered: boolean, taggable: boolean,
-                               align: string, spacing: string, style: string) {
-  // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
-  parser.Push(begin);
-  if (taggable) {
-    AmsMethods.checkEqnEnv(parser, '');
-  }
-  align = align.replace(/[^clr]/g, '').split('').join(' ');
-  align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  let newItem = parser.itemFactory.create('AMSarray', begin.getName(), numbered, taggable, parser.stack.global);
-  newItem.arraydef = {
-    displaystyle: true,
-    columnalign: align,
-    columnspacing: (spacing || '1em'),
-    rowspacing: '3pt',
-    side: TagConfig.get('TagSide'),
-    minlabelspacing: TagConfig.get('TagIndent')
-  };
-  return newItem;
-};
-
-
 // TODO: do we really need style?
-AmsMethods.AlignedAMSArray = function(parser: TexParser, begin: StackItem,
+AmsMethods.AmsEquation = function(parser: TexParser, begin: StackItem,
                                       numbered: boolean, taggable: boolean,
                                       align: string, spacing: string,
                                       style: string) {
   // @test Aligned, Gathered
   const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
-  const array = AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spacing, style);
+  const array = BaseMethods.AlignedEquation(parser, begin, numbered, taggable, align, spacing, style);
   return ParseUtil.setArrayAlign(array as ArrayItem, args);
 };
 
@@ -106,10 +83,10 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
   let spaceStr = spacing.join(' ');
   if (taggable) {
     // @test Alignat, Alignat Star
-    return AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spaceStr);
+    return AmsMethods.AlignedEquation(parser, begin, numbered, taggable, align, spaceStr);
   }
   // @test Alignedat
-  let array = AmsMethods.AMSarray(parser, begin, numbered, taggable, align, spaceStr);
+  let array = AmsMethods.AlignedEquation(parser, begin, numbered, taggable, align, spaceStr);
   return ParseUtil.setArrayAlign(array as ArrayItem, valign);
 };
 
@@ -120,7 +97,7 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
 AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: boolean) {
   // @test Shove*, Multline
   parser.Push(begin);
-  AmsMethods.checkEqnEnv(parser, '');
+  ParseUtil.checkEqnEnv(parser);
   const item = parser.itemFactory.create('multline', numbered, parser.stack);
   item.arraydef = {
     displaystyle: true,
@@ -133,26 +110,6 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
   return item;
 };
 
-
-/**
- *  Handle equation environment
- */
-AmsMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
-  parser.Push(begin);
-  AmsMethods.checkEqnEnv(parser, '');
-  return parser.itemFactory.create('equation', numbered);
-};
-
-
-/**
- *  Check for bad nesting of equation environments
- */
-AmsMethods.checkEqnEnv = function(parser: TexParser) {
-  if (parser.stack.global.eqnenv) {
-    throw new TexError(['ErroneousNestingEq', 'Erroneous nesting of equation structures']);
-  }
-  parser.stack.global.eqnenv = true;
-};
 
 // TODO: How to set an extra definition. Probably best to deal with this
 //       together with newcommand, setEnv etc.
@@ -444,5 +401,7 @@ AmsMethods.Array = BaseMethods.Array;
 AmsMethods.Spacer = BaseMethods.Spacer;
 
 AmsMethods.NamedOp = BaseMethods.NamedOp;
+
+AmsMethods.AlignedEquation = BaseMethods.AlignedEquation;
 
 export default AmsMethods;

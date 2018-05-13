@@ -408,7 +408,6 @@ new sm.CommandMap('macros', {
   tt:                ['SetFont', TexConstant.Variant.MONOSPACE],
 
   //      font:
-
   tiny:              ['SetSize', 0.5],
   Tiny:              ['SetSize', 0.6],  // non-standard
   scriptsize:        ['SetSize', 0.7],
@@ -500,8 +499,6 @@ new sm.CommandMap('macros', {
   moveleft:           'MoveLeftRight',
   moveright:          'MoveLeftRight',
 
-  // TODO: QUESTION: Why was there a space after ,?
-  // ', ':              ['Spacer', TexConstant.Length.THINMATHSPACE],
   ',':               ['Spacer', TexConstant.Length.THINMATHSPACE],
   ':':               ['Spacer', TexConstant.Length.MEDIUMMATHSPACE],
   '>':               ['Spacer', TexConstant.Length.MEDIUMMATHSPACE],
@@ -643,44 +640,20 @@ new sm.CommandMap('macros', {
 
 
   //  LaTeX
-  // TODO: These should be in a special structure.
   begin:              'BeginEnd',
   end:                'BeginEnd',
 
-  newcommand:        ['Extension', 'newcommand'],
-  renewcommand:      ['Extension', 'newcommand'],
-  newenvironment:    ['Extension', 'newcommand'],
-  renewenvironment:  ['Extension', 'newcommand'],
-  def:               ['Extension', 'newcommand'],
-  'let':               ['Extension', 'newcommand'],
-
-  verb:              ['Extension', 'verb'],
-
-  boldsymbol:        ['Extension', 'boldsymbol'],
-
-  // tag:               ['Extension', 'AMSmath'],
-  // notag:             ['Extension', 'AMSmath'],
+  // TODO: Change those three.
   // label:             ['Extension', 'AMSmath'],
   // ref:               ['Extension', 'AMSmath'],
-  // eqref:             ['Extension', 'AMSmath'],
   nonumber:          ['Macro', '\\notag'],
 
-  //  Extensions to TeX
-  unicode:           ['Extension', 'unicode'],
+  // TODO: Should be removed once Color is converted.
   color:              'Color',
 
-  href:              ['Extension', 'HTML'],
-  'class':           ['Extension', 'HTML'],
-  style:             ['Extension', 'HTML'],
-  cssId:             ['Extension', 'HTML'],
-  bbox:              ['Extension', 'bbox'],
-
-  mmlToken:           'MmlToken',
-
-  require:            'Require',
-
-  // mathchoice
-  mathchoice:         'MathChoice'
+  // Internal use:
+  mathchoice:         'MathChoice',
+  mmlToken:           'MmlToken'
 }, BaseMethods);
 
 
@@ -688,35 +661,11 @@ new sm.CommandMap('macros', {
  * Macros for LaTeX environments.
  */
 const envs = new sm.EnvironmentMap('environment', ParseMethods.environment, {
-  array:        ['AlignedArray'],
-  matrix:       ['Array', null, null, null, 'c'],
-  pmatrix:      ['Array', null, '(', ')', 'c'],
-  bmatrix:      ['Array', null, '[', ']', 'c'],
-  Bmatrix:      ['Array', null, '\\{', '\\}', 'c'],
-  vmatrix:      ['Array', null, '\\vert', '\\vert', 'c'],
-  Vmatrix:      ['Array', null, '\\Vert', '\\Vert', 'c'],
-  cases:        ['Array', null, '\\{', '.', 'll', null, '.2em', 'T'],
-
-  // VS Q What are these with function null?
-  //      What about the AMSmath argument?
-  // equation:     [null, 'Equation'],
-  // 'equation*':  [null, 'Equation'],
-
-  // eqnarray:     ['ExtensionEnv', null, 'AMSmath'],
-  // 'eqnarray*':  ['ExtensionEnv', null, 'AMSmath'],
-
-  // align:        ['ExtensionEnv', null, 'AMSmath'],
-  // 'align*':     ['ExtensionEnv', null, 'AMSmath'],
-  // aligned:      ['ExtensionEnv', null, 'AMSmath'],
-  // multline:     ['ExtensionEnv', null, 'AMSmath'],
-  // 'multline*':  ['ExtensionEnv', null, 'AMSmath'],
-  // split:        ['ExtensionEnv', null, 'AMSmath'],
-  // gather:       ['ExtensionEnv', null, 'AMSmath'],
-  // 'gather*':    ['ExtensionEnv', null, 'AMSmath'],
-  // gathered:     ['ExtensionEnv', null, 'AMSmath'],
-  // alignat:      ['ExtensionEnv', null, 'AMSmath'],
-  // 'alignat*':   ['ExtensionEnv', null, 'AMSmath'],
-  // alignedat:    ['ExtensionEnv', null, 'AMSmath']
+  array:         ['AlignedArray'],
+  equation:      ['Equation', null, true],
+  'equation*':   ['Equation', null, false],
+  eqnarray:      ['AlignedEquation', null, true, true, 'rcl',
+                  '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
 }, BaseMethods);
 
 
