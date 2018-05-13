@@ -31,8 +31,6 @@ import {TextNode, MmlNode, AbstractMmlNode, AbstractMmlEmptyNode} from '../../co
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
-import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
-import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {JsonMmlVisitor} from '../../core/MmlTree/JsonMmlVisitor.js';
 import {Args} from './Types.js';
 import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
@@ -56,11 +54,7 @@ export namespace TreeHelper {
                           ];
 
   const methodOut: boolean = false;
-  const defOut: boolean = false;
-  const jsonOut: boolean = false;
-  const simpleOut: boolean = false;
   
-
   export function createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
     const node = factory.create(kind, {}, []);
     // If infinity or -1 remove inferred mrow
@@ -99,7 +93,6 @@ export namespace TreeHelper {
       return null;
     }
     let node = (factory.create('text') as TextNode).setText(text);
-    printJSON(node);
     return node;
   };
 
@@ -228,71 +221,9 @@ export namespace TreeHelper {
     return node.coreMO();
   };
 
-  // TODO: reduce some of the casting.
-  export function cleanSubSup(node: MmlNode): MmlNode  {
-    let rewrite: MmlNode[] = [];
-    node.walkTree((n, d) => {
-      const children = n.childNodes;
-      if ((n.isKind('msubsup') && (!children[(n as MmlMsubsup).sub] ||
-                                   !children[(n as MmlMsubsup).sup])) ||
-          (n.isKind('munderover') && (!children[(n as MmlMunderover).under] ||
-                                      !children[(n as MmlMunderover).over]))) {
-        d.unshift(n);
-      }
-    }, rewrite);
-    for (const n of rewrite) {
-      const children = n.childNodes as (MmlNode|TextNode)[];
-      const parent = n.parent;
-      let ms, newNode;
-      if (n.isKind('msubsup')) {
-        ms = n as MmlMsubsup;
-        newNode = (children[ms.sub] ?
-                   createNode('msub', [children[ms.base], children[ms.sub]], {}) :
-                   createNode('msup', [children[ms.base], children[ms.sup]], {}));
-      } else {
-        ms = n as MmlMunderover;
-        newNode = (children[ms.under] ?
-                   createNode('munder', [children[ms.base], children[ms.under]], {}) :
-                   createNode('mover', [children[ms.base], children[ms.over]], {}));
-      }
-      copyAttributes(n, newNode);
-      if (parent) {
-        parent.replaceChild(newNode, n);
-      } else {
-        node = newNode;
-      }
-    }
-    return node;
-  };
-
-  
-  export function printSimple(txt: string): void  {
-    if (simpleOut) {
-      console.log(txt);
-    }
-  };
-
-  export function untested(kind: string|number): void  {
-    console.log('Untested case ' + kind);
-  };
-
   export function printMethod(text: string): void  {
     if (methodOut) {
       console.log('In ' + text);
-    }
-  };
-
-  export function printJSON(node: MmlNode): void  {
-    if (jsonOut) {
-      console.log(visitor.visitNode(node));
-    }
-  };
-
-  export function printDef(def: PropertyList): void  {
-    if (methodOut && defOut) {
-      for (let x in def) {
-        console.log(x + ': ' + def[x]);
-      }
     }
   };
 

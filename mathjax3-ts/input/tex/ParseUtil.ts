@@ -164,47 +164,6 @@ namespace ParseUtil {
 
 
   /**
-   * Combine adjacent <mo> elements that are relations (since MathML treats the
-   * spacing very differently)
-   * @param {MmlNode} mml The node in which to combine relations.
-   */
-  export function combineRelations(mml: MmlNode) {
-    TreeHelper.printMethod('combineRelations: ');
-    let m1: MmlNode, m2: MmlNode;
-    let children = TreeHelper.getChildren(mml);
-    for (let i = 0, m = children.length; i < m; i++) {
-      if (children[i]) {
-        if (TreeHelper.isType(mml, 'mrow')) {
-          while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
-                 TreeHelper.isType(m1, 'mo') && TreeHelper.isType(m2, 'mo') &&
-                 TreeHelper.getTexClass(m1) === TEXCLASS.REL &&
-                 TreeHelper.getTexClass(m2) === TEXCLASS.REL) {
-            if (TreeHelper.getProperty(m1, 'variantForm') ===
-                TreeHelper.getProperty(m2, 'variantForm') &&
-                TreeHelper.getAttribute(m1, 'mathvariant') ===
-                TreeHelper.getAttribute(m2, 'mathvariant')) {
-              // @test Shift Left, Less Equal
-              TreeHelper.appendChildren(m1, TreeHelper.getChildren(m2));
-              children.splice(i + 1, 1);
-              m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
-              m--;
-            } else {
-              TreeHelper.untested('Combine Relations Case 2');
-              TreeHelper.setAttribute(m1, 'rspace', '0pt');
-              TreeHelper.setAttribute(m2, 'lspace', '0pt');
-              i++;
-            }
-          }
-        }
-        if (!children[i].isToken) {
-          combineRelations(children[i]);
-        }
-      }
-    }
-  }
-
-
-  /**
    *  If the initial child, skipping any initial space or
    *  empty braces (TeXAtom with child being an empty inferred row),
    *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
@@ -295,7 +254,6 @@ namespace ParseUtil {
             let len = ((RegExp as any)['$&'] as string).length;
             if (k < i - 1) {
               // TODO: test a\mbox{ \eqref{1} } c
-              TreeHelper.untested(17);
               mml.push(internalText(text.slice(k, i - 1), def));
             }
             match = '}';
@@ -304,21 +262,17 @@ namespace ParseUtil {
           } else {
             c = text.charAt(i++);
             if (c === '(' && match === '') {
-              TreeHelper.untested(18);
               if (k < i - 2) {
-                TreeHelper.untested(19);
                 mml.push(internalText(text.slice(k, i - 2), def));
               }
               match = ')'; k = i;
             } else if (c === ')' && match === ')' && braces === 0) {
-              TreeHelper.untested(20);
               node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i - 2), {})).mml()], {});
               mml.push(node);
               match = '';
               k = i;
             } else if (c.match(/[${}\\]/) && match === '')  {
               // TODO: test  a\mbox{aa \\ bb} c
-              TreeHelper.untested(21);
               i--;
               text = text.substr(0, i - 1) + text.substr(i); // remove \ from \$, \{, \}, or \\
             }
@@ -455,7 +409,6 @@ namespace ParseUtil {
     // TODO: Implement this.
     return value;
   };
-
 
 }
 

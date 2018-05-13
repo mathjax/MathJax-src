@@ -116,12 +116,9 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
     throw new TexError(['DoubleExponent', 'Double exponent: use braces to clarify']);
   }
   if (!TreeHelper.isType(base, 'msubsup')) {
-    TreeHelper.printSimple('Case 1');
     if (movesupsub) {
-      TreeHelper.printSimple('Case 2');
       // @test Move Superscript, Large Operator
       if (!TreeHelper.isType(base, 'munderover') || TreeHelper.getChildAt(base, (base as MmlMunderover).over)) {
-        TreeHelper.printSimple('Case 3');
         if (TreeHelper.getProperty(base, 'movablelimits') && TreeHelper.isType(base, 'mi')) {
           // @test Mathop Super
           base = ParseUtil.mi2mo(base);
@@ -131,7 +128,6 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
       }
       position = (base as MmlMunderover).over;
     } else {
-      TreeHelper.printSimple('Case 4');
       // @test Empty base, Empty base2, Square, Cube
       base = TreeHelper.createNode('msubsup', [base], {});
       position = (base as MmlMsubsup).sup;
@@ -443,7 +439,6 @@ function parseRoot(parser: TexParser, n: string) {
   env['inRoot'] = true;
   const newParser = new TexParser(n, env);
   let node = newParser.mml();
-  TreeHelper.printJSON(node);
   const global = newParser.stack.global;
   if (global['leftRoot'] || global['upRoot']) {
     // @test Tweaked Root

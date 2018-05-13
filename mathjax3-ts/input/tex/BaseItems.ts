@@ -808,7 +808,6 @@ export class NotItem extends BaseItem {
     if (item.isKind('mml') &&
         (TreeHelper.isType(item.Top, 'mo') || TreeHelper.isType(item.Top, 'mi') ||
          TreeHelper.isType(item.Top, 'mtext'))) {
-      TreeHelper.printJSON(mml);
       mml = item.Top;
       c = TreeHelper.getText(mml as TextNode);
       if (c.length === 1 && !TreeHelper.getProperty(mml, 'movesupsub') &&

@@ -170,7 +170,7 @@ export default class TexParser {
    * @param {MmlMo} node The mo node.
    */
   public toClean(node: MmlMo) {
-    NewTex.secondPass.push(node);
+    NewTex.fixStretchy.push(node);
   }
 
 

@@ -203,7 +203,6 @@ export class MmlStack implements NodeStack {
       inferred = true;
     }
     if (this._nodes.length === 1 && !forceRow) {
-      TreeHelper.printSimple('End 1');
       return this.Top;
     }
     // @test Two Identifiers
