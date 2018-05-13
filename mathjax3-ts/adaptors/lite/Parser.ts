@@ -23,7 +23,7 @@
 
 import {AttributeData} from '../../core/DOMAdaptor.js';
 import {MinHTMLAdaptor, MinDOMParser} from '../HTMLAdaptor.js';
-import {Entities} from '../../util/Entities.js';
+import * as Entities from '../../util/Entities.js';
 import {LiteDocument} from './Document.js';
 import {LiteElement} from './Element.js';
 import {LiteText, LiteComment} from './Text.js';
@@ -111,18 +111,6 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     };
 
     /*
-     * The entity translator object
-     */
-    protected entities: Entities;
-
-    /*
-     * @constructor
-     */
-    constructor() {
-        this.entities = new Entities({loadMissingEntities: false});
-    }
-
-    /*
      * @override
      */
     public parseFromString(text: string, format: string = 'text/html', adaptor: LiteAdaptor = null) {
@@ -160,7 +148,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
      * @return{LiteText}            The text element
      */
     protected addText(adaptor: LiteAdaptor, node: LiteElement, text: string) {
-        text = this.entities.translate(text);
+        text = Entities.translate(text);
         return adaptor.append(node, adaptor.text(text)) as LiteText;
     }
 
@@ -246,7 +234,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
             let [space, name, v1, v2, v3] = attributes.splice(0,5);
             let value = v1 || v2 || v3 || '';
             if (!CDATA_ATTR[name]) {
-                value = this.entities.translate(value);
+                value = Entities.translate(value);
             }
             adaptor.setAttribute(node, name, value);
         }
