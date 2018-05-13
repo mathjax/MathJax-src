@@ -26,6 +26,8 @@ import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {BBox} from '../BBox.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
+import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
 import {Property} from '../../../core/Tree/Node.js';
 import {StyleList} from '../CssStyles.js';
 
@@ -34,12 +36,12 @@ import {StyleList} from '../CssStyles.js';
 /*
  * The types needed to define the actiontypes
  */
-export type ActionHandler<N, T, D> = (node: CHTMLmaction<N, T, D>) => void;
+export type ActionData = {[name: string]: any};
+export type ActionHandler<N, T, D> = (node: CHTMLmaction<N, T, D>, data?: ActionData) => void;
 export type ActionMap = Map<string, ActionHandler<any, any, any>>;
-export type ActionPair = [string, ActionHandler<any, any, any>];
+export type ActionPair = [string, [ActionHandler<any, any, any>, ActionData]];
 
 export type EventHandler = (event: Event) => void;
-export type EventList = [any, string, EventHandler];
 
 /*****************************************************************/
 /*
@@ -80,36 +82,107 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
      * The valid action types and their handlers
      */
     public static Actions = new Map([
-        ['toggle', node => {
+        ['toggle', [(node, data) => {
+            //
+            // Mark which child is selected
+            //
             node.adaptor.setAttribute(node.chtml, 'toggle', node.node.attributes.get('selection') as string);
-            node.setEventHandler('click', node.toggleClick);
-        }],
+            //
+            // Cache the data needed to select another node
+            //
+            const math = node.factory.chtml.math;
+            const document = node.factory.chtml.document;
+            const mml = node.node as MmlMaction;
+            //
+            // Add a click handler that changes the selection and rerenders the expression
+            //
+            node.setEventHandler('click', (event: Event) => {
+                mml.nextToggleSelection();
+                math.rerender(document);
+                event.stopPropagation();
+            });
+        }, {}]],
 
-        ['tooltip', node => {
+        ['tooltip', [(node, data) => {
             const tip = node.childNodes[1];
             if (!tip) return;
             if (tip.node.isKind('mtext')) {
+                //
+                // Text tooltips are handled through title attributes
+                //
                 const text = (tip.node as TextNode).getText();
                 node.adaptor.setAttribute(node.chtml, 'title', text);
             } else {
-                const box = node.html('mjx-tip');
-                tip.toCHTML(box);
-                node.adaptor.append(node.chtml, node.html('mjx-tool', {}, [box]));
-                node.setEventHandler('mouseover', node.tooltipOver);
-                node.setEventHandler('mouseout',  node.tooltipOut);
+                //
+                // Math tooltips are handled through hidden nodes and event handlers
+                //
+                const adaptor = node.adaptor;
+                const tool = adaptor.append(node.chtml, node.html('mjx-tool', {}, [node.html('mjx-tip')]));
+                tip.toCHTML(adaptor.firstChild(tool));
+                //
+                // Set up the event handlers to display and remove the tooltip
+                //
+                node.setEventHandler('mouseover', (event: Event) => {
+                    data.stopTimers(data);
+                    data.hoverTimer = setTimeout(() => adaptor.setStyle(tool, 'display', 'block'), data.postDelay);
+                    event.stopPropagation();
+                });
+                node.setEventHandler('mouseout',  (event: Event) => {
+                    data.stopTimers(data);
+                    data.clearTimer = setTimeout(() => adaptor.setStyle(tool, 'display', ''), data.clearDelay);
+                    event.stopPropagation();
+                });
             }
-        }],
+        }, {
+            postDelay: 600,      // milliseconds before tooltip posts
+            clearDelay: 100,     // milliseconds before tooltip is removed
 
-        ['statusline', node => {
+            hoverTimer: null,    // timer for posting tooltips
+            clearTimer: null,    // timer for removing tooltips
+
+            /*
+             * clear the timers if any are active
+             */
+            stopTimers: (data: ActionData) => {
+                if (data.clearTimer) {
+                    clearTimeout(data.clearTimer);
+                    data.clearTimer = null;
+                }
+                if (data.hoverTimer) {
+                    clearTimeout(data.hoverTimer);
+                    data.hoverTimer = null;
+                }
+            }
+        }]],
+
+        ['statusline', [(node, data) => {
             const tip = node.childNodes[1];
             if (!tip) return;
             if (tip.node.isKind('mtext')) {
+                const adaptor = node.adaptor;
                 const text = (tip.node as TextNode).getText();
-                node.adaptor.setAttribute(node.chtml, 'statusline', text);
-                node.setEventHandler('mouseover', node.statusOver);
-                node.setEventHandler('mouseout', node.statusOut);
+                adaptor.setAttribute(node.chtml, 'statusline', text);
+                //
+                // Set up event handlers to change the document title
+                //
+                node.setEventHandler('mouseover', (event: Event) => {
+                    if (data.status === null) {
+                        data.status = adaptor.getStatus(adaptor.document);
+                        adaptor.setStatus(adaptor.document, text);
+                    }
+                    event.stopPropagation();
+                });
+                node.setEventHandler('mouseout', (event: Event) => {
+                    if (data.status) {
+                        adaptor.setStatus(adaptor.document, data.status);
+                        data.status = null;
+                    }
+                    event.stopPropagation();
+                });
             }
-        }]
+        }, {
+            status: null  // cached status line
+        }]]
 
     ] as ActionPair[]);
 
@@ -127,6 +200,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
      * The handler for the specified actiontype
      */
     protected action: ActionHandler<N, T, D> = null;
+    protected data: ActionData = null;
 
     /*
      * @return{CHTMLWrapper}  The selected child wrapper
@@ -146,7 +220,9 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
         super(factory, node, parent);
         const Actions = (this.constructor as typeof CHTMLmaction).Actions;
         const action = this.node.attributes.get('actiontype') as string;
-        this.action = Actions.get(action) || ((node => {}) as ActionHandler<N, T, D>);
+        const [handler, data] = Actions.get(action) || [((node, data) => {}) as ActionHandler<N, T, D>, {}];
+        this.action = handler;
+        this.data = data;
     }
 
     /*
@@ -156,7 +232,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
         const chtml = this.standardCHTMLnode(parent);
         const child = this.selected;
         child.toCHTML(chtml);
-        this.action(this);
+        this.action(this, this.data);
     }
 
     /*
@@ -166,147 +242,11 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.updateFrom(this.selected.getBBox());
     }
 
-    /*************************************************************/
-    /*************************************************************/
-    /*
-     * Handle events for the actions
-     */
-
     /*
      * Add an event handler to the output for this maction
      */
     public setEventHandler(type: string, handler: EventHandler) {
-        (this.chtml as any).addEventListener(type, handler.bind(this));
+        (this.chtml as any).addEventListener(type, handler);
     }
 
-    /*************************************************************/
-    /*
-     *  Handle statuline changes
-     */
-
-    /*
-     * Change the selection and rerender the expression
-     */
-    public toggleClick() {
-        let selection = Math.max(1, (this.node.attributes.get('selection') as number) + 1);
-        if (selection > this.childNodes.length) {
-            selection = 1;
-        }
-        this.node.attributes.set('selection', selection);
-        this.toggleRerender();
-    }
-
-    /*
-     * Rerender the complete expression and replace it in the document
-     */
-    protected toggleRerender() {
-        const html = this.getMathHTML();
-        if (!html) return;
-        const CHTML = this.factory.chtml;
-        const node = CHTML.typeset(CHTML.math, CHTML.document);
-        this.adaptor.replace(node, html);
-    }
-
-    /*
-     * @return{N}  The html for the top-level mjx-chtml node for the expression
-     */
-    protected getMathHTML() {
-        let parent = this as CHTMLWrapper<N, T, D>;
-        while (!parent.node.isKind('math')) {
-            parent = parent.parent;
-            if (!parent) return null;
-        }
-        return this.adaptor.parent(parent.chtml);
-    }
-
-    /*************************************************************/
-    /*
-     *  Handle tool tips containing math
-     */
-
-    /*
-     * Timers for posting/clearing a math tooltip
-     */
-    protected hoverTimer: number = null;
-    protected clearTimer: number = null;
-
-    /*
-     * clear the timers if any are active
-     */
-    public clearTimers() {
-        if (this.clearTimer) {
-            clearTimeout(this.clearTimer);
-            this.clearTimer = null;
-        }
-        if (this.hoverTimer) {
-            clearTimeout(this.hoverTimer);
-            this.hoverTimer = null;
-        }
-    }
-
-    /*
-     * Handle a tooltip mousover event (start a timer to post the tooltip)
-     *
-     * @param{Event} event  The mouseover event
-     */
-    public tooltipOver(event: Event) {
-        const delay = (this.constructor as typeof CHTMLmaction).postDelay;
-        this.clearTimers();
-        this.hoverTimer = setTimeout(((event:Event) => {
-            const adaptor = this.adaptor;
-            adaptor.setStyle(adaptor.lastChild(this.chtml) as N, 'display', 'block');
-        }).bind(this), delay);
-        event.stopPropagation();
-    }
-
-    /*
-     * Handle a tooltip mousout event (start a timer to remove the tooltip)
-     *
-     * @param{Event} event  The mouseout event
-     */
-    public tooltipOut(event: Event) {
-        const delay = (this.constructor as typeof CHTMLmaction).clearDelay;
-        this.clearTimers();
-        this.clearTimer = setTimeout(((event: Event) => {
-            const adaptor = this.adaptor;
-            adaptor.setStyle(adaptor.lastChild(this.chtml) as N, 'display', '');
-        }).bind(this), delay);
-        event.stopPropagation();
-    }
-
-    /*************************************************************/
-    /*
-     *  Handle statuline changes
-     */
-
-    /*
-     * Cached document title (where the status is shown)
-     */
-    protected status: string = null;
-
-    /*
-     * Set the document title to the status value
-     *
-     * @param{Event} event  The mouseover event
-     */
-    public statusOver(event: Event) {
-        if (this.status === null) {
-            this.status = document.title;
-            document.title = this.adaptor.getAttribute(this.chtml, 'statusline');
-        }
-        event.stopPropagation();
-    }
-
-    /*
-     * Restore the document title to its original value
-     *
-     * @param{Event} event  The mouseout event
-     */
-    public statusOut(event: Event) {
-        if (this.status) {
-            document.title = this.status;
-            this.status = null;
-        }
-        event.stopPropagation();
-    }
 }

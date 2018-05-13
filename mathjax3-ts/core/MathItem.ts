@@ -150,6 +150,13 @@ export interface MathItem<N, T, D> {
     typeset(document: MathDocument<N, T, D>): void;
 
     /*
+     * Rerenders an already rendered item and re-inserts it into the document
+     *
+     * @param{MathDocument} document  The MathDocument in which the math resides
+     */
+    rerender(document: MathDocument<N, T, D>): void;
+
+    /*
      * Inserts the typeset version in place of the original form in the document
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
@@ -301,6 +308,15 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
             this.typesetRoot = document.outputJax[this.display === null ? 'escaped' : 'typeset'](this, document);
             this.state(STATE.TYPESET);
         }
+    }
+
+    /*
+     * @override
+     */
+    public rerender(document: MathDocument<N, T, D>) {
+        this.state(AbstractMathItem.STATE.COMPILED);
+        this.typeset(document);
+        this.updateDocument(document);
     }
 
     /*

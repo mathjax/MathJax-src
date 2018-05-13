@@ -114,4 +114,16 @@ export class MmlMaction extends AbstractMmlNode {
         this.updateTeXclass(selected);
         return prev;
     }
+
+    /*
+     * Select the next child for a toggle action
+     */
+    public nextToggleSelection() {
+        let selection = Math.max(1, (this.attributes.get('selection') as number) + 1);
+        if (selection > this.childNodes.length) {
+            selection = 1;
+        }
+        this.attributes.set('selection', selection);
+    }
+
 }

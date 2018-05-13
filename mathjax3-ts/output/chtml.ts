@@ -24,7 +24,7 @@
 import {AbstractOutputJax} from '../core/OutputJax.js';
 import {OptionList, separateOptions} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
-import {MathItem} from '../core/MathItem.js';
+import {MathItem, AbstractMathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
