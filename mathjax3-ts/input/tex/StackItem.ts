@@ -367,8 +367,12 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
 
-  // TODO: This needs proper changing once we get rid of legacy compatibility!
-  With(def: PropList) {
+  /**
+   * Sets a list of properties.
+   * @param {PropList} def The properties to set.
+   * @return {StackItem} Returns the stack item object for pipelining.
+   */
+  public setProperties(def: PropList) {
     for (let id in def) {
       if (def.hasOwnProperty(id)) {
         this.setProperty(id, def[id]);

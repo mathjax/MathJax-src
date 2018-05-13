@@ -39,6 +39,8 @@ import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 // Namespace
 let BaseMethods: Record<string, ParseMethod> = {};
 
+// TODO: Once we can properly load AllEntities, there should be not need for
+//       those anymore.
 const PRIME = '\u2032';
 const SMARTQUOTE = '\u2019';
 const NBSP = '\u00A0';
@@ -78,9 +80,6 @@ BaseMethods.Close = function(parser: TexParser, c: string) {
  */
 BaseMethods.Tilde = function(parser: TexParser, c: string) {
   // @test Tilde, Tilde2
-  //
-  // TODO: Once we can properly load AllEntities, this should be the line.
-  // var textNode = TreeHelper.createText(MmlEntities.ENTITIES.nbsp);
   const textNode = TreeHelper.createText(NBSP);
   const node = TreeHelper.createNode('mtext', [], {}, textNode);
   parser.Push(node);
@@ -116,7 +115,6 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
   const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
   let position = TreeHelper.isType(base, 'msubsup') ? (base as MmlMsubsup).sup :
     (base as MmlMunderover).over;
-  // var movesupsub = base.movesupsub, position = base.sup;
   if ((TreeHelper.isType(base, 'msubsup') && TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) ||
       (TreeHelper.isType(base, 'munderover') && TreeHelper.getChildAt(base, (base as MmlMunderover).over) &&
        !TreeHelper.getProperty(base, 'subsupOK'))) {
@@ -146,7 +144,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
     }
   }
   parser.Push(
-    parser.itemFactory.create('subsup', base).With({
+    parser.itemFactory.create('subsup', base).setProperties({
       position: position, primes: primes, movesupsub: movesupsub
     }) );
 };
@@ -206,7 +204,7 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
     }
   }
   parser.Push(
-    parser.itemFactory.create('subsup', base).With({
+    parser.itemFactory.create('subsup', base).setProperties({
       position: position, primes: primes, movesupsub: movesupsub
     }) );
 };
@@ -270,13 +268,13 @@ BaseMethods.SetStyle = function(parser: TexParser, name: string, texStyle: strin
                          ' style: ' + style + ' level: ' + level);
   parser.stack.env['style'] = texStyle; parser.stack.env['level'] = level;
   parser.Push(
-    parser.itemFactory.create('style').With({styles: {displaystyle: style, scriptlevel: level}}) );
+    parser.itemFactory.create('style').setProperties({styles: {displaystyle: style, scriptlevel: level}}) );
 };
 BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
   TreeHelper.printMethod('SetSize');
   parser.stack.env['size'] = size;
   parser.Push(
-    parser.itemFactory.create('style').With({styles: {mathsize: size + 'em'}}) ); // convert to absolute?
+    parser.itemFactory.create('style').setProperties({styles: {mathsize: size + 'em'}}) ); // convert to absolute?
 };
 
 // Look at color extension!
@@ -308,9 +306,8 @@ BaseMethods.LeftRight = function(parser: TexParser, name: string) {
   // @test Fenced, Fenced3
   const alpha = name.substr(1);
   parser.Push(
-    // TODO: Sort this out so there is no need for type casting!
     parser.itemFactory.create(alpha)
-      .With({delim: parser.GetDelimiter(name)}) );
+      .setProperties({delim: parser.GetDelimiter(name)}) );
 };
 
 BaseMethods.Middle = function(parser: TexParser, name: string) {
@@ -394,7 +391,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
 BaseMethods.Over = function(parser: TexParser, name: string, open: string, close: string) {
   TreeHelper.printMethod('Over');
   // @test Over
-  const mml = parser.itemFactory.create('over').With({name: name}) ;
+  const mml = parser.itemFactory.create('over').setProperties({name: name}) ;
   if (open || close) {
     // @test Choose
     mml.setProperty('open', open);
@@ -450,7 +447,6 @@ function parseRoot(parser: TexParser, n: string) {
   const env = parser.stack.env;
   const inRoot = env['inRoot'];
   env['inRoot'] = true;
-  // TODO: This parser call might change!
   const newParser = new TexParser(n, env);
   let node = newParser.mml();
   TreeHelper.printJSON(node);
@@ -545,7 +541,6 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   let mo;
   if (TreeHelper.isType(base, 'munderover') && TreeHelper.isEmbellished(base)) {
     // @test Overline Limits
-    // TODO: Sort these properties out!
     TreeHelper.setProperties(TreeHelper.getCore(base), {lspace: 0, rspace: 0}); // get spacing right for NativeMML
     mo = TreeHelper.createNode('mo', [], {rspace: 0});
     base = TreeHelper.createNode('mrow', [mo, base], {});  // add an empty <mi> so it's not embellished any more
@@ -554,7 +549,6 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   const entity = TreeHelper.createEntity(c);
   mo = TreeHelper.createNode('mo', [], {stretchy: true, accent: !noaccent}, entity);
 
-  // TEMP: Changes here:
   TreeHelper.setData(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
                      parser.mmlToken(mo));
   let node: MmlNode = mml;
@@ -620,7 +614,7 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
   parser.Push(mml);
 };
 
-// VS: This method is only called during a macro call: AMS Math and \\mod.
+
 BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('MmlToken');
   // @test Modulo
@@ -735,7 +729,7 @@ BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
   // @test Raise, Lower, Raise Negative, Lower Negative
   let h = parser.GetDimen(name);
   let item =
-    parser.itemFactory.create('position').With({name: name, move: 'vertical'}) ;
+    parser.itemFactory.create('position').setProperties({name: name, move: 'vertical'}) ;
   // TEMP: Changes here:
   if (h.charAt(0) === '-') {
     // @test Raise Negative, Lower Negative
@@ -765,7 +759,7 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
     nh = tmp;
   }
   parser.Push(
-    parser.itemFactory.create('position').With({
+    parser.itemFactory.create('position').setProperties({
       name: name, move: 'horizontal',
       left:  TreeHelper.createNode('mspace', [], {width: h}),
       right: TreeHelper.createNode('mspace', [], {width: nh})}) );
@@ -871,7 +865,7 @@ BaseMethods.Dots = function(parser: TexParser, name: string) {
   const ldots = TreeHelper.createNode('mo', [], {stretchy: false}, ldotsEntity);
   const cdots = TreeHelper.createNode('mo', [], {stretchy: false}, cdotsEntity);
   parser.Push(
-    parser.itemFactory.create('dots').With({
+    parser.itemFactory.create('dots').setProperties({
       ldots: parser.mmlToken(ldots),
       cdots: parser.mmlToken(cdots)
     }) );
@@ -896,7 +890,7 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
     parser.i = 0;
   }
   // @test Matrix Braces, Matrix Columns, Matrix Rows.
-  const array = parser.itemFactory.create('array').With({requireClose: true});
+  const array = parser.itemFactory.create('array').setProperties({requireClose: true});
   array.arraydef = {
     rowspacing: (vspacing || '4pt'),
     columnspacing: (spacing || '1em')
@@ -930,7 +924,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Entry');
   // @test Label, Array, Cross Product Formula
   parser.Push(
-    parser.itemFactory.create('cell').With({isEntry: true, name: name}) );
+    parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}) );
   if (parser.stack.Top().getProperty('isCases')) {
     //
     //  Make second column be in \text{...} (unless it is already
@@ -1009,7 +1003,7 @@ BaseMethods.Cr = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Cr');
   TreeHelper.untested(15);
   parser.Push(
-    parser.itemFactory.create('cell').With({isCR: true, name: name}) );
+    parser.itemFactory.create('cell').setProperties({isCR: true, name: name}) );
 };
 
 BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
@@ -1023,7 +1017,7 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
     }
   }
   parser.Push(
-    parser.itemFactory.create('cell').With({isCR: true, name: name, linebreak: true}) );
+    parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true}) );
   const top = parser.stack.Top();
   let node: MmlNode;
   if (top instanceof sitem.ArrayItem) {
@@ -1106,7 +1100,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   }
   if (name === '\\end') {
     const mml =
-      parser.itemFactory.create('end').With({name: env}) ;
+      parser.itemFactory.create('end').setProperties({name: env}) ;
     parser.Push(mml);
   } else {
     if (++parser.macroCount > MAXMACROS) {

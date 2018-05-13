@@ -290,7 +290,6 @@ export namespace TreeHelper {
 
   export function printDef(def: PropertyList): void  {
     if (methodOut && defOut) {
-      console.log('With:');
       for (let x in def) {
         console.log(x + ': ' + def[x]);
       }
