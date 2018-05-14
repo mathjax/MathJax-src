@@ -416,14 +416,6 @@ export class NoTags extends AbstractTags {
 
 
 /**
- * Standard AMS style tagging.
- * @constructor
- * @extends {AbstractTags}
- */
-export class AmsTags extends AbstractTags { }
-
-
-/**
  * Tags every display formula. Exceptions are:
  * @constructor
  * @extends {AbstractTags}
@@ -462,15 +454,20 @@ export interface TagsClass {
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([
-    ['default', AmsTags],
     ['none', NoTags],
-    ['all', AllTags],
-    ['AMS', AmsTags]
+    ['all', AllTags]
   ]);
 
+  let defaultTags = 'none';
 
   export let add = function(name: string, constr: TagsClass) {
     tagsMapping.set(name, constr);
+  };
+
+  export let addTags = function(tags: {[name: string]: TagsClass}) {
+    for (const key of Object.keys(tags)) {
+      TagsFactory.add(key, tags[key]);
+    }
   };
 
   export let create = function(name: string): Tags {
@@ -479,11 +476,11 @@ export namespace TagsFactory {
   };
 
   export let setDefault = function(name: string) {
-    tagsMapping.set('default', tagsMapping.get(name));
+    defaultTags = name;
   };
 
   export let getDefault = function() {
-    return TagsFactory.create('default');
+    return TagsFactory.create(defaultTags);
   };
 
 }

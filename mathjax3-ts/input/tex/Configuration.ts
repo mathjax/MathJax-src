@@ -24,15 +24,16 @@
 
 import {ParseMethod} from './Types.js';
 import {HandlerType} from './MapHandler.js';
+import {StackItemClass} from './StackItem.js';
+import {TagsClass} from './Tags.js';
 
 
-export type HandlerConfig = {
-  [P in HandlerType]?: string[]
-}
+export type HandlerConfig = {[P in HandlerType]?: string[]}
+export type FallbackConfig = {[P in HandlerType]?: ParseMethod}
+export type StackItemConfig = {[kind: string]: StackItemClass}
+export type TagsConfig = {[kind: string]: TagsClass}
+export type OptionsConfig = {[key: string]: (string|boolean)}
 
-export type FallbackConfig = {
-  [P in HandlerType]?: ParseMethod
-}
 
 export class Configuration {
 
@@ -46,24 +47,22 @@ export class Configuration {
   /**
    * @constructor
    */
-  constructor(private _handler: HandlerConfig,
-              private _fallback?: FallbackConfig) {
+  constructor(readonly name: string,
+              readonly handler: HandlerConfig = {},
+              readonly fallback: FallbackConfig = {},
+              readonly items: StackItemConfig = {},
+              readonly tags: TagsConfig = {},
+              readonly options: OptionsConfig = {}
+             ) {
     let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
-    let handlers = Object.keys(_handler) as HandlerType[];
+    let handlers = Object.keys(handler) as HandlerType[];
     for (const key of handlers) {
-      _default[key] = _handler[key];
+      _default[key] = handler[key];
     }
-    this._handler = _default;
-    this._fallback = _fallback || {};
+    this.handler = _default;
+    ConfigurationHandler.getInstance().set(name, this);
   }
 
-  public get handler(): HandlerConfig {
-    return this._handler;
-  }
-
-  public get fallback(): FallbackConfig {
-    return this._fallback;
-  }
 
   /**
    * Appends configurations to this configuration. Note that fallbacks are
@@ -84,6 +83,71 @@ export class Configuration {
       let name = key as HandlerType;
       this.fallback[name] = config.fallback[name];
     }
+    for (const name of Object.keys(config.items)) {
+      this.items[name] = config.items[name];
+    }
+    for (const name of Object.keys(config.tags)) {
+      this.tags[name] = config.tags[name];
+    }
+    for (const name of Object.keys(config.options)) {
+      this.options[name] = config.options[name];
+    }
   }
 
 };
+
+
+export class ConfigurationHandler {
+
+  private static instance: ConfigurationHandler;
+
+  private map: Map<string, Configuration> = new Map();
+
+  /**
+   * @return {ConfigurationHandler} The singleton ConfigurationHandler object.
+   */
+  public static getInstance(): ConfigurationHandler {
+    if (!ConfigurationHandler.instance) {
+      ConfigurationHandler.instance = new ConfigurationHandler();
+    }
+    return ConfigurationHandler.instance;
+  }
+
+
+  /**
+   * Adds a new configuration to the handler overwriting old ones.
+   *
+   * @param {SymbolConfiguration} map Registers a new symbol map.
+   */
+  public set(name: string, map: Configuration): void {
+    this.map.set(name, map);
+  }
+
+    
+  /**
+   * Looks up a configuration.
+   *
+   * @param {string} name The name of the configuration.
+   * @return {SymbolConfiguration} The configuration with the given name or null.
+   */
+  public get(name: string): Configuration {
+    return this.map.get(name);
+  }
+
+  /**
+   * @return {string[]} All configurations in the handler.
+   */
+  public keys(): IterableIterator<string> {
+    return this.map.keys();
+  }
+
+
+  /**
+   * Dummy constructor
+   * @constructor
+   */
+  private constructor() { }
+
+}
+
+

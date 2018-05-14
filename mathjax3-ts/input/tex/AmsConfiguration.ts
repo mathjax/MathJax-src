@@ -25,6 +25,8 @@
 import {Configuration} from './Configuration.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
+import {MultlineItem} from './AmsItems.js';
+import {AbstractTags} from './Tags.js';
 
 
 // This is from the 'no undefined' extension.
@@ -34,13 +36,26 @@ function noUndefined(parser: TexParser, name: string) {
 };
 
 
-export const AmsConfiguration = new Configuration({
-  delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
-  macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
-          'AMSsymbols-delimiter', 'AMSsymbols-macros',
-          'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-  environment: ['AMSmath-environment']
-}, {
-  // macro: noUndefined
-});
+/**
+ * Standard AMS style tagging.
+ * @constructor
+ * @extends {AbstractTags}
+ */
+export class AmsTags extends AbstractTags { }
+
+
+export const AmsConfiguration = new Configuration(
+  'ams',
+  {
+    delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
+    macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
+            'AMSsymbols-delimiter', 'AMSsymbols-macros',
+            'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
+    environment: ['AMSmath-environment']
+  }, {
+    // macro: noUndefined
+  }, {[MultlineItem.prototype.kind]: MultlineItem}, {'AMS': AmsTags},
+  {}
+);
+
 

@@ -79,16 +79,20 @@ export namespace NewTex {
     script: Script, configurations: string[] = [], stackitem?: any): MmlNode {
     // TODO: This has to become a configuration option!
     let options = new ParseOptions();
-    options.tags = TagsFactory.getDefault();
-    options.tags.configuration = options;
-    options.itemFactory = new StackItemFactory();
-    options.itemFactory.configuration = options;
     //// TEMPORARY:
-    const DefaultConfig = new Configuration({});
+    const DefaultConfig = new Configuration('default', {}, {}, {}, {}, {});
     DefaultConfig.append(BaseConfiguration);
     DefaultConfig.append(AmsConfiguration);
     options.handlers = new SubHandlers(DefaultConfig);
-
+    options.itemFactory = new StackItemFactory();
+    options.itemFactory.configuration = options;
+    options.itemFactory.addStackItems(DefaultConfig.items);
+    TagsFactory.addTags(DefaultConfig.tags);
+    options.tags = TagsFactory.getDefault();
+    options.tags.configuration = options;
+    for (const key of Object.keys(DefaultConfig.options)) {
+      options.options.set(key, DefaultConfig.options[key]);
+    }
     let mml: MmlNode;
     let parser: TexParser;
     let math = script.innerText;

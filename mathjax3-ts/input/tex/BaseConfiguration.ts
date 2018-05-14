@@ -30,6 +30,8 @@ import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
 import {ParseMethod} from './Types.js';
 import {CharacterMap} from './SymbolMap.js';
+import * as bitem from './BaseItems.js';
+import {AbstractTags} from './Tags.js';
 
 
 /**
@@ -86,16 +88,50 @@ function envUndefined(parser: TexParser, env: string) {
 };
 
 
-// Some concrete definitions.
-export const BaseConfiguration = new Configuration({
-  character: ['command', 'special', 'letter', 'digit'],
-  delimiter: ['delimiter'],
-  // Note, that the position of the delimiters here is important!
-  macro: ['delimiter', 'macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
-  environment: ['environment']
-}, {
-  character: Other,
-  macro: csUndefined,
-  environment: envUndefined
-});
+/**
+ * Standard tagging.
+ * @constructor
+ * @extends {AbstractTags}
+ */
+export class BaseTags extends AbstractTags { }
 
+
+// Some concrete definitions.
+export const BaseConfiguration = new Configuration(
+  'base',
+  {
+    character: ['command', 'special', 'letter', 'digit'],
+    delimiter: ['delimiter'],
+    // Note, that the position of the delimiters here is important!
+    macro: ['delimiter', 'macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
+    environment: ['environment']
+  }, {
+    character: Other,
+    macro: csUndefined,
+    environment: envUndefined
+  }, {
+    // BaseItems
+    [bitem.StartItem.prototype.kind]: bitem.StartItem,
+    [bitem.StopItem.prototype.kind]: bitem.StopItem,
+    [bitem.OpenItem.prototype.kind]: bitem.OpenItem,
+    [bitem.CloseItem.prototype.kind]: bitem.CloseItem,
+    [bitem.PrimeItem.prototype.kind]: bitem.PrimeItem,
+    [bitem.SubsupItem.prototype.kind]: bitem.SubsupItem,
+    [bitem.OverItem.prototype.kind]: bitem.OverItem,
+    [bitem.LeftItem.prototype.kind]: bitem.LeftItem,
+    [bitem.RightItem.prototype.kind]: bitem.RightItem,
+    [bitem.BeginItem.prototype.kind]: bitem.BeginItem,
+    [bitem.EndItem.prototype.kind]: bitem.EndItem,
+    [bitem.StyleItem.prototype.kind]: bitem.StyleItem,
+    [bitem.PositionItem.prototype.kind]: bitem.PositionItem,
+    [bitem.CellItem.prototype.kind]: bitem.CellItem,
+    [bitem.MmlItem.prototype.kind]: bitem.MmlItem,
+    [bitem.FnItem.prototype.kind]: bitem.FnItem,
+    [bitem.NotItem.prototype.kind]: bitem.NotItem,
+    [bitem.DotsItem.prototype.kind]: bitem.DotsItem,
+    [bitem.ArrayItem.prototype.kind]: bitem.ArrayItem,
+    [bitem.EqnArrayItem.prototype.kind]: bitem.EqnArrayItem,
+    [bitem.EquationItem.prototype.kind]: bitem.EquationItem
+  }, {
+    base: BaseTags
+  });

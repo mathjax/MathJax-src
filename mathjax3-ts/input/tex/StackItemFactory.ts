@@ -31,8 +31,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sm from './BaseItems.js';
-import * as ams from './AmsItems.js';
 import {StackItemClass, StackItem, BaseItem} from './StackItem.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import ParseOptions from './ParseOptions.js';
@@ -49,31 +47,7 @@ class DummyItem extends BaseItem {}
 export default class StackItemFactory {
 
   private static DefaultStackItems: {[kind: string]: StackItemClass} = {
-    [DummyItem.prototype.kind]: DummyItem,
-    // BaseItems
-    [sm.StartItem.prototype.kind]: sm.StartItem,
-    [sm.StopItem.prototype.kind]: sm.StopItem,
-    [sm.OpenItem.prototype.kind]: sm.OpenItem,
-    [sm.CloseItem.prototype.kind]: sm.CloseItem,
-    [sm.PrimeItem.prototype.kind]: sm.PrimeItem,
-    [sm.SubsupItem.prototype.kind]: sm.SubsupItem,
-    [sm.OverItem.prototype.kind]: sm.OverItem,
-    [sm.LeftItem.prototype.kind]: sm.LeftItem,
-    [sm.RightItem.prototype.kind]: sm.RightItem,
-    [sm.BeginItem.prototype.kind]: sm.BeginItem,
-    [sm.EndItem.prototype.kind]: sm.EndItem,
-    [sm.StyleItem.prototype.kind]: sm.StyleItem,
-    [sm.PositionItem.prototype.kind]: sm.PositionItem,
-    [sm.CellItem.prototype.kind]: sm.CellItem,
-    [sm.MmlItem.prototype.kind]: sm.MmlItem,
-    [sm.FnItem.prototype.kind]: sm.FnItem,
-    [sm.NotItem.prototype.kind]: sm.NotItem,
-    [sm.DotsItem.prototype.kind]: sm.DotsItem,
-    [sm.ArrayItem.prototype.kind]: sm.ArrayItem,
-    [sm.EqnArrayItem.prototype.kind]: sm.EqnArrayItem,
-    [sm.EquationItem.prototype.kind]: sm.EquationItem,
-    // temporary: AMS stuff for testing!
-    [ams.MultlineItem.prototype.kind]: ams.MultlineItem
+    [DummyItem.prototype.kind]: DummyItem
   };
 
   /**

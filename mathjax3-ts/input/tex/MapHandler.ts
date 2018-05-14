@@ -95,11 +95,12 @@ new sm.DelimiterMap('new-Delimiter', ParseMethods.delimiter, {});
 new sm.CommandMap('new-Macro', {}, {});
 new sm.EnvironmentMap('new-Environment', ParseMethods.environment, {}, {});
 const emptyConf = new Configuration(
+  'empty',
   {character: ['new-Character'],
    delimiter: ['new-Delimiter'],
    macro: ['new-Macro'],
    environment: ['new-Environment']
-  });
+  }, {}, {});
 
 
 /**
@@ -235,11 +236,11 @@ export class SubHandlers {
     this.map.set(name, subHandler);
   }
 
-  public get(name: HandlerType) {
+  public get(name: HandlerType): SubHandler {
     return this.map.get(name);
   }
 
-  public keys() {
+  public keys(): IterableIterator<string> {
     return this.map.keys();
   }
 
