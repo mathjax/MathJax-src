@@ -44,11 +44,6 @@ const DefaultOptions: [string, string | boolean][] = [
   //
   ['MultLineWidth', '85%'],
 
-  // 'AMS' for standard AMS environment numbering,
-  //  or 'all' to number all displayed equations
-  // This is now done in classes!
-  // ['autoNumber', 'none'],
-
   // make element ID's use \label name rather than equation number
   // MJ puts in an equation prefix: mjx-eqn
   // When true it uses the label name XXX as mjx-eqn-XXX
@@ -76,11 +71,3 @@ export default class ParseOptions {
     }
   }
 }
-
-
-// this is what goes into an options object:
-// subhandler_configuration.
-// options_map
-// item_factory
-// tag_object
-// possibly a node_factory: TreeHelper should become the node factory!

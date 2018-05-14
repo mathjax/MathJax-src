@@ -28,13 +28,12 @@ import {TEXCLASS, MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from './ParseOptions.js';
 import {TagsFactory} from './Tags.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import StackItemFactory from './StackItemFactory.js';
-import {Configuration} from './Configuration.js';
+import {Configuration, ConfigurationHandler} from './Configuration.js';
 import {SubHandlers} from './MapHandler.js';
 import {BaseConfiguration} from './BaseConfiguration.js';
 import {AmsConfiguration} from './AmsConfiguration.js';
@@ -50,18 +49,44 @@ import './AmsMappings.js';
 
 export namespace NewTex {
 
-  export type Script = {type: string, innerText: string, MathJax: any};
+  export type Script = {type: string, innerText: string};
 
   export let fixStretchy: MmlMo[] = [];
 
-  export function Compile(tex: string, display: boolean): MmlNode {
+  export function configure(packages: string[], settings: {[key: string]: string|boolean}): ParseOptions {
+    const DefaultConfig = new Configuration('default', {}, {}, {}, {}, {});
+    for (let key in packages) {
+      let conf = ConfigurationHandler.getInstance().get(key);
+      if (conf) {
+        DefaultConfig.append(conf);
+      }
+    }
+    let options = new ParseOptions();
+    options.handlers = new SubHandlers(DefaultConfig);
+    options.itemFactory = new StackItemFactory();
+    options.itemFactory.configuration = options;
+    options.itemFactory.addStackItems(DefaultConfig.items);
+    TagsFactory.addTags(DefaultConfig.tags);
+    options.tags = TagsFactory.getDefault();
+    options.tags.configuration = options;
+    for (const key of Object.keys(DefaultConfig.options)) {
+      options.options.set(key, DefaultConfig.options[key]);
+    }
+    console.log(options);
+    return options;
+  }
+
+
+  export function Compile(tex: string, display: boolean, packages: string[],
+                          settings: {[key: string]: string|boolean}): MmlNode {
     let script = {
       type: 'math/tex' + (display ? '; mode=display' : ''),
       innerText: tex,
       MathJax: {}
     };
     fixStretchy = [];
-    let node = Translate(script, [], {});
+    let options = configure(packages, settings);
+    let node = Translate(script, options);
     (node as any).setInheritedAttributes();
     (node as any).setTeXclass();
     // Cleanup:
@@ -75,31 +100,16 @@ export namespace NewTex {
     return TreeHelper.createError(message);
   };
 
+
   export function Translate(
-    script: Script, configurations: string[] = [], stackitem?: any): MmlNode {
-    // TODO: This has to become a configuration option!
-    let options = new ParseOptions();
-    //// TEMPORARY:
-    const DefaultConfig = new Configuration('default', {}, {}, {}, {}, {});
-    DefaultConfig.append(BaseConfiguration);
-    DefaultConfig.append(AmsConfiguration);
-    options.handlers = new SubHandlers(DefaultConfig);
-    options.itemFactory = new StackItemFactory();
-    options.itemFactory.configuration = options;
-    options.itemFactory.addStackItems(DefaultConfig.items);
-    TagsFactory.addTags(DefaultConfig.tags);
-    options.tags = TagsFactory.getDefault();
-    options.tags.configuration = options;
-    for (const key of Object.keys(DefaultConfig.options)) {
-      options.options.set(key, DefaultConfig.options[key]);
-    }
+    script: Script, configurations: ParseOptions): MmlNode {
     let mml: MmlNode;
     let parser: TexParser;
     let math = script.innerText;
     let display = script.type.replace(/\n/g, ' ').
       match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
     try {
-      parser = new TexParser(math, {display: display, isInner: false}, options);
+      parser = new TexParser(math, {display: display, isInner: false}, configurations);
       mml = parser.mml();
     } catch (err) {
       if (!(err instanceof TexError)) {

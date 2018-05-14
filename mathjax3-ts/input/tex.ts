@@ -22,11 +22,10 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-// import {LegacyTeX} from '../../mathjax2/input/TeX.js';
 import {NewTex} from './tex/Translate.js';
 import {separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js'
+import {MmlNode} from '../core/MmlTree/MmlNode.js';
 
 import {FindTeX} from './tex/FindTeX.js';
 
@@ -45,7 +44,25 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     public static NAME: string = 'TeX';
     public static OPTIONS: OptionList = {
         ...AbstractInputJax.OPTIONS,
-        FindTeX: null
+      FindTeX: null,
+      packages: ['base'],
+      settings: {
+        //  This specifies the side on which \tag{} macros will place the tags.
+        //  Set to 'left' to place on the left-hand side.
+        TagSide: 'right',
+        //  This is the amound of indentation (from right or left) for the tags.
+        TagIndent: '0.8em',
+        //  This is the width to use for the multline environment
+        MultLineWidth: '85%',
+        // make element ID's use \label name rather than equation number
+        // MJ puts in an equation prefix: mjx-eqn
+        // When true it uses the label name XXX as mjx-eqn-XXX
+        // If false it uses the actual number N that is displayed: mjx-eqn-N
+        useLabelIds: true,
+        refUpdate: false
+      },
+      // Tagging style.
+      tags: 'none'
     };
 
     /**
@@ -66,7 +83,11 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
      * @override
      */
   public compile(math: MathItem<N, T, D>): MmlNode {
-        return NewTex.Compile(math.math, math.display);
+    console.log(this.options['packages']);
+    console.log(this.options['settings']);
+    console.log(this.options['tags']);
+    return NewTex.Compile(math.math, math.display,
+                          this.options['packages'], this.options['settings']);
     }
 
     /**
