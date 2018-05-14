@@ -23,7 +23,6 @@
  */
 
 import {ParseMethod} from './Types.js';
-import FallbackMethods from './FallbackMethods.js';
 import {HandlerType} from './MapHandler.js';
 
 
@@ -88,32 +87,3 @@ export class Configuration {
   }
 
 };
-
-
-// Some concrete definitions.
-const BaseConfiguration = new Configuration({
-  character: ['command', 'special', 'letter', 'digit'],
-  delimiter: ['delimiter'],
-  // Note, that the position of the delimiters here is important!
-  macro: ['delimiter', 'macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
-  environment: ['environment']
-});
-
-const AmsSymbolsConf = new Configuration({
-  delimiter: ['AMSsymbols-delimiter'],
-  macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
-          'AMSsymbols-delimiter', 'AMSsymbols-macros'],
-});
-
-const AmsMathConf = new Configuration({
-  delimiter: ['AMSmath-delimiter'],
-  macro: ['AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-  environment: ['AMSmath-environment']
-});
-
-// const NoUndef = new Configuration({ }, {macro: FallbackMethods.noUndefined});
-
-export const DefaultConfig = new Configuration({});
-DefaultConfig.append(BaseConfiguration);
-DefaultConfig.append(AmsSymbolsConf);
-DefaultConfig.append(AmsMathConf);

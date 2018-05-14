@@ -23,7 +23,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import FallbackMethods from './FallbackMethods.js';
 import ParseUtil from './ParseUtil.js';
 import {HandlerType} from './MapHandler.js';
 import Stack from './Stack.js';

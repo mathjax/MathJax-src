@@ -257,7 +257,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
   public get factory() {
-    console.log('Getting the item factory for item: ' + this.kind);
     return this._factory;
   }
 

@@ -34,13 +34,13 @@ import {TagsFactory} from './Tags.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import StackItemFactory from './StackItemFactory.js';
-import {Configuration, DefaultConfig} from './Configuration.js';
-import {MapHandler, HandlerType, SubHandler} from './MapHandler.js';
-import FallbackMethods from './FallbackMethods.js';
+import {Configuration} from './Configuration.js';
+import {SubHandlers} from './MapHandler.js';
+import {BaseConfiguration} from './BaseConfiguration.js';
+import {AmsConfiguration} from './AmsConfiguration.js';
 
 import './BaseMappings.js';
 import './AmsMappings.js';
-import './AmsSymbols.js';
 
 // A wrapper for translating scripts with LaTeX content.
 // 
@@ -75,25 +75,6 @@ export namespace NewTex {
     return TreeHelper.createError(message);
   };
 
-  /**
-   * Sets a new configuration for the map handler.
-   * @param {Configuration} configuration A setting for the map handler.
-   */
-  function initHandlers(config: Configuration = DefaultConfig): Map<HandlerType, SubHandler> {
-    // TODO (VS):
-    // * Defaults for configuration and fallback should be handled cleaner.
-    // * Maybe move the subhandlers in with the maphandler.
-    const configurations = new Map();
-    for (const key of Object.keys(config.handler)) {
-      let name = key as HandlerType;
-      let subHandler = new SubHandler(config.handler[name] || [],
-                                      config.fallback[name] ||
-                                      FallbackMethods.get(name));
-      configurations.set(name, subHandler);
-    }
-    return configurations;
-  }
-
   export function Translate(
     script: Script, configurations: string[] = [], stackitem?: any): MmlNode {
     // TODO: This has to become a configuration option!
@@ -102,7 +83,12 @@ export namespace NewTex {
     options.tags.configuration = options;
     options.itemFactory = new StackItemFactory();
     options.itemFactory.configuration = options;
-    options.handlers = initHandlers();
+    //// TEMPORARY:
+    const DefaultConfig = new Configuration({});
+    DefaultConfig.append(BaseConfiguration);
+    DefaultConfig.append(AmsConfiguration);
+    options.handlers = new SubHandlers(DefaultConfig);
+
     let mml: MmlNode;
     let parser: TexParser;
     let math = script.innerText;

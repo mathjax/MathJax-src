@@ -718,6 +718,3 @@ new sm.CharacterMap('not_remap', null, {
   '\u22B5': '\u22ED',
   '\u2203': '\u2204'
 });
-
-
-new sm.CommandMap('empty', null, {});

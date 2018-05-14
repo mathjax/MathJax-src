@@ -24,6 +24,9 @@
 
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
+import *  as sm from './SymbolMap.js';
+import ParseMethods from './ParseMethods.js';
+import {Configuration} from './Configuration.js';
 
 
 export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
@@ -84,6 +87,19 @@ export class MapHandler {
 
 }
 
+
+// Defining empty handlers for declaring new commands, macros, etc.
+// TODO: Make sure multiple runs do not interfere!
+new sm.MacroMap('new-Character', {}, {});
+new sm.DelimiterMap('new-Delimiter', ParseMethods.delimiter, {});
+new sm.CommandMap('new-Macro', {}, {});
+new sm.EnvironmentMap('new-Environment', ParseMethods.environment, {}, {});
+const emptyConf = new Configuration(
+  {character: ['new-Character'],
+   delimiter: ['new-Delimiter'],
+   macro: ['new-Macro'],
+   environment: ['new-Environment']
+  });
 
 
 /**
@@ -191,6 +207,40 @@ export class SubHandler {
    */
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
+  }
+
+}
+
+
+// TODO: This should be an extension of Map, but that only works in ES6 proper!
+export class SubHandlers {
+
+  private map = new Map<HandlerType, SubHandler>();
+  
+  /**
+   * Sets a new configuration for the map handler.
+   * @param {Configuration} configuration A setting for the map handler.
+   */
+  constructor(config: Configuration) {
+    config.append(emptyConf);
+    for (const key of Object.keys(config.handler)) {
+      let name = key as HandlerType;
+      let subHandler = new SubHandler(config.handler[name] || [],
+                                      config.fallback[name]); // A dummy?
+      this.set(name, subHandler);
+    }
+  }
+
+  public set(name: HandlerType, subHandler: SubHandler) {
+    this.map.set(name, subHandler);
+  }
+
+  public get(name: HandlerType) {
+    return this.map.get(name);
+  }
+
+  public keys() {
+    return this.map.keys();
   }
 
 }
