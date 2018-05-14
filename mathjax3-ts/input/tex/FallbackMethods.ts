@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import MapHandler from './MapHandler.js';
+import {MapHandler} from './MapHandler.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {CharacterMap} from './SymbolMap.js';
 import {TreeHelper} from './TreeHelper.js';

@@ -31,7 +31,7 @@
  */
 
 
-import MapHandler from './MapHandler.js';
+import {MapHandler} from './MapHandler.js';
 import {CharacterMap} from './SymbolMap.js';
 import {Entities} from '../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';

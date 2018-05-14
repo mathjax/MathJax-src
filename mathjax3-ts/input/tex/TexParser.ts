@@ -24,14 +24,13 @@
  */
 
 import FallbackMethods from './FallbackMethods.js';
-import MapHandler from './MapHandler.js';
 import ParseUtil from './ParseUtil.js';
+import {HandlerType} from './MapHandler.js';
 import Stack from './Stack.js';
 import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
 import TexError from './TexError.js';
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
-import {HandlerType, Configuration, DefaultConfig} from './Configuration.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {NewTex} from './Translate.js';
@@ -68,8 +67,6 @@ export default class TexParser {
 
   private input: string = '';
   private remainder: string = '';
-  private configurations: Map<HandlerType, SubHandler> = new Map();
-
 
   /**
    * @constructor
@@ -80,7 +77,6 @@ export default class TexParser {
    */
   constructor(private _string: string, env: EnvList,
               public configuration: ParseOptions) {
-    this.configure(null);
     const inner = env.isInner as boolean;
     delete env.isInner;
     let ENV: EnvList;
@@ -128,32 +124,13 @@ export default class TexParser {
 
 
   /**
-   * Sets a new configuration for the map handler.
-   * @param {Configuration} configuration A setting for the map handler.
-   */
-  public configure(config: Configuration): void {
-    // TODO (VS):
-    // * Defaults for configuration and fallback should be handled cleaner.
-    // * Maybe move the subhandlers in with the maphandler.
-    config = config || DefaultConfig;
-    for (const key of Object.keys(config.handler)) {
-      let name = key as HandlerType;
-      let subHandler = new SubHandler(config.handler[name] || [],
-                                      config.fallback[name] ||
-                                      FallbackMethods.get(name));
-      this.configurations.set(name, subHandler);
-    }
-  }
-
-
-  /**
    * Parses the input with the specified kind of map.
    * @param {HandlerType} kind Configuration name.
    * @param {ParseInput} input Input to be parsed.
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
-    return this.configurations.get(kind).parse(input);
+    return this.configuration.handlers.get(kind).parse(input);
   }
 
 
@@ -165,7 +142,7 @@ export default class TexParser {
    * @return {T} A boolean, Character, or Macro.
    */
   public lookup(kind: HandlerType, symbol: string) {
-    return this.configurations.get(kind).lookup(symbol);
+    return this.configuration.handlers.get(kind).lookup(symbol);
   }
 
 
@@ -178,7 +155,7 @@ export default class TexParser {
    *     symbol mapping.
    */
   public contains(kind: HandlerType, symbol: string): boolean {
-    return this.configurations.get(kind).contains(symbol);
+    return this.configuration.handlers.get(kind).contains(symbol);
   }
 
 
@@ -198,9 +175,9 @@ export default class TexParser {
    */
   public toString(): string {
     let str = '';
-    for (const config of Array.from(this.configurations.keys())) {
+    for (const config of Array.from(this.configuration.handlers.keys())) {
       str += config + ': ' +
-        this.configurations.get(config as HandlerType) + '\n';
+        this.configuration.handlers.get(config as HandlerType) + '\n';
     }
     return str;
   }
@@ -482,117 +459,6 @@ export default class TexParser {
       this.i++;
     }
     return star;
-  }
-
-}
-
-
-
-/**
- * Class of symbol mappings that are active in a configuration.
- */
-class SubHandler {
-
-  private _configuration: SymbolMap[] = [];
-
-  /**
-   * @constructor
-   * @param {Array.<string>} maps Names of the maps included in this
-   *     configuration.
-   */
-  constructor(maps: string[], private _fallback: ParseMethod) {
-    for (const name of maps) {
-      this.add(name);
-    }
-  }
-
-
-  /**
-   * Adds a symbol map to the configuration if it exists.
-   * @param {string} name of the symbol map.
-   */
-  public add(name: string): void {
-    let map = MapHandler.getInstance().getMap(name);
-    if (!map) {
-      this.warn('Configuration ' + name + ' not found! Omitted.');
-      return;
-    }
-    this._configuration.push(map);
-  }
-
-
-  /**
-   * Parses the given input with the first applicable symbol map.
-   * @param {ParseInput} input The input for the parser.
-   * @return {ParseResult} The output of the parsing function.
-   */
-  public parse(input: ParseInput): ParseResult {
-    for (let map of this._configuration) {
-      const result = map.parse(input);
-      if (result) {
-        return result;
-      }
-    }
-    let [env, symbol] = input;
-    this._fallback(env, symbol);
-  }
-
-
-  /**
-   * Maps a symbol to its "parse value" if it exists.
-   *
-   * @param {string} symbol The symbol to parse.
-   * @return {T} A boolean, Character, or Macro.
-   */
-  public lookup<T>(symbol: string): T {
-    let map = this.applicable(symbol) as AbstractSymbolMap<T>;
-    return map ? map.lookup(symbol) : null;
-  }
-
-
-  /**
-   * Checks if a symbol is contained in one of the symbol mappings of this
-   * configuration.
-   *
-   * @param {string} symbol The symbol to parse.
-   * @return {boolean} True if the symbol is contained in the mapping.
-   */
-  public contains(symbol: string): boolean {
-    return this.applicable(symbol) ? true : false;
-  }
-
-
-  /**
-   * @override
-   */
-  public toString(): string {
-    return this._configuration
-      .map(function(x: SymbolMap) {return x.name; })
-      .join(', ');
-  }
-
-
-  /**
-   * Retrieves the first applicable symbol map in the configuration.
-   * @param {string} symbol The symbol to parse.
-   * @return {SymbolMap} A map that can parse the symbol.
-   */
-  private applicable(symbol: string): SymbolMap {
-    for (let map of this._configuration) {
-      if (map.contains(symbol)) {
-        return map;
-      }
-    }
-    return null;
-  }
-
-
-  /**
-   * Prints a warning message.
-   * @param {string} message The warning.
-   */
-  private warn(message: string) {
-    console.log('TexParser Warning: ' + message);
   }
 
 }

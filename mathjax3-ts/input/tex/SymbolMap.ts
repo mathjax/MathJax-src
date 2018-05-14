@@ -24,7 +24,7 @@
 
 import {Attributes, Args, ParseMethod, ParseInput, ParseResult} from './Types.js';
 import {Symbol, Macro} from './Symbol.js';
-import MapHandler from './MapHandler.js';
+import {MapHandler} from './MapHandler.js';
 
 
 /**

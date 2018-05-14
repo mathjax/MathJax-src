@@ -30,16 +30,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import MapHandler from './MapHandler.js';
-import {CharacterMap} from './SymbolMap.js';
-import {Entities} from '../../util/Entities.js';
-import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
-import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
-import {TexConstant} from './TexConstants.js';
-import TexError from './TexError.js';
-import ParseUtil from './ParseUtil.js';
+import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
 import {TreeHelper} from './TreeHelper.js';
-import {Property, PropertyList} from '../../core/Tree/Node.js';
+import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 
 // Union types for abbreviation.

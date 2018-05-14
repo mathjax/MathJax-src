@@ -38,7 +38,7 @@ import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {Label} from './Tags.js';
 import {Macro} from './Symbol.js';
 import {CommandMap} from './SymbolMap.js';
-import MapHandler from './MapHandler.js';
+import {MapHandler} from './MapHandler.js';
 
 
 // Namespace

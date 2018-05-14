@@ -24,9 +24,8 @@
 
 import {ParseMethod} from './Types.js';
 import FallbackMethods from './FallbackMethods.js';
+import {HandlerType} from './MapHandler.js';
 
-
-export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
 
 export type HandlerConfig = {
   [P in HandlerType]?: string[]

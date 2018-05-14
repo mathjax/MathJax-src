@@ -23,9 +23,12 @@
  */
 
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
+import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 
 
-export default class MapHandler {
+export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
+
+export class MapHandler {
 
   private static instance: MapHandler;
 
@@ -78,5 +81,116 @@ export default class MapHandler {
    * @constructor
    */
   private constructor() { }
+
+}
+
+
+
+/**
+ * Class of symbol mappings that are active in a configuration.
+ */
+export class SubHandler {
+
+  private _configuration: SymbolMap[] = [];
+
+  /**
+   * @constructor
+   * @param {Array.<string>} maps Names of the maps included in this
+   *     configuration.
+   */
+  constructor(maps: string[], private _fallback: ParseMethod) {
+    for (const name of maps) {
+      this.add(name);
+    }
+  }
+
+
+  /**
+   * Adds a symbol map to the configuration if it exists.
+   * @param {string} name of the symbol map.
+   */
+  public add(name: string): void {
+    let map = MapHandler.getInstance().getMap(name);
+    if (!map) {
+      this.warn('Configuration ' + name + ' not found! Omitted.');
+      return;
+    }
+    this._configuration.push(map);
+  }
+
+
+  /**
+   * Parses the given input with the first applicable symbol map.
+   * @param {ParseInput} input The input for the parser.
+   * @return {ParseResult} The output of the parsing function.
+   */
+  public parse(input: ParseInput): ParseResult {
+    for (let map of this._configuration) {
+      const result = map.parse(input);
+      if (result) {
+        return result;
+      }
+    }
+    let [env, symbol] = input;
+    this._fallback(env, symbol);
+  }
+
+
+  /**
+   * Maps a symbol to its "parse value" if it exists.
+   *
+   * @param {string} symbol The symbol to parse.
+   * @return {T} A boolean, Character, or Macro.
+   */
+  public lookup<T>(symbol: string): T {
+    let map = this.applicable(symbol) as AbstractSymbolMap<T>;
+    return map ? map.lookup(symbol) : null;
+  }
+
+
+  /**
+   * Checks if a symbol is contained in one of the symbol mappings of this
+   * configuration.
+   *
+   * @param {string} symbol The symbol to parse.
+   * @return {boolean} True if the symbol is contained in the mapping.
+   */
+  public contains(symbol: string): boolean {
+    return this.applicable(symbol) ? true : false;
+  }
+
+
+  /**
+   * @override
+   */
+  public toString(): string {
+    return this._configuration
+      .map(function(x: SymbolMap) {return x.name; })
+      .join(', ');
+  }
+
+
+  /**
+   * Retrieves the first applicable symbol map in the configuration.
+   * @param {string} symbol The symbol to parse.
+   * @return {SymbolMap} A map that can parse the symbol.
+   */
+  private applicable(symbol: string): SymbolMap {
+    for (let map of this._configuration) {
+      if (map.contains(symbol)) {
+        return map;
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   * Prints a warning message.
+   * @param {string} message The warning.
+   */
+  private warn(message: string) {
+    console.log('TexParser Warning: ' + message);
+  }
 
 }

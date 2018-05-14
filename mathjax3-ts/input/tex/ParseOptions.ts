@@ -24,6 +24,7 @@
 
 import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
+import {HandlerType, SubHandler} from './MapHandler.js';
 
 
 const DefaultOptions: [string, string | boolean][] = [
@@ -63,7 +64,7 @@ const DefaultOptions: [string, string | boolean][] = [
  */
 export default class ParseOptions {
 
-  // private handlers: Map<HandlerType, SubHandler> = new Map();
+  public handlers: Map<HandlerType, SubHandler> = new Map();
   public options: Map<string, string|boolean> = new Map();
   public itemFactory: StackItemFactory;
   public tags: Tags;
