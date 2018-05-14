@@ -22,7 +22,6 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-// import {NewTex} from './tex/Translate.js';
 import {separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
 import {TEXCLASS, MmlNode, TextNode} from '../core/MmlTree/MmlNode.js';
