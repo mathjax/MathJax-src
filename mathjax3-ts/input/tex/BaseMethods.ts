@@ -35,7 +35,7 @@ import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {TagConfig, DefaultTags, Label} from './Tags.js';
+import {Label} from './Tags.js';
 
 
 // Namespace
@@ -420,7 +420,7 @@ BaseMethods.Sqrt = function(parser: TexParser, name: string) {
   if (arg === '\\frac') {
     arg  += '{' + parser.GetArgument(arg) + '}{' + parser.GetArgument(arg) + '}';
   }
-  let mml = new TexParser(arg, parser.stack.env).mml();
+  let mml = new TexParser(arg, parser.stack.env, parser.configuration).mml();
   if (!n) {
     // @test Square Root
     mml = TreeHelper.createNode('msqrt', [mml], {});
@@ -439,7 +439,7 @@ function parseRoot(parser: TexParser, n: string) {
   const env = parser.stack.env;
   const inRoot = env['inRoot'];
   env['inRoot'] = true;
-  const newParser = new TexParser(n, env);
+  const newParser = new TexParser(n, env, parser.configuration);
   let node = newParser.mml();
   const global = newParser.stack.global;
   if (global['leftRoot'] || global['upRoot']) {
@@ -593,7 +593,7 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
       mml = parser.itemFactory.create('fn', parser.mmlToken(node));
     } else {
       // @test Mathop Cal
-      parsed = new TexParser(arg, parser.stack.env).mml();
+      parsed = new TexParser(arg, parser.stack.env, parser.configuration).mml();
       node = TreeHelper.createNode('TeXAtom', [parsed], def);
       mml = parser.itemFactory.create('fn', node);
     }
@@ -1207,8 +1207,8 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
     columnalign: align,
     columnspacing: (spacing || '1em'),
     rowspacing: '3pt',
-    side: TagConfig.get('TagSide'),
-    minlabelspacing: TagConfig.get('TagIndent')
+    side: parser.options.get('TagSide'),
+    minlabelspacing: parser.options.get('TagIndent')
   };
   return newItem;
 };
@@ -1218,7 +1218,7 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
  * Handles no tag commands.
  */
 BaseMethods.HandleNoTag = function(parser: TexParser, name: string) {
-  DefaultTags.notag();
+  parser.tags.notag();
 };
 
 
@@ -1234,18 +1234,18 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
     return;
   }
   // TODO: refUpdate is currently not implemented.
-  if (!TagConfig.get('refUpdate')) {
+  if (!parser.options.get('refUpdate')) {
     // @test Label, Ref, Ref Unknown
-    if (DefaultTags.label) {
+    if (parser.tags.label) {
       // @test Double Label Error
       throw new TexError(['MultipleCommand', 'Multiple %1', name]);
     }
-    DefaultTags.label = label;
-    if (DefaultTags.allLabels[label] || DefaultTags.labels[label]) {
+    parser.tags.label = label;
+    if (parser.tags.allLabels[label] || parser.tags.labels[label]) {
       // @ Duplicate Label Error
       throw new TexError(['MultipleLabel', 'Label \'%1\' multiply defined', label])}
     // TODO: This should be set in the tags structure!
-    DefaultTags.labels[label] = new Label(); // will be replaced by tag value later
+    parser.tags.labels[label] = new Label(); // will be replaced by tag value later
   }
 };
 
@@ -1262,7 +1262,7 @@ let baseURL = (typeof(document) === 'undefined' ||
 BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
   // @test Ref, Ref Unknown, Eqref, Ref Default, Ref Named
   let label = this.GetArgument(name);
-  let ref = DefaultTags.allLabels[label] || DefaultTags.labels[label];
+  let ref = parser.tags.allLabels[label] || parser.tags.labels[label];
   if (!ref) {
     // @test Ref Unknown
     ref = new Label();
@@ -1270,10 +1270,10 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
   let tag = ref.tag;
   if (eqref) {
     // @test Eqref
-    tag = DefaultTags.formatTag(tag);
+    tag = parser.tags.formatTag(tag);
   }
   let node = TreeHelper.createNode('mrow', ParseUtil.internalMath(parser, tag), {
-    href: DefaultTags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
+    href: parser.tags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
   });
   parser.Push(node);
 };

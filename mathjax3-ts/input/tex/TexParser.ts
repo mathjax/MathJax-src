@@ -28,6 +28,7 @@ import MapHandler from './MapHandler.js';
 import ParseUtil from './ParseUtil.js';
 import Stack from './Stack.js';
 import StackItemFactory from './StackItemFactory.js';
+import {Tags} from './Tags.js';
 import TexError from './TexError.js';
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {HandlerType, Configuration, DefaultConfig} from './Configuration.js';
@@ -35,6 +36,7 @@ import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {NewTex} from './Translate.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
+import ParseOptions from './ParseOptions.js';
 import {StackItem, EnvList} from './StackItem.js';
 import {Symbol} from './Symbol.js';
 
@@ -50,11 +52,7 @@ export default class TexParser {
    */
   public macroCount: number = 0;
 
-  /**
-   * The factory for stack items.
-   * @type {StackItemFactory}
-   */
-  public itemFactory = new StackItemFactory();
+  // public itemFactory = new StackItemFactory();
 
   /**
    * The stack for items and created nodes.
@@ -80,8 +78,9 @@ export default class TexParser {
    *     state of the overall expression translation.
    * @param {Configuration=} config A parser configuration.
    */
-  constructor(private _string: string, env: EnvList, config?: Configuration) {
-    this.configure(config);
+  constructor(private _string: string, env: EnvList,
+              public configuration: ParseOptions) {
+    this.configure(null);
     const inner = env.isInner as boolean;
     delete env.isInner;
     let ENV: EnvList;
@@ -98,6 +97,26 @@ export default class TexParser {
     this.Push(this.itemFactory.create('stop'));
   }
 
+  /**
+   * @return {Map<string, string|boolean>} The configuration options.
+   */
+  get options() {
+    return this.configuration.options;
+  }
+
+  /**
+   * @return {StackItemFactory} The factory for stack items.
+   */
+  get itemFactory() {
+    return this.configuration.itemFactory;
+  }
+
+  /**
+   * @return {Tags} The tags style of this configuration.
+   */
+  get tags() {
+    return this.configuration.tags;
+  }
 
   set string(str: string) {
     this._string = str;
@@ -424,7 +443,7 @@ export default class TexParser {
    *  Parse various substrings
    */
   public ParseArg(name: string) {
-    let object = new TexParser(this.GetArgument(name), this.stack.env);
+    let object = new TexParser(this.GetArgument(name), this.stack.env, this.configuration);
     return object.mml();
   }
 
@@ -435,7 +454,7 @@ export default class TexParser {
    * @return {MmlNode} The parsed node.
    */
   public ParseUpTo(name: string, token: string) {
-    return new TexParser(this.GetUpTo(name, token), this.stack.env).mml();
+    return new TexParser(this.GetUpTo(name, token), this.stack.env, this.configuration).mml();
   }
 
 

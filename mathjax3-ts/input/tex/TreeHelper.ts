@@ -53,7 +53,7 @@ export namespace TreeHelper {
                            'close'
                           ];
 
-  const methodOut: boolean = false;
+  const methodOut: boolean = true;
   
   export function createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
     const node = factory.create(kind, {}, []);

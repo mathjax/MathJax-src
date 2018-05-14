@@ -35,7 +35,7 @@ import TexError from './TexError.js';
 import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
-import {Label, TagConfig, DefaultTags} from './Tags.js';
+import {Label} from './Tags.js';
 import {Macro} from './Symbol.js';
 import {CommandMap} from './SymbolMap.js';
 import MapHandler from './MapHandler.js';
@@ -103,9 +103,9 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
     displaystyle: true,
     rowspacing: '.5em',
     columnwidth: '100%',
-    width: TagConfig.get('MultLineWidth'),
-    side: TagConfig.get('TagSide'),
-    minlabelspacing: TagConfig.get('TagIndent')
+    width: parser.options.get('MultLineWidth'),
+    side: parser.options.get('TagSide'),
+    minlabelspacing: parser.options.get('TagIndent')
   };
   return item;
 };
@@ -191,7 +191,7 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   TreeHelper.setData(mml, mml.over, mpadded);
   if (bot) {
     // @test Above Below Left Arrow, Above Below Right Arrow
-    let bottom = new TexParser(bot, parser.stack.env).mml();
+    let bottom = new TexParser(bot, parser.stack.env, parser.configuration).mml();
     mpadded = TreeHelper.createNode('mpadded', [bottom], def);
     TreeHelper.setProperties(mpadded, {voffset: '-.24em'});
     TreeHelper.setData(mml, mml.under, mpadded);
@@ -234,8 +234,10 @@ AmsMethods.CFrac = function(parser: TexParser, name: string) {
   let den = parser.GetArgument(name);
   let lrMap: {[key: string]: string} = {
     l: TexConstant.Align.LEFT, r: TexConstant.Align.RIGHT, '': ''};
-  let numNode = new TexParser('\\strut\\textstyle{' + num + '}', parser.stack.env).mml();
-  let denNode = new TexParser('\\strut\\textstyle{' + den + '}', parser.stack.env).mml();
+  let numNode = new TexParser('\\strut\\textstyle{' + num + '}',
+                              parser.stack.env, parser.configuration).mml();
+  let denNode = new TexParser('\\strut\\textstyle{' + den + '}',
+                              parser.stack.env, parser.configuration).mml();
   let frac = TreeHelper.createNode('mfrac', [numNode, denNode], {});
   lr = lrMap[lr];
   if (lr == null) {
@@ -278,7 +280,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
   if (left || right) {
     // @test Normal Binomial, Text Binomial, Display Binomial
     TreeHelper.setProperties(frac, {withDelims: true});
-    frac = ParseUtil.fixedFence(left, frac, right);
+    frac = ParseUtil.fixedFence(left, frac, right, parser.configuration);
   }
   if (style !== '') {
     let styleDigit = parseInt(style, 10);
@@ -311,18 +313,18 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
  * tag is 
  */
 AmsMethods.HandleTag = function(parser: TexParser, name: string) {
-  if (!DefaultTags.currentTag.taggable) {
+  if (!parser.tags.currentTag.taggable) {
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',
-                        name, DefaultTags.env]);
+                        name, parser.tags.env]);
   }
   // TODO: sort out empty strings in tagId!
-  if (DefaultTags.currentTag.tag) {
+  if (parser.tags.currentTag.tag) {
     throw new TexError(['MultipleCommand', 'Multiple %1', name]);
   }
   let star = parser.GetStar();
   let tagId = ParseUtil.trimSpaces(parser.GetArgument(name));
-  DefaultTags.tag(tagId, star);
+  parser.tags.tag(tagId, star);
 };
 
 

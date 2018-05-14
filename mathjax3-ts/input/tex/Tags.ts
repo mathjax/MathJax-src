@@ -26,41 +26,7 @@ import TexParser from './TexParser.js';
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {EnvList} from './StackItem.js';
-
-// For the time being here is a configuration object for Tags, equation numbers
-// etc.  This should move somewhere else, once we have decided how to really
-// deal with them.
-//
-export let TagConfig = new Map<string, string|boolean>([
-  //
-  //  This specifies the side on which \tag{} macros will place the tags.
-  //  Set to 'left' to place on the left-hand side.
-  //
-  ['TagSide', 'right'],
-
-  //
-  //  This is the amound of indentation (from right or left) for the tags.
-  //
-  ['TagIndent', '0.8em'],
-
-  //
-  //  This is the width to use for the multline environment
-  //
-  ['MultLineWidth', '85%'],
-
-  // 'AMS' for standard AMS environment numbering,
-  //  or 'all' to number all displayed equations
-  // This is now done in classes!
-  // ['autoNumber', 'none'],
-
-  // make element ID's use \label name rather than equation number
-  // MJ puts in an equation prefix: mjx-eqn
-  // When true it uses the label name XXX as mjx-eqn-XXX
-  // If false it uses the actual number N that is displayed: mjx-eqn-N
-  ['useLabelIds', true],
-
-  ['refUpdate', false]
-]);
+import ParseOptions from './ParseOptions.js';
 
 
 /**
@@ -109,6 +75,12 @@ export class TagInfo {
 
 
 export interface Tags {
+
+  /**
+   * The global configurations in which the parsing takes place.
+   * @type {ParseOptions}
+   */
+  configuration: ParseOptions;
 
   /**
    * IDs used in this equation.
@@ -188,6 +160,7 @@ export interface Tags {
   env: string;
 
   currentTag: TagInfo;
+  enTag(node: MmlNode, tag: MmlNode): MmlNode;
 }
 
 
@@ -206,14 +179,17 @@ export class AbstractTags implements Tags {
   protected offset: number = 0;
 
   /**
-   * IDs used in this equation.
-   * @type {Object.<boolean>}
+   * @override
+   */
+  public configuration: ParseOptions = null;
+
+  /**
+   * @override
    */
   public ids: {[key: string]: boolean} = {};
 
   /**
-   * IDs used in previous equations.
-   * @type {Object.<boolean>}
+   * @override
    */
   public allIds: {[key: string]: boolean} = {};
 
@@ -375,6 +351,20 @@ export class AbstractTags implements Tags {
     return node;
   }
 
+  /**
+   * @override
+   */
+  public enTag = function(node: MmlNode, tag: MmlNode): MmlNode {
+    let cell = TreeHelper.createNode('mtd', [node], {});
+    let row = TreeHelper.createNode('mlabeledtr', [tag, cell], {});
+    let table = TreeHelper.createNode('mtable', [row], {
+      side: this.configuration.options.get('TagSide'),
+      minlabelspacing: this.configuration.options.get('TagIndent'),
+      displaystyle: true
+    });
+    return table;
+  };
+
 
   /**
    * Sets the tag id.
@@ -382,7 +372,7 @@ export class AbstractTags implements Tags {
   private makeId() {
     // TODO: Test for uniqueness.
     this.currentTag.tagId = this.formatId(
-      TagConfig.get('useLabelIds') ?
+      this.configuration.options.get('useLabelIds') ?
         (this.label || this.currentTag.tag) : this.currentTag.tag);
   }
 
@@ -395,7 +385,8 @@ export class AbstractTags implements Tags {
     if (this.label) {
       this.labels[this.label] = new Label(this.currentTag.tag, this.currentTag.tagId);
     }
-    let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {}).mml();
+    let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
+                            this.configuration).mml();
     return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
   }
 
@@ -448,7 +439,7 @@ export class AllTags extends AbstractTags {
       return node;
     }
     let tag = this.getTag(true);
-    return TagsFactory.enTag(node, tag);
+    return this.enTag(node, tag);
   }
 
 }
@@ -492,20 +483,9 @@ export namespace TagsFactory {
   };
 
   export let getDefault = function() {
-    DefaultTags = TagsFactory.create('default');
-  };
-
-  export let enTag = function(node: MmlNode, tag: MmlNode): MmlNode {
-    let cell = TreeHelper.createNode('mtd', [node], {});
-    let row = TreeHelper.createNode('mlabeledtr', [tag, cell], {});
-    let table = TreeHelper.createNode('mtable', [row], {
-      side: TagConfig.get('TagSide'),
-      minlabelspacing: TagConfig.get('TagIndent'),
-      displaystyle: true
-    });
-    return table;
+    return TagsFactory.create('default');
   };
 
 }
 
-export let DefaultTags = TagsFactory.create('default');
+// export let DefaultTags = TagsFactory.create('default');

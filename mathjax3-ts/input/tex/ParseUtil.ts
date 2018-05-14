@@ -34,6 +34,7 @@ import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {EnvList} from './StackItem.js';
 import {ArrayItem} from './BaseItems.js';
+import ParseOptions from './ParseOptions.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
@@ -132,13 +133,13 @@ namespace ParseUtil {
   /**
    *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
    */
-  export function fixedFence(open: string, mml: MmlNode, close: string) {
+  export function fixedFence(open: string, mml: MmlNode, close: string, config: ParseOptions) {
     // @test Choose, Over With Delims, Above with Delims
     TreeHelper.printMethod('fixedFence');
     let mrow = TreeHelper.createNode(
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
     if (open) {
-      TreeHelper.appendChildren(mrow, [mathPalette(open, 'l')]);
+      TreeHelper.appendChildren(mrow, [mathPalette(open, 'l', config)]);
     }
     if (TreeHelper.isType(mml, 'mrow')) {
       TreeHelper.appendChildren(mrow, TreeHelper.getChildren(mml));
@@ -146,20 +147,20 @@ namespace ParseUtil {
       TreeHelper.appendChildren(mrow, [mml]);
     }
     if (close) {
-      TreeHelper.appendChildren(mrow, [mathPalette(close, 'r')]);
+      TreeHelper.appendChildren(mrow, [mathPalette(close, 'r', config)]);
     }
     return mrow;
   }
 
 
-  export function mathPalette(fence: string, side: string) {
+  export function mathPalette(fence: string, side: string, config: ParseOptions) {
     TreeHelper.printMethod('mathPalette');
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
-    return new TexParser('\\mathchoice' + D + T + T + T, {}).mml();
+    return new TexParser('\\mathchoice' + D + T + T + T, {}, config).mml();
   }
 
 
@@ -217,7 +218,7 @@ namespace ParseUtil {
           if (match === '$' && braces === 0) {
             // @test Interspersed Text
             node = TreeHelper.createNode('TeXAtom',
-                                         [(new TexParser(text.slice(k, i - 1), {})).mml()], {});
+                                         [(new TexParser(text.slice(k, i - 1), {}, parser.configuration)).mml()], {});
             mml.push(node);
             match = '';
             k = i;
@@ -235,7 +236,7 @@ namespace ParseUtil {
         } else if (c === '}') {
           if (match === '}' && braces === 0) {
             // TODO: test a\mbox{ \eqref{1} } c
-            node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i), {})).mml()], def);
+            node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i), {}, parser.configuration)).mml()], def);
             mml.push(node);
             match = '';
             k = i;
@@ -267,7 +268,7 @@ namespace ParseUtil {
               }
               match = ')'; k = i;
             } else if (c === ')' && match === ')' && braces === 0) {
-              node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i - 2), {})).mml()], {});
+              node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i - 2), {}, parser.configuration)).mml()], {});
               mml.push(node);
               match = '';
               k = i;

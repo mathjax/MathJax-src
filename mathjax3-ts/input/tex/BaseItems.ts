@@ -43,7 +43,6 @@ import {TreeHelper} from './TreeHelper.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import StackItemFactory from './StackItemFactory.js';
 import {BaseItem, StackItem, EnvList} from './StackItem.js';
-import {TagsFactory, DefaultTags} from './Tags.js';
 
 
 export class StartItem extends BaseItem {
@@ -80,7 +79,7 @@ export class StartItem extends BaseItem {
     if (item.isKind('stop')) {
       let node = this.toMml();
       if (!this.global.isInner) {
-        node = DefaultTags.finalize(node, this.env);
+        node = this.factory.configuration.tags.finalize(node, this.env);
       }
       return this.factory.create('mml', node);
     }
@@ -309,7 +308,8 @@ export class OverItem extends BaseItem {
         // @test Choose
         TreeHelper.setProperties(mml, {'withDelims': true});
         mml = ParseUtil.fixedFence(this.getProperty('open') as string, mml,
-                                   this.getProperty('close') as string);
+                                   this.getProperty('close') as string,
+                                   this.factory.configuration);
       }
       return [this.factory.create('mml', mml), item];
     }
@@ -873,7 +873,7 @@ export class EqnArrayItem extends ArrayItem {
    */
   constructor(factory: any, ...args: any[]) {
     super(factory);
-    DefaultTags.start(args[0], args[2], args[1]);
+    this.factory.configuration.tags.start(args[0], args[2], args[1]);
   }
 
 
@@ -906,12 +906,12 @@ export class EqnArrayItem extends ArrayItem {
     TreeHelper.printMethod('AMS-EndRow');
     // @test Cubic Binomial
     let mtr = 'mtr';
-    let tag = DefaultTags.getTag();
+    let tag = this.factory.configuration.tags.getTag();
     if (tag) {
       this.row = [tag].concat(this.row);
       mtr = 'mlabeledtr';
     }
-    DefaultTags.clearTag();
+    this.factory.configuration.tags.clearTag();
     const node = TreeHelper.createNode(mtr, this.row, {});
     this.table.push(node); this.row = [];
   }
@@ -923,7 +923,7 @@ export class EqnArrayItem extends ArrayItem {
     TreeHelper.printMethod('AMS-EndTable');
     // @test Cubic Binomial
     super.EndTable();
-    DefaultTags.end();
+    this.factory.configuration.tags.end();
   }
 }
 
@@ -935,7 +935,7 @@ export class EquationItem extends BaseItem {
    */
   constructor(factory: any, ...args: any[]) {
     super(factory);
-    DefaultTags.start('equation', true, args[0]);
+    this.factory.configuration.tags.start('equation', true, args[0]);
   }
 
 
@@ -952,8 +952,8 @@ export class EquationItem extends BaseItem {
   public checkItem(item: StackItem) {
     if (item.isKind('end')) {
       let mml = this.toMml();
-      let tag = DefaultTags.getTag();
-      return [tag ? TagsFactory.enTag(mml, tag) : mml, item];
+      let tag = this.factory.configuration.tags.getTag();
+      return [tag ? this.factory.configuration.tags.enTag(mml, tag) : mml, item];
     }
     return super.checkItem(item);
   }

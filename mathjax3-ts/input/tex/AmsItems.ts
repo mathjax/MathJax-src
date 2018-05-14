@@ -39,7 +39,6 @@ import StackItemFactory from './StackItemFactory.js';
 import {StackItem, BaseItem} from './StackItem.js';
 import TexError from './TexError.js';
 import {TexConstant} from './TexConstants.js';
-import {DefaultTags, TagsFactory} from './Tags.js';
 
 
 export class MultlineItem extends ArrayItem {
@@ -49,7 +48,7 @@ export class MultlineItem extends ArrayItem {
    */
   constructor(factory: any, ...args: any[]) {
     super(factory);
-    DefaultTags.start('multline', true, args[0]);
+    this.factory.configuration.tags.start('multline', true, args[0]);
   }
 
 
@@ -111,7 +110,7 @@ export class MultlineItem extends ArrayItem {
         TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0],
                                 'columnalign', TexConstant.Align.RIGHT);
       }
-      let tag = DefaultTags.getTag();
+      let tag = this.factory.configuration.tags.getTag();
       if (tag) {
         label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
         const mtr = this.table[label];
@@ -121,6 +120,6 @@ export class MultlineItem extends ArrayItem {
         this.table[label] = mlabel;
       }
     }
-    DefaultTags.end();
+    this.factory.configuration.tags.end();
   }
 }

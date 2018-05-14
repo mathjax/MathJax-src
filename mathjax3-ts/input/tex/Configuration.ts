@@ -38,6 +38,13 @@ export type FallbackConfig = {
 
 export class Configuration {
 
+  // Configuration for the TexParser consist of the following:
+  // * Handlerconfigurations
+  // * Fallback methods for handler types.
+  // * StackItem mappings for the StackFactory.
+  // * Tagging objects.
+  // * Other Options.
+
   /**
    * @constructor
    */

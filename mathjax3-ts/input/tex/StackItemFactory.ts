@@ -35,6 +35,7 @@ import * as sm from './BaseItems.js';
 import * as ams from './AmsItems.js';
 import {StackItemClass, StackItem, BaseItem} from './StackItem.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
+import ParseOptions from './ParseOptions.js';
 
 
 class DummyItem extends BaseItem {}
@@ -79,6 +80,7 @@ export default class StackItemFactory {
    * A default item.
    */
   public defaultKind = 'dummy';
+  public configuration: ParseOptions = null;
 
   private itemMap: Map<string, StackItemClass> = new Map();
 

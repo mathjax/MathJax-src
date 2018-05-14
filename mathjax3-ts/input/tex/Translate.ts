@@ -29,9 +29,11 @@ import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
-import {TagsFactory, DefaultTags} from './Tags.js';
+import ParseOptions from './ParseOptions.js';
+import {TagsFactory} from './Tags.js';
 import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
+import StackItemFactory from './StackItemFactory.js';
 
 import './BaseMappings.js';
 import './AmsMappings.js';
@@ -73,14 +75,18 @@ export namespace NewTex {
   export function Translate(
     script: Script, configurations: string[] = [], stackitem?: any): MmlNode {
     // TODO: This has to become a configuration option!
-    TagsFactory.getDefault();
+    let options = new ParseOptions();
+    options.tags = TagsFactory.getDefault();
+    options.tags.configuration = options;
+    options.itemFactory = new StackItemFactory();
+    options.itemFactory.configuration = options;
     let mml: MmlNode;
     let parser: TexParser;
     let math = script.innerText;
     let display = script.type.replace(/\n/g, ' ').
       match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
     try {
-      parser = new TexParser(math, {display: display, isInner: false});
+      parser = new TexParser(math, {display: display, isInner: false}, options);
       mml = parser.mml();
     } catch (err) {
       if (!(err instanceof TexError)) {
