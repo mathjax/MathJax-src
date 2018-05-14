@@ -33,9 +33,11 @@
 
 import * as sm from './BaseItems.js';
 import * as ams from './AmsItems.js';
-import {StackItemClass, StackItem} from './StackItem.js';
+import {StackItemClass, StackItem, BaseItem} from './StackItem.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 
+
+class DummyItem extends BaseItem {}
 
 /**
  * The StackItemFactory is initially populated with the default stack item
@@ -45,7 +47,9 @@ import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
  */
 export default class StackItemFactory {
 
-  public static DefaultStackItems: {[kind: string]: StackItemClass} = {
+  private static DefaultStackItems: {[kind: string]: StackItemClass} = {
+    [DummyItem.prototype.kind]: DummyItem,
+    // BaseItems
     [sm.StartItem.prototype.kind]: sm.StartItem,
     [sm.StopItem.prototype.kind]: sm.StopItem,
     [sm.OpenItem.prototype.kind]: sm.OpenItem,
@@ -71,11 +75,14 @@ export default class StackItemFactory {
     [ams.MultlineItem.prototype.kind]: ams.MultlineItem
   };
 
+  /**
+   * A default item.
+   */
+  public defaultKind = 'dummy';
+
   private itemMap: Map<string, StackItemClass> = new Map();
 
   private item: {[kind: string]: (factory: StackItemFactory, ...args: any[]) => StackItem} = {};
-
-  public defaultKind = 'base';
 
   /**
    * @constructor
@@ -92,10 +99,9 @@ export default class StackItemFactory {
   public addStackItems(stackItems: {[kind: string]: StackItemClass}) {
     for (const kind of Object.keys(stackItems)) {
       this.itemMap.set(kind, stackItems[kind]);
-      let THIS = this;
-      let KIND = this.itemMap.get(kind);
+      let constr = this.itemMap.get(kind);
       this.item[kind] = (factory: StackItemFactory, ...args: any[]) => {
-        return new KIND(factory, ...args);
+        return new constr(factory, ...args);
       };
     }
   }

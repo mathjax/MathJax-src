@@ -343,6 +343,40 @@ export class AbstractTags implements Tags {
 
 
   /**
+   * @override
+   */
+  public getTag(force: boolean = false) {
+    if (force) {
+      this.autoTag();
+      return this.makeTag();
+    }
+    const ct = this.currentTag;
+    if (ct.taggable && !ct.noTag) {
+      if (ct.defaultTags) {
+        this.autoTag();
+      } else {
+        return null;
+      }
+      return this.makeTag();
+    }
+    return null;
+  }
+
+  public reset(n: number, keepLabels: boolean) {
+    this.offset = (n || 0);
+    this.history = [];
+    if (!keepLabels) {
+      this.labels = {};
+      this.ids = {};
+    }
+  }
+
+  public finalize(node: MmlNode, env: EnvList): MmlNode {
+    return node;
+  }
+
+
+  /**
    * Sets the tag id.
    */
   private makeId() {
@@ -363,63 +397,6 @@ export class AbstractTags implements Tags {
     }
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {}).mml();
     return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
-  }
-
-
-  /**
-   * @override
-   */
-  public getTag(force: boolean = false) {
-    if (force) {
-      this.autoTag();
-      return this.makeTag();
-    }
-    const ct = this.currentTag;
-    if (ct.taggable && !ct.noTag) {
-      if (ct.defaultTags) {
-        this.autoTag();
-      } else {
-        return null;
-      }
-      return this.makeTag();
-    }
-    return null;
-  // this.tag = global.tag;
-    // global.tagged = true;
-    // if (global.label) {
-    //   if (CONFIG.useLabelIds) {tag.id = this.formatId(global.label)}
-    //   AMS.eqlabels[global.label] = {tag:global.tagID, id:tag.id};
-    // }
-    // //
-    // //  Check for repeated ID's (either in the document or as
-    // //  a previous tag) and find a unique related one. (#240)
-    // //
-    // //  TODO: find tests and sort this out!
-    // //
-    // // if (AMS.IDs[tag.id] || AMS.eqIDs[tag.id]) {
-    // //   var i = 0, ID;
-    // //   do {i++; ID = tag.id+"_"+i}
-    // //   while (document.getElementById(ID) || AMS.IDs[ID] || AMS.eqIDs[ID]);
-    // //   tag.id = ID; if (global.label) {AMS.eqlabels[global.label].id = ID}
-    // // }
-    // AMS.eqIDs[tag.id] = 1;
-    // this.clearTag();
-    // return tag;
-
-    // return global.tag as MmlNode;
-  }
-
-  public reset(n: number, keepLabels: boolean) {
-    this.offset = (n || 0);
-    this.history = [];
-    if (!keepLabels) {
-      this.labels = {};
-      this.ids = {};
-    }
-  }
-
-  public finalize(node: MmlNode, env: EnvList): MmlNode {
-    return node;
   }
 
 };
