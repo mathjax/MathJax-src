@@ -32,7 +32,7 @@ import TexError from './TexError.js';
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {NewTex} from './Translate.js';
+// import {NewTex} from './Translate.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 import ParseOptions from './ParseOptions.js';
 import {StackItem, EnvList} from './StackItem.js';
@@ -49,8 +49,6 @@ export default class TexParser {
    * @type {number}
    */
   public macroCount: number = 0;
-
-  // public itemFactory = new StackItemFactory();
 
   /**
    * The stack for items and created nodes.
