@@ -83,9 +83,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
      * @override
      */
   public compile(math: MathItem<N, T, D>): MmlNode {
-    console.log(this.options['packages']);
-    console.log(this.options['settings']);
-    console.log(this.options['tags']);
     return NewTex.Compile(math.math, math.display,
                           this.options['packages'], this.options['settings']);
     }

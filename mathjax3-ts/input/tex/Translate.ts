@@ -38,24 +38,16 @@ import {SubHandlers} from './MapHandler.js';
 import {BaseConfiguration} from './BaseConfiguration.js';
 import {AmsConfiguration} from './AmsConfiguration.js';
 
-import './BaseMappings.js';
-import './AmsMappings.js';
-
-// A wrapper for translating scripts with LaTeX content.
-// 
-// TODO: This needs to be put into a proper object, so we can run multiple
-//       translations in parallel, otherwise there might be interference with
-//       the fixStretchy global variable.
+import './BaseConfiguration.js';
+import './AmsConfiguration.js';
 
 export namespace NewTex {
 
   export type Script = {type: string, innerText: string};
 
-  export let fixStretchy: MmlMo[] = [];
-
   export function configure(packages: string[], settings: {[key: string]: string|boolean}): ParseOptions {
     const DefaultConfig = new Configuration('default', {}, {}, {}, {}, {});
-    for (let key in packages) {
+    for (let key of packages) {
       let conf = ConfigurationHandler.getInstance().get(key);
       if (conf) {
         DefaultConfig.append(conf);
@@ -72,7 +64,6 @@ export namespace NewTex {
     for (const key of Object.keys(DefaultConfig.options)) {
       options.options.set(key, DefaultConfig.options[key]);
     }
-    console.log(options);
     return options;
   }
 
@@ -82,13 +73,11 @@ export namespace NewTex {
     let script = {
       type: 'math/tex' + (display ? '; mode=display' : ''),
       innerText: tex,
-      MathJax: {}
     };
-    fixStretchy = [];
     let options = configure(packages, settings);
     let node = Translate(script, options);
-    (node as any).setInheritedAttributes();
-    (node as any).setTeXclass();
+    node.setInheritedAttributes({}, false, 0, false);
+    node.setTeXclass(null);
     // Cleanup:
     cleanAttributes(node);
     combineRelations(node);
@@ -123,52 +112,54 @@ export namespace NewTex {
     if (display) {
       TreeHelper.setAttribute(root, 'display', 'block');
     }
-    mathNode.setInheritedAttributes({}, false, 0, false);
-    mathNode.setTeXclass(null);
     if (!parser) {
       // In case we have a caught error, parser will be undefined.
       return mathNode;
     }
-    cleanStretchy(NewTex.fixStretchy);
+    mathNode.setInheritedAttributes({}, false, 0, false);
+    cleanStretchy(mathNode);
     return mathNode;
   };
 
   
   // Cleanup methods. Should be static on the class.
-  function cleanStretchy(nodes: MmlMo[]) {
-    for (let mo of nodes) {
-      let symbol = TreeHelper.getForm(mo);
-      if (symbol && symbol[3] && symbol[3]['stretchy']) {
-        TreeHelper.setAttribute(mo, 'stretchy', false);
+  function cleanStretchy(node: MmlNode) {
+    node.walkTree((mo: MmlNode, d) => {
+      if (TreeHelper.getProperty(mo, 'fixStretchy')) {
+        let symbol = TreeHelper.getForm(mo);
+        if (symbol && symbol[3] && symbol[3]['stretchy']) {
+          TreeHelper.setAttribute(mo, 'stretchy', false);
+        }
+        if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
+          const parent = mo.parent;
+          const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
+          texAtom.parent = parent;
+          parent.replaceChild(texAtom, mo);
+        }
+        TreeHelper.removeProperties(mo, 'fixStretchy');
       }
-      if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
-        const parent = mo.parent;
-        const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
-        texAtom.parent = parent;
-        parent.replaceChild(texAtom, mo);
-      }
-    }
+    }, {});
   }
 
 
   // TODO: should be done with a visitor and combined with combineRelations.
   function cleanAttributes(mml: MmlNode) {
-    let attribs = mml.attributes as any;
-    let keys = Object.keys(attribs.attributes);
-    for (let i = 0, key: string; key = keys[i]; i++) {
-      if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
-        delete attribs.attributes[key];
+    mml.walkTree((n: MmlNode, d) => {
+      let attribs = n.attributes as any;
+      let keys = Object.keys(attribs.attributes);
+      for (let i = 0, key: string; key = keys[i]; i++) {
+        if (attribs.attributes[key] === n.attributes.getInherited(key)) {
+          delete attribs.attributes[key];
+        }
       }
-    }
-    if (!mml.isToken) {
-      let children = TreeHelper.getChildren(mml);
-      for (let i = 0, m = children.length; i < m; i++) {
-        cleanAttributes(children[i]);
-      }
-    }
+    }, {});
+    // if (!mml.isToken) {
+    //   let children = TreeHelper.getChildren(mml);
+    //   for (let i = 0, m = children.length; i < m; i++) {
+    //     cleanAttributes(children[i]);
+    //   }
+    // }
   };
-
-  
 
 
   /**
@@ -176,7 +167,7 @@ export namespace NewTex {
    * spacing very differently)
    * @param {MmlNode} mml The node in which to combine relations.
    */
-  // TODO: should be done with a visitor and combined with cleanAttributes.
+  // TODO: Could this be done with a visitor?
   function combineRelations(mml: MmlNode) {
     TreeHelper.printMethod('combineRelations: ');
     let m1: MmlNode, m2: MmlNode;
@@ -247,6 +238,5 @@ export namespace NewTex {
     }
     return node;
   };
-
 
 }

@@ -136,6 +136,11 @@ export namespace TreeHelper {
   };
 
 
+  export function setProperty(node: MmlNode, attribute: string, value: Args): void {
+    node.setProperty(attribute, value);
+  };
+
+
   // Sets properties and attributes.
   export function setProperties(node: MmlNode, properties: PropertyList): void {
     for (const name of Object.keys(properties)) {

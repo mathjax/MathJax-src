@@ -13,8 +13,12 @@ RegisterHTMLHandler(chooseAdaptor());
 
 export class ParserTest extends Test {
 
+  
   constructor() {
     super();
+    this.packages = ['ams', 'base'];
+    this.options = {};
+    this.tags = 'none';
     TagsFactory.setDefault('none');
     console.log('\u001B\u005B\u0033\u0034\u006D' +
                 'Running tests from ' + this.constructor.name +
@@ -28,13 +32,15 @@ export class ParserTest extends Test {
       t => {
         MathJax.handleRetriesFor(function() {
           let html = MathJax.document('<html></html>', {
-            InputJax: new TeX()
+            InputJax: new TeX({packages: this.packages,
+                               settings: this.options,
+                               tags: this.tags})
           });
           html.TestMath(tex).compile();
           let jv = new JsonMmlVisitor();
           let actual = jv.visitTree(html.math.pop().root);
           t.deepEqual(actual, expected, name);
-        }).catch(err => {
+        }.bind(this)).catch(err => {
           console.log(err.message);
           console.log(err.stack.replace(/\n.*\/system\.js:(.|\n)*/, ''));
         });

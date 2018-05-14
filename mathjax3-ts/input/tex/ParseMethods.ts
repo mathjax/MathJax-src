@@ -29,7 +29,6 @@ import {TreeHelper} from './TreeHelper.js';
 import {TexConstant} from './TexConstants.js';
 import {ParseMethod, ParseInput} from './Types.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 
 
 namespace ParseMethods {
@@ -112,7 +111,7 @@ namespace ParseMethods {
     // @test Large Set
     const textNode = TreeHelper.createText(mchar.char);
     const node = TreeHelper.createNode('mo', [], def, textNode);
-    parser.toClean(node as MmlMo);
+    TreeHelper.setProperty(node, 'fixStretchy', true);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(parser.mmlToken(node));
   };

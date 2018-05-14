@@ -24,7 +24,6 @@
 
 import {Configuration} from './Configuration.js';
 import {MapHandler} from './MapHandler.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import TexError from './TexError.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
@@ -32,6 +31,7 @@ import {ParseMethod} from './Types.js';
 import {CharacterMap} from './SymbolMap.js';
 import * as bitem from './BaseItems.js';
 import {AbstractTags} from './Tags.js';
+import './BaseMappings.js';
 
 
 /**
@@ -59,8 +59,8 @@ function Other(parser: TexParser, char: string) {
   // @test Other
   // @test Other Remap
   const textNode = TreeHelper.createText(remap ? remap.char : char);
-  let mo = TreeHelper.createNode('mo', [], def, textNode) as MmlMo;
-  parser.toClean(mo);
+  let mo = TreeHelper.createNode('mo', [], def, textNode);
+  TreeHelper.setProperty(mo, 'fixStretchy', true);
   parser.Push(parser.mmlToken(mo));
 };
 

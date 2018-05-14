@@ -159,17 +159,6 @@ export default class TexParser {
 
 
   /**
-   * Adds an operator node to be cleaned up at the end of the translation of the
-   * entire expression.
-   *
-   * @param {MmlMo} node The mo node.
-   */
-  public toClean(node: MmlMo) {
-    NewTex.fixStretchy.push(node);
-  }
-
-
-  /**
    * @override
    */
   public toString(): string {

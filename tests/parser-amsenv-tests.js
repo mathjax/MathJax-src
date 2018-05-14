@@ -7,6 +7,7 @@ class ParserAmsenvTest extends ParserTest {
 
   constructor() {
     super();
+    this.tags = 'AMS';
     TagsFactory.setDefault('AMS');
   }
 

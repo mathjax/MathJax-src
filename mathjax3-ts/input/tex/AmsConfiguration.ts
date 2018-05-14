@@ -27,7 +27,7 @@ import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';
 import {MultlineItem} from './AmsItems.js';
 import {AbstractTags} from './Tags.js';
-
+import './AmsMappings.js';
 
 // This is from the 'no undefined' extension.
 function noUndefined(parser: TexParser, name: string) {
