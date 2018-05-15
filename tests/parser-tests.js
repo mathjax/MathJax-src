@@ -8,8 +8,8 @@ import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 
 import {Test} from './tests.js';
-import 'mathjax3/input/tex/BaseConfiguration.js';
-import 'mathjax3/input/tex/AmsConfiguration.js';
+import 'mathjax3/input/tex/base/BaseConfiguration.js';
+import 'mathjax3/input/tex/ams/AmsConfiguration.js';
 
 
 RegisterHTMLHandler(chooseAdaptor());

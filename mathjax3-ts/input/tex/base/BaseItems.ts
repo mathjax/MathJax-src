@@ -31,18 +31,18 @@
  */
 
 
-import {MapHandler} from './MapHandler.js';
-import {CharacterMap} from './SymbolMap.js';
-import {Entities} from '../../util/Entities.js';
-import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
-import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
-import {TexConstant} from './TexConstants.js';
-import TexError from './TexError.js';
-import ParseUtil from './ParseUtil.js';
-import {TreeHelper} from './TreeHelper.js';
-import {Property, PropertyList} from '../../core/Tree/Node.js';
-import StackItemFactory from './StackItemFactory.js';
-import {BaseItem, StackItem, EnvList} from './StackItem.js';
+import {MapHandler} from '../MapHandler.js';
+import {CharacterMap} from '../SymbolMap.js';
+import {Entities} from '../../../util/Entities.js';
+import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import {TexConstant} from '../TexConstants.js';
+import TexError from '../TexError.js';
+import ParseUtil from '../ParseUtil.js';
+import {TreeHelper} from '../TreeHelper.js';
+import {Property, PropertyList} from '../../../core/Tree/Node.js';
+import StackItemFactory from '../StackItemFactory.js';
+import {BaseItem, StackItem, EnvList} from '../StackItem.js';
 
 
 export class StartItem extends BaseItem {

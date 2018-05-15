@@ -22,12 +22,12 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import *  as sm from './SymbolMap.js';
-import {TexConstant} from './TexConstants.js';
-import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
-import ParseMethods from './ParseMethods.js';
 import AmsMethods from './AmsMethods.js';
-import ParseUtil from './ParseUtil.js';
+import *  as sm from '../SymbolMap.js';
+import {TexConstant} from '../TexConstants.js';
+import ParseMethods from '../ParseMethods.js';
+import ParseUtil from '../ParseUtil.js';
+import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 
 
 let COLS = function(W: number[]) {

@@ -33,7 +33,7 @@
 import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {EnvList} from './StackItem.js';
-import {ArrayItem} from './BaseItems.js';
+import {ArrayItem} from './base/BaseItems.js';
 import ParseOptions from './ParseOptions.js';
 import {TreeHelper} from './TreeHelper.js';
 import TexParser from './TexParser.js';

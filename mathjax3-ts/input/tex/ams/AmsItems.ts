@@ -31,14 +31,14 @@
  */
 
 
-import {ArrayItem} from './BaseItems.js';
-import ParseUtil from './ParseUtil.js';
-import {TreeHelper} from './TreeHelper.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import StackItemFactory from './StackItemFactory.js';
-import {StackItem, BaseItem} from './StackItem.js';
-import TexError from './TexError.js';
-import {TexConstant} from './TexConstants.js';
+import {ArrayItem} from '../base/BaseItems.js';
+import ParseUtil from '../ParseUtil.js';
+import {TreeHelper} from '../TreeHelper.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import StackItemFactory from '../StackItemFactory.js';
+import {StackItem, BaseItem} from '../StackItem.js';
+import TexError from '../TexError.js';
+import {TexConstant} from '../TexConstants.js';
 
 
 export class MultlineItem extends ArrayItem {

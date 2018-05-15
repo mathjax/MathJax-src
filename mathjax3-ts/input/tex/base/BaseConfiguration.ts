@@ -22,15 +22,15 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from './Configuration.js';
-import {MapHandler} from './MapHandler.js';
-import TexError from './TexError.js';
-import {TreeHelper} from './TreeHelper.js';
-import TexParser from './TexParser.js';
-import {ParseMethod} from './Types.js';
-import {CharacterMap} from './SymbolMap.js';
+import {Configuration} from '../Configuration.js';
+import {MapHandler} from '../MapHandler.js';
+import TexError from '../TexError.js';
+import {TreeHelper} from '../TreeHelper.js';
+import TexParser from '../TexParser.js';
+import {ParseMethod} from '../Types.js';
+import {CharacterMap} from '../SymbolMap.js';
 import * as bitem from './BaseItems.js';
-import {AbstractTags} from './Tags.js';
+import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';
 
 

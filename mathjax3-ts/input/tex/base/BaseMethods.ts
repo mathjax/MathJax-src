@@ -23,19 +23,19 @@
  */
 
 import * as sitem from './BaseItems.js';
-import {StackItem, EnvList} from './StackItem.js';
-import {Symbol} from './Symbol.js';
-import {ParseMethod} from './Types.js';
-import {TreeHelper} from './TreeHelper.js';
-import TexError from './TexError.js';
-import TexParser from './TexParser.js';
-import {TexConstant} from './TexConstants.js';
-import ParseUtil from './ParseUtil.js';
-import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
-import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
-import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {Label} from './Tags.js';
+import {StackItem, EnvList} from '../StackItem.js';
+import {Symbol} from '../Symbol.js';
+import {ParseMethod} from '../Types.js';
+import {TreeHelper} from '../TreeHelper.js';
+import TexError from '../TexError.js';
+import TexParser from '../TexParser.js';
+import {TexConstant} from '../TexConstants.js';
+import ParseUtil from '../ParseUtil.js';
+import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
+import {Label} from '../Tags.js';
 
 
 // Namespace

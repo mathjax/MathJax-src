@@ -33,7 +33,7 @@
 
 import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {StartItem, MmlItem} from './BaseItems.js';
+import {StartItem, MmlItem} from './base/BaseItems.js';
 import {StackItem, EnvList, BaseItem} from './StackItem.js';
 import StackItemFactory from './StackItemFactory.js';
 

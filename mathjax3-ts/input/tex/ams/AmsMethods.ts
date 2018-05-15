@@ -23,22 +23,22 @@
  */
 
 
-import {StackItem} from './StackItem.js';
-import {ArrayItem} from './BaseItems.js';
-import {ParseMethod} from './Types.js';
-import BaseMethods from './BaseMethods.js';
-import ParseUtil from './ParseUtil.js';
-import {TreeHelper} from './TreeHelper.js';
-import {TexConstant} from './TexConstants.js';
-import TexParser from './TexParser.js';
-import TexError from './TexError.js';
-import {MmlNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
-import {Label} from './Tags.js';
-import {Macro} from './Symbol.js';
-import {CommandMap} from './SymbolMap.js';
-import {MapHandler} from './MapHandler.js';
+import {StackItem} from '../StackItem.js';
+import {ParseMethod} from '../Types.js';
+import ParseUtil from '../ParseUtil.js';
+import {TreeHelper} from '../TreeHelper.js';
+import {TexConstant} from '../TexConstants.js';
+import TexParser from '../TexParser.js';
+import TexError from '../TexError.js';
+import {Label} from '../Tags.js';
+import {Macro} from '../Symbol.js';
+import {CommandMap} from '../SymbolMap.js';
+import {MapHandler} from '../MapHandler.js';
+import {ArrayItem} from '../base/BaseItems.js';
+import BaseMethods from '../base/BaseMethods.js';
+import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
+import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 
 
 // Namespace

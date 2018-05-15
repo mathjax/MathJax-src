@@ -40,7 +40,7 @@ import StackItemFactory from './tex/StackItemFactory.js';
 import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
 import {SubHandlers} from './tex/MapHandler.js';
 // Import base as it is the default package loaded.
-import './tex/BaseConfiguration.js';
+import './tex/base/BaseConfiguration.js';
 
 
 /*****************************************************************/
