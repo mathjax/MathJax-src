@@ -31,15 +31,16 @@ import {TextNode, MmlNode, AbstractMmlNode, AbstractMmlEmptyNode} from '../../co
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
-import {JsonMmlVisitor} from '../../core/MmlTree/JsonMmlVisitor.js';
 import {Args} from './Types.js';
 import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
+import TexParser from './TexParser.js';
 
 
 export namespace TreeHelper {
 
+  export let parser: TexParser = null;
+
   const factory: MmlFactory = new MmlFactory();
-  const visitor: JsonMmlVisitor = new JsonMmlVisitor();
 
   const attrs: String[] = ['autoOP',
                            'fnOP',
@@ -53,9 +54,9 @@ export namespace TreeHelper {
                            'close'
                           ];
 
-  const methodOut: boolean = false;
-  
-  export function createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
+  const methodOut: boolean = true;
+
+  export function _createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
     const node = factory.create(kind, {}, []);
     // If infinity or -1 remove inferred mrow
     // 
@@ -88,12 +89,16 @@ export namespace TreeHelper {
     return node;
   };
 
-  export function createToken(kind: string, def: any, text: string): MmlNode  {
+  export let createNode = _createNode;
+
+  export function _createToken(kind: string, def: any, text: string): MmlNode  {
     const textNode = TreeHelper.createText(text);
     return TreeHelper.createNode(kind, [], def, textNode);
   }
 
-  export function createText(text: string): TextNode  {
+  export let createToken = _createToken;
+
+  export function _createText(text: string): TextNode  {
     if (text == null) {
       return null;
     }
@@ -101,25 +106,23 @@ export namespace TreeHelper {
     return node;
   };
 
+  export let createText = _createText;
+
+  export function _createError(message: string): MmlNode  {
+    let text = createText(message);
+    let mtext = TreeHelper.createNode('mtext', [], {}, text);
+    let error = TreeHelper.createNode('merror', [mtext], {});
+    return error;
+  };
+
+  export let createError = _createError;
 
   export function createEntity(code: string): string  {
     return String.fromCharCode(parseInt(code, 16));
   };
 
 
-  export function createError(message: string): MmlNode  {
-    let text = createText(message);
-    let mtext = createNode('mtext', [], {}, text);
-    let error = createNode('merror', [mtext], {});
-    return error;
-  };
-
-
-  export function getRoot(tree: MmlNode): MmlNode  {
-    return tree;
-  };
-
-  export function getChildren(node: MmlNode): (MmlNode|TextNode)[]  {
+  export function getChildren(node: MmlNode): (MmlNode|TextNode)[] {
     return (node.childNodes as (MmlNode|TextNode)[]);
   };
 
@@ -260,6 +263,17 @@ export namespace TreeHelper {
     }
     return null;
   };
+
+  // export type creators = 'node' | 'token' | 'text' | 'error';
   
+  export function setCreators(assign: {[key: string]: any} = {}) {
+    console.log(assign);
+    console.log('HERE');
+    Object.assign(TreeHelper, assign);
+    console.log(TreeHelper);
+    for (let key in assign) {
+      (TreeHelper as any)[key] = assign[key];
+    }
+  }
 }
 

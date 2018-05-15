@@ -52,7 +52,9 @@ export class Configuration {
               readonly fallback: FallbackConfig = {},
               readonly items: StackItemConfig = {},
               readonly tags: TagsConfig = {},
-              readonly options: OptionsConfig = {}
+              readonly options: OptionsConfig = {},
+              // TODO: Flash this out with a node factory and node type.
+              readonly nodes: {[key: string]: any} = {}
              ) {
     let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
     let handlers = Object.keys(handler) as HandlerType[];
@@ -79,19 +81,11 @@ export class Configuration {
       }
     }
     handlers = Object.keys(config.fallback) as HandlerType[];
-    for (const key of handlers) {
-      let name = key as HandlerType;
-      this.fallback[name] = config.fallback[name];
-    }
-    for (const name of Object.keys(config.items)) {
-      this.items[name] = config.items[name];
-    }
-    for (const name of Object.keys(config.tags)) {
-      this.tags[name] = config.tags[name];
-    }
-    for (const name of Object.keys(config.options)) {
-      this.options[name] = config.options[name];
-    }
+    Object.assign(this.fallback, config.fallback);
+    Object.assign(this.items, config.items);
+    Object.assign(this.tags, config.tags);
+    Object.assign(this.options, config.options);
+    Object.assign(this.nodes, config.nodes);
   }
 
 };

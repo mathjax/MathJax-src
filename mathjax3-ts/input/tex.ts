@@ -264,13 +264,15 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       }
       node = TeX.formatError(err);
     }
+    console.log(node);
     let mathNode = TreeHelper.createNode('math', [node], {});
-    let root = TreeHelper.getRoot(mathNode);
+    console.log(node);
     if (display) {
-      TreeHelper.setAttribute(root, 'display', 'block');
+      TreeHelper.setAttribute(mathNode, 'display', 'block');
     }
     TeX.cleanSubSup(mathNode);
     mathNode.setInheritedAttributes({}, display, 0, false);
+    console.log(node);
     TeX.cleanStretchy(mathNode);
     mathNode.setInheritedAttributes({}, display, 0, false);
     mathNode.setTeXclass(null);
@@ -292,7 +294,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @return {ParseOptions} Configures the parser.
    */
   private configure(): ParseOptions {
-    const config = new Configuration('default', {}, {}, {}, {}, {});
+    const config = new Configuration('default', {}, {}, {}, {}, {}, {});
     // Combine package configurations
     for (let key of this.options['packages']) {
       let conf = ConfigurationHandler.getInstance().get(key);
@@ -300,6 +302,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         config.append(conf);
       }
     }
+    console.log(config.nodes);
+    TreeHelper.setCreators(config.nodes);
     let options = new ParseOptions();
     options.handlers = new SubHandlers(config);
     options.itemFactory = new StackItemFactory();
