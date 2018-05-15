@@ -216,40 +216,34 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     let script = {
       type: 'math/tex' + (math.display ? '; mode=display' : ''),
       innerText: math.math,
-    };
-    let options = this.configure();
-    let node = this.translate(script, options);
-    node.setInheritedAttributes({}, math.display, 0, false);
-    node.setTeXclass(null);
-    TeX.cleanAttributes(node);
-    TeX.combineRelations(node);
-    return node;
-  }
-
-  public translate(script: {type: string, innerText: string},
-                   configurations: ParseOptions): MmlNode {
-    let mml: MmlNode;
+    }; // Fuffing about with the script, why is that necessary?
+    let configurations = this.configure();
+    let node: MmlNode;
     let parser: TexParser;
-    let math = script.innerText;
-    let display = script.type.replace(/\n/g, ' ').
-      match(/(;|\s|\n)mode\s*=\s*display(;|\s|\n|$)/) != null;
+    let display = math.display;
     try {
-      parser = new TexParser(math, {display: display, isInner: false}, configurations);
-      mml = parser.mml();
+      parser = new TexParser(math.math,
+                             {display: display, isInner: false},
+                             configurations);
+      node = parser.mml();
     } catch (err) {
       if (!(err instanceof TexError)) {
         throw err;
       }
-      mml = TeX.formatError(err);
+      node = TeX.formatError(err);
     }
-    let mathNode = TreeHelper.createNode('math', [mml], {});
+    let mathNode = TreeHelper.createNode('math', [node], {});
     let root = TreeHelper.getRoot(mathNode);
     if (display) {
       TreeHelper.setAttribute(root, 'display', 'block');
     }
-    TeX.cleanSubSup(mml);
-    mathNode.setInheritedAttributes({}, false, 0, false);
+    TeX.cleanSubSup(mathNode);
+    mathNode.setInheritedAttributes({}, display, 0, false);
     TeX.cleanStretchy(mathNode);
+    mathNode.setInheritedAttributes({}, display, 0, false);
+    mathNode.setTeXclass(null);
+    TeX.cleanAttributes(mathNode);
+    TeX.combineRelations(mathNode);
     return mathNode;
   };
 
