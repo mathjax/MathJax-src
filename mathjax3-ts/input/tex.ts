@@ -24,7 +24,7 @@
 import {AbstractInputJax} from '../core/InputJax.js';
 import {separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
-import {TEXCLASS, MmlNode, TextNode} from '../core/MmlTree/MmlNode.js';
+import {TEXCLASS, MmlNode, TextNode, AttributeList} from '../core/MmlTree/MmlNode.js';
 
 import {FindTeX} from './tex/FindTeX.js';
 
@@ -39,6 +39,8 @@ import {MmlMo} from '../core/MmlTree/MmlNodes/mo.js';
 import StackItemFactory from './tex/StackItemFactory.js';
 import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
 import {SubHandlers} from './tex/MapHandler.js';
+// Import base as it is the default package loaded.
+import './tex/BaseConfiguration.js';
 
 
 /*****************************************************************/
@@ -53,7 +55,16 @@ import {SubHandlers} from './tex/MapHandler.js';
  */
 export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
+  /**
+   * Name of input jax.
+   * @type {string}
+   */
   public static NAME: string = 'TeX';
+
+  /**
+   * Default options for the jax.
+   * @type {OptionList}
+   */
   public static OPTIONS: OptionList = {
     ...AbstractInputJax.OPTIONS,
     FindTeX: null,
@@ -77,12 +88,29 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     tags: 'none'
   };
 
-  private static formatError(err: TexError) {
+  /**
+   * The FindTeX instance used for locating TeX in strings
+   */
+  protected findTeX: FindTeX<N, T, D>;
+
+
+  /**
+   * Wraps an error into a node for output.
+   * @param {TeXError} err The TexError.
+   * @return {Node} The merror node.
+   */
+  private static formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
     return TreeHelper.createError(message);
   };
 
-  // Cleanup methods. Should be static on the class.
+
+  /**
+   * Visitor to set stretchy attributes to false on <mo> elements, if they are
+   * not used as delimiters. Also wraps non-stretchy infix delimiters into a
+   * TeXAtom.
+   * @param {MmlNode} node The node to rewrite.
+   */
   private static cleanStretchy(node: MmlNode) {
     node.walkTree((mo: MmlNode, d) => {
       if (TreeHelper.getProperty(mo, 'fixStretchy')) {
@@ -96,14 +124,19 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
           texAtom.parent = parent;
           parent.replaceChild(texAtom, mo);
         }
-        console.log(parent.attributes);
         TreeHelper.removeProperties(mo, 'fixStretchy');
-        // node.setTeXclass(null);
       }
     }, {});
   }
 
 
+  /**
+   * Visitor that removes superfluous attributes from nodes. I.e., if a node has
+   * an attribute, which is also an inherited attribute it will be removed. This
+   * is necessary as attributes are set bottom up in the parser.
+   * @param {MmlNode} mml The node to clean.
+   */
+  // TODO (DC): Move this maybe into setInheritedAttributes method?
   private static cleanAttributes(mml: MmlNode) {
     mml.walkTree((n: MmlNode, d) => {
       let attribs = n.attributes as any;
@@ -122,7 +155,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * spacing very differently)
    * @param {MmlNode} mml The node in which to combine relations.
    */
-  // TODO: Could this be done with a visitor?
+  // TODO (DC): Could this be done with a visitor?
   private static combineRelations(mml: MmlNode) {
     TreeHelper.printMethod('combineRelations: ');
     let m1: MmlNode, m2: MmlNode;
@@ -144,6 +177,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
               m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
               m--;
             } else {
+              // TODO (VS): Find a tests.
               TreeHelper.setAttribute(m1, 'rspace', '0pt');
               TreeHelper.setAttribute(m2, 'lspace', '0pt');
               i++;
@@ -157,7 +191,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     }
   }
 
-  // TODO: reduce some of the casting.
+
+  /**
+   * Visitor that rewrites incomplete msubsup/munderover elements in the given
+   * node into corresponding msub/sup/under/over nodes.
+   * @param {MmlNode} node The node to rewrite.
+   */
+  // TODO (VS): reduce some of the casting.
   private static cleanSubSup(node: MmlNode) {
     let rewrite: MmlNode[] = [];
     node.walkTree((n, d) => {
@@ -185,20 +225,16 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
                    TreeHelper.createNode('mover', [children[ms.base], children[ms.over]], {}));
       }
       TreeHelper.copyAttributes(n, newNode);
-      parent.replaceChild(newNode, n);
-      // if (parent) {
-      //   parent.replaceChild(newNode, n);
-      // } else {
-      //   node = newNode;
-      // }
+      // This is only necessary if applied to an incomplete node, where
+      // msubsup/underover can be top level.
+      if (parent) {
+        parent.replaceChild(newNode, n);
+      } else {
+        node = newNode;
+      }
     }
   };
 
-
-  /**
-   * The FindTeX instance used for locating TeX in strings
-   */
-  protected findTeX: FindTeX<N, T, D>;
 
   /**
    * @override
@@ -213,10 +249,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   public compile(math: MathItem<N, T, D>): MmlNode {
-    let script = {
-      type: 'math/tex' + (math.display ? '; mode=display' : ''),
-      innerText: math.math,
-    }; // Fuffing about with the script, why is that necessary?
     let configurations = this.configure();
     let node: MmlNode;
     let parser: TexParser;
