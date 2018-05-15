@@ -5,8 +5,8 @@ import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 class ParserAmsComplexTest extends ParserTest {
 
   constructor() {
-    TagsFactory.setDefault('none');
     super();
+    this.tags = 'none';
   }
 
 }

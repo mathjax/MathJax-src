@@ -599,8 +599,8 @@ export class FnItem extends BaseItem {
         }
       }
       // @test Named Function, Named Function Arg
-      const text = TreeHelper.createText(Entities.ENTITIES.ApplyFunction);
-      const node = TreeHelper.createNode('mo', [], {texClass: TEXCLASS.NONE}, text);
+      const node = TreeHelper.createToken('mo', {texClass: TEXCLASS.NONE},
+                                          Entities.ENTITIES.ApplyFunction);
       return [top, node, item];
     }
     // @test Mathop Super, Mathop Sub

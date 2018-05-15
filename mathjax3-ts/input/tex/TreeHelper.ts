@@ -88,6 +88,11 @@ export namespace TreeHelper {
     return node;
   };
 
+  export function createToken(kind: string, def: any, text: string): MmlNode  {
+    const textNode = TreeHelper.createText(text);
+    return TreeHelper.createNode(kind, [], def, textNode);
+  }
+
   export function createText(text: string): TextNode  {
     if (text == null) {
       return null;
@@ -97,8 +102,8 @@ export namespace TreeHelper {
   };
 
 
-  export function createEntity(code: string): TextNode  {
-    return createText(String.fromCharCode(parseInt(code, 16)));
+  export function createEntity(code: string): string  {
+    return String.fromCharCode(parseInt(code, 16));
   };
 
 

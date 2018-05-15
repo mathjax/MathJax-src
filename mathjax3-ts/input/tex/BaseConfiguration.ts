@@ -58,8 +58,7 @@ function Other(parser: TexParser, char: string) {
     lookup(char);
   // @test Other
   // @test Other Remap
-  const textNode = TreeHelper.createText(remap ? remap.char : char);
-  let mo = TreeHelper.createNode('mo', [], def, textNode);
+  let mo = TreeHelper.createToken('mo', def, (remap ? remap.char : char));
   TreeHelper.setProperty(mo, 'fixStretchy', true);
   parser.Push(parser.mmlToken(mo));
 };

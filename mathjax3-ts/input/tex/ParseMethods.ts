@@ -44,8 +44,7 @@ namespace ParseMethods {
       def['mathvariant'] = parser.stack.env['font'];
     }
     // @test Identifier
-    const textNode = TreeHelper.createText(c);
-    const node = TreeHelper.createNode('mi', [], def, textNode);
+    const node = TreeHelper.createToken('mi', def, c);
     parser.Push(parser.mmlToken(node));
   };
 
@@ -64,13 +63,11 @@ namespace ParseMethods {
     }
     if (n) {
       // @test Integer, Number
-      const textNode = TreeHelper.createText(n[0].replace(/[{}]/g, ''));
-      mml = TreeHelper.createNode('mn', [], def, textNode);
+      mml = TreeHelper.createToken('mn', def, n[0].replace(/[{}]/g, ''));
       parser.i += n[0].length - 1;
     } else {
       // @test Decimal
-      const textNode = TreeHelper.createText(c);
-      mml = TreeHelper.createNode('mo', [], def, textNode);
+      mml = TreeHelper.createToken('mo', def, c);
     }
     parser.Push(parser.mmlToken(mml));
   };
@@ -96,8 +93,7 @@ namespace ParseMethods {
     TreeHelper.printMethod('csMathchar0mi');
     const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
-    const textNode = TreeHelper.createText(mchar.char);
-    const node = TreeHelper.createNode('mi', [], def, textNode);
+    const node = TreeHelper.createToken('mi', def, mchar.char);
     parser.Push(parser.mmlToken(node));
   };
 
@@ -109,8 +105,7 @@ namespace ParseMethods {
     const def = mchar.attributes || {};
     def['stretchy'] = false;
     // @test Large Set
-    const textNode = TreeHelper.createText(mchar.char);
-    const node = TreeHelper.createNode('mo', [], def, textNode);
+    const node = TreeHelper.createToken('mo', def, mchar.char);
     TreeHelper.setProperty(node, 'fixStretchy', true);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(parser.mmlToken(node));
@@ -127,8 +122,7 @@ namespace ParseMethods {
       def['mathvariant'] = parser.stack.env['font'];
     }
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
-    const textNode = TreeHelper.createText(mchar.char);
-    const node = TreeHelper.createNode('mi', [], def, textNode);
+    const node = TreeHelper.createToken('mi', def, mchar.char);
     parser.Push(parser.mmlToken(node));
   };
 
@@ -140,8 +134,7 @@ namespace ParseMethods {
     let def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({fence: false, stretchy: false}, def);
-    const textNode = TreeHelper.createText(delim.char);
-    const node = TreeHelper.createNode('mo', [], def, textNode);
+    const node = TreeHelper.createToken('mo', def, delim.char);
     parser.Push(parser.mmlToken(node));
   };
 

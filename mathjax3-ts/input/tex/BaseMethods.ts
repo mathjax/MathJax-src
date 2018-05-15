@@ -104,8 +104,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
     base = parser.stack.Prev();
     if (!base) {
       // @test Empty base
-      const textNode = TreeHelper.createText('');
-      base = TreeHelper.createNode('mi', [], {}, textNode);
+      base = TreeHelper.createToken('mi', {}, '');
     }
   }
   const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
@@ -160,8 +159,7 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
     base = parser.stack.Prev();
     if (!base) {
       // @test Empty Base Index
-      const textNode = TreeHelper.createText('');
-      base = TreeHelper.createNode('mi', [], {}, textNode);
+      base = TreeHelper.createToken('mi', {}, '');
     }
   }
   const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
@@ -220,8 +218,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
     sup += PRIME; parser.i++, c = parser.GetNext();
   } while (c === '\'' || c === SMARTQUOTE);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
-  const textNode = TreeHelper.createText(sup);
-  const node = TreeHelper.createNode('mo', [], {}, textNode);
+  const node = TreeHelper.createToken('mo', {}, sup);
   parser.Push(
     parser.itemFactory.create('prime', base, parser.mmlToken(node)) );
 };
@@ -313,8 +310,7 @@ BaseMethods.Middle = function(parser: TexParser, name: string) {
     throw new TexError(['MisplacedMiddle',
                         '%1 must be within \\left and \\right', name]);
   }
-  const textNode = TreeHelper.createText(delim);
-  node = TreeHelper.createNode('mo', [], {stretchy: true}, textNode);
+  node = TreeHelper.createToken('mo', {stretchy: true}, delim);
   parser.Push(node);
   node = TreeHelper.createNode('TeXAtom', [], {texClass: TEXCLASS.OPEN});
   parser.Push(node);
@@ -326,8 +322,7 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
   if (!id) {
     id = name.substr(1);
   }
-  const textNode = TreeHelper.createText(id);
-  const mml = TreeHelper.createNode('mi', [], {texClass: TEXCLASS.OP}, textNode);
+  const mml = TreeHelper.createToken('mi', {texClass: TEXCLASS.OP}, id);
   parser.Push( parser.itemFactory.create('fn', parser.mmlToken(mml)) );
 };
 BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
@@ -337,13 +332,12 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
     id = name.substr(1);
   }
   id = id.replace(/&thinsp;/, '\u2006');
-  const text = TreeHelper.createText(id);
-  const mml = TreeHelper.createNode('mo', [], {
+  const mml = TreeHelper.createToken('mo', {
     movablelimits: true,
     movesupsub: true,
     form: TexConstant.Form.PREFIX,
     texClass: TEXCLASS.OP
-  }, text);
+  }, id);
   parser.Push(parser.mmlToken(mml));
 };
 
@@ -501,7 +495,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
     def['mathvariant'] = parser.stack.env['font'];
   }
   const entity = TreeHelper.createEntity(accent);
-  const moNode = TreeHelper.createNode('mo', [], def, entity);
+  const moNode = TreeHelper.createToken('mo', def, entity);
   const mml = parser.mmlToken(moNode);
   TreeHelper.setAttribute(mml, 'stretchy', stretchy ? true : false);
   // @test Vector Op, Vector
@@ -538,7 +532,7 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   }
   const mml = TreeHelper.createNode('munderover', [base], {}) as MmlMunderover;
   const entity = TreeHelper.createEntity(c);
-  mo = TreeHelper.createNode('mo', [], {stretchy: true, accent: !noaccent}, entity);
+  mo = TreeHelper.createToken('mo', {stretchy: true, accent: !noaccent}, entity);
 
   TreeHelper.setData(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
                      parser.mmlToken(mo));
@@ -588,8 +582,7 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
     if (match) {
       // @test Mathop
       def['mathvariant'] = TexConstant.Variant.NORMAL;
-      const textNode = TreeHelper.createText(match[1]);
-      node = TreeHelper.createNode('mi', [], def, textNode);
+      node = TreeHelper.createToken('mi', def, match[1]);
       mml = parser.itemFactory.create('fn', parser.mmlToken(node));
     } else {
       // @test Mathop Cal
@@ -804,11 +797,10 @@ BaseMethods.MakeBig = function(parser: TexParser, name: string, mclass: number, 
   size *= P_HEIGHT;
   let sizeStr = String(size).replace(/(\.\d\d\d).+/, '$1') + 'em';
   const delim = parser.GetDelimiter(name, true);
-  const text = TreeHelper.createText(delim);
-  const mo = TreeHelper.createNode('mo', [], {
+  const mo = TreeHelper.createToken('mo', {
     minsize: sizeStr, maxsize: sizeStr,
     fence: true, stretchy: true, symmetric: true
-  }, text);
+  }, delim);
   const node = TreeHelper.createNode('TeXAtom', [mo], {texClass: mclass});
   parser.Push(node);
 };
@@ -853,8 +845,8 @@ BaseMethods.Dots = function(parser: TexParser, name: string) {
   // @test Operator Dots
   const ldotsEntity = TreeHelper.createEntity('2026');
   const cdotsEntity = TreeHelper.createEntity('22EF');
-  const ldots = TreeHelper.createNode('mo', [], {stretchy: false}, ldotsEntity);
-  const cdots = TreeHelper.createNode('mo', [], {stretchy: false}, cdotsEntity);
+  const ldots = TreeHelper.createToken('mo', {stretchy: false}, ldotsEntity);
+  const cdots = TreeHelper.createToken('mo', {stretchy: false}, cdotsEntity);
   parser.Push(
     parser.itemFactory.create('dots').setProperties({
       ldots: parser.mmlToken(ldots),

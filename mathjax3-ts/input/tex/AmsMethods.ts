@@ -182,9 +182,8 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
   let top = parser.ParseArg(name);
-  let text = TreeHelper.createText(String.fromCharCode(chr));
-  let arrow = TreeHelper.createNode('mo', [],
-                                    {stretchy: true, texClass: TEXCLASS.REL}, text);
+  let arrow = TreeHelper.createToken(
+    'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCharCode(chr));
   let mml = TreeHelper.createNode('munderover', [arrow], {}) as MmlMunderover;
   let mpadded = TreeHelper.createNode('mpadded', [top], def);
   TreeHelper.setProperties(mpadded, {voffset: '.15em'});

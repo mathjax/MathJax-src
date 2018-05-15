@@ -39,8 +39,6 @@ import {MmlMo} from '../core/MmlTree/MmlNodes/mo.js';
 import StackItemFactory from './tex/StackItemFactory.js';
 import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
 import {SubHandlers} from './tex/MapHandler.js';
-import './tex/BaseConfiguration.js';
-import './tex/AmsConfiguration.js';
 
 
 /*****************************************************************/
@@ -75,7 +73,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       useLabelIds: true,
       refUpdate: false
     },
-    // Tagging style.
+    // Tagging style, used to be autonumber in v2.
     tags: 'none'
   };
 
@@ -92,13 +90,15 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         if (symbol && symbol[3] && symbol[3]['stretchy']) {
           TreeHelper.setAttribute(mo, 'stretchy', false);
         }
+        const parent = mo.parent;
         if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
-          const parent = mo.parent;
           const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
           texAtom.parent = parent;
           parent.replaceChild(texAtom, mo);
         }
+        console.log(parent.attributes);
         TreeHelper.removeProperties(mo, 'fixStretchy');
+        // node.setTeXclass(null);
       }
     }, {});
   }
@@ -158,7 +158,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   }
 
   // TODO: reduce some of the casting.
-  private static cleanSubSup(node: MmlNode): MmlNode  {
+  private static cleanSubSup(node: MmlNode) {
     let rewrite: MmlNode[] = [];
     node.walkTree((n, d) => {
       const children = n.childNodes;
@@ -185,13 +185,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
                    TreeHelper.createNode('mover', [children[ms.base], children[ms.over]], {}));
       }
       TreeHelper.copyAttributes(n, newNode);
-      if (parent) {
-        parent.replaceChild(newNode, n);
-      } else {
-        node = newNode;
-      }
+      parent.replaceChild(newNode, n);
+      // if (parent) {
+      //   parent.replaceChild(newNode, n);
+      // } else {
+      //   node = newNode;
+      // }
     }
-    return node;
   };
 
 
@@ -219,9 +219,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     };
     let options = this.configure();
     let node = this.translate(script, options);
-    node.setInheritedAttributes({}, false, 0, false);
+    node.setInheritedAttributes({}, math.display, 0, false);
     node.setTeXclass(null);
-    // Cleanup:
     TeX.cleanAttributes(node);
     TeX.combineRelations(node);
     return node;
@@ -243,22 +242,18 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       }
       mml = TeX.formatError(err);
     }
-    mml = TeX.cleanSubSup(mml);
     let mathNode = TreeHelper.createNode('math', [mml], {});
     let root = TreeHelper.getRoot(mathNode);
     if (display) {
       TreeHelper.setAttribute(root, 'display', 'block');
     }
-    if (!parser) {
-      // In case we have a caught error, parser will be undefined.
-      return mathNode;
-    }
+    TeX.cleanSubSup(mml);
     mathNode.setInheritedAttributes({}, false, 0, false);
     TeX.cleanStretchy(mathNode);
     return mathNode;
   };
 
-  
+
   /**
    * @override
    */
@@ -267,26 +262,38 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   }
 
 
+  /**
+   * @return {ParseOptions} Configures the parser.
+   */
   private configure(): ParseOptions {
-    const DefaultConfig = new Configuration('default', {}, {}, {}, {}, {});
+    const config = new Configuration('default', {}, {}, {}, {}, {});
+    // Combine package configurations
     for (let key of this.options['packages']) {
       let conf = ConfigurationHandler.getInstance().get(key);
       if (conf) {
-        DefaultConfig.append(conf);
+        config.append(conf);
       }
     }
     let options = new ParseOptions();
-    options.handlers = new SubHandlers(DefaultConfig);
+    options.handlers = new SubHandlers(config);
     options.itemFactory = new StackItemFactory();
     options.itemFactory.configuration = options;
-    options.itemFactory.addStackItems(DefaultConfig.items);
-    TagsFactory.addTags(DefaultConfig.tags);
+    // Add stackitems from packages.
+    options.itemFactory.addStackItems(config.items);
+    // Add tagging structures from packages and set tagging to given default.
+    TagsFactory.addTags(config.tags);
+    TagsFactory.setDefault(this.options.tags);
     options.tags = TagsFactory.getDefault();
     options.tags.configuration = options;
-    for (const key of Object.keys(DefaultConfig.options)) {
-      options.options.set(key, DefaultConfig.options[key]);
+    // Set other options for parser from package configurations.
+    for (const key of Object.keys(config.options)) {
+      options.options.set(key, config.options[key]);
+    } // From this run's configuration.
+    let settings = this.options['settings'];
+    for (const key of Object.keys(settings)) {
+      options.options.set(key, settings[key]);
     }
     return options;
   }
-  
+
 }

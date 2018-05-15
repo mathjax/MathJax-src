@@ -8,6 +8,9 @@ import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 
 import {Test} from './tests.js';
+import 'mathjax3/input/tex/BaseConfiguration.js';
+import 'mathjax3/input/tex/AmsConfiguration.js';
+
 
 RegisterHTMLHandler(chooseAdaptor());
 
@@ -17,9 +20,8 @@ export class ParserTest extends Test {
   constructor() {
     super();
     this.packages = ['ams', 'base'];
-    this.options = {};
+    this.settings = {};
     this.tags = 'none';
-    TagsFactory.setDefault('none');
     console.log('\u001B\u005B\u0033\u0034\u006D' +
                 'Running tests from ' + this.constructor.name +
                 '\u001B\u005B\u0033\u0037\u006D');
@@ -33,7 +35,7 @@ export class ParserTest extends Test {
         MathJax.handleRetriesFor(function() {
           let html = MathJax.document('<html></html>', {
             InputJax: new TeX({packages: this.packages,
-                               settings: this.options,
+                               settings: this.settings,
                                tags: this.tags})
           });
           html.TestMath(tex).compile();

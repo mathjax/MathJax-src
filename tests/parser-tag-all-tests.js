@@ -5,7 +5,7 @@ class ParserTagAllTest extends ParserTest {
 
   constructor() {
     super();
-    TagsFactory.setDefault('all');
+    this.tags = 'all';
   }
 
 }
