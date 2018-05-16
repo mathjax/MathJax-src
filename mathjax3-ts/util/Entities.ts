@@ -42,7 +42,7 @@ export const options: OptionList = {
  *  The entity name-to-value translation table
  *  (basic math entities -- others are loaded from external files)
  */
-const entities: EntityList = {
+export const entities: EntityList = {
     ApplyFunction: '\u2061',
     Backslash: '\u2216',
     Because: '\u2235',
