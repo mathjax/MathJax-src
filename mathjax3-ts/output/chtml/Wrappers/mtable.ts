@@ -672,7 +672,8 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         const {L} = this.getTableData();
         const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
         let pad = L + sep;   // FIXME, handle indentalign values
-        const [lpad, rpad] = [this.styles.get('padding-left'), this.styles.get('padding-right')];
+        const [lpad, rpad] = (this.styles == null ? ['', ''] :
+                              [this.styles.get('padding-left'), this.styles.get('padding-right')]);
         if (lpad || rpad) {
             pad = Math.max(pad, this.length2em(lpad || '0'), this.length2em(rpad || '0'));
         }
