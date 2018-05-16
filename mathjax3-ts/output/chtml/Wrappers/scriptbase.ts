@@ -33,6 +33,11 @@ import {BBox} from '../BBox.js';
 import {StyleData, StyleList} from '../CssStyles.js';
 import {DIRECTION} from '../FontData.js';
 
+/*
+ * Mutliply italic correction by this much (improve horizontal shift for italic characters)
+ */
+const DELTA = 1.5;
+
 /*****************************************************************/
 /*
  * A base class for msup/msub/msubsup and munder/mover/munderover
@@ -79,7 +84,10 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         let core = this.baseCore = this.childNodes[0];
         if (!core) return;
-        while (core.childNodes.length === 1 && (core.node.isKind('mrow') || core.node.isKind('TeXAtom'))) {
+        while (core.childNodes.length === 1 &&
+               (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
+                core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
+                core.node.isKind('mphantom') || core.node.isKind('semantics'))) {
             core = core.childNodes[0];
             if (!core) return;
         }
@@ -214,9 +222,12 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @return{numner[]}     The separation between their boxes, and the offset of the overscript
      */
     protected getOverKU(basebox: BBox, overbox: BBox) {
+        const accent = this.node.attributes.get('accent') as boolean;
         const tex = this.font.params;
         const d = overbox.d * overbox.rscale;
-        const k = Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d));
+        const k = (accent ? tex.rule_thickness :
+                   Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d))) -
+            (this.baseChild.node.isKind('munderover') ? .1 : 0);
         return [k, basebox.h + k + d];
     }
 
@@ -228,24 +239,29 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @return{numner[]}      The separation between their boxes, and the offset of the underscript
      */
     protected getUnderKV(basebox: BBox, underbox: BBox) {
+        const accent = this.node.attributes.get('accentunder') as boolean;
         const tex = this.font.params;
         const h = underbox.h * underbox.rscale;
-        const k = Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h);
+        const k = (accent ? tex.rule_thickness :
+                   Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h)) -
+            (this.baseChild.node.isKind('munderover') ? .1 : 0);
         return [k, -(basebox.d + k + h)];
     }
 
     /*
-     * @param{BBox[]} boxes  The bounding boxes whose offsets are to be computed
-     * @param{number[]}      The initial x offsets of the boxes
-     * @return{number[]}     The actual offsets needed to center the boxes in the stack
+     * @param{BBox[]} boxes    The bounding boxes whose offsets are to be computed
+     * @param{number[]} delta  The initial x offsets of the boxes
+     * @return{number[]}       The actual offsets needed to center the boxes in the stack
      */
     protected getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]) {
+        const align = this.node.attributes.get('align');
         const widths = boxes.map(box => box.w * box.rscale);
         const w = Math.max(...widths);
         const dw = [];
         let m = 0;
         for (const i of widths.keys()) {
-            dw[i] = (w - widths[i]) / 2 + delta[i];
+            dw[i] = (align === 'center' ? (w - widths[i]) / 2 :
+                     align === 'right' ? w - widths[i] : 0) + delta[i];
             if (dw[i] < m) {
                 m = -dw[i];
             }
@@ -268,6 +284,15 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
                 this.adaptor.setStyle(nodes[i], 'paddingLeft', this.em(dx[i]));
             }
         }
+    }
+
+    /*
+     * @return{number}   The offset for under and over
+     */
+    protected getDelta(noskew: boolean = false) {
+        const accent = this.node.attributes.get('accent');
+        const ddelta = (accent ? this.baseChild.coreMO().bbox.sk : 0);
+        return DELTA * this.baseCore.bbox.ic / 2 + ddelta;
     }
 
     /*
@@ -296,8 +321,8 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
             for (const child of this.childNodes) {
                 const noStretch = (child.stretch.dir === DIRECTION.None);
                 if (all || noStretch) {
-                    const {w} = child.getBBox(noStretch);
-                    if (w > W) W = w;
+                    const {w, rscale} = child.getBBox(noStretch);
+                    if (w * rscale > W) W = w * rscale;
                 }
             }
             //
@@ -308,4 +333,30 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
             }
         }
     }
+
+    /*
+     * @param{N} over        The HTML element for the overscript
+     * @param{BBox} overbox  The bbox for the overscript
+     */
+    protected adjustOverDepth(over: N, overbox: BBox) {
+        if (overbox.d >= 0) return;
+        this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
+    }
+
+    /*
+     * @param{N} under        The HTML element for the underscript
+     * @param{BBox} underbox  The bbox for the underscript
+     */
+    protected adjustUnderDepth(under: N, underbox: BBox) {
+        if (underbox.d >= 0) return;
+        const adaptor = this.adaptor;
+        const child = adaptor.firstChild(adaptor.firstChild(under) as N) as N;
+        const v = this.em(underbox.d);
+        const box = this.html('mjx-box', {style: {'margin-bottom': v, 'vertical-align': v}});
+        for (const child of adaptor.childNodes(adaptor.firstChild(under) as N) as N[]) {
+            adaptor.append(box, child);
+        }
+        adaptor.append(adaptor.firstChild(under) as N, box);
+    }
+
 }

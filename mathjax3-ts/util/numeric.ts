@@ -16,25 +16,25 @@
  */
 
 /**
- * @fileoverview  Chooses between jdsom and browser DOM adaptors
+ * @fileoverview  Implements some numeric utility functions
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {liteAdaptor, LiteAdaptor} from './liteAdaptor.js';
-import {browserAdaptor} from './browserAdaptor.js';
-import {HTMLAdaptor} from './HTMLAdaptor.js';
-
-let choose;
-
-try {
-    document;  // errors if not in browser
-    choose = browserAdaptor;
-} catch(e) {
-    choose = liteAdaptor;
+/*
+ * @param{number[]} A  The array to sum
+ * @return{number}     The summ of the elements in A
+ */
+export function sum(A: number[]) {
+    return A.reduce((a, b) => a + b, 0);
 }
 
 /*
- * Function to selecting which adaptor to use (depending on whether we are in a browser of node.js)
+ * @param{number[]} A  The array whose maximum entry is sought
+ * @return{number}     The largest entry in the array
  */
-export const chooseAdaptor = choose;
+export function max(A: number[]) {
+    return A.reduce((a, b) => Math.max(a, b), 0);
+}
+
+

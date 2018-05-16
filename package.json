@@ -1,6 +1,6 @@
 {
   "name": "mathjax3",
-  "version": "3.0.0-alpha.4",
+  "version": "3.0.0-alpha.5",
   "maintainers": [
     "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
   ],
@@ -10,10 +10,6 @@
   "scripts": {
     "compile": "npx tsc",
     "prepublishOnly": "npx tsc"
-  },
-  "dependencies": {
-    "jsdom": "10.*",
-    "webpack": "^3.10.0"
   },
   "devDependencies": {
     "typescript": "2.3.*",
@@ -42,5 +38,7 @@
     "nodejs",
     "equations",
     "formula"
-  ],  "license": "Apache-2.0"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {}
 }

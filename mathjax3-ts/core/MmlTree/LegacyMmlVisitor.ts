@@ -69,8 +69,8 @@ export class LegacyMmlVisitor extends MmlVisitor {
     }
 
     /*
-     * Vist an inferred mrow, but don't add the inferred row itself (the old-style
-     * nodes will one one automaticall).
+     * Visit an inferred mrow, but don't add the inferred row itself (the old-style
+     * nodes will add one automatically).
      *
      * @param {MmlNode} node  The inferred mrow to visit
      * @param {any} parent  The old-style parent to which this node's children should be added

@@ -59,8 +59,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
 
         'mjx-stretchy-h': {
             display: 'inline-table',
-            width: '100%',
-            'min-width': '1.2em'
+            width: '100%'
         },
         'mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-end': {
             display: 'table-cell',
@@ -73,6 +72,9 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
         },
         'mjx-stretchy-h > mjx-ext > mjx-c': {
             transform: 'scalex(500)'
+        },
+        'mjx-stretchy-h > mjx-ext > mjx-c::before': {
+            padding: '.001em 0'                  // for blink
         },
         'mjx-stretchy-h > mjx-beg > mjx-c': {
             'margin-right': '-.1em'
@@ -127,12 +129,23 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public size: number = null;
 
+    /*
+     * True if used as an accent in an munderover construct
+     */
+    public isAccent: boolean;
+
+    /*
+     * @override
+     */
+    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
+        super(factory, node, parent);
+        this.isAccent = (this.node as MmlMo).isAccent;
+    }
 
     /*
      * @override
      */
     public toCHTML(parent: N) {
-        // eventually handle centering, largop, etc.
         const attributes = this.node.attributes;
         const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
         const stretchy = this.stretch.dir !== DIRECTION.None;
@@ -220,11 +233,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
         if (stretchy && this.size < 0) return;
         super.computeBBox(bbox);
-        const child = this.childNodes[this.childNodes.length - 1];
-        if (child && child.bbox.ic) {
-            bbox.ic = child.bbox.ic;
-            if (!this.noIC) bbox.w += bbox.ic;
-        }
+        this.copySkewIC(bbox);
         if (this.node.attributes.get('symmetric') &&
             this.stretch.dir !== DIRECTION.Horizontal) {
             const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
@@ -248,6 +257,9 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @override
      */
     public canStretch(direction: DIRECTION) {
+        if (this.stretch.dir !== DIRECTION.None) {
+            return this.stretch.dir === direction;
+        }
         const attributes = this.node.attributes;
         if (!attributes.get('stretchy')) return false;
         const c = this.getText();
@@ -297,6 +309,7 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
             //
             if (delim.stretch) {
                 this.size = -1;
+                this.invalidateBBox();
                 this.getStretchBBox(WH, D, delim);
             } else {
                 this.variant = this.font.getSizeVariant(c, i - 1);
@@ -381,6 +394,20 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
             d = cd * (h / (ch + cd));
         }
         return [h - d, d];
+    }
+
+    /*
+     * @override
+     */
+    public remapChars(chars: number[]) {
+        if (chars.length == 1) {
+            const map = (this.isAccent ? 'accent' : 'mo');
+            const text = this.font.getRemappedChar(map, chars[0]);
+            if (text) {
+                chars = this.unicodeChars(text);
+            }
+        }
+        return chars;
     }
 
 }

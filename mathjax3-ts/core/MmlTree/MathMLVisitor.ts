@@ -68,7 +68,7 @@ export class MathMLVisitor extends MmlVisitor {
     }
 
     /*
-     * Vist an inferred mrow, but don't add the inferred row itself (since
+     * Visit an inferred mrow, but don't add the inferred row itself (since
      * it is supposed to be inferred).
      *
      * @param {MmlNode} node  The inferred mrow to visit

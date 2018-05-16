@@ -1,13 +1,14 @@
-import {MathJax} from "mathjax3/mathjax.js";
+import {MathJax} from '../mathjax3/mathjax.js';
 
-import {MathML} from "mathjax3/input/mathml.js";
-import {CHTML} from "mathjax3/output/chtml.js";
-import {RegisterHTMLHandler} from "mathjax3/handlers/html.js";
-import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
+import {MathML} from '../mathjax3/input/mathml.js';
+import {CHTML} from '../mathjax3/output/chtml.js';
+import {RegisterHTMLHandler} from '../mathjax3/handlers/html.js';
+import {chooseAdaptor} from '../mathjax3/adaptors/chooseAdaptor.js';
 
-RegisterHTMLHandler(chooseAdaptor());
+const adaptor = chooseAdaptor();
+RegisterHTMLHandler(adaptor);
 
-let html = MathJax.document("<html></html>", {
+const html = MathJax.document('<html></html>', {
     InputJax: new MathML(),
     OutputJax: new CHTML()
 });
@@ -20,7 +21,7 @@ function showBBox(node, space) {
     }
 }
 
-MathJax.handleRetriesFor(function () {
+MathJax.handleRetriesFor(() => {
 
     html.TestMath(process.argv[3] || '<math></math>').compile().typeset();
     let math = html.math.pop();
@@ -33,10 +34,6 @@ MathJax.handleRetriesFor(function () {
     console.log('');
     showBBox(wrap, '');
     console.log('');
-    console.log(math.typesetRoot.outerHTML);
-    
+    console.log(adaptor.outerHTML(math.typesetRoot));
 
-}).catch(err => {
-  console.log(err.message);
-  console.log(err.stack.replace(/\n.*\/system\.js:(.|\n)*/,""));
-});
+}).catch(err => console.log(err.stack));

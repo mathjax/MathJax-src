@@ -23,7 +23,7 @@
 
 import {AbstractWrapper} from '../../core/Tree/Wrapper.js';
 import {Node, PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, TextNode, AbstractMmlNode, AttributeList} from '../../core/MmlTree/MmlNode.js';
 import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
@@ -335,6 +335,35 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
             bbox.append(child.getBBox());
         }
         bbox.clean();
+    }
+  
+    /*
+     * Mark BBox to be computed again (e.g., when an mo has stretched)
+     */
+    public invalidateBBox() {
+        if (this.bboxComputed) {
+            this.bboxComputed = false;
+            if (this.parent) {
+                this.parent.invalidateBBox();
+            }
+        }
+    }
+
+    /*
+     * Copy child skew and italic correction
+     *
+     * @param{BBox} bbox  The bounding box to modify
+     */
+    protected copySkewIC(bbox: BBox) {
+        const first = this.childNodes[0];
+        if (first && first.bbox.sk) {
+            bbox.sk = first.bbox.sk;
+        }
+        const last = this.childNodes[this.childNodes.length - 1];
+        if (last && last.bbox.ic) {
+            bbox.ic = last.bbox.ic;
+            bbox.w += bbox.ic;
+        }
     }
 
     /*******************************************************************/
@@ -745,6 +774,14 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /*
+     * @param{number[]} chars    The array of unicode character numbers to remap
+     * @return{number[]}         The converted array
+     */
+    public remapChars(chars: number[]) {
+        return chars;
+    }
+
+    /*
      * @param{string} type  The tag name of the HTML node to be created
      * @param{OptionList} def  The properties to set for the created node
      * @param{N[]} content  The child nodes for the created HTML node
@@ -778,6 +815,29 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      */
     public mmlNode(kind: string, properties: PropertyList = {}, children: MmlNode[] = []) {
         return (this.node as AbstractMmlNode).factory.create(kind, properties, children);
+    }
+
+    /*
+     * Create an mo wrapper with the given text,
+     *   link it in, and give it the right defaults.
+     *
+     * @param{string} text  The text for the wrapped element
+     * @return{CHTMLWrapper}  The wrapped MmlMo node
+     */
+    protected createMo(text: string): CHTMLmo<N, T, D> {
+        const mmlFactory = (this.node as AbstractMmlNode).factory;
+        const textNode = (mmlFactory.create('text') as TextNode).setText(text);
+        const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
+        const attributes = this.node.attributes;
+        const display = attributes.get('display') as boolean;
+        const scriptlevel = attributes.get('scriptlevel') as number;
+        const defaults: AttributeList = {
+            mathsize: ['math', attributes.get('mathsize')]
+        };
+        mml.setInheritedAttributes(defaults, display, scriptlevel, false);
+        const node = this.wrap(mml) as CHTMLmo<N, T, D>;
+        node.parent = this;
+        return node;
     }
 
 }
