@@ -305,6 +305,18 @@ export interface DOMAdaptor<N, T, D> {
      * @return{string}       The cssText for the styles
      */
     allStyles(node: N): string;
+
+    /*
+     * @param{N} node        The HTML node whose font size is to be determined
+     * @return{number}       The font size (in pixels) of the node
+     */
+    fontSize(node: N): number;
+
+    /*
+     * @param{N} node        The HTML node whose dimensions are to be determined
+     * @return{number}       The width and height (in pixels) of the element
+     */
+    nodeSize(node: N): [number, number];
 }
 
 /*****************************************************************/
@@ -576,5 +588,15 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public abstract allStyles(node: N): string;
+
+    /*
+     * @override
+     */
+    public abstract fontSize(node: N): number;
+
+    /*
+     * @override
+     */
+    public abstract nodeSize(node: N): [number, number];
 
 }
