@@ -33,7 +33,7 @@
 
 import {MapHandler} from '../MapHandler.js';
 import {CharacterMap} from '../SymbolMap.js';
-import {Entities} from '../../../util/Entities.js';
+import * as Entities from '../../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {TexConstant} from '../TexConstants.js';
@@ -592,7 +592,7 @@ export class FnItem extends BaseItem {
       }
       // @test Named Function, Named Function Arg
       const node = this.factory.configuration.nodeFactory.create('token', 'mo', {texClass: TEXCLASS.NONE},
-                                          Entities.ENTITIES.ApplyFunction);
+                                          Entities.entities.ApplyFunction);
       return [top, node, item];
     }
     // @test Mathop Super, Mathop Sub
