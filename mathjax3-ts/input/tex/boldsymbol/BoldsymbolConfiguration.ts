@@ -62,25 +62,33 @@ new CommandMap('boldsymbol', {boldsymbol: 'Boldsymbol'}, BoldsymbolMethods);
 
 
 export function createBoldToken(kind: string, def: any, text: string): MmlNode  {
-  console.log(kind + ': ' + text);
-  console.log(def);
   let token = TreeHelper._createToken(kind, def, text);
   if (kind !== 'mtext' &&
       TreeHelper.parser && TreeHelper.parser.stack.env.boldsymbol) {
-    let variant = TreeHelper.getAttribute(token, 'mathvariant') as string;
-    console.log(variant);
-    if (variant == null) {
-      TreeHelper.setProperties(token, {mathvariant: TexConstant.Variant.BOLD});
-    } else {
-      TreeHelper.setProperties(token, {mathvariant: BOLDVARIANT[variant] || variant});
-    }
+    TreeHelper.setProperties(token, {'fixBold': true});
   }
   return token;
 }
 
 
+export function rewriteBoldTokens(mml: MmlNode): MmlNode  {
+  mml.walkTree((node: MmlNode, d: any) => {
+    if (TreeHelper.getProperty(node, 'fixStretchy')) {
+      let variant = TreeHelper.getAttribute(node, 'mathvariant') as string;
+      if (variant == null) {
+        TreeHelper.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
+      } else {
+        TreeHelper.setProperties(node, {mathvariant: BOLDVARIANT[variant] || variant});
+      }
+    }}, {});
+  return mml;
+}
+
+
 export const BoldsymbolConfiguration = Configuration.create(
-  'boldsymbol', {handler: {macro: ['boldsymbol']}, nodes: {'createToken': createBoldToken}}
+  'boldsymbol', {handler: {macro: ['boldsymbol']},
+                 nodes: {'createToken': createBoldToken},
+                 postprocessors: [rewriteBoldTokens]}
 );
 
 

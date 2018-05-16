@@ -1,12 +1,4 @@
 /*************************************************************
- *
- *  MathJax/jax/input/TeX/imp.js
- *  
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
  *  
  *  Copyright (c) 2009-2017 The MathJax Consortium
  * 
@@ -54,7 +46,7 @@ export namespace TreeHelper {
                            'close'
                           ];
 
-  const methodOut: boolean = true;
+  const methodOut: boolean = false;
 
   export function _createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
     const node = factory.create(kind, {}, []);
