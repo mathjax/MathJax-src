@@ -26,7 +26,7 @@ import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass
 import {MmlFactory} from './MmlFactory.js';
 
 /*
- *  Used in setInheritedAttrbutes() to pass originating node kind as well as property value
+ *  Used in setInheritedAttributes() to pass originating node kind as well as property value
  */
 export type AttributeList = {[attribute: string]: [string, Property]};
 
