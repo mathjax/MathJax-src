@@ -72,6 +72,25 @@ export class MmlMtable extends AbstractMmlNode {
     }
 
     /*
+     * @override
+     */
+    setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+        //
+        // Force inheritance of shift and align values (since they are needed to output tables with labels)
+        //   but make sure they are not given explicitly on the <mtable> tag.
+        //
+        for (const name of ['indentalign', 'indentalignfirst', 'indentshift', 'indentshiftfirst']) {
+            if (attributes[name]) {
+                this.attributes.setInherited(name, attributes[name][1]);
+            }
+            if (this.attributes.getExplicit(name) !== undefined) {
+                delete (this.attributes.getAllAttributes())[name];
+            }
+        }
+        super.setInheritedAttributes(attributes, display, level, prime);
+    };
+
+    /*
      * Make sure all children are mtr or mlabeledtr nodes
      * Inherit the table attributes, and set the display attribute based on the table's displaystyle attribute
      *

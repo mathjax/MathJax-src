@@ -46,6 +46,12 @@ export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
     constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
+        for (const child of this.childNodes) {
+            if (child.bbox.pwidth) {
+                this.bbox.pwidth = '100%';
+                break;
+            }
+        }
     }
 
     /*
@@ -59,9 +65,6 @@ export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
             if (child.bbox.w < 0) {
                 hasNegative = true;
             }
-            if (child.bbox.pwidth) {
-                this.makeFullWidth();
-            }
         }
         // FIXME:  handle line breaks
         if (hasNegative) {
@@ -73,15 +76,6 @@ export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
                 }
             }
         }
-    }
-
-    /*
-     * Handle the case where a child has a percentage width by
-     * marking the parent as 100% width.
-     */
-    protected makeFullWidth() {
-        this.bbox.pwidth = '100%';
-        this.adaptor.setAttribute(this.chtml, 'width', 'full');
     }
 
     /*
