@@ -24,9 +24,9 @@
  */
 
 
-import {AbstractMmlNode, AbstractMmlEmptyNode} from 'mathjax3/core/MmlTree/MmlNode.js';
-import {MmlFactory} from 'mathjax3/core/MmlTree/MmlFactory.js';
-import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
+import {AbstractMmlNode, AbstractMmlEmptyNode} from '../../../../../mathjax3/core/MmlTree/MmlNode.js';
+import {MmlFactory} from '../../../../../mathjax3/core/MmlTree/MmlFactory.js';
+import {JsonMmlVisitor} from '../../../../../mathjax3/core/MmlTree/JsonMmlVisitor.js';
 
 // Intermediate parser namespace
 export let imp = {};

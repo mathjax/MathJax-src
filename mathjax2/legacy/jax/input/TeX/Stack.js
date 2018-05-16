@@ -26,7 +26,7 @@
 
 import {imp} from './imp.js';
 // import {BaseItem, StartItem, MmlItem} from './StackItem.js';
-import {BaseItem, StartItem, MmlItem} from 'mathjax3/input/tex/StackItem.js';
+import {BaseItem, StartItem, MmlItem} from '../../../../../mathjax3/input/tex/StackItem.js';
 
 // Stack class for the parser.
 

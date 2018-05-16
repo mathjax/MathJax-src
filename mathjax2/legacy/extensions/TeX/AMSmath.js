@@ -24,13 +24,12 @@
  *  limitations under the License.
  */
 
-let sm = require('mathjax3/input/tex/SymbolMap.js');
-let tc = require('mathjax3/input/tex/TexConstants.js');
-let BaseMethods = require('mathjax3/input/tex/BaseMethods.js').default;
+let sm = require('../../../../mathjax3/input/tex/SymbolMap.js');
+let tc = require('../../../../mathjax3/input/tex/TexConstants.js');
+let BaseMethods = require('../../../../mathjax3/input/tex/BaseMethods.js').default;
 let AmsMethods = require('../../jax/input/TeX/AmsMethods.js').default;
 let imp = require("../../jax/input/TeX/imp.js").imp;
 let ParserUtil = require("../../jax/input/TeX/ParserUtil.js").ParserUtil;
-
 
 MathJax.Extension["TeX/AMSmath"] = {
   version: "2.7.0",

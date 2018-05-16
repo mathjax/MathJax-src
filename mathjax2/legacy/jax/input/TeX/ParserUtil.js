@@ -24,7 +24,7 @@
  */
 
 
-import {TEXCLASS} from 'mathjax3/core/MmlTree/MmlNode.js';
+import {TEXCLASS} from '../../../../../mathjax3/core/MmlTree/MmlNode.js';
 import {imp} from './imp.js';
 import {OldParser} from './Parser.js';
 

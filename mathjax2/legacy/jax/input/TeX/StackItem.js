@@ -24,11 +24,11 @@
  */
 
 
-import MapHandler from 'mathjax3/input/tex/MapHandler.js';
-import {MmlEntities} from 'mathjax3/input/mathml/MmlEntities.js';
-import {TEXCLASS} from 'mathjax3/core/MmlTree/MmlNode.js';
-import {TexConstant} from 'mathjax3/input/tex/TexConstants.js';
-import TexError from 'mathjax3/input/tex/TexError.js';
+import MapHandler from '../../../../../mathjax3/input/tex/MapHandler.js';
+import {MmlEntities} from '../../../../../mathjax3/input/mathml/MmlEntities.js';
+import {TEXCLASS} from '../../../../../mathjax3/core/MmlTree/MmlNode.js';
+import {TexConstant} from '../../../../../mathjax3/input/tex/TexConstants.js';
+import TexError from '../../../../../mathjax3/input/tex/TexError.js';
 // import {TexError} from './TexError.js';
 import {ParserUtil} from './ParserUtil.js';
 import {imp} from './imp.js';

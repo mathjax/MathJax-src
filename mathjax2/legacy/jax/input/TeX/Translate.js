@@ -25,11 +25,11 @@
 
 import {imp} from './imp.js';
 // import {OldParser} from './Parser.js';
-import {OldParser} from 'mathjax3/input/tex/OldParser.js';
-import {ParserUtil} from 'mathjax3/input/tex/ParserUtil.js';
+import {OldParser} from '../../../../../mathjax3/input/tex/OldParser.js';
+import {ParserUtil} from '../../../../../mathjax3/input/tex/ParserUtil.js';
 // import {ParseMethods} from './ParseMethods.js';
-import {ParseMethods} from 'mathjax3/input/tex/ParseMethods.js';
-import TexError from 'mathjax3/input/tex/TexError.js';
+import {ParseMethods} from '../../../../../mathjax3/input/tex/ParseMethods.js';
+import TexError from '../../../../../mathjax3/input/tex/TexError.js';
 
 // A wrapper for translating scripts with LaTeX content.
 

@@ -40,5 +40,7 @@
     "formula"
   ],
   "license": "Apache-2.0",
-  "dependencies": {}
+  "dependencies": {
+    "esm": "^3.0.34"
+  }
 }

@@ -1,9 +1,9 @@
 // import * as sitem from './StackItem.js';
-import * as sitem from 'mathjax3/input/tex/StackItem.js';
+import * as sitem from '../../../../../mathjax3/input/tex/StackItem.js';
 import {imp} from './imp.js';
-import TexError from 'mathjax3/input/tex/TexError.js';
-import {TEXCLASS} from 'mathjax3/core/MmlTree/MmlNode.js';
-import {TexConstant} from 'mathjax3/input/tex/TexConstants.js';
+import TexError from '../../../../../mathjax3/input/tex/TexError.js';
+import {TEXCLASS} from '../../../../../mathjax3/core/MmlTree/MmlNode.js';
+import {TexConstant} from '../../../../../mathjax3/input/tex/TexConstants.js';
 import {ParserUtil} from './ParserUtil.js';
 import {OldParser} from './Parser.js';
 
