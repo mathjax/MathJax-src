@@ -94,13 +94,13 @@ new sm.MacroMap('new-Character', {}, {});
 new sm.DelimiterMap('new-Delimiter', ParseMethods.delimiter, {});
 new sm.CommandMap('new-Macro', {}, {});
 new sm.EnvironmentMap('new-Environment', ParseMethods.environment, {}, {});
-const emptyConf = new Configuration(
+const emptyConf = Configuration.create(
   'empty',
-  {character: ['new-Character'],
-   delimiter: ['new-Delimiter'],
-   macro: ['new-Macro'],
-   environment: ['new-Environment']
-  }, {}, {});
+  {handler: {character: ['new-Character'],
+              delimiter: ['new-Delimiter'],
+              macro: ['new-Macro'],
+              environment: ['new-Environment']
+             }});
 
 
 /**

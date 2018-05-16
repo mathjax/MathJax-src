@@ -66,8 +66,6 @@ export default class ParseOptions {
   
   public constructor(setting: {[key: string]: (string|boolean)} = {}) {
     this.options = new Map(DefaultOptions);
-    for (let key in setting) {
-      this.options.set(key, setting[key]);
-    }
+    Object.assign(this.options, setting);
   }
 }

@@ -26,6 +26,7 @@ import {ParseMethod} from './Types.js';
 import {HandlerType} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
 
 export type HandlerConfig = {[P in HandlerType]?: string[]}
@@ -34,8 +35,32 @@ export type StackItemConfig = {[kind: string]: StackItemClass}
 export type TagsConfig = {[kind: string]: TagsClass}
 export type OptionsConfig = {[key: string]: (string|boolean)}
 
+// export type ConfigurationType = 'handler' | 'fallback' | 'items' | 'tags' | 'options' | 'nodes' | 'preprocessors' | 'postprocessors';
+
 
 export class Configuration {
+
+  public static create(name: string,
+                       config: {handler?: HandlerConfig,
+                                fallback?: FallbackConfig,
+                                items?: StackItemConfig,
+                                tags?: TagsConfig,
+                                options?: OptionsConfig,
+                                nodes?: {[key: string]: any},
+                                preprocessors?: ((input: string) => string)[],
+                                postprocessors?: ((input: MmlNode) => MmlNode)[]
+                               }) {
+    return new Configuration(name,
+                             config.handler || {},
+                             config.fallback || {},
+                             config.items || {},
+                             config.tags || {},
+                             config.options || {},
+                             config.nodes || {},
+                             config.preprocessors || [],
+                             config.postprocessors || []
+                            )
+  }
 
   // Configuration for the TexParser consist of the following:
   // * Handlerconfigurations
@@ -47,14 +72,16 @@ export class Configuration {
   /**
    * @constructor
    */
-  constructor(readonly name: string,
-              readonly handler: HandlerConfig = {},
-              readonly fallback: FallbackConfig = {},
-              readonly items: StackItemConfig = {},
-              readonly tags: TagsConfig = {},
-              readonly options: OptionsConfig = {},
-              // TODO: Flash this out with a node factory and node type.
-              readonly nodes: {[key: string]: any} = {}
+  private constructor(readonly name: string,
+                      readonly handler: HandlerConfig = {},
+                      readonly fallback: FallbackConfig = {},
+                      readonly items: StackItemConfig = {},
+                      readonly tags: TagsConfig = {},
+                      readonly options: OptionsConfig = {},
+                      // TODO: Flash this out with a node factory and node type.
+                      readonly nodes: {[key: string]: any} = {},
+                      readonly preprocessors?: ((input: string) => string)[],
+                      readonly postprocessors?: ((input: MmlNode) => MmlNode)[]
              ) {
     let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
     let handlers = Object.keys(handler) as HandlerType[];

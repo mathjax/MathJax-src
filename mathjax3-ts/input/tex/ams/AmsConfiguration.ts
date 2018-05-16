@@ -29,12 +29,6 @@ import {MultlineItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
 import './AmsMappings.js';
 
-// This is from the 'no undefined' extension.
-function noUndefined(parser: TexParser, name: string) {
-  const textNode = TreeHelper.createText('\\' + name);
-  parser.Push(TreeHelper.createNode('mtext', [], {mathcolor: 'red'}, textNode));
-};
-
 
 /**
  * Standard AMS style tagging.
@@ -44,17 +38,17 @@ function noUndefined(parser: TexParser, name: string) {
 export class AmsTags extends AbstractTags { }
 
 
-export const AmsConfiguration = new Configuration(
+export const AmsConfiguration = Configuration.create(
   'ams',
-  {
+  {handler: {
     delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
     macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
             'AMSsymbols-delimiter', 'AMSsymbols-macros',
             'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
     environment: ['AMSmath-environment']
-  }, { },
-  {[MultlineItem.prototype.kind]: MultlineItem}, {'AMS': AmsTags},
-  {}
+  },
+   items: {[MultlineItem.prototype.kind]: MultlineItem},
+   tags: {'AMS': AmsTags}}
 );
 
 

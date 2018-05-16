@@ -32,8 +32,7 @@ function noUndefined(parser: TexParser, name: string) {
   parser.Push(TreeHelper.createNode('mtext', [], {mathcolor: 'red'}, textNode));
 };
 
-export const NoUndefinedConfiguration = new Configuration(
-  'noundefined', {}, {macro: noUndefined}, {}, {}
-);
+export const NoUndefinedConfiguration = Configuration.create(
+  'noundefined', {fallback: {macro: noUndefined}});
 
 

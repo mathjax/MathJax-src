@@ -96,19 +96,20 @@ export class BaseTags extends AbstractTags { }
 
 
 // Some concrete definitions.
-export const BaseConfiguration = new Configuration(
+export const BaseConfiguration = Configuration.create(
   'base',
-  {
+  {handler: {
     character: ['command', 'special', 'letter', 'digit'],
     delimiter: ['delimiter'],
     // Note, that the position of the delimiters here is important!
     macro: ['delimiter', 'macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
     environment: ['environment']
-  }, {
+  },
+   fallback: {
     character: Other,
     macro: csUndefined,
-    environment: envUndefined
-  }, {
+    environment: envUndefined},
+   items: {
     // BaseItems
     [bitem.StartItem.prototype.kind]: bitem.StartItem,
     [bitem.StopItem.prototype.kind]: bitem.StopItem,
@@ -131,6 +132,5 @@ export const BaseConfiguration = new Configuration(
     [bitem.ArrayItem.prototype.kind]: bitem.ArrayItem,
     [bitem.EqnArrayItem.prototype.kind]: bitem.EqnArrayItem,
     [bitem.EquationItem.prototype.kind]: bitem.EquationItem
-  }, {
-    base: BaseTags
-  });
+   },
+   tags: {base: BaseTags}});

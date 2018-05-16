@@ -93,7 +93,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   protected findTeX: FindTeX<N, T, D>;
 
-
+  private configuration: Configuration;
+  private latex: string;
+  private mathNode: MmlNode;
+  
   /**
    * Wraps an error into a node for output.
    * @param {TeXError} err The TexError.
@@ -137,7 +140,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {MmlNode} mml The node to clean.
    */
   // TODO (DC): Move this maybe into setInheritedAttributes method?
-  private static cleanAttributes(mml: MmlNode) {
+  private static cleanAttributes(mml: MmlNode): MmlNode {
     mml.walkTree((n: MmlNode, d) => {
       let attribs = n.attributes as any;
       let keys = Object.keys(attribs.attributes);
@@ -147,6 +150,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         }
       }
     }, {});
+    return mml;
   };
 
 
@@ -156,7 +160,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {MmlNode} mml The node in which to combine relations.
    */
   // TODO (DC): Could this be done with a visitor?
-  private static combineRelations(mml: MmlNode) {
+  private static combineRelations(mml: MmlNode): MmlNode {
     TreeHelper.printMethod('combineRelations: ');
     let m1: MmlNode, m2: MmlNode;
     let children = TreeHelper.getChildren(mml);
@@ -189,6 +193,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         }
       }
     }
+    return mml;
   }
 
 
@@ -253,8 +258,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     let node: MmlNode;
     let parser: TexParser;
     let display = math.display;
+    this.latex = math.math;
+    this.runPreprocessors()
     try {
-      parser = new TexParser(math.math,
+      parser = new TexParser(this.latex,
                              {display: display, isInner: false},
                              configurations);
       node = parser.mml();
@@ -264,21 +271,18 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       }
       node = TeX.formatError(err);
     }
-    console.log(node);
-    let mathNode = TreeHelper.createNode('math', [node], {});
-    console.log(node);
+    this.mathNode = TreeHelper.createNode('math', [node], {});
     if (display) {
-      TreeHelper.setAttribute(mathNode, 'display', 'block');
+      TreeHelper.setAttribute(this.mathNode, 'display', 'block');
     }
-    TeX.cleanSubSup(mathNode);
-    mathNode.setInheritedAttributes({}, display, 0, false);
-    console.log(node);
-    TeX.cleanStretchy(mathNode);
-    mathNode.setInheritedAttributes({}, display, 0, false);
-    mathNode.setTeXclass(null);
-    TeX.cleanAttributes(mathNode);
-    TeX.combineRelations(mathNode);
-    return mathNode;
+    TeX.cleanSubSup(this.mathNode);
+    this.mathNode.setInheritedAttributes({}, display, 0, false);
+    TeX.cleanStretchy(this.mathNode);
+    this.mathNode.setInheritedAttributes({}, display, 0, false);
+    this.mathNode.setTeXclass(null);
+    // Run Postprocessors: MmlNode => MmlNode
+    this.runPostprocessors();
+    return this.mathNode;
   };
 
 
@@ -294,36 +298,49 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @return {ParseOptions} Configures the parser.
    */
   private configure(): ParseOptions {
-    const config = new Configuration('default', {}, {}, {}, {}, {}, {});
+    this.configuration = Configuration.create(
+      'default', {postprocessors: [TeX.cleanAttributes, TeX.combineRelations]});
     // Combine package configurations
     for (let key of this.options['packages']) {
       let conf = ConfigurationHandler.getInstance().get(key);
       if (conf) {
-        config.append(conf);
+        this.configuration.append(conf);
       }
     }
-    console.log(config.nodes);
-    TreeHelper.setCreators(config.nodes);
+    console.log(this.configuration.nodes);
+    TreeHelper.setCreators(this.configuration.nodes);
     let options = new ParseOptions();
-    options.handlers = new SubHandlers(config);
+    options.handlers = new SubHandlers(this.configuration);
     options.itemFactory = new StackItemFactory();
     options.itemFactory.configuration = options;
     // Add stackitems from packages.
-    options.itemFactory.addStackItems(config.items);
+    options.itemFactory.addStackItems(this.configuration.items);
     // Add tagging structures from packages and set tagging to given default.
-    TagsFactory.addTags(config.tags);
+    TagsFactory.addTags(this.configuration.tags);
     TagsFactory.setDefault(this.options.tags);
     options.tags = TagsFactory.getDefault();
     options.tags.configuration = options;
     // Set other options for parser from package configurations.
-    for (const key of Object.keys(config.options)) {
-      options.options.set(key, config.options[key]);
+    for (const key of Object.keys(this.configuration.options)) {
+      options.options.set(key, this.configuration.options[key]);
     } // From this run's configuration.
     let settings = this.options['settings'];
     for (const key of Object.keys(settings)) {
       options.options.set(key, settings[key]);
     }
     return options;
+  }
+
+  private runPreprocessors() {
+    for (let preprocessor of this.configuration.preprocessors) {
+      this.latex = preprocessor(this.latex);
+    }
+  }
+
+  private runPostprocessors() {
+    for (let postprocessor of this.configuration.postprocessors) {
+      this.mathNode = postprocessor(this.mathNode);
+    }
   }
 
 }

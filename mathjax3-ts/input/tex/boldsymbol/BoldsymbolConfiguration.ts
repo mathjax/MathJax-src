@@ -30,12 +30,6 @@ import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 
-// This is from the 'no undefined' extension.
-// function noUndefined(parser: TexParser, name: string) {
-//   const textNode = TreeHelper.createText('\\' + name);
-//   parser.Push(TreeHelper.createNode('mtext', [], {mathcolor: 'red'}, textNode));
-// };
-
 let BOLDVARIANT: {[key: string]: string} = {};
 BOLDVARIANT[TexConstant.Variant.NORMAL] = TexConstant.Variant.BOLD;
 BOLDVARIANT[TexConstant.Variant.ITALIC]    = TexConstant.Variant.BOLDITALIC;
@@ -85,8 +79,8 @@ export function createBoldToken(kind: string, def: any, text: string): MmlNode  
 }
 
 
-export const BoldsymbolConfiguration = new Configuration(
-  'boldsymbol', {macro: ['boldsymbol']}, {}, {}, {}, {}, {'createToken': createBoldToken}
+export const BoldsymbolConfiguration = Configuration.create(
+  'boldsymbol', {handler: {macro: ['boldsymbol']}, nodes: {'createToken': createBoldToken}}
 );
 
 
