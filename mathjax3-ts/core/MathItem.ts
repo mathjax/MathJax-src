@@ -48,7 +48,7 @@ export type Location<N, T> = {
 /*****************************************************************/
 /*
  *  The Metrics object includes the data needed to typeset
- *  a Mathitem.
+ *  a MathItem.
  */
 
 export type Metrics = {

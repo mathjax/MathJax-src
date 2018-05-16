@@ -60,6 +60,8 @@ export interface MinHTMLElement<N, T> {
     parentNode: N | Node;
     nextSibling: N | T | Node;
     previousSibling: N | T | Node;
+    offsetWidth: number;
+    offsetHeight: number;
 
     attributes: AttributeData[] | NamedNodeMap;
     classList: DOMTokenList;
@@ -118,9 +120,10 @@ export interface MinDOMParser<D> {
  */
 
 /*
+ * @template N  The HTMLElement node class
  * @template D  The Document class
  */
-export interface MinWindow<D> {
+export interface MinWindow<N, D> {
     document: D;
     DOMParser: {
         new(): MinDOMParser<D>
@@ -130,6 +133,7 @@ export interface MinWindow<D> {
     HTMLElement: any;
     DocumentFragment: any;
     Document: any;
+    getComputedStyle(node: N): any;
 }
 
 /*****************************************************************/
@@ -143,7 +147,7 @@ export interface MinWindow<D> {
  * @template D  The Document class
  */
 export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
-    window: MinWindow<D>
+    window: MinWindow<N, D>
 }
 
 /*****************************************************************/
@@ -168,7 +172,7 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /*
      * The window object for this adaptor
      */
-    window: MinWindow<D>;
+    window: MinWindow<N, D>;
 
     /*
      * The DOMParser used to parse a string into a DOM tree
@@ -179,7 +183,7 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
      * @override
      * @constructor
      */
-    constructor(window: MinWindow<D>) {
+    constructor(window: MinWindow<N, D>) {
         super(window.document);
         this.window = window;
         this.parser = new (window.DOMParser as any)();
@@ -462,4 +466,18 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
         return node.style.cssText;
     }
 
+    /*
+     * @override
+     */
+    public fontSize(node: N) {
+        const style = this.window.getComputedStyle(node);
+        return parseFloat(style.fontSize);
+    }
+
+    /*
+     * @override
+     */
+    public nodeSize(node: N) {
+        return [node.offsetWidth, node.offsetHeight] as [number, number];
+    }
 }
