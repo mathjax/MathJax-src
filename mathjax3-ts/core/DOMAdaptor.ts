@@ -88,6 +88,18 @@ export interface DOMAdaptor<N, T, D> {
     root(doc: D): N;
 
     /*
+     * @param{D} doc    The document whose statusline is to be obtained
+     * @return{string}  The document's status line (title)
+     */
+    getStatus(doc: D): string;
+
+    /*
+     * @param{D} doc           The document whose statusline is to be set
+     * @param{string} status   The document's new status line (title)
+     */
+    setStatus(doc: D, status: string): void;
+
+    /*
      * @param{N} node        The node to search for tags
      * @param{string} name   The name of the tag to search for
      * @param{string} ns     The namespace to search in (or null for no namespace)
@@ -384,6 +396,16 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public abstract root(doc: D): N;
+
+    /*
+     * @override
+     */
+    public abstract getStatus(doc: D): string;
+
+    /*
+     * @override
+     */
+    public abstract setStatus(doc: D, status: string): void;
 
     /*
      * @override

@@ -42,6 +42,7 @@ import {CHTMLmtable} from './Wrappers/mtable.js';
 import {CHTMLmtr, CHTMLmlabeledtr} from './Wrappers/mtr.js';
 import {CHTMLmtd} from './Wrappers/mtd.js';
 import {CHTMLmglyph} from './Wrappers/mglyph.js';
+import {CHTMLmaction} from './Wrappers/maction.js';
 import {CHTMLsemantics, CHTMLannotation, CHTMLannotationXML, CHTMLxml} from './Wrappers/semantics.js';
 import {CHTMLTeXAtom} from './Wrappers/TeXAtom.js';
 import {CHTMLTextNode} from './Wrappers/TextNode.js';
@@ -73,6 +74,7 @@ export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
     [CHTMLmlabeledtr.kind]: CHTMLmlabeledtr,
     [CHTMLmtd.kind]: CHTMLmtd,
     [CHTMLmglyph.kind]: CHTMLmglyph,
+    [CHTMLmaction.kind]: CHTMLmaction,
     [CHTMLsemantics.kind]: CHTMLsemantics,
     [CHTMLannotation.kind]: CHTMLannotation,
     [CHTMLannotationXML.kind]: CHTMLannotationXML,

@@ -55,7 +55,6 @@ export interface RetryError extends Error {
  *             .compile()
  *             .getMetrics()
  *             .typeset()
- *             .addEventHandlers()
  *             .updateDocument();
  *
  *     }).catch(err => {

@@ -115,6 +115,20 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     /*
      * @override
      */
+    public getStatus(doc: LiteDocument) {
+        return '';  // statusline is not maintained
+    }
+
+    /*
+     * @override
+     */
+    public setStatus(doc: LiteDocument, status: string) {
+        // statusline is not maintained
+    }
+
+    /*
+     * @override
+     */
     public tags(node: LiteElement, name: string, ns: string = null) {
         let stack = [] as LiteNode[];
         let tags = [] as LiteElement[];

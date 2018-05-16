@@ -37,6 +37,7 @@ export interface MinDocument<N, T> {
     documentElement: N;
     head: N;
     body: N;
+    title: string;
     createElement(type: string): N;
     createTextNode(text: string): T;
     querySelectorAll(selector: string): N[];
@@ -225,6 +226,20 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
      */
     public root(doc: D) {
         return doc.documentElement;
+    }
+
+    /*
+     * @override
+     */
+    public getStatus(doc: D) {
+        return doc.title;
+    }
+
+    /*
+     * @override
+     */
+    public setStatus(doc: D, status: string) {
+        doc.title = status;
     }
 
     /*
