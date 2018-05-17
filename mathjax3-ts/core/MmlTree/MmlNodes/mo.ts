@@ -136,8 +136,7 @@ export class MmlMo extends AbstractMmlTokenNode {
      * @override
      */
     public hasSpacingAttributes() {
-        return !!this.attributes.getExplicit('form') ||
-               this.attributes.isSet('lspace') ||
+        return this.attributes.isSet('lspace') ||
                this.attributes.isSet('rspace');
     }
 
@@ -149,10 +148,6 @@ export class MmlMo extends AbstractMmlTokenNode {
     public setTeXclass(prev: MmlNode): MmlNode {
         let {form, lspace, rspace, fence} = this.attributes.getList('form', 'lspace', 'rspace', 'fence') as
                                              {form: string, lspace: string, rspace: string, fence: string};
-        if (this.hasSpacingAttributes()) {
-            this.texClass = TEXCLASS.NONE;
-            return this;
-        }
         if (fence && this.texClass === TEXCLASS.REL) {
             if (form === 'prefix') {
                 this.texClass = TEXCLASS.OPEN;
@@ -248,8 +243,9 @@ export class MmlMo extends AbstractMmlTokenNode {
             let range = this.getRange(mo);
             if (range) {
                 this.texClass = range[2];
-                this.lspace = (def[0] + 1) / 18;
-                this.rspace = (def[1] + 1) / 18;
+                // TODO: Fix range numbers.
+                // this.lspace = (range[0] + 1) / 18;
+                // this.rspace = (range[1] + 1) / 18;
             }
         }
     }
