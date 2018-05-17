@@ -75,7 +75,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
             if (this.inputJax.processStrings) {
                 let node = this.start.node as T;
                 if (node === this.end.node) {
-                    if (this.end.n < this.adaptor.value(this.end.node).length) {
+                    if (this.end.n && this.end.n < this.adaptor.value(this.end.node).length) {
                         this.adaptor.split(this.end.node, this.end.n);
                     }
                     if (this.start.n) {
