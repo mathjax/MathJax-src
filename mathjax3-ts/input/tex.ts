@@ -160,40 +160,39 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {MmlNode} mml The node in which to combine relations.
    */
   // TODO (DC): Could this be done with a visitor?
-  private static combineRelations(mml: MmlNode): MmlNode {
+  private static combineRelations(node: MmlNode): MmlNode {
     TreeHelper.printMethod('combineRelations: ');
-    let m1: MmlNode, m2: MmlNode;
-    let children = TreeHelper.getChildren(mml);
-    for (let i = 0, m = children.length; i < m; i++) {
-      if (children[i]) {
-        if (TreeHelper.isType(mml, 'mrow')) {
-          while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
-                 TreeHelper.isType(m1, 'mo') && TreeHelper.isType(m2, 'mo') &&
-                 TreeHelper.getTexClass(m1) === TEXCLASS.REL &&
-                 TreeHelper.getTexClass(m2) === TEXCLASS.REL) {
-            if (TreeHelper.getProperty(m1, 'variantForm') ===
-                TreeHelper.getProperty(m2, 'variantForm') &&
-                TreeHelper.getAttribute(m1, 'mathvariant') ===
-                TreeHelper.getAttribute(m2, 'mathvariant')) {
-              // @test Shift Left, Less Equal
-              TreeHelper.appendChildren(m1, TreeHelper.getChildren(m2));
-              children.splice(i + 1, 1);
-              m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
-              m--;
-            } else {
-              // TODO (VS): Find a tests.
-              TreeHelper.setAttribute(m1, 'rspace', '0pt');
-              TreeHelper.setAttribute(m2, 'lspace', '0pt');
-              i++;
+    node.walkTree((mml: MmlNode, d) => {
+      let m1: MmlNode, m2: MmlNode;
+      let children = TreeHelper.getChildren(mml);
+      for (let i = 0, m = children.length; i < m; i++) {
+        if (children[i]) {
+          if (TreeHelper.isType(mml, 'mrow')) {
+            while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
+                   TreeHelper.isType(m1, 'mo') && TreeHelper.isType(m2, 'mo') &&
+                   TreeHelper.getTexClass(m1) === TEXCLASS.REL &&
+                   TreeHelper.getTexClass(m2) === TEXCLASS.REL) {
+              if (TreeHelper.getProperty(m1, 'variantForm') ===
+                  TreeHelper.getProperty(m2, 'variantForm') &&
+                  TreeHelper.getAttribute(m1, 'mathvariant') ===
+                  TreeHelper.getAttribute(m2, 'mathvariant')) {
+                // @test Shift Left, Less Equal
+                TreeHelper.appendChildren(m1, TreeHelper.getChildren(m2));
+                children.splice(i + 1, 1);
+                m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
+                m--;
+              } else {
+                // TODO (VS): Find a tests.
+                TreeHelper.setAttribute(m1, 'rspace', '0pt');
+                TreeHelper.setAttribute(m2, 'lspace', '0pt');
+                i++;
+              }
             }
           }
         }
-        if (!children[i].isToken) {
-          TeX.combineRelations(children[i]);
-        }
       }
-    }
-    return mml;
+    }, node);
+    return node;
   }
 
 
