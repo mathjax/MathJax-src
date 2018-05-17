@@ -65,7 +65,7 @@ export function createBoldToken(kind: string, def: any, text: string): MmlNode  
   let token = TreeHelper._createToken(kind, def, text);
   if (kind !== 'mtext' &&
       TreeHelper.parser && TreeHelper.parser.stack.env.boldsymbol) {
-    TreeHelper.setProperties(token, {'fixBold': true});
+    TreeHelper.setProperty(token, 'fixBold', true);
   }
   return token;
 }
@@ -73,13 +73,16 @@ export function createBoldToken(kind: string, def: any, text: string): MmlNode  
 
 export function rewriteBoldTokens(mml: MmlNode): MmlNode  {
   mml.walkTree((node: MmlNode, d: any) => {
-    if (TreeHelper.getProperty(node, 'fixStretchy')) {
+    TreeHelper.getProperty(node, 'fixBold')
+    if (TreeHelper.getProperty(node, 'fixBold')) {
       let variant = TreeHelper.getAttribute(node, 'mathvariant') as string;
+      console.log(variant);
       if (variant == null) {
         TreeHelper.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
       } else {
         TreeHelper.setProperties(node, {mathvariant: BOLDVARIANT[variant] || variant});
       }
+      TreeHelper.removeProperties(node, 'fixBold')
     }}, {});
   return mml;
 }

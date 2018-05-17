@@ -80,8 +80,8 @@ export class Configuration {
                       readonly options: OptionsConfig = {},
                       // TODO: Flash this out with a node factory and node type.
                       readonly nodes: {[key: string]: any} = {},
-                      readonly preprocessors?: ((input: string) => string)[],
-                      readonly postprocessors?: ((input: MmlNode) => MmlNode)[]
+                      public preprocessors: ((input: string) => string)[] = [],
+                      public postprocessors: ((input: MmlNode) => MmlNode)[] = []
              ) {
     let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
     let handlers = Object.keys(handler) as HandlerType[];
@@ -113,6 +113,8 @@ export class Configuration {
     Object.assign(this.tags, config.tags);
     Object.assign(this.options, config.options);
     Object.assign(this.nodes, config.nodes);
+    this.preprocessors = this.preprocessors.concat(config.preprocessors);
+    this.postprocessors = this.postprocessors.concat(config.postprocessors);
   }
 
 };
