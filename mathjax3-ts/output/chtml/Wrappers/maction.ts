@@ -97,6 +97,14 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
             // Add a click handler that changes the selection and rerenders the expression
             //
             node.setEventHandler('click', (event: Event) => {
+                if (!math.start.node) {
+                    //
+                    // If the MathItem was created by hand, it might not have a node
+                    // telling it where to replace the existing math, so set it.
+                    //
+                    math.start.node = math.end.node = math.typesetRoot;
+                    math.start.n = math.end.n = 0;
+                }
                 mml.nextToggleSelection();
                 math.rerender(document);
                 event.stopPropagation();
