@@ -24,7 +24,7 @@
 import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 import {MmlMrow} from './mrow.js';
-import {OperatorList, OPTABLE, RangeDef, RANGES} from '../OperatorDictionary.js';
+import {OperatorList, OPTABLE, RangeDef, RANGES, MMLSPACING} from '../OperatorDictionary.js';
 
 /*****************************************************************/
 /*
@@ -59,9 +59,10 @@ export class MmlMo extends AbstractMmlTokenNode {
     };
 
     /*
-     * Unicode ranges and their default TeX classes
+     * Unicode ranges and their default TeX classes and MathML spacing
      */
-    public static RANGES: RangeDef[] = RANGES;
+    public static RANGES = RANGES;
+    public static MMLSPACING = MMLSPACING;
 
     /*
      * The Operator Dictionary.
@@ -243,9 +244,9 @@ export class MmlMo extends AbstractMmlTokenNode {
             let range = this.getRange(mo);
             if (range) {
                 this.texClass = range[2];
-                // TODO: Fix range numbers.
-                // this.lspace = (range[0] + 1) / 18;
-                // this.rspace = (range[1] + 1) / 18;
+                const spacing = (this.constructor as typeof MmlMo).MMLSPACING[range[2]];
+                this.lspace = (spacing[0] + 1) / 18;
+                this.rspace = (spacing[1] + 1) / 18;
             }
         }
     }
