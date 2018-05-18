@@ -142,7 +142,7 @@ export class OpenItem extends BaseItem {
     if (item.isKind('close')) {
       // @test PrimeSup
       let mml = this.toMml();
-      const node = TreeHelper.createNode('TeXAtom', [mml], {});
+      const node = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
       return this.factory.create('mml', node); // TeXAtom make it an ORD to prevent spacing
       // (FIXME: should be another way)
     }
@@ -188,7 +188,7 @@ export class PrimeItem extends BaseItem {
     let [top0, top1] = this.TopN(2);
     if (!TreeHelper.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
-      const node = TreeHelper.createNode('msup', [top0, top1], {});
+      const node = this.factory.configuration.nodeFactory.create('node', 'msup', [top0, top1], {});
       return [node, item];
     }
     TreeHelper.setData(top0, (top0 as MmlMsubsup).sup, top1);
@@ -239,7 +239,7 @@ export class SubsupItem extends BaseItem {
         } else {
           // @test Prime on Prime
           TreeHelper.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
-          const node = TreeHelper.createNode('mrow', [this.getProperty('primes') as MmlNode, item.Top], {});
+          const node = this.factory.configuration.nodeFactory.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.Top], {});
           item.Top = node;
         }
       }
@@ -297,7 +297,7 @@ export class OverItem extends BaseItem {
     }
     if (item.isClose) {
       // @test Over
-      let mml = TreeHelper.createNode(
+      let mml = this.factory.configuration.nodeFactory.create('node', 
         'mfrac', [this.getProperty('num') as MmlNode, this.toMml(false)], {});
       if (this.getProperty('thickness') != null) {
         // @test Choose, Above, Above with Delims
@@ -475,7 +475,7 @@ export class StyleItem extends BaseItem {
       return super.checkItem(item);
     }
     // @test Style
-    const mml = TreeHelper.createNode('mstyle', this.nodes, this.getProperty('styles'));
+    const mml = this.factory.configuration.nodeFactory.create('node', 'mstyle', this.nodes, this.getProperty('styles'));
     return [this.factory.create('mml', mml), item];
   }
 
@@ -504,7 +504,7 @@ export class PositionItem extends BaseItem {
       switch (this.getProperty('move')) {
       case 'vertical':
         // @test Raise, Lower
-        mml = TreeHelper.createNode('mpadded', [mml],
+        mml = this.factory.configuration.nodeFactory.create('node', 'mpadded', [mml],
                                     {height: this.getProperty('dh'),
                                      depth: this.getProperty('dd'),
                                      voffset: this.getProperty('dh')});
@@ -599,7 +599,7 @@ export class FnItem extends BaseItem {
         }
       }
       // @test Named Function, Named Function Arg
-      const node = TreeHelper.createToken('mo', {texClass: TEXCLASS.NONE},
+      const node = this.factory.configuration.nodeFactory.create('token', 'mo', {texClass: TEXCLASS.NONE},
                                           Entities.ENTITIES.ApplyFunction);
       return [top, node, item];
     }
@@ -641,21 +641,21 @@ export class NotItem extends BaseItem {
           TreeHelper.getChildren(mml).length === 1) {
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
-          textNode = TreeHelper.createText(this.remap.lookup(c).char);
+          textNode = this.factory.configuration.nodeFactory.create('text', this.remap.lookup(c).char) as TextNode;
           TreeHelper.setData(mml, 0, textNode);
         } else {
           // @test Negation Explicit
-          textNode = TreeHelper.createText('\u0338');
+          textNode = this.factory.configuration.nodeFactory.create('text', '\u0338') as TextNode;
           TreeHelper.appendChildren(mml, [textNode]);
         }
         return item as MmlItem;
       }
     }
     // @test Negation Large
-    textNode = TreeHelper.createText('\u29F8');
-    const mtextNode = TreeHelper.createNode('mtext', [], {}, textNode);
-    const paddedNode = TreeHelper.createNode('mpadded', [mtextNode], {width: 0});
-    mml = TreeHelper.createNode('TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
+    textNode = this.factory.configuration.nodeFactory.create('text', '\u29F8') as TextNode;
+    const mtextNode = this.factory.configuration.nodeFactory.create('node', 'mtext', [], {}, textNode);
+    const paddedNode = this.factory.configuration.nodeFactory.create('node', 'mpadded', [mtextNode], {width: 0});
+    mml = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
     return [mml, item];
   }
 }
@@ -742,7 +742,7 @@ export class ArrayItem extends BaseItem {
       this.clearEnv();
       const scriptlevel = this.arraydef['scriptlevel'];
       delete this.arraydef['scriptlevel'];
-      let mml = TreeHelper.createNode('mtable', this.table, this.arraydef);
+      let mml = this.factory.configuration.nodeFactory.create('node', 'mtable', this.table, this.arraydef);
       if (this.frame.length === 4) {
         // @test Enclosed frame solid, Enclosed frame dashed
         TreeHelper.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
@@ -754,7 +754,7 @@ export class ArrayItem extends BaseItem {
             (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
         // @test Enclosed left right
-        mml = TreeHelper.createNode('menclose', [mml],
+        mml = this.factory.configuration.nodeFactory.create('node', 'menclose', [mml],
                                     {notation: this.frame.join(' '), isFrame: true});
         if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
             (this.arraydef['rowlines'] || 'none') !== 'none') {
@@ -765,7 +765,7 @@ export class ArrayItem extends BaseItem {
       }
       if (scriptlevel) {
         // @test Subarray, Small Matrix
-        mml = TreeHelper.createNode('mstyle', [mml], {scriptlevel: scriptlevel});
+        mml = this.factory.configuration.nodeFactory.create('node', 'mstyle', [mml], {scriptlevel: scriptlevel});
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Cross Product Formula
@@ -792,7 +792,7 @@ export class ArrayItem extends BaseItem {
    */
   public EndEntry() {
     // @test Array1, Array2
-    const mtd = TreeHelper.createNode('mtd', this.nodes, {});
+    const mtd = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes, {});
     if (this.hfill.length) {
       if (this.hfill[0] === 0) {
         TreeHelper.setAttribute(mtd, 'columnalign', 'right');
@@ -818,10 +818,10 @@ export class ArrayItem extends BaseItem {
       // @test Label, Matrix Numbered
       this.row.unshift(this.row.pop());  // move equation number to first
                                          // position
-      node = TreeHelper.createNode('mlabeledtr', this.row, {});
+      node = this.factory.configuration.nodeFactory.create('node', 'mlabeledtr', this.row, {});
     } else {
       // @test Array1, Array2
-      node = TreeHelper.createNode('mtr', this.row, {});
+      node = this.factory.configuration.nodeFactory.create('node', 'mtr', this.row, {});
     }
     this.table.push(node);
     this.row = [];
@@ -894,7 +894,7 @@ export class EqnArrayItem extends ArrayItem {
     if (this.row.length) {
       ParseUtil.fixInitialMO(this.nodes);
     }
-    const node = TreeHelper.createNode('mtd', this.nodes, {});
+    const node = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes, {});
     this.row.push(node);
     this.Clear();
   }
@@ -912,7 +912,7 @@ export class EqnArrayItem extends ArrayItem {
       mtr = 'mlabeledtr';
     }
     this.factory.configuration.tags.clearTag();
-    const node = TreeHelper.createNode(mtr, this.row, {});
+    const node = this.factory.configuration.nodeFactory.create('node', mtr, this.row, {});
     this.table.push(node); this.row = [];
   }
 

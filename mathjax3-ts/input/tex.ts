@@ -125,7 +125,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         }
         const parent = mo.parent;
         if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
-          const texAtom = TreeHelper.createNode('TeXAtom', [mo], {});
+          const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo], {});
           texAtom.parent = parent;
           parent.replaceChild(texAtom, mo);
         }
@@ -218,13 +218,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       if (n.isKind('msubsup')) {
         ms = n as MmlMsubsup;
         newNode = (children[ms.sub] ?
-                   TreeHelper.createNode('msub', [children[ms.base], children[ms.sub]], {}) :
-                   TreeHelper.createNode('msup', [children[ms.base], children[ms.sup]], {}));
+                   options.nodeFactory.create('node', 'msub', [children[ms.base], children[ms.sub]], {}) :
+                   options.nodeFactory.create('node', 'msup', [children[ms.base], children[ms.sup]], {}));
       } else {
         ms = n as MmlMunderover;
         newNode = (children[ms.under] ?
-                   TreeHelper.createNode('munder', [children[ms.base], children[ms.under]], {}) :
-                   TreeHelper.createNode('mover', [children[ms.base], children[ms.over]], {}));
+                   options.nodeFactory.create('node', 'munder', [children[ms.base], children[ms.under]], {}) :
+                   options.nodeFactory.create('node', 'mover', [children[ms.base], children[ms.over]], {}));
       }
       TreeHelper.copyAttributes(n, newNode);
       // This is only necessary if applied to an incomplete node, where
@@ -304,12 +304,12 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         this.configuration.append(conf);
       }
     }
-    TreeHelper.setCreators(this.configuration.nodes);
     let options = new ParseOptions();
     options.handlers = new SubHandlers(this.configuration);
     options.itemFactory.configuration = options;
     // Add node factory methods from packages.
     options.nodeFactory.setCreators(this.configuration.nodes);
+    TreeHelper.setCreators(this.configuration.nodes);
     // Add stackitems from packages.
     options.itemFactory.addStackItems(this.configuration.items);
     // Add tagging structures from packages and set tagging to given default.

@@ -74,6 +74,7 @@ export default class TexParser {
    */
   constructor(private _string: string, env: EnvList,
               public configuration: ParseOptions) {
+    console.log('Configuration: ' + !!configuration);
     const inner = env.isInner as boolean;
     delete env.isInner;
     let ENV: EnvList;

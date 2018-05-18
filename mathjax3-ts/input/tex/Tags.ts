@@ -355,9 +355,9 @@ export class AbstractTags implements Tags {
    * @override
    */
   public enTag = function(node: MmlNode, tag: MmlNode): MmlNode {
-    let cell = TreeHelper.createNode('mtd', [node], {});
-    let row = TreeHelper.createNode('mlabeledtr', [tag, cell], {});
-    let table = TreeHelper.createNode('mtable', [row], {
+    let cell = this.configuration.nodeFactory.create('node', 'mtd', [node], {});
+    let row = this.configuration.nodeFactory.create('node', 'mlabeledtr', [tag, cell], {});
+    let table = this.configuration.nodeFactory.create('node', 'mtable', [row], {
       side: this.configuration.options.get('TagSide'),
       minlabelspacing: this.configuration.options.get('TagIndent'),
       displaystyle: true
@@ -387,7 +387,7 @@ export class AbstractTags implements Tags {
     }
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
                             this.configuration).mml();
-    return TreeHelper.createNode('mtd', [mml], {id: this.currentTag.tagId});
+    return this.configuration.nodeFactory.create('node', 'mtd', [mml], {id: this.currentTag.tagId});
   }
 
 };

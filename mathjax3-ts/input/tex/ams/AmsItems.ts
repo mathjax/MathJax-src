@@ -69,7 +69,7 @@ export class MultlineItem extends ArrayItem {
       ParseUtil.fixInitialMO(this.nodes);
     }
     const shove = this.getProperty('shove');
-    const mtd = TreeHelper.createNode(
+    const mtd = this.factory.configuration.nodeFactory.create('node', 
       'mtd', this.nodes, shove ? {columnalign: shove} : {});
     this.setProperty('shove', null);
     this.row.push(mtd);
@@ -87,7 +87,7 @@ export class MultlineItem extends ArrayItem {
          'The rows within the %1 environment must have exactly one column',
          'multline']);
       }
-    let row = TreeHelper.createNode('mtr', this.row, {});
+    let row = this.factory.configuration.nodeFactory.create('node', 'mtr', this.row, {});
     this.table.push(row);
     this.row = [];
   }
@@ -114,7 +114,7 @@ export class MultlineItem extends ArrayItem {
       if (tag) {
         label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
         const mtr = this.table[label];
-        const mlabel = TreeHelper.createNode(
+        const mlabel = this.factory.configuration.nodeFactory.create('node', 
           'mlabeledtr', [tag].concat(TreeHelper.getChildren(mtr)), {});
         TreeHelper.copyAttributes(mtr, mlabel);
         this.table[label] = mlabel;

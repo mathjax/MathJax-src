@@ -95,7 +95,7 @@ export interface NodeStack {
 }
 
 
-export class MmlStack implements NodeStack {
+export abstract class MmlStack implements NodeStack {
 
   constructor(private _nodes: MmlNode[]) { }
 
@@ -179,6 +179,8 @@ export class MmlStack implements NodeStack {
   }
 
 
+  protected abstract get factory(): StackItemFactory;
+  
   /**
    * @override
    */
@@ -191,7 +193,8 @@ export class MmlStack implements NodeStack {
       return this.Top;
     }
     // @test Two Identifiers
-    return TreeHelper.createNode(inferred ? 'inferredMrow' : 'mrow', this._nodes, {});
+    return this.factory.configuration.nodeFactory.create(
+      'node', inferred ? 'inferredMrow' : 'mrow', this._nodes, {});
   }
 
 }
@@ -241,15 +244,11 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
   public global: EnvList = {};
 
-  constructor(private _factory: StackItemFactory, ...nodes: MmlNode[]) {
+  constructor(protected factory: StackItemFactory, ...nodes: MmlNode[]) {
     super(nodes);
     if (this.isOpen) {
       this._env = {};
     }
-  }
-
-  public get factory() {
-    return this._factory;
   }
 
   /**

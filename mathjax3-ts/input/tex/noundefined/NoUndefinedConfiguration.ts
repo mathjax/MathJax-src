@@ -28,8 +28,9 @@ import TexParser from '../TexParser.js';
 
 // This is from the 'no undefined' extension.
 function noUndefined(parser: TexParser, name: string) {
-  const textNode = TreeHelper.createText('\\' + name);
-  parser.Push(TreeHelper.createNode('mtext', [], {mathcolor: 'red'}, textNode));
+  const textNode = parser.configuration.nodeFactory.create('text', '\\' + name);
+  parser.Push(parser.configuration.nodeFactory.create(
+    'node', 'mtext', [], {mathcolor: 'red'}, textNode));
 };
 
 export const NoUndefinedConfiguration = Configuration.create(

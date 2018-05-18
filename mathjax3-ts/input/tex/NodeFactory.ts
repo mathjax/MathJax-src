@@ -82,7 +82,7 @@ export class NodeFactory {
   }
 
   public setCreators(maps: {[name: string]: (kind: string, ...rest: any[]) => MmlNode}) {
-    for (let name in Object.keys(maps)) {
+    for (let name in maps) {
       this.set(name, maps[name]);
     }
   }

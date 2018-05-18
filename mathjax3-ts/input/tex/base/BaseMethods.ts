@@ -76,8 +76,8 @@ BaseMethods.Close = function(parser: TexParser, c: string) {
  */
 BaseMethods.Tilde = function(parser: TexParser, c: string) {
   // @test Tilde, Tilde2
-  const textNode = TreeHelper.createText(NBSP);
-  const node = TreeHelper.createNode('mtext', [], {}, textNode);
+  const textNode = parser.configuration.nodeFactory.create('text', NBSP);
+  const node = parser.configuration.nodeFactory.create('node', 'mtext', [], {}, textNode);
   parser.Push(node);
 };
 BaseMethods.Space = function(parser: TexParser, c: string) {};
@@ -104,7 +104,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
     base = parser.stack.Prev();
     if (!base) {
       // @test Empty base
-      base = TreeHelper.createToken('mi', {}, '');
+      base = parser.configuration.nodeFactory.create('token', 'mi', {}, '');
     }
   }
   const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
@@ -125,12 +125,12 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
           base = ParseUtil.mi2mo(base);
         }
         // @test Large Operator
-        base = TreeHelper.createNode('munderover', [base], {movesupsub: true});
+        base = parser.configuration.nodeFactory.create('node', 'munderover', [base], {movesupsub: true});
       }
       position = (base as MmlMunderover).over;
     } else {
       // @test Empty base, Empty base2, Square, Cube
-      base = TreeHelper.createNode('msubsup', [base], {});
+      base = parser.configuration.nodeFactory.create('node', 'msubsup', [base], {});
       position = (base as MmlMsubsup).sup;
     }
   }
@@ -159,7 +159,7 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
     base = parser.stack.Prev();
     if (!base) {
       // @test Empty Base Index
-      base = TreeHelper.createToken('mi', {}, '');
+      base = parser.configuration.nodeFactory.create('token', 'mi', {}, '');
     }
   }
   const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
@@ -184,12 +184,12 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
           base = ParseUtil.mi2mo(base);
         }
         // @test Move Superscript
-        base = TreeHelper.createNode('munderover', [base], {movesupsub: true});
+        base = parser.configuration.nodeFactory.create('node', 'munderover', [base], {movesupsub: true});
       }
       position = (base as MmlMunderover).under;
     } else {
       // @test Empty Base Index, Empty Base Index2, Index
-      base = TreeHelper.createNode('msubsup', [base], {});
+      base = parser.configuration.nodeFactory.create('node', 'msubsup', [base], {});
       position = (base as MmlMsubsup).sub;
     }
   }
@@ -204,7 +204,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   let base = parser.stack.Prev();
   if (!base) {
     // @test PrimeSup, PrePrime, Prime on Sup
-    base = TreeHelper.createNode('mi', [], {});
+    base = parser.configuration.nodeFactory.create('node', 'mi', [], {});
   }
   if (TreeHelper.isType(base, 'msubsup') &&
       TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) {
@@ -218,7 +218,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
     sup += PRIME; parser.i++, c = parser.GetNext();
   } while (c === '\'' || c === SMARTQUOTE);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
-  const node = TreeHelper.createToken('mo', {}, sup);
+  const node = parser.configuration.nodeFactory.create('token', 'mo', {}, sup);
   parser.Push(
     parser.itemFactory.create('prime', base, parser.mmlToken(node)) );
 };
@@ -279,13 +279,13 @@ BaseMethods.Color = function(parser: TexParser, name: string) {
   } else {
     delete parser.stack.env['color'];
   }
-  const node = TreeHelper.createNode('mstyle', [math], {mathcolor: color});
+  const node = parser.configuration.nodeFactory.create('node', 'mstyle', [math], {mathcolor: color});
   parser.Push(node);
 };
 
 BaseMethods.Spacer = function(parser: TexParser, name: string, space: string) {
   // @test Positive Spacing, Negative Spacing
-  const node = TreeHelper.createNode('mspace', [],
+  const node = parser.configuration.nodeFactory.create('node', 'mspace', [],
                                      {width: space, scriptlevel: 0});
   parser.Push(node);
 };
@@ -303,16 +303,16 @@ BaseMethods.Middle = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Middle');
   // @test Middle
   const delim = parser.GetDelimiter(name);
-  let node = TreeHelper.createNode('TeXAtom', [], {texClass: TEXCLASS.CLOSE});
+  let node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE});
   parser.Push(node);
   if (!parser.stack.Top().isKind('left')) {
     // @test Orphan Middle, Middle with Right
     throw new TexError(['MisplacedMiddle',
                         '%1 must be within \\left and \\right', name]);
   }
-  node = TreeHelper.createToken('mo', {stretchy: true}, delim);
+  node = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true}, delim);
   parser.Push(node);
-  node = TreeHelper.createNode('TeXAtom', [], {texClass: TEXCLASS.OPEN});
+  node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN});
   parser.Push(node);
 };
 
@@ -322,7 +322,7 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
   if (!id) {
     id = name.substr(1);
   }
-  const mml = TreeHelper.createToken('mi', {texClass: TEXCLASS.OP}, id);
+  const mml = parser.configuration.nodeFactory.create('token', 'mi', {texClass: TEXCLASS.OP}, id);
   parser.Push( parser.itemFactory.create('fn', parser.mmlToken(mml)) );
 };
 BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
@@ -332,7 +332,7 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
     id = name.substr(1);
   }
   id = id.replace(/&thinsp;/, '\u2006');
-  const mml = TreeHelper.createToken('mo', {
+  const mml = parser.configuration.nodeFactory.create('token', 'mo', {
     movablelimits: true,
     movesupsub: true,
     form: TexConstant.Form.PREFIX,
@@ -355,14 +355,14 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   let node;
   if (TreeHelper.isType(op, 'munderover') && !limits) {
     // @test Limits UnderOver
-    node = TreeHelper.createNode('msubsup', [], {});
+    node = parser.configuration.nodeFactory.create('node', 'msubsup', [], {});
     TreeHelper.copyChildren(op, node);
     op = top.Last = node;
   } else if (TreeHelper.isType(op, 'msubsup') && limits) {
     // @test Limits SubSup
-    // node = TreeHelper.createNode('munderover', TreeHelper.getChildren(op), {});
+    // node = parser.configuration.nodeFactory.create('node', 'munderover', TreeHelper.getChildren(op), {});
     // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
-    node = TreeHelper.createNode('munderover', [], {});
+    node = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
     TreeHelper.copyChildren(op, node);
     op = top.Last = node;
   }
@@ -403,7 +403,7 @@ BaseMethods.Frac = function(parser: TexParser, name: string) {
   // @test Frac
   const num = parser.ParseArg(name);
   const den = parser.ParseArg(name);
-  const node = TreeHelper.createNode('mfrac', [num, den], {});
+  const node = parser.configuration.nodeFactory.create('node', 'mfrac', [num, den], {});
   parser.Push(node);
 };
 
@@ -417,10 +417,10 @@ BaseMethods.Sqrt = function(parser: TexParser, name: string) {
   let mml = new TexParser(arg, parser.stack.env, parser.configuration).mml();
   if (!n) {
     // @test Square Root
-    mml = TreeHelper.createNode('msqrt', [mml], {});
+    mml = parser.configuration.nodeFactory.create('node', 'msqrt', [mml], {});
   } else {
     // @test General Root
-    mml = TreeHelper.createNode('mroot', [mml, parseRoot(parser, n)], {});
+    mml = parser.configuration.nodeFactory.create('node', 'mroot', [mml, parseRoot(parser, n)], {});
   }
   parser.Push(mml);
 };
@@ -446,7 +446,7 @@ function parseRoot(parser: TexParser, n: string) {
       def['voffset'] = global['upRoot'];
       def['height'] = global['upRoot'];
     }
-    node = TreeHelper.createNode('mpadded', [node], def);
+    node = parser.configuration.nodeFactory.create('node', 'mpadded', [node], def);
   }
   env['inRoot'] = inRoot;
   return node;
@@ -457,7 +457,7 @@ BaseMethods.Root = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Root');
   const n = parser.GetUpTo(name, '\\of');
   const arg = parser.ParseArg(name);
-  const node = TreeHelper.createNode('mroot', [arg, parseRoot(parser, n)], {});
+  const node = parser.configuration.nodeFactory.create('node', 'mroot', [arg, parseRoot(parser, n)], {});
   parser.Push(node);
 };
 
@@ -495,7 +495,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
     def['mathvariant'] = parser.stack.env['font'];
   }
   const entity = TreeHelper.createEntity(accent);
-  const moNode = TreeHelper.createToken('mo', def, entity);
+  const moNode = parser.configuration.nodeFactory.create('token', 'mo', def, entity);
   const mml = parser.mmlToken(moNode);
   TreeHelper.setAttribute(mml, 'stretchy', stretchy ? true : false);
   // @test Vector Op, Vector
@@ -504,12 +504,12 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
     // @test Vector Op
     TreeHelper.setProperties(mo, {'movablelimits': false});
   }
-  const muoNode = TreeHelper.createNode('munderover', [], {});
+  const muoNode = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
   // TODO: This is necessary to get the empty element into the children.
   TreeHelper.setData(muoNode, 0, c);
   TreeHelper.setData(muoNode, 1, null);
   TreeHelper.setData(muoNode, 2, mml);
-  let texAtom = TreeHelper.createNode('TeXAtom', [muoNode], {});
+  let texAtom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [muoNode], {});
   parser.Push(texAtom);
 };
 
@@ -527,19 +527,19 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   if (TreeHelper.isType(base, 'munderover') && TreeHelper.isEmbellished(base)) {
     // @test Overline Limits
     TreeHelper.setProperties(TreeHelper.getCore(base), {lspace: 0, rspace: 0}); // get spacing right for NativeMML
-    mo = TreeHelper.createNode('mo', [], {rspace: 0});
-    base = TreeHelper.createNode('mrow', [mo, base], {});  // add an empty <mi> so it's not embellished any more
+    mo = parser.configuration.nodeFactory.create('node', 'mo', [], {rspace: 0});
+    base = parser.configuration.nodeFactory.create('node', 'mrow', [mo, base], {});  // add an empty <mi> so it's not embellished any more
   }
-  const mml = TreeHelper.createNode('munderover', [base], {}) as MmlMunderover;
+  const mml = parser.configuration.nodeFactory.create('node', 'munderover', [base], {}) as MmlMunderover;
   const entity = TreeHelper.createEntity(c);
-  mo = TreeHelper.createToken('mo', {stretchy: true, accent: !noaccent}, entity);
+  mo = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
 
   TreeHelper.setData(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
                      parser.mmlToken(mo));
   let node: MmlNode = mml;
   if (stack) {
     // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
-    node = TreeHelper.createNode('TeXAtom', [mml], {texClass: TEXCLASS.OP, movesupsub: true});
+    node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP, movesupsub: true});
   }
   // TODO: Sort these properties out!
   TreeHelper.setProperties(node, {subsupOK: true});
@@ -553,7 +553,7 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
   if (TreeHelper.getAttribute(base, 'movablelimits') || TreeHelper.getProperty(base, 'movablelimits')) {
     TreeHelper.setProperties(base, {'movablelimits': false});
   }
-  const node = TreeHelper.createNode('mover', [base, top], {});
+  const node = parser.configuration.nodeFactory.create('node', 'mover', [base, top], {});
   parser.Push(node);
 };
 
@@ -565,7 +565,7 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
     // @test Overline Sum
     TreeHelper.setProperties(base, {'movablelimits': false});
   }
-  const node = TreeHelper.createNode('munder', [base, bot], {});
+  const node = parser.configuration.nodeFactory.create('node', 'munder', [base, bot], {});
   parser.Push(node);
 };
 
@@ -582,18 +582,18 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
     if (match) {
       // @test Mathop
       def['mathvariant'] = TexConstant.Variant.NORMAL;
-      node = TreeHelper.createToken('mi', def, match[1]);
+      node = parser.configuration.nodeFactory.create('token', 'mi', def, match[1]);
       mml = parser.itemFactory.create('fn', parser.mmlToken(node));
     } else {
       // @test Mathop Cal
       parsed = new TexParser(arg, parser.stack.env, parser.configuration).mml();
-      node = TreeHelper.createNode('TeXAtom', [parsed], def);
+      node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [parsed], def);
       mml = parser.itemFactory.create('fn', node);
     }
   } else {
     // @test Mathrel
     parsed = parser.ParseArg(name);
-    mml = TreeHelper.createNode('TeXAtom', [parsed], def);
+    mml = parser.configuration.nodeFactory.create('node', 'TeXAtom', [parsed], def);
   }
   parser.Push(mml);
 };
@@ -608,7 +608,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   const def: EnvList = {};
   let node: MmlNode;
   try {
-    node = TreeHelper.createNode(kind, [], {});
+    node = parser.configuration.nodeFactory.create('node', kind, [], {});
   } catch (e) {
     node = null;
   }
@@ -641,7 +641,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
     }
     attr = attr.substr(match[0].length);
   }
-  const textNode = TreeHelper.createText(text);
+  const textNode = parser.configuration.nodeFactory.create('text', text);
   node.appendChild(textNode);
   TreeHelper.setProperties(node, def);
   parser.Push(parser.mmlToken(node));
@@ -652,8 +652,8 @@ BaseMethods.Strut = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Strut');
   // @test Strut
   // TODO: Do we still need this row as it is implicit?
-  const row = TreeHelper.createNode('mrow', [], {});
-  const padded = TreeHelper.createNode('mpadded', [row],
+  const row = parser.configuration.nodeFactory.create('node', 'mrow', [], {});
+  const padded = parser.configuration.nodeFactory.create('node', 'mpadded', [row],
                                        {height: '8.6pt', depth: '3pt', width: 0});
   parser.Push(padded);
 };
@@ -661,10 +661,10 @@ BaseMethods.Strut = function(parser: TexParser, name: string) {
 BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: string) {
   TreeHelper.printMethod('Phantom');
   // @test Phantom
-  let box = TreeHelper.createNode('mphantom', [parser.ParseArg(name)], {});
+  let box = parser.configuration.nodeFactory.create('node', 'mphantom', [parser.ParseArg(name)], {});
   if (v || h) {
     // TEMP: Changes here
-    box = TreeHelper.createNode('mpadded', [box], {});
+    box = parser.configuration.nodeFactory.create('node', 'mpadded', [box], {});
     if (h) {
       // @test Horizontal Phantom
       TreeHelper.setAttribute(box, 'height', 0);
@@ -675,7 +675,7 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
       TreeHelper.setAttribute(box, 'width', 0);
     }
   }
-  const atom = TreeHelper.createNode('TeXAtom', [box], {});
+  const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [box], {});
   parser.Push(atom);
 };
 
@@ -683,7 +683,7 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Smash');
   // @test Smash, Smash Top, Smash Bottom
   const bt = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
-  const smash = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {});
+  const smash = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {});
   // TEMP: Changes here:
   switch (bt) {
   case 'b': TreeHelper.setAttribute(smash, 'depth', 0); break;
@@ -692,19 +692,19 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
     TreeHelper.setAttribute(smash, 'height', 0);
     TreeHelper.setAttribute(smash, 'depth', 0);
   }
-  const atom = TreeHelper.createNode('TeXAtom', [smash], {});
+  const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [smash], {});
   parser.Push(atom);
 };
 
 BaseMethods.Lap = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Lap');
   // @test Llap, Rlap
-  const mml = TreeHelper.createNode('mpadded', [parser.ParseArg(name)], {width: 0});
+  const mml = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {width: 0});
   if (name === '\\llap') {
     // @test Llap
     TreeHelper.setAttribute(mml, 'lspace', '-1width');
   }
-  const atom = TreeHelper.createNode('TeXAtom', [mml], {});
+  const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
   parser.Push(atom);
 };
 
@@ -745,14 +745,14 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
   parser.Push(
     parser.itemFactory.create('position').setProperties({
       name: name, move: 'horizontal',
-      left:  TreeHelper.createNode('mspace', [], {width: h}),
-      right: TreeHelper.createNode('mspace', [], {width: nh})}) );
+      left:  parser.configuration.nodeFactory.create('node', 'mspace', [], {width: h}),
+      right: parser.configuration.nodeFactory.create('node', 'mspace', [], {width: nh})}) );
 };
 
 BaseMethods.Hskip = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('Hskip');
   // @test Modulo
-  const node = TreeHelper.createNode('mspace', [],
+  const node = parser.configuration.nodeFactory.create('node', 'mspace', [],
                                      {width: parser.GetDimen(name)});
   parser.Push(node);
 };
@@ -767,7 +767,7 @@ BaseMethods.Rule = function(parser: TexParser, name: string, style: string) {
   if (style !== 'blank') {
     def['mathbackground'] = (parser.stack.env['color'] || 'black');
   }
-  const node = TreeHelper.createNode('mspace', [], def);
+  const node = parser.configuration.nodeFactory.create('node', 'mspace', [], def);
   parser.Push(node);
 };
 BaseMethods.rule = function(parser: TexParser, name: string) {
@@ -776,11 +776,11 @@ BaseMethods.rule = function(parser: TexParser, name: string) {
   const v = parser.GetBrackets(name),
   w = parser.GetDimen(name),
   h = parser.GetDimen(name);
-  let mml = TreeHelper.createNode('mspace', [], {
+  let mml = parser.configuration.nodeFactory.create('node', 'mspace', [], {
     width: w, height: h,
     mathbackground: (parser.stack.env['color'] || 'black') });
   if (v) {
-    mml = TreeHelper.createNode('mpadded', [mml], {voffset: v});
+    mml = parser.configuration.nodeFactory.create('node', 'mpadded', [mml], {voffset: v});
     if (v.match(/^\-/)) {
       TreeHelper.setAttribute(mml, 'height', v);
       TreeHelper.setAttribute(mml, 'depth', '+' + v.substr(1));
@@ -797,11 +797,11 @@ BaseMethods.MakeBig = function(parser: TexParser, name: string, mclass: number, 
   size *= P_HEIGHT;
   let sizeStr = String(size).replace(/(\.\d\d\d).+/, '$1') + 'em';
   const delim = parser.GetDelimiter(name, true);
-  const mo = TreeHelper.createToken('mo', {
+  const mo = parser.configuration.nodeFactory.create('token', 'mo', {
     minsize: sizeStr, maxsize: sizeStr,
     fence: true, stretchy: true, symmetric: true
   }, delim);
-  const node = TreeHelper.createNode('TeXAtom', [mo], {texClass: mclass});
+  const node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mo], {texClass: mclass});
   parser.Push(node);
 };
 
@@ -810,12 +810,12 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   // @test BuildRel, BuildRel Expression
   const top = parser.ParseUpTo(name, '\\over');
   const bot = parser.ParseArg(name);
-  const node = TreeHelper.createNode('munderover', [], {});
+  const node = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
   // TODO: This is necessary to get the empty element into the children.
   TreeHelper.setData(node, 0, bot);
   TreeHelper.setData(node, 1, null);
   TreeHelper.setData(node, 2, top);
-  const atom = TreeHelper.createNode('TeXAtom', [node], {texClass: TEXCLASS.REL});
+  const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [node], {texClass: TEXCLASS.REL});
   parser.Push(atom);
 };
 
@@ -829,7 +829,7 @@ BaseMethods.FBox = function(parser: TexParser, name: string) {
   TreeHelper.printMethod('FBox');
   // @test Fbox
   const internal = ParseUtil.internalMath(parser, parser.GetArgument(name));
-  const node = TreeHelper.createNode('menclose', internal, {notation: 'box'});
+  const node = parser.configuration.nodeFactory.create('node', 'menclose', internal, {notation: 'box'});
   parser.Push(node);
 };
 
@@ -845,8 +845,8 @@ BaseMethods.Dots = function(parser: TexParser, name: string) {
   // @test Operator Dots
   const ldotsEntity = TreeHelper.createEntity('2026');
   const cdotsEntity = TreeHelper.createEntity('22EF');
-  const ldots = TreeHelper.createToken('mo', {stretchy: false}, ldotsEntity);
-  const cdots = TreeHelper.createToken('mo', {stretchy: false}, cdotsEntity);
+  const ldots = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: false}, ldotsEntity);
+  const cdots = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: false}, cdotsEntity);
   parser.Push(
     parser.itemFactory.create('dots').setProperties({
       ldots: parser.mmlToken(ldots),
@@ -1027,11 +1027,11 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
   } else {
     if (n) {
       // @test Custom Linebreak
-      node = TreeHelper.createNode('mspace', [], {depth: n});
+      node = parser.configuration.nodeFactory.create('node', 'mspace', [], {depth: n});
       parser.Push(node);
     }
     // @test Linebreak
-    node = TreeHelper.createNode('mspace', [], {linebreak: TexConstant.LineBreak.NEWLINE});
+    node = parser.configuration.nodeFactory.create('node', 'mspace', [], {linebreak: TexConstant.LineBreak.NEWLINE});
     parser.Push(node);
   }
 };
@@ -1264,7 +1264,7 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
     // @test Eqref
     tag = parser.tags.formatTag(tag);
   }
-  let node = TreeHelper.createNode('mrow', ParseUtil.internalMath(parser, tag), {
+  let node = parser.configuration.nodeFactory.create('node', 'mrow', ParseUtil.internalMath(parser, tag), {
     href: parser.tags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
   });
   parser.Push(node);
@@ -1307,7 +1307,7 @@ BaseMethods.MathChoice = function(parser: TexParser, name: string) {
   const T  = parser.ParseArg(name);
   const S  = parser.ParseArg(name);
   const SS = parser.ParseArg(name);
-  parser.Push(TreeHelper.createNode('mathchoice', [D, T, S, SS], {}));
+  parser.Push(parser.configuration.nodeFactory.create('node', 'mathchoice', [D, T, S, SS], {}));
 };
 
 

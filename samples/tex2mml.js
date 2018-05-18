@@ -3,11 +3,15 @@ import {MathJax} from '../mathjax3/mathjax.js';
 import {TeX} from '../mathjax3/input/tex.js';
 import {RegisterHTMLHandler} from '../mathjax3/handlers/html.js';
 import {chooseAdaptor} from '../mathjax3/adaptors/chooseAdaptor.js';
+import '../mathjax3/input/tex/base/BaseConfiguration.js';
+import '../mathjax3/input/tex/ams/AmsConfiguration.js';
+import '../mathjax3/input/tex/noundefined/NoUndefinedConfiguration.js';
+import '../mathjax3/input/tex/boldsymbol/BoldsymbolConfiguration.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-    InputJax: new TeX()
+  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol']})
 });
 
 // import {TestMmlVisitor as MmlVisitor} from '../mathjax3/core/MmlTree/TestMmlVisitor.js';

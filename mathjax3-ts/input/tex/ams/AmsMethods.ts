@@ -182,16 +182,16 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
   let top = parser.ParseArg(name);
-  let arrow = TreeHelper.createToken(
+  let arrow = parser.configuration.nodeFactory.create('token', 
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCharCode(chr));
-  let mml = TreeHelper.createNode('munderover', [arrow], {}) as MmlMunderover;
-  let mpadded = TreeHelper.createNode('mpadded', [top], def);
+  let mml = parser.configuration.nodeFactory.create('node', 'munderover', [arrow], {}) as MmlMunderover;
+  let mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [top], def);
   TreeHelper.setProperties(mpadded, {voffset: '.15em'});
   TreeHelper.setData(mml, mml.over, mpadded);
   if (bot) {
     // @test Above Below Left Arrow, Above Below Right Arrow
     let bottom = new TexParser(bot, parser.stack.env, parser.configuration).mml();
-    mpadded = TreeHelper.createNode('mpadded', [bottom], def);
+    mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [bottom], def);
     TreeHelper.setProperties(mpadded, {voffset: '-.24em'});
     TreeHelper.setData(mml, mml.under, mpadded);
   }
@@ -237,7 +237,7 @@ AmsMethods.CFrac = function(parser: TexParser, name: string) {
                               parser.stack.env, parser.configuration).mml();
   let denNode = new TexParser('\\strut\\textstyle{' + den + '}',
                               parser.stack.env, parser.configuration).mml();
-  let frac = TreeHelper.createNode('mfrac', [numNode, denNode], {});
+  let frac = parser.configuration.nodeFactory.create('node', 'mfrac', [numNode, denNode], {});
   lr = lrMap[lr];
   if (lr == null) {
     // @test Center Fraction Error
@@ -271,7 +271,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
   }
   let num = parser.ParseArg(name);
   let den = parser.ParseArg(name);
-  let frac = TreeHelper.createNode('mfrac', [num, den], {});
+  let frac = parser.configuration.nodeFactory.create('node', 'mfrac', [num, den], {});
   if (thick !== '') {
     // @test Normal Binomial, Text Binomial, Display Binomial
     TreeHelper.setAttribute(frac, 'linethickness', thick);
@@ -288,7 +288,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
       // @test Genfrac Error
       throw new TexError(['BadMathStyleFor', 'Bad math style for %1', name]);
     }
-    frac = TreeHelper.createNode('mstyle', [frac], {});
+    frac = parser.configuration.nodeFactory.create('node', 'mstyle', [frac], {});
     if (styleAlpha === 'D') {
       // @test Display Fraction, Display Sub Fraction, Display Binomial,
       //       Display Sub Binomial

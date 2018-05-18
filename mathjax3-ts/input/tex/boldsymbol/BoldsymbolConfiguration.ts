@@ -64,7 +64,8 @@ new CommandMap('boldsymbol', {boldsymbol: 'Boldsymbol'}, BoldsymbolMethods);
 
 
 export function createBoldToken(kind: string, def: any, text: string): MmlNode  {
-  let token = NodeUtil.createNode(kind, def, text);
+  console.log('Going through here');
+  let token = NodeUtil.createToken(kind, def, text);
   if (kind !== 'mtext' &&
       TreeHelper.parser && TreeHelper.parser.stack.env.boldsymbol) {
     TreeHelper.setProperty(token, 'fixBold', true);
@@ -89,7 +90,7 @@ export function rewriteBoldTokens(node: MmlNode, options: ParseOptions)  {
 
 export const BoldsymbolConfiguration = Configuration.create(
   'boldsymbol', {handler: {macro: ['boldsymbol']},
-                 nodes: {'createToken': createBoldToken},
+                 nodes: {'token': createBoldToken},
                  postprocessors: [rewriteBoldTokens]}
 );
 

@@ -19,7 +19,7 @@ export class ParserTest extends Test {
   
   constructor() {
     super();
-    this.packages = ['ams', 'base'];
+    this.packages = ['ams', 'base', 'boldsymbol'];
     this.settings = {};
     this.tags = 'none';
     console.log('\u001B\u005B\u0033\u0034\u006D' +
