@@ -495,7 +495,6 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         const isTop = this.isTopEmbellished();
         const hasSpacing = this.node.hasSpacingAttributes();
         if (this.CHTML.options.mathmlSpacing || hasSpacing) {
-            console.log(this.node.attributes);
             isTop && this.getMathMLSpacing();
         } else {
             this.getTeXSpacing(isTop, hasSpacing);
