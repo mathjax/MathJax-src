@@ -279,7 +279,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
   if (left || right) {
     // @test Normal Binomial, Text Binomial, Display Binomial
     TreeHelper.setProperties(frac, {withDelims: true});
-    frac = ParseUtil.fixedFence(left, frac, right, parser.configuration);
+    frac = ParseUtil.fixedFence(parser.configuration, left, frac, right);
   }
   if (style !== '') {
     let styleDigit = parseInt(style, 10);

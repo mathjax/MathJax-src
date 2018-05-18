@@ -307,9 +307,9 @@ export class OverItem extends BaseItem {
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Choose
         TreeHelper.setProperties(mml, {'withDelims': true});
-        mml = ParseUtil.fixedFence(this.getProperty('open') as string, mml,
-                                   this.getProperty('close') as string,
-                                   this.factory.configuration);
+        mml = ParseUtil.fixedFence(this.factory.configuration,
+                                   this.getProperty('open') as string, mml,
+                                   this.getProperty('close') as string);
       }
       return [this.factory.create('mml', mml), item];
     }
@@ -363,9 +363,10 @@ export class LeftItem extends BaseItem {
     // @test Missing Right
     TreeHelper.printMethod('Checkitem left');
     if (item.isKind('right')) {
-      return this.factory.create('mml',
-                                 ParseUtil.fenced(this.getProperty('delim') as string, this.toMml(),
-                                                  item.getProperty('delim') as string));
+      return this.factory.create('mml', ParseUtil.fenced(
+        this.factory.configuration,
+        this.getProperty('delim') as string, this.toMml(),
+        item.getProperty('delim') as string));
     }
     return super.checkItem(item);
   }
@@ -769,7 +770,8 @@ export class ArrayItem extends BaseItem {
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Cross Product Formula
-        mml = ParseUtil.fenced(this.getProperty('open') as string, mml,
+        mml = ParseUtil.fenced(this.factory.configuration,
+                               this.getProperty('open') as string, mml,
                                this.getProperty('close') as string);
       }
       let newItem = this.factory.create('mml', mml);
@@ -892,7 +894,7 @@ export class EqnArrayItem extends ArrayItem {
     TreeHelper.printMethod('AMS-EndEntry');
     // @test Cubic Binomial
     if (this.row.length) {
-      ParseUtil.fixInitialMO(this.nodes);
+      ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
     const node = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes, {});
     this.row.push(node);

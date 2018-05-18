@@ -102,13 +102,13 @@ namespace ParseUtil {
   /**
    *  Create an mrow that has stretchy delimiters at either end, as needed
    */
-  export function fenced(open: string, mml: MmlNode, close: string) {
+  export function fenced(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
     TreeHelper.printMethod('fenced');
     // @test Fenced, Fenced3
-    let mrow = TreeHelper.createNode(
+    let mrow = configuration.nodeFactory.create('node', 
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.INNER});
-    let openNode = TreeHelper.createText(open);
-    let mo = TreeHelper.createNode(
+    let openNode = configuration.nodeFactory.create('text', open);
+    let mo = configuration.nodeFactory.create('node', 
       'mo', [],
       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
       openNode);
@@ -120,8 +120,8 @@ namespace ParseUtil {
       // @test Fenced3
       TreeHelper.appendChildren(mrow, [mml]);
     }
-    let closeNode = TreeHelper.createText(close);
-    mo = TreeHelper.createNode(
+    let closeNode = configuration.nodeFactory.create('text', close);
+    mo = configuration.nodeFactory.create('node', 
       'mo', [],
       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
       closeNode);
@@ -133,13 +133,13 @@ namespace ParseUtil {
   /**
    *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
    */
-  export function fixedFence(open: string, mml: MmlNode, close: string, config: ParseOptions) {
+  export function fixedFence(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
     // @test Choose, Over With Delims, Above with Delims
     TreeHelper.printMethod('fixedFence');
-    let mrow = TreeHelper.createNode(
+    let mrow = configuration.nodeFactory.create('node', 
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
     if (open) {
-      TreeHelper.appendChildren(mrow, [mathPalette(open, 'l', config)]);
+      TreeHelper.appendChildren(mrow, [mathPalette(configuration, open, 'l')]);
     }
     if (TreeHelper.isType(mml, 'mrow')) {
       TreeHelper.appendChildren(mrow, TreeHelper.getChildren(mml));
@@ -147,20 +147,20 @@ namespace ParseUtil {
       TreeHelper.appendChildren(mrow, [mml]);
     }
     if (close) {
-      TreeHelper.appendChildren(mrow, [mathPalette(close, 'r', config)]);
+      TreeHelper.appendChildren(mrow, [mathPalette(configuration, close, 'r')]);
     }
     return mrow;
   }
 
 
-  export function mathPalette(fence: string, side: string, config: ParseOptions) {
+  export function mathPalette(configuration: ParseOptions, fence: string, side: string) {
     TreeHelper.printMethod('mathPalette');
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
     let D = '{\\bigg' + side + ' ' + fence + '}';
     let T = '{\\big' + side + ' ' + fence + '}';
-    return new TexParser('\\mathchoice' + D + T + T + T, {}, config).mml();
+    return new TexParser('\\mathchoice' + D + T + T + T, {}, configuration).mml();
   }
 
 
@@ -170,7 +170,7 @@ namespace ParseUtil {
    *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
    *  be infix.
    */
-  export function fixInitialMO(nodes: MmlNode[]) {
+  export function fixInitialMO(configuration: ParseOptions, nodes: MmlNode[]) {
     TreeHelper.printMethod('AMS-fixInitialMO');
     for (let i = 0, m = nodes.length; i < m; i++) {
       let child = nodes[i];
@@ -179,7 +179,7 @@ namespace ParseUtil {
                      (TreeHelper.getChildren(child)[0] &&
                       TreeHelper.getChildren(TreeHelper.getChildren(child)[0]).length)))) {
         if (TreeHelper.isEmbellished(child)) {
-          let mi = TreeHelper.createNode('mi', [], {});
+          let mi = configuration.nodeFactory.create('node', 'mi', [], {});
           nodes.unshift(mi);
         }
         break;
@@ -188,10 +188,10 @@ namespace ParseUtil {
   }
 
 
-  export function mi2mo(mi: MmlNode) {
+  export function mi2mo(parser: TexParser, mi: MmlNode) {
     TreeHelper.printMethod('mi2mo');
     // @test Mathop Sub, Mathop Super
-    const mo = TreeHelper.createNode('mo', [], {});
+    const mo = parser.configuration.nodeFactory.create('node', 'mo', [], {});
     TreeHelper.copyChildren(mi, mo);
     TreeHelper.copyAttributes(mi, mo);
     TreeHelper.setProperties(mo, {lspace: '0', rspace: '0'});
@@ -217,7 +217,7 @@ namespace ParseUtil {
         if (c === '$') {
           if (match === '$' && braces === 0) {
             // @test Interspersed Text
-            node = TreeHelper.createNode('TeXAtom',
+            node = parser.configuration.nodeFactory.create('node', 'TeXAtom',
                                          [(new TexParser(text.slice(k, i - 1), {}, parser.configuration)).mml()], {});
             mml.push(node);
             match = '';
@@ -225,7 +225,7 @@ namespace ParseUtil {
           } else if (match === '') {
             // @test Interspersed Text
             if (k < i - 1) {
-              mml.push(internalText(text.slice(k, i - 1), def));
+              mml.push(internalText(parser, text.slice(k, i - 1), def));
             }
             match = '$';
             k = i;
@@ -236,7 +236,7 @@ namespace ParseUtil {
         } else if (c === '}') {
           if (match === '}' && braces === 0) {
             // TODO: test a\mbox{ \eqref{1} } c
-            node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i), {}, parser.configuration)).mml()], def);
+            node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [(new TexParser(text.slice(k, i), {}, parser.configuration)).mml()], def);
             mml.push(node);
             match = '';
             k = i;
@@ -255,7 +255,7 @@ namespace ParseUtil {
             let len = ((RegExp as any)['$&'] as string).length;
             if (k < i - 1) {
               // TODO: test a\mbox{ \eqref{1} } c
-              mml.push(internalText(text.slice(k, i - 1), def));
+              mml.push(internalText(parser, text.slice(k, i - 1), def));
             }
             match = '}';
             k = i - 1;
@@ -264,11 +264,12 @@ namespace ParseUtil {
             c = text.charAt(i++);
             if (c === '(' && match === '') {
               if (k < i - 2) {
-                mml.push(internalText(text.slice(k, i - 2), def));
+                mml.push(internalText(parser, text.slice(k, i - 2), def));
               }
               match = ')'; k = i;
             } else if (c === ')' && match === ')' && braces === 0) {
-              node = TreeHelper.createNode('TeXAtom', [(new TexParser(text.slice(k, i - 2), {}, parser.configuration)).mml()], {});
+              node = parser.configuration.nodeFactory.create(
+                'node', 'TeXAtom', [(new TexParser(text.slice(k, i - 2), {}, parser.configuration)).mml()], {});
               mml.push(node);
               match = '';
               k = i;
@@ -286,26 +287,26 @@ namespace ParseUtil {
       }
     }
     if (k < text.length) {
-      mml.push(internalText(text.slice(k), def));
+      mml.push(internalText(parser, text.slice(k), def));
     }
     if (level != null) {
       // @test Label, Fbox, Hbox
-      mml = [TreeHelper.createNode('mstyle', mml, {displaystyle: false, scriptlevel: level})];
+      mml = [parser.configuration.nodeFactory.create('node', 'mstyle', mml, {displaystyle: false, scriptlevel: level})];
     } else if (mml.length > 1) {
       // @test Interspersed Text
-      mml = [TreeHelper.createNode('mrow', mml, {})];
+      mml = [parser.configuration.nodeFactory.create('node', 'mrow', mml, {})];
     }
     return mml;
   }
 
   const NBSP = '\u00A0';
 
-  function internalText(text: string, def: EnvList) {
+  function internalText(parser: TexParser, text: string, def: EnvList) {
     // @test Label, Fbox, Hbox
     TreeHelper.printMethod('InternalText (Old Parser Object)');
     text = text.replace(/^\s+/, NBSP).replace(/\s+$/, NBSP);
-    let textNode = TreeHelper.createText(text);
-    return TreeHelper.createNode('mtext', [], def, textNode);
+    let textNode = parser.configuration.nodeFactory.create('text', text);
+    return parser.configuration.nodeFactory.create('node', 'mtext', [], def, textNode);
   }
 
   /**

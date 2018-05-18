@@ -122,7 +122,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
       if (!TreeHelper.isType(base, 'munderover') || TreeHelper.getChildAt(base, (base as MmlMunderover).over)) {
         if (TreeHelper.getProperty(base, 'movablelimits') && TreeHelper.isType(base, 'mi')) {
           // @test Mathop Super
-          base = ParseUtil.mi2mo(base);
+          base = ParseUtil.mi2mo(parser, base);
         }
         // @test Large Operator
         base = parser.configuration.nodeFactory.create('node', 'munderover', [base], {movesupsub: true});
@@ -181,7 +181,7 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
         if (TreeHelper.getProperty(base, 'movablelimits') &&
             TreeHelper.isType(base, 'mi')) {
           // @test Mathop Sub
-          base = ParseUtil.mi2mo(base);
+          base = ParseUtil.mi2mo(parser, base);
         }
         // @test Move Superscript
         base = parser.configuration.nodeFactory.create('node', 'munderover', [base], {movesupsub: true});

@@ -46,8 +46,8 @@ export namespace NodeUtil {
   };
 
   export function createToken(kind: string, def: any, text: string): MmlNode  {
-    const textNode = TreeHelper.createText(text);
-    return TreeHelper.createNode(kind, [], def, textNode);
+    const textNode = createText(text);
+    return createNode(kind, [], def, textNode);
   }
 
   export function createText(text: string): TextNode  {
@@ -60,14 +60,16 @@ export namespace NodeUtil {
 
   export function createError(message: string): MmlNode  {
     let text = createText(message);
-    let mtext = TreeHelper.createNode('mtext', [], {}, text);
-    let error = TreeHelper.createNode('merror', [mtext], {});
+    let mtext = createNode('mtext', [], {}, text);
+    let error = createNode('merror', [mtext], {});
     return error;
   };
 
 }
 
 export class NodeFactory {
+
+  protected mmlFactory: MmlFactory = new MmlFactory();
 
   private factory: Map<string, (kind: string, ...rest: any[]) => MmlNode> =
     new Map([

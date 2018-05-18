@@ -66,7 +66,7 @@ export class MultlineItem extends ArrayItem {
   public EndEntry() {
     TreeHelper.printMethod('AMS-EndEntry');
     if (this.table.length) {
-      ParseUtil.fixInitialMO(this.nodes);
+      ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
     const shove = this.getProperty('shove');
     const mtd = this.factory.configuration.nodeFactory.create('node', 
