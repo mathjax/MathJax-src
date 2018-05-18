@@ -36,9 +36,9 @@ import {TagsFactory} from './tex/Tags.js';
 import {MmlMsubsup} from '../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../core/MmlTree/MmlNodes/munderover.js';
 import {MmlMo} from '../core/MmlTree/MmlNodes/mo.js';
-import StackItemFactory from './tex/StackItemFactory.js';
 import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
 import {SubHandlers} from './tex/MapHandler.js';
+import {NodeFactory} from './tex/NodeFactory.js';
 // Import base as it is the default package loaded.
 import './tex/base/BaseConfiguration.js';
 
@@ -94,6 +94,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   protected findTeX: FindTeX<N, T, D>;
 
   private configuration: Configuration;
+  private parseOptions: ParseOptions;
   private latex: string;
   private mathNode: MmlNode;
   
@@ -102,9 +103,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {TeXError} err The TexError.
    * @return {Node} The merror node.
    */
-  private static formatError(err: TexError): MmlNode {
+  private formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
-    return TreeHelper.createError(message);
+    return this.parseOptions.createNode('error', message);
   };
 
 
@@ -113,8 +114,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * not used as delimiters. Also wraps non-stretchy infix delimiters into a
    * TeXAtom.
    * @param {MmlNode} node The node to rewrite.
+   * @param {ParseOptions} options The parse options.
    */
-  private static cleanStretchy(node: MmlNode) {
+  private static cleanStretchy(node: MmlNode, options: ParseOptions) {
     node.walkTree((mo: MmlNode, d: any) => {
       if (TreeHelper.getProperty(mo, 'fixStretchy')) {
         let symbol = TreeHelper.getForm(mo);
@@ -138,9 +140,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * an attribute, which is also an inherited attribute it will be removed. This
    * is necessary as attributes are set bottom up in the parser.
    * @param {MmlNode} mml The node to clean.
+   * @param {ParseOptions} options The parse options.
    */
   // TODO (DC): Move this maybe into setInheritedAttributes method?
-  private static cleanAttributes(mml: MmlNode) {
+  private static cleanAttributes(mml: MmlNode, options: ParseOptions) {
       let attribs = mml.attributes as any;
       let keys = Object.keys(attribs.attributes);
       for (let i = 0, key: string; key = keys[i]; i++) {
@@ -155,8 +158,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * Combine adjacent <mo> elements that are relations (since MathML treats the
    * spacing very differently)
    * @param {MmlNode} mml The node in which to combine relations.
+   * @param {ParseOptions} options The parse options.
    */
-  private static combineRelations(mml: MmlNode) {
+  private static combineRelations(mml: MmlNode, options: ParseOptions) {
     TreeHelper.printMethod('combineRelations: ');
       let m1: MmlNode, m2: MmlNode;
       let children = TreeHelper.getChildren(mml);
@@ -193,9 +197,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * Visitor that rewrites incomplete msubsup/munderover elements in the given
    * node into corresponding msub/sup/under/over nodes.
    * @param {MmlNode} node The node to rewrite.
+   * @param {ParseOptions} options The parse options.
    */
   // TODO (VS): reduce some of the casting.
-  private static cleanSubSup(node: MmlNode) {
+  private static cleanSubSup(node: MmlNode, options: ParseOptions) {
     let rewrite: MmlNode[] = [];
     node.walkTree((n, d) => {
       const children = n.childNodes;
@@ -246,7 +251,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   public compile(math: MathItem<N, T, D>): MmlNode {
-    let configurations = this.configure();
+    this.parseOptions = this.configure();
     let node: MmlNode;
     let parser: TexParser;
     let display = math.display;
@@ -255,21 +260,21 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     try {
       parser = new TexParser(this.latex,
                              {display: display, isInner: false},
-                             configurations);
+                             this.parseOptions);
       node = parser.mml();
     } catch (err) {
       if (!(err instanceof TexError)) {
         throw err;
       }
-      node = TeX.formatError(err);
+      node = this.formatError(err);
     }
-    this.mathNode = TreeHelper.createNode('math', [node], {});
+    this.mathNode = this.parseOptions.createNode('node', 'math', [node], {});
     if (display) {
       TreeHelper.setAttribute(this.mathNode, 'display', 'block');
     }
-    TeX.cleanSubSup(this.mathNode);
+    TeX.cleanSubSup(this.mathNode, this.parseOptions);
     this.mathNode.setInheritedAttributes({}, display, 0, false);
-    TeX.cleanStretchy(this.mathNode);
+    TeX.cleanStretchy(this.mathNode, this.parseOptions);
     this.mathNode.setInheritedAttributes({}, display, 0, false);
     this.mathNode.setTeXclass(null);
     // Run Postprocessors: MmlNode => MmlNode
@@ -302,8 +307,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     TreeHelper.setCreators(this.configuration.nodes);
     let options = new ParseOptions();
     options.handlers = new SubHandlers(this.configuration);
-    options.itemFactory = new StackItemFactory();
     options.itemFactory.configuration = options;
+    // Add node factory methods from packages.
+    options.nodeFactory.setCreators(this.configuration.nodes);
     // Add stackitems from packages.
     options.itemFactory.addStackItems(this.configuration.items);
     // Add tagging structures from packages and set tagging to given default.
@@ -324,14 +330,14 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
   private runPreprocessors() {
     for (let preprocessor of this.configuration.preprocessors) {
-      this.latex = preprocessor(this.latex);
+      this.latex = preprocessor(this.latex, this.parseOptions);
     }
   }
 
   private runPostprocessors() {
     this.mathNode.walkTree((mml: MmlNode, d: any) => {
       for (let postprocessor of this.configuration.postprocessors) {
-        postprocessor(mml);
+        postprocessor(mml, this.parseOptions);
       }
     }, {});
   }

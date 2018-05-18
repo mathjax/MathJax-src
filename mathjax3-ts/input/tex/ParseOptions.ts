@@ -25,6 +25,8 @@
 import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
 import {HandlerType, SubHandlers} from './MapHandler.js';
+import {NodeFactory} from './NodeFactory.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
 
 const DefaultOptions: [string, string | boolean][] = [
@@ -61,11 +63,23 @@ export default class ParseOptions {
 
   public handlers: SubHandlers;
   public options: Map<string, string|boolean> = new Map();
-  public itemFactory: StackItemFactory;
+  public itemFactory: StackItemFactory = new StackItemFactory();
+  public nodeFactory: NodeFactory = new NodeFactory();
   public tags: Tags;
   
   public constructor(setting: {[key: string]: (string|boolean)} = {}) {
     this.options = new Map(DefaultOptions);
     Object.assign(this.options, setting);
+  }
+
+
+  /**
+   * Convenience method to create nodes with this node factory.
+   * @param {string} kind The kind of node to create.
+   * @param {any[]} ...rest The remaining arguments for the creation method.
+   * @return {MmlNode} The newly created node.
+   */
+  public createNode(kind: string, ...rest: any[]): MmlNode {
+    return this.nodeFactory.create(kind, ...rest);
   }
 }

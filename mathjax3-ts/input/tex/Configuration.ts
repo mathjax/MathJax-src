@@ -27,6 +27,7 @@ import {HandlerType} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import ParseOptions from './ParseOptions.js';
 
 
 export type HandlerConfig = {[P in HandlerType]?: string[]}
@@ -47,8 +48,8 @@ export class Configuration {
                                 tags?: TagsConfig,
                                 options?: OptionsConfig,
                                 nodes?: {[key: string]: any},
-                                preprocessors?: ((input: string) => string)[],
-                                postprocessors?: ((input: MmlNode) => void)[]
+                                preprocessors?: ((input: string, options: ParseOptions) => string)[],
+                                postprocessors?: ((input: MmlNode, options: ParseOptions) => void)[]
                                }) {
     return new Configuration(name,
                              config.handler || {},
@@ -80,8 +81,8 @@ export class Configuration {
                       readonly options: OptionsConfig = {},
                       // TODO: Flash this out with a node factory and node type.
                       readonly nodes: {[key: string]: any} = {},
-                      public preprocessors: ((input: string) => string)[] = [],
-                      public postprocessors: ((input: MmlNode) => void)[] = []
+                      public preprocessors: ((input: string, options: ParseOptions) => string)[] = [],
+                      public postprocessors: ((input: MmlNode, options: ParseOptions) => void)[] = []
              ) {
     let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
     let handlers = Object.keys(handler) as HandlerType[];

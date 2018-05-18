@@ -29,6 +29,8 @@ import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
+import {NodeUtil} from '../NodeFactory.js';
+import ParseOptions from '../ParseOptions.js';
 
 let BOLDVARIANT: {[key: string]: string} = {};
 BOLDVARIANT[TexConstant.Variant.NORMAL] = TexConstant.Variant.BOLD;
@@ -62,7 +64,7 @@ new CommandMap('boldsymbol', {boldsymbol: 'Boldsymbol'}, BoldsymbolMethods);
 
 
 export function createBoldToken(kind: string, def: any, text: string): MmlNode  {
-  let token = TreeHelper._createToken(kind, def, text);
+  let token = NodeUtil.createNode(kind, def, text);
   if (kind !== 'mtext' &&
       TreeHelper.parser && TreeHelper.parser.stack.env.boldsymbol) {
     TreeHelper.setProperty(token, 'fixBold', true);
@@ -71,7 +73,7 @@ export function createBoldToken(kind: string, def: any, text: string): MmlNode  
 }
 
 
-export function rewriteBoldTokens(node: MmlNode)  {
+export function rewriteBoldTokens(node: MmlNode, options: ParseOptions)  {
   TreeHelper.getProperty(node, 'fixBold')
   if (TreeHelper.getProperty(node, 'fixBold')) {
     let variant = TreeHelper.getAttribute(node, 'mathvariant') as string;
