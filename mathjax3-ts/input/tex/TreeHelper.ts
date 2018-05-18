@@ -259,10 +259,7 @@ export namespace TreeHelper {
   // export type creators = 'node' | 'token' | 'text' | 'error';
   
   export function setCreators(assign: {[key: string]: any} = {}) {
-    console.log(assign);
-    console.log('HERE');
     Object.assign(TreeHelper, assign);
-    console.log(TreeHelper);
     for (let key in assign) {
       (TreeHelper as any)[key] = assign[key];
     }

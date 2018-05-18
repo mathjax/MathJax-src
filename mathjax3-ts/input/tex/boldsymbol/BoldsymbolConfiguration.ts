@@ -71,20 +71,17 @@ export function createBoldToken(kind: string, def: any, text: string): MmlNode  
 }
 
 
-export function rewriteBoldTokens(mml: MmlNode): MmlNode  {
-  mml.walkTree((node: MmlNode, d: any) => {
-    TreeHelper.getProperty(node, 'fixBold')
-    if (TreeHelper.getProperty(node, 'fixBold')) {
-      let variant = TreeHelper.getAttribute(node, 'mathvariant') as string;
-      console.log(variant);
-      if (variant == null) {
-        TreeHelper.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
-      } else {
-        TreeHelper.setProperties(node, {mathvariant: BOLDVARIANT[variant] || variant});
-      }
-      TreeHelper.removeProperties(node, 'fixBold')
-    }}, {});
-  return mml;
+export function rewriteBoldTokens(node: MmlNode)  {
+  TreeHelper.getProperty(node, 'fixBold')
+  if (TreeHelper.getProperty(node, 'fixBold')) {
+    let variant = TreeHelper.getAttribute(node, 'mathvariant') as string;
+    if (variant == null) {
+      TreeHelper.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
+    } else {
+      TreeHelper.setProperties(node, {mathvariant: BOLDVARIANT[variant] || variant});
+    }
+    TreeHelper.removeProperties(node, 'fixBold')
+  }
 }
 
 

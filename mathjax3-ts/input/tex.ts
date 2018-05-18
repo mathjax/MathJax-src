@@ -115,7 +115,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {MmlNode} node The node to rewrite.
    */
   private static cleanStretchy(node: MmlNode) {
-    node.walkTree((mo: MmlNode, d) => {
+    node.walkTree((mo: MmlNode, d: any) => {
       if (TreeHelper.getProperty(mo, 'fixStretchy')) {
         let symbol = TreeHelper.getForm(mo);
         if (symbol && symbol[3] && symbol[3]['stretchy']) {
@@ -140,17 +140,14 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {MmlNode} mml The node to clean.
    */
   // TODO (DC): Move this maybe into setInheritedAttributes method?
-  private static cleanAttributes(mml: MmlNode): MmlNode {
-    mml.walkTree((n: MmlNode, d) => {
-      let attribs = n.attributes as any;
+  private static cleanAttributes(mml: MmlNode) {
+      let attribs = mml.attributes as any;
       let keys = Object.keys(attribs.attributes);
       for (let i = 0, key: string; key = keys[i]; i++) {
-        if (attribs.attributes[key] === n.attributes.getInherited(key)) {
+        if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
           delete attribs.attributes[key];
         }
       }
-    }, {});
-    return mml;
   };
 
 
@@ -159,10 +156,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * spacing very differently)
    * @param {MmlNode} mml The node in which to combine relations.
    */
-  // TODO (DC): Could this be done with a visitor?
-  private static combineRelations(node: MmlNode): MmlNode {
+  private static combineRelations(mml: MmlNode) {
     TreeHelper.printMethod('combineRelations: ');
-    node.walkTree((mml: MmlNode, d) => {
       let m1: MmlNode, m2: MmlNode;
       let children = TreeHelper.getChildren(mml);
       for (let i = 0, m = children.length; i < m; i++) {
@@ -191,8 +186,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
           }
         }
       }
-    }, node);
-    return node;
   }
 
 
@@ -306,7 +299,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         this.configuration.append(conf);
       }
     }
-    console.log(this.configuration.nodes);
     TreeHelper.setCreators(this.configuration.nodes);
     let options = new ParseOptions();
     options.handlers = new SubHandlers(this.configuration);
@@ -337,9 +329,11 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   }
 
   private runPostprocessors() {
-    for (let postprocessor of this.configuration.postprocessors) {
-      this.mathNode = postprocessor(this.mathNode);
-    }
+    this.mathNode.walkTree((mml: MmlNode, d: any) => {
+      for (let postprocessor of this.configuration.postprocessors) {
+        postprocessor(mml);
+      }
+    }, {});
   }
 
 }

@@ -45,7 +45,6 @@ namespace ParseMethods {
     }
     // @test Identifier
     const node = TreeHelper.createToken('mi', def, c);
-    console.log(node);
     parser.Push(parser.mmlToken(node));
   };
 

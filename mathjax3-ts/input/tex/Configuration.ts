@@ -48,7 +48,7 @@ export class Configuration {
                                 options?: OptionsConfig,
                                 nodes?: {[key: string]: any},
                                 preprocessors?: ((input: string) => string)[],
-                                postprocessors?: ((input: MmlNode) => MmlNode)[]
+                                postprocessors?: ((input: MmlNode) => void)[]
                                }) {
     return new Configuration(name,
                              config.handler || {},
@@ -81,7 +81,7 @@ export class Configuration {
                       // TODO: Flash this out with a node factory and node type.
                       readonly nodes: {[key: string]: any} = {},
                       public preprocessors: ((input: string) => string)[] = [],
-                      public postprocessors: ((input: MmlNode) => MmlNode)[] = []
+                      public postprocessors: ((input: MmlNode) => void)[] = []
              ) {
     let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
     let handlers = Object.keys(handler) as HandlerType[];
