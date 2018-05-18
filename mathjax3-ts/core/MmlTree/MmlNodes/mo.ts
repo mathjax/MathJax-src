@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 import {MmlMrow} from './mrow.js';
 import {MmlMover, MmlMunder, MmlMunderover} from './munderover.js';
-import {OperatorList, OPTABLE, RangeDef, RANGES} from '../OperatorDictionary.js';
+import {OperatorList, OPTABLE, RangeDef, RANGES, MMLSPACING} from '../OperatorDictionary.js';
 
 /*****************************************************************/
 /*
@@ -60,9 +60,10 @@ export class MmlMo extends AbstractMmlTokenNode {
     };
 
     /*
-     * Unicode ranges and their default TeX classes
+     * Unicode ranges and their default TeX classes and MathML spacing
      */
-    public static RANGES: RangeDef[] = RANGES;
+    public static RANGES = RANGES;
+    public static MMLSPACING = MMLSPACING;
 
     /*
      * The Operator Dictionary.
@@ -164,8 +165,7 @@ export class MmlMo extends AbstractMmlTokenNode {
      * @override
      */
     public hasSpacingAttributes() {
-        return !!this.attributes.getExplicit('form') ||
-               this.attributes.isSet('lspace') ||
+        return this.attributes.isSet('lspace') ||
                this.attributes.isSet('rspace');
     }
 
@@ -177,10 +177,6 @@ export class MmlMo extends AbstractMmlTokenNode {
     public setTeXclass(prev: MmlNode): MmlNode {
         let {form, lspace, rspace, fence} = this.attributes.getList('form', 'lspace', 'rspace', 'fence') as
                                              {form: string, lspace: string, rspace: string, fence: string};
-        if (this.hasSpacingAttributes()) {
-            this.texClass = TEXCLASS.NONE;
-            return this;
-        }
         if (fence && this.texClass === TEXCLASS.REL) {
             if (form === 'prefix') {
                 this.texClass = TEXCLASS.OPEN;
@@ -276,8 +272,9 @@ export class MmlMo extends AbstractMmlTokenNode {
             let range = this.getRange(mo);
             if (range) {
                 this.texClass = range[2];
-                this.lspace = (def[0] + 1) / 18;
-                this.rspace = (def[1] + 1) / 18;
+                const spacing = (this.constructor as typeof MmlMo).MMLSPACING[range[2]];
+                this.lspace = (spacing[0] + 1) / 18;
+                this.rspace = (spacing[1] + 1) / 18;
             }
         }
     }

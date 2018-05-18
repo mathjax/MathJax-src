@@ -103,6 +103,19 @@ export const RANGES: RangeDef[] = [
 ];
 
 /*
+ * The default MathML spacing for the various TeX classes.
+ */
+export const MMLSPACING = [
+    [0, 0],  // ORD
+    [1, 2],  // OP
+    [3, 3],  // BIN
+    [4, 4],  // REL
+    [0, 0],  // OPEN
+    [0, 0],  // CLOSE
+    [0, 3]   // PUNCT
+];
+
+/*
  *  The operator dictionary, with sections for the three forms:  prefix, postfix, and infix
  */
 export const OPTABLE: {[form: string]: OperatorList} = {
