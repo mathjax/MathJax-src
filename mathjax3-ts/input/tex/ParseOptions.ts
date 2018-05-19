@@ -27,6 +27,7 @@ import {Tags} from './Tags.js';
 import {HandlerType, SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import TexParser from './TexParser.js';
 
 
 const DefaultOptions: [string, string | boolean][] = [
@@ -66,6 +67,7 @@ export default class ParseOptions {
   public itemFactory: StackItemFactory = new StackItemFactory();
   public nodeFactory: NodeFactory = new NodeFactory();
   public tags: Tags;
+  public parser: TexParser;
   
   public constructor(setting: {[key: string]: (string|boolean)} = {}) {
     this.options = new Map(DefaultOptions);

@@ -346,7 +346,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   // @test Limits
   let op = parser.stack.Prev(true);
   // Get the texclass for the core operator. Q: Davide?
-  if (!op || (TreeHelper.getTexClass(TreeHelper.getCore(op)) !== TEXCLASS.OP &&
+  if (!op || (TreeHelper.getTexClass(TreeHelper.getCoreMO(op)) !== TEXCLASS.OP &&
               TreeHelper.getProperty(op, 'movesupsub') == null)) {
     // @test Limits Error
     throw new TexError(['MisplacedLimits', '%1 is allowed only on operators', name]);
@@ -367,7 +367,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
     op = top.Last = node;
   }
   TreeHelper.setProperties(op, {'movesupsub': limits ? true : false});
-  TreeHelper.setProperties(TreeHelper.getCore(op), {'movablelimits': false});
+  TreeHelper.setProperties(TreeHelper.getCoreMO(op), {'movablelimits': false});
   if (TreeHelper.getAttribute(op, 'movablelimits') ||
       TreeHelper.getProperty(op, 'movablelimits')) {
     TreeHelper.setProperties(op, {'movablelimits': false});
@@ -526,7 +526,7 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   let mo;
   if (TreeHelper.isType(base, 'munderover') && TreeHelper.isEmbellished(base)) {
     // @test Overline Limits
-    TreeHelper.setProperties(TreeHelper.getCore(base), {lspace: 0, rspace: 0}); // get spacing right for NativeMML
+    TreeHelper.setProperties(TreeHelper.getCoreMO(base), {lspace: 0, rspace: 0}); // get spacing right for NativeMML
     mo = parser.configuration.nodeFactory.create('node', 'mo', [], {rspace: 0});
     base = parser.configuration.nodeFactory.create('node', 'mrow', [mo, base], {});  // add an empty <mi> so it's not embellished any more
   }

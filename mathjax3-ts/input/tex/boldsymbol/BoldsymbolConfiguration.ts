@@ -22,14 +22,14 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {TextNode, MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Configuration} from '../Configuration.js';
 import {TreeHelper} from '../TreeHelper.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
-import {NodeUtil} from '../NodeFactory.js';
+import {NodeFactory} from '../NodeFactory.js';
 import ParseOptions from '../ParseOptions.js';
 
 let BOLDVARIANT: {[key: string]: string} = {};
@@ -46,28 +46,22 @@ BOLDVARIANT['-tex-oldstyle']       = '-tex-oldstyle-bold';
 export let BoldsymbolMethods: Record<string, ParseMethod> = {};
 
 BoldsymbolMethods.Boldsymbol = function (parser: TexParser, name: string) {
-  // TODO: This is a hack! Get rid of it once we have a proper node factory.
-  TreeHelper.parser = parser;
-  let boldsymbol = parser.stack.env.boldsymbol,
-  font = parser.stack.env.font;
-  parser.stack.env.boldsymbol = true;
-  parser.stack.env.font = null;
+  let boldsymbol = parser.stack.env['boldsymbol'];
+  parser.stack.env['boldsymbol'] = true;
   let mml = parser.ParseArg(name);
-  parser.stack.env.font = font;
-  parser.stack.env.boldsymbol = boldsymbol;
+  parser.stack.env['boldsymbol'] = boldsymbol;
   parser.Push(mml);
-  TreeHelper.parser = null;
 };
 
 
 new CommandMap('boldsymbol', {boldsymbol: 'Boldsymbol'}, BoldsymbolMethods);
 
 
-export function createBoldToken(kind: string, def: any, text: string): MmlNode  {
-  console.log('Going through here');
-  let token = NodeUtil.createToken(kind, def, text);
+export function createBoldToken(factory: NodeFactory, kind: string,
+                                def: any, text: string): MmlNode  {
+  let token = NodeFactory.createToken(factory, kind, def, text);
   if (kind !== 'mtext' &&
-      TreeHelper.parser && TreeHelper.parser.stack.env.boldsymbol) {
+      factory.configuration.parser.stack.env['boldsymbol']) {
     TreeHelper.setProperty(token, 'fixBold', true);
   }
   return token;
@@ -81,7 +75,8 @@ export function rewriteBoldTokens(node: MmlNode, options: ParseOptions)  {
     if (variant == null) {
       TreeHelper.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
     } else {
-      TreeHelper.setProperties(node, {mathvariant: BOLDVARIANT[variant] || variant});
+      TreeHelper.setProperties(node,
+                               {mathvariant: BOLDVARIANT[variant] || variant});
     }
     TreeHelper.removeProperties(node, 'fixBold')
   }

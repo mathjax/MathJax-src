@@ -5,15 +5,46 @@ import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {Args} from './Types.js';
 import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 import TexParser from './TexParser.js';
+import ParseOptions from './ParseOptions.js';
 import {TreeHelper} from './TreeHelper.js';
 
 
-export namespace NodeUtil {
-  
-  const factory: MmlFactory = new MmlFactory();
 
-  export function createNode(kind: string, children: MmlNode[], def: any, text?: TextNode): MmlNode  {
-    const node = factory.create(kind, {}, []);
+export class NodeFactory {
+
+  public configuration: ParseOptions;
+
+  protected mmlFactory: MmlFactory = new MmlFactory();
+
+  private factory: Map<string, (factory: NodeFactory, kind: string, ...rest: any[]) => MmlNode> =
+    new Map([
+      ['node', NodeFactory.createNode],
+      ['token', NodeFactory.createToken],
+      ['text', NodeFactory.createText],
+      ['error', NodeFactory.createError],
+    ]);
+
+  public set(name: string, func: (factory: NodeFactory, kind: string, ...rest: any[]) => MmlNode) {
+    this.factory.set(name, func);
+  }
+
+  public setCreators(maps: {[name: string]: (factory: NodeFactory, kind: string, ...rest: any[]) => MmlNode}) {
+    for (let name in maps) {
+      this.set(name, maps[name]);
+    }
+  }
+  
+  public create(name: string, ...rest: any[]): MmlNode {
+    let func = this.factory.get(name) || this.factory.get('node');
+    return func.apply(null, [this].concat(rest));
+  }
+
+
+  public static createNode(factory: NodeFactory, kind: string,
+                           children: MmlNode[], def: any, text?: TextNode): MmlNode
+  {
+    console.log('Creating node');
+    const node = factory.mmlFactory.create(kind, {}, []);
     // If infinity or -1 remove inferred mrow
     // 
     // In all other cases replace inferred mrow with a regular mrow, before adding
@@ -29,7 +60,7 @@ export namespace NodeUtil {
       let cleanChildren = [];
       for (let i = 0, child; child = children[i]; i++) {
         if (child.isInferred) {
-          let mrow = factory.create('mrow', {}, TreeHelper.getChildren(child));
+          let mrow = factory.mmlFactory.create('mrow', {}, TreeHelper.getChildren(child));
           TreeHelper.copyAttributes(child, mrow);
           cleanChildren.push(mrow);
         } else {
@@ -45,53 +76,28 @@ export namespace NodeUtil {
     return node;
   };
 
-  export function createToken(kind: string, def: any, text: string): MmlNode  {
-    const textNode = createText(text);
-    return createNode(kind, [], def, textNode);
+  public static createToken(factory: NodeFactory, kind: string, def: any, text: string): MmlNode  {
+    const textNode = NodeFactory.createText(factory, text);
+    return NodeFactory.createNode(factory, kind, [], def, textNode);
   }
 
-  export function createText(text: string): TextNode  {
+  public static createText(factory: NodeFactory, text: string): TextNode  {
     if (text == null) {
       return null;
     }
-    let node = (factory.create('text') as TextNode).setText(text);
+    console.log('Creating text node');
+    let node = (factory.mmlFactory.create('text') as TextNode).setText(text);
+    console.log(node);
     return node;
   };
 
-  export function createError(message: string): MmlNode  {
-    let text = createText(message);
-    let mtext = createNode('mtext', [], {}, text);
-    let error = createNode('merror', [mtext], {});
+  public static createError(factory: NodeFactory, message: string): MmlNode  {
+    let text = NodeFactory.createText(factory, message);
+    let mtext = NodeFactory.createNode(factory, 'mtext', [], {}, text);
+    let error = NodeFactory.createNode(factory, 'merror', [mtext], {});
     return error;
   };
 
-}
 
-export class NodeFactory {
-
-  protected mmlFactory: MmlFactory = new MmlFactory();
-
-  private factory: Map<string, (kind: string, ...rest: any[]) => MmlNode> =
-    new Map([
-      ['node', NodeUtil.createNode],
-      ['token', NodeUtil.createToken],
-      ['text', NodeUtil.createText],
-      ['error', NodeUtil.createError],
-    ]);
-
-  public set(name: string, func: (kind: string, ...rest: any[]) => MmlNode) {
-    this.factory.set(name, func);
-  }
-
-  public setCreators(maps: {[name: string]: (kind: string, ...rest: any[]) => MmlNode}) {
-    for (let name in maps) {
-      this.set(name, maps[name]);
-    }
-  }
-  
-  public create(name: string, ...rest: any[]): MmlNode {
-    let func = this.factory.get(name) || this.factory.get('node');
-    return func.apply(null, rest);
-  }
 
 }

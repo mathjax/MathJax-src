@@ -308,8 +308,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     options.handlers = new SubHandlers(this.configuration);
     options.itemFactory.configuration = options;
     // Add node factory methods from packages.
+    options.nodeFactory.configuration = options;
     options.nodeFactory.setCreators(this.configuration.nodes);
-    TreeHelper.setCreators(this.configuration.nodes);
     // Add stackitems from packages.
     options.itemFactory.addStackItems(this.configuration.items);
     // Add tagging structures from packages and set tagging to given default.
