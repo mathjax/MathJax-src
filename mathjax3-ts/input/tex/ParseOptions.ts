@@ -67,14 +67,26 @@ export default class ParseOptions {
   public itemFactory: StackItemFactory = new StackItemFactory();
   public nodeFactory: NodeFactory = new NodeFactory();
   public tags: Tags;
-  public parser: TexParser;
+
+  private parsers: TexParser[] = [];
   
   public constructor(setting: {[key: string]: (string|boolean)} = {}) {
     this.options = new Map(DefaultOptions);
     Object.assign(this.options, setting);
   }
 
+  public pushParser(parser: TexParser) {
+    this.parsers.unshift(parser);
+  }
 
+  public popParser() {
+    this.parsers.shift();
+  }
+
+  public get parser(): TexParser {
+    return this.parsers[0];
+  }
+  
   /**
    * Convenience method to create nodes with this node factory.
    * @param {string} kind The kind of node to create.

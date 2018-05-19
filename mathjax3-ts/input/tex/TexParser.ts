@@ -86,7 +86,7 @@ export default class TexParser {
         }
       }
     }
-    this.configuration.parser = this;
+    this.configuration.pushParser(this);
     this.stack = new Stack(this.itemFactory, ENV, inner);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
@@ -200,6 +200,7 @@ export default class TexParser {
       return null;
     }
     let node = this.stack.Top().Top;
+    this.configuration.popParser();
     return node;
   }
 
