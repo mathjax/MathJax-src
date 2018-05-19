@@ -23,6 +23,10 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-multline-shove-tests.js
 
     node load.js tests/parser-matrix-tests.js
+
+    # Other packages
+    node load.js tests/parser-noundefined-tests.js
+    node load.js tests/parser-boldsymbol-tests.js
     exit 0
 else
     repeat=$1
