@@ -74,9 +74,8 @@ export default class TexParser {
    */
   constructor(private _string: string, env: EnvList,
               public configuration: ParseOptions) {
-    console.log('Configuration: ' + !!configuration);
-    const inner = env.isInner as boolean;
-    delete env.isInner;
+    const inner = env['isInner'] as boolean;
+    delete env['isInner'];
     let ENV: EnvList;
     if (env) {
       ENV = {};
@@ -409,8 +408,8 @@ export default class TexParser {
    *  Parse various substrings
    */
   public ParseArg(name: string) {
-    let object = new TexParser(this.GetArgument(name), this.stack.env, this.configuration);
-    return object.mml();
+    return new TexParser(this.GetArgument(name), this.stack.env,
+                         this.configuration).mml();
   }
 
   /**
@@ -420,7 +419,8 @@ export default class TexParser {
    * @return {MmlNode} The parsed node.
    */
   public ParseUpTo(name: string, token: string) {
-    return new TexParser(this.GetUpTo(name, token), this.stack.env, this.configuration).mml();
+    return new TexParser(this.GetUpTo(name, token), this.stack.env,
+                         this.configuration).mml();
   }
 
 

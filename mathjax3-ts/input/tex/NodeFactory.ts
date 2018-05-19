@@ -43,7 +43,6 @@ export class NodeFactory {
   public static createNode(factory: NodeFactory, kind: string,
                            children: MmlNode[], def: any, text?: TextNode): MmlNode
   {
-    console.log('Creating node');
     const node = factory.mmlFactory.create(kind, {}, []);
     // If infinity or -1 remove inferred mrow
     // 
@@ -76,7 +75,8 @@ export class NodeFactory {
     return node;
   };
 
-  public static createToken(factory: NodeFactory, kind: string, def: any, text: string): MmlNode  {
+  public static createToken(factory: NodeFactory, kind: string, def: any,
+                            text: string): MmlNode  {
     const textNode = NodeFactory.createText(factory, text);
     return NodeFactory.createNode(factory, kind, [], def, textNode);
   }
@@ -85,10 +85,7 @@ export class NodeFactory {
     if (text == null) {
       return null;
     }
-    console.log('Creating text node');
-    let node = (factory.mmlFactory.create('text') as TextNode).setText(text);
-    console.log(node);
-    return node;
+    return (factory.mmlFactory.create('text') as TextNode).setText(text);
   };
 
   public static createError(factory: NodeFactory, message: string): MmlNode  {
