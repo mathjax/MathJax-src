@@ -23,7 +23,6 @@
  */
 
 import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
-import {TreeHelper} from './TreeHelper.js';
 import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 

@@ -23,7 +23,6 @@
  */
 
 import TexParser from './TexParser.js';
-import {TreeHelper} from './TreeHelper.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {EnvList} from './StackItem.js';
 import ParseOptions from './ParseOptions.js';

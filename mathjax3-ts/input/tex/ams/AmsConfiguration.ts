@@ -23,7 +23,6 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {TreeHelper} from '../TreeHelper.js';
 import TexParser from '../TexParser.js';
 import {MultlineItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';

@@ -24,7 +24,7 @@
 
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Configuration} from '../Configuration.js';
-import {TreeHelper} from '../TreeHelper.js';
+import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
@@ -62,23 +62,23 @@ export function createBoldToken(factory: NodeFactory, kind: string,
   let token = NodeFactory.createToken(factory, kind, def, text);
   if (kind !== 'mtext' &&
       factory.configuration.parser.stack.env['boldsymbol']) {
-    TreeHelper.setProperty(token, 'fixBold', true);
+    NodeUtil.setProperty(token, 'fixBold', true);
   }
   return token;
 }
 
 
 export function rewriteBoldTokens(node: MmlNode, options: ParseOptions)  {
-  TreeHelper.getProperty(node, 'fixBold')
-  if (TreeHelper.getProperty(node, 'fixBold')) {
-    let variant = TreeHelper.getAttribute(node, 'mathvariant') as string;
+  NodeUtil.getProperty(node, 'fixBold')
+  if (NodeUtil.getProperty(node, 'fixBold')) {
+    let variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
     if (variant == null) {
-      TreeHelper.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
+      NodeUtil.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
     } else {
-      TreeHelper.setProperties(node,
+      NodeUtil.setProperties(node,
                                {mathvariant: BOLDVARIANT[variant] || variant});
     }
-    TreeHelper.removeProperties(node, 'fixBold')
+    NodeUtil.removeProperties(node, 'fixBold')
   }
 }
 

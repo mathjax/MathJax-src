@@ -28,7 +28,7 @@ import {TEXCLASS, MmlNode, TextNode, AttributeList} from '../core/MmlTree/MmlNod
 
 import {FindTeX} from './tex/FindTeX.js';
 
-import {TreeHelper} from './tex/TreeHelper.js';
+import NodeUtil from './tex/NodeUtil.js';
 import TexParser from './tex/TexParser.js';
 import TexError from './tex/TexError.js';
 import ParseOptions from './tex/ParseOptions.js';
@@ -118,18 +118,18 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   private static cleanStretchy(node: MmlNode, options: ParseOptions) {
     node.walkTree((mo: MmlNode, d: any) => {
-      if (TreeHelper.getProperty(mo, 'fixStretchy')) {
-        let symbol = TreeHelper.getForm(mo);
+      if (NodeUtil.getProperty(mo, 'fixStretchy')) {
+        let symbol = NodeUtil.getForm(mo);
         if (symbol && symbol[3] && symbol[3]['stretchy']) {
-          TreeHelper.setAttribute(mo, 'stretchy', false);
+          NodeUtil.setAttribute(mo, 'stretchy', false);
         }
         const parent = mo.parent;
-        if (!TreeHelper.getTexClass(mo) && (!symbol || !symbol[2])) {
+        if (!NodeUtil.getTexClass(mo) && (!symbol || !symbol[2])) {
           const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo], {});
           texAtom.parent = parent;
           parent.replaceChild(texAtom, mo);
         }
-        TreeHelper.removeProperties(mo, 'fixStretchy');
+        NodeUtil.removeProperties(mo, 'fixStretchy');
       }
     }, {});
   }
@@ -162,27 +162,27 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   private static combineRelations(mml: MmlNode, options: ParseOptions) {
     let m1: MmlNode, m2: MmlNode;
-    let children = TreeHelper.getChildren(mml);
+    let children = NodeUtil.getChildren(mml);
     for (let i = 0, m = children.length; i < m; i++) {
       if (children[i]) {
-        if (TreeHelper.isType(mml, 'mrow')) {
+        if (NodeUtil.isType(mml, 'mrow')) {
           while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
-                 TreeHelper.isType(m1, 'mo') && TreeHelper.isType(m2, 'mo') &&
-                 TreeHelper.getTexClass(m1) === TEXCLASS.REL &&
-                 TreeHelper.getTexClass(m2) === TEXCLASS.REL) {
-            if (TreeHelper.getProperty(m1, 'variantForm') ===
-                TreeHelper.getProperty(m2, 'variantForm') &&
-                TreeHelper.getAttribute(m1, 'mathvariant') ===
-                TreeHelper.getAttribute(m2, 'mathvariant')) {
+                 NodeUtil.isType(m1, 'mo') && NodeUtil.isType(m2, 'mo') &&
+                 NodeUtil.getTexClass(m1) === TEXCLASS.REL &&
+                 NodeUtil.getTexClass(m2) === TEXCLASS.REL) {
+            if (NodeUtil.getProperty(m1, 'variantForm') ===
+                NodeUtil.getProperty(m2, 'variantForm') &&
+                NodeUtil.getAttribute(m1, 'mathvariant') ===
+                NodeUtil.getAttribute(m2, 'mathvariant')) {
               // @test Shift Left, Less Equal
-              TreeHelper.appendChildren(m1, TreeHelper.getChildren(m2));
+              NodeUtil.appendChildren(m1, NodeUtil.getChildren(m2));
               children.splice(i + 1, 1);
               m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
               m--;
             } else {
               // TODO (VS): Find a tests.
-              TreeHelper.setAttribute(m1, 'rspace', '0pt');
-              TreeHelper.setAttribute(m2, 'lspace', '0pt');
+              NodeUtil.setAttribute(m1, 'rspace', '0pt');
+              NodeUtil.setAttribute(m2, 'lspace', '0pt');
               i++;
             }
           }
@@ -225,7 +225,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
                    options.nodeFactory.create('node', 'munder', [children[ms.base], children[ms.under]], {}) :
                    options.nodeFactory.create('node', 'mover', [children[ms.base], children[ms.over]], {}));
       }
-      TreeHelper.copyAttributes(n, newNode);
+      NodeUtil.copyAttributes(n, newNode);
       // This is only necessary if applied to an incomplete node, where
       // msubsup/underover can be top level.
       if (parent) {
@@ -269,7 +269,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     }
     this.mathNode = this.parseOptions.createNode('node', 'math', [node], {});
     if (display) {
-      TreeHelper.setAttribute(this.mathNode, 'display', 'block');
+      NodeUtil.setAttribute(this.mathNode, 'display', 'block');
     }
     TeX.cleanSubSup(this.mathNode, this.parseOptions);
     this.mathNode.setInheritedAttributes({}, display, 0, false);

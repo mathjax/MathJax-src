@@ -1,6 +1,6 @@
 /*************************************************************
  *  
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,20 @@
  */
 
 
+/**
+ * @fileoverview Node utility methods.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
 import {TextNode, MmlNode, AbstractMmlNode, AbstractMmlEmptyNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
-import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {Args} from './Types.js';
 import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
-import TexParser from './TexParser.js';
 
 
-export namespace TreeHelper {
-
-  export let parser: TexParser = null;
+namespace NodeUtil {
 
   const attrs: String[] = ['autoOP',
                            'fnOP',
@@ -165,7 +167,7 @@ export namespace TreeHelper {
   };
 
   export function getForm(node: MmlNode): OperatorDef {
-    if (!TreeHelper.isType(node, 'mo')) {
+    if (!isType(node, 'mo')) {
       return null;
     }
     let mo = node as MmlMo;
@@ -181,4 +183,4 @@ export namespace TreeHelper {
 
 }
 
-
+export default NodeUtil;

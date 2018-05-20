@@ -23,7 +23,7 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {TreeHelper} from '../TreeHelper.js';
+import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 
 // This is from the 'no undefined' extension.

@@ -31,7 +31,7 @@
  */
 
 
-import {TreeHelper} from './TreeHelper.js';
+import NodeUtil from './NodeUtil.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {StartItem, MmlItem} from './base/BaseItems.js';
 import {StackItem, EnvList, BaseItem} from './StackItem.js';
@@ -85,7 +85,7 @@ export default class Stack {
       if (!node) {
         continue;
       }
-      const item = TreeHelper.isNode(node) ?
+      const item = NodeUtil.isNode(node) ?
         this._factory.create('mml', node) : node;
       item.global = this.global;
       const top = this.stack.length ? this.Top().checkItem(item) : true;

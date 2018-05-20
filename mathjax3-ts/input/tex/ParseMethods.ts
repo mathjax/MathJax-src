@@ -25,7 +25,7 @@
 import * as sitem from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import TexParser from './TexParser.js';
-import {TreeHelper} from './TreeHelper.js';
+import NodeUtil from './NodeUtil.js';
 import {TexConstant} from './TexConstants.js';
 import {ParseMethod, ParseInput} from './Types.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
@@ -101,7 +101,7 @@ namespace ParseMethods {
     def['stretchy'] = false;
     // @test Large Set
     const node = parser.configuration.nodeFactory.create('token', 'mo', def, mchar.char);
-    TreeHelper.setProperty(node, 'fixStretchy', true);
+    NodeUtil.setProperty(node, 'fixStretchy', true);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(node);
   };

@@ -26,7 +26,7 @@ import * as sitem from './BaseItems.js';
 import {StackItem, EnvList} from '../StackItem.js';
 import {Symbol} from '../Symbol.js';
 import {ParseMethod} from '../Types.js';
-import {TreeHelper} from '../TreeHelper.js';
+import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
@@ -106,20 +106,20 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
       base = parser.configuration.nodeFactory.create('token', 'mi', {}, '');
     }
   }
-  const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
-  let position = TreeHelper.isType(base, 'msubsup') ? (base as MmlMsubsup).sup :
+  const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
+  let position = NodeUtil.isType(base, 'msubsup') ? (base as MmlMsubsup).sup :
     (base as MmlMunderover).over;
-  if ((TreeHelper.isType(base, 'msubsup') && TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) ||
-      (TreeHelper.isType(base, 'munderover') && TreeHelper.getChildAt(base, (base as MmlMunderover).over) &&
-       !TreeHelper.getProperty(base, 'subsupOK'))) {
+  if ((NodeUtil.isType(base, 'msubsup') && NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
+      (NodeUtil.isType(base, 'munderover') && NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
+       !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double-super-error, Double-over-error
     throw new TexError(['DoubleExponent', 'Double exponent: use braces to clarify']);
   }
-  if (!TreeHelper.isType(base, 'msubsup')) {
+  if (!NodeUtil.isType(base, 'msubsup')) {
     if (movesupsub) {
       // @test Move Superscript, Large Operator
-      if (!TreeHelper.isType(base, 'munderover') || TreeHelper.getChildAt(base, (base as MmlMunderover).over)) {
-        if (TreeHelper.getProperty(base, 'movablelimits') && TreeHelper.isType(base, 'mi')) {
+      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.getChildAt(base, (base as MmlMunderover).over)) {
+        if (NodeUtil.getProperty(base, 'movablelimits') && NodeUtil.isType(base, 'mi')) {
           // @test Mathop Super
           base = ParseUtil.mi2mo(parser, base);
         }
@@ -160,24 +160,24 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
       base = parser.configuration.nodeFactory.create('token', 'mi', {}, '');
     }
   }
-  const movesupsub = TreeHelper.getProperty(base, 'movesupsub');
-  let position = TreeHelper.isType(base, 'msubsup') ?
+  const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
+  let position = NodeUtil.isType(base, 'msubsup') ?
     (base as MmlMsubsup).sub : (base as MmlMunderover).under;
-  if ((TreeHelper.isType(base, 'msubsup') &&
-       TreeHelper.getChildAt(base, (base as MmlMsubsup).sub)) ||
-      (TreeHelper.isType(base, 'munderover') &&
-       TreeHelper.getChildAt(base, (base as MmlMunderover).under) &&
-       !TreeHelper.getProperty(base, 'subsupOK'))) {
+  if ((NodeUtil.isType(base, 'msubsup') &&
+       NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
+      (NodeUtil.isType(base, 'munderover') &&
+       NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
+       !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double-sub-error, Double-under-error
     throw new TexError(['DoubleSubscripts', 'Double subscripts: use braces to clarify']);
   }
-  if (!TreeHelper.isType(base, 'msubsup')) {
+  if (!NodeUtil.isType(base, 'msubsup')) {
     if (movesupsub) {
       // @test Large Operator, Move Superscript
-      if (!TreeHelper.isType(base, 'munderover') ||
-          TreeHelper.getChildAt(base, (base as MmlMunderover).under)) {
-        if (TreeHelper.getProperty(base, 'movablelimits') &&
-            TreeHelper.isType(base, 'mi')) {
+      if (!NodeUtil.isType(base, 'munderover') ||
+          NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
+        if (NodeUtil.getProperty(base, 'movablelimits') &&
+            NodeUtil.isType(base, 'mi')) {
           // @test Mathop Sub
           base = ParseUtil.mi2mo(parser, base);
         }
@@ -204,8 +204,8 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
     // @test PrimeSup, PrePrime, Prime on Sup
     base = parser.configuration.nodeFactory.create('node', 'mi', [], {});
   }
-  if (TreeHelper.isType(base, 'msubsup') &&
-      TreeHelper.getChildAt(base, (base as MmlMsubsup).sup)) {
+  if (NodeUtil.isType(base, 'msubsup') &&
+      NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) {
     // @test Double Prime Error
     throw new TexError(['DoubleExponentPrime',
                         'Prime causes double exponent: use braces to clarify']);
@@ -337,31 +337,31 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   // @test Limits
   let op = parser.stack.Prev(true);
   // Get the texclass for the core operator. Q: Davide?
-  if (!op || (TreeHelper.getTexClass(TreeHelper.getCoreMO(op)) !== TEXCLASS.OP &&
-              TreeHelper.getProperty(op, 'movesupsub') == null)) {
+  if (!op || (NodeUtil.getTexClass(NodeUtil.getCoreMO(op)) !== TEXCLASS.OP &&
+              NodeUtil.getProperty(op, 'movesupsub') == null)) {
     // @test Limits Error
     throw new TexError(['MisplacedLimits', '%1 is allowed only on operators', name]);
   }
   const top = parser.stack.Top();
   let node;
-  if (TreeHelper.isType(op, 'munderover') && !limits) {
+  if (NodeUtil.isType(op, 'munderover') && !limits) {
     // @test Limits UnderOver
     node = parser.configuration.nodeFactory.create('node', 'msubsup', [], {});
-    TreeHelper.copyChildren(op, node);
+    NodeUtil.copyChildren(op, node);
     op = top.Last = node;
-  } else if (TreeHelper.isType(op, 'msubsup') && limits) {
+  } else if (NodeUtil.isType(op, 'msubsup') && limits) {
     // @test Limits SubSup
-    // node = parser.configuration.nodeFactory.create('node', 'munderover', TreeHelper.getChildren(op), {});
+    // node = parser.configuration.nodeFactory.create('node', 'munderover', NodeUtil.getChildren(op), {});
     // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
     node = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
-    TreeHelper.copyChildren(op, node);
+    NodeUtil.copyChildren(op, node);
     op = top.Last = node;
   }
-  TreeHelper.setProperties(op, {'movesupsub': limits ? true : false});
-  TreeHelper.setProperties(TreeHelper.getCoreMO(op), {'movablelimits': false});
-  if (TreeHelper.getAttribute(op, 'movablelimits') ||
-      TreeHelper.getProperty(op, 'movablelimits')) {
-    TreeHelper.setProperties(op, {'movablelimits': false});
+  NodeUtil.setProperties(op, {'movesupsub': limits ? true : false});
+  NodeUtil.setProperties(NodeUtil.getCoreMO(op), {'movablelimits': false});
+  if (NodeUtil.getAttribute(op, 'movablelimits') ||
+      NodeUtil.getProperty(op, 'movablelimits')) {
+    NodeUtil.setProperties(op, {'movablelimits': false});
   }
 };
 
@@ -478,21 +478,21 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
     // @test Vector Font
     def['mathvariant'] = parser.stack.env['font'];
   }
-  const entity = TreeHelper.createEntity(accent);
+  const entity = NodeUtil.createEntity(accent);
   const moNode = parser.configuration.nodeFactory.create('token', 'mo', def, entity);
   const mml = moNode;
-  TreeHelper.setAttribute(mml, 'stretchy', stretchy ? true : false);
+  NodeUtil.setAttribute(mml, 'stretchy', stretchy ? true : false);
   // @test Vector Op, Vector
-  const mo = (TreeHelper.isEmbellished(c) ? TreeHelper.getCoreMO(c) : c);
-  if (TreeHelper.isType(mo, 'mo')) {
+  const mo = (NodeUtil.isEmbellished(c) ? NodeUtil.getCoreMO(c) : c);
+  if (NodeUtil.isType(mo, 'mo')) {
     // @test Vector Op
-    TreeHelper.setProperties(mo, {'movablelimits': false});
+    NodeUtil.setProperties(mo, {'movablelimits': false});
   }
   const muoNode = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
   // TODO: This is necessary to get the empty element into the children.
-  TreeHelper.setData(muoNode, 0, c);
-  TreeHelper.setData(muoNode, 1, null);
-  TreeHelper.setData(muoNode, 2, mml);
+  NodeUtil.setData(muoNode, 0, c);
+  NodeUtil.setData(muoNode, 1, null);
+  NodeUtil.setData(muoNode, 2, mml);
   let texAtom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [muoNode], {});
   parser.Push(texAtom);
 };
@@ -500,24 +500,24 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
 BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean, noaccent: boolean) {
   // @test Overline
   let base = parser.ParseArg(name);
-  let symbol = TreeHelper.getForm(base);
+  let symbol = NodeUtil.getForm(base);
   if ((symbol && symbol[3] && symbol[3]['movablelimits'])
-      || TreeHelper.getProperty(base, 'movablelimits')) {
+      || NodeUtil.getProperty(base, 'movablelimits')) {
     // @test Overline Sum
-    TreeHelper.setProperties(base, {'movablelimits': false});
+    NodeUtil.setProperties(base, {'movablelimits': false});
   }
   let mo;
-  if (TreeHelper.isType(base, 'munderover') && TreeHelper.isEmbellished(base)) {
+  if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
     // @test Overline Limits
-    TreeHelper.setProperties(TreeHelper.getCoreMO(base), {lspace: 0, rspace: 0}); // get spacing right for NativeMML
+    NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0}); // get spacing right for NativeMML
     mo = parser.configuration.nodeFactory.create('node', 'mo', [], {rspace: 0});
     base = parser.configuration.nodeFactory.create('node', 'mrow', [mo, base], {});  // add an empty <mi> so it's not embellished any more
   }
   const mml = parser.configuration.nodeFactory.create('node', 'munderover', [base], {}) as MmlMunderover;
-  const entity = TreeHelper.createEntity(c);
+  const entity = NodeUtil.createEntity(c);
   mo = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
 
-  TreeHelper.setData(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
+  NodeUtil.setData(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
                      mo);
   let node: MmlNode = mml;
   if (stack) {
@@ -525,15 +525,15 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
     node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP, movesupsub: true});
   }
   // TODO: Sort these properties out!
-  TreeHelper.setProperties(node, {subsupOK: true});
+  NodeUtil.setProperties(node, {subsupOK: true});
   parser.Push(node);
 };
 
 BaseMethods.Overset = function(parser: TexParser, name: string) {
   // @test Overset
   const top = parser.ParseArg(name), base = parser.ParseArg(name);
-  if (TreeHelper.getAttribute(base, 'movablelimits') || TreeHelper.getProperty(base, 'movablelimits')) {
-    TreeHelper.setProperties(base, {'movablelimits': false});
+  if (NodeUtil.getAttribute(base, 'movablelimits') || NodeUtil.getProperty(base, 'movablelimits')) {
+    NodeUtil.setProperties(base, {'movablelimits': false});
   }
   const node = parser.configuration.nodeFactory.create('node', 'mover', [base, top], {});
   parser.Push(node);
@@ -542,9 +542,9 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
 BaseMethods.Underset = function(parser: TexParser, name: string) {
   // @test Underset
   const bot = parser.ParseArg(name), base = parser.ParseArg(name);
-  if (TreeHelper.getAttribute(base, 'movablelimits') || TreeHelper.getProperty(base, 'movablelimits')) {
+  if (NodeUtil.getAttribute(base, 'movablelimits') || NodeUtil.getProperty(base, 'movablelimits')) {
     // @test Overline Sum
-    TreeHelper.setProperties(base, {'movablelimits': false});
+    NodeUtil.setProperties(base, {'movablelimits': false});
   }
   const node = parser.configuration.nodeFactory.create('node', 'munder', [base, bot], {});
   parser.Push(node);
@@ -622,7 +622,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   }
   const textNode = parser.configuration.nodeFactory.create('text', text);
   node.appendChild(textNode);
-  TreeHelper.setProperties(node, def);
+  NodeUtil.setProperties(node, def);
   parser.Push(node);
 };
 
@@ -644,12 +644,12 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
     box = parser.configuration.nodeFactory.create('node', 'mpadded', [box], {});
     if (h) {
       // @test Horizontal Phantom
-      TreeHelper.setAttribute(box, 'height', 0);
-      TreeHelper.setAttribute(box, 'depth', 0);
+      NodeUtil.setAttribute(box, 'height', 0);
+      NodeUtil.setAttribute(box, 'depth', 0);
     }
     if (v) {
       // @test Vertical Phantom
-      TreeHelper.setAttribute(box, 'width', 0);
+      NodeUtil.setAttribute(box, 'width', 0);
     }
   }
   const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [box], {});
@@ -662,11 +662,11 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
   const smash = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {});
   // TEMP: Changes here:
   switch (bt) {
-  case 'b': TreeHelper.setAttribute(smash, 'depth', 0); break;
-  case 't': TreeHelper.setAttribute(smash, 'height', 0); break;
+  case 'b': NodeUtil.setAttribute(smash, 'depth', 0); break;
+  case 't': NodeUtil.setAttribute(smash, 'height', 0); break;
   default:
-    TreeHelper.setAttribute(smash, 'height', 0);
-    TreeHelper.setAttribute(smash, 'depth', 0);
+    NodeUtil.setAttribute(smash, 'height', 0);
+    NodeUtil.setAttribute(smash, 'depth', 0);
   }
   const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [smash], {});
   parser.Push(atom);
@@ -677,7 +677,7 @@ BaseMethods.Lap = function(parser: TexParser, name: string) {
   const mml = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {width: 0});
   if (name === '\\llap') {
     // @test Llap
-    TreeHelper.setAttribute(mml, 'lspace', '-1width');
+    NodeUtil.setAttribute(mml, 'lspace', '-1width');
   }
   const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
   parser.Push(atom);
@@ -752,10 +752,10 @@ BaseMethods.rule = function(parser: TexParser, name: string) {
   if (v) {
     mml = parser.configuration.nodeFactory.create('node', 'mpadded', [mml], {voffset: v});
     if (v.match(/^\-/)) {
-      TreeHelper.setAttribute(mml, 'height', v);
-      TreeHelper.setAttribute(mml, 'depth', '+' + v.substr(1));
+      NodeUtil.setAttribute(mml, 'height', v);
+      NodeUtil.setAttribute(mml, 'depth', '+' + v.substr(1));
     } else {
-      TreeHelper.setAttribute(mml, 'height', '+' + v);
+      NodeUtil.setAttribute(mml, 'height', '+' + v);
     }
   }
   parser.Push(mml);
@@ -780,9 +780,9 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   const bot = parser.ParseArg(name);
   const node = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
   // TODO: This is necessary to get the empty element into the children.
-  TreeHelper.setData(node, 0, bot);
-  TreeHelper.setData(node, 1, null);
-  TreeHelper.setData(node, 2, top);
+  NodeUtil.setData(node, 0, bot);
+  NodeUtil.setData(node, 1, null);
+  NodeUtil.setData(node, 2, top);
   const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [node], {texClass: TEXCLASS.REL});
   parser.Push(atom);
 };
@@ -807,8 +807,8 @@ BaseMethods.Not = function(parser: TexParser, name: string) {
 
 BaseMethods.Dots = function(parser: TexParser, name: string) {
   // @test Operator Dots
-  const ldotsEntity = TreeHelper.createEntity('2026');
-  const cdotsEntity = TreeHelper.createEntity('22EF');
+  const ldotsEntity = NodeUtil.createEntity('2026');
+  const cdotsEntity = NodeUtil.createEntity('22EF');
   const ldots = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: false}, ldotsEntity);
   const cdots = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: false}, cdotsEntity);
   parser.Push(

@@ -35,7 +35,7 @@ import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {EnvList} from './StackItem.js';
 import {ArrayItem} from './base/BaseItems.js';
 import ParseOptions from './ParseOptions.js';
-import {TreeHelper} from './TreeHelper.js';
+import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 
@@ -111,20 +111,20 @@ namespace ParseUtil {
       'mo', [],
       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
       openNode);
-    TreeHelper.appendChildren(mrow, [mo]);
-    if (TreeHelper.isType(mml, 'mrow') && TreeHelper.isInferred(mml)) {
+    NodeUtil.appendChildren(mrow, [mo]);
+    if (NodeUtil.isType(mml, 'mrow') && NodeUtil.isInferred(mml)) {
       // @test Fenced, Middle
-      TreeHelper.appendChildren(mrow, TreeHelper.getChildren(mml));
+      NodeUtil.appendChildren(mrow, NodeUtil.getChildren(mml));
     } else {
       // @test Fenced3
-      TreeHelper.appendChildren(mrow, [mml]);
+      NodeUtil.appendChildren(mrow, [mml]);
     }
     let closeNode = configuration.nodeFactory.create('text', close);
     mo = configuration.nodeFactory.create('node', 
       'mo', [],
       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
       closeNode);
-    TreeHelper.appendChildren(mrow, [mo]);
+    NodeUtil.appendChildren(mrow, [mo]);
     return mrow;
   }
 
@@ -137,15 +137,15 @@ namespace ParseUtil {
     let mrow = configuration.nodeFactory.create('node', 
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
     if (open) {
-      TreeHelper.appendChildren(mrow, [mathPalette(configuration, open, 'l')]);
+      NodeUtil.appendChildren(mrow, [mathPalette(configuration, open, 'l')]);
     }
-    if (TreeHelper.isType(mml, 'mrow')) {
-      TreeHelper.appendChildren(mrow, TreeHelper.getChildren(mml));
+    if (NodeUtil.isType(mml, 'mrow')) {
+      NodeUtil.appendChildren(mrow, NodeUtil.getChildren(mml));
     } else {
-      TreeHelper.appendChildren(mrow, [mml]);
+      NodeUtil.appendChildren(mrow, [mml]);
     }
     if (close) {
-      TreeHelper.appendChildren(mrow, [mathPalette(configuration, close, 'r')]);
+      NodeUtil.appendChildren(mrow, [mathPalette(configuration, close, 'r')]);
     }
     return mrow;
   }
@@ -170,11 +170,11 @@ namespace ParseUtil {
   export function fixInitialMO(configuration: ParseOptions, nodes: MmlNode[]) {
     for (let i = 0, m = nodes.length; i < m; i++) {
       let child = nodes[i];
-      if (child && (!TreeHelper.isType(child, 'mspace') &&
-                    (!TreeHelper.isType(child, 'TeXAtom') ||
-                     (TreeHelper.getChildren(child)[0] &&
-                      TreeHelper.getChildren(TreeHelper.getChildren(child)[0]).length)))) {
-        if (TreeHelper.isEmbellished(child)) {
+      if (child && (!NodeUtil.isType(child, 'mspace') &&
+                    (!NodeUtil.isType(child, 'TeXAtom') ||
+                     (NodeUtil.getChildren(child)[0] &&
+                      NodeUtil.getChildren(NodeUtil.getChildren(child)[0]).length)))) {
+        if (NodeUtil.isEmbellished(child)) {
           let mi = configuration.nodeFactory.create('node', 'mi', [], {});
           nodes.unshift(mi);
         }
@@ -187,10 +187,10 @@ namespace ParseUtil {
   export function mi2mo(parser: TexParser, mi: MmlNode) {
     // @test Mathop Sub, Mathop Super
     const mo = parser.configuration.nodeFactory.create('node', 'mo', [], {});
-    TreeHelper.copyChildren(mi, mo);
-    TreeHelper.copyAttributes(mi, mo);
-    TreeHelper.setProperties(mo, {lspace: '0', rspace: '0'});
-    TreeHelper.removeProperties(mo, 'movesupsub');
+    NodeUtil.copyChildren(mi, mo);
+    NodeUtil.copyAttributes(mi, mo);
+    NodeUtil.setProperties(mo, {lspace: '0', rspace: '0'});
+    NodeUtil.removeProperties(mo, 'movesupsub');
     return mo;
   }
 

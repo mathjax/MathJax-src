@@ -39,7 +39,7 @@ import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {TexConstant} from '../TexConstants.js';
 import TexError from '../TexError.js';
 import ParseUtil from '../ParseUtil.js';
-import {TreeHelper} from '../TreeHelper.js';
+import NodeUtil from '../NodeUtil.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {BaseItem, StackItem, EnvList} from '../StackItem.js';
@@ -183,12 +183,12 @@ export class PrimeItem extends BaseItem {
    */
   public checkItem(item: StackItem) {
         let [top0, top1] = this.TopN(2);
-    if (!TreeHelper.isType(top0, 'msubsup')) {
+    if (!NodeUtil.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
       const node = this.factory.configuration.nodeFactory.create('node', 'msup', [top0, top1], {});
       return [node, item];
     }
-    TreeHelper.setData(top0, (top0 as MmlMsubsup).sup, top1);
+    NodeUtil.setData(top0, (top0 as MmlMsubsup).sup, top1);
     return [top0, item];
   }
 }
@@ -231,18 +231,18 @@ export class SubsupItem extends BaseItem {
       if (this.getProperty('primes')) {
         if (position !== 2) {
           // @test Prime on Sub
-          TreeHelper.setData(top, 2, this.getProperty('primes') as MmlNode);
+          NodeUtil.setData(top, 2, this.getProperty('primes') as MmlNode);
         } else {
           // @test Prime on Prime
-          TreeHelper.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
+          NodeUtil.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
           const node = this.factory.configuration.nodeFactory.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.Top], {});
           item.Top = node;
         }
       }
-      TreeHelper.setData(top, position, item.Top);
+      NodeUtil.setData(top, position, item.Top);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
-        TreeHelper.setProperties(top, {movesupsub: this.getProperty('movesupsub')} as PropertyList);
+        NodeUtil.setProperties(top, {movesupsub: this.getProperty('movesupsub')} as PropertyList);
       }
       const result = this.factory.create('mml', top);
       return result;
@@ -296,12 +296,12 @@ export class OverItem extends BaseItem {
         'mfrac', [this.getProperty('num') as MmlNode, this.toMml(false)], {});
       if (this.getProperty('thickness') != null) {
         // @test Choose, Above, Above with Delims
-        TreeHelper.setAttribute(mml, 'linethickness',
+        NodeUtil.setAttribute(mml, 'linethickness',
                                 this.getProperty('thickness') as string);
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Choose
-        TreeHelper.setProperties(mml, {'withDelims': true});
+        NodeUtil.setProperties(mml, {'withDelims': true});
         mml = ParseUtil.fixedFence(this.factory.configuration,
                                    this.getProperty('open') as string, mml,
                                    this.getProperty('close') as string);
@@ -576,15 +576,15 @@ export class FnItem extends BaseItem {
           // @test Mathop Super
           return [top, item];
         }
-        if (TreeHelper.isType(mml, 'mspace')) {
+        if (NodeUtil.isType(mml, 'mspace')) {
           // @test Fn Pos Space, Fn Neg Space
           return [top, item];
         }
-        if (TreeHelper.isEmbellished(mml)) {
+        if (NodeUtil.isEmbellished(mml)) {
           // @test MultiInt with Limits
-          mml = TreeHelper.getCoreMO(mml);
+          mml = NodeUtil.getCoreMO(mml);
         }
-        const form = TreeHelper.getForm(mml);
+        const form = NodeUtil.getForm(mml);
         if (form != null && [0, 0, 1, 1, 0, 1, 1, 0, 0, 0][form[2]]) {
           // @test Fn Operator
           return [top, item];
@@ -624,20 +624,20 @@ export class NotItem extends BaseItem {
       return true;
     }
     if (item.isKind('mml') &&
-        (TreeHelper.isType(item.Top, 'mo') || TreeHelper.isType(item.Top, 'mi') ||
-         TreeHelper.isType(item.Top, 'mtext'))) {
+        (NodeUtil.isType(item.Top, 'mo') || NodeUtil.isType(item.Top, 'mi') ||
+         NodeUtil.isType(item.Top, 'mtext'))) {
       mml = item.Top;
-      c = TreeHelper.getText(mml as TextNode);
-      if (c.length === 1 && !TreeHelper.getProperty(mml, 'movesupsub') &&
-          TreeHelper.getChildren(mml).length === 1) {
+      c = NodeUtil.getText(mml as TextNode);
+      if (c.length === 1 && !NodeUtil.getProperty(mml, 'movesupsub') &&
+          NodeUtil.getChildren(mml).length === 1) {
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
           textNode = this.factory.configuration.nodeFactory.create('text', this.remap.lookup(c).char) as TextNode;
-          TreeHelper.setData(mml, 0, textNode);
+          NodeUtil.setData(mml, 0, textNode);
         } else {
           // @test Negation Explicit
           textNode = this.factory.configuration.nodeFactory.create('text', '\u0338') as TextNode;
-          TreeHelper.appendChildren(mml, [textNode]);
+          NodeUtil.appendChildren(mml, [textNode]);
         }
         return item as MmlItem;
       }
@@ -671,8 +671,8 @@ export class DotsItem extends BaseItem {
     let dots = this.getProperty('ldots') as MmlNode;
     let top = item.Top;
     // @test Operator Dots
-    if (item.isKind('mml') && TreeHelper.isEmbellished(top)) {
-      const tclass = TreeHelper.getTexClass(TreeHelper.getCoreMO(top));
+    if (item.isKind('mml') && NodeUtil.isEmbellished(top)) {
+      const tclass = NodeUtil.getTexClass(NodeUtil.getCoreMO(top));
       if (tclass === TEXCLASS.BIN || tclass === TEXCLASS.REL) {
         dots = this.getProperty('cdots') as MmlNode;
       }
@@ -734,7 +734,7 @@ export class ArrayItem extends BaseItem {
       let mml = this.factory.configuration.nodeFactory.create('node', 'mtable', this.table, this.arraydef);
       if (this.frame.length === 4) {
         // @test Enclosed frame solid, Enclosed frame dashed
-        TreeHelper.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
+        NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
       } else if (this.frame.length) {
         // @test Enclosed left right
         if (this.arraydef['rowlines']) {
@@ -749,7 +749,7 @@ export class ArrayItem extends BaseItem {
             (this.arraydef['rowlines'] || 'none') !== 'none') {
           // @test Enclosed dashed row, Enclosed solid row
           // @test Enclosed dashed column, Enclosed solid column
-          TreeHelper.setAttribute(mml, 'padding', 0);
+          NodeUtil.setAttribute(mml, 'padding', 0);
         }
       }
       if (scriptlevel) {
@@ -785,12 +785,12 @@ export class ArrayItem extends BaseItem {
     const mtd = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes, {});
     if (this.hfill.length) {
       if (this.hfill[0] === 0) {
-        TreeHelper.setAttribute(mtd, 'columnalign', 'right');
+        NodeUtil.setAttribute(mtd, 'columnalign', 'right');
       }
       if (this.hfill[this.hfill.length - 1] === this.Size()) {
-        TreeHelper.setAttribute(
+        NodeUtil.setAttribute(
           mtd, 'columnalign',
-          TreeHelper.getAttribute(mtd, 'columnalign') ? 'center' : 'left');
+          NodeUtil.getAttribute(mtd, 'columnalign') ? 'center' : 'left');
       }
     }
     this.row.push(mtd);

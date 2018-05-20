@@ -25,7 +25,7 @@
 import {Configuration} from '../Configuration.js';
 import {MapHandler} from '../MapHandler.js';
 import TexError from '../TexError.js';
-import {TreeHelper} from '../TreeHelper.js';
+import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import {ParseMethod} from '../Types.js';
 import {CharacterMap} from '../SymbolMap.js';
@@ -60,7 +60,7 @@ function Other(parser: TexParser, char: string) {
   // @test Other Remap
   let mo = parser.configuration.nodeFactory.create(
     'token', 'mo', def, (remap ? remap.char : char));
-  TreeHelper.setProperty(mo, 'fixStretchy', true);
+  NodeUtil.setProperty(mo, 'fixStretchy', true);
   parser.Push(mo);
 };
 

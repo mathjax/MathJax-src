@@ -6,7 +6,7 @@ import {Args} from './Types.js';
 import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 import TexParser from './TexParser.js';
 import ParseOptions from './ParseOptions.js';
-import {TreeHelper} from './TreeHelper.js';
+import NodeUtil from './NodeUtil.js';
 
 
 
@@ -51,7 +51,7 @@ export class NodeFactory {
     const arity = node.arity;
     if (arity === Infinity || arity === -1) {
       if (children.length === 1 && children[0].isInferred) {
-        node.setChildren(TreeHelper.getChildren(children[0]));
+        node.setChildren(NodeUtil.getChildren(children[0]));
       } else {
         node.setChildren(children);
       }
@@ -59,8 +59,8 @@ export class NodeFactory {
       let cleanChildren = [];
       for (let i = 0, child; child = children[i]; i++) {
         if (child.isInferred) {
-          let mrow = factory.mmlFactory.create('mrow', {}, TreeHelper.getChildren(child));
-          TreeHelper.copyAttributes(child, mrow);
+          let mrow = factory.mmlFactory.create('mrow', {}, NodeUtil.getChildren(child));
+          NodeUtil.copyAttributes(child, mrow);
           cleanChildren.push(mrow);
         } else {
           cleanChildren.push(child);
@@ -71,7 +71,7 @@ export class NodeFactory {
     if (text) {
       node.appendChild(text);
     }
-    TreeHelper.setProperties(node, def);
+    NodeUtil.setProperties(node, def);
     return node;
   };
 

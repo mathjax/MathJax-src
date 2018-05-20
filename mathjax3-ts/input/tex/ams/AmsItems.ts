@@ -33,7 +33,7 @@
 
 import {ArrayItem} from '../base/BaseItems.js';
 import ParseUtil from '../ParseUtil.js';
-import {TreeHelper} from '../TreeHelper.js';
+import NodeUtil from '../NodeUtil.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {StackItem, BaseItem} from '../StackItem.js';
@@ -97,14 +97,14 @@ export class MultlineItem extends ArrayItem {
     super.EndTable();
     if (this.table.length) {
       let m = this.table.length - 1, i, label = -1;
-      if (!TreeHelper.getAttribute(
-        TreeHelper.getChildren(this.table[0])[0], 'columnalign')) {
-        TreeHelper.setAttribute(TreeHelper.getChildren(this.table[0])[0],
+      if (!NodeUtil.getAttribute(
+        NodeUtil.getChildren(this.table[0])[0], 'columnalign')) {
+        NodeUtil.setAttribute(NodeUtil.getChildren(this.table[0])[0],
                                 'columnalign', TexConstant.Align.LEFT);
       }
-      if (!TreeHelper.getAttribute(
-        TreeHelper.getChildren(this.table[m])[0], 'columnalign')) {
-        TreeHelper.setAttribute(TreeHelper.getChildren(this.table[m])[0],
+      if (!NodeUtil.getAttribute(
+        NodeUtil.getChildren(this.table[m])[0], 'columnalign')) {
+        NodeUtil.setAttribute(NodeUtil.getChildren(this.table[m])[0],
                                 'columnalign', TexConstant.Align.RIGHT);
       }
       let tag = this.factory.configuration.tags.getTag();
@@ -112,8 +112,8 @@ export class MultlineItem extends ArrayItem {
         label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
         const mtr = this.table[label];
         const mlabel = this.factory.configuration.nodeFactory.create('node', 
-          'mlabeledtr', [tag].concat(TreeHelper.getChildren(mtr)), {});
-        TreeHelper.copyAttributes(mtr, mlabel);
+          'mlabeledtr', [tag].concat(NodeUtil.getChildren(mtr)), {});
+        NodeUtil.copyAttributes(mtr, mlabel);
         this.table[label] = mlabel;
       }
     }
