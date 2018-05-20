@@ -86,7 +86,6 @@ BaseMethods.Space = function(parser: TexParser, c: string) {};
  *  Handle ^, _, and '
  */
 BaseMethods.Superscript = function(parser: TexParser, c: string) {
-  TreeHelper.printMethod('Superscript');
   if (parser.GetNext().match(/\d/)) {
     // don't treat numbers as a unit
     parser.string = parser.string.substr(0, parser.i + 1) +
@@ -142,7 +141,6 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
 
 
 BaseMethods.Subscript = function(parser: TexParser, c: string) {
-  TreeHelper.printMethod('Subscript');
   if (parser.GetNext().match(/\d/)) {
     // don't treat numbers as a unit
     parser.string =
@@ -227,7 +225,6 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
  *  Handle comments
  */
 BaseMethods.Comment = function(parser: TexParser, c: string) {
-  TreeHelper.printMethod('Comment');
   while (parser.i < parser.string.length && parser.string.charAt(parser.i) !== '\n') {
     parser.i++;
   }
@@ -237,7 +234,6 @@ BaseMethods.Comment = function(parser: TexParser, c: string) {
  *  Handle hash marks outside of definitions
  */
 BaseMethods.Hash = function(parser: TexParser, c: string) {
-  TreeHelper.printMethod('Hash');
   // @test Hash Error
   throw new TexError(['CantUseHash1',
                       'You can\'t use \'macro parameter character #\' in math mode']);
@@ -252,23 +248,23 @@ BaseMethods.SetFont = function(parser: TexParser, name: string, font: string) {
   parser.stack.env['font'] = font;
 };
 
-BaseMethods.SetStyle = function(parser: TexParser, name: string, texStyle: string, style: string, level: string) {
-  TreeHelper.printMethod('SetStyle: ' + name + ' texStyle: ' + texStyle +
-                         ' style: ' + style + ' level: ' + level);
+BaseMethods.SetStyle = function(parser: TexParser, name: string,
+                                texStyle: string, style: string,
+                                level: string) {
   parser.stack.env['style'] = texStyle; parser.stack.env['level'] = level;
   parser.Push(
-    parser.itemFactory.create('style').setProperties({styles: {displaystyle: style, scriptlevel: level}}) );
-};
-BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
-  TreeHelper.printMethod('SetSize');
-  parser.stack.env['size'] = size;
-  parser.Push(
-    parser.itemFactory.create('style').setProperties({styles: {mathsize: size + 'em'}}) ); // convert to absolute?
+    parser.itemFactory.create('style').setProperties(
+      {styles: {displaystyle: style, scriptlevel: level}}) );
 };
 
-// Look at color extension!
+BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
+  parser.stack.env['size'] = size;
+  parser.Push(
+    parser.itemFactory.create('style').setProperties({styles: {mathsize: size + 'em'}}) );
+};
+
+// TODO: Will be replace by the color extension!
 BaseMethods.Color = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Color');
   // @test Color Frac
   const color = parser.GetArgument(name);
   const old = parser.stack.env['color'];
@@ -286,12 +282,11 @@ BaseMethods.Color = function(parser: TexParser, name: string) {
 BaseMethods.Spacer = function(parser: TexParser, name: string, space: string) {
   // @test Positive Spacing, Negative Spacing
   const node = parser.configuration.nodeFactory.create('node', 'mspace', [],
-                                     {width: space, scriptlevel: 0});
+                                                       {width: space, scriptlevel: 0});
   parser.Push(node);
 };
 
 BaseMethods.LeftRight = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('LeftRight');
   // @test Fenced, Fenced3
   const alpha = name.substr(1);
   parser.Push(
@@ -300,7 +295,6 @@ BaseMethods.LeftRight = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.Middle = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Middle');
   // @test Middle
   const delim = parser.GetDelimiter(name);
   let node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE});
@@ -317,7 +311,6 @@ BaseMethods.Middle = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
-  TreeHelper.printMethod('NamedFn');
   // @test Named Function
   if (!id) {
     id = name.substr(1);
@@ -326,7 +319,6 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
   parser.Push( parser.itemFactory.create('fn', mml) );
 };
 BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
-  TreeHelper.printMethod('NamedOp');
   // @test Limit
   if (!id) {
     id = name.substr(1);
@@ -342,7 +334,6 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
 };
 
 BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
-  TreeHelper.printMethod('Limits');
   // @test Limits
   let op = parser.stack.Prev(true);
   // Get the texclass for the core operator. Q: Davide?
@@ -375,7 +366,6 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
 };
 
 BaseMethods.Over = function(parser: TexParser, name: string, open: string, close: string) {
-  TreeHelper.printMethod('Over');
   // @test Over
   const mml = parser.itemFactory.create('over').setProperties({name: name}) ;
   if (open || close) {
@@ -399,7 +389,6 @@ BaseMethods.Over = function(parser: TexParser, name: string, open: string, close
 };
 
 BaseMethods.Frac = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Frac');
   // @test Frac
   const num = parser.ParseArg(name);
   const den = parser.ParseArg(name);
@@ -408,7 +397,6 @@ BaseMethods.Frac = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.Sqrt = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Sqrt');
   const n = parser.GetBrackets(name);
   let arg = parser.GetArgument(name);
   if (arg === '\\frac') {
@@ -428,7 +416,6 @@ BaseMethods.Sqrt = function(parser: TexParser, name: string) {
 
 // Utility
 function parseRoot(parser: TexParser, n: string) {
-  TreeHelper.printMethod('parseRoot');
   // @test General Root, Explicit Root
   const env = parser.stack.env;
   const inRoot = env['inRoot'];
@@ -454,7 +441,6 @@ function parseRoot(parser: TexParser, n: string) {
 
 
 BaseMethods.Root = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Root');
   const n = parser.GetUpTo(name, '\\of');
   const arg = parser.ParseArg(name);
   const node = parser.configuration.nodeFactory.create('node', 'mroot', [arg, parseRoot(parser, n)], {});
@@ -463,7 +449,6 @@ BaseMethods.Root = function(parser: TexParser, name: string) {
 
 
 BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
-  TreeHelper.printMethod('MoveRoot');
   // @test Tweaked Root
   if (!parser.stack.env['inRoot']) {
     // @test Misplaced Move Root
@@ -486,7 +471,6 @@ BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
 };
 
 BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, stretchy: boolean) {
-  TreeHelper.printMethod('Accent');
   // @test Vector
   const c = parser.ParseArg(name);
   const def: EnvList = {accent: true};
@@ -514,7 +498,6 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
 };
 
 BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean, noaccent: boolean) {
-  TreeHelper.printMethod('UnderOver');
   // @test Overline
   let base = parser.ParseArg(name);
   let symbol = TreeHelper.getForm(base);
@@ -547,7 +530,6 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
 };
 
 BaseMethods.Overset = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Overset');
   // @test Overset
   const top = parser.ParseArg(name), base = parser.ParseArg(name);
   if (TreeHelper.getAttribute(base, 'movablelimits') || TreeHelper.getProperty(base, 'movablelimits')) {
@@ -558,7 +540,6 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.Underset = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Underset');
   // @test Underset
   const bot = parser.ParseArg(name), base = parser.ParseArg(name);
   if (TreeHelper.getAttribute(base, 'movablelimits') || TreeHelper.getProperty(base, 'movablelimits')) {
@@ -570,7 +551,6 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) {
-  TreeHelper.printMethod('TeXAtom');
   let def: EnvList = {texClass: mclass};
   let mml: StackItem | MmlNode;
   let node: MmlNode;
@@ -600,7 +580,6 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
 
 
 BaseMethods.MmlToken = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('MmlToken');
   // @test Modulo
   const kind = parser.GetArgument(name);
   let attr = parser.GetBrackets(name, '').replace(/^\s+/, '');
@@ -649,17 +628,15 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
 
 
 BaseMethods.Strut = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Strut');
   // @test Strut
   // TODO: Do we still need this row as it is implicit?
   const row = parser.configuration.nodeFactory.create('node', 'mrow', [], {});
   const padded = parser.configuration.nodeFactory.create('node', 'mpadded', [row],
-                                       {height: '8.6pt', depth: '3pt', width: 0});
+                                                         {height: '8.6pt', depth: '3pt', width: 0});
   parser.Push(padded);
 };
 
 BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: string) {
-  TreeHelper.printMethod('Phantom');
   // @test Phantom
   let box = parser.configuration.nodeFactory.create('node', 'mphantom', [parser.ParseArg(name)], {});
   if (v || h) {
@@ -680,7 +657,6 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
 };
 
 BaseMethods.Smash = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Smash');
   // @test Smash, Smash Top, Smash Bottom
   const bt = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
   const smash = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {});
@@ -697,7 +673,6 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.Lap = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Lap');
   // @test Llap, Rlap
   const mml = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {width: 0});
   if (name === '\\llap') {
@@ -709,7 +684,6 @@ BaseMethods.Lap = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('RaiseLower');
   // @test Raise, Lower, Raise Negative, Lower Negative
   let h = parser.GetDimen(name);
   let item =
@@ -733,7 +707,6 @@ BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('MoveLeftRight');
   // @test Move Left, Move Right, Move Left Negative, Move Right Negative
   let h = parser.GetDimen(name);
   let nh = (h.charAt(0) === '-' ? h.slice(1) : '-' + h);
@@ -750,15 +723,13 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.Hskip = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Hskip');
   // @test Modulo
   const node = parser.configuration.nodeFactory.create('node', 'mspace', [],
-                                     {width: parser.GetDimen(name)});
+                                                       {width: parser.GetDimen(name)});
   parser.Push(node);
 };
 
 BaseMethods.Rule = function(parser: TexParser, name: string, style: string) {
-  TreeHelper.printMethod('Rule');
   // @test Rule 3D, Space 3D
   const w = parser.GetDimen(name),
   h = parser.GetDimen(name),
@@ -771,7 +742,6 @@ BaseMethods.Rule = function(parser: TexParser, name: string, style: string) {
   parser.Push(node);
 };
 BaseMethods.rule = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('rule');
   // @test Rule 2D
   const v = parser.GetBrackets(name),
   w = parser.GetDimen(name),
@@ -792,7 +762,6 @@ BaseMethods.rule = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.MakeBig = function(parser: TexParser, name: string, mclass: number, size: number) {
-  TreeHelper.printMethod('MakeBig');
   // @test Choose, Over With Delims, Above With Delims
   size *= P_HEIGHT;
   let sizeStr = String(size).replace(/(\.\d\d\d).+/, '$1') + 'em';
@@ -806,7 +775,6 @@ BaseMethods.MakeBig = function(parser: TexParser, name: string, mclass: number, 
 };
 
 BaseMethods.BuildRel = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('BuildRel');
   // @test BuildRel, BuildRel Expression
   const top = parser.ParseUpTo(name, '\\over');
   const bot = parser.ParseArg(name);
@@ -820,13 +788,11 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.HBox = function(parser: TexParser, name: string, style: string) {
-  TreeHelper.printMethod('HBox');
   // @test Hbox
   parser.PushAll(ParseUtil.internalMath(parser, parser.GetArgument(name), style));
 };
 
 BaseMethods.FBox = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('FBox');
   // @test Fbox
   const internal = ParseUtil.internalMath(parser, parser.GetArgument(name));
   const node = parser.configuration.nodeFactory.create('node', 'menclose', internal, {notation: 'box'});
@@ -834,14 +800,12 @@ BaseMethods.FBox = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.Not = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Not');
   // @test Negation Simple, Negation Complex, Negation Explicit,
   //       Negation Large
   parser.Push( parser.itemFactory.create('not') );
 };
 
 BaseMethods.Dots = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Dots');
   // @test Operator Dots
   const ldotsEntity = TreeHelper.createEntity('2026');
   const cdotsEntity = TreeHelper.createEntity('22EF');
@@ -855,10 +819,9 @@ BaseMethods.Dots = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.Matrix = function(parser: TexParser, name: string,
-                       open: string, close: string, align: string,
-                       spacing: string, vspacing: string, style: string,
-                       cases: boolean, numbered: boolean) {
-  TreeHelper.printMethod('Matrix');
+                              open: string, close: string, align: string,
+                              spacing: string, vspacing: string, style: string,
+                              cases: boolean, numbered: boolean) {
   const c = parser.GetNext();
   if (c === '') {
     // @test Matrix Error
@@ -904,7 +867,6 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
 };
 
 BaseMethods.Entry = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Entry');
   // @test Label, Array, Cross Product Formula
   parser.Push(
     parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}) );
@@ -983,14 +945,12 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.Cr = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('Cr');
   // @test Cr Linebreak, Misplaced Cr
   parser.Push(
     parser.itemFactory.create('cell').setProperties({isCR: true, name: name}) );
 };
 
 BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('CrLaTeX');
   let n: string;
   if (parser.string.charAt(parser.i) === '[') {
     let dim = parser.GetBrackets(name, '');
@@ -1037,7 +997,6 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
 };
 
 BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
-  TreeHelper.printMethod('HLine');
   if (style == null) {
     style = 'solid';
   }
@@ -1058,7 +1017,6 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
 };
 
 BaseMethods.HFill = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('HFill');
   const top = parser.stack.Top();
   if (top instanceof sitem.ArrayItem) {
     top.hfill.push(top.Size());
@@ -1076,7 +1034,6 @@ BaseMethods.HFill = function(parser: TexParser, name: string) {
 let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 
 BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
-  TreeHelper.printMethod('BeginEnd');
   // @test Array1, Array2, Array Test
   let env = parser.GetArgument(name);
   const regexp = /^\\end\\/;
@@ -1102,10 +1059,9 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
 
 
 BaseMethods.Array = function(parser: TexParser, begin: StackItem,
-                      open: string, close: string, align: string,
-                      spacing: string, vspacing: string, style: string,
-                      raggedHeight: boolean) {
-  TreeHelper.printMethod('Array');
+                             open: string, close: string, align: string,
+                             spacing: string, vspacing: string, style: string,
+                             raggedHeight: boolean) {
   if (!align) {
     // @test Array Single
     align = parser.GetArgument('\\begin{' + begin.getName() + '}');
@@ -1165,7 +1121,6 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
 
 
 BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
-  TreeHelper.printMethod('AlignedArray');
   // @test Array1, Array2, Array Test
   const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
   let item = BaseMethods.Array(parser, begin);
@@ -1184,8 +1139,8 @@ BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: 
 
 
 BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
-                                       numbered: boolean, taggable: boolean,
-                                       align: string, spacing: string, style: string) {
+                                numbered: boolean, taggable: boolean,
+                                align: string, spacing: string, style: string) {
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
   parser.Push(begin);
   if (taggable) {
@@ -1276,10 +1231,9 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
  * Macros
  */
 BaseMethods.Macro = function(parser: TexParser, name: string,
-                      macro: string, argcount: number,
-                      // TODO: The final argument seems never to be used.
-                      def?: string) {
-  TreeHelper.printMethod('Macro');
+                             macro: string, argcount: number,
+                             // TODO: The final argument seems never to be used.
+                             def?: string) {
   if (argcount) {
     const args: string[] = [];
     if (def != null) {

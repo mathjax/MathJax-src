@@ -107,7 +107,6 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public Push(...nodes: MmlNode[]) {
-    TreeHelper.printMethod('StackItem Push arguments: ' + this._nodes + ' arguments: ');
     this._nodes.push.apply(this._nodes, nodes);
   }
 
@@ -185,7 +184,6 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public toMml(inferred?: boolean, forceRow?: boolean) {
-    TreeHelper.printMethod('toMml');
     if (inferred == null) {
       inferred = true;
     }
@@ -313,7 +311,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @override
    */
   public checkItem(item: StackItem): CheckType {
-    TreeHelper.printMethod('Checkitem base for ' + item.kind + ' with ' + item);
     if (item.isKind('over') && this.isOpen) {
       item.setProperty('num', this.toMml(false));
       this.Clear();

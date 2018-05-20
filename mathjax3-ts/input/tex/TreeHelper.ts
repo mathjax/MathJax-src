@@ -16,9 +16,6 @@
  */
 
 
-// Some helper functionality for generating nodes. This should be eventually
-// dissolved.
-
 import {TextNode, MmlNode, AbstractMmlNode, AbstractMmlEmptyNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
@@ -156,12 +153,6 @@ export namespace TreeHelper {
 
   export function getCoreMO(node: MmlNode): MmlNode  {
     return node.coreMO();
-  };
-
-  export function printMethod(text: string): void  {
-    if (methodOut) {
-      console.log('In ' + text);
-    }
   };
 
   export function isNode(item: any): boolean  {

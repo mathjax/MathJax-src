@@ -75,8 +75,7 @@ export class StartItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem start');
-    if (item.isKind('stop')) {
+        if (item.isKind('stop')) {
       let node = this.toMml();
       if (!this.global.isInner) {
         node = this.factory.configuration.tags.finalize(node, this.env);
@@ -138,8 +137,7 @@ export class OpenItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem open');
-    if (item.isKind('close')) {
+        if (item.isKind('close')) {
       // @test PrimeSup
       let mml = this.toMml();
       const node = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
@@ -184,8 +182,7 @@ export class PrimeItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem prime');
-    let [top0, top1] = this.TopN(2);
+        let [top0, top1] = this.TopN(2);
     if (!TreeHelper.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
       const node = this.factory.configuration.nodeFactory.create('node', 'msup', [top0, top1], {});
@@ -225,8 +222,7 @@ export class SubsupItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem subsup');
-    if (item.isKind('open') || item.isKind('left')) {
+        if (item.isKind('open') || item.isKind('left')) {
       return true;
     }
     const top = this.Top;
@@ -289,8 +285,7 @@ export class OverItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem over');
-    if (item.isKind('over')) {
+        if (item.isKind('over')) {
       // @test Double Over
       throw new TexError(
         ['AmbiguousUseOf', 'Ambiguous use of %1', item.getName()]);
@@ -361,8 +356,7 @@ export class LeftItem extends BaseItem {
    */
   public checkItem(item: StackItem) {
     // @test Missing Right
-    TreeHelper.printMethod('Checkitem left');
-    if (item.isKind('right')) {
+        if (item.isKind('right')) {
       return this.factory.create('mml', ParseUtil.fenced(
         this.factory.configuration,
         this.getProperty('delim') as string, this.toMml(),
@@ -471,8 +465,7 @@ export class StyleItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem style');
-    if (!item.isClose) {
+        if (!item.isClose) {
       return super.checkItem(item);
     }
     // @test Style
@@ -496,8 +489,7 @@ export class PositionItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem position');
-    if (item.isClose) {
+        if (item.isClose) {
       throw new TexError(['MissingBoxFor', 'Missing box for %1', this.getName()]);
     }
     if (item.isFinal) {
@@ -571,8 +563,7 @@ export class FnItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem fn');
-    const top = this.Top;
+        const top = this.Top;
     if (top) {
       if (item.isOpen) {
         // @test Fn Stretchy
@@ -625,8 +616,7 @@ export class NotItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem not');
-    let mml: TextNode | MmlNode;
+        let mml: TextNode | MmlNode;
     let c: string;
     let textNode: TextNode;
     if (item.isKind('open') || item.isKind('left')) {
@@ -675,8 +665,7 @@ export class DotsItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem dots');
-    if (item.isKind('open') || item.isKind('left')) {
+        if (item.isKind('open') || item.isKind('left')) {
       return true;
     }
     let dots = this.getProperty('ldots') as MmlNode;
@@ -722,8 +711,7 @@ export class ArrayItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    TreeHelper.printMethod('Checkitem array');
-    // @test Array Single
+        // @test Array Single
     if (item.isClose && !item.isKind('over')) {
       // @test Array Single
       if (item.getProperty('isEntry')) {
@@ -891,8 +879,7 @@ export class EqnArrayItem extends ArrayItem {
    * @override
    */
   public EndEntry() {
-    TreeHelper.printMethod('AMS-EndEntry');
-    // @test Cubic Binomial
+        // @test Cubic Binomial
     if (this.row.length) {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
@@ -905,8 +892,7 @@ export class EqnArrayItem extends ArrayItem {
    * @override
    */
   public EndRow() {
-    TreeHelper.printMethod('AMS-EndRow');
-    // @test Cubic Binomial
+        // @test Cubic Binomial
     let mtr = 'mtr';
     let tag = this.factory.configuration.tags.getTag();
     if (tag) {
@@ -922,7 +908,6 @@ export class EqnArrayItem extends ArrayItem {
    * @override
    */
   public EndTable() {
-    TreeHelper.printMethod('AMS-EndTable');
     // @test Cubic Binomial
     super.EndTable();
     this.factory.configuration.tags.end();

@@ -64,7 +64,6 @@ export class MultlineItem extends ArrayItem {
    * @override
    */
   public EndEntry() {
-    TreeHelper.printMethod('AMS-EndEntry');
     if (this.table.length) {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
@@ -80,8 +79,7 @@ export class MultlineItem extends ArrayItem {
    * @override
    */
   public EndRow() {
-    TreeHelper.printMethod('AMS-EndRow');
-    if (this.row.length !== 1) {
+        if (this.row.length !== 1) {
       throw new TexError(
         ['MultlineRowsOneCol',
          'The rows within the %1 environment must have exactly one column',
@@ -96,7 +94,6 @@ export class MultlineItem extends ArrayItem {
    * @override
    */
   public EndTable() {
-    TreeHelper.printMethod('AMS-EndTable');
     super.EndTable();
     if (this.table.length) {
       let m = this.table.length - 1, i, label = -1;

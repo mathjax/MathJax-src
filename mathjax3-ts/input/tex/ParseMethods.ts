@@ -37,7 +37,6 @@ namespace ParseMethods {
    *  Handle a variable (a single letter)
    */
   export function variable(parser: TexParser, c: string) {
-    TreeHelper.printMethod('Variable');
     const def: sitem.EnvList = {};
     if (parser.stack.env['font']) {
       // @test Identifier Font
@@ -53,7 +52,6 @@ namespace ParseMethods {
    *  Determine the extent of a number (pattern may need work)
    */
   export function digit(parser: TexParser, c: string) {
-    TreeHelper.printMethod('Number');
     let mml: MmlNode;
     const n = parser.string.slice(parser.i - 1).match(/^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
     const def: sitem.EnvList = {};
@@ -76,7 +74,6 @@ namespace ParseMethods {
    *  Lookup a control-sequence and process it
    */
   export function controlSequence(parser: TexParser, c: string) {
-    TreeHelper.printMethod('ControlSequence');
     const name = parser.GetCS();
     parser.parse('macro', [parser, name]);
   };
@@ -90,8 +87,7 @@ namespace ParseMethods {
   //  Handle normal mathchar (as an mi)
   //
   export function mathchar0mi(parser: TexParser, mchar: Symbol) {
-    TreeHelper.printMethod('csMathchar0mi');
-    const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
+        const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
     const node = parser.configuration.nodeFactory.create('token', 'mi', def, mchar.char);
     parser.Push(node);
@@ -101,8 +97,7 @@ namespace ParseMethods {
   //  Handle normal mathchar (as an mo)
   //
   export function mathchar0mo(parser: TexParser, mchar: Symbol) {
-    TreeHelper.printMethod('csMathchar0mo');
-    const def = mchar.attributes || {};
+        const def = mchar.attributes || {};
     def['stretchy'] = false;
     // @test Large Set
     const node = parser.configuration.nodeFactory.create('token', 'mo', def, mchar.char);
@@ -115,8 +110,7 @@ namespace ParseMethods {
   //  Handle mathchar in current family
   //
   export function mathchar7(parser: TexParser, mchar: Symbol) {
-    TreeHelper.printMethod('csMathchar7');
-    const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
+        const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
     if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
       def['mathvariant'] = parser.stack.env['font'];
@@ -130,7 +124,6 @@ namespace ParseMethods {
   //  Handle delimiter
   //
   export function delimiter(parser: TexParser, delim: Symbol) {
-    TreeHelper.printMethod('csDelimiter');
     let def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({fence: false, stretchy: false}, def);
@@ -139,7 +132,6 @@ namespace ParseMethods {
   };
 
   export function environment(parser: TexParser, env: string, func: Function, args: any[]) {
-    TreeHelper.printMethod('BeginEnvironment');
     const end = args[0];
     let mml = parser.itemFactory.create('begin').setProperties({name: env, end: end});
     mml = func.apply(null, [parser, mml].concat(args.slice(1)));

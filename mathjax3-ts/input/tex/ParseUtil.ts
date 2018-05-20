@@ -103,7 +103,6 @@ namespace ParseUtil {
    *  Create an mrow that has stretchy delimiters at either end, as needed
    */
   export function fenced(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
-    TreeHelper.printMethod('fenced');
     // @test Fenced, Fenced3
     let mrow = configuration.nodeFactory.create('node', 
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.INNER});
@@ -135,7 +134,6 @@ namespace ParseUtil {
    */
   export function fixedFence(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
     // @test Choose, Over With Delims, Above with Delims
-    TreeHelper.printMethod('fixedFence');
     let mrow = configuration.nodeFactory.create('node', 
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
     if (open) {
@@ -154,7 +152,6 @@ namespace ParseUtil {
 
 
   export function mathPalette(configuration: ParseOptions, fence: string, side: string) {
-    TreeHelper.printMethod('mathPalette');
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
@@ -171,7 +168,6 @@ namespace ParseUtil {
    *  be infix.
    */
   export function fixInitialMO(configuration: ParseOptions, nodes: MmlNode[]) {
-    TreeHelper.printMethod('AMS-fixInitialMO');
     for (let i = 0, m = nodes.length; i < m; i++) {
       let child = nodes[i];
       if (child && (!TreeHelper.isType(child, 'mspace') &&
@@ -189,7 +185,6 @@ namespace ParseUtil {
 
 
   export function mi2mo(parser: TexParser, mi: MmlNode) {
-    TreeHelper.printMethod('mi2mo');
     // @test Mathop Sub, Mathop Super
     const mo = parser.configuration.nodeFactory.create('node', 'mo', [], {});
     TreeHelper.copyChildren(mi, mo);
@@ -208,7 +203,6 @@ namespace ParseUtil {
    */
   // TODO: Write tests!
   export function internalMath(parser: TexParser, text: string, level?: number|string) {
-    TreeHelper.printMethod('InternalMath (Old Parser Object)');
     let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
     if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
@@ -303,7 +297,6 @@ namespace ParseUtil {
 
   function internalText(parser: TexParser, text: string, def: EnvList) {
     // @test Label, Fbox, Hbox
-    TreeHelper.printMethod('InternalText (Old Parser Object)');
     text = text.replace(/^\s+/, NBSP).replace(/\s+$/, NBSP);
     let textNode = parser.configuration.nodeFactory.create('text', text);
     return parser.configuration.nodeFactory.create('node', 'mtext', [], def, textNode);
@@ -315,7 +308,6 @@ namespace ParseUtil {
    * @return {string} The string with leading and trailing whitespace removed.
    */
   export function trimSpaces(text: string): string {
-    TreeHelper.printMethod('trimSpaces (Old Parser Object)');
     if (typeof(text) !== 'string') {
       return text;
     }
@@ -330,7 +322,6 @@ namespace ParseUtil {
    * Sets alignment in array definitions.
    */
   export function setArrayAlign(array: ArrayItem, align: string) {
-    TreeHelper.printMethod('setArrayAlign');
     // @test Array1, Array2, Array Test
     align = ParseUtil.trimSpaces(align || '');
     if (align === 't') {
@@ -352,7 +343,6 @@ namespace ParseUtil {
    *  Replace macro parameters with their values
    */
   export function substituteArgs(args: string[], str: string) {
-    TreeHelper.printMethod('SubstituteArgs');
     let text = '';
     let newstring = '';
     let i = 0;
@@ -387,7 +377,6 @@ namespace ParseUtil {
    *  could accidentally be continued into the following text.
    */
   export function addArgs(s1: string, s2: string) {
-    TreeHelper.printMethod('AddArgs');
     if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
       s1 += ' ';
     }
