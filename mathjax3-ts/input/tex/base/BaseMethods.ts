@@ -220,7 +220,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
   const node = parser.configuration.nodeFactory.create('token', 'mo', {}, sup);
   parser.Push(
-    parser.itemFactory.create('prime', base, parser.mmlToken(node)) );
+    parser.itemFactory.create('prime', base, node) );
 };
 
 /*
@@ -323,7 +323,7 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
     id = name.substr(1);
   }
   const mml = parser.configuration.nodeFactory.create('token', 'mi', {texClass: TEXCLASS.OP}, id);
-  parser.Push( parser.itemFactory.create('fn', parser.mmlToken(mml)) );
+  parser.Push( parser.itemFactory.create('fn', mml) );
 };
 BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
   TreeHelper.printMethod('NamedOp');
@@ -338,7 +338,7 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
     form: TexConstant.Form.PREFIX,
     texClass: TEXCLASS.OP
   }, id);
-  parser.Push(parser.mmlToken(mml));
+  parser.Push(mml);
 };
 
 BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
@@ -496,7 +496,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   }
   const entity = TreeHelper.createEntity(accent);
   const moNode = parser.configuration.nodeFactory.create('token', 'mo', def, entity);
-  const mml = parser.mmlToken(moNode);
+  const mml = moNode;
   TreeHelper.setAttribute(mml, 'stretchy', stretchy ? true : false);
   // @test Vector Op, Vector
   const mo = (TreeHelper.isEmbellished(c) ? TreeHelper.getCoreMO(c) : c);
@@ -535,7 +535,7 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   mo = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
 
   TreeHelper.setData(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
-                     parser.mmlToken(mo));
+                     mo);
   let node: MmlNode = mml;
   if (stack) {
     // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
@@ -583,7 +583,7 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
       // @test Mathop
       def['mathvariant'] = TexConstant.Variant.NORMAL;
       node = parser.configuration.nodeFactory.create('token', 'mi', def, match[1]);
-      mml = parser.itemFactory.create('fn', parser.mmlToken(node));
+      mml = parser.itemFactory.create('fn', node);
     } else {
       // @test Mathop Cal
       parsed = new TexParser(arg, parser.stack.env, parser.configuration).mml();
@@ -644,7 +644,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   const textNode = parser.configuration.nodeFactory.create('text', text);
   node.appendChild(textNode);
   TreeHelper.setProperties(node, def);
-  parser.Push(parser.mmlToken(node));
+  parser.Push(node);
 };
 
 
@@ -849,8 +849,8 @@ BaseMethods.Dots = function(parser: TexParser, name: string) {
   const cdots = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: false}, cdotsEntity);
   parser.Push(
     parser.itemFactory.create('dots').setProperties({
-      ldots: parser.mmlToken(ldots),
-      cdots: parser.mmlToken(cdots)
+      ldots: ldots,
+      cdots: cdots
     }) );
 };
 

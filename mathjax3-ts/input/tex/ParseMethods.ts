@@ -45,7 +45,7 @@ namespace ParseMethods {
     }
     // @test Identifier
     const node = parser.configuration.nodeFactory.create('token', 'mi', def, c);
-    parser.Push(parser.mmlToken(node));
+    parser.Push(node);
   };
 
 
@@ -69,7 +69,7 @@ namespace ParseMethods {
       // @test Decimal
       mml = parser.configuration.nodeFactory.create('token', 'mo', def, c);
     }
-    parser.Push(parser.mmlToken(mml));
+    parser.Push(mml);
   };
 
   /**
@@ -94,7 +94,7 @@ namespace ParseMethods {
     const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
     const node = parser.configuration.nodeFactory.create('token', 'mi', def, mchar.char);
-    parser.Push(parser.mmlToken(node));
+    parser.Push(node);
   };
 
   //
@@ -108,7 +108,7 @@ namespace ParseMethods {
     const node = parser.configuration.nodeFactory.create('token', 'mo', def, mchar.char);
     TreeHelper.setProperty(node, 'fixStretchy', true);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
-    parser.Push(parser.mmlToken(node));
+    parser.Push(node);
   };
 
   //
@@ -123,7 +123,7 @@ namespace ParseMethods {
     }
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
     const node = parser.configuration.nodeFactory.create('token', 'mi', def, mchar.char);
-    parser.Push(parser.mmlToken(node));
+    parser.Push(node);
   };
 
   //
@@ -135,7 +135,7 @@ namespace ParseMethods {
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({fence: false, stretchy: false}, def);
     const node = parser.configuration.nodeFactory.create('token', 'mo', def, delim.char);
-    parser.Push(parser.mmlToken(node));
+    parser.Push(node);
   };
 
   export function environment(parser: TexParser, env: string, func: Function, args: any[]) {

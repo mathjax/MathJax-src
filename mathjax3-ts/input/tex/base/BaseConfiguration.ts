@@ -61,7 +61,7 @@ function Other(parser: TexParser, char: string) {
   let mo = parser.configuration.nodeFactory.create(
     'token', 'mo', def, (remap ? remap.char : char));
   TreeHelper.setProperty(mo, 'fixStretchy', true);
-  parser.Push(parser.mmlToken(mo));
+  parser.Push(mo);
 };
 
 

@@ -203,12 +203,6 @@ export default class TexParser {
     return node;
   }
 
-  // VS: Forget this for now!
-  public mmlToken(token: MmlNode): MmlNode {
-    return token;
-  } // used by boldsymbol extension
-
-
   /************************************************************************/
   /*
    *   String handling routines
