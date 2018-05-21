@@ -46,6 +46,96 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+
+parserTest.runTest(
+  'Simple Tag', 'a\\tag{0}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mtable",
+         "texClass": 0,
+         "attributes": {"displaystyle": true},
+         "inherited": {"scriptlevel": 0},
+         "properties": {"useHeight": 1},
+         "childNodes": [
+           {"kind": "mlabeledtr",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"columnalign": "center",
+                          "rowalign": "baseline",
+                          "displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mtd",
+               "texClass": null,
+               "attributes": {"id": "mjx-eqn-0"},
+               "inherited": {"columnalign": "right",
+                             "rowalign": "baseline",
+                             "displaystyle": true,
+                             "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                                "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "mtext",
+                     "texClass": 0,
+                          "attributes": {},
+                          "inherited": {"displaystyle": true,
+                            "scriptlevel": 0},
+                          "properties": {},
+                          "childNodes": [
+                            {"kind": "text",
+                              "text": "(0)"}],
+                          "isSpacelike": true}],
+                      "isInferred": true,
+                      "isSpacelike": true}]},
+                {"kind": "mtd",
+                  "texClass": null,
+                  "attributes": {},
+                  "inherited": {"columnalign": "center",
+                    "rowalign": "baseline",
+                    "displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "mrow",
+                      "texClass": 0,
+                      "attributes": {},
+                      "inherited": {"displaystyle": true,
+                        "scriptlevel": 0},
+                      "properties": {},
+                      "childNodes": [
+                        {"kind": "mi",
+                          "texClass": 0,
+                          "attributes": {},
+                          "inherited": {"displaystyle": true,
+                            "scriptlevel": 0,
+                            "mathvariant": "italic"},
+                          "properties": {},
+                          "childNodes": [
+                            {"kind": "text",
+                              "text": "a"}]}],
+                      "isInferred": true}]}]}]}],
+      "isInferred": true}]}
+);
+
 parserTest.runTest(
   'Align', '\\begin{align}a\\end{align}',
   {"kind": "math",
