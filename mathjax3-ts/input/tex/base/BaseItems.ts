@@ -75,7 +75,7 @@ export class StartItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        if (item.isKind('stop')) {
+    if (item.isKind('stop')) {
       let node = this.toMml();
       if (!this.global.isInner) {
         node = this.factory.configuration.tags.finalize(node, this.env);

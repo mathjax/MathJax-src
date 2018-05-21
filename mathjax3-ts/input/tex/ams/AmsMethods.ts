@@ -312,7 +312,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
  * tag is 
  */
 AmsMethods.HandleTag = function(parser: TexParser, name: string) {
-  if (!parser.tags.currentTag.taggable) {
+  if (!parser.tags.currentTag.taggable && parser.tags.env) {
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',
                         name, parser.tags.env]);
