@@ -45,6 +45,9 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
     public static useIC: boolean = true;
 
     public static styles: StyleList = {
+        'mjx-over': {
+            'text-align': 'left'
+        },
         'mjx-munder:not([limits="false"])': {
             display: 'inline-table',
         },
