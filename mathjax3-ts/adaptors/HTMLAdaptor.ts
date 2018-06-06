@@ -231,20 +231,6 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /*
      * @override
      */
-    public getStatus(doc: D) {
-        return doc.title;
-    }
-
-    /*
-     * @override
-     */
-    public setStatus(doc: D, status: string) {
-        doc.title = status;
-    }
-
-    /*
-     * @override
-     */
     public tags(node: N, name: string, ns: string = null) {
         let nodes = (ns ? node.getElementsByTagNameNS(ns, name) : node.getElementsByTagName(name));
         return Array.from(nodes as N[]) as N[];

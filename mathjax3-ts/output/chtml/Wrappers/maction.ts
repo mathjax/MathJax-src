@@ -75,6 +75,18 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
         },
         'mjx-maction[toggle]': {
             cursor: 'pointer'
+        },
+        'mjx-status': {
+            display: 'block',
+            position: 'fixed',
+            left: '1em',
+            bottom: '1em',
+            'min-width': '25%',
+            padding: '.2em .4em',
+            border: '1px solid #888',
+            'font-size': '90%',
+            'background-color': '#F8F8F8',
+            color: 'black'
         }
     };
 
@@ -171,18 +183,18 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
                 const text = (tip.node as TextNode).getText();
                 adaptor.setAttribute(node.chtml, 'statusline', text);
                 //
-                // Set up event handlers to change the document title
+                // Set up event handlers to change the status window
                 //
                 node.setEventHandler('mouseover', (event: Event) => {
                     if (data.status === null) {
-                        data.status = adaptor.getStatus(adaptor.document);
-                        adaptor.setStatus(adaptor.document, text);
+                        const body = adaptor.body(adaptor.document);
+                        data.status = adaptor.append(body, node.html('mjx-status', {}, [node.text(text)]));
                     }
                     event.stopPropagation();
                 });
                 node.setEventHandler('mouseout', (event: Event) => {
                     if (data.status) {
-                        adaptor.setStatus(adaptor.document, data.status);
+                        adaptor.remove(data.status);
                         data.status = null;
                     }
                     event.stopPropagation();
