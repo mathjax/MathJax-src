@@ -62,9 +62,6 @@ export default class TexParser {
    */
   public i: number = 0;
 
-  private input: string = '';
-  private remainder: string = '';
-
   /**
    * @constructor
    * @param {string} _string The string to parse.

@@ -24,7 +24,7 @@
 
 import * as sitem from './BaseItems.js';
 import {StackItem, EnvList} from '../StackItem.js';
-import {Symbol} from '../Symbol.js';
+import {Symbol, Macro} from '../Symbol.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
@@ -1035,17 +1035,29 @@ let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 
 BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   // @test Array1, Array2, Array Test
+  let isEnd = false;
   let env = parser.GetArgument(name);
+  console.log('In BeginEnd:' + name);
+  console.log(env);
+  console.log(parser.stack.Top().kind);
+  console.log(parser.string);
+  console.log(parser.i);
+  console.log(parser.configuration);
   const regexp = /^\\end\\/;
   if (env.match(regexp)) {
+    console.log('In end here');
+    isEnd = true;
     env = env.substr(5);
   } // special \end{} for \newenvironment environments
+  let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
   if (env.match(/\\/i)) {
-    throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'',env]);
+    throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'', env]);
   }
   if (name === '\\end') {
-    const mml =
-      parser.itemFactory.create('end').setProperties({name: env}) ;
+    const mml = // macro.args[0] ?
+      // parser.itemFactory.create(macro.args[0]).setProperties(
+      //   {name: env, args: macro.args.slice(1)}) :
+      parser.itemFactory.create('end').setProperties({name: env});
     parser.Push(mml);
   } else {
     if (++parser.macroCount > MAXMACROS) {

@@ -68,7 +68,7 @@ export default class ParseOptions {
   public nodeFactory: NodeFactory = new NodeFactory();
   public tags: Tags;
 
-  private parsers: TexParser[] = [];
+  public parsers: TexParser[] = [];
   
   public constructor(setting: {[key: string]: (string|boolean)} = {}) {
     this.options = new Map(DefaultOptions);

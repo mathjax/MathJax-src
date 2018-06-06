@@ -243,6 +243,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
   constructor(protected factory: StackItemFactory, ...nodes: MmlNode[]) {
     super(nodes);
+    console.log('In item: ' + this.kind);
     if (this.isOpen) {
       this._env = {};
     }
@@ -310,6 +311,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @override
    */
   public checkItem(item: StackItem): CheckType {
+    console.log('In baseitem');
+    console.log(item);
     if (item.isKind('over') && this.isOpen) {
       item.setProperty('num', this.toMml(false));
       this.Clear();

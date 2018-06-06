@@ -76,7 +76,7 @@ export function rewriteBoldTokens(node: MmlNode, options: ParseOptions)  {
       NodeUtil.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
     } else {
       NodeUtil.setProperties(node,
-                               {mathvariant: BOLDVARIANT[variant] || variant});
+                             {mathvariant: BOLDVARIANT[variant] || variant});
     }
     NodeUtil.removeProperties(node, 'fixBold')
   }

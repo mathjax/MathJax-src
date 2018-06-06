@@ -423,7 +423,7 @@ export class BeginItem extends BaseItem {
       if (!this.getProperty('end')) {
         return this.factory.create('mml', this.toMml());
       }
-      return false;
+      return false;  // TODO: This case could probably go!
     }
     if (item.isKind('stop')) {
       throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
@@ -465,7 +465,7 @@ export class StyleItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        if (!item.isClose) {
+    if (!item.isClose) {
       return super.checkItem(item);
     }
     // @test Style
