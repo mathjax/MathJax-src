@@ -25,7 +25,7 @@ import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
     from '../../core/MmlTree/MmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
-import {Entities} from '../../util/Entities.js';
+import * as Entities from '../../util/Entities.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 
 /********************************************************************/
@@ -46,7 +46,6 @@ export class MathMLCompile<N, T, D> {
      */
     public static OPTIONS: OptionList = {
         MmlFactory: null,                   // The MmlFactory to use (defaults to a new MmlFactory)
-        Entities: null,                     // The entity translator (defaults to a new Entities)
         fixMisplacedChildren: true,         // True if we want to use heuristics to try to fix
                                             //   problems with the tree based on HTML not handling
                                             //   self-closing tags properly
@@ -64,16 +63,15 @@ export class MathMLCompile<N, T, D> {
     public adaptor: DOMAdaptor<N, T, D>;
 
     /*
-     *  The instances of the MmlFactory and Entities objects,
-     *  and the options (the defaults with the user options merged in)
+     *  The instance of the MmlFactory object and
+     *  the options (the defaults with the user options merged in)
      */
     protected factory: MmlFactory;
-    protected entities: Entities;
     protected options: OptionList;
 
     /*
      *  Merge the user options into the defaults, and save them
-     *  Create the MmlFactory and Entities objects
+     *  Create the MmlFactory object
      *
      * @param {OptionList} options  The options controlling the conversion
      */
@@ -84,7 +82,6 @@ export class MathMLCompile<N, T, D> {
             this.options['verify'] = userOptions(defaultOptions({}, Class.VERIFY), this.options['verify']);
         }
         this.factory = this.options['MmlFactory'] || new MmlFactory();
-        this.entities = this.options['Entities'] || new Entities();
     }
 
     /*
@@ -209,7 +206,7 @@ export class MathMLCompile<N, T, D> {
         let text = this.adaptor.value(child);
         if ((mml.isToken || mml.getProperty('isChars')) && mml.arity) {
             if (mml.isToken) {
-                text = this.entities.translate(text);
+                text = Entities.translate(text);
                 text = this.trimSpace(text);
             }
             mml.appendChild((this.factory.create('text') as TextNode).setText(text));
@@ -284,8 +281,7 @@ export class MathMLCompile<N, T, D> {
      */
     protected trimSpace(text: string) {
         return text.replace(/[\t\n\r]/g, ' ')    // whitespace to spaces
-                   .replace(/^ +/, '')           // initial whitespace
-                   .replace(/ +$/, '')           // trailing whitespace
+                   .trim()                       // initial and trailing whitespace
                    .replace(/  +/g, ' ');        // internal multiple whitespace
     }
 
