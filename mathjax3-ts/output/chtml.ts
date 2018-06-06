@@ -24,7 +24,7 @@
 import {AbstractOutputJax} from '../core/OutputJax.js';
 import {OptionList, separateOptions} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
-import {MathItem} from '../core/MathItem.js';
+import {MathItem, AbstractMathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
@@ -32,6 +32,7 @@ import {FontData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import {CssStyles} from './chtml/CssStyles.js';
 import {percent} from '../util/lengths.js';
+import {FunctionList} from '../util/FunctionList.js';
 import {BBox} from './chtml/BBox.js';
 
 
@@ -117,7 +118,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
         this.nodeMap = new Map<MmlNode, CHTMLWrapper<N, T, D>>();
         this.toCHTML(math.root, node);
         this.nodeMap = null;
-        return node;
+        return this.executeFilters(this.postFilters, math, node);
     }
 
     /*
@@ -148,7 +149,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
      */
     public getMetrics(html: MathDocument<N, T, D>) {
         for (const math of html.math) {
-            math.setMetrics(16, 8, 1000000, 1000000, 1);
+            math.setMetrics(16, 8, 80 * 16, 1000000, 1);
         }
     }
 
