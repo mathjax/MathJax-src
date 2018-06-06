@@ -87,7 +87,7 @@ namespace ParseMethods {
   //  Handle normal mathchar (as an mi)
   //
   export function mathchar0mi(parser: TexParser, mchar: Symbol) {
-        const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
+    const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
     const node = parser.configuration.nodeFactory.create('token', 'mi', def, mchar.char);
     parser.Push(node);
@@ -97,7 +97,7 @@ namespace ParseMethods {
   //  Handle normal mathchar (as an mo)
   //
   export function mathchar0mo(parser: TexParser, mchar: Symbol) {
-        const def = mchar.attributes || {};
+    const def = mchar.attributes || {};
     def['stretchy'] = false;
     // @test Large Set
     const node = parser.configuration.nodeFactory.create('token', 'mo', def, mchar.char);

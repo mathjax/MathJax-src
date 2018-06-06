@@ -124,7 +124,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
   // TODO: Use a better dedicated handler.
   //       What about already defined commands?
-  (MapHandler.getInstance().getMap('new-Macro') as CommandMap).
+  (MapHandler.getInstance().getMap('new-Command') as CommandMap).
     add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
 };
 

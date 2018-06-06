@@ -90,15 +90,15 @@ export class MapHandler {
 
 // Defining empty handlers for declaring new commands, macros, etc.
 // TODO: Make sure multiple runs do not interfere!
-new sm.MacroMap('new-Character', {}, {});
+new sm.MacroMap('new-Macro', {}, {});
 new sm.DelimiterMap('new-Delimiter', ParseMethods.delimiter, {});
-new sm.CommandMap('new-Macro', {}, {});
+new sm.CommandMap('new-Command', {}, {});
 new sm.EnvironmentMap('new-Environment', ParseMethods.environment, {}, {});
 const emptyConf = Configuration.create(
   'empty',
-  {handler: {character: ['new-Character'],
+  {handler: {character: ['new-Macro'],
               delimiter: ['new-Delimiter'],
-              macro: ['new-Macro'],
+              macro: ['new-Command'],
               environment: ['new-Environment']
              }});
 
