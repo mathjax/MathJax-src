@@ -140,6 +140,10 @@ export interface MmlNode extends Node {
      * @return {string}  The spacing to use before this element (one of TEXSPACELENGTH array above)
      */
     texSpacing(): string;
+    /*
+     * @return {boolean}  The core mo element has an explicit 'form', 'lspace', or 'rspace' attribute
+     */
+    hasSpacingAttributes(): boolean;
 
     /*
      * Sets the nodes inherited attributes, and pushes them to the nodes children.
@@ -482,6 +486,13 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             return '';
         }
         return TEXSPACELENGTH[Math.abs(space)];
+    }
+
+    /*
+     * @return {boolean}  The core mo element has an explicit 'form' attribute
+     */
+    public hasSpacingAttributes() {
+        return this.isEmbellished && this.coreMO().hasSpacingAttributes();
     }
 
     /*
@@ -937,6 +948,13 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
      */
     public get prevLevel() {
         return 0;
+    }
+
+    /*
+     * @return {boolean}  The core mo element has an explicit 'form' attribute
+     */
+    public hasSpacingAttributes() {
+        return false;
     }
 
     /*
