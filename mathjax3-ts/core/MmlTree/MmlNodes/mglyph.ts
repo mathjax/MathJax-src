@@ -29,7 +29,7 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  *  Implements the MmlMglyph node class (subclass of AbstractMmlTokenNode)
  */
 
-export class MmlMi extends AbstractMmlTokenNode {
+export class MmlMglyph extends AbstractMmlTokenNode {
     public static defaults: PropertyList = {
         ...AbstractMmlTokenNode.defaults,
         alt: '',

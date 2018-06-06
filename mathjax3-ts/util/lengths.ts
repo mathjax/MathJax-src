@@ -79,19 +79,21 @@ export const MATHSPACE: {[name: string]: number} = {
 
 
 /*
- * @param{Property} length  A dimension (giving number and units) to be converted to ems
- * @param{number} size      The default size of the dimension (for percentage values)
- * @param{number} scale     The current scaling factor (to handle absolute units)
- * @return{number}          The dimension converted to ems
+ * @param{string|number} length  A dimension (giving number and units) to be converted to ems
+ * @param{number} size           The default size of the dimension (for percentage values)
+ * @param{number} scale          The current scaling factor (to handle absolute units)
+ * @return{number}               The dimension converted to ems
  */
-export function length2em(length: string, size: number = 0, scale: number = 1, em: number = 16) {
+export function length2em(length: string | number, size: number = 0, scale: number = 1, em: number = 16) {
+    if (typeof length !== 'string') {
+        length = String(length);
+    }
     if (length === '' || length == null) {
         return size;
     }
     if (MATHSPACE[length]) {
         return MATHSPACE[length];
     }
-
     let match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
     if (!match) {
         return size;

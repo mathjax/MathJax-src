@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,47 +16,46 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmi wrapper for the MmlMi object
+ * @fileoverview  Implements the CHTMLmn wrapper for the MmlMn object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTMLWrapper} from '../Wrapper.js';
-import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
-import {BBox} from '../BBox.js';
+import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {MmlMn} from '../../../core/MmlTree/MmlNodes/mn.js';
+import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /*
- *  The CHTMLmi wrapper for the MmlMi object
+ * The CHTMLmn wrapper for the MmlMn object
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
-    public static kind = MmlMi.prototype.kind;
-
-    /*
-     * True if no italic correction should be used
-     */
-    public noIC: boolean = false;
+export class CHTMLmn<N, T, D> extends CHTMLWrapper<N, T, D> {
+    public static kind = MmlMn.prototype.kind;
 
     /*
      * @override
      */
-    public toCHTML(parent: N) {
-        super.toCHTML(parent);
-        if (this.noIC) {
-            this.adaptor.setAttribute(this.chtml, 'noIC', 'true');
+    public remapChars(chars: number[]) {
+        //
+        //  Convert a leading hyphen to a minus
+        //
+        if (chars.length) {
+            const string = this.font.getRemappedChar('mn', chars[0]);
+            if (string) {
+                const c = this.unicodeChars(string);
+                if (c.length === 1) {
+                    chars[0] = c[0];
+                } else {
+                    chars = c.concat(chars.slice(1));
+                }
+            }
         }
-    }
-
-    /*
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        super.computeBBox(bbox);
-        this.copySkewIC(bbox);
+        return chars;
     }
 
 }
