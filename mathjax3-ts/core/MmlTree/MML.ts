@@ -55,6 +55,8 @@ import {MmlMtd}         from './MmlNodes/mtd.js';
 import {MmlMaligngroup} from './MmlNodes/maligngroup.js';
 import {MmlMalignmark}  from './MmlNodes/malignmark.js';
 
+import {MmlMglyph}      from './MmlNodes/mglyph.js';
+
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from './MmlNodes/semantics.js';
 
 import {TeXAtom} from './MmlNodes/TeXAtom.js';
@@ -108,6 +110,8 @@ export let MML: {[kind: string]: MmlNodeClass} = {
     [MmlMtd.prototype.kind]: MmlMtd,
     [MmlMaligngroup.prototype.kind]: MmlMaligngroup,
     [MmlMalignmark.prototype.kind]: MmlMalignmark,
+
+    [MmlMglyph.prototype.kind]: MmlMglyph,
 
     [MmlSemantics.prototype.kind]: MmlSemantics,
     [MmlAnnotation.prototype.kind]: MmlAnnotation,

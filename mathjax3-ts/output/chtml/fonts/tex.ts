@@ -353,6 +353,16 @@ export class TeXFont extends FontData {
             'font-family': 'MJXTEX-T',
             src: 'url("%%URL%%/woff/MathJax_Typewriter-Regular.woff") format("woff")'
         },
+
+        '@font-face /* 20 */': {
+            'font-family': 'MJXTEX-V',
+            src: 'url("%%URL%%/woff/MathJax_Vector-Regular.woff") format("woff")'
+        },
+
+        '@font-face /* 21 */': {
+            'font-family': 'MJXTEX-VB',
+            src: 'url("%%URL%%/woff/MathJax_Vector-Bold.woff") format("woff")'
+        },
     };
 
     protected options: OptionList;

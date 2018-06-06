@@ -355,7 +355,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         }
         bbox.clean();
     }
-
+  
     /*
      * Mark BBox to be computed again (e.g., when an mo has stretched)
      */
@@ -365,6 +365,23 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
             if (this.parent) {
                 this.parent.invalidateBBox();
             }
+        }
+    }
+
+    /*
+     * Copy child skew and italic correction
+     *
+     * @param{BBox} bbox  The bounding box to modify
+     */
+    protected copySkewIC(bbox: BBox) {
+        const first = this.childNodes[0];
+        if (first && first.bbox.sk) {
+            bbox.sk = first.bbox.sk;
+        }
+        const last = this.childNodes[this.childNodes.length - 1];
+        if (last && last.bbox.ic) {
+            bbox.ic = last.bbox.ic;
+            bbox.w += bbox.ic;
         }
     }
 
@@ -825,6 +842,14 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      */
     protected char(n: number, escape: boolean = false) {
         return this.font.char(n, escape);
+    }
+
+    /*
+     * @param{number[]} chars    The array of unicode character numbers to remap
+     * @return{number[]}         The converted array
+     */
+    public remapChars(chars: number[]) {
+        return chars;
     }
 
     /*

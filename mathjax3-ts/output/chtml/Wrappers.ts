@@ -25,9 +25,11 @@ import {CHTMLWrapper} from './Wrapper.js';
 import {CHTMLmath} from './Wrappers/math.js';
 import {CHTMLmi} from './Wrappers/mi.js';
 import {CHTMLmo} from './Wrappers/mo.js';
+import {CHTMLmn} from './Wrappers/mn.js';
 import {CHTMLms} from './Wrappers/ms.js';
 import {CHTMLmspace} from './Wrappers/mspace.js';
 import {CHTMLmpadded} from './Wrappers/mpadded.js';
+import {CHTMLmenclose} from './Wrappers/menclose.js';
 import {CHTMLmrow, CHTMLinferredMrow} from './Wrappers/mrow.js';
 import {CHTMLmfenced} from './Wrappers/mfenced.js';
 import {CHTMLmfrac} from './Wrappers/mfrac.js';
@@ -38,6 +40,7 @@ import {CHTMLmover, CHTMLmunder, CHTMLmunderover} from './Wrappers/munderover.js
 import {CHTMLmtable} from './Wrappers/mtable.js';
 import {CHTMLmtr, CHTMLmlabeledtr} from './Wrappers/mtr.js';
 import {CHTMLmtd} from './Wrappers/mtd.js';
+import {CHTMLmglyph} from './Wrappers/mglyph.js';
 import {CHTMLsemantics, CHTMLannotation, CHTMLannotationXML, CHTMLxml} from './Wrappers/semantics.js';
 import {CHTMLTeXAtom} from './Wrappers/TeXAtom.js';
 import {CHTMLTextNode} from './Wrappers/TextNode.js';
@@ -48,9 +51,11 @@ export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
     [CHTMLinferredMrow.kind]: CHTMLinferredMrow,
     [CHTMLmi.kind]: CHTMLmi,
     [CHTMLmo.kind]: CHTMLmo,
+    [CHTMLmn.kind]: CHTMLmn,
     [CHTMLms.kind]: CHTMLms,
     [CHTMLmspace.kind]: CHTMLmspace,
     [CHTMLmpadded.kind]: CHTMLmpadded,
+    [CHTMLmenclose.kind]: CHTMLmenclose,
     [CHTMLmfrac.kind]: CHTMLmfrac,
     [CHTMLmsqrt.kind]: CHTMLmsqrt,
     [CHTMLmroot.kind]: CHTMLmroot,
@@ -65,6 +70,7 @@ export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
     [CHTMLmtr.kind]: CHTMLmtr,
     [CHTMLmlabeledtr.kind]: CHTMLmlabeledtr,
     [CHTMLmtd.kind]: CHTMLmtd,
+    [CHTMLmglyph.kind]: CHTMLmglyph,
     [CHTMLsemantics.kind]: CHTMLsemantics,
     [CHTMLannotation.kind]: CHTMLannotation,
     [CHTMLannotationXML.kind]: CHTMLannotationXML,

@@ -50,13 +50,13 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-        let text = (this.node as TextNode).getText();
+        const text = (this.node as TextNode).getText();
         if (this.parent.variant === '-explicitFont') {
             this.adaptor.append(parent, this.text(text));
-        } else if (this.parent.stretch.c) {
-            this.adaptor.append(parent, this.html('mjx-c', {c: this.char(this.parent.stretch.c)}));
         } else {
-            for (const n of this.unicodeChars(text)) {
+            const c = this.parent.stretch.c;
+            const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));
+            for (const n of chars) {
                 this.adaptor.append(parent, this.html('mjx-c', {c: this.char(n)}));
             }
         }
@@ -71,18 +71,21 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
             // FIXME:  measure this using DOM, if possible
         } else {
             const c = this.parent.stretch.c;
-            const chars = (c ? [c] : this.unicodeChars((this.node as TextNode).getText()));
+            const text = (this.node as TextNode).getText();
+            const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));
             let [h, d, w, data] = this.getChar(variant, chars[0]);
             bbox.h = h;
             bbox.d = d;
             bbox.w = w;
             bbox.ic = data.ic || 0;
+            bbox.sk = data.sk || 0;
             for (let i = 1, m = chars.length; i < m; i++) {
                 [h, d, w, data] = this.getChar(variant, chars[i]);
                 bbox.w += w;
                 if (h > bbox.h) bbox.h = h;
                 if (d > bbox.d) bbox.d = d;
                 bbox.ic = data.ic || 0;
+                bbox.sk = 0;
             }
         }
     }
