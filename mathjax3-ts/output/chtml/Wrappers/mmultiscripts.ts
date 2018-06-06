@@ -114,7 +114,7 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
         const chtml = this.standardCHTMLnode(parent);
         const data = this.getScriptData();
         //
-        //  Combine the bounding boxed of the pre- and post-scripts,
+        //  Combine the bounding boxes of the pre- and post-scripts,
         //  and get the resulting baseline offsets
         //
         const sub = this.combinePrePost(data.sub, data.psub);
@@ -124,17 +124,17 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
         //  Place the pre-scripts, then the base, then the post-scripts
         //
         if (data.numPrescripts) {
-            this.addScripts(u, -v, 'pre', data.psub, data.psup, this.firstPrescript, data.numPrescripts);
+            this.addScripts(u, -v, true, data.psub, data.psup, this.firstPrescript, data.numPrescripts);
         }
         this.childNodes[0].toCHTML(chtml);
         if (data.numScripts) {
-            this.addScripts(u, -v, '', data.sub, data.sup, 1, data.numScripts);
+            this.addScripts(u, -v, false, data.sub, data.sup, 1, data.numScripts);
         }
     }
 
     /*
      * @param{BBox} pre   The prescript bounding box
-     * @param{BBox} post  The poscript bounding box
+     * @param{BBox} post  The postcript bounding box
      * @return{BBox}      The combined bounding box
      */
     protected combinePrePost(pre: BBox, post: BBox) {
@@ -146,15 +146,15 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
     /*
      * Create a table with the super and subscripts properly separated and aligned.
      *
-     * @param{number} u    The baseline offset for the superscripts
-     * @param{number} v    The baseline offset for the subscripts
-     * @param{string} pre  Either 'pre' or '' (used to create mjx-prescripts or mjx-scripts element)
-     * @param{BBox} sub    The subscript bounding box
-     * @param{BBox} sup    The superscript bounding box
-     * @param{number} i    The starting index for the scripts
-     * @param{number} n    The number of sub/super-scripts
+     * @param{number} u       The baseline offset for the superscripts
+     * @param{number} v       The baseline offset for the subscripts
+     * @param{boolean} isPre  True for prescripts, false for scripts
+     * @param{BBox} sub       The subscript bounding box
+     * @param{BBox} sup       The superscript bounding box
+     * @param{number} i       The starting index for the scripts
+     * @param{number} n       The number of sub/super-scripts
      */
-    protected addScripts(u: number, v: number, pre: string, sub: BBox, sup: BBox, i: number, n: number) {
+    protected addScripts(u: number, v: number, isPre: boolean, sub: BBox, sup: BBox, i: number, n: number) {
         const adaptor = this.adaptor;
         const q = (u - sup.d) + (v - sub.h);             // separation of scripts
         const U = (u < 0 && v === 0 ? sub.h + u : u);    // vertical offset of table
@@ -163,7 +163,8 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
         const supRow = this.html('mjx-row');
         const sepRow = this.html('mjx-row', rowdef);
         const subRow = this.html('mjx-row');
-        adaptor.append(this.chtml, this.html('mjx-' + pre + 'scripts', tabledef, [supRow, sepRow, subRow]));
+        const name = 'mjx-' + (isPre ? 'pre' : '') + 'scripts';
+        adaptor.append(this.chtml, this.html(name, tabledef, [supRow, sepRow, subRow]));
         let m = i + 2 * n;
         while (i < m) {
             this.childNodes[i++].toCHTML(adaptor.append(subRow, this.html('mjx-cell')) as N);
