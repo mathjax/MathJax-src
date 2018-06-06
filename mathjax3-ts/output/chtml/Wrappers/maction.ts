@@ -238,9 +238,9 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
-        const Actions = (this.constructor as typeof CHTMLmaction).Actions;
+        const actions = (this.constructor as typeof CHTMLmaction).Actions;
         const action = this.node.attributes.get('actiontype') as string;
-        const [handler, data] = Actions.get(action) || [((node, data) => {}) as ActionHandler<N, T, D>, {}];
+        const [handler, data] = actions.get(action) || [((node, data) => {}) as ActionHandler<N, T, D>, {}];
         this.action = handler;
         this.data = data;
     }
