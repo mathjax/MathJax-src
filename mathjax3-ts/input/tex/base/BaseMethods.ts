@@ -1035,31 +1035,19 @@ let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 
 BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   // @test Array1, Array2, Array Test
-  // let isEnd = false;
   let env = parser.GetArgument(name);
-  console.log('In BeginEnd:' + name);
-  console.log(env);
-  console.log(parser.stack.Top().kind);
-  console.log(parser.string);
-  console.log(parser.i);
-  console.log(parser.configuration);
-  // const regexp = /^\\end\\/;
-  // if (env.match(regexp)) {
-  //   console.log('In end here');
-  //   env = env.substr(5);
-  // } // special \end{} for \newenvironment environments
   if (env.match(/\\/i)) {
     throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'', env]);
   }
-  if (name === '\\end') {
-    let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
+  let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
+  if (macro && name === '\\end') {
     if (!macro.args[0]) {
       const mml = parser.itemFactory.create('end').setProperties({name: env});
       parser.Push(mml);
       return;
     }
     parser.stack.env['closing'] = macro.args[0];
-  } 
+  }
   if (++parser.macroCount > MAXMACROS) {
     throw new TexError(['MaxMacroSub2',
                         'MathJax maximum substitution count exceeded; ' +

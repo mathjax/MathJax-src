@@ -98,7 +98,6 @@ export default class Stack {
         this.Push(top);
       }
       else if (top) {
-        console.log('Pushing item: ' + item.kind);
         this.stack.push(item);
         if (item.env) {
           for (let id in this.env) {
@@ -125,7 +124,6 @@ export default class Stack {
       delete item.env;
     }
     this.env = (this.stack.length ? this.Top().env : {});
-    console.log('Popping item ' + item.kind);
     return item;
   }
 
