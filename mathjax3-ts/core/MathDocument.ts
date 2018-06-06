@@ -44,7 +44,6 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  *        .compile()
  *        .getMetrics()
  *        .typeset()
- *        .addEventHandlers()
  *        .updateDocument();
  *
  *  The MathDocument is the main interface for page authors to
@@ -130,13 +129,6 @@ export interface MathDocument<N, T, D> {
     typeset(): MathDocument<N, T, D>;
 
     /*
-     * Add any event handlers to the typeset math
-     *
-     * @return{MathDocument}  The math document instance
-     */
-    addEventHandlers(): MathDocument<N, T, D>;
-
-    /*
      * Updates the document to include the typeset math
      *
      * @return{MathDocument}  The math document instance
@@ -198,7 +190,6 @@ export type MathProcessed = {
     compile: boolean;
     getMetrics: boolean;
     typeset: boolean;
-    addEventHandlers: boolean;
     updateDocument: boolean;
     [name: string]: boolean;
 };
@@ -289,7 +280,6 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             compile: false,
             typeset: false,
             getMetrics: false,
-            addEventHandlers: false,
             updateDocument: false
         };
         this.outputJax = this.options['OutputJax'] || new DefaultOutputJax<N, T, D>();
@@ -408,14 +398,6 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     /*
      * @override
      */
-    public addEventHandlers() {
-        this.processed.addEventHandlers = true;
-        return this;
-    }
-
-    /*
-     * @override
-     */
     public updateDocument() {
         if (!this.processed.updateDocument) {
             for (const math of this.math.reversed()) {
@@ -445,7 +427,6 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         }
         if (state < STATE.TYPESET) {
             this.processed.typeset = false;
-            this.processed.addEventHandlers = false;
             this.processed.getMetrics = false;
         }
         if (state < STATE.COMPILED) {

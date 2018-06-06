@@ -150,9 +150,11 @@ export interface MathItem<N, T, D> {
     typeset(document: MathDocument<N, T, D>): void;
 
     /*
-     * Adds any needed event handlers to the typeset output
+     * Rerenders an already rendered item and re-inserts it into the document
+     *
+     * @param{MathDocument} document  The MathDocument in which the math resides
      */
-    addEventHandlers(): void;
+    rerender(document: MathDocument<N, T, D>): void;
 
     /*
      * Inserts the typeset version in place of the original form in the document
@@ -311,7 +313,11 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     /*
      * @override
      */
-    public addEventHandlers() {}
+    public rerender(document: MathDocument<N, T, D>) {
+        this.state(AbstractMathItem.STATE.COMPILED);
+        this.typeset(document);
+        this.updateDocument(document);
+    }
 
     /*
      * @override

@@ -37,6 +37,7 @@ export interface MinDocument<N, T> {
     documentElement: N;
     head: N;
     body: N;
+    title: string;
     createElement(type: string): N;
     createTextNode(text: string): T;
     querySelectorAll(selector: string): N[];

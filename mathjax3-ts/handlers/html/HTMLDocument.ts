@@ -183,6 +183,11 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         return this;
     }
 
+    /*
+     * @param{N} head     The document <head>
+     * @param{string} id  The id of the stylesheet to find
+     * @param{N|null}     The stylesheet with the given ID
+     */
     protected findSheet(head: N, id: string) {
         if (id) {
             for (const sheet of this.adaptor.tags(head, 'style')) {
