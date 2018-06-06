@@ -1035,7 +1035,7 @@ let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 
 BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   // @test Array1, Array2, Array Test
-  let isEnd = false;
+  // let isEnd = false;
   let env = parser.GetArgument(name);
   console.log('In BeginEnd:' + name);
   console.log(env);
@@ -1043,30 +1043,29 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   console.log(parser.string);
   console.log(parser.i);
   console.log(parser.configuration);
-  const regexp = /^\\end\\/;
-  if (env.match(regexp)) {
-    console.log('In end here');
-    isEnd = true;
-    env = env.substr(5);
-  } // special \end{} for \newenvironment environments
-  let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
+  // const regexp = /^\\end\\/;
+  // if (env.match(regexp)) {
+  //   console.log('In end here');
+  //   env = env.substr(5);
+  // } // special \end{} for \newenvironment environments
   if (env.match(/\\/i)) {
     throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'', env]);
   }
   if (name === '\\end') {
-    const mml = // macro.args[0] ?
-      // parser.itemFactory.create(macro.args[0]).setProperties(
-      //   {name: env, args: macro.args.slice(1)}) :
-      parser.itemFactory.create('end').setProperties({name: env});
-    parser.Push(mml);
-  } else {
-    if (++parser.macroCount > MAXMACROS) {
-      throw new TexError(['MaxMacroSub2',
-                          'MathJax maximum substitution count exceeded; ' +
-                          'is there a recursive latex environment?']);
+    let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
+    if (!macro.args[0]) {
+      const mml = parser.itemFactory.create('end').setProperties({name: env});
+      parser.Push(mml);
+      return;
     }
-    parser.parse('environment', [parser, env]);
+    parser.stack.env['closing'] = macro.args[0];
+  } 
+  if (++parser.macroCount > MAXMACROS) {
+    throw new TexError(['MaxMacroSub2',
+                        'MathJax maximum substitution count exceeded; ' +
+                        'is there a recursive latex environment?']);
   }
+  parser.parse('environment', [parser, env]);
 };
 
 
