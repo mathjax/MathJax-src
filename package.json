@@ -11,7 +11,9 @@
     "compile": "npx tsc",
     "prepublishOnly": "npx tsc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "esm": "^3.0.34"
+  },
   "devDependencies": {
     "typescript": "2.3.*",
     "tape": "^4.8.0",
