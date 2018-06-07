@@ -24,7 +24,7 @@
 import {AbstractOutputJax} from '../core/OutputJax.js';
 import {OptionList, separateOptions} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
-import {MathItem, AbstractMathItem} from '../core/MathItem.js';
+import {MathItem, Metrics} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
@@ -35,6 +35,15 @@ import {percent} from '../util/lengths.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {BBox} from './chtml/BBox.js';
 
+
+/*****************************************************************/
+
+/*
+ * Maps linking a node to the test node it contains,
+ *  and a map linking a node to the metrics within that node.
+ */
+export type MetricMap<N> = Map<N, Metrics>;
+type MetricDomMap<N> = Map<N, N>;
 
 /*****************************************************************/
 /*
@@ -54,6 +63,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
         scale: 1,                      // Global scaling factor for all expressions
         mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
         skipAttributes: {},            // RFDa and other attributes NOT to copy to CHTML output
+        exFactor: .5,                  // default size of ex in em units
         CHTMLWrapperFactory: null,     // The CHTMLWrapper factory to use
         font: null,                    // The FontData object to use
         cssStyles: null                // The CssStyles object to use
@@ -80,6 +90,8 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
      * from the core nodes)
      */
     public nodeMap: Map<MmlNode, CHTMLWrapper<N, T, D>>;
+
+    public testNodes: N;
 
     /*
      * Get the WrapperFactory and connect it to this output jax
@@ -149,9 +161,91 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
      * @override
      */
     public getMetrics(html: MathDocument<N, T, D>) {
+        const adaptor = this.adaptor;
+        adaptor.document = html.document;
+        const map = this.getMetricMap(html);
         for (const math of html.math) {
-            math.setMetrics(16, 8, 80 * 16, 1000000, 1);
+            const parent = adaptor.parent(math.start.node);
+            const {em, ex, containerWidth, lineWidth, scale} = map.get(parent);
+            math.setMetrics(em, ex, containerWidth, lineWidth, scale);
         }
+    }
+
+    /*
+     * Get a MetricMap for the math list
+     *
+     * @return{MetricMap}   The node-to-metrics map for all the containers that have math
+     */
+    protected getMetricMap(html: MathDocument<N, T, D>) {
+        const adaptor = this.adaptor;
+        const domMap = new Map() as MetricDomMap<N>;
+        //
+        // Add the test elements all at once (so only one reflow)
+        //
+        for (const math of html.math) {
+            const parent = adaptor.parent(math.start.node);
+            if (!domMap.has(parent)) {
+                domMap.set(parent, this.getTestElement(parent));
+            }
+        }
+        //
+        // Measure the metrics for all the mapped elements
+        //
+        const map = new Map() as MetricMap<N>;
+        for (const node of domMap.keys()) {
+            map.set(node, this.measureMetrics(domMap.get(node)));
+        }
+        //
+        // Remove the test elements
+        //
+        for (const node of domMap.values()) {
+            adaptor.remove(node);
+        }
+        return map;
+    }
+
+    /*
+     * @param{N} node    The container to add the test elements to
+     * @return{N}        The test elements that were added
+     */
+    protected getTestElement(node: N) {
+        const adaptor = this.adaptor;
+        if (!this.testNodes) {
+            this.testNodes = this.html('mjx-test', {style: {
+                display:           'inline-block',
+                'font-style':      'normal',
+                'font-weight':     'normal',
+                'font-size':       '100%',
+                'font-size-adjust':'none',
+                'text-indent':     0,
+                'text-transform':  'none',
+                'letter-spacing':  'normal',
+                'word-spacing':    'normal',
+                overflow:          'hidden',
+                height:            '1px'
+            }}, [
+                this.html('mjx-ex-box', {style: {
+                    position: 'absolute',
+                    overflow: 'hidden',
+                    width: '1px', height: '60ex'
+                }})
+            ]);
+        }
+        return adaptor.append(node, adaptor.clone(this.testNodes)) as N;
+    }
+
+    /*
+     * @param{N} node    The test node to measure
+     * @return{Metrics}  The metric data for the given node
+     */
+    protected measureMetrics(node: N) {
+        const adaptor = this.adaptor;
+        const em = adaptor.fontSize(node);
+        const ex = (adaptor.nodeSize(adaptor.firstChild(node) as N)[1] / 60) || (em * this.options.exFactor);
+        const containerWidth = 80 * em; // for now (should be measured in the DOM)
+        const scale = ex / this.font.params.x_height / em;
+        const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
+        return {em, ex, containerWidth, lineWidth, scale} as Metrics;
     }
 
     /*

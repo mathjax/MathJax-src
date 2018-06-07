@@ -29,12 +29,25 @@ import {LiteList} from './lite/List.js';
 import {LiteWindow} from './lite/Window.js';
 import {LiteParser} from './lite/Parser.js';
 import {Styles} from '../util/Styles.js';
+import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 
 /************************************************************/
 /*
  * Implements a lightweight DOMAdaptor on liteweight HTML elements
  */
 export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocument> {
+    /*
+     * The default options
+     */
+    public static OPTIONS: OptionList = {
+        fontSize: 16,      // we can't compute the font size, so always use this
+    };
+
+    /*
+     * The options for the instance
+     */
+    public options: OptionList;
+
     /*
      * The document in which the HTML nodes will be created
      */
@@ -43,16 +56,19 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     /*
      * The window for the document
      */
-    public window: LiteWindow = new LiteWindow();
+    public window: LiteWindow;
 
     /*
      * The parser for serialized HTML
      */
     public parser: LiteParser;
 
-    constructor() {
+    constructor(options: OptionList = null) {
         super();
+        let CLASS = this.constructor as typeof LiteAdaptor;
+        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
         this.parser = new LiteParser();
+        this.window = new LiteWindow();
     }
 
     /*
@@ -499,12 +515,27 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     public allStyles(node: LiteElement) {
         return this.getAttribute(node, 'style');
     }
+
+    /*
+     * @override
+     */
+    public fontSize(node: LiteElement) {
+        return this.options.fontSize;
+    }
+
+    /*
+     * @override
+     */
+    public nodeSize(node: LiteElement) {
+        return [0, 0] as [number, number];
+    }
+
 }
 
 /************************************************************/
 /*
  * The function to call to obtain a LiteAdaptor
  */
-export function liteAdaptor() {
-    return new LiteAdaptor();
+export function liteAdaptor(options: OptionList = null) {
+    return new LiteAdaptor(options);
 }
