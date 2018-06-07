@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Args, Attributes} from './Types.js';
+import {Args, Attributes, ParseMethod} from './Types.js';
 
 
 /**
@@ -60,10 +60,10 @@ export class Macro {
   /**
    * @constructor
    * @param {string} _symbol The symbol parsed
-   * @param {string} _func The parsing function for that symbol.
+   * @param {ParseMethod} _func The parsing function for that symbol.
    * @param {Attributes} _args Additional arguments for the function.
    */
-  constructor(private _symbol: string, private _func: string,
+  constructor(private _symbol: string, private _func: ParseMethod,
               private _args: Args[] = []) {
   }
 
@@ -71,7 +71,7 @@ export class Macro {
     return this._symbol;
   }
 
-  public get func(): string {
+  public get func(): ParseMethod {
     return this._func;
   }
 

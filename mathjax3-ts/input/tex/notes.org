@@ -67,6 +67,36 @@
   //
   // Also: How are we to know "outside" what the actual value is?
 
+<<<<<<< HEAD
+* Notes for future refactoring:
+
+** Why does TextNode not inherit AbstractMmlNode. This hiearchy with empty nodes seems to be odd.
+
+** msubsup.ts -> no TEXCLASS
+
+** Tests that currently do not work:
+   
+*** Choose, Over With Delims, Above With Delims (Need the mathchoice extension!)
+
+*** Label: Uses AMS Math stuff.
+    
+*** Named Function: AutoOP, FnOP?
+
+*** Limit: mml.SPACE_ATTR ? 
+
+*** Modulo: uses mathchoice
+
+*** Checkout Dots
+
+*** Delimiters-left-right seems to have one mrow too many in the expected value
+
+*** Dots The mo elements seem to be getting the wrong texclass.
+
+** AMS methods already done:
+   EndEntry, EndTable, fixInitialMO
+
+**** For Davide: How does With with nested dictionary work.
+=======
 * Review 1 notes
 
 ** TEXCLASSNAMES: 
@@ -88,4 +118,5 @@
    ended up being superfluous.
 
 *** This is effectively the new textnode class.
+>>>>>>> initial_parser
 

@@ -22,26 +22,17 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {StackItem} from './StackItem.js';
+import {Symbol} from './Symbol.js';
+import TexParser from './TexParser.js';
+
 export type Args = boolean|number|string|null;
 
 export type Attributes = Record<string, Args>;
 
 export type Environment = Record<string, Args>;
 
-// TODO: These are the future types.
-// export type ParseInput = {symbol: string, rest: string, stack: Stack};
-// export type ParseResult = {rest: string, item: Item};
-
-export type ParseInput = [string, Object];
+export type ParseInput = [TexParser, string];
 export type ParseResult = boolean|string;
 
-
-export interface ParseMethod {
-  (input: ParseInput): ParseResult;
-}
-
-export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
-
-export type Configuration = {
-  [P in HandlerType]?: string[]
-}
+export type ParseMethod = (parser: TexParser, c: string | Symbol | StackItem, ...rest: any[]) => void|StackItem;

@@ -23,10 +23,20 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sm from './SymbolMap.js';
-import MapHandler from './MapHandler.js';
-import {HandlerType, Configuration, ParseInput, ParseResult, ParseMethod} from './Types.js';
-import {BaseMappings} from './BaseMappings.js';
+import ParseUtil from './ParseUtil.js';
+import {HandlerType} from './MapHandler.js';
+import Stack from './Stack.js';
+import StackItemFactory from './StackItemFactory.js';
+import {Tags} from './Tags.js';
+import TexError from './TexError.js';
+import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
+import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+// import {NewTex} from './Translate.js';
+import {ParseInput, ParseResult, ParseMethod} from './Types.js';
+import ParseOptions from './ParseOptions.js';
+import {StackItem, EnvList} from './StackItem.js';
+import {Symbol} from './Symbol.js';
 
 
 /**
@@ -34,88 +44,77 @@ import {BaseMappings} from './BaseMappings.js';
  */
 export default class TexParser {
 
-  private input: string = '';
-  private remainder: string = '';
-  private macroCount: number = 0;
-  private configurations: Map<HandlerType, SubHandler> = new Map();
+  /**
+   * Counter for recursive macros.
+   * @type {number}
+   */
+  public macroCount: number = 0;
 
+  /**
+   * The stack for items and created nodes.
+   * @type {Stack}
+   */
+  public stack: Stack;
+
+  /**
+   * Current position in the string that is parsed.
+   * @type {number}
+   */
+  public i: number = 0;
 
   /**
    * @constructor
+   * @param {string} _string The string to parse.
+   * @param {EnvList} env The intial environment representing the current parse
+   *     state of the overall expression translation.
+   * @param {Configuration=} config A parser configuration.
    */
-  constructor() {
-    this.configure(BaseMappings.CONFIGURATION);
-  }
-
-
-  /**
-   * The main parsing method.
-   * @param {string} tex The TeX string.
-   * @return {MmlNode} The parsing result.
-   */
-  // TODO (VS): This will eventually become the actual parsing method.
-  public process(tex: string): void { }
-
-
-  /**
-   * Sets up parsing methods etc. from legacy code.
-   * @param {Record.<string, ParseMethod} env The MathJax legacy object.
-   */
-  // TODO (VS): Temporary for setting up parsing in SymbolMaps.
-  public setup(env: Record<string, ParseMethod>) {
-    const maps = MapHandler.getInstance().allMaps();
-    for (let i = 0, map; map = maps[i]; i++) {
-      if (map instanceof sm.CharacterMap ||
-          map instanceof sm.RegExpMap ||
-          map instanceof sm.EnvironmentMap) {
-        try {
-          let parser = map.parser(null);
-          if (typeof parser === 'string') {
-            map.parser = env[parser];
-          }
-        } catch (e) {}
-      }
-      if (map instanceof sm.MacroMap) {
-        map.functionMap = env;
+  constructor(private _string: string, env: EnvList,
+              public configuration: ParseOptions) {
+    const inner = env['isInner'] as boolean;
+    delete env['isInner'];
+    let ENV: EnvList;
+    if (env) {
+      ENV = {};
+      for (let id in env) {
+        if (env.hasOwnProperty(id)) {
+          ENV[id] = env[id];
+        }
       }
     }
-    this.fallback('character', env['Other']);
-    this.fallback('macro', env['csUndefined']);
-    this.fallback('environment', env['envUndefined']);
+    this.configuration.pushParser(this);
+    this.stack = new Stack(this.itemFactory, ENV, inner);
+    this.Parse();
+    this.Push(this.itemFactory.create('stop'));
   }
 
-
   /**
-   * Sets a new configuration for the map handler.
-   * @param {{character: Array.<string>,
-   *          delimiter: Array.<string>,
-   *          macro: Array.<string>,
-   *          environment: Array.<string>}} configuration A setting for the
-   *    map handler.
+   * @return {Map<string, string|boolean>} The configuration options.
    */
-  public configure(config: Configuration): void {
-    for (const key of Object.keys(config)) {
-      let name = key as HandlerType;
-      this.configurations.set(name, new SubHandler(config[name] || []));
-    }
+  get options() {
+    return this.configuration.options;
   }
 
+  /**
+   * @return {StackItemFactory} The factory for stack items.
+   */
+  get itemFactory() {
+    return this.configuration.itemFactory;
+  }
 
   /**
-   * Appends configurations to the current map handlers.
-   * @param {{character: Array.<string>,
-   *          delimiter: Array.<string>,
-   *          macro: Array.<string>,
-   *          environment: Array.<string>}} configuration A setting for the
-   *    map handler.
+   * @return {Tags} The tags style of this configuration.
    */
-  public append(config: Configuration): void {
-    for (const key of Object.keys(config)) {
-      let name = key as HandlerType;
-      for (const map of config[name]) {
-        this.configurations.get(name).add(map);
-      }
-    }
+  get tags() {
+    return this.configuration.tags;
+  }
+
+  set string(str: string) {
+    this._string = str;
+  }
+
+  get string() {
+    return this._string;
   }
 
 
@@ -126,7 +125,7 @@ export default class TexParser {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
-    return this.configurations.get(kind).parse(input);
+    return this.configuration.handlers.get(kind).parse(input);
   }
 
 
@@ -138,20 +137,9 @@ export default class TexParser {
    * @return {T} A boolean, Character, or Macro.
    */
   public lookup(kind: HandlerType, symbol: string) {
-    return this.configurations.get(kind).lookup(symbol);
+    return this.configuration.handlers.get(kind).lookup(symbol);
   }
 
-
-  /**
-   * Maps a symbol to its "parse value" if it exists.
-   *
-   * @param {HandlerType} kind Configuration name.
-   * @param {string} symbol The symbol to parse.
-   * @return {T} A boolean, Character, or Macro.
-   */
-  public fallback(kind: HandlerType, method: ParseMethod) {
-    return this.configurations.get(kind).fallback(method);
-  }
 
   /**
    * Checks if a symbol is contained in one of the symbol mappings of the
@@ -162,7 +150,7 @@ export default class TexParser {
    *     symbol mapping.
    */
   public contains(kind: HandlerType, symbol: string): boolean {
-    return this.configurations.get(kind).contains(symbol);
+    return this.configuration.handlers.get(kind).contains(symbol);
   }
 
 
@@ -171,135 +159,286 @@ export default class TexParser {
    */
   public toString(): string {
     let str = '';
-    for (const config of Array.from(this.configurations.keys())) {
+    for (const config of Array.from(this.configuration.handlers.keys())) {
       str += config + ': ' +
-        this.configurations.get(config as HandlerType) + '\n';
+        this.configuration.handlers.get(config as HandlerType) + '\n';
     }
     return str;
   }
 
-}
+  public Parse() {
+    let c, n;
+    while (this.i < this.string.length) {
+      c = this.string.charAt(this.i++); n = c.charCodeAt(0);
+      if (n >= 0xD800 && n < 0xDC00) {
+        c += this.string.charAt(this.i++);
+      }
+      this.parse('character', [this, c]);
+    }
+  }
 
+  public Push(arg: StackItem|MmlNode) {
+    this.stack.Push(arg);
+  }
 
-
-
-/**
- * Class of symbol mappings that are active in a configuration.
- */
-class SubHandler {
-
-  private _configuration: sm.SymbolMap[] = [];
-  private _fallback: ParseMethod = (x => { return null; });
-
-  /**
-   * @constructor
-   * @param {Array.<string>} maps Names of the maps included in this
-   *     configuration.
-   */
-  constructor(maps: string[]) {
-    for (const name of maps) {
-      this.add(name);
+  public PushAll(args: (StackItem|MmlNode)[]) {
+    for (let i = 0, m = args.length; i < m; i++) {
+      this.stack.Push(args[i]);
     }
   }
 
 
   /**
-   * Sets the default method to call when parsing fails.
-   * @param {function(string): ParseResult} method The fallback method.
+   * @return {MmlNode} The internal Mathml structure.
    */
-  public fallback(method: ParseMethod) {
-    this._fallback = method;
-  }
-
-
-  /**
-   * Adds a symbol map to the configuration if it exists.
-   * @param {string} name of the symbol map.
-   */
-  public add(name: string): void {
-    let map = MapHandler.getInstance().getMap(name);
-    if (!map) {
-      this.warn('Configuration ' + name + ' not found! Omitted.');
-      return;
+  public mml(): MmlNode {
+    if (!this.stack.Top().isKind('mml')) {
+      return null;
     }
-    this._configuration.push(map);
+    let node = this.stack.Top().Top;
+    this.configuration.popParser();
+    return node;
+  }
+
+  /************************************************************************/
+  /*
+   *   String handling routines
+   */
+
+  /**
+   *  Convert delimiter to character
+   */
+  public convertDelimiter(c: string): string {
+    const symbol = this.lookup('delimiter', c) as Symbol;
+    return symbol ? symbol.char : null;
+  }
+
+  /**
+   *   Check if the next character is a space
+   */
+  public nextIsSpace() {
+    return this.string.charAt(this.i).match(/\s/);
   }
 
 
   /**
-   * Parses the given input with the first applicable symbol map.
-   * @param {ParseInput} input The input for the parser.
-   * @return {ParseResult} The output of the parsing function.
+   *  Get the next non-space character
    */
-  public parse(input: ParseInput): ParseResult {
-    // TODO: Can't be done with applicable due to delimiter parsing!
-    for (let map of this._configuration) {
-      const result = map.parse(input);
-      if (result) {
-        return result;
+  public GetNext(): string {
+    while (this.nextIsSpace()) {
+      this.i++;
+    }
+    return this.string.charAt(this.i);
+  }
+
+  /**
+   *  Get and return a control-sequence name
+   */
+  public GetCS() {
+    let CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
+    if (CS) {
+      this.i += CS[1].length;
+      return CS[1];
+    } else {
+      this.i++;
+      return ' ';
+    }
+  }
+
+  /**
+   *  Get and return a TeX argument (either a single character or control sequence,
+   *  or the contents of the next set of braces).
+   */
+  public GetArgument(name: string, noneOK?: boolean) {
+    switch (this.GetNext()) {
+    case '':
+      if (!noneOK) {
+        throw new TexError(['MissingArgFor', 'Missing argument for %1', name]);
+      }
+      return null;
+    case '}':
+      if (!noneOK) {
+        throw new TexError(['ExtraCloseMissingOpen',
+                            'Extra close brace or missing open brace']);
+      }
+      return null;
+    case '\\':
+      this.i++;
+      return '\\' + this.GetCS();
+    case '{':
+      let j = ++this.i, parens = 1;
+      while (this.i < this.string.length) {
+        switch (this.string.charAt(this.i++)) {
+        case '\\':  this.i++; break;
+        case '{':   parens++; break;
+        case '}':
+          if (--parens === 0) {
+            return this.string.slice(j, this.i - 1);
+          }
+          break;
+        }
+      }
+      throw new TexError(['MissingCloseBrace', 'Missing close brace']);
+    }
+    return this.string.charAt(this.i++);
+  }
+
+
+  /**
+   *  Get an optional LaTeX argument in brackets
+   */
+  public GetBrackets(name: string, def?: string): string {
+    if (this.GetNext() !== '[') {
+      return def;
+    }
+    let j = ++this.i, parens = 0;
+    while (this.i < this.string.length) {
+      switch (this.string.charAt(this.i++)) {
+      case '{':   parens++; break;
+      case '\\':  this.i++; break;
+      case '}':
+        if (parens-- <= 0) {
+          throw new TexError(['ExtraCloseLooking',
+                              'Extra close brace while looking for %1', '\']\'']);
+        }
+        break;
+      case ']':
+        if (parens === 0) {
+          return this.string.slice(j, this.i - 1);
+        }
+        break;
       }
     }
-    let [symbol, env] = input;
-    return this._fallback.bind(env)(symbol);
+    throw new TexError(['MissingCloseBracket',
+                        'Could not find closing \']\' for argument to %1', name]);
   }
 
-
   /**
-   * Maps a symbol to its "parse value" if it exists.
-   *
-   * @param {string} symbol The symbol to parse.
-   * @return {T} A boolean, Character, or Macro.
+   *  Get the name of a delimiter (check it in the delimiter list).
    */
-  public lookup<T>(symbol: string): T {
-    let map = this.applicable(symbol) as sm.AbstractSymbolMap<T>;
-    return map ? map.lookup(symbol) : null;
-  }
-
-
-  /**
-   * Checks if a symbol is contained in one of the symbol mappings of this
-   * configuration.
-   *
-   * @param {string} symbol The symbol to parse.
-   * @return {boolean} True if the symbol is contained in the mapping.
-   */
-  public contains(symbol: string): boolean {
-    return this.applicable(symbol) ? true : false;
-  }
-
-
-  /**
-   * @override
-   */
-  public toString(): string {
-    return this._configuration
-      .map(function(x: sm.SymbolMap) {return x.name; })
-      .join(', ');
-  }
-
-
-  /**
-   * Retrieves the first applicable symbol map in the configuration.
-   * @param {string} symbol The symbol to parse.
-   * @return {SymbolMap} A map that can parse the symbol.
-   */
-  private applicable(symbol: string): sm.SymbolMap {
-    for (let map of this._configuration) {
-      if (map.contains(symbol)) {
-        return map;
+  public GetDelimiter(name: string, braceOK?: boolean) {
+    while (this.nextIsSpace()) {
+      this.i++;
+    }
+    let c = this.string.charAt(this.i); this.i++;
+    if (this.i <= this.string.length) {
+      if (c === '\\') {
+        c += this.GetCS();
+      } else if (c === '{' && braceOK) {
+        this.i--;
+        c = this.GetArgument(name);
+      }
+      if (this.contains('delimiter', c)) {
+        return this.convertDelimiter(c);
       }
     }
-    return null;
+    throw new TexError(['MissingOrUnrecognizedDelim',
+                        'Missing or unrecognized delimiter for %1', name]);
+  }
+
+  /**
+   *  Get a dimension (including its units).
+   */
+  public GetDimen(name: string) {
+    if (this.nextIsSpace()) {
+      this.i++;
+    }
+    if (this.string.charAt(this.i) === '{') {
+      let dimen = this.GetArgument(name);
+      let [value, unit, _] = ParseUtil.matchDimen(dimen);
+      if (value) {
+        // @test Raise In Line, Lower 2, (Raise|Lower) Negative
+        return value + unit;
+      }
+    } else {
+      // @test Above, Raise, Lower, Modulo, Above With Delims
+      let dimen = this.string.slice(this.i);
+      let [value, unit, length] = ParseUtil.matchDimen(dimen, true);
+      if (value) {
+        this.i += length;
+        return value + unit;
+      }
+    }
+    throw new TexError(['MissingDimOrUnits',
+                        'Missing dimension or its units for %1', name]);
   }
 
 
-  // TODO: Turn this into a global warning and error functionality
   /**
-   * Prints a warning message.
-   * @param {string} message The warning.
+   *  Get everything up to the given control sequence (token)
    */
-  private warn(message: string) {
-    console.log('TexParser Warning: ' + message);
+  public GetUpTo(name: string, token: string) {
+    while (this.nextIsSpace()) {
+      this.i++;
+    }
+    let j = this.i;
+    let parens = 0;
+    while (this.i < this.string.length) {
+      let k = this.i;
+      let c = this.string.charAt(this.i++);
+      switch (c) {
+      case '\\':  c += this.GetCS(); break;
+      case '{':   parens++; break;
+      case '}':
+        if (parens === 0) {
+          throw new TexError(['ExtraCloseLooking',
+                              'Extra close brace while looking for %1', token]);
+        }
+        parens--;
+        break;
+      }
+      if (parens === 0 && c === token) {
+        return this.string.slice(j, k);
+      }
+    }
+    throw new TexError(['TokenNotFoundForCommand',
+                        'Could not find %1 for %2', token, name]);
+  }
+
+  /**
+   *  Parse various substrings
+   */
+  public ParseArg(name: string) {
+    return new TexParser(this.GetArgument(name), this.stack.env,
+                         this.configuration).mml();
+  }
+
+  /**
+   * Parses a given string up to a given token.
+   * @param {string} name The string to parse.
+   * @param {string} token A Token at which to end parsing.
+   * @return {MmlNode} The parsed node.
+   */
+  public ParseUpTo(name: string, token: string) {
+    return new TexParser(this.GetUpTo(name, token), this.stack.env,
+                         this.configuration).mml();
+  }
+
+
+  /**
+   *  Get a delimiter or empty argument
+   */
+  public GetDelimiterArg(name: string) {
+    let c = ParseUtil.trimSpaces(this.GetArgument(name));
+    if (c === '') {
+      return null;
+    }
+    if (this.contains('delimiter', c)) {
+      return c;
+    }
+    throw new TexError(['MissingOrUnrecognizedDelim',
+                        'Missing or unrecognized delimiter for %1', name]);
+  }
+
+  /**
+   *  Get a star following a control sequence name, if any
+   */
+  public GetStar() {
+    let star = (this.GetNext() === '*');
+    if (star) {
+      this.i++;
+    }
+    return star;
   }
 
 }
