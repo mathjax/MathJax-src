@@ -50,13 +50,6 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMo.prototype.kind;
 
     public static styles: StyleList = {
-        'mjx-symmetric': {
-            'vertical-align': '.25em'
-        },
-        'mjx-symmetric > mjx-c': {
-            'vertical-align': 'middle'
-        },
-
         'mjx-stretchy-h': {
             display: 'inline-table',
             width: '100%'
@@ -160,7 +153,12 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
             this.stretchHTML(chtml, symmetric);
         } else {
             if (symmetric || attributes.get('largeop')) {
-                chtml = this.adaptor.append(chtml, this.html('mjx-symmetric')) as N;
+                const bbox = BBox.empty();
+                super.computeBBox(bbox);
+                const u = this.em((bbox.d - bbox.h) / 2 + this.font.params.axis_height);
+                if (u !== '0') {
+                    this.adaptor.setStyle(chtml, 'verticalAlign', u);
+                }
             }
             for (const child of this.childNodes) {
                 child.toCHTML(chtml);
