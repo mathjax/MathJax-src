@@ -1,0 +1,57 @@
+\def\bar{h}
+\let\fooi\bar
+\def\fooii{\bar}
+\fooi +\fooii
+\def\bar{g}
+\fooi +\fooii
+
+
+\newcommand{\sum}{2 + 3}
+\sum
+\renewcommand{\sum}[1]{2 #1 3}
+\sum{*}
+
+
+
+\newenvironment{myHeartEnv}
+  {\color{purple}{\heartsuit}\kern-2.5pt\color{green}{\heartsuit}}
+  {\text{ forever}}
+
+\begin{myHeartEnv}
+\end{myHeartEnv}
+
+
+\begin{myHeartEnv}
+  2+3
+\end{myHeartEnv}
+
+
+\newenvironment{proof}
+{\textbf{Proof:}}
+{\begin{align} \blacksquare \end{align}}
+\begin{proof}a=b\end{proof}
+
+\newenvironment{proof}
+{\begin{align}\textbf{Proof:}}
+{\end{align}}
+\begin{proof}a=b\end{proof}
+
+\newenvironment{proof}
+{\begin{align}\textbf{Proof:}&}
+{ \begin{split} 5 \end{split}&& \blacksquare\end{align}}
+\begin{proof}a&=b\end{proof}
+
+
+
+\newcommand{\wbalTwo}[2][Wikimedia]{
+  This is the Wikibook about LaTeX
+  supported by {#1} and {#2}!}
+
+\wbalTwo{hello}{John Doe}
+
+
+\newenvironment{argument}[1][a]{\textbf{Argument #1:}}{aa}
+\begin{argument}[c]b\end{argument}
+
+\renewenvironment{argument}[2][a]{\textbf{Argument #1(#2):}}{aa}
+\begin{argument}[c]{3}b\end{argument}
