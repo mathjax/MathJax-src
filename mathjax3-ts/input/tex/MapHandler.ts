@@ -96,11 +96,11 @@ new sm.CommandMap('new-Command', {}, {});
 new sm.EnvironmentMap('new-Environment', ParseMethods.environment, {}, {});
 const emptyConf = Configuration.create(
   'empty',
-  {handler: {character: ['new-Macro'],
-              delimiter: ['new-Delimiter'],
-              macro: ['new-Command'],
-              environment: ['new-Environment']
-             }});
+  {handler: {character: [],
+             delimiter: ['new-Delimiter'],
+             macro: ['new-Delimiter', 'new-Command', 'new-Macro'],
+             environment: ['new-Environment']
+            }});
 
 
 /**
@@ -192,7 +192,7 @@ export class SubHandler {
    * @param {string} symbol The symbol to parse.
    * @return {SymbolMap} A map that can parse the symbol.
    */
-  private applicable(symbol: string): SymbolMap {
+  public applicable(symbol: string): SymbolMap {
     for (let map of this._configuration) {
       if (map.contains(symbol)) {
         return map;

@@ -23,10 +23,10 @@
  */
 
 
-import {ParseMethod} from '../Types.js';
+import {Args, Attributes, ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
-import {MacroMap, EnvironmentMap, CommandMap} from '../SymbolMap.js';
+import * as sm from '../SymbolMap.js';
 import {MapHandler} from '../MapHandler.js';
 import {Symbol, Macro} from '../Symbol.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -59,7 +59,7 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
                           'Illegal number of parameters specified in %1', name]);
     }
   }
-  let newMacros = MapHandler.getInstance().getMap('new-Command') as CommandMap;
+  let newMacros = MapHandler.getInstance().getMap('new-Command') as sm.CommandMap;
   newMacros.add(cs,
                 new Macro('Macro', NewcommandMethods.Macro, [def, n, opt]));
   // this.setDef(cs, ['Macro', def, n, opt]);
@@ -81,7 +81,7 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
                           'Illegal number of parameters specified in %1', name]);
         }
   }
-  let newEnv = MapHandler.getInstance().getMap('new-Environment') as EnvironmentMap;
+  let newEnv = MapHandler.getInstance().getMap('new-Environment') as sm.EnvironmentMap;
   newEnv.add(env, new Macro(env, NewcommandMethods.BeginEnv, [true, bdef, edef, n, opt]));
 };
     
@@ -92,16 +92,14 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
   let cs = GetCSname(parser, name);
   let params = GetTemplate(parser, name, '\\' + cs);
   let def = parser.GetArgument(name);
-  let newMacros = MapHandler.getInstance().getMap('new-Command') as CommandMap;
+  let newMacros = MapHandler.getInstance().getMap('new-Command') as sm.CommandMap;
   if (!(params instanceof Array)) {
     newMacros.add(cs,
                   new Macro('Macro', NewcommandMethods.Macro, [def, params]));
-    // this.setDef(cs,['Macro', def, params]);
   }
   else {
     newMacros.add(cs, new Macro('MacroWithTemplate', NewcommandMethods.MacroWithTemplate,
                                 [def].concat(params)));
-    // this.setDef(cs, ['MacroWithTemplate', def].concat(params));
   }
 };
 
@@ -116,69 +114,81 @@ let cloneMacro = function(macro: Macro | Symbol): Macro | Symbol {
 /**
  *  Implements the \let command
  */
-// NewcommandMethods.Let = function(parser: TexParser, name: string) {
-//   let cs = GetCSname(parser, name), macro;
-//   let c = parser.GetNext();
-//   if (c === '=') {
-//     parser.i++;
-//     c = parser.GetNext();
-//   }
-//   //
-//   //  All \let commands create entries in the macros array, but we
-//   //  have to look in the various mathchar and delimiter arrays if
-//   //  the source isn't a macro already, and attach the data to a
-//   //  macro with the proper routine to process it.
-//   //
-//   //  A command of the form \let\cs=char produces a macro equivalent
-//   //  to \def\cs{char}, which is as close as MathJax can get for this.
-//   //  So \let\bgroup={ is possible, but doesn't work as it does in TeX.
-//   //
-//   if (c === '\\') {
-//     name = GetCSname(parser, name);
-//     // macro = parser.configuration.handlers.lookup(name);
-//     // csFindMacro(name);
-//     const handlers = parser.configuration.handlers;
-//     let macro: Symbol | Macro = handlers.get('macro').lookup(name) as Macro;
-//     if (macro) {
-//       (MapHandler.getInstance().getMap('new-Command') as CommandMap).
-//         add(name, new Macro(macro.symbol, macro.func, macro.args));
-//       return;
-//     }
-//     macro = handlers.get('character').lookup(name) as Macro;
-//     if (macro) {
-//       (MapHandler.getInstance().getMap('new-Character') as MacroMap).
-//         add(name, new Macro(macro.symbol, macro.func, macro.args));
-//       return;
-//     }
-//     macro = handlers.get('delimiter').lookup(name) as Macro;
-//     if (macro) {
-//       (MapHandler.getInstance().getMap('new-Character') as MacroMap).
-//         add(name, new Macro(macro.symbol, macro.func, macro.args));
-//       return;
-//     }
-    
-//       || handlers.get('delimiter').lookup(name);
-//     if (!macro) {
-//       return;
-//     }
-//     if (macro instanceof Macro) {
-      
-//     } else {
-      
-//     }
-//     if (!macro) {
-//       if (TEXDEF.mathchar0mi[name])            {macro = ['csMathchar0mi',TEXDEF.mathchar0mi[name]]}  else
-//         if (TEXDEF.mathchar0mo[name])            {macro = ['csMathchar0mo',TEXDEF.mathchar0mo[name]]}  else
-//           if (TEXDEF.mathchar7[name])              {macro = ['csMathchar7',TEXDEF.mathchar7[name]]}      else 
-//             if (TEXDEF.delimiter['\\'+name] != null) {macro = ['csDelimiter',TEXDEF.delimiter['\\'+name]]} else
-//               return;
-//     }
-//   } else {
-//     macro = ['Macro', c];
-//     parser.i++;
-//   }
-//   // parser.setDef(cs, macro);
-// };
+NewcommandMethods.Let = function(parser: TexParser, name: string) {
+  let cs = GetCSname(parser, name), macro;
+  let c = parser.GetNext();
+  if (c === '=') {
+    parser.i++;
+    c = parser.GetNext();
+  }
+  //
+  //  All \let commands create entries in the macros array, but we
+  //  have to look in the various mathchar and delimiter arrays if
+  //  the source isn't a macro already, and attach the data to a
+  //  macro with the proper routine to process it.
+  //
+  //  A command of the form \let\cs=char produces a macro equivalent
+  //  to \def\cs{char}, which is as close as MathJax can get for this.
+  //  So \let\bgroup={ is possible, but doesn't work as it does in TeX.
+  //
+  if (c === '\\') {
+    name = GetCSname(parser, name);
+    const handlers = parser.configuration.handlers;
+    macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
+    if (macro) {
+      (MapHandler.getInstance().getMap('new-Delimiter') as sm.DelimiterMap).
+        add('\\' + cs, new Symbol('\\' + cs, macro.char, macro.attributes));
+      return;
+    }
+    let map = handlers.get('macro').applicable(name);
+    if (map instanceof sm.CommandMap) {
+      macro = (map as sm.CommandMap).lookup(name) as Macro;
+      let newArgs: Args[] = [name as Args].concat(macro.args);
+      (MapHandler.getInstance().getMap('new-Command') as sm.CommandMap).
+        add(cs, new Macro(macro.symbol, macro.func, newArgs));
+      return;
+    }
+    if (map instanceof sm.CharacterMap) {
+      macro = (map as sm.CharacterMap).lookup(name) as Symbol;
+      let newArgs = disassembleSymbol(cs, macro);
+      let method = (p: TexParser, cs: string, ...rest: any[]) => {
+        let symb = assembleSymbol(rest);
+        return map.parser(p, symb);
+      };
+      let newMacro = new Macro(cs, method as any, newArgs);
+      (MapHandler.getInstance().getMap('new-Command') as sm.CommandMap).
+        add(cs, newMacro);
+      return;
+    }
+  } else {
+    // TODO: Add the delimiter case for elements like [],()
+    let newMacros = MapHandler.getInstance().getMap('new-Command') as sm.CommandMap;
+    newMacros.add(cs,
+                  new Macro('Macro', NewcommandMethods.Macro, [c]));
+    parser.i++;
+  }
+};
+
+let disassembleSymbol = function(name: string, symbol: Symbol): Args[] {
+  let newArgs = [name, symbol.char] as Args[];
+  if (symbol.attributes) {
+    for (let key in symbol.attributes) {
+      newArgs.push(key);
+      newArgs.push(symbol.attributes[key] as Args);
+    }
+  }
+  return newArgs;
+};
+
+let assembleSymbol = function(args: Args[]): Symbol {
+  let name = args[0] as string;
+  let char = args[1] as string;
+  let attrs: Attributes = {};
+  for (let i = 2; i < args.length; i = i + 2) {
+    attrs[args[i] as string] = args[i + 1];
+  }
+  return new Symbol(name, char, attrs);
+};
 
 
 /**
@@ -278,7 +288,7 @@ NewcommandMethods.BeginEnv = function(parser: TexParser, begin: StackItem,
     return parser.itemFactory.create('endEnv').setProperties({name: begin.getName()});
   }
   if (n) {
-    let args = [];
+    let args: string[] = [];
     if (def != null) {
       let optional = parser.GetBrackets('\\begin{' + begin.getName() + '}');
       args.push(optional == null ? def : optional);
