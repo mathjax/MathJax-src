@@ -131,9 +131,9 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   //  to \def\cs{char}, which is as close as MathJax can get for this.
   //  So \let\bgroup={ is possible, but doesn't work as it does in TeX.
   //
+  const handlers = parser.configuration.handlers;
   if (c === '\\') {
     name = GetCSname(parser, name);
-    const handlers = parser.configuration.handlers;
     macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
     if (macro) {
       (MapHandler.getInstance().getMap('new-Delimiter') as sm.DelimiterMap).
@@ -162,10 +162,16 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     }
   } else {
     // TODO: Add the delimiter case for elements like [],()
+    parser.i++;
+    macro = handlers.get('delimiter').lookup(c) as Symbol;
+    if (macro) {
+      (MapHandler.getInstance().getMap('new-Delimiter') as sm.DelimiterMap).
+        add('\\' + cs, new Symbol('\\' + cs, macro.char, macro.attributes));
+      return;
+    }
     let newMacros = MapHandler.getInstance().getMap('new-Command') as sm.CommandMap;
     newMacros.add(cs,
                   new Macro('Macro', NewcommandMethods.Macro, [c]));
-    parser.i++;
   }
 };
 
