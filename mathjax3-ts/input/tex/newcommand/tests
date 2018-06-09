@@ -55,3 +55,39 @@
 
 \renewenvironment{argument}[2][a]{\textbf{Argument #1(#2):}}{aa}
 \begin{argument}[c]{3}b\end{argument}
+
+
+\let\b\lvert
+\let\lvert\langle
+\vert
+\b
+\lvert
+\left\b q \right\lvert
+
+
+\let\be={
+
+  \be a}
+
+\let\be={
+
+  \be a}
+
+\let\car^
+
+a\car b
+
+\let\lb=\{
+\lb \frac{1}{2} \}
+\left\lb \frac{1}{2} \right\}
+
+
+\let\al\alpha
+\al\alpha
+\let\al\aleph
+\al\alpha
+
+\let\al\alpha
+\al\alpha
+\let\alpha\beta
+\al\alpha
