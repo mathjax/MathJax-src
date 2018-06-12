@@ -130,9 +130,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         'mjx-chtml [size="hg"]': {'font-size': '207%'},
         'mjx-chtml [size="HG"]': {'font-size': '249%'},
 
-        'mjx-chtml [width="full"]': {
-            width: '100%'
-        },
+        'mjx-chtml [width="full"]': {width: '100%'},
 
         'mjx-box': {display: 'inline-block'},
         'mjx-block': {display: 'block'},
@@ -143,14 +141,11 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         //
         //  These don't have Wrapper subclasses, so add their styles here
         //
-        'mjx-mn': {display: 'inline-block'},
-        'mjx-mtext': {display: 'inline-block'},
         'mjx-merror': {
             display: 'inline-block',
             color: 'red',
             'background-color': 'yellow'
         },
-
         'mjx-mphantom': {visibility: 'hidden'}
 
     };

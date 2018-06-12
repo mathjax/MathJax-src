@@ -165,7 +165,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
         for (const kind of this.factory.getKinds()) {
             const CLASS = this.factory.getNodeClass(kind);
             if (CLASS.autoStyle && kind !== 'unknown') {
-                this.cssStyles.addStyles({['mjx-' + CLASS.kind]: {display: 'inline-block'}});
+                this.cssStyles.addStyles({['mjx-' + CLASS.kind]: {display: 'inline-block', 'text-align': 'left'}});
             }
             this.cssStyles.addStyles(CLASS.styles);
         }
