@@ -339,6 +339,10 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
      * @return{string}              The serialized element (like innerHTML)
      */
     public serializeInner(adaptor: LiteAdaptor, node: LiteElement) {
+        const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
+        if (PCDATA.hasOwnProperty(node.kind)) {
+            return adaptor.childNodes(node).map(x => adaptor.value(x)).join('');
+        }
         return adaptor.childNodes(node).map(x => {
             const kind = adaptor.kind(x);
             return (kind === '#text' ? this.protectHTML(adaptor.value(x)) :
