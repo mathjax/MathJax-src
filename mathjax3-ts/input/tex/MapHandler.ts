@@ -112,7 +112,7 @@ export const ExtensionMaps: {[id: string]: ExtensionMap} = {
 };
 
 MapHandler.getInstance().resetExtensions();
-const emptyConf = Configuration.create(
+export const ExtensionConf = Configuration.create(
   'empty',
   {handler: {character: [],
              delimiter: [ExtensionMaps.NEW_DELIMITER],
@@ -240,7 +240,7 @@ export class SubHandlers {
    * @param {Configuration} configuration A setting for the map handler.
    */
   constructor(config: Configuration) {
-    config.append(emptyConf);
+    config.append(ExtensionConf);
     for (const key of Object.keys(config.handler)) {
       let name = key as HandlerType;
       let subHandler = new SubHandler(config.handler[name] || [],

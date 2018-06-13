@@ -27,7 +27,7 @@ import {Args, Attributes, ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../SymbolMap.js';
-import {ExtensionMaps, MapHandler} from '../MapHandler.js';
+import {ExtensionConf, ExtensionMaps, MapHandler} from '../MapHandler.js';
 import {Symbol, Macro} from '../Symbol.js';
 import BaseMethods from '../base/BaseMethods.js';
 import ParseUtil from '../ParseUtil.js';
@@ -61,7 +61,7 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
                           'Illegal number of parameters specified in %1', name]);
     }
   }
-  let newMacros = MapHandler.getInstance().getMap('new-Command') as sm.CommandMap;
+  let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
   newMacros.add(cs,
                 new Macro('Macro', NewcommandMethods.Macro, [def, n, opt]));
   // this.setDef(cs, ['Macro', def, n, opt]);
@@ -86,7 +86,7 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
                           'Illegal number of parameters specified in %1', name]);
         }
   }
-  let newEnv = MapHandler.getInstance().getMap('new-Environment') as sm.EnvironmentMap;
+  let newEnv = MapHandler.getInstance().getMap(ExtensionMaps.NEW_ENVIRONMENT) as sm.EnvironmentMap;
   newEnv.add(env, new Macro(env, NewcommandMethods.BeginEnv, [true, bdef, edef, n, opt]));
 };
 
@@ -101,7 +101,7 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
   let params = GetTemplate(parser, name, '\\' + cs);
   console.log(params);
   let def = parser.GetArgument(name);
-  let newMacros = MapHandler.getInstance().getMap('new-Command') as sm.CommandMap;
+  let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
   if (!(params instanceof Array)) {
     newMacros.add(cs,
                   new Macro('Macro', NewcommandMethods.Macro, [def, params]));
@@ -110,7 +110,7 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
     newMacros.add(cs, new Macro('MacroWithTemplate', NewcommandMethods.MacroWithTemplate,
                                 [def].concat(params)));
   }
-  console.log(MapHandler.getInstance().getMap('new-Command'));
+  console.log(MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND));
 };
 
 
@@ -149,18 +149,17 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     console.log(name);
     macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
     if (macro) {
-      (MapHandler.getInstance().getMap('new-Delimiter') as sm.DelimiterMap).
+      (MapHandler.getInstance().getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).
         add('\\' + cs, new Symbol('\\' + cs, macro.char, macro.attributes));
       return;
     }
     let map = handlers.get('macro').applicable(name);
-    console.log(handlers.get('macro'));
-    console.log('This map:');
-    console.log(map);
+    let extension = ExtensionConf.handler['macro'].indexOf(map.name) !== -1;
     if (map instanceof sm.CommandMap) {
       macro = (map as sm.CommandMap).lookup(name) as Macro;
-      let newArgs: Args[] = [name as Args].concat(macro.args);
-      (MapHandler.getInstance().getMap('new-Command') as sm.CommandMap).
+      let firstArg: Args[] = extension ? [] : [name as Args];
+      let newArgs: Args[] = firstArg.concat(macro.args);
+      (MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
         add(cs, new Macro(macro.symbol, macro.func, newArgs));
       return;
     }
@@ -172,7 +171,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
         return map.parser(p, symb);
       };
       let newMacro = new Macro(cs, method as any, newArgs);
-      (MapHandler.getInstance().getMap('new-Command') as sm.CommandMap).
+      (MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
         add(cs, newMacro);
       return;
     }
@@ -181,11 +180,11 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     parser.i++;
     macro = handlers.get('delimiter').lookup(c) as Symbol;
     if (macro) {
-      (MapHandler.getInstance().getMap('new-Delimiter') as sm.DelimiterMap).
+      (MapHandler.getInstance().getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).
         add('\\' + cs, new Symbol('\\' + cs, macro.char, macro.attributes));
       return;
     }
-    let newMacros = MapHandler.getInstance().getMap('new-Command') as sm.CommandMap;
+    let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
     newMacros.add(cs,
                   new Macro('Macro', NewcommandMethods.Macro, [c]));
   }
