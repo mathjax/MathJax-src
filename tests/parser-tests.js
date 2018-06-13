@@ -6,6 +6,7 @@ import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
 import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
 
 import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
+import {MapHandler} from "mathjax3/input/tex/MapHandler.js";
 
 import {Test} from './tests.js';
 import 'mathjax3/input/tex/base/BaseConfiguration.js';
@@ -38,6 +39,7 @@ export class ParserTest extends Test {
                                settings: this.settings,
                                tags: this.tags})
           });
+          MapHandler.getInstance().resetExtensions();
           html.TestMath(tex).compile();
           let jv = new JsonMmlVisitor();
           let actual = jv.visitTree(html.math.pop().root);

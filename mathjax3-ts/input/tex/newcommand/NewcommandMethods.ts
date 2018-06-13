@@ -99,7 +99,6 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
 NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
   let cs = GetCSname(parser, name);
   let params = GetTemplate(parser, name, '\\' + cs);
-  console.log(params);
   let def = parser.GetArgument(name);
   let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
   if (!(params instanceof Array)) {
@@ -110,7 +109,6 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
     newMacros.add(cs, new Macro('MacroWithTemplate', NewcommandMethods.MacroWithTemplate,
                                 [def].concat(params)));
   }
-  console.log(MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND));
 };
 
 
@@ -146,7 +144,6 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   const handlers = parser.configuration.handlers;
   if (c === '\\') {
     name = GetCSname(parser, name);
-    console.log(name);
     macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
     if (macro) {
       (MapHandler.getInstance().getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).
@@ -155,26 +152,22 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     }
     let map = handlers.get('macro').applicable(name);
     let extension = ExtensionConf.handler['macro'].indexOf(map.name) !== -1;
-    if (map instanceof sm.CommandMap) {
+    if (map instanceof sm.MacroMap) {
       macro = (map as sm.CommandMap).lookup(name) as Macro;
-      let firstArg: Args[] = extension ? [] : [name as Args];
-      let newArgs: Args[] = firstArg.concat(macro.args);
       (MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
-        add(cs, new Macro(macro.symbol, macro.func, newArgs));
+        add(cs, new Macro(macro.symbol, macro.func, macro.args));
       return;
     }
-    if (map instanceof sm.CharacterMap) {
-      macro = (map as sm.CharacterMap).lookup(name) as Symbol;
-      let newArgs = disassembleSymbol(cs, macro);
-      let method = (p: TexParser, cs: string, ...rest: any[]) => {
-        let symb = assembleSymbol(rest);
-        return map.parser(p, symb);
-      };
-      let newMacro = new Macro(cs, method as any, newArgs);
-      (MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
-        add(cs, newMacro);
-      return;
-    }
+    macro = (map as sm.CharacterMap).lookup(name) as Symbol;
+    let newArgs = disassembleSymbol(cs, macro);
+    let method = (p: TexParser, cs: string, ...rest: any[]) => {
+      let symb = assembleSymbol(rest);
+      return map.parser(p, symb);
+    };
+    let newMacro = new Macro(cs, method as any, newArgs);
+    (MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
+      add(cs, newMacro);
+    return;
   } else {
     // TODO: Add the delimiter case for elements like [],()
     parser.i++;
@@ -274,7 +267,6 @@ let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
                                                 text: string, n: string,
                                                 ...params: string[]) {
-  console.log('testing');
   const argCount = parseInt(n, 10);
   if (argCount) {
     let args = [];

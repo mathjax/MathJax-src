@@ -163,6 +163,9 @@ a\car b
 \d \c
 
 
+// Macros of macros:
+\let\sqrt\choose a\sqrt b
+
 // Why does that not work?
 \newenvironment{proof}{\textbf{Proof:}}{}
 \begin{proof}a=b\end{proof}

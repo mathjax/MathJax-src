@@ -303,7 +303,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
     if (!macro || !parser) {
       return null;
     }
-    let args = [env, symbol].concat(macro.args as string[]);
+    let args = [env, macro.symbol].concat(macro.args as string[]);
     return parser ? (parser.apply(env, args) || true) : null;
   }
 
@@ -327,7 +327,7 @@ export class CommandMap extends MacroMap {
     if (!macro || !parser) {
       return null;
     }
-    let args = [env, '\\' + symbol].concat(macro.args as string[]);
+    let args = [env, '\\' + macro.symbol].concat(macro.args as string[]);
     return parser ? (parser.apply(env, args) || true) : null;
   }
 
@@ -370,7 +370,7 @@ export class EnvironmentMap extends MacroMap {
     if (!macro || !envParser) {
       return null;
     }
-    this.parser(env, symbol, envParser, macro.args);
+    this.parser(env, macro.symbol, envParser, macro.args);
     return true;
   }
 
