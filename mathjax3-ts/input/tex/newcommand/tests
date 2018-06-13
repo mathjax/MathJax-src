@@ -1,16 +1,16 @@
-\def\bar{h}
-\let\fooi\bar
-\def\fooii{\bar}
-\fooi +\fooii
-\def\bar{g}
-\fooi +\fooii
-
-
 \newcommand{\sum}{2 + 3}
 \sum
+
 \renewcommand{\sum}[1]{2 #1 3}
 \sum{*}
 
+\renewcommand{\sum}[1][+]{2 #1 3}
+\sum
+\sum[*]
+
+\renewcommand{\sum}[2][+]{2 #1 3 #2 4}
+\sum{+}
+\sum[*]{+}
 
 
 \newenvironment{myHeartEnv}
@@ -19,7 +19,6 @@
 
 \begin{myHeartEnv}
 \end{myHeartEnv}
-
 
 \begin{myHeartEnv}
   2+3
@@ -42,20 +41,25 @@
 \begin{proof}a&=b\end{proof}
 
 
-
-\newcommand{\wbalTwo}[2][Wikimedia]{
-  This is the Wikibook about LaTeX
-  supported by {#1} and {#2}!}
-
-\wbalTwo{hello}{John Doe}
-
-
 \newenvironment{argument}[1][a]{\textbf{Argument #1:}}{aa}
 \begin{argument}[c]b\end{argument}
 
 \renewenvironment{argument}[2][a]{\textbf{Argument #1(#2):}}{aa}
 \begin{argument}[c]{3}b\end{argument}
 
+\def\bar{h}
+\let\fooi\bar
+\def\fooii{\bar}
+\fooi +\fooii
+\def\bar{g}
+\fooi +\fooii
+
+\def\foo{a + b}
+\foo
+\def\foo#1{a #1 b}
+\foo{-}
+\def\foo#1#2{#2 #1 b}
+\foo{-}{x}
 
 \let\b\lvert
 \let\lvert\langle
@@ -81,6 +85,10 @@ a\car b
 \lb \frac{1}{2} \}
 \left\lb \frac{1}{2} \right\}
 
+\let\lb(
+\lb \frac{1}{2})
+\left\lb \frac{1}{2} \right)
+
 
 \let\al\alpha
 \al\alpha
@@ -91,3 +99,19 @@ a\car b
 \al\alpha
 \let\alpha\beta
 \al\alpha
+
+
+----------- TODO  ------------------
+
+\def\bar[#1]#2{#1 + #2}
+\bar[a]{b}
+\let\foo\bar
+\foo[c]{d}
+
+\newcommand{\bar}[2][1]{#1 + #2}
+\bar[a]{b}
+\let\foo\bar
+\foo[c]{d}
+
+
+// Recognise if it is a newly created command (or created with let).

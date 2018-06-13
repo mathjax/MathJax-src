@@ -37,8 +37,10 @@ import {StackItem} from '../StackItem.js';
 // Namespace
 let NewcommandMethods: Record<string, ParseMethod> = {};
 
-/*
- *  Implement \newcommand{\name}[n][default]{...}
+/**
+ * Implements \newcommand{\name}[n][default]{...}
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the calling command.
  */
 NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
   let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
@@ -65,8 +67,11 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
   // this.setDef(cs, ['Macro', def, n, opt]);
 };
 
+
 /**
- *  Implement \newenvironment{name}[n][default]{begincmd}{endcmd}
+ * Implements \newenvironment{name}[n][default]{begincmd}{endcmd}
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the calling command.
  */
 NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
   let env = ParseUtil.trimSpaces(parser.GetArgument(name));
@@ -84,13 +89,17 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
   let newEnv = MapHandler.getInstance().getMap('new-Environment') as sm.EnvironmentMap;
   newEnv.add(env, new Macro(env, NewcommandMethods.BeginEnv, [true, bdef, edef, n, opt]));
 };
-    
+
+
 /**
- *  Implement \def command
+ * Implements \def command
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the calling command.
  */
 NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
   let cs = GetCSname(parser, name);
   let params = GetTemplate(parser, name, '\\' + cs);
+  console.log(params);
   let def = parser.GetArgument(name);
   let newMacros = MapHandler.getInstance().getMap('new-Command') as sm.CommandMap;
   if (!(params instanceof Array)) {
@@ -101,6 +110,7 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
     newMacros.add(cs, new Macro('MacroWithTemplate', NewcommandMethods.MacroWithTemplate,
                                 [def].concat(params)));
   }
+  console.log(MapHandler.getInstance().getMap('new-Command'));
 };
 
 
@@ -112,7 +122,9 @@ let cloneMacro = function(macro: Macro | Symbol): Macro | Symbol {
 
 
 /**
- *  Implements the \let command
+ * Implements the \let command
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the calling command.
  */
 NewcommandMethods.Let = function(parser: TexParser, name: string) {
   let cs = GetCSname(parser, name), macro;
@@ -134,6 +146,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   const handlers = parser.configuration.handlers;
   if (c === '\\') {
     name = GetCSname(parser, name);
+    console.log(name);
     macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
     if (macro) {
       (MapHandler.getInstance().getMap('new-Delimiter') as sm.DelimiterMap).
@@ -141,6 +154,9 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
       return;
     }
     let map = handlers.get('macro').applicable(name);
+    console.log(handlers.get('macro'));
+    console.log('This map:');
+    console.log(map);
     if (map instanceof sm.CommandMap) {
       macro = (map as sm.CommandMap).lookup(name) as Macro;
       let newArgs: Args[] = [name as Args].concat(macro.args);
@@ -259,6 +275,7 @@ let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
                                                 text: string, n: string,
                                                 ...params: string[]) {
+  console.log('testing');
   const argCount = parseInt(n, 10);
   if (argCount) {
     let args = [];
@@ -281,8 +298,8 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
   }
 };
     
-/*
- *  Process a user-defined environment
+/**
+ * Process a user-defined environment
  */
 NewcommandMethods.BeginEnv = function(parser: TexParser, begin: StackItem,
                                       bdef: string, edef: string, n: number, def: string) {
@@ -347,9 +364,9 @@ let GetParameter = function(parser: TexParser, name: string, param: string) {
 
 
 /**
- *  Check if a template is at the current location.
- *  (The match must be exact, with no spacing differences.  TeX is
- *   a little more forgiving than this about spaces after macro names)
+ * Check if a template is at the current location.
+ * (The match must be exact, with no spacing differences. TeX is
+ *  a little more forgiving than this about spaces after macro names)
  */
 let MatchParam = function(parser: TexParser, param: string) {
   if (parser.string.substr(parser.i, param.length) !== param) {
