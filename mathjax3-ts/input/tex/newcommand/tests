@@ -115,3 +115,27 @@ a\car b
 
 
 // Recognise if it is a newly created command (or created with let).
+
+\let\kk\alpha
+\kk
+\let\rr\beta
+\rr
+\let\rr\kk
+\let\kk\beta
+\kk\rr
+
+// The following do not work as expected in MJ2.
+
+\let\ll\sin
+\ll(x)
+\let\rr\ll
+\let\ll\cos
+\rr(x)
+\ll(x)
+
+\let\save\sin
+\let\sin\cos
+\let\cos\tan
+\let\tan\save
+\sin(x)\cos(x)\tan(x)
+

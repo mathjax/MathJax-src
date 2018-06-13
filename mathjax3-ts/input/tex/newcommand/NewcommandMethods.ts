@@ -27,7 +27,7 @@ import {Args, Attributes, ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../SymbolMap.js';
-import {MapHandler} from '../MapHandler.js';
+import {ExtensionMaps, MapHandler} from '../MapHandler.js';
 import {Symbol, Macro} from '../Symbol.js';
 import BaseMethods from '../base/BaseMethods.js';
 import ParseUtil from '../ParseUtil.js';

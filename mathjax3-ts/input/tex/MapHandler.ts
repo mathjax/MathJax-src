@@ -80,28 +80,45 @@ export class MapHandler {
 
 
   /**
+   * Initialises extension maps.
+   */
+  public resetExtensions() {
+    new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
+    new sm.DelimiterMap(ExtensionMaps.NEW_DELIMITER, ParseMethods.delimiter, {});
+    new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
+    new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT, ParseMethods.environment, {}, {});
+  }
+
+
+  /**
    * Dummy constructor
    * @constructor
    */
-  private constructor() { }
+  private constructor() {
+  }
 
 }
 
 
 // Defining empty handlers for declaring new commands, macros, etc.
 // TODO: Make sure multiple runs do not interfere!
-new sm.MacroMap('new-Macro', {}, {});
-new sm.DelimiterMap('new-Delimiter', ParseMethods.delimiter, {});
-new sm.CommandMap('new-Command', {}, {});
-new sm.EnvironmentMap('new-Environment', ParseMethods.environment, {}, {});
+export type ExtensionMap = 'new-Macro' | 'new-Delimiter' | 'new-Command' |
+  'new-Environment';
+export const ExtensionMaps: {[id: string]: ExtensionMap} = {
+  NEW_MACRO: 'new-Macro',
+  NEW_DELIMITER: 'new-Delimiter',
+  NEW_COMMAND: 'new-Command',
+  NEW_ENVIRONMENT: 'new-Environment'
+};
+
+MapHandler.getInstance().resetExtensions();
 const emptyConf = Configuration.create(
   'empty',
   {handler: {character: [],
-             delimiter: ['new-Delimiter'],
-             macro: ['new-Delimiter', 'new-Command', 'new-Macro'],
-             environment: ['new-Environment']
+             delimiter: [ExtensionMaps.NEW_DELIMITER],
+             macro: [ExtensionMaps.NEW_DELIMITER, ExtensionMaps.NEW_COMMAND, ExtensionMaps.NEW_MACRO],
+             environment: [ExtensionMaps.NEW_ENVIRONMENT]
             }});
-
 
 /**
  * Class of symbol mappings that are active in a configuration.
