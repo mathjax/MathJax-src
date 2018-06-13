@@ -139,3 +139,35 @@ a\car b
 \let\tan\save
 \sin(x)\cos(x)\tan(x)
 
+
+// Delimiters:
+\let\lp(
+\let\rp)
+\let\mp\rp
+\left\lp \frac{a}{b}\middle\mp c \right\rp
+
+\let\lp\langle
+\let\rp\rangle
+\let\mp\rp
+\left\lp \frac{a}{b}\middle\mp c \right\rp
+
+
+\let\a a
+\let\b b
+\a \b
+\let\c\a
+\let\a c
+\c \a
+\let\d=\c
+\let\c \b
+\d \c
+
+
+// Why does that not work?
+\newenvironment{proof}{\textbf{Proof:}}{}
+\begin{proof}a=b\end{proof}
+\renewenvironment{proof}{\begin{align}\textbf{Proof:}&}{ \begin{split} 5 \end{split}&& \blacksquare\end{align}}\begin{proof}a&=b\end{proof}
+\newenvironment{proof}{\textbf{Nix:}}{}
+\begin{proof}a=b\end{proof}
+\renewenvironment{proof}{\begin{equation}\textbf{Proof:}}{ 5 \blacksquare\end{equation}}\begin{proof}a=b\end{proof}
+
