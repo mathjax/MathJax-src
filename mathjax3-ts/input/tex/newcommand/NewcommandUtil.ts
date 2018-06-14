@@ -138,7 +138,7 @@ namespace NewcommandUtil {
       parser.i++;
     }
     throw new TexError(['MissingReplacementString',
-                        'Missing replacement string for definition of %1',cmd]);
+                        'Missing replacement string for definition of %1', cmd]);
   };
 
 

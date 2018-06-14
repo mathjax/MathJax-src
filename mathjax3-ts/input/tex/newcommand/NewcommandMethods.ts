@@ -44,18 +44,22 @@ let NewcommandMethods: Record<string, ParseMethod> = {};
  * @param {string} name The name of the calling command.
  */
 NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
+  // @test Newcommand Simple
   let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
   let n = parser.GetBrackets(name);
   let opt = parser.GetBrackets(name);
   let def = parser.GetArgument(name);
   if (cs.charAt(0) === '\\') {
+    // @test Newcommand Simple
     cs = cs.substr(1);
   }
   if (!cs.match(/^(.|[a-z]+)$/i)) {
+    // @test (missing) \newcommand{\11}{a}
     throw new TexError(['IllegalControlSequenceName',
                         'Illegal control sequence name for %1', name]);
   }
   if (n) {
+    // @test Newcommand Optional, Newcommand Arg, Newcommand Arg Optional
     n = ParseUtil.trimSpaces(n);
     if (!n.match(/^[0-9]+$/)) {
       throw new TexError(['IllegalParamNumber',
@@ -65,7 +69,6 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
   let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
   newMacros.add(cs,
                 new Macro('Macro', NewcommandMethods.Macro, [def, n, opt]));
-  // this.setDef(cs, ['Macro', def, n, opt]);
 };
 
 
@@ -75,14 +78,17 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
  * @param {string} name The name of the calling command.
  */
 NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
+  // @test Newenvironment Empty, Newenvironment Content
   let env = ParseUtil.trimSpaces(parser.GetArgument(name));
   let n = parser.GetBrackets(name);
   let opt = parser.GetBrackets(name);
   let bdef = parser.GetArgument(name);
   let edef = parser.GetArgument(name);
   if (n) {
+    // @test Newenvironment Optional, Newenvironment Arg Optional
     n = ParseUtil.trimSpaces(n);
     if (!n.match(/^[0-9]+$/)) {
+      // @test (missing) \newenvironment{hh}[a]{}{}
       throw new TexError(['IllegalParamNumber',
                           'Illegal number of parameters specified in %1', name]);
         }
@@ -98,18 +104,18 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
  * @param {string} name The name of the calling command.
  */
 NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
+  // @test Def DoubleLet, DefReDef
   let cs = NewcommandUtil.GetCSname(parser, name);
   let params = NewcommandUtil.GetTemplate(parser, name, '\\' + cs);
   let def = parser.GetArgument(name);
   let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
-  if (!(params instanceof Array)) {
-    newMacros.add(cs,
-                  new Macro('Macro', NewcommandMethods.Macro, [def, params]));
-  }
-  else {
-    newMacros.add(cs, new Macro('MacroWithTemplate', NewcommandMethods.MacroWithTemplate,
-                                [def].concat(params)));
-  }
+  let macro = !(params instanceof Array) ?
+    // @test Def DoubleLet, DefReDef
+    new Macro('Macro', NewcommandMethods.Macro, [def, params]) :
+    // @test Def Let
+    new Macro('MacroWithTemplate', NewcommandMethods.MacroWithTemplate,
+              [def].concat(params));
+  newMacros.add(cs, macro);
 };
 
 
