@@ -31,18 +31,6 @@ import ParseUtil from '../ParseUtil.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 
-
-export class EndEnvItem extends EndItem {
-
-  /**
-   * @override
-   */
-  public get kind() {
-    return 'endEnv';
-  }
-
-}
-
 export class BeginEnvItem extends BaseItem {
 
   /**
@@ -52,6 +40,10 @@ export class BeginEnvItem extends BaseItem {
     return 'beginEnv';
   }
 
+
+  /**
+   * @override
+   */
   get isOpen() {
     return true;
   }
@@ -61,16 +53,20 @@ export class BeginEnvItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    if (item.isKind('endEnv')) {
+    if (item.isKind('end')) {
+      // @test Newenvironment Empty, Newenvironment Align
       if (item.getName() !== this.getName()) {
+        // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc\end{equation}
         throw new TexError(['EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
                             this.getName(), item.getName()]);
       }
       return this.factory.create('mml', this.toMml());
     }
     if (item.isKind('stop')) {
+      // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc
       throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
     }
+    // @test Newenvironment Empty, Newenvironment Align
     return super.checkItem(item);
   }
 }

@@ -23,7 +23,7 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {EndEnvItem, BeginEnvItem} from './NewcommandItems.js';
+import {BeginEnvItem} from './NewcommandItems.js';
 import './NewcommandMappings.js';
 
 
@@ -34,7 +34,6 @@ export const NewcommandConfiguration = Configuration.create(
   },
    items: {
      [BeginEnvItem.prototype.kind]: BeginEnvItem,
-     [EndEnvItem.prototype.kind]: EndEnvItem,
    }
   }
 );

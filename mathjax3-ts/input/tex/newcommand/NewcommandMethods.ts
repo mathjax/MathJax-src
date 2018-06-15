@@ -68,7 +68,7 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
   }
   let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
   newMacros.add(cs,
-                new Macro('Macro', NewcommandMethods.Macro, [def, n, opt]));
+                new Macro(cs, NewcommandMethods.Macro, [def, n, opt]));
 };
 
 
@@ -111,9 +111,9 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
   let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
   let macro = !(params instanceof Array) ?
     // @test Def DoubleLet, DefReDef
-    new Macro('Macro', NewcommandMethods.Macro, [def, params]) :
+    new Macro(cs, NewcommandMethods.Macro, [def, params]) :
     // @test Def Let
-    new Macro('MacroWithTemplate', NewcommandMethods.MacroWithTemplate,
+    new Macro(cs, NewcommandMethods.MacroWithTemplate,
               [def].concat(params));
   newMacros.add(cs, macro);
 };
@@ -138,15 +138,19 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
 NewcommandMethods.Let = function(parser: TexParser, name: string) {
   let cs = NewcommandUtil.GetCSname(parser, name), macro;
   let c = parser.GetNext();
+  // @test Let Bar, Let Caret
   if (c === '=') {
+    // @test Let Brace Equal, Let Brace Equal Stretchy
     parser.i++;
     c = parser.GetNext();
   }
   const handlers = parser.configuration.handlers;
   if (c === '\\') {
+    // @test Let Bar, Let Brace Equal Stretchy
     name = NewcommandUtil.GetCSname(parser, name);
     macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
     if (macro) {
+      // @test Let Bar, Let Brace Equal Stretchy
       (MapHandler.getInstance().getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).
         add('\\' + cs, new Symbol('\\' + cs, macro.char, macro.attributes));
       return;
@@ -154,6 +158,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     let map = handlers.get('macro').applicable(name);
     let extension = ExtensionConf.handler['macro'].indexOf(map.name) !== -1;
     if (map instanceof sm.MacroMap) {
+      // @test Def Let, Newcommand Let
       macro = (map as sm.CommandMap).lookup(name) as Macro;
       (MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
         add(cs, new Macro(macro.symbol, macro.func, macro.args));
@@ -162,6 +167,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     macro = (map as sm.CharacterMap).lookup(name) as Symbol;
     let newArgs = NewcommandUtil.disassembleSymbol(cs, macro);
     let method = (p: TexParser, cs: string, ...rest: any[]) => {
+      // @test Let Relet, Let Let, Let Circular Macro
       let symb = NewcommandUtil.assembleSymbol(rest);
       return map.parser(p, symb);
     };
@@ -170,17 +176,19 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
       add(cs, newMacro);
     return;
   }
-  // TODO: Add the delimiter case for elements like [],()
+  // @test Let Brace Equal, Let Caret
   parser.i++;
   macro = handlers.get('delimiter').lookup(c) as Symbol;
   if (macro) {
+    // @test Let Paren Delim, Let Paren Stretchy
     (MapHandler.getInstance().getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).
       add('\\' + cs, new Symbol('\\' + cs, macro.char, macro.attributes));
     return;
   }
+  // @test Let Brace Equal, Let Caret
   let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
   newMacros.add(cs,
-                new Macro('Macro', NewcommandMethods.Macro, [c]));
+                new Macro(cs, NewcommandMethods.Macro, [c]));
 };
 
 
@@ -199,15 +207,20 @@ let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
                                                 text: string, n: string,
                                                 ...params: string[]) {
+  name = parser.lastCS;
   const argCount = parseInt(n, 10);
+  // @test Def Let
   if (argCount) {
+    // @test Def Let
     let args = [];
     parser.GetNext();
     if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
+      // @test (missing) \def\bar[#1]#2#3{c + c}\bar
       throw new TexError(['MismatchUseDef',
                           'Use of %1 doesn\'t match its definition', name]);
     }
     for (let i = 0; i < argCount; i++) {
+      // @test Def Let
       args.push(NewcommandUtil.GetParameter(parser, name, params[i + 1]));
     }
     text = ParseUtil.substituteArgs(args, text);
@@ -233,20 +246,25 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
  */
 NewcommandMethods.BeginEnv = function(parser: TexParser, begin: StackItem,
                                       bdef: string, edef: string, n: number, def: string) {
+  // @test Newenvironment Empty, Newenvironment Content
   if (parser.stack.env['closing'] === begin.getProperty('end')) {
+    // @test Newenvironment Empty, Newenvironment Content
     delete parser.stack.env['closing'];
     parser.string = edef + parser.string.slice(parser.i);
     parser.i = 0;
     parser.Parse();
-    return parser.itemFactory.create('endEnv').setProperties({name: begin.getName()});
+    return parser.itemFactory.create('end').setProperties({name: begin.getName()});
   }
   if (n) {
+    // @test Newenvironment Optional, Newenvironment Arg Optional
     let args: string[] = [];
     if (def != null) {
+      // @test Newenvironment Optional, Newenvironment Arg Optional
       let optional = parser.GetBrackets('\\begin{' + begin.getName() + '}');
       args.push(optional == null ? def : optional);
     }
     for (let i = args.length; i < n; i++) {
+      // @test Newenvironment Arg Optional
       args.push(parser.GetArgument('\\begin{' + begin.getName() + '}'));
     }
     bdef = ParseUtil.substituteArgs(args, bdef);
