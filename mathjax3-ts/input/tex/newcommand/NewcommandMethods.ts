@@ -207,7 +207,6 @@ let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
                                                 text: string, n: string,
                                                 ...params: string[]) {
-  name = parser.lastCS;
   const argCount = parseInt(n, 10);
   // @test Def Let
   if (argCount) {
