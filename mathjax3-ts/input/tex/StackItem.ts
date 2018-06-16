@@ -231,8 +231,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   private _properties: PropList = {};
 
   protected errors: {[key: string]: string[]} = {
-    // @test ExtraOpenMissingClose End
-    end: ['ExtraOpenMissingClose', 'Extra open brace or missing close brace'],
+    // @test ExtraOpenMissingClose
+    end: ['MissingBeginExtraEnd', 'Missing \\begin{%1} or extra \\end{%1}'],
     // @test ExtraCloseMissingOpen
     close: ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'],
     // @test MissingLeftExtraRight
@@ -322,6 +322,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
       throw new TexError(['Misplaced', 'Misplaced %1', item.getName()]);
     }
     if (item.isClose && this.errors[item.kind]) {
+      // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
+      //       MissingLeftExtraRight, MissingBeginExtraEnd
       throw new TexError(this.errors[item.kind].concat([item.getName()]));
     }
     if (!item.isFinal) {

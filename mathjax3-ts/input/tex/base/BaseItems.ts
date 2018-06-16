@@ -53,8 +53,6 @@ export class StartItem extends BaseItem {
   constructor(factory: StackItemFactory, ...global: any[]) {
     super(factory);
     this.global = global[0] as EnvList;
-    this.errors['end'] = ['MissingBeginExtraEnd',
-                          'Missing \\begin{%1} or extra \\end{%1}'];
   }
 
 
@@ -115,7 +113,7 @@ export class OpenItem extends BaseItem {
    */
   constructor(factory: StackItemFactory) {
     super(factory);
-    // @test ExtraOpenMissingClose Stop
+    // @test ExtraOpenMissingClose
     this.errors['stop'] = ['ExtraOpenMissingClose',
                            'Extra open brace or missing close brace'];
   }
@@ -143,8 +141,7 @@ export class OpenItem extends BaseItem {
       // @test PrimeSup
       let mml = this.toMml();
       const node = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
-      return this.factory.create('mml', node); // TeXAtom make it an ORD to prevent spacing
-      // (FIXME: should be another way)
+      return this.factory.create('mml', node);
     }
     return super.checkItem(item);
   }
@@ -358,7 +355,7 @@ export class LeftItem extends BaseItem {
    */
   public checkItem(item: StackItem) {
     // @test Missing Right
-        if (item.isKind('right')) {
+    if (item.isKind('right')) {
       return this.factory.create('mml', ParseUtil.fenced(
         this.factory.configuration,
         this.getProperty('delim') as string, this.toMml(),
