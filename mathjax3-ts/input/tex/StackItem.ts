@@ -318,13 +318,11 @@ export abstract class BaseItem extends MmlStack implements StackItem {
       if (item.getProperty('linebreak')) {
         return false;
       }
-      // TODO: Test what symbol really does!
-      //throw new TexError(['Misplaced', 'Misplaced %1', item.getProperty('name').symbol]);
       // @test Ampersand-error
       throw new TexError(['Misplaced', 'Misplaced %1', item.getName()]);
     }
     if (item.isClose && this.errors[item.kind]) {
-      throw new TexError(this.errors[item.kind]);
+      throw new TexError(this.errors[item.kind].concat([item.getName()]));
     }
     if (!item.isFinal) {
       return true;

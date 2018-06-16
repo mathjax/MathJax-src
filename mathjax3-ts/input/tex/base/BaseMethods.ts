@@ -1005,8 +1005,10 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
     throw new TexError(['Misplaced', 'Misplaced %1', name]);
   }
   if (!top.table.length) {
+    // @test Enclosed top, Enclosed top bottom
     top.frame.push('top');
   } else {
+    // @test Enclosed bottom, Enclosed top bottom
     const lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
     while (lines.length < top.table.length) {
       lines.push('none');
@@ -1041,7 +1043,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     env = env.substr(5);
   } // special \end{} for \newenvironment environments
   if (env.match(/\\/i)) {
-    throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'',env]);
+    throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'', env]);
   }
   if (name === '\\end') {
     const mml =
@@ -1134,7 +1136,8 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
 BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
-  return parser.itemFactory.create('equation', numbered);
+  return parser.itemFactory.create('equation', numbered).
+    setProperties({name: begin.getName()});
 };
 
 

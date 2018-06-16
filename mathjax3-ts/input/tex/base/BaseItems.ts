@@ -53,6 +53,8 @@ export class StartItem extends BaseItem {
   constructor(factory: StackItemFactory, ...global: any[]) {
     super(factory);
     this.global = global[0] as EnvList;
+    this.errors['end'] = ['MissingBeginExtraEnd',
+                          'Missing \\begin{%1} or extra \\end{%1}'];
   }
 
 
@@ -489,20 +491,21 @@ export class PositionItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        if (item.isClose) {
+    if (item.isClose) {
       throw new TexError(['MissingBoxFor', 'Missing box for %1', this.getName()]);
     }
     if (item.isFinal) {
       let mml = item.toMml();
       switch (this.getProperty('move')) {
       case 'vertical':
-        // @test Raise, Lower
+        // @test Raise, Lower, Raise Negative, Lower Negative
         mml = this.factory.configuration.nodeFactory.create('node', 'mpadded', [mml],
                                     {height: this.getProperty('dh'),
                                      depth: this.getProperty('dd'),
                                      voffset: this.getProperty('dh')});
         return [this.factory.create('mml', mml)];
       case 'horizontal':
+        // @test Move Left, Move Right, Move Left Negative, Move Right Negative
         return [this.factory.create('mml', this.getProperty('left') as MmlNode), item,
                 this.factory.create('mml', this.getProperty('right') as MmlNode)];
       }
@@ -941,6 +944,9 @@ export class EquationItem extends BaseItem {
       let mml = this.toMml();
       let tag = this.factory.configuration.tags.getTag();
       return [tag ? this.factory.configuration.tags.enTag(mml, tag) : mml, item];
+    }
+    if (item.isKind('stop')) {
+      throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
     }
     return super.checkItem(item);
   }
