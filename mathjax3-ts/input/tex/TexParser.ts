@@ -32,7 +32,6 @@ import TexError from './TexError.js';
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-// import {NewTex} from './Translate.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 import ParseOptions from './ParseOptions.js';
 import {StackItem, EnvList} from './StackItem.js';
@@ -61,6 +60,9 @@ export default class TexParser {
    * @type {number}
    */
   public i: number = 0;
+
+
+  private _lastCS: string = '';
 
   /**
    * @constructor
@@ -117,6 +119,13 @@ export default class TexParser {
     return this._string;
   }
 
+
+  /**
+   * @return {string} The last command sequence that was matched.
+   */
+  get lastCS() {
+    return this._lastCS;
+  }
 
   /**
    * Parses the input with the specified kind of map.
@@ -237,6 +246,7 @@ export default class TexParser {
   public GetCS() {
     let CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
     if (CS) {
+      this._lastCS = CS[1];
       this.i += CS[1].length;
       return CS[1];
     } else {
@@ -253,11 +263,13 @@ export default class TexParser {
     switch (this.GetNext()) {
     case '':
       if (!noneOK) {
+        // @test MissingArgFor
         throw new TexError(['MissingArgFor', 'Missing argument for %1', name]);
       }
       return null;
     case '}':
       if (!noneOK) {
+        // @test ExtraCloseMissingOpen
         throw new TexError(['ExtraCloseMissingOpen',
                             'Extra close brace or missing open brace']);
       }
@@ -278,6 +290,7 @@ export default class TexParser {
           break;
         }
       }
+      // @test MissingCloseBrace
       throw new TexError(['MissingCloseBrace', 'Missing close brace']);
     }
     return this.string.charAt(this.i++);
@@ -298,6 +311,7 @@ export default class TexParser {
       case '\\':  this.i++; break;
       case '}':
         if (parens-- <= 0) {
+          // @test ExtraCloseLooking1
           throw new TexError(['ExtraCloseLooking',
                               'Extra close brace while looking for %1', '\']\'']);
         }
@@ -309,6 +323,7 @@ export default class TexParser {
         break;
       }
     }
+    // @test MissingCloseBracket
     throw new TexError(['MissingCloseBracket',
                         'Could not find closing \']\' for argument to %1', name]);
   }
@@ -332,6 +347,7 @@ export default class TexParser {
         return this.convertDelimiter(c);
       }
     }
+    // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
     throw new TexError(['MissingOrUnrecognizedDelim',
                         'Missing or unrecognized delimiter for %1', name]);
   }
@@ -359,6 +375,7 @@ export default class TexParser {
         return value + unit;
       }
     }
+    // @test MissingDimOrUnits
     throw new TexError(['MissingDimOrUnits',
                         'Missing dimension or its units for %1', name]);
   }
@@ -381,6 +398,7 @@ export default class TexParser {
       case '{':   parens++; break;
       case '}':
         if (parens === 0) {
+          // @test ExtraCloseLooking2
           throw new TexError(['ExtraCloseLooking',
                               'Extra close brace while looking for %1', token]);
         }
@@ -391,6 +409,7 @@ export default class TexParser {
         return this.string.slice(j, k);
       }
     }
+    // @test TokenNotFoundForCommand
     throw new TexError(['TokenNotFoundForCommand',
                         'Could not find %1 for %2', token, name]);
   }
@@ -418,6 +437,7 @@ export default class TexParser {
   /**
    *  Get a delimiter or empty argument
    */
+  // TODO: This is actually an AMS command.
   public GetDelimiterArg(name: string) {
     let c = ParseUtil.trimSpaces(this.GetArgument(name));
     if (c === '') {
@@ -426,6 +446,7 @@ export default class TexParser {
     if (this.contains('delimiter', c)) {
       return c;
     }
+    // @test MissingOrUnrecognizedDelim
     throw new TexError(['MissingOrUnrecognizedDelim',
                         'Missing or unrecognized delimiter for %1', name]);
   }

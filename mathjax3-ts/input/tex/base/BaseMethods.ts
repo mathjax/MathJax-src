@@ -911,6 +911,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
         //
         //  Extra alignment tabs are not allowed in cases
         //
+        // @test ExtraAlignTab
         throw new TexError(['ExtraAlignTab', 'Extra alignment tab in \\cases text']);
       } else if (c === '\\') {
         //
@@ -1002,11 +1003,14 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
   }
   const top = parser.stack.Top();
   if (!(top instanceof sitem.ArrayItem) || top.Size()) {
+    // @test Misplaced hline
     throw new TexError(['Misplaced', 'Misplaced %1', name]);
   }
   if (!top.table.length) {
+    // @test Enclosed top, Enclosed top bottom
     top.frame.push('top');
   } else {
+    // @test Enclosed bottom, Enclosed top bottom
     const lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
     while (lines.length < top.table.length) {
       lines.push('none');
@@ -1019,8 +1023,10 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
 BaseMethods.HFill = function(parser: TexParser, name: string) {
   const top = parser.stack.Top();
   if (top instanceof sitem.ArrayItem) {
+    // @test Hfill
     top.hfill.push(top.Size());
   } else {
+    // @test UnsupportedHFill
     throw new TexError(['UnsupportedHFill', 'Unsupported use of %1', name]);
   }
 };
@@ -1037,6 +1043,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   // @test Array1, Array2, Array Test
   let env = parser.GetArgument(name);
   if (env.match(/\\/i)) {
+    // @test InvalidEnv
     throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'', env]);
   }
   let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
@@ -1133,7 +1140,8 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
 BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
-  return parser.itemFactory.create('equation', numbered);
+  return parser.itemFactory.create('equation', numbered).
+    setProperties({name: begin.getName()});
 };
 
 
@@ -1233,6 +1241,7 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
                              macro: string, argcount: number,
                              // TODO: The final argument seems never to be used.
                              def?: string) {
+  console.log(name);
   if (argcount) {
     const args: string[] = [];
     if (def != null) {

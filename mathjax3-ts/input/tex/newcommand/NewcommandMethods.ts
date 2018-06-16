@@ -136,7 +136,7 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
  * @param {string} name The name of the calling command.
  */
 NewcommandMethods.Let = function(parser: TexParser, name: string) {
-  let cs = NewcommandUtil.GetCSname(parser, name), macro;
+  let cs = NewcommandUtil.GetCSname(parser, name);
   let c = parser.GetNext();
   // @test Let Bar, Let Caret
   if (c === '=') {
@@ -148,7 +148,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   if (c === '\\') {
     // @test Let Bar, Let Brace Equal Stretchy
     name = NewcommandUtil.GetCSname(parser, name);
-    macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
+    let macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
     if (macro) {
       // @test Let Bar, Let Brace Equal Stretchy
       (MapHandler.getInstance().getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).
@@ -156,10 +156,14 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
       return;
     }
     let map = handlers.get('macro').applicable(name);
+    if (!map) {
+      // @test (missing) \let\aa\bb \aa
+      return;
+    }
     let extension = ExtensionConf.handler['macro'].indexOf(map.name) !== -1;
     if (map instanceof sm.MacroMap) {
       // @test Def Let, Newcommand Let
-      macro = (map as sm.CommandMap).lookup(name) as Macro;
+      let macro = (map as sm.CommandMap).lookup(name) as Macro;
       (MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
         add(cs, new Macro(macro.symbol, macro.func, macro.args));
       return;
@@ -178,7 +182,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   }
   // @test Let Brace Equal, Let Caret
   parser.i++;
-  macro = handlers.get('delimiter').lookup(c) as Symbol;
+  let macro = handlers.get('delimiter').lookup(c) as Symbol;
   if (macro) {
     // @test Let Paren Delim, Let Paren Stretchy
     (MapHandler.getInstance().getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).

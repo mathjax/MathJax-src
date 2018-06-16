@@ -7102,5 +7102,78 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+parserTest.runTest(
+  'Hfill', '\\begin{array}{c}a\\hfill b\\end{array}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mtable",
+         "texClass": 0,
+         "attributes": {"rowspacing": "4pt",
+                        "columnspacing": "1em"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {"useHeight": 1},
+         "childNodes": [
+           {"kind": "mtr",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"columnalign": "center",
+                          "rowalign": "baseline",
+                          "displaystyle": false,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+              {"kind": "mtd",
+               "texClass": null,
+               "attributes": {},
+               "inherited": {"columnalign": "center",
+                             "rowalign": "baseline",
+                             "displaystyle": false,
+                             "scriptlevel": 0},
+               "properties": {},
+               "childNodes": [
+                 {"kind": "mrow",
+                      "texClass": 0,
+                      "attributes": {},
+                      "inherited": {"displaystyle": false,
+                        "scriptlevel": 0},
+                      "properties": {},
+                      "childNodes": [
+                        {"kind": "mi",
+                          "texClass": 0,
+                          "attributes": {},
+                          "inherited": {"displaystyle": false,
+                            "scriptlevel": 0,
+                            "mathvariant": "italic"},
+                          "properties": {},
+                          "childNodes": [
+                            {"kind": "text",
+                              "text": "a"}]},
+                        {"kind": "mi",
+                          "texClass": 0,
+                          "attributes": {},
+                          "inherited": {"displaystyle": false,
+                            "scriptlevel": 0,
+                            "mathvariant": "italic"},
+                          "properties": {},
+                          "childNodes": [
+                            {"kind": "text",
+                              "text": "b"}]}],
+                      "isInferred": true}]}]}]}],
+      "isInferred": true}]}
+);
+
 
 parserTest.printTime();

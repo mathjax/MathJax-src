@@ -113,7 +113,7 @@ export class OpenItem extends BaseItem {
    */
   constructor(factory: StackItemFactory) {
     super(factory);
-    // @test ExtraOpenMissingClose Stop
+    // @test ExtraOpenMissingClose
     this.errors['stop'] = ['ExtraOpenMissingClose',
                            'Extra open brace or missing close brace'];
   }
@@ -141,8 +141,7 @@ export class OpenItem extends BaseItem {
       // @test PrimeSup
       let mml = this.toMml();
       const node = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
-      return this.factory.create('mml', node); // TeXAtom make it an ORD to prevent spacing
-      // (FIXME: should be another way)
+      return this.factory.create('mml', node);
     }
     return super.checkItem(item);
   }
@@ -356,7 +355,7 @@ export class LeftItem extends BaseItem {
    */
   public checkItem(item: StackItem) {
     // @test Missing Right
-        if (item.isKind('right')) {
+    if (item.isKind('right')) {
       return this.factory.create('mml', ParseUtil.fenced(
         this.factory.configuration,
         this.getProperty('delim') as string, this.toMml(),
@@ -417,6 +416,7 @@ export class BeginItem extends BaseItem {
   public checkItem(item: StackItem) {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
+        // @test EnvBadEnd
         throw new TexError(['EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
                             this.getName(), item.getName()]);
       }
@@ -426,6 +426,7 @@ export class BeginItem extends BaseItem {
       return false;  // TODO: This case could probably go!
     }
     if (item.isKind('stop')) {
+      // @test EnvMissingEnd Array
       throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
     }
     return super.checkItem(item);
@@ -489,20 +490,22 @@ export class PositionItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        if (item.isClose) {
+    if (item.isClose) {
+      // @test MissingBoxFor
       throw new TexError(['MissingBoxFor', 'Missing box for %1', this.getName()]);
     }
     if (item.isFinal) {
       let mml = item.toMml();
       switch (this.getProperty('move')) {
       case 'vertical':
-        // @test Raise, Lower
+        // @test Raise, Lower, Raise Negative, Lower Negative
         mml = this.factory.configuration.nodeFactory.create('node', 'mpadded', [mml],
                                     {height: this.getProperty('dh'),
                                      depth: this.getProperty('dd'),
                                      voffset: this.getProperty('dh')});
         return [this.factory.create('mml', mml)];
       case 'horizontal':
+        // @test Move Left, Move Right, Move Left Negative, Move Right Negative
         return [this.factory.create('mml', this.getProperty('left') as MmlNode), item,
                 this.factory.create('mml', this.getProperty('right') as MmlNode)];
       }
@@ -769,6 +772,7 @@ export class ArrayItem extends BaseItem {
           // @test: Label
           return newItem;
         }
+        // @test MissingCloseBrace2
         throw new TexError(['MissingCloseBrace', 'Missing close brace']);
       }
       return [newItem, item];
@@ -941,6 +945,10 @@ export class EquationItem extends BaseItem {
       let mml = this.toMml();
       let tag = this.factory.configuration.tags.getTag();
       return [tag ? this.factory.configuration.tags.enTag(mml, tag) : mml, item];
+    }
+    if (item.isKind('stop')) {
+      // @test EnvMissingEnd Equation
+      throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
     }
     return super.checkItem(item);
   }

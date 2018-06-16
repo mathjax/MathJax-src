@@ -70,6 +70,7 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
   }
   n = parser.GetArgument('\\begin{' + name + '}');
   if (n.match(/[^0-9]/)) {
+    // @test PositiveIntegerArg
     throw new TexError(['PositiveIntegerArg',
                         'Argument to %1 must me a positive integer',
                         '\\begin{' + name + '}']);
@@ -308,17 +309,18 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
 
 
 /**
- *  Add the tag to the environment (to be added to the table row later)
+ * Add the tag to the environment (to be added to the table row later)
  * tag is 
  */
 AmsMethods.HandleTag = function(parser: TexParser, name: string) {
   if (!parser.tags.currentTag.taggable && parser.tags.env) {
+    // @test Illegal Tag Error
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',
                         name, parser.tags.env]);
   }
-  // TODO: sort out empty strings in tagId!
   if (parser.tags.currentTag.tag) {
+    // @test Double Tag Error
     throw new TexError(['MultipleCommand', 'Multiple %1', name]);
   }
   let star = parser.GetStar();
