@@ -394,6 +394,7 @@ namespace ParseUtil {
    */
   export function checkEqnEnv(parser: TexParser) {
     if (parser.stack.global.eqnenv) {
+      // @test ErroneousNestingEq
       throw new TexError(['ErroneousNestingEq', 'Erroneous nesting of equation structures']);
     }
     parser.stack.global.eqnenv = true;

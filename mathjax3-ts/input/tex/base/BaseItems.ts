@@ -416,6 +416,7 @@ export class BeginItem extends BaseItem {
   public checkItem(item: StackItem) {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
+        // @test EnvBadEnd
         throw new TexError(['EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
                             this.getName(), item.getName()]);
       }
@@ -425,6 +426,7 @@ export class BeginItem extends BaseItem {
       return false;
     }
     if (item.isKind('stop')) {
+      // @test EnvMissingEnd Array
       throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
     }
     return super.checkItem(item);
@@ -489,6 +491,7 @@ export class PositionItem extends BaseItem {
    */
   public checkItem(item: StackItem) {
     if (item.isClose) {
+      // @test MissingBoxFor
       throw new TexError(['MissingBoxFor', 'Missing box for %1', this.getName()]);
     }
     if (item.isFinal) {
@@ -769,6 +772,7 @@ export class ArrayItem extends BaseItem {
           // @test: Label
           return newItem;
         }
+        // @test MissingCloseBrace2
         throw new TexError(['MissingCloseBrace', 'Missing close brace']);
       }
       return [newItem, item];
@@ -943,6 +947,7 @@ export class EquationItem extends BaseItem {
       return [tag ? this.factory.configuration.tags.enTag(mml, tag) : mml, item];
     }
     if (item.isKind('stop')) {
+      // @test EnvMissingEnd Equation
       throw new TexError(['EnvMissingEnd', 'Missing \\end{%1}', this.getName()]);
     }
     return super.checkItem(item);

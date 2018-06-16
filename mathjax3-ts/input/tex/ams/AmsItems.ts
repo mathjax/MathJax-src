@@ -80,7 +80,8 @@ export class MultlineItem extends ArrayItem {
    */
   public EndRow() {
         if (this.row.length !== 1) {
-      throw new TexError(
+          // @test MultlineRowsOneCol
+          throw new TexError(
         ['MultlineRowsOneCol',
          'The rows within the %1 environment must have exactly one column',
          'multline']);

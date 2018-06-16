@@ -911,6 +911,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
         //
         //  Extra alignment tabs are not allowed in cases
         //
+        // @test ExtraAlignTab
         throw new TexError(['ExtraAlignTab', 'Extra alignment tab in \\cases text']);
       } else if (c === '\\') {
         //
@@ -1002,6 +1003,7 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
   }
   const top = parser.stack.Top();
   if (!(top instanceof sitem.ArrayItem) || top.Size()) {
+    // @test Misplaced hline
     throw new TexError(['Misplaced', 'Misplaced %1', name]);
   }
   if (!top.table.length) {
@@ -1021,8 +1023,10 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
 BaseMethods.HFill = function(parser: TexParser, name: string) {
   const top = parser.stack.Top();
   if (top instanceof sitem.ArrayItem) {
+    // @test Hfill
     top.hfill.push(top.Size());
   } else {
+    // @test UnsupportedHFill
     throw new TexError(['UnsupportedHFill', 'Unsupported use of %1', name]);
   }
 };
@@ -1043,6 +1047,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     env = env.substr(5);
   } // special \end{} for \newenvironment environments
   if (env.match(/\\/i)) {
+    // @test InvalidEnv
     throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'', env]);
   }
   if (name === '\\end') {
