@@ -61,8 +61,11 @@ export default class TexParser {
    */
   public i: number = 0;
 
-
-  private _lastCS: string = '';
+  /**
+   * The last command sequence 
+   * @type {string}
+   */
+  public currentCS: string = '';
 
   /**
    * @constructor
@@ -119,13 +122,6 @@ export default class TexParser {
     return this._string;
   }
 
-
-  /**
-   * @return {string} The last command sequence that was matched.
-   */
-  get lastCS() {
-    return this._lastCS;
-  }
 
   /**
    * Parses the input with the specified kind of map.
@@ -246,7 +242,6 @@ export default class TexParser {
   public GetCS() {
     let CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
     if (CS) {
-      this._lastCS = CS[1];
       this.i += CS[1].length;
       return CS[1];
     } else {
@@ -264,7 +259,7 @@ export default class TexParser {
     case '':
       if (!noneOK) {
         // @test MissingArgFor
-        throw new TexError(['MissingArgFor', 'Missing argument for %1', name]);
+        throw new TexError(['MissingArgFor', 'Missing argument for %1', this.currentCS]);
       }
       return null;
     case '}':
@@ -325,7 +320,7 @@ export default class TexParser {
     }
     // @test MissingCloseBracket
     throw new TexError(['MissingCloseBracket',
-                        'Could not find closing \']\' for argument to %1', name]);
+                        'Could not find closing \']\' for argument to %1', this.currentCS]);
   }
 
   /**
@@ -349,7 +344,7 @@ export default class TexParser {
     }
     // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
     throw new TexError(['MissingOrUnrecognizedDelim',
-                        'Missing or unrecognized delimiter for %1', name]);
+                        'Missing or unrecognized delimiter for %1', this.currentCS]);
   }
 
   /**
@@ -377,7 +372,7 @@ export default class TexParser {
     }
     // @test MissingDimOrUnits
     throw new TexError(['MissingDimOrUnits',
-                        'Missing dimension or its units for %1', name]);
+                        'Missing dimension or its units for %1', this.currentCS]);
   }
 
 
@@ -411,7 +406,7 @@ export default class TexParser {
     }
     // @test TokenNotFoundForCommand
     throw new TexError(['TokenNotFoundForCommand',
-                        'Could not find %1 for %2', token, name]);
+                        'Could not find %1 for %2', token, this.currentCS]);
   }
 
   /**
@@ -448,7 +443,7 @@ export default class TexParser {
     }
     // @test MissingOrUnrecognizedDelim
     throw new TexError(['MissingOrUnrecognizedDelim',
-                        'Missing or unrecognized delimiter for %1', name]);
+                        'Missing or unrecognized delimiter for %1', this.currentCS]);
   }
 
   /**

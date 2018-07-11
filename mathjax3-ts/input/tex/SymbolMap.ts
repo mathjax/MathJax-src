@@ -328,7 +328,14 @@ export class CommandMap extends MacroMap {
       return null;
     }
     let args = [env, '\\' + macro.symbol].concat(macro.args as string[]);
-    return parser ? (parser.apply(env, args) || true) : null;
+    if (!parser) {
+      return null;
+    }
+    let saveCommand = env.currentCS;
+    env.currentCS = '\\' + symbol;
+    let result = (parser.apply(env, args) || true);
+    env.currentCS = saveCommand;
+    return result;
   }
 
 }

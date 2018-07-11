@@ -40,7 +40,6 @@ import {Args, Attributes, ParseMethod} from '../Types.js';
 
 namespace NewcommandUtil {
 
-
   /**
    * Transforms the attributes of a symbol into the arguments of a macro. E.g.,
    * Symbol('ell', 'l', {mathvariant: "italic"}) is turned into Macro arguments:

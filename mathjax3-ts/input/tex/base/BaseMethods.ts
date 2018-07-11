@@ -301,8 +301,10 @@ BaseMethods.Middle = function(parser: TexParser, name: string) {
   parser.Push(node);
   if (!parser.stack.Top().isKind('left')) {
     // @test Orphan Middle, Middle with Right
+    console.log(parser);
+    console.log(parser.currentCS);
     throw new TexError(['MisplacedMiddle',
-                        '%1 must be within \\left and \\right', name]);
+                        '%1 must be within \\left and \\right', parser.currentCS]);
   }
   node = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true}, delim);
   parser.Push(node);
@@ -340,7 +342,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   if (!op || (NodeUtil.getTexClass(NodeUtil.getCoreMO(op)) !== TEXCLASS.OP &&
               NodeUtil.getProperty(op, 'movesupsub') == null)) {
     // @test Limits Error
-    throw new TexError(['MisplacedLimits', '%1 is allowed only on operators', name]);
+    throw new TexError(['MisplacedLimits', '%1 is allowed only on operators', parser.currentCS]);
   }
   const top = parser.stack.Top();
   let node;
@@ -367,7 +369,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
 
 BaseMethods.Over = function(parser: TexParser, name: string, open: string, close: string) {
   // @test Over
-  const mml = parser.itemFactory.create('over').setProperties({name: name}) ;
+  const mml = parser.itemFactory.create('over').setProperties({name: parser.currentCS}) ;
   if (open || close) {
     // @test Choose
     mml.setProperty('open', open);
@@ -452,16 +454,16 @@ BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
   // @test Tweaked Root
   if (!parser.stack.env['inRoot']) {
     // @test Misplaced Move Root
-    throw new TexError(['MisplacedMoveRoot', '%1 can appear only within a root', name]);
+    throw new TexError(['MisplacedMoveRoot', '%1 can appear only within a root', parser.currentCS]);
   }
   if (parser.stack.global[id]) {
     // @test Multiple Move Root
-    throw new TexError(['MultipleMoveRoot', 'Multiple use of %1', name]);
+    throw new TexError(['MultipleMoveRoot', 'Multiple use of %1', parser.currentCS]);
   }
   let n = parser.GetArgument(name);
   if (!n.match(/-?[0-9]+/)) {
     // @test Incorrect Move Root
-    throw new TexError(['IntegerArg', 'The argument to %1 must be an integer', name]);
+    throw new TexError(['IntegerArg', 'The argument to %1 must be an integer', parser.currentCS]);
   }
   n = (parseInt(n, 10) / 15) + 'em';
   if (n.substr(0, 1) !== '-') {
@@ -687,7 +689,7 @@ BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
   // @test Raise, Lower, Raise Negative, Lower Negative
   let h = parser.GetDimen(name);
   let item =
-    parser.itemFactory.create('position').setProperties({name: name, move: 'vertical'}) ;
+    parser.itemFactory.create('position').setProperties({name: parser.currentCS, move: 'vertical'}) ;
   // TEMP: Changes here:
   if (h.charAt(0) === '-') {
     // @test Raise Negative, Lower Negative
@@ -717,7 +719,7 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
   }
   parser.Push(
     parser.itemFactory.create('position').setProperties({
-      name: name, move: 'horizontal',
+      name: parser.currentCS, move: 'horizontal',
       left:  parser.configuration.nodeFactory.create('node', 'mspace', [], {width: h}),
       right: parser.configuration.nodeFactory.create('node', 'mspace', [], {width: nh})}) );
 };
@@ -825,7 +827,7 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
   const c = parser.GetNext();
   if (c === '') {
     // @test Matrix Error
-    throw new TexError(['MissingArgFor', 'Missing argument for %1', name]);
+    throw new TexError(['MissingArgFor', 'Missing argument for %1', parser.currentCS]);
   }
   if (c === '{') {
     // @test Matrix Braces, Matrix Columns, Matrix Rows.
@@ -960,7 +962,7 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
     if (dim && !value) {
       // @test Dimension Error
       throw new TexError(['BracketMustBeDimension',
-                          'Bracket argument to %1 must be a dimension', name]);
+                          'Bracket argument to %1 must be a dimension', parser.currentCS]);
     }
     n = value + unit;
   }
@@ -1004,7 +1006,7 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
   const top = parser.stack.Top();
   if (!(top instanceof sitem.ArrayItem) || top.Size()) {
     // @test Misplaced hline
-    throw new TexError(['Misplaced', 'Misplaced %1', name]);
+    throw new TexError(['Misplaced', 'Misplaced %1', parser.currentCS]);
   }
   if (!top.table.length) {
     // @test Enclosed top, Enclosed top bottom
@@ -1027,7 +1029,7 @@ BaseMethods.HFill = function(parser: TexParser, name: string) {
     top.hfill.push(top.Size());
   } else {
     // @test UnsupportedHFill
-    throw new TexError(['UnsupportedHFill', 'Unsupported use of %1', name]);
+    throw new TexError(['UnsupportedHFill', 'Unsupported use of %1', parser.currentCS]);
   }
 };
 
@@ -1192,12 +1194,13 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
     // @test Label, Ref, Ref Unknown
     if (parser.tags.label) {
       // @test Double Label Error
-      throw new TexError(['MultipleCommand', 'Multiple %1', name]);
+      throw new TexError(['MultipleCommand', 'Multiple %1', parser.currentCS]);
     }
     parser.tags.label = label;
     if (parser.tags.allLabels[label] || parser.tags.labels[label]) {
       // @ Duplicate Label Error
-      throw new TexError(['MultipleLabel', 'Label \'%1\' multiply defined', label])}
+      throw new TexError(['MultipleLabel', 'Label \'%1\' multiply defined', label]);
+    }
     // TODO: This should be set in the tags structure!
     parser.tags.labels[label] = new Label(); // will be replaced by tag value later
   }
@@ -1241,7 +1244,6 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
                              macro: string, argcount: number,
                              // TODO: The final argument seems never to be used.
                              def?: string) {
-  console.log(name);
   if (argcount) {
     const args: string[] = [];
     if (def != null) {
@@ -1269,7 +1271,8 @@ BaseMethods.MathChoice = function(parser: TexParser, name: string) {
   const T  = parser.ParseArg(name);
   const S  = parser.ParseArg(name);
   const SS = parser.ParseArg(name);
-  parser.Push(parser.configuration.nodeFactory.create('node', 'mathchoice', [D, T, S, SS], {}));
+  parser.Push(parser.configuration.nodeFactory.create(
+      'node', 'mathchoice', [D, T, S, SS], {}));
 };
 
 

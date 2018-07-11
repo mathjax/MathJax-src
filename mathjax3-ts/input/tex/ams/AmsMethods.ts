@@ -214,12 +214,12 @@ AmsMethods.HandleShove = function(parser: TexParser, name: string,
     // @test Shove Error Environment
     throw new TexError(['CommandOnlyAllowedInEnv',
                         '%1 only allowed in %2 environment',
-                        name, 'multline']);
+                        parser.currentCS, 'multline']);
   }
   if (top.Size()) {
     // @test Shove Error (Top|Middle|Bottom)
     throw new TexError(['CommandAtTheBeginingOfLine',
-                        '%1 must come at the beginning of the line', name]);
+                        '%1 must come at the beginning of the line', parser.currentCS]);
   }
   top.setProperty('shove', shove);
 };
@@ -242,7 +242,7 @@ AmsMethods.CFrac = function(parser: TexParser, name: string) {
   lr = lrMap[lr];
   if (lr == null) {
     // @test Center Fraction Error
-    throw new TexError(['IllegalAlign', 'Illegal alignment specified in %1', name]);
+    throw new TexError(['IllegalAlign', 'Illegal alignment specified in %1', parser.currentCS]);
   }
   if (lr) {
     // @test Right Fraction, Left Fraction
@@ -287,7 +287,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
     let styleAlpha = ['D', 'T', 'S', 'SS'][styleDigit];
     if (styleAlpha == null) {
       // @test Genfrac Error
-      throw new TexError(['BadMathStyleFor', 'Bad math style for %1', name]);
+      throw new TexError(['BadMathStyleFor', 'Bad math style for %1', parser.currentCS]);
     }
     frac = parser.configuration.nodeFactory.create('node', 'mstyle', [frac], {});
     if (styleAlpha === 'D') {
@@ -317,11 +317,11 @@ AmsMethods.HandleTag = function(parser: TexParser, name: string) {
     // @test Illegal Tag Error
     throw new TexError(['CommandNotAllowedInEnv',
                         '%1 not allowed in %2 environment',
-                        name, parser.tags.env]);
+                        parser.currentCS, parser.tags.env]);
   }
   if (parser.tags.currentTag.tag) {
     // @test Double Tag Error
-    throw new TexError(['MultipleCommand', 'Multiple %1', name]);
+    throw new TexError(['MultipleCommand', 'Multiple %1', parser.currentCS]);
   }
   let star = parser.GetStar();
   let tagId = ParseUtil.trimSpaces(parser.GetArgument(name));

@@ -284,14 +284,14 @@ export class OverItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        if (item.isKind('over')) {
+    if (item.isKind('over')) {
       // @test Double Over
       throw new TexError(
         ['AmbiguousUseOf', 'Ambiguous use of %1', item.getName()]);
     }
     if (item.isClose) {
       // @test Over
-      let mml = this.factory.configuration.nodeFactory.create('node', 
+      let mml = this.factory.configuration.nodeFactory.create('node',
         'mfrac', [this.getProperty('num') as MmlNode, this.toMml(false)], {});
       if (this.getProperty('thickness') != null) {
         // @test Choose, Above, Above with Delims

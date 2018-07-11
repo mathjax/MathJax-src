@@ -23,7 +23,7 @@
  */
 
 
-import {Attributes, ParseMethod} from '../Types.js';
+import {Args, Attributes, ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../SymbolMap.js';
@@ -164,6 +164,12 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     if (map instanceof sm.MacroMap) {
       // @test Def Let, Newcommand Let
       let macro = (map as sm.CommandMap).lookup(name) as Macro;
+      let func = function(...args: any[]) {
+        let parser = args[0];
+        let symbol = args[1];
+        let rest = args.slice(2);
+        ((macro as Macro).func as ParseMethod).apply(macro, [parser].concat(rest));
+      };
       (MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
         add(cs, new Macro(macro.symbol, macro.func, macro.args));
       return;
