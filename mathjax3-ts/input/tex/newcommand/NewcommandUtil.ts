@@ -51,7 +51,9 @@ namespace NewcommandUtil {
    */
   export function disassembleSymbol(name: string, symbol: Symbol): Args[] {
     let newArgs = [name, symbol.char] as Args[];
+    // @test Let Relet, Let Let, Let Circular Macro
     if (symbol.attributes) {
+      // @test Let Relet
       for (let key in symbol.attributes) {
         newArgs.push(key);
         newArgs.push(symbol.attributes[key] as Args);
@@ -69,10 +71,12 @@ namespace NewcommandUtil {
    * @return {Symbol} The Symbol generated from the arguments..
    */
   export function assembleSymbol(args: Args[]): Symbol {
+    // @test Let Relet, Let Let, Let Circular Macro
     let name = args[0] as string;
     let char = args[1] as string;
     let attrs: Attributes = {};
     for (let i = 2; i < args.length; i = i + 2) {
+      // @test Let Relet
       attrs[args[i] as string] = args[i + 1];
     }
     return new Symbol(name, char, attrs);
@@ -86,8 +90,10 @@ namespace NewcommandUtil {
    * @return {string} The control sequence.
    */
   export function GetCSname(parser: TexParser, cmd: string) {
+    // @test Def ReDef, Let Bar, Let Brace Equal
     let c = parser.GetNext();
     if (c !== '\\') {
+      // @test No CS
       throw new TexError(['MissingCS',
                           '%1 must be followed by a control sequence', cmd]);
     }
@@ -105,37 +111,48 @@ namespace NewcommandUtil {
    *     there is an optional argument.
    */
   export function GetTemplate(parser: TexParser, cmd: string, cs: string): number | string[] {
-    let c, params = [], n = 0;
-    c = parser.GetNext();
+    // @test Def Double Let, Def ReDef, Def Let
+    let c = parser.GetNext();
+    let params: string[] = [];
+    let n = 0;
     let i = parser.i;
     while (parser.i < parser.string.length) {
       c = parser.GetNext();
       if (c === '#') {
+        // @test Def ReDef, Def Let, Def Optional Brace
         if (i !== parser.i) {
+          // @test Def Let, Def Optional Brace
           params[n] = parser.string.substr(i, parser.i - i);
         }
         c = parser.string.charAt(++parser.i);
         if (!c.match(/^[1-9]$/)) {
+          // @test Illegal Hash
           throw new TexError(['CantUseHash2',
                               'Illegal use of # in template for %1', cs]);
         }
         if (parseInt(c) !== ++n) {
+          // @test No Sequence
           throw new TexError(['SequentialParam',
                               'Parameters for %1 must be numbered sequentially', cs]);
         }
         i = parser.i + 1;
       } else if (c === '{') {
+        // @test Def Double Let, Def ReDef, Def Let
         if (i !== parser.i) {
+          // @test Optional Brace Error
           params[n] = parser.string.substr(i, parser.i - i);
         }
         if (params.length > 0) {
+          // @test Def Let, Def Optional Brace
           return [n.toString()].concat(params);
         } else {
+          // @test Def Double Let, Def ReDef
           return n;
         }
       }
       parser.i++;
     }
+    // @test No Replacement
     throw new TexError(['MissingReplacementString',
                         'Missing replacement string for definition of %1', cmd]);
   };
@@ -149,33 +166,43 @@ namespace NewcommandUtil {
    */
   export function GetParameter(parser: TexParser, name: string, param: string) {
     if (param == null) {
+      // @test Def Let, Def Optional Brace, Def Options CS
       return parser.GetArgument(name);
     }
     let i = parser.i, j = 0, hasBraces = 0;
     while (parser.i < parser.string.length) {
       let c = parser.string.charAt(parser.i);
+      // @test Def Let, Def Optional Brace, Def Options CS
       if (c === '{') {
+        // @test Def Optional Brace, Def Options CS
         if (parser.i === i) {
+          // @test Def Optional Brace
           hasBraces = 1;
         }
         parser.GetArgument(name); j = parser.i - i;
       } else if (MatchParam(parser, param)) {
+        // @test Def Let, Def Optional Brace, Def Options CS
         if (hasBraces) {
+          // @test Def Optional Brace
           i++;
           j -= 2;
         }
         return parser.string.substr(i, j);
       } else if (c === '\\') {
+        // @test Def Options CS
         parser.i++; j++; hasBraces = 0;
         let match = parser.string.substr(parser.i).match(/[a-z]+|./i);
         if (match) {
+          // @test Def Options CS
           parser.i += match[0].length;
           j = parser.i - i;
         }
       } else {
+        // @test Def Let
         parser.i++; j++; hasBraces = 0;
       }
     }
+    // @test Runaway Argument
     throw new TexError(['RunawayArgument', 'Runaway argument for %1?', name]);
   };
 
@@ -189,13 +216,17 @@ namespace NewcommandUtil {
    * @return {number} The number of optional parameters, either 0 or 1.
    */
   export function MatchParam(parser: TexParser, param: string) {
+    // @test Def Let, Def Optional Brace, Def Options CS
     if (parser.string.substr(parser.i, param.length) !== param) {
+      // @test Def Let, Def Options CS
       return 0;
     }
     if (param.match(/\\[a-z]+$/i) &&
         parser.string.charAt(parser.i + param.length).match(/[a-z]/i)) {
+      // @test (missing)
       return 0;
     }
+    // @test Def Let, Def Optional Brace, Def Options CS
     parser.i += param.length;
     return 1;
   };

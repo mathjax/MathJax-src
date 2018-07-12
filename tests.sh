@@ -28,6 +28,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-noundefined-tests.js
     node load.js tests/parser-boldsymbol-tests.js
     node load.js tests/parser-newcommand-tests.js
+    node load.js tests/parser-ncerrors-tests.js
     exit 0
 else
     repeat=$1

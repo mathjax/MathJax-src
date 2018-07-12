@@ -54,7 +54,7 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
     cs = cs.substr(1);
   }
   if (!cs.match(/^(.|[a-z]+)$/i)) {
-    // @test (missing) \newcommand{\11}{a}
+    // @test Illegal CS
     throw new TexError(['IllegalControlSequenceName',
                         'Illegal control sequence name for %1', name]);
   }
@@ -62,6 +62,7 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
     // @test Newcommand Optional, Newcommand Arg, Newcommand Arg Optional
     n = ParseUtil.trimSpaces(n);
     if (!n.match(/^[0-9]+$/)) {
+      // @test Illegal Argument Number
       throw new TexError(['IllegalParamNumber',
                           'Illegal number of parameters specified in %1', name]);
     }
@@ -88,7 +89,7 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
     // @test Newenvironment Optional, Newenvironment Arg Optional
     n = ParseUtil.trimSpaces(n);
     if (!n.match(/^[0-9]+$/)) {
-      // @test (missing) \newenvironment{hh}[a]{}{}
+      // @test Illegal Parameter Number
       throw new TexError(['IllegalParamNumber',
                           'Illegal number of parameters specified in %1', name]);
         }
@@ -157,7 +158,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     }
     let map = handlers.get('macro').applicable(name);
     if (!map) {
-      // @test (missing) \let\aa\bb \aa
+      // @test Let Undefined CS
       return;
     }
     let extension = ExtensionConf.handler['macro'].indexOf(map.name) !== -1;
@@ -224,7 +225,7 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
     let args = [];
     parser.GetNext();
     if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
-      // @test (missing) \def\bar[#1]#2#3{c + c}\bar
+      // @test Missing Arguments
       throw new TexError(['MismatchUseDef',
                           'Use of %1 doesn\'t match its definition', name]);
     }

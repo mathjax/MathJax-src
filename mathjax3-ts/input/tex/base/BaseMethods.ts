@@ -301,8 +301,6 @@ BaseMethods.Middle = function(parser: TexParser, name: string) {
   parser.Push(node);
   if (!parser.stack.Top().isKind('left')) {
     // @test Orphan Middle, Middle with Right
-    console.log(parser);
-    console.log(parser.currentCS);
     throw new TexError(['MisplacedMiddle',
                         '%1 must be within \\left and \\right', parser.currentCS]);
   }
