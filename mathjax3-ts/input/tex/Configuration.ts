@@ -36,11 +36,26 @@ export type StackItemConfig = {[kind: string]: StackItemClass}
 export type TagsConfig = {[kind: string]: TagsClass}
 export type OptionsConfig = {[key: string]: (string|boolean)}
 
-// export type ConfigurationType = 'handler' | 'fallback' | 'items' | 'tags' | 'options' | 'nodes' | 'preprocessors' | 'postprocessors';
-
 
 export class Configuration {
 
+  /**
+   * Creates a configuration for a package.
+   * @param {string} name The package name.
+   * @param {Object} config The configuration parameters:
+   * Configuration for the TexParser consist of the following:
+   *  * _handler_  configuration mapping handler types to lists of symbol mappings.
+   *  * _fallback_ configuration mapping handler types to fallback methods.
+   *  * _items_ for the StackItem factory.
+   *  * _tags_ mapping tagging configurations to tagging objects.
+   *  * _options_ parse options for the packages.
+   *  * _nodes_ for the Node factory.
+   *  * _preprocessors_ list of functions for preprocessing the LaTeX
+   *      string wrt. to given parse options.
+   *  * _postprocessors_ list of functions for postprocessing the MmlNode
+   *      wrt. to given parse options.
+   * @return {Configuration} The newly generated configuration.
+   */
   public static create(name: string,
                        config: {handler?: HandlerConfig,
                                 fallback?: FallbackConfig,
@@ -60,39 +75,8 @@ export class Configuration {
                              config.nodes || {},
                              config.preprocessors || [],
                              config.postprocessors || []
-                            )
+                            );
   }
-
-  // Configuration for the TexParser consist of the following:
-  // * Handlerconfigurations
-  // * Fallback methods for handler types.
-  // * StackItem mappings for the StackFactory.
-  // * Tagging objects.
-  // * Other Options.
-
-  /**
-   * @constructor
-   */
-  private constructor(readonly name: string,
-                      readonly handler: HandlerConfig = {},
-                      readonly fallback: FallbackConfig = {},
-                      readonly items: StackItemConfig = {},
-                      readonly tags: TagsConfig = {},
-                      readonly options: OptionsConfig = {},
-                      // TODO: Flash this out with a node factory and node type.
-                      readonly nodes: {[key: string]: any} = {},
-                      public preprocessors: ((input: string, options: ParseOptions) => string)[] = [],
-                      public postprocessors: ((input: MmlNode, options: ParseOptions) => void)[] = []
-             ) {
-    let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
-    let handlers = Object.keys(handler) as HandlerType[];
-    for (const key of handlers) {
-      _default[key] = handler[key];
-    }
-    this.handler = _default;
-    ConfigurationHandler.getInstance().set(name, this);
-  }
-
 
   /**
    * Appends configurations to this configuration. Note that fallbacks are
@@ -116,6 +100,29 @@ export class Configuration {
     Object.assign(this.nodes, config.nodes);
     this.preprocessors = this.preprocessors.concat(config.preprocessors);
     this.postprocessors = this.postprocessors.concat(config.postprocessors);
+  }
+
+
+  /**
+   * @constructor
+   */
+  private constructor(readonly name: string,
+                      readonly handler: HandlerConfig = {},
+                      readonly fallback: FallbackConfig = {},
+                      readonly items: StackItemConfig = {},
+                      readonly tags: TagsConfig = {},
+                      readonly options: OptionsConfig = {},
+                      readonly nodes: {[key: string]: any} = {},
+                      public preprocessors: ((input: string, options: ParseOptions) => string)[] = [],
+                      public postprocessors: ((input: MmlNode, options: ParseOptions) => void)[] = []
+             ) {
+    let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
+    let handlers = Object.keys(handler) as HandlerType[];
+    for (const key of handlers) {
+      _default[key] = handler[key];
+    }
+    this.handler = _default;
+    ConfigurationHandler.getInstance().set(name, this);
   }
 
 };
@@ -147,7 +154,7 @@ export class ConfigurationHandler {
     this.map.set(name, map);
   }
 
-    
+
   /**
    * Looks up a configuration.
    *

@@ -171,6 +171,10 @@ export default class TexParser {
     return str;
   }
 
+
+  /**
+   * Parses the current input string.
+   */
   public Parse() {
     let c, n;
     while (this.i < this.string.length) {
@@ -182,10 +186,20 @@ export default class TexParser {
     }
   }
 
+
+  /**
+   * Pushes a new item onto the stack. The item can also be a Mml node.
+   * @param {StackItem|MmlNode} arg The new item.
+   */
   public Push(arg: StackItem|MmlNode) {
     this.stack.Push(arg);
   }
 
+
+  /**
+   * Pushes a list of new items onto the stack.
+   * @param {StackItem|MmlNode[]} args The new items.
+   */
   public PushAll(args: (StackItem|MmlNode)[]) {
     for (let i = 0, m = args.length; i < m; i++) {
       this.stack.Push(args[i]);
@@ -205,8 +219,8 @@ export default class TexParser {
     return node;
   }
 
-  /************************************************************************/
-  /*
+  /************************************************************************
+   *
    *   String handling routines
    */
 

@@ -255,7 +255,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     let parser: TexParser;
     let display = math.display;
     this.latex = math.math;
-    this.runPreprocessors()
+    this.runPreprocessors();
     try {
       parser = new TexParser(this.latex,
                              {display: display, isInner: false},
