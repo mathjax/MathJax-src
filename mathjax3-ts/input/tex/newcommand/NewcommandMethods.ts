@@ -55,16 +55,16 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
   }
   if (!cs.match(/^(.|[a-z]+)$/i)) {
     // @test Illegal CS
-    throw new TexError(['IllegalControlSequenceName',
-                        'Illegal control sequence name for %1', name]);
+    throw new TexError('IllegalControlSequenceName',
+                        'Illegal control sequence name for %1', name);
   }
   if (n) {
     // @test Newcommand Optional, Newcommand Arg, Newcommand Arg Optional
     n = ParseUtil.trimSpaces(n);
     if (!n.match(/^[0-9]+$/)) {
       // @test Illegal Argument Number
-      throw new TexError(['IllegalParamNumber',
-                          'Illegal number of parameters specified in %1', name]);
+      throw new TexError('IllegalParamNumber',
+                          'Illegal number of parameters specified in %1', name);
     }
   }
   let newMacros = MapHandler.getInstance().getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
@@ -90,8 +90,8 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
     n = ParseUtil.trimSpaces(n);
     if (!n.match(/^[0-9]+$/)) {
       // @test Illegal Parameter Number
-      throw new TexError(['IllegalParamNumber',
-                          'Illegal number of parameters specified in %1', name]);
+      throw new TexError('IllegalParamNumber',
+                          'Illegal number of parameters specified in %1', name);
         }
   }
   let newEnv = MapHandler.getInstance().getMap(ExtensionMaps.NEW_ENVIRONMENT) as sm.EnvironmentMap;
@@ -226,8 +226,8 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
     parser.GetNext();
     if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
       // @test Missing Arguments
-      throw new TexError(['MismatchUseDef',
-                          'Use of %1 doesn\'t match its definition', name]);
+      throw new TexError('MismatchUseDef',
+                          'Use of %1 doesn\'t match its definition', name);
     }
     for (let i = 0; i < argCount; i++) {
       // @test Def Let
@@ -238,9 +238,9 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
   parser.string = ParseUtil.addArgs(text, parser.string.slice(parser.i));
   parser.i = 0;
   if (++parser.macroCount > MAXMACROS) {
-    throw new TexError(['MaxMacroSub1',
+    throw new TexError('MaxMacroSub1',
                         'MathJax maximum macro substitution count exceeded; ' +
-                        'is here a recursive macro call?']);
+                        'is here a recursive macro call?');
   }
 };
 

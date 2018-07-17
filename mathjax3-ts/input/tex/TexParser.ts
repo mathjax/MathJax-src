@@ -273,14 +273,14 @@ export default class TexParser {
     case '':
       if (!noneOK) {
         // @test MissingArgFor
-        throw new TexError(['MissingArgFor', 'Missing argument for %1', this.currentCS]);
+        throw new TexError('MissingArgFor', 'Missing argument for %1', this.currentCS);
       }
       return null;
     case '}':
       if (!noneOK) {
         // @test ExtraCloseMissingOpen
-        throw new TexError(['ExtraCloseMissingOpen',
-                            'Extra close brace or missing open brace']);
+        throw new TexError('ExtraCloseMissingOpen',
+                            'Extra close brace or missing open brace');
       }
       return null;
     case '\\':
@@ -300,7 +300,7 @@ export default class TexParser {
         }
       }
       // @test MissingCloseBrace
-      throw new TexError(['MissingCloseBrace', 'Missing close brace']);
+      throw new TexError('MissingCloseBrace', 'Missing close brace');
     }
     return this.string.charAt(this.i++);
   }
@@ -321,8 +321,8 @@ export default class TexParser {
       case '}':
         if (parens-- <= 0) {
           // @test ExtraCloseLooking1
-          throw new TexError(['ExtraCloseLooking',
-                              'Extra close brace while looking for %1', '\']\'']);
+          throw new TexError('ExtraCloseLooking',
+                              'Extra close brace while looking for %1', '\']\'');
         }
         break;
       case ']':
@@ -333,8 +333,8 @@ export default class TexParser {
       }
     }
     // @test MissingCloseBracket
-    throw new TexError(['MissingCloseBracket',
-                        'Could not find closing \']\' for argument to %1', this.currentCS]);
+    throw new TexError('MissingCloseBracket',
+                        'Could not find closing \']\' for argument to %1', this.currentCS);
   }
 
   /**
@@ -357,8 +357,8 @@ export default class TexParser {
       }
     }
     // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
-    throw new TexError(['MissingOrUnrecognizedDelim',
-                        'Missing or unrecognized delimiter for %1', this.currentCS]);
+    throw new TexError('MissingOrUnrecognizedDelim',
+                        'Missing or unrecognized delimiter for %1', this.currentCS);
   }
 
   /**
@@ -385,8 +385,8 @@ export default class TexParser {
       }
     }
     // @test MissingDimOrUnits
-    throw new TexError(['MissingDimOrUnits',
-                        'Missing dimension or its units for %1', this.currentCS]);
+    throw new TexError('MissingDimOrUnits',
+                        'Missing dimension or its units for %1', this.currentCS);
   }
 
 
@@ -408,8 +408,8 @@ export default class TexParser {
       case '}':
         if (parens === 0) {
           // @test ExtraCloseLooking2
-          throw new TexError(['ExtraCloseLooking',
-                              'Extra close brace while looking for %1', token]);
+          throw new TexError('ExtraCloseLooking',
+                              'Extra close brace while looking for %1', token);
         }
         parens--;
         break;
@@ -419,8 +419,8 @@ export default class TexParser {
       }
     }
     // @test TokenNotFoundForCommand
-    throw new TexError(['TokenNotFoundForCommand',
-                        'Could not find %1 for %2', token, this.currentCS]);
+    throw new TexError('TokenNotFoundForCommand',
+                        'Could not find %1 for %2', token, this.currentCS);
   }
 
   /**
@@ -456,8 +456,8 @@ export default class TexParser {
       return c;
     }
     // @test MissingOrUnrecognizedDelim
-    throw new TexError(['MissingOrUnrecognizedDelim',
-                        'Missing or unrecognized delimiter for %1', this.currentCS]);
+    throw new TexError('MissingOrUnrecognizedDelim',
+                        'Missing or unrecognized delimiter for %1', this.currentCS);
   }
 
   /**

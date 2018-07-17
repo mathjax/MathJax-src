@@ -319,12 +319,13 @@ export abstract class BaseItem extends MmlStack implements StackItem {
         return false;
       }
       // @test Ampersand-error
-      throw new TexError(['Misplaced', 'Misplaced %1', item.getName()]);
+      throw new TexError('Misplaced', 'Misplaced %1', item.getName());
     }
     if (item.isClose && this.errors[item.kind]) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      throw new TexError(this.errors[item.kind].concat([item.getName()]));
+      const error = this.errors[item.kind].concat([item.getName()]);
+      throw new TexError(error[0], error[1], ...error.splice(2));
     }
     if (!item.isFinal) {
       return true;

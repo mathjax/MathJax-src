@@ -277,7 +277,7 @@ namespace ParseUtil {
       }
       if (match !== '') {
         // TODO: test a\mbox{$}} c
-        throw new TexError(['MathNotTerminated', 'Math not terminated in text box']);
+        throw new TexError('MathNotTerminated', 'Math not terminated in text box');
       }
     }
     if (k < text.length) {
@@ -357,8 +357,8 @@ namespace ParseUtil {
           text += c;
         } else {
           if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
-            throw new TexError(['IllegalMacroParam',
-                                'Illegal macro parameter reference']);
+            throw new TexError('IllegalMacroParam',
+                                'Illegal macro parameter reference');
           }
           newstring = addArgs(addArgs(newstring, text),
                               args[parseInt(c, 10) - 1]);
@@ -381,9 +381,9 @@ namespace ParseUtil {
       s1 += ' ';
     }
     if (s1.length + s2.length > MAXBUFFER) {
-      throw new TexError(['MaxBufferSize',
+      throw new TexError('MaxBufferSize',
                           'MathJax internal buffer size exceeded; is there a' +
-                          ' recursive macro call?']);
+                          ' recursive macro call?');
     }
     return s1 + s2;
   }
@@ -395,7 +395,7 @@ namespace ParseUtil {
   export function checkEqnEnv(parser: TexParser) {
     if (parser.stack.global.eqnenv) {
       // @test ErroneousNestingEq
-      throw new TexError(['ErroneousNestingEq', 'Erroneous nesting of equation structures']);
+      throw new TexError('ErroneousNestingEq', 'Erroneous nesting of equation structures');
     }
     parser.stack.global.eqnenv = true;
   };

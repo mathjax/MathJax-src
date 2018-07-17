@@ -82,9 +82,9 @@ export class MultlineItem extends ArrayItem {
         if (this.row.length !== 1) {
           // @test MultlineRowsOneCol
           throw new TexError(
-        ['MultlineRowsOneCol',
-         'The rows within the %1 environment must have exactly one column',
-         'multline']);
+            'MultlineRowsOneCol',
+            'The rows within the %1 environment must have exactly one column',
+            'multline');
       }
     let row = this.factory.configuration.nodeFactory.create('node', 'mtr', this.row, {});
     this.table.push(row);

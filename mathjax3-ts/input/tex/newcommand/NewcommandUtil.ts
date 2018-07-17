@@ -94,8 +94,8 @@ namespace NewcommandUtil {
     let c = parser.GetNext();
     if (c !== '\\') {
       // @test No CS
-      throw new TexError(['MissingCS',
-                          '%1 must be followed by a control sequence', cmd]);
+      throw new TexError('MissingCS',
+                          '%1 must be followed by a control sequence', cmd);
     }
     let cs = ParseUtil.trimSpaces(parser.GetArgument(cmd));
     return cs.substr(1);
@@ -127,13 +127,13 @@ namespace NewcommandUtil {
         c = parser.string.charAt(++parser.i);
         if (!c.match(/^[1-9]$/)) {
           // @test Illegal Hash
-          throw new TexError(['CantUseHash2',
-                              'Illegal use of # in template for %1', cs]);
+          throw new TexError('CantUseHash2',
+                              'Illegal use of # in template for %1', cs);
         }
         if (parseInt(c) !== ++n) {
           // @test No Sequence
-          throw new TexError(['SequentialParam',
-                              'Parameters for %1 must be numbered sequentially', cs]);
+          throw new TexError('SequentialParam',
+                              'Parameters for %1 must be numbered sequentially', cs);
         }
         i = parser.i + 1;
       } else if (c === '{') {
@@ -153,8 +153,8 @@ namespace NewcommandUtil {
       parser.i++;
     }
     // @test No Replacement
-    throw new TexError(['MissingReplacementString',
-                        'Missing replacement string for definition of %1', cmd]);
+    throw new TexError('MissingReplacementString',
+                        'Missing replacement string for definition of %1', cmd);
   };
 
 
@@ -203,7 +203,7 @@ namespace NewcommandUtil {
       }
     }
     // @test Runaway Argument
-    throw new TexError(['RunawayArgument', 'Runaway argument for %1?', name]);
+    throw new TexError('RunawayArgument', 'Runaway argument for %1?', name);
   };
 
 

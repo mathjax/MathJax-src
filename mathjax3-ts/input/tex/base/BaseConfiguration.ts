@@ -72,8 +72,8 @@ function Other(parser: TexParser, char: string) {
  */
 function csUndefined(parser: TexParser, name: string) {
   // @test Undefined-CS 
-  throw new TexError(['UndefinedControlSequence',
-                      'Undefined control sequence %1', '\\' + name]);
+  throw new TexError('UndefinedControlSequence',
+                      'Undefined control sequence %1', '\\' + name);
 };
 
 
@@ -84,7 +84,7 @@ function csUndefined(parser: TexParser, name: string) {
  */
 function envUndefined(parser: TexParser, env: string) {
   // @test Undefined-Env
-  throw new TexError(['UnknownEnv', 'Unknown environment \'%1\'', env]);
+  throw new TexError('UnknownEnv', 'Unknown environment \'%1\'', env);
 };
 
 

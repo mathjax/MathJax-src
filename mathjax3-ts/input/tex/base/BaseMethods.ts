@@ -113,7 +113,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
       (NodeUtil.isType(base, 'munderover') && NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
        !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double-super-error, Double-over-error
-    throw new TexError(['DoubleExponent', 'Double exponent: use braces to clarify']);
+    throw new TexError('DoubleExponent', 'Double exponent: use braces to clarify');
   }
   if (!NodeUtil.isType(base, 'msubsup')) {
     if (movesupsub) {
@@ -169,7 +169,7 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
        NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
        !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double-sub-error, Double-under-error
-    throw new TexError(['DoubleSubscripts', 'Double subscripts: use braces to clarify']);
+    throw new TexError('DoubleSubscripts', 'Double subscripts: use braces to clarify');
   }
   if (!NodeUtil.isType(base, 'msubsup')) {
     if (movesupsub) {
@@ -207,8 +207,8 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   if (NodeUtil.isType(base, 'msubsup') &&
       NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) {
     // @test Double Prime Error
-    throw new TexError(['DoubleExponentPrime',
-                        'Prime causes double exponent: use braces to clarify']);
+    throw new TexError('DoubleExponentPrime',
+                        'Prime causes double exponent: use braces to clarify');
   }
   let sup = '';
   parser.i--;
@@ -235,8 +235,8 @@ BaseMethods.Comment = function(parser: TexParser, c: string) {
  */
 BaseMethods.Hash = function(parser: TexParser, c: string) {
   // @test Hash Error
-  throw new TexError(['CantUseHash1',
-                      'You can\'t use \'macro parameter character #\' in math mode']);
+  throw new TexError('CantUseHash1',
+                      'You can\'t use \'macro parameter character #\' in math mode');
 };
 
 /************************************************************************/
@@ -301,8 +301,8 @@ BaseMethods.Middle = function(parser: TexParser, name: string) {
   parser.Push(node);
   if (!parser.stack.Top().isKind('left')) {
     // @test Orphan Middle, Middle with Right
-    throw new TexError(['MisplacedMiddle',
-                        '%1 must be within \\left and \\right', parser.currentCS]);
+    throw new TexError('MisplacedMiddle',
+                        '%1 must be within \\left and \\right', parser.currentCS);
   }
   node = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true}, delim);
   parser.Push(node);
@@ -340,7 +340,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   if (!op || (NodeUtil.getTexClass(NodeUtil.getCoreMO(op)) !== TEXCLASS.OP &&
               NodeUtil.getProperty(op, 'movesupsub') == null)) {
     // @test Limits Error
-    throw new TexError(['MisplacedLimits', '%1 is allowed only on operators', parser.currentCS]);
+    throw new TexError('MisplacedLimits', '%1 is allowed only on operators', parser.currentCS);
   }
   const top = parser.stack.Top();
   let node;
@@ -452,16 +452,16 @@ BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
   // @test Tweaked Root
   if (!parser.stack.env['inRoot']) {
     // @test Misplaced Move Root
-    throw new TexError(['MisplacedMoveRoot', '%1 can appear only within a root', parser.currentCS]);
+    throw new TexError('MisplacedMoveRoot', '%1 can appear only within a root', parser.currentCS);
   }
   if (parser.stack.global[id]) {
     // @test Multiple Move Root
-    throw new TexError(['MultipleMoveRoot', 'Multiple use of %1', parser.currentCS]);
+    throw new TexError('MultipleMoveRoot', 'Multiple use of %1', parser.currentCS);
   }
   let n = parser.GetArgument(name);
   if (!n.match(/-?[0-9]+/)) {
     // @test Incorrect Move Root
-    throw new TexError(['IntegerArg', 'The argument to %1 must be an integer', parser.currentCS]);
+    throw new TexError('IntegerArg', 'The argument to %1 must be an integer', parser.currentCS);
   }
   n = (parseInt(n, 10) / 15) + 'em';
   if (n.substr(0, 1) !== '-') {
@@ -593,19 +593,19 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   }
   if (!node || !node.isToken) {
     // @test Token Illegal Type, Token Wrong Type
-    throw new TexError(['NotMathMLToken', '%1 is not a token element', kind]);
+    throw new TexError('NotMathMLToken', '%1 is not a token element', kind);
   }
   while (attr !== '') {
     const match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|'[^']*'|[^ ,]*)\s*,?\s*/i);
     if (!match) {
       // @test Token Invalid Attribute
-      throw new TexError(['InvalidMathMLAttr', 'Invalid MathML attribute: %1', attr]);
+      throw new TexError('InvalidMathMLAttr', 'Invalid MathML attribute: %1', attr);
     }
     if (node.attributes.getAllDefaults()[match[1]] == null && !MmlTokenAllow[match[1]]) {
       // @test Token Unknown Attribute, Token Wrong Attribute
-      throw new TexError(['UnknownAttrForElement',
+      throw new TexError('UnknownAttrForElement',
                           '%1 is not a recognized attribute for %2',
-                          match[1], kind]);
+                          match[1], kind);
     }
     let value: string | boolean = ParseUtil.MmlFilterAttribute(
       parser, match[1], match[2].replace(/^([''])(.*)\1$/, '$2'));
@@ -825,7 +825,7 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
   const c = parser.GetNext();
   if (c === '') {
     // @test Matrix Error
-    throw new TexError(['MissingArgFor', 'Missing argument for %1', parser.currentCS]);
+    throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
   }
   if (c === '{') {
     // @test Matrix Braces, Matrix Columns, Matrix Rows.
@@ -912,7 +912,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
         //  Extra alignment tabs are not allowed in cases
         //
         // @test ExtraAlignTab
-        throw new TexError(['ExtraAlignTab', 'Extra alignment tab in \\cases text']);
+        throw new TexError('ExtraAlignTab', 'Extra alignment tab in \\cases text');
       } else if (c === '\\') {
         //
         //  If the macro is \cr or \\, end the search, otherwise skip the macro
@@ -959,8 +959,8 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
     // @test Custom Linebreak
     if (dim && !value) {
       // @test Dimension Error
-      throw new TexError(['BracketMustBeDimension',
-                          'Bracket argument to %1 must be a dimension', parser.currentCS]);
+      throw new TexError('BracketMustBeDimension',
+                          'Bracket argument to %1 must be a dimension', parser.currentCS);
     }
     n = value + unit;
   }
@@ -1004,7 +1004,7 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
   const top = parser.stack.Top();
   if (!(top instanceof sitem.ArrayItem) || top.Size()) {
     // @test Misplaced hline
-    throw new TexError(['Misplaced', 'Misplaced %1', parser.currentCS]);
+    throw new TexError('Misplaced', 'Misplaced %1', parser.currentCS);
   }
   if (!top.table.length) {
     // @test Enclosed top, Enclosed top bottom
@@ -1027,7 +1027,7 @@ BaseMethods.HFill = function(parser: TexParser, name: string) {
     top.hfill.push(top.Size());
   } else {
     // @test UnsupportedHFill
-    throw new TexError(['UnsupportedHFill', 'Unsupported use of %1', parser.currentCS]);
+    throw new TexError('UnsupportedHFill', 'Unsupported use of %1', parser.currentCS);
   }
 };
 
@@ -1044,7 +1044,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   let env = parser.GetArgument(name);
   if (env.match(/\\/i)) {
     // @test InvalidEnv
-    throw new TexError(['InvalidEnv', 'Invalid environment name \'%1\'', env]);
+    throw new TexError('InvalidEnv', 'Invalid environment name \'%1\'', env);
   }
   let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
   if (macro && name === '\\end') {
@@ -1056,9 +1056,9 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     parser.stack.env['closing'] = macro.args[0];
   }
   if (++parser.macroCount > MAXMACROS) {
-    throw new TexError(['MaxMacroSub2',
+    throw new TexError('MaxMacroSub2',
                         'MathJax maximum substitution count exceeded; ' +
-                        'is there a recursive latex environment?']);
+                        'is there a recursive latex environment?');
   }
   parser.parse('environment', [parser, env]);
 };
@@ -1192,12 +1192,12 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
     // @test Label, Ref, Ref Unknown
     if (parser.tags.label) {
       // @test Double Label Error
-      throw new TexError(['MultipleCommand', 'Multiple %1', parser.currentCS]);
+      throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
     }
     parser.tags.label = label;
     if (parser.tags.allLabels[label] || parser.tags.labels[label]) {
       // @ Duplicate Label Error
-      throw new TexError(['MultipleLabel', 'Label \'%1\' multiply defined', label]);
+      throw new TexError('MultipleLabel', 'Label \'%1\' multiply defined', label);
     }
     // TODO: This should be set in the tags structure!
     parser.tags.labels[label] = new Label(); // will be replaced by tag value later
@@ -1256,9 +1256,9 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
   parser.string = ParseUtil.addArgs(macro, parser.string.slice(parser.i));
   parser.i = 0;
   if (++parser.macroCount > MAXMACROS) {
-    throw new TexError(['MaxMacroSub1',
+    throw new TexError('MaxMacroSub1',
                         'MathJax maximum macro substitution count exceeded; ' +
-                        'is there a recursive macro call?']);
+                        'is there a recursive macro call?');
   }
 };
 
