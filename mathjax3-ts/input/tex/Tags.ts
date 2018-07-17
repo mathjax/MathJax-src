@@ -112,6 +112,11 @@ export interface Tags {
   // Not sure how to handle this at the moment.
   refs: MmlNode[]; // array of nodes with unresolved references
 
+  label: string;
+  env: string;
+
+  currentTag: TagInfo;
+
   /**
    * How to format tags.
    * @param {string} tag The tag string.
@@ -155,10 +160,6 @@ export interface Tags {
   end(): void;
   tag(tag: string, format: boolean): void;
   notag(): void;
-  label: string;
-  env: string;
-
-  currentTag: TagInfo;
   enTag(node: MmlNode, tag: MmlNode): MmlNode;
 }
 
@@ -358,7 +359,7 @@ export class AbstractTags implements Tags {
     let table = this.enTag(node, tag);
     return table;
   }
-  
+
   /**
    * @override
    */

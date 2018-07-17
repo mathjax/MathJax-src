@@ -104,10 +104,10 @@ namespace ParseUtil {
    */
   export function fenced(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
     // @test Fenced, Fenced3
-    let mrow = configuration.nodeFactory.create('node', 
+    let mrow = configuration.nodeFactory.create('node',
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.INNER});
     let openNode = configuration.nodeFactory.create('text', open);
-    let mo = configuration.nodeFactory.create('node', 
+    let mo = configuration.nodeFactory.create('node',
       'mo', [],
       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
       openNode);
@@ -120,7 +120,7 @@ namespace ParseUtil {
       NodeUtil.appendChildren(mrow, [mml]);
     }
     let closeNode = configuration.nodeFactory.create('text', close);
-    mo = configuration.nodeFactory.create('node', 
+    mo = configuration.nodeFactory.create('node',
       'mo', [],
       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
       closeNode);
@@ -134,7 +134,7 @@ namespace ParseUtil {
    */
   export function fixedFence(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
     // @test Choose, Over With Delims, Above with Delims
-    let mrow = configuration.nodeFactory.create('node', 
+    let mrow = configuration.nodeFactory.create('node',
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
     if (open) {
       NodeUtil.appendChildren(mrow, [mathPalette(configuration, open, 'l')]);
@@ -230,7 +230,9 @@ namespace ParseUtil {
         } else if (c === '}') {
           if (match === '}' && braces === 0) {
             // TODO: test a\mbox{ \eqref{1} } c
-            node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [(new TexParser(text.slice(k, i), {}, parser.configuration)).mml()], def);
+            let atom = (new TexParser(text.slice(k, i), {}, parser.configuration)).mml();
+            node = parser.configuration.nodeFactory.create(
+              'node', 'TeXAtom', [atom], def);
             mml.push(node);
             match = '';
             k = i;

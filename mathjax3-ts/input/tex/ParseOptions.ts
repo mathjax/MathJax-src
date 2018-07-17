@@ -69,7 +69,7 @@ export default class ParseOptions {
   public tags: Tags;
 
   public parsers: TexParser[] = [];
-  
+
   public constructor(setting: {[key: string]: (string|boolean)} = {}) {
     this.options = new Map(DefaultOptions);
     Object.assign(this.options, setting);
@@ -86,7 +86,7 @@ export default class ParseOptions {
   public get parser(): TexParser {
     return this.parsers[0];
   }
-  
+
   /**
    * Convenience method to create nodes with this node factory.
    * @param {string} kind The kind of node to create.

@@ -41,7 +41,7 @@ import {Label} from '../Tags.js';
 // Namespace
 let BaseMethods: Record<string, ParseMethod> = {};
 
-// TODO: Once we can properly load AllEntities, there should be not need for
+// TODO: Once we can properly load AllEntities, there should be no need for
 //       those anymore.
 const PRIME = '\u2032';
 const SMARTQUOTE = '\u2019';
@@ -55,23 +55,23 @@ const MmlTokenAllow: {[key: string]: number} = {
 };
 
 
-/************************************************************************/
-/*
- *   Handle various token classes
- */
-
-/*
- *  Handle { and }
+// Handle LaTeX tokens
+/**
+ *  Handle { 
  */
 BaseMethods.Open = function(parser: TexParser, c: string) {
   parser.Push( parser.itemFactory.create('open') );
 };
 
+/**
+ *  Handle }
+ */
 BaseMethods.Close = function(parser: TexParser, c: string) {
   parser.Push( parser.itemFactory.create('close') );
 };
 
-/*
+
+/**
  *  Handle tilde and spaces
  */
 BaseMethods.Tilde = function(parser: TexParser, c: string) {
@@ -82,8 +82,8 @@ BaseMethods.Tilde = function(parser: TexParser, c: string) {
 };
 BaseMethods.Space = function(parser: TexParser, c: string) {};
 
-/*
- *  Handle ^, _, and '
+/**
+ *  Handle ^
  */
 BaseMethods.Superscript = function(parser: TexParser, c: string) {
   if (parser.GetNext().match(/\d/)) {
@@ -140,6 +140,9 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
 };
 
 
+/**
+ *  Handle _
+ */
 BaseMethods.Subscript = function(parser: TexParser, c: string) {
   if (parser.GetNext().match(/\d/)) {
     // don't treat numbers as a unit
@@ -197,6 +200,10 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
     }) );
 };
 
+
+/**
+ *  Handle '
+ */
 BaseMethods.Prime = function(parser: TexParser, c: string) {
   // @test Prime
   let base = parser.stack.Prev();
@@ -221,7 +228,8 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
     parser.itemFactory.create('prime', base, node) );
 };
 
-/*
+
+/**
  *  Handle comments
  */
 BaseMethods.Comment = function(parser: TexParser, c: string) {
@@ -230,7 +238,8 @@ BaseMethods.Comment = function(parser: TexParser, c: string) {
   }
 };
 
-/*
+
+/**
  *  Handle hash marks outside of definitions
  */
 BaseMethods.Hash = function(parser: TexParser, c: string) {
@@ -239,11 +248,12 @@ BaseMethods.Hash = function(parser: TexParser, c: string) {
                       'You can\'t use \'macro parameter character #\' in math mode');
 };
 
-/************************************************************************/
-/*
- *   Macros
- */
 
+
+// Handle LaTeX Macros
+/**
+ *  Macros
+ */
 BaseMethods.SetFont = function(parser: TexParser, name: string, font: string) {
   parser.stack.env['font'] = font;
 };
@@ -1240,7 +1250,6 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
  */
 BaseMethods.Macro = function(parser: TexParser, name: string,
                              macro: string, argcount: number,
-                             // TODO: The final argument seems never to be used.
                              def?: string) {
   if (argcount) {
     const args: string[] = [];

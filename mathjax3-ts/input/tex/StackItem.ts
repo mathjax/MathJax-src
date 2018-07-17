@@ -178,7 +178,7 @@ export abstract class MmlStack implements NodeStack {
 
 
   protected abstract get factory(): StackItemFactory;
-  
+
   /**
    * @override
    */
@@ -226,10 +226,6 @@ export interface StackItemClass {
 
 export abstract class BaseItem extends MmlStack implements StackItem {
 
-  private _env: EnvList;
-
-  private _properties: PropList = {};
-
   protected errors: {[key: string]: string[]} = {
     // @test ExtraOpenMissingClose
     end: ['MissingBeginExtraEnd', 'Missing \\begin{%1} or extra \\end{%1}'],
@@ -240,6 +236,10 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   };
 
   public global: EnvList = {};
+
+  private _env: EnvList;
+
+  private _properties: PropList = {};
 
   constructor(protected factory: StackItemFactory, ...nodes: MmlNode[]) {
     super(nodes);
@@ -259,15 +259,15 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     return this._env;
   }
 
-  set env(value) {
+  set env(value: EnvList) {
     this._env = value;
   }
 
-  getProperty(key: string): Prop {
+  public getProperty(key: string): Prop {
     return this._properties[key];
   }
 
-  setProperty(key: string, value: Prop) {
+  public setProperty(key: string, value: Prop) {
     this._properties[key] = value;
   }
 

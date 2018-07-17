@@ -323,7 +323,7 @@ export class OverItem extends BaseItem {
 }
 
 export class LeftItem extends BaseItem {
-  
+
   /**
    * @override
    */

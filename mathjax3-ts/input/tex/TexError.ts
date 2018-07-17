@@ -24,13 +24,18 @@
  */
 
 
-// Temporary class to create error messages without all original localization
-// machinery.
+/**
+ * @fileoverview Error class for the TeX parser.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
 
-const pattern =
-        /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%\{\d+\}|%.|[^\}])*)+\}|.)/g;
 
+// TODO: Should extend Error. This only works when transpiling to ES6.
 export default class TexError {
+
+  private static pattern =
+    /%(\d+|\{\d+\}|\{[a-z]+:\%\d+(?:\|(?:%\{\d+\}|%.|[^\}])*)+\}|.)/g;
 
   /**
    * Default error message.
@@ -44,7 +49,7 @@ export default class TexError {
    * @return {string} The processed error string.
    */
   private static processString(str: string, args: string[]) {
-    let parts = str.split(pattern);
+    let parts = str.split(TexError.pattern);
     for (let i = 1, m = parts.length; i < m; i += 2) {
       let c = parts[i].charAt(0);  // first char will be { or \d or a char to be
                                    // kept literally

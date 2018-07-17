@@ -234,7 +234,7 @@ export class SubHandler {
 export class SubHandlers {
 
   private map = new Map<HandlerType, SubHandler>();
-  
+
   /**
    * Sets a new configuration for the map handler.
    * @param {Configuration} configuration A setting for the map handler.
