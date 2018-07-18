@@ -28,26 +28,27 @@ import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
-import '../ams/AmsConfiguration.js';
+import AmsMethods from '../ams/AmsMethods.js';
 import './mhchem_parser.js';
 
 // Namespace
 let MhchemMethods: Record<string, ParseMethod> = {};
 
 MhchemMethods.Macro = BaseMethods.Macro;
+MhchemMethods.xArrow = AmsMethods.xArrow;
 MhchemMethods.Machine = function(parser: TexParser, name: string, machine: string) {
   try {
-    var arg = parser.GetArgument(name);
-    var data = mhchemParser.go(arg, machine);
+    let arg = parser.GetArgument(name);
+    let data = mhchemParser.go(arg, machine);
     // TODO: Harvest chemical information here from data, test looping through
     //       the array.
-    var tex = texify.go(data);
+    let tex = texify.go(data);
     parser.string = tex + parser.string.substr(parser.i);
     parser.i = 0;
   } catch (err) {
     throw new TexError(err[0], err[1], err.slice(2));
   }
-}
+};
 
 new CommandMap(
   'mhchem',
@@ -66,7 +67,13 @@ new CommandMap(
    //  Not perfectly aligned when zoomed in, but on 100%
    //
    tripledash: ['Macro',
-                '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}']
+                '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}'],
+   xrightarrow: ['xArrow', 0x2192, 5, 6],
+   xleftarrow:  ['xArrow', 0x2190, 7, 3],
+   xleftrightarrow:    ['xArrow', 0x2194, 6, 6],
+   xrightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  doesn't stretch in HTML-CSS output
+   xRightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  how should this be handled?
+   xLeftrightharpoons: ['xArrow', 0x21CC, 5, 7]
   },
   MhchemMethods);
 
