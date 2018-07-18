@@ -41,20 +41,26 @@ MhchemMethods.Machine = function(parser: TexParser, name: string, machine: strin
   parser.i = 0;
 }
 
-new CommandMap('mhchem',
-               {ce: ['Machine', 'ce'],
-                pu: ['Machine', 'pu'],
-                longrightleftharpoons: ['Macro', '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'],
-                longRightleftharpoons: ['Macro', '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}'],
-                longLeftrightharpoons: ['Macro', '\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'],
-                longleftrightarrows: ['Macro', '\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}'],
-                //
-                //  Needed for \bond for the ~ forms
-                //  Not perfectly aligned when zoomed in, but on 100%
-                //
-                tripledash: ['Macro', '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}']
-               },
-               MhchemMethods);
+new CommandMap(
+  'mhchem',
+  {ce: ['Machine', 'ce'],
+   pu: ['Machine', 'pu'],
+   longrightleftharpoons: ['Macro',
+                           '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'],
+   longRightleftharpoons: ['Macro',
+                           '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}'],
+   longLeftrightharpoons: ['Macro',
+                           '\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'],
+   longleftrightarrows: ['Macro',
+                         '\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}'],
+   //
+   //  Needed for \bond for the ~ forms
+   //  Not perfectly aligned when zoomed in, but on 100%
+   //
+   tripledash: ['Macro',
+                '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}']
+  },
+  MhchemMethods);
 
 
 export const MhchemConfiguration = Configuration.create(
