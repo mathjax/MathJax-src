@@ -25,6 +25,7 @@
 import {Configuration} from '../Configuration.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
+import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 import '../ams/AmsConfiguration.js';
@@ -35,10 +36,14 @@ let MhchemMethods: Record<string, ParseMethod> = {};
 
 MhchemMethods.Macro = BaseMethods.Macro;
 MhchemMethods.Machine = function(parser: TexParser, name: string, machine: string) {
-  var arg = parser.GetArgument(name);
-  var tex = texify.go(mhchemParser.go(arg, machine));
-  parser.string = tex + parser.string.substr(parser.i);
-  parser.i = 0;
+  try {
+    var arg = parser.GetArgument(name);
+    var tex = texify.go(mhchemParser.go(arg, machine));
+    parser.string = tex + parser.string.substr(parser.i);
+    parser.i = 0;
+  } catch (err) {
+    throw new TexError(err[0], err[1], err.slice(2));
+  }
 }
 
 new CommandMap(
