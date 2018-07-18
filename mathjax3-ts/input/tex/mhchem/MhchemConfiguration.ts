@@ -38,7 +38,10 @@ MhchemMethods.Macro = BaseMethods.Macro;
 MhchemMethods.Machine = function(parser: TexParser, name: string, machine: string) {
   try {
     var arg = parser.GetArgument(name);
-    var tex = texify.go(mhchemParser.go(arg, machine));
+    var data = mhchemParser.go(arg, machine);
+    // TODO: Harvest chemical information here from data, test looping through
+    //       the array.
+    var tex = texify.go(data);
     parser.string = tex + parser.string.substr(parser.i);
     parser.i = 0;
   } catch (err) {
