@@ -183,7 +183,7 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
   let top = parser.ParseArg(name);
-  let arrow = parser.configuration.nodeFactory.create('token', 
+  let arrow = parser.configuration.nodeFactory.create('token',
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCharCode(chr));
   let mml = parser.configuration.nodeFactory.create('node', 'munderover', [arrow], {}) as MmlMunderover;
   let mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [top], def);
