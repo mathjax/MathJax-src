@@ -96,8 +96,11 @@ function envUndefined(parser: TexParser, env: string) {
 export class BaseTags extends AbstractTags { }
 
 
-// Some concrete definitions.
-export const BaseConfiguration = Configuration.create(
+/**
+ * The base configuration.
+ * @type {Configuration}
+ */
+export const BaseConfiguration: Configuration = Configuration.create(
   'base',
   {handler: {
     character: ['command', 'special', 'letter', 'digit'],

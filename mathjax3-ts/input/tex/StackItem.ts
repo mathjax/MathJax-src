@@ -96,8 +96,16 @@ export interface NodeStack {
 
 export abstract class MmlStack implements NodeStack {
 
+  /**
+   * @constructor
+   * @extends {NodeStack}
+   * @param {MmlNode[]} _nodes An initial list of nodes to put on the stack.
+   */
   constructor(private _nodes: MmlNode[]) { }
 
+  /**
+   * @return {MmlNode[]} The nodes on the stack.
+   */
   protected get nodes(): MmlNode[] {
     return this._nodes;
   }
@@ -198,12 +206,42 @@ export abstract class MmlStack implements NodeStack {
 
 export interface StackItem extends NodeStack {
 
+
+  /**
+   * Type of stack item.
+   * @type {string}
+   */
   kind: string;
+
+  /**
+   * Is this a closing item, e.g., end.
+   * @type {boolean}
+   */
   isClose: boolean;
+
+  /**
+   * Is this an opening item, e.g., begin.
+   * @type {boolean}
+   */
   isOpen: boolean;
+
+  /**
+   * Is this a finalising item, e.g., end.
+   * @type {boolean}
+   */
   isFinal: boolean;
-  global: EnvList;
-  env: EnvList;
+
+  /**
+   * Global properties of the parser.
+   * @type {EnvList}
+   */
+   global: EnvList;
+
+  /**
+   * Local properties of the stack item.
+   * @type {EnvList}
+   */
+   env: EnvList;
 
   /**
    * Tests if item is of the given type.
@@ -212,10 +250,49 @@ export interface StackItem extends NodeStack {
    */
   isKind(kind: string): boolean;
 
+  /**
+   * Get a property of the item.
+   * @param {string} key Property name.
+   * @return {Prop} Property value if it exists.
+   */
   getProperty(key: string): Prop;
+
+  /**
+   * Set a property.
+   * @param {string} key Property name.
+   * @param {Prop} value Property value.
+   */
   setProperty(key: string, value: Prop): void;
 
+  /**
+   * Convenience method for returning the string property "name".
+   * @return {string} The value for the name property.
+   */
   getName(): string;
+
+  /**
+   * TeX parsing in MathJax is essentially implemented via a nested stack
+   * automaton. That is the tex parser works on a stack, and each item on the
+   * stack can have a data stack of its own. Data on the stack is either a stack
+   * item or a node.
+   * 
+   * The checkItem method effectively implements the recursive checking of
+   * input data from the parser against data recursively given on the stack.
+   * 
+   * I.e., new input is parsed resulting in a new item. When pushed on the stack
+   * it is checked against the top most item on the stack. This either leads to
+   * the item being pushed onto the stack or combined with the top most
+   * element(s), pushing a new item, which is recursively checked, unless an
+   * error is thrown.
+   *
+   * A simple example: If \\end{foo} is parsed, an endItem is created, pushed on
+   * the stack. Nodes on the stack are collapsed into content of the 'foo'
+   * environment, until a beginItem for 'foo' is found.  If a beginItem is not
+   * for 'foo' or does not exist an error is thrown.
+   * 
+   * @param {StackItem} item The pushed item.
+   * @return {CheckType} True/false or an item or node.
+   */
   checkItem(item: StackItem): CheckType;
 
 }
@@ -224,8 +301,18 @@ export interface StackItemClass {
   new (factory: StackItemFactory, ...nodes: MmlNode[]): StackItem;
 }
 
+
+/**
+ * Abstract basic item class that implements most of the stack item
+ * functionality. In particular, it contains the base method for checkItem.
+ */
 export abstract class BaseItem extends MmlStack implements StackItem {
 
+
+  /**
+   * A list of basic errors.
+   * @type {{[key: string]: string[]}}
+   */
   protected errors: {[key: string]: string[]} = {
     // @test ExtraOpenMissingClose
     end: ['MissingBeginExtraEnd', 'Missing \\begin{%1} or extra \\end{%1}'],
@@ -235,12 +322,21 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     right: ['MissingLeftExtraRight', 'Missing \\left or extra \\right']
   };
 
+
+  /**
+   * @override
+   */
   public global: EnvList = {};
 
   private _env: EnvList;
 
   private _properties: PropList = {};
 
+
+  /**
+   * @constructor
+   * @extends {MmlStack}
+   */
   constructor(protected factory: StackItemFactory, ...nodes: MmlNode[]) {
     super(nodes);
     if (this.isOpen) {
@@ -263,10 +359,16 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     this._env = value;
   }
 
+  /**
+   * @override
+   */
   public getProperty(key: string): Prop {
     return this._properties[key];
   }
 
+  /**
+   * @override
+   */
   public setProperty(key: string, value: Prop) {
     this._properties[key] = value;
   }
@@ -362,10 +464,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
 
-
   /**
-   * Convenience method for returning the string property "name".
-   * @return {string} The value for the name property.
+   * @override
    */
   public getName() {
     return this.getProperty('name') as string;

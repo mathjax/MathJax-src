@@ -17,7 +17,7 @@
 
 
 /**
- * @fileoverview Base parsing methods for TeX Parsing.
+ * @fileoverview Base methods for TeX Parsing.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -34,7 +34,9 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 namespace ParseMethods {
 
   /**
-   *  Handle a variable (a single letter)
+   * Handle a variable (a single letter).
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} c The string to parse.
    */
   export function variable(parser: TexParser, c: string) {
     const def: sitem.EnvList = {};
@@ -49,7 +51,9 @@ namespace ParseMethods {
 
 
   /**
-   *  Determine the extent of a number (pattern may need work)
+   * Handle a number (a sequence of digits, with decimal separator, etc.).
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} c The string to parse.
    */
   export function digit(parser: TexParser, c: string) {
     let mml: MmlNode;
@@ -71,21 +75,21 @@ namespace ParseMethods {
   };
 
   /**
-   *  Lookup a control-sequence and process it
+   * Lookup a control-sequence and process it.
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} c The string to parse.
    */
   export function controlSequence(parser: TexParser, c: string) {
     const name = parser.GetCS();
     parser.parse('macro', [parser, name]);
   };
 
-  //
-  //  Look up a macro in the macros list
-  //  (overridden in begingroup extension)
-  //
-  // csFindMacro: function(name) {return TEXDEF.macros[name]},
-  //
-  //  Handle normal mathchar (as an mi)
-  //
+
+  /**
+   * Handle normal mathchar (as an mi).
+   * @param {TexParser} parser The current tex parser.
+   * @param {Symbol} mchar The string to parse.
+   */
   export function mathchar0mi(parser: TexParser, mchar: Symbol) {
     const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
@@ -93,9 +97,11 @@ namespace ParseMethods {
     parser.Push(node);
   };
 
-  //
-  //  Handle normal mathchar (as an mo)
-  //
+  /**
+   * Handle normal mathchar (as an mo).
+   * @param {TexParser} parser The current tex parser.
+   * @param {Symbol} mchar The string to parse.
+   */
   export function mathchar0mo(parser: TexParser, mchar: Symbol) {
     const def = mchar.attributes || {};
     def['stretchy'] = false;
@@ -106,9 +112,11 @@ namespace ParseMethods {
     parser.Push(node);
   };
 
-  //
-  //  Handle mathchar in current family
-  //
+  /**
+   * Handle mathchar in current family.
+   * @param {TexParser} parser The current tex parser.
+   * @param {Symbol} mchar The string to parse.
+   */
   export function mathchar7(parser: TexParser, mchar: Symbol) {
         const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
     if (parser.stack.env['font']) {
@@ -120,9 +128,11 @@ namespace ParseMethods {
     parser.Push(node);
   };
 
-  //
-  //  Handle delimiter
-  //
+  /**
+   * Handle delimiter.
+   * @param {TexParser} parser The current tex parser.
+   * @param {Symbol} mchar The string to parse.
+   */
   export function delimiter(parser: TexParser, delim: Symbol) {
     let def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
@@ -131,6 +141,14 @@ namespace ParseMethods {
     parser.Push(node);
   };
 
+
+  /**
+   * Parse an environment.
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} env The name of the environment.
+   * @param {Function} func The parse method for the environment.
+   * @param {any[]} args A list of additional arguments.
+   */
   export function environment(parser: TexParser, env: string, func: Function, args: any[]) {
     const end = args[0];
     let mml = parser.itemFactory.create('begin').setProperties({name: env, end: end});

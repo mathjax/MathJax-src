@@ -84,9 +84,11 @@ export class MapHandler {
    */
   public resetExtensions() {
     new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
-    new sm.DelimiterMap(ExtensionMaps.NEW_DELIMITER, ParseMethods.delimiter, {});
+    new sm.DelimiterMap(ExtensionMaps.NEW_DELIMITER,
+                        ParseMethods.delimiter, {});
     new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
-    new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT, ParseMethods.environment, {}, {});
+    new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT,
+                          ParseMethods.environment, {}, {});
   }
 
 
@@ -116,7 +118,9 @@ export const ExtensionConf = Configuration.create(
   'empty',
   {handler: {character: [],
              delimiter: [ExtensionMaps.NEW_DELIMITER],
-             macro: [ExtensionMaps.NEW_DELIMITER, ExtensionMaps.NEW_COMMAND, ExtensionMaps.NEW_MACRO],
+             macro: [ExtensionMaps.NEW_DELIMITER,
+                     ExtensionMaps.NEW_COMMAND,
+                     ExtensionMaps.NEW_MACRO],
              environment: [ExtensionMaps.NEW_ENVIRONMENT]
             }});
 
@@ -249,14 +253,31 @@ export class SubHandlers {
     }
   }
 
+
+  /**
+   * Setter for subhandlers.
+   * @param {HandlerType} name The name of the subhandler.
+   * @param {SubHandler} subHandler The subhandler.
+   */
   public set(name: HandlerType, subHandler: SubHandler) {
     this.map.set(name, subHandler);
   }
 
+
+  /**
+   * Getter for subhandler.
+   * @param {HandlerType} name Name of the subhandler.
+   * @return {SubHandler} The subhandler by that name if it exists.
+   */
   public get(name: HandlerType): SubHandler {
     return this.map.get(name);
   }
 
+
+  /**
+   * All names of registered subhandlers.
+   * @return {IterableIterator<string>} Iterable list of keys.
+   */
   public keys(): IterableIterator<string> {
     return this.map.keys();
   }

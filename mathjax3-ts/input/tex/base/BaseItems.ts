@@ -187,7 +187,7 @@ export class PrimeItem extends BaseItem {
       const node = this.factory.configuration.nodeFactory.create('node', 'msup', [top0, top1], {});
       return [node, item];
     }
-    NodeUtil.setData(top0, (top0 as MmlMsubsup).sup, top1);
+    NodeUtil.setChild(top0, (top0 as MmlMsubsup).sup, top1);
     return [top0, item];
   }
 }
@@ -230,7 +230,7 @@ export class SubsupItem extends BaseItem {
       if (this.getProperty('primes')) {
         if (position !== 2) {
           // @test Prime on Sub
-          NodeUtil.setData(top, 2, this.getProperty('primes') as MmlNode);
+          NodeUtil.setChild(top, 2, this.getProperty('primes') as MmlNode);
         } else {
           // @test Prime on Prime
           NodeUtil.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
@@ -238,7 +238,7 @@ export class SubsupItem extends BaseItem {
           item.Top = node;
         }
       }
-      NodeUtil.setData(top, position, item.Top);
+      NodeUtil.setChild(top, position, item.Top);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
         NodeUtil.setProperties(top, {movesupsub: this.getProperty('movesupsub')} as PropertyList);
@@ -637,7 +637,7 @@ export class NotItem extends BaseItem {
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
           textNode = this.factory.configuration.nodeFactory.create('text', this.remap.lookup(c).char) as TextNode;
-          NodeUtil.setData(mml, 0, textNode);
+          NodeUtil.setChild(mml, 0, textNode);
         } else {
           // @test Negation Explicit
           textNode = this.factory.configuration.nodeFactory.create('text', '\u0338') as TextNode;
@@ -688,11 +688,40 @@ export class DotsItem extends BaseItem {
 
 export class ArrayItem extends BaseItem {
 
+  /**
+   * The table as a list of rows.
+   * @type {MmlNode[]}
+   */
   public table: MmlNode[] = [];
+
+  /**
+   * The current row as a list of cells.
+   * @type {MmlNode[]}
+   */
   public row: MmlNode[] = [];
+
+  /**
+   * Frame specification as a list of strings.
+   * @type {string[]}
+   */
   public frame: string[] = [];
+
+  /**
+   * Hfill value.
+   * @type {number[]}
+   */
   public hfill: number[] = [];
+
+  /**
+   * Properties for special array definitions.
+   * @type {{[key: string]: string|number|boolean}}
+   */
   public arraydef: {[key: string]: string|number|boolean}= {};
+
+  /**
+   * True if separators are dashed.
+   * @type {boolean}
+   */
   public dashed: boolean = false;
 
   /**

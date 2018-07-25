@@ -45,7 +45,17 @@ import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 let AmsMethods: Record<string, ParseMethod> = {};
 
 
-// TODO: do we really need style?
+/**
+ * Handle AMS array environments. 
+ * @param {TexParser} parser The calling parser.
+ * @param {StackItem} begin The opening stackitem.
+ * @param {boolean} numbered Environment numbered.
+ * @param {boolean} taggable Environment taggable (e.g., align* is taggable,
+ *     split is not).
+ * @param {string} align Column alignment.
+ * @param {string} spacing Column spacing.
+ * @param {string} style Display style indicator.
+ */
 AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
                                       numbered: boolean, taggable: boolean,
                                       align: string, spacing: string,
@@ -58,7 +68,12 @@ AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
 
 
 /**
- *  Handle alignat environments
+ * Handle AMS  alignat environments.
+ * @param {TexParser} parser The calling parser.
+ * @param {StackItem} begin The opening stackitem.
+ * @param {boolean} numbered Environment numbered.
+ * @param {boolean} taggable Environment taggable (e.g., align* is taggable,
+ *     split is not).
  */
 AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
                               numbered: boolean, taggable: boolean) {
@@ -93,7 +108,10 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
 
 
 /**
- *  Implements multline environment (mostly handled through STACKITEM below)
+ * Implements multline environment (mostly handled through STACKITEM below)
+ * @param {TexParser} parser The calling parser.
+ * @param {StackItem} begin The opening stackitem.
+ * @param {boolean} numbered Environment numbered.
  */
 AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: boolean) {
   // @test Shove*, Multline
@@ -112,9 +130,11 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
 };
 
 
-// TODO: How to set an extra definition. Probably best to deal with this
-//       together with newcommand, setEnv etc.
-// 
+/**
+ * Handle DeclareMathOperator.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   let limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
   let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
@@ -130,6 +150,11 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
 };
 
 
+/**
+ * Handle operatorname.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   // @test Operatorname
   const limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
@@ -141,6 +166,11 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Handle SkipLimits.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 AmsMethods.SkipLimits = function(parser: TexParser, name: string) {
   // @test Operatorname
   const c = parser.GetNext(), i = parser.i;
@@ -150,6 +180,12 @@ AmsMethods.SkipLimits = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Handle multi integral signs.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} integral The actual integral sign.
+ */
 AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
                                     integral: string) {
   let next = parser.GetNext();
@@ -159,7 +195,7 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
     next = parser.GetArgument(name);
     parser.i = i;
     if (next === '\\limits') {
-      if (name === '\\idotsint') { 
+      if (name === '\\idotsint') {
        // @test MultiInt with Limits
         integral = '\\!\\!\\mathop{\\,\\,' + integral + '}';
       }
@@ -176,25 +212,30 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
 
 
 /**
- *  Handle stretchable arrows
+ *  Handle stretchable arrows.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {number} chr The arrow character in hex code.
+ * @param {number} l Left width.
+ * @param {number} r Right width.
  */
 AmsMethods.xArrow = function(parser: TexParser, name: string,
                              chr: number, l: number, r: number) {
   let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
   let top = parser.ParseArg(name);
-  let arrow = parser.configuration.nodeFactory.create('token', 
+  let arrow = parser.configuration.nodeFactory.create('token',
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCharCode(chr));
   let mml = parser.configuration.nodeFactory.create('node', 'munderover', [arrow], {}) as MmlMunderover;
   let mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [top], def);
   NodeUtil.setProperties(mpadded, {voffset: '.15em'});
-  NodeUtil.setData(mml, mml.over, mpadded);
+  NodeUtil.setChild(mml, mml.over, mpadded);
   if (bot) {
     // @test Above Below Left Arrow, Above Below Right Arrow
     let bottom = new TexParser(bot, parser.stack.env, parser.configuration).mml();
     mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [bottom], def);
     NodeUtil.setProperties(mpadded, {voffset: '-.24em'});
-    NodeUtil.setData(mml, mml.under, mpadded);
+    NodeUtil.setChild(mml, mml.under, mpadded);
   }
   // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
   //       Above Right Arrow in Context
@@ -204,7 +245,10 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
 
 
 /**
- *  Record presence of \shoveleft and \shoveright
+ * Record presence of \shoveleft and \shoveright
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} shove The shove value.
  */
 AmsMethods.HandleShove = function(parser: TexParser, name: string,
                                   shove: string) {
@@ -226,7 +270,9 @@ AmsMethods.HandleShove = function(parser: TexParser, name: string,
 
 
 /**
- *  Handle \cfrac
+ * Handle \cfrac
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
  */
 AmsMethods.CFrac = function(parser: TexParser, name: string) {
   let lr  = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
@@ -254,7 +300,13 @@ AmsMethods.CFrac = function(parser: TexParser, name: string) {
 
 
 /**
- *  Implement AMS generalized fraction
+ * Implement AMS generalized fraction.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} left Left delimiter.
+ * @param {string} right Right delimiter.
+ * @param {string} thick Line thickness.
+ * @param {string} style Math style.
  */
 AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
                               right: string, thick: string, style: string) {
@@ -309,8 +361,9 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
 
 
 /**
- * Add the tag to the environment (to be added to the table row later)
- * tag is 
+ * Add the tag to the environment (to be added to the table row later).
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
  */
 AmsMethods.HandleTag = function(parser: TexParser, name: string) {
   if (!parser.tags.currentTag.taggable && parser.tags.env) {

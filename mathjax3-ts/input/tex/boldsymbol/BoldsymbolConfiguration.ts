@@ -45,7 +45,13 @@ BOLDVARIANT['-tex-oldstyle']       = '-tex-oldstyle-bold';
 // Namespace
 export let BoldsymbolMethods: Record<string, ParseMethod> = {};
 
-BoldsymbolMethods.Boldsymbol = function (parser: TexParser, name: string) {
+
+/**
+ * Parse function for boldsymbol macro.
+ * @param {TexParser} parser The current tex parser.
+ * @param {string} name The name of the macro.
+ */
+BoldsymbolMethods.Boldsymbol = function(parser: TexParser, name: string) {
   let boldsymbol = parser.stack.env['boldsymbol'];
   parser.stack.env['boldsymbol'] = true;
   let mml = parser.ParseArg(name);
@@ -57,6 +63,14 @@ BoldsymbolMethods.Boldsymbol = function (parser: TexParser, name: string) {
 new CommandMap('boldsymbol', {boldsymbol: 'Boldsymbol'}, BoldsymbolMethods);
 
 
+/**
+ * Creates token nodes in bold font if possible.
+ * @param {NodeFactory} factory The current node factory.
+ * @param {string} kind The type of token node to create.
+ * @param {any} def Properties for the node.
+ * @param {string} text The text content.
+ * @return {MmlNode} The generated token node.
+ */
 export function createBoldToken(factory: NodeFactory, kind: string,
                                 def: any, text: string): MmlNode  {
   let token = NodeFactory.createToken(factory, kind, def, text);
@@ -68,8 +82,12 @@ export function createBoldToken(factory: NodeFactory, kind: string,
 }
 
 
+/**
+ * Postprocessor to rewrite token nodes to bold font, if possible.
+ * @param {MmlNode} node The node to rewrite.
+ * @param {ParseOptions} options The parse options.
+ */
 export function rewriteBoldTokens(node: MmlNode, options: ParseOptions)  {
-  NodeUtil.getProperty(node, 'fixBold')
   if (NodeUtil.getProperty(node, 'fixBold')) {
     let variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
     if (variant == null) {
@@ -78,7 +96,7 @@ export function rewriteBoldTokens(node: MmlNode, options: ParseOptions)  {
       NodeUtil.setProperties(node,
                              {mathvariant: BOLDVARIANT[variant] || variant});
     }
-    NodeUtil.removeProperties(node, 'fixBold')
+    NodeUtil.removeProperties(node, 'fixBold');
   }
 }
 

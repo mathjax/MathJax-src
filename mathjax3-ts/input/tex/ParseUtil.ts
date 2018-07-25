@@ -80,10 +80,10 @@ namespace ParseUtil {
 
   /**
    * Convert a dimension string into standard em dimension.
-   * @param {}
-   * @return {}
+   * @param {string} dim The attribute string.
+   * @return {number} The numerical value.
    */
-  export function dimen2em(dim: string) {
+  export function dimen2em(dim: string): number {
     let [value, unit, _] = matchDimen(dim);
     let m = parseFloat(value || '1');
     let func = UNIT_CASES[unit];
@@ -91,6 +91,10 @@ namespace ParseUtil {
   }
 
 
+  /**
+   * Turns a number into an em value.
+   * @param {number} m The number.
+   */
   export function Em(m: number) {
     if (Math.abs(m) < .0006) {
       return '0em';
@@ -100,7 +104,11 @@ namespace ParseUtil {
 
 
   /**
-   *  Create an mrow that has stretchy delimiters at either end, as needed
+   * Create an mrow that has stretchy delimiters at either end, as needed
+   * @param {ParseOptions} configuration Current parse options.
+   * @param {string} open The opening fence.
+   * @param {MmlNode} mml The enclosed node.
+   * @param {string} close The closing fence.
    */
   export function fenced(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
     // @test Fenced, Fenced3
@@ -130,7 +138,11 @@ namespace ParseUtil {
 
 
   /**
-   *  Create an mrow that has \mathchoice using \bigg and \big for the delimiters
+   *  Create an mrow that has \\mathchoice using \\bigg and \\big for the delimiters.
+   * @param {ParseOptions} configuration The current parse options.
+   * @param {string} open The opening fence.
+   * @param {MmlNode} mml The enclosed node.
+   * @param {string} close The closing fence.
    */
   export function fixedFence(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
     // @test Choose, Over With Delims, Above with Delims
@@ -151,6 +163,14 @@ namespace ParseUtil {
   }
 
 
+  /**
+   * Generates a mathchoice element for fences. These will be resolved later,
+   * once the position, and therefore size, of the of the fenced expression is
+   * known.
+   * @param {ParseOptions} configuration The current parse otpions.
+   * @param {string} fence The fence.
+   * @param {string} side The side of the fence (l or r).
+   */
   export function mathPalette(configuration: ParseOptions, fence: string, side: string) {
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
@@ -184,6 +204,11 @@ namespace ParseUtil {
   }
 
 
+  /**
+   * Rewrites an mi node into an mo node.
+   * @param {TexParser} parser The current TexParser.
+   * @param {MmlNode} mi The mi node.
+   */
   export function mi2mo(parser: TexParser, mi: MmlNode) {
     // @test Mathop Sub, Mathop Super
     const mo = parser.configuration.nodeFactory.create('node', 'mo', [], {});
@@ -196,7 +221,7 @@ namespace ParseUtil {
 
 
   /**
-   *  Break up a string into text and math blocks
+   *  Break up a string into text and math blocks.
    * @param {TexParser} parser The calling parser.
    * @param {string} text The text in the math expression to parse.
    * @param {number|string=} level The scriptlevel.
@@ -297,7 +322,14 @@ namespace ParseUtil {
 
   const NBSP = '\u00A0';
 
-  function internalText(parser: TexParser, text: string, def: EnvList) {
+  /**
+   * Parses text internal to boxes or labels.
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} text The text to parse.
+   * @param {EnvList} def The attributes of the text node.
+   * @return {MmlNode} The text node.
+   */
+  function internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
     text = text.replace(/^\s+/, NBSP).replace(/\s+$/, NBSP);
     let textNode = parser.configuration.nodeFactory.create('text', text);
@@ -320,10 +352,14 @@ namespace ParseUtil {
     return TEXT;
   }
 
+
   /**
    * Sets alignment in array definitions.
+   * @param {ArrayItem} array The array item.
+   * @param {string} align The alignment string.
+   * @return {ArrayItem} 
    */
-  export function setArrayAlign(array: ArrayItem, align: string) {
+  export function setArrayAlign(array: ArrayItem, align: string): ArrayItem {
     // @test Array1, Array2, Array Test
     align = ParseUtil.trimSpaces(align || '');
     if (align === 't') {
