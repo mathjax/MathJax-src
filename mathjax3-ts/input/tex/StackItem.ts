@@ -206,12 +206,42 @@ export abstract class MmlStack implements NodeStack {
 
 export interface StackItem extends NodeStack {
 
+
+  /**
+   * Type of stack item.
+   * @type {string}
+   */
   kind: string;
+
+  /**
+   * Is this a closing item, e.g., end.
+   * @type {boolean}
+   */
   isClose: boolean;
+
+  /**
+   * Is this an opening item, e.g., begin.
+   * @type {boolean}
+   */
   isOpen: boolean;
+
+  /**
+   * Is this a finalising item, e.g., end.
+   * @type {boolean}
+   */
   isFinal: boolean;
-  global: EnvList;
-  env: EnvList;
+
+  /**
+   * Global properties of the parser.
+   * @type {EnvList}
+   */
+   global: EnvList;
+
+  /**
+   * Local properties of the stack item.
+   * @type {EnvList}
+   */
+   env: EnvList;
 
   /**
    * Tests if item is of the given type.
@@ -271,6 +301,11 @@ export interface StackItemClass {
   new (factory: StackItemFactory, ...nodes: MmlNode[]): StackItem;
 }
 
+
+/**
+ * Abstract basic item class that implements most of the stack item
+ * functionality. In particular, it contains the base method for checkItem.
+ */
 export abstract class BaseItem extends MmlStack implements StackItem {
 
 
@@ -287,12 +322,21 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     right: ['MissingLeftExtraRight', 'Missing \\left or extra \\right']
   };
 
+
+  /**
+   * @override
+   */
   public global: EnvList = {};
 
   private _env: EnvList;
 
   private _properties: PropList = {};
 
+
+  /**
+   * @constructor
+   * @extends {MmlStack}
+   */
   constructor(protected factory: StackItemFactory, ...nodes: MmlNode[]) {
     super(nodes);
     if (this.isOpen) {
