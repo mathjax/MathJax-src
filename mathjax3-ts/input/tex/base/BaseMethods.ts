@@ -1383,7 +1383,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
 /**
  * Handle array environment.
  * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
+ * @param {StackItem} begin The opening stackitem.
  * @param {string} open Opening fence.
  * @param {string} close Closing fence.
  * @param {string} align Column alignment.

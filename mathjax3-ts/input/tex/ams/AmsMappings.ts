@@ -210,7 +210,7 @@ new sm.CharacterMap('AMSsymbols-mathchar0mi', ParseMethods.mathchar0mi, {
   diagdown:               '\u2572',
   Bbbk:                   ['\u006B',
                            {mathvariant: TexConstant.Variant.DOUBLESTRUCK}],
-  
+
   yen:                    '\u00A5',
   circledR:               '\u00AE',
   checkmark:              '\u2713',
@@ -448,4 +448,3 @@ new sm.CommandMap('AMSsymbols-macros', {
   implies:    ['Macro', '\\;\\Longrightarrow\\;'],
   impliedby:  ['Macro', '\\;\\Longleftarrow\\;']
 }, AmsMethods);
-
