@@ -325,6 +325,11 @@ BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
 };
 
 // TODO: Will be replace by the color extension!
+/**
+ * Dummy color command.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Color = function(parser: TexParser, name: string) {
   // @test Color Frac
   const color = parser.GetArgument(name);
@@ -353,6 +358,12 @@ BaseMethods.Spacer = function(parser: TexParser, name: string, space: string) {
   parser.Push(node);
 };
 
+
+/**
+ * Parses left/right fenced expressions.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.LeftRight = function(parser: TexParser, name: string) {
   // @test Fenced, Fenced3
   const alpha = name.substr(1);
@@ -361,6 +372,11 @@ BaseMethods.LeftRight = function(parser: TexParser, name: string) {
       .setProperties({delim: parser.GetDelimiter(name)}) );
 };
 
+/**
+ * Parses middle fenced expressions.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Middle = function(parser: TexParser, name: string) {
   // @test Middle
   const delim = parser.GetDelimiter(name);
@@ -377,6 +393,12 @@ BaseMethods.Middle = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+/**
+ * Handle a named math function, e.g., \\sin, \\cos
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} id Alternative string representation of the function.
+ */
 BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
   // @test Named Function
   if (!id) {
@@ -385,6 +407,14 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
   const mml = parser.configuration.nodeFactory.create('token', 'mi', {texClass: TEXCLASS.OP}, id);
   parser.Push( parser.itemFactory.create('fn', mml) );
 };
+
+
+/**
+ * Handle a named math operator, e.g., \\min, \\lim
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} id Alternative string representation of the operator.
+ */
 BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
   // @test Limit
   if (!id) {
@@ -400,6 +430,12 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
   parser.Push(mml);
 };
 
+/**
+ * Handle a limits command for math operators.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} limits The limits arguments.
+ */
 BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   // @test Limits
   let op = parser.stack.Prev(true);
@@ -432,6 +468,14 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   }
 };
 
+
+/**
+ * Handle over commands.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} open The open delimiter in case of a "withdelim" version.
+ * @param {string} close The close delimiter.
+ */
 BaseMethods.Over = function(parser: TexParser, name: string, open: string, close: string) {
   // @test Over
   const mml = parser.itemFactory.create('over').setProperties({name: parser.currentCS}) ;
@@ -455,6 +499,11 @@ BaseMethods.Over = function(parser: TexParser, name: string, open: string, close
   parser.Push(mml);
 };
 
+/**
+ * Parses a fraction.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Frac = function(parser: TexParser, name: string) {
   // @test Frac
   const num = parser.ParseArg(name);
@@ -463,6 +512,11 @@ BaseMethods.Frac = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+/**
+ * Parses a square root element.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Sqrt = function(parser: TexParser, name: string) {
   const n = parser.GetBrackets(name);
   let arg = parser.GetArgument(name);
@@ -482,6 +536,11 @@ BaseMethods.Sqrt = function(parser: TexParser, name: string) {
 
 
 // Utility
+/**
+ * Parse a general root.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} n The index of the root.
+ */
 function parseRoot(parser: TexParser, n: string) {
   // @test General Root, Explicit Root
   const env = parser.stack.env;
@@ -507,6 +566,11 @@ function parseRoot(parser: TexParser, n: string) {
 };
 
 
+/**
+ * Parse a general root.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Root = function(parser: TexParser, name: string) {
   const n = parser.GetUpTo(name, '\\of');
   const arg = parser.ParseArg(name);
@@ -515,6 +579,12 @@ BaseMethods.Root = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Parses a movable index element in a root, e.g. \\uproot, \\leftroot
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} id Argument which should be a string representation of an integer.
+ */
 BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
   // @test Tweaked Root
   if (!parser.stack.env['inRoot']) {
@@ -537,6 +607,14 @@ BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
   parser.stack.global[id] = n;
 };
 
+
+/**
+ * Handle accents.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} accent The accent.
+ * @param {boolean} stretchy True if accent is stretchy.
+ */
 BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, stretchy: boolean) {
   // @test Vector
   const c = parser.ParseArg(name);
@@ -564,6 +642,15 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   parser.Push(texAtom);
 };
 
+
+/**
+ * Handles stacked elements.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} c Character to stack.
+ * @param {boolean} stack True if stacked operator.
+ * @param {boolean} noaccent True if not an accent.
+ */
 BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean, noaccent: boolean) {
   // @test Overline
   let base = parser.ParseArg(name);
@@ -576,9 +663,10 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   let mo;
   if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
     // @test Overline Limits
-    NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0}); // get spacing right for NativeMML
+    NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0});
     mo = parser.configuration.nodeFactory.create('node', 'mo', [], {rspace: 0});
-    base = parser.configuration.nodeFactory.create('node', 'mrow', [mo, base], {});  // add an empty <mi> so it's not embellished any more
+    base = parser.configuration.nodeFactory.create('node', 'mrow', [mo, base], {});
+    // TODO? add an empty <mi> so it's not embellished any more
   }
   const mml = parser.configuration.nodeFactory.create('node', 'munderover', [base], {}) as MmlMunderover;
   const entity = NodeUtil.createEntity(c);
@@ -589,13 +677,19 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   let node: MmlNode = mml;
   if (stack) {
     // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
-    node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP, movesupsub: true});
+    node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mml],
+                                                   {texClass: TEXCLASS.OP, movesupsub: true});
   }
-  // TODO: Sort these properties out!
   NodeUtil.setProperties(node, {subsupOK: true});
   parser.Push(node);
 };
 
+
+/**
+ * Handles overset.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Overset = function(parser: TexParser, name: string) {
   // @test Overset
   const top = parser.ParseArg(name), base = parser.ParseArg(name);
@@ -606,6 +700,12 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+
+/**
+ * Handles overset.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Underset = function(parser: TexParser, name: string) {
   // @test Underset
   const bot = parser.ParseArg(name), base = parser.ParseArg(name);
@@ -617,6 +717,13 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+
+/**
+ * Creates TeXAtom, when class of element is changed explicitly.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {number} mclass The new TeX class.
+ */
 BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) {
   let def: EnvList = {texClass: mclass};
   let mml: StackItem | MmlNode;
@@ -646,6 +753,11 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
 };
 
 
+/**
+ * Creates mmltoken elements. Used in Macro substitutions.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   // @test Modulo
   const kind = parser.GetArgument(name);
@@ -694,6 +806,11 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Handle strut.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Strut = function(parser: TexParser, name: string) {
   // @test Strut
   // TODO: Do we still need this row as it is implicit?
@@ -703,6 +820,13 @@ BaseMethods.Strut = function(parser: TexParser, name: string) {
   parser.Push(padded);
 };
 
+/**
+ * Handle phantom commands.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} v Vertical size.
+ * @param {string} h Horizontal size.
+ */
 BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: string) {
   // @test Phantom
   let box = parser.configuration.nodeFactory.create('node', 'mphantom', [parser.ParseArg(name)], {});
@@ -723,6 +847,11 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
   parser.Push(atom);
 };
 
+/**
+ * Handle smash.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Smash = function(parser: TexParser, name: string) {
   // @test Smash, Smash Top, Smash Bottom
   const bt = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
@@ -739,6 +868,11 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
   parser.Push(atom);
 };
 
+/**
+ * Handle rlap and llap commands.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Lap = function(parser: TexParser, name: string) {
   // @test Llap, Rlap
   const mml = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {width: 0});
@@ -750,6 +884,11 @@ BaseMethods.Lap = function(parser: TexParser, name: string) {
   parser.Push(atom);
 };
 
+/**
+ * Handle raise and lower commands.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
   // @test Raise, Lower, Raise Negative, Lower Negative
   let h = parser.GetDimen(name);
@@ -773,6 +912,12 @@ BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
   parser.Push(item);
 };
 
+
+/**
+ * Handle moveleft, moveright commands
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
   // @test Move Left, Move Right, Move Left Negative, Move Right Negative
   let h = parser.GetDimen(name);
@@ -789,6 +934,12 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
       right: parser.configuration.nodeFactory.create('node', 'mspace', [], {width: nh})}) );
 };
 
+
+/**
+ * Handle horizontal spacing commands.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Hskip = function(parser: TexParser, name: string) {
   // @test Modulo
   const node = parser.configuration.nodeFactory.create('node', 'mspace', [],
@@ -796,6 +947,13 @@ BaseMethods.Hskip = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+
+/**
+ * Handle Rule and Space command
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} style The style of the rule spacer.
+ */
 BaseMethods.Rule = function(parser: TexParser, name: string, style: string) {
   // @test Rule 3D, Space 3D
   const w = parser.GetDimen(name),
@@ -808,6 +966,13 @@ BaseMethods.Rule = function(parser: TexParser, name: string, style: string) {
   const node = parser.configuration.nodeFactory.create('node', 'mspace', [], def);
   parser.Push(node);
 };
+
+
+/**
+ * Handle rule command.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.rule = function(parser: TexParser, name: string) {
   // @test Rule 2D
   const v = parser.GetBrackets(name),
@@ -828,6 +993,13 @@ BaseMethods.rule = function(parser: TexParser, name: string) {
   parser.Push(mml);
 };
 
+/**
+ * Handle big command sequences, e.g., \\big, \\Bigg.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {number} mclass The TeX class of the element.
+ * @param {number} size The em size.
+ */
 BaseMethods.MakeBig = function(parser: TexParser, name: string, mclass: number, size: number) {
   // @test Choose, Over With Delims, Above With Delims
   size *= P_HEIGHT;
@@ -841,6 +1013,12 @@ BaseMethods.MakeBig = function(parser: TexParser, name: string, mclass: number, 
   parser.Push(node);
 };
 
+
+/**
+ * Handle buildrel command.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   // @test BuildRel, BuildRel Expression
   const top = parser.ParseUpTo(name, '\\over');
@@ -854,11 +1032,23 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   parser.Push(atom);
 };
 
+
+/**
+ * Handle horizontal boxes.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} style Box style.
+ */
 BaseMethods.HBox = function(parser: TexParser, name: string, style: string) {
   // @test Hbox
   parser.PushAll(ParseUtil.internalMath(parser, parser.GetArgument(name), style));
 };
 
+/**
+ * Handle framce boxes.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.FBox = function(parser: TexParser, name: string) {
   // @test Fbox
   const internal = ParseUtil.internalMath(parser, parser.GetArgument(name));
@@ -866,12 +1056,24 @@ BaseMethods.FBox = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+
+/**
+ * Handle \\not.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Not = function(parser: TexParser, name: string) {
   // @test Negation Simple, Negation Complex, Negation Explicit,
   //       Negation Large
   parser.Push( parser.itemFactory.create('not') );
 };
 
+
+/**
+ * Handle dots.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Dots = function(parser: TexParser, name: string) {
   // @test Operator Dots
   const ldotsEntity = NodeUtil.createEntity('2026');
@@ -885,6 +1087,20 @@ BaseMethods.Dots = function(parser: TexParser, name: string) {
     }) );
 };
 
+
+/**
+ * Handle small matrix environments.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} open Opening fence.
+ * @param {string} close Closing fence.
+ * @param {string} align Column alignment.
+ * @param {string} spacing Column spacing.
+ * @param {string} vspacing Row spacing.
+ * @param {string} style Display or text style.
+ * @param {boolean} cases Is it a cases environment.
+ * @param {boolean} numbered Is it a numbered environment.
+ */
 BaseMethods.Matrix = function(parser: TexParser, name: string,
                               open: string, close: string, align: string,
                               spacing: string, vspacing: string, style: string,
@@ -933,6 +1149,12 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
   parser.Push(array);
 };
 
+
+/**
+ * Handle array entry.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Entry = function(parser: TexParser, name: string) {
   // @test Label, Array, Cross Product Formula
   parser.Push(
@@ -1012,12 +1234,23 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
   }
 };
 
+/**
+ * Handle newline in array.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.Cr = function(parser: TexParser, name: string) {
   // @test Cr Linebreak, Misplaced Cr
   parser.Push(
     parser.itemFactory.create('cell').setProperties({isCR: true, name: name}) );
 };
 
+
+/**
+ * Handle newline outside array.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
   let n: string;
   if (parser.string.charAt(parser.i) === '[') {
@@ -1064,6 +1297,12 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
   }
 };
 
+/**
+ * Handle horizontal lines in arrays.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} style Style of the line. E.g., dashed.
+ */
 BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
   if (style == null) {
     style = 'solid';
@@ -1087,6 +1326,12 @@ BaseMethods.HLine = function(parser: TexParser, name: string, style: string) {
   }
 };
 
+
+/**
+ * Handle hfill commands.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.HFill = function(parser: TexParser, name: string) {
   const top = parser.stack.Top();
   if (top instanceof sitem.ArrayItem) {
@@ -1103,9 +1348,13 @@ BaseMethods.HFill = function(parser: TexParser, name: string) {
 /**
  *   LaTeX environments
  */
-
 let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 
+/**
+ * Handle begin and end environments. This is a macro method.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   // @test Array1, Array2, Array Test
   let env = parser.GetArgument(name);
@@ -1131,6 +1380,18 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Handle array environment.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} open Opening fence.
+ * @param {string} close Closing fence.
+ * @param {string} align Column alignment.
+ * @param {string} spacing Column spacing.
+ * @param {string} vspacing Row spacing.
+ * @param {string} style Display or text style.
+ * @param {boolean} raggedHeight Does the height need to be adjusted.
+ */
 BaseMethods.Array = function(parser: TexParser, begin: StackItem,
                              open: string, close: string, align: string,
                              spacing: string, vspacing: string, style: string,
@@ -1193,6 +1454,11 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
 };
 
 
+/**
+ * Handle aligned arrays.
+ * @param {TexParser} parser The calling parser.
+ * @param {StackItem} begin The opening stackitem.
+ */
 BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
   // @test Array1, Array2, Array Test
   const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
@@ -1202,7 +1468,10 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
 
 
 /**
- * Handle equation environment
+ * Handle equation environment.
+ * @param {TexParser} parser The calling parser.
+ * @param {StackItem} begin The opening stackitem.
+ * @param {boolean} numbered True if environment is numbered.
  */
 BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
   parser.Push(begin);
@@ -1213,11 +1482,17 @@ BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: 
 
 
 /**
- * Handle equation array.
+ * Handle eqnarray.
+ * @param {TexParser} parser The calling parser.
+ * @param {StackItem} begin The opening stackitem.
+ * @param {boolean} numbered True if environment is numbered.
+ * @param {boolean} taggable True if taggable.
+ * @param {string} align Alignment string.
+ * @param {string} spacing Spacing between columns.
  */
 BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
                                 numbered: boolean, taggable: boolean,
-                                align: string, spacing: string, style: string) {
+                                align: string, spacing: string) {
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
   parser.Push(begin);
   if (taggable) {
@@ -1240,14 +1515,18 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
 
 /**
  * Handles no tag commands.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
  */
 BaseMethods.HandleNoTag = function(parser: TexParser, name: string) {
   parser.tags.notag();
 };
 
 
-/*
- *  Record a label name for a tag
+/**
+ * Record a label name for a tag
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
  */
 BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
   // @test Label, Label Empty
@@ -1282,7 +1561,10 @@ let baseURL = (typeof(document) === 'undefined' ||
 
 
 /**
- * Handle a label reference
+ * Handle a label reference.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {boolean} eqref True if formatted as eqref.
  */
 BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
   // @test Ref, Ref Unknown, Eqref, Ref Default, Ref Named
@@ -1332,7 +1614,12 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
 };
 
 
-// mathchoice
+/**
+ * Handle mathchoice for elements whose exact size/style properties can only be
+ * determined after the expression has been parsed.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 BaseMethods.MathChoice = function(parser: TexParser, name: string) {
   const D  = parser.ParseArg(name);
   const T  = parser.ParseArg(name);
