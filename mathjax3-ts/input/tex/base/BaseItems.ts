@@ -688,11 +688,40 @@ export class DotsItem extends BaseItem {
 
 export class ArrayItem extends BaseItem {
 
+  /**
+   * The table as a list of rows.
+   * @type {MmlNode[]}
+   */
   public table: MmlNode[] = [];
+
+  /**
+   * The current row as a list of cells.
+   * @type {MmlNode[]}
+   */
   public row: MmlNode[] = [];
+
+  /**
+   * Frame specification as a list of strings.
+   * @type {string[]}
+   */
   public frame: string[] = [];
+
+  /**
+   * Hfill value.
+   * @type {number[]}
+   */
   public hfill: number[] = [];
+
+  /**
+   * Properties for special array definitions.
+   * @type {{[key: string]: string|number|boolean}}
+   */
   public arraydef: {[key: string]: string|number|boolean}= {};
+
+  /**
+   * True if separators are dashed.
+   * @type {boolean}
+   */
   public dashed: boolean = false;
 
   /**

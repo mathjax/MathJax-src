@@ -55,24 +55,36 @@ const MmlTokenAllow: {[key: string]: number} = {
 };
 
 
-// Handle LaTeX tokens
+
 /**
- *  Handle { 
+ * Handle LaTeX tokens.
+ */
+
+/**
+ * Handle { 
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
  */
 BaseMethods.Open = function(parser: TexParser, c: string) {
+  // @test Identifier Font, Prime, Prime with subscript
   parser.Push( parser.itemFactory.create('open') );
 };
 
 /**
- *  Handle }
+ * Handle }
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
  */
 BaseMethods.Close = function(parser: TexParser, c: string) {
+  // @test Identifier Font, Prime, Prime with subscript
   parser.Push( parser.itemFactory.create('close') );
 };
 
 
 /**
- *  Handle tilde and spaces
+ * Handle tilde and spaces.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
  */
 BaseMethods.Tilde = function(parser: TexParser, c: string) {
   // @test Tilde, Tilde2
@@ -80,10 +92,18 @@ BaseMethods.Tilde = function(parser: TexParser, c: string) {
   const node = parser.configuration.nodeFactory.create('node', 'mtext', [], {}, textNode);
   parser.Push(node);
 };
+
+/**
+ * Handling space, by doing nothing.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
+ */
 BaseMethods.Space = function(parser: TexParser, c: string) {};
 
 /**
- *  Handle ^
+ * Handle ^
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
  */
 BaseMethods.Superscript = function(parser: TexParser, c: string) {
   if (parser.GetNext().match(/\d/)) {
@@ -141,7 +161,9 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
 
 
 /**
- *  Handle _
+ * Handle _
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
  */
 BaseMethods.Subscript = function(parser: TexParser, c: string) {
   if (parser.GetNext().match(/\d/)) {
@@ -202,7 +224,9 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
 
 
 /**
- *  Handle '
+ * Handle '
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
  */
 BaseMethods.Prime = function(parser: TexParser, c: string) {
   // @test Prime
@@ -230,7 +254,9 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
 
 
 /**
- *  Handle comments
+ * Handle comments
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
  */
 BaseMethods.Comment = function(parser: TexParser, c: string) {
   while (parser.i < parser.string.length && parser.string.charAt(parser.i) !== '\n') {
@@ -240,7 +266,9 @@ BaseMethods.Comment = function(parser: TexParser, c: string) {
 
 
 /**
- *  Handle hash marks outside of definitions
+ * Handle hash marks outside of definitions
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
  */
 BaseMethods.Hash = function(parser: TexParser, c: string) {
   // @test Hash Error
@@ -250,16 +278,32 @@ BaseMethods.Hash = function(parser: TexParser, c: string) {
 
 
 
-// Handle LaTeX Macros
 /**
- *  Macros
+ *  
+ * Handle LaTeX Macros
+ *
+ */
+
+/**
+ * Setting font, e.g., via \\rm, \\bf etc.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} font The font name.
  */
 BaseMethods.SetFont = function(parser: TexParser, name: string, font: string) {
   parser.stack.env['font'] = font;
 };
 
+/**
+ * Setting style, e.g., via \\displaystyle, \\textstyle, etc.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} texStyle The tex style name: D, T, S, SS
+ * @param {boolean} style True if we are in displaystyle.
+ * @param {string} level The nesting level for scripts.
+ */
 BaseMethods.SetStyle = function(parser: TexParser, name: string,
-                                texStyle: string, style: string,
+                                texStyle: string, style: boolean,
                                 level: string) {
   parser.stack.env['style'] = texStyle; parser.stack.env['level'] = level;
   parser.Push(
@@ -267,6 +311,13 @@ BaseMethods.SetStyle = function(parser: TexParser, name: string,
       {styles: {displaystyle: style, scriptlevel: level}}) );
 };
 
+
+/**
+ * Setting size of an expression, e.g., \\small, \\huge.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} size The size value.
+ */
 BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
   parser.stack.env['size'] = size;
   parser.Push(
@@ -289,6 +340,12 @@ BaseMethods.Color = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+/**
+ * Setting explicit spaces, e.g., via commata or colons.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} space The space value.
+ */
 BaseMethods.Spacer = function(parser: TexParser, name: string, space: string) {
   // @test Positive Spacing, Negative Spacing
   const node = parser.configuration.nodeFactory.create('node', 'mspace', [],
@@ -1145,7 +1202,7 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
 
 
 /**
- *  Handle equation environment
+ * Handle equation environment
  */
 BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
   parser.Push(begin);
@@ -1155,6 +1212,9 @@ BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: 
 };
 
 
+/**
+ * Handle equation array.
+ */
 BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
                                 numbered: boolean, taggable: boolean,
                                 align: string, spacing: string, style: string) {
@@ -1222,7 +1282,7 @@ let baseURL = (typeof(document) === 'undefined' ||
 
 
 /**
- *  Handle a label reference
+ * Handle a label reference
  */
 BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
   // @test Ref, Ref Unknown, Eqref, Ref Default, Ref Named
