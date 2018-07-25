@@ -26,7 +26,12 @@ import {Configuration} from '../Configuration.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 
-// This is from the 'no undefined' extension.
+/**
+ * Generates a red version of the undefined control sequence, instead of
+ * throwing an error.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 function noUndefined(parser: TexParser, name: string) {
   const textNode = parser.configuration.nodeFactory.create('text', '\\' + name);
   parser.Push(parser.configuration.nodeFactory.create(
