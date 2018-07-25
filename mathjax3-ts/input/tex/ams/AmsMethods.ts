@@ -188,13 +188,13 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   let mml = parser.configuration.nodeFactory.create('node', 'munderover', [arrow], {}) as MmlMunderover;
   let mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [top], def);
   NodeUtil.setProperties(mpadded, {voffset: '.15em'});
-  NodeUtil.setData(mml, mml.over, mpadded);
+  NodeUtil.setChild(mml, mml.over, mpadded);
   if (bot) {
     // @test Above Below Left Arrow, Above Below Right Arrow
     let bottom = new TexParser(bot, parser.stack.env, parser.configuration).mml();
     mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [bottom], def);
     NodeUtil.setProperties(mpadded, {voffset: '-.24em'});
-    NodeUtil.setData(mml, mml.under, mpadded);
+    NodeUtil.setChild(mml, mml.under, mpadded);
   }
   // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
   //       Above Right Arrow in Context

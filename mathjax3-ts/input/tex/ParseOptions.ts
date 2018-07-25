@@ -62,27 +62,75 @@ const DefaultOptions: [string, string | boolean][] = [
  */
 export default class ParseOptions {
 
+  /**
+   * A set of sub handlers
+   * @type {SubHandlers}
+   */
   public handlers: SubHandlers;
+
+  /**
+   * A set of options, mapping names to string or boolean values.
+   * @type {Map<string, string|boolean>}
+   */
   public options: Map<string, string|boolean> = new Map();
+
+  /**
+   * The current item factory.
+   * @type {StackItemFactory}
+   */
   public itemFactory: StackItemFactory = new StackItemFactory();
+
+  /**
+   * The current node factory.
+   * @type {NodeFactory}
+   */
   public nodeFactory: NodeFactory = new NodeFactory();
+
+  /**
+   * The current tagging object.
+   * @type {Tags}
+   */
   public tags: Tags;
 
+  /**
+   * Stack of previous tex parsers. This is used to keep track of parser
+   * settings when expressions are recursively parser.
+   * @type {TexParser[]}
+   */
   public parsers: TexParser[] = [];
 
+
+  /**
+   * @constructor
+   * @param {{[key: string]: (string|boolean)}} setting A list of option
+   *     settings. Those are added to the default options.
+   */
   public constructor(setting: {[key: string]: (string|boolean)} = {}) {
     this.options = new Map(DefaultOptions);
     Object.assign(this.options, setting);
   }
 
+
+  /**
+   * Pushes a new tex parser onto the stack.
+   * @param {TexParser} parser The new parser.
+   */
   public pushParser(parser: TexParser) {
     this.parsers.unshift(parser);
   }
 
+
+  /**
+   * Pops a parser of the tex parser stack.
+   */
   public popParser() {
     this.parsers.shift();
   }
 
+
+  /**
+   * @return {TexParser} The currently active tex parser.
+   */
   public get parser(): TexParser {
     return this.parsers[0];
   }

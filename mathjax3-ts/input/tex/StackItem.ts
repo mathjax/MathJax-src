@@ -96,8 +96,16 @@ export interface NodeStack {
 
 export abstract class MmlStack implements NodeStack {
 
+  /**
+   * @constructor
+   * @extends {NodeStack}
+   * @param {MmlNode[]} _nodes An initial list of nodes to put on the stack.
+   */
   constructor(private _nodes: MmlNode[]) { }
 
+  /**
+   * @return {MmlNode[]} The nodes on the stack.
+   */
   protected get nodes(): MmlNode[] {
     return this._nodes;
   }
@@ -212,10 +220,49 @@ export interface StackItem extends NodeStack {
    */
   isKind(kind: string): boolean;
 
+  /**
+   * Get a property of the item.
+   * @param {string} key Property name.
+   * @return {Prop} Property value if it exists.
+   */
   getProperty(key: string): Prop;
+
+  /**
+   * Set a property.
+   * @param {string} key Property name.
+   * @param {Prop} value Property value.
+   */
   setProperty(key: string, value: Prop): void;
 
+  /**
+   * Convenience method for returning the string property "name".
+   * @return {string} The value for the name property.
+   */
   getName(): string;
+
+  /**
+   * TeX parsing in MathJax is essentially implemented via a nested stack
+   * automaton. That is the tex parser works on a stack, and each item on the
+   * stack can have a data stack of its own. Data on the stack is either a stack
+   * item or a node.
+   * 
+   * The checkItem method effectively implements the recursive checking of
+   * input data from the parser against data recursively given on the stack.
+   * 
+   * I.e., new input is parsed resulting in a new item. When pushed on the stack
+   * it is checked against the top most item on the stack. This either leads to
+   * the item being pushed onto the stack or combined with the top most
+   * element(s), pushing a new item, which is recursively checked, unless an
+   * error is thrown.
+   *
+   * A simple example: If \\end{foo} is parsed, an endItem is created, pushed on
+   * the stack. Nodes on the stack are collapsed into content of the 'foo'
+   * environment, until a beginItem for 'foo' is found.  If a beginItem is not
+   * for 'foo' or does not exist an error is thrown.
+   * 
+   * @param {StackItem} item The pushed item.
+   * @return {CheckType} True/false or an item or node.
+   */
   checkItem(item: StackItem): CheckType;
 
 }
@@ -226,6 +273,11 @@ export interface StackItemClass {
 
 export abstract class BaseItem extends MmlStack implements StackItem {
 
+
+  /**
+   * A list of basic errors.
+   * @type {{[key: string]: string[]}}
+   */
   protected errors: {[key: string]: string[]} = {
     // @test ExtraOpenMissingClose
     end: ['MissingBeginExtraEnd', 'Missing \\begin{%1} or extra \\end{%1}'],
@@ -263,10 +315,16 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     this._env = value;
   }
 
+  /**
+   * @override
+   */
   public getProperty(key: string): Prop {
     return this._properties[key];
   }
 
+  /**
+   * @override
+   */
   public setProperty(key: string, value: Prop) {
     this._properties[key] = value;
   }
@@ -362,10 +420,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
 
-
   /**
-   * Convenience method for returning the string property "name".
-   * @return {string} The value for the name property.
+   * @override
    */
   public getName() {
     return this.getProperty('name') as string;

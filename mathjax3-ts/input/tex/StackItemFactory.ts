@@ -53,7 +53,12 @@ export default class StackItemFactory {
   /**
    * A default item.
    */
-  public defaultKind = 'dummy';
+  public defaultKind: string = 'dummy';
+
+  /**
+   * The parser configuration.
+   * @type {ParseOptions} 
+   */
   public configuration: ParseOptions = null;
 
   private itemMap: Map<string, StackItemClass> = new Map();

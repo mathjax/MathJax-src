@@ -109,12 +109,25 @@ export interface Tags {
    * Nodes with unresolved references.
    * @type {MmlNode[]}
    */
-  // Not sure how to handle this at the moment.
+  // TODO: Not sure how to handle this at the moment.
   refs: MmlNode[]; // array of nodes with unresolved references
 
+  /**
+   * The label to use for the next tag.
+   * @type {string}
+   */
   label: string;
+
+  /**
+   * The environment that is currently tagged.
+   * @type {string}
+   */
   env: string;
 
+  /**
+   * The currently active tag.
+   * @type {TagInfo}
+   */
   currentTag: TagInfo;
 
   /**
@@ -154,12 +167,45 @@ export interface Tags {
    */
   reset(offset: number, keep: boolean): void;
 
+  /**
+   * Finalizes tag creation.
+   * @param {MmlNode} node 
+   * @param {EnvList} env List of environment properties.
+   * @return {MmlNode} The newly created tag.
+   */
   finalize(node: MmlNode, env: EnvList): MmlNode;
 
+  /**
+   * Starts tagging on a given environment.
+   * @param {string} env The name of the environment.
+   * @param {boolean} taggable True if taggable.
+   * @param {boolean} defaultTags True if tagged by default.
+   */
   start(env: string, taggable: boolean, defaultTags: boolean): void;
+
+  /**
+   * End tagging.
+   */
   end(): void;
+
+  /**
+   * Computes the next tag.
+   * @param {string} tag The tag content.
+   * @param {boolean} noFormat True if tag should not be formatted.
+   */
   tag(tag: string, format: boolean): void;
+
+  /**
+   * Call an explicit no tag.
+   */
   notag(): void;
+
+  /**
+   * Entag an element by creating a table around it.
+   * @param {MmlNode} node The node to be tagged.
+   * @param {MmlNode} tag The tag node.
+   * @return {MmlNode} The table node containing the original node and tag.
+   */
   enTag(node: MmlNode, tag: MmlNode): MmlNode;
 }
 
@@ -209,9 +255,11 @@ export class AbstractTags implements Tags {
    * Nodes with unresolved references.
    * @type {MmlNode[]}
    */
-  // Not sure how to handle this at the moment.
-  public refs: MmlNode[] = new Array(); // array of nodes with unresolved references
+  public refs: MmlNode[] = new Array();
 
+  /**
+   * @override
+   */
   public currentTag: TagInfo = new TagInfo();
 
 
@@ -224,7 +272,9 @@ export class AbstractTags implements Tags {
 
   private stack: TagInfo[] = [];
 
-
+  /**
+   * @override
+   */
   public start(env: string, taggable: boolean, defaultTags: boolean) {
     if (this.currentTag) {
       this.stack.push(this.currentTag);
@@ -236,17 +286,29 @@ export class AbstractTags implements Tags {
     return this.currentTag.env;
   }
 
+
+  /**
+   * @override
+   */
   public end() {
     this.history.push(this.currentTag);
     this.currentTag = this.stack.pop();
   }
 
+
+  /**
+   * @override
+   */
   public tag(tag: string, noFormat: boolean) {
     this.currentTag.tag = tag;
     this.currentTag.tagFormat = noFormat ? tag : this.formatTag(tag);
     this.currentTag.noTag = false;
   }
 
+
+  /**
+   * @override
+   */
   public notag() {
     this.tag('', true);
     this.currentTag.noTag = true;
@@ -338,6 +400,10 @@ export class AbstractTags implements Tags {
     return null;
   }
 
+
+  /**
+   * @override
+   */
   public reset(n: number, keepLabels: boolean) {
     this.offset = (n || 0);
     this.history = [];
@@ -455,11 +521,8 @@ export interface TagsClass {
 }
 
 
-// Factory needs functionality to create one Tags object from an existing one
-// to hand over label values, equation ids etc.
-//
-// 'AMS' for standard AMS numbering,
-//  or 'all' for all displayed equations
+// TODO: Factory needs functionality to create one Tags object from an existing one
+//       to hand over label values, equation ids etc.
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([
@@ -469,26 +532,51 @@ export namespace TagsFactory {
 
   let defaultTags = 'none';
 
+  /**
+   * Add a tagging object.
+   * @param {string} name Name of the tagging object.
+   * @param {TagsClass} constr The class of the Tagging object.
+   */
   export let add = function(name: string, constr: TagsClass) {
     tagsMapping.set(name, constr);
   };
 
+
+  /**
+   * Adds a list of tagging objects to the factory.
+   * @param {{[name: string]: TagsClass}} tags The list of tagging objects.
+   */
   export let addTags = function(tags: {[name: string]: TagsClass}) {
     for (const key of Object.keys(tags)) {
       TagsFactory.add(key, tags[key]);
     }
   };
 
+
+  /**
+   * Creates a new tagging object.
+   * @param {string} name The name of the tagging object.
+   * @return {Tags} The newly created object.
+   */
   export let create = function(name: string): Tags {
     let constr = tagsMapping.get(name) || tagsMapping.get('default');
     return new constr();
   };
 
+
+  /**
+   * Set the name of the default tagging object.
+   * @param {string} name The default.
+   */
   export let setDefault = function(name: string) {
     defaultTags = name;
   };
 
-  export let getDefault = function() {
+
+  /**
+   * @return {Tags} The default tagging object.
+   */
+  export let getDefault = function(): Tags {
     return TagsFactory.create(defaultTags);
   };
 

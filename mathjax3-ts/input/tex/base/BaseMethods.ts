@@ -500,9 +500,9 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   }
   const muoNode = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
   // TODO: This is necessary to get the empty element into the children.
-  NodeUtil.setData(muoNode, 0, c);
-  NodeUtil.setData(muoNode, 1, null);
-  NodeUtil.setData(muoNode, 2, mml);
+  NodeUtil.setChild(muoNode, 0, c);
+  NodeUtil.setChild(muoNode, 1, null);
+  NodeUtil.setChild(muoNode, 2, mml);
   let texAtom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [muoNode], {});
   parser.Push(texAtom);
 };
@@ -527,7 +527,7 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   const entity = NodeUtil.createEntity(c);
   mo = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
 
-  NodeUtil.setData(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
+  NodeUtil.setChild(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
                      mo);
   let node: MmlNode = mml;
   if (stack) {
@@ -790,9 +790,9 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   const bot = parser.ParseArg(name);
   const node = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
   // TODO: This is necessary to get the empty element into the children.
-  NodeUtil.setData(node, 0, bot);
-  NodeUtil.setData(node, 1, null);
-  NodeUtil.setData(node, 2, top);
+  NodeUtil.setChild(node, 0, bot);
+  NodeUtil.setChild(node, 1, null);
+  NodeUtil.setChild(node, 2, top);
   const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [node], {texClass: TEXCLASS.REL});
   parser.Push(atom);
 };
