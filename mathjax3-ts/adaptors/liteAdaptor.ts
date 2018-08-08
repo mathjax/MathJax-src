@@ -63,6 +63,10 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
      */
     public parser: LiteParser;
 
+    /*
+     * @param{OptionList} options  The options for the lite adaptor (e.g., fontSize)
+     * @constructor
+     */
     constructor(options: OptionList = null) {
         super();
         let CLASS = this.constructor as typeof LiteAdaptor;

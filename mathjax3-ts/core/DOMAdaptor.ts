@@ -301,8 +301,8 @@ export interface DOMAdaptor<N, T, D> {
     fontSize(node: N): number;
 
     /*
-     * @param{N} node        The HTML node whose dimensions are to be determined
-     * @return{number}       The width and height (in pixels) of the element
+     * @param{N} node            The HTML node whose dimensions are to be determined
+     * @return{[number, number]} The width and height (in pixels) of the element
      */
     nodeSize(node: N): [number, number];
 }

@@ -172,7 +172,8 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     /*
      * Get a MetricMap for the math list
      *
-     * @return{MetricMap}   The node-to-metrics map for all the containers that have math
+     * @param{MathDocument} html  The math document whose math list is to be processed.
+     * @return{MetricMap}         The node-to-metrics map for all the containers that have math
      */
     protected getMetricMap(html: MathDocument<N, T, D>) {
         const adaptor = this.adaptor;
