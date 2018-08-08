@@ -57,13 +57,6 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
     }
 
     /*
-     * Not yet implemented
-     *
-     * @override
-     */
-    public addEventHandlers() {}
-
-    /*
      * Insert the typeset MathItem into the document at the right location
      *   If the starting and ending nodes are the same:
      *     Split the text to isolate the math and its delimiters
@@ -82,7 +75,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
             if (this.inputJax.processStrings) {
                 let node = this.start.node as T;
                 if (node === this.end.node) {
-                    if (this.end.n < this.adaptor.value(this.end.node).length) {
+                    if (this.end.n && this.end.n < this.adaptor.value(this.end.node).length) {
                         this.adaptor.split(this.end.node, this.end.n);
                     }
                     if (this.start.n) {
@@ -122,18 +115,19 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
     public removeFromDocument(restore: boolean = false) {
         if (this.state() >= STATE.TYPESET) {
             let node = this.start.node;
+            let math: N | T = this.adaptor.text('');
             if (restore) {
                 let text = this.start.delim + this.math + this.end.delim;
-                let math;
                 if (this.inputJax.processStrings) {
                     math = this.adaptor.text(text);
                 } else {
                     const doc = this.adaptor.parse(text, 'text/html');
                     math = this.adaptor.firstChild(this.adaptor.body(doc));
                 }
-                this.adaptor.insert(math, node);
             }
-            this.adaptor.remove(node);
+            this.adaptor.replace(math, node);
+            this.start.node = this.end.node = math;
+            this.start.n = this.end.n = 0;
         }
     }
 

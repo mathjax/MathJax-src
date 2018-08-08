@@ -32,6 +32,7 @@ import {FontData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import {CssStyles} from './chtml/CssStyles.js';
 import {percent} from '../util/lengths.js';
+import {FunctionList} from '../util/FunctionList.js';
 import {BBox} from './chtml/BBox.js';
 
 
@@ -60,6 +61,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     public static OPTIONS: OptionList = {
         ...AbstractOutputJax.OPTIONS,
         scale: 1,                      // Global scaling factor for all expressions
+        mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
         skipAttributes: {},            // RFDa and other attributes NOT to copy to CHTML output
         exFactor: .5,                  // default size of ex in em units
         CHTMLWrapperFactory: null,     // The CHTMLWrapper factory to use
@@ -129,7 +131,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
         this.nodeMap = new Map<MmlNode, CHTMLWrapper<N, T, D>>();
         this.toCHTML(math.root, node);
         this.nodeMap = null;
-        return node;
+        return this.executeFilters(this.postFilters, math, node);
     }
 
     /*

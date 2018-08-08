@@ -54,7 +54,9 @@ export class MmlMaction extends AbstractMmlNode {
      * @return {MmlNode}  The selected child node (or an mrow if none selected)
      */
     public get selected(): MmlNode {
-        return this.childNodes[(this.attributes.get('selection') as number) - 1] || this.factory.create('mrow');
+        const selection = this.attributes.get('selection') as number;
+        const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
+        return this.childNodes[i] || this.factory.create('mrow');
     }
 
     /*
@@ -86,6 +88,18 @@ export class MmlMaction extends AbstractMmlNode {
     }
 
     /*
+     * @override
+     */
+    protected verifyAttributes(options: PropertyList) {
+        super.verifyAttributes(options);
+        if (this.attributes.get('actiontype') !== 'toggle' &&
+            this.attributes.getExplicit('selection') !== undefined) {
+            const attributes = this.attributes.getAllAttributes();
+            delete attributes.selection;
+        }
+    }
+
+    /*
      * Get the TeX class from the selceted node
      * For tooltips, set TeX classes within the tip as a separate math list
      *
@@ -100,4 +114,16 @@ export class MmlMaction extends AbstractMmlNode {
         this.updateTeXclass(selected);
         return prev;
     }
+
+    /*
+     * Select the next child for a toggle action
+     */
+    public nextToggleSelection() {
+        let selection = Math.max(1, (this.attributes.get('selection') as number) + 1);
+        if (selection > this.childNodes.length) {
+            selection = 1;
+        }
+        this.attributes.set('selection', selection);
+    }
+
 }

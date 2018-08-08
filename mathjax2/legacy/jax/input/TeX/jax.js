@@ -27,8 +27,8 @@
  */
 
 
-let MapHandler = require('mathjax3/input/tex/MapHandler.js').default;
-let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
+let MapHandler = require('../../../../../mathjax3/input/tex/MapHandler.js').default;
+let TeXParser = require('../../../../../mathjax3/input/tex/TexParser.js').default;
 
 (function (TEX,HUB,AJAX) {
 

@@ -56,6 +56,12 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-mtable > mjx-itable > *:last-child > mjx-mtd': {
             'padding-bottom': 0
         },
+        'mjx-mtable > mjx-labels > *:first-child > mjx-mtd': {
+            'padding-top': 0
+        },
+        'mjx-mtable > mjx-labels > *:last-child > mjx-mtd': {
+            'padding-bottom': 0
+        },
         'mjx-tstrut': {
             display: 'inline-block',
             height: '1em',
