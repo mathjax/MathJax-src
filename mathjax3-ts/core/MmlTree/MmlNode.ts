@@ -26,7 +26,7 @@ import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass
 import {MmlFactory} from './MmlFactory.js';
 
 /*
- *  Used in setInheritedAttrbutes() to pass originating node kind as well as property value
+ *  Used in setInheritedAttributes() to pass originating node kind as well as property value
  */
 export type AttributeList = {[attribute: string]: [string, Property]};
 
@@ -65,6 +65,14 @@ const TEXSPACE = [
     [ 0, -1,  2,  3,  0,  0,  0,  1], // CLOSE
     [ 1,  1,  0,  1,  1,  1,  1,  1], // PUNCT
     [ 1, -1,  2,  3,  1,  0,  1,  1]  // INNER
+];
+
+/*
+ * Attributes used to determine indentation and shifting
+ */
+export const indentAttributes = [
+    'indentalign', 'indentalignfirst',
+    'indentshift', 'indentshiftfirst'
 ];
 
 

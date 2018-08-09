@@ -74,6 +74,22 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
             position: 'absolute',
             top: 0
         },
+        'mjx-mtable[justify="left"][side="left"]': {
+            'text-align': 'left',
+            'padding-right': '0 ! important'
+        },
+        'mjx-mtable[justify="left"][side="right"]': {
+            'text-align': 'left',
+            'padding-left': '0 ! important'
+        },
+        'mjx-mtable[justify="right"][side="left"]': {
+            'text-align': 'right',
+            'padding-right': '0 ! important'
+        },
+        'mjx-mtable[justify="right"][side="right"]': {
+            'text-align': 'right',
+            'padding-left': '0 ! important'
+        },
         'mjx-mtable[align]': {
             'vertical-align': 'baseline'
         },
@@ -134,12 +150,13 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
-        this.labels = this.html('mjx-labels', {align: node.attributes.get('side')});
+        this.labels = this.html('mjx-labels');
         //
-        // Determine the number of columns and rows
+        // Determine the number of columns and rows, and whether the table is stretchy
         //
         this.numCols = max(this.tableRows.map(row => row.numCells));
         this.numRows = this.childNodes.length;
+        this.getPercentageWidth();
         //
         // Get the frame, row, and column parameters
         //
@@ -156,6 +173,22 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         //
         this.stretchRows();
         this.stretchColumns();
+    }
+
+    /*
+     * If the table has a precentage width or has labels, set the pwidth of the bounding box
+     */
+    protected getPercentageWidth() {
+        for (const row of this.childNodes) {
+            if (row.node.isKind('mlabeledtr')) {
+                this.bbox.pwidth = BBox.fullWidth;
+                return;
+            }
+        }
+        const width = this.node.attributes.get('width') as string;
+        if (isPercent(width)) {
+            this.bbox.pwidth = width;
+        }
     }
 
     /*
@@ -266,12 +299,13 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.handleWidth();
         this.handleLabels();
         this.handleAlign();
+        this.handleJustify();
         this.shiftColor();
     }
 
     /*
      * Move background color (if any) to inner itable node so that labeled tables are
-     * only colored on thei main part of the table.
+     * only colored on the main part of the table.
      */
     protected shiftColor() {
         const color = this.adaptor.getStyle(this.chtml, 'backgroundColor');
@@ -624,10 +658,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected handleWidth() {
         let w = this.node.attributes.get('width') as string;
         const hasLabels = (this.adaptor.childNodes(this.labels).length > 0);
-        if (isPercent(w) || hasLabels) {
-            this.bbox.pwidth = (hasLabels ? '100%' : w);
-            this.adaptor.setStyle(this.chtml, 'width', '100%');
-        } else {
+        if (!(isPercent(w) || hasLabels)) {
             if (w === 'auto') return;
             w = this.em(this.length2em(w) + (this.frame ? .14 : 0));
         }
@@ -651,6 +682,16 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
+    /*
+     * Mark the alignment of the table
+     */
+    protected handleJustify() {
+        const [align, shift] = this.getAlignShift();
+        if (align !== 'center') {
+            this.adaptor.setAttribute(this.chtml, 'justify', align);
+        }
+    }
+
     /******************************************************************/
 
     /*
@@ -658,26 +699,39 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     protected handleLabels() {
         const labels = this.labels;
+        const attributes = this.node.attributes;
         const adaptor = this.adaptor;
         if (adaptor.childNodes(labels).length === 0) return;
         //
         //  Set the side for the labels
         //
-        const side = this.node.attributes.get('side') as string;
-        adaptor.setAttribute(labels, 'side', side);
+        const side = attributes.get('side') as string;
+        adaptor.setAttribute(this.chtml, 'side', side);
+        adaptor.setAttribute(labels, 'align', side);
         adaptor.setStyle(labels, side, '0');
         //
         //  Make sure labels don't overlap table
         //
         const {L} = this.getTableData();
-        const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
-        let pad = L + sep;   // FIXME, handle indentalign values
+        const sep = this.length2em(attributes.get('minlabelspacing'));
+        let pad = L + sep;
         const [lpad, rpad] = (this.styles == null ? ['', ''] :
                               [this.styles.get('padding-left'), this.styles.get('padding-right')]);
         if (lpad || rpad) {
             pad = Math.max(pad, this.length2em(lpad || '0'), this.length2em(rpad || '0'));
         }
         adaptor.setStyle(this.chtml, 'padding', '0 ' + this.em(pad));
+        //
+        //  Handle indentation
+        //
+        let [align, shift] = this.getAlignShift();
+        if (align === side) {
+            shift = (side === 'left' ? Math.max(pad, shift) - pad : Math.min(-pad, shift) + pad);
+        }
+        if (shift) {
+            const table = adaptor.firstChild(this.chtml) as N;
+            this.setIndent(table, align, shift);
+        }
         //
         // Add the labels to the table
         //
