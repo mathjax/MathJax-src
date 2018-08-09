@@ -106,7 +106,9 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     public toCHTML(parent: N) {
         super.toCHTML(parent);
         const align = this.node.attributes.get('rowalign') as string;
-        this.adaptor.setAttribute(this.chtml, 'rowalign', align);
+        if (align !== 'baseline') {
+            this.adaptor.setAttribute(this.chtml, 'rowalign', align);
+        }
     }
 
     /*

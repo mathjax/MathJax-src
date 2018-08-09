@@ -23,7 +23,7 @@
 
 import {AbstractWrapper} from '../../core/Tree/Wrapper.js';
 import {Node, PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode, AbstractMmlNode, AttributeList} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
@@ -277,7 +277,11 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         this.getScale();
         this.getSpace();
         this.childNodes = node.childNodes.map((child: Node) => {
-            return this.wrap(child as MmlNode);
+            const wrapped = this.wrap(child as MmlNode);
+            if (wrapped.bbox.pwidth) {
+                this.bbox.pwidth = BBox.fullWidth;
+            }
+            return wrapped;
         });
     }
 
@@ -494,6 +498,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         this.handleColor();
         this.handleSpace();
         this.handleAttributes();
+        this.handlePWidth();
         return chtml;
     }
 
@@ -602,12 +607,26 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         const defaults = attributes.getAllDefaults();
         const skip = CHTMLWrapper.skipAttributes;
         for (const name of attributes.getExplicitNames()) {
-            if (skip[name] === false || (!(name in defaults) && !skip[name] && !this.adaptor.hasAttribute(this.chtml, name))) {
+            if (skip[name] === false || (!(name in defaults) && !skip[name] &&
+                                         !this.adaptor.hasAttribute(this.chtml, name))) {
                 this.adaptor.setAttribute(this.chtml, name, attributes.getExplicit(name) as string);
             }
         }
         if (attributes.get('class')) {
             this.adaptor.addClass(this.chtml, attributes.get('class') as string);
+        }
+    }
+
+    /*
+     * Handle the attributes needed for percentage widths
+     */
+    protected handlePWidth() {
+        if (this.bbox.pwidth) {
+            if (this.bbox.pwidth === BBox.fullWidth) {
+                this.adaptor.setAttribute(this.chtml, 'width', 'full');
+            } else {
+                this.adaptor.setStyle(this.chtml, 'width', this.bbox.pwidth);
+            }
         }
     }
 
@@ -657,6 +676,42 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
             }
         }
         return this.stretch.dir !== DIRECTION.None;
+    }
+
+    /*
+     * @return{[string, number]}  The alignment and indentation shift for the expression
+     */
+    protected getAlignShift() {
+        let {indentalign, indentshift, indentalignfirst, indentshiftfirst} =
+            this.node.attributes.getList(...indentAttributes) as StringMap;
+        if (indentalignfirst !== 'indentalign') {
+            indentalign = indentalignfirst;
+        }
+        if (indentalign === 'auto') {
+            indentalign = 'center';
+        }
+        if (indentshiftfirst !== 'indentshift') {
+            indentshift = indentshiftfirst;
+        }
+        if (indentshift === 'auto') {
+            indentshift = '0';
+        }
+        const shift = this.length2em(indentshift, this.metrics.containerWidth);
+        return [indentalign, shift] as [string, number];
+    }
+
+    /*
+     * @param{N} chtml       The HTML node whose indentation is to be adjusted
+     * @param{string} align  The alignment for the node
+     * @param{number} shift  The indent (positive or negative) for the node
+     */
+    protected setIndent(chtml: N, align: string, shift: number) {
+        if (align === 'center' || align === 'left') {
+            this.adaptor.setStyle(chtml, 'margin-left', this.em(shift));
+        }
+        if (align === 'center' || align === 'right') {
+            this.adaptor.setStyle(chtml, 'margin-right', this.em(-shift));
+        }
     }
 
     /*******************************************************************/
