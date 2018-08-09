@@ -48,7 +48,7 @@ export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.stretchChildren();
         for (const child of this.childNodes) {
             if (child.bbox.pwidth) {
-                this.bbox.pwidth = '100%';
+                this.bbox.pwidth = BBox.fullWidth;
                 break;
             }
         }

@@ -23,7 +23,7 @@
 
 import {AbstractWrapper} from '../../core/Tree/Wrapper.js';
 import {Node, PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode, AbstractMmlNode, AttributeList} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {Property} from '../../core/Tree/Node.js';
 import {OptionList} from '../../util/Options.js';
 import {unicodeChars} from '../../util/string.js';
@@ -279,7 +279,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
         this.childNodes = node.childNodes.map((child: Node) => {
             const wrapped = this.wrap(child as MmlNode);
             if (wrapped.bbox.pwidth) {
-                this.bbox.pwidth = '100%';
+                this.bbox.pwidth = BBox.fullWidth;
             }
             return wrapped;
         });
@@ -622,7 +622,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      */
     protected handlePWidth() {
         if (this.bbox.pwidth) {
-            if (this.bbox.pwidth === '100%') {
+            if (this.bbox.pwidth === BBox.fullWidth) {
                 this.adaptor.setAttribute(this.chtml, 'width', 'full');
             } else {
                 this.adaptor.setStyle(this.chtml, 'width', this.bbox.pwidth);
@@ -683,8 +683,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      */
     protected getAlignShift() {
         let {indentalign, indentshift, indentalignfirst, indentshiftfirst} =
-            this.node.attributes.getList('indentalign', 'indentshift',
-                                    'indentalignfirst', 'indentshiftfirst') as StringMap;
+            this.node.attributes.getList(...indentAttributes) as StringMap;
         if (indentalignfirst !== 'indentalign') {
             indentalign = indentalignfirst;
         }
@@ -702,7 +701,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /*
-     * @param{N} chtml       The HTML node whose indenting is to be adjusted
+     * @param{N} chtml       The HTML node whose indentation is to be adjusted
      * @param{string} align  The alignment for the node
      * @param{number} shift  The indent (positive or negative) for the node
      */

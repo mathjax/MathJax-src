@@ -67,6 +67,14 @@ const TEXSPACE = [
     [ 1, -1,  2,  3,  1,  0,  1,  1]  // INNER
 ];
 
+/*
+ * Attributes used to determine indentation and shifting
+ */
+export const indentAttributes = [
+    'indentalign', 'indentalignfirst',
+    'indentshift', 'indentshiftfirst'
+];
+
 
 /*****************************************************************/
 /*

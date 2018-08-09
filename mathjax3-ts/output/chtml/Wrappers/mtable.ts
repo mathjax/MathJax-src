@@ -181,7 +181,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected getPercentageWidth() {
         for (const row of this.childNodes) {
             if (row.node.isKind('mlabeledtr')) {
-                this.bbox.pwidth = '100%';
+                this.bbox.pwidth = BBox.fullWidth;
                 return;
             }
         }

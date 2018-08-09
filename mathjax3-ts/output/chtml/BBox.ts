@@ -53,6 +53,11 @@ export type BBoxData = {
 
 export class BBox {
     /*
+     * Constant for pwidth of full width box
+     */
+    public static fullWidth = '100%';
+
+    /*
      *  These are the data stored for a bounding box
      */
     public w: number;
