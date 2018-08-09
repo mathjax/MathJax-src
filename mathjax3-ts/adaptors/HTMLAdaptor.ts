@@ -389,7 +389,6 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
      * @override
      */
     public setAttribute(node: N, name: string, value: string) {
-        name = name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
         return node.setAttribute(name, value);
     }
 

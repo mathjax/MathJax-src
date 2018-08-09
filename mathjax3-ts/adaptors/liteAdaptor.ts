@@ -417,7 +417,6 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
      * @override
      */
     public setAttribute(node: LiteElement, name: string, value: string) {
-        name = name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
         node.attributes[name] = value;
         if (name === 'style') {
             node.styles = null;
