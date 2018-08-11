@@ -25,17 +25,15 @@ import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {ProtoItem} from './MathItem.js';
 
 /*****************************************************************/
-/*
+/**
  *  The FindMath interface
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export interface FindMath<N, T, D> {
-    /*
+    /**
      * One of two possibilities:  Look through a DOM element,
      *   or look through an array of strings for delimited math.
      */
@@ -44,28 +42,28 @@ export interface FindMath<N, T, D> {
 }
 
 /*****************************************************************/
-/*
+/**
  *  The FindMath abstract class
  */
 
-/*
+/**
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
 
-    /*
+    /**
      * The default options for FindMath
      */
     public static OPTIONS: OptionList = {};
 
-    /*
+    /**
      * The actual options for this instance
      */
     protected options: OptionList;
 
-    /*
+    /**
      * @param {OptionList} options  The user options for this instance
      */
     constructor(options: OptionList) {
@@ -73,7 +71,7 @@ export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     }
 
-    /*
+    /**
      * Locate math in an Element or a string array;
      *
      * @param{Element | string[]} where  The node or string array to search for math

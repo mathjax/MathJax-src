@@ -30,7 +30,7 @@ import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/Mml
 import {BBox} from '../BBox.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmfenced wrapper for the MmlMfenced object
  *
  * @template N  The HTMLElement node class
@@ -45,7 +45,7 @@ export class CHTMLmfenced<N, T, D> extends CHTMLWrapper<N, T, D> {
     //
     protected mrow: CHTMLinferredMrow<N, T, D> = null;
 
-    /*
+    /**
      * @override
      * @constructor
      */
@@ -55,7 +55,7 @@ export class CHTMLmfenced<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.addMrowChildren();
     }
 
-    /*
+    /**
      * Creates the mrow wrapper to use for the layout
      */
     protected createMrow() {
@@ -72,7 +72,7 @@ export class CHTMLmfenced<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.mrow.parent = this;
     }
 
-    /*
+    /**
      * Populate the mrow with wrapped mo elements interleaved
      *   with the mfenced children (the mo's are already created
      *   in the mfenced object)
@@ -93,7 +93,7 @@ export class CHTMLmfenced<N, T, D> extends CHTMLWrapper<N, T, D> {
         mrow.stretchChildren();
     }
 
-    /*
+    /**
      * Wrap an mo element and push it onto the mrow
      *
      * @param{MmlNode} node  The mo element to push on the mrow
@@ -105,7 +105,7 @@ export class CHTMLmfenced<N, T, D> extends CHTMLWrapper<N, T, D> {
         mo.parent = this.mrow;
     }
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -114,7 +114,7 @@ export class CHTMLmfenced<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.drawBBox();
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {

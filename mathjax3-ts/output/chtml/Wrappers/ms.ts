@@ -27,7 +27,7 @@ import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
 import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLms wrapper for the MmlMs object
  *
  * @template N  The HTMLElement node class
@@ -37,7 +37,7 @@ import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.
 export class CHTMLms<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMs.prototype.kind;
 
-    /*
+    /**
      * Add the quote characters to the wrapper children so they will be output
      *
      * @override
@@ -54,7 +54,7 @@ export class CHTMLms<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.childNodes.push(this.createText(quotes.rquote as string));
     }
 
-    /*
+    /**
      * Create a text wrapper with the given text;
      *
      * @param{string} text  The text for the wrapped element

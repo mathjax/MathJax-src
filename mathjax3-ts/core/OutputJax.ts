@@ -28,42 +28,40 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {FunctionList} from '../util/FunctionList.js';
 
 /*****************************************************************/
-/*
+/**
  *  The OutputJax interface
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export interface OutputJax<N, T, D> {
-    /*
+    /**
      * The name of this output jax class
      */
     name: string;
 
-    /*
+    /**
      * The options for the instance
      */
     options: OptionList;
 
-    /*
+    /**
      * Lists of post-filters to call after typesetting the math
      */
     postFilters: FunctionList;
 
-    /*
+    /**
      * The DOM adaptor for managing HTML elements
      */
     adaptor: DOMAdaptor<N, T, D>;
 
-    /*
+    /**
      * @param{DOMAdaptor}  The adaptor to use in this jax
      */
     setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
 
-    /*
+    /**
      * Typset a given MathItem
      *
      * @param{MathItem} math          The MathItem to be typeset
@@ -72,7 +70,7 @@ export interface OutputJax<N, T, D> {
      */
     typeset(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
-    /*
+    /**
      * Handle an escaped character (e.g., \$ from the TeX input jax preventing it from being a delimiter)
      *
      * @param{MathItem} math          The MathItem to be escaped
@@ -81,14 +79,14 @@ export interface OutputJax<N, T, D> {
      */
     escaped(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
-    /*
+    /**
      * Get the metric information for all math in the given document
      *
      * @param{MathDocument} document  The MathDocument being processed
      */
     getMetrics(document: MathDocument<N, T, D>): void;
 
-    /*
+    /**
      * Produce the stylesheet needed for this output jax
      *
      * @param{MathDocument} document  The MathDocument being processed
@@ -98,11 +96,9 @@ export interface OutputJax<N, T, D> {
 
 
 /*****************************************************************/
-/*
+/**
  *  The OutputJax abstract class
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -116,7 +112,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     public postFilters: FunctionList;
     public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
 
-    /*
+    /**
      * @param{OptionList} options  The options for this instance
      */
     constructor(options: OptionList = {}) {
@@ -125,44 +121,44 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
         this.postFilters = new FunctionList();
     }
 
-    /*
+    /**
      * @return{string}  The name for this output jax class
      */
     public get name() {
         return (this.constructor as typeof AbstractOutputJax).NAME;
     }
 
-    /*
+    /**
      * @override
      */
     public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
         this.adaptor = adaptor;
     }
 
-    /*
+    /**
      * @override
      */
     public abstract typeset(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
-    /*
+    /**
      * @override
      */
     public abstract escaped(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
-    /*
+    /**
      * @override
      */
     public getMetrics(document: MathDocument<N, T, D>) {
     }
 
-    /*
+    /**
      * @override
      */
     public styleSheet(document: MathDocument<N, T, D>) {
         return null as N;
     }
 
-    /*
+    /**
      * Execute a set of filters, passing them the MathItem and any needed data,
      *  and return the (possibly modified) data
      *

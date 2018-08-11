@@ -25,48 +25,48 @@ import {OptionList} from '../../util/Options.js';
 import {Styles} from '../../util/Styles.js';
 import {LiteText} from './Text.js';
 
-/*
+/**
  * Type for attribute lists
  */
 export type LiteAttributeList = OptionList;
 
-/*
+/**
  * Type for generic nodes in LiteAdaptor
  */
 export type LiteNode = LiteElement | LiteText;
 
 
 /************************************************************/
-/*
+/**
  * Implements a lightweight HTML element replacement
  */
 export class LiteElement {
-    /*
+    /**
      * The type of element (tag name)
      */
     public kind: string;
 
-    /*
+    /**
      * The element's attribute list
      */
     public attributes: LiteAttributeList;
 
-    /*
+    /**
      * The element's children
      */
     public children: LiteNode[];
 
-    /*
+    /**
      * The element's parent
      */
     public parent: LiteElement;
 
-    /*
+    /**
      * The styles for the element
      */
     public styles: Styles;
 
-    /*
+    /**
      * @param{string} kind  The type of node to create
      * @param{LiteAttributeList} attributes  The list of attributes to set (if any)
      * @param{LiteNode[]} children  The children for the node (if any)

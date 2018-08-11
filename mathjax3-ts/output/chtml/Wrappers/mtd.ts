@@ -28,7 +28,7 @@ import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmtd wrapper for the MmlMtd object
  *
  * @template N  The HTMLElement node class
@@ -90,7 +90,7 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {

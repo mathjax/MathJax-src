@@ -31,7 +31,7 @@ import {InputJax} from '../../core/InputJax.js';
 import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
 
 /*****************************************************************/
-/*
+/**
  * List of Lists of pairs consisting of a DOM node and its text length
  *
  * These represent the Text elements that make up a single
@@ -44,7 +44,7 @@ import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
 export type HTMLNodeArray<N, T> = [N | T, number][][];
 
 /*****************************************************************/
-/*
+/**
  *  The HTMLDocument class (extends AbstractMathDocument)
  *
  * @template N  The HTMLElement node class
@@ -61,12 +61,12 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     };
     public static STATE = AbstractMathDocument.STATE;
 
-    /*
+    /**
      * The DomString parser for locating the text in DOM trees
      */
     public domStrings: HTMLDomStrings<N, T, D>;
 
-    /*
+    /**
      * @override
      * @constructor
      * @extends{AbstractMathDocument}
@@ -78,7 +78,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         this.domStrings.adaptor = adaptor;
     }
 
-    /*
+    /**
      * Creates a Location object for a delimiter at the position given by index in the N's string
      *  of the array of strings searched for math, recovering the original DOM node where the delimiter
      *  was found.
@@ -100,7 +100,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         return {node: null, n: 0, delim: delim};
     }
 
-    /*
+    /**
      * Convert a ProtoItem to a MathItem (i.e., determine the actual Location
      *  objects for its start and end)
      *
@@ -116,7 +116,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         return new HTMLMathItem(math, jax, item.display, start, end);
     }
 
-    /*
+    /**
      * Find math within the document:
      *  Get the list of containers (default is document.body), and for each:
      *    For each input jax:
@@ -162,7 +162,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public updateDocument() {
@@ -183,7 +183,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         return this;
     }
 
-    /*
+    /**
      * @param{N} head     The document <head>
      * @param{string} id  The id of the stylesheet to find
      * @param{N|null}     The stylesheet with the given ID
@@ -199,7 +199,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         return null as N;
     }
 
-    /*
+    /**
      * @override
      */
     public removeFromDocument(restore: boolean = false) {
@@ -214,14 +214,14 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public documentStyleSheet() {
         return this.outputJax.styleSheet(this);
     }
 
-    /*
+    /**
      * Temporary function for testing purposes.  Will be removed
      */
     public TestMath(text: string, display: boolean = true) {

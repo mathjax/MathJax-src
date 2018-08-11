@@ -22,12 +22,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-/*
+/**
  * An object contining name: value pairs
  */
 export type StyleList = {[name: string]: string};
 
-/*
+/**
  * Data for how to map a combined style (like border) to its children
  */
 export type connection = {
@@ -36,19 +36,19 @@ export type connection = {
     combine: (name: string) => void   // function to combine the child values when one changes
 };
 
-/*
+/**
  * A collection of connections
  */
 export type connections = {[name: string]: connection};
 
 /*********************************************************/
-/*
+/**
  * Some common children arrays
  */
 const TRBL = ['top', 'right', 'bottom', 'left'];
 const WSC = ['width', 'style', 'color'];
 
-/*
+/**
  * Split a style at spaces (taking quotation marks and commas into account)
  *
  * @param{string} text  The combined styles to be split at spaces
@@ -65,7 +65,7 @@ function splitSpaces(text: string) {
 }
 
 /*********************************************************/
-/*
+/**
  * Split a top-right-bottom-left group into its parts
  * Format:
  *    x           all are the same value
@@ -95,7 +95,7 @@ function splitTRBL(name: string) {
     }
 }
 
-/*
+/**
  * Combine top-right-bottom-left into one entry
  * (removing unneeded values)
  *
@@ -125,7 +125,7 @@ function combineTRBL(name: string) {
 }
 
 /*********************************************************/
-/*
+/**
  * Use the same value for all children
  *
  * @param{string} name   The style to be processed
@@ -136,7 +136,7 @@ function splitSame(name: string) {
     }
 }
 
-/*
+/**
  * Check that all children have the same values and
  * if so, set the parent to that value
  *
@@ -155,7 +155,7 @@ function combineSame(name: string) {
 }
 
 /*********************************************************/
-/*
+/**
  * Patterns for the parts of a boarder
  */
 const BORDER: {[name: string]: RegExp} = {
@@ -163,7 +163,7 @@ const BORDER: {[name: string]: RegExp} = {
     style: /^(?:none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|inherit|initial|unset)$/
 };
 
-/*
+/**
  * Split a width-style-color border definition
  *
  * @param{string} name   The style to be processed
@@ -184,7 +184,7 @@ function splitWSC(name: string) {
     }
 }
 
-/*
+/**
  * Combine with-style-color border definition from children
  *
  * @param{string} name   The style to be processed
@@ -205,7 +205,7 @@ function combineWSC(name: string) {
 }
 
 /*********************************************************/
-/*
+/**
  * Patterns for the parts of a font declaration
  */
 const FONT: {[name: string]: RegExp} = {
@@ -238,7 +238,7 @@ const FONT: {[name: string]: RegExp} = {
                      '(?:\/(?:normal|[\d.\+](?:%|[a-z]+)?))?$')
 };
 
-/*
+/**
  * Split a font declaration into is parts (not perfect but good enough for now)
  *
  * @param{string} name   The style to be processed
@@ -282,7 +282,7 @@ function splitFont(name: string) {
     delete this.styles[name]; // only use the parts, not the font declaration itself
 }
 
-/*
+/**
  * @param{string} name   The style to be processed
  * @param{{[name: string]: string | string[]}} value  The list of parts detected above
  */
@@ -300,18 +300,18 @@ function saveFontParts(name: string, value: {[name: string]: string | string[]})
     }
 }
 
-/*
+/**
  * Combine font parts into one (we don't actually do that)
  */
 function combineFont(name: string) {}
 
 /*********************************************************/
-/*
+/**
  * Implements the Styles object (lite version of CssStyleDeclaration)
  */
 export class Styles {
 
-    /*
+    /**
      * Patterns for style values and comments
      */
     public static pattern: {[name: string]: RegExp} = {
@@ -319,7 +319,7 @@ export class Styles {
         comment: /\/\*[^]*?\*\//g
     };
 
-    /*
+    /**
      * The mapping of parents to children, and how to split and combine them
      */
     public static connect: connections = {
@@ -377,12 +377,12 @@ export class Styles {
         }
     };
 
-    /*
+    /**
      * The list of styles defined for this declaration
      */
     protected styles: StyleList;
 
-    /*
+    /**
      * @param{string} cssText  The initial definition for the style
      * @constructor
      */
@@ -390,7 +390,7 @@ export class Styles {
         this.parse(cssText);
     }
 
-    /*
+    /**
      * @return{string}  The CSS string for the styles currently defined
      */
     public get cssText() {
@@ -404,7 +404,7 @@ export class Styles {
         return styles.join('; ');
     }
 
-    /*
+    /**
      * @param{string} name   The name of the style to set
      * @param{srting|number|boolean}  The value to set it to
      */
@@ -431,7 +431,7 @@ export class Styles {
         }
     }
 
-    /*
+    /**
      * @param{string} name  The name of the style to get
      * @return{string}      The value of the style (or empty string if not defined)
      */
@@ -440,7 +440,7 @@ export class Styles {
         return (this.styles.hasOwnProperty(name) ? this.styles[name] : '');
     }
 
-    /*
+    /**
      * @param{string} name   The name of the style to set (without causing parent updates)
      * @param{string} value  The value to set it to
      */
@@ -454,7 +454,7 @@ export class Styles {
         }
     }
 
-    /*
+    /**
      * @param{string} name   The name of the style whose parent is to be combined
      */
     protected combineChildren(name: string) {
@@ -465,7 +465,7 @@ export class Styles {
         }
     }
 
-    /*
+    /**
      * @param{string} name   The name of the style whose parent style is to be found
      * @return{string}       The name of the parent, or '' if none
      */
@@ -474,7 +474,7 @@ export class Styles {
         return (name === parent ? '' : parent);
     }
 
-    /*
+    /**
      * @param{string} name   The name of the parent style
      * @param{string} child  The suffix to be added to the parent
      * @preturn{string}      The combined name
@@ -497,7 +497,7 @@ export class Styles {
         return name + '-' + child;
     }
 
-    /*
+    /**
      * @param{string} name  The name of a style to normalize
      * @return{string}      The name converted from CamelCase to lowercase with dashes
      */
@@ -505,7 +505,7 @@ export class Styles {
         return name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
     }
 
-    /*
+    /**
      * @param{string} cssText  A style text string to be parsed into separate styles
      *                         (by using this.set(), we get all the sub-styles created
      *                          as well as the merged style shorthands)

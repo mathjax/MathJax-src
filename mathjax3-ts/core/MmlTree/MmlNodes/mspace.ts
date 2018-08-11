@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMspace node class (subclass of AbstractMmlTokenNode)
  */
 
@@ -39,28 +39,28 @@ export class MmlMspace extends AbstractMmlTokenNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  the mspace kind
      */
     public get kind() {
         return 'mspace';
     }
 
-    /*
+    /**
      * @return {number}  mspace can't have children
      */
     public get arity() {
         return 0;
     }
 
-    /*
+    /**
      * @override
      */
     public get isSpacelike() {
         return true;
     }
 
-    /*
+    /**
      * Only process linebreak if the space has no explicit dimensions (according to spec)
      *
      * @override

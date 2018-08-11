@@ -27,14 +27,14 @@ import {MmlNode, MmlNodeClass} from './MmlNode.js';
 import {MML} from './MML.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlFactory (subclass of NodeFactory)
  */
 
 export class MmlFactory extends AbstractNodeFactory<MmlNode, MmlNodeClass> {
     public static defaultNodes = MML;
 
-    /*
+    /**
      * @return {object}  The list of node-creation functions (similar to the
      *                   MML object from MathJax v2).
      */

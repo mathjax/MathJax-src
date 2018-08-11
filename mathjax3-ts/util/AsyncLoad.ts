@@ -25,7 +25,7 @@ declare var System: {import: Function};
 declare function require(name: string): Object;
 declare var __dirname: string;
 
-/*
+/**
  * Load a file asynchronously, either using System.js, or node's require().
  *
  * @param{string} name  The name of the file to load

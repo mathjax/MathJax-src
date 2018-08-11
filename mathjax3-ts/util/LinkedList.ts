@@ -22,37 +22,41 @@
  */
 
 /*****************************************************************/
-/*
+/**
  *  A symbol used to mark the special node used to indicate
  *  the start and end of the list.
  */
 const END = Symbol();
 
-/*
+/**
  * Shorthand type for the functions used to sort the data items
+ *
+ * @template DataClass   The type of data stored in the list
  */
 export type SortFn<DataClass> = (a: DataClass, b: DataClass) => boolean;
 
 /*****************************************************************/
-/*
+/**
  *  The ListItem interface (for a specific type of data item)
  *
  *  These are the items in the doubly-linked list.
+ *
+ * @template DataClass   The type of data stored in the list
  */
 
 export class ListItem<DataClass> {
-    /*
+    /**
      * The data for the list item
      */
     public data: DataClass | symbol;
 
-    /*
+    /**
      * Pointers to the next and previous items in the list
      */
     public next: ListItem<DataClass> = null;
     public prev: ListItem<DataClass> = null;
 
-    /*
+    /**
      * @param{any} data  The data to be stored in the list item
      * @constructor
      */
@@ -63,18 +67,20 @@ export class ListItem<DataClass> {
 
 
 /*****************************************************************/
-/*
+/**
  *  Implements the generic LinkedList class
+ *
+ * @template DataClass   The type of data stored in the list
  */
 
 export class LinkedList<DataClass> {
 
-    /*
+    /**
      * The linked list
      */
     protected list: ListItem<DataClass>;
 
-    /*
+    /**
      *  This.list is a special ListItem whose next property
      *    points to the head of the list and whose prev
      *    property points to the tail.  This lets us relink
@@ -91,7 +97,7 @@ export class LinkedList<DataClass> {
         this.push(...args);
     }
 
-    /*
+    /**
      * Typescript < 2.3 targeted at ES5 doesn't handle
      *
      *     for (const x of this) {...}
@@ -104,7 +110,7 @@ export class LinkedList<DataClass> {
         return Array.from(this) as DataClass[];
     }
 
-    /*
+    /**
      *  Used for sorting and merging lists (Overridden by subclasses)
      *
      * @param{DataClass} a   The first item to compare
@@ -115,7 +121,7 @@ export class LinkedList<DataClass> {
         return (a < b);
     }
 
-    /*
+    /**
      * Push items on the end of the list
      *
      * @param{DataClass[]} args   The list of data items to be pushed
@@ -132,7 +138,7 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Pop the end item off the list and return its data
      *
      * @return{DataClass}  The data from the last item in the list
@@ -148,7 +154,7 @@ export class LinkedList<DataClass> {
         return item.data as DataClass;
     }
 
-    /*
+    /**
      * Push items at the head of the list
      *
      * @param{DataClass[]} args   The list of data items to inserted
@@ -165,7 +171,7 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Remove an item from the head of the list and return its data
      *
      * @return{DataClass}  The data from the first item in the list
@@ -181,7 +187,7 @@ export class LinkedList<DataClass> {
         return item.data as DataClass;
     }
 
-    /*
+    /**
      * Empty the list
      *
      * @return{LinkedList}  The LinkedList object (for chaining)
@@ -192,7 +198,7 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Make the list iterable and return the data from the items in the list
      *
      * @return{{next: Function}}  The object containing the iterator's next() function
@@ -209,7 +215,7 @@ export class LinkedList<DataClass> {
         };
     }
 
-    /*
+    /**
      * An iterator for the list in reverse order
      *
      * @return{Object}  The iterator for walking the list in reverse
@@ -232,7 +238,7 @@ export class LinkedList<DataClass> {
         };
     }
 
-    /*
+    /**
      * Insert a new item into a sorted list in the correct locations
      *
      * @param{DataClass} data   The data item to add
@@ -254,7 +260,7 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Sort the list using an optional sort function
      *
      * @param{SortFn} isBefore  The function used to order the data
@@ -293,7 +299,7 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Merge a sorted list with another sorted list
      *
      * @param{LinkedList} list  The list to merge into this instance's list
@@ -346,4 +352,5 @@ export class LinkedList<DataClass> {
         }
         return this;
     }
+
 }

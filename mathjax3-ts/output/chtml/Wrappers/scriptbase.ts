@@ -39,7 +39,7 @@ import {DIRECTION} from '../FontData.js';
 const DELTA = 1.5;
 
 /*****************************************************************/
-/*
+/**
  * A base class for msup/msub/msubsup and munder/mover/munderover
  * wrapper implementations
  *
@@ -50,31 +50,31 @@ const DELTA = 1.5;
 export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = 'scriptbase';
 
-    /*
+    /**
      * Set to true for munderover/munder/mover/msup (Appendix G 13)
      */
     public static useIC: boolean = false;
 
-    /*
+    /**
      * The core mi or mo of the base (or the base itself if there isn't one)
      */
     protected baseCore: CHTMLWrapper<N, T, D>;
 
-    /*
+    /**
      * @return{CHTMLWrapper}  The base element's wrapper
      */
     public get baseChild() {
         return this.childNodes[(this.node as MmlMsubsup).base];
     }
 
-    /*
+    /**
      * @return{CHTMLWrapper}  The script element's wrapper (overridden in subclasses)
      */
     public get script() {
         return this.childNodes[1];
     }
 
-    /*
+    /**
      * @override
      */
     constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
@@ -101,7 +101,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * This gives the common output for msub and msup.  It is overriden
      * for all the others (msubsup, munder, mover, munderover).
      *
@@ -118,7 +118,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.script.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
     }
 
-    /*
+    /**
      * This gives the common bbox for msub and msup.  It is overriden
      * for all the others (msubsup, munder, mover, munderover).
      *
@@ -134,7 +134,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.clean();
     }
 
-    /*
+    /**
      * @return{boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
      */
     protected isCharBase() {
@@ -152,7 +152,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      *  Methods for sub-sup nodes
      */
 
-    /*
+    /**
      * Get the shift for the script (implemented in subclasses)
      *
      * @param{BBox} bbox   The bounding box of the base element
@@ -163,7 +163,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         return [0, 0];
     }
 
-    /*
+    /**
      * Get the shift for a subscript (TeXBook Appendix G 18ab)
      *
      * @param{BBox} bbox   The bounding box of the base element
@@ -180,7 +180,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         );
     }
 
-    /*
+    /**
      * Get the shift for a superscript (TeXBook Appendix G 18acd)
      *
      * @param{BBox} bbox   The bounding box of the base element
@@ -204,7 +204,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      *  Methods for under-over nodes
      */
 
-    /*
+    /**
      * @return{boolean}  True if the base has movablelimits (needed by munderover)
      */
     protected hasMovableLimits() {
@@ -214,7 +214,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
                              this.baseChild.coreMO().node.attributes.get('movablelimits')));
     }
 
-    /*
+    /**
      * Get the separation and offset for overscripts (TeXBoox Appendix G 13, 13a)
      *
      * @param{BBox} basebox  The bounding box of the base
@@ -231,7 +231,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         return [k, basebox.h + k + d];
     }
 
-    /*
+    /**
      * Get the separation and offset for underscripts (TeXBoox Appendix G 13, 13a)
      *
      * @param{BBox} basebox   The bounding box of the base
@@ -248,7 +248,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         return [k, -(basebox.d + k + h)];
     }
 
-    /*
+    /**
      * @param{BBox[]} boxes    The bounding boxes whose offsets are to be computed
      * @param{number[]} delta  The initial x offsets of the boxes
      * @return{number[]}       The actual offsets needed to center the boxes in the stack
@@ -274,7 +274,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         return dw;
     }
 
-    /*
+    /**
      * @param{N[]} nodes    The HTML elements to be centered in a stack
      * @param{number[]} dx  The x offsets needed to center the elements
      */
@@ -286,7 +286,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @return{number}   The offset for under and over
      */
     protected getDelta(noskew: boolean = false) {
@@ -295,7 +295,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         return DELTA * this.baseCore.bbox.ic / 2 + ddelta;
     }
 
-    /*
+    /**
      * Handle horizontal stretching of children to match greatest width
      *  of all children
      */
@@ -334,7 +334,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @param{N} over        The HTML element for the overscript
      * @param{BBox} overbox  The bbox for the overscript
      */
@@ -343,7 +343,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
     }
 
-    /*
+    /**
      * @param{N} under        The HTML element for the underscript
      * @param{BBox} underbox  The bbox for the underscript
      */

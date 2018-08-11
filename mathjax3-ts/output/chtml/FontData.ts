@@ -24,7 +24,7 @@
 
 import {StringMap} from './Wrapper.js';
 
-/*
+/**
  * The extra options allowed in a CharData array
  */
 export type CharOptions = {
@@ -35,7 +35,7 @@ export type CharOptions = {
     sk?: number;                  // skew value
 };
 
-/*
+/**
  * The bit values for CharOptions.css
  */
 export const enum CSS {
@@ -45,7 +45,7 @@ export const enum CSS {
 }
 
 
-/*
+/**
  * Data about a character
  *   [height, depth, width, {italic-correction, skew, options}]
  */
@@ -61,20 +61,20 @@ export type CharMapMap = {
     [name: string]: CharMap;
 };
 
-/*
+/**
  * Data for a variant
  */
 export type VariantData = {
-    /*
+    /**
      * A list of CharMaps that must be updated when characters are
      * added to this variant
      */
     linked: CharMap[];
-    /*
+    /**
      * The character data for this variant
      */
     chars: CharMap;
-    /*
+    /**
      * The classes to use for this variant
      */
     classes?: string;
@@ -84,7 +84,7 @@ export type VariantMap = {
     [name: string]: VariantData;
 };
 
-/*
+/**
  * Stretchy delimiter data
  */
 export const enum DIRECTION {None, Vertical, Horizontal}
@@ -109,7 +109,7 @@ export type DelimiterMap = {
 
 export const NOSTRETCH: DelimiterData = {dir: DIRECTION.None};
 
-/*
+/**
  * Data for remapping characters
  */
 export type RemapData = string;
@@ -120,7 +120,7 @@ export type RemapMapMap = {
     [key: string]: RemapMap;
 }
 
-/*
+/**
  * Font parameters (for TeX typesetting rules)
  */
 export type FontParameters = {
@@ -159,13 +159,13 @@ export type FontParameters = {
 };
 
 /****************************************************************************/
-/*
+/**
  *  The FontData class (for storing character bounding box data by variant,
  *                      and the stretchy delimiter data).
  */
 export class FontData {
 
-    /*
+    /**
      *  The standard variants to define
      */
     protected static defaultVariants = [
@@ -185,7 +185,7 @@ export class FontData {
         ['monospace', 'normal']
     ];
 
-    /*
+    /**
      *  The default remappings
      */
     protected static defaultAccentMap = {
@@ -228,7 +228,7 @@ export class FontData {
         0x002D: '\u2212' // hyphen
     }
 
-    /*
+    /**
      *  The default font parameters for the font
      */
     public static defaultParams: FontParameters = {
@@ -266,40 +266,40 @@ export class FontData {
         min_rule_thickness:  1.25     // in pixels
     };
 
-    /*
+    /**
      * The default delimiter and character data
      */
     protected static defaultDelimiters: DelimiterMap = {};
     protected static defaultChars: CharMapMap = {};
 
-    /*
+    /**
      * The default variants for the fixed size stretchy delimiters
      */
     protected static defaultSizeVariants: string[] = [];
 
-    /*
+    /**
      * The default class names to use for each variant
      */
     protected static defaultVariantClasses: StringMap = {};
 
-    /*
+    /**
      * The actual variant, delimiter, and size information for this font
      */
     protected variant: VariantMap = {};
     protected delimiters: DelimiterMap = {};
     protected sizeVariants: string[];
 
-    /*
+    /**
      * The character maps
      */
     protected remapChars: RemapMapMap = {};
 
-    /*
+    /**
      * The actual font parameters for this font
      */
     public params: FontParameters;
 
-    /*
+    /**
      * Copies the data from the defaults to the instance
      *
      * @constructor
@@ -321,7 +321,7 @@ export class FontData {
         this.defineRemap('mn', CLASS.defaultMnMap);
     }
 
-    /*
+    /**
      * Creates the data structure for a variant -- an object with
      *   prototype chain that includes a copy of the linked variant,
      *   and then the inherited variant chain.
@@ -365,7 +365,7 @@ export class FontData {
         this.variant[name] = variant;
     }
 
-    /*
+    /**
      * Create a collection of variants
      *
      * @param{string[][]} variants  Array of [name, inherit?, link?] values for
@@ -377,7 +377,7 @@ export class FontData {
         }
     }
 
-    /*
+    /**
      * Defines new character data in a given variant
      *  (We use Object.assign() here rather than the spread operator since
      *  the character maps are objeccts with prototypes, and we don't
@@ -394,7 +394,7 @@ export class FontData {
         }
     }
 
-    /*
+    /**
      * Defines stretchy delimiters
      *
      * @param{DelimiterMap} delims  The delimiters to define
@@ -403,7 +403,7 @@ export class FontData {
         Object.assign(this.delimiters, delims);
     }
 
-    /*
+    /**
      * Defines a character remapping map
      *
      * @param{string} name     The name of the map to define or augment
@@ -416,7 +416,7 @@ export class FontData {
         Object.assign(this.remapChars[name], remap);
     }
 
-    /*
+    /**
      * @param{number} n  The delimiter character number whose data is desired
      * @return{DelimiterData}  The data for that delimiter (or undefined)
      */
@@ -424,7 +424,7 @@ export class FontData {
         return this.delimiters[n];
     }
 
-    /*
+    /**
      * @param{number} n  The delimiter character number whose variant is needed
      * @param{number} i  The index in the size array of the size whose variant is needed
      * @return{string}   The variant of the i-th size for delimiter n
@@ -436,7 +436,7 @@ export class FontData {
         return this.sizeVariants[i];
     }
 
-    /*
+    /**
      * @param{string} name  The variant whose character data is being querried
      * @param{number} n     The unicode number for the character to be found
      * @return{CharData}    The data for the given character (or undefined)
@@ -445,7 +445,7 @@ export class FontData {
         return this.variant[name].chars[n];
     }
 
-    /*
+    /**
      * @param{string} name   The name of the variant whose data is to be obtained
      * @return{VariantData}  The data for the requested variant (or undefined)
      */
@@ -453,7 +453,7 @@ export class FontData {
         return this.variant[name];
     }
 
-    /*
+    /**
      * @param{string} name   The name of the map to query
      * @param{number} c      The character to remap
      * @return{number}       The remapped character (or the original)
@@ -463,7 +463,7 @@ export class FontData {
         return map[c];
     }
 
-    /*
+    /**
      * @param{number} n  A unicode code point to be converted to a character reference for use with the
      *                   CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
      *                   for higher values, or for the double quote and backslash characters).

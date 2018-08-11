@@ -27,11 +27,9 @@ import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {HTMLDocument} from './HTMLDocument.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the HTMLMathItem class (extends AbstractMathItem)
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -40,14 +38,14 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
 
     public static STATE = AbstractMathItem.STATE;
 
-    /*
+    /**
      * Easy access to DOM adaptor
      */
     get adaptor() {
         return this.inputJax.adaptor;
     }
 
-    /*
+    /**
      * @override
      */
     constructor(math: string, jax: InputJax<N, T, D>, display: boolean = true,
@@ -56,7 +54,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
         super(math, jax, display, start, end);
     }
 
-    /*
+    /**
      * Insert the typeset MathItem into the document at the right location
      *   If the starting and ending nodes are the same:
      *     Split the text to isolate the math and its delimiters
@@ -106,7 +104,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Remove the typeset math from the document, and put back the original
      *  expression and its delimiters, if requested.
      *

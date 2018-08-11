@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMaction node class (subclass of AbstractMmlNode)
  */
 
@@ -36,21 +36,21 @@ export class MmlMaction extends AbstractMmlNode {
         selection: 1
     };
 
-    /*
+    /**
      *  @return {string}  The maction kind
      */
     public get kind() {
         return 'maction';
     }
 
-    /*
+    /**
      * @return {number}  At least one child
      */
     public get arity() {
         return 1;
     }
 
-    /*
+    /**
      * @return {MmlNode}  The selected child node (or an mrow if none selected)
      */
     public get selected(): MmlNode {
@@ -59,35 +59,35 @@ export class MmlMaction extends AbstractMmlNode {
         return this.childNodes[i] || this.factory.create('mrow');
     }
 
-    /*
+    /**
      * @override
      */
     public get isEmbellished() {
         return this.selected.isEmbellished;
     }
 
-    /*
+    /**
      * @override
      */
     public get isSpacelike() {
         return this.selected.isSpacelike;
     }
 
-    /*
+    /**
      * @override
      */
     public core(): MmlNode {
         return this.selected.core();
     }
 
-    /*
+    /**
      * @override
      */
     public coreMO(): MmlNode {
         return this.selected.coreMO();
     }
 
-    /*
+    /**
      * @override
      */
     protected verifyAttributes(options: PropertyList) {
@@ -99,7 +99,7 @@ export class MmlMaction extends AbstractMmlNode {
         }
     }
 
-    /*
+    /**
      * Get the TeX class from the selceted node
      * For tooltips, set TeX classes within the tip as a separate math list
      *
@@ -115,7 +115,7 @@ export class MmlMaction extends AbstractMmlNode {
         return prev;
     }
 
-    /*
+    /**
      * Select the next child for a toggle action
      */
     public nextToggleSelection() {

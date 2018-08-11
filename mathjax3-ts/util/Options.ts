@@ -23,7 +23,7 @@
 
 
 /*****************************************************************/
-/*
+/**
  *  Check if an object is an object literal (as opposed to an instance of a class)
  */
 
@@ -33,13 +33,13 @@ function isObject(obj: any) {
 }
 
 /*****************************************************************/
-/*
+/**
  * Generic list of options
  */
 export type OptionList = {[name: string]: any};
 
 /*****************************************************************/
-/*
+/**
  *  Used to append an array to an array in default options
  *  E.g., an option of the form
  *
@@ -54,7 +54,7 @@ export const APPEND = Symbol('Append to option array');
 
 
 /*****************************************************************/
-/*
+/**
  *  Make sure an option is an Array
  */
 export function makeArray(x: any): any[] {
@@ -62,7 +62,7 @@ export function makeArray(x: any): any[] {
 }
 
 /*****************************************************************/
-/*
+/**
  * Get all keys and symbols from an object
  *
  * @param{Optionlist} def        The object whose keys are to be returned
@@ -76,7 +76,7 @@ export function keys(def: OptionList) {
 }
 
 /*****************************************************************/
-/*
+/**
  * Make a deep copy of an object
  *
  * @param{OptionList} def  The object to be copied
@@ -100,7 +100,7 @@ export function copy(def: OptionList): OptionList {
 }
 
 /*****************************************************************/
-/*
+/**
  * Insert one object into another (with optional warnings about
  * keys that aren't in the original)
  *
@@ -138,7 +138,7 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
 }
 
 /*****************************************************************/
-/*
+/**
  * Merge options without warnings (so we can add new default values into an
  * existing default list)
  *
@@ -152,7 +152,7 @@ export function defaultOptions(options: OptionList, ...defs: OptionList[]) {
 }
 
 /*****************************************************************/
-/*
+/**
  * Merge options with warnings about undefined ones (so we can merge
  * user options into the default list)
  *
@@ -166,7 +166,7 @@ export function userOptions(options: OptionList, ...defs: OptionList[]) {
 }
 
 /*****************************************************************/
-/*
+/**
  * Select a subset of options by key name
  *
  * @param{OptionList} options  The option list from which option values will be taken
@@ -184,7 +184,7 @@ export function selectOptions(options: OptionList, ...keys: string[]) {
 }
 
 /*****************************************************************/
-/*
+/**
  * Select a subset of options by keys from an object
  *
  * @param{OptionList} options  The option list from which the option values will be taken
@@ -197,7 +197,7 @@ export function selectOptionsFromKeys(options: OptionList, object: OptionList) {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Separate options into sets: the ones having the same keys
  *  as the second object, the third object, etc, and the ones that don't.
  *  (Used to separate an option list into the options needed for several

@@ -27,14 +27,12 @@ import {OptionList} from '../util/Options.js';
 import {MmlNode} from './MmlTree/MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  The Location gives a location of a position in a document
  *  (either a node and character position within it, or
  *  an index into a string array, the character position within
  *  the string, and the delimiter at that location).
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  */
@@ -46,11 +44,10 @@ export type Location<N, T> = {
 };
 
 /*****************************************************************/
-/*
+/**
  *  The Metrics object includes the data needed to typeset
  *  a MathItem.
  */
-
 export type Metrics = {
     em: number;
     ex: number;
@@ -60,17 +57,16 @@ export type Metrics = {
 };
 
 /*****************************************************************/
-/*
+/**
  *  The BBox object contains the data about the bounding box
  *  for the typeset element.
  */
-
 export type BBox = {
     // will be defined later
 };
 
 /*****************************************************************/
-/*
+/**
  *  The MathItem interface
  *
  *  The MathItem is the object that holds the information about a
@@ -78,92 +74,90 @@ export type BBox = {
  *  where it is in the document, its compiled version (in the
  *  internal format), its typeset version, its bounding box,
  *  and so on.
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export interface MathItem<N, T, D> {
-    /*
+    /**
      * The string represeting the expression to be processed
      */
     math: string;
 
-    /*
+    /**
      * The input jax used to process the math
      */
     inputJax: InputJax<N, T, D>;
 
-    /*
+    /**
      * Whether the math is in display mode or inline mode
      */
     display: boolean;
 
-    /*
+    /**
      * The start and ending locations in the document of
      *   this expression
      */
     start: Location<N, T>;
     end: Location<N, T>;
 
-    /*
+    /**
      * The internal format for this expression (onece compiled)
      */
     root: MmlNode;
 
-    /*
+    /**
      * The typeset version of the expression (once typeset)
      */
     typesetRoot: N;
 
-    /*
+    /**
      * The metric information at the location of the math
      * (the em-size, scaling factor, etc.)
      */
     metrics: Metrics;
 
-    /*
+    /**
      * The bounding box for the typeset math (once typeset)
      */
     bbox: BBox;
 
-    /*
+    /**
      * Extra data needed by the input or output jax, as needed
      */
     inputData: OptionList;
     outputData: OptionList;
 
-    /*
+    /**
      * Converts the expression into the internal format by calling the input jax
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
     compile(document: MathDocument<N, T, D>): void;
 
-    /*
+    /**
      * Converts the internal format to the typeset version by caling the output jax
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
     typeset(document: MathDocument<N, T, D>): void;
 
-    /*
+    /**
      * Rerenders an already rendered item and re-inserts it into the document
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
     rerender(document: MathDocument<N, T, D>): void;
 
-    /*
+    /**
      * Inserts the typeset version in place of the original form in the document
      *
      * @param{MathDocument} document  The MathDocument in which the math resides
      */
     updateDocument(document: MathDocument<N, T, D>): void;
 
-    /*
+    /**
      * Removes the typeset version from the document, optionally replacing the original
      * form of the expression and its delimiters.
      *
@@ -171,7 +165,7 @@ export interface MathItem<N, T, D> {
      */
     removeFromDocument(restore: boolean): void;
 
-    /*
+    /**
      * Sets the metric information for this expression
      *
      * @param{number} em      The size of 1 em in pixels
@@ -182,7 +176,7 @@ export interface MathItem<N, T, D> {
      */
     setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number): void;
 
-    /*
+    /**
      * Set or return the current processing state of this expression,
      * optionally restoring the document if rolling back an expression
      * that has been added to the document.
@@ -196,16 +190,14 @@ export interface MathItem<N, T, D> {
 }
 
 /*****************************************************************/
-/*
+/**
  *  The ProtoItem interface
  *
  *  This is what is returned by the FindMath class, giving the location
  *  of math within the document, and is used to produce the full
  *  MathItem later (e.g., when the position within a string array
  *  is translated back into the actual node location in the DOM).
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  */
@@ -219,11 +211,9 @@ export type ProtoItem<N, T> = {
     display: boolean;        // True means display mode, false is inline mode
 };
 
-/*
+/**
  *  Produce a proto math item that can be turned into a MathItem
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  */
@@ -235,11 +225,9 @@ export function protoItem<N, T>(open: string, math: string, close: string, n: nu
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MathItem class
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -266,7 +254,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     public inputData: OptionList = {};
     public outputData: OptionList = {};
 
-    /*
+    /**
      * @param{string} math      The math expression for this item
      * @param{Inputjax} jax     The input jax to use for this item
      * @param{boolean} display  True if display mode, false if inline
@@ -290,7 +278,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         this.outputData = {};
     }
 
-    /*
+    /**
      * @override
      */
     public compile(document: MathDocument<N, T, D>) {
@@ -300,7 +288,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public typeset(document: MathDocument<N, T, D>) {
@@ -310,7 +298,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public rerender(document: MathDocument<N, T, D>) {
@@ -319,17 +307,17 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         this.updateDocument(document);
     }
 
-    /*
+    /**
      * @override
      */
     public updateDocument(document: MathDocument<N, T, D>) {}
 
-    /*
+    /**
      * @override
      */
     public removeFromDocument(restore: boolean = false) {}
 
-    /*
+    /**
      * @override
      */
     public setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number) {
@@ -341,7 +329,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         };
     }
 
-    /*
+    /**
      * @override
      */
     public state(state: number = null, restore: boolean = false) {

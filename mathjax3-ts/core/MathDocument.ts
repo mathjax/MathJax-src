@@ -31,7 +31,7 @@ import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
-/*
+/**
  *  The MathDocument interface
  *
  *  The MathDocument is created by MathJax.Document() and holds the
@@ -48,57 +48,55 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  *
  *  The MathDocument is the main interface for page authors to
  *  interact with MathJax.
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export interface MathDocument<N, T, D> {
-    /*
+    /**
      * The document being processed (e.g., DOM document, or Markdown string)
      */
     document: D;
 
-    /*
+    /**
      * The kind of MathDocument (e.g., "HTML")
      */
     kind: string;
 
-    /*
+    /**
      * The options for the document
      */
     options: OptionList;
 
-    /*
+    /**
      * The list of MathItems found in this page
      */
     math: MathList<N, T, D>;
 
-    /*
+    /**
      * This object tracks what operations have been performed, so that (when
      *  asynchronous operations are used), the ones that have already been
      *  completed won't be performed again.
      */
     processed: {[name: string]: boolean};
 
-    /*
+    /**
      * An array of input jax to run on the document
      */
     inputJax: InputJax<N, T, D>[];
 
-    /*
+    /**
      * The output jax to use for the document
      */
     outputJax: OutputJax<N, T, D>;
 
-    /*
+    /**
      * The DOM adaotor to use for input and output
      */
     adaptor: DOMAdaptor<N, T, D>;
 
-    /*
+    /**
      * Locates the math in the document and constructs the MathList
      *  for the document.
      *
@@ -107,35 +105,35 @@ export interface MathDocument<N, T, D> {
      */
     findMath(options?: OptionList): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Calls the input jax to process the MathItems in the MathList
      *
      * @return{MathDocument}  The math document instance
      */
     compile(): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Gets the metric information for the MathItems
      *
      * @return{MathDocument}  The math document instance
      */
     getMetrics(): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Calls the output jax to process the compiled math in the MathList
      *
      * @return{MathDocument}  The math document instance
      */
     typeset(): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Updates the document to include the typeset math
      *
      * @return{MathDocument}  The math document instance
      */
     updateDocument(): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Removes the typeset math from the document
      *
      * @param{boolean} restore  True if the original math should be put
@@ -144,7 +142,7 @@ export interface MathDocument<N, T, D> {
      */
     removeFromDocument(restore?: boolean): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Set the state of the document (allowing you to roll back
      *  the state to a previous one, if needed).
      *
@@ -154,14 +152,14 @@ export interface MathDocument<N, T, D> {
      */
     state(state: number, restore?: boolean): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Clear the processed values so that the document can be reprocessed
      *
      * @return{MathDocument}  The math document instance
      */
     reset(): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Reset the processed values and clear the MathList (so that new math
      * can be processed in the document).
      *
@@ -169,7 +167,7 @@ export interface MathDocument<N, T, D> {
      */
     clear(): MathDocument<N, T, D>;
 
-    /*
+    /**
      * Merges a MathList into the list for this document.
      *
      * @param{MathList} list   The MathList to be merged into this document's list
@@ -180,7 +178,7 @@ export interface MathDocument<N, T, D> {
 }
 
 /*****************************************************************/
-/*
+/**
  *  The booleans used to keep track of what processing has been
  *  performed.
  */
@@ -194,25 +192,32 @@ export type MathProcessed = {
     [name: string]: boolean;
 };
 
-/*
- * Defaults used when input and output jax aren't specified
- */
-/*
+/**
+ * Defaults used when input jax isn't specified
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 class DefaultInputJax<N, T, D> extends AbstractInputJax<N, T, D> {
+    /**
+     * @override
+     */
     public compile(math: MathItem<N, T, D>) {
         return null as MmlNode;
     }
 }
-/*
+/**
+ * Defaults used when ouput jax isn't specified
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 class DefaultOutputJax<N, T, D> extends AbstractOutputJax<N, T, D> {
+    /**
+     * @override
+     */
     public typeset(math: MathItem<N, T, D>, document: MathDocument<N, T, D> = null) {
         return null as N;
     }
@@ -220,7 +225,9 @@ class DefaultOutputJax<N, T, D> extends AbstractOutputJax<N, T, D> {
         return null as N;
     }
 }
-/*
+/**
+ * Default for the MathList when one isn't specified
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -231,11 +238,9 @@ let errorFactory = new MmlFactory();
 
 
 /*****************************************************************/
-/*
+/**
  *  Implements the abstract MathDocument class
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -265,7 +270,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     public adaptor: DOMAdaptor<N, T, D>;
 
 
-    /*
+    /**
      * @param{any} document        The document (HTML string, parsed DOM, etc.) to be processed
      * @param{OptionList} options  The options for this document
      * @constructor
@@ -296,14 +301,14 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         this.inputJax.map(jax => jax.setAdaptor(adaptor));
     }
 
-    /*
+    /**
      * @return{string}  The kind of document
      */
     public get kind() {
         return (this.constructor as typeof AbstractMathDocument).KIND;
     }
 
-    /*
+    /**
      * @override
      */
     public findMath(options: OptionList = null) {
@@ -311,7 +316,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public compile() {
@@ -332,7 +337,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         return this;
     }
 
-    /*
+    /**
      * Produce an error using MmlNodes
      *
      * @param{MathItem} math  The MathItem producing the error
@@ -351,7 +356,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         }
     }
 
-    /*
+    /**
      * @override
      */
     public typeset() {
@@ -372,7 +377,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         return this;
     }
 
-    /*
+    /**
      * Produce an error using HTML
      *
      * @param{MathItem} math  The MathItem producing the error
@@ -384,7 +389,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
                                              [this.adaptor.text('Math output error')]);
     }
 
-    /*
+    /**
      * @override
      */
     public getMetrics() {
@@ -395,7 +400,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public updateDocument() {
@@ -408,14 +413,14 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public removeFromDocument(restore: boolean = false) {
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public state(state: number, restore: boolean = false) {
@@ -435,7 +440,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public reset() {
@@ -445,7 +450,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public clear() {
@@ -454,7 +459,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public concat(list: MathList<N, T, D>) {

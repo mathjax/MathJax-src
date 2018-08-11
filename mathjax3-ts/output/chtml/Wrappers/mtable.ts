@@ -32,7 +32,7 @@ import {DIRECTION} from '../FontData.js';
 import {split, isPercent} from '../../../util/string.js';
 import {sum, max} from '../../../util/numeric.js';
 
-/*
+/**
  * The heights, depths, and widths of the rows and columns
  * Plus the natural height and depth (i.e., without the labels)
  * Plus the label column width
@@ -47,7 +47,7 @@ export type TableData = {
 };
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmtable wrapper for the MmlMtable object
  *
  * @template N  The HTMLElement node class
@@ -107,18 +107,18 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      * The column for labels
      */
     public labels: N;
 
-    /*
+    /**
      * The number of columns and rows in the table
      */
     protected numCols: number = 0;
     protected numRows: number = 0;
 
-    /*
+    /**
      * The spacing and line data
      */
     protected frame: boolean;
@@ -129,13 +129,13 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected rLines: number[];
     protected cWidths: (number | string)[];
 
-    /*
+    /**
      * The bounding box information for the table rows and columns
      */
     protected data: TableData = null;
 
 
-    /*
+    /**
      * @return{CHTMLmtr[]}  The rows of the table
      */
     get tableRows() {
@@ -144,7 +144,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /******************************************************************/
 
-    /*
+    /**
      * @override
      * @constructor
      */
@@ -175,7 +175,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.stretchColumns();
     }
 
-    /*
+    /**
      * If the table has a precentage width or has labels, set the pwidth of the bounding box
      */
     protected getPercentageWidth() {
@@ -191,7 +191,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Stretch the rows to the equal height or natural height
      */
     protected stretchRows() {
@@ -205,7 +205,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Stretch the columns to their proper widths
      */
     protected stretchColumns() {
@@ -215,7 +215,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Handle horizontal stretching within the ith column
      *
      * @param{number} i   The column number
@@ -271,7 +271,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /******************************************************************/
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -303,7 +303,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.shiftColor();
     }
 
-    /*
+    /**
      * Move background color (if any) to inner itable node so that labeled tables are
      * only colored on the main part of the table.
      */
@@ -317,7 +317,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /******************************************************************/
 
-    /*
+    /**
      * Determine the row heights and depths, the column widths,
      * and the natural width and height of the table.
      */
@@ -349,7 +349,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return this.data;
     }
 
-    /*
+    /**
      * @param{CHTMLWrapper} cell    The cell whose height, depth, and width are to be added into the H, D, W arrays
      * @param{number} i             The column number for the cell
      * @param{number} j             The row number for the cell
@@ -366,7 +366,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         if (W && w > W[i]) W[i] = w;
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
@@ -412,7 +412,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.w = width;
     }
 
-    /*
+    /**
      * @param{number} height   The total height of the table
      * @return{number[]}       The [height, depth] for the aligned table
      */
@@ -437,7 +437,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /******************************************************************/
 
-    /*
+    /**
      * Pad any short rows with extra cells
      */
     protected padRows() {
@@ -448,7 +448,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Set the inter-column spacing for all columns
      *  (Use frame spacing on the outsides, if needed, and use half the column spacing on each
      *   neighboring column, so that if column lines are needed, they fall in the middle
@@ -486,7 +486,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Add borders to the left of cells to make the column lines
      */
     protected handleColumnLines() {
@@ -503,7 +503,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Add widths to the cells for the column widths
      */
     protected handleColumnWidths() {
@@ -521,7 +521,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Set the inter-row spacing for all rows
      *  (Use frame spacing on the outsides, if needed, and use half the row spacing on each
      *   neighboring row, so that if row lines are needed, they fall in the middle
@@ -558,7 +558,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Add borders to the tops of cells to make the row lines
      */
     protected handleRowLines() {
@@ -575,7 +575,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Set the heights of all rows to be the same, and properly center
      * baseline or axis rows within the newly sized
      */
@@ -596,7 +596,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Set the height of the row, and make sure that the baseline is in the right position for cells
      *   that are row aligned to baseline ot axis
      *
@@ -617,7 +617,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Make sure the baseline is in the correct place for cells aligned on baseline or axis
      *
      * @param{CHTMLWrapper} cell  The cell to modify
@@ -642,7 +642,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return false;
     }
 
-    /*
+    /**
      * Add a frame to the mtable, if needed
      */
     protected handleFrame() {
@@ -652,7 +652,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Handle percentage widths and fixed widths
      */
     protected handleWidth() {
@@ -666,7 +666,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.adaptor.setStyle(table, 'minWidth', w);
     }
 
-    /*
+    /**
      * Handle alignment of table to surrounding baseline
      */
     protected handleAlign() {
@@ -682,7 +682,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Mark the alignment of the table
      */
     protected handleJustify() {
@@ -694,7 +694,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /******************************************************************/
 
-    /*
+    /**
      * Handle addition of labels to the table
      */
     protected handleLabels() {
@@ -740,7 +740,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         adaptor.append(this.chtml, labels);
     }
 
-    /*
+    /**
      * Update any rows that are not naturally tall enough for the labels,
      *   and set the baseline for labels that are baseline aligned.
      */
@@ -758,7 +758,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Add spacing elements between the label rows so align them with the rest of the table
      */
     protected addLabelSpacing() {
@@ -788,7 +788,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /******************************************************************/
 
-    /*
+    /**
      * Get the maximum height of a row
      */
     protected getEqualRowHeight() {
@@ -797,7 +797,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return Math.max.apply(Math, HD);
     }
 
-    /*
+    /**
      * Determine the column widths that can be computed (and need to be set).
      * The resulting arrays will have numbers for fixed-size arrays,
      *   strings for percentage sizes that can't be determined now,
@@ -822,7 +822,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return this.getColumnWidthsFixed(swidths, this.length2em(width));
     }
 
-    /*
+    /**
      * For tables with equal columns, get the proper amount per row.
      *
      * @return{(string|number|null)[]}  The array of widths
@@ -842,7 +842,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return Array(this.numCols).fill(cwidth);
     }
 
-    /*
+    /**
      * For tables with width="auto", auto and fit columns
      * will end up being natural width, so don't need to
      * set those explicitly.
@@ -857,7 +857,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         });
     }
 
-    /*
+    /**
      * For tables with percentage widths, let 'fit' columns (or 'auto'
      * columns if there are not 'fit' ones) will stretch automatically,
      * but for 'auto' columns (when there are 'fit' ones), set the size
@@ -877,7 +877,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         });
     }
 
-    /*
+    /**
      * For fixed-width tables, compute the column widths of all columns.
      *
      * @return{(string|number|null)[]}  The array of widths
@@ -918,7 +918,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         });
     }
 
-    /*
+    /**
      * @param{number} i      The row number (starting at 0)
      * @param{string} align  The alignment on that row
      * @return{number}       The offest of the alignment position from the top of the table
@@ -959,7 +959,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /******************************************************************/
 
-    /*
+    /**
      * @param{number} fspace   The frame spacing to use
      * @param{number[]} space  The array of spacing values to convert to strings
      * @return{string[]}       The half-spacing as stings with units of "em"
@@ -976,7 +976,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return spaceEm;
     }
 
-    /*
+    /**
      * @return{number[]}   The half-spacing for rows with frame spacing at the ends
      */
     protected getRowHalfSpacing() {
@@ -986,7 +986,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return space;
     }
 
-    /*
+    /**
      * @return{[string,number|null]}  The alignment and row number (based at 0) or null
      */
     protected getAlignmentRow(): [string, number] {
@@ -997,7 +997,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return [align, i < 1 || i > this.numRows ? null : i - 1];
     }
 
-    /*
+    /**
      * @param{string} name           The name of the attribute to get as an array
      * @param{number} i              Return this many fewer than numCols entries
      * @return{string[]}             The array of values in the given attribute, split at spaces,
@@ -1016,7 +1016,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return columns;
     }
 
-    /*
+    /**
      * @param{string} name           The name of the attribute to get as an array
      * @param{number} i              Return this many fewer than numRows entries
      * @return{string[]}             The array of values in the given attribute, split at spaces,
@@ -1035,7 +1035,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return rows;
     }
 
-    /*
+    /**
      * @param{string} name           The name of the attribute to get as an array
      * @return{string[]}             The array of values in the given attribute, split at spaces
      *                                 (after leading and trailing spaces are removed, and multiple
@@ -1047,7 +1047,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return split(value);
     }
 
-    /*
+    /**
      * Adds "em" to a list of dimensions, after dividing by n (defaults to 1).
      *
      * @param{string[]} list   The array of dimensions (in em's)
@@ -1059,7 +1059,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
         return list.map(x => this.em(x / n));
     }
 
-    /*
+    /**
      * Converts an array of dimensions (with arbitrary units) to an array of numbers
      *   representing the dimensions in units of em's.
      *

@@ -26,7 +26,7 @@ import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS, indentAttributes} fro
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMtable node class (subclass of AbstractMmlNode)
  */
 
@@ -57,21 +57,21 @@ export class MmlMtable extends AbstractMmlNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The mtable kind
      */
     public get kind() {
         return 'mtable';
     }
 
-    /*
+    /**
      * @return {boolean}  Linebreaks are allowed in tables
      */
     public get linebreakContainer() {
         return true;
     }
 
-    /*
+    /**
      * @override
      */
     setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
@@ -90,7 +90,7 @@ export class MmlMtable extends AbstractMmlNode {
         super.setInheritedAttributes(attributes, display, level, prime);
     };
 
-    /*
+    /**
      * Make sure all children are mtr or mlabeledtr nodes
      * Inherit the table attributes, and set the display attribute based on the table's displaystyle attribute
      *
@@ -115,7 +115,7 @@ export class MmlMtable extends AbstractMmlNode {
         }
     }
 
-    /*
+    /**
      * Check that children are mtr or mlabeledtr
      *
      * @override
@@ -131,7 +131,7 @@ export class MmlMtable extends AbstractMmlNode {
         super.verifyChildren(options);
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {

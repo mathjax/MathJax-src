@@ -21,12 +21,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-/*
+/**
  *  A very large number
  */
 export const BIGDIMEN = 1000000;
 
-/*
+/**
  *  Sizes of various units in pixels
  */
 export const UNITS: {[unit: string]: number} = {
@@ -38,7 +38,7 @@ export const UNITS: {[unit: string]: number} = {
     mm: 96 / 25.4        // 10 mm to a cm
 };
 
-/*
+/**
  *  Sizes of various relative units in em's
  */
 export const RELUNITS: {[unit: string]: number} = {
@@ -47,7 +47,7 @@ export const RELUNITS: {[unit: string]: number} = {
     mu: 1 / 18       // 18mu to an em for the scriptlevel
 };
 
-/*
+/**
  *  The various named spaces
  */
 export const MATHSPACE: {[name: string]: number} = {
@@ -78,7 +78,7 @@ export const MATHSPACE: {[name: string]: number} = {
 };
 
 
-/*
+/**
  * @param{string|number} length  A dimension (giving number and units) to be converted to ems
  * @param{number} size           The default size of the dimension (for percentage values)
  * @param{number} scale          The current scaling factor (to handle absolute units)
@@ -111,7 +111,7 @@ export function length2em(length: string | number, size: number = 0, scale: numb
     return m * size;            // relative to size
 }
 
-/*
+/**
  * @param{number} m  A number to be shown as a percent
  * @return{string}   The number m as a percent
  */
@@ -119,7 +119,7 @@ export function percent(m: number) {
     return (100 * m).toFixed(1).replace(/\.?0+$/, '') + '%';
 }
 
-/*
+/**
  * @param{number} m  A number to be shown in ems
  * @return{string}   The number with units of ems
  */
@@ -128,7 +128,7 @@ export function em(m: number) {
     return (m.toFixed(3).replace(/\.?0+$/, '')) + 'em';
 }
 
-/*
+/**
  * @param{number} m   A number to be shown in ems, but rounded to pixel boundaries
  * @param{number} em  The number of pixels in an em
  * @return{string}    The number with units of em
@@ -140,7 +140,7 @@ export function emRounded(m: number, em: number = 16) {
 }
 
 
-/*
+/**
  * @param{number} m   A number of em's to be shown as pixels
  * @param{number} M   The minimum number of pixels to allow
  * @param{number} em  The number of pixels in an em

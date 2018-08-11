@@ -32,7 +32,7 @@ import {OptionList} from '../../../util/Options.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmfrac wrapper for the MmlMfrac object
  *
  * @template N  The HTMLElement node class
@@ -128,7 +128,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /************************************************/
 
-    /*
+    /**
      * @override
      * @constructor
      */
@@ -145,7 +145,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -164,7 +164,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
@@ -186,7 +186,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /************************************************/
 
-    /*
+    /**
      * @param{boolean} display  True when fraction is in display mode
      * @param{number} t         The rule line thickness
      */
@@ -235,7 +235,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.childNodes[1].toCHTML(den);
     }
 
-    /*
+    /**
      * @param{BBox} bbox        The buonding box to modify
      * @param{boolean} display  True for display-mode fractions
      * @param{number} t         The thickness of the line
@@ -252,7 +252,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.w += 2 * pad + .2;
     }
 
-    /*
+    /**
      * @param{boolean} display  True for display-mode fractions
      * @param{number} t         The thickness of the line
      * @return{Object}          The expanded rule thickness (T), and baeline offsets
@@ -269,7 +269,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /************************************************/
 
-    /*
+    /**
      * @param{boolean} display  True when fraction is in display mode
      */
     protected makeAtop(display: boolean) {
@@ -300,7 +300,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.childNodes[1].toCHTML(den);
     }
 
-    /*
+    /**
      * @param{BBox} bbox        The bounding box to modify
      * @param{boolean} display  True for display-mode fractions
      */
@@ -313,7 +313,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.w += 2 * pad;
     }
 
-    /*
+    /**
      * @param{boolean} display  True for diplay-mode fractions
      * @return{Object}
      *    The vertical offsets of the numerator (u), the denominator (v),
@@ -344,7 +344,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /************************************************/
 
-    /*
+    /**
      * @param{boolean} display  True when fraction is in display mode
      */
     protected makeBevelled(display: boolean) {
@@ -372,7 +372,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         adaptor.setStyle(this.bevel.chtml, 'marginRight', dx);
     }
 
-    /*
+    /**
      * @param{BBox} bbox        The boundng box to modify
      * @param{boolean} display  True for display-mode fractions
      */
@@ -384,7 +384,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.combine(dbox, bbox.w - delta / 2, v);
     }
 
-    /*
+    /**
      * @param{boolean} display  True for display-style fractions
      * @return{Object}          The height (H) of the bevel, horizontal offest (delta)
      *                             vertical offsets (u and v) of the parts, and
@@ -404,14 +404,14 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /************************************************/
 
-    /*
+    /**
      * @override
      */
     public canStretch(direction: DIRECTION) {
         return false;
     }
 
-    /*
+    /**
      * @return{boolean}   True if in display mode, false otherwise
      */
     protected isDisplay() {

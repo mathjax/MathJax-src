@@ -29,19 +29,17 @@ import * as Entities from '../../util/Entities.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 
 /********************************************************************/
-/*
+/**
  *  The class for performing the MathML DOM node to
  *  internal MmlNode conversion.
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export class MathMLCompile<N, T, D> {
 
-    /*
+    /**
      *  The default options for this object
      */
     public static OPTIONS: OptionList = {
@@ -53,7 +51,7 @@ export class MathMLCompile<N, T, D> {
         translateEntities: true             // True means translate entities in text nodes
     };
 
-    /*
+    /**
      *  The default values for the verify option
      */
     public static VERIFY: OptionList = {
@@ -62,14 +60,14 @@ export class MathMLCompile<N, T, D> {
 
     public adaptor: DOMAdaptor<N, T, D>;
 
-    /*
+    /**
      *  The instance of the MmlFactory object and
      *  the options (the defaults with the user options merged in)
      */
     protected factory: MmlFactory;
     protected options: OptionList;
 
-    /*
+    /**
      *  Merge the user options into the defaults, and save them
      *  Create the MmlFactory object
      *
@@ -84,7 +82,7 @@ export class MathMLCompile<N, T, D> {
         this.factory = this.options['MmlFactory'] || new MmlFactory();
     }
 
-    /*
+    /**
      * Convert a MathML DOM tree to internal MmlNodes
      *
      * @param {N} node  The <math> node to convert to MmlNodes
@@ -98,7 +96,7 @@ export class MathMLCompile<N, T, D> {
         return mml;
     }
 
-    /*
+    /**
      * Recursively convert nodes and their children, taking MathJax classes
      * into account.
      *
@@ -129,7 +127,7 @@ export class MathMLCompile<N, T, D> {
         return mml;
     }
 
-    /*
+    /**
      * Copy the attributes from a MathML node to an MmlNode.
      *
      * @param{MmlNode} mml       The MmlNode to which attributes will be added
@@ -152,7 +150,7 @@ export class MathMLCompile<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Provide a hook for the Safe extension to filter
      * attribute values.
      *
@@ -163,7 +161,7 @@ export class MathMLCompile<N, T, D> {
         return value;
     }
 
-    /*
+    /**
      * Convert the children of the MathML node and add them to the MmlNode
      *
      * @param{MmlNode} mml       The MmlNode to which children will be added
@@ -196,7 +194,7 @@ export class MathMLCompile<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Add text to a token node
      *
      * @param{MmlNode} mml  The MmlNode to which text will be added
@@ -215,7 +213,7 @@ export class MathMLCompile<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Check for special MJX values in the class and process them
      *
      * @param{MmlNode} mml       The MmlNode to be modified according to the class markers
@@ -239,7 +237,7 @@ export class MathMLCompile<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Handle the properties of a TeXAtom
      *
      * @param {MmlNode} mml      The node to be updated
@@ -254,7 +252,7 @@ export class MathMLCompile<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Check to see if an mrow has delimiters at both ends (so looks like an mfenced structure).
      *
      * @param {MmlNode} mml  The node to check for mfenced structure
@@ -275,7 +273,7 @@ export class MathMLCompile<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @param {string} text  The text to have leading/trailing spaced removed
      * @return {string}      The trimmed text
      */
@@ -285,7 +283,7 @@ export class MathMLCompile<N, T, D> {
                    .replace(/  +/g, ' ');        // internal multiple whitespace
     }
 
-    /*
+    /**
      * @param {string} message  The error message to produce
      */
     protected error(message: string) {

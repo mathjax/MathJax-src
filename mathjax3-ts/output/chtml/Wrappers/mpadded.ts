@@ -29,7 +29,7 @@ import {Property} from '../../../core/Tree/Node.js';
 import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmpadded wrapper for the MmlMpadded object
  *
  * @template N  The HTMLElement node class
@@ -49,7 +49,7 @@ export class CHTMLmpadded<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -86,7 +86,7 @@ export class CHTMLmpadded<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Get the content bounding box, and the change in size and offsets
      *   as specified by the parameters
      *
@@ -106,7 +106,7 @@ export class CHTMLmpadded<N, T, D> extends CHTMLWrapper<N, T, D> {
         return [H, D, W, h - H, d - D, w - W, x, y];
     }
 
-    /*
+    /**
      * Get a particular dimension, which can be relative to any of the BBox dimensions,
      *   and can be an offset from the default size of the given dimension.
      *
@@ -130,7 +130,7 @@ export class CHTMLmpadded<N, T, D> extends CHTMLWrapper<N, T, D> {
         return dimen;
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {

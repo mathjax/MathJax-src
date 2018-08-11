@@ -31,7 +31,7 @@ import {StyleList} from '../CssStyles.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmsqrt wrapper for the MmlMsqrt object
  *
  * @template N  The HTMLElement node class
@@ -63,33 +63,33 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      * @return{number}  The index of the base of the root in childNodes
      */
     get base() {
         return 0;
     }
 
-    /*
+    /**
      * @return{number}  The index of the surd in childNodes
      */
     get surd() {
         return 1;
     }
 
-    /*
+    /**
      * @return{number}  The index of the root in childNodes (or null if none)
      */
     get root(): number {
         return null;
     }
 
-    /*
+    /**
      * The requested height of the stretched surd character
      */
     protected surdH: number;
 
-    /*
+    /**
      * Add the surd character so we can display it later
      *
      * @override
@@ -105,7 +105,7 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
         surd.getStretchedVariant([this.surdH - d, d], true);
     }
 
-    /*
+    /**
      * @override
      */
     protected createMo(text: string) {
@@ -114,7 +114,7 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
         return node;
     }
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -155,7 +155,7 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Add root HTML (overridden in mroot)
      *
      * @param{N} ROOT   The container for the root
@@ -165,7 +165,7 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox) {
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
@@ -182,7 +182,7 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.clean();
     }
 
-    /*
+    /**
      * Combine the bounding box of the root (overridden in mroot)
      *
      * @param{BBox} bbox  The bounding box so far
@@ -191,7 +191,7 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected combineRootBBox(bbox: BBox, sbox: BBox) {
     }
 
-    /*
+    /**
      * @param{BBox} sbox  The bounding box for the surd character
      * @return{number[]}  The p, q, and x values for the TeX layout computations
      */
@@ -202,7 +202,7 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
         return [p, q];
     }
 
-    /*
+    /**
      * @param{BBox} sbox  The bounding box of the surd
      * @return{number[]}  The x offset of the surd, and the height, x offset, and scale of the root
      */

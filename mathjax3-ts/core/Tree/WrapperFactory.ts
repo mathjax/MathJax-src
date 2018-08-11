@@ -26,18 +26,16 @@ import {Wrapper, WrapperClass} from './Wrapper.js';
 import {Factory, AbstractFactory} from './Factory.js';
 
 /*****************************************************************/
-/*
+/**
  * The generic WrapperFactory class
- */
-
-/*
+ *
  * @template N  The Node type being created by the factory
  * @template W  The Wrapper type being produced (instance type)
  * @template C  The Wrapper class (for static values)
  */
 export interface WrapperFactory<N extends Node, W extends Wrapper<N, W>, C extends WrapperClass<N, W>>
 extends Factory<W, C> {
-    /*
+    /**
      * @param{N} node  The node to be wrapped
      * @param{any[]} args  Any additional arguments needed when wrapping the node
      * @return{W}  The newly wrapped node
@@ -46,18 +44,16 @@ extends Factory<W, C> {
 }
 
 /*****************************************************************/
-/*
+/**
  * The generic WrapperFactory class
- */
-
-/*
+ *
  * @template N  The Node type being created by the factory
  * @template W  The Wrapper type being produced (instance type)
  * @template C  The Wrapper class (for static values)
  */
 export abstract class AbstractWrapperFactory<N extends Node, W extends Wrapper<N, W>, C extends WrapperClass<N, W>>
 extends AbstractFactory<W, C> implements WrapperFactory<N, W, C> {
-    /*
+    /**
      * @param{N} node  The node to be wrapped
      * @param{any[]} args  Any additional arguments needed when wrapping the node
      * @return{W}  The newly wrapped node

@@ -29,7 +29,7 @@ import {LiteElement} from './Element.js';
 import {LiteText, LiteComment} from './Text.js';
 import {LiteAdaptor} from '../liteAdaptor.js';
 
-/*
+/**
  * Patterns used in parsing serialized HTML
  */
 export namespace PATTERNS {
@@ -49,13 +49,13 @@ export namespace PATTERNS {
 }
 
 /************************************************************/
-/*
+/**
  * Implements a lightweight DOMParser replacement
  * (Not perfect, but handles most well-formed HTML)
  */
 export class LiteParser implements MinDOMParser<LiteDocument> {
 
-    /*
+    /**
      * The list of self-closing tags
      */
     public static SELF_CLOSING: {[name: string]: boolean} = {
@@ -78,7 +78,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         wbr: true
     };
 
-    /*
+    /**
      * The list of tags chose content is not parsed (PCDATA)
      */
     public static PCDATA: {[name: string]: boolean} = {
@@ -90,7 +90,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         script: true
     };
 
-    /*
+    /**
      * The list of attributes that don't get entity translation
      */
     public static CDATA_ATTR: {[name: string]: boolean} = {
@@ -110,7 +110,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         scheme: true
     };
 
-    /*
+    /**
      * @override
      */
     public parseFromString(text: string, format: string = 'text/html', adaptor: LiteAdaptor = null) {
@@ -141,7 +141,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return root;
     }
 
-    /*
+    /**
      * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
      * @param{LiteElement} node     The node to add a text element to
      * @param{string} text          The text for the text node
@@ -152,7 +152,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return adaptor.append(node, adaptor.text(text)) as LiteText;
     }
 
-    /*
+    /**
      * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
      * @param{LiteElement} node     The node to add a comment to
      * @param{string} comment       The text for the comment node
@@ -162,7 +162,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return adaptor.append(node, new LiteComment(comment)) as LiteComment;
     }
 
-    /*
+    /**
      * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
      * @param{LiteElement} node     The node to close
      * @param{string} tag           The close tag being processed
@@ -176,7 +176,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return adaptor.parent(node);
     }
 
-    /*
+    /**
      * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
      * @param{LiteElement} node     The parent node for the tag
      * @param{string} tag           The tag being processed
@@ -222,7 +222,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return node;
     }
 
-    /*
+    /**
      * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
      * @param{LiteElement} node     The node getting the attributes
      * @param{string[]} attributes  The array of space, name, value1, value2, value3
@@ -240,7 +240,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         }
     }
 
-    /*
+    /**
      * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
      * @param{LiteElement} node     The node whose PCDATA content is being collected
      * @param{string} kind          The tag name being handled
@@ -266,7 +266,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         adaptor.append(node, adaptor.text(pcdata.join('')));
     }
 
-    /*
+    /**
      * Check the contents of the parsed document and move html, head, and body
      * tags into the document structure.  That way, you can parse fragements or
      * full documents and still get a valid document.
@@ -315,7 +315,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         }
     }
 
-    /*
+    /**
      * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
      * @param{LiteElement} node     The node to serialize
      * @return{string}              The serialized element (like outerHTML)
@@ -333,7 +333,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return html;
     }
 
-    /*
+    /**
      * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
      * @param{LiteElement} node     The node whose innerHTML is needed
      * @return{string}              The serialized element (like innerHTML)
@@ -347,7 +347,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         }).join('');
     }
 
-    /*
+    /**
      * @param{string} text  The attribute value to be HTML escaped
      * @return{string}      The string with " replaced by entities
      */
@@ -355,7 +355,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return text.replace(/"/, '&quot;');
     }
 
-    /*
+    /**
      * @param{string} text  The text to be HTML escaped
      * @return{string}      The string with &, <, and > replaced by entities
      */

@@ -21,14 +21,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-/*
+/**
  * The data for a selector
  */
 export type StyleData = {
     [property: string]: string | number;
 };
 
-/*
+/**
  * A list of selectors and their data (basically a stylesheet)
  */
 export type StyleList = {
@@ -36,24 +36,24 @@ export type StyleList = {
 };
 
 /******************************************************************************/
-/*
+/**
  * The CssStyles class (for managing a collection of CSS style definitions)
  */
 
 export class CssStyles {
-    /*
+    /**
      * The styles as they currently stand
      */
     protected styles: StyleList = {};
 
-    /*
+    /**
      * @return{string}  The styles as a CSS string
      */
     get cssText() {
         return this.getStyleString();
     }
 
-    /*
+    /**
      * @param{StyleList} styles  The initial styles to use, if any
      * @constructor
      */
@@ -61,7 +61,7 @@ export class CssStyles {
         this.addStyles(styles);
     }
 
-    /*
+    /**
      * @param{StyleList} styles  The styles to combine with the existing ones
      */
     public addStyles(styles: StyleList) {
@@ -74,7 +74,7 @@ export class CssStyles {
         }
     }
 
-    /*
+    /**
      * @param{string[]} selectors  The selectors for the styles to remove
      */
     public removeStyles(...selectors: string[]) {
@@ -83,7 +83,7 @@ export class CssStyles {
         }
     }
 
-    /*
+    /**
      * @return{string} The CSS string for the style list
      */
     public getStyleString() {
@@ -96,7 +96,7 @@ export class CssStyles {
         return defs.join('\n\n');
     }
 
-    /*
+    /**
      * @param{StyleData} styles  The style data to be stringified
      * @return{string}           The CSS string for the given data
      */

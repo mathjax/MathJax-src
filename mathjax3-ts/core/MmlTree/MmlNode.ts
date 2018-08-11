@@ -25,12 +25,12 @@ import {Attributes, INHERIT} from './Attributes.js';
 import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass} from '../Tree/Node.js';
 import {MmlFactory} from './MmlFactory.js';
 
-/*
+/**
  *  Used in setInheritedAttributes() to pass originating node kind as well as property value
  */
 export type AttributeList = {[attribute: string]: [string, Property]};
 
-/*
+/**
  *  These are the TeX classes for spacing computations
  */
 export const TEXCLASS = {
@@ -48,12 +48,12 @@ export const TEXCLASS = {
 
 export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER', 'VCENTER'];
 
-/*
+/**
  *  The spacing sizes used by the TeX spacing table below.
  */
 const TEXSPACELENGTH = ['', 'thinmathspace', 'mediummathspace', 'thickmathspace'];
 
-/*
+/**
  * See TeXBook Chapter 18 (p. 170)
  */
 const TEXSPACE = [
@@ -67,7 +67,7 @@ const TEXSPACE = [
     [ 1, -1,  2,  3,  1,  0,  1,  1]  // INNER
 ];
 
-/*
+/**
  * Attributes used to determine indentation and shifting
  */
 export const indentAttributes = [
@@ -77,12 +77,12 @@ export const indentAttributes = [
 
 
 /*****************************************************************/
-/*
+/**
  *  The MmlNode interface (extends Node interface)
  */
 
 export interface MmlNode extends Node {
-    /*
+    /**
      * Test various properties of MathML nodes
      */
     readonly isToken: boolean;
@@ -90,70 +90,70 @@ export interface MmlNode extends Node {
     readonly isSpacelike: boolean;
     readonly linebreakContainer: boolean;
     readonly hasNewLine: boolean;
-    /*
+    /**
      *  The expected number of children (-1 means use inferred mrow)
      */
     readonly arity: number;
     readonly isInferred: boolean;
-    /*
+    /**
      *  Get the parent node (skipping inferred mrows and
      *    other nodes marked as notParent)
      */
     readonly Parent: MmlNode;
     readonly notParent: boolean;
-    /*
+    /**
      * The actual parent in the tree
      */
     parent: MmlNode;
-    /*
+    /**
      *  values needed for TeX spacing computations
      */
     texClass: number;
     prevClass: number;
     prevLevel: number;
 
-    /*
+    /**
      *  The attributes (explicit and inherited) for this node
      */
     attributes: Attributes;
 
-    /*
+    /**
      * @return {MmlNode}  For embellished operators, the child node that contains the
      *                    core <mo> node.  For non-embellished nodes, the original node.
      */
     core(): MmlNode;
-    /*
+    /**
      * @return {MmlNode}  For embellished operators, the core <mo> element (at whatever
      *                    depth).  Fod non-embellished nodes, the original node itself.
      */
     coreMO(): MmlNode;
-    /*
+    /**
      * @return {number}   For embellished operators, the index of the child node containing
      *                    the core <mo>.  For non-embellished nodes, 0.
      */
     coreIndex(): number;
-    /*
+    /**
      * @return {number}  The index of this node in its parent's childNodes array.
      */
     childPosition(): number;
 
-    /*
+    /**
      * @param {MmlNode} prev  The node that is before this one for TeX spacing purposes
      *                        (not all nodes count in TeX measurements)
      * @return {MmlNode}  The node that should be the previous node for the next one
      *                    in the tree (usually, either the last child, or the node itself)
      */
     setTeXclass(prev: MmlNode): MmlNode;
-    /*
+    /**
      * @return {string}  The spacing to use before this element (one of TEXSPACELENGTH array above)
      */
     texSpacing(): string;
-    /*
+    /**
      * @return {boolean}  The core mo element has an explicit 'form', 'lspace', or 'rspace' attribute
      */
     hasSpacingAttributes(): boolean;
 
-    /*
+    /**
      * Sets the nodes inherited attributes, and pushes them to the nodes children.
      *
      * @param {AttributeList} attributes  The list of inheritable attributes (with the node kinds
@@ -164,7 +164,7 @@ export interface MmlNode extends Node {
      */
     setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
 
-    /*
+    /**
      * Replace the current node with an error message (or the name of the node)
      *
      * @param {string} message         The error message to use
@@ -173,7 +173,7 @@ export interface MmlNode extends Node {
      */
     mError(message: string, options: PropertyList, short?: boolean): void;
 
-    /*
+    /**
      * Check integrity of MathML structure
      *
      * @param {PropertyList} options  The options controlling the check
@@ -183,16 +183,16 @@ export interface MmlNode extends Node {
 
 
 /*****************************************************************/
-/*
+/**
  *  The MmlNode class interface (extends the NodeClass)
  */
 
 export interface MmlNodeClass extends NodeClass {
-    /*
+    /**
      *  The list of default attribute values for nodes of this class
      */
     defaults?: PropertyList;
-    /*
+    /**
      * An MmlNode takes a NodeFactory (so it can create additional nodes as needed), a list
      *   of attributes, and an array of children and returns the desired MmlNode with
      *   those attributes and children
@@ -207,13 +207,13 @@ export interface MmlNodeClass extends NodeClass {
 
 
 /*****************************************************************/
-/*
+/**
  *  The abstract MmlNode class (extends the AbstractNode class and implements
  *  the IMmlNode interface)
  */
 
 export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
-    /*
+    /**
      * The properties common to all MathML nodes
      */
     public static defaults: PropertyList = {
@@ -223,7 +223,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
                             //    scale all spaces, fractions, etc.
         dir: INHERIT
     };
-    /*
+    /**
      *  This lists properties that do NOT get inherited between specific kinds
      *  of nodes.  The outer keys are the node kinds that are being inherited FROM,
      *  while the second level of keys are the nodes that INHERIT the values.  Any
@@ -241,7 +241,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             mtable: {groupalign: true}
         }
     };
-    /*
+    /**
      * This is the list of options for the verifyTree() method
      */
     public static verifyDefaults: PropertyList = {
@@ -252,7 +252,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         fixMtables: true
     };
 
-    /*
+    /**
      * These default to being unset (the node doesn't participate in spacing calculations).
      * The correct values are produced when the setTeXclass() method is called on the tree.
      */
@@ -262,7 +262,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
 
     public attributes: Attributes;
 
-    /*
+    /**
      *  Child nodes are MmlNodes (special case of Nodes).
      *  The parent is an MmlNode.
      */
@@ -270,7 +270,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     public parent: MmlNode;
     public factory: MmlFactory;
 
-    /*
+    /**
      *  Create an MmlNode:
      *    If the arity is -1, add the inferred row (created by the factory)
      *    Add the children, if any
@@ -292,42 +292,42 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         this.attributes.setList(attributes);
     }
 
-    /*
+    /**
      * @return {boolean}  true if this is a token node
      */
     public get isToken() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  true if this is an embellished operator
      */
     public get isEmbellished() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  true if this is a space-like node
      */
     public get isSpacelike() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  true if this is a node that supports linebreaks in its children
      */
     public get linebreakContainer() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  true if this node contains a line break
      */
     public get hasNewLine() {
         return false;
     }
 
-    /*
+    /**
      * @return {number}  The number of children allowed, or Infinity for any number,
      *                   or -1 for when an inferred row is needed for the children.
      *                   Special case is 1, meaning at least one (other numbers
@@ -337,14 +337,14 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         return Infinity;
     }
 
-    /*
+    /**
      * @return {boolean}  true if this is an inferred mrow
      */
     public get isInferred() {
         return false;
     }
 
-    /*
+    /**
      * @return {MmlNode}  The logial parent of this node (skipping over inferred rows
      *                      some other node types)
      */
@@ -356,14 +356,14 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         return parent;
     }
 
-    /*
+    /**
      * @return {boolean}  true if this is a node that doesn't count as a parent node in Parent()
      */
     public get notParent() {
         return false;
     }
 
-    /*
+    /**
      * If there is an inferred row, the the children of that instead
      *
      * @override
@@ -374,7 +374,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         }
         return super.setChildren(children);
     }
-    /*
+    /**
      * If there is an inferred row, append to that instead
      *
      * @override
@@ -386,7 +386,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         }
         return super.appendChild(child);
     }
-    /*
+    /**
      * If there is an inferred row, remove the child from there
      *
      * @override
@@ -399,28 +399,28 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         return super.replaceChild(newChild, oldChild);
     }
 
-    /*
+    /**
      * @override
      */
     public core(): MmlNode {
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public coreMO(): MmlNode {
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public coreIndex() {
         return 0;
     }
 
-    /*
+    /**
      * @override
      */
     public childPosition() {
@@ -442,14 +442,14 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         return null;
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode): MmlNode {
         this.getPrevClass(prev);
         return (this.texClass != null ? this : prev);
     }
-    /*
+    /**
      * For embellished operators, get the data from the core and clear the core
      *
      * @param {MmlNode} core  The core <mo> for this node
@@ -462,7 +462,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             this.texClass = core.texClass;
         }
     }
-    /*
+    /**
      * Get the previous element's texClass and scriptlevel
      *
      * @param {MmlNode} prev  The previous node to this one
@@ -474,7 +474,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         }
     }
 
-    /*
+    /**
      * @return {string}  returns the spacing to use before this node
      */
     public texSpacing() {
@@ -496,14 +496,14 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         return TEXSPACELENGTH[Math.abs(space)];
     }
 
-    /*
+    /**
      * @return {boolean}  The core mo element has an explicit 'form' attribute
      */
     public hasSpacingAttributes() {
         return this.isEmbellished && this.coreMO().hasSpacingAttributes();
     }
 
-    /*
+    /**
      * Sets the inherited propertis for this node, and pushes inherited properties to the children
      *
      *   For each inheritable attribute:
@@ -557,7 +557,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         }
         this.setChildInheritedAttributes(attributes, display, level, prime);
     }
-    /*
+    /**
      * Apply inherited attributes to all children
      * (Some classes override this to handle changes in displaystyle and scriptlevel)
      *
@@ -572,7 +572,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             child.setInheritedAttributes(attributes, display, level, prime);
         }
     }
-    /*
+    /**
      * Used by subclasses to add add their own attributes to the inherited list
      * (e.g., mstyle uses this to augment the inhertied attibutes)
      *
@@ -589,7 +589,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         return updated;
     }
 
-    /*
+    /**
      * Verify the attributes, and that there are the right number of children.
      * Then verify the children.
      *
@@ -611,7 +611,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         this.verifyChildren(options);
     }
 
-    /*
+    /**
      * Verify that all the attributes are valid (i.e., have defaults)
      *
      * @param {PropertyList} options   The options telling how much to verify
@@ -634,7 +634,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         }
     }
 
-    /*
+    /**
      * Verify the children.
      *
      * @param {PropertyList} options   The options telling how much to verify
@@ -645,7 +645,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         }
     }
 
-    /*
+    /**
      * Replace the current node with an error message (or the name of the node)
      *
      * @param {string} message         The error message to use
@@ -673,13 +673,13 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  The abstract MmlNode Token node class (extends the AbstractMmlNode)
  */
 
 export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
 
-    /*
+    /**
      * Add the attributes common to all token nodes
      */
     public static defaults: PropertyList = {
@@ -688,14 +688,14 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
         mathsize: INHERIT
     };
 
-    /*
+    /**
      * @override
      */
     public get isToken() {
         return true;
     }
 
-    /*
+    /**
      * Get the text of the token node (skipping mglyphs, and combining
      *   multiple text nodes)
      */
@@ -709,7 +709,7 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
         return text;
     }
 
-    /*
+    /**
      * Only inherit to child nodes that are AbstractMmlNodes (not TextNodes)
      *
      * @override
@@ -722,7 +722,7 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
         }
     }
 
-    /*
+    /**
      * Only step into children that are AbstractMmlNodes (not TextNodes)
      * @override
      */
@@ -740,7 +740,7 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
 
 
 /*****************************************************************/
-/*
+/**
  *  The abstract MmlNode Layout class (extends the AbstractMmlNode)
  *
  *  These have inferred mrows (so only one child) and can be
@@ -749,47 +749,47 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
 
 export abstract class AbstractMmlLayoutNode extends AbstractMmlNode {
 
-    /*
+    /**
      * Use the same defaults as AbstractMmlNodes
      */
     public static defaults: PropertyList = AbstractMmlNode.defaults;
 
-    /*
+    /**
      * @override
      */
     public get isSpacelike() {
         return this.childNodes[0].isSpacelike;
     }
 
-    /*
+    /**
      * @override
      */
     public get isEmbellished() {
         return this.childNodes[0].isEmbellished;
     }
 
-    /*
+    /**
      * @override
      */
     public get arity() {
         return -1;
     }
 
-    /*
+    /**
      * @override
      */
     public core() {
         return this.childNodes[0];
     }
 
-    /*
+    /**
      * @override
      */
     public coreMO() {
         return this.childNodes[0].coreMO();
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {
@@ -800,7 +800,7 @@ export abstract class AbstractMmlLayoutNode extends AbstractMmlNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  The abstract MmlNode-with-base-node Class (extends the AbstractMmlNode)
  *
  *  These have a base element and other elemetns, (e.g., script elements for msubsup).
@@ -810,33 +810,33 @@ export abstract class AbstractMmlLayoutNode extends AbstractMmlNode {
 
 export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
 
-    /*
+    /**
      * Use the same defaults as AbstractMmlNodes
      */
     public static defaults: PropertyList = AbstractMmlNode.defaults;
 
-    /*
+    /**
      * @override
      */
     public get isEmbellished() {
         return this.childNodes[0].isEmbellished;
     }
 
-    /*
+    /**
      * @override
      */
     public core() {
         return this.childNodes[0];
     }
 
-    /*
+    /**
      * @override
      */
     public coreMO() {
         return this.childNodes[0].coreMO();
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {
@@ -864,7 +864,7 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  The abstract MmlNode Empty Class (extends AbstractEmptyNode, implements MmlNode)
  *
  *  These have no children and no attributes (TextNode and XMLNode), so we
@@ -874,159 +874,159 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
 
 export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements MmlNode {
 
-    /*
+    /**
      * @return {boolean}  Not a token element
      */
     public get isToken() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  Not embellished
      */
     public get isEmbellished() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  Not space-like
      */
     public get isSpacelike() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  Not a container of any kind
      */
     public get linebreakContainer() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  Does not contain new lines
      */
     public get hasNewLine() {
         return false;
     }
 
-    /*
+    /**
      * @return {number}  No children
      */
     public get arity() {
         return 0;
     }
 
-    /*
+    /**
      * @return {boolean}  Is not an inferred row
      */
     public get isInferred() {
         return false;
     }
 
-    /*
+    /**
      * @return {boolean}  Is not a container element
      */
     public get notParent() {
         return false;
     }
 
-    /*
+    /**
      * @return {MmlNode}  Parent is the actual parent
      */
     public get Parent() {
         return this.parent;
     }
 
-    /*
+    /**
      * @return {number}  No TeX class
      */
     public get texClass() {
         return TEXCLASS.NONE;
     }
 
-    /*
+    /**
      * @return {number}  No previous element
      */
     public get prevClass() {
         return TEXCLASS.NONE;
     }
 
-    /*
+    /**
      * @return {number}  No previous element
      */
     public get prevLevel() {
         return 0;
     }
 
-    /*
+    /**
      * @return {boolean}  The core mo element has an explicit 'form' attribute
      */
     public hasSpacingAttributes() {
         return false;
     }
 
-    /*
+    /**
      * return {Attributes}  No attributes, so don't store one
      */
     public get attributes(): Attributes {
         return null;
     }
 
-    /*
+    /**
      *  Parent is an MmlNode
      */
     public parent: MmlNode;
 
 
-    /*
+    /**
      * @override
      */
     public core(): MmlNode {
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public coreMO(): MmlNode {
         return this;
     }
 
-    /*
+    /**
      * @override
      */
     public coreIndex() {
         return 0;
     }
 
-    /*
+    /**
      * @override
      */
     public childPosition() {
         return 0;
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {
         return prev;
     }
-    /*
+    /**
      * @override
      */
     public texSpacing() {
         return '';
     }
 
-    /*
+    /**
      * No children or attributes, so ignore this call.
      *
      * @override
      */
     public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {}
 
-    /*
+    /**
      * No children or attributes, so ignore this call.
      *
      * @param {MmlNode} node          The node tree to be checked
@@ -1034,7 +1034,7 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
      */
     public verifyTree(options: PropertyList) {}
 
-    /*
+    /**
      *  @override
      */
     public mError(message: string, options: PropertyList, short: boolean = false) {}
@@ -1042,31 +1042,31 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
 }
 
 /*****************************************************************/
-/*
+/**
  *  The TextNode Class (extends AbstractMmlEmptyNode)
  */
 
 export class TextNode extends AbstractMmlEmptyNode {
-    /*
+    /**
      * The text for this node
      */
     protected text: string = '';
 
-    /*
+    /**
      * @override
      */
     public get kind() {
         return 'text';
     }
 
-    /*
+    /**
      * @return {string}  Return the node's text
      */
     public getText(): string {
         return this.text;
     }
 
-    /*
+    /**
      * @param {string} text  The text to use for the node
      * @return {TextNode}  The text node (for chaining of method calls)
      */
@@ -1075,7 +1075,7 @@ export class TextNode extends AbstractMmlEmptyNode {
         return this;
     }
 
-    /*
+    /**
      * Just use the text
      */
     public toString() {
@@ -1086,31 +1086,31 @@ export class TextNode extends AbstractMmlEmptyNode {
 
 
 /*****************************************************************/
-/*
+/**
  *  The XMLNode Class (extends AbstractMmlEmptyNode)
  */
 
 export class XMLNode extends AbstractMmlEmptyNode {
-    /*
+    /**
      * The XML content for this node
      */
     protected xml: Object = null;
 
-    /*
+    /**
      * @override
      */
     public get kind() {
         return 'XML';
     }
 
-    /*
+    /**
      * @return {Object}  Return the node's XML content
      */
     public getXML(): Object {
         return this.xml;
     }
 
-    /*
+    /**
      * @param {object} xml  The XML content to be saved
      * @return {XMLNode}  The XML node (for chaining of method calls)
      */
@@ -1119,7 +1119,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
         return this;
     }
 
-    /*
+    /**
      * Just indicate that this is XML data
      */
     public toString() {

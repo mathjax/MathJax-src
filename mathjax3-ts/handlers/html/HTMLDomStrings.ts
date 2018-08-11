@@ -24,7 +24,7 @@
 import {userOptions, defaultOptions, OptionList, makeArray} from '../../util/Options.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 
-/*
+/**
  *  List of consecutive text nodes and their text lengths
  *
  * @template N  The HTMLElement node class
@@ -33,13 +33,11 @@ import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 export type HTMLNodeList<N, T> = [N | T, number][];
 
 /*****************************************************************/
-/*
+/**
  *  The HTMLDocument class (extends AbstractMathDocument)
  *
  *  A class for extracting the text from DOM trees
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -66,38 +64,38 @@ export class HTMLDomStrings<N, T, D> {
                                           // so be sure to quote any regexp special characters
     };
 
-    /*
+    /**
      * The options for this instance
      */
     protected options: OptionList;
 
-    /*
+    /**
      * The array of strings found in the DOM
      */
     protected strings: string[];
 
-    /*
+    /**
      * The string currently being constructed
      */
     protected string: string;
 
-    /*
+    /**
      * The list of nodes and lengths for the string being constructed
      */
     protected snodes: HTMLNodeList<N, T>;
 
-    /*
+    /**
      * The list of node lists corresponding to the strings in this.strings
      */
     protected nodes: HTMLNodeList<N, T>[];
 
-    /*
+    /**
      * The container nodes that are currently being traversed, and whether their
      *  contents are being ignored or not
      */
     protected stack: [N | T, boolean][];
 
-    /*
+    /**
      * Regular expressions for the tags to be skipped, and which classes should start/stop
      *  processing of math
      */
@@ -105,12 +103,12 @@ export class HTMLDomStrings<N, T, D> {
     protected ignoreClass: RegExp;
     protected processClass: RegExp;
 
-    /*
+    /**
      * The DOM Adaptor to managing HTML elements
      */
     public adaptor: DOMAdaptor<N, T, D>;
 
-    /*
+    /**
      * @param{OptionList} options  The user-supplied options
      * @constructor
      */
@@ -121,7 +119,7 @@ export class HTMLDomStrings<N, T, D> {
         this.getPatterns();
     }
 
-    /*
+    /**
      * Set the initial values of the main properties
      */
     protected init() {
@@ -132,7 +130,7 @@ export class HTMLDomStrings<N, T, D> {
         this.stack = [];
     }
 
-    /*
+    /**
      * Create the search patterns for skipTags, ignoreClass, and processClass
      */
     protected getPatterns() {
@@ -144,7 +142,7 @@ export class HTMLDomStrings<N, T, D> {
         this.processClass = new RegExp('(?:^| )(?:' + process + ')(?: |$)');
     }
 
-    /*
+    /**
      * Add a string to the string array and record its node list
      */
     protected pushString() {
@@ -156,7 +154,7 @@ export class HTMLDomStrings<N, T, D> {
         this.snodes = [];
     }
 
-    /*
+    /**
      * Add more text to the current string, and record the
      * node and its position in the string.
      *
@@ -170,7 +168,7 @@ export class HTMLDomStrings<N, T, D> {
         this.string += text;
     }
 
-    /*
+    /**
      * Handle a #text node (add its text to the current string)
      *
      * @param{T} node          The Text node to process
@@ -184,7 +182,7 @@ export class HTMLDomStrings<N, T, D> {
         return this.adaptor.next(node);
     }
 
-    /*
+    /**
      * Handle a BR, WBR, or #comment element (or others in the includeTag object).
      *
      * @param{N} node          The node to process
@@ -199,7 +197,7 @@ export class HTMLDomStrings<N, T, D> {
         return this.adaptor.next(node);
     }
 
-    /*
+    /**
      * Handle an arbitrary DOM node:
      *   Check the class to see if it matches the processClass regex
      *   If the node has a child and is not marked as created by MathJax (data-MJX)
@@ -234,7 +232,7 @@ export class HTMLDomStrings<N, T, D> {
         return [next, ignore] as [N | T, boolean];
     }
 
-    /*
+    /**
      * Find the strings for a given DOM element:
      *   Initialize the state
      *   Get the element where we stop processing

@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMerror node class (subclass of AbstractMmlNode)
  */
 
@@ -35,21 +35,21 @@ export class MmlMerror extends AbstractMmlNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The merror kind
      */
     public get kind() {
         return 'merror';
     }
 
-    /*
+    /**
      * @return {number}  <merror> gets an inferred mrow
      */
     public get arity() {
         return -1;
     }
 
-    /*
+    /**
      * @return {boolean}  <merror> can contain line breaks
      */
     public get linebreakContainer() {

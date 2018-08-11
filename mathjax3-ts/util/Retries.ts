@@ -24,14 +24,14 @@
 
 /*****************************************************************/
 /*
- *  The legacy MathJax object
+ *  The legacy MathJax object  (FIXME: remove this after all v2 code is gone)
  */
 
 declare var MathJax: {Callback: {After: Function}};
 
 
 /*****************************************************************/
-/*
+/**
  *  Allow us to pass a promise as part of an Error object
  */
 
@@ -40,7 +40,7 @@ export interface RetryError extends Error {
 }
 
 /*****************************************************************/
-/*
+/**
  * A wrapper for actions that may be asynchronous.  This will
  *   rerun the action after the asychronous action completes.
  *   Usually, this is for dynamic loading of files.  Legacy
@@ -76,6 +76,7 @@ export function handleRetriesFor(code: Function) {
                 err.retry.then(() => run(ok, fail))
                          .catch((perr: Error) => fail(perr));
             } else if (err.restart && err.restart.isCallback) {
+                // FIXME: Remove this branch when all legacy code is gone
                 MathJax.Callback.After(() => run(ok, fail), err.restart);
             } else {
                 fail(err);
@@ -85,7 +86,7 @@ export function handleRetriesFor(code: Function) {
 }
 
 /*****************************************************************/
-/*
+/**
  * Tells HandleRetriesFor() to wait for this promise to be fulfilled
  *   before rerunning the code.  Causes an error to be thrown, so
  *   calling this terminates the code at that point.

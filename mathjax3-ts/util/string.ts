@@ -22,7 +22,7 @@
  */
 
 
-/*
+/**
  * Sort strings by length
  *
  * @param{string} a, b  The strings to be compared
@@ -32,7 +32,7 @@ export function sortLength(a: string, b: string) {
     return a.length !== b.length ? b.length - a.length : a === b ? 0 : a < b ? -1 : 1;
 }
 
-/*
+/**
  * Quote a string for use in regular expressions
  *
  * @param{string} text  The text whose regex characters are to be quoted
@@ -42,7 +42,7 @@ export function quotePattern(text: string) {
     return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
 }
 
-/*
+/**
  * Convert a UTF-8 string to an array of unicode code points
  *
  * @param{string} text  The string to be turned into unicode positions
@@ -60,7 +60,7 @@ export function unicodeChars(text: string) {
     return unicode;
 }
 
-/*
+/**
  * Test if a value is a percentage
  *
  * @param{string} x   The string to test
@@ -70,7 +70,7 @@ export function isPercent(x: string) {
     return x.match(/%\s*$/);
 }
 
-/*
+/**
  * Split a space-separated string of values
  *
  * @param{string} x   The string to be split
