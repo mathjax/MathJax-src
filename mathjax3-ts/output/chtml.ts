@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractOutputJax} from '../core/OutputJax.js';
+import {CommonOutputJax} from './common/OutputJax.js';
 import {OptionList, separateOptions} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem, Metrics} from '../core/MathItem.js';
@@ -53,11 +53,11 @@ type MetricDomMap<N> = Map<N, N>;
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
+export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>> {
 
     public static NAME: string = 'CHTML';
     public static OPTIONS: OptionList = {
-        ...AbstractOutputJax.OPTIONS,
+        ...CommonOutputJax.OPTIONS,
         scale: 1,                      // Global scaling factor for all expressions
         mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
         skipAttributes: {},            // RFDa and other attributes NOT to copy to CHTML output
@@ -74,13 +74,6 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     public factory: CHTMLWrapperFactory<N, T, D>;
     public font: FontData;
     public cssStyles: CssStyles;
-
-    /**
-     * The MathDocument for the math we find
-     * and the MathItem currently being processed
-     */
-    public document: MathDocument<N, T, D>;
-    public math: MathItem<N, T, D>;
 
     /**
      * A map from the nodes in the expression currently being processed to the
@@ -102,7 +95,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
         const [chtmlOptions, fontOptions] = separateOptions(options, TeXFont.OPTIONS);
         super(chtmlOptions);
         this.factory = this.options.CHTMLWrapperFactory || new CHTMLWrapperFactory<N, T, D>();
-        this.factory.chtml = this;
+        this.factory.jax = this;
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new TeXFont(fontOptions);
     }

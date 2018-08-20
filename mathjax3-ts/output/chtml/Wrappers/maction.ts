@@ -102,8 +102,8 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
             //
             // Cache the data needed to select another node
             //
-            const math = node.factory.chtml.math;
-            const document = node.factory.chtml.document;
+            const math = node.factory.jax.math;
+            const document = node.factory.jax.document;
             const mml = node.node as MmlMaction;
             //
             // Add a click handler that changes the selection and rerenders the expression

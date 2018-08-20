@@ -16,42 +16,32 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLWrapperFactory class
+ * @fileoverview  Implements the abstract class for the CommonOutputJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../chtml.js';
-import {AbstractWrapperFactory} from '../../core/Tree/WrapperFactory.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
-import {CHTMLWrappers} from './Wrappers.js';
+import {AbstractOutputJax} from '../../core/OutputJax.js';
+import {MathDocument} from '../../core/MathDocument.js';
+import {MathItem} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
-/*****************************************************************/
 /**
- *  The CHTMLWrapperFactory class for creating CHTMLWrapper nodes
+ *  The CommonOutputJax class on which the CHTML and SVG jax are built
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
+ * @template W  The Wrapper class
  */
-export class CHTMLWrapperFactory<N, T, D> extends AbstractWrapperFactory<MmlNode, CHTMLWrapper<N, T, D>, CHTMLWrapperClass> {
-
+export abstract class CommonOutputJax<N, T, D, W> extends AbstractOutputJax<N, T, D> {
     /**
-     * The default list of wrapper nodes this factory can create
+     * The MathDocument for the math we find
+     * and the MathItem currently being processed
      */
-    public static defaultNodes = CHTMLWrappers;
+    public document: MathDocument<N, T, D>;
+    public math: MathItem<N, T, D>;
 
-    /**
-     * The CHTML output jax associated with this factory
-     */
-    public chtml: CHTML<N, T, D> = null;
-
-    /**
-     * @return {object}  The list of node-creation functions
-     */
-    get Wrappers() {
-        return this.node;
-    }
-
+    public font: any;
+    public nodeMap: Map<MmlNode, W>;
 }
