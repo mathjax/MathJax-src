@@ -29,7 +29,7 @@ import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**

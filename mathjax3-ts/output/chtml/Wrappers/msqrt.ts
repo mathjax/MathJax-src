@@ -27,7 +27,7 @@ import {CHTMLmo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
 import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/

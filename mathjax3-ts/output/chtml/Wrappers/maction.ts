@@ -29,7 +29,7 @@ import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
 import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
 import {Property} from '../../../core/Tree/Node.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 

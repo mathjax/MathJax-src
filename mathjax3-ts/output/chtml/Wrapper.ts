@@ -36,7 +36,7 @@ import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox, BBoxData} from './BBox.js';
 import {FontData, DelimiterData, DIRECTION, NOSTRETCH} from './FontData.js';
-import {StyleList} from './CssStyles.js';
+import {StyleList} from '../common/CssStyles.js';
 
 /*****************************************************************/
 

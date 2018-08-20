@@ -27,7 +27,7 @@ import {CHTMLmtr} from './mtr.js';
 import {BBox} from '../BBox.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 import {DIRECTION} from '../FontData.js';
 import {split, isPercent} from '../../../util/string.js';
 import {sum, max} from '../../../util/numeric.js';

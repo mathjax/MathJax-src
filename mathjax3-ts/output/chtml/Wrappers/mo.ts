@@ -27,7 +27,7 @@ import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {DelimiterData} from '../FontData.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
 /**

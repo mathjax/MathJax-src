@@ -24,7 +24,7 @@
 import {CHTMLmsubsup} from './msubsup.js';
 import {BBox} from '../BBox.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 

@@ -27,7 +27,7 @@ import {CHTMLscriptbase} from './scriptbase.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**

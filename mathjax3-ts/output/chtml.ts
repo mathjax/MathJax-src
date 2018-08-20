@@ -30,7 +30,7 @@ import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {FontData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
-import {CssStyles} from './chtml/CssStyles.js';
+import {CssStyles} from './common/CssStyles.js';
 import {percent} from '../util/lengths.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {BBox} from './chtml/BBox.js';

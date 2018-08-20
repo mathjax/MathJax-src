@@ -22,7 +22,7 @@
  */
 
 import {FontData, DelimiterData, CharData, CharOptions, DelimiterMap, CharMapMap, CSS, V, H} from '../FontData.js';
-import {StyleList, StyleData} from '../CssStyles.js';
+import {StyleList, StyleData} from '../../common/CssStyles.js';
 import {em} from '../../../util/lengths.js';
 import {OptionList, defaultOptions, userOptions} from '../../../util/Options.js';
 import {StringMap} from '../Wrapper.js';

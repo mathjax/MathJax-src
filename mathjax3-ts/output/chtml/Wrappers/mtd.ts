@@ -25,7 +25,7 @@ import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {BBox} from '../BBox.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**

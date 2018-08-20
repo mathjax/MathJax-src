@@ -29,7 +29,7 @@ import * as Notation from '../Notation.js';
 import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../../util/Options.js';
-import {StyleList, StyleData} from '../CssStyles.js';
+import {StyleList, StyleData} from '../../common/CssStyles.js';
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/

@@ -27,7 +27,7 @@ import {BBox} from '../BBox.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Property} from '../../../core/Tree/Node.js';
-import {StyleList, StyleData} from '../CssStyles.js';
+import {StyleList, StyleData} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
