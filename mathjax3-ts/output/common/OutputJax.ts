@@ -25,6 +25,7 @@ import {AbstractOutputJax} from '../../core/OutputJax.js';
 import {MathDocument} from '../../core/MathDocument.js';
 import {MathItem} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {FontData} from './FontData.js';
 
 /**
  *  The CommonOutputJax class on which the CHTML and SVG jax are built
@@ -42,6 +43,16 @@ export abstract class CommonOutputJax<N, T, D, W> extends AbstractOutputJax<N, T
     public document: MathDocument<N, T, D>;
     public math: MathItem<N, T, D>;
 
-    public font: any;
+    /**
+     * The data for the font in use
+     */
+    public font: FontData;
+
+    /**
+     * A map from the nodes in the expression currently being processed to the
+     * wrapper nodes for them (used by functions like core() to locate the wrappers
+     * from the core nodes)
+     */
     public nodeMap: Map<MmlNode, W>;
+
 }

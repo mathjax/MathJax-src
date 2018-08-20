@@ -28,7 +28,6 @@ import {MathItem, Metrics} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
-import {FontData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import {CssStyles} from './common/CssStyles.js';
 import {percent} from '../util/lengths.js';
@@ -72,15 +71,8 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      *  the FontData object, and the CssStyles object.
      */
     public factory: CHTMLWrapperFactory<N, T, D>;
-    public font: FontData;
+    public font: TeXFont;
     public cssStyles: CssStyles;
-
-    /**
-     * A map from the nodes in the expression currently being processed to the
-     * wrapper nodes for them (used by functions like core() to locate the wrappers
-     * from the core nodes)
-     */
-    public nodeMap: Map<MmlNode, CHTMLWrapper<N, T, D>>;
 
     public testNodes: N;
 
