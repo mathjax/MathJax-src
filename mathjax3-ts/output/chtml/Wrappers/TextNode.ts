@@ -49,6 +49,7 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
     public toCHTML(parent: N) {
         const text = (this.node as TextNode).getText();
+console.log(this.parent);
         if (this.parent.variant === '-explicitFont') {
             this.adaptor.append(parent, this.text(text));
         } else {

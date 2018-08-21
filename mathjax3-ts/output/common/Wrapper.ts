@@ -61,12 +61,17 @@ function MathMLSpace(script: boolean, size: number) {
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
  */
-export class CommonWrapper<J extends CommonOutputJax<any, any, any, any>,
+export class CommonWrapper<J extends CommonOutputJax<any, any, any, any, any>,
                            W extends CommonWrapper<J, W, C>,
                            C extends WrapperClass<MmlNode, W>> extends
 AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
 
     public static kind: string = 'unknown';
+
+    /**
+     * Any styles needed for the class
+     */
+    public static styles: StyleList = {};
 
     /**
      * Styles that should not be passed on from style attribute

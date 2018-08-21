@@ -23,6 +23,8 @@
  */
 
 import {StringMap} from './Wrapper.js';
+import {OptionList} from '../../util/Options.js';
+import {StyleList} from './CssStyles.js';
 
 /**
  * The extra options allowed in a CharData array
@@ -166,6 +168,11 @@ export type FontParameters = {
 export class FontData {
 
     /**
+     * Subclasses may need options
+     */
+    public static OPTIONS: OptionList = {};
+
+    /**
      *  The standard variants to define
      */
     protected static defaultVariants = [
@@ -298,6 +305,11 @@ export class FontData {
      * The actual font parameters for this font
      */
     public params: FontParameters;
+
+    /**
+     * Any styles needed for the font
+     */
+    public styles: StyleList;
 
     /**
      * Copies the data from the defaults to the instance
@@ -474,4 +486,12 @@ export class FontData {
                 String.fromCharCode(n) : (escape ? '\\' : '') + n.toString(16).toUpperCase());
     }
 
+}
+
+/**
+ * The class interface for the FontData class
+ */
+export interface FontDataClass {
+    OPTIONS: OptionList;
+    new(options?: OptionList): FontData;
 }
