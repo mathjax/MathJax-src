@@ -139,7 +139,7 @@ export class CHTMLWrapper<N, T, D> extends CommonWrapper<CHTML<N, T, D>, CHTMLWr
     /**
      * The parent and children of this node
      */
-    public parent: CHTMLWrapper<N, T, D> = null;
+    public parent: CHTMLWrapper<N, T, D>;
     public childNodes: CHTMLWrapper<N, T, D>[];
 
     /**
