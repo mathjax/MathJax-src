@@ -130,8 +130,8 @@ export class MathMLCompile<N, T, D> {
     /**
      * Copy the attributes from a MathML node to an MmlNode.
      *
-     * @param{MmlNode} mml       The MmlNode to which attributes will be added
-     * @param{N} node  The MathML node whose attributes to copy
+     * @param {MmlNode} mml       The MmlNode to which attributes will be added
+     * @param {N} node  The MathML node whose attributes to copy
      */
     protected addAttributes(mml: MmlNode, node: N) {
         for (const attr of this.adaptor.allAttributes(node)) {
@@ -154,8 +154,8 @@ export class MathMLCompile<N, T, D> {
      * Provide a hook for the Safe extension to filter
      * attribute values.
      *
-     * @param{string} name   The name of an attribute to filter
-     * @param{string} value  The value to filter
+     * @param {string} name   The name of an attribute to filter
+     * @param {string} value  The value to filter
      */
     protected filterAttribute(name: string, value: string) {
         return value;
@@ -164,8 +164,8 @@ export class MathMLCompile<N, T, D> {
     /**
      * Convert the children of the MathML node and add them to the MmlNode
      *
-     * @param{MmlNode} mml       The MmlNode to which children will be added
-     * @param{N} node  The MathML node whose children are to be copied
+     * @param {MmlNode} mml       The MmlNode to which children will be added
+     * @param {N} node  The MathML node whose children are to be copied
      */
     protected addChildren(mml: MmlNode, node: N) {
         if (mml.arity === 0) {
@@ -197,8 +197,8 @@ export class MathMLCompile<N, T, D> {
     /**
      * Add text to a token node
      *
-     * @param{MmlNode} mml  The MmlNode to which text will be added
-     * @param{N} child      The text node whose contents is to be copied
+     * @param {MmlNode} mml  The MmlNode to which text will be added
+     * @param {N} child      The text node whose contents is to be copied
      */
     protected addText(mml: MmlNode, child: N) {
         let text = this.adaptor.value(child);
@@ -216,8 +216,8 @@ export class MathMLCompile<N, T, D> {
     /**
      * Check for special MJX values in the class and process them
      *
-     * @param{MmlNode} mml       The MmlNode to be modified according to the class markers
-     * @param{N} node  The MathML node whose class is to be processed
+     * @param {MmlNode} mml       The MmlNode to be modified according to the class markers
+     * @param {N} node  The MathML node whose class is to be processed
      */
     protected checkClass(mml: MmlNode, node: N) {
         let classList = [];

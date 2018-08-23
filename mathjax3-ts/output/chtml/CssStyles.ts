@@ -47,14 +47,14 @@ export class CssStyles {
     protected styles: StyleList = {};
 
     /**
-     * @return{string}  The styles as a CSS string
+     * @return {string}  The styles as a CSS string
      */
     get cssText() {
         return this.getStyleString();
     }
 
     /**
-     * @param{StyleList} styles  The initial styles to use, if any
+     * @param {StyleList} styles  The initial styles to use, if any
      * @constructor
      */
     constructor(styles: StyleList = null) {
@@ -62,7 +62,7 @@ export class CssStyles {
     }
 
     /**
-     * @param{StyleList} styles  The styles to combine with the existing ones
+     * @param {StyleList} styles  The styles to combine with the existing ones
      */
     public addStyles(styles: StyleList) {
         if (!styles) return;
@@ -75,7 +75,7 @@ export class CssStyles {
     }
 
     /**
-     * @param{string[]} selectors  The selectors for the styles to remove
+     * @param {string[]} selectors  The selectors for the styles to remove
      */
     public removeStyles(...selectors: string[]) {
         for (const selector of selectors) {
@@ -84,7 +84,7 @@ export class CssStyles {
     }
 
     /**
-     * @return{string} The CSS string for the style list
+     * @return {string} The CSS string for the style list
      */
     public getStyleString() {
         const selectors = Object.keys(this.styles);
@@ -97,8 +97,8 @@ export class CssStyles {
     }
 
     /**
-     * @param{StyleData} styles  The style data to be stringified
-     * @return{string}           The CSS string for the given data
+     * @param {StyleData} styles  The style data to be stringified
+     * @return {string}           The CSS string for the given data
      */
     public getStyleDefString(styles: StyleData) {
         const properties = Object.keys(styles);

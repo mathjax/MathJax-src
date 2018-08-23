@@ -347,9 +347,9 @@ export class FontData {
      *   bold-italic looks for bold-italic, then bold, then italic,
      *   then normal glyphs in order to find the given character.
      *
-     * @param{string} name     The new variant to create
-     * @param{string} inherit  The variant to use if a character is not in this one
-     * @param{string} link     A variant to search before the inherit one (but only
+     * @param {string} name     The new variant to create
+     * @param {string} inherit  The variant to use if a character is not in this one
+     * @param {string} link     A variant to search before the inherit one (but only
      *                           its top-level object).
      */
     public createVariant(name: string, inherit: string = null, link: string = null) {
@@ -368,7 +368,7 @@ export class FontData {
     /**
      * Create a collection of variants
      *
-     * @param{string[][]} variants  Array of [name, inherit?, link?] values for
+     * @param {string[][]} variants  Array of [name, inherit?, link?] values for
      *                              the variants to define
      */
     public createVariants(variants: string[][]) {
@@ -383,8 +383,8 @@ export class FontData {
      *  the character maps are objeccts with prototypes, and we don't
      *  want to loose those by doing {...chars} or something similar.)
      *
-     * @param{string} name    The variant for these characters
-     * @param{CharMap} chars  The characters to define
+     * @param {string} name    The variant for these characters
+     * @param {CharMap} chars  The characters to define
      */
     public defineChars(name: string, chars: CharMap) {
         let variant = this.variant[name];
@@ -397,7 +397,7 @@ export class FontData {
     /**
      * Defines stretchy delimiters
      *
-     * @param{DelimiterMap} delims  The delimiters to define
+     * @param {DelimiterMap} delims  The delimiters to define
      */
     public defineDelimiters(delims: DelimiterMap) {
         Object.assign(this.delimiters, delims);
@@ -406,8 +406,8 @@ export class FontData {
     /**
      * Defines a character remapping map
      *
-     * @param{string} name     The name of the map to define or augment
-     * @param{RemapMap} remap  The characters to remap
+     * @param {string} name     The name of the map to define or augment
+     * @param {RemapMap} remap  The characters to remap
      */
     public defineRemap(name: string, remap: RemapMap) {
         if (!this.remapChars.hasOwnProperty(name)) {
@@ -417,17 +417,17 @@ export class FontData {
     }
 
     /**
-     * @param{number} n  The delimiter character number whose data is desired
-     * @return{DelimiterData}  The data for that delimiter (or undefined)
+     * @param {number} n  The delimiter character number whose data is desired
+     * @return {DelimiterData}  The data for that delimiter (or undefined)
      */
     public getDelimiter(n: number) {
         return this.delimiters[n];
     }
 
     /**
-     * @param{number} n  The delimiter character number whose variant is needed
-     * @param{number} i  The index in the size array of the size whose variant is needed
-     * @return{string}   The variant of the i-th size for delimiter n
+     * @param {number} n  The delimiter character number whose variant is needed
+     * @param {number} i  The index in the size array of the size whose variant is needed
+     * @return {string}   The variant of the i-th size for delimiter n
      */
     public getSizeVariant(n: number, i: number) {
         if (this.delimiters[n].variants) {
@@ -437,26 +437,26 @@ export class FontData {
     }
 
     /**
-     * @param{string} name  The variant whose character data is being querried
-     * @param{number} n     The unicode number for the character to be found
-     * @return{CharData}    The data for the given character (or undefined)
+     * @param {string} name  The variant whose character data is being querried
+     * @param {number} n     The unicode number for the character to be found
+     * @return {CharData}    The data for the given character (or undefined)
      */
     public getChar(name: string, n: number) {
         return this.variant[name].chars[n];
     }
 
     /**
-     * @param{string} name   The name of the variant whose data is to be obtained
-     * @return{VariantData}  The data for the requested variant (or undefined)
+     * @param {string} name   The name of the variant whose data is to be obtained
+     * @return {VariantData}  The data for the requested variant (or undefined)
      */
     public getVariant(name: string) {
         return this.variant[name];
     }
 
     /**
-     * @param{string} name   The name of the map to query
-     * @param{number} c      The character to remap
-     * @return{number}       The remapped character (or the original)
+     * @param {string} name   The name of the map to query
+     * @param {number} c      The character to remap
+     * @return {number}       The remapped character (or the original)
      */
     public getRemappedChar(name: string, c: number) {
         const map = this.remapChars[name] || {} as RemapMap;
@@ -464,10 +464,10 @@ export class FontData {
     }
 
     /**
-     * @param{number} n  A unicode code point to be converted to a character reference for use with the
+     * @param {number} n  A unicode code point to be converted to a character reference for use with the
      *                   CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
      *                   for higher values, or for the double quote and backslash characters).
-     * @return{string}  The character as a properly encoded string.
+     * @return {string}  The character as a properly encoded string.
      */
     public char(n: number, escape: boolean = false) {
         return (n >= 0x20 && n <= 0x7E && n !== 0x22 && n !== 0x27 && n !== 0x5C ?

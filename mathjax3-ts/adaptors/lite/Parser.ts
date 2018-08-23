@@ -142,10 +142,10 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     }
 
     /**
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node to add a text element to
-     * @param{string} text          The text for the text node
-     * @return{LiteText}            The text element
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node to add a text element to
+     * @param {string} text          The text for the text node
+     * @return {LiteText}            The text element
      */
     protected addText(adaptor: LiteAdaptor, node: LiteElement, text: string) {
         text = Entities.translate(text);
@@ -153,20 +153,20 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     }
 
     /**
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node to add a comment to
-     * @param{string} comment       The text for the comment node
-     * @return{LiteText}            The comment element
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node to add a comment to
+     * @param {string} comment       The text for the comment node
+     * @return {LiteText}            The comment element
      */
     protected addComment(adaptor: LiteAdaptor, node: LiteElement, comment: string) {
         return adaptor.append(node, new LiteComment(comment)) as LiteComment;
     }
 
     /**
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node to close
-     * @param{string} tag           The close tag being processed
-     * @return{LiteElement}         The first unclosed parent node
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node to close
+     * @param {string} tag           The close tag being processed
+     * @return {LiteElement}         The first unclosed parent node
      */
     protected closeTag(adaptor: LiteAdaptor, node: LiteElement, tag: string) {
         const kind = tag.slice(2,tag.length - 1).toLowerCase();
@@ -177,11 +177,11 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     }
 
     /**
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The parent node for the tag
-     * @param{string} tag           The tag being processed
-     * @param{string[]} parts       The rest of the text/tag array
-     * @return{LiteElement}         The node to which the next tag will be added
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The parent node for the tag
+     * @param {string} tag           The tag being processed
+     * @param {string[]} parts       The rest of the text/tag array
+     * @return {LiteElement}         The node to which the next tag will be added
      */
     protected openTag(adaptor: LiteAdaptor, node: LiteElement, tag: string, parts: string[]) {
         const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
@@ -223,9 +223,9 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     }
 
     /**
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node getting the attributes
-     * @param{string[]} attributes  The array of space, name, value1, value2, value3
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node getting the attributes
+     * @param {string[]} attributes  The array of space, name, value1, value2, value3
      *                                as described above.
      */
     protected addAttributes(adaptor: LiteAdaptor, node: LiteElement, attributes: string[]) {
@@ -241,10 +241,10 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     }
 
     /**
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node whose PCDATA content is being collected
-     * @param{string} kind          The tag name being handled
-     * @param{string[]} parts       The array of text/tag data for the document
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node whose PCDATA content is being collected
+     * @param {string} kind          The tag name being handled
+     * @param {string[]} parts       The array of text/tag data for the document
      */
     protected handlePCDATA(adaptor: LiteAdaptor, node: LiteElement, kind: string, parts: string[]) {
         const pcdata = [] as string[];
@@ -271,8 +271,8 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
      * tags into the document structure.  That way, you can parse fragements or
      * full documents and still get a valid document.
      *
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteDocuemnt} root    The document being checked
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteDocuemnt} root    The document being checked
      */
     protected checkDocument(adaptor: LiteAdaptor, root: LiteDocument) {
         if (adaptor.childNodes(adaptor.body(root)).length !== 1) return;
@@ -316,9 +316,9 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     }
 
     /**
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node to serialize
-     * @return{string}              The serialized element (like outerHTML)
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node to serialize
+     * @return {string}              The serialized element (like outerHTML)
      */
     public serialize(adaptor: LiteAdaptor, node: LiteElement) {
         const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
@@ -334,9 +334,9 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     }
 
     /**
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node whose innerHTML is needed
-     * @return{string}              The serialized element (like innerHTML)
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node whose innerHTML is needed
+     * @return {string}              The serialized element (like innerHTML)
      */
     public serializeInner(adaptor: LiteAdaptor, node: LiteElement) {
         return adaptor.childNodes(node).map(x => {
@@ -348,16 +348,16 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     }
 
     /**
-     * @param{string} text  The attribute value to be HTML escaped
-     * @return{string}      The string with " replaced by entities
+     * @param {string} text  The attribute value to be HTML escaped
+     * @return {string}      The string with " replaced by entities
      */
     public protectAttribute(text: string) {
         return text.replace(/"/, '&quot;');
     }
 
     /**
-     * @param{string} text  The text to be HTML escaped
-     * @return{string}      The string with &, <, and > replaced by entities
+     * @param {string} text  The text to be HTML escaped
+     * @return {string}      The string with &, <, and > replaced by entities
      */
     public protectHTML(text: string) {
         return text.replace(/&/g, '&amp;')

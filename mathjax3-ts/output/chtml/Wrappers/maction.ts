@@ -223,7 +223,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected data: ActionData = null;
 
     /**
-     * @return{CHTMLWrapper}  The selected child wrapper
+     * @return {CHTMLWrapper}  The selected child wrapper
      */
     public get selected(): CHTMLWrapper<N, T, D> {
         const selection = this.node.attributes.get('selection') as number;

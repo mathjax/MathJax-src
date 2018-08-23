@@ -61,14 +61,14 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     protected baseCore: CHTMLWrapper<N, T, D>;
 
     /**
-     * @return{CHTMLWrapper}  The base element's wrapper
+     * @return {CHTMLWrapper}  The base element's wrapper
      */
     public get baseChild() {
         return this.childNodes[(this.node as MmlMsubsup).base];
     }
 
     /**
-     * @return{CHTMLWrapper}  The script element's wrapper (overridden in subclasses)
+     * @return {CHTMLWrapper}  The script element's wrapper (overridden in subclasses)
      */
     public get script() {
         return this.childNodes[1];
@@ -135,7 +135,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @return{boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
+     * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
      */
     protected isCharBase() {
         let base = this.baseChild;
@@ -155,9 +155,9 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Get the shift for the script (implemented in subclasses)
      *
-     * @param{BBox} bbox   The bounding box of the base element
-     * @param{BBox} sbox   The bounding box of the script element
-     * @return{number[]}   The horizontal and vertical offsets for the script
+     * @param {BBox} bbox   The bounding box of the base element
+     * @param {BBox} sbox   The bounding box of the script element
+     * @return {number[]}   The horizontal and vertical offsets for the script
      */
     protected getOffset(bbox: BBox, sbox: BBox) {
         return [0, 0];
@@ -166,9 +166,9 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Get the shift for a subscript (TeXBook Appendix G 18ab)
      *
-     * @param{BBox} bbox   The bounding box of the base element
-     * @param{BBox} sbox   The bounding box of the superscript element
-     * @return{number}     The vertical offset for the script
+     * @param {BBox} bbox   The bounding box of the base element
+     * @param {BBox} sbox   The bounding box of the superscript element
+     * @return {number}     The vertical offset for the script
      */
     protected getV(bbox: BBox, sbox: BBox) {
         const tex = this.font.params;
@@ -183,9 +183,9 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Get the shift for a superscript (TeXBook Appendix G 18acd)
      *
-     * @param{BBox} bbox   The bounding box of the base element
-     * @param{BBox} sbox   The bounding box of the superscript element
-     * @return{number}     The vertical offset for the script
+     * @param {BBox} bbox   The bounding box of the base element
+     * @param {BBox} sbox   The bounding box of the superscript element
+     * @return {number}     The vertical offset for the script
      */
     protected getU(bbox: BBox, sbox: BBox) {
         const tex = this.font.params;
@@ -205,7 +205,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
      */
 
     /**
-     * @return{boolean}  True if the base has movablelimits (needed by munderover)
+     * @return {boolean}  True if the base has movablelimits (needed by munderover)
      */
     protected hasMovableLimits() {
         const display = this.node.attributes.get('displaystyle');
@@ -217,9 +217,9 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Get the separation and offset for overscripts (TeXBoox Appendix G 13, 13a)
      *
-     * @param{BBox} basebox  The bounding box of the base
-     * @param{BBox} overbox  The bounding box of the overscript
-     * @return{numner[]}     The separation between their boxes, and the offset of the overscript
+     * @param {BBox} basebox  The bounding box of the base
+     * @param {BBox} overbox  The bounding box of the overscript
+     * @return {numner[]}     The separation between their boxes, and the offset of the overscript
      */
     protected getOverKU(basebox: BBox, overbox: BBox) {
         const accent = this.node.attributes.get('accent') as boolean;
@@ -234,9 +234,9 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Get the separation and offset for underscripts (TeXBoox Appendix G 13, 13a)
      *
-     * @param{BBox} basebox   The bounding box of the base
-     * @param{BBox} underbox  The bounding box of the underscript
-     * @return{numner[]}      The separation between their boxes, and the offset of the underscript
+     * @param {BBox} basebox   The bounding box of the base
+     * @param {BBox} underbox  The bounding box of the underscript
+     * @return {numner[]}      The separation between their boxes, and the offset of the underscript
      */
     protected getUnderKV(basebox: BBox, underbox: BBox) {
         const accent = this.node.attributes.get('accentunder') as boolean;
@@ -249,9 +249,9 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{BBox[]} boxes    The bounding boxes whose offsets are to be computed
-     * @param{number[]} delta  The initial x offsets of the boxes
-     * @return{number[]}       The actual offsets needed to center the boxes in the stack
+     * @param {BBox[]} boxes    The bounding boxes whose offsets are to be computed
+     * @param {number[]} delta  The initial x offsets of the boxes
+     * @return {number[]}       The actual offsets needed to center the boxes in the stack
      */
     protected getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]) {
         const align = this.node.attributes.get('align');
@@ -275,8 +275,8 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{N[]} nodes    The HTML elements to be centered in a stack
-     * @param{number[]} dx  The x offsets needed to center the elements
+     * @param {N[]} nodes    The HTML elements to be centered in a stack
+     * @param {number[]} dx  The x offsets needed to center the elements
      */
     protected setDeltaW(nodes: N[], dx: number[]) {
         for (let i = 0; i < dx.length; i++) {
@@ -287,7 +287,7 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @return{number}   The offset for under and over
+     * @return {number}   The offset for under and over
      */
     protected getDelta(noskew: boolean = false) {
         const accent = this.node.attributes.get('accent');
@@ -335,8 +335,8 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{N} over        The HTML element for the overscript
-     * @param{BBox} overbox  The bbox for the overscript
+     * @param {N} over        The HTML element for the overscript
+     * @param {BBox} overbox  The bbox for the overscript
      */
     protected adjustOverDepth(over: N, overbox: BBox) {
         if (overbox.d >= 0) return;
@@ -344,8 +344,8 @@ export class CHTMLscriptbase<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{N} under        The HTML element for the underscript
-     * @param{BBox} underbox  The bbox for the underscript
+     * @param {N} under        The HTML element for the underscript
+     * @param {BBox} underbox  The bbox for the underscript
      */
     protected adjustUnderDepth(under: N, underbox: BBox) {
         if (underbox.d >= 0) return;

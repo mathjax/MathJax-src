@@ -40,7 +40,7 @@ declare global {
 /**
  * Function to create an HTML adpator for browsers
  *
- * @return{HTMLAdaptor}  The newly created adaptor
+ * @return {HTMLAdaptor}  The newly created adaptor
  */
 export function browserAdaptor() {
     return new HTMLAdaptor<HTMLElement, Text, Document>(window);

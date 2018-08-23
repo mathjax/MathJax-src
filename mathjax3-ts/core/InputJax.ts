@@ -64,16 +64,16 @@ export interface InputJax<N, T, D> {
     adaptor: DOMAdaptor<N, T, D>;
 
     /**
-     * @param{DOMAdaptor}  The adaptor to use in this jax
+     * @param {DOMAdaptor}  The adaptor to use in this jax
      */
     setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
 
     /**
      * Finds the math within the DOM or the list of strings
      *
-     * @param{N | string[]} which   The element or array of strings to be searched for math
-     * @param{OptionList} options   The options for the search, if any
-     * @return{ProtoItem[]}         Array of proto math items found (further processed by the
+     * @param {N | string[]} which   The element or array of strings to be searched for math
+     * @param {OptionList} options   The options for the search, if any
+     * @return {ProtoItem[]}         Array of proto math items found (further processed by the
      *                                handler to produce actual MathItem objects)
      */
     findMath(which: N | string[], options?: OptionList): ProtoItem<N, T>[];
@@ -81,8 +81,8 @@ export interface InputJax<N, T, D> {
     /**
      * Convert the math in a math item into the internal format
      *
-     * @param{MathItem} math  The MathItem whose math content is to processed
-     * @return{MmlNode}       The resulting internal node tree for the math
+     * @param {MathItem} math  The MathItem whose math content is to processed
+     * @return {MmlNode}       The resulting internal node tree for the math
      */
     compile(math: MathItem<N, T, D>): MmlNode;
 }
@@ -106,7 +106,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
 
     /**
-     * @param{OptionList} options  The options to applyt to this input jax
+     * @param {OptionList} options  The options to applyt to this input jax
      *
      * @constructor
      */
@@ -118,7 +118,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     }
 
     /**
-     * @return{string}  The name of this input jax class
+     * @return {string}  The name of this input jax class
      */
     public get name() {
         return (this.constructor as typeof AbstractInputJax).NAME;
@@ -132,7 +132,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     }
 
     /**
-     * @return{boolean}  True means find math in string array, false means in DOM element
+     * @return {boolean}  True means find math in string array, false means in DOM element
      */
     public get processStrings() {
         return true;
@@ -154,10 +154,10 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
      * Execute a set of filters, passing them the MathItem and any needed data,
      *  and return the (possibly modified) data
      *
-     * @param{FunctionList} filters  The list of functions to be performed
-     * @param{MathItem} math         The math item that is being processed
-     * @param{any} data              Whatever other data is needed
-     * @return{any}                  The (possibly modidied) data
+     * @param {FunctionList} filters  The list of functions to be performed
+     * @param {MathItem} math         The math item that is being processed
+     * @param {any} data              Whatever other data is needed
+     * @return {any}                  The (possibly modidied) data
      */
     protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>, data: any) {
         let args = {math: math, data: data};

@@ -298,9 +298,9 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /**
-     * @param{MmlNode} node  The node to the wrapped
-     * @param{CHTMLWrapper} parent  The wrapped parent node
-     * @return{CHTMLWrapper}  The newly wrapped node
+     * @param {MmlNode} node  The node to the wrapped
+     * @param {CHTMLWrapper} parent  The wrapped parent node
+     * @return {CHTMLWrapper}  The newly wrapped node
      */
     public wrap(node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         const wrapped = this.factory.wrap(node, parent || this);
@@ -315,7 +315,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     /**
      * Create the HTML for the wrapped node.
      *
-     * @param{N} parent  The HTML node where the output is added
+     * @param {N} parent  The HTML node where the output is added
      */
     public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
@@ -329,8 +329,8 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      * Return the wrapped node's bounding box, either the cached one, if it exists,
      *   or computed directly if not.
      *
-     * @param{boolean} save  Whether to cache the bbox or not (used for stretchy elements)
-     * @return{BBox}  The computed bounding box
+     * @param {boolean} save  Whether to cache the bbox or not (used for stretchy elements)
+     * @return {BBox}  The computed bounding box
      */
     public getBBox(save: boolean = true) {
         if (this.bboxComputed) {
@@ -343,7 +343,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /**
-     * @param{BBox} bbox  The bounding box to modify (either this.bbox, or an empty one)
+     * @param {BBox} bbox  The bounding box to modify (either this.bbox, or an empty one)
      */
     protected computeBBox(bbox: BBox) {
         bbox.empty();
@@ -368,7 +368,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     /**
      * Copy child skew and italic correction
      *
-     * @param{BBox} bbox  The bounding box to modify
+     * @param {BBox} bbox  The bounding box to modify
      */
     protected copySkewIC(bbox: BBox) {
         const first = this.childNodes[0];
@@ -437,9 +437,9 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     /**
      * Set the CSS for a token element having an explicit font (rather than regular mathvariant).
      *
-     * @param{string} fontFamily  The font family to use
-     * @param{string} fontWeight  The font weight to use
-     * @param{string} fontStyle   The font style to use
+     * @param {string} fontFamily  The font family to use
+     * @param {string} fontWeight  The font weight to use
+     * @param {string} fontStyle   The font style to use
      */
     protected explicitVariant(fontFamily: string, fontWeight: string, fontStyle: string) {
         let style = this.styles;
@@ -453,7 +453,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     /**
      * Determine the scaling factor to use for this wrapped node, and set the styles for it.
      *
-     * @return{number}   The scaling factor for this node
+     * @return {number}   The scaling factor for this node
      */
     protected getScale() {
         let scale = 1, parent = this.parent;
@@ -534,8 +534,8 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     /**
      * Get the spacing using the TeX rules
      *
-     * @parm{boolean} isTop       True when this is a top-level embellished operator
-     * @parm{boolean} hasSpacing  True when there is an explicit or inherited 'form' attribute
+     * @parm {boolean} isTop       True when this is a top-level embellished operator
+     * @parm {boolean} hasSpacing  True when there is an explicit or inherited 'form' attribute
      */
     protected getTeXSpacing(isTop: boolean, hasSpacing: boolean) {
         if (!hasSpacing) {
@@ -565,8 +565,8 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     /**
      * Create the standard CHTML element for the given wrapped node.
      *
-     * @param{N} parent  The HTML element in which the node is to be created
-     * @returns{N}  The root of the HTML tree for the wrapped node's output
+     * @param {N} parent  The HTML element in which the node is to be created
+     * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
     protected standardCHTMLnode(parent: N) {
         const chtml = this.createCHTMLnode(parent);
@@ -581,8 +581,8 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /**
-     * @param{N} parent  The HTML element in which the node is to be created
-     * @returns{N}  The root of the HTML tree for the wrapped node's output
+     * @param {N} parent  The HTML element in which the node is to be created
+     * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
     protected createCHTMLnode(parent: N) {
         const href = this.node.attributes.get('href');
@@ -622,9 +622,9 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /**
-     * @param{N} chtml  The HTML node to scale
-     * @param{number} rscale      The relatie scale to apply
-     * @return{N}       The HTML node (for chaining)
+     * @param {N} chtml  The HTML node to scale
+     * @param {number} rscale      The relatie scale to apply
+     * @return {N}       The HTML node (for chaining)
      */
     protected setScale(chtml: N, rscale: number) {
         const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
@@ -714,21 +714,21 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     /*******************************************************************/
 
     /**
-     * @return{CHTMLWrapper}  The wrapper for this node's core node
+     * @return {CHTMLWrapper}  The wrapper for this node's core node
      */
     public core() {
         return this.CHTML.nodeMap.get(this.node.core());
     }
 
     /**
-     * @return{CHTMLWrapper}  The wrapper for this node's core <mo> node
+     * @return {CHTMLWrapper}  The wrapper for this node's core <mo> node
      */
     public coreMO(): CHTMLmo<N, T, D> {
         return this.CHTML.nodeMap.get(this.node.coreMO()) as CHTMLmo<N, T, D>;
     }
 
     /**
-     * @return{string}  For a token node, the combined text content of the node's children
+     * @return {string}  For a token node, the combined text content of the node's children
      */
     public getText() {
         let text = '';
@@ -743,8 +743,8 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /**
-     * @param{DIRECTION} direction  The direction to stretch this node
-     * @return{boolean}             Whether the node can stretch in that direction
+     * @param {DIRECTION} direction  The direction to stretch this node
+     * @return {boolean}             Whether the node can stretch in that direction
      */
     public canStretch(direction: DIRECTION): boolean {
         this.stretch = NOSTRETCH;
@@ -760,7 +760,7 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /**
-     * @return{[string, number]}  The alignment and indentation shift for the expression
+     * @return {[string, number]}  The alignment and indentation shift for the expression
      */
     protected getAlignShift() {
         let {indentalign, indentshift, indentalignfirst, indentshiftfirst} =
@@ -782,9 +782,9 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /**
-     * @param{N} chtml       The HTML node whose indentation is to be adjusted
-     * @param{string} align  The alignment for the node
-     * @param{number} shift  The indent (positive or negative) for the node
+     * @param {N} chtml       The HTML node whose indentation is to be adjusted
+     * @param {string} align  The alignment for the node
+     * @param {number} shift  The indent (positive or negative) for the node
      */
     protected setIndent(chtml: N, align: string, shift: number) {
         if (align === 'center' || align === 'left') {
@@ -837,35 +837,35 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      */
 
     /**
-     * @param{number} m  A number to be shown as a percent
-     * @return{string}  The number m as a percent
+     * @param {number} m  A number to be shown as a percent
+     * @return {string}  The number m as a percent
      */
     protected percent(m: number) {
         return LENGTHS.percent(m);
     }
 
     /**
-     * @param{number} m  A number to be shown in ems
-     * @return{string}  The number with units of ems
+     * @param {number} m  A number to be shown in ems
+     * @return {string}  The number with units of ems
      */
     protected em(m: number) {
         return LENGTHS.em(m);
     }
 
     /**
-     * @param{number} m   A number of em's to be shown as pixels
-     * @param{number} M   The minimum number of pixels to allow
-     * @return{string}  The number with units of px
+     * @param {number} m   A number of em's to be shown as pixels
+     * @param {number} M   The minimum number of pixels to allow
+     * @return {string}  The number with units of px
      */
     protected px(m: number, M: number = -LENGTHS.BIGDIMEN) {
         return LENGTHS.px(m, M, this.metrics.em);
     }
 
     /**
-     * @param{Property} length  A dimension (giving number and units) or number to be converted to ems
-     * @param{number} size  The default size of the dimension (for percentage values)
-     * @param{number} scale  The current scaling factor (to handle absolute units)
-     * @return{number}  The dimension converted to ems
+     * @param {Property} length  A dimension (giving number and units) or number to be converted to ems
+     * @param {number} size  The default size of the dimension (for percentage values)
+     * @param {number} scale  The current scaling factor (to handle absolute units)
+     * @return {number}  The dimension converted to ems
      */
     protected length2em(length: Property, size: number = 1, scale: number = null) {
         if (scale === null) {
@@ -875,62 +875,62 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
     }
 
     /**
-     * @param{string} text  The text to turn into unicode locations
-     * @return{number[]}  Array of numbers represeting the string's unicode character positions
+     * @param {string} text  The text to turn into unicode locations
+     * @return {number[]}  Array of numbers represeting the string's unicode character positions
      */
     protected unicodeChars(text: string) {
         return unicodeChars(text);
     }
 
     /**
-     * @param{number} n  A unicode code point to be converted to a character reference for use with the
+     * @param {number} n  A unicode code point to be converted to a character reference for use with the
      *                   CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
      *                   for higher values, or for the double quote and backslash characters).
-     * @return{string}  The character as a properly encoded string.
+     * @return {string}  The character as a properly encoded string.
      */
     protected char(n: number, escape: boolean = false) {
         return this.font.char(n, escape);
     }
 
     /**
-     * @param{number[]} chars    The array of unicode character numbers to remap
-     * @return{number[]}         The converted array
+     * @param {number[]} chars    The array of unicode character numbers to remap
+     * @return {number[]}         The converted array
      */
     public remapChars(chars: number[]) {
         return chars;
     }
 
     /**
-     * @param{string} type  The tag name of the HTML node to be created
-     * @param{OptionList} def  The properties to set for the created node
-     * @param{N[]} content  The child nodes for the created HTML node
-     * @return{N}   The generated HTML tree
+     * @param {string} type  The tag name of the HTML node to be created
+     * @param {OptionList} def  The properties to set for the created node
+     * @param {N[]} content  The child nodes for the created HTML node
+     * @return {N}   The generated HTML tree
      */
     public html(type: string, def: OptionList = {}, content: N[] = []) {
         return this.factory.chtml.html(type, def, content);
     }
 
     /**
-     * @param{string} text  The text from which to create an HTML text node
-     * @return{T}  The generated text node with the given text
+     * @param {string} text  The text from which to create an HTML text node
+     * @return {T}  The generated text node with the given text
      */
     public text(text: string) {
         return this.factory.chtml.text(text);
     }
 
     /**
-     * @param{string} text  The text from which to create a TextNode object
-     * @return{CHTMLTextNode}  The TextNode with the given text
+     * @param {string} text  The text from which to create a TextNode object
+     * @return {CHTMLTextNode}  The TextNode with the given text
      */
     public mmlText(text: string) {
         return ((this.node as AbstractMmlNode).factory.create('text') as TextNode).setText(text);
     }
 
     /**
-     * @param{string} kind  The kind of MmlNode to create
+     * @param {string} kind  The kind of MmlNode to create
      * @paramProperyList} properties  The properties to set initially
-     * @param{MmlNode[]} children  The child nodes to add to the created node
-     * @return{MmlNode}  The newly created MmlNode
+     * @param {MmlNode[]} children  The child nodes to add to the created node
+     * @return {MmlNode}  The newly created MmlNode
      */
     public mmlNode(kind: string, properties: PropertyList = {}, children: MmlNode[] = []) {
         return (this.node as AbstractMmlNode).factory.create(kind, properties, children);
@@ -940,8 +940,8 @@ export class CHTMLWrapper<N, T, D> extends AbstractWrapper<MmlNode, CHTMLWrapper
      * Create an mo wrapper with the given text,
      *   link it in, and give it the right defaults.
      *
-     * @param{string} text  The text for the wrapped element
-     * @return{CHTMLWrapper}  The wrapped MmlMo node
+     * @param {string} text  The text for the wrapped element
+     * @return {CHTMLWrapper}  The wrapped MmlMo node
      */
     protected createMo(text: string): CHTMLmo<N, T, D> {
         const mmlFactory = (this.node as AbstractMmlNode).factory;

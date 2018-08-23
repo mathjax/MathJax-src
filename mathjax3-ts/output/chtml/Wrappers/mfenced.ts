@@ -96,7 +96,7 @@ export class CHTMLmfenced<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Wrap an mo element and push it onto the mrow
      *
-     * @param{MmlNode} node  The mo element to push on the mrow
+     * @param {MmlNode} node  The mo element to push on the mrow
      */
     protected addMo(node: MmlNode) {
         if (!node) return;

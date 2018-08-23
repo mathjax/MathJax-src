@@ -109,7 +109,7 @@ export class HTMLDomStrings<N, T, D> {
     public adaptor: DOMAdaptor<N, T, D>;
 
     /**
-     * @param{OptionList} options  The user-supplied options
+     * @param {OptionList} options  The user-supplied options
      * @constructor
      */
     constructor(options: OptionList = null) {
@@ -158,8 +158,8 @@ export class HTMLDomStrings<N, T, D> {
      * Add more text to the current string, and record the
      * node and its position in the string.
      *
-     * @param{T} node        The node to be pushed
-     * @param{string} text   The text to be added (it may not be the actual text
+     * @param {T} node        The node to be pushed
+     * @param {string} text   The text to be added (it may not be the actual text
      *                         of the node, if it is one of the nodes that gets
      *                         translated to text, like <br> to a newline).
      */
@@ -171,9 +171,9 @@ export class HTMLDomStrings<N, T, D> {
     /**
      * Handle a #text node (add its text to the current string)
      *
-     * @param{T} node          The Text node to process
-     * @param{boolean} ignore  Whether we are currently ignoring content
-     * @return{N}              The next element to process
+     * @param {T} node          The Text node to process
+     * @param {boolean} ignore  Whether we are currently ignoring content
+     * @return {N}              The next element to process
      */
     protected handleText(node: T, ignore: boolean) {
         if (!ignore) {
@@ -185,9 +185,9 @@ export class HTMLDomStrings<N, T, D> {
     /**
      * Handle a BR, WBR, or #comment element (or others in the includeTag object).
      *
-     * @param{N} node          The node to process
-     * @param{boolean} ignore  Whether we are currently ignoring content
-     * @return{N}              The next element to process
+     * @param {N} node          The node to process
+     * @param {boolean} ignore  Whether we are currently ignoring content
+     * @return {N}              The next element to process
      */
     protected handleTag(node: N, ignore: boolean) {
         if (!ignore) {
@@ -209,9 +209,9 @@ export class HTMLDomStrings<N, T, D> {
      *     Move on to the next sibling
      *   Return the next node to process and the ignore state
      *
-     * @param{N} node               The node to process
-     * @param{boolean} ignore       Whether we are currently ignoring content
-     * @return{[N|T, boolean]}      The next element to process and whether to ignore its content
+     * @param {N} node               The node to process
+     * @param {boolean} ignore       Whether we are currently ignoring content
+     * @return {[N|T, boolean]}      The next element to process and whether to ignore its content
      */
     protected handleContainer(node: N, ignore: boolean) {
         this.pushString();
@@ -247,8 +247,8 @@ export class HTMLDomStrings<N, T, D> {
      *   Clear the internal values (so the memory can be freed)
      *   Return the strings and node lists
      *
-     * @param{N} node                       The node to search
-     * @return{[string[], HTMLNodeList[]]}  The array of strings and their associated lists of nodes
+     * @param {N} node                       The node to search
+     * @return {[string[], HTMLNodeList[]]}  The array of strings and their associated lists of nodes
      */
     public find(node: N | T) {
         this.init();

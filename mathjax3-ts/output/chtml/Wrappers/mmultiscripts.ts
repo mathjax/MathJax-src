@@ -133,9 +133,9 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
     }
 
     /**
-     * @param{BBox} pre   The prescript bounding box
-     * @param{BBox} post  The postcript bounding box
-     * @return{BBox}      The combined bounding box
+     * @param {BBox} pre   The prescript bounding box
+     * @param {BBox} post  The postcript bounding box
+     * @return {BBox}      The combined bounding box
      */
     protected combinePrePost(pre: BBox, post: BBox) {
         const bbox = new BBox(pre);
@@ -146,13 +146,13 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
     /**
      * Create a table with the super and subscripts properly separated and aligned.
      *
-     * @param{number} u       The baseline offset for the superscripts
-     * @param{number} v       The baseline offset for the subscripts
-     * @param{boolean} isPre  True for prescripts, false for scripts
-     * @param{BBox} sub       The subscript bounding box
-     * @param{BBox} sup       The superscript bounding box
-     * @param{number} i       The starting index for the scripts
-     * @param{number} n       The number of sub/super-scripts
+     * @param {number} u       The baseline offset for the superscripts
+     * @param {number} v       The baseline offset for the subscripts
+     * @param {boolean} isPre  True for prescripts, false for scripts
+     * @param {BBox} sub       The subscript bounding box
+     * @param {BBox} sup       The superscript bounding box
+     * @param {number} i       The starting index for the scripts
+     * @param {number} n       The number of sub/super-scripts
      */
     protected addScripts(u: number, v: number, isPre: boolean, sub: BBox, sup: BBox, i: number, n: number) {
         const adaptor = this.adaptor;
@@ -206,7 +206,7 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
     }
 
     /**
-     * @return{ScriptData}   The bounding box information about all the scripts
+     * @return {ScriptData}   The bounding box information about all the scripts
      */
     protected getScriptData() {
         //
@@ -238,7 +238,7 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
     }
 
     /**
-     * @return{ScriptLists}  The bounding boxes for all the scripts divided into lists by position
+     * @return {ScriptLists}  The bounding boxes for all the scripts divided into lists by position
      */
     protected getScriptBBoxLists() {
         const lists: ScriptLists = {
@@ -272,8 +272,8 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
     /**
      * Pad the second list, if it is one short
      *
-     * @param{BBox[]} list1   The first list
-     * @param{BBox[]} list2   The second list
+     * @param {BBox[]} list1   The first list
+     * @param {BBox[]} list2   The second list
      */
     protected padLists(list1: BBox[], list2: BBox[]) {
         if (list1.length > list2.length) {
@@ -282,10 +282,10 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
     }
 
     /**
-     * @param{BBox} bbox1    The bbox for the combined subscripts
-     * @param{BBox} bbox2    The bbox for the combined superscripts
-     * @param{BBox[]} list1  The list of subscripts to combine
-     * @param{BBox[]} list2  The list of superscripts to combine
+     * @param {BBox} bbox1    The bbox for the combined subscripts
+     * @param {BBox} bbox2    The bbox for the combined superscripts
+     * @param {BBox[]} list1  The list of subscripts to combine
+     * @param {BBox[]} list2  The list of superscripts to combine
      */
     protected combineBBoxLists(bbox1: BBox, bbox2: BBox, list1: BBox[], list2: BBox[]) {
         for (let i = 0; i < list1.length; i++) {
@@ -302,7 +302,7 @@ export class CHTMLmmultiscripts<N, T, D> extends CHTMLmsubsup<N, T, D> {
     }
 
     /**
-     * @param{BBox} bbox  The bounding box from which to get the (scaled) width, height, and depth
+     * @param {BBox} bbox  The bounding box from which to get the (scaled) width, height, and depth
      */
     protected getScaledWHD(bbox: BBox) {
         const {w, h, d, rscale} = bbox;

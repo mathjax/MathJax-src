@@ -95,7 +95,7 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
      * Get the WrapperFactory and connect it to this output jax
      * Get the cssStyle and font objects
      *
-     * @param{OptionList} options  The configuration options
+     * @param {OptionList} options  The configuration options
      * @constructor
      */
     constructor(options: OptionList = null) {
@@ -133,8 +133,8 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     }
 
     /**
-     * @param{MathItem} math      The MathItem to get the bounding box for
-     * @param{MathDocument} html  The MathDocument for the math
+     * @param {MathItem} math      The MathItem to get the bounding box for
+     * @param {MathDocument} html  The MathDocument for the math
      */
     public getBBox(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
         this.document = html;
@@ -172,8 +172,8 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     /**
      * Get a MetricMap for the math list
      *
-     * @param{MathDocument} html  The math document whose math list is to be processed.
-     * @return{MetricMap}         The node-to-metrics map for all the containers that have math
+     * @param {MathDocument} html  The math document whose math list is to be processed.
+     * @return {MetricMap}         The node-to-metrics map for all the containers that have math
      */
     protected getMetricMap(html: MathDocument<N, T, D>) {
         const adaptor = this.adaptor;
@@ -204,8 +204,8 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     }
 
     /**
-     * @param{N} node    The container to add the test elements to
-     * @return{N}        The test elements that were added
+     * @param {N} node    The container to add the test elements to
+     * @return {N}        The test elements that were added
      */
     protected getTestElement(node: N) {
         const adaptor = this.adaptor;
@@ -234,8 +234,8 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     }
 
     /**
-     * @param{N} node    The test node to measure
-     * @return{Metrics}  The metric data for the given node
+     * @param {N} node    The test node to measure
+     * @return {Metrics}  The metric data for the given node
      */
     protected measureMetrics(node: N) {
         const adaptor = this.adaptor;
@@ -280,28 +280,28 @@ export class CHTML<N, T, D> extends AbstractOutputJax<N, T, D> {
     }
 
     /**
-     * @param{MmlNode} node  The MML node whose HTML is to be produced
-     * @param{HTMLElement} parent  The HTML node to contain the HTML
+     * @param {MmlNode} node  The MML node whose HTML is to be produced
+     * @param {HTMLElement} parent  The HTML node to contain the HTML
      */
     public toCHTML(node: MmlNode, parent: N) {
         return this.factory.wrap(node).toCHTML(parent);
     }
 
     /**
-     * @param{string} type  The type of HTML node to create
-     * @param{OptionList} def  The properties to set on the HTML node
-     * @param{HTMLElement[]} content  Array of child nodes to set for the HTML node
+     * @param {string} type  The type of HTML node to create
+     * @param {OptionList} def  The properties to set on the HTML node
+     * @param {HTMLElement[]} content  Array of child nodes to set for the HTML node
      *
-     * @return{HTMLElement} The newly created HTML tree
+     * @return {HTMLElement} The newly created HTML tree
      */
     public html(type: string, def: OptionList = {}, content: (N | T)[] = []) {
         return this.adaptor.node(type, def, content);
     }
 
     /**
-     * @param{string} text  The text string for which to make a text node
+     * @param {string} text  The text string for which to make a text node
      *
-     * @return{HTMLElement}  A text node with the given text
+     * @return {HTMLElement}  A text node with the given text
      */
     public text(text: string) {
         return this.adaptor.text(text);

@@ -187,8 +187,8 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     /************************************************/
 
     /**
-     * @param{boolean} display  True when fraction is in display mode
-     * @param{number} t         The rule line thickness
+     * @param {boolean} display  True when fraction is in display mode
+     * @param {number} t         The rule line thickness
      */
     protected makeFraction(display: boolean, t: number) {
         const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
@@ -236,9 +236,9 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{BBox} bbox        The buonding box to modify
-     * @param{boolean} display  True for display-mode fractions
-     * @param{number} t         The thickness of the line
+     * @param {BBox} bbox        The buonding box to modify
+     * @param {boolean} display  True for display-mode fractions
+     * @param {number} t         The thickness of the line
      */
     protected getFractionBBox(bbox: BBox, display: boolean, t: number) {
         const nbox = this.childNodes[0].getBBox();
@@ -253,9 +253,9 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{boolean} display  True for display-mode fractions
-     * @param{number} t         The thickness of the line
-     * @return{Object}          The expanded rule thickness (T), and baeline offsets
+     * @param {boolean} display  True for display-mode fractions
+     * @param {number} t         The thickness of the line
+     * @return {Object}          The expanded rule thickness (T), and baeline offsets
      *                             for numerator and denomunator (u and v)
      */
     protected getTUV(display: boolean, t: number) {
@@ -270,7 +270,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     /************************************************/
 
     /**
-     * @param{boolean} display  True when fraction is in display mode
+     * @param {boolean} display  True when fraction is in display mode
      */
     protected makeAtop(display: boolean) {
         const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
@@ -301,8 +301,8 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{BBox} bbox        The bounding box to modify
-     * @param{boolean} display  True for display-mode fractions
+     * @param {BBox} bbox        The bounding box to modify
+     * @param {boolean} display  True for display-mode fractions
      */
     protected getAtopBBox(bbox: BBox, display: boolean) {
         const tex = this.font.params;
@@ -314,8 +314,8 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{boolean} display  True for diplay-mode fractions
-     * @return{Object}
+     * @param {boolean} display  True for diplay-mode fractions
+     * @return {Object}
      *    The vertical offsets of the numerator (u), the denominator (v),
      *    the separation between the two, and the bboxes themselves.
      */
@@ -345,7 +345,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     /************************************************/
 
     /**
-     * @param{boolean} display  True when fraction is in display mode
+     * @param {boolean} display  True when fraction is in display mode
      */
     protected makeBevelled(display: boolean) {
         const adaptor = this.adaptor;
@@ -373,8 +373,8 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{BBox} bbox        The boundng box to modify
-     * @param{boolean} display  True for display-mode fractions
+     * @param {BBox} bbox        The boundng box to modify
+     * @param {boolean} display  True for display-mode fractions
      */
     protected getBevelledBBox(bbox: BBox, display: boolean) {
         const {u, v, delta, nbox, dbox} = this.getBevelData(display);
@@ -385,8 +385,8 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{boolean} display  True for display-style fractions
-     * @return{Object}          The height (H) of the bevel, horizontal offest (delta)
+     * @param {boolean} display  True for display-style fractions
+     * @return {Object}          The height (H) of the bevel, horizontal offest (delta)
      *                             vertical offsets (u and v) of the parts, and
      *                             bounding boxes of the parts.
      */
@@ -412,7 +412,7 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @return{boolean}   True if in display mode, false otherwise
+     * @return {boolean}   True if in display mode, false otherwise
      */
     protected isDisplay() {
         const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');

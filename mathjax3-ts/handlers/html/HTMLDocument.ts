@@ -69,7 +69,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     /**
      * @override
      * @constructor
-     * @extends{AbstractMathDocument}
+     * @extends {AbstractMathDocument}
      */
     constructor(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
         let [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
@@ -83,11 +83,11 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      *  of the array of strings searched for math, recovering the original DOM node where the delimiter
      *  was found.
      *
-     * @param{number} N             The index of the string in the string array
-     * @param{number} index         The position within the N's string that needs to be found
-     * @param{string} delim         The delimiter for this position
-     * @param{HTMLNodeArray} nodes  The list of node lists representing the string array
-     * @return{Location}            The Location object for the position of the delimiter in the document
+     * @param {number} N             The index of the string in the string array
+     * @param {number} index         The position within the N's string that needs to be found
+     * @param {string} delim         The delimiter for this position
+     * @param {HTMLNodeArray} nodes  The list of node lists representing the string array
+     * @return {Location}            The Location object for the position of the delimiter in the document
      */
     protected findPosition(N: number, index: number, delim: string, nodes: HTMLNodeArray<N, T>): Location<N, T> {
         for (const list of nodes[N]) {
@@ -104,10 +104,10 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * Convert a ProtoItem to a MathItem (i.e., determine the actual Location
      *  objects for its start and end)
      *
-     * @param{ProtoItem} item       The proto math item to turn into an actual MathItem
-     * @param{InputJax} jax         The input jax to use for the MathItem
-     * @param{HTMLNodeArray} nodes  The array of node lists that produced the string array
-     * @return{HTMLMathItem}        The MathItem for the given proto item
+     * @param {ProtoItem} item       The proto math item to turn into an actual MathItem
+     * @param {InputJax} jax         The input jax to use for the MathItem
+     * @param {HTMLNodeArray} nodes  The array of node lists that produced the string array
+     * @return {HTMLMathItem}        The MathItem for the given proto item
      */
     protected mathItem(item: ProtoItem<N, T>, jax: InputJax<N, T, D>, nodes: HTMLNodeArray<N, T>) {
         let math = item.math;
@@ -184,9 +184,9 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     }
 
     /**
-     * @param{N} head     The document <head>
-     * @param{string} id  The id of the stylesheet to find
-     * @param{N|null}     The stylesheet with the given ID
+     * @param {N} head     The document <head>
+     * @param {string} id  The id of the stylesheet to find
+     * @param {N|null}     The stylesheet with the given ID
      */
     protected findSheet(head: N, id: string) {
         if (id) {

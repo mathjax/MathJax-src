@@ -134,9 +134,9 @@ export const arrowBBox = {
 /**
  * Create a named element (handled by CSS), and adjust it if thickness is non-standard
  *
- * @param{string} name    The name of the element to create
- * @param{string} offset  The offset direction to adjust if thickness is non-standard
- * @return{Renderer}      The renderer function for the given element name
+ * @param {string} name    The name of the element to create
+ * @param {string} offset  The offset direction to adjust if thickness is non-standard
+ * @return {Renderer}      The renderer function for the given element name
  */
 export const  RenderElement = (name: string, offset: string = '') => {
     return ((node, child) => {
@@ -150,8 +150,8 @@ export const  RenderElement = (name: string, offset: string = '') => {
 };
 
 /**
- * @param{string} side   The side on which a border should appear
- * @return{DefPair}      The notation definition for the notation having a line on the given side
+ * @param {string} side   The side on which a border should appear
+ * @return {DefPair}      The notation definition for the notation having a line on the given side
  */
 export const Border = (side: Side) => {
     const i = sideIndex[side];
@@ -182,10 +182,10 @@ export const Border = (side: Side) => {
 };
 
 /**
- * @param{string} name    The name of the notation to define
- * @param{string} side1   The first side to get a border
- * @param{string} side2   The second side to get a border
- * @return{DefPair}       The notation definition for the notation having lines on two sides
+ * @param {string} name    The name of the notation to define
+ * @param {string} side1   The first side to get a border
+ * @param {string} side2   The second side to get a border
+ * @return {DefPair}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = (name: string, side1: Side, side2: Side) => {
     const i1 = sideIndex[side1];
@@ -224,9 +224,9 @@ export const Border2 = (name: string, side1: Side, side2: Side) => {
 };
 
 /**
- * @param{string} name  The name of the diagonal strike to define
- * @param{number} neg   1 or -1 to use with the angle
- * @return{DefPair}     The notation definition for the diagonal strike
+ * @param {string} name  The name of the diagonal strike to define
+ * @param {number} neg   1 or -1 to use with the angle
+ * @return {DefPair}     The notation definition for the diagonal strike
  */
 export const DiagonalStrike = (name: string, neg: number) => {
     const cname = 'mjx-' + name.charAt(0) + 'strike';
@@ -253,8 +253,8 @@ export const DiagonalStrike = (name: string, neg: number) => {
 };
 
 /**
- * @param{string} name   The name of the diagonal arrow to define
- * @return{DefPair}      The notation definition for the diagonal arrow
+ * @param {string} name   The name of the diagonal arrow to define
+ * @return {DefPair}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = (name: string) => {
     const [neg, c, pi, double, origin, remove] = diagonalArrowDef[name];
@@ -284,8 +284,8 @@ export const DiagonalArrow = (name: string) => {
 };
 
 /**
- * @param{string} name   The name of the horizontal or vertical arrow to define
- * @return{DefPair}      The notation definition for the arrow
+ * @param {string} name   The name of the horizontal or vertical arrow to define
+ * @return {DefPair}      The notation definition for the arrow
  */
 export const Arrow = (name: string) => {
     const [angle, neg, double, origin, offset, isVertical, remove] = arrowDef[name];

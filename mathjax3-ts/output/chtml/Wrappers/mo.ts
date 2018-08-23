@@ -169,8 +169,8 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Create the HTML for a multi-character stretchy delimiter
      *
-     * @param{N} chtml  The parent element in which to put the delimiter
-     * @param{boolean} symmetric  Whether delimiter should be symmetric about the math axis
+     * @param {N} chtml  The parent element in which to put the delimiter
+     * @param {boolean} symmetric  Whether delimiter should be symmetric about the math axis
      */
     protected stretchHTML(chtml: N, symmetric: boolean) {
         const c = this.getText().charCodeAt(0);
@@ -270,8 +270,8 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Determint variant for vertically/horizontally stretched character
      *
-     * @param{number[]} WH  size to stretch to, either [W] or [H, D]
-     * @param{boolean} exact  True if not allowed to use delimiter factor and shortfall
+     * @param {number[]} WH  size to stretch to, either [W] or [H, D]
+     * @param {boolean} exact  True if not allowed to use delimiter factor and shortfall
      */
     public getStretchedVariant(WH: number[], exact: boolean = false) {
         if (this.stretch.dir !== DIRECTION.None) {
@@ -317,9 +317,9 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{string} name   The name of the attribute to get
-     * @param{number} value  The default value to use
-     * @return{number}       The size in em's of the attribute (or the default value)
+     * @param {string} name   The name of the attribute to get
+     * @param {number} value  The default value to use
+     * @return {number}       The size in em's of the attribute (or the default value)
      */
     protected getSize(name: string, value: number) {
         let attributes = this.node.attributes;
@@ -330,8 +330,8 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{number[]} WH  Either [W] for width, [H, D] for height and depth, or [] for min/max size
-     * @return{number}      Either the width or the total height of the character
+     * @param {number[]} WH  Either [W] for width, [H, D] for height and depth, or [] for min/max size
+     * @return {number}      Either the width or the total height of the character
      */
     protected getWH(WH: number[]) {
         if (WH.length === 0) return 0;
@@ -342,9 +342,9 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{number[]} WHD     The [W] or [H, D] being requested from the parent mrow
-     * @param{number} D         The full dimension (including symmetry, etc)
-     * @param{DelimiterData} C  The delimiter data for the stretchy character
+     * @param {number[]} WHD     The [W] or [H, D] being requested from the parent mrow
+     * @param {number} D         The full dimension (including symmetry, etc)
+     * @param {DelimiterData} C  The delimiter data for the stretchy character
      */
     protected getStretchBBox(WHD: number[], D: number, C: DelimiterData) {
         let [h, d, w] = C.HDW;
@@ -359,10 +359,10 @@ export class CHTMLmo<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{number[]} WHD     The [H, D] being requested from the parent mrow
-     * @param{number} HD        The full height (including symmetry, etc)
-     * @param{DelimiterData} C  The delimiter data for the stretchy character
-     * @return{number[]}        The height and depth for the vertically stretched delimiter
+     * @param {number[]} WHD     The [H, D] being requested from the parent mrow
+     * @param {number} HD        The full height (including symmetry, etc)
+     * @param {DelimiterData} C  The delimiter data for the stretchy character
+     * @return {number[]}        The height and depth for the vertically stretched delimiter
      */
     protected getBaseline(WHD: number[], HD: number, C: DelimiterData) {
         const hasWHD = (WHD.length === 2 && WHD[0] + WHD[1] === HD);

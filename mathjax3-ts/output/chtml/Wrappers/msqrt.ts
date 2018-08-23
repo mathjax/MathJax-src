@@ -64,21 +64,21 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     };
 
     /**
-     * @return{number}  The index of the base of the root in childNodes
+     * @return {number}  The index of the base of the root in childNodes
      */
     get base() {
         return 0;
     }
 
     /**
-     * @return{number}  The index of the surd in childNodes
+     * @return {number}  The index of the surd in childNodes
      */
     get surd() {
         return 1;
     }
 
     /**
-     * @return{number}  The index of the root in childNodes (or null if none)
+     * @return {number}  The index of the root in childNodes (or null if none)
      */
     get root(): number {
         return null;
@@ -158,9 +158,9 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Add root HTML (overridden in mroot)
      *
-     * @param{N} ROOT   The container for the root
-     * @param{CHTMLWrapper} root  The wrapped MML root content
-     * @param{BBox} sbox          The bounding box of the surd
+     * @param {N} ROOT   The container for the root
+     * @param {CHTMLWrapper} root  The wrapped MML root content
+     * @param {BBox} sbox          The bounding box of the surd
      */
     protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox) {
     }
@@ -185,15 +185,15 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Combine the bounding box of the root (overridden in mroot)
      *
-     * @param{BBox} bbox  The bounding box so far
-     * @param{BBox} sbox  The bounding box of the surd
+     * @param {BBox} bbox  The bounding box so far
+     * @param {BBox} sbox  The bounding box of the surd
      */
     protected combineRootBBox(bbox: BBox, sbox: BBox) {
     }
 
     /**
-     * @param{BBox} sbox  The bounding box for the surd character
-     * @return{number[]}  The p, q, and x values for the TeX layout computations
+     * @param {BBox} sbox  The bounding box for the surd character
+     * @return {number[]}  The p, q, and x values for the TeX layout computations
      */
     protected getPQ(sbox: BBox) {
         const t = this.font.params.rule_thickness;
@@ -203,8 +203,8 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{BBox} sbox  The bounding box of the surd
-     * @return{number[]}  The x offset of the surd, and the height, x offset, and scale of the root
+     * @param {BBox} sbox  The bounding box of the surd
+     * @return {number[]}  The x offset of the surd, and the height, x offset, and scale of the root
      */
     protected getRootDimens(sbox: BBox) {
         return [0, 0, 0, 0];

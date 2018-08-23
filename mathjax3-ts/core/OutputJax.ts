@@ -57,39 +57,39 @@ export interface OutputJax<N, T, D> {
     adaptor: DOMAdaptor<N, T, D>;
 
     /**
-     * @param{DOMAdaptor}  The adaptor to use in this jax
+     * @param {DOMAdaptor}  The adaptor to use in this jax
      */
     setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
 
     /**
      * Typset a given MathItem
      *
-     * @param{MathItem} math          The MathItem to be typeset
-     * @param{MathDocument} document  The MathDocument in which the typesetting should occur
-     * @return{N}                     The DOM tree for the typeset math
+     * @param {MathItem} math          The MathItem to be typeset
+     * @param {MathDocument} document  The MathDocument in which the typesetting should occur
+     * @return {N}                     The DOM tree for the typeset math
      */
     typeset(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
     /**
      * Handle an escaped character (e.g., \$ from the TeX input jax preventing it from being a delimiter)
      *
-     * @param{MathItem} math          The MathItem to be escaped
-     * @param{MathDocument} document  The MathDocument in which the math occurs
-     * @return{N}                     The DOM tree for the escaped item
+     * @param {MathItem} math          The MathItem to be escaped
+     * @param {MathDocument} document  The MathDocument in which the math occurs
+     * @return {N}                     The DOM tree for the escaped item
      */
     escaped(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
     /**
      * Get the metric information for all math in the given document
      *
-     * @param{MathDocument} document  The MathDocument being processed
+     * @param {MathDocument} document  The MathDocument being processed
      */
     getMetrics(document: MathDocument<N, T, D>): void;
 
     /**
      * Produce the stylesheet needed for this output jax
      *
-     * @param{MathDocument} document  The MathDocument being processed
+     * @param {MathDocument} document  The MathDocument being processed
      */
     styleSheet(document: MathDocument<N, T, D>): N;
 }
@@ -113,7 +113,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
 
     /**
-     * @param{OptionList} options  The options for this instance
+     * @param {OptionList} options  The options for this instance
      */
     constructor(options: OptionList = {}) {
         let CLASS = this.constructor as typeof AbstractOutputJax;
@@ -122,7 +122,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     }
 
     /**
-     * @return{string}  The name for this output jax class
+     * @return {string}  The name for this output jax class
      */
     public get name() {
         return (this.constructor as typeof AbstractOutputJax).NAME;
@@ -162,10 +162,10 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
      * Execute a set of filters, passing them the MathItem and any needed data,
      *  and return the (possibly modified) data
      *
-     * @param{FunctionList} filters  The list of functions to be performed
-     * @param{MathItem} math         The math item that is being processed
-     * @param{any} data              Whatever other data is needed
-     * @return{any}                  The (possibly modified) data
+     * @param {FunctionList} filters  The list of functions to be performed
+     * @param {MathItem} math         The math item that is being processed
+     * @param {any} data              Whatever other data is needed
+     * @return {any}                  The (possibly modified) data
      */
     protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>, data: any) {
         let args = {math: math, data: data};

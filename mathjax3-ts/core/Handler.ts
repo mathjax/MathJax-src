@@ -53,18 +53,18 @@ export interface Handler<N, T, D> {
     /**
      * Checks to see if the handler can process a given document
      *
-     * @param{any} document  The document to be processed (string, window, etc.)
-     * @return{boolean}      True if this handler can process the given document
+     * @param {any} document  The document to be processed (string, window, etc.)
+     * @return {boolean}      True if this handler can process the given document
      */
     handlesDocument(document: any): boolean;
 
     /**
      * Creates a MathDocument for the given handler
      *
-     * @param{any} document        The document to be handled
-     * @param{DOMAdaptor} adaptor  The DOM adaptor for managing HTML elements
-     * @param{OptionList} options  The options for the handling of the document
-     * @return{MathDocument}       The MathDocument object that manages the processing
+     * @param {any} document        The document to be handled
+     * @param {DOMAdaptor} adaptor  The DOM adaptor for managing HTML elements
+     * @param {OptionList} options  The options for the handling of the document
+     * @return {MathDocument}       The MathDocument object that manages the processing
      */
     create(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList): MathDocument<N, T, D>;
 }
@@ -105,7 +105,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     public priority: number;
 
     /**
-     * @param{number} priority  The priority to use for this handler
+     * @param {number} priority  The priority to use for this handler
      *
      * @constructor
      */
@@ -115,7 +115,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     }
 
     /**
-     * @return{string}  The name of this handler class
+     * @return {string}  The name of this handler class
      */
     public get name() {
         return (this.constructor as typeof AbstractHandler).NAME;

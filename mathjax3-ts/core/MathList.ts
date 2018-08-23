@@ -36,8 +36,8 @@ export interface MathList<N, T, D> extends LinkedList<MathItem<N, T, D>> {
     /**
      * Test if one math item is before the other in the document (a < b)
      *
-     * @param{MathItem} a   The first MathItem
-     * @param{MathItem} b   The second MathItem
+     * @param {MathItem} a   The first MathItem
+     * @param {MathItem} b   The second MathItem
      */
     isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>): boolean;
 }

@@ -92,10 +92,10 @@ export class CHTMLmroot<N, T, D> extends CHTMLmsqrt<N, T, D> {
     }
 
     /**
-     * @param{BBox} rbox      The bbox of the root
-     * @param{BBox} sbox      The bbox of the surd
-     * @param{number} size    The size of the surd
-     * @return{number}        The height of the root within the surd
+     * @param {BBox} rbox      The bbox of the root
+     * @param {BBox} sbox      The bbox of the surd
+     * @param {number} size    The size of the surd
+     * @return {number}        The height of the root within the surd
      */
     protected rootHeight(rbox: BBox, sbox: BBox, size: number) {
         const H = sbox.h + sbox.d;

@@ -35,9 +35,9 @@ export interface FactoryNode {
  */
 export interface FactoryNodeClass<N extends FactoryNode> {
     /**
-     * @param{Factory<N, FactoryNodeClass<N>>} factory  The factory for creating more nodes
-     * @param{any[]} args  Any additional arguments needed by the node
-     * @return{N}  The newly created node
+     * @param {Factory<N, FactoryNodeClass<N>>} factory  The factory for creating more nodes
+     * @param {any[]} args  Any additional arguments needed by the node
+     * @return {N}  The newly created node
      */
     new(factory: Factory<N, FactoryNodeClass<N>>, ...args: any[]): N;
 }

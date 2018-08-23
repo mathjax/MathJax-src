@@ -120,14 +120,14 @@ export class CHTMLmsubsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
     protected UVQ: number[] = null;
 
     /**
-     * @return{CHTMLWrapper}  The wrapper for the subscript
+     * @return {CHTMLWrapper}  The wrapper for the subscript
      */
     public get subChild() {
         return this.childNodes[(this.node as MmlMsubsup).sub];
     }
 
     /**
-     * @return{CHTMLWrapper}  The wrapper for the superscript
+     * @return {CHTMLWrapper}  The wrapper for the superscript
      */
     public get supChild() {
         return this.childNodes[(this.node as MmlMsubsup).sup];
@@ -172,10 +172,10 @@ export class CHTMLmsubsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
     /**
      * Get the shift for the scripts and their separation (TeXBook Appendix G 18adef)
      *
-     * @param{BBox} basebox    The bounding box of the base
-     * @param{BBox} subbox     The bounding box of the superscript
-     * @param{BBox} supbox     The bounding box of the subscript
-     * @return{number[]}       The vertical offsets for super and subscripts, and the space between them
+     * @param {BBox} basebox    The bounding box of the base
+     * @param {BBox} subbox     The bounding box of the superscript
+     * @param {BBox} supbox     The bounding box of the subscript
+     * @return {number[]}       The vertical offsets for super and subscripts, and the space between them
      */
     protected getUVQ(basebox: BBox, subbox: BBox, supbox: BBox) {
         if (this.UVQ) return this.UVQ;

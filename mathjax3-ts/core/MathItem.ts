@@ -132,28 +132,28 @@ export interface MathItem<N, T, D> {
     /**
      * Converts the expression into the internal format by calling the input jax
      *
-     * @param{MathDocument} document  The MathDocument in which the math resides
+     * @param {MathDocument} document  The MathDocument in which the math resides
      */
     compile(document: MathDocument<N, T, D>): void;
 
     /**
      * Converts the internal format to the typeset version by caling the output jax
      *
-     * @param{MathDocument} document  The MathDocument in which the math resides
+     * @param {MathDocument} document  The MathDocument in which the math resides
      */
     typeset(document: MathDocument<N, T, D>): void;
 
     /**
      * Rerenders an already rendered item and re-inserts it into the document
      *
-     * @param{MathDocument} document  The MathDocument in which the math resides
+     * @param {MathDocument} document  The MathDocument in which the math resides
      */
     rerender(document: MathDocument<N, T, D>): void;
 
     /**
      * Inserts the typeset version in place of the original form in the document
      *
-     * @param{MathDocument} document  The MathDocument in which the math resides
+     * @param {MathDocument} document  The MathDocument in which the math resides
      */
     updateDocument(document: MathDocument<N, T, D>): void;
 
@@ -161,18 +161,18 @@ export interface MathItem<N, T, D> {
      * Removes the typeset version from the document, optionally replacing the original
      * form of the expression and its delimiters.
      *
-     * @param{boolena} restore  True if the original version is to be restored
+     * @param {boolena} restore  True if the original version is to be restored
      */
     removeFromDocument(restore: boolean): void;
 
     /**
      * Sets the metric information for this expression
      *
-     * @param{number} em      The size of 1 em in pixels
-     * @param{number} ex      The size of 1 ex in pixels
-     * @param{number} cwidth  The container width in pixels
-     * @param{number} lwidth  The line breaking width in pixels
-     * @param{number} scale   The scaling factor (unitless)
+     * @param {number} em      The size of 1 em in pixels
+     * @param {number} ex      The size of 1 ex in pixels
+     * @param {number} cwidth  The container width in pixels
+     * @param {number} lwidth  The line breaking width in pixels
+     * @param {number} scale   The scaling factor (unitless)
      */
     setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number): void;
 
@@ -181,8 +181,8 @@ export interface MathItem<N, T, D> {
      * optionally restoring the document if rolling back an expression
      * that has been added to the document.
      *
-     * @param{number} state    The state to set for the expression
-     * @param{number} restore  True if the original form should be restored
+     * @param {number} state    The state to set for the expression
+     * @param {number} restore  True if the original form should be restored
      *                           when rolling back a typeset version
      */
     state(state?: number, restore?: boolean): number;
@@ -255,11 +255,11 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     public outputData: OptionList = {};
 
     /**
-     * @param{string} math      The math expression for this item
-     * @param{Inputjax} jax     The input jax to use for this item
-     * @param{boolean} display  True if display mode, false if inline
-     * @param{Location} start   The starting position of the math in the document
-     * @param{Location} end     The ending position of the math in the document
+     * @param {string} math      The math expression for this item
+     * @param {Inputjax} jax     The input jax to use for this item
+     * @param {boolean} display  True if display mode, false if inline
+     * @param {Location} start   The starting position of the math in the document
+     * @param {Location} end     The ending position of the math in the document
      * @constructor
      */
     constructor (math: string, jax: InputJax<N, T, D>, display: boolean = true,

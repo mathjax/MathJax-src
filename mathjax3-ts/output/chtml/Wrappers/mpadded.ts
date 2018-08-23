@@ -90,7 +90,7 @@ export class CHTMLmpadded<N, T, D> extends CHTMLWrapper<N, T, D> {
      * Get the content bounding box, and the change in size and offsets
      *   as specified by the parameters
      *
-     * @return{number[]}  The original height, depth, width, the changes in height, depth,
+     * @return {number[]}  The original height, depth, width, the changes in height, depth,
      *                    and width, and the horizontal and vertical offsets of the content
      */
     protected getDimens() {
@@ -110,11 +110,11 @@ export class CHTMLmpadded<N, T, D> extends CHTMLWrapper<N, T, D> {
      * Get a particular dimension, which can be relative to any of the BBox dimensions,
      *   and can be an offset from the default size of the given dimension.
      *
-     * @param{Property} length   The value to be converted to a length in ems
-     * @param{BBox} bbox         The bbox of the mpadded content
-     * @param{string} d          The default dimension to use for relative sizes ('w', 'h', or 'd')
-     * @param{number} m          The minimum value allowed for the dimension
-     * @return{number}           The final dimension in ems
+     * @param {Property} length   The value to be converted to a length in ems
+     * @param {BBox} bbox         The bbox of the mpadded content
+     * @param {string} d          The default dimension to use for relative sizes ('w', 'h', or 'd')
+     * @param {number} m          The minimum value allowed for the dimension
+     * @return {number}           The final dimension in ems
      */
     protected dimen(length: Property, bbox: BBox, d: string = '', m: number = null) {
         length = String(length);

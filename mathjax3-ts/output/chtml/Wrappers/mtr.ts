@@ -65,36 +65,36 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     };
 
     /**
-     * @return{number}   The number of mtd's in the mtr
+     * @return {number}   The number of mtd's in the mtr
      */
     get numCells() {
         return this.childNodes.length;
     }
 
     /**
-     * @return{boolean}   True if this is a labeled row
+     * @return {boolean}   True if this is a labeled row
      */
     get labeled() {
         return false;
     }
 
     /**
-     * @return{CHTMLmtd[]}  The child nodes that are part of the table (no label node)
+     * @return {CHTMLmtd[]}  The child nodes that are part of the table (no label node)
      */
     get tableCells() {
         return this.childNodes as CHTMLmtd<N, T, D>[];
     }
 
     /**
-     * @param{nunber} i   The index of the child to get (skipping labels)
-     * @return{Wrapper}   The ith child node wrapper
+     * @param {nunber} i   The index of the child to get (skipping labels)
+     * @return {Wrapper}   The ith child node wrapper
      */
     public getChild(i: number) {
         return this.childNodes[i] as CHTMLmtd<N, T, D>;
     }
 
     /**
-     * @return{BBox[]}  An array of the bounding boxes for the mtd's in the row
+     * @return {BBox[]}  An array of the bounding boxes for the mtd's in the row
      */
     public getChildBBoxes() {
         return this.childNodes.map(cell => cell.getBBox());
@@ -115,7 +115,7 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
      * Handle vertical stretching of cells to match height of
      *  other cells in the row.
      *
-     * @param{number[]} HD   The total height and depth for the row [H, D]
+     * @param {number[]} HD   The total height and depth for the row [H, D]
      *
      * If this isn't specified, the maximum height and depth is computed.
      */

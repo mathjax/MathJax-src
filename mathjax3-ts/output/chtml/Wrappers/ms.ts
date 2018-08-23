@@ -57,8 +57,8 @@ export class CHTMLms<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Create a text wrapper with the given text;
      *
-     * @param{string} text  The text for the wrapped element
-     * @return{CHTMLWrapper}   The wrapped text node
+     * @param {string} text  The text for the wrapped element
+     * @return {CHTMLWrapper}   The wrapped text node
      */
     protected createText(text: string) {
         const node = this.wrap(this.mmlText(text));

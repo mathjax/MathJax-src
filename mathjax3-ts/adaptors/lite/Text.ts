@@ -46,7 +46,7 @@ export class LiteText {
     }
 
     /**
-     * @param{string} text  The text for the node
+     * @param {string} text  The text for the node
      * @constructor
      */
     constructor(text: string = "") {

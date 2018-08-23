@@ -74,8 +74,8 @@ export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
     /**
      * Locate math in an Element or a string array;
      *
-     * @param{Element | string[]} where  The node or string array to search for math
-     * @return{ProtoItem[]}              The array of proto math items found
+     * @param {Element | string[]} where  The node or string array to search for math
+     * @return {ProtoItem[]}              The array of proto math items found
      */
     public abstract findMath(where: N | string[]): ProtoItem<N, T>[];
 

@@ -36,7 +36,7 @@ export class LiteList<N> {
     public nodes: N[] = [];
 
     /**
-     * @param{N[]} children  The children for the fragment
+     * @param {N[]} children  The children for the fragment
      * @constructor
      */
     constructor(children: N[]) {
@@ -44,7 +44,7 @@ export class LiteList<N> {
     }
 
     /**
-     * @param{N} node  A node to append to the fragment
+     * @param {N} node  A node to append to the fragment
      */
     public append(node: N) {
         this.nodes.push(node);

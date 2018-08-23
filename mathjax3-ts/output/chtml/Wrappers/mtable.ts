@@ -136,7 +136,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
 
 
     /**
-     * @return{CHTMLmtr[]}  The rows of the table
+     * @return {CHTMLmtr[]}  The rows of the table
      */
     get tableRows() {
         return this.childNodes as CHTMLmtr<N, T, D>[];
@@ -218,8 +218,8 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Handle horizontal stretching within the ith column
      *
-     * @param{number} i   The column number
-     * @param{number} W   The computed width of the column (or null of not computed)
+     * @param {number} i   The column number
+     * @param {number} W   The computed width of the column (or null of not computed)
      */
     protected stretchColumn(i: number, W: number) {
         let stretchy: CHTMLWrapper<N, T, D>[] = [];
@@ -350,12 +350,12 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{CHTMLWrapper} cell    The cell whose height, depth, and width are to be added into the H, D, W arrays
-     * @param{number} i             The column number for the cell
-     * @param{number} j             The row number for the cell
-     * @param{number[]} H           The maximum height for each of the rows
-     * @param{number[]} D           The maximum depth for each of the rows
-     * @param{number[]} W           The maximum width for each column
+     * @param {CHTMLWrapper} cell    The cell whose height, depth, and width are to be added into the H, D, W arrays
+     * @param {number} i             The column number for the cell
+     * @param {number} j             The row number for the cell
+     * @param {number[]} H           The maximum height for each of the rows
+     * @param {number[]} D           The maximum depth for each of the rows
+     * @param {number[]} W           The maximum width for each column
      */
     protected updateHDW(cell: CHTMLWrapper<N, T, D>, i: number, j: number, H: number[], D: number[], W: number[] = null) {
         let {h, d, w} = cell.getBBox();
@@ -413,8 +413,8 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{number} height   The total height of the table
-     * @return{number[]}       The [height, depth] for the aligned table
+     * @param {number} height   The total height of the table
+     * @return {number[]}       The [height, depth] for the aligned table
      */
     protected getBBoxHD(height: number) {
         const [align, row] = this.getAlignmentRow();
@@ -600,10 +600,10 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * Set the height of the row, and make sure that the baseline is in the right position for cells
      *   that are row aligned to baseline ot axis
      *
-     * @param{CHTMLWrapper} row   The row to be set
-     * @param{number} HD          The total height+depth for the row
-     * @param{number] D           The new depth for the row
-     * @param{number} space       The total spacing above and below the row
+     * @param {CHTMLWrapper} row   The row to be set
+     * @param {number} HD          The total height+depth for the row
+     * @param {number] D           The new depth for the row
+     * @param {number} space       The total spacing above and below the row
      */
     protected setRowHeight(row: CHTMLWrapper<N, T, D>, HD: number, D: number, space: number) {
         this.adaptor.setStyle(row.chtml, 'height', this.em(HD + space));
@@ -620,11 +620,11 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Make sure the baseline is in the correct place for cells aligned on baseline or axis
      *
-     * @param{CHTMLWrapper} cell  The cell to modify
-     * @param{string} ralign      The alignment of the row
-     * @param{number} HD          The total height+depth for the row
-     * @param{number] D           The new depth for the row
-     * @return{boolean}           True if no other cells in this row need to be processed
+     * @param {CHTMLWrapper} cell  The cell to modify
+     * @param {string} ralign      The alignment of the row
+     * @param {number} HD          The total height+depth for the row
+     * @param {number] D           The new depth for the row
+     * @return {boolean}           True if no other cells in this row need to be processed
      */
     protected setCellBaseline(cell: CHTMLWrapper<N, T, D>, ralign: string, HD: number, D: number) {
         const calign = cell.node.attributes.get('rowalign');
@@ -805,7 +805,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * Depending on the width specified for the table, different column
      *  values can be determined.
      *
-     * @return{(string|number|null)[]}  The array of widths
+     * @return {(string|number|null)[]}  The array of widths
      */
     protected getColumnWidths() {
         const width = this.node.attributes.get('width') as string;
@@ -825,7 +825,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * For tables with equal columns, get the proper amount per row.
      *
-     * @return{(string|number|null)[]}  The array of widths
+     * @return {(string|number|null)[]}  The array of widths
      */
     protected getEqualColumns(width: string) {
         const n = Math.max(1, this.numCols);
@@ -847,7 +847,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * will end up being natural width, so don't need to
      * set those explicitly.
      *
-     * @return{(string|number|null)[]}  The array of widths
+     * @return {(string|number|null)[]}  The array of widths
      */
     protected getColumnWidthsAuto(swidths: string[]) {
         return swidths.map(x => {
@@ -863,7 +863,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * but for 'auto' columns (when there are 'fit' ones), set the size
      * to the natural size of the column.
      *
-     * @return{(string|number|null)[]}  The array of widths
+     * @return {(string|number|null)[]}  The array of widths
      */
     protected getColumnWidthsPercent(swidths: string[], width: string) {
         const hasFit = swidths.indexOf('fit') >= 0;
@@ -880,7 +880,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * For fixed-width tables, compute the column widths of all columns.
      *
-     * @return{(string|number|null)[]}  The array of widths
+     * @return {(string|number|null)[]}  The array of widths
      */
     protected getColumnWidthsFixed(swidths: string[], width: number) {
         //
@@ -919,9 +919,9 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{number} i      The row number (starting at 0)
-     * @param{string} align  The alignment on that row
-     * @return{number}       The offest of the alignment position from the top of the table
+     * @param {number} i      The row number (starting at 0)
+     * @param {string} align  The alignment on that row
+     * @return {number}       The offest of the alignment position from the top of the table
      */
     protected getVerticalPosition(i: number, align: string) {
         const equal = this.node.attributes.get('equalrows') as boolean;
@@ -960,9 +960,9 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     /******************************************************************/
 
     /**
-     * @param{number} fspace   The frame spacing to use
-     * @param{number[]} space  The array of spacing values to convert to strings
-     * @return{string[]}       The half-spacing as stings with units of "em"
+     * @param {number} fspace   The frame spacing to use
+     * @param {number[]} space  The array of spacing values to convert to strings
+     * @return {string[]}       The half-spacing as stings with units of "em"
      *                           with frame spacing at the beginning and end
      */
     protected getEmHalfSpacing(fspace: number, space: number[]) {
@@ -977,7 +977,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @return{number[]}   The half-spacing for rows with frame spacing at the ends
+     * @return {number[]}   The half-spacing for rows with frame spacing at the ends
      */
     protected getRowHalfSpacing() {
         const space = this.rSpace.map(x => x / 2);
@@ -987,7 +987,7 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @return{[string,number|null]}  The alignment and row number (based at 0) or null
+     * @return {[string,number|null]}  The alignment and row number (based at 0) or null
      */
     protected getAlignmentRow(): [string, number] {
         const [align, row] = split(this.node.attributes.get('align') as string);
@@ -998,9 +998,9 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{string} name           The name of the attribute to get as an array
-     * @param{number} i              Return this many fewer than numCols entries
-     * @return{string[]}             The array of values in the given attribute, split at spaces,
+     * @param {string} name           The name of the attribute to get as an array
+     * @param {number} i              Return this many fewer than numCols entries
+     * @return {string[]}             The array of values in the given attribute, split at spaces,
      *                                 padded to the number of table columns (minus 1) by repeating the last entry
      */
     protected getColumnAttributes(name: string, i: number = 1) {
@@ -1017,9 +1017,9 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{string} name           The name of the attribute to get as an array
-     * @param{number} i              Return this many fewer than numRows entries
-     * @return{string[]}             The array of values in the given attribute, split at spaces,
+     * @param {string} name           The name of the attribute to get as an array
+     * @param {number} i              Return this many fewer than numRows entries
+     * @return {string[]}             The array of values in the given attribute, split at spaces,
      *                                 padded to the number of table rows (minus 1) by repeating the last entry
      */
     protected getRowAttributes(name: string, i: number = 1) {
@@ -1036,8 +1036,8 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{string} name           The name of the attribute to get as an array
-     * @return{string[]}             The array of values in the given attribute, split at spaces
+     * @param {string} name           The name of the attribute to get as an array
+     * @return {string[]}             The array of values in the given attribute, split at spaces
      *                                 (after leading and trailing spaces are removed, and multiple
      *                                  spaces have been collapsed to one).
      */
@@ -1050,9 +1050,9 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * Adds "em" to a list of dimensions, after dividing by n (defaults to 1).
      *
-     * @param{string[]} list   The array of dimensions (in em's)
-     * @param{nunber} n        The number to divide each dimension by after converted
-     * @return{string[]}       The array of values with "em" added
+     * @param {string[]} list   The array of dimensions (in em's)
+     * @param {nunber} n        The number to divide each dimension by after converted
+     * @return {string[]}       The array of values with "em" added
      */
     protected addEm(list: number[], n: number = 1) {
         if (!list) return;
@@ -1063,8 +1063,8 @@ export class CHTMLmtable<N, T, D> extends CHTMLWrapper<N, T, D> {
      * Converts an array of dimensions (with arbitrary units) to an array of numbers
      *   representing the dimensions in units of em's.
      *
-     * @param{string[]} list   The array of dimensions to be turned into em's
-     * @return{number[]}       The array of values converted to em's
+     * @param {string[]} list   The array of dimensions to be turned into em's
+     * @return {number[]}       The array of values converted to em's
      */
     protected convertLengths(list: string[]) {
         if (!list) return;

@@ -32,11 +32,11 @@ export type OperatorList = {[name: string]: OperatorDef};
 export type RangeDef = [number, number, number, string];
 
 /**
- * @param{number} lspace            The operator's MathML left-hand spacing
- * @param{number} rspace            The operator's MathML right-hand spacing
- * @param{number} texClass          The default TeX class for the operator
- * @param{PropertyList} properties  Any default properties from the operator dictionary
- * @return{OperatorDef}             The operator definition array
+ * @param {number} lspace            The operator's MathML left-hand spacing
+ * @param {number} rspace            The operator's MathML right-hand spacing
+ * @param {number} texClass          The default TeX class for the operator
+ * @param {PropertyList} properties  Any default properties from the operator dictionary
+ * @return {OperatorDef}             The operator definition array
  */
 export function OPDEF(lspace: number, rspace: number, texClass: number = TEXCLASS.BIN,
                       properties: PropertyList = null): OperatorDef {

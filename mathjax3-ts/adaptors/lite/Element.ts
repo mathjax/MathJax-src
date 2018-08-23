@@ -67,9 +67,9 @@ export class LiteElement {
     public styles: Styles;
 
     /**
-     * @param{string} kind  The type of node to create
-     * @param{LiteAttributeList} attributes  The list of attributes to set (if any)
-     * @param{LiteNode[]} children  The children for the node (if any)
+     * @param {string} kind  The type of node to create
+     * @param {LiteAttributeList} attributes  The list of attributes to set (if any)
+     * @param {LiteNode[]} children  The children for the node (if any)
      * @constructor
      */
     constructor(kind: string, attributes: LiteAttributeList = {}, children: LiteNode[] = []) {

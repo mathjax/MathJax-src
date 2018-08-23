@@ -36,9 +36,9 @@ import {Factory, AbstractFactory} from './Factory.js';
 export interface WrapperFactory<N extends Node, W extends Wrapper<N, W>, C extends WrapperClass<N, W>>
 extends Factory<W, C> {
     /**
-     * @param{N} node  The node to be wrapped
-     * @param{any[]} args  Any additional arguments needed when wrapping the node
-     * @return{W}  The newly wrapped node
+     * @param {N} node  The node to be wrapped
+     * @param {any[]} args  Any additional arguments needed when wrapping the node
+     * @return {W}  The newly wrapped node
      */
     wrap(node: N, ...args: any[]): W;
 }
@@ -54,9 +54,9 @@ extends Factory<W, C> {
 export abstract class AbstractWrapperFactory<N extends Node, W extends Wrapper<N, W>, C extends WrapperClass<N, W>>
 extends AbstractFactory<W, C> implements WrapperFactory<N, W, C> {
     /**
-     * @param{N} node  The node to be wrapped
-     * @param{any[]} args  Any additional arguments needed when wrapping the node
-     * @return{W}  The newly wrapped node
+     * @param {N} node  The node to be wrapped
+     * @param {any[]} args  Any additional arguments needed when wrapping the node
+     * @return {W}  The newly wrapped node
      */
     public wrap(node: N, ...args: any[]) {
         return this.create(node.kind, node, ...args);

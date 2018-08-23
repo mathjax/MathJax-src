@@ -39,7 +39,7 @@ export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
 
     /**
      * @param {Node} node  A node to be wrapped
-     * @param{any[]} args  Any additional arguments needed when creating the wrapper
+     * @param {any[]} args  Any additional arguments needed when creating the wrapper
      * @return {Wrapper}   The wrapped node
      */
     wrap(node: N, ...args: any[]): W;
@@ -54,10 +54,10 @@ export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
  */
 export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
     /**
-     * @param{WrapperFactory} factory  The factory used to create more wrappers
-     * @param{N} node  The node to be wrapped
-     * @param{any[]} args  Any additional arguments needed when creating the wrapper
-     * @return{W}  The wrapped node
+     * @param {WrapperFactory} factory  The factory used to create more wrappers
+     * @param {N} node  The node to be wrapped
+     * @param {any[]} args  Any additional arguments needed when creating the wrapper
+     * @return {W}  The wrapped node
      */
     new(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N, ...args: any[]): W;
 }

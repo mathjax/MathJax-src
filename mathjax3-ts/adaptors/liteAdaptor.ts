@@ -64,7 +64,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     public parser: LiteParser;
 
     /**
-     * @param{OptionList} options  The options for the lite adaptor (e.g., fontSize)
+     * @param {OptionList} options  The options for the lite adaptor (e.g., fontSize)
      * @constructor
      */
     constructor(options: OptionList = null) {
@@ -97,15 +97,15 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     }
 
     /**
-     * @param{string} text   The text of the comment
-     * @return{LiteComment}  The comment node
+     * @param {string} text   The text of the comment
+     * @return {LiteComment}  The comment node
      */
     public comment(text: string) {
         return new LiteComment(text);
     }
 
     /**
-     * @return{LiteDocument}  A new document element
+     * @return {LiteDocument}  A new document element
      */
     public createDocument() {
         return new LiteDocument();
@@ -159,9 +159,9 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     }
 
     /**
-     * @param{LiteELement} node   The node to be searched
-     * @param{string} id          The id of the node to look for
-     * @return{LiteElement}       The child node having the given id
+     * @param {LiteELement} node   The node to be searched
+     * @param {string} id          The id of the node to look for
+     * @return {LiteElement}       The child node having the given id
      */
     public elementById(node: LiteElement, id: string) {
         let stack = [] as LiteNode[];
@@ -182,9 +182,9 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     }
 
     /**
-     * @param{LiteELement} node   The node to be searched
-     * @param{string} name        The name of the class to find
-     * @return{LiteElement[]}     The nodes with the given class
+     * @param {LiteELement} node   The node to be searched
+     * @param {string} name        The name of the class to find
+     * @return {LiteElement[]}     The nodes with the given class
      */
     public elementsByClass(node: LiteElement, name: string) {
         let stack = [] as LiteNode[];
@@ -243,8 +243,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     }
 
     /**
-     * @param{LiteNode} node  The node whose index is needed
-     * @return{number}        THe index of the node it its parent's children array
+     * @param {LiteNode} node  The node whose index is needed
+     * @return {number}        THe index of the node it its parent's children array
      */
     public childIndex(node: LiteNode) {
         return (node.parent ? node.parent.children.findIndex(n => n === node) : -1);
@@ -539,8 +539,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
 /**
  * The function to call to obtain a LiteAdaptor
  *
- * @param{OptionList} options  The options for the adaptor
- * @return{LiteAdaptor}        The newly created adaptor
+ * @param {OptionList} options  The options for the adaptor
+ * @return {LiteAdaptor}        The newly created adaptor
  */
 export function liteAdaptor(options: OptionList = null) {
     return new LiteAdaptor(options);

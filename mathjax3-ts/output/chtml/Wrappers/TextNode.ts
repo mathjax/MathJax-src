@@ -89,9 +89,9 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
     }
 
     /**
-     * @param{string} variant   The variant in which to look for the character
-     * @param{number} n         The number of the character to look up
-     * @return{CharData}        The full CharData object, with CharOptions guaranteed to be defined
+     * @param {string} variant   The variant in which to look for the character
+     * @param {number} n         The number of the character to look up
+     * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
      */
     protected getChar(variant: string, n: number) {
         const char = this.font.getChar(variant, n) || [0, 0, 0, null];

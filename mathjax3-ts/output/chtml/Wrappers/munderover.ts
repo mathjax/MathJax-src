@@ -235,14 +235,14 @@ export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
     };
 
     /*
-     * @return{CHTMLWrapper)   The wrapped under node
+     * @return {CHTMLWrapper)   The wrapped under node
      */
     public get underChild() {
         return this.childNodes[(this.node as MmlMunderover).under];
     }
 
     /*
-     * @return{CHTMLWrapper)   The wrapped overder node
+     * @return {CHTMLWrapper)   The wrapped overder node
      */
     public get overChild() {
         return this.childNodes[(this.node as MmlMunderover).over];

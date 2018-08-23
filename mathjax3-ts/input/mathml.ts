@@ -84,7 +84,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
     /**
      * Set the adaptor in any of the objects that need it
      *
-     * @param{DOMAdaptor} adaptor  The adaptor to save
+     * @param {DOMAdaptor} adaptor  The adaptor to save
      */
     public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
         super.setAdaptor(adaptor);
@@ -139,8 +139,8 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
     /**
      * Check a parsed MathML string for errors.
      *
-     * @param{Document} doc  The document returns from the DOMParser
-     * @return{Document}     The document
+     * @param {Document} doc  The document returns from the DOMParser
+     * @return {Document}     The document
      */
     protected checkForErrors(doc: D) {
         let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
@@ -156,7 +156,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
     /**
      * Throw an error
      *
-     * @param{string} message  The error message to produce
+     * @param {string} message  The error message to produce
      */
     protected error(message: string) {
         throw new Error(message);
