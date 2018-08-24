@@ -53,6 +53,30 @@ function MathMLSpace(script: boolean, size: number) {
     return (script ? size < SMALLSIZE ? 0 : SMALLSIZE : size);
 }
 
+/**
+ * Shorthands for wrappers and their constructors
+ */
+export type AnyWrapper = CommonWrapper<any, any, any>;
+export type WrapperConstructor = Constructor<AnyWrapper>;
+
+/*********************************************************/
+/**
+ *  The CommonWrapper class interface
+ *
+ * @template J  The OutputJax type
+ * @template W  The Wrapper type
+ * @template C  The WrapperClass type
+ */
+export interface CommonWrapperClass<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>>,
+                                    W extends CommonWrapper<J, W, C>,
+                                    C extends CommonWrapperClass<J, W, C>> extends
+WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
+    /**
+     * @override
+     */
+    new(factory: CommonWrapperFactory<J, W, C>, node: MmlNode, ...args: any[]): W;
+}
+
 /*****************************************************************/
 /**
  *  The base CommonWrapper class
@@ -61,9 +85,9 @@ function MathMLSpace(script: boolean, size: number) {
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
  */
-export class CommonWrapper<J extends CommonOutputJax<any, any, any, any, any>,
+export class CommonWrapper<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>>,
                            W extends CommonWrapper<J, W, C>,
-                           C extends WrapperClass<MmlNode, W>> extends
+                           C extends CommonWrapperClass<J, W, C>> extends
 AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
 
     public static kind: string = 'unknown';
@@ -648,8 +672,3 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     }
 
 }
-
-/**
- *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
- */
-export type CommonWrapperClass = typeof CommonWrapper;

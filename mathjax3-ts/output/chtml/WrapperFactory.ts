@@ -35,7 +35,7 @@ import {CHTMLWrappers} from './Wrappers.js';
  * @template D  The Document class
  */
 export class CHTMLWrapperFactory<N, T, D> extends
-CommonWrapperFactory<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass> {
+CommonWrapperFactory<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>> {
 
     /*
      * The default list of wrapper nodes this factory can create

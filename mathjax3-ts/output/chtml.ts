@@ -78,7 +78,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
     /**
      * @override
      */
-    protected addClassStyles(CLASS: CHTMLWrapperClass) {
+    protected addClassStyles(CLASS: typeof CHTMLWrapper) {
         if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
             this.cssStyles.addStyles({
                 ['mjx-' + CLASS.kind]: {

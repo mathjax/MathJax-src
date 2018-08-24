@@ -117,7 +117,7 @@ AbstractOutputJax<N, T, D> {
         const [chtmlOptions, fontOptions] = separateOptions(options, defaultFont.OPTIONS);
         super(chtmlOptions);
         this.factory = this.options.wrapperFactory ||
-            new defaultFactory<CommonOutputJax<N, T, D, W, F>, W, WrapperClass<MmlNode, W>>();
+            new defaultFactory<CommonOutputJax<N, T, D, W, F>, W, CommonWrapperClass<any, W, any>>();
         this.factory.jax = this;
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new defaultFont(fontOptions);
@@ -332,7 +332,7 @@ try {
     /**
      * @param{any} CLASS  The Wrapper class whose styles are to be added
      */
-    protected addClassStyles(CLASS: CommonWrapperClass) {
+    protected addClassStyles(CLASS: typeof CommonWrapper) {
         this.cssStyles.addStyles(CLASS.styles);
     }
 

@@ -25,7 +25,7 @@ import {PropertyList} from '../../core/Tree/Node.js';
 import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
@@ -67,6 +67,32 @@ interface CSSStyle extends CSSStyleDeclaration {
     [id: string]: string | Function | number | CSSRule;
 }
 
+/**
+ * Shorthand for makeing a CHTMLWrapper constructor
+ */
+export type CHTMLConstructor<N, T, D> = Constructor<CHTMLWrapper<N, T, D>>;
+
+
+/*****************************************************************/
+/**
+ *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
+ */
+export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<any, any, any> {
+
+    kind: string;
+
+    /**
+     * If true, this causes a style for the node type to be generated automatically
+     * that sets display:inline-block (as needed for the output for MmlNodes).
+     */
+    autoStyle: boolean;
+
+    /**
+     *  The default styles for CommonHTML
+     */
+    styles: StyleList;
+}
+
 /*****************************************************************/
 /**
  *  The base CHTMLWrapper class
@@ -75,7 +101,8 @@ interface CSSStyle extends CSSStyleDeclaration {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLWrapper<N, T, D> extends CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass> {
+export class CHTMLWrapper<N, T, D> extends
+CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>> {
 
     public static kind: string = 'unknown';
 
@@ -419,9 +446,11 @@ export class CHTMLWrapper<N, T, D> extends CommonWrapper<CHTML<N, T, D>, CHTMLWr
         return super.createMo(text) as CHTMLmo<N, T, D>;
     }
 
-}
+    /**
+     * @override
+     */
+    public coreMO(): CHTMLmo<N, T, D> {
+        return super.coreMO() as CHTMLmo<N, T, D>;
+    }
 
-/**
- *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
- */
-export type CHTMLWrapperClass = typeof CHTMLWrapper;
+}
