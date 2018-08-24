@@ -32,9 +32,9 @@ import {CharOptions} from '../FontData.js';
  */
 export interface CommonTextNodeInterface extends AnyWrapper {
     /**
-     * @param{string} variant   The variant in which to look for the character
-     * @param{number} n         The number of the character to look up
-     * @return{CharData}        The full CharData object, with CharOptions guaranteed to be defined
+     * @param {string} variant   The variant in which to look for the character
+     * @param {number} n         The number of the character to look up
+     * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
      */
     getChar(text: string, n: number): [number, number, number, CharOptions];
 }
@@ -46,7 +46,7 @@ export type TextNodeConstructor = Constructor<CommonTextNodeInterface>;
 
 /*****************************************************************/
 /**
- *  The CHTMLTextNode wrapper for the TextNode object
+ *  The CommonTextNode wrapper mixin for the TextNode object
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -93,9 +93,9 @@ export function CommonTextNode<N, T, D, U extends WrapperConstructor>(Base: U): 
        }
 
        /**
-        * @param{string} variant   The variant in which to look for the character
-        * @param{number} n         The number of the character to look up
-        * @return{CharData}        The full CharData object, with CharOptions guaranteed to be defined
+        * @param {string} variant   The variant in which to look for the character
+        * @param {number} n         The number of the character to look up
+        * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
         */
        public getChar(variant: string, n: number) {
            const char = this.font.getChar(variant, n) || [0, 0, 0, null];

@@ -186,7 +186,7 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
     /**
      * Create the HTML for the wrapped node.
      *
-     * @param{N} parent  The HTML node where the output is added
+     * @param {N} parent  The HTML node where the output is added
      */
     public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
@@ -200,8 +200,8 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
     /**
      * Create the standard CHTML element for the given wrapped node.
      *
-     * @param{N} parent  The HTML element in which the node is to be created
-     * @returns{N}  The root of the HTML tree for the wrapped node's output
+     * @param {N} parent  The HTML element in which the node is to be created
+     * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
     protected standardCHTMLnode(parent: N) {
         const chtml = this.createCHTMLnode(parent);
@@ -216,8 +216,8 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
     }
 
     /**
-     * @param{N} parent  The HTML element in which the node is to be created
-     * @returns{N}  The root of the HTML tree for the wrapped node's output
+     * @param {N} parent  The HTML element in which the node is to be created
+     * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
     protected createCHTMLnode(parent: N) {
         const href = this.node.attributes.get('href');
@@ -257,9 +257,9 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
     }
 
     /**
-     * @param{N} chtml  The HTML node to scale
-     * @param{number} rscale      The relatie scale to apply
-     * @return{N}       The HTML node (for chaining)
+     * @param {N} chtml  The HTML node to scale
+     * @param {number} rscale      The relatie scale to apply
+     * @return {N}       The HTML node (for chaining)
      */
     protected setScale(chtml: N, rscale: number) {
         const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
@@ -349,9 +349,9 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
     /*******************************************************************/
 
     /**
-     * @param{N} chtml       The HTML node whose indentation is to be adjusted
-     * @param{string} align  The alignment for the node
-     * @param{number} shift  The indent (positive or negative) for the node
+     * @param {N} chtml       The HTML node whose indentation is to be adjusted
+     * @param {string} align  The alignment for the node
+     * @param {number} shift  The indent (positive or negative) for the node
      */
     protected setIndent(chtml: N, align: string, shift: number) {
         if (align === 'center' || align === 'left') {
@@ -404,36 +404,36 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      */
 
     /**
-     * @param{string} type  The tag name of the HTML node to be created
-     * @param{OptionList} def  The properties to set for the created node
-     * @param{N[]} content  The child nodes for the created HTML node
-     * @return{N}   The generated HTML tree
+     * @param {string} type  The tag name of the HTML node to be created
+     * @param {OptionList} def  The properties to set for the created node
+     * @param {N[]} content  The child nodes for the created HTML node
+     * @return {N}   The generated HTML tree
      */
     public html(type: string, def: OptionList = {}, content: N[] = []) {
         return this.CHTML.html(type, def, content);
     }
 
     /**
-     * @param{string} text  The text from which to create an HTML text node
-     * @return{T}  The generated text node with the given text
+     * @param {string} text  The text from which to create an HTML text node
+     * @return {T}  The generated text node with the given text
      */
     public text(text: string) {
         return this.CHTML.text(text);
     }
 
     /**
-     * @param{string} text  The text from which to create a TextNode object
-     * @return{CHTMLTextNode}  The TextNode with the given text
+     * @param {string} text  The text from which to create a TextNode object
+     * @return {CHTMLTextNode}  The TextNode with the given text
      */
     public mmlText(text: string) {
         return ((this.node as AbstractMmlNode).factory.create('text') as TextNode).setText(text);
     }
 
     /**
-     * @param{string} kind  The kind of MmlNode to create
+     * @param {string} kind  The kind of MmlNode to create
      * @paramProperyList} properties  The properties to set initially
-     * @param{MmlNode[]} children  The child nodes to add to the created node
-     * @return{MmlNode}  The newly created MmlNode
+     * @param {MmlNode[]} children  The child nodes to add to the created node
+     * @return {MmlNode}  The newly created MmlNode
      */
     public mmlNode(kind: string, properties: PropertyList = {}, children: MmlNode[] = []) {
         return (this.node as AbstractMmlNode).factory.create(kind, properties, children);

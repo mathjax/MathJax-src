@@ -107,7 +107,7 @@ AbstractOutputJax<N, T, D> {
      * Get the WrapperFactory and connect it to this output jax
      * Get the cssStyle and font objects
      *
-     * @param{OptionList} options         The configuration options
+     * @param {OptionList} options         The configuration options
      * @param(FontDataClass} defaultFont  The default FontData constructor
      * @constructor
      */
@@ -141,14 +141,14 @@ AbstractOutputJax<N, T, D> {
     }
 
     /**
-     * @return{N}  The container DOM node for the typeset math
+     * @return {N}  The container DOM node for the typeset math
      */
     protected createNode() {
         return this.html('mjx-container', {'class': 'MathJax'});
     }
 
     /**
-     * @param{N} node   The container whose scale is to be set
+     * @param {N} node   The container whose scale is to be set
      */
     protected setScale(node: N) {
         const scale = this.math.metrics.scale * this.options.scale;
@@ -167,9 +167,9 @@ AbstractOutputJax<N, T, D> {
      * Clear the nodeMape
      * Execute the post-filters
      *
-     * @param{MathItem} math      The math item to convert
-     * @param{N} node             The contaier to place the result into
-     * @param{MathDocument} html  The document containing the math
+     * @param {MathItem} math      The math item to convert
+     * @param {N} node             The contaier to place the result into
+     * @param {MathDocument} html  The document containing the math
      */
     public toDOM(math: MathItem<N, T, D>, node: N, html: MathDocument<N, T, D> = null) {
         this.setDocument(html);
@@ -190,16 +190,16 @@ try {
     /**
      * This is the actual typesetting function supplied by the subclass
      *
-     * @param{MmlNode} math   The intenral MathML node of the root math element to process
-     * @param{N} node         The container node where the math is to be typeset
+     * @param {MmlNode} math   The intenral MathML node of the root math element to process
+     * @param {N} node         The container node where the math is to be typeset
      */
     protected abstract processMath(math: MmlNode, node: N): void;
 
     /*****************************************************************/
 
     /**
-     * @param{MathItem} math      The MathItem to get the bounding box for
-     * @param{MathDocument} html  The MathDocument for the math
+     * @param {MathItem} math      The MathItem to get the bounding box for
+     * @param {MathDocument} html  The MathDocument for the math
      */
     public getBBox(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
         this.setDocument(html);
@@ -230,8 +230,8 @@ try {
     /**
      * Get a MetricMap for the math list
      *
-     * @param{MathDocument} html  The math document whose math list is to be processed.
-     * @return{MetricMap}         The node-to-metrics map for all the containers that have math
+     * @param {MathDocument} html  The math document whose math list is to be processed.
+     * @return {MetricMap}         The node-to-metrics map for all the containers that have math
      */
     protected getMetricMap(html: MathDocument<N, T, D>) {
         const adaptor = this.adaptor;
@@ -262,8 +262,8 @@ try {
     }
 
     /**
-     * @param{N} node    The container to add the test elements to
-     * @return{N}        The test elements that were added
+     * @param {N} node    The container to add the test elements to
+     * @return {N}        The test elements that were added
      */
     protected getTestElement(node: N) {
         const adaptor = this.adaptor;
@@ -292,8 +292,8 @@ try {
     }
 
     /**
-     * @param{N} node    The test node to measure
-     * @return{Metrics}  The metric data for the given node
+     * @param {N} node    The test node to measure
+     * @return {Metrics}  The metric data for the given node
      */
     protected measureMetrics(node: N) {
         const adaptor = this.adaptor;
@@ -330,7 +330,7 @@ try {
     }
 
     /**
-     * @param{any} CLASS  The Wrapper class whose styles are to be added
+     * @param {any} CLASS  The Wrapper class whose styles are to be added
      */
     protected addClassStyles(CLASS: typeof CommonWrapper) {
         this.cssStyles.addStyles(CLASS.styles);
@@ -339,7 +339,7 @@ try {
     /*****************************************************************/
 
     /**
-     * @param{MathDocument} html  The document to be used
+     * @param {MathDocument} html  The document to be used
      */
     protected setDocument(html: MathDocument<N, T, D>) {
         if (html) {
@@ -349,20 +349,20 @@ try {
     }
 
     /**
-     * @param{string} type  The type of HTML node to create
-     * @param{OptionList} def  The properties to set on the HTML node
-     * @param{HTMLElement[]} content  Array of child nodes to set for the HTML node
+     * @param {string} type  The type of HTML node to create
+     * @param {OptionList} def  The properties to set on the HTML node
+     * @param {HTMLElement[]} content  Array of child nodes to set for the HTML node
      *
-     * @return{HTMLElement} The newly created HTML tree
+     * @return {HTMLElement} The newly created HTML tree
      */
     public html(type: string, def: OptionList = {}, content: (N | T)[] = []) {
         return this.adaptor.node(type, def, content);
     }
 
     /**
-     * @param{string} text  The text string for which to make a text node
+     * @param {string} text  The text string for which to make a text node
      *
-     * @return{HTMLElement}  A text node with the given text
+     * @return {HTMLElement}  A text node with the given text
      */
     public text(text: string) {
         return this.adaptor.text(text);
