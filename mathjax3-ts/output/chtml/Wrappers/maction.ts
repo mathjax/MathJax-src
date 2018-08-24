@@ -44,7 +44,7 @@ export type ActionPair = [string, [ActionHandler<any, any, any>, ActionData]];
 export type EventHandler = (event: Event) => void;
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmaction wrapper for the MmlMaction object
  *
  * @template N  The HTMLElement node class
@@ -90,7 +90,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      * The valid action types and their handlers
      */
     public static Actions = new Map([
@@ -208,7 +208,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /*************************************************************/
 
-    /*
+    /**
      *  Delays before posting or clearing a math tooltip
      */
     public static postDelay = 600;
@@ -216,14 +216,14 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /*************************************************************/
 
-    /*
+    /**
      * The handler for the specified actiontype
      */
     protected action: ActionHandler<N, T, D> = null;
     protected data: ActionData = null;
 
-    /*
-     * @return{CHTMLWrapper}  The selected child wrapper
+    /**
+     * @return {CHTMLWrapper}  The selected child wrapper
      */
     public get selected(): CHTMLWrapper<N, T, D> {
         const selection = this.node.attributes.get('selection') as number;
@@ -233,7 +233,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /*************************************************************/
 
-    /*
+    /**
      * @override
      */
     constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
@@ -245,7 +245,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.data = data;
     }
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -255,14 +255,14 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.action(this, this.data);
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
         bbox.updateFrom(this.selected.getBBox());
     }
 
-    /*
+    /**
      * Add an event handler to the output for this maction
      */
     public setEventHandler(type: string, handler: EventHandler) {

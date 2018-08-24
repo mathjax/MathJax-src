@@ -28,7 +28,7 @@ import {MmlMover, MmlMunder, MmlMunderover} from './munderover.js';
 import {OperatorList, OPTABLE, RangeDef, RANGES, MMLSPACING} from '../OperatorDictionary.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMo node class (subclass of AbstractMmlTokenNode)
  */
 
@@ -59,50 +59,50 @@ export class MmlMo extends AbstractMmlTokenNode {
         indentshiftlast: 'indentshift'
     };
 
-    /*
+    /**
      * Unicode ranges and their default TeX classes and MathML spacing
      */
     public static RANGES = RANGES;
     public static MMLSPACING = MMLSPACING;
 
-    /*
+    /**
      * The Operator Dictionary.
      */
     public static OPTABLE: {[form: string]: OperatorList} = OPTABLE;
 
-    /*
+    /**
      * The TeX class of the node is set to REL for MathML, but TeX sets it explicitly in setTeXclass()
      */
     public texClass = TEXCLASS.REL;
 
-    /*
+    /**
      * The default MathML spacing on the left and right
      */
     public lspace = 5/18;
     public rspace = 5/18;
 
-    /*
+    /**
      * @return {string}  The mo kind
      */
     public get kind() {
         return 'mo';
     }
 
-    /*
+    /**
      * @return {boolean}  All <mo> are considered embellished
      */
     public get isEmbellished() {
         return true;
     }
 
-    /*
+    /**
      * @return {boolean}  Is <mo> marked as an explicit linebreak?
      */
     public get hasNewLine() {
         return this.attributes.get('linebreak') === 'newline';
     }
 
-    /*
+    /**
      * @return {MmlNode}  The node that is the outermost embellished operator
      *                    with this node as its core
      */
@@ -115,7 +115,7 @@ export class MmlMo extends AbstractMmlTokenNode {
         return parent;
     }
 
-    /*
+    /**
      * @param {MmlNode} parent  The node whose core text is to be obtained
      * @return {string}         The text of the core MO of the given parent element
      */
@@ -134,7 +134,7 @@ export class MmlMo extends AbstractMmlTokenNode {
         return (parent.isToken ? (parent as AbstractMmlTokenNode).getText() : '');
     }
 
-    /*
+    /**
      * @override
      */
     public hasSpacingAttributes() {
@@ -142,8 +142,8 @@ export class MmlMo extends AbstractMmlTokenNode {
                this.attributes.isSet('rspace');
     }
 
-    /*
-     * @return{boolean}  True is this mo is an accent in an munderover construction
+    /**
+     * @return {boolean}  True is this mo is an accent in an munderover construction
      */
     get isAccent() {
         let accent = false;
@@ -169,7 +169,7 @@ export class MmlMo extends AbstractMmlTokenNode {
         return accent;
     }
 
-    /*
+    /**
      * Produce the texClass based on the operator dictionary values
      *
      * @override
@@ -198,7 +198,7 @@ export class MmlMo extends AbstractMmlTokenNode {
         }
         return this.adjustTeXclass(prev);
     }
-    /*
+    /**
      * Follow the TeXBook rules for adjusting the TeX class once its neighbors are known
      *
      * @param {MmlNode} prev  The node appearing before this one in the output
@@ -246,7 +246,7 @@ export class MmlMo extends AbstractMmlTokenNode {
         return this;
     }
 
-    /*
+    /**
      * Do the normal inheritance, then look up the attributes from the operator dictionary.
      * If there is no dictionary entry, get the TeX class from the Unicode range list.
      *  (FIXME: if using MathML spacing, fake lspace and rspace as well)
@@ -279,7 +279,7 @@ export class MmlMo extends AbstractMmlTokenNode {
         }
     }
 
-    /*
+    /**
      * @return {[string, string, string]}  The list of form attribute values in the
      *                                     order they should be tested, based on the
      *                                     position of the element in its parent.
@@ -304,9 +304,9 @@ export class MmlMo extends AbstractMmlTokenNode {
         return ['infix', 'prefix', 'postfix'];
     }
 
-    /*
-     * @param{string[]} forms     The three forms in the default order they are to be tested
-     * @return{string[]}          The forms in the new order, if there is an explicit form attribute
+    /**
+     * @param {string[]} forms     The three forms in the default order they are to be tested
+     * @return {string[]}          The forms in the new order, if there is an explicit form attribute
      */
     protected handleExplicitForm(forms: string[]) {
         if (this.attributes.isSet('form')) {
@@ -316,7 +316,7 @@ export class MmlMo extends AbstractMmlTokenNode {
         return forms;
     }
 
-    /*
+    /**
      * @param {string} mo  The character to look up in the range table
      * @return {RangeDef}  The unicode range in which the character falls, or null
      */

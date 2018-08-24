@@ -24,20 +24,20 @@
 import {MmlVisitor} from './MmlVisitor.js';
 import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
 
-/*
+/**
  *  Get access to legacy MML Element Jax
  */
 declare var MathJax: any;
 let MML = MathJax.ElementJax.mml;
 
 /*****************************************************************/
-/*
+/**
  *  Implements the LegacyMmlVisitor (subclass of MmlVisitor)
  */
 
 export class LegacyMmlVisitor extends MmlVisitor {
 
-    /*
+    /**
      * Convert the tree rooted at a particular node into the old-style
      * internal format used by MathJax v2.
      *
@@ -52,7 +52,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
         return root;
     }
 
-    /*
+    /**
      * @param {TextNode} node  The text node to visit
      * @param {any} parent  The old-style parent to which this node should be added
      */
@@ -60,7 +60,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
         parent.Append(MML.chars(node.getText()));
     }
 
-    /*
+    /**
      * @param {XMLNode} node  The XML node to visit
      * @param {any} parent  The old-style parent to which this node should be added
      */
@@ -68,7 +68,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
         parent.Append(MML.xml(node.getXML()));
     }
 
-    /*
+    /**
      * Visit an inferred mrow, but don't add the inferred row itself (the old-style
      * nodes will add one automatically).
      *
@@ -81,7 +81,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
         }
     }
 
-    /*
+    /**
      * The generic visiting function:
      *   Create a node of the correct type.
      *   Add its explicit attributes.
@@ -101,7 +101,8 @@ export class LegacyMmlVisitor extends MmlVisitor {
         }
         parent.Append(mml);
     }
-    /*
+
+    /**
      * @param {MmlNode} node  The node who attributes are to be copied
      * @param {any} mml  The old-style node to which attributes are being added
      */
@@ -112,7 +113,8 @@ export class LegacyMmlVisitor extends MmlVisitor {
             mml[name] = attributes.getExplicit(name);
         }
     }
-    /*
+
+    /**
      * @param {MmlNode} node  The node whose properties are to be copied
      * @param {any} mml  The old-stype node to which the properties are being copied
      */

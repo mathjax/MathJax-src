@@ -26,17 +26,17 @@ import {MmlFactory} from './MmlFactory.js';
 import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MathMLVisitor (subclass of MmlVisitor)
  */
 
 export class MathMLVisitor extends MmlVisitor {
-    /*
+    /**
      * The document in which the nodes are being made
      */
     protected document: Document = null;
 
-    /*
+    /**
      * Convert the tree rooted at a particular node into DOM nodes.
      *
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
@@ -51,7 +51,7 @@ export class MathMLVisitor extends MmlVisitor {
         return root.firstChild;
     }
 
-    /*
+    /**
      * @param {TextNode} node  The text node to visit
      * @param {Element} parent  The DOM parent to which this node should be added
      */
@@ -59,7 +59,7 @@ export class MathMLVisitor extends MmlVisitor {
         parent.appendChild(this.document.createTextNode(node.getText()));
     }
 
-    /*
+    /**
      * @param {XMLNode} node  The XML node to visit
      * @param {Element} parent  The DOM parent to which this node should be added
      */
@@ -67,7 +67,7 @@ export class MathMLVisitor extends MmlVisitor {
         parent.appendChild((node.getXML() as Element).cloneNode(true));
     }
 
-    /*
+    /**
      * Visit an inferred mrow, but don't add the inferred row itself (since
      * it is supposed to be inferred).
      *
@@ -80,7 +80,7 @@ export class MathMLVisitor extends MmlVisitor {
         }
     }
 
-    /*
+    /**
      * The generic visiting function:
      *   Create a DOM node of the correct type.
      *   Add its explicit attributes.
@@ -98,7 +98,7 @@ export class MathMLVisitor extends MmlVisitor {
         }
         parent.appendChild(mml);
     }
-    /*
+    /**
      * @param {MmlNode} node  The node who attributes are to be copied
      * @param {Element} mml  The MathML DOM node to which attributes are being added
      */

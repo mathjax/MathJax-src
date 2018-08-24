@@ -32,39 +32,39 @@ import {Styles} from '../util/Styles.js';
 import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 
 /************************************************************/
-/*
+/**
  * Implements a lightweight DOMAdaptor on liteweight HTML elements
  */
 export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocument> {
-    /*
+    /**
      * The default options
      */
     public static OPTIONS: OptionList = {
         fontSize: 16,      // we can't compute the font size, so always use this
     };
 
-    /*
+    /**
      * The options for the instance
      */
     public options: OptionList;
 
-    /*
+    /**
      * The document in which the HTML nodes will be created
      */
     public document: LiteDocument;
 
-    /*
+    /**
      * The window for the document
      */
     public window: LiteWindow;
 
-    /*
+    /**
      * The parser for serialized HTML
      */
     public parser: LiteParser;
 
-    /*
-     * @param{OptionList} options  The options for the lite adaptor (e.g., fontSize)
+    /**
+     * @param {OptionList} options  The options for the lite adaptor (e.g., fontSize)
      * @constructor
      */
     constructor(options: OptionList = null) {
@@ -75,64 +75,64 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         this.window = new LiteWindow();
     }
 
-    /*
+    /**
      * @override
      */
     public parse(text: string, format?: string) {
         return this.parser.parseFromString(text, format, this);
     };
 
-    /*
+    /**
      * @override
      */
     protected create(type: string) {
         return new LiteElement(type);
     }
 
-    /*
+    /**
      * @override
      */
     public text(text: string) {
         return new LiteText(text);
     }
 
-    /*
-     * @param{string} text   The text of the comment
-     * @return{LiteComment}  The comment node
+    /**
+     * @param {string} text   The text of the comment
+     * @return {LiteComment}  The comment node
      */
     public comment(text: string) {
         return new LiteComment(text);
     }
 
-    /*
-     * @return{LiteDocument}  A new document element
+    /**
+     * @return {LiteDocument}  A new document element
      */
     public createDocument() {
         return new LiteDocument();
     }
 
-    /*
+    /**
      * @override
      */
     public head(doc: LiteDocument) {
         return doc.head;
     }
 
-    /*
+    /**
      * @override
      */
     public body(doc: LiteDocument) {
         return doc.body;
     }
 
-    /*
+    /**
      * @override
      */
     public root(doc: LiteDocument) {
         return doc.root;
     }
 
-    /*
+    /**
      * @override
      */
     public tags(node: LiteElement, name: string, ns: string = null) {
@@ -158,10 +158,10 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return tags;
     }
 
-    /*
-     * @param{LiteELement} node   The node to be searched
-     * @param{string} id          The id of the node to look for
-     * @return{LiteElement}       The child node having the given id
+    /**
+     * @param {LiteELement} node   The node to be searched
+     * @param {string} id          The id of the node to look for
+     * @return {LiteElement}       The child node having the given id
      */
     public elementById(node: LiteElement, id: string) {
         let stack = [] as LiteNode[];
@@ -181,10 +181,10 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return null as LiteElement;
     }
 
-    /*
-     * @param{LiteELement} node   The node to be searched
-     * @param{string} name        The name of the class to find
-     * @return{LiteElement[]}     The nodes with the given class
+    /**
+     * @param {LiteELement} node   The node to be searched
+     * @param {string} name        The name of the class to find
+     * @return {LiteElement[]}     The nodes with the given class
      */
     public elementsByClass(node: LiteElement, name: string) {
         let stack = [] as LiteNode[];
@@ -206,7 +206,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return tags;
     }
 
-    /*
+    /**
      * @override
      */
     public getElements(nodes: (string | LiteElement | LiteElement[])[], document: LiteDocument) {
@@ -235,22 +235,22 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return containers;
     }
 
-    /*
+    /**
      * @override
      */
     public parent(node: LiteNode) {
         return node.parent;
     }
 
-    /*
-     * @param{LiteNode} node  The node whose index is needed
-     * @return{number}        THe index of the node it its parent's children array
+    /**
+     * @param {LiteNode} node  The node whose index is needed
+     * @return {number}        THe index of the node it its parent's children array
      */
     public childIndex(node: LiteNode) {
         return (node.parent ? node.parent.children.findIndex(n => n === node) : -1);
     }
 
-    /*
+    /**
      * @override
      */
     public append(node: LiteElement, child: LiteNode) {
@@ -262,7 +262,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return child;
     }
 
-    /*
+    /**
      * @override
      */
     public insert(nchild: LiteNode, ochild: LiteNode) {
@@ -276,7 +276,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         }
     }
 
-    /*
+    /**
      * @override
      */
     public remove(child: LiteNode) {
@@ -288,7 +288,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return child;
     }
 
-    /*
+    /**
      * @override
      */
     public replace(nnode: LiteNode, onode: LiteNode) {
@@ -299,7 +299,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return onode;
     }
 
-    /*
+    /**
      * @override
      */
     public clone(node: LiteElement) {
@@ -319,7 +319,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return nnode;
     }
 
-    /*
+    /**
      * @override
      */
     public split(node: LiteText, n: number) {
@@ -330,7 +330,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return text;
     }
 
-    /*
+    /**
      * @override
      */
     public next(node: LiteNode) {
@@ -340,7 +340,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return (i >= 0 && i < parent.children.length ? parent.children[i] : null);
     }
 
-    /*
+    /**
      * @override
      */
     public previous(node: LiteNode) {
@@ -350,49 +350,49 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return (i >= 0 ? parent.children[i] : null);
     }
 
-    /*
+    /**
      * @override
      */
     public firstChild(node: LiteElement) {
         return node.children[0];
     }
 
-    /*
+    /**
      * @override
      */
     public lastChild(node: LiteElement) {
         return node.children[node.children.length - 1];
     }
 
-    /*
+    /**
      * @override
      */
     public childNodes(node: LiteElement) {
         return [...node.children];
     }
 
-    /*
+    /**
      * @override
      */
     public childNode(node: LiteElement, i: number) {
         return node.children[i];
     }
 
-    /*
+    /**
      * @override
      */
     public kind(node: LiteNode) {
         return node.kind;
     }
 
-    /*
+    /**
      * @override
      */
     public value(node: LiteNode | LiteText) {
         return (node.kind === '#text' ? (node as LiteText).value : '');
     }
 
-    /*
+    /**
      * @override
      */
     public textContent(node: LiteElement): string {
@@ -406,14 +406,14 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return this.parser.serializeInner(this, node);
     }
 
-    /*
+    /**
      * @override
      */
     public outerHTML(node: LiteElement) {
         return this.parser.serialize(this, node);
     }
 
-    /*
+    /**
      * @override
      */
     public setAttribute(node: LiteElement, name: string, value: string) {
@@ -423,28 +423,28 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         }
     }
 
-    /*
+    /**
      * @override
      */
     public getAttribute(node: LiteElement, name: string) {
         return node.attributes[name];
     }
 
-    /*
+    /**
      * @override
      */
     public removeAttribute(node: LiteElement, name: string) {
         delete node.attributes[name];
     }
 
-    /*
+    /**
      * @override
      */
     public hasAttribute(node: LiteElement, name: string) {
         return node.attributes.hasOwnProperty(name);
     }
 
-    /*
+    /**
      * @override
      */
     public allAttributes(node: LiteElement) {
@@ -456,7 +456,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return list;
     }
 
-    /*
+    /**
      * @override
      */
     public addClass(node: LiteElement, name: string) {
@@ -467,7 +467,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         }
     }
 
-    /*
+    /**
      * @override
      */
     public removeClass(node: LiteElement, name: string) {
@@ -479,7 +479,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         }
     }
 
-    /*
+    /**
      * @override
      */
     public hasClass(node: LiteElement, name: string) {
@@ -487,7 +487,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return !!classes.find(n => n === name);
     }
 
-    /*
+    /**
      * @override
      */
     public setStyle(node: LiteElement, name: string, value: string) {
@@ -498,7 +498,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         node.attributes['style'] = node.styles.cssText;
     }
 
-    /*
+    /**
      * @override
      */
     public getStyle(node: LiteElement, name: string) {
@@ -512,21 +512,21 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return node.styles.get(name);
     }
 
-    /*
+    /**
      * @override
      */
     public allStyles(node: LiteElement) {
         return this.getAttribute(node, 'style');
     }
 
-    /*
+    /**
      * @override
      */
     public fontSize(node: LiteElement) {
         return this.options.fontSize;
     }
 
-    /*
+    /**
      * @override
      */
     public nodeSize(node: LiteElement) {
@@ -536,8 +536,11 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
 }
 
 /************************************************************/
-/*
+/**
  * The function to call to obtain a LiteAdaptor
+ *
+ * @param {OptionList} options  The options for the adaptor
+ * @return {LiteAdaptor}        The newly created adaptor
  */
 export function liteAdaptor(options: OptionList = null) {
     return new LiteAdaptor(options);

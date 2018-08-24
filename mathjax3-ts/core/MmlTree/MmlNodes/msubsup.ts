@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlBaseNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMsubsup node class (subclass of AbstractMmlBaseNode)
  */
 
@@ -36,42 +36,42 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
         superscriptshift: ''
     };
 
-    /*
+    /**
      * @return {string}  The msubsup kind
      */
     public get kind() {
         return 'msubsup';
     }
 
-    /*
+    /**
      * @return {number}  <msubsup> requires three children
      */
     public get arity() {
         return 3;
     }
 
-    /*
+    /**
      * @return {number}  The position of the base element
      */
     public get base() {
         return 0;
     }
 
-    /*
+    /**
      * @return {number}  The position of the subscript (overriden in msup below)
      */
     public get sub() {
         return 1;
     }
 
-    /*
+    /**
      * @return {number}  The position of the superscript (overriden in msup below)
      */
     public get sup() {
         return 2;
     }
 
-    /*
+    /**
      * Super- and subscripts are not in displaymode, have scriptlevel increased, and prime style in subscripts.
      *
      * @override
@@ -88,7 +88,7 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMsub node class (subclass of MmlMsubsup)
  */
 
@@ -97,14 +97,14 @@ export class MmlMsub extends MmlMsubsup {
         ...MmlMsubsup.defaults
     };
 
-    /*
+    /**
      * @return {string}  The msub kind
      */
     public get kind() {
         return 'msub';
     }
 
-    /*
+    /**
      * @return {number}  <msub> only gets two children
      */
     public get arity() {
@@ -113,7 +113,7 @@ export class MmlMsub extends MmlMsubsup {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMsup node class (subclass of MmlMsubsup)
  */
 
@@ -122,28 +122,28 @@ export class MmlMsup extends MmlMsubsup {
         ...MmlMsubsup.defaults
     };
 
-    /*
+    /**
      * @return {string}  The msup kind
      */
     public get kind() {
         return 'msup';
     }
 
-    /*
+    /**
      * @return {number}  <msup> only gets two children
      */
     get arity() {
         return 2;
     }
 
-    /*
+    /**
      * @return {number}  child 1 is superscript
      */
     get sup() {
         return 1;
     }
 
-    /*
+    /**
      * @return {number}  child 2 is null (no subscript)
      */
     get sub() {

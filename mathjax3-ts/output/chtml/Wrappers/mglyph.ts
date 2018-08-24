@@ -30,7 +30,7 @@ import {Property} from '../../../core/Tree/Node.js';
 import {StyleList, StyleData} from '../CssStyles.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmglyph wrapper for the MmlMglyph object
  *
  * @template N  The HTMLElement node class
@@ -48,14 +48,14 @@ export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      * The image's width, height, and voffset values converted to em's
      */
     public width: number;
     public height: number;
     public voffset: number;
 
-    /*
+    /**
      * @override
      * @constructor
      */
@@ -64,7 +64,7 @@ export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.getParameters();
     }
 
-    /*
+    /**
      * Obtain the width, height, and voffset.
      * Note:  Currently, the width and height must be specified explicitly, or they default to 1em
      *   Since loading the image may be asynchronous, it would require a restart.
@@ -78,7 +78,7 @@ export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.voffset = this.length2em(voffset || '0');
     }
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -95,7 +95,7 @@ export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.adaptor.append(chtml, img);
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {

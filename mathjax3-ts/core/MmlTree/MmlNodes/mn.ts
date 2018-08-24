@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMn node class (subclass of AbstractMmlTokenNode)
  */
 
@@ -35,7 +35,7 @@ export class MmlMn extends AbstractMmlTokenNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The mn kind
      */
     public get kind() {

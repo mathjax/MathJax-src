@@ -29,11 +29,9 @@ import {MathItem} from '../core/MathItem.js';
 import {FindAsciiMath} from './asciimath/FindAsciiMath.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the AsciiMath class (extends AbstractInputJax)
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -46,12 +44,12 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
         FindAsciiMath: null
     };
 
-    /*
+    /**
      * The FindMath object used to search for AsciiMath in the document
      */
     protected findAsciiMath: FindAsciiMath<N, T, D>;
 
-    /*
+    /**
      * @override
      */
     constructor(options: OptionList) {
@@ -60,7 +58,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
         this.findAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
     }
 
-    /*
+    /**
      * Use legacy AsciiMath input jax for now
      *
      * @override
@@ -69,7 +67,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
         return LegacyAsciiMath.Compile(math.math, math.display);
     }
 
-    /*
+    /**
      * @override
      */
     public findMath(strings: string[]) {

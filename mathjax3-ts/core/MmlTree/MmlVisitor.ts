@@ -26,13 +26,13 @@ import {MmlFactory} from './MmlFactory.js';
 import {AbstractVisitor} from '../Tree/Visitor.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlVisitor (subclass of Visitor, and base class
  *  for visitors that accept MmlNode trees)
  */
 
 export class MmlVisitor extends AbstractVisitor {
-    /*
+    /**
      * @param {MmlFactory} factory  The MmlNode factory (defaults to MmlFactory if not given)
      *
      * @constructor
@@ -46,17 +46,18 @@ export class MmlVisitor extends AbstractVisitor {
     }
 
     /***********************************************/
-    /*
+    /**
      * Stubs for overriding in subclasses
      */
 
-    /*
+    /**
      * @param {TextNode} node  The TextNode to visit
      * @param {any[]} args  Any arguments needed by the visitor
      * @return {any}  Any return value needed for the visitor
      */
     public visitTextNode(node: TextNode, ...args: any[]): any {}
-    /*
+
+    /**
      * @param {XMLNode} node  The XMLNode to visit
      * @param {any[]} args  Any arguments needed by the visitor
      * @return {any}  Any return value needed for the visitor

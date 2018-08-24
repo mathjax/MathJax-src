@@ -35,7 +35,7 @@ export const SOLID = THICKNESS + 'em solid';  // a solid border
 
 /*****************************************************************/
 
-/*
+/**
  * The functions used for notation definitions
  */
 export type Renderer<N, T, D> = (node: CHTMLmenclose<N, T, D>, child: N) => void;
@@ -43,7 +43,7 @@ export type BBoxExtender<N, T, D> = (node: CHTMLmenclose<N, T, D>) => number[];
 export type BBoxBorder<N, T, D> = (node: CHTMLmenclose<N, T, D>) => number[];
 export type Initializer<N, T, D> = (node: CHTMLmenclose<N, T, D>) => void;
 
-/*
+/**
  * The definition of a notation
  */
 export type NotationDef<N, T, D> = {
@@ -55,13 +55,13 @@ export type NotationDef<N, T, D> = {
     remove?: string;                    // list of notations that are suppressed by this one
 };
 
-/*
+/**
  * For defining notation maps
  */
 export type DefPair = [string, NotationDef<any, any, any>];
 export type DefList = Map<string, NotationDef<any, any, any>>;
 
-/*
+/**
  * The list of notations for an menclose element
  */
 export type List<N, T, D> = {[notation: string]: NotationDef<N, T, D>};
@@ -69,28 +69,28 @@ export type List<N, T, D> = {[notation: string]: NotationDef<N, T, D>};
 
 /*****************************************************************/
 
-/*
+/**
  * The names and indices of sides for borders, padding, etc.
  */
 export const sideIndex = {top: 0, right: 1, bottom: 2, left: 3};
 export type Side = keyof typeof sideIndex;
 export const sideNames = Object.keys(sideIndex) as Side[];
 
-/*
+/**
  * the spacing to leave for an arrowhead
  */
 export const arrowHead = (node: CHTMLmenclose<any, any, any>) => {
     return Math.max(node.padding, node.thickness * (node.arrowhead.x + node.arrowhead.dx + 1));
 };
 
-/*
+/**
  * Common BBox and Border functions
  */
 export const fullBBox = ((node) => new Array(4).fill(node.thickness + node.padding)) as BBoxExtender<any, any, any>;
 export const fullPadding = ((node) => new Array(4).fill(node.padding)) as BBoxExtender<any, any, any>;
 export const fullBorder = ((node) => new Array(4).fill(node.thickness)) as BBoxBorder<any, any, any>;
 
-/*
+/**
  * The data for horizontal and vertical arrow notations
  *   [angle, neg, double, origin, offset, isVertical, remove]
  */
@@ -103,7 +103,7 @@ export const arrowDef = {
     leftright: [0,           -1, true, 'top left',  'Y', false, 'horizontalstrike leftarrow rightarrow']
 } as {[name: string]: [number, number, boolean, string, string, boolean, string]};
 
-/*
+/**
  * The data for diagonal arrow notations
  *   [neg, c, pi, double, origin, remove]
  */
@@ -119,7 +119,7 @@ export const diagonalArrowDef = {
                           'downdiagonalstrike northwestarrow southeastarrow']
 } as {[name: string]: [number, number, number, boolean, string, string]};
 
-/*
+/**
  * The BBox functions for horizontal and vertical arrows
  */
 export const arrowBBox = {
@@ -131,12 +131,12 @@ export const arrowBBox = {
     leftright: (node) => [0, arrowHead(node), 0, arrowHead(node)]
 } as {[name: string]: BBoxExtender<any, any, any>};
 
-/*
+/**
  * Create a named element (handled by CSS), and adjust it if thickness is non-standard
  *
- * @param{string} name    The name of the element to create
- * @param{string} offset  The offset direction to adjust if thickness is non-standard
- * @return{Renderer}      The renderer function for the given element name
+ * @param {string} name    The name of the element to create
+ * @param {string} offset  The offset direction to adjust if thickness is non-standard
+ * @return {Renderer}      The renderer function for the given element name
  */
 export const  RenderElement = (name: string, offset: string = '') => {
     return ((node, child) => {
@@ -149,9 +149,9 @@ export const  RenderElement = (name: string, offset: string = '') => {
     }) as Renderer<any, any, any>;
 };
 
-/*
- * @param{string} side   The side on which a border should appear
- * @return{DefPair}      The notation definition for the notation having a line on the given side
+/**
+ * @param {string} side   The side on which a border should appear
+ * @return {DefPair}      The notation definition for the notation having a line on the given side
  */
 export const Border = (side: Side) => {
     const i = sideIndex[side];
@@ -181,11 +181,11 @@ export const Border = (side: Side) => {
     }] as DefPair;
 };
 
-/*
- * @param{string} name    The name of the notation to define
- * @param{string} side1   The first side to get a border
- * @param{string} side2   The second side to get a border
- * @return{DefPair}       The notation definition for the notation having lines on two sides
+/**
+ * @param {string} name    The name of the notation to define
+ * @param {string} side1   The first side to get a border
+ * @param {string} side2   The second side to get a border
+ * @return {DefPair}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = (name: string, side1: Side, side2: Side) => {
     const i1 = sideIndex[side1];
@@ -223,10 +223,10 @@ export const Border2 = (name: string, side1: Side, side2: Side) => {
     }] as DefPair;
 };
 
-/*
- * @param{string} name  The name of the diagonal strike to define
- * @param{number} neg   1 or -1 to use with the angle
- * @return{DefPair}     The notation definition for the diagonal strike
+/**
+ * @param {string} name  The name of the diagonal strike to define
+ * @param {number} neg   1 or -1 to use with the angle
+ * @return {DefPair}     The notation definition for the diagonal strike
  */
 export const DiagonalStrike = (name: string, neg: number) => {
     const cname = 'mjx-' + name.charAt(0) + 'strike';
@@ -252,9 +252,9 @@ export const DiagonalStrike = (name: string, neg: number) => {
     }] as DefPair;
 };
 
-/*
- * @param{string} name   The name of the diagonal arrow to define
- * @return{DefPair}      The notation definition for the diagonal arrow
+/**
+ * @param {string} name   The name of the diagonal arrow to define
+ * @return {DefPair}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = (name: string) => {
     const [neg, c, pi, double, origin, remove] = diagonalArrowDef[name];
@@ -283,9 +283,9 @@ export const DiagonalArrow = (name: string) => {
     }] as DefPair;
 };
 
-/*
- * @param{string} name   The name of the horizontal or vertical arrow to define
- * @return{DefPair}      The notation definition for the arrow
+/**
+ * @param {string} name   The name of the horizontal or vertical arrow to define
+ * @return {DefPair}      The notation definition for the arrow
  */
 export const Arrow = (name: string) => {
     const [angle, neg, double, origin, offset, isVertical, remove] = arrowDef[name];

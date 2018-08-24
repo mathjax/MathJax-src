@@ -23,7 +23,7 @@
 
 import {OptionList} from '../util/Options.js';
 
-/*
+/**
  * The data for an attribute
  */
 export type AttributeData = {
@@ -33,311 +33,307 @@ export type AttributeData = {
 
 
 /*****************************************************************/
-/*
+/**
  *  The interface for the DOMAdaptor
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export interface DOMAdaptor<N, T, D> {
-    /*
+    /**
      * Document in which the nodes are to be created
      */
     document: D;
 
-    /*
-     * @param{string} text    The serialized document to be parsed
-     * @param{string} format  The format (e.g., 'text/html' or 'text/xhtml')
-     * @return{D}             The parsed document
+    /**
+     * @param {string} text    The serialized document to be parsed
+     * @param {string} format  The format (e.g., 'text/html' or 'text/xhtml')
+     * @return {D}             The parsed document
      */
     parse(text: string, format?: string): D;
 
-    /*
-     * @param{string} type      The tag name of the HTML node to be created
-     * @param{OptionList} def   The properties to set for the created node
-     * @param{(N|T)[]} content  The child nodes for the created HTML node
-     * @return{N}               The generated HTML tree
+    /**
+     * @param {string} type      The tag name of the HTML node to be created
+     * @param {OptionList} def   The properties to set for the created node
+     * @param {(N|T)[]} content  The child nodes for the created HTML node
+     * @return {N}               The generated HTML tree
      */
     node(type: string, def?: OptionList, children?: (N | T)[]): N;
 
-    /*
-     * @param{string} text   The text from which to create an HTML text node
-     * @return{T}            The generated text node with the given text
+    /**
+     * @param {string} text   The text from which to create an HTML text node
+     * @return {T}            The generated text node with the given text
      */
     text(text: string): T;
 
-    /*
-     * @param{D} doc   The document whose head is to be obtained
-     * @return{N}      The document.head element
+    /**
+     * @param {D} doc   The document whose head is to be obtained
+     * @return {N}      The document.head element
      */
     head(doc: D): N;
 
-    /*
-     * @param{D} doc   The document whose body is to be obtained
-     * @return{N}      The document.body element
+    /**
+     * @param {D} doc   The document whose body is to be obtained
+     * @return {N}      The document.body element
      */
     body(doc: D): N;
 
-    /*
-     * @param{D} doc   The document whose documentElement is to be obtained
-     * @return{N}      The documentElement
+    /**
+     * @param {D} doc   The document whose documentElement is to be obtained
+     * @return {N}      The documentElement
      */
     root(doc: D): N;
 
-    /*
-     * @param{N} node        The node to search for tags
-     * @param{string} name   The name of the tag to search for
-     * @param{string} ns     The namespace to search in (or null for no namespace)
-     * @return{N[]}          The list of tags found
+    /**
+     * @param {N} node        The node to search for tags
+     * @param {string} name   The name of the tag to search for
+     * @param {string} ns     The namespace to search in (or null for no namespace)
+     * @return {N[]}          The list of tags found
      */
     tags(node: N, name: string, ns?: string): N[];
 
-    /*
+    /**
      * Get a list of containers (to be searched for math).  These can be
      *  specified by CSS selector, or as actual DOM elements or arrays of such.
      *
-     * @param{(string | N | N[])[]} nodes  The array of items to make into a container list
-     * @param{D} document                  The document in which to search
-     * @return{N[]}                        The array of containers to search
+     * @param {(string | N | N[])[]} nodes  The array of items to make into a container list
+     * @param {D} document                  The document in which to search
+     * @return {N[]}                        The array of containers to search
      */
     getElements(nodes: (string | N | N[])[], document: D): N[];
 
-    /*
-     * @param{N|T} node  The HTML node whose parent is to be obtained
-     * @return{N}        The parent node of the given one
+    /**
+     * @param {N|T} node  The HTML node whose parent is to be obtained
+     * @return {N}        The parent node of the given one
      */
     parent(node: N | T): N;
 
-    /*
-     * @param{N} node     The HTML node to be appended to
-     * @param{N|T} child  The node or text to be appended
-     * @return{N|T}       The appended node
+    /**
+     * @param {N} node     The HTML node to be appended to
+     * @param {N|T} child  The node or text to be appended
+     * @return {N|T}       The appended node
      */
     append(node: N, child: N | T): N | T;
 
-    /*
-     * @param{N|T} nchild  The node or text to be inserted
-     * @param{N|T} ochild  The node or text where the new child is to be added before it
+    /**
+     * @param {N|T} nchild  The node or text to be inserted
+     * @param {N|T} ochild  The node or text where the new child is to be added before it
      */
     insert(nchild: N | T, ochild: N | T): void;
 
-    /*
-     * @param{N|T} child  The node or text to be removed from its parent
-     * @return{N|T}       The removed node
+    /**
+     * @param {N|T} child  The node or text to be removed from its parent
+     * @return {N|T}       The removed node
      */
     remove(child: N | T): N | T;
 
-    /*
-     * @param{N|T} nnode  The node to replace with
-     * @param{N|T} onode  The child to be replaced
-     * @return{N|T}       The removed node
+    /**
+     * @param {N|T} nnode  The node to replace with
+     * @param {N|T} onode  The child to be replaced
+     * @return {N|T}       The removed node
      */
     replace(nnode: N | T, onode: N | T): N | T;
 
-    /*
-     * @param{N} node   The HTML node to be cloned
-     * @return{N}       The copied node
+    /**
+     * @param {N} node   The HTML node to be cloned
+     * @return {N}       The copied node
      */
     clone(node: N): N;
 
-    /*
-     * @param{T} node    The HTML text node to be split
-     * @param{number} n  The index of the character where the split will occur
+    /**
+     * @param {T} node    The HTML text node to be split
+     * @param {number} n  The index of the character where the split will occur
      */
     split(node: T, n: number): T;
 
-    /*
-     * @param{N|T} node   The HTML node whose sibling is to be obtained
-     * @return{N|T}       The node following the given one (or null)
+    /**
+     * @param {N|T} node   The HTML node whose sibling is to be obtained
+     * @return {N|T}       The node following the given one (or null)
      */
     next(node: N | T): N | T;
 
-    /*
-     * @param{N|T} node   The HTML node whose sibling is to be obtained
-     * @return{N|T}       The node preceding the given one (or null)
+    /**
+     * @param {N|T} node   The HTML node whose sibling is to be obtained
+     * @return {N|T}       The node preceding the given one (or null)
      */
     previous(node: N | T): N | T;
 
-    /*
-     * @param{N} node   The HTML node whose child is to be obtained
-     * @return{N|T}     The first child of the given node (or null)
+    /**
+     * @param {N} node   The HTML node whose child is to be obtained
+     * @return {N|T}     The first child of the given node (or null)
      */
     firstChild(node: N): N | T;
 
-    /*
-     * @param{N} node   The HTML node whose child is to be obtained
-     * @return{N}       The last child of the given node (or null)
+    /**
+     * @param {N} node   The HTML node whose child is to be obtained
+     * @return {N}       The last child of the given node (or null)
      */
     lastChild(node: N): N | T;
 
-    /*
-     * @param{N} node    The HTML node whose children are to be obtained
-     * @return{(N|T)[]}  Array of children for the given node (not a live list)
+    /**
+     * @param {N} node    The HTML node whose children are to be obtained
+     * @return {(N|T)[]}  Array of children for the given node (not a live list)
      */
     childNodes(node: N): (N | T)[];
 
-    /*
-     * @param{N} node    The HTML node whose child is to be obtained
-     * @param{number} i  The index of the child to return
-     * @return{N|T}      The i-th child node of the given node (or null)
+    /**
+     * @param {N} node    The HTML node whose child is to be obtained
+     * @param {number} i  The index of the child to return
+     * @return {N|T}      The i-th child node of the given node (or null)
      */
     childNode(node: N, i: number): N | T;
 
-    /*
-     * @param{N | T} node   The HTML node whose tag or node name is to be obtained
-     * @return{string}      The tag or node name of the given node
+    /**
+     * @param {N | T} node   The HTML node whose tag or node name is to be obtained
+     * @return {string}      The tag or node name of the given node
      */
     kind(node: N | T): string;
 
-    /*
-     * @param{N|T} node  The HTML node whose value is to be obtained
-     * @return{string}   The value of the given node
+    /**
+     * @param {N|T} node  The HTML node whose value is to be obtained
+     * @return {string}   The value of the given node
      */
     value(node: N | T): string;
 
-    /*
-     * @param{N} node    The HTML node whose text content is to be obtained
-     * @return{string}   The text content of the given node
+    /**
+     * @param {N} node    The HTML node whose text content is to be obtained
+     * @return {string}   The text content of the given node
      */
     textContent(node: N): string;
 
-    /*
-     * @param{N} node   The HTML node whose inner HTML string is to be obtained
-     * @return{string}  The serialized content of the node
+    /**
+     * @param {N} node   The HTML node whose inner HTML string is to be obtained
+     * @return {string}  The serialized content of the node
      */
     innerHTML(node: N): string;
 
-    /*
-     * @param{N} node   The HTML node whose outer HTML string is to be obtained
-     * @return{string}  The serialized node and its content
+    /**
+     * @param {N} node   The HTML node whose outer HTML string is to be obtained
+     * @return {string}  The serialized node and its content
      */
     outerHTML(node: N): string;
 
-    /*
-     * @param{N} node        The HTML node whose attribute is to be set
-     * @param{string} name   The name of the attribute to set
-     * @param{string} value  The new value of the attribute
+    /**
+     * @param {N} node        The HTML node whose attribute is to be set
+     * @param {string} name   The name of the attribute to set
+     * @param {string} value  The new value of the attribute
      */
     setAttribute(node: N, name: string, value: string): void;
 
-    /*
-     * @param{N} node        The HTML node whose attribute is to be obtained
-     * @param{string} name   The name of the attribute to get
-     * @return{string}       The value of the given attribute of the given node
+    /**
+     * @param {N} node        The HTML node whose attribute is to be obtained
+     * @param {string} name   The name of the attribute to get
+     * @return {string}       The value of the given attribute of the given node
      */
     getAttribute(node: N, name: string): string;
 
-    /*
-     * @param{N} node        The HTML node whose attribute is to be removed
-     * @param{string} name   The name of the attribute to remove
+    /**
+     * @param {N} node        The HTML node whose attribute is to be removed
+     * @param {string} name   The name of the attribute to remove
      */
     removeAttribute(node: N, name: string): void;
 
-    /*
-     * @param{N} node        The HTML node whose attribute is to be tested
-     * @param{string} name   The name of the attribute to test
-     * @return{boolean}      True of the node has the given attribute defined
+    /**
+     * @param {N} node        The HTML node whose attribute is to be tested
+     * @param {string} name   The name of the attribute to test
+     * @return {boolean}      True of the node has the given attribute defined
      */
     hasAttribute(node: N, name: string): boolean;
 
-    /*
-     * @param{N} node           The HTML node whose attributes are to be returned
-     * @return{AttributeData[]} The list of attributes
+    /**
+     * @param {N} node           The HTML node whose attributes are to be returned
+     * @return {AttributeData[]} The list of attributes
      */
     allAttributes(node: N): AttributeData[];
 
-    /*
-     * @param{N} node        The HTML node whose class is to be augmented
-     * @param{string} name   The class to be added
+    /**
+     * @param {N} node        The HTML node whose class is to be augmented
+     * @param {string} name   The class to be added
      */
     addClass(node: N, name: string): void;
 
-    /*
-     * @param{N} node        The HTML node whose class is to be changed
-     * @param{string} name   The class to be removed
+    /**
+     * @param {N} node        The HTML node whose class is to be changed
+     * @param {string} name   The class to be removed
      */
     removeClass(node: N, name: string): void;
 
-    /*
-     * @param{N} node        The HTML node whose class is to be tested
-     * @param{string} name   The class to test
-     * @return{boolean}      True if the node has the given class
+    /**
+     * @param {N} node        The HTML node whose class is to be tested
+     * @param {string} name   The class to test
+     * @return {boolean}      True if the node has the given class
      */
     hasClass(node: N, name: string): void;
 
-    /*
-     * @param{N} node        The HTML node whose class list is needed
-     * @return{string[]}     An array of the class names for this node
+    /**
+     * @param {N} node        The HTML node whose class list is needed
+     * @return {string[]}     An array of the class names for this node
      */
     allClasses(node: N): string[];
 
-    /*
-     * @param{N} node        The HTML node whose style is to be changed
-     * @param{string} name   The style to be set
-     * @param{string} name   The new value of the style
+    /**
+     * @param {N} node        The HTML node whose style is to be changed
+     * @param {string} name   The style to be set
+     * @param {string} name   The new value of the style
      */
     setStyle(node: N, name: string, value: string): void;
 
-    /*
-     * @param{N} node        The HTML node whose style is to be obtained
-     * @param{string} name   The style to be obtained
-     * @return{string}       The value of the style
+    /**
+     * @param {N} node        The HTML node whose style is to be obtained
+     * @param {string} name   The style to be obtained
+     * @return {string}       The value of the style
      */
     getStyle(node: N, name: string): string;
 
-    /*
-     * @param{N} node        The HTML node whose styles are to be returned
-     * @return{string}       The cssText for the styles
+    /**
+     * @param {N} node        The HTML node whose styles are to be returned
+     * @return {string}       The cssText for the styles
      */
     allStyles(node: N): string;
 
-    /*
-     * @param{N} node        The HTML node whose font size is to be determined
-     * @return{number}       The font size (in pixels) of the node
+    /**
+     * @param {N} node        The HTML node whose font size is to be determined
+     * @return {number}       The font size (in pixels) of the node
      */
     fontSize(node: N): number;
 
-    /*
-     * @param{N} node            The HTML node whose dimensions are to be determined
-     * @return{[number, number]} The width and height (in pixels) of the element
+    /**
+     * @param {N} node            The HTML node whose dimensions are to be determined
+     * @return {[number, number]} The width and height (in pixels) of the element
      */
     nodeSize(node: N): [number, number];
 }
 
 /*****************************************************************/
-/*
+/**
  *  Abstract DOMAdaptor class for creating HTML elements
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D> {
 
-    /*
+    /**
      * The document in which the HTML nodes will be created
      */
     public document: D;
 
-    /*
-     * @param{D} document  The document in which the nodes will be created
+    /**
+     * @param {D} document  The document in which the nodes will be created
      * @constructor
      */
     constructor(document: D = null) {
         this.document = document;
     }
 
-    /*
+    /**
      * @override
      */
     public abstract parse(text: string, format?: string): D;
 
-    /*
+    /**
      * @override
      */
     public node(type: string, def: OptionList = {}, children: (N | T)[] = []) {
@@ -349,20 +345,20 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
         return node as N;
     }
 
-    /*
-     * @param{string} type  The type of the node to create
-     * @return{N}           The created node
+    /**
+     * @param {string} type  The type of the node to create
+     * @return {N}           The created node
      */
     protected abstract create(type: string): N;
 
-    /*
+    /**
      * @override
      */
     public abstract text(text: string): T;
 
-    /*
-     * @param{N} node           The HTML element whose attributes are to be set
-     * @param{OptionList} def   The attributes to set on that node
+    /**
+     * @param {N} node           The HTML element whose attributes are to be set
+     * @param {OptionList} def   The attributes to set on that node
      */
     public setAttributes(node: N, def: OptionList) {
         if (def.style && typeof(def.style) !== 'string') {
@@ -382,52 +378,52 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
         }
     }
 
-    /*
+    /**
      * @override
      */
     public abstract head(doc: D): N;
 
-    /*
+    /**
      * @override
      */
     public abstract body(doc: D): N;
 
-    /*
+    /**
      * @override
      */
     public abstract root(doc: D): N;
 
-    /*
+    /**
      * @override
      */
     public abstract tags(node: N, name: string, ns?: string): N[];
 
-    /*
+    /**
      * @override
      */
     public abstract getElements(nodes: (string | N | N[])[], document: D): N[];
 
-    /*
+    /**
      * @override
      */
     public abstract parent(node: N | T): N;
 
-    /*
+    /**
      * @override
      */
     public abstract append(node: N, child: N | T): N | T;
 
-    /*
+    /**
      * @override
      */
     public abstract insert(nchild: N | T, ochild: N | T): void;
 
-    /*
+    /**
      * @override
      */
     public abstract remove(child: N | T): N | T;
 
-    /*
+    /**
      * @override
      */
     public replace(nnode: N | T, onode: N | T) {
@@ -436,115 +432,115 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
         return onode;
     }
 
-    /*
+    /**
      * @override
      */
     public abstract clone(node: N):  N;
 
-    /*
+    /**
      * @override
      */
     public abstract split(node: T, n: number): T;
 
-    /*
+    /**
      * @override
      */
     public abstract next(node: N | T): N | T;
 
-    /*
+    /**
      * @override
      */
     public abstract previous(node: N | T): N | T;
 
-    /*
+    /**
      * @override
      */
     public abstract firstChild(node: N): N | T;
 
-    /*
+    /**
      * @override
      */
     public abstract lastChild(node: N): N | T;
 
-    /*
+    /**
      * @override
      */
     public abstract childNodes(node: N): (N | T)[];
 
-    /*
+    /**
      * @override
      */
     public childNode(node: N, i: number) {
         return this.childNodes(node)[i];
     }
 
-    /*
+    /**
      * @override
      */
     public abstract kind(node: N | T): string;
 
-    /*
+    /**
      * @override
      */
     public abstract value(node: N | T): string;
 
-    /*
+    /**
      * @override
      */
     public abstract textContent(node: N): string;
 
-    /*
+    /**
      * @override
      */
     public abstract innerHTML(node: N): string;
 
-    /*
+    /**
      * @override
      */
     public abstract outerHTML(node: N): string;
 
-    /*
+    /**
      * @override
      */
     public abstract setAttribute(node: N, name: string, value: string): void;
 
-    /*
+    /**
      * @override
      */
     public abstract getAttribute(node: N, name: string): string;
 
-    /*
+    /**
      * @override
      */
     public abstract removeAttribute(node: N, name: string): void;
 
-    /*
+    /**
      * @override
      */
     public abstract hasAttribute(node: N, name: string): boolean;
 
 
-    /*
+    /**
      * @override
      */
     public abstract allAttributes(node: N): AttributeData[];
 
-    /*
+    /**
      * @override
      */
     public abstract addClass(node: N, name: string): void;
 
-    /*
+    /**
      * @override
      */
     public abstract removeClass(node: N, name: string): void;
 
-    /*
+    /**
      * @override
      */
     public abstract hasClass(node: N, name: string): boolean;
 
-    /*
+    /**
      * @override
      */
     public allClasses(node: N) {
@@ -552,27 +548,27 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
         return classes.replace(/  +/g, ' ').replace(/^ /, '').replace(/ $/, '').split(/ /);
     }
 
-    /*
+    /**
      * @override
      */
     public abstract setStyle(node: N, name: string, value: string): void;
 
-    /*
+    /**
      * @override
      */
     public abstract getStyle(node: N, name: string): string;
 
-    /*
+    /**
      * @override
      */
     public abstract allStyles(node: N): string;
 
-    /*
+    /**
      * @override
      */
     public abstract fontSize(node: N): number;
 
-    /*
+    /**
      * @override
      */
     public abstract nodeSize(node: N): [number, number];

@@ -26,7 +26,7 @@ import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMstyle node class (subclass of AbstractMmlLayoutNode)
  */
 
@@ -43,14 +43,14 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
         infixlinebreakstyle: 'before'
     };
 
-    /*
+    /**
      * @return {string}  The mstyle kind
      */
     public get kind() {
         return 'mstyle';
     }
 
-    /*
+    /**
      * Handle scriptlevel changes, and add mstyle attributes to the ones being inherited.
      *
      * @override

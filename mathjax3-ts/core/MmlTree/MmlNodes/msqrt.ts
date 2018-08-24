@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMsqrt node class (subclass of AbstractMmlNode)
  */
 
@@ -35,28 +35,28 @@ export class MmlMsqrt extends AbstractMmlNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The msqrt kind
      */
     public get kind() {
         return 'msqrt';
     }
 
-    /*
+    /**
      * @return {number}  <msqrt> has an inferred mrow
      */
     public get arity() {
         return -1;
     }
 
-    /*
+    /**
      * @return {boolean}  <msqrt> can contain line breaks
      */
     public get linebreakContainer() {
         return true;
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {
@@ -65,7 +65,7 @@ export class MmlMsqrt extends AbstractMmlNode {
         return this;
     }
 
-    /*
+    /**
      * The contents of sqrt are in TeX prime style.
      *
      * @override

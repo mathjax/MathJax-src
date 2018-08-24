@@ -24,7 +24,7 @@
 import {AbstractMathList} from '../../core/MathList.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implement the HTMLMathList class (extends AbstractMathList)
  *
  * @template N  The HTMLElement node class

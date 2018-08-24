@@ -26,7 +26,7 @@ import {AbstractMmlNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMaligngroup node class (subclass of AbstractMmlNode)
  */
 
@@ -36,21 +36,21 @@ export class MmlMaligngroup extends AbstractMmlNode {
         groupalign: INHERIT
     };
 
-    /*
+    /**
      * @return {string}  The maligngroup kind
      */
     public get kind() {
         return 'maligngroup';
     }
 
-    /*
+    /**
      * @return {boolean}  <maligngroup> is space-like
      */
     public get isSpacelike() {
         return true;
     }
 
-    /*
+    /**
      * Children can inherit from <maligngroup>
      *
      * @override

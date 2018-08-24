@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMroot node class (subclass of AbstractMmlNode)
  */
 
@@ -35,21 +35,21 @@ export class MmlMroot extends AbstractMmlNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The mroot kind
      */
     public get kind() {
         return 'mroot';
     }
 
-    /*
+    /**
      * @return {number}  <mroot> requires two children
      */
     public get arity() {
         return 2;
     }
 
-    /*
+    /**
      * Set the children display/level/prime for the base and root.
      *
      * @override

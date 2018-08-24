@@ -24,26 +24,26 @@
 import {PrioritizedList, PrioritizedListItem} from './PrioritizedList.js';
 
 /*****************************************************************/
-/*
- *  The FunctionListItem interface (extends PrioritizedListItem<Function>
+/**
+ *  The FunctionListItem interface (extends PrioritizedListItem<Function>)
  */
 
 export interface FunctionListItem extends PrioritizedListItem<Function> {}
 
 /*****************************************************************/
-/*
- *  Implements the FunctionList class (extends PrioritizedList<Function>
+/**
+ *  Implements the FunctionList class (extends PrioritizedList<Function>)
  */
 
 export class FunctionList extends PrioritizedList<Function> {
 
-    /*
+    /**
      * Executes the functions in the list (in prioritized order),
      *   passing the given data to the functions.  If any return
      *   false, the list is terminated.
      *
-     * @param{any[]} data  The array of arguments to pass to the functions
-     * @return{boolean}    False if any function stopped the list by
+     * @param {any[]} data  The array of arguments to pass to the functions
+     * @return {boolean}    False if any function stopped the list by
      *                       returning false, true otherwise
      */
     public execute(...data: any[]) {
@@ -56,7 +56,7 @@ export class FunctionList extends PrioritizedList<Function> {
         return true;
     }
 
-    /*
+    /**
      * Executes the functions in the list (in prioritied order) asynchronously,
      *   passing the given data to the functions, and doing the next function
      *   only when the previous one completes.  If the function returns a
@@ -67,8 +67,8 @@ export class FunctionList extends PrioritizedList<Function> {
      *   succeeds, but passes false as its argument.  Otherwise it succeeds
      *   and passes true.
      *
-     * @param{any[]} data  The array of arguments to pass to the functions
-     * @return{Promise}    The promise that is satisfied when the function
+     * @param {any[]} data  The array of arguments to pass to the functions
+     * @return {Promise}    The promise that is satisfied when the function
      *                       list completes (with argument true or false
      *                       depending on whether some function returned
      *                       false or not).

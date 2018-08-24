@@ -34,7 +34,7 @@ import {split} from '../../../util/string.js';
 
 /*****************************************************************/
 
-/*
+/**
  * The CHTMLmenclose wrapper for the MmlMenclose object
  *
  * @template N  The HTMLElement node class
@@ -44,7 +44,7 @@ import {split} from '../../../util/string.js';
 export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMenclose.prototype.kind;
 
-    /*
+    /**
      * Styles needed for the various notations
      */
     public static styles: StyleList = {
@@ -119,7 +119,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      *  The definitions of the various notations
      */
     public static Notations: Notation.DefList = new Map([
@@ -261,18 +261,18 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     ] as Notation.DefPair[]);
 
-    /*
+    /**
      *  The notations active on this menclose, and the one to use for the child, if any
      */
     protected notations: Notation.List<N, T, D> = {};
     protected renderChild: Notation.Renderer<N, T, D> = null;
 
-    /*
+    /**
      * fake msqrt for radial notation (if used)
      */
     protected msqrt: CHTMLmsqrt<N, T, D> = null;
 
-    /*
+    /**
      * The padding, thickness, and shape of the arrow head
      *   (may be overriden using data-padding, data-thickness, and data-arrowhead attibutes)
      */
@@ -280,7 +280,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
     public thickness: number = Notation.THICKNESS;
     public arrowhead = {x: Notation.ARROWX, y: Notation.ARROWY, dx: Notation.ARROWDX};
 
-    /*
+    /**
      * @override
      * @constructor
      */
@@ -292,7 +292,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.initializeNotations();
     }
 
-    /*
+    /**
      * Look up the data-* attributes and override the default values
      */
     protected getParameters() {
@@ -316,7 +316,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      *  Get the notations given in the notation attribute
      *    and check if any are used to render the child nodes
      */
@@ -333,7 +333,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      *  Remove any redundant notations
      */
     protected removeRedundantNotations() {
@@ -347,7 +347,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      *  Run any initialization needed by notations in use
      */
     protected initializeNotations() {
@@ -359,7 +359,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /********************************************************/
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -392,7 +392,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
@@ -407,8 +407,8 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.w += R;
     }
 
-    /*
-     * @return{number[]}  Array of the maximum extra space from the notations along each side
+    /**
+     * @return {number[]}  Array of the maximum extra space from the notations along each side
      */
     protected getBBoxExtenders() {
         let TRBL = [0, 0, 0, 0];
@@ -418,8 +418,8 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         return TRBL;
     }
 
-    /*
-     * @return{number[]}  Array of padding (i.e., BBox minus border) along each side
+    /**
+     * @return {number[]}  Array of padding (i.e., BBox minus border) along each side
      */
     protected getPadding() {
         let TRBL = [0, 0, 0, 0];
@@ -434,11 +434,11 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         return [0, 1, 2, 3].map(i => TRBL[i] - BTRBL[i]);
     }
 
-    /*
+    /**
      * Each entry in X gets replaced by the corresponding one in Y if it is larger
      *
-     * @param{number[]} X   An array of numbers
-     * @param{number[]} Y   An array of numbers that replace smaller ones in X
+     * @param {number[]} X   An array of numbers
+     * @param {number[]} Y   An array of numbers that replace smaller ones in X
      */
     protected maximizeEntries(X: number[], Y: number[]) {
         for (let i = 0; i < X.length; i++) {
@@ -450,7 +450,7 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /********************************************************/
 
-    /*
+    /**
      * @override
      * (make it public so it can be called by the notation functions)
      */
@@ -458,32 +458,32 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         return super.em(m);
     }
 
-    /*
-     * @param{number} m  A number to trim to 4 decimal places
-     * @return{string}   The number trimmed to 4 places, with trailing 0's removed
+    /**
+     * @param {number} m  A number to trim to 4 decimal places
+     * @return {string}   The number trimmed to 4 places, with trailing 0's removed
      */
     public units(m: number) {
         if (Math.abs(m) < .001) return '0';
         return m.toFixed(4).replace(/\.?0+$/, '');
     }
 
-    /*
-     * @param{number} w   The width of the box whose diagonal is needed
-     * @param{number} h   The height of the box whose diagonal is needed
-     * @param{number[]}   The angle and width of the diagonal of the box
+    /**
+     * @param {number} w   The width of the box whose diagonal is needed
+     * @param {number} h   The height of the box whose diagonal is needed
+     * @param {number[]}   The angle and width of the diagonal of the box
      */
     public getArgMod(w: number, h: number) {
         return [Math.atan2(h, w), Math.sqrt(w * w + h * h)];
     }
 
-    /*
+    /**
      * Create an svg element
      *
-     * @param{string} type       The class for the new svg element
-     * @param{number[]} box      The viewBox values for the svg element
-     * @param{N[]} nodes         The children for the svg element
-     * @param{StyleData} styles  Styles to set on the svg element, if any
-     * @return{N}                The newly created svg element
+     * @param {string} type       The class for the new svg element
+     * @param {number[]} box      The viewBox values for the svg element
+     * @param {N[]} nodes         The children for the svg element
+     * @param {StyleData} styles  Styles to set on the svg element, if any
+     * @return {N}                The newly created svg element
      */
     public svg(type: string, box: number[], nodes: N[], styles: StyleData = null) {
         const properties: OptionList = {
@@ -496,12 +496,12 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         return this.html('svg', properties, nodes);
     }
 
-    /*
+    /**
      * Create an ellipse element
      *
-     * @param{number} w  The width of the ellipse
-     * @param{number} h  The height of the ellipse
-     * @return{N}        The newly created ellipse node
+     * @param {number} w  The width of the ellipse
+     * @param {number} h  The height of the ellipse
+     * @return {N}        The newly created ellipse node
      */
     public ellipse(w: number, h: number) {
         const t = this.thickness;
@@ -511,14 +511,14 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         }));
     }
 
-    /*
+    /**
      * Create a line element
      *
-     * @param{number} x1   The x-coordinate of the starting point
-     * @param{number} y1   The y-coordinate of the starting point
-     * @param{number} x2   The x-coordinate of the ending point
-     * @param{number} y2   The y-coordinate of the ending point
-     * @return{N}          The newly created line element
+     * @param {number} x1   The x-coordinate of the starting point
+     * @param {number} y1   The y-coordinate of the starting point
+     * @param {number} x2   The x-coordinate of the ending point
+     * @param {number} y2   The y-coordinate of the ending point
+     * @return {N}          The newly created line element
      */
     public line(x1: number, y1: number, x2: number, y2: number) {
         return this.adjustThickness(this.html('line', {
@@ -527,11 +527,11 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         }));
     }
 
-    /*
+    /**
      * Create a path element from the commands the specify it
      *
-     * @param{(string|number)[]} P   The list of commands and coordinates for the path
-     * @return{N}                    The newly created path
+     * @param {(string|number)[]} P   The list of commands and coordinates for the path
+     * @return {N}                    The newly created path
      */
     public path(...P: (string | number)[]) {
         return this.adjustThickness(this.html('path', {
@@ -539,12 +539,12 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         }));
     }
 
-    /*
+    /**
      * Create a filled path element from the commands the specify it
      *   (same as path above, but no thickness adjustments)
      *
-     * @param{(string|number)[]} P   The list of commands and coordinates for the path
-     * @return{N}                    The newly created path
+     * @param {(string|number)[]} P   The list of commands and coordinates for the path
+     * @return {N}                    The newly created path
      */
     public fill(...P: (string | number)[]) {
         return this.html('path', {
@@ -552,16 +552,16 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         });
     }
 
-    /*
+    /**
      * Create a arrow using an svg element
      *
-     * @param{number} w        The length of the arrow
-     * @param{number} a        The angle for the arrow
-     * @param{number} neg      The direction to shift the arrow's Y coordinate before rotating it (1 or -1)
-     * @param{string} origin   The transform-origin for the rotation
-     * @param{string} offset   The axis alogn which to offset the rotated arrow
-     * @param{number} d        The distance to offset by
-     * @param{boolean} double  True if this is a double-headed arrow
+     * @param {number} w        The length of the arrow
+     * @param {number} a        The angle for the arrow
+     * @param {number} neg      The direction to shift the arrow's Y coordinate before rotating it (1 or -1)
+     * @param {string} origin   The transform-origin for the rotation
+     * @param {string} offset   The axis alogn which to offset the rotated arrow
+     * @param {number} d        The distance to offset by
+     * @param {boolean} double  True if this is a double-headed arrow
      */
     public arrow(w: number, a: number, neg: number, origin: string, offset: string = '', d: number = 0, double: boolean = false) {
         const t = this.thickness;
@@ -598,10 +598,10 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         return svg;
     }
 
-    /*
-     * @param{N} shape   The svg element whose stroke-thickness must be
+    /**
+     * @param {N} shape   The svg element whose stroke-thickness must be
      *                   adjusted if the thickness isn't the default
-     * @return{N}        The adjusted element
+     * @return {N}        The adjusted element
      */
     public adjustThickness(shape: N) {
         if (this.thickness !== Notation.THICKNESS) {
@@ -610,10 +610,10 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         return shape;
     }
 
-    /*
-     * @param{N} node   The HTML element whose border width must be
+    /**
+     * @param {N} node   The HTML element whose border width must be
      *                  adjusted if the thickness isn't the default
-     * @return{N}       The adjusted element
+     * @return {N}       The adjusted element
      */
     public adjustBorder(node: N) {
         if (this.thickness !== Notation.THICKNESS) {
@@ -624,14 +624,14 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     /********************************************************/
 
-    /*
+    /**
      * Create an unattached msqrt wrapper to render the 'radical' notation.
      *   We replace the inferred mrow of the msqrt with the one from the menclose
      *   but without changing the parent pointer, so as not to detach it from
      *   the menclose (which would desrtoy the original MathML tree).
      *
-     * @param{CHTMLWrapper} child   The inferred mrow that is the child of this menclose
-     * @return{CHTMLmsqrt}          The newly created (but detached) msqrt wrapper
+     * @param {CHTMLWrapper} child   The inferred mrow that is the child of this menclose
+     * @return {CHTMLmsqrt}          The newly created (but detached) msqrt wrapper
      */
     public createMsqrt(child: CHTMLWrapper<N, T, D>) {
         const mmlFactory = (this.node as AbstractMmlNode).factory;
@@ -649,10 +649,10 @@ export class CHTMLmenclose<N, T, D> extends CHTMLWrapper<N, T, D> {
         return node;
     }
 
-    /*
-     * @return{number[]}  The differences between the msqrt bounding box
-     *                    and its child bounding box (i.e., the extra space
-     *                    created by the radical symbol).
+    /**
+     * @return {number[]}  The differences between the msqrt bounding box
+     *                     and its child bounding box (i.e., the extra space
+     *                     created by the radical symbol).
      */
     public sqrtTRBL() {
         const bbox = this.msqrt.getBBox();
