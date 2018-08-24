@@ -34,7 +34,6 @@ import {CommonTextNode, CommonTextNodeInterface} from '../../common/Wrappers/Tex
  * @template D  The Document class
  */
 export class CHTMLTextNode<N, T, D> extends CommonTextNode<N, T, D, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
-    public static kind = TextNode.prototype.kind;
 
     public static autoStyle = false;
     public static styles = {
