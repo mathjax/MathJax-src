@@ -70,7 +70,7 @@ export class PrioritizedList<DataClass> {
     /**
      * Make the list iterable, and return the data for the items in the list
      *
-     * @return{{next: Function}}  The object containing the iterator's next() function
+     * @return {{next: Function}}  The object containing the iterator's next() function
      */
     public [Symbol.iterator](): Iterator<PrioritizedListItem<DataClass>> {
         let i = 0;
@@ -85,9 +85,9 @@ export class PrioritizedList<DataClass> {
     /**
      * Add an item to the list
      *
-     * @param{DataClass} item   The data for the item to be added
-     * @param{number} priority  The priority for the item
-     * @return{DataClass}       The data itself
+     * @param {DataClass} item   The data for the item to be added
+     * @param {number} priority  The priority for the item
+     * @return {DataClass}       The data itself
      */
     public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY) {
         let i = this.items.length;
@@ -101,7 +101,7 @@ export class PrioritizedList<DataClass> {
     /**
      * Remove an item from the list
      *
-     * @param{DataClass} item   The data for the item to be removed
+     * @param {DataClass} item   The data for the item to be removed
      */
     public remove(item: DataClass) {
         let i = this.items.length;
@@ -120,7 +120,7 @@ export class PrioritizedList<DataClass> {
      *
      * so use toArray() to convert to array, when needed
      *
-     * @return{PrioritizedListItem<DataClass>[]}  The list converted to an array
+     * @return {PrioritizedListItem<DataClass>[]}  The list converted to an array
      */
     public toArray() {
         return Array.from(this);

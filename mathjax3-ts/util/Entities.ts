@@ -508,8 +508,8 @@ function replace(match: string, entity: string) {
 }
 
 /**
- * @param{string} entity  The character code point as a string
- * @return{srting}        The character(s) with the given code point
+ * @param {string} entity  The character code point as a string
+ * @return {srting}        The character(s) with the given code point
  */
 export function numeric(entity: string) {
     let n = (entity.charAt(0) === 'x' ?

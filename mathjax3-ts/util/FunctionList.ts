@@ -42,8 +42,8 @@ export class FunctionList extends PrioritizedList<Function> {
      *   passing the given data to the functions.  If any return
      *   false, the list is terminated.
      *
-     * @param{any[]} data  The array of arguments to pass to the functions
-     * @return{boolean}    False if any function stopped the list by
+     * @param {any[]} data  The array of arguments to pass to the functions
+     * @return {boolean}    False if any function stopped the list by
      *                       returning false, true otherwise
      */
     public execute(...data: any[]) {
@@ -67,8 +67,8 @@ export class FunctionList extends PrioritizedList<Function> {
      *   succeeds, but passes false as its argument.  Otherwise it succeeds
      *   and passes true.
      *
-     * @param{any[]} data  The array of arguments to pass to the functions
-     * @return{Promise}    The promise that is satisfied when the function
+     * @param {any[]} data  The array of arguments to pass to the functions
+     * @return {Promise}    The promise that is satisfied when the function
      *                       list completes (with argument true or false
      *                       depending on whether some function returned
      *                       false or not).

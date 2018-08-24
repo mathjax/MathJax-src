@@ -51,8 +51,8 @@ const WSC = ['width', 'style', 'color'];
 /**
  * Split a style at spaces (taking quotation marks and commas into account)
  *
- * @param{string} text  The combined styles to be split at spaces
- * @return{string[]}    Array of parts of the style (separated by spaces)
+ * @param {string} text  The combined styles to be split at spaces
+ * @return {string[]}    Array of parts of the style (separated by spaces)
  */
 function splitSpaces(text: string) {
     const parts = text.split(/((?:'[^']*'|"[^"]*"|,[\s\n]|[^\s\n])*)/g);
@@ -73,7 +73,7 @@ function splitSpaces(text: string) {
  *    x y z       same as x y z y
  *    x y z w     each specified
  *
- * @param{string} name   The style to be processed
+ * @param {string} name   The style to be processed
  */
 
 function splitTRBL(name: string) {
@@ -99,7 +99,7 @@ function splitTRBL(name: string) {
  * Combine top-right-bottom-left into one entry
  * (removing unneeded values)
  *
- * @param{string} name   The style to be processed
+ * @param {string} name   The style to be processed
  */
 function combineTRBL(name: string) {
     const children = Styles.connect[name].children;
@@ -128,7 +128,7 @@ function combineTRBL(name: string) {
 /**
  * Use the same value for all children
  *
- * @param{string} name   The style to be processed
+ * @param {string} name   The style to be processed
  */
 function splitSame(name: string) {
     for (const child of Styles.connect[name].children) {
@@ -140,7 +140,7 @@ function splitSame(name: string) {
  * Check that all children have the same values and
  * if so, set the parent to that value
  *
- * @param{string} name   The style to be processed
+ * @param {string} name   The style to be processed
  */
 function combineSame(name: string) {
     const children = [...Styles.connect[name].children];
@@ -166,7 +166,7 @@ const BORDER: {[name: string]: RegExp} = {
 /**
  * Split a width-style-color border definition
  *
- * @param{string} name   The style to be processed
+ * @param {string} name   The style to be processed
  */
 function splitWSC(name: string) {
     let parts = {width: '', style: '', color: ''} as StyleList;
@@ -187,7 +187,7 @@ function splitWSC(name: string) {
 /**
  * Combine with-style-color border definition from children
  *
- * @param{string} name   The style to be processed
+ * @param {string} name   The style to be processed
  */
 function combineWSC(name: string) {
     const parts = [] as string[];
@@ -241,7 +241,7 @@ const FONT: {[name: string]: RegExp} = {
 /**
  * Split a font declaration into is parts (not perfect but good enough for now)
  *
- * @param{string} name   The style to be processed
+ * @param {string} name   The style to be processed
  */
 function splitFont(name: string) {
     const parts = splitSpaces(this.styles[name]);
@@ -283,8 +283,8 @@ function splitFont(name: string) {
 }
 
 /**
- * @param{string} name   The style to be processed
- * @param{{[name: string]: string | string[]}} value  The list of parts detected above
+ * @param {string} name   The style to be processed
+ * @param {{[name: string]: string | string[]}} value  The list of parts detected above
  */
 function saveFontParts(name: string, value: {[name: string]: string | string[]}) {
     for (const child of Styles.connect[name].children) {
@@ -383,7 +383,7 @@ export class Styles {
     protected styles: StyleList;
 
     /**
-     * @param{string} cssText  The initial definition for the style
+     * @param {string} cssText  The initial definition for the style
      * @constructor
      */
     constructor(cssText: string = '') {
@@ -391,7 +391,7 @@ export class Styles {
     }
 
     /**
-     * @return{string}  The CSS string for the styles currently defined
+     * @return {string}  The CSS string for the styles currently defined
      */
     public get cssText() {
         const styles = [] as string[];
@@ -405,8 +405,8 @@ export class Styles {
     }
 
     /**
-     * @param{string} name   The name of the style to set
-     * @param{srting|number|boolean}  The value to set it to
+     * @param {string} name   The name of the style to set
+     * @param {srting|number|boolean}  The value to set it to
      */
     public set(name: string, value: string | number | boolean) {
         name = this.normalizeName(name);
@@ -432,8 +432,8 @@ export class Styles {
     }
 
     /**
-     * @param{string} name  The name of the style to get
-     * @return{string}      The value of the style (or empty string if not defined)
+     * @param {string} name  The name of the style to get
+     * @return {string}      The value of the style (or empty string if not defined)
      */
     public get(name: string) {
         name = this.normalizeName(name);
@@ -441,8 +441,8 @@ export class Styles {
     }
 
     /**
-     * @param{string} name   The name of the style to set (without causing parent updates)
-     * @param{string} value  The value to set it to
+     * @param {string} name   The name of the style to set (without causing parent updates)
+     * @param {string} value  The value to set it to
      */
     protected setStyle(name: string, value: string) {
         this.styles[name] = value;
@@ -455,7 +455,7 @@ export class Styles {
     }
 
     /**
-     * @param{string} name   The name of the style whose parent is to be combined
+     * @param {string} name   The name of the style whose parent is to be combined
      */
     protected combineChildren(name: string) {
         const parent = this.parentName(name);
@@ -466,8 +466,8 @@ export class Styles {
     }
 
     /**
-     * @param{string} name   The name of the style whose parent style is to be found
-     * @return{string}       The name of the parent, or '' if none
+     * @param {string} name   The name of the style whose parent style is to be found
+     * @return {string}       The name of the parent, or '' if none
      */
     protected parentName(name: string) {
         const parent = name.replace(/-[^-]*$/, '');
@@ -475,9 +475,9 @@ export class Styles {
     }
 
     /**
-     * @param{string} name   The name of the parent style
-     * @param{string} child  The suffix to be added to the parent
-     * @preturn{string}      The combined name
+     * @param {string} name   The name of the parent style
+     * @param {string} child  The suffix to be added to the parent
+     * @preturn {string}      The combined name
      */
     protected childName(name: string, child: string) {
         //
@@ -498,17 +498,17 @@ export class Styles {
     }
 
     /**
-     * @param{string} name  The name of a style to normalize
-     * @return{string}      The name converted from CamelCase to lowercase with dashes
+     * @param {string} name  The name of a style to normalize
+     * @return {string}      The name converted from CamelCase to lowercase with dashes
      */
     protected normalizeName(name: string) {
         return name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
     }
 
     /**
-     * @param{string} cssText  A style text string to be parsed into separate styles
-     *                         (by using this.set(), we get all the sub-styles created
-     *                          as well as the merged style shorthands)
+     * @param {string} cssText  A style text string to be parsed into separate styles
+     *                          (by using this.set(), we get all the sub-styles created
+     *                           as well as the merged style shorthands)
      */
     protected parse(cssText: string = '') {
         let PATTERN = (this.constructor as typeof Styles).pattern;

@@ -22,8 +22,8 @@
  */
 
 /**
- * @param{string} name  The name of the file to load
- * @return{Promise}     The promise that always fails (indicating file not loaded)
+ * @param {string} name  The name of the file to load
+ * @return {Promise}     The promise that always fails (indicating file not loaded)
  */
 export function asyncLoad(name: string) {
     return new Promise((ok, fail) => fail());

@@ -143,7 +143,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     }
 
     /**
-     * @return{boolean}  True is this mo is an accent in an munderover construction
+     * @return {boolean}  True is this mo is an accent in an munderover construction
      */
     get isAccent() {
         let accent = false;
@@ -305,8 +305,8 @@ export class MmlMo extends AbstractMmlTokenNode {
     }
 
     /**
-     * @param{string[]} forms     The three forms in the default order they are to be tested
-     * @return{string[]}          The forms in the new order, if there is an explicit form attribute
+     * @param {string[]} forms     The three forms in the default order they are to be tested
+     * @return {string[]}          The forms in the new order, if there is an explicit form attribute
      */
     protected handleExplicitForm(forms: string[]) {
         if (this.attributes.isSet('form')) {

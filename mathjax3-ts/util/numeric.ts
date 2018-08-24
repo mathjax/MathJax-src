@@ -22,16 +22,16 @@
  */
 
 /**
- * @param{number[]} A  The array to sum
- * @return{number}     The summ of the elements in A
+ * @param {number[]} A  The array to sum
+ * @return {number}     The summ of the elements in A
  */
 export function sum(A: number[]) {
     return A.reduce((a, b) => a + b, 0);
 }
 
 /**
- * @param{number[]} A  The array whose maximum entry is sought
- * @return{number}     The largest entry in the array
+ * @param {number[]} A  The array whose maximum entry is sought
+ * @return {number}     The largest entry in the array
  */
 export function max(A: number[]) {
     return A.reduce((a, b) => Math.max(a, b), 0);

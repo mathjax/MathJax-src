@@ -136,9 +136,9 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     /*
      * Add the needed patterns for a pair of delimiters
      *
-     * @param{string[]} starts  Array of starting delimiter strings
-     * @param{Delims} delims    Array of delimiter strings, as [start, end]
-     * @param{boolean} display  True if the delimiters are for display mode
+     * @param {string[]} starts  Array of starting delimiter strings
+     * @param {Delims} delims    Array of delimiter strings, as [start, end]
+     * @param {boolean} display  True if the delimiters are for display mode
      */
     protected addPattern(starts: string[], delims: Delims, display: boolean) {
         let [open, close] = delims;
@@ -149,8 +149,8 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     /*
      * Create the pattern for a close delimiter
      *
-     * @param{string} end  The end delimiter text
-     * @return{RegExp}     The regular expression for the end delimiter
+     * @param {string} end  The end delimiter text
+     * @return {RegExp}     The regular expression for the end delimiter
      */
     protected endPattern(end: string) {
         return new RegExp(quotePattern(end) + '|\\\\(?:[a-zA-Z]|.)|[{}]', 'g');
@@ -161,11 +161,11 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
      *   skipping braced groups, and control sequences that aren't
      *   the close delimiter.
      *
-     * @param{string} text            The string being searched for the end delimiter
-     * @param{number} n               The index of the string being searched
-     * @param{RegExpExecArray} start  The result array from the start-delimiter search
-     * @param{EndItem} end            The end-delimiter data corresponding to the start delimiter
-     * @return{ProtoItem}             The proto math item for the math, if found
+     * @param {string} text            The string being searched for the end delimiter
+     * @param {number} n               The index of the string being searched
+     * @param {RegExpExecArray} start  The result array from the start-delimiter search
+     * @param {EndItem} end            The end-delimiter data corresponding to the start delimiter
+     * @return {ProtoItem}             The proto math item for the math, if found
      */
     protected findEnd(text: string, n: number, start: RegExpExecArray, end: EndItem) {
         let [close, display, pattern] = end;
@@ -188,9 +188,9 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
      * Search a string for math delimited by one of the delimiter pairs,
      *   or by \begin{env}...\end{env}, or \eqref{...}, \ref{...}, \\, or \$.
      *
-     * @param{ProtoItem[]} math  The array of proto math items located so far
-     * @param{number} n          The index of the string being searched
-     * @param{string} text       The string being searched
+     * @param {ProtoItem[]} math  The array of proto math items located so far
+     * @param {number} n          The index of the string being searched
+     * @param {string} text       The string being searched
      */
     protected findMathInString(math: ProtoItem<N, T>[], n: number, text: string) {
         let start, match;

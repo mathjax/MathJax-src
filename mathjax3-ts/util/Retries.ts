@@ -61,8 +61,8 @@ export interface RetryError extends Error {
  *       console.log(err.message);
  *     });
  *
- * @param{Function} code  The code to run that might cause retries
- * @return{Promise}       A promise that is satisfied when the code
+ * @param {Function} code  The code to run that might cause retries
+ * @return {Promise}       A promise that is satisfied when the code
  *                         runs completely, and fails if the code
  *                         generates an error (that is not a retry).
  */
@@ -91,7 +91,7 @@ export function handleRetriesFor(code: Function) {
  *   before rerunning the code.  Causes an error to be thrown, so
  *   calling this terminates the code at that point.
  *
- * @param{Promise} promise  The promise that must be satisfied before
+ * @param {Promise} promise  The promise that must be satisfied before
  *                            actions will continue
  */
 
