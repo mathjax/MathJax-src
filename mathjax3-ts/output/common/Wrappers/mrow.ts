@@ -23,7 +23,6 @@
 
 import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
 import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -55,8 +54,6 @@ export type MrowConstructor = Constructor<CommonMrowInterface>;
  */
 export function CommonMrow<N, T, D, U extends WrapperConstructor>(Base: U): MrowConstructor & U {
     return class extends Base {
-
-        public static kind = MmlMrow.prototype.kind;
 
         /**
          * @override

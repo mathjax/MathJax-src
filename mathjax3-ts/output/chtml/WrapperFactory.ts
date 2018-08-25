@@ -22,6 +22,7 @@
  */
 
 import {CHTML} from '../chtml.js';
+import {CommonWrapper} from '../common/Wrapper.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
 import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
 import {CHTMLWrappers} from './Wrappers.js';

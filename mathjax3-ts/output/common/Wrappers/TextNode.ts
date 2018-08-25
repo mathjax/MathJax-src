@@ -55,7 +55,6 @@ export type TextNodeConstructor = Constructor<CommonTextNodeInterface>;
  */
 export function CommonTextNode<N, T, D, U extends WrapperConstructor>(Base: U): TextNodeConstructor & U {
    return class extends Base {
-        public static kind = TextNode.prototype.kind;
 
         public static autoStyle = false;
         public static styles = {
