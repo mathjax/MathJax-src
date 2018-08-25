@@ -45,7 +45,7 @@ export type MrowConstructor = Constructor<CommonMrowInterface>;
 
 /*****************************************************************/
 /**
- * The CommonMrow wrapper for the MmlMrow object
+ * The CommonMrow wrapper mixin for the MmlMrow object
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -129,7 +129,7 @@ export type InferredMrowConstructor = Constructor<CommonInferredMrowInterface>;
 
 /*****************************************************************/
 /**
- * The CHTMLinferredMrow wrapper for the MmlInferredMrow object
+ * The CommonInferredMrow wrapper mixin for the MmlInferredMrow object
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

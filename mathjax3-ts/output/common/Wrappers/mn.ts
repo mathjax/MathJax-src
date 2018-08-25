@@ -38,7 +38,7 @@ export type MnConstructor = Constructor<CommonMnInterface>;
 
 /*****************************************************************/
 /**
- * The Commonmn wrapper for the MmlMn object
+ * The CommonMn wrapper mixin for the MmlMn object
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
