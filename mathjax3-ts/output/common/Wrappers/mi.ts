@@ -29,6 +29,9 @@ import {BBox} from '../BBox.js';
  * The CommonMi interface
  */
 export interface CommonMiInterface extends AnyWrapper {
+    /**
+     * True if no italic correction should be used
+     */
     noIC: boolean;
 }
 
