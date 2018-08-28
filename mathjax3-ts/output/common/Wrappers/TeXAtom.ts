@@ -41,12 +41,9 @@ export type TeXAtomConstructor = Constructor<CommonTeXAtomInterface>;
 /**
  * The CommonTeXAtom wrapper mixin for the TeXAtom object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonTeXAtom<N, T, D, U extends WrapperConstructor>(Base: U): TeXAtomConstructor & U {
+export function CommonTeXAtom<T extends WrapperConstructor>(Base: T): TeXAtomConstructor & T {
     return class extends Base {
 
         /**

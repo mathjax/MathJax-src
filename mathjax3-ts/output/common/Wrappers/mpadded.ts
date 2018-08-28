@@ -59,14 +59,11 @@ export type MpaddedConstructor = Constructor<CommonMpaddedInterface>;
 
 /*****************************************************************/
 /**
- * The CHTMLmpadded wrapper for the MmlMpadded object
+ * The CommomMpadded wrapper for the MmlMpadded object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMpadded<N, T, D, U extends WrapperConstructor>(Base: U): MpaddedConstructor & U {
+export function CommonMpadded<T extends WrapperConstructor>(Base: T): MpaddedConstructor & T {
     return class extends Base {
 
         /**

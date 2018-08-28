@@ -163,14 +163,11 @@ export type ScriptbaseConstructor<W extends AnyWrapper> = Constructor<CommonScri
  * A base class for msup/msub/msubsup and munder/mover/munderover
  * wrapper mixin implementations
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template W  The child-node Wrapper class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonScriptbase<N, T, D, W extends AnyWrapper,
-                                          U extends WrapperConstructor>(Base: U): ScriptbaseConstructor<W> & U {
+export function CommonScriptbase<W extends AnyWrapper,
+                                 T extends WrapperConstructor>(Base: T): ScriptbaseConstructor<W> & T {
     return class extends Base {
 
         /**

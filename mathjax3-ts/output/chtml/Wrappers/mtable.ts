@@ -40,7 +40,7 @@ import {isPercent} from '../../../util/string.js';
  * @template D  The Document class
  */
 export class CHTMLmtable<N, T, D> extends
-CommonMtable<N, T, D, CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+CommonMtable<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMtable.prototype.kind;
 

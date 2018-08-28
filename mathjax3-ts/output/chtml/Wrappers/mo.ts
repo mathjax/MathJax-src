@@ -37,7 +37,7 @@ import {DIRECTION, NOSTRETCH} from '../FontData.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmo<N, T, D> extends CommonMo<N, T, D, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmo<N, T, D> extends CommonMo<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMo.prototype.kind;
 

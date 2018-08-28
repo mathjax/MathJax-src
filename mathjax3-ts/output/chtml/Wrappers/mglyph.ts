@@ -34,7 +34,7 @@ import {StyleList, StyleData} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmglyph<N, T, D> extends CommonMglyph<N, T, D, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmglyph<N, T, D> extends CommonMglyph<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMglyph.prototype.kind;
 

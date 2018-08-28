@@ -40,7 +40,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmunder<N, T, D> extends
-CommonMunder<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMunder<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMunder.prototype.kind;
 
@@ -101,7 +101,7 @@ CommonMunder<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D
  * @template D  The Document class
  */
 export class CHTMLmover<N, T, D> extends
-CommonMover<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMover<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMover.prototype.kind;
 
@@ -151,7 +151,7 @@ CommonMover<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>
  * @template D  The Document class
  */
 export class CHTMLmunderover<N, T, D> extends
-CommonMunderover<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMunderover<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMunderover.prototype.kind;
 

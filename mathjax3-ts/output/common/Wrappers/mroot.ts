@@ -43,12 +43,9 @@ export type MrootConstructor = Constructor<CommonMrootInterface>;
 /**
  * The CommonMroot wrapper mixin for the MmlMroot object (extends CHTMLmsqrt)
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMroot<N, T, D, U extends MsqrtConstructor>(Base: U): MrootConstructor & U {
+export function CommonMroot<T extends MsqrtConstructor>(Base: T): MrootConstructor & T {
     return class extends Base {
 
         /**

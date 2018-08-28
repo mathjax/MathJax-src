@@ -38,8 +38,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmtr<N, T, D> extends
-CommonMtr<N, T, D, CHTMLmtd<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmtr<N, T, D> extends CommonMtr<CHTMLmtd<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMtr.prototype.kind;
 
@@ -86,7 +85,7 @@ CommonMtr<N, T, D, CHTMLmtd<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
  * @template D  The Document class
  */
 export class CHTMLmlabeledtr<N, T, D> extends
-CommonMlabeledtr<N, T, D, CHTMLmtd<N, T, D>, Constructor<CHTMLmtr<N, T, D>>>(CHTMLmtr) {
+CommonMlabeledtr<CHTMLmtd<N, T, D>, Constructor<CHTMLmtr<N, T, D>>>(CHTMLmtr) {
 
     public static kind = MmlMlabeledtr.prototype.kind;
 

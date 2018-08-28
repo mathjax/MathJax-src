@@ -36,7 +36,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmsqrt<N, T, D> extends CommonMsqrt<N, T, D, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmsqrt<N, T, D> extends CommonMsqrt<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMsqrt.prototype.kind;
 

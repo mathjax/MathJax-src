@@ -40,12 +40,9 @@ export type MspaceConstructor = Constructor<CommonMspaceInterface>;
 /**
  * The CommonMspace wrapper mixin for the MmlMspace object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMspace<N, T, D, U extends WrapperConstructor>(Base: U): MspaceConstructor & U {
+export function CommonMspace<T extends WrapperConstructor>(Base: T): MspaceConstructor & T {
     return class extends Base {
 
         /**

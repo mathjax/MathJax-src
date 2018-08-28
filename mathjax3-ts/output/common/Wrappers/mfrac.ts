@@ -90,12 +90,9 @@ export type MfracConstructor = Constructor<CommonMfracInterface>;
 /**
  * The CommonMfrac wrapper mixin for the MmlMfrac object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMfrac<N, T, D, U extends WrapperConstructor>(Base: U): MfracConstructor & U {
+export function CommonMfrac<T extends WrapperConstructor>(Base: T): MfracConstructor & T {
     return class extends Base {
 
         public bevel: CommonMoInterface = null;

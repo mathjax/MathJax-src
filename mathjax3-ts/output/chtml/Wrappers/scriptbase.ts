@@ -40,7 +40,7 @@ import {StyleData, StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLscriptbase<N, T, D> extends
-CommonScriptbase<N, T, D, CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+CommonScriptbase<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = 'scriptbase';
 

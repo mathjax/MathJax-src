@@ -47,12 +47,9 @@ export type MrowConstructor = Constructor<CommonMrowInterface>;
 /**
  * The CommonMrow wrapper mixin for the MmlMrow object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMrow<N, T, D, U extends WrapperConstructor>(Base: U): MrowConstructor & U {
+export function CommonMrow<T extends WrapperConstructor>(Base: T): MrowConstructor & T {
     return class extends Base {
 
         /**
@@ -131,12 +128,9 @@ export type InferredMrowConstructor = Constructor<CommonInferredMrowInterface>;
 /**
  * The CommonInferredMrow wrapper mixin for the MmlInferredMrow object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonInferredMrow<N, T, D, U extends MrowConstructor>(Base: U): InferredMrowConstructor & U {
+export function CommonInferredMrow<T extends MrowConstructor>(Base: T): InferredMrowConstructor & T {
     return class extends Base {
 
         public static kind = MmlInferredMrow.prototype.kind;

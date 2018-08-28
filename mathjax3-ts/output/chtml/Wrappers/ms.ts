@@ -33,7 +33,7 @@ import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLms<N, T, D> extends CommonMs<N, T, D, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLms<N, T, D> extends CommonMs<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMs.prototype.kind;
 

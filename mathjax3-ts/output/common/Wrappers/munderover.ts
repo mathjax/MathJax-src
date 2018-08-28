@@ -47,14 +47,11 @@ export type MunderConstructor<W extends AnyWrapper> = Constructor<CommonMunderIn
 /**
  * The CommonMunder wrapper mixin for the MmlMunder object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template W  The child-node Wrapper class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMunder<N, T, D, W extends AnyWrapper,
-                                      U extends ScriptbaseConstructor<W>>(Base: U): MunderConstructor<W> & U {
+export function CommonMunder<W extends AnyWrapper,
+                             T extends ScriptbaseConstructor<W>>(Base: T): MunderConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -118,14 +115,11 @@ export type MoverConstructor<W extends AnyWrapper> = Constructor<CommonMoverInte
 /**
  * The CommonMover wrapper mixin for the MmlMover object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template W  The child-node Wrapper class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMover<N, T, D, W extends AnyWrapper,
-                                     U extends ScriptbaseConstructor<W>>(Base: U): MoverConstructor<W> & U {
+export function CommonMover<W extends AnyWrapper,
+                            T extends ScriptbaseConstructor<W>>(Base: T): MoverConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -200,14 +194,11 @@ export type MunderoverConstructor<W extends AnyWrapper> = Constructor<CommonMund
 /*
  * The CommonMunderover wrapper for the MmlMunderover object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template W  The child-node Wrapper class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMunderover<N, T, D, W extends AnyWrapper,
-                                       U extends ScriptbaseConstructor<W>>(Base: U): MunderoverConstructor<W> & U {
+export function CommonMunderover<W extends AnyWrapper,
+                                 T extends ScriptbaseConstructor<W>>(Base: T): MunderoverConstructor<W> & T {
     return class extends Base {
 
         /*

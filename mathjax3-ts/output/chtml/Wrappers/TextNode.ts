@@ -33,7 +33,7 @@ import {CommonTextNode, CommonTextNodeInterface} from '../../common/Wrappers/Tex
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLTextNode<N, T, D> extends CommonTextNode<N, T, D, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLTextNode<N, T, D> extends CommonTextNode<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = TextNode.prototype.kind;
 

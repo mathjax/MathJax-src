@@ -82,14 +82,11 @@ export type MtrConstructor<C extends AnyWrapper> = Constructor<CommonMtrInterfac
 /**
  * The CommonMtr wrapper for the MmlMtr object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template C  The class for table cells
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMtr<N, T, D, C extends AnyWrapper,
-                                   U extends WrapperConstructor>(Base: U): MtrConstructor<C> & U {
+export function CommonMtr<C extends AnyWrapper,
+                          T extends WrapperConstructor>(Base: T): MtrConstructor<C> & T {
     return class extends Base {
 
         /**
@@ -207,14 +204,11 @@ export type MlabeledtrConstructor<C extends AnyWrapper> = Constructor<CommonMlab
 /**
  * The CommonMlabeledtr wrapper mixin for the MmlMlabeledtr object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template C  The class for table cells
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMlabeledtr<N, T, D, C extends AnyWrapper,
-                                          U extends MtrConstructor<C>>(Base: U): MlabeledtrConstructor<C> & U {
+export function CommonMlabeledtr<C extends AnyWrapper,
+                                 T extends MtrConstructor<C>>(Base: T): MlabeledtrConstructor<C> & T {
     return class extends Base {
 
         /**

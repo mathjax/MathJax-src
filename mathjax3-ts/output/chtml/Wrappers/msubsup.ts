@@ -39,7 +39,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmsub<N, T, D> extends
-CommonMsub<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsub<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsub.prototype.kind;
 
@@ -56,7 +56,7 @@ CommonMsub<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>
  * @template D  The Document class
  */
 export class CHTMLmsup<N, T, D> extends
-CommonMsup<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsup<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsup.prototype.kind;
 
@@ -73,7 +73,7 @@ CommonMsup<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>
  * @template D  The Document class
  */
 export class CHTMLmsubsup<N, T, D> extends
-CommonMsubsup<N, T, D, CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsubsup<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsubsup.prototype.kind;
 

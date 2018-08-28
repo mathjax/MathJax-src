@@ -54,12 +54,9 @@ export type MglyphConstructor = Constructor<CommonMglyphInterface>;
 /**
  * The CommonMglyph wrapper mixin for the MmlMglyph object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMglyph<N, T, D, U extends WrapperConstructor>(Base: U): MglyphConstructor & U {
+export function CommonMglyph<T extends WrapperConstructor>(Base: T): MglyphConstructor & T {
     return class extends Base {
 
         /**

@@ -82,12 +82,9 @@ export type MsqrtConstructor = Constructor<CommonMsqrtInterface>;
 /**
  * The CommonMsqrt wrapper mixin for the MmlMsqrt object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMsqrt<N, T, D, U extends WrapperConstructor>(Base: U): MsqrtConstructor & U {
+export function CommonMsqrt<T extends WrapperConstructor>(Base: T): MsqrtConstructor & T {
     return class extends Base {
 
         /**

@@ -138,14 +138,11 @@ export type MmultiscriptsConstructor<W extends AnyWrapper> = Constructor<CommonM
 /**
  * The CommonMmultiscripts wrapper mixin for the MmlMmultiscripts object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template W  The child-node Wrapper class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMmultiscripts<N, T, D, W extends AnyWrapper,
-                                    U extends MsubsupConstructor<W>>(Base: U): MmultiscriptsConstructor<W> & U {
+export function CommonMmultiscripts<W extends AnyWrapper,
+                                    T extends MsubsupConstructor<W>>(Base: T): MmultiscriptsConstructor<W> & T {
     return class extends Base {
 
         /**

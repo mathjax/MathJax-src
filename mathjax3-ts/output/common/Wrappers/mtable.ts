@@ -260,16 +260,13 @@ export type MtableConstructor<C extends AnyWrapper, R extends CommonMtrInterface
 /**
  * The CommonMtable wrapper mixin for the MmlMtable object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template C  The table cell class
  * @temlpate R  the table row class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMtable<N, T, D, C extends AnyWrapper,
-                                      R extends CommonMtrInterface<C>,
-                                      U extends WrapperConstructor>(Base: U): MtableConstructor<C, R> & U {
+export function CommonMtable<C extends AnyWrapper,
+                             R extends CommonMtrInterface<C>,
+                             T extends WrapperConstructor>(Base: T): MtableConstructor<C, R> & T {
     return class extends Base {
 
         /**

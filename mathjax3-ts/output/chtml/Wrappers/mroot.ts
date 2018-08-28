@@ -35,7 +35,7 @@ import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmroot<N, T, D> extends CommonMroot<N, T, D, MrootConstructor>(CHTMLmsqrt) {
+export class CHTMLmroot<N, T, D> extends CommonMroot<MrootConstructor>(CHTMLmsqrt) {
 
     public static kind = MmlMroot.prototype.kind;
 

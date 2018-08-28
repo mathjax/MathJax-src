@@ -40,12 +40,9 @@ export type MnConstructor = Constructor<CommonMnInterface>;
 /**
  * The CommonMn wrapper mixin for the MmlMn object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMn<N, T, D, U extends WrapperConstructor>(Base: U): MnConstructor & U {
+export function CommonMn<T extends WrapperConstructor>(Base: T): MnConstructor & T {
     return class extends Base {
 
         /**

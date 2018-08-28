@@ -44,12 +44,9 @@ export type MiConstructor = Constructor<CommonMiInterface>;
 /**
  *  The CommonMi wrapper mixin for the MmlMi object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMi<N, T, D, U extends WrapperConstructor>(Base: U): MiConstructor & U {
+export function CommonMi<T extends WrapperConstructor>(Base: T): MiConstructor & T {
     return class extends Base {
 
         /**

@@ -47,14 +47,11 @@ export type MsubConstructor<W extends AnyWrapper> = Constructor<CommonMsubInterf
 /**
  * The CommonMsub wrapper mixin for the MmlMsub object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template W  The child-node Wrapper class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMsub<N, T, D, W extends AnyWrapper,
-                                    U extends ScriptbaseConstructor<W>>(Base: U): MsubConstructor<W> & U {
+export function CommonMsub<W extends AnyWrapper,
+                           T extends ScriptbaseConstructor<W>>(Base: T): MsubConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -97,14 +94,11 @@ export type MsupConstructor<W extends AnyWrapper> = Constructor<CommonMsupInterf
 /**
  * The CommonMsup wrapper mixin for the MmlMsup object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template W  The child-node Wrapper class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMsup<N, T, D, W extends AnyWrapper,
-                                    U extends ScriptbaseConstructor<W>>(Base: U): MsubConstructor<W> & U {
+export function CommonMsup<W extends AnyWrapper,
+                           T extends ScriptbaseConstructor<W>>(Base: T): MsubConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -174,14 +168,11 @@ export type MsubsupConstructor<W extends AnyWrapper> = Constructor<CommonMsubsup
 /**
  * The CommomMsubsup wrapper for the MmlMsubsup object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template W  The child-node Wrapper class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMsubsup<N, T, D, W extends AnyWrapper,
-                                       U extends ScriptbaseConstructor<W>>(Base: U): MsubsupConstructor<W> & U {
+export function CommonMsubsup<W extends AnyWrapper,
+                              T extends ScriptbaseConstructor<W>>(Base: T): MsubsupConstructor<W> & T {
     return class extends Base {
 
         /**

@@ -48,12 +48,9 @@ export type TextNodeConstructor = Constructor<CommonTextNodeInterface>;
 /**
  *  The CommonTextNode wrapper mixin for the TextNode object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonTextNode<N, T, D, U extends WrapperConstructor>(Base: U): TextNodeConstructor & U {
+export function CommonTextNode<T extends WrapperConstructor>(Base: T): TextNodeConstructor & T {
    return class extends Base {
 
         public static autoStyle = false;

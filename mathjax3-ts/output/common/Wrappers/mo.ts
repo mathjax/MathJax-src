@@ -27,6 +27,7 @@ import {BBox} from '../BBox.js';
 import {DelimiterData} from '../FontData.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
+/*****************************************************************/
 /**
  * Convert direction to letter
  */
@@ -102,12 +103,9 @@ export type MoConstructor = Constructor<CommonMoInterface>;
 /**
  * The CommomMo wrapper mixin for the MmlMo object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMo<N, T, D, U extends WrapperConstructor>(Base: U): MoConstructor & U {
+export function CommonMo<T extends WrapperConstructor>(Base: T): MoConstructor & T {
     return class extends Base {
 
         /**

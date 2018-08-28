@@ -46,12 +46,9 @@ export type MsConstructor = Constructor<CommonMsInterface>;
 /**
  * The CommonMs wrapper mixin for the MmlMs object
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
- * @template U  The Wrapper class constructor type
+ * @template T  The Wrapper class constructor type
  */
-export function CommonMs<N, T, D, U extends WrapperConstructor>(Base: U): MsConstructor & U {
+export function CommonMs<T extends WrapperConstructor>(Base: T): MsConstructor & T {
     return class extends Base {
 
         /**
