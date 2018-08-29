@@ -30,7 +30,7 @@ import {CharOptions} from '../FontData.js';
 /**
  * The CommonTextNode interface
  */
-export interface CommonTextNodeInterface extends AnyWrapper {
+export interface CommonTextNode extends AnyWrapper {
     /**
      * @param {string} variant   The variant in which to look for the character
      * @param {number} n         The number of the character to look up
@@ -42,7 +42,7 @@ export interface CommonTextNodeInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonTextNode constructor
  */
-export type TextNodeConstructor = Constructor<CommonTextNodeInterface>;
+export type TextNodeConstructor = Constructor<CommonTextNode>;
 
 /*****************************************************************/
 /**
@@ -50,7 +50,7 @@ export type TextNodeConstructor = Constructor<CommonTextNodeInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonTextNode<T extends WrapperConstructor>(Base: T): TextNodeConstructor & T {
+export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): TextNodeConstructor & T {
    return class extends Base {
 
         public static autoStyle = false;

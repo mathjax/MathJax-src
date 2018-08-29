@@ -29,7 +29,7 @@ import {Property} from '../../../core/Tree/Node.js';
 /**
  * The CommonMpadded interface
  */
-export interface CommonMpaddedInterface extends AnyWrapper {
+export interface CommonMpadded extends AnyWrapper {
     /**
      * Get the content bounding box, and the change in size and offsets
      *   as specified by the parameters
@@ -55,7 +55,7 @@ export interface CommonMpaddedInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMpadded constructor
  */
-export type MpaddedConstructor = Constructor<CommonMpaddedInterface>;
+export type MpaddedConstructor = Constructor<CommonMpadded>;
 
 /*****************************************************************/
 /**
@@ -63,7 +63,7 @@ export type MpaddedConstructor = Constructor<CommonMpaddedInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMpadded<T extends WrapperConstructor>(Base: T): MpaddedConstructor & T {
+export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): MpaddedConstructor & T {
     return class extends Base {
 
         /**

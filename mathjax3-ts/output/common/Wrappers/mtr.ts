@@ -33,7 +33,7 @@ import {DIRECTION} from '../FontData.js';
  *
  * @template C  The class for table cells
  */
-export interface CommonMtrInterface<C extends AnyWrapper> extends AnyWrapper {
+export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
     /**
      * The number of mtd's in the mtr
      */
@@ -76,7 +76,7 @@ export interface CommonMtrInterface<C extends AnyWrapper> extends AnyWrapper {
  *
  * @template C  The class for table cells
  */
-export type MtrConstructor<C extends AnyWrapper> = Constructor<CommonMtrInterface<C>>;
+export type MtrConstructor<C extends AnyWrapper> = Constructor<CommonMtr<C>>;
 
 /*****************************************************************/
 /**
@@ -85,8 +85,8 @@ export type MtrConstructor<C extends AnyWrapper> = Constructor<CommonMtrInterfac
  * @template C  The class for table cells
  * @template T  The Wrapper class constructor type
  */
-export function CommonMtr<C extends AnyWrapper,
-                          T extends WrapperConstructor>(Base: T): MtrConstructor<C> & T {
+export function CommonMtrMixin<C extends AnyWrapper,
+                               T extends WrapperConstructor>(Base: T): MtrConstructor<C> & T {
     return class extends Base {
 
         /**
@@ -190,7 +190,7 @@ export function CommonMtr<C extends AnyWrapper,
  *
  * @template C  The class for table cells
  */
-export interface CommonMlabeledtrInterface<C extends AnyWrapper> extends CommonMtrInterface<C> {
+export interface CommonMlabeledtr<C extends AnyWrapper> extends CommonMtr<C> {
 }
 
 /**
@@ -198,7 +198,7 @@ export interface CommonMlabeledtrInterface<C extends AnyWrapper> extends CommonM
  *
  * @template C  The class for table cells
  */
-export type MlabeledtrConstructor<C extends AnyWrapper> = Constructor<CommonMlabeledtrInterface<C>>;
+export type MlabeledtrConstructor<C extends AnyWrapper> = Constructor<CommonMlabeledtr<C>>;
 
 /*****************************************************************/
 /**
@@ -207,8 +207,8 @@ export type MlabeledtrConstructor<C extends AnyWrapper> = Constructor<CommonMlab
  * @template C  The class for table cells
  * @template T  The Wrapper class constructor type
  */
-export function CommonMlabeledtr<C extends AnyWrapper,
-                                 T extends MtrConstructor<C>>(Base: T): MlabeledtrConstructor<C> & T {
+export function CommonMlabeledtrMixin<C extends AnyWrapper,
+                                      T extends MtrConstructor<C>>(Base: T): MlabeledtrConstructor<C> & T {
     return class extends Base {
 
         /**

@@ -23,7 +23,7 @@
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CommonMtable, CommonMtableInterface} from '../../common/Wrappers/mtable.js';
+import {CommonMtable, CommonMtableMixin} from '../../common/Wrappers/mtable.js';
 import {CHTMLmtr} from './mtr.js';
 import {CHTMLmtd} from './mtd.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
@@ -40,7 +40,7 @@ import {isPercent} from '../../../util/string.js';
  * @template D  The Document class
  */
 export class CHTMLmtable<N, T, D> extends
-CommonMtable<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMtable.prototype.kind;
 

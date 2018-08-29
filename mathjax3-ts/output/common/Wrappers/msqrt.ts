@@ -30,7 +30,7 @@ import {DIRECTION} from '../FontData.js';
 /**
  * The CommonMsqrt interface
  */
-export interface CommonMsqrtInterface extends AnyWrapper {
+export interface CommonMsqrt extends AnyWrapper {
     /**
      * The index of the base of the root in childNodes
      */
@@ -76,7 +76,7 @@ export interface CommonMsqrtInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMsqrt constructor
  */
-export type MsqrtConstructor = Constructor<CommonMsqrtInterface>;
+export type MsqrtConstructor = Constructor<CommonMsqrt>;
 
 /*****************************************************************/
 /**
@@ -84,7 +84,7 @@ export type MsqrtConstructor = Constructor<CommonMsqrtInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMsqrt<T extends WrapperConstructor>(Base: T): MsqrtConstructor & T {
+export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtConstructor & T {
     return class extends Base {
 
         /**

@@ -25,7 +25,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonScriptbase, CommonScriptbaseInterface} from '../../common/Wrappers/scriptbase.js';
+import {CommonScriptbase, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {BBox} from '../BBox.js';
 import {StyleData, StyleList} from '../../common/CssStyles.js';
@@ -40,7 +40,7 @@ import {StyleData, StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLscriptbase<N, T, D> extends
-CommonScriptbase<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+CommonScriptbaseMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = 'scriptbase';
 

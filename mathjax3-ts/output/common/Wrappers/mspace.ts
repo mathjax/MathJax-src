@@ -28,13 +28,13 @@ import {BBox} from '../BBox.js';
 /**
  * The CommonMspance interface
  */
-export interface CommonMspaceInterface extends AnyWrapper {
+export interface CommonMspace extends AnyWrapper {
 }
 
 /**
  * Shorthand for the CommonMspace constructor
  */
-export type MspaceConstructor = Constructor<CommonMspaceInterface>;
+export type MspaceConstructor = Constructor<CommonMspace>;
 
 /*****************************************************************/
 /**
@@ -42,7 +42,7 @@ export type MspaceConstructor = Constructor<CommonMspaceInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMspace<T extends WrapperConstructor>(Base: T): MspaceConstructor & T {
+export function CommonMspaceMixin<T extends WrapperConstructor>(Base: T): MspaceConstructor & T {
     return class extends Base {
 
         /**

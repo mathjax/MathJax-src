@@ -23,7 +23,7 @@
  */
 
 import {AnyWrapper} from '../Wrapper.js';
-import {CommonScriptbase, CommonScriptbaseInterface, ScriptbaseConstructor} from './scriptbase.js';
+import {CommonScriptbase, ScriptbaseConstructor} from './scriptbase.js';
 import {BBox} from '../BBox.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 
@@ -33,7 +33,7 @@ import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubs
  *
  * @template W  The child-node Wrapper class
  */
-export interface CommonMsubInterface<W extends AnyWrapper> extends CommonScriptbaseInterface<W> {
+export interface CommonMsub<W extends AnyWrapper> extends CommonScriptbase<W> {
 }
 
 /**
@@ -41,7 +41,7 @@ export interface CommonMsubInterface<W extends AnyWrapper> extends CommonScriptb
  *
  * @template W  The child-node Wrapper class
  */
-export type MsubConstructor<W extends AnyWrapper> = Constructor<CommonMsubInterface<W>>;
+export type MsubConstructor<W extends AnyWrapper> = Constructor<CommonMsub<W>>;
 
 /*****************************************************************/
 /**
@@ -50,8 +50,8 @@ export type MsubConstructor<W extends AnyWrapper> = Constructor<CommonMsubInterf
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMsub<W extends AnyWrapper,
-                           T extends ScriptbaseConstructor<W>>(Base: T): MsubConstructor<W> & T {
+export function CommonMsubMixin<W extends AnyWrapper,
+                                T extends ScriptbaseConstructor<W>>(Base: T): MsubConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -80,7 +80,7 @@ export function CommonMsub<W extends AnyWrapper,
  *
  * @template W  The child-node Wrapper class
  */
-export interface CommonMsupInterface<W extends AnyWrapper> extends CommonScriptbaseInterface<W> {
+export interface CommonMsup<W extends AnyWrapper> extends CommonScriptbase<W> {
 }
 
 /**
@@ -88,7 +88,7 @@ export interface CommonMsupInterface<W extends AnyWrapper> extends CommonScriptb
  *
  * @template W  The child-node Wrapper class
  */
-export type MsupConstructor<W extends AnyWrapper> = Constructor<CommonMsupInterface<W>>;
+export type MsupConstructor<W extends AnyWrapper> = Constructor<CommonMsup<W>>;
 
 /*****************************************************************/
 /**
@@ -97,8 +97,8 @@ export type MsupConstructor<W extends AnyWrapper> = Constructor<CommonMsupInterf
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMsup<W extends AnyWrapper,
-                           T extends ScriptbaseConstructor<W>>(Base: T): MsubConstructor<W> & T {
+export function CommonMsupMixin<W extends AnyWrapper,
+                                T extends ScriptbaseConstructor<W>>(Base: T): MsubConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -128,7 +128,7 @@ export function CommonMsup<W extends AnyWrapper,
  *
  * @template W  The child-node Wrapper class
  */
-export interface CommonMsubsupInterface<W extends AnyWrapper> extends CommonScriptbaseInterface<W> {
+export interface CommonMsubsup<W extends AnyWrapper> extends CommonScriptbase<W> {
 
     /**
      *  Cached values for the script offsets and separation (so if they are
@@ -162,7 +162,7 @@ export interface CommonMsubsupInterface<W extends AnyWrapper> extends CommonScri
  *
  * @template W  The child-node Wrapper class
  */
-export type MsubsupConstructor<W extends AnyWrapper> = Constructor<CommonMsubsupInterface<W>>;
+export type MsubsupConstructor<W extends AnyWrapper> = Constructor<CommonMsubsup<W>>;
 
 /*****************************************************************/
 /**
@@ -171,8 +171,8 @@ export type MsubsupConstructor<W extends AnyWrapper> = Constructor<CommonMsubsup
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMsubsup<W extends AnyWrapper,
-                              T extends ScriptbaseConstructor<W>>(Base: T): MsubsupConstructor<W> & T {
+export function CommonMsubsupMixin<W extends AnyWrapper,
+                                   T extends ScriptbaseConstructor<W>>(Base: T): MsubsupConstructor<W> & T {
     return class extends Base {
 
         /**

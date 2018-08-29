@@ -28,7 +28,7 @@ import {BBox} from '../BBox.js';
 /**
  * The CommonMi interface
  */
-export interface CommonMiInterface extends AnyWrapper {
+export interface CommonMi extends AnyWrapper {
     /**
      * True if no italic correction should be used
      */
@@ -38,7 +38,7 @@ export interface CommonMiInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMi constructor
  */
-export type MiConstructor = Constructor<CommonMiInterface>;
+export type MiConstructor = Constructor<CommonMi>;
 
 /*****************************************************************/
 /**
@@ -46,7 +46,7 @@ export type MiConstructor = Constructor<CommonMiInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMi<T extends WrapperConstructor>(Base: T): MiConstructor & T {
+export function CommonMiMixin<T extends WrapperConstructor>(Base: T): MiConstructor & T {
     return class extends Base {
 
         /**

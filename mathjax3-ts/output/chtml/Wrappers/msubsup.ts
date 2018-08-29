@@ -24,9 +24,9 @@
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CHTMLscriptbase} from './scriptbase.js';
-import {CommonMsub, CommonMsubInterface} from '../../common/Wrappers/msubsup.js';
-import {CommonMsup, CommonMsupInterface} from '../../common/Wrappers/msubsup.js';
-import {CommonMsubsup, CommonMsubsupInterface} from '../../common/Wrappers/msubsup.js';
+import {CommonMsub, CommonMsubMixin} from '../../common/Wrappers/msubsup.js';
+import {CommonMsup, CommonMsupMixin} from '../../common/Wrappers/msubsup.js';
+import {CommonMsubsup, CommonMsubsupMixin} from '../../common/Wrappers/msubsup.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -39,7 +39,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmsub<N, T, D> extends
-CommonMsub<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsubMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsub.prototype.kind;
 
@@ -56,7 +56,7 @@ CommonMsub<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLsc
  * @template D  The Document class
  */
 export class CHTMLmsup<N, T, D> extends
-CommonMsup<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsupMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsup.prototype.kind;
 
@@ -73,7 +73,7 @@ CommonMsup<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLsc
  * @template D  The Document class
  */
 export class CHTMLmsubsup<N, T, D> extends
-CommonMsubsup<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsubsupMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsubsup.prototype.kind;
 

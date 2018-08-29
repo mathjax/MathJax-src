@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonTeXAtom, CommonTeXAtomInterface} from '../../common/Wrappers/TeXAtom.js';
+import {CommonTeXAtom, CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
 import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 
@@ -34,7 +34,7 @@ import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLTeXAtom<N, T, D> extends CommonTeXAtom<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLTeXAtom<N, T, D> extends CommonTeXAtomMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = TeXAtom.prototype.kind;
 

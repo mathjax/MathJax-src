@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
-import {CommonMo, CommonMoInterface, DirectionVH} from '../../common/Wrappers/mo.js';
+import {CommonMo, CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../BBox.js';
 import {DelimiterData} from '../FontData.js';
@@ -37,7 +37,7 @@ import {DIRECTION, NOSTRETCH} from '../FontData.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmo<N, T, D> extends CommonMo<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMo.prototype.kind;
 

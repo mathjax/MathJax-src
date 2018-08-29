@@ -23,7 +23,7 @@
 
 import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLmsubsup} from './msubsup.js';
-import {CommonMmultiscripts, CommonMmultiscriptsInterface} from '../../common/Wrappers/mmultiscripts.js';
+import {CommonMmultiscripts, CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
 import {BBox} from '../BBox.js';
 import {StyleList} from '../../common/CssStyles.js';
@@ -37,7 +37,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmmultiscripts<N, T, D> extends
-CommonMmultiscripts<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsubsup<N, T, D>>>(CHTMLmsubsup) {
+CommonMmultiscriptsMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsubsup<N, T, D>>>(CHTMLmsubsup) {
 
     public static kind = MmlMmultiscripts.prototype.kind;
 

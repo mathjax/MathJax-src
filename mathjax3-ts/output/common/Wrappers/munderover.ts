@@ -23,7 +23,7 @@
  */
 
 import {AnyWrapper} from '../Wrapper.js';
-import {CommonScriptbase, CommonScriptbaseInterface, ScriptbaseConstructor} from './scriptbase.js';
+import {CommonScriptbase, ScriptbaseConstructor} from './scriptbase.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {BBox} from '../BBox.js';
 
@@ -33,7 +33,7 @@ import {BBox} from '../BBox.js';
  *
  * @template W  The child-node Wrapper class
  */
-export interface CommonMunderInterface<W extends AnyWrapper> extends CommonScriptbaseInterface<W> {
+export interface CommonMunder<W extends AnyWrapper> extends CommonScriptbase<W> {
 }
 
 /**
@@ -41,7 +41,7 @@ export interface CommonMunderInterface<W extends AnyWrapper> extends CommonScrip
  *
  * @template W  The child-node Wrapper class
  */
-export type MunderConstructor<W extends AnyWrapper> = Constructor<CommonMunderInterface<W>>;
+export type MunderConstructor<W extends AnyWrapper> = Constructor<CommonMunder<W>>;
 
 /*****************************************************************/
 /**
@@ -50,8 +50,8 @@ export type MunderConstructor<W extends AnyWrapper> = Constructor<CommonMunderIn
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMunder<W extends AnyWrapper,
-                             T extends ScriptbaseConstructor<W>>(Base: T): MunderConstructor<W> & T {
+export function CommonMunderMixin<W extends AnyWrapper,
+                                  T extends ScriptbaseConstructor<W>>(Base: T): MunderConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -101,7 +101,7 @@ export function CommonMunder<W extends AnyWrapper,
  *
  * @template W  The child-node Wrapper class
  */
-export interface CommonMoverInterface<W extends AnyWrapper> extends CommonScriptbaseInterface<W> {
+export interface CommonMover<W extends AnyWrapper> extends CommonScriptbase<W> {
 }
 
 /**
@@ -109,7 +109,7 @@ export interface CommonMoverInterface<W extends AnyWrapper> extends CommonScript
  *
  * @template W  The child-node Wrapper class
  */
-export type MoverConstructor<W extends AnyWrapper> = Constructor<CommonMoverInterface<W>>;
+export type MoverConstructor<W extends AnyWrapper> = Constructor<CommonMover<W>>;
 
 /*****************************************************************/
 /**
@@ -118,8 +118,8 @@ export type MoverConstructor<W extends AnyWrapper> = Constructor<CommonMoverInte
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMover<W extends AnyWrapper,
-                            T extends ScriptbaseConstructor<W>>(Base: T): MoverConstructor<W> & T {
+export function CommonMoverMixin<W extends AnyWrapper,
+                                 T extends ScriptbaseConstructor<W>>(Base: T): MoverConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -169,7 +169,7 @@ export function CommonMover<W extends AnyWrapper,
  *
  * @template W  The child-node Wrapper class
  */
-export interface CommonMunderoverInterface<W extends AnyWrapper> extends CommonScriptbaseInterface<W> {
+export interface CommonMunderover<W extends AnyWrapper> extends CommonScriptbase<W> {
 
     /*
      * The wrapped under node
@@ -188,7 +188,7 @@ export interface CommonMunderoverInterface<W extends AnyWrapper> extends CommonS
  *
  * @template W  The child-node Wrapper class
  */
-export type MunderoverConstructor<W extends AnyWrapper> = Constructor<CommonMunderoverInterface<W>>;
+export type MunderoverConstructor<W extends AnyWrapper> = Constructor<CommonMunderover<W>>;
 
 /*****************************************************************/
 /*
@@ -197,8 +197,8 @@ export type MunderoverConstructor<W extends AnyWrapper> = Constructor<CommonMund
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMunderover<W extends AnyWrapper,
-                                 T extends ScriptbaseConstructor<W>>(Base: T): MunderoverConstructor<W> & T {
+export function CommonMunderoverMixin<W extends AnyWrapper,
+                                      T extends ScriptbaseConstructor<W>>(Base: T): MunderoverConstructor<W> & T {
     return class extends Base {
 
         /*

@@ -23,7 +23,7 @@
 
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonTextNode, CommonTextNodeInterface} from '../../common/Wrappers/TextNode.js';
+import {CommonTextNode, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
 
 /*****************************************************************/
 /**
@@ -33,7 +33,7 @@ import {CommonTextNode, CommonTextNodeInterface} from '../../common/Wrappers/Tex
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLTextNode<N, T, D> extends CommonTextNode<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = TextNode.prototype.kind;
 

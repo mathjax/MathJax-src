@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
-import {CommonMpadded, CommonMpaddedInterface} from '../../common/Wrappers/mpadded.js';
+import {CommonMpadded, CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
 import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -34,7 +34,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmpadded<N, T, D> extends CommonMpadded<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmpadded<N, T, D> extends CommonMpaddedMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMpadded.prototype.kind;
 

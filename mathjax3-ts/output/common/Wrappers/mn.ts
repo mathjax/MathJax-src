@@ -28,13 +28,13 @@ import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 /**
  * The CommonMn interface
  */
-export interface CommonMnInterface extends AnyWrapper {
+export interface CommonMn extends AnyWrapper {
 }
 
 /**
  * Shorthand for the CommonMn constructor
  */
-export type MnConstructor = Constructor<CommonMnInterface>;
+export type MnConstructor = Constructor<CommonMn>;
 
 /*****************************************************************/
 /**
@@ -42,7 +42,7 @@ export type MnConstructor = Constructor<CommonMnInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMn<T extends WrapperConstructor>(Base: T): MnConstructor & T {
+export function CommonMnMixin<T extends WrapperConstructor>(Base: T): MnConstructor & T {
     return class extends Base {
 
         /**

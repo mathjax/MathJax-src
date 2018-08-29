@@ -27,7 +27,7 @@ import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
 /**
  * The CommonMs interface
  */
-export interface CommonMsInterface extends AnyWrapper {
+export interface CommonMs extends AnyWrapper {
     /**
      * Create a text wrapper with the given text;
      *
@@ -40,7 +40,7 @@ export interface CommonMsInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMs constructor
  */
-export type MsConstructor = Constructor<CommonMsInterface>;
+export type MsConstructor = Constructor<CommonMs>;
 
 /*****************************************************************/
 /**
@@ -48,7 +48,7 @@ export type MsConstructor = Constructor<CommonMsInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMs<T extends WrapperConstructor>(Base: T): MsConstructor & T {
+export function CommonMsMixin<T extends WrapperConstructor>(Base: T): MsConstructor & T {
     return class extends Base {
 
         /**

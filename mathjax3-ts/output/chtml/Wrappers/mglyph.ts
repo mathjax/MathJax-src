@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMglyph, CommonMglyphInterface} from '../../common/Wrappers/mglyph.js';
+import {CommonMglyph, CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
 import {StyleList, StyleData} from '../../common/CssStyles.js';
 
@@ -34,7 +34,7 @@ import {StyleList, StyleData} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmglyph<N, T, D> extends CommonMglyph<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmglyph<N, T, D> extends CommonMglyphMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMglyph.prototype.kind;
 

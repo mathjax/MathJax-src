@@ -22,7 +22,7 @@
  */
 
 import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
-import {CommonInferredMrowInterface} from './mrow.js';
+import {CommonInferredMrow} from './mrow.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
 import {BBox} from '../BBox.js';
@@ -31,11 +31,11 @@ import {BBox} from '../BBox.js';
 /**
  * The CommonMfenced interface
  */
-export interface CommonMfencedInterface extends AnyWrapper {
+export interface CommonMfenced extends AnyWrapper {
     /**
      * An mrow to use for the layout of the mfenced
      */
-    mrow: CommonInferredMrowInterface;
+    mrow: CommonInferredMrow;
 
     /**
      * Creates the mrow wrapper to use for the layout
@@ -60,7 +60,7 @@ export interface CommonMfencedInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMfenced constructor
  */
-export type MfencedConstructor = Constructor<CommonMfencedInterface>;
+export type MfencedConstructor = Constructor<CommonMfenced>;
 
 /*****************************************************************/
 /**
@@ -68,13 +68,13 @@ export type MfencedConstructor = Constructor<CommonMfencedInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMfenced<T extends WrapperConstructor>(Base: T): MfencedConstructor & T {
+export function CommonMfencedMixin<T extends WrapperConstructor>(Base: T): MfencedConstructor & T {
     return class extends Base {
 
         /**
          * An mrow to use for the layout of the mfenced
          */
-        public mrow: CommonInferredMrowInterface = null;
+        public mrow: CommonInferredMrow = null;
 
         /**
          * @override
@@ -99,7 +99,7 @@ export function CommonMfenced<T extends WrapperConstructor>(Base: T): MfencedCon
                 mathsize: ['math', attributes.get('mathsize')]
             };
             mrow.setInheritedAttributes(defaults, display, scriptlevel, false);
-            this.mrow = this.wrap(mrow) as CommonInferredMrowInterface;
+            this.mrow = this.wrap(mrow) as CommonInferredMrow;
             this.mrow.parent = this;
         }
 

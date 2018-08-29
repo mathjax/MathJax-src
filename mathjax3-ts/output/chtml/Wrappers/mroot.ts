@@ -23,7 +23,7 @@
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CHTMLmsqrt} from './msqrt.js';
-import {CommonMroot, CommonMrootInterface, MrootConstructor} from '../../common/Wrappers/mroot.js';
+import {CommonMroot, CommonMrootMixin, MrootConstructor} from '../../common/Wrappers/mroot.js';
 import {BBox} from '../BBox.js';
 import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
 
@@ -35,7 +35,7 @@ import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmroot<N, T, D> extends CommonMroot<MrootConstructor>(CHTMLmsqrt) {
+export class CHTMLmroot<N, T, D> extends CommonMrootMixin<MrootConstructor>(CHTMLmsqrt) {
 
     public static kind = MmlMroot.prototype.kind;
 

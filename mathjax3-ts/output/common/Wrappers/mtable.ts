@@ -22,7 +22,7 @@
  */
 
 import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
-import {CommonMtrInterface} from './mtr.js';
+import {CommonMtr} from './mtr.js';
 import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';
 import {split, isPercent} from '../../../util/string.js';
@@ -55,7 +55,7 @@ export type ColumnWidths = (string | number | null)[];
  * @template C   The class for table cells
  * @template R   The class for table rows
  */
-export interface CommonMtableInterface<C extends AnyWrapper, R extends CommonMtrInterface<C>> extends AnyWrapper {
+export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> extends AnyWrapper {
 
     /**
      * The number of columns and rows in the table
@@ -253,8 +253,7 @@ export interface CommonMtableInterface<C extends AnyWrapper, R extends CommonMtr
 /**
  * Shorthand for the CommonMtable constructor
  */
-export type MtableConstructor<C extends AnyWrapper, R extends CommonMtrInterface<C>>
-    = Constructor<CommonMtableInterface<C, R>>;
+export type MtableConstructor<C extends AnyWrapper, R extends CommonMtr<C>> = Constructor<CommonMtable<C, R>>;
 
 /*****************************************************************/
 /**
@@ -264,9 +263,9 @@ export type MtableConstructor<C extends AnyWrapper, R extends CommonMtrInterface
  * @temlpate R  the table row class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMtable<C extends AnyWrapper,
-                             R extends CommonMtrInterface<C>,
-                             T extends WrapperConstructor>(Base: T): MtableConstructor<C, R> & T {
+export function CommonMtableMixin<C extends AnyWrapper,
+                                  R extends CommonMtr<C>,
+                                  T extends WrapperConstructor>(Base: T): MtableConstructor<C, R> & T {
     return class extends Base {
 
         /**

@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMsqrt, CommonMsqrtInterface} from '../../common/Wrappers/msqrt.js';
+import {CommonMsqrt, CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
 import {CHTMLmo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
@@ -36,7 +36,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmsqrt<N, T, D> extends CommonMsqrt<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMsqrt.prototype.kind;
 

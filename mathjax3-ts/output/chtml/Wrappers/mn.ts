@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMn, CommonMnInterface} from '../../common/Wrappers/mn.js';
+import {CommonMn, CommonMnMixin} from '../../common/Wrappers/mn.js';
 import {MmlMn} from '../../../core/MmlTree/MmlNodes/mn.js';
 
 /*****************************************************************/
@@ -33,7 +33,7 @@ import {MmlMn} from '../../../core/MmlTree/MmlNodes/mn.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmn<N, T, D> extends CommonMn<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmn<N, T, D> extends CommonMnMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMn.prototype.kind;
 

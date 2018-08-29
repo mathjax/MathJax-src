@@ -22,7 +22,7 @@
  */
 
 import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
-import {CommonMoInterface} from './mo.js';
+import {CommonMo} from './mo.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';
@@ -31,7 +31,7 @@ import {DIRECTION} from '../FontData.js';
 /**
  * The CommonMfrac interface
  */
-export interface CommonMfracInterface extends AnyWrapper {
+export interface CommonMfrac extends AnyWrapper {
     /**
      * @param {BBox} bbox        The buonding box to modify
      * @param {boolean} display  True for display-mode fractions
@@ -84,7 +84,7 @@ export interface CommonMfracInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMfrac constructor
  */
-export type MfracConstructor = Constructor<CommonMfracInterface>;
+export type MfracConstructor = Constructor<CommonMfrac>;
 
 /*****************************************************************/
 /**
@@ -92,10 +92,10 @@ export type MfracConstructor = Constructor<CommonMfracInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMfrac<T extends WrapperConstructor>(Base: T): MfracConstructor & T {
+export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracConstructor & T {
     return class extends Base {
 
-        public bevel: CommonMoInterface = null;
+        public bevel: CommonMo = null;
 
         /************************************************/
 

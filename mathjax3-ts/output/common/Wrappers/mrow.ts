@@ -30,7 +30,7 @@ import {DIRECTION} from '../FontData.js';
 /**
  * The CommonMrow interface
  */
-export interface CommonMrowInterface extends AnyWrapper {
+export interface CommonMrow extends AnyWrapper {
     /**
      * Handle vertical stretching of children to match height of
      *  other nodes in the row.
@@ -41,7 +41,7 @@ export interface CommonMrowInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMrow constructor
  */
-export type MrowConstructor = Constructor<CommonMrowInterface>;
+export type MrowConstructor = Constructor<CommonMrow>;
 
 /*****************************************************************/
 /**
@@ -49,7 +49,7 @@ export type MrowConstructor = Constructor<CommonMrowInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMrow<T extends WrapperConstructor>(Base: T): MrowConstructor & T {
+export function CommonMrowMixin<T extends WrapperConstructor>(Base: T): MrowConstructor & T {
     return class extends Base {
 
         /**
@@ -116,13 +116,13 @@ export function CommonMrow<T extends WrapperConstructor>(Base: T): MrowConstruct
 /**
  * The CommonInferredMrow interface
  */
-export interface CommonInferredMrowInterface extends CommonMrowInterface {
+export interface CommonInferredMrow extends CommonMrow {
 }
 
 /**
  * Shorthand for the CommonInferredMrow constructor
  */
-export type InferredMrowConstructor = Constructor<CommonInferredMrowInterface>;
+export type InferredMrowConstructor = Constructor<CommonInferredMrow>;
 
 /*****************************************************************/
 /**
@@ -130,7 +130,7 @@ export type InferredMrowConstructor = Constructor<CommonInferredMrowInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonInferredMrow<T extends MrowConstructor>(Base: T): InferredMrowConstructor & T {
+export function CommonInferredMrowMixin<T extends MrowConstructor>(Base: T): InferredMrowConstructor & T {
     return class extends Base {
 
         public static kind = MmlInferredMrow.prototype.kind;

@@ -24,10 +24,9 @@
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CHTMLscriptbase} from './scriptbase.js';
-import {CommonMunder, CommonMunderInterface} from '../../common/Wrappers/munderover.js';
-import {CommonMover, CommonMoverInterface} from '../../common/Wrappers/munderover.js';
-import {CommonMunderover, CommonMunderoverInterface} from '../../common/Wrappers/munderover.js';
-//import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
+import {CommonMunder, CommonMunderMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMover, CommonMoverMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMunderover, CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -40,7 +39,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmunder<N, T, D> extends
-CommonMunder<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMunderMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMunder.prototype.kind;
 
@@ -101,7 +100,7 @@ CommonMunder<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTML
  * @template D  The Document class
  */
 export class CHTMLmover<N, T, D> extends
-CommonMover<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMover.prototype.kind;
 
@@ -151,7 +150,7 @@ CommonMover<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLs
  * @template D  The Document class
  */
 export class CHTMLmunderover<N, T, D> extends
-CommonMunderover<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMunderoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMunderover.prototype.kind;
 

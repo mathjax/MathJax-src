@@ -40,7 +40,7 @@ export const DirectionVH: {[n: number]: string} = {
 /**
  * The CommonMo interface
  */
-export interface CommonMoInterface extends AnyWrapper {
+export interface CommonMo extends AnyWrapper {
     /**
      * True if no italic correction should be used
      */
@@ -97,7 +97,7 @@ export interface CommonMoInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMo constructor
  */
-export type MoConstructor = Constructor<CommonMoInterface>;
+export type MoConstructor = Constructor<CommonMo>;
 
 /*****************************************************************/
 /**
@@ -105,7 +105,7 @@ export type MoConstructor = Constructor<CommonMoInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMo<T extends WrapperConstructor>(Base: T): MoConstructor & T {
+export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstructor & T {
     return class extends Base {
 
         /**

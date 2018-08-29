@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonMsqrtInterface, MsqrtConstructor} from './msqrt.js';
-import {CommonMoInterface} from './mo.js';
+import {CommonMsqrt, MsqrtConstructor} from './msqrt.js';
+import {CommonMo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
@@ -31,13 +31,13 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 /**
  * The CommonMroot interface
  */
-export interface CommonMrootInterface extends CommonMsqrtInterface {
+export interface CommonMroot extends CommonMsqrt {
 }
 
 /**
  * Shorthand for the CommonMroot constructor
  */
-export type MrootConstructor = Constructor<CommonMrootInterface>;
+export type MrootConstructor = Constructor<CommonMroot>;
 
 /*****************************************************************/
 /**
@@ -45,7 +45,7 @@ export type MrootConstructor = Constructor<CommonMrootInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMroot<T extends MsqrtConstructor>(Base: T): MrootConstructor & T {
+export function CommonMrootMixin<T extends MsqrtConstructor>(Base: T): MrootConstructor & T {
     return class extends Base {
 
         /**
@@ -75,7 +75,7 @@ export function CommonMroot<T extends MsqrtConstructor>(Base: T): MrootConstruct
          * @override
          */
         public getRootDimens(sbox: BBox) {
-            const surd = this.childNodes[this.surd] as CommonMoInterface;
+            const surd = this.childNodes[this.surd] as CommonMo;
             const bbox = this.childNodes[this.root].getBBox();
             const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
             const {w, rscale} = bbox;

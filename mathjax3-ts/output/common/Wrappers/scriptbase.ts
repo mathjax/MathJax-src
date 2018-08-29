@@ -25,7 +25,7 @@
  */
 
 import {AnyWrapper, WrapperConstructor, CommonWrapperClass} from '../Wrapper.js';
-import {CommonMoInterface} from './mo.js';
+import {CommonMo} from './mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';
@@ -41,7 +41,7 @@ const DELTA = 1.5;
  *
  * @template W  The child-node Wrapper class
  */
-export interface CommonScriptbaseInterface<W extends AnyWrapper> extends AnyWrapper {
+export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
 
     /**
      * The core mi or mo of the base (or the base itself if there isn't one)
@@ -156,7 +156,7 @@ export interface CommonScriptbaseClass extends CommonWrapperClass<any, any, any>
  *
  * @template W  The child-node Wrapper class
  */
-export type ScriptbaseConstructor<W extends AnyWrapper> = Constructor<CommonScriptbaseInterface<W>>;
+export type ScriptbaseConstructor<W extends AnyWrapper> = Constructor<CommonScriptbase<W>>;
 
 /*****************************************************************/
 /**
@@ -166,8 +166,8 @@ export type ScriptbaseConstructor<W extends AnyWrapper> = Constructor<CommonScri
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonScriptbase<W extends AnyWrapper,
-                                 T extends WrapperConstructor>(Base: T): ScriptbaseConstructor<W> & T {
+export function CommonScriptbaseMixin<W extends AnyWrapper,
+                                      T extends WrapperConstructor>(Base: T): ScriptbaseConstructor<W> & T {
     return class extends Base {
 
         /**
@@ -217,7 +217,7 @@ export function CommonScriptbase<W extends AnyWrapper,
             //  Check if the base is a mi or mo that needs italic correction removed
             //
             if (!(this.constructor as CommonScriptbaseClass).useIC) {
-                (core as CommonMoInterface).noIC = true;
+                (core as CommonMo).noIC = true;
             }
         }
 

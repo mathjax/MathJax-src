@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMfrac, CommonMfracInterface} from '../../common/Wrappers/mfrac.js';
+import {CommonMfrac, CommonMfracMixin} from '../../common/Wrappers/mfrac.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {CHTMLmo} from './mo.js';
 import {StyleList} from '../../common/CssStyles.js';
@@ -37,7 +37,7 @@ import {DIRECTION} from '../FontData.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmfrac<N, T, D> extends CommonMfrac<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmfrac<N, T, D> extends CommonMfracMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMfrac.prototype.kind;
 

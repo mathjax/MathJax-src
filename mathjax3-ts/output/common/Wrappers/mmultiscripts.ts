@@ -22,7 +22,7 @@
  */
 
 import {AnyWrapper} from '../Wrapper.js';
-import {CommonMsubsupInterface, MsubsupConstructor} from './msubsup.js';
+import {CommonMsubsup, MsubsupConstructor} from './msubsup.js';
 import {BBox} from '../BBox.js';
 
 /*****************************************************************/
@@ -75,7 +75,7 @@ export const ScriptNames = ['sup', 'sup', 'psup', 'psub'] as ScriptDataName[];
  *
  * @template W  The child-node Wrapper class
  */
-export interface CommonMmultiscriptsInterface<W extends AnyWrapper> extends CommonMsubsupInterface<W> {
+export interface CommonMmultiscripts<W extends AnyWrapper> extends CommonMsubsup<W> {
 
     /**
      *  The cached data for the various bounding boxes
@@ -132,7 +132,7 @@ export interface CommonMmultiscriptsInterface<W extends AnyWrapper> extends Comm
  *
  * @template W  The child-node Wrapper class
  */
-export type MmultiscriptsConstructor<W extends AnyWrapper> = Constructor<CommonMmultiscriptsInterface<W>>;
+export type MmultiscriptsConstructor<W extends AnyWrapper> = Constructor<CommonMmultiscripts<W>>;
 
 /*****************************************************************/
 /**
@@ -141,8 +141,8 @@ export type MmultiscriptsConstructor<W extends AnyWrapper> = Constructor<CommonM
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMmultiscripts<W extends AnyWrapper,
-                                    T extends MsubsupConstructor<W>>(Base: T): MmultiscriptsConstructor<W> & T {
+export function CommonMmultiscriptsMixin<W extends AnyWrapper,
+                                         T extends MsubsupConstructor<W>>(Base: T): MmultiscriptsConstructor<W> & T {
     return class extends Base {
 
         /**

@@ -29,13 +29,13 @@ import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 /**
  * The CommonTeXAtom interface
  */
-export interface CommonTeXAtomInterface extends AnyWrapper {
+export interface CommonTeXAtom extends AnyWrapper {
 }
 
 /**
  * Shorthand for the CommonTeXAtom constructor
  */
-export type TeXAtomConstructor = Constructor<CommonTeXAtomInterface>;
+export type TeXAtomConstructor = Constructor<CommonTeXAtom>;
 
 /*****************************************************************/
 /**
@@ -43,7 +43,7 @@ export type TeXAtomConstructor = Constructor<CommonTeXAtomInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonTeXAtom<T extends WrapperConstructor>(Base: T): TeXAtomConstructor & T {
+export function CommonTeXAtomMixin<T extends WrapperConstructor>(Base: T): TeXAtomConstructor & T {
     return class extends Base {
 
         /**

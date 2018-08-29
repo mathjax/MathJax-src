@@ -23,8 +23,8 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMtr, CommonMtrInterface} from '../../common/Wrappers/mtr.js';
-import {CommonMlabeledtr, CommonMlabeledtrInterface} from '../../common/Wrappers/mtr.js';
+import {CommonMtr, CommonMtrMixin} from '../../common/Wrappers/mtr.js';
+import {CommonMlabeledtr, CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
 import {CHTMLmtable} from './mtable.js';
 import {CHTMLmtd} from './mtd.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
@@ -38,7 +38,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmtr<N, T, D> extends CommonMtr<CHTMLmtd<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmtr<N, T, D> extends CommonMtrMixin<CHTMLmtd<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMtr.prototype.kind;
 
@@ -85,7 +85,7 @@ export class CHTMLmtr<N, T, D> extends CommonMtr<CHTMLmtd<N, T, D>, CHTMLConstru
  * @template D  The Document class
  */
 export class CHTMLmlabeledtr<N, T, D> extends
-CommonMlabeledtr<CHTMLmtd<N, T, D>, Constructor<CHTMLmtr<N, T, D>>>(CHTMLmtr) {
+CommonMlabeledtrMixin<CHTMLmtd<N, T, D>, Constructor<CHTMLmtr<N, T, D>>>(CHTMLmtr) {
 
     public static kind = MmlMlabeledtr.prototype.kind;
 

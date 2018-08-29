@@ -31,7 +31,7 @@ import {StyleList, StyleData} from '../../common/CssStyles.js';
 /**
  * The CommonMglyph interface
  */
-export interface CommonMglyphInterface extends AnyWrapper {
+export interface CommonMglyph extends AnyWrapper {
     /**
      * The image's width, height, and voffset values converted to em's
      */
@@ -48,7 +48,7 @@ export interface CommonMglyphInterface extends AnyWrapper {
 /**
  * Shorthand for the CommonMglyph constructor
  */
-export type MglyphConstructor = Constructor<CommonMglyphInterface>;
+export type MglyphConstructor = Constructor<CommonMglyph>;
 
 /*****************************************************************/
 /**
@@ -56,7 +56,7 @@ export type MglyphConstructor = Constructor<CommonMglyphInterface>;
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMglyph<T extends WrapperConstructor>(Base: T): MglyphConstructor & T {
+export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): MglyphConstructor & T {
     return class extends Base {
 
         /**
