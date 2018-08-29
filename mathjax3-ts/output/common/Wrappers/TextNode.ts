@@ -53,13 +53,6 @@ export type TextNodeConstructor = Constructor<CommonTextNode>;
 export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): TextNodeConstructor & T {
    return class extends Base {
 
-        public static autoStyle = false;
-        public static styles = {
-            'mjx-c, mjx-c::before': {
-                display: 'inline-block'
-            }
-        };
-
        /**
         * @override
         */

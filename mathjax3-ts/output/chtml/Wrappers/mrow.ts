@@ -36,7 +36,7 @@ import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
  */
 export class CHTMLmrow<N, T, D> extends CommonMrowMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
-    public static kind: string = MmlMrow.prototype.kind;
+    public static kind = MmlMrow.prototype.kind;
 
     /**
      * @override
@@ -74,6 +74,6 @@ export class CHTMLmrow<N, T, D> extends CommonMrowMixin<CHTMLConstructor<N, T, D
  */
 export class CHTMLinferredMrow<N, T, D> extends CommonInferredMrowMixin<Constructor<CHTMLmrow<N, T, D>>>(CHTMLmrow) {
 
-    public static kind: string = MmlInferredMrow.prototype.kind;
+    public static kind = MmlInferredMrow.prototype.kind;
 
 }

@@ -60,7 +60,7 @@ CommonMsupMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CH
 
     public static kind = MmlMsup.prototype.kind;
 
-    public static useIC: boolean = true;
+    public static useIC = true;
 
 }
 
@@ -87,7 +87,7 @@ CommonMsubsupMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>
         }
     };
 
-    public static noIC: boolean = true;
+    public static useIC = true;
 
     /**
      * @override

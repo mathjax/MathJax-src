@@ -133,8 +133,6 @@ export type InferredMrowConstructor = Constructor<CommonInferredMrow>;
 export function CommonInferredMrowMixin<T extends MrowConstructor>(Base: T): InferredMrowConstructor & T {
     return class extends Base {
 
-        public static kind = MmlInferredMrow.prototype.kind;
-
         /**
          * Since inferred rows don't produce a container span, we can't
          * set a font-size for it, so we inherit the parent scale

@@ -24,6 +24,7 @@
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonTextNode, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -38,7 +39,7 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
     public static kind = TextNode.prototype.kind;
 
     public static autoStyle = false;
-    public static styles = {
+    public static styles: StyleList = {
         'mjx-c, mjx-c::before': {
             display: 'inline-block'
         }
