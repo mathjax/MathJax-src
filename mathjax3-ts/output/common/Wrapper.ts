@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLWrapper class
+ * @fileoverview  Implements the CommonWrapper class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -107,7 +107,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
 
     /**
      * Non-MathML attributes on MathML elements NOT to be copied to the
-     * corresponding CHTML elements.  If set to false, then the attribute
+     * corresponding DOM elements.  If set to false, then the attribute
      * WILL be copied.  Most of these (like the font attributes) are handled
      * in other ways.
      */
@@ -156,7 +156,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     };
 
     /**
-     * The factory used to create more CHTMLWrappers
+     * The factory used to create more wrappers
      */
     protected factory: CommonWrapperFactory<J, W, C>;
 
@@ -167,7 +167,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     public childNodes: W[];
 
     /**
-     * Styles that must be handled directly by CHTML (mostly having to do with fonts)
+     * Styles that must be handled directly by the wrappers (mostly having to do with fonts)
      */
     protected removedStyles: StringMap = null;
 
@@ -198,7 +198,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     public font: FontData = null;
 
     /**
-     * Easy access to the CHTML output jax for this node
+     * Easy access to the output jax for this node
      */
     get jax() {
         return this.factory.jax;
@@ -631,8 +631,8 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     }
 
     /**
-     * @param {string} text     The text from which to create a TextNode object
-     * @return {CHTMLTextNode}  The TextNode with the given text
+     * @param {string} text   The text from which to create a TextNode object
+     * @return {TextNode}     The TextNode with the given text
      */
     public mmlText(text: string) {
         return ((this.node as AbstractMmlNode).factory.create('text') as TextNode).setText(text);

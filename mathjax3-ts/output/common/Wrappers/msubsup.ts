@@ -132,7 +132,7 @@ export interface CommonMsubsup<W extends AnyWrapper> extends CommonScriptbase<W>
 
     /**
      *  Cached values for the script offsets and separation (so if they are
-     *  computed in computeBBox(), they don't have to be recomputed for toCHTML())
+     *  computed in computeBBox(), they don't have to be recomputed during output)
      */
     UVQ: number[];
 
@@ -177,7 +177,7 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
 
         /**
          *  Cached values for the script offsets and separation (so if they are
-         *  computed in computeBBox(), they don't have to be recomputed for toCHTML())
+         *  computed in computeBBox(), they don't have to be recomputed during output)
          */
         public UVQ: number[] = null;
 

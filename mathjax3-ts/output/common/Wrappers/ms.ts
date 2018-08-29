@@ -71,8 +71,8 @@ export function CommonMsMixin<T extends WrapperConstructor>(Base: T): MsConstruc
         /**
          * Create a text wrapper with the given text;
          *
-         * @param {string} text  The text for the wrapped element
-         * @return {CHTMLWrapper}   The wrapped text node
+         * @param {string} text   The text for the wrapped element
+         * @return {AnyWrapper}   The wrapped text node
          */
         public createText(text: string) {
             const node = this.wrap(this.mmlText(text));

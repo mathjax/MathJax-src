@@ -202,14 +202,14 @@ export function CommonMunderoverMixin<W extends AnyWrapper,
     return class extends Base {
 
         /*
-         * @return {CHTMLWrapper)   The wrapped under node
+         * @return {W}   The wrapped under node
          */
         public get underChild() {
             return this.childNodes[(this.node as MmlMunderover).under];
         }
 
         /*
-         * @return {CHTMLWrapper)   The wrapped overder node
+         * @return {W}   The wrapped overder node
          */
         public get overChild() {
             return this.childNodes[(this.node as MmlMunderover).over];

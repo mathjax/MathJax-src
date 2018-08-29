@@ -573,8 +573,8 @@ export function CommonMencloseMixin<W extends AnyWrapper,
          *   but without changing the parent pointer, so as not to detach it from
          *   the menclose (which would desrtoy the original MathML tree).
          *
-         * @param {CHTMLWrapper} child   The inferred mrow that is the child of this menclose
-         * @return {CHTMLmsqrt}          The newly created (but detached) msqrt wrapper
+         * @param {W} child   The inferred mrow that is the child of this menclose
+         * @return {S}        The newly created (but detached) msqrt wrapper
          */
         public createMsqrt(child: W) {
             const mmlFactory = (this.node as AbstractMmlNode).factory;

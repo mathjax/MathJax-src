@@ -41,7 +41,7 @@ export type MrootConstructor = Constructor<CommonMroot>;
 
 /*****************************************************************/
 /**
- * The CommonMroot wrapper mixin for the MmlMroot object (extends CHTMLmsqrt)
+ * The CommonMroot wrapper mixin for the MmlMroot object (extends CommonMsqrt)
  *
  * @template T  The Wrapper class constructor type
  */

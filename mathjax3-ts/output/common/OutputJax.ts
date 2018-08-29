@@ -63,7 +63,7 @@ AbstractOutputJax<N, T, D> {
         ...AbstractOutputJax.OPTIONS,
         scale: 1,                      // Global scaling factor for all expressions
         mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
-        skipAttributes: {},            // RFDa and other attributes NOT to copy to CHTML output
+        skipAttributes: {},            // RFDa and other attributes NOT to copy to the output
         exFactor: .5,                  // default size of ex in em units
         wrapperFactory: null,          // The wrapper factory to use
         font: null,                    // The FontData object to use
