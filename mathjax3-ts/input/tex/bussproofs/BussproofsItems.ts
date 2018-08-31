@@ -29,6 +29,7 @@ import {BaseItem, StackItem} from '../StackItem.js';
 import StackItemFactory from '../StackItemFactory.js';
 import ParseUtil from '../ParseUtil.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
+import Stack from '../Stack.js';
 
 
 export class ProofTreeItem extends BaseItem {
@@ -46,6 +47,8 @@ export class ProofTreeItem extends BaseItem {
    */
   public rigthLabel: MmlNode[] = null;
 
+  private innerStack: Stack = new Stack(this.factory, {}, true);
+
   /**
    * @override
    */
@@ -58,17 +61,29 @@ export class ProofTreeItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    console.log('Checking in the proof tree item with item:' + item.kind);
-    if (item.isKind('end')) {
-      console.log('here at the end');
+    if (item.isKind('end') && item.getName() === 'prooftree') {
       return [this.toMml(), item];
     }
     if (item.isKind('stop')) {
-      console.log(this);
-      // @test EnvMissingEnd Equation
       throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
     }
-    return super.checkItem(item);
+    this.innerStack.Push(item);
+    return false;
   }
 
+
+  /**
+   * @override
+   */
+  public toMml() {
+    const tree = super.toMml();
+    const start = this.innerStack.Top();
+    if (start.isKind('start') && !start.Size()) {
+      return tree;
+    }
+    this.innerStack.Push(this.factory.create('stop'));
+    let prefix = this.innerStack.Top().toMml();
+    return this.factory.configuration.nodeFactory.create(
+        'node', 'mrow', [prefix, tree], {});
+  }
 }
