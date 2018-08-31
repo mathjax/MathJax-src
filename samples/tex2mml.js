@@ -8,11 +8,12 @@ import '../mathjax3/input/tex/ams/AmsConfiguration.js';
 import '../mathjax3/input/tex/noundefined/NoUndefinedConfiguration.js';
 import '../mathjax3/input/tex/boldsymbol/BoldsymbolConfiguration.js';
 import '../mathjax3/input/tex/newcommand/NewcommandConfiguration.js';
+import '../mathjax3/input/tex/bussproofs/BussproofsConfiguration.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand']})
+  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'bussproofs']})
 });
 
 // import {TestMmlVisitor as MmlVisitor} from '../mathjax3/core/MmlTree/TestMmlVisitor.js';
