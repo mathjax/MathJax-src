@@ -58,6 +58,7 @@ export class ProofTreeItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
+    console.log('Checking in the proof tree item with item:' + item.kind);
     if (item.isKind('end')) {
       console.log('here at the end');
       return [this.toMml(), item];
@@ -71,37 +72,3 @@ export class ProofTreeItem extends BaseItem {
   }
 
 }
-
-
-export class ProofLabelItem extends BaseItem {
-
-  /**
-   * @override
-   */
-  public get kind() {
-    return 'proofLabel';
-  }
-
-
-  // /**
-  //  * @override
-  //  */
-  // public checkItem(item: StackItem) {
-  //   console.log(2);
-  //   console.log(item.kind);
-  //   if (item.isKind('end')) {
-  //     console.log('here at the end');
-  //     return [this.toMml(), item];
-  //   }
-  //   if (item.isKind('stop')) {
-  //     console.log(this);
-  //     // @test EnvMissingEnd Equation
-  //     throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
-  //   }
-  //   return super.checkItem(item);
-  // }
-
-}
-
-
-

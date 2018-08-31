@@ -65,14 +65,6 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   console.log('Inference');
   let top = parser.stack.Top();
   const factory = parser.configuration.nodeFactory;
-  // Check for label
-  // TODO
-  let label = null;
-  if (top.kind === 'proofLabel') {
-    label = top;
-    parser.stack.Pop();
-    top = parser.stack.Top();
-  }
   if (top.kind !== 'proofTree') {
     throw new TexError('IllegalProofCommand',
                        'Proof commands only allowed in prooftree environment.');
@@ -99,39 +91,62 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
     top.setProperty('currentLine', top.getProperty('line'));
   }
   let rule = top.getProperty('fraction') ?
-    createRuleOld(factory, table, conclusion, label, style) :
-    createRule(factory, table, conclusion, label, style);
+    createRuleOld(factory, table, conclusion,
+                  top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
+                  style) :
+    createRule(factory, table, conclusion,
+               top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
+               style);
+  top.setProperty('left', null);
+  top.setProperty('right', null);
   top.Push(rule);
 };
 
 
 function createRuleOld(factory: NodeFactory, premise: MmlNode,
-                       conclusions: MmlNode[], label: StackItem, style: string) {
+                       conclusions: MmlNode[], left: MmlNode|null,
+                       right: MmlNode|null, style: string) {
   let conclusion = factory.create('node', 'mrow', conclusions, {});
   let frac = factory.create('node', 'mfrac', [premise, conclusion], {});
-  if (label) {
-    let mml = label.toMml();
-    frac = factory.create('node', 'mrow',
-                          (label.getProperty('side') === 'right') ? [frac, mml] : [mml, frac], {});
+  if (left && right) {
+    return factory.create('node', 'mrow', [left, frac, right], {});
+  }
+  if (left) {
+    return factory.create('node', 'mrow', [left, frac], {});
+  }
+  if (right) {
+    return factory.create('node', 'mrow', [frac, right], {});
   }
   return frac;
 };
 
 
 function createRule(factory: NodeFactory, premise: MmlNode,
-                    conclusions: MmlNode[], label: StackItem, style: string) {
+                    conclusions: MmlNode[], left: MmlNode|null,
+                    right: MmlNode|null, style: string) {
   const upper = factory.create(
     'node', 'mtr', [factory.create('node', 'mtd', [premise], {})], {});
   const lower = factory.create(
     'node', 'mtr', [factory.create('node', 'mtd', conclusions, {})], {});
   let rule = factory.create('node', 'mtable', [upper, lower],
                             {align: 'top 2', rowlines: style, framespacing: '0 0'});
-  if (label) {
-    let mml = label.toMml();
-    const name = factory.create('node', 'mpadded', [mml],
+  let leftLabel, rightLabel;
+  if (left) {
+    leftLabel = factory.create('node', 'mpadded', [left],
+                               {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+  }
+  if (right) {
+    rightLabel = factory.create('node', 'mpadded', [right],
                                 {height: '+.5em', width: '+.5em', voffset: '-.15em'});
-    rule = factory.create('node', 'mrow',
-                          (label.getProperty('side') === 'right') ? [rule, name] : [name, rule], {});
+  }
+  if (left && right) {
+    return factory.create('node', 'mrow', [leftLabel, rule, rightLabel], {});
+  }
+  if (left) {
+    return factory.create('node', 'mrow', [leftLabel, rule], {});
+  }
+  if (right) {
+    return factory.create('node', 'mrow', [rule, rightLabel], {});
   }
   return rule;
 };
@@ -146,13 +161,9 @@ BussproofsMethods.Label = function(parser: TexParser, name: string, side: string
                        'Proof commands only allowed in prooftree environment.');
   }
   let content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
-  // let label = (content.length > 1) ?
-  //   parser.configuration.nodeFactory.create('node', 'mrow', content, {}) : content[0];
-  // top.setProperty(side, label);
-  // TODO: No label item. Have two fields in the prooftree item for left and right.
-  let newItem = parser.itemFactory.create('proofLabel').setProperties({side: side});
-  newItem.Push.apply(newItem, content);
-  parser.Push(newItem);
+  let label = (content.length > 1) ?
+    parser.configuration.nodeFactory.create('node', 'mrow', content, {}) : content[0];
+  top.setProperty(side, label);
 };
 
 

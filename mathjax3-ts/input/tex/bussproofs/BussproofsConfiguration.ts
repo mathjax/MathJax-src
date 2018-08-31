@@ -23,7 +23,7 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {ProofLabelItem, ProofTreeItem} from './BussproofsItems.js';
+import {ProofTreeItem} from './BussproofsItems.js';
 import './BussproofsMappings.js';
 
 
@@ -35,7 +35,6 @@ export const BussproofsConfiguration = Configuration.create(
   },
    items: {
      [ProofTreeItem.prototype.kind]: ProofTreeItem,
-     [ProofLabelItem.prototype.kind]: ProofLabelItem,
    }
   }
 );
