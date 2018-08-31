@@ -35,6 +35,7 @@ export type CharOptions = {
     css?: number;                 // a bitmap for whether CSS is needed for content, padding, or width
     ic?: number;                  // italic correction value
     sk?: number;                  // skew value
+    p?: string;                   // svg path
 };
 
 /**

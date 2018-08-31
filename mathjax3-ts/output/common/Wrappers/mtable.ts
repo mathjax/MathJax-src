@@ -132,7 +132,7 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
     getBBoxHD(height: number): number[];
 
     /**
-     * @return{number]   The maximum height of a row
+     * @return {number}   The maximum height of a row
      */
     getEqualRowHeight(): number;
 
@@ -549,7 +549,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
         /******************************************************************/
 
         /**
-         * @return{number}   The maximum height of a row
+         * @return {number}   The maximum height of a row
          */
         public getEqualRowHeight() {
             const {H, D} = this.getTableData();

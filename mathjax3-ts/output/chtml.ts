@@ -26,7 +26,7 @@ import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from './chtml/Wrapper.js';
+import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 

@@ -54,18 +54,18 @@ export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
             'direction': 'ltr',
             'padding': '1px 0'
         },
-        'mjx-chtml.MJX-DISPLAY': {
+        'mjx-container.MJX-DISPLAY': {
             display: 'block',
             'text-align': 'center',
             margin: '1em 0'
         },
-        'mjx-chtml.MJX-DISPLAY mjx-math': {
+        'mjx-container.MJX-DISPLAY mjx-math': {
             padding: 0
         },
-        'mjx-chtml[justify="left"]': {
+        'mjx-container[justify="left"]': {
             'text-align': 'left'
         },
-        'mjx-chtml[justify="right"]': {
+        'mjx-container[justify="right"]': {
             'text-align': 'right'
         }
     };
@@ -83,6 +83,8 @@ export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
             adaptor.setAttribute(chtml, 'display', 'true');
             adaptor.addClass(parent, 'MJX-DISPLAY');
         }
+        adaptor.addClass(parent, 'MJX-CHTML');
+        adaptor.addClass(parent, 'MJX-TEX');
         const [align, shift] = this.getAlignShift();
         if (align !== 'center') {
             adaptor.setAttribute(parent, 'justify', align);

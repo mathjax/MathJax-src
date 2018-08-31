@@ -215,11 +215,11 @@ export interface DOMAdaptor<N, T, D> {
     outerHTML(node: N): string;
 
     /**
-     * @param {N} node        The HTML node whose attribute is to be set
-     * @param {string} name   The name of the attribute to set
-     * @param {string} value  The new value of the attribute
+     * @param {N} node               The HTML node whose attribute is to be set
+     * @param {string|number} name   The name of the attribute to set
+     * @param {string} value         The new value of the attribute
      */
-    setAttribute(node: N, name: string, value: string): void;
+    setAttribute(node: N, name: string, value: string | number): void;
 
     /**
      * @param {N} node        The HTML node whose attribute is to be obtained

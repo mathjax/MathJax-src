@@ -116,29 +116,29 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      *  The default styles for CommonHTML
      */
     public static styles: StyleList = {
-        'mjx-chtml [space="1"]': {'margin-left': '.111em'},
-        'mjx-chtml [space="2"]': {'margin-left': '.167em'},
-        'mjx-chtml [space="3"]': {'margin-left': '.222em'},
-        'mjx-chtml [space="4"]': {'margin-left': '.278em'},
-        'mjx-chtml [space="5"]': {'margin-left': '.333em'},
+        'mjx-container [space="1"]': {'margin-left': '.111em'},
+        'mjx-container [space="2"]': {'margin-left': '.167em'},
+        'mjx-container [space="3"]': {'margin-left': '.222em'},
+        'mjx-container [space="4"]': {'margin-left': '.278em'},
+        'mjx-container [space="5"]': {'margin-left': '.333em'},
 
-        'mjx-chtml [rspace="1"]': {'margin-right': '.111em'},
-        'mjx-chtml [rspace="2"]': {'margin-right': '.167em'},
-        'mjx-chtml [rspace="3"]': {'margin-right': '.222em'},
-        'mjx-chtml [rspace="4"]': {'margin-right': '.278em'},
-        'mjx-chtml [rspace="5"]': {'margin-right': '.333em'},
+        'mjx-container [rspace="1"]': {'margin-right': '.111em'},
+        'mjx-container [rspace="2"]': {'margin-right': '.167em'},
+        'mjx-container [rspace="3"]': {'margin-right': '.222em'},
+        'mjx-container [rspace="4"]': {'margin-right': '.278em'},
+        'mjx-container [rspace="5"]': {'margin-right': '.333em'},
 
-        'mjx-chtml [size="s"]' : {'font-size': '70.7%'},
-        'mjx-chtml [size="ss"]': {'font-size': '50%'},
-        'mjx-chtml [size="Tn"]': {'font-size': '60%'},
-        'mjx-chtml [size="sm"]': {'font-size': '85%'},
-        'mjx-chtml [size="lg"]': {'font-size': '120%'},
-        'mjx-chtml [size="Lg"]': {'font-size': '144%'},
-        'mjx-chtml [size="LG"]': {'font-size': '173%'},
-        'mjx-chtml [size="hg"]': {'font-size': '207%'},
-        'mjx-chtml [size="HG"]': {'font-size': '249%'},
+        'mjx-container [size="s"]' : {'font-size': '70.7%'},
+        'mjx-container [size="ss"]': {'font-size': '50%'},
+        'mjx-container [size="Tn"]': {'font-size': '60%'},
+        'mjx-container [size="sm"]': {'font-size': '85%'},
+        'mjx-container [size="lg"]': {'font-size': '120%'},
+        'mjx-container [size="Lg"]': {'font-size': '144%'},
+        'mjx-container [size="LG"]': {'font-size': '173%'},
+        'mjx-container [size="hg"]': {'font-size': '207%'},
+        'mjx-container [size="HG"]': {'font-size': '249%'},
 
-        'mjx-chtml [width="full"]': {width: '100%'},
+        'mjx-container [width="full"]': {width: '100%'},
 
         'mjx-box': {display: 'inline-block'},
         'mjx-block': {display: 'block'},
@@ -173,13 +173,6 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      * The HTML element generated for this wrapped node
      */
     public chtml: N = null;
-
-    /**
-     * Easy access to the CHTML output jax for this node
-     */
-    get CHTML() {
-        return this.factory.jax;
-    }
 
     /*******************************************************************/
 
@@ -410,7 +403,7 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      * @return {N}   The generated HTML tree
      */
     public html(type: string, def: OptionList = {}, content: N[] = []) {
-        return this.CHTML.html(type, def, content);
+        return this.jax.html(type, def, content);
     }
 
     /**
@@ -418,25 +411,7 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      * @return {T}  The generated text node with the given text
      */
     public text(text: string) {
-        return this.CHTML.text(text);
-    }
-
-    /**
-     * @param {string} text  The text from which to create a TextNode object
-     * @return {CHTMLTextNode}  The TextNode with the given text
-     */
-    public mmlText(text: string) {
-        return ((this.node as AbstractMmlNode).factory.create('text') as TextNode).setText(text);
-    }
-
-    /**
-     * @param {string} kind  The kind of MmlNode to create
-     * @paramProperyList} properties  The properties to set initially
-     * @param {MmlNode[]} children  The child nodes to add to the created node
-     * @return {MmlNode}  The newly created MmlNode
-     */
-    public mmlNode(kind: string, properties: PropertyList = {}, children: MmlNode[] = []) {
-        return (this.node as AbstractMmlNode).factory.create(kind, properties, children);
+        return this.jax.text(text);
     }
 
     /**

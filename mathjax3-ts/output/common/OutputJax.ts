@@ -114,8 +114,8 @@ AbstractOutputJax<N, T, D> {
     constructor(options: OptionList = null,
                 defaultFactory: typeof CommonWrapperFactory = null,
                 defaultFont: FontDataClass = null) {
-        const [chtmlOptions, fontOptions] = separateOptions(options, defaultFont.OPTIONS);
-        super(chtmlOptions);
+        const [jaxOptions, fontOptions] = separateOptions(options, defaultFont.OPTIONS);
+        super(jaxOptions);
         this.factory = this.options.wrapperFactory ||
             new defaultFactory<CommonOutputJax<N, T, D, W, F>, W, CommonWrapperClass<any, W, any>>();
         this.factory.jax = this;
@@ -127,7 +127,7 @@ AbstractOutputJax<N, T, D> {
 
     /**
      * Save the math document
-     * Create the container mjx-chtml node
+     * Create the container mjx-container node
      * Create the DOM output for the root MathML math node in the container
      * Return the container node
      *
