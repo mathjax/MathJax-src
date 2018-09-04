@@ -127,7 +127,7 @@ AbstractOutputJax<N, T, D> {
 
     /**
      * Save the math document
-     * Create the container mjx-container node
+     * Create the mjx-container node
      * Create the DOM output for the root MathML math node in the container
      * Return the container node
      *
@@ -144,7 +144,8 @@ AbstractOutputJax<N, T, D> {
      * @return {N}  The container DOM node for the typeset math
      */
     protected createNode() {
-        return this.html('mjx-container', {'class': 'MathJax'});
+        const jax = (this.constructor as typeof CommonOutputJax).NAME;
+        return this.html('mjx-container', {'class': 'MathJax', jax: jax});
     }
 
     /**
@@ -349,14 +350,14 @@ try {
     }
 
     /**
-     * @param {string} type  The type of HTML node to create
-     * @param {OptionList} def  The properties to set on the HTML node
-     * @param {HTMLElement[]} content  Array of child nodes to set for the HTML node
-     *
-     * @return {HTMLElement} The newly created HTML tree
+     * @param {string} type      The type of HTML node to create
+     * @param {OptionList} def   The properties to set on the HTML node
+     * @param {(N|T)[]} content  Array of child nodes to set for the HTML node
+     * @param {string}           The namespace for the element
+     * @return {N}               The newly created DOM tree
      */
-    public html(type: string, def: OptionList = {}, content: (N | T)[] = []) {
-        return this.adaptor.node(type, def, content);
+    public html(type: string, def: OptionList = {}, content: (N | T)[] = [], ns?: string) {
+        return this.adaptor.node(type, def, content, ns);
     }
 
     /**

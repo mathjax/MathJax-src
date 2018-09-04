@@ -85,7 +85,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     /**
      * @override
      */
-    protected create(type: string) {
+    protected create(type: string, ns: string = null) {
         return new LiteElement(type);
     }
 

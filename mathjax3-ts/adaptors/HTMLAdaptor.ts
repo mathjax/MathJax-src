@@ -37,6 +37,7 @@ export interface MinDocument<N, T> {
     body: N;
     title: string;
     createElement(type: string): N;
+    createElementNS(ns: string, type: string): N;
     createTextNode(text: string): T;
     querySelectorAll(selector: string): N[];
 }
@@ -186,8 +187,10 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /**
      * @override
      */
-    protected create(type: string) {
-        return this.document.createElement(type);
+    protected create(type: string, ns?: string) {
+        return (ns ?
+                this.document.createElementNS(ns, type) :
+                this.document.createElement(type));
     }
 
     /**

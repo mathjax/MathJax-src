@@ -309,7 +309,7 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      * Don't copy those in the skipAttributes list, or anything that already exists
      * as a property of the node (e.g., no "onlick", etc.).  If a name in the
      * skipAttributes object is set to false, then the attribute WILL be copied.
-     * Add the class to anhy other classes already in use.
+     * Add the class to any other classes already in use.
      */
     protected handleAttributes() {
         const attributes = this.node.attributes;
