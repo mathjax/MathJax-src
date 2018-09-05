@@ -43,7 +43,7 @@ BussproofsMethods.Prooftree = function(parser: TexParser, begin: StackItem, frac
   // TODO: Check if opening a proof tree is legal.
   let newItem = parser.itemFactory.create('proofTree').
     setProperties({name: begin.getName(), fraction: fraction, // fraction is temporary! 
-                   line: 'solid', currentLine: 'solid'});
+                   line: 'solid', currentLine: 'solid', rootAtTop: false});
   // parser.Push(item);
   return newItem;
 };
@@ -64,7 +64,6 @@ BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
 BussproofsMethods.Inference = function(parser: TexParser, name: string, n: number) {
   console.log('Inference');
   let top = parser.stack.Top();
-  const factory = parser.configuration.nodeFactory;
   if (top.kind !== 'proofTree') {
     throw new TexError('IllegalProofCommand',
                        'Proof commands only allowed in prooftree environment.');
@@ -72,6 +71,8 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   if (top.Size() < n) {
     throw new TexError('BadProofTree', 'Proof tree badly specified.');
   }
+  const factory = parser.configuration.nodeFactory;
+  const rootAtTop = top.getProperty('rootAtTop') as boolean;
   let children: MmlNode[] = [];
   do {
     if (children.length) {
@@ -79,13 +80,13 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
       children.unshift(factory.create('node', 'mtd', [space], {}));
     }
     children.unshift(
-      factory.create('node', 'mtd', [top.Pop()], {'rowalign': 'bottom'}));
+      factory.create('node', 'mtd', [top.Pop()],
+                     {'rowalign': (rootAtTop ? 'top' : 'bottom')}));
     n--;
   } while (n > 0);
   let row = factory.create('node', 'mtr', children, {});
   let table = factory.create('node', 'mtable', [row], {framespacing: '0 0'});
   let conclusion = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
-  // Here we use the information on the
   let style = top.getProperty('currentLine') as string;
   if (style !== top.getProperty('line')) {
     top.setProperty('currentLine', top.getProperty('line'));
@@ -93,10 +94,10 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   let rule = top.getProperty('fraction') ?
     createRuleOld(factory, table, conclusion,
                   top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
-                  style) :
+                  style, rootAtTop) :
     createRule(factory, table, conclusion,
                top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
-               style);
+               style, rootAtTop);
   top.setProperty('left', null);
   top.setProperty('right', null);
   top.Push(rule);
@@ -105,9 +106,11 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
 
 function createRuleOld(factory: NodeFactory, premise: MmlNode,
                        conclusions: MmlNode[], left: MmlNode|null,
-                       right: MmlNode|null, style: string) {
+                       right: MmlNode|null, style: string,
+                       rootAtTop: boolean) {
   let conclusion = factory.create('node', 'mrow', conclusions, {});
-  let frac = factory.create('node', 'mfrac', [premise, conclusion], {});
+  let frac = factory.create('node', 'mfrac',
+                            rootAtTop ? [conclusion, premise] : [premise, conclusion], {});
   if (left && right) {
     return factory.create('node', 'mrow', [left, frac, right], {});
   }
@@ -123,12 +126,13 @@ function createRuleOld(factory: NodeFactory, premise: MmlNode,
 
 function createRule(factory: NodeFactory, premise: MmlNode,
                     conclusions: MmlNode[], left: MmlNode|null,
-                    right: MmlNode|null, style: string) {
+                    right: MmlNode|null, style: string,
+                    rootAtTop: boolean) {
   const upper = factory.create(
     'node', 'mtr', [factory.create('node', 'mtd', [premise], {})], {});
   const lower = factory.create(
     'node', 'mtr', [factory.create('node', 'mtd', conclusions, {})], {});
-  let rule = factory.create('node', 'mtable', [upper, lower],
+  let rule = factory.create('node', 'mtable', rootAtTop ? [lower, upper] : [upper, lower],
                             {align: 'top 2', rowlines: style, framespacing: '0 0'});
   let leftLabel, rightLabel;
   if (left) {
@@ -187,5 +191,82 @@ BussproofsMethods.SetLine = function(parser: TexParser, name: string, style: str
   }
 };
 
+
+BussproofsMethods.RootAtTop = function(parser: TexParser, name: string, where: boolean) {
+  let top = parser.stack.Top();
+  if (top.kind !== 'proofTree') {
+    throw new TexError('IllegalProofCommand',
+                       'Proof commands only allowed in prooftree environment.');
+  }
+  top.setProperty('rootAtTop', where);
+};
+
+
+BussproofsMethods.AxiomF = function(parser: TexParser, name: string) {
+  let top = parser.stack.Top();
+  if (top.kind !== 'proofTree') {
+    throw new TexError('IllegalProofCommand',
+                       'Proof commands only allowed in prooftree environment.');
+  }
+  let line = parseFCenterLine(parser, name);
+  top.Push(line);
+};
+
+
+function parseFCenterLine(parser: TexParser, name: string): MmlNode {
+  let dollar = parser.GetNext();
+  if (dollar !== '$') {
+    throw new TexError('IllegalUseOfCommand',
+                       'Use of %1 does not match it\'s definition.', name);
+  }
+  console.log(dollar);
+  parser.i++;
+  let axiom = parser.GetUpTo(name, '$');
+  console.log(axiom);
+  if (axiom.indexOf('\\fCenter') === -1) {
+    throw new TexError('IllegalUseOfCommand',
+                       'Missing \\fCenter in %1.', name);
+  }
+  // Check for fCenter and throw error?
+  let [prem, conc] = axiom.split('\\fCenter');
+  let premise = (new TexParser(prem, parser.stack.env, parser.configuration)).mml();
+  let conclusion = (new TexParser(conc, parser.stack.env, parser.configuration)).mml();
+  console.log(premise);
+  console.log(conclusion);
+  let fcenter = (new TexParser('\\fCenter', parser.stack.env, parser.configuration)).mml();
+  console.log(fcenter);
+  console.log(parser.i);
+  const factory = parser.configuration.nodeFactory;
+  const left = factory.create('node', 'mtd', [premise], {});
+  const middle = factory.create('node', 'mtd', [fcenter], {});
+  const right = factory.create('node', 'mtd', [conclusion], {});
+  const row = factory.create('node', 'mtr', [left, middle, right], {});
+  const table = factory.create('node', 'mtable', [row], {columnspacing: '.5ex', align: 'center 2'});
+  return table;
+};
+
+
+BussproofsMethods.FCenter = function(parser: TexParser, name: string) { };
+
+BussproofsMethods.InferenceF = function(parser: TexParser, name: string) { 
+  let top = parser.stack.Top();
+  if (top.kind !== 'proofTree') {
+    throw new TexError('IllegalProofCommand',
+                       'Proof commands only allowed in prooftree environment.');
+  }
+  const factory = parser.configuration.nodeFactory;
+  const rootAtTop = top.getProperty('rootAtTop') as boolean;
+  let style = top.getProperty('currentLine') as string;
+  if (style !== top.getProperty('line')) {
+    top.setProperty('currentLine', top.getProperty('line'));
+  }
+  let conclusion = parseFCenterLine(parser, name);
+  let rule = createRule(factory, top.Pop() as MmlNode, [conclusion],
+                        top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
+                        style, rootAtTop);
+  top.setProperty('left', null);
+  top.setProperty('right', null);
+  top.Push(rule);
+};
 
 export default BussproofsMethods;

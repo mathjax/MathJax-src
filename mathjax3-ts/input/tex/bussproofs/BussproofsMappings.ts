@@ -63,6 +63,20 @@ new CommandMap('Bussproofs-macros', {
   // alwaysDoubleLine:       ['SetLine', 'double', true],
   // alwaysDottedLine:       ['SetLine', 'dotted', true],
 
+  rootAtTop: ['RootAtTop', true],
+  alwaysRootAtTop: ['RootAtTop', true],
+
+  rootAtBottom: ['RootAtTop', false],
+  alwaysRootAtBottom: ['RootAtTop', false],
+  // TODO: always commands should be persistent.
+
+  fCenter:         'FCenter',
+  Axiom:           'AxiomF',
+  UnaryInf:        'InferenceF',
+  BrinaryInf:        'InferenceF',
+  TrinaryInf:        'InferenceF',
+  QuaternaryInf:        'InferenceF',
+  QuinaryInf:        'InferenceF'
 }, BussproofsMethods);
 
 
