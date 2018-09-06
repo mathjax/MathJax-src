@@ -31,6 +31,7 @@ import ParseUtil from '../ParseUtil.js';
 import {StackItem} from '../StackItem.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {NodeFactory} from '../NodeFactory.js';
+import NodeUtil from '../NodeUtil.js';
 
 // Namespace
 let BussproofsMethods: Record<string, ParseMethod> = {};
@@ -49,7 +50,6 @@ BussproofsMethods.Prooftree = function(parser: TexParser, begin: StackItem, frac
 };
 
 BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
-  console.log('Axiom');
   let top = parser.stack.Top();
   // TODO: Label error
   if (top.kind !== 'proofTree') {
@@ -62,7 +62,6 @@ BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
 
 
 BussproofsMethods.Inference = function(parser: TexParser, name: string, n: number) {
-  console.log('Inference');
   let top = parser.stack.Top();
   if (top.kind !== 'proofTree') {
     throw new TexError('IllegalProofCommand',
@@ -157,7 +156,6 @@ function createRule(factory: NodeFactory, premise: MmlNode,
 
 
 BussproofsMethods.Label = function(parser: TexParser, name: string, side: string) {
-  console.log('Label');
   let top = parser.stack.Top();
   // Label error
   if (top.kind !== 'proofTree') {
@@ -219,10 +217,8 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
     throw new TexError('IllegalUseOfCommand',
                        'Use of %1 does not match it\'s definition.', name);
   }
-  console.log(dollar);
   parser.i++;
   let axiom = parser.GetUpTo(name, '$');
-  console.log(axiom);
   if (axiom.indexOf('\\fCenter') === -1) {
     throw new TexError('IllegalUseOfCommand',
                        'Missing \\fCenter in %1.', name);
@@ -231,17 +227,14 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   let [prem, conc] = axiom.split('\\fCenter');
   let premise = (new TexParser(prem, parser.stack.env, parser.configuration)).mml();
   let conclusion = (new TexParser(conc, parser.stack.env, parser.configuration)).mml();
-  console.log(premise);
-  console.log(conclusion);
   let fcenter = (new TexParser('\\fCenter', parser.stack.env, parser.configuration)).mml();
-  console.log(fcenter);
-  console.log(parser.i);
   const factory = parser.configuration.nodeFactory;
   const left = factory.create('node', 'mtd', [premise], {});
   const middle = factory.create('node', 'mtd', [fcenter], {});
   const right = factory.create('node', 'mtd', [conclusion], {});
   const row = factory.create('node', 'mtr', [left, middle, right], {});
-  const table = factory.create('node', 'mtable', [row], {columnspacing: '.5ex', align: 'center 2'});
+  row.setProperty('sequent', true);
+  const table = factory.create('node', 'mtable', [row], {columnspacing: '.5ex', columnalign: 'center 2'});
   return table;
 };
 
@@ -261,9 +254,11 @@ BussproofsMethods.InferenceF = function(parser: TexParser, name: string) {
     top.setProperty('currentLine', top.getProperty('line'));
   }
   let conclusion = parseFCenterLine(parser, name);
-  let rule = createRule(factory, top.Pop() as MmlNode, [conclusion],
+  let premise = top.Pop() as MmlNode;
+  let rule = createRule(factory, premise, [conclusion],
                         top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
                         style, rootAtTop);
+  NodeUtil.setAttribute(rule, 'columnalign', 'center 2');
   top.setProperty('left', null);
   top.setProperty('right', null);
   top.Push(rule);
