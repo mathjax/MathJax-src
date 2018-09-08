@@ -113,7 +113,6 @@ export const ExtensionMaps: {[id: string]: ExtensionMap} = {
   NEW_ENVIRONMENT: 'new-Environment'
 };
 
-MapHandler.getInstance().resetExtensions();
 export const ExtensionConf = Configuration.create(
   'empty',
   {handler: {character: [],

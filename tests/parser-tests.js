@@ -21,8 +21,7 @@ export class ParserTest extends Test {
   constructor() {
     super();
     this.packages = ['ams', 'base'];
-    this.settings = {};
-    this.tags = 'none';
+    this.settings = {tags: 'none'};
     console.log('\u001B\u005B\u0033\u0034\u006D' +
                 'Running tests from ' + this.constructor.name +
                 '\u001B\u005B\u0033\u0037\u006D');
@@ -34,12 +33,11 @@ export class ParserTest extends Test {
       name,
       t => {
         MathJax.handleRetriesFor(function() {
+          let options = {packages: this.packages};
+          Object.assign(options, this.settings);
           let html = MathJax.document('<html></html>', {
-            InputJax: new TeX({packages: this.packages,
-                               settings: this.settings,
-                               tags: this.tags})
+            InputJax: new TeX(options)
           });
-          MapHandler.getInstance().resetExtensions();
           html.TestMath(tex).compile();
           let jv = new JsonMmlVisitor();
           let actual = jv.visitTree(html.math.pop().root);

@@ -5,7 +5,7 @@ class ParserTagNoneTest extends ParserTest {
 
   constructor() {
     super();
-    this.tags = 'none';
+    this.settings = {tags: 'none'};
   }
 
   runTest(name, expr, json) {

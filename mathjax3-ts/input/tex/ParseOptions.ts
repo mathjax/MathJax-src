@@ -28,33 +28,7 @@ import {HandlerType, SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
-
-
-const DefaultOptions: [string, string | boolean][] = [
-  //
-  //  This specifies the side on which \tag{} macros will place the tags.
-  //  Set to 'left' to place on the left-hand side.
-  //
-  ['TagSide', 'right'],
-
-  //
-  //  This is the amound of indentation (from right or left) for the tags.
-  //
-  ['TagIndent', '0.8em'],
-
-  //
-  //  This is the width to use for the multline environment
-  //
-  ['MultLineWidth', '85%'],
-
-  // make element ID's use \label name rather than equation number
-  // MJ puts in an equation prefix: mjx-eqn
-  // When true it uses the label name XXX as mjx-eqn-XXX
-  // If false it uses the actual number N that is displayed: mjx-eqn-N
-  ['useLabelIds', true],
-
-  ['refUpdate', false]
-];
+import {OptionList} from '../../util/Options.js';
 
 
 /**
@@ -70,9 +44,9 @@ export default class ParseOptions {
 
   /**
    * A set of options, mapping names to string or boolean values.
-   * @type {Map<string, string|boolean>}
+   * @type {OptionList}
    */
-  public options: Map<string, string|boolean> = new Map();
+  public options: OptionList;
 
   /**
    * The current item factory.
@@ -105,9 +79,8 @@ export default class ParseOptions {
    * @param {{[key: string]: (string|boolean)}} setting A list of option
    *     settings. Those are added to the default options.
    */
-  public constructor(setting: {[key: string]: (string|boolean)} = {}) {
-    this.options = new Map(DefaultOptions);
-    Object.assign(this.options, setting);
+  public constructor(setting: OptionList = {}) {
+    this.options = setting;
   }
 
 

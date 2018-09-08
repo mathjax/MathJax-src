@@ -27,6 +27,7 @@ import {HandlerType} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {defaultOptions, OptionList} from '../../util/Options.js';
 import ParseOptions from './ParseOptions.js';
 
 
@@ -34,7 +35,6 @@ export type HandlerConfig = {[P in HandlerType]?: string[]}
 export type FallbackConfig = {[P in HandlerType]?: ParseMethod}
 export type StackItemConfig = {[kind: string]: StackItemClass}
 export type TagsConfig = {[kind: string]: TagsClass}
-export type OptionsConfig = {[key: string]: (string|boolean)}
 
 
 export class Configuration {
@@ -61,7 +61,7 @@ export class Configuration {
                                 fallback?: FallbackConfig,
                                 items?: StackItemConfig,
                                 tags?: TagsConfig,
-                                options?: OptionsConfig,
+                                options?: OptionList,
                                 nodes?: {[key: string]: any},
                                 preprocessors?: ((input: string, options: ParseOptions) => string)[],
                                 postprocessors?: ((input: MmlNode, options: ParseOptions) => void)[]
@@ -96,7 +96,7 @@ export class Configuration {
     Object.assign(this.fallback, config.fallback);
     Object.assign(this.items, config.items);
     Object.assign(this.tags, config.tags);
-    Object.assign(this.options, config.options);
+    defaultOptions(this.options, config.options);
     Object.assign(this.nodes, config.nodes);
     this.preprocessors = this.preprocessors.concat(config.preprocessors);
     this.postprocessors = this.postprocessors.concat(config.postprocessors);
@@ -111,7 +111,7 @@ export class Configuration {
                       readonly fallback: FallbackConfig = {},
                       readonly items: StackItemConfig = {},
                       readonly tags: TagsConfig = {},
-                      readonly options: OptionsConfig = {},
+                      readonly options: OptionList = {},
                       readonly nodes: {[key: string]: any} = {},
                       public preprocessors: ((input: string, options: ParseOptions) => string)[] = [],
                       public postprocessors: ((input: MmlNode, options: ParseOptions) => void)[] = []

@@ -94,7 +94,7 @@ export default class TexParser {
   }
 
   /**
-   * @return {Map<string, string|boolean>} The configuration options.
+   * @return {OptionList} The configuration options.
    */
   get options() {
     return this.configuration.options;

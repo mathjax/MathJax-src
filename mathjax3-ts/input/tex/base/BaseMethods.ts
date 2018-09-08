@@ -1506,8 +1506,8 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
     columnalign: align,
     columnspacing: (spacing || '1em'),
     rowspacing: '3pt',
-    side: parser.options.get('TagSide'),
-    minlabelspacing: parser.options.get('TagIndent')
+    side: parser.options['TagSide'],
+    minlabelspacing: parser.options['TagIndent']
   };
   return newItem;
 };
@@ -1537,7 +1537,7 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
     return;
   }
   // TODO: refUpdate is currently not implemented.
-  if (!parser.options.get('refUpdate')) {
+  if (!parser.options['refUpdate']) {
     // @test Label, Ref, Ref Unknown
     if (parser.tags.label) {
       // @test Double Label Error

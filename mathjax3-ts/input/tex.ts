@@ -22,7 +22,7 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {separateOptions, OptionList} from '../util/Options.js';
+import {defaultOptions, userOptions, separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
 import {TEXCLASS, MmlNode, TextNode, AttributeList} from '../core/MmlTree/MmlNode.js';
 
@@ -37,7 +37,7 @@ import {MmlMsubsup} from '../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../core/MmlTree/MmlNodes/munderover.js';
 import {MmlMo} from '../core/MmlTree/MmlNodes/mo.js';
 import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
-import {SubHandlers} from './tex/MapHandler.js';
+import {MapHandler, SubHandlers} from './tex/MapHandler.js';
 import {NodeFactory} from './tex/NodeFactory.js';
 // Import base as it is the default package loaded.
 import './tex/base/BaseConfiguration.js';
@@ -69,23 +69,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     ...AbstractInputJax.OPTIONS,
     FindTeX: null,
     packages: ['base'],
-    settings: {
-      //  This specifies the side on which \tag{} macros will place the tags.
-      //  Set to 'left' to place on the left-hand side.
-      TagSide: 'right',
-      //  This is the amound of indentation (from right or left) for the tags.
-      TagIndent: '0.8em',
-      //  This is the width to use for the multline environment
-      MultLineWidth: '85%',
-      // make element ID's use \label name rather than equation number
-      // MJ puts in an equation prefix: mjx-eqn
-      // When true it uses the label name XXX as mjx-eqn-XXX
-      // If false it uses the actual number N that is displayed: mjx-eqn-N
-      useLabelIds: true,
-      refUpdate: false
-    },
-    // Tagging style, used to be autonumber in v2.
-    tags: 'none'
   };
 
   /**
@@ -97,17 +80,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   private parseOptions: ParseOptions;
   private latex: string;
   private mathNode: MmlNode;
-  
-  /**
-   * Wraps an error into a node for output.
-   * @param {TeXError} err The TexError.
-   * @return {Node} The merror node.
-   */
-  private formatError(err: TexError): MmlNode {
-    let message = err.message.replace(/\n.*/, '');
-    return this.parseOptions.createNode('error', message);
-  };
-
 
   /**
    * Visitor to set stretchy attributes to false on <mo> elements, if they are
@@ -238,19 +210,80 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
 
   /**
+   * Initialises the configurations.
+   * @param {string[]} packages Names of packages.
+   * @return {Configuration} The configuration object.
+   */
+  private static configure(packages: string[]): Configuration {
+    MapHandler.getInstance().resetExtensions();
+    let configuration = Configuration.create(
+      'default', {postprocessors: [TeX.cleanAttributes, TeX.combineRelations]});
+    // Combine package configurations
+    for (let key of packages) {
+      let conf = ConfigurationHandler.getInstance().get(key);
+      if (conf) {
+        configuration.append(conf);
+      }
+    }
+    return configuration;
+  }
+
+
+
+  /**
+   * Initialises the parse options.
+   * @param {Configuration} configuration A configuration.
+   * @return {ParseOptions} The initialised parse options.
+   */
+  private static options(configuration: Configuration): ParseOptions {
+    let options = new ParseOptions();
+    options.handlers = new SubHandlers(configuration);
+    options.itemFactory.configuration = options;
+    // Add node factory methods from packages.
+    options.nodeFactory.configuration = options;
+    options.nodeFactory.setCreators(configuration.nodes);
+    // Add stackitems from packages.
+    options.itemFactory.addStackItems(configuration.items);
+    // Set default options for parser from packages and for tags.
+    defaultOptions(options.options, TagsFactory.OPTIONS, configuration.options);
+    return options;
+  };
+
+
+  /**
+   * Initialises the Tags factory. Add tagging structures from packages and set
+   * tagging to given default.
+   * @param {ParseOptions} options The parse options.
+   * @param {Configuration} configuration The configuration.
+   */
+  private static tags(options: ParseOptions, configuration: Configuration) {
+    TagsFactory.addTags(configuration.tags);
+    TagsFactory.setDefault(options.options.tags);
+    options.tags = TagsFactory.getDefault();
+    options.tags.configuration = options;
+  }
+
+  /**
    * @override
    */
-  constructor(options: OptionList) {
-    let [tex, find] = separateOptions(options, FindTeX.OPTIONS);
+  constructor(options: OptionList = {}) {
+    let packages = options['packages'] || TeX.OPTIONS['packages'];
+    let configuration = TeX.configure(packages);
+    let parseOptions = TeX.options(configuration);
+    defaultOptions(parseOptions.options, {'packages': packages});
+    let [tex, find, rest] = separateOptions(options, FindTeX.OPTIONS, parseOptions.options);
     super(tex);
-    this.findTeX = this.options['FindTeX'] || new FindTeX(find);
+    userOptions(parseOptions.options, options);
+    TeX.tags(parseOptions, configuration);
+    this.parseOptions = parseOptions;
+    this.configuration = configuration;
+    this.findTeX = this.parseOptions.options['FindTeX'] || new FindTeX(find);
   }
 
   /**
    * @override
    */
   public compile(math: MathItem<N, T, D>): MmlNode {
-    this.parseOptions = this.configure();
     let node: MmlNode;
     let parser: TexParser;
     let display = math.display;
@@ -290,43 +323,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   }
 
 
-  /**
-   * @return {ParseOptions} Configures the parser.
-   */
-  private configure(): ParseOptions {
-    this.configuration = Configuration.create(
-      'default', {postprocessors: [TeX.cleanAttributes, TeX.combineRelations]});
-    // Combine package configurations
-    for (let key of this.options['packages']) {
-      let conf = ConfigurationHandler.getInstance().get(key);
-      if (conf) {
-        this.configuration.append(conf);
-      }
-    }
-    let options = new ParseOptions();
-    options.handlers = new SubHandlers(this.configuration);
-    options.itemFactory.configuration = options;
-    // Add node factory methods from packages.
-    options.nodeFactory.configuration = options;
-    options.nodeFactory.setCreators(this.configuration.nodes);
-    // Add stackitems from packages.
-    options.itemFactory.addStackItems(this.configuration.items);
-    // Add tagging structures from packages and set tagging to given default.
-    TagsFactory.addTags(this.configuration.tags);
-    TagsFactory.setDefault(this.options.tags);
-    options.tags = TagsFactory.getDefault();
-    options.tags.configuration = options;
-    // Set other options for parser from package configurations.
-    for (const key of Object.keys(this.configuration.options)) {
-      options.options.set(key, this.configuration.options[key]);
-    } // From this run's configuration.
-    let settings = this.options['settings'];
-    for (const key of Object.keys(settings)) {
-      options.options.set(key, settings[key]);
-    }
-    return options;
-  }
-
   private runPreprocessors() {
     for (let preprocessor of this.configuration.preprocessors) {
       this.latex = preprocessor(this.latex, this.parseOptions);
@@ -340,5 +336,15 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       }
     }, {});
   }
+
+  /**
+   * Wraps an error into a node for output.
+   * @param {TeXError} err The TexError.
+   * @return {Node} The merror node.
+   */
+  private formatError(err: TexError): MmlNode {
+    let message = err.message.replace(/\n.*/, '');
+    return this.parseOptions.createNode('error', message);
+  };
 
 }
