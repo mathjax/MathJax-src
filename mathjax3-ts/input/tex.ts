@@ -215,16 +215,16 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @return {Configuration} The configuration object.
    */
   private static configure(packages: string[]): Configuration {
-    MapHandler.resetExtensions();
-    let configuration = Configuration.create(
-      'default', {postprocessors: [TeX.cleanAttributes, TeX.combineRelations]});
+    let configuration = Configuration.empty();
+    configuration.postprocessors.push(TeX.cleanAttributes, TeX.combineRelations);
     // Combine package configurations
     for (let key of packages) {
-      let conf = ConfigurationHandler.getInstance().get(key);
+      let conf = ConfigurationHandler.get(key);
       if (conf) {
         configuration.append(conf);
       }
     }
+    configuration.append(Configuration.extension());
     return configuration;
   }
 

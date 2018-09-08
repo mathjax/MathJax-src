@@ -23,12 +23,14 @@
  */
 
 import {ParseMethod} from './Types.js';
-import {HandlerType} from './MapHandler.js';
+import ParseMethods from './ParseMethods.js';
+import {ExtensionMaps, HandlerType} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
 import ParseOptions from './ParseOptions.js';
+import *  as sm from './SymbolMap.js';
 
 
 export type HandlerConfig = {[P in HandlerType]?: string[]}
@@ -65,7 +67,7 @@ export class Configuration {
                                 nodes?: {[key: string]: any},
                                 preprocessors?: ((input: string, options: ParseOptions) => string)[],
                                 postprocessors?: ((input: MmlNode, options: ParseOptions) => void)[]
-                               }) {
+                               } = {}) {
     return new Configuration(name,
                              config.handler || {},
                              config.fallback || {},
@@ -77,6 +79,37 @@ export class Configuration {
                              config.postprocessors || []
                             );
   }
+
+
+  /**
+   * An empty configuration.
+   */
+  public static empty(): Configuration {
+    return Configuration.create('empty');
+  };
+
+
+  /**
+   * Initialises extension maps.
+   */
+  public static extension(): Configuration {
+    new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
+    new sm.DelimiterMap(ExtensionMaps.NEW_DELIMITER,
+                        ParseMethods.delimiter, {});
+    new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
+    new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT,
+                          ParseMethods.environment, {}, {});
+    return Configuration.create(
+      'extension',
+      {handler: {character: [],
+                 delimiter: [ExtensionMaps.NEW_DELIMITER],
+                 macro: [ExtensionMaps.NEW_DELIMITER,
+                         ExtensionMaps.NEW_COMMAND,
+                         ExtensionMaps.NEW_MACRO],
+                 environment: [ExtensionMaps.NEW_ENVIRONMENT]
+                }});
+  };
+
 
   /**
    * Appends configurations to this configuration. Note that fallbacks are
@@ -122,37 +155,24 @@ export class Configuration {
       _default[key] = handler[key];
     }
     this.handler = _default;
-    ConfigurationHandler.getInstance().set(name, this);
+    ConfigurationHandler.set(name, this);
   }
 
 };
 
 
-export class ConfigurationHandler {
+export namespace ConfigurationHandler {
 
-  private static instance: ConfigurationHandler;
-
-  private map: Map<string, Configuration> = new Map();
-
-  /**
-   * @return {ConfigurationHandler} The singleton ConfigurationHandler object.
-   */
-  public static getInstance(): ConfigurationHandler {
-    if (!ConfigurationHandler.instance) {
-      ConfigurationHandler.instance = new ConfigurationHandler();
-    }
-    return ConfigurationHandler.instance;
-  }
-
+  let maps: Map<string, Configuration> = new Map();
 
   /**
    * Adds a new configuration to the handler overwriting old ones.
    *
    * @param {SymbolConfiguration} map Registers a new symbol map.
    */
-  public set(name: string, map: Configuration): void {
-    this.map.set(name, map);
-  }
+  export let set = function(name: string, map: Configuration): void {
+    maps.set(name, map);
+  };
 
 
   /**
@@ -161,23 +181,16 @@ export class ConfigurationHandler {
    * @param {string} name The name of the configuration.
    * @return {SymbolConfiguration} The configuration with the given name or null.
    */
-  public get(name: string): Configuration {
-    return this.map.get(name);
-  }
+  export let get = function(name: string): Configuration {
+    return maps.get(name);
+  };
 
   /**
    * @return {string[]} All configurations in the handler.
    */
-  public keys(): IterableIterator<string> {
-    return this.map.keys();
-  }
-
-
-  /**
-   * Dummy constructor
-   * @constructor
-   */
-  private constructor() { }
+  export let keys = function(): IterableIterator<string> {
+    return maps.keys();
+  };
 
 }
 

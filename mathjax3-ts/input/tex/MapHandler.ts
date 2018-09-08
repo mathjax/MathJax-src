@@ -24,8 +24,6 @@
 
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
-import *  as sm from './SymbolMap.js';
-import ParseMethods from './ParseMethods.js';
 import {Configuration} from './Configuration.js';
 
 
@@ -56,20 +54,6 @@ export namespace MapHandler {
     return maps.get(name);
   };
 
-
-  // TODO: Move this into Configurations!
-  /**
-   * Initialises extension maps.
-   */
-  export let resetExtensions = function() {
-    new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
-    new sm.DelimiterMap(ExtensionMaps.NEW_DELIMITER,
-                        ParseMethods.delimiter, {});
-    new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
-    new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT,
-                          ParseMethods.environment, {}, {});
-  };
-
 }
 
 
@@ -84,15 +68,7 @@ export const ExtensionMaps: {[id: string]: ExtensionMap} = {
   NEW_ENVIRONMENT: 'new-Environment'
 };
 
-export const ExtensionConf = Configuration.create(
-  'empty',
-  {handler: {character: [],
-             delimiter: [ExtensionMaps.NEW_DELIMITER],
-             macro: [ExtensionMaps.NEW_DELIMITER,
-                     ExtensionMaps.NEW_COMMAND,
-                     ExtensionMaps.NEW_MACRO],
-             environment: [ExtensionMaps.NEW_ENVIRONMENT]
-            }});
+
 
 /**
  * Class of symbol mappings that are active in a configuration.
@@ -214,7 +190,7 @@ export class SubHandlers {
    * @param {Configuration} configuration A setting for the map handler.
    */
   constructor(config: Configuration) {
-    config.append(ExtensionConf);
+    // config.append(ExtensionConf);
     for (const key of Object.keys(config.handler)) {
       let name = key as HandlerType;
       let subHandler = new SubHandler(config.handler[name] || [],

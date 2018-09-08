@@ -27,7 +27,7 @@ import {Args, Attributes, ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../SymbolMap.js';
-import {ExtensionConf, ExtensionMaps, MapHandler} from '../MapHandler.js';
+import {ExtensionMaps, MapHandler} from '../MapHandler.js';
 import {Symbol, Macro} from '../Symbol.js';
 import BaseMethods from '../base/BaseMethods.js';
 import ParseUtil from '../ParseUtil.js';
@@ -161,7 +161,6 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
       // @test Let Undefined CS
       return;
     }
-    let extension = ExtensionConf.handler['macro'].indexOf(map.name) !== -1;
     if (map instanceof sm.MacroMap) {
       // @test Def Let, Newcommand Let
       let macro = (map as sm.CommandMap).lookup(name) as Macro;
