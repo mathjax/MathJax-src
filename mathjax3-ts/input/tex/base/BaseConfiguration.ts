@@ -54,7 +54,7 @@ function Other(parser: TexParser, char: string) {
   let def = font ?
     // @test Other Font
     {mathvariant: parser.stack.env['font']} : {};
-  const remap = (MapHandler.getInstance().getMap('remap') as CharacterMap).
+  const remap = (MapHandler.getMap('remap') as CharacterMap).
     lookup(char);
   // @test Other
   // @test Other Remap

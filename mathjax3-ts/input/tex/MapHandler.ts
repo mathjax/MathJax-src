@@ -31,22 +31,9 @@ import {Configuration} from './Configuration.js';
 
 export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
 
-export class MapHandler {
+export namespace MapHandler {
 
-  private static instance: MapHandler;
-
-  private maps: Map<string, SymbolMap> = new Map();
-
-  /**
-   * @return {MapHandler} The singleton MapHandler object.
-   */
-  public static getInstance(): MapHandler {
-    if (!MapHandler.instance) {
-      MapHandler.instance = new MapHandler();
-    }
-    return MapHandler.instance;
-  }
-
+  let maps: Map<string, SymbolMap> = new Map();
 
   /**
    * Adds a new symbol map to the map handler. Might overwrite an existing
@@ -54,9 +41,9 @@ export class MapHandler {
    *
    * @param {SymbolMap} map Registers a new symbol map.
    */
-  public register(map: SymbolMap): void {
-    this.maps.set(map.name, map);
-  }
+  export let register = function(map: SymbolMap): void {
+    maps.set(map.name, map);
+  };
 
 
   /**
@@ -65,39 +52,23 @@ export class MapHandler {
    * @param {string} name The name of the symbol map.
    * @return {SymbolMap} The symbol map with the given name or null.
    */
-  public getMap(name: string): SymbolMap {
-    return this.maps.get(name);
-  }
+  export let getMap = function(name: string): SymbolMap {
+    return maps.get(name);
+  };
 
 
-  // Temporary function to allow setting values from legacy code.
-  /**
-   * @return {SymbolMap[]} All maps in the handler.
-   */
-  public allMaps(): SymbolMap[] {
-    return Array.from(this.maps.values());
-  }
-
-
+  // TODO: Move this into Configurations!
   /**
    * Initialises extension maps.
    */
-  public resetExtensions() {
+  export let resetExtensions = function() {
     new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
     new sm.DelimiterMap(ExtensionMaps.NEW_DELIMITER,
                         ParseMethods.delimiter, {});
     new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
     new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT,
                           ParseMethods.environment, {}, {});
-  }
-
-
-  /**
-   * Dummy constructor
-   * @constructor
-   */
-  private constructor() {
-  }
+  };
 
 }
 
@@ -147,7 +118,7 @@ export class SubHandler {
    * @param {string} name of the symbol map.
    */
   public add(name: string): void {
-    let map = MapHandler.getInstance().getMap(name);
+    let map = MapHandler.getMap(name);
     if (!map) {
       this.warn('Configuration ' + name + ' not found! Omitted.');
       return;

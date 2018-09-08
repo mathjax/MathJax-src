@@ -606,7 +606,7 @@ export class FnItem extends BaseItem {
 
 export class NotItem extends BaseItem {
 
-  private remap = MapHandler.getInstance().getMap('not_remap') as CharacterMap;
+  private remap = MapHandler.getMap('not_remap') as CharacterMap;
 
   /**
    * @override

@@ -84,7 +84,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
    * @param {ParseMethod} _parser The parser for the mappiong.
    */
   constructor(private _name: string, private _parser: ParseMethod) {
-    MapHandler.getInstance().register(this);
+    MapHandler.register(this);
   };
 
 
