@@ -202,9 +202,6 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
 };
 
 
-let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
-
-
 /**
  * Process a macro with a parameter template by replacing parameters in the
  * parser's string.
@@ -236,7 +233,7 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
   }
   parser.string = ParseUtil.addArgs(text, parser.string.slice(parser.i));
   parser.i = 0;
-  if (++parser.macroCount > MAXMACROS) {
+  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub1',
                         'MathJax maximum macro substitution count exceeded; ' +
                         'is here a recursive macro call?');

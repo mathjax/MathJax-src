@@ -34,7 +34,8 @@ export const NewcommandConfiguration = Configuration.create(
   },
    items: {
      [BeginEnvItem.prototype.kind]: BeginEnvItem,
-   }
+   },
+   options: {maxMacros: 1000}
   }
 );
 

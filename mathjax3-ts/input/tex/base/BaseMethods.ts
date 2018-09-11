@@ -1045,7 +1045,7 @@ BaseMethods.HBox = function(parser: TexParser, name: string, style: string) {
 };
 
 /**
- * Handle framce boxes.
+ * Handle framed boxes.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
@@ -1344,11 +1344,9 @@ BaseMethods.HFill = function(parser: TexParser, name: string) {
 };
 
 
-
 /**
  *   LaTeX environments
  */
-let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 
 /**
  * Handle begin and end environments. This is a macro method.
@@ -1371,7 +1369,8 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     }
     parser.stack.env['closing'] = macro.args[0];
   }
-  if (++parser.macroCount > MAXMACROS) {
+  console.log(parser.configuration.options['maxMacros']);
+  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub2',
                         'MathJax maximum substitution count exceeded; ' +
                         'is there a recursive latex environment?');
@@ -1606,7 +1605,7 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
   }
   parser.string = ParseUtil.addArgs(macro, parser.string.slice(parser.i));
   parser.i = 0;
-  if (++parser.macroCount > MAXMACROS) {
+  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub1',
                         'MathJax maximum macro substitution count exceeded; ' +
                         'is there a recursive macro call?');

@@ -114,6 +114,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     options.itemFactory.addStackItems(configuration.items);
     // Set default options for parser from packages and for tags.
     defaultOptions(options.options, TagsFactory.OPTIONS, configuration.options);
+    console.log(options.options);
     return options;
   };
 

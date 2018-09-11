@@ -48,7 +48,7 @@ namespace FilterUtil {
         const parent = mo.parent;
         if (!NodeUtil.getTexClass(mo) && (!symbol || !symbol[2])) {
           const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo], {});
-          texAtom.parent = parent;
+          // texAtom.parent = parent;
           parent.replaceChild(texAtom, mo);
         }
         NodeUtil.removeProperties(mo, 'fixStretchy');

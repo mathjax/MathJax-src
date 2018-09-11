@@ -31,17 +31,18 @@ import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
 
 namespace NodeUtil {
 
-  const attrs: String[] = ['autoOP',
-                           'fnOP',
-                           'movesupsub',
-                           'subsupOK',
-                           'texprimestyle',
-                           'useHeight',
-                           'variantForm',
-                           'withDelims',
-                           'open',
-                           'close'
-                          ];
+  const attrs: Map<String, boolean> = new Map([
+    ['autoOP', true],
+    ['fnOP', true],
+    ['movesupsub', true],
+    ['subsupOK', true],
+    ['texprimestyle', true],
+    ['useHeight', true],
+    ['variantForm', true],
+    ['withDelims', true],
+    ['open', true],
+    ['close', true]
+  ]);
 
   const methodOut: boolean = false;
 
@@ -127,7 +128,7 @@ namespace NodeUtil {
         }
       } else if (name === 'inferred') {
         // ignore
-      } else if (attrs.indexOf(name) !== -1) {
+      } else if (attrs.has(name)) {
         node.setProperty(name, value);
       } else {
         node.attributes.set(name, value);

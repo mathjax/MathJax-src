@@ -1,12 +1,4 @@
 /*************************************************************
- *
- *  MathJax/jax/input/TeX/NodeFactory.js
- *  
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
  *  
  *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
@@ -47,7 +39,7 @@ export type NodeFactoryMethod = (factory: NodeFactory, kind: string, ...rest: an
 export class NodeFactory {
 
   /**
-   * Parser configuration that can be used for passes information between node methods.
+   * Parser configuration that can be used to pass information between node methods.
    * @type {ParseOption}
    */
   public configuration: ParseOptions;
@@ -84,7 +76,7 @@ export class NodeFactory {
   public static createNode(factory: NodeFactory, kind: string,
                            children: MmlNode[], def: any,
                            text?: TextNode): MmlNode {
-    const node = factory.mmlFactory.create(kind, {}, []);
+    const node = factory.mmlFactory.create(kind);
     // If infinity or -1 remove inferred mrow
     //
     // In all other cases replace inferred mrow with a regular mrow, before adding

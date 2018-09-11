@@ -138,4 +138,5 @@ export const BaseConfiguration: Configuration = Configuration.create(
     [bitem.EqnArrayItem.prototype.kind]: bitem.EqnArrayItem,
     [bitem.EquationItem.prototype.kind]: bitem.EquationItem
    },
+   options: {maxMacros: 1000},
    tags: {base: BaseTags}});
