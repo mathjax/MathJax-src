@@ -31,12 +31,14 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
 import ParseOptions from './ParseOptions.js';
 import *  as sm from './SymbolMap.js';
+import {FunctionList, FunctionListItem} from '../../util/FunctionList.js';
 
 
 export type HandlerConfig = {[P in HandlerType]?: string[]}
 export type FallbackConfig = {[P in HandlerType]?: ParseMethod}
 export type StackItemConfig = {[kind: string]: StackItemClass}
 export type TagsConfig = {[kind: string]: TagsClass}
+export type ProcessorList = (Function | [Function, number])[]
 
 
 export class Configuration {
@@ -53,9 +55,9 @@ export class Configuration {
    *  * _options_ parse options for the packages.
    *  * _nodes_ for the Node factory.
    *  * _preprocessors_ list of functions for preprocessing the LaTeX
-   *      string wrt. to given parse options.
+   *      string wrt. to given parse options. Can contain a priority.
    *  * _postprocessors_ list of functions for postprocessing the MmlNode
-   *      wrt. to given parse options.
+   *      wrt. to given parse options. Can contain a priority.
    * @return {Configuration} The newly generated configuration.
    */
   public static create(name: string,
@@ -65,8 +67,8 @@ export class Configuration {
                                 tags?: TagsConfig,
                                 options?: OptionList,
                                 nodes?: {[key: string]: any},
-                                preprocessors?: ((input: string, options: ParseOptions) => string)[],
-                                postprocessors?: ((input: MmlNode, options: ParseOptions) => void)[]
+                                preprocessors?: ProcessorList,
+                                postprocessors?: ProcessorList
                                } = {}) {
     return new Configuration(name,
                              config.handler || {},
@@ -131,8 +133,12 @@ export class Configuration {
     Object.assign(this.tags, config.tags);
     defaultOptions(this.options, config.options);
     Object.assign(this.nodes, config.nodes);
-    this.preprocessors = this.preprocessors.concat(config.preprocessors);
-    this.postprocessors = this.postprocessors.concat(config.postprocessors);
+    for (let pre of config.preprocessors) {
+      this.preprocessors.push(pre);
+    };
+    for (let post of config.postprocessors) {
+      this.postprocessors.push(post);
+    };
   }
 
 
@@ -146,8 +152,8 @@ export class Configuration {
                       readonly tags: TagsConfig = {},
                       readonly options: OptionList = {},
                       readonly nodes: {[key: string]: any} = {},
-                      public preprocessors: ((input: string, options: ParseOptions) => string)[] = [],
-                      public postprocessors: ((input: MmlNode, options: ParseOptions) => void)[] = []
+                      readonly preprocessors: ProcessorList = [],
+                      readonly postprocessors: ProcessorList = []
              ) {
     let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
     let handlers = Object.keys(handler) as HandlerType[];

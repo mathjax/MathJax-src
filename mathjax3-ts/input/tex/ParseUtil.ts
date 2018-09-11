@@ -214,6 +214,7 @@ namespace ParseUtil {
     const mo = parser.configuration.nodeFactory.create('node', 'mo', [], {});
     NodeUtil.copyChildren(mi, mo);
     NodeUtil.copyAttributes(mi, mo);
+    parser.configuration.removeNode('mi', mi);
     NodeUtil.setProperties(mo, {lspace: '0', rspace: '0'});
     NodeUtil.removeProperties(mo, 'movesupsub');
     return mo;

@@ -221,7 +221,7 @@ export class SubsupItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        if (item.isKind('open') || item.isKind('left')) {
+    if (item.isKind('open') || item.isKind('left')) {
       return true;
     }
     const top = this.Top;

@@ -115,6 +115,7 @@ export class MultlineItem extends ArrayItem {
         const mlabel = this.factory.configuration.nodeFactory.create('node',
           'mlabeledtr', [tag].concat(NodeUtil.getChildren(mtr)), {});
         NodeUtil.copyAttributes(mtr, mlabel);
+        this.factory.configuration.removeNode('mtr', mtr);
         this.table[label] = mlabel;
       }
     }

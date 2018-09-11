@@ -102,6 +102,7 @@ export class NodeFactory {
         if (child.isInferred) {
           let mrow = factory.mmlFactory.create('mrow', {}, NodeUtil.getChildren(child));
           NodeUtil.copyAttributes(child, mrow);
+          factory.configuration.removeNode('inferredMrow', child);
           cleanChildren.push(mrow);
         } else {
           cleanChildren.push(child);
@@ -188,8 +189,10 @@ export class NodeFactory {
    * @return {MmlNode} The created node.
    */
   public create(kind: string, ...rest: any[]): MmlNode {
-    let func = this.factory.get(kind) || this.factory.get('node');
-    return func.apply(null, [this].concat(rest));
+    const func = this.factory.get(kind) || this.factory.get('node');
+    const node = func.apply(null, [this].concat(rest));
+    this.configuration.addNode(rest[0], node);
+    return node;
   }
 
 }

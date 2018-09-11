@@ -73,7 +73,62 @@ export default class ParseOptions {
    */
   public parsers: TexParser[] = [];
 
+  // ephemeral options
+  public root: MmlNode = null;
+  public nodeLists: {[key: string]: MmlNode[]} = {};
+  public error = false;
+  
+  public clear() {
+    this.root = null;
+    this.nodeLists = {};
+    this.error = false;
+  }
 
+  public addNode(property: string, node: MmlNode) {
+    let list = this.nodeLists[property];
+    if (!list) {
+      list = this.nodeLists[property] = [];
+    }
+    list.push(node);
+  }
+    
+
+  public removeNode(property: string, node: MmlNode) {
+    let list = this.nodeLists[property];
+    if (!list) {
+      return;
+    }
+    let position = list.indexOf(node);
+    if (position !== -1) {
+      list.splice(position, 1);
+    }
+  }
+    
+
+  // private inTree(node: MmlNode) {
+  //   while (node && node !== this.root) {
+  //     node = node.parent;
+  //   }
+  //   return !!node;
+  // }
+
+  public getList(property: string) {
+    return this.nodeLists[property] || [];
+  }
+  
+  // public getList(property: string) {
+  //   let list = this.nodeLists[property] || [];
+  //   let result = [];
+  //   for (let node of list) {
+  //     if (this.inTree(node)) {
+  //       result.push(node);
+  //     }
+  //   }
+  //   this.nodeLists[property] = result;
+  //   return result;
+  // }
+
+  
   /**
    * @constructor
    * @param {{[key: string]: (string|boolean)}} setting A list of option

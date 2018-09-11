@@ -61,6 +61,7 @@ function Other(parser: TexParser, char: string) {
   let mo = parser.configuration.nodeFactory.create(
     'token', 'mo', def, (remap ? remap.char : char));
   NodeUtil.setProperty(mo, 'fixStretchy', true);
+  parser.configuration.addNode('fixStretchy', mo);
   parser.Push(mo);
 };
 

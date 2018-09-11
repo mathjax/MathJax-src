@@ -108,6 +108,7 @@ namespace ParseMethods {
     // @test Large Set
     const node = parser.configuration.nodeFactory.create('token', 'mo', def, mchar.char);
     NodeUtil.setProperty(node, 'fixStretchy', true);
+    parser.configuration.addNode('fixStretchy', node);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(node);
   };
