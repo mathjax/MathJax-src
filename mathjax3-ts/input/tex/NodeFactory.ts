@@ -102,7 +102,6 @@ export class NodeFactory {
         if (child.isInferred) {
           let mrow = factory.mmlFactory.create('mrow', {}, NodeUtil.getChildren(child));
           NodeUtil.copyAttributes(child, mrow);
-          factory.configuration.removeNode('inferredMrow', child);
           cleanChildren.push(mrow);
         } else {
           cleanChildren.push(child);

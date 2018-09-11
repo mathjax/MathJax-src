@@ -451,7 +451,6 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
     // @test Limits UnderOver
     node = parser.configuration.nodeFactory.create('node', 'msubsup', [], {});
     NodeUtil.copyChildren(op, node);
-    parser.configuration.removeNode('munderover', op);
     op = top.Last = node;
   } else if (NodeUtil.isType(op, 'msubsup') && limits) {
     // @test Limits SubSup
@@ -459,7 +458,6 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
     // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
     node = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
     NodeUtil.copyChildren(op, node);
-    parser.configuration.removeNode('msubsup', op);
     op = top.Last = node;
   }
   NodeUtil.setProperties(op, {'movesupsub': limits ? true : false});

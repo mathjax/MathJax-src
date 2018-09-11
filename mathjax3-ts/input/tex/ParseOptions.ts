@@ -93,40 +93,24 @@ export default class ParseOptions {
   }
     
 
-  public removeNode(property: string, node: MmlNode) {
-    let list = this.nodeLists[property];
-    if (!list) {
-      return;
+  private inTree(node: MmlNode) {
+    while (node && node !== this.root) {
+      node = node.parent;
     }
-    let position = list.indexOf(node);
-    if (position !== -1) {
-      list.splice(position, 1);
-    }
+    return !!node;
   }
-    
-
-  // private inTree(node: MmlNode) {
-  //   while (node && node !== this.root) {
-  //     node = node.parent;
-  //   }
-  //   return !!node;
-  // }
 
   public getList(property: string) {
-    return this.nodeLists[property] || [];
+    let list = this.nodeLists[property] || [];
+    let result = [];
+    for (let node of list) {
+      if (this.inTree(node)) {
+        result.push(node);
+      }
+    }
+    this.nodeLists[property] = result;
+    return result;
   }
-  
-  // public getList(property: string) {
-  //   let list = this.nodeLists[property] || [];
-  //   let result = [];
-  //   for (let node of list) {
-  //     if (this.inTree(node)) {
-  //       result.push(node);
-  //     }
-  //   }
-  //   this.nodeLists[property] = result;
-  //   return result;
-  // }
 
   
   /**

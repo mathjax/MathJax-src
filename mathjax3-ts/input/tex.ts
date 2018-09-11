@@ -182,7 +182,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {MmlNode} node The node to rewrite.
    * @param {ParseOptions} options The parse options.
    */
-  // TODO (VS): reduce some of the casting.
   private static cleanSubSup(arg: {math: any, data: ParseOptions}) {
     let options = arg.data;
     if (options.error) {
