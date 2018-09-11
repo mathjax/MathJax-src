@@ -24,21 +24,18 @@
 import {AbstractInputJax} from '../core/InputJax.js';
 import {defaultOptions, userOptions, separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
-import {TEXCLASS, MmlNode, TextNode, AttributeList} from '../core/MmlTree/MmlNode.js';
+import {MmlNode} from '../core/MmlTree/MmlNode.js';
 
 import {FindTeX} from './tex/FindTeX.js';
 
+import FilterUtil from './tex/FilterUtil.js';
 import NodeUtil from './tex/NodeUtil.js';
 import TexParser from './tex/TexParser.js';
 import TexError from './tex/TexError.js';
 import ParseOptions from './tex/ParseOptions.js';
 import {TagsFactory} from './tex/Tags.js';
-import {MmlMsubsup} from '../core/MmlTree/MmlNodes/msubsup.js';
-import {MmlMunderover} from '../core/MmlTree/MmlNodes/munderover.js';
-import {MmlMo} from '../core/MmlTree/MmlNodes/mo.js';
 import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
-import {MapHandler, SubHandlers} from './tex/MapHandler.js';
-import {NodeFactory} from './tex/NodeFactory.js';
+import {SubHandlers} from './tex/MapHandler.js';
 // Import base as it is the default package loaded.
 import './tex/base/BaseConfiguration.js';
 
@@ -80,149 +77,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   private parseOptions: ParseOptions;
   private latex: string;
   private mathNode: MmlNode;
-
-  /**
-   * Visitor to set stretchy attributes to false on <mo> elements, if they are
-   * not used as delimiters. Also wraps non-stretchy infix delimiters into a
-   * TeXAtom.
-   * @param {MmlNode} node The node to rewrite.
-   * @param {ParseOptions} options The parse options.
-   */
-  private static cleanStretchy(arg: {math: any, data: ParseOptions}) {
-    let options = arg.data;
-    for (let mo of options.getList('fixStretchy')) {
-      if (NodeUtil.getProperty(mo, 'fixStretchy')) {
-        let symbol = NodeUtil.getForm(mo);
-        if (symbol && symbol[3] && symbol[3]['stretchy']) {
-          NodeUtil.setAttribute(mo, 'stretchy', false);
-        }
-        const parent = mo.parent;
-        if (!NodeUtil.getTexClass(mo) && (!symbol || !symbol[2])) {
-          const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo], {});
-          texAtom.parent = parent;
-          parent.replaceChild(texAtom, mo);
-        }
-        NodeUtil.removeProperties(mo, 'fixStretchy');
-      }
-    }
-    options.root.setInheritedAttributes({}, arg.math['display'], 0, false);
-    options.root.setTeXclass(null);
-  }
-
-
-  /**
-   * Visitor that removes superfluous attributes from nodes. I.e., if a node has
-   * an attribute, which is also an inherited attribute it will be removed. This
-   * is necessary as attributes are set bottom up in the parser.
-   * @param {MmlNode} mml The node to clean.
-   * @param {ParseOptions} options The parse options.
-   */
-  // TODO (DC): Move this maybe into setInheritedAttributes method?
-  private static cleanAttributes(arg: {data: ParseOptions}) {
-    let node = arg.data.root as MmlNode;
-    node.walkTree((mml: MmlNode, d: any) => {
-      let attribs = mml.attributes as any;
-      let keys = Object.keys(attribs.attributes);
-      for (let i = 0, key: string; key = keys[i]; i++) {
-        if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
-          delete attribs.attributes[key];
-        }
-      }
-    }, {});
-  };
-
-
-  /**
-   * Combine adjacent <mo> elements that are relations (since MathML treats the
-   * spacing very differently)
-   * @param {MmlNode} mml The node in which to combine relations.
-   * @param {ParseOptions} options The parse options.
-   */
-  private static combineRelations(arg: {data: ParseOptions}) {
-    for (let mo of arg.data.getList('mo')) {
-      if (mo.getProperty('relationsCombined') || !mo.parent ||
-          (mo.parent && !NodeUtil.isType(mo.parent, 'mrow'))) {
-        continue;
-      }
-      let mml = mo.parent;
-      let m1: MmlNode, m2: MmlNode;
-      let children = mml.childNodes as (MmlNode|TextNode)[];
-      for (let i = 0, m = children.length; i < m; i++) {
-        if (children[i]) {
-          while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
-                 NodeUtil.isType(m1, 'mo') && NodeUtil.isType(m2, 'mo') &&
-                 NodeUtil.getTexClass(m1) === TEXCLASS.REL &&
-                 NodeUtil.getTexClass(m2) === TEXCLASS.REL) {
-            m2.setProperty('relationsCombined', true);
-            if (NodeUtil.getProperty(m1, 'variantForm') ===
-                NodeUtil.getProperty(m2, 'variantForm') &&
-                NodeUtil.getAttribute(m1, 'mathvariant') ===
-                NodeUtil.getAttribute(m2, 'mathvariant')) {
-              // @test Shift Left, Less Equal
-              NodeUtil.appendChildren(m1, NodeUtil.getChildren(m2));
-              children.splice(i + 1, 1);
-              m2.parent = null;
-              m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
-              m--;
-            } else {
-              // TODO (VS): Find a test.
-              NodeUtil.setAttribute(m1, 'rspace', '0pt');
-              NodeUtil.setAttribute(m2, 'lspace', '0pt');
-              i++;
-            }
-          }
-        }
-      }
-    }
-  };
-
-  /**
-   * Visitor that rewrites incomplete msubsup/munderover elements in the given
-   * node into corresponding msub/sup/under/over nodes.
-   * @param {MmlNode} node The node to rewrite.
-   * @param {ParseOptions} options The parse options.
-   */
-  private static cleanSubSup(arg: {math: any, data: ParseOptions}) {
-    let options = arg.data;
-    if (options.error) {
-      return;
-    }
-    let newNode;
-    for (let mml of options.getList('msubsup') as MmlMsubsup[]) {
-      const children = mml.childNodes;
-      if (children[mml.sub] && children[mml.sup]) {
-        continue;
-      }
-      const parent = mml.parent;
-      newNode = (children[mml.sub] ?
-                 options.nodeFactory.create('node', 'msub', [children[mml.base], children[mml.sub]], {}) :
-                 options.nodeFactory.create('node', 'msup', [children[mml.base], children[mml.sup]], {}));
-      NodeUtil.copyAttributes(mml, newNode);
-      if (parent) {
-        parent.replaceChild(newNode, mml);
-      } else {
-        options.root = newNode;
-      }
-    }
-    for (let mml of options.getList('munderover') as MmlMunderover[]) {
-      const children = mml.childNodes;
-      const parent = mml.parent;
-      if (children[mml.under] && children[mml.over]) {
-        continue;
-      }
-      newNode = (children[mml.under] ?
-                 options.nodeFactory.create('node', 'munder', [children[mml.base], children[mml.under]], {}) :
-                 options.nodeFactory.create('node', 'mover', [children[mml.base], children[mml.over]], {}));
-      NodeUtil.copyAttributes(mml, newNode);
-      if (parent) {
-        parent.replaceChild(newNode, mml);
-      } else {
-        options.root = newNode;
-      }
-    }
-    options.root.setInheritedAttributes({}, arg.math['display'], 0, false);
-  };
-
 
   /**
    * Initialises the configurations.
@@ -299,10 +153,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       typeof post === 'function' ? this.postFilters.add(post) :
         this.postFilters.add(post[0], post[1]);
     }
-    this.postFilters.add(TeX.cleanSubSup, -4);
-    this.postFilters.add(TeX.cleanStretchy, -3);
-    this.postFilters.add(TeX.cleanAttributes, -2);
-    this.postFilters.add(TeX.combineRelations, -1);
+    this.postFilters.add(FilterUtil.cleanSubSup, -4);
+    this.postFilters.add(FilterUtil.cleanStretchy, -3);
+    this.postFilters.add(FilterUtil.cleanAttributes, -2);
+    this.postFilters.add(FilterUtil.combineRelations, -1);
     this.findTeX = this.parseOptions.options['FindTeX'] || new FindTeX(find);
   }
 
