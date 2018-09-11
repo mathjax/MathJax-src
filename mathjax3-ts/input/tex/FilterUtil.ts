@@ -25,8 +25,6 @@
 import {TEXCLASS, MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
 import NodeUtil from './NodeUtil.js';
 import ParseOptions from './ParseOptions.js';
-import {MmlMsubsup} from '../../core/MmlTree/MmlNodes/msubsup.js';
-import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 
 
@@ -98,30 +96,57 @@ namespace FilterUtil {
       let m1: MmlNode, m2: MmlNode;
       let children = mml.childNodes as (MmlNode|TextNode)[];
       for (let i = 0, m = children.length; i < m; i++) {
-        if (children[i]) {
-          while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
-                 NodeUtil.isType(m1, 'mo') && NodeUtil.isType(m2, 'mo') &&
-                 NodeUtil.getTexClass(m1) === TEXCLASS.REL &&
-                 NodeUtil.getTexClass(m2) === TEXCLASS.REL) {
-            m2.setProperty('relationsCombined', true);
-            if (NodeUtil.getProperty(m1, 'variantForm') ===
-                NodeUtil.getProperty(m2, 'variantForm') &&
-                NodeUtil.getAttribute(m1, 'mathvariant') ===
-                NodeUtil.getAttribute(m2, 'mathvariant')) {
-              // @test Shift Left, Less Equal
-              NodeUtil.appendChildren(m1, NodeUtil.getChildren(m2));
-              children.splice(i + 1, 1);
-              m2.parent = null;
-              m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
-              m--;
-            } else {
-              // TODO (VS): Find a test.
-              NodeUtil.setAttribute(m1, 'rspace', '0pt');
-              NodeUtil.setAttribute(m2, 'lspace', '0pt');
-              i++;
-            }
+        if (!children[i]) {
+          break;
+        }
+        while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
+               NodeUtil.isType(m1, 'mo') && NodeUtil.isType(m2, 'mo') &&
+               NodeUtil.getTexClass(m1) === TEXCLASS.REL &&
+               NodeUtil.getTexClass(m2) === TEXCLASS.REL) {
+          m2.setProperty('relationsCombined', true);
+          if (NodeUtil.getProperty(m1, 'variantForm') ===
+              NodeUtil.getProperty(m2, 'variantForm') &&
+              NodeUtil.getAttribute(m1, 'mathvariant') ===
+              NodeUtil.getAttribute(m2, 'mathvariant')) {
+            // @test Shift Left, Less Equal
+            NodeUtil.appendChildren(m1, NodeUtil.getChildren(m2));
+            children.splice(i + 1, 1);
+            m2.parent = null;
+            m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
+            m--;
+          } else {
+            // TODO (VS): Find a test.
+            NodeUtil.setAttribute(m1, 'rspace', '0pt');
+            NodeUtil.setAttribute(m2, 'lspace', '0pt');
+            i++;
           }
         }
+      }
+    }
+  };
+
+
+  /**
+   * Cleans msubsup and munderover elements.
+   * @param {ParseOptions} options The parse options.
+   * @param {string} low String representing the lower part of the expression.
+   * @param {string} up String representing the upper part.
+   */
+  let _cleanSubSup = function(options: ParseOptions, low: string, up: string) {
+    for (let mml of options.getList('m' + low + up) as any[]) {
+      const children = mml.childNodes;
+      if (children[mml[low]] && children[mml[up]]) {
+        continue;
+      }
+      const parent = mml.parent;
+      let newNode = (children[mml[low]] ?
+                 options.nodeFactory.create('node', 'm' + low, [children[mml.base], children[mml[low]]], {}) :
+                 options.nodeFactory.create('node', 'm' + up, [children[mml.base], children[mml[up]]], {}));
+      NodeUtil.copyAttributes(mml, newNode);
+      if (parent) {
+        parent.replaceChild(newNode, mml);
+      } else {
+        options.root = newNode;
       }
     }
   };
@@ -138,39 +163,8 @@ namespace FilterUtil {
     if (options.error) {
       return;
     }
-    let newNode;
-    for (let mml of options.getList('msubsup') as MmlMsubsup[]) {
-      const children = mml.childNodes;
-      if (children[mml.sub] && children[mml.sup]) {
-        continue;
-      }
-      const parent = mml.parent;
-      newNode = (children[mml.sub] ?
-                 options.nodeFactory.create('node', 'msub', [children[mml.base], children[mml.sub]], {}) :
-                 options.nodeFactory.create('node', 'msup', [children[mml.base], children[mml.sup]], {}));
-      NodeUtil.copyAttributes(mml, newNode);
-      if (parent) {
-        parent.replaceChild(newNode, mml);
-      } else {
-        options.root = newNode;
-      }
-    }
-    for (let mml of options.getList('munderover') as MmlMunderover[]) {
-      const children = mml.childNodes;
-      const parent = mml.parent;
-      if (children[mml.under] && children[mml.over]) {
-        continue;
-      }
-      newNode = (children[mml.under] ?
-                 options.nodeFactory.create('node', 'munder', [children[mml.base], children[mml.under]], {}) :
-                 options.nodeFactory.create('node', 'mover', [children[mml.base], children[mml.over]], {}));
-      NodeUtil.copyAttributes(mml, newNode);
-      if (parent) {
-        parent.replaceChild(newNode, mml);
-      } else {
-        options.root = newNode;
-      }
-    }
+    _cleanSubSup(options, 'sub', 'sup');
+    _cleanSubSup(options, 'under', 'over');
     options.root.setInheritedAttributes({}, arg.math['display'], 0, false);
   };
 

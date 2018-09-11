@@ -66,53 +66,36 @@ export default class ParseOptions {
    */
   public tags: Tags;
 
+  // Fields for ephemeral options, i.e., options that will be cleared for each
+  // run of the parser.
   /**
    * Stack of previous tex parsers. This is used to keep track of parser
-   * settings when expressions are recursively parser.
+   * settings when expressions are recursively parsed.
    * @type {TexParser[]}
    */
   public parsers: TexParser[] = [];
 
-  // ephemeral options
+
+  /**
+   * The current root node.
+   * @type {MmlNode}
+   */
   public root: MmlNode = null;
+
+  /**
+   * List of node lists saved with respect to some property or their kind.
+   * @type {{[key: string]: MmlNode[]}}
+   */
   public nodeLists: {[key: string]: MmlNode[]} = {};
-  public error = false;
-  
-  public clear() {
-    this.root = null;
-    this.nodeLists = {};
-    this.error = false;
-  }
 
-  public addNode(property: string, node: MmlNode) {
-    let list = this.nodeLists[property];
-    if (!list) {
-      list = this.nodeLists[property] = [];
-    }
-    list.push(node);
-  }
-    
+  /**
+   * Error state of the parser.
+   * @type {boolean}
+   */
+  public error: boolean = false;
 
-  private inTree(node: MmlNode) {
-    while (node && node !== this.root) {
-      node = node.parent;
-    }
-    return !!node;
-  }
 
-  public getList(property: string) {
-    let list = this.nodeLists[property] || [];
-    let result = [];
-    for (let node of list) {
-      if (this.inTree(node)) {
-        result.push(node);
-      }
-    }
-    this.nodeLists[property] = result;
-    return result;
-  }
 
-  
   /**
    * @constructor
    * @param {{[key: string]: (string|boolean)}} setting A list of option
@@ -123,6 +106,18 @@ export default class ParseOptions {
   }
 
 
+  /**
+   * Convenience method to create nodes with this node factory.
+   * @param {string} kind The kind of node to create.
+   * @param {any[]} ...rest The remaining arguments for the creation method.
+   * @return {MmlNode} The newly created node.
+   */
+  public createNode(kind: string, ...rest: any[]): MmlNode {
+    return this.nodeFactory.create(kind, ...rest);
+  }
+
+
+  // Methods for dealing with ephemeral fields.
   /**
    * Pushes a new tex parser onto the stack.
    * @param {TexParser} parser The new parser.
@@ -148,12 +143,63 @@ export default class ParseOptions {
   }
 
   /**
-   * Convenience method to create nodes with this node factory.
-   * @param {string} kind The kind of node to create.
-   * @param {any[]} ...rest The remaining arguments for the creation method.
-   * @return {MmlNode} The newly created node.
+   * Clears all the ephemeral options.
    */
-  public createNode(kind: string, ...rest: any[]): MmlNode {
-    return this.nodeFactory.create(kind, ...rest);
+  public clear() {
+    this.parsers = [];
+    this.root = null;
+    this.nodeLists = {};
+    this.error = false;
   }
+
+
+  /**
+   * Saves a tree node to a list of nodes for post processing.
+   * @param {string} property The property name that will be used for
+   *     postprocessing.
+   * @param {MmlNode} node The node to save.
+   */
+  public addNode(property: string, node: MmlNode) {
+    let list = this.nodeLists[property];
+    if (!list) {
+      list = this.nodeLists[property] = [];
+    }
+    list.push(node);
+  }
+
+
+  /**
+   * Gets a saved node list with respect to a given property. It first ensures
+   * that all the nodes are "live", i.e., actually live in the current
+   * tree. Sometimes nodes are created, saved in the node list but discarded
+   * later in the parsing. These will be filtered out here.
+   *
+   * NB: Do not use this method before the root field of the options is
+   * set. Otherwise, your node list will always be empty!
+   * @param {string} property The property for which to retrieve the node list.
+   */
+  public getList(property: string) {
+    let list = this.nodeLists[property] || [];
+    let result = [];
+    for (let node of list) {
+      if (this.inTree(node)) {
+        result.push(node);
+      }
+    }
+    this.nodeLists[property] = result;
+    return result;
+  }
+
+
+  /**
+   * Tests if the node is in the tree spanned by the current root node.
+   * @param {MmlNode} node The node to test.
+   */
+  private inTree(node: MmlNode) {
+    while (node && node !== this.root) {
+      node = node.parent;
+    }
+    return !!node;
+  }
+
 }
