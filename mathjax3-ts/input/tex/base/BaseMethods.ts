@@ -1369,7 +1369,6 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     }
     parser.stack.env['closing'] = macro.args[0];
   }
-  console.log(parser.configuration.options['maxMacros']);
   if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub2',
                         'MathJax maximum substitution count exceeded; ' +

@@ -164,12 +164,6 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     if (map instanceof sm.MacroMap) {
       // @test Def Let, Newcommand Let
       let macro = (map as sm.CommandMap).lookup(name) as Macro;
-      let func = function(...args: any[]) {
-        let parser = args[0];
-        let symbol = args[1];
-        let rest = args.slice(2);
-        ((macro as Macro).func as ParseMethod).apply(macro, [parser].concat(rest));
-      };
       (MapHandler.getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
         add(cs, new Macro(macro.symbol, macro.func, macro.args));
       return;
@@ -181,7 +175,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
       let symb = NewcommandUtil.assembleSymbol(rest);
       return map.parser(p, symb);
     };
-    let newMacro = new Macro(cs, method as any, newArgs);
+    let newMacro = new Macro(cs, method, newArgs);
     (MapHandler.getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
       add(cs, newMacro);
     return;
