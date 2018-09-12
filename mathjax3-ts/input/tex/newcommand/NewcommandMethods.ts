@@ -247,12 +247,19 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
 NewcommandMethods.BeginEnv = function(parser: TexParser, begin: StackItem,
                                       bdef: string, edef: string, n: number, def: string) {
   // @test Newenvironment Empty, Newenvironment Content
-  if (parser.stack.env['closing'] === begin.getProperty('end')) {
+  // We have an end item, and we are supposed to close this environment.
+  if (begin.getProperty('end') && parser.stack.env['closing'] === begin.getName()) {
     // @test Newenvironment Empty, Newenvironment Content
     delete parser.stack.env['closing'];
-    parser.string = edef + parser.string.slice(parser.i);
+    // Parse the commands in the end environment definition.
+    let rest = parser.string.slice(parser.i);
+    parser.string = edef;
     parser.i = 0;
     parser.Parse();
+    // Reset to parsing the remainder of the expression.
+    parser.string = rest;
+    parser.i = 0;
+    // Close this environment.
     return parser.itemFactory.create('end').setProperties({name: begin.getName()});
   }
   if (n) {

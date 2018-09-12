@@ -1362,12 +1362,15 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   }
   let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
   if (macro && name === '\\end') {
+    // If the first argument is true, we have some sort of user defined
+    // environment. Otherwise we have a standard LaTeX environment that is
+    // handled with begin and end items.
     if (!macro.args[0]) {
       const mml = parser.itemFactory.create('end').setProperties({name: env});
       parser.Push(mml);
       return;
     }
-    parser.stack.env['closing'] = macro.args[0];
+    parser.stack.env['closing'] = env;
   }
   if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub2',
