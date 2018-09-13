@@ -55,7 +55,6 @@ namespace FilterUtil {
       }
     }
     options.root.setInheritedAttributes({}, arg.math['display'], 0, false);
-    options.root.setTeXclass(null);
   };
 
 

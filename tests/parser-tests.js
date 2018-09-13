@@ -40,7 +40,9 @@ export class ParserTest extends Test {
           });
           html.TestMath(tex).compile();
           let jv = new JsonMmlVisitor();
-          let actual = jv.visitTree(html.math.pop().root);
+          let root = html.math.pop().root;
+          root.setTeXclass(null);
+          let actual = jv.visitTree(root);
           t.deepEqual(actual, expected, name);
         }.bind(this)).catch(err => {
           console.log(err.message);
