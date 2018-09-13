@@ -27,7 +27,6 @@ import {Args, Attributes, ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../SymbolMap.js';
-import {ExtensionMaps, MapHandler} from '../MapHandler.js';
 import {Symbol, Macro} from '../Symbol.js';
 import BaseMethods from '../base/BaseMethods.js';
 import ParseUtil from '../ParseUtil.js';
@@ -67,9 +66,7 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
                           'Illegal number of parameters specified in %1', name);
     }
   }
-  let newMacros = MapHandler.getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
-  newMacros.add(cs,
-                new Macro(cs, NewcommandMethods.Macro, [def, n, opt]));
+  NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, n, opt]);
 };
 
 
@@ -94,8 +91,7 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
                           'Illegal number of parameters specified in %1', name);
         }
   }
-  let newEnv = MapHandler.getMap(ExtensionMaps.NEW_ENVIRONMENT) as sm.EnvironmentMap;
-  newEnv.add(env, new Macro(env, NewcommandMethods.BeginEnv, [true, bdef, edef, n, opt]));
+  NewcommandUtil.addEnvironment(parser, env, NewcommandMethods.BeginEnv, [true, bdef, edef, n, opt]);
 };
 
 
@@ -109,14 +105,11 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
   let cs = NewcommandUtil.GetCSname(parser, name);
   let params = NewcommandUtil.GetTemplate(parser, name, '\\' + cs);
   let def = parser.GetArgument(name);
-  let newMacros = MapHandler.getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
-  let macro = !(params instanceof Array) ?
+  !(params instanceof Array) ?
     // @test Def DoubleLet, DefReDef
-    new Macro(cs, NewcommandMethods.Macro, [def, params]) :
+    NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, params]) :
     // @test Def Let
-    new Macro(cs, NewcommandMethods.MacroWithTemplate,
-              [def].concat(params));
-  newMacros.add(cs, macro);
+    NewcommandUtil.addMacro(parser, cs, NewcommandMethods.MacroWithTemplate, [def].concat(params));
 };
 
 
@@ -137,7 +130,7 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
  * @param {string} name The name of the calling command.
  */
 NewcommandMethods.Let = function(parser: TexParser, name: string) {
-  let cs = NewcommandUtil.GetCSname(parser, name);
+  const cs = NewcommandUtil.GetCSname(parser, name);
   let c = parser.GetNext();
   // @test Let Bar, Let Caret
   if (c === '=') {
@@ -152,47 +145,40 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     let macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
     if (macro) {
       // @test Let Bar, Let Brace Equal Stretchy
-      (MapHandler.getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).
-        add('\\' + cs, new Symbol('\\' + cs, macro.char, macro.attributes));
+      NewcommandUtil.addDelimiter(parser, '\\' + cs, macro.char, macro.attributes);
       return;
     }
-    let map = handlers.get('macro').applicable(name);
+    const map = handlers.get('macro').applicable(name);
     if (!map) {
       // @test Let Undefined CS
       return;
     }
     if (map instanceof sm.MacroMap) {
       // @test Def Let, Newcommand Let
-      let macro = (map as sm.CommandMap).lookup(name) as Macro;
-      (MapHandler.getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
-        add(cs, new Macro(macro.symbol, macro.func, macro.args));
+      const macro = (map as sm.CommandMap).lookup(name) as Macro;
+      NewcommandUtil.addMacro(parser, cs, macro.func, macro.args, macro.symbol);
       return;
     }
     macro = (map as sm.CharacterMap).lookup(name) as Symbol;
-    let newArgs = NewcommandUtil.disassembleSymbol(cs, macro);
-    let method = (p: TexParser, cs: string, ...rest: any[]) => {
+    const newArgs = NewcommandUtil.disassembleSymbol(cs, macro);
+    const method = (p: TexParser, cs: string, ...rest: any[]) => {
       // @test Let Relet, Let Let, Let Circular Macro
-      let symb = NewcommandUtil.assembleSymbol(rest);
+      const symb = NewcommandUtil.assembleSymbol(rest);
       return map.parser(p, symb);
     };
-    let newMacro = new Macro(cs, method, newArgs);
-    (MapHandler.getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap).
-      add(cs, newMacro);
+    NewcommandUtil.addMacro(parser, cs, method, newArgs);
     return;
   }
   // @test Let Brace Equal, Let Caret
   parser.i++;
-  let macro = handlers.get('delimiter').lookup(c) as Symbol;
+  const macro = handlers.get('delimiter').lookup(c) as Symbol;
   if (macro) {
     // @test Let Paren Delim, Let Paren Stretchy
-    (MapHandler.getMap(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap).
-      add('\\' + cs, new Symbol('\\' + cs, macro.char, macro.attributes));
+    NewcommandUtil.addDelimiter(parser, '\\' + cs, macro.char, macro.attributes);
     return;
   }
   // @test Let Brace Equal, Let Caret
-  let newMacros = MapHandler.getMap(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
-  newMacros.add(cs,
-                new Macro(cs, NewcommandMethods.Macro, [c]));
+  NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [c]);
 };
 
 

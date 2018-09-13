@@ -28,6 +28,8 @@ import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {Macro, Symbol} from '../Symbol.js';
 import {Args, Attributes, ParseMethod} from '../Types.js';
+import * as sm from '../SymbolMap.js';
+import {ExtensionMaps} from '../MapHandler.js';
 
 
 namespace NewcommandUtil {
@@ -228,6 +230,50 @@ namespace NewcommandUtil {
     // @test Def Let, Def Optional Brace, Def Options CS
     parser.i += param.length;
     return 1;
+  };
+
+
+  /**
+   * Adds a new delimiter as extension to the parser.
+   * @param {TexParser} parser The current parser.
+   * @param {string} cs The control sequence of the delimiter.
+   * @param {string} char The corresponding character.
+   * @param {Attributes} attr The attributes needed for parsing.
+   */
+  export function addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
+    const handlers = parser.configuration.handlers;
+    const handler = handlers.retrieve(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap;
+    handler.add(cs, new Symbol(cs, char, attr));
+  };
+
+  /**
+   * Adds a new macro as extension to the parser.
+   * @param {TexParser} parser The current parser.
+   * @param {string} cs The control sequence of the delimiter.
+   * @param {ParseMethod} func The parse method for this macro.
+   * @param {Args[]} attr The attributes needed for parsing.
+   * @param {string=} symbol Optionally original symbol for macro, in case it is
+   *     different from the control sequence.
+   */
+  export function addMacro(parser: TexParser, cs: string, func: ParseMethod, attr: Args[],
+                           symbol: string = '') {
+    const handlers = parser.configuration.handlers;
+    const handler = handlers.retrieve(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
+    handler.add(cs, new Macro(symbol ? symbol : cs, func, attr));
+  };
+
+
+  /**
+   * Adds a new environment as extension to the parser.
+   * @param {TexParser} parser The current parser.
+   * @param {string} env The environment name.
+   * @param {ParseMethod} func The parse method for this macro.
+   * @param {Args[]} attr The attributes needed for parsing.
+   */
+  export function addEnvironment(parser: TexParser, env: string, func: ParseMethod, attr: Args[]) {
+    const handlers = parser.configuration.handlers;
+    const handler = handlers.retrieve(ExtensionMaps.NEW_ENVIRONMENT) as sm.EnvironmentMap;
+    handler.add(env, new Macro(env, func, attr));
   };
 
 }

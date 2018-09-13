@@ -58,7 +58,6 @@ export namespace MapHandler {
 
 
 // Defining empty handlers for declaring new commands, macros, etc.
-// TODO: Make sure multiple runs do not interfere!
 export type ExtensionMap = 'new-Macro' | 'new-Delimiter' | 'new-Command' |
   'new-Environment';
 export const ExtensionMaps: {[id: string]: ExtensionMap} = {
@@ -170,6 +169,16 @@ export class SubHandler {
 
 
   /**
+   * Retrieves the map of the given name.
+   * @param {string} name Name of the symbol map.
+   * @return {SymbolMap} The map if it exists.
+   */
+  public retrieve(name: string): SymbolMap {
+    return this._configuration.find(x => { return x.name === name; });
+  }
+
+
+  /**
    * Prints a warning message.
    * @param {string} message The warning.
    */
@@ -190,7 +199,6 @@ export class SubHandlers {
    * @param {Configuration} configuration A setting for the map handler.
    */
   constructor(config: Configuration) {
-    // config.append(ExtensionConf);
     for (const key of Object.keys(config.handler)) {
       let name = key as HandlerType;
       let subHandler = new SubHandler(config.handler[name] || [],
@@ -217,6 +225,22 @@ export class SubHandlers {
    */
   public get(name: HandlerType): SubHandler {
     return this.map.get(name);
+  }
+
+
+  /**
+   * Retrieves a symbol map of the given name.
+   * @param {string} name Name of the symbol map.
+   * @return {SymbolMap} The map if it exists. O/w null.
+   */
+  public retrieve(name: string): SymbolMap {
+    for (const handler of this.map.values()) {
+      let map = handler.retrieve(name);
+      if (map) {
+        return map;
+      }
+    }
+    return null;
   }
 
 
