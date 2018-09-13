@@ -66,6 +66,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     ...AbstractInputJax.OPTIONS,
     FindTeX: null,
     packages: ['base'],
+    digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/
   };
 
   /**
@@ -113,7 +114,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     // Add stackitems from packages.
     options.itemFactory.addStackItems(configuration.items);
     // Set default options for parser from packages and for tags.
-    defaultOptions(options.options, TagsFactory.OPTIONS, configuration.options);
+    defaultOptions(options.options, TeX.OPTIONS, TagsFactory.OPTIONS, configuration.options);
     return options;
   };
 

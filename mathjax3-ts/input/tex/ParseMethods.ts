@@ -22,13 +22,13 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sitem from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import TexParser from './TexParser.js';
 import NodeUtil from './NodeUtil.js';
 import {TexConstant} from './TexConstants.js';
 import {ParseMethod, ParseInput} from './Types.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import ParseUtil from './ParseUtil.js';
 
 
 namespace ParseMethods {
@@ -39,11 +39,8 @@ namespace ParseMethods {
    * @param {string} c The string to parse.
    */
   export function variable(parser: TexParser, c: string) {
-    const def: sitem.EnvList = {};
-    if (parser.stack.env['font']) {
-      // @test Identifier Font
-      def['mathvariant'] = parser.stack.env['font'];
-    }
+    // @test Identifier Font
+    const def = ParseUtil.getFontDef(parser);
     // @test Identifier
     const node = parser.configuration.nodeFactory.create('token', 'mi', def, c);
     parser.Push(node);
@@ -57,12 +54,14 @@ namespace ParseMethods {
    */
   export function digit(parser: TexParser, c: string) {
     let mml: MmlNode;
-    const n = parser.string.slice(parser.i - 1).match(/^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
-    const def: sitem.EnvList = {};
-    if (parser.stack.env['font']) {
-      // @test Integer Font
-      def['mathvariant'] = parser.stack.env['font'];
-    }
+    // Needs test! 1, 1.1, 0.1, 1.1.1
+    // Different pattern! 1,1 etc.
+    // const n = parser.string.slice(parser.i - 1).match(/^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
+    // /^(?:[0-9]+(?:\{\.\}[0-9]{3})*(?:,[0-9]*)*|,[0-9]+)/
+    const pattern = parser.configuration.options['digits'];
+    const n = parser.string.slice(parser.i - 1).match(pattern);
+    // @test Integer Font
+    const def = ParseUtil.getFontDef(parser);
     if (n) {
       // @test Integer, Number
       mml = parser.configuration.nodeFactory.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
@@ -119,7 +118,7 @@ namespace ParseMethods {
    * @param {Symbol} mchar The string to parse.
    */
   export function mathchar7(parser: TexParser, mchar: Symbol) {
-        const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
+    const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
     if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
       def['mathvariant'] = parser.stack.env['font'];

@@ -90,7 +90,6 @@ function envUndefined(parser: TexParser, env: string) {
 
 
 /**
- * Standard tagging.
  * @constructor
  * @extends {AbstractTags}
  */

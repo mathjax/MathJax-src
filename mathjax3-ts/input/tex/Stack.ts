@@ -1,13 +1,5 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/Stack.js
- *
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
- *
  *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,10 +58,20 @@ export default class Stack {
     this.env = this.stack[0].env;
   }
 
+
+  /**
+   * Set the environment of the stack.
+   * @param {EnvList} env The new environment.
+   */
   public set env(env: EnvList) {
     this._env = env;
   }
 
+
+  /**
+   * Retrieves the environment of that stack.
+   * @return {EnvList} The current environment.
+   */
   public get env(): EnvList {
     return this._env;
   }
@@ -80,8 +82,7 @@ export default class Stack {
    * @param {...StackItem|MmlNode} args A list of items to push.
    */
   public Push(...args: (StackItem|MmlNode)[]) {
-    for (let i = 0, m = args.length; i < m; i++) {
-      const node = args[i];
+    for (const node of args) {
       if (!node) {
         continue;
       }
@@ -89,26 +90,25 @@ export default class Stack {
         this._factory.create('mml', node) : node;
       item.global = this.global;
       const top = this.stack.length ? this.Top().checkItem(item) : true;
+      if (!top) {
+        continue;
+      }
       if (top instanceof Array) {
         this.Pop();
-        this.Push.apply(this, top);
+        this.Push(...top);
+        continue;
       }
-      else if (top instanceof BaseItem) {
+      if (top instanceof BaseItem) {
         this.Pop();
         this.Push(top);
+        continue;
       }
-      else if (top) {
-        this.stack.push(item);
-        if (item.env) {
-          for (let id in this.env) {
-            if (this.env.hasOwnProperty(id)) {
-              item.env[id] = this.env[id];
-            }
-          }
-          this.env = item.env;
-        } else {
-          item.env = this.env;
-        }
+      this.stack.push(item);
+      if (item.env) {
+        Object.assign(item.env, this.env);
+        this.env = item.env;
+      } else {
+        item.env = this.env;
       }
     }
   }
@@ -133,10 +133,7 @@ export default class Stack {
    * @param {number=} n Position of element that should be returned. Default 1.
    * @return {StackItem} Nth item on the stack.
    */
-  public Top(n?: number): StackItem {
-    if (n == null) {
-      n = 1;
-    }
+  public Top(n: number = 1): StackItem {
     return this.stack.length < n ? null : this.stack[this.stack.length - n];
   }
 

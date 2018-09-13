@@ -438,6 +438,7 @@ namespace ParseUtil {
     parser.stack.global.eqnenv = true;
   };
 
+
   /**
    * This is a placeholder for future security filtering of attributes.
    * @param {TexParser} parser The current parser.
@@ -448,6 +449,17 @@ namespace ParseUtil {
   export function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
     // TODO: Implement this.
     return value;
+  };
+
+
+  /**
+   * Initialises an stack environment with current font definition in the parser.
+   * @param {TexParser} parser The current tex parser.
+   * @return {EnvList} The initialised environment list.
+   */
+  export function getFontDef(parser: TexParser): EnvList {
+    const font = parser.stack.env['font'];
+    return (font ? {mathvariant: font} : {});
   };
 
 }

@@ -31,7 +31,7 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
 import ParseOptions from './ParseOptions.js';
 import *  as sm from './SymbolMap.js';
-import {FunctionList, FunctionListItem} from '../../util/FunctionList.js';
+import {FunctionList} from '../../util/FunctionList.js';
 
 
 export type HandlerConfig = {[P in HandlerType]?: string[]}
@@ -115,7 +115,7 @@ export class Configuration {
 
   /**
    * Appends configurations to this configuration. Note that fallbacks are
-   * overwritten.
+   * overwritten, while order of configurations is preserved.
    *
    * @param {Configuration} configuration A configuration setting for the TeX
    *       parser.
@@ -127,7 +127,6 @@ export class Configuration {
         this.handler[key].unshift(map);
       }
     }
-    handlers = Object.keys(config.fallback) as HandlerType[];
     Object.assign(this.fallback, config.fallback);
     Object.assign(this.items, config.items);
     Object.assign(this.tags, config.tags);
@@ -155,12 +154,8 @@ export class Configuration {
                       readonly preprocessors: ProcessorList = [],
                       readonly postprocessors: ProcessorList = []
              ) {
-    let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
-    let handlers = Object.keys(handler) as HandlerType[];
-    for (const key of handlers) {
-      _default[key] = handler[key];
-    }
-    this.handler = _default;
+    this.handler = Object.assign(
+      {character: [], delimiter: [], macro: [], environment: []}, handler);
     ConfigurationHandler.set(name, this);
   }
 

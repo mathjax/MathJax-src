@@ -618,11 +618,9 @@ BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
 BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, stretchy: boolean) {
   // @test Vector
   const c = parser.ParseArg(name);
-  const def: EnvList = {accent: true};
-  if (parser.stack.env['font']) {
-    // @test Vector Font
-    def['mathvariant'] = parser.stack.env['font'];
-  }
+  // @test Vector Font
+  const def = ParseUtil.getFontDef(parser);
+  def['accent'] = true;
   const entity = NodeUtil.createEntity(accent);
   const moNode = parser.configuration.nodeFactory.create('token', 'mo', def, entity);
   const mml = moNode;
