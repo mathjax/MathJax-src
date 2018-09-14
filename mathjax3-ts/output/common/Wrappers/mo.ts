@@ -143,11 +143,14 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
             if (stretchy && this.size < 0) return;
             super.computeBBox(bbox);
             this.copySkewIC(bbox);
+            if (this.noIC) {
+                bbox.w -= bbox.ic;
+            }
             if (this.node.attributes.get('symmetric') &&
                 this.stretch.dir !== DIRECTION.Horizontal) {
                 const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
                 bbox.h += d;
-                bbox.d += d;
+                bbox.d -= d;
             }
         }
 

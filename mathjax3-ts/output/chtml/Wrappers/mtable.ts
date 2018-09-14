@@ -378,7 +378,7 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
         const hasLabels = (this.adaptor.childNodes(this.labels).length > 0);
         if (!(isPercent(w) || hasLabels)) {
             if (w === 'auto') return;
-            w = this.em(this.length2em(w) + (this.frame ? .14 : 0));
+            w = this.em(this.length2em(w) + 2 * this.fLine);
         }
         const table = this.adaptor.firstChild(this.chtml) as N;
         this.adaptor.setStyle(table, 'minWidth', w);
@@ -477,7 +477,7 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
     }
 
     /**
-     * Add spacing elements between the label rows so align them with the rest of the table
+     * Add spacing elements between the label rows to align them with the rest of the table
      */
     protected addLabelSpacing() {
         const adaptor = this.adaptor;
@@ -489,11 +489,11 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
         //  Start with frame size and add in spacing, height and depth,
         //    and line thickness for each non-labeled row.
         //
-        let h = (this.frame ? .07 : 0);
+        let h = this.fLine;
         let current = adaptor.firstChild(this.labels) as N;
         for (let i = 0; i < this.numRows; i++) {
             const row = this.childNodes[i];
-            if (row.kind === 'mlabeledtr') {
+            if (row.node.isKind('mlabeledtr')) {
                 h && adaptor.insert(this.html('mjx-mtr', {style: {height: this.em(h)}}), current);
                 adaptor.setStyle(current, 'height', this.em((equal ? HD : H[i] + D[i]) + space[i] + space[i + 1]));
                 current = adaptor.next(current) as N;

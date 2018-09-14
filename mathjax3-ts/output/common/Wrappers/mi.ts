@@ -60,8 +60,10 @@ export function CommonMiMixin<T extends WrapperConstructor>(Base: T): MiConstruc
         public computeBBox(bbox: BBox) {
             super.computeBBox(bbox);
             this.copySkewIC(bbox);
+            if (this.noIC) {
+                bbox.w -= bbox.ic;
+            }
         }
-
     };
 
 }

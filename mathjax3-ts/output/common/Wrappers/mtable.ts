@@ -67,6 +67,7 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
      * The spacing and line data
      */
     frame: boolean;
+    fLine: number;
     fSpace: number[];
     cSpace: number[];
     rSpace: number[];
@@ -83,6 +84,11 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
      * The rows of the table
      */
     readonly tableRows: R[];
+
+    /**
+     * @override
+     */
+    childNodes: R[];
 
     /**
      * If the table has a precentage width or has labels, set the pwidth of the bounding box
@@ -135,6 +141,11 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
      * @return {number}   The maximum height of a row
      */
     getEqualRowHeight(): number;
+
+    /**
+     * @return {number[]}   The array of computed widths
+     */
+    getComputedWidths(): number[];
 
     /**
      * Determine the column widths that can be computed (and need to be set).
@@ -200,6 +211,11 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
      * @return {number[]}   The half-spacing for rows with frame spacing at the ends
      */
     getRowHalfSpacing(): number[];
+
+    /**
+     * @return {number[]}   The half-spacing for columns with frame spacing at the ends
+     */
+    getColumnHalfSpacing(): number[];
 
     /**
      * @return {[string,number|null]}  The alignment and row number (based at 0) or null
@@ -278,6 +294,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
          * The spacing and line data
          */
         public frame: boolean;
+        public fLine: number;
         public fSpace: number[];
         public cSpace: number[];
         public rSpace: number[];
@@ -295,7 +312,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
          * @return {R[]}  The rows of the table
          */
         get tableRows() {
-            return this.childNodes as R[];
+            return this.childNodes;
         }
 
     /******************************************************************/
@@ -317,6 +334,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
             //
             const attributes = this.node.attributes;
             this.frame = attributes.get('frame') !== 'none';
+            this.fLine = (this.frame ? .07 : 0);
             this.fSpace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
             this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
             this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
@@ -481,7 +499,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
          * @override
          */
         public computeBBox(bbox: BBox) {
-            const {H, D, W} = this.getTableData();
+            const {H, D} = this.getTableData();
             let height, width;
             //
             // For equal rows, use the common height and depth for all rows
@@ -494,17 +512,15 @@ export function CommonMtableMixin<C extends AnyWrapper,
             } else {
                 height = sum(H.concat(D, this.rLines, this.rSpace));
             }
-            height += (this.frame ? .14 + 2 * this.fSpace[1] : 0);
+            height += 2 * (this.fLine + this.fSpace[1]);
             //
-            //  Get the widths of all columns (explicit width or computed width)
+            //  Get the widths of all columns
             //
-            const CW = Array.from(W.keys()).map(i => {
-                return (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : W[i]);
-            });
+            const CW = this.getComputedWidths();
             //
             //  Get the expected width of the table
             //
-            width = sum(CW.concat(this.cLines, this.cSpace)) + (this.frame ? .14 + 2 * this.fSpace[0] : 0);
+            width = sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
             //
             //  If the table width is not 'auto', determine the specified width
             //    and pick the larger of the specified and computed widths.
@@ -512,7 +528,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
             const w = this.node.attributes.get('width') as string;
             if (w !== 'auto') {
                 const cwidth = this.metrics.containerWidth / this.metrics.em;
-                width = Math.max(this.length2em(w, cwidth) + (this.frame ? .14 : 0), width);
+                width = Math.max(this.length2em(w, cwidth) + 2 * this.fLine, width);
             }
             //
             //  Return the bounding box information
@@ -558,10 +574,20 @@ export function CommonMtableMixin<C extends AnyWrapper,
         }
 
         /**
+         * @return {number[]}   The array of computed widths
+         */
+        public getComputedWidths() {
+            const W = this.getTableData().W;
+            return Array.from(W.keys()).map(i => {
+                return (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : W[i]);
+            });
+        }
+
+        /**
          * Determine the column widths that can be computed (and need to be set).
          * The resulting arrays will have numbers for fixed-size arrays,
          *   strings for percentage sizes that can't be determined now,
-         *   and null for stretchy columns tht will expand to fill the extra space.
+         *   and null for stretchy columns that will expand to fill the extra space.
          * Depending on the width specified for the table, different column
          *  values can be determined.
          *
@@ -583,8 +609,9 @@ export function CommonMtableMixin<C extends AnyWrapper,
         }
 
         /**
-         * For tables with equal columns, get the proper amount per row.
+         * For tables with equal columns, get the proper amount per column.
          *
+         * @param {string} width   The width attribute of the table
          * @return {(string|number|null)[]}  The array of widths
          */
         public getEqualColumns(width: string) {
@@ -607,6 +634,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
          * will end up being natural width, so don't need to
          * set those explicitly.
          *
+         * @param {string[]} swidths   The split and padded columnwidths attribute
          * @return {ColumnWidths}  The array of widths
          */
         public getColumnWidthsAuto(swidths: string[]) {
@@ -623,7 +651,9 @@ export function CommonMtableMixin<C extends AnyWrapper,
          * but for 'auto' columns (when there are 'fit' ones), set the size
          * to the natural size of the column.
          *
-         * @return {ColumnWidths}  The array of widths
+         * @param {string[]} swidths   The split and padded columnwidths attribute
+         * @param {string} width       The width attribute of the table
+         * @return {ColumnWidths}      The array of widths
          */
         public getColumnWidthsPercent(swidths: string[], width: string) {
             const hasFit = swidths.indexOf('fit') >= 0;
@@ -640,7 +670,9 @@ export function CommonMtableMixin<C extends AnyWrapper,
         /**
          * For fixed-width tables, compute the column widths of all columns.
          *
-         * @return {ColumnWidths}  The array of widths
+         * @param {string[]} swidths   The split and padded columnwidths attribute
+         * @param {number} width       The width of the table
+         * @return {ColumnWidths}      The array of widths
          */
         public getColumnWidthsFixed(swidths: string[], width: number) {
             //
@@ -692,7 +724,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
             //  Start with frame size and add in spacing, height and depth,
             //    and line thickness for each row.
             //
-            let y = (this.frame ? .07 : 0);
+            let y = this.fLine;
             for (let j = 0; j < i; j++) {
                 y += space[j] + (equal ? HD : H[j] + D[j]) + space[j + 1] + this.rLines[j];
             }
@@ -743,6 +775,16 @@ export function CommonMtableMixin<C extends AnyWrapper,
             const space = this.rSpace.map(x => x / 2);
             space.unshift(this.fSpace[1]);
             space.push(this.fSpace[1]);
+            return space;
+        }
+
+        /**
+         * @return {number[]}   The half-spacing for columns with frame spacing at the ends
+         */
+        public getColumnHalfSpacing() {
+            const space = this.cSpace.map(x => x / 2);
+            space.unshift(this.fSpace[0]);
+            space.push(this.fSpace[0]);
             return space;
         }
 

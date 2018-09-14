@@ -62,7 +62,7 @@ export function CommonTeXAtomMixin<T extends WrapperConstructor>(Base: T): TeXAt
                 const a = this.font.params.axis_height;
                 const dh = ((h + d) / 2 + a) - h;  // new height minus old height
                 bbox.h += dh;
-                bbox.d += dh;
+                bbox.d -= dh;
             }
         }
 

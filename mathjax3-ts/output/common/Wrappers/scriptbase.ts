@@ -69,6 +69,11 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
      */
 
     /**
+     * @return {number}  The ic for the core element
+     */
+    coreIC(): number;
+
+    /**
      * Get the shift for the script (implemented in subclasses)
      *
      * @param {BBox} bbox   The bounding box of the base element
@@ -235,6 +240,14 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
             bbox.combine(scriptbox, bbox.w + x, y);
             bbox.w += this.font.params.scriptspace;
             bbox.clean();
+        }
+
+        /**
+         * @return {number}  The ic for the core element
+         */
+        public coreIC() {
+            const corebox = this.baseCore.getBBox();
+            return (corebox.ic ? 1.2 * corebox.ic + .05 : 0);
         }
 
         /**

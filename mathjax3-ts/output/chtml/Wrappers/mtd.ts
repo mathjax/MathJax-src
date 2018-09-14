@@ -22,8 +22,6 @@
  */
 
 import {CHTMLWrapper} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {BBox} from '../BBox.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -36,6 +34,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
+
     public static kind = MmlMtd.prototype.kind;
 
     public static styles: StyleList = {

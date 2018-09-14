@@ -34,7 +34,7 @@ import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {CommonOutputJax} from './OutputJax.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {BBox, BBoxData} from './BBox.js';
-import {FontData, DelimiterData, DIRECTION, NOSTRETCH} from './FontData.js';
+import {FontData, DelimiterData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
 import {StyleList} from '../common/CssStyles.js';
 
 /*****************************************************************/
@@ -669,6 +669,16 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         const node = this.wrap(mml);
         node.parent = this as any as W;
         return node;
+    }
+
+    /**
+     * @param {string} variant   The variant in which to look for the character
+     * @param {number} n         The number of the character to look up
+     * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
+     */
+    protected getVariantChar(variant: string, n: number) {
+        const char = this.font.getChar(variant, n) || [0, 0, 0, null];
+        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CharOptions];
     }
 
 }

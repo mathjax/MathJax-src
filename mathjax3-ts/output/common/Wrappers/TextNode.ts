@@ -24,19 +24,12 @@
 import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
 import {BBox} from '../BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {CharOptions} from '../FontData.js';
 
 /*****************************************************************/
 /**
  * The CommonTextNode interface
  */
 export interface CommonTextNode extends AnyWrapper {
-    /**
-     * @param {string} variant   The variant in which to look for the character
-     * @param {number} n         The number of the character to look up
-     * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
-     */
-    getChar(text: string, n: number): [number, number, number, CharOptions];
 }
 
 /**
@@ -64,14 +57,14 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
                const c = this.parent.stretch.c;
                const text = (this.node as TextNode).getText();
                const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));
-               let [h, d, w, data] = this.getChar(variant, chars[0]);
+               let [h, d, w, data] = this.getVariantChar(variant, chars[0]);
                bbox.h = h;
                bbox.d = d;
                bbox.w = w;
                bbox.ic = data.ic || 0;
                bbox.sk = data.sk || 0;
                for (let i = 1, m = chars.length; i < m; i++) {
-                   [h, d, w, data] = this.getChar(variant, chars[i]);
+                   [h, d, w, data] = this.getVariantChar(variant, chars[i]);
                    bbox.w += w;
                    if (h > bbox.h) bbox.h = h;
                    if (d > bbox.d) bbox.d = d;
@@ -79,16 +72,6 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
                    bbox.sk = 0;
                }
            }
-       }
-
-       /**
-        * @param {string} variant   The variant in which to look for the character
-        * @param {number} n         The number of the character to look up
-        * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
-        */
-       public getChar(variant: string, n: number) {
-           const char = this.font.getChar(variant, n) || [0, 0, 0, null];
-           return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CharOptions];
        }
 
        /******************************************************/

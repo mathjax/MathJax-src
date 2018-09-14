@@ -44,7 +44,6 @@ export class CHTMLmfenced<N, T, D> extends CommonMfencedMixin<CHTMLConstructor<N
     public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
         (this.mrow as CHTMLinferredMrow<N, T, D>).toCHTML(chtml);
-        this.drawBBox();
     }
 
 }

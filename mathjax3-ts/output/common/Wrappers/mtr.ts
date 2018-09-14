@@ -69,6 +69,11 @@ export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
      * If this isn't specified, the maximum height and depth is computed.
      */
     stretchChildren(HD?: number[]): void;
+
+    /**
+     * @override;
+     */
+    childNodes: C[];
 }
 
 /**

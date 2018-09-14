@@ -207,7 +207,7 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
             const w = bbox.w;
             const [u, v, q] = this.getUVQ(basebox, subbox, supbox);
             bbox.combine(subbox, w, v);
-            bbox.combine(supbox, w, u);
+            bbox.combine(supbox, w + this.coreIC(), u);
             bbox.w += this.font.params.scriptspace;
             bbox.clean();
         }

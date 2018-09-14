@@ -42,7 +42,7 @@ export interface CommonMfrac extends AnyWrapper {
     /**
      * @param {boolean} display  True for display-mode fractions
      * @param {number} t         The thickness of the line
-     * @return {Object}          The expanded rule thickness (T), and baeline offsets
+     * @return {Object}          The expanded rule thickness (T), and baseline offsets
      *                             for numerator and denomunator (u and v)
      */
     getTUV(display: boolean, t: number): {T: number, u: number, v: number};
@@ -158,7 +158,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
         /**
          * @param {boolean} display  True for display-mode fractions
          * @param {number} t         The thickness of the line
-         * @return {Object}          The expanded rule thickness (T), and baeline offsets
+         * @return {Object}          The expanded rule thickness (T), and baseline offsets
          *                             for numerator and denomunator (u and v)
          */
         public getTUV(display: boolean, t: number) {
