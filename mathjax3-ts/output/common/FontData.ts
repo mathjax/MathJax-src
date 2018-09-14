@@ -26,6 +26,8 @@ import {StringMap} from './Wrapper.js';
 import {OptionList} from '../../util/Options.js';
 import {StyleList} from './CssStyles.js';
 
+/****************************************************************************/
+
 /**
  * The extra options allowed in a CharData array
  */
@@ -48,6 +50,8 @@ export const enum CSS {
 }
 
 
+/****************************************************************************/
+
 /**
  * Data about a character
  *   [height, depth, width, {italic-correction, skew, options}]
@@ -63,6 +67,8 @@ export type CharMap = {
 export type CharMapMap = {
     [name: string]: CharMap;
 };
+
+/****************************************************************************/
 
 /**
  * Data for a variant
@@ -87,12 +93,16 @@ export type VariantMap = {
     [name: string]: VariantData;
 };
 
+/****************************************************************************/
+
 /**
  * Stretchy delimiter data
  */
 export const enum DIRECTION {None, Vertical, Horizontal}
 export const V = DIRECTION.Vertical;
 export const H = DIRECTION.Horizontal;
+
+/****************************************************************************/
 
 export type DelimiterData = {
     dir: DIRECTION;              // vertical or horizontal direction
@@ -112,6 +122,8 @@ export type DelimiterMap = {
 
 export const NOSTRETCH: DelimiterData = {dir: DIRECTION.None};
 
+/****************************************************************************/
+
 /**
  * Data for remapping characters
  */
@@ -122,6 +134,8 @@ export type RemapMap = {
 export type RemapMapMap = {
     [key: string]: RemapMap;
 }
+
+/****************************************************************************/
 
 /**
  * Font parameters (for TeX typesetting rules)
