@@ -25,14 +25,14 @@ import {PropertyList} from '../../core/Tree/Node.js';
 import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, CommonWrapperClass, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
 import {StyleList} from '../common/CssStyles.js';
 
-export {StringMap} from '../common/Wrapper.js';
+export {Constructor, StringMap} from '../common/Wrapper.js';
 
 /*****************************************************************/
 

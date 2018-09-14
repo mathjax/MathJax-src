@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, CommonWrapperClass} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor, CommonWrapperClass} from '../Wrapper.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {BBox} from '../BBox.js';
 import {Property} from '../../../core/Tree/Node.js';

@@ -53,6 +53,8 @@ function MathMLSpace(script: boolean, size: number) {
     return (script ? size < SMALLSIZE ? 0 : SMALLSIZE : size);
 }
 
+export type Constructor<T> = new(...args: any[]) => T;
+
 /**
  * Shorthands for wrappers and their constructors
  */

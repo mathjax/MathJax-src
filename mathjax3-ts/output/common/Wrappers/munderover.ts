@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper} from '../Wrapper.js';
+import {AnyWrapper, Constructor} from '../Wrapper.js';
 import {CommonScriptbase, ScriptbaseConstructor} from './scriptbase.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {BBox} from '../BBox.js';

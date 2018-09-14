@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper} from '../Wrapper.js';
+import {AnyWrapper, Constructor} from '../Wrapper.js';
 import {CommonMsubsup, MsubsupConstructor} from './msubsup.js';
 import {BBox} from '../BBox.js';
 

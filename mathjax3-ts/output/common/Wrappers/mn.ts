@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonInferredMrow} from './mrow.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';

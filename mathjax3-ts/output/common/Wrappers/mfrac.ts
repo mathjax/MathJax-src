@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {BBox} from '../BBox.js';

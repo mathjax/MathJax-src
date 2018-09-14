@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
 import {CommonMtr, CommonMtrMixin} from '../../common/Wrappers/mtr.js';
 import {CommonMlabeledtr, CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
 import {CHTMLmtable} from './mtable.js';

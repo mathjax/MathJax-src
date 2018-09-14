@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMtr} from './mtr.js';
 import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';

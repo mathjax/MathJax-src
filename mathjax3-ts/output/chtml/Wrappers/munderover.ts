@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
 import {CHTMLscriptbase} from './scriptbase.js';
 import {CommonMunder, CommonMunderMixin} from '../../common/Wrappers/munderover.js';
 import {CommonMover, CommonMoverMixin} from '../../common/Wrappers/munderover.js';

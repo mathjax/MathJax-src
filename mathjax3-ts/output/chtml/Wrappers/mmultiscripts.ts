@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapper, Constructor} from '../Wrapper.js';
 import {CHTMLmsubsup} from './msubsup.js';
 import {CommonMmultiscripts, CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';

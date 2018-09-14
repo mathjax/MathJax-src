@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
 import {CommonMrow, CommonMrowMixin} from '../../common/Wrappers/mrow.js';
 import {CommonInferredMrow, CommonInferredMrowMixin} from '../../common/Wrappers/mrow.js';
 import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';

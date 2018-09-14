@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {BBox} from '../BBox.js';
 import {Property} from '../../../core/Tree/Node.js';
 
