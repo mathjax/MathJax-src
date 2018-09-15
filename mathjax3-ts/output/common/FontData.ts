@@ -304,6 +304,20 @@ export class FontData {
      */
     protected static defaultVariantClasses: StringMap = {};
 
+
+    /**
+     * @param {CharMap} font   The font to check
+     * @param {number} n       The character to get options for
+     * @return {CharOptions}   The options for the character
+     */
+    public static charOptions(font: CharMap, n: number) {
+        const char = font[n];
+        if (char.length === 3) {
+            char[3] = {};
+        }
+        return char[3] as CharOptions;
+    }
+
     /**
      * The actual variant, delimiter, and size information for this font
      */

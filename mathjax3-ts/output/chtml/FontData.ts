@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CharMap, CharOptions} from '../common/FontData.js';
+import {CharMap, CharOptions, FontData} from '../common/FontData.js';
 export * from '../common/FontData.js';
 
 export type CharOptionsMap = {[name: number]: CharOptions};
@@ -35,21 +35,13 @@ export type CssMap = {[name: number]: number};
  * @return {CharMap}                 The augmented font
  */
 export function AddCSS(font: CharMap, css: CssMap, options: CharOptionsMap) {
-    for (const n of Object.keys(css)) {
-        const c = parseInt(n);
-        const char = font[c];
-        if (char.length === 3) {
-            char[3] = {};
-        }
-        (char[3] as CharOptions).css = css[c];
+    for (const c of Object.keys(css)) {
+        const n = parseInt(c);
+        FontData.charOptions(font, n).css = css[n];
     }
-    for (const n of Object.keys(options)) {
-        const c = parseInt(n);
-        const char = font[c];
-        if (char.length === 3) {
-            char[3] = {};
-        }
-        Object.assign(char[3], options[c]);
+    for (const c of Object.keys(options)) {
+        const n = parseInt(c);
+        Object.assign(FontData.charOptions(font, n), options[n]);
     }
     return font;
 }
