@@ -137,7 +137,7 @@ export class OpenItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        if (item.isKind('close')) {
+    if (item.isKind('close')) {
       // @test PrimeSup
       let mml = this.toMml();
       const node = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
@@ -181,7 +181,7 @@ export class PrimeItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        let [top0, top1] = this.TopN(2);
+    let [top0, top1] = this.TopN(2);
     if (!NodeUtil.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
       const node = this.factory.configuration.nodeFactory.create('node', 'msup', [top0, top1], {});
@@ -974,6 +974,7 @@ export class EquationItem extends BaseItem {
     if (item.isKind('end')) {
       let mml = this.toMml();
       let tag = this.factory.configuration.tags.getTag();
+      this.factory.configuration.tags.end();
       return [tag ? this.factory.configuration.tags.enTag(mml, tag) : mml, item];
     }
     if (item.isKind('stop')) {

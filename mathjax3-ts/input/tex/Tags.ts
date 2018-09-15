@@ -492,7 +492,8 @@ export class NoTags extends AbstractTags {
 
 
 /**
- * Tags every display formula. Exceptions are:
+ * Tags every display formula. Exceptions are: Environments that explicitly
+ * disallow tags, e.g., equation*.
  * @constructor
  * @extends {AbstractTags}
  */
@@ -526,13 +527,20 @@ export interface TagsClass {
 //       to hand over label values, equation ids etc.
 export namespace TagsFactory {
 
+  let tagsMapping = new Map<string, TagsClass>([
+    ['none', NoTags],
+    ['all', AllTags]
+  ]);
+
+  let defaultTags = 'none';
+
   /**
    * The default options for 
    * @type {OptionList}
    */
   export let OPTIONS: OptionList = {
     // Tagging style, used to be autonumber in v2.
-    tags: 'none',
+    tags: defaultTags,
     //  This specifies the side on which \tag{} macros will place the tags.
     //  Set to 'left' to place on the left-hand side.
     TagSide: 'right',
@@ -548,13 +556,6 @@ export namespace TagsFactory {
     refUpdate: false
   };
 
-
-  let tagsMapping = new Map<string, TagsClass>([
-    ['none', NoTags],
-    ['all', AllTags]
-  ]);
-
-  let defaultTags = 'none';
 
   /**
    * Add a tagging object.
@@ -583,7 +584,7 @@ export namespace TagsFactory {
    * @return {Tags} The newly created object.
    */
   export let create = function(name: string): Tags {
-    let constr = tagsMapping.get(name) || tagsMapping.get('default');
+    let constr = tagsMapping.get(name) || this.defaultTags;
     return new constr();
   };
 

@@ -67,7 +67,7 @@ const MmlTokenAllow: {[key: string]: number} = {
  */
 BaseMethods.Open = function(parser: TexParser, c: string) {
   // @test Identifier Font, Prime, Prime with subscript
-  parser.Push( parser.itemFactory.create('open') );
+  parser.Push(parser.itemFactory.create('open'));
 };
 
 /**
@@ -77,7 +77,7 @@ BaseMethods.Open = function(parser: TexParser, c: string) {
  */
 BaseMethods.Close = function(parser: TexParser, c: string) {
   // @test Identifier Font, Prime, Prime with subscript
-  parser.Push( parser.itemFactory.create('close') );
+  parser.Push(parser.itemFactory.create('close'));
 };
 
 
@@ -188,10 +188,8 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
   const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
   let position = NodeUtil.isType(base, 'msubsup') ?
     (base as MmlMsubsup).sub : (base as MmlMunderover).under;
-  if ((NodeUtil.isType(base, 'msubsup') &&
-       NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
-      (NodeUtil.isType(base, 'munderover') &&
-       NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
+  if ((NodeUtil.isType(base, 'msubsup') && NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
+      (NodeUtil.isType(base, 'munderover') && NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
        !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double-sub-error, Double-under-error
     throw new TexError('DoubleSubscripts', 'Double subscripts: use braces to clarify');
@@ -199,10 +197,8 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
   if (!NodeUtil.isType(base, 'msubsup')) {
     if (movesupsub) {
       // @test Large Operator, Move Superscript
-      if (!NodeUtil.isType(base, 'munderover') ||
-          NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
-        if (NodeUtil.getProperty(base, 'movablelimits') &&
-            NodeUtil.isType(base, 'mi')) {
+      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
+        if (NodeUtil.getProperty(base, 'movablelimits') && NodeUtil.isType(base, 'mi')) {
           // @test Mathop Sub
           base = ParseUtil.mi2mo(parser, base);
         }
@@ -324,7 +320,7 @@ BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
     parser.itemFactory.create('style').setProperties({styles: {mathsize: size + 'em'}}) );
 };
 
-// TODO: Will be replace by the color extension!
+// TODO: Will be replaced by the color extension!
 /**
  * Dummy color command.
  * @param {TexParser} parser The calling parser.
@@ -337,7 +333,7 @@ BaseMethods.Color = function(parser: TexParser, name: string) {
   parser.stack.env['color'] = color;
   const math = parser.ParseArg(name);
   if (old) {
-    parser.stack.env['color'];
+    parser.stack.env['color'] = old;
   } else {
     delete parser.stack.env['color'];
   }
@@ -366,9 +362,9 @@ BaseMethods.Spacer = function(parser: TexParser, name: string, space: string) {
  */
 BaseMethods.LeftRight = function(parser: TexParser, name: string) {
   // @test Fenced, Fenced3
-  const alpha = name.substr(1);
+  const first = name.substr(1);
   parser.Push(
-    parser.itemFactory.create(alpha)
+    parser.itemFactory.create(first)
       .setProperties({delim: parser.GetDelimiter(name)}) );
 };
 
@@ -405,7 +401,7 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
     id = name.substr(1);
   }
   const mml = parser.configuration.nodeFactory.create('token', 'mi', {texClass: TEXCLASS.OP}, id);
-  parser.Push( parser.itemFactory.create('fn', mml) );
+  parser.Push(parser.itemFactory.create('fn', mml));
 };
 
 
@@ -439,7 +435,7 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
 BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   // @test Limits
   let op = parser.stack.Prev(true);
-  // Get the texclass for the core operator. Q: Davide?
+  // Get the texclass for the core operator.
   if (!op || (NodeUtil.getTexClass(NodeUtil.getCoreMO(op)) !== TEXCLASS.OP &&
               NodeUtil.getProperty(op, 'movesupsub') == null)) {
     // @test Limits Error
@@ -670,8 +666,7 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   const entity = NodeUtil.createEntity(c);
   mo = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
 
-  NodeUtil.setChild(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
-                     mo);
+  NodeUtil.setChild(mml, name.charAt(1) === 'o' ?  mml.over : mml.under, mo);
   let node: MmlNode = mml;
   if (stack) {
     // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
@@ -735,13 +730,12 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
       // @test Mathop
       def['mathvariant'] = TexConstant.Variant.NORMAL;
       node = parser.configuration.nodeFactory.create('token', 'mi', def, match[1]);
-      mml = parser.itemFactory.create('fn', node);
     } else {
       // @test Mathop Cal
       parsed = new TexParser(arg, parser.stack.env, parser.configuration).mml();
       node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [parsed], def);
-      mml = parser.itemFactory.create('fn', node);
     }
+    mml = parser.itemFactory.create('fn', node);
   } else {
     // @test Mathrel
     parsed = parser.ParseArg(name);
@@ -773,19 +767,19 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
     throw new TexError('NotMathMLToken', '%1 is not a token element', kind);
   }
   while (attr !== '') {
-    const match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|'[^']*'|[^ ,]*)\s*,?\s*/i);
+    const match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
     if (!match) {
       // @test Token Invalid Attribute
       throw new TexError('InvalidMathMLAttr', 'Invalid MathML attribute: %1', attr);
     }
-    if (node.attributes.getAllDefaults()[match[1]] == null && !MmlTokenAllow[match[1]]) {
+    if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
       // @test Token Unknown Attribute, Token Wrong Attribute
       throw new TexError('UnknownAttrForElement',
                           '%1 is not a recognized attribute for %2',
                           match[1], kind);
     }
     let value: string | boolean = ParseUtil.MmlFilterAttribute(
-      parser, match[1], match[2].replace(/^([''])(.*)\1$/, '$2'));
+      parser, match[1], match[2].replace(/^(['"])(.*)\1$/, '$2'));
     if (value) {
       if (value.toLowerCase() === 'true') {
         value = true;
@@ -811,7 +805,6 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
  */
 BaseMethods.Strut = function(parser: TexParser, name: string) {
   // @test Strut
-  // TODO: Do we still need this row as it is implicit?
   const row = parser.configuration.nodeFactory.create('node', 'mrow', [], {});
   const padded = parser.configuration.nodeFactory.create('node', 'mpadded', [row],
                                                          {height: '8.6pt', depth: '3pt', width: 0});
@@ -1063,7 +1056,7 @@ BaseMethods.FBox = function(parser: TexParser, name: string) {
 BaseMethods.Not = function(parser: TexParser, name: string) {
   // @test Negation Simple, Negation Complex, Negation Explicit,
   //       Negation Large
-  parser.Push( parser.itemFactory.create('not') );
+  parser.Push(parser.itemFactory.create('not'));
 };
 
 
