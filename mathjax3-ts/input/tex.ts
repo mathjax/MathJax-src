@@ -190,6 +190,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       NodeUtil.setAttribute(this.mathNode, 'display', 'block');
     }
     this.executeFilters(this.postFilters, math, this.parseOptions);
+    if (this.parseOptions.error) {
+      this.parseOptions.root.setInheritedAttributes({}, display, 0, false);
+    }
     this.mathNode = this.parseOptions.root;
     return this.mathNode;
   };

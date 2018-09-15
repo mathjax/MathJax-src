@@ -48,13 +48,14 @@ namespace FilterUtil {
         const parent = mo.parent;
         if (!NodeUtil.getTexClass(mo) && (!symbol || !symbol[2])) {
           const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo], {});
-          // texAtom.parent = parent;
           parent.replaceChild(texAtom, mo);
+          texAtom.setInheritedAttributes({}, arg.math['display'],
+                                         parent.attributes.get('scriptlevel') as number,
+                                         parent.getProperty('texprimestyle') as boolean);
         }
         NodeUtil.removeProperties(mo, 'fixStretchy');
       }
     }
-    options.root.setInheritedAttributes({}, arg.math['display'], 0, false);
   };
 
 
