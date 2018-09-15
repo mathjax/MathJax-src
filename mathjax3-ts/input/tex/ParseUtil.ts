@@ -1,13 +1,5 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/ParseUtil.js
- *
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
- *
  *  Copyright (c) 2009-2017 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +37,7 @@ namespace ParseUtil {
   // TODO (VS): Combine some of this with lengths in util.
   const emPerInch = 7.2;
   const pxPerInch = 72;
+  // Note, the following are TeX CM font values.
   const UNIT_CASES: {[key: string]: ((m: number) => number)}  = {
     'em': m => m,
     'ex': m => m * .43,
@@ -94,6 +87,7 @@ namespace ParseUtil {
   /**
    * Turns a number into an em value.
    * @param {number} m The number.
+   * @return {string} The em dimension string.
    */
   export function Em(m: number) {
     if (Math.abs(m) < .0006) {
@@ -143,8 +137,10 @@ namespace ParseUtil {
    * @param {string} open The opening fence.
    * @param {MmlNode} mml The enclosed node.
    * @param {string} close The closing fence.
+   * @return {MmlNode} The mrow node.
    */
-  export function fixedFence(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
+  export function fixedFence(configuration: ParseOptions, open: string,
+                             mml: MmlNode, close: string): MmlNode {
     // @test Choose, Over With Delims, Above with Delims
     let mrow = configuration.nodeFactory.create('node',
       'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
@@ -170,8 +166,10 @@ namespace ParseUtil {
    * @param {ParseOptions} configuration The current parse otpions.
    * @param {string} fence The fence.
    * @param {string} side The side of the fence (l or r).
+   * @return {MmlNode} The mathchoice node.
    */
-  export function mathPalette(configuration: ParseOptions, fence: string, side: string) {
+  export function mathPalette(configuration: ParseOptions, fence: string,
+                              side: string): MmlNode  {
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
@@ -208,8 +206,9 @@ namespace ParseUtil {
    * Rewrites an mi node into an mo node.
    * @param {TexParser} parser The current TexParser.
    * @param {MmlNode} mi The mi node.
+   * @return {MmlNode} The corresponding mo node.
    */
-  export function mi2mo(parser: TexParser, mi: MmlNode) {
+  export function mi2mo(parser: TexParser, mi: MmlNode): MmlNode {
     // @test Mathop Sub, Mathop Super
     const mo = parser.configuration.nodeFactory.create('node', 'mo', [], {});
     NodeUtil.copyChildren(mi, mo);
@@ -225,9 +224,11 @@ namespace ParseUtil {
    * @param {TexParser} parser The calling parser.
    * @param {string} text The text in the math expression to parse.
    * @param {number|string=} level The scriptlevel.
+   * @return {MmlNode[]} The nodes corresponding to the internal math expression.
    */
   // TODO: Write tests!
-  export function internalMath(parser: TexParser, text: string, level?: number|string) {
+  export function internalMath(parser: TexParser, text: string,
+                               level?: number|string): MmlNode[] {
     let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
     if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
@@ -357,7 +358,7 @@ namespace ParseUtil {
    * Sets alignment in array definitions.
    * @param {ArrayItem} array The array item.
    * @param {string} align The alignment string.
-   * @return {ArrayItem} 
+   * @return {ArrayItem} The altered array item.
    */
   export function setArrayAlign(array: ArrayItem, align: string): ArrayItem {
     // @test Array1, Array2, Array Test
@@ -375,12 +376,15 @@ namespace ParseUtil {
   }
 
 
-  let MAXBUFFER = 5 * 1024;   // maximum size of TeX string to process
-
   /**
-   *  Replace macro parameters with their values
+   * Replace macro parameters with their values.
+   * @param {TexParser} parser The current TeX parser.
+   * @param {string[]} args A list of arguments for macro parameters.
+   * @param {string} str The macro parameter string.
+   * @return {string} The string with all parameters replaced by arguments.
    */
-  export function substituteArgs(args: string[], str: string) {
+  export function substituteArgs(parser: TexParser, args: string[],
+                                 str: string): string {
     let text = '';
     let newstring = '';
     let i = 0;
@@ -398,7 +402,7 @@ namespace ParseUtil {
             throw new TexError('IllegalMacroParam',
                                 'Illegal macro parameter reference');
           }
-          newstring = addArgs(addArgs(newstring, text),
+          newstring = addArgs(parser, addArgs(parser, newstring, text),
                               args[parseInt(c, 10) - 1]);
           text = '';
         }
@@ -406,19 +410,24 @@ namespace ParseUtil {
         text += c;
       }
     }
-    return addArgs(newstring, text);
+    return addArgs(parser, newstring, text);
   }
 
 
   /**
-   *  Make sure that macros are followed by a space if their names
-   *  could accidentally be continued into the following text.
+   * Adds a new expanded argument to an already macro parameter string.  Makes
+   * sure that macros are followed by a space if their names could accidentally
+   * be continued into the following text.
+   * @param {TexParser} parser The current TeX parser.
+   * @param {string} s1 The already expanded string.
+   * @param {string} s2 The string to add.
+   * @return {string} The combined string.
    */
-  export function addArgs(s1: string, s2: string) {
+  export function addArgs(parser: TexParser, s1: string, s2: string): string {
     if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
       s1 += ' ';
     }
-    if (s1.length + s2.length > MAXBUFFER) {
+    if (s1.length + s2.length > parser.configuration.options['maxBuffer']) {
       throw new TexError('MaxBufferSize',
                           'MathJax internal buffer size exceeded; is there a' +
                           ' recursive macro call?');

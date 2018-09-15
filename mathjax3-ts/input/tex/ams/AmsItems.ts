@@ -1,13 +1,5 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/AmsItem.ts
- *
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
- *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,13 +71,13 @@ export class MultlineItem extends ArrayItem {
    * @override
    */
   public EndRow() {
-        if (this.row.length !== 1) {
-          // @test MultlineRowsOneCol
-          throw new TexError(
-            'MultlineRowsOneCol',
-            'The rows within the %1 environment must have exactly one column',
-            'multline');
-      }
+    if (this.row.length !== 1) {
+      // @test MultlineRowsOneCol
+      throw new TexError(
+        'MultlineRowsOneCol',
+        'The rows within the %1 environment must have exactly one column',
+        'multline');
+    }
     let row = this.factory.configuration.nodeFactory.create('node', 'mtr', this.row, {});
     this.table.push(row);
     this.row = [];

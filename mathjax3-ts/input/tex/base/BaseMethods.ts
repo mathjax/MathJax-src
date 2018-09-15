@@ -1601,9 +1601,9 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
     for (let i = args.length; i < argcount; i++) {
       args.push(parser.GetArgument(name));
     }
-    macro = ParseUtil.substituteArgs(args, macro);
+    macro = ParseUtil.substituteArgs(parser, args, macro);
   }
-  parser.string = ParseUtil.addArgs(macro, parser.string.slice(parser.i));
+  parser.string = ParseUtil.addArgs(parser, macro, parser.string.slice(parser.i));
   parser.i = 0;
   if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub1',

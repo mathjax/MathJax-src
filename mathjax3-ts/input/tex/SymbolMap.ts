@@ -228,7 +228,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
   constructor(name: string, parser: ParseMethod,
               json: {[index: string]: string|[string, Attributes]}) {
     super(name, parser);
-    for (let key in json) {
+    for (const key of Object.keys(json)) {
       let value = json[key];
       let [char, attrs] = (typeof(value) === 'string') ? [value, null] : value;
       let character = new Symbol(key, char, attrs);
@@ -276,7 +276,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
               json: {[index: string]: string|Args[]},
               functionMap: Record<string, ParseMethod>) {
     super(name, null);
-    for (let key in json) {
+    for (const key of Object.keys(json)) {
       let value = json[key];
       let [func, ...attrs] = (typeof(value) === 'string') ? [value] : value;
       let character = new Macro(key, functionMap[func as string], attrs);

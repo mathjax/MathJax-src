@@ -36,7 +36,7 @@ namespace ParseMethods {
   /**
    * Handle a variable (a single letter).
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The string to parse.
+   * @param {string} c The single letter string to transform into an mi.
    */
   export function variable(parser: TexParser, c: string) {
     // @test Identifier Font
@@ -50,24 +50,21 @@ namespace ParseMethods {
   /**
    * Handle a number (a sequence of digits, with decimal separator, etc.).
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The string to parse.
+   * @param {string} c The first character of a number than can be parsed with
+   *     the digits pattern.
    */
   export function digit(parser: TexParser, c: string) {
     let mml: MmlNode;
-    // Needs test! 1, 1.1, 0.1, 1.1.1
-    // Different pattern! 1,1 etc.
-    // const n = parser.string.slice(parser.i - 1).match(/^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
-    // /^(?:[0-9]+(?:\{\.\}[0-9]{3})*(?:,[0-9]*)*|,[0-9]+)/
     const pattern = parser.configuration.options['digits'];
     const n = parser.string.slice(parser.i - 1).match(pattern);
     // @test Integer Font
     const def = ParseUtil.getFontDef(parser);
     if (n) {
-      // @test Integer, Number
+      // @test Integer, Number, Decimal (European)
       mml = parser.configuration.nodeFactory.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
       parser.i += n[0].length - 1;
     } else {
-      // @test Decimal
+      // @test Decimal Point, Decimal Point European
       mml = parser.configuration.nodeFactory.create('token', 'mo', def, c);
     }
     parser.Push(mml);
@@ -76,7 +73,7 @@ namespace ParseMethods {
   /**
    * Lookup a control-sequence and process it.
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The string to parse.
+   * @param {string} c The string '\'.
    */
   export function controlSequence(parser: TexParser, c: string) {
     const name = parser.GetCS();
@@ -87,7 +84,7 @@ namespace ParseMethods {
   /**
    * Handle normal mathchar (as an mi).
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The string to parse.
+   * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar0mi(parser: TexParser, mchar: Symbol) {
     const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
@@ -99,7 +96,7 @@ namespace ParseMethods {
   /**
    * Handle normal mathchar (as an mo).
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The string to parse.
+   * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar0mo(parser: TexParser, mchar: Symbol) {
     const def = mchar.attributes || {};
@@ -115,7 +112,7 @@ namespace ParseMethods {
   /**
    * Handle mathchar in current family.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The string to parse.
+   * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar7(parser: TexParser, mchar: Symbol) {
     const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
@@ -131,7 +128,7 @@ namespace ParseMethods {
   /**
    * Handle delimiter.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The string to parse.
+   * @param {Symbol} mchar The parsed symbol.
    */
   export function delimiter(parser: TexParser, delim: Symbol) {
     let def = delim.attributes || {};
@@ -152,7 +149,7 @@ namespace ParseMethods {
   export function environment(parser: TexParser, env: string, func: Function, args: any[]) {
     const end = args[0];
     let mml = parser.itemFactory.create('begin').setProperties({name: env, end: end});
-    mml = func.apply(null, [parser, mml].concat(args.slice(1)));
+    mml = func(parser, mml, ...args.slice(1));
     parser.Push(mml);
   };
 

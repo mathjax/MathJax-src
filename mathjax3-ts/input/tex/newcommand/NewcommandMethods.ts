@@ -209,9 +209,10 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
       // @test Def Let
       args.push(NewcommandUtil.GetParameter(parser, name, params[i + 1]));
     }
-    text = ParseUtil.substituteArgs(args, text);
+    text = ParseUtil.substituteArgs(parser, args, text);
   }
-  parser.string = ParseUtil.addArgs(text, parser.string.slice(parser.i));
+  parser.string = ParseUtil.addArgs(parser, text,
+                                    parser.string.slice(parser.i));
   parser.i = 0;
   if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub1',
@@ -260,10 +261,11 @@ NewcommandMethods.BeginEnv = function(parser: TexParser, begin: StackItem,
       // @test Newenvironment Arg Optional
       args.push(parser.GetArgument('\\begin{' + begin.getName() + '}'));
     }
-    bdef = ParseUtil.substituteArgs(args, bdef);
-    edef = ParseUtil.substituteArgs([], edef); // no args, but get errors for #n in edef
+    bdef = ParseUtil.substituteArgs(parser, args, bdef);
+    edef = ParseUtil.substituteArgs(parser, [], edef); // no args, but get errors for #n in edef
   }
-  parser.string = ParseUtil.addArgs(bdef, parser.string.slice(parser.i));
+  parser.string = ParseUtil.addArgs(parser, bdef,
+                                    parser.string.slice(parser.i));
   parser.i = 0;
   return parser.itemFactory.create('beginEnv').setProperties({name: begin.getName()});
 };

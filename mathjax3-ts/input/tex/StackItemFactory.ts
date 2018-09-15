@@ -1,13 +1,5 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/StackItemFactory.ts
- *
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
- *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -105,10 +97,8 @@ export default class StackItemFactory {
    * @return {}
    */
   public create(kind: string, ...parameters: any[]) {
-    let tt1 = [this].concat(...parameters);
-    let tt2 = [this].concat(parameters);
-    return (this.item[kind] || this.item[this.defaultKind])
-      .apply(null, [this].concat(...parameters));
+    return (this.item[kind] || this.item[this.defaultKind]).
+      apply(null, [this].concat(...parameters));
   }
 
 }

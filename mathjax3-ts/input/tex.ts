@@ -66,7 +66,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     ...AbstractInputJax.OPTIONS,
     FindTeX: null,
     packages: ['base'],
-    digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/
+    // Digit pattern to match numbers.
+    digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    // Maximum size of TeX string to process.
+    maxBuffer: 5 * 1024
   };
 
   /**

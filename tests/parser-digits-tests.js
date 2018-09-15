@@ -1,18 +1,16 @@
 import {ParserTest} from './parser-tests.js';
 
+let patternUS = /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/;
 
 class ParserDigitsTest extends ParserTest {
 
-
-  constructor(pattern) {
+  constructor() {
     super();
-    this.settings['digits'] = pattern;
+    this.settings['digits'] = patternUS;
   }
 
 }
 
-let patternUS = /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/;
-let patternEuropean = /^(?:[0-9]+(?:\{\.\}[0-9]{3})*(?:,[0-9]*)?|,[0-9]+)/;
 
 let parserTest = new ParserDigitsTest(patternUS);
 
@@ -74,6 +72,36 @@ parserTest.runTest(
          "childNodes": [
            {"kind": "text",
             "text": "3.14"}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'Decimal', '.14',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {
+        "displaystyle": true,
+        "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mn",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {
+           "displaystyle": true,
+           "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": ".14"}]}],
       "isInferred": true}]}
 );
 
@@ -145,7 +173,7 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  'Decimal', '.',
+  'Decimal Point', '.',
   {"kind": "math",
    "texClass": 6,
    "attributes": {"display": "block"},
@@ -227,134 +255,4 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
-
-parserTest = new ParserDigitsTest(patternEuropean);
-
-parserTest.runTest(
-  'Integer European', '2',
-  {"kind":"math",
-   "texClass":0,
-   "attributes":{"display":"block"},
-   "inherited":{"displaystyle":true,
-                "scriptlevel":0},
-   "properties":{},
-   "childNodes":[
-     {"kind":"mrow",
-      "texClass":0,
-      "attributes":{},
-      "inherited":{
-        "displaystyle":true,
-        "scriptlevel":0},
-      "properties":{},
-      "childNodes":[
-        {"kind":"mn",
-         "texClass":0,
-         "attributes":{},
-         "inherited":{
-           "displaystyle":true,
-           "scriptlevel":0},
-         "properties":{},
-         "childNodes":[
-           {"kind":"text",
-            "text":"2"}]}],
-      "isInferred":true}]}
-);
-
-
-parserTest.runTest(
-  'Number European', '3,14',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {
-        "displaystyle": true,
-        "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "mn",
-         "texClass": 0,
-         "attributes": {},
-         "inherited": {
-           "displaystyle": true,
-           "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "text",
-            "text": "3,14"}]}],
-      "isInferred": true}]}
-);
-
-parserTest.runTest(
-  'Thousands European', '1{.}000,10',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {
-        "displaystyle": true,
-        "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "mn",
-         "texClass": 0,
-         "attributes": {},
-         "inherited": {
-           "displaystyle": true,
-           "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "text",
-            "text": "1.000,10"}]}],
-      "isInferred": true}]}
-);
-
-parserTest.runTest(
-  'Wrong Thousands', '1{.}0000,10',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {"displaystyle": true,
-                    "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "mn",
-         "texClass": 0,
-         "attributes": {},
-         "inherited": {"displaystyle": true,
-                       "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "text",
-            "text": "1.000"}]},
-        {"kind": "mn",
-          "texClass": 0,
-          "attributes": {},
-          "inherited": {"displaystyle": true,
-            "scriptlevel": 0},
-          "properties": {},
-          "childNodes": [
-            {"kind": "text",
-              "text": "0,10"}]}],
-      "isInferred": true}]}
-);
 

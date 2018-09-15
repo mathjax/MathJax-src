@@ -81,10 +81,8 @@ export default class TexParser {
     let ENV: EnvList;
     if (env) {
       ENV = {};
-      for (let id in env) {
-        if (env.hasOwnProperty(id)) {
-          ENV[id] = env[id];
-        }
+      for (const id of Object.keys(env)) {
+        ENV[id] = env[id];
       }
     }
     this.configuration.pushParser(this);
@@ -183,7 +181,8 @@ export default class TexParser {
   public Parse() {
     let c, n;
     while (this.i < this.string.length) {
-      c = this.string.charAt(this.i++); n = c.charCodeAt(0);
+      c = this.string.charAt(this.i++);
+      n = c.charCodeAt(0);
       if (n >= 0xD800 && n < 0xDC00) {
         c += this.string.charAt(this.i++);
       }
@@ -206,8 +205,8 @@ export default class TexParser {
    * @param {StackItem|MmlNode[]} args The new items.
    */
   public PushAll(args: (StackItem|MmlNode)[]) {
-    for (let i = 0, m = args.length; i < m; i++) {
-      this.stack.Push(args[i]);
+    for (const arg of args) {
+      this.stack.Push(arg);
     }
   }
 

@@ -3,6 +3,7 @@
 if [ $# -eq 0 ]; then 
     node load.js tests/parser-base-tests.js
     node load.js tests/parser-digits-tests.js
+    node load.js tests/parser-digits-european-tests.js
     node load.js tests/parser-other-tests.js
     node load.js tests/parser-fenced-tests.js
     node load.js tests/parser-movlim-tests.js
