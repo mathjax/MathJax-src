@@ -42,7 +42,7 @@ namespace ParseMethods {
     // @test Identifier Font
     const def = ParseUtil.getFontDef(parser);
     // @test Identifier
-    const node = parser.configuration.nodeFactory.create('token', 'mi', def, c);
+    const node = parser.create('token', 'mi', def, c);
     parser.Push(node);
   };
 
@@ -61,11 +61,11 @@ namespace ParseMethods {
     const def = ParseUtil.getFontDef(parser);
     if (n) {
       // @test Integer, Number, Decimal (European)
-      mml = parser.configuration.nodeFactory.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
+      mml = parser.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
       parser.i += n[0].length - 1;
     } else {
       // @test Decimal Point, Decimal Point European
-      mml = parser.configuration.nodeFactory.create('token', 'mo', def, c);
+      mml = parser.create('token', 'mo', def, c);
     }
     parser.Push(mml);
   };
@@ -89,7 +89,7 @@ namespace ParseMethods {
   export function mathchar0mi(parser: TexParser, mchar: Symbol) {
     const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
-    const node = parser.configuration.nodeFactory.create('token', 'mi', def, mchar.char);
+    const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
   };
 
@@ -102,7 +102,7 @@ namespace ParseMethods {
     const def = mchar.attributes || {};
     def['stretchy'] = false;
     // @test Large Set
-    const node = parser.configuration.nodeFactory.create('token', 'mo', def, mchar.char);
+    const node = parser.create('token', 'mo', def, mchar.char);
     NodeUtil.setProperty(node, 'fixStretchy', true);
     parser.configuration.addNode('fixStretchy', node);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
@@ -121,7 +121,7 @@ namespace ParseMethods {
       def['mathvariant'] = parser.stack.env['font'];
     }
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
-    const node = parser.configuration.nodeFactory.create('token', 'mi', def, mchar.char);
+    const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
   };
 
@@ -134,7 +134,7 @@ namespace ParseMethods {
     let def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({fence: false, stretchy: false}, def);
-    const node = parser.configuration.nodeFactory.create('token', 'mo', def, delim.char);
+    const node = parser.create('token', 'mo', def, delim.char);
     parser.Push(node);
   };
 

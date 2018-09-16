@@ -106,17 +106,6 @@ export default class ParseOptions {
   }
 
 
-  /**
-   * Convenience method to create nodes with this node factory.
-   * @param {string} kind The kind of node to create.
-   * @param {any[]} ...rest The remaining arguments for the creation method.
-   * @return {MmlNode} The newly created node.
-   */
-  public createNode(kind: string, ...rest: any[]): MmlNode {
-    return this.nodeFactory.create(kind, ...rest);
-  }
-
-
   // Methods for dealing with ephemeral fields.
   /**
    * Pushes a new tex parser onto the stack.

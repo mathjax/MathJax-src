@@ -210,7 +210,7 @@ namespace ParseUtil {
    */
   export function mi2mo(parser: TexParser, mi: MmlNode): MmlNode {
     // @test Mathop Sub, Mathop Super
-    const mo = parser.configuration.nodeFactory.create('node', 'mo', [], {});
+    const mo = parser.create('node', 'mo', [], {});
     NodeUtil.copyChildren(mi, mo);
     NodeUtil.copyAttributes(mi, mo);
     NodeUtil.setProperties(mo, {lspace: '0', rspace: '0'});
@@ -237,7 +237,7 @@ namespace ParseUtil {
         if (c === '$') {
           if (match === '$' && braces === 0) {
             // @test Interspersed Text
-            node = parser.configuration.nodeFactory.create('node', 'TeXAtom',
+            node = parser.create('node', 'TeXAtom',
                                          [(new TexParser(text.slice(k, i - 1), {}, parser.configuration)).mml()], {});
             mml.push(node);
             match = '';
@@ -257,8 +257,7 @@ namespace ParseUtil {
           if (match === '}' && braces === 0) {
             // TODO: test a\mbox{ \eqref{1} } c
             let atom = (new TexParser(text.slice(k, i), {}, parser.configuration)).mml();
-            node = parser.configuration.nodeFactory.create(
-              'node', 'TeXAtom', [atom], def);
+            node = parser.create('node', 'TeXAtom', [atom], def);
             mml.push(node);
             match = '';
             k = i;
@@ -290,8 +289,9 @@ namespace ParseUtil {
               }
               match = ')'; k = i;
             } else if (c === ')' && match === ')' && braces === 0) {
-              node = parser.configuration.nodeFactory.create(
-                'node', 'TeXAtom', [(new TexParser(text.slice(k, i - 2), {}, parser.configuration)).mml()], {});
+              node = parser.create(
+                'node', 'TeXAtom',
+                [(new TexParser(text.slice(k, i - 2), {}, parser.configuration)).mml()], {});
               mml.push(node);
               match = '';
               k = i;
@@ -313,10 +313,10 @@ namespace ParseUtil {
     }
     if (level != null) {
       // @test Label, Fbox, Hbox
-      mml = [parser.configuration.nodeFactory.create('node', 'mstyle', mml, {displaystyle: false, scriptlevel: level})];
+      mml = [parser.create('node', 'mstyle', mml, {displaystyle: false, scriptlevel: level})];
     } else if (mml.length > 1) {
       // @test Interspersed Text
-      mml = [parser.configuration.nodeFactory.create('node', 'mrow', mml, {})];
+      mml = [parser.create('node', 'mrow', mml, {})];
     }
     return mml;
   }
@@ -333,8 +333,8 @@ namespace ParseUtil {
   function internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
     text = text.replace(/^\s+/, NBSP).replace(/\s+$/, NBSP);
-    let textNode = parser.configuration.nodeFactory.create('text', text);
-    return parser.configuration.nodeFactory.create('node', 'mtext', [], def, textNode);
+    let textNode = parser.create('text', text);
+    return parser.create('node', 'mtext', [], def, textNode);
   }
 
   /**

@@ -492,4 +492,16 @@ export default class TexParser {
     return star;
   }
 
+
+  /**
+   * Convenience method to create nodes with this node factory.
+   * @param {string} kind The kind of node to create.
+   * @param {any[]} ...rest The remaining arguments for the creation method.
+   * @return {MmlNode} The newly created node.
+   */
+  public create(kind: string, ...rest: any[]): MmlNode {
+    return this.configuration.nodeFactory.create(kind, ...rest);
+  }
+
+
 }
