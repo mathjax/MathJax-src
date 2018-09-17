@@ -106,13 +106,13 @@ namespace ParseUtil {
    */
   export function fenced(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
     // @test Fenced, Fenced3
-    let mrow = configuration.nodeFactory.create('node',
-      'mrow', [], {open: open, close: close, texClass: TEXCLASS.INNER});
-    let openNode = configuration.nodeFactory.create('text', open);
-    let mo = configuration.nodeFactory.create('node',
-      'mo', [],
-      {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
-      openNode);
+    let nf = configuration.nodeFactory;
+    let mrow = nf.create('node', 'mrow', [],
+                         {open: open, close: close, texClass: TEXCLASS.INNER});
+    let openNode = nf.create('text', open);
+    let mo = nf.create('node', 'mo', [],
+                       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
+                       openNode);
     NodeUtil.appendChildren(mrow, [mo]);
     if (NodeUtil.isType(mml, 'mrow') && NodeUtil.isInferred(mml)) {
       // @test Fenced, Middle
@@ -121,11 +121,10 @@ namespace ParseUtil {
       // @test Fenced3
       NodeUtil.appendChildren(mrow, [mml]);
     }
-    let closeNode = configuration.nodeFactory.create('text', close);
-    mo = configuration.nodeFactory.create('node',
-      'mo', [],
-      {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
-      closeNode);
+    let closeNode = nf.create('text', close);
+    mo = nf.create('node', 'mo', [],
+                   {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
+                   closeNode);
     NodeUtil.appendChildren(mrow, [mo]);
     return mrow;
   }

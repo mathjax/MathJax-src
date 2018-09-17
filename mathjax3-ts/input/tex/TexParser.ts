@@ -494,7 +494,8 @@ export default class TexParser {
 
 
   /**
-   * Convenience method to create nodes with this node factory.
+   * Convenience method to create nodes with the node factory of the current
+   * configuration.
    * @param {string} kind The kind of node to create.
    * @param {any[]} ...rest The remaining arguments for the creation method.
    * @return {MmlNode} The newly created node.

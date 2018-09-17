@@ -198,8 +198,19 @@ export abstract class MmlStack implements NodeStack {
       return this.Top;
     }
     // @test Two Identifiers
-    return this.factory.configuration.nodeFactory.create(
+    return this.create(
       'node', inferred ? 'inferredMrow' : 'mrow', this._nodes, {});
+  }
+
+
+  /**
+   * Convenience method to create nodes with the node factory on this stack.
+   * @param {string} kind The kind of node to create.
+   * @param {any[]} ...rest The remaining arguments for the creation method.
+   * @return {MmlNode} The newly created node.
+   */
+  public create(kind: string, ...rest: any[]): MmlNode {
+    return this.factory.configuration.nodeFactory.create(kind, ...rest);
   }
 
 }

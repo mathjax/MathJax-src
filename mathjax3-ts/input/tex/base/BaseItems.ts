@@ -140,7 +140,7 @@ export class OpenItem extends BaseItem {
     if (item.isKind('close')) {
       // @test PrimeSup
       let mml = this.toMml();
-      const node = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [mml]);
+      const node = this.create('node', 'TeXAtom', [mml]);
       return this.factory.create('mml', node);
     }
     return super.checkItem(item);
@@ -184,7 +184,7 @@ export class PrimeItem extends BaseItem {
     let [top0, top1] = this.TopN(2);
     if (!NodeUtil.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
-      const node = this.factory.configuration.nodeFactory.create('node', 'msup', [top0, top1]);
+      const node = this.create('node', 'msup', [top0, top1]);
       return [node, item];
     }
     NodeUtil.setChild(top0, (top0 as MmlMsubsup).sup, top1);
@@ -234,7 +234,7 @@ export class SubsupItem extends BaseItem {
         } else {
           // @test Prime on Prime
           NodeUtil.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
-          const node = this.factory.configuration.nodeFactory.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.Top]);
+          const node = this.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.Top]);
           item.Top = node;
         }
       }
@@ -288,16 +288,16 @@ export class OverItem extends BaseItem {
     if (item.isKind('over')) {
       // @test Double Over
       throw new TexError(
-          'AmbiguousUseOf', 'Ambiguous use of %1', item.getName());
+        'AmbiguousUseOf', 'Ambiguous use of %1', item.getName());
     }
     if (item.isClose) {
       // @test Over
-      let mml = this.factory.configuration.nodeFactory.create('node',
-        'mfrac', [this.getProperty('num') as MmlNode, this.toMml(false)]);
+      let mml = this.create('node',
+                            'mfrac', [this.getProperty('num') as MmlNode, this.toMml(false)]);
       if (this.getProperty('thickness') != null) {
         // @test Choose, Above, Above with Delims
         NodeUtil.setAttribute(mml, 'linethickness',
-                                this.getProperty('thickness') as string);
+                              this.getProperty('thickness') as string);
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Choose
@@ -419,7 +419,7 @@ export class BeginItem extends BaseItem {
       if (item.getName() !== this.getName()) {
         // @test EnvBadEnd
         throw new TexError('EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
-                            this.getName(), item.getName());
+                           this.getName(), item.getName());
       }
       if (!this.getProperty('end')) {
         return this.factory.create('mml', this.toMml());
@@ -471,7 +471,7 @@ export class StyleItem extends BaseItem {
       return super.checkItem(item);
     }
     // @test Style
-    const mml = this.factory.configuration.nodeFactory.create('node', 'mstyle', this.nodes, this.getProperty('styles'));
+    const mml = this.create('node', 'mstyle', this.nodes, this.getProperty('styles'));
     return [this.factory.create('mml', mml), item];
   }
 
@@ -500,10 +500,10 @@ export class PositionItem extends BaseItem {
       switch (this.getProperty('move')) {
       case 'vertical':
         // @test Raise, Lower, Raise Negative, Lower Negative
-        mml = this.factory.configuration.nodeFactory.create('node', 'mpadded', [mml],
-                                    {height: this.getProperty('dh'),
-                                     depth: this.getProperty('dd'),
-                                     voffset: this.getProperty('dh')});
+        mml = this.create('node', 'mpadded', [mml],
+                          {height: this.getProperty('dh'),
+                           depth: this.getProperty('dd'),
+                           voffset: this.getProperty('dh')});
         return [this.factory.create('mml', mml)];
       case 'horizontal':
         // @test Move Left, Move Right, Move Left Negative, Move Right Negative
@@ -567,7 +567,7 @@ export class FnItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        const top = this.Top;
+    const top = this.Top;
     if (top) {
       if (item.isOpen) {
         // @test Fn Stretchy
@@ -595,8 +595,8 @@ export class FnItem extends BaseItem {
         }
       }
       // @test Named Function, Named Function Arg
-      const node = this.factory.configuration.nodeFactory.create('token', 'mo', {texClass: TEXCLASS.NONE},
-                                          Entities.ENTITIES.ApplyFunction);
+      const node = this.create('token', 'mo', {texClass: TEXCLASS.NONE},
+                               Entities.ENTITIES.ApplyFunction);
       return [top, node, item];
     }
     // @test Mathop Super, Mathop Sub
@@ -620,7 +620,7 @@ export class NotItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        let mml: TextNode | MmlNode;
+    let mml: TextNode | MmlNode;
     let c: string;
     let textNode: TextNode;
     if (item.isKind('open') || item.isKind('left')) {
@@ -636,21 +636,21 @@ export class NotItem extends BaseItem {
           NodeUtil.getChildren(mml).length === 1) {
         if (this.remap.contains(c)) {
           // @test Negation Simple, Negation Complex
-          textNode = this.factory.configuration.nodeFactory.create('text', this.remap.lookup(c).char) as TextNode;
+          textNode = this.create('text', this.remap.lookup(c).char) as TextNode;
           NodeUtil.setChild(mml, 0, textNode);
         } else {
           // @test Negation Explicit
-          textNode = this.factory.configuration.nodeFactory.create('text', '\u0338') as TextNode;
+          textNode = this.create('text', '\u0338') as TextNode;
           NodeUtil.appendChildren(mml, [textNode]);
         }
         return item as MmlItem;
       }
     }
     // @test Negation Large
-    textNode = this.factory.configuration.nodeFactory.create('text', '\u29F8') as TextNode;
-    const mtextNode = this.factory.configuration.nodeFactory.create('node', 'mtext', [], {}, textNode);
-    const paddedNode = this.factory.configuration.nodeFactory.create('node', 'mpadded', [mtextNode], {width: 0});
-    mml = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
+    textNode = this.create('text', '\u29F8') as TextNode;
+    const mtextNode = this.create('node', 'mtext', [], {}, textNode);
+    const paddedNode = this.create('node', 'mpadded', [mtextNode], {width: 0});
+    mml = this.create('node', 'TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
     return [mml, item];
   }
 }
@@ -669,7 +669,7 @@ export class DotsItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        if (item.isKind('open') || item.isKind('left')) {
+    if (item.isKind('open') || item.isKind('left')) {
       return true;
     }
     let dots = this.getProperty('ldots') as MmlNode;
@@ -744,7 +744,7 @@ export class ArrayItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-        // @test Array Single
+    // @test Array Single
     if (item.isClose && !item.isKind('over')) {
       // @test Array Single
       if (item.getProperty('isEntry')) {
@@ -764,7 +764,7 @@ export class ArrayItem extends BaseItem {
       this.clearEnv();
       const scriptlevel = this.arraydef['scriptlevel'];
       delete this.arraydef['scriptlevel'];
-      let mml = this.factory.configuration.nodeFactory.create('node', 'mtable', this.table, this.arraydef);
+      let mml = this.create('node', 'mtable', this.table, this.arraydef);
       if (this.frame.length === 4) {
         // @test Enclosed frame solid, Enclosed frame dashed
         NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
@@ -776,8 +776,8 @@ export class ArrayItem extends BaseItem {
             (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
         }
         // @test Enclosed left right
-        mml = this.factory.configuration.nodeFactory.create('node', 'menclose', [mml],
-                                    {notation: this.frame.join(' '), isFrame: true});
+        mml = this.create('node', 'menclose', [mml],
+                          {notation: this.frame.join(' '), isFrame: true});
         if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
             (this.arraydef['rowlines'] || 'none') !== 'none') {
           // @test Enclosed dashed row, Enclosed solid row
@@ -787,7 +787,7 @@ export class ArrayItem extends BaseItem {
       }
       if (scriptlevel) {
         // @test Subarray, Small Matrix
-        mml = this.factory.configuration.nodeFactory.create('node', 'mstyle', [mml], {scriptlevel: scriptlevel});
+        mml = this.create('node', 'mstyle', [mml], {scriptlevel: scriptlevel});
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Cross Product Formula
@@ -816,7 +816,7 @@ export class ArrayItem extends BaseItem {
    */
   public EndEntry() {
     // @test Array1, Array2
-    const mtd = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes);
+    const mtd = this.create('node', 'mtd', this.nodes);
     if (this.hfill.length) {
       if (this.hfill[0] === 0) {
         NodeUtil.setAttribute(mtd, 'columnalign', 'right');
@@ -841,11 +841,11 @@ export class ArrayItem extends BaseItem {
     if (this.getProperty('isNumbered') && this.row.length === 3) {
       // @test Label, Matrix Numbered
       this.row.unshift(this.row.pop());  // move equation number to first
-                                         // position
-      node = this.factory.configuration.nodeFactory.create('node', 'mlabeledtr', this.row);
+      // position
+      node = this.create('node', 'mlabeledtr', this.row);
     } else {
       // @test Array1, Array2
-      node = this.factory.configuration.nodeFactory.create('node', 'mtr', this.row);
+      node = this.create('node', 'mtr', this.row);
     }
     this.table.push(node);
     this.row = [];
@@ -913,11 +913,11 @@ export class EqnArrayItem extends ArrayItem {
    * @override
    */
   public EndEntry() {
-        // @test Cubic Binomial
+    // @test Cubic Binomial
     if (this.row.length) {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
-    const node = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes);
+    const node = this.create('node', 'mtd', this.nodes);
     this.row.push(node);
     this.Clear();
   }
@@ -926,7 +926,7 @@ export class EqnArrayItem extends ArrayItem {
    * @override
    */
   public EndRow() {
-        // @test Cubic Binomial
+    // @test Cubic Binomial
     let mtr = 'mtr';
     let tag = this.factory.configuration.tags.getTag();
     if (tag) {
@@ -934,7 +934,7 @@ export class EqnArrayItem extends ArrayItem {
       mtr = 'mlabeledtr';
     }
     this.factory.configuration.tags.clearTag();
-    const node = this.factory.configuration.nodeFactory.create('node', mtr, this.row);
+    const node = this.create('node', mtr, this.row);
     this.table.push(node);
     this.row = [];
   }
