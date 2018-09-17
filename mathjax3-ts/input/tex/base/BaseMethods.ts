@@ -348,9 +348,9 @@ BaseMethods.Color = function(parser: TexParser, name: string) {
  */
 BaseMethods.Spacer = function(parser: TexParser, name: string, space: string) {
   // @test Positive Spacing, Negative Spacing
-  const node = parser.create('node', 'mspace', [],
-                                                       {width: space, scriptlevel: 0});
-  parser.Push(node);
+  const node = parser.create('node', 'mspace', [], {width: space});
+  const style = parser.create('node', 'mstyle', [node], {scriptlevel: 0});
+  parser.Push(style);
 };
 
 
@@ -1435,7 +1435,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
   if (style === 'S') {
     // @test Subarray, Small Matrix
     array.arraydef['scriptlevel'] = 1;
-  } // FIXME: should use mstyle?
+  }
   if (raggedHeight)  {
     // @test Subarray, Small Matrix
     array.arraydef['useHeight'] = false;

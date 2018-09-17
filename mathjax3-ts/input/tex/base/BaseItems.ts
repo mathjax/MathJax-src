@@ -580,7 +580,9 @@ export class FnItem extends BaseItem {
           // @test Mathop Super
           return [top, item];
         }
-        if (NodeUtil.isType(mml, 'mspace')) {
+        if ((NodeUtil.isType(mml, 'mstyle') && mml.childNodes.length &&
+             NodeUtil.isType(mml.childNodes[0].childNodes[0] as MmlNode, 'mspace')) ||
+             NodeUtil.isType(mml, 'mspace')) {
           // @test Fn Pos Space, Fn Neg Space
           return [top, item];
         }
