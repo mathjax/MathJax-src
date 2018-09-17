@@ -376,7 +376,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
          * Get the angle and width of a diagonal arrow, plus the x and y extension
          *   past the content bounding box
          *
-         * @return {Obejct}  The angle, width, and x and y extentions
+         * @return {Object}  The angle, width, and x and y extentions
          */
         public arrowData() {
             const [p, t] = [this.padding, this.thickness];

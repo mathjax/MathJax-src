@@ -403,7 +403,7 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
 
     /**
      * @param {N} line           The arrow shaft to be adjusted
-     * @param {number{ t         The arrow shaft thickness
+     * @param {number} t         The arrow shaft thickness
      * @param {number} x         The arrow head x size
      * @param {boolean} double   True if the arrow is double-headed
      */
