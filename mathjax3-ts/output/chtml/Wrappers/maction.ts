@@ -27,9 +27,6 @@ import {ActionDef} from '../../common/Wrappers/maction.js';
 import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-//import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
-//import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
-//import {Property} from '../../../core/Tree/Node.js';
 import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
