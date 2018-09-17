@@ -110,80 +110,20 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
     getArgMod(w: number, h: number): number[];
 
     /**
-     * Create an svg tree
-     *
-     * @param {string} type        The class for the new svg element
-     * @param {number[]} box       The viewBox values for the svg element
-     * @param {N[]} nodes          The children for the svg element
-     * @param {StyleData=} styles  Styles to set on the svg element, if any
-     * @return {N}                 The newly created svg element
-     */
-    svg(type: string, box: number[], nodes: N[], styles?: StyleData): void;
-
-    /**
-     * @param {string} kind              The name of the svg node
-     * @param {OptionList=} properties   The properties to set for the node
-     * @param {N[]=} nodes               The children of the node
-     */
-    svgNode(kind: string, properties?: OptionList, nodes?: N[]): N;
-
-    /**
-     * Create an ellipse element
-     *
-     * @param {number} w  The width of the ellipse
-     * @param {number} h  The height of the ellipse
-     * @return {N}        The newly created ellipse node
-     */
-    ellipse(w: number, h: number): N;
-
-    /**
-     * Create a line element
-     *
-     * @param {number} x1   The x-coordinate of the starting point
-     * @param {number} y1   The y-coordinate of the starting point
-     * @param {number} x2   The x-coordinate of the ending point
-     * @param {number} y2   The y-coordinate of the ending point
-     * @return {N}          The newly created line element
-     */
-    line(x1: number, y1: number, x2: number, y2: number): N;
-
-    /**
-     * Create a path element from the commands the specify it
-     *
-     * @param {(string|number)[]} P   The list of commands and coordinates for the path
-     * @return {N}                    The newly created path
-     */
-    path(...P: (string | number)[]): N;
-
-    /**
-     * Create a filled path element from the commands the specify it
-     *   (same as path above, but no thickness adjustments)
-     *
-     * @param {(string|number)[]} P   The list of commands and coordinates for the path
-     * @return {N}                    The newly created path
-     */
-    fill(...P: (string | number)[]): N;
-
-    /**
      * Create an arrow using an svg element
      *
      * @param {number} w         The length of the arrow
      * @param {number} a         The angle for the arrow
-     * @param {number} neg       The direction to shift the arrow's Y coordinate before rotating it (1 or -1)
-     * @param {string} origin    The transform-origin for the rotation
-     * @param {string=} offset   The axis alogn which to offset the rotated arrow
-     * @param {number=} d        The distance to offset by
      * @param {boolean=} double  True if this is a double-headed arrow
      * @return {N}               The newly created arrow
      */
-    arrow(w: number, a: number, neg: number, origin: string, offset?: string, d?: number, double?: boolean): N;
+    arrow(w: number, a: number, double?: boolean): N;
 
     /**
-     * @param {N} shape   The svg element whose stroke-thickness must be
-     *                    adjusted if the thickness isn't the default
-     * @return {N}        The adjusted element
+     * Get the angle and width of a diagonal arrow, plus the x and y extension
+     *   past the content bounding box
      */
-    adjustThickness(shape: N): N;
+    arrowData(): {a: number, W: number, x: number, y: number};
 
     /**
      * Create an unattached msqrt wrapper to render the 'radical' notation.
@@ -421,148 +361,32 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         }
 
         /**
-         * Create an svg tree
-         *
-         * @param {string} type        The class for the new svg element
-         * @param {number[]} box       The viewBox values for the svg element
-         * @param {N[]} nodes          The children for the svg element
-         * @param {StyleData=} styles  Styles to set on the svg element, if any
-         * @return {N}                 The newly created svg element
-         */
-        public svg(type: string, box: number[], nodes: N[], styles: StyleData = null) {
-            const properties: OptionList = {
-                class: 'mjx-' + type,
-                viewbox: box.join(' ')
-            };
-            if (styles) {
-                properties.style = styles;
-            }
-            return this.svgNode('svg', properties, nodes);
-        }
-
-        /**
-         * @param {string} kind              The name of the svg node
-         * @param {OptionList=} properties   The properties to set for the node
-         * @param {N[]=} nodes               The children of the node
-         */
-        public svgNode(kind: string, properties: OptionList = {}, nodes: N[] = null) {
-            // implemented in subclasses
-            return null as N;
-        }
-
-        /**
-         * Create an ellipse element
-         *
-         * @param {number} w  The width of the ellipse
-         * @param {number} h  The height of the ellipse
-         * @return {N}        The newly created ellipse node
-         */
-        public ellipse(w: number, h: number) {
-            const t = this.thickness;
-            return this.adjustThickness(this.svgNode('ellipse', {
-                rx: this.units((w - t) / 2), ry: this.units((h - t) / 2),
-                cx: this.units(w / 2), cy: this.units(h / 2)
-            }));
-        }
-
-        /**
-         * Create a line element
-         *
-         * @param {number} x1   The x-coordinate of the starting point
-         * @param {number} y1   The y-coordinate of the starting point
-         * @param {number} x2   The x-coordinate of the ending point
-         * @param {number} y2   The y-coordinate of the ending point
-         * @return {N}          The newly created line element
-         */
-        public line(x1: number, y1: number, x2: number, y2: number) {
-            return this.adjustThickness(this.svgNode('line', {
-                x1: this.units(x1), y1: this.units(y1),
-                x2: this.units(x2), y2: this.units(y2)
-            }));
-        }
-
-        /**
-         * Create a path element from the commands the specify it
-         *
-         * @param {(string|number)[]} P   The list of commands and coordinates for the path
-         * @return {N}                    The newly created path
-         */
-        public path(...P: (string | number)[]) {
-            return this.adjustThickness(this.svgNode('path', {
-                d: P.map(x => (typeof x === 'string' ? x : this.units(x))).join(' ')
-            }));
-        }
-
-        /**
-         * Create a filled path element from the commands the specify it
-         *   (same as path above, but no thickness adjustments)
-         *
-         * @param {(string|number)[]} P   The list of commands and coordinates for the path
-         * @return {N}                    The newly created path
-         */
-        public fill(...P: (string | number)[]) {
-            return this.svgNode('path', {
-                d: P.map(x => (typeof x === 'string' ? x : this.units(x))).join(' ')
-            });
-        }
-
-        /**
          * Create an arrow using an svg element
          *
          * @param {number} w        The length of the arrow
          * @param {number} a        The angle for the arrow
-         * @param {number} neg      The direction to shift the arrow's Y coordinate before rotating it (1 or -1)
-         * @param {string} origin   The transform-origin for the rotation
-         * @param {string} offset   The axis alogn which to offset the rotated arrow
-         * @param {number} d        The distance to offset by
          * @param {boolean} double  True if this is a double-headed arrow
+         * @return {N}              The newly created arrow
          */
-        public arrow(w: number, a: number, neg: number, origin: string, offset: string = '',
-                     d: number = 0, double: boolean = false) {
-            const t = this.thickness;
-            const head = this.arrowhead;
-            const [x, y, dx] = [t * head.x, t * head.y, t * head.dx];
-            //
-            //  Get the offset, if any,
-            //  and translate by the width if rotating by more than 90 degrees
-            //
-            if (offset) {
-                offset = 'translate' + offset + '(' + this.em(d) + ') ';
-            }
-            if (Math.abs(a) >  Math.PI / 2) {
-                offset = 'translateX(' + this.em(w) + ') ' + offset;
-            }
-            //
-            //  Create the svg holding the arrow with the one or two arrow heads and the line between them
-            //
-            const svg = this.svg('arrow', [0, -y, w, 2 * y], [
-                this.line(double ? x : t / 2, 0, w - x, 0),
-                this.fill('M', w - x, 0,  'L', w - x - dx, y,  'L', w, 0,  'L', w - x - dx, -y)
-            ], {
-                width: this.em(w), height: this.em(2 * y),
-                transform: offset + 'rotate(' + this.units(a) + 'rad) translateY(' + this.units(neg * y) + 'em)',
-                'transform-origin': origin.replace(/right/, 'left')
-            });
-            double && this.adaptor.append(svg, this.fill('M', x, 0,  'L', x + dx, y,  'L', 0, 0,  'L', x + dx, -y));
-            //
-            // Align the arrow with the givin origin sides
-            //
-            for (const side of split(origin)) {
-                this.adaptor.setStyle(svg, side, '0');
-            }
-            return svg;
+        public arrow(w: number, a: number, double: boolean = false) {
+            return null as N;
         }
 
         /**
-         * @param {N} shape   The svg element whose stroke-thickness must be
-         *                    adjusted if the thickness isn't the default
-         * @return {N}        The adjusted element
+         * Get the angle and width of a diagonal arrow, plus the x and y extension
+         *   past the content bounding box
+         *
+         * @return {Obejct}  The angle, width, and x and y extentions
          */
-        public adjustThickness(shape: N) {
-            if (this.thickness !== Notation.THICKNESS) {
-                this.adaptor.setStyle(shape, 'strokeWidth', this.units(this.thickness));
-            }
-            return shape;
+        public arrowData() {
+            const [p, t] = [this.padding, this.thickness];
+            const r = t * (this.arrowhead.x + Math.max(1, this.arrowhead.dx));
+            const {h, d, w} = this.childNodes[0].getBBox();
+            const H = h + d;
+            const R = Math.sqrt(H * H + w * w);
+            const [x, y] = [Math.max(p, r * w / R), Math.max(p, r * H / R)];
+            const [a, W] = this.getArgMod(w + 2 * x, H + 2 * y);
+            return {a, W, x, y};
         }
 
         /********************************************************/

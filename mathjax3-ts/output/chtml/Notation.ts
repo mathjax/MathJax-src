@@ -82,7 +82,7 @@ export const DiagonalStrike = <N, T, D>(name: string, neg: number) =>
             transform: 'rotate(' + node.units(-neg * a) + 'rad) translateY(' + t + 'em)',
         }}));
         node.adaptor.append(node.chtml, strike);
-    });
+    })(name, neg);
 
 /**
  * @param {string} name   The name of the diagonal arrow to define
