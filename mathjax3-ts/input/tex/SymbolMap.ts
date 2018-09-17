@@ -117,7 +117,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
     let parser = this.parserFor(symbol);
     let mapped = this.lookup(symbol);
     return (parser && mapped) ?
-      (parser.apply(env, [env, mapped]) || true) : null;
+      parser(env, mapped as any) || true as ParseResult : null;
   }
 
 
@@ -168,7 +168,7 @@ export class RegExpMap extends AbstractSymbolMap<string> {
   /**
    * @override
    */
-  public lookup(symbol: string) {
+  public lookup(symbol: string): string {
     return this.contains(symbol) ? symbol : null;
   }
 
@@ -188,7 +188,7 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   /**
    * @override
    */
-  public lookup(symbol: string) {
+  public lookup(symbol: string): K {
     return this.map.get(symbol);
   }
 
@@ -303,8 +303,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
     if (!macro || !parser) {
       return null;
     }
-    let args = [env, macro.symbol].concat(macro.args as string[]);
-    return parser ? (parser.apply(env, args) || true) : null;
+    return parser(env, macro.symbol, ...macro.args) || true as ParseResult;
   }
 
 }
@@ -327,15 +326,15 @@ export class CommandMap extends MacroMap {
     if (!macro || !parser) {
       return null;
     }
-    let args = [env, '\\' + macro.symbol].concat(macro.args as string[]);
+    let args = ['\\' + macro.symbol].concat(macro.args as string[]);
     if (!parser) {
       return null;
     }
     let saveCommand = env.currentCS;
     env.currentCS = '\\' + symbol;
-    let result = (parser.apply(env, args) || true);
+    let result = parser(env, '\\' + macro.symbol, ...macro.args);
     env.currentCS = saveCommand;
-    return result;
+    return result || true as ParseResult;
   }
 
 }

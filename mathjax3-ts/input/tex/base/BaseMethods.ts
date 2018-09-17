@@ -299,7 +299,8 @@ BaseMethods.SetFont = function(parser: TexParser, name: string, font: string) {
 BaseMethods.SetStyle = function(parser: TexParser, name: string,
                                 texStyle: string, style: boolean,
                                 level: string) {
-  parser.stack.env['style'] = texStyle; parser.stack.env['level'] = level;
+  parser.stack.env['style'] = texStyle;
+  parser.stack.env['level'] = level;
   parser.Push(
     parser.itemFactory.create('style').setProperties(
       {styles: {displaystyle: style, scriptlevel: level}}) );
@@ -1520,8 +1521,8 @@ BaseMethods.HandleNoTag = function(parser: TexParser, name: string) {
  */
 BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
   // @test Label, Label Empty
-  let global = this.stack.global;
-  let label = this.GetArgument(name);
+  let global = parser.stack.global;
+  let label = parser.GetArgument(name);
   if (label === '') {
     // @test Label Empty
     return;
@@ -1558,7 +1559,7 @@ let baseURL = (typeof(document) === 'undefined' ||
  */
 BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
   // @test Ref, Ref Unknown, Eqref, Ref Default, Ref Named
-  let label = this.GetArgument(name);
+  let label = parser.GetArgument(name);
   let ref = parser.tags.allLabels[label] || parser.tags.labels[label];
   if (!ref) {
     // @test Ref Unknown
