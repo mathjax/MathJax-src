@@ -47,7 +47,7 @@ namespace FilterUtil {
         }
         const parent = mo.parent;
         if (!NodeUtil.getTexClass(mo) && (!symbol || !symbol[2])) {
-          const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo], {});
+          const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo]);
           parent.replaceChild(texAtom, mo);
           texAtom.setInheritedAttributes({}, arg.math['display'],
                                          parent.attributes.get('scriptlevel') as number,
@@ -140,8 +140,8 @@ namespace FilterUtil {
       }
       const parent = mml.parent;
       let newNode = (children[mml[low]] ?
-                 options.nodeFactory.create('node', 'm' + low, [children[mml.base], children[mml[low]]], {}) :
-                 options.nodeFactory.create('node', 'm' + up, [children[mml.base], children[mml[up]]], {}));
+                 options.nodeFactory.create('node', 'm' + low, [children[mml.base], children[mml[low]]]) :
+                 options.nodeFactory.create('node', 'm' + up, [children[mml.base], children[mml[up]]]));
       NodeUtil.copyAttributes(mml, newNode);
       if (parent) {
         parent.replaceChild(newNode, mml);

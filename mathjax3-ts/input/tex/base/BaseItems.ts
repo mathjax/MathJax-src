@@ -140,7 +140,7 @@ export class OpenItem extends BaseItem {
     if (item.isKind('close')) {
       // @test PrimeSup
       let mml = this.toMml();
-      const node = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
+      const node = this.factory.configuration.nodeFactory.create('node', 'TeXAtom', [mml]);
       return this.factory.create('mml', node);
     }
     return super.checkItem(item);
@@ -184,7 +184,7 @@ export class PrimeItem extends BaseItem {
     let [top0, top1] = this.TopN(2);
     if (!NodeUtil.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
-      const node = this.factory.configuration.nodeFactory.create('node', 'msup', [top0, top1], {});
+      const node = this.factory.configuration.nodeFactory.create('node', 'msup', [top0, top1]);
       return [node, item];
     }
     NodeUtil.setChild(top0, (top0 as MmlMsubsup).sup, top1);
@@ -234,7 +234,7 @@ export class SubsupItem extends BaseItem {
         } else {
           // @test Prime on Prime
           NodeUtil.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
-          const node = this.factory.configuration.nodeFactory.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.Top], {});
+          const node = this.factory.configuration.nodeFactory.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.Top]);
           item.Top = node;
         }
       }
@@ -293,7 +293,7 @@ export class OverItem extends BaseItem {
     if (item.isClose) {
       // @test Over
       let mml = this.factory.configuration.nodeFactory.create('node',
-        'mfrac', [this.getProperty('num') as MmlNode, this.toMml(false)], {});
+        'mfrac', [this.getProperty('num') as MmlNode, this.toMml(false)]);
       if (this.getProperty('thickness') != null) {
         // @test Choose, Above, Above with Delims
         NodeUtil.setAttribute(mml, 'linethickness',
@@ -816,7 +816,7 @@ export class ArrayItem extends BaseItem {
    */
   public EndEntry() {
     // @test Array1, Array2
-    const mtd = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes, {});
+    const mtd = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes);
     if (this.hfill.length) {
       if (this.hfill[0] === 0) {
         NodeUtil.setAttribute(mtd, 'columnalign', 'right');
@@ -842,10 +842,10 @@ export class ArrayItem extends BaseItem {
       // @test Label, Matrix Numbered
       this.row.unshift(this.row.pop());  // move equation number to first
                                          // position
-      node = this.factory.configuration.nodeFactory.create('node', 'mlabeledtr', this.row, {});
+      node = this.factory.configuration.nodeFactory.create('node', 'mlabeledtr', this.row);
     } else {
       // @test Array1, Array2
-      node = this.factory.configuration.nodeFactory.create('node', 'mtr', this.row, {});
+      node = this.factory.configuration.nodeFactory.create('node', 'mtr', this.row);
     }
     this.table.push(node);
     this.row = [];
@@ -917,7 +917,7 @@ export class EqnArrayItem extends ArrayItem {
     if (this.row.length) {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
-    const node = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes, {});
+    const node = this.factory.configuration.nodeFactory.create('node', 'mtd', this.nodes);
     this.row.push(node);
     this.Clear();
   }
@@ -934,8 +934,9 @@ export class EqnArrayItem extends ArrayItem {
       mtr = 'mlabeledtr';
     }
     this.factory.configuration.tags.clearTag();
-    const node = this.factory.configuration.nodeFactory.create('node', mtr, this.row, {});
-    this.table.push(node); this.row = [];
+    const node = this.factory.configuration.nodeFactory.create('node', mtr, this.row);
+    this.table.push(node);
+    this.row = [];
   }
 
   /**

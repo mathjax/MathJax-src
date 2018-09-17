@@ -187,7 +187,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       this.parseOptions.error = true;
       node = this.formatError(err);
     }
-    this.mathNode = this.parseOptions.nodeFactory.create('node', 'math', [node], {});
+    this.mathNode = this.parseOptions.nodeFactory.create('node', 'math', [node]);
     this.parseOptions.root = this.mathNode;
     if (display) {
       NodeUtil.setAttribute(this.mathNode, 'display', 'block');

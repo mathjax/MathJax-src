@@ -431,8 +431,8 @@ export class AbstractTags implements Tags {
    * @override
    */
   public enTag = function(node: MmlNode, tag: MmlNode): MmlNode {
-    let cell = this.configuration.nodeFactory.create('node', 'mtd', [node], {});
-    let row = this.configuration.nodeFactory.create('node', 'mlabeledtr', [tag, cell], {});
+    let cell = this.configuration.nodeFactory.create('node', 'mtd', [node]);
+    let row = this.configuration.nodeFactory.create('node', 'mlabeledtr', [tag, cell]);
     let table = this.configuration.nodeFactory.create('node', 'mtable', [row], {
       side: this.configuration.options['TagSide'],
       minlabelspacing: this.configuration.options['TagIndent'],

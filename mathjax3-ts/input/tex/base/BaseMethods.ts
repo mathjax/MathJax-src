@@ -88,9 +88,7 @@ BaseMethods.Close = function(parser: TexParser, c: string) {
  */
 BaseMethods.Tilde = function(parser: TexParser, c: string) {
   // @test Tilde, Tilde2
-  const textNode = parser.create('text', NBSP);
-  const node = parser.create('node', 'mtext', [], {}, textNode);
-  parser.Push(node);
+  parser.Push(parser.create('token', 'mtext', {}, NBSP));
 };
 
 /**
@@ -149,7 +147,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
       position = (base as MmlMunderover).over;
     } else {
       // @test Empty base, Empty base2, Square, Cube
-      base = parser.create('node', 'msubsup', [base], {});
+      base = parser.create('node', 'msubsup', [base]);
       position = (base as MmlMsubsup).sup;
     }
   }
@@ -208,7 +206,7 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
       position = (base as MmlMunderover).under;
     } else {
       // @test Empty Base Index, Empty Base Index2, Index
-      base = parser.create('node', 'msubsup', [base], {});
+      base = parser.create('node', 'msubsup', [base]);
       position = (base as MmlMsubsup).sub;
     }
   }
@@ -229,7 +227,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   let base = parser.stack.Prev();
   if (!base) {
     // @test PrimeSup, PrePrime, Prime on Sup
-    base = parser.create('node', 'mi', [], {});
+    base = parser.create('node', 'mi');
   }
   if (NodeUtil.isType(base, 'msubsup') &&
       NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) {
@@ -445,14 +443,14 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   let node;
   if (NodeUtil.isType(op, 'munderover') && !limits) {
     // @test Limits UnderOver
-    node = parser.create('node', 'msubsup', [], {});
+    node = parser.create('node', 'msubsup');
     NodeUtil.copyChildren(op, node);
     op = top.Last = node;
   } else if (NodeUtil.isType(op, 'msubsup') && limits) {
     // @test Limits SubSup
     // node = parser.create('node', 'munderover', NodeUtil.getChildren(op), {});
     // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
-    node = parser.create('node', 'munderover', [], {});
+    node = parser.create('node', 'munderover');
     NodeUtil.copyChildren(op, node);
     op = top.Last = node;
   }
@@ -504,7 +502,7 @@ BaseMethods.Frac = function(parser: TexParser, name: string) {
   // @test Frac
   const num = parser.ParseArg(name);
   const den = parser.ParseArg(name);
-  const node = parser.create('node', 'mfrac', [num, den], {});
+  const node = parser.create('node', 'mfrac', [num, den]);
   parser.Push(node);
 };
 
@@ -522,10 +520,10 @@ BaseMethods.Sqrt = function(parser: TexParser, name: string) {
   let mml = new TexParser(arg, parser.stack.env, parser.configuration).mml();
   if (!n) {
     // @test Square Root
-    mml = parser.create('node', 'msqrt', [mml], {});
+    mml = parser.create('node', 'msqrt', [mml]);
   } else {
     // @test General Root
-    mml = parser.create('node', 'mroot', [mml, parseRoot(parser, n)], {});
+    mml = parser.create('node', 'mroot', [mml, parseRoot(parser, n)]);
   }
   parser.Push(mml);
 };
@@ -570,7 +568,7 @@ function parseRoot(parser: TexParser, n: string) {
 BaseMethods.Root = function(parser: TexParser, name: string) {
   const n = parser.GetUpTo(name, '\\of');
   const arg = parser.ParseArg(name);
-  const node = parser.create('node', 'mroot', [arg, parseRoot(parser, n)], {});
+  const node = parser.create('node', 'mroot', [arg, parseRoot(parser, n)]);
   parser.Push(node);
 };
 
@@ -627,12 +625,12 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
     // @test Vector Op
     NodeUtil.setProperties(mo, {'movablelimits': false});
   }
-  const muoNode = parser.create('node', 'munderover', [], {});
+  const muoNode = parser.create('node', 'munderover');
   // TODO: This is necessary to get the empty element into the children.
   NodeUtil.setChild(muoNode, 0, c);
   NodeUtil.setChild(muoNode, 1, null);
   NodeUtil.setChild(muoNode, 2, mml);
-  let texAtom = parser.create('node', 'TeXAtom', [muoNode], {});
+  let texAtom = parser.create('node', 'TeXAtom', [muoNode]);
   parser.Push(texAtom);
 };
 
@@ -659,10 +657,10 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
     // @test Overline Limits
     NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0});
     mo = parser.create('node', 'mo', [], {rspace: 0});
-    base = parser.create('node', 'mrow', [mo, base], {});
+    base = parser.create('node', 'mrow', [mo, base]);
     // TODO? add an empty <mi> so it's not embellished any more
   }
-  const mml = parser.create('node', 'munderover', [base], {}) as MmlMunderover;
+  const mml = parser.create('node', 'munderover', [base]) as MmlMunderover;
   const entity = NodeUtil.createEntity(c);
   mo = parser.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
 
@@ -689,7 +687,7 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
   if (NodeUtil.getAttribute(base, 'movablelimits') || NodeUtil.getProperty(base, 'movablelimits')) {
     NodeUtil.setProperties(base, {'movablelimits': false});
   }
-  const node = parser.create('node', 'mover', [base, top], {});
+  const node = parser.create('node', 'mover', [base, top]);
   parser.Push(node);
 };
 
@@ -706,7 +704,7 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
     // @test Overline Sum
     NodeUtil.setProperties(base, {'movablelimits': false});
   }
-  const node = parser.create('node', 'munder', [base, bot], {});
+  const node = parser.create('node', 'munder', [base, bot]);
   parser.Push(node);
 };
 
@@ -758,7 +756,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   const def: EnvList = {};
   let node: MmlNode;
   try {
-    node = parser.create('node', kind, [], {});
+    node = parser.create('node', kind);
   } catch (e) {
     node = null;
   }
@@ -805,7 +803,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
  */
 BaseMethods.Strut = function(parser: TexParser, name: string) {
   // @test Strut
-  const row = parser.create('node', 'mrow', [], {});
+  const row = parser.create('node', 'mrow');
   const padded = parser.create('node', 'mpadded', [row],
                                                          {height: '8.6pt', depth: '3pt', width: 0});
   parser.Push(padded);
@@ -820,10 +818,10 @@ BaseMethods.Strut = function(parser: TexParser, name: string) {
  */
 BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: string) {
   // @test Phantom
-  let box = parser.create('node', 'mphantom', [parser.ParseArg(name)], {});
+  let box = parser.create('node', 'mphantom', [parser.ParseArg(name)]);
   if (v || h) {
     // TEMP: Changes here
-    box = parser.create('node', 'mpadded', [box], {});
+    box = parser.create('node', 'mpadded', [box]);
     if (h) {
       // @test Horizontal Phantom
       NodeUtil.setAttribute(box, 'height', 0);
@@ -834,7 +832,7 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
       NodeUtil.setAttribute(box, 'width', 0);
     }
   }
-  const atom = parser.create('node', 'TeXAtom', [box], {});
+  const atom = parser.create('node', 'TeXAtom', [box]);
   parser.Push(atom);
 };
 
@@ -846,7 +844,7 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
 BaseMethods.Smash = function(parser: TexParser, name: string) {
   // @test Smash, Smash Top, Smash Bottom
   const bt = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
-  const smash = parser.create('node', 'mpadded', [parser.ParseArg(name)], {});
+  const smash = parser.create('node', 'mpadded', [parser.ParseArg(name)]);
   // TEMP: Changes here:
   switch (bt) {
   case 'b': NodeUtil.setAttribute(smash, 'depth', 0); break;
@@ -855,7 +853,7 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
     NodeUtil.setAttribute(smash, 'height', 0);
     NodeUtil.setAttribute(smash, 'depth', 0);
   }
-  const atom = parser.create('node', 'TeXAtom', [smash], {});
+  const atom = parser.create('node', 'TeXAtom', [smash]);
   parser.Push(atom);
 };
 
@@ -871,7 +869,7 @@ BaseMethods.Lap = function(parser: TexParser, name: string) {
     // @test Llap
     NodeUtil.setAttribute(mml, 'lspace', '-1width');
   }
-  const atom = parser.create('node', 'TeXAtom', [mml], {});
+  const atom = parser.create('node', 'TeXAtom', [mml]);
   parser.Push(atom);
 };
 
@@ -1014,7 +1012,7 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   // @test BuildRel, BuildRel Expression
   const top = parser.ParseUpTo(name, '\\over');
   const bot = parser.ParseArg(name);
-  const node = parser.create('node', 'munderover', [], {});
+  const node = parser.create('node', 'munderover');
   // TODO: This is necessary to get the empty element into the children.
   NodeUtil.setChild(node, 0, bot);
   NodeUtil.setChild(node, 1, null);
@@ -1617,7 +1615,7 @@ BaseMethods.MathChoice = function(parser: TexParser, name: string) {
   const T  = parser.ParseArg(name);
   const S  = parser.ParseArg(name);
   const SS = parser.ParseArg(name);
-  parser.Push(parser.create('node', 'mathchoice', [D, T, S, SS], {}));
+  parser.Push(parser.create('node', 'mathchoice', [D, T, S, SS]));
 };
 
 

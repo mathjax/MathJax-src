@@ -193,7 +193,7 @@ namespace ParseUtil {
                      (NodeUtil.getChildren(child)[0] &&
                       NodeUtil.getChildren(NodeUtil.getChildren(child)[0]).length)))) {
         if (NodeUtil.isEmbellished(child)) {
-          let mi = configuration.nodeFactory.create('node', 'mi', [], {});
+          let mi = configuration.nodeFactory.create('node', 'mi');
           nodes.unshift(mi);
         }
         break;
@@ -210,7 +210,7 @@ namespace ParseUtil {
    */
   export function mi2mo(parser: TexParser, mi: MmlNode): MmlNode {
     // @test Mathop Sub, Mathop Super
-    const mo = parser.create('node', 'mo', [], {});
+    const mo = parser.create('node', 'mo');
     NodeUtil.copyChildren(mi, mo);
     NodeUtil.copyAttributes(mi, mo);
     NodeUtil.setProperties(mo, {lspace: '0', rspace: '0'});
@@ -238,7 +238,7 @@ namespace ParseUtil {
           if (match === '$' && braces === 0) {
             // @test Interspersed Text
             node = parser.create('node', 'TeXAtom',
-                                         [(new TexParser(text.slice(k, i - 1), {}, parser.configuration)).mml()], {});
+                                         [(new TexParser(text.slice(k, i - 1), {}, parser.configuration)).mml()]);
             mml.push(node);
             match = '';
             k = i;
@@ -291,7 +291,7 @@ namespace ParseUtil {
             } else if (c === ')' && match === ')' && braces === 0) {
               node = parser.create(
                 'node', 'TeXAtom',
-                [(new TexParser(text.slice(k, i - 2), {}, parser.configuration)).mml()], {});
+                [(new TexParser(text.slice(k, i - 2), {}, parser.configuration)).mml()]);
               mml.push(node);
               match = '';
               k = i;
@@ -316,7 +316,7 @@ namespace ParseUtil {
       mml = [parser.create('node', 'mstyle', mml, {displaystyle: false, scriptlevel: level})];
     } else if (mml.length > 1) {
       // @test Interspersed Text
-      mml = [parser.create('node', 'mrow', mml, {})];
+      mml = [parser.create('node', 'mrow', mml)];
     }
     return mml;
   }
