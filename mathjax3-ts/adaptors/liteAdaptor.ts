@@ -539,6 +539,12 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         return [0, 0] as [number, number];
     }
 
+    /**
+     * @override
+     */
+    public nodeBBox(node: LiteElement) {
+        return {left: 0, right: 0, top: 0, bottom: 0};
+    }
 }
 
 /************************************************************/

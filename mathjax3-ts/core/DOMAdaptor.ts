@@ -31,6 +31,16 @@ export type AttributeData = {
     value: string
 };
 
+/**
+ * The data for an elements page-based bounding box
+ */
+export type PageBBox = {
+    left: number,
+    right: number,
+    top: number,
+    bottom: number
+};
+
 
 /*****************************************************************/
 /**
@@ -304,6 +314,13 @@ export interface DOMAdaptor<N, T, D> {
      * @return {[number, number]} The width and height (in pixels) of the element
      */
     nodeSize(node: N): [number, number];
+
+
+    /**
+     * @param {N} node            The HTML node whose BBox is to be determined
+     * @return {PageBBox}         BBox as {left, right, top, bottom} position on the page (in pixels)
+     */
+    nodeBBox(node: N): PageBBox;
 }
 
 /*****************************************************************/
@@ -574,5 +591,10 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public abstract nodeSize(node: N): [number, number];
+
+    /**
+     * @override
+     */
+    public abstract nodeBBox(node: N): PageBBox;
 
 }

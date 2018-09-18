@@ -16,44 +16,41 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmaction wrapper for the MmlMaction object
+ * @fileoverview  Implements the SVGmaction wrapper for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonMaction, CommonMactionMixin} from '../../common/Wrappers/maction.js';
 import {ActionDef} from '../../common/Wrappers/maction.js';
 import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
-import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-//import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
-//import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
-//import {Property} from '../../../core/Tree/Node.js';
+import {TextNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
- * The CHTMLmaction wrapper for the MmlMaction object
+ * The SVGmaction wrapper for the MmlMaction object
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmaction<N, T, D> extends
-CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class SVGmaction<N, T, D> extends
+CommonMactionMixin<SVGWrapper<N, T, D>, SVGConstructor<N, T, D>>(SVGWrapper) {
 
     public static kind = MmlMaction.prototype.kind;
 
     public static styles: StyleList = {
-        'mjx-maction': {
-            position: 'relative'
+        '[jax="SVG"] mjx-tool': {
+            display: 'inline-block',
+            position: 'relative',
+            width: 0, height: 0
         },
-        'mjx-maction > mjx-tool': {
-            display: 'none',
+        '[jax="SVG"] mjx-tool > mjx-tip': {
             position: 'absolute',
-            bottom: 0, right: 0,
-            Width: 0, height: 0
+            top: 0, left: 0
         },
         'mjx-tool > mjx-tip': {
             display: 'inline-block',
@@ -64,7 +61,7 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
             color: 'black',
             'box-shadow': '2px 2px 5px #AAAAAA'
         },
-        'mjx-maction[toggle]': {
+        'g[data-mml-node="maction"][data-toggle]': {
             cursor: 'pointer'
         },
         'mjx-status': {
@@ -89,7 +86,7 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
             //
             // Mark which child is selected
             //
-            node.adaptor.setAttribute(node.chtml, 'toggle', node.node.attributes.get('selection') as string);
+            node.adaptor.setAttribute(node.element, 'data-toggle', node.node.attributes.get('selection') as string);
             //
             // Cache the data needed to select another node
             //
@@ -117,32 +114,45 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
         ['tooltip', [(node, data) => {
             const tip = node.childNodes[1];
             if (!tip) return;
+            const rect = node.adaptor.firstChild(node.element);
             if (tip.node.isKind('mtext')) {
                 //
                 // Text tooltips are handled through title attributes
                 //
                 const text = (tip.node as TextNode).getText();
-                node.adaptor.setAttribute(node.chtml, 'title', text);
+                node.adaptor.insert(node.svg('title', {}, [node.text(text)]), rect);
             } else {
                 //
                 // Math tooltips are handled through hidden nodes and event handlers
                 //
                 const adaptor = node.adaptor;
-                const tool = adaptor.append(node.chtml, node.html('mjx-tool', {
-                    style: {bottom: node.em(-node.dy), right: node.em(-node.dx)}
-                }, [node.html('mjx-tip')]));
-                tip.toCHTML(adaptor.firstChild(tool));
+                const container = node.jax.container;
+                const math = (node.node as AbstractMmlNode).factory.create('math', {}, [node.childNodes[1].node])
+                const tool = node.html('mjx-tool', {}, [node.html('mjx-tip')]);
+                const hidden = adaptor.append(rect, node.svg('foreignObject', {style: {display: 'none'}}, [tool]));
+                node.jax.processMath(math, adaptor.firstChild(tool));
+                node.childNodes[1].node.parent = node.node;
                 //
                 // Set up the event handlers to display and remove the tooltip
                 //
                 node.setEventHandler('mouseover', (event: Event) => {
                     data.stopTimers(data);
-                    data.hoverTimer = setTimeout(() => adaptor.setStyle(tool, 'display', 'block'), data.postDelay);
+                    data.hoverTimer = setTimeout(() => {
+                        adaptor.setStyle(tool, 'left', '0');
+                        adaptor.setStyle(tool, 'top', '0');
+                        adaptor.append(container, tool)
+                        const tbox = adaptor.nodeBBox(tool);
+                        const nbox = adaptor.nodeBBox(node.element);
+                        const dx = (nbox.right - tbox.left) / node.metrics.em + node.dx;
+                        const dy = (nbox.bottom - tbox.bottom) / node.metrics.em + node.dy;
+                        adaptor.setStyle(tool, 'left', node.px(dx));
+                        adaptor.setStyle(tool, 'top', node.px(dy));
+                    }, data.postDelay);
                     event.stopPropagation();
                 });
                 node.setEventHandler('mouseout',  (event: Event) => {
                     data.stopTimers(data);
-                    data.clearTimer = setTimeout(() => adaptor.setStyle(tool, 'display', ''), data.clearDelay);
+                    data.clearTimer = setTimeout(() => adaptor.append(hidden, tool), data.clearDelay);
                     event.stopPropagation();
                 });
             }
@@ -154,7 +164,7 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
             if (tip.node.isKind('mtext')) {
                 const adaptor = node.adaptor;
                 const text = (tip.node as TextNode).getText();
-                adaptor.setAttribute(node.chtml, 'statusline', text);
+                adaptor.setAttribute(node.element, 'data-statusline', text);
                 //
                 // Set up event handlers to change the status window
                 //
@@ -177,17 +187,22 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
             status: null  // cached status line
         }]]
 
-    ] as ActionDef<CHTMLmaction<any, any, any>>[]);
+    ] as ActionDef<SVGmaction<any, any, any>>[]);
 
     /*************************************************************/
 
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-        const chtml = this.standardCHTMLnode(parent);
+    public toSVG(parent: N) {
+        const svg = this.standardSVGnode(parent);
         const child = this.selected;
-        child.toCHTML(chtml);
+        const {h, d, w} = child.getBBox();
+        this.adaptor.append(this.element, this.svg('rect', {
+            width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d),
+            fill: 'none', 'pointer-events': 'all'
+        }));
+        child.toSVG(svg);
         this.action(this, this.data);
     }
 
@@ -195,7 +210,7 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
      * Add an event handler to the output for this maction
      */
     public setEventHandler(type: string, handler: EventHandler) {
-        (this.chtml as any).addEventListener(type, handler);
+        (this.element as any).addEventListener(type, handler);
     }
 
 }

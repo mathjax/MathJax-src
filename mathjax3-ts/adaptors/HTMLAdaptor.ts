@@ -22,7 +22,7 @@
  */
 
 import {OptionList} from '../util/Options.js';
-import {AttributeData, AbstractDOMAdaptor, DOMAdaptor} from '../core/DOMAdaptor.js';
+import {AttributeData, AbstractDOMAdaptor, DOMAdaptor, PageBBox} from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /**
@@ -79,6 +79,7 @@ export interface MinHTMLElement<N, T> {
     getAttribute(name: string): string;
     removeAttribute(name: string): void;
     hasAttribute(name: string): boolean;
+    getBoundingClientRect(): Object;
 }
 
 /*****************************************************************/
@@ -468,5 +469,13 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
      */
     public nodeSize(node: N) {
         return [node.offsetWidth, node.offsetHeight] as [number, number];
+    }
+
+    /**
+     * @override
+     */
+    public nodeBBox(node: N) {
+        const {left, right, top, bottom} = node.getBoundingClientRect() as PageBBox;
+        return {left, right, top, bottom};
     }
 }
