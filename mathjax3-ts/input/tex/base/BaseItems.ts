@@ -1,13 +1,5 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/BaseItems.ts
- *
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
- *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,14 +37,17 @@ import StackItemFactory from '../StackItemFactory.js';
 import {BaseItem, StackItem, EnvList} from '../StackItem.js';
 
 
+
+/**
+ * Initial item on the stack. It's pushed when parsing begins.
+ */
 export class StartItem extends BaseItem {
 
   /**
    * @override
    */
-  constructor(factory: StackItemFactory, ...global: any[]) {
+  constructor(factory: StackItemFactory, public global: EnvList) {
     super(factory);
-    this.global = global[0] as EnvList;
   }
 
 
@@ -87,6 +82,11 @@ export class StartItem extends BaseItem {
 
 }
 
+
+/**
+ * Final item on the stack. Errors will be thrown if other items than the start
+ * item are still on the stack.
+ */
 export class StopItem extends BaseItem {
 
   /**
@@ -106,6 +106,10 @@ export class StopItem extends BaseItem {
 
 }
 
+
+/**
+ * Item indicating an open brace.
+ */
 export class OpenItem extends BaseItem {
 
   /**
@@ -148,6 +152,9 @@ export class OpenItem extends BaseItem {
 }
 
 
+/**
+ * Item indicating an close brace. Collapses stack until an OpenItem is found.
+ */
 export class CloseItem extends BaseItem {
 
   /**
@@ -168,6 +175,9 @@ export class CloseItem extends BaseItem {
 }
 
 
+/**
+ * Item indicating an we are currently dealing with a prime mark.
+ */
 export class PrimeItem extends BaseItem {
 
   /**
@@ -192,6 +202,11 @@ export class PrimeItem extends BaseItem {
   }
 }
 
+
+/**
+ * Item indicating an we are currently dealing with a sub/superscript
+ * expression.
+ */
 export class SubsupItem extends BaseItem {
 
   /**
@@ -255,6 +270,10 @@ export class SubsupItem extends BaseItem {
 
 }
 
+
+/**
+ * Item indicating an we are currently dealing with an \\over command.
+ */
 export class OverItem extends BaseItem {
 
   /**
@@ -322,6 +341,10 @@ export class OverItem extends BaseItem {
 
 }
 
+
+/**
+ * Item pushed when a \\left opening delimiter has been found.
+ */
 export class LeftItem extends BaseItem {
 
   /**
@@ -367,6 +390,11 @@ export class LeftItem extends BaseItem {
 
 }
 
+
+/**
+ * Item pushed when a \\right closing delimiter has been found. Stack is
+ * collapsed until a corresponding LeftItem is encountered.
+ */
 export class RightItem extends BaseItem {
 
   /**
@@ -394,6 +422,10 @@ export class RightItem extends BaseItem {
 
 }
 
+
+/**
+ * Item pushed for opening an environment with \\begin{env}.
+ */
 export class BeginItem extends BaseItem {
 
   /**
@@ -435,6 +467,12 @@ export class BeginItem extends BaseItem {
 
 }
 
+
+/**
+ * Item pushed for closing an environment with \\end{env}. Stack is collapsed
+ * until a corresponding BeginItem for 'env' is found. Error is thrown in case
+ * other open environments interfere.
+ */
 export class EndItem extends BaseItem {
 
   /**
@@ -454,6 +492,10 @@ export class EndItem extends BaseItem {
 
 }
 
+
+/**
+ * Item pushed for remembering styling information.
+ */
 export class StyleItem extends BaseItem {
 
   /**
@@ -477,6 +519,10 @@ export class StyleItem extends BaseItem {
 
 }
 
+
+/**
+ * Item pushed for remembering positioning information.
+ */
 export class PositionItem extends BaseItem {
 
   /**
@@ -516,6 +562,9 @@ export class PositionItem extends BaseItem {
 }
 
 
+/**
+ * Item indicating a table cell.
+ */
 export class CellItem extends BaseItem {
 
   /**
@@ -535,6 +584,9 @@ export class CellItem extends BaseItem {
 }
 
 
+/**
+ * Final item for collating Nodes.
+ */
 export class MmlItem extends BaseItem {
 
   /**
@@ -554,6 +606,9 @@ export class MmlItem extends BaseItem {
 }
 
 
+/**
+ * Item indicating a named function operator (e.g., \\sin) as been encountered.
+ */
 export class FnItem extends BaseItem {
 
   /**
@@ -606,6 +661,11 @@ export class FnItem extends BaseItem {
   }
 }
 
+
+/**
+ * Item indicating a \\not has been encountered and needs to be applied to the
+ * next operator.
+ */
 export class NotItem extends BaseItem {
 
   private remap = MapHandler.getMap('not_remap') as CharacterMap;
@@ -658,6 +718,9 @@ export class NotItem extends BaseItem {
 }
 
 
+/**
+ * Item indicating a dots command has been encountered.
+ */
 export class DotsItem extends BaseItem {
 
   /**
@@ -688,6 +751,10 @@ export class DotsItem extends BaseItem {
 }
 
 
+/**
+ * Item indicating an array is assembled. It collates cells, rows and
+ * information about column/row separator and framing lines.
+ */
 export class ArrayItem extends BaseItem {
 
   /**
@@ -892,6 +959,10 @@ export class ArrayItem extends BaseItem {
 }
 
 
+/**
+ * Item dealing with equation arrays as a special case of arrays. Handles
+ * tagging information according to the given tagging style.
+ */
 export class EqnArrayItem extends ArrayItem {
 
   /**
@@ -952,6 +1023,10 @@ export class EqnArrayItem extends ArrayItem {
 }
 
 
+/**
+ * Item dealing with simple equation environments.  Handles tagging information
+ * according to the given tagging style.
+ */
 export class EquationItem extends BaseItem {
 
   /**

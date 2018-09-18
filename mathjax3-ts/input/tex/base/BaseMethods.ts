@@ -1360,6 +1360,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
       parser.Push(mml);
       return;
     }
+    // Remember the user defined environment we are closing.
     parser.stack.env['closing'] = env;
   }
   if (++parser.macroCount > parser.configuration.options['maxMacros']) {

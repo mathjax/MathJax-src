@@ -31,6 +31,11 @@ import ParseUtil from '../ParseUtil.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 
+/**
+ * Opening Item dealing with definitions of new environments. It's pushed onto
+ * the stack whenever a user defined environment is encountered and remains
+ * until a corresponding \\end collapses the stack.
+ */
 export class BeginEnvItem extends BaseItem {
 
   /**

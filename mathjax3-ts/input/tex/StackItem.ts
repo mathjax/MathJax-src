@@ -234,7 +234,7 @@ export interface StackItem extends NodeStack {
   isOpen: boolean;
 
   /**
-   * Is this a finalising item, e.g., end.
+   * Is this a finalising item, i.e., one that only collects nodes.
    * @type {boolean}
    */
   isFinal: boolean;
@@ -306,7 +306,7 @@ export interface StackItem extends NodeStack {
 }
 
 export interface StackItemClass {
-  new (factory: StackItemFactory, ...nodes: MmlNode[]): StackItem;
+  new (factory: StackItemFactory, ...args: any[]): StackItem;
 }
 
 

@@ -33,6 +33,13 @@ import TexError from '../TexError.js';
 import {TexConstant} from '../TexConstants.js';
 
 
+/**
+ * Item dealing with multiline environments as a special case of arrays. Note,
+ * that all other AMS equation environments (e.g., align, split) can be handled
+ * by the regular EqnArrayItem class.
+ *
+ * Handles tagging information according to the given tagging style.
+ */
 export class MultlineItem extends ArrayItem {
 
   /**
