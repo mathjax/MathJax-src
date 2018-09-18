@@ -99,6 +99,8 @@ export const fullBBox = ((node) => new Array(4).fill(node.thickness + node.paddi
 export const fullPadding = ((node) => new Array(4).fill(node.padding)) as BBoxExtender<Menclose>;
 export const fullBorder = ((node) => new Array(4).fill(node.thickness)) as BBoxBorder<Menclose>;
 
+/*****************************************************************/
+
 /**
  * The length of an arrowhead
  */
@@ -166,6 +168,8 @@ export const arrowBBox = {
     updown:    (node) => arrowBBoxW(node, [arrowHead(node), 0, arrowHead(node), 0]),
     leftright: (node) => arrowBBoxHD(node, [0, arrowHead(node), 0, arrowHead(node)])
 } as {[name: string]: BBoxExtender<Menclose>};
+
+/*****************************************************************/
 
 /**
  * @param {Renderer} render     The function for adding the border to the node
@@ -249,6 +253,8 @@ export const CommonBorder2 = <W extends Menclose, N>(render: Renderer<W, N>) => 
     }
 };
 
+/*****************************************************************/
+
 /**
  * @param {string => Renderer} render      The function for adding the strike to the node
  * @return {(string, number) => DefPair}   The function returning the notation definition for the diagonal strike
@@ -256,10 +262,9 @@ export const CommonBorder2 = <W extends Menclose, N>(render: Renderer<W, N>) => 
 export const CommonDiagonalStrike = <W extends Menclose, N>(render: (sname: string) => Renderer<W, N>) => {
     /**
      * @param {string} name  The name of the diagonal strike to define
-     * @param {number} neg   1 or -1 to use with the angle
      * @return {DefPair}     The notation definition for the diagonal strike
      */
-    return (name: string, neg: number) => {
+    return (name: string) => {
         const cname = 'mjx-' + name.charAt(0) + 'strike';
         return [name + 'diagonalstrike', {
             //
@@ -273,6 +278,8 @@ export const CommonDiagonalStrike = <W extends Menclose, N>(render: (sname: stri
         }] as DefPair<W, N>;
     }
 };
+
+/*****************************************************************/
 
 /**
  * @param {Renderer} render     The function to add the arrow to the node

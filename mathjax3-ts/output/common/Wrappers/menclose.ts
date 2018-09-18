@@ -97,12 +97,6 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
     maximizeEntries(X: number[], Y: number[]): void;
 
     /**
-     * @param {number} m  A number to trim to 4 decimal places
-     * @return {string}   The number trimmed to 4 places, with trailing 0's removed
-     */
-    units(m: number): string;
-
-    /**
      * @param {number} w    The width of the box whose diagonal is needed
      * @param {number} h    The height of the box whose diagonal is needed
      * @return {number[]}   The angle and width of the diagonal of the box
@@ -333,23 +327,6 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         }
 
         /********************************************************/
-
-        /**
-         * @override
-         * (make it public so it can be called by the notation functions)
-         */
-        public em(m: number) {
-            return super.em(m);
-        }
-
-        /**
-         * @param {number} m  A number to trim to 4 decimal places
-         * @return {string}   The number trimmed to 4 places, with trailing 0's removed
-         */
-        public units(m: number) {
-            if (Math.abs(m) < .001) return '0';
-            return m.toFixed(4).replace(/\.?0+$/, '');
-        }
 
         /**
          * @param {number} w    The width of the box whose diagonal is needed

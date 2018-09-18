@@ -24,13 +24,11 @@
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMenclose, CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
 import {CHTMLmsqrt} from './msqrt.js';
-import {BBox} from '../BBox.js';
 import * as Notation from '../Notation.js';
 import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../../util/Options.js';
 import {StyleList, StyleData} from '../../common/CssStyles.js';
-import {split} from '../../../util/string.js';
 import {em} from '../../../util/lengths.js';
 
 /*****************************************************************/
@@ -38,11 +36,11 @@ import {em} from '../../../util/lengths.js';
 /**
  *  The skew angle needed for the arrow head pieces
  */
-function Angle(x: number, dx: number) {
-    return Math.atan(dx / x).toFixed(3).replace(/\.?0+$/, '');
+function Angle(x: number, y: number) {
+    return Math.atan2(x, y).toFixed(3).replace(/\.?0+$/, '');
 }
 
-const ANGLE = Angle(Notation.ARROWX, Notation.ARROWDX);
+const ANGLE = Angle(Notation.ARROWDX, Notation.ARROWY);
 
 /*****************************************************************/
 /**
@@ -182,7 +180,7 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
 
         ['horizontalstrike', {
             renderer: Notation.RenderElement('hstrike', 'Y'),
-            bbox: (node) => [0, 0, 0, 0]
+            bbox: (node) => [0, node.padding, 0, node.padding]
         }],
 
         ['verticalstrike', {
@@ -220,7 +218,7 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
                 node.adaptor.setStyle(child, 'border-bottom', node.em(node.thickness) + ' solid');
                 const strike = node.adjustBorder(node.html('mjx-ustrike', {style: {
                     width: node.em(W),
-                    transform: 'translateX(' + node.em(t) + ') rotate(' + node.units(-a) + 'rad)',
+                    transform: 'translateX(' + node.em(t) + ') rotate(' + node.fixed(-a) + 'rad)',
                 }}));
                 node.adaptor.append(node.chtml, strike);
             },
@@ -310,12 +308,13 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
      * @override
      */
     public toCHTML(parent: N) {
+        const adaptor = this.adaptor;
         const chtml = this.standardCHTMLnode(parent);
         //
         //  Create a box for the child (that can have padding and borders added by the notations)
         //    and add the child HTML into it
         //
-        const block = this.adaptor.append(chtml, this.html('mjx-box')) as N;
+        const block = adaptor.append(chtml, this.html('mjx-box')) as N;
         if (this.renderChild) {
             this.renderChild(this, block);
         } else {
@@ -332,7 +331,6 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
         //  Add the needed padding, if any
         //
         const pbox = this.getPadding();
-        const adaptor = this.adaptor;
         for (const name of Notation.sideNames) {
             const i = Notation.sideIndex[name];
             pbox[i] > 0 && adaptor.setStyle(block, 'padding-' + name, this.em(pbox[i]));
@@ -380,7 +378,7 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
         if (head.x === Notation.ARROWX && head.y === Notation.ARROWY &&
             head.dx === Notation.ARROWDX && t === Notation.THICKNESS) return;
         const [x, y, dx] = [t * head.x, t * head.y, t * head.dx].map(x => this.em(x));
-        const a = Angle(head.x, head.dx);
+        const a = Angle(head.dx, head.y);
         const [line, rthead, rbhead, lthead, lbhead] = this.adaptor.childNodes(arrow);
         this.adjustHead(rthead, [y, '0', '1px', x], a);
         this.adjustHead(rbhead, ['1px', '0', y, x], '-' + a);
@@ -437,20 +435,12 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
      */
     public adjustThickness(shape: N) {
         if (this.thickness !== Notation.THICKNESS) {
-            this.adaptor.setStyle(shape, 'strokeWidth', this.units(this.thickness));
+            this.adaptor.setStyle(shape, 'strokeWidth', this.fixed(this.thickness));
         }
         return shape;
     }
 
     /********************************************************/
-
-    /**
-     * @override
-     * (make it public so it can be called by the notation functions)
-     */
-    public em(m: number) {
-        return super.em(m);
-    }
 
     /**
      * @param {number} m    A number to be shown with a fixed number of digits
@@ -460,6 +450,14 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
     fixed(m: number, n: number = 3) {
         if (Math.abs(m) < .0006) return "0";
         return m.toFixed(n).replace(/\.?0+$/,"");
+    }
+
+    /**
+     * @override
+     * (make it public so it can be called by the notation functions)
+     */
+    public em(m: number) {
+        return super.em(m);
     }
 
 }
