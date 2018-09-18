@@ -36,7 +36,7 @@ export type Prop = string | number | boolean | MmlNode | PropList;
 
 export type PropList = {[key: string]: Prop};
 
-export type CheckType = boolean | StackItem | (MmlNode | StackItem)[];
+export type CheckType = [(MmlNode | StackItem)[], boolean];
 
 
 export interface NodeStack {
@@ -317,6 +317,17 @@ export interface StackItemClass {
  */
 export abstract class BaseItem extends MmlStack implements StackItem {
 
+  /**
+   * The fail value.
+   * @type {CheckType}
+   */
+  protected static fail: CheckType = [null, false];
+
+  /**
+   * The success value.
+   * @type {CheckType}
+   */
+  protected static success: CheckType = [null, true];
 
   /**
    * A list of basic errors.
@@ -428,7 +439,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     }
     if (item.isKind('cell') && this.isOpen) {
       if (item.getProperty('linebreak')) {
-        return false;
+        return BaseItem.fail;
       }
       // @test Ampersand-error
       throw new TexError('Misplaced', 'Misplaced %1', item.getName());
@@ -440,10 +451,10 @@ export abstract class BaseItem extends MmlStack implements StackItem {
       throw new TexError(id, message, item.getName());
     }
     if (!item.isFinal) {
-      return true;
+      return BaseItem.success;
     }
     this.Push(item.First);
-    return false;
+    return BaseItem.fail;
   }
 
 

@@ -34,7 +34,7 @@ import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
-import {BaseItem, StackItem, EnvList} from '../StackItem.js';
+import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 
 
 
@@ -69,13 +69,13 @@ export class StartItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('stop')) {
       let node = this.toMml();
       if (!this.global.isInner) {
         node = this.factory.configuration.tags.finalize(node, this.env);
       }
-      return this.factory.create('mml', node);
+      return [[this.factory.create('mml', node)], true];
     }
     return super.checkItem(item);
   }
@@ -140,12 +140,12 @@ export class OpenItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('close')) {
       // @test PrimeSup
       let mml = this.toMml();
       const node = this.create('node', 'TeXAtom', [mml]);
-      return this.factory.create('mml', node);
+      return [[this.factory.create('mml', node)], true];
     }
     return super.checkItem(item);
   }
@@ -190,15 +190,15 @@ export class PrimeItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     let [top0, top1] = this.Peek(2);
     if (!NodeUtil.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
       const node = this.create('node', 'msup', [top0, top1]);
-      return [node, item];
+      return [[node, item], true];
     }
     NodeUtil.setChild(top0, (top0 as MmlMsubsup).sup, top1);
-    return [top0, item];
+    return [[top0, item], true];
   }
 }
 
@@ -235,9 +235,9 @@ export class SubsupItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('open') || item.isKind('left')) {
-      return true;
+      return BaseItem.success;
     }
     const top = this.First;
     const position = this.getProperty('position') as number;
@@ -259,9 +259,9 @@ export class SubsupItem extends BaseItem {
         NodeUtil.setProperty(top, 'movesupsub', this.getProperty('movesupsub') as Property);
       }
       const result = this.factory.create('mml', top);
-      return result;
+      return [[result], true];
     }
-    if (super.checkItem(item)) {
+    if (super.checkItem(item)[1]) {
       // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
       const error = this.errors[['', 'sub', 'sup'][position]];
       throw new TexError(error[0], error[1], ...error.splice(2));
@@ -303,7 +303,7 @@ export class OverItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('over')) {
       // @test Double Over
       throw new TexError(
@@ -325,7 +325,7 @@ export class OverItem extends BaseItem {
                                    this.getProperty('open') as string, mml,
                                    this.getProperty('close') as string);
       }
-      return [this.factory.create('mml', mml), item];
+      return [[this.factory.create('mml', mml), item], true];
     }
     return super.checkItem(item);
   }
@@ -377,13 +377,13 @@ export class LeftItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     // @test Missing Right
     if (item.isKind('right')) {
-      return this.factory.create('mml', ParseUtil.fenced(
+      return [[this.factory.create('mml', ParseUtil.fenced(
         this.factory.configuration,
         this.getProperty('delim') as string, this.toMml(),
-        item.getProperty('delim') as string));
+        item.getProperty('delim') as string))], true];
     }
     return super.checkItem(item);
   }
@@ -446,7 +446,7 @@ export class BeginItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         // @test EnvBadEnd
@@ -454,9 +454,9 @@ export class BeginItem extends BaseItem {
                            this.getName(), item.getName());
       }
       if (!this.getProperty('end')) {
-        return this.factory.create('mml', this.toMml());
+        return [[this.factory.create('mml', this.toMml())], true];
       }
-      return false;  // TODO: This case could probably go!
+      return BaseItem.fail;  // TODO: This case could probably go!
     }
     if (item.isKind('stop')) {
       // @test EnvMissingEnd Array
@@ -508,13 +508,13 @@ export class StyleItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (!item.isClose) {
       return super.checkItem(item);
     }
     // @test Style
     const mml = this.create('node', 'mstyle', this.nodes, this.getProperty('styles'));
-    return [this.factory.create('mml', mml), item];
+    return [[this.factory.create('mml', mml), item], true];
   }
 
 }
@@ -536,7 +536,7 @@ export class PositionItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isClose) {
       // @test MissingBoxFor
       throw new TexError('MissingBoxFor', 'Missing box for %1', this.getName());
@@ -550,11 +550,11 @@ export class PositionItem extends BaseItem {
                           {height: this.getProperty('dh'),
                            depth: this.getProperty('dd'),
                            voffset: this.getProperty('dh')});
-        return [this.factory.create('mml', mml)];
+        return [[this.factory.create('mml', mml)], true];
       case 'horizontal':
         // @test Move Left, Move Right, Move Left Negative, Move Right Negative
-        return [this.factory.create('mml', this.getProperty('left') as MmlNode), item,
-                this.factory.create('mml', this.getProperty('right') as MmlNode)];
+        return [[this.factory.create('mml', this.getProperty('left') as MmlNode), item,
+                 this.factory.create('mml', this.getProperty('right') as MmlNode)], true];
       }
     }
     return super.checkItem(item);
@@ -621,25 +621,25 @@ export class FnItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     const top = this.First;
     if (top) {
       if (item.isOpen) {
         // @test Fn Stretchy
-        return true;
+        return BaseItem.success;
       }
       if (!item.isKind('fn')) {
         // @test Named Function
         let mml = item.First;
         if (!item.isKind('mml') || !mml) {
           // @test Mathop Super
-          return [top, item];
+          return [[top, item], true];
         }
         if ((NodeUtil.isType(mml, 'mstyle') && mml.childNodes.length &&
              NodeUtil.isType(mml.childNodes[0].childNodes[0] as MmlNode, 'mspace')) ||
              NodeUtil.isType(mml, 'mspace')) {
           // @test Fn Pos Space, Fn Neg Space
-          return [top, item];
+          return [[top, item], true];
         }
         if (NodeUtil.isEmbellished(mml)) {
           // @test MultiInt with Limits
@@ -648,13 +648,13 @@ export class FnItem extends BaseItem {
         const form = NodeUtil.getForm(mml);
         if (form != null && [0, 0, 1, 1, 0, 1, 1, 0, 0, 0][form[2]]) {
           // @test Fn Operator
-          return [top, item];
+          return [[top, item], true];
         }
       }
       // @test Named Function, Named Function Arg
       const node = this.create('token', 'mo', {texClass: TEXCLASS.NONE},
                                Entities.ENTITIES.ApplyFunction);
-      return [top, node, item];
+      return [[top, node, item], true];
     }
     // @test Mathop Super, Mathop Sub
     return super.checkItem.apply(this, arguments);
@@ -681,13 +681,13 @@ export class NotItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     let mml: TextNode | MmlNode;
     let c: string;
     let textNode: TextNode;
     if (item.isKind('open') || item.isKind('left')) {
       // @test Negation Left Paren
-      return true;
+      return BaseItem.success;
     }
     if (item.isKind('mml') &&
         (NodeUtil.isType(item.First, 'mo') || NodeUtil.isType(item.First, 'mi') ||
@@ -705,7 +705,7 @@ export class NotItem extends BaseItem {
           textNode = this.create('text', '\u0338') as TextNode;
           NodeUtil.appendChildren(mml, [textNode]);
         }
-        return item as MmlItem;
+        return [[item], true];
       }
     }
     // @test Negation Large
@@ -713,7 +713,7 @@ export class NotItem extends BaseItem {
     const mtextNode = this.create('node', 'mtext', [], {}, textNode);
     const paddedNode = this.create('node', 'mpadded', [mtextNode], {width: 0});
     mml = this.create('node', 'TeXAtom', [paddedNode], {texClass: TEXCLASS.REL});
-    return [mml, item];
+    return [[mml, item], true];
   }
 }
 
@@ -733,9 +733,9 @@ export class DotsItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('open') || item.isKind('left')) {
-      return true;
+      return BaseItem.success;
     }
     let dots = this.getProperty('ldots') as MmlNode;
     let top = item.First;
@@ -746,7 +746,7 @@ export class DotsItem extends BaseItem {
         dots = this.getProperty('cdots') as MmlNode;
       }
     }
-    return [dots, item];
+    return [[dots, item], true];
   }
 }
 
@@ -812,7 +812,7 @@ export class ArrayItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     // @test Array Single
     if (item.isClose && !item.isKind('over')) {
       // @test Array Single
@@ -820,14 +820,14 @@ export class ArrayItem extends BaseItem {
         // @test Array dashed column, Array solid column
         this.EndEntry();
         this.clearEnv();
-        return false;
+        return BaseItem.fail;
       }
       if (item.getProperty('isCR')) {
         // @test Enclosed bottom
         this.EndEntry();
         this.EndRow();
         this.clearEnv();
-        return false;
+        return BaseItem.fail;
       }
       this.EndTable();
       this.clearEnv();
@@ -869,12 +869,12 @@ export class ArrayItem extends BaseItem {
         // @test: Label
         if (item.isKind('close')) {
           // @test: Label
-          return newItem;
+          return [[newItem], true];
         }
         // @test MissingCloseBrace2
         throw new TexError('MissingCloseBrace', 'Missing close brace');
       }
-      return [newItem, item];
+      return [[newItem, item], true];
     }
     return super.checkItem(item);
   }
@@ -1048,12 +1048,12 @@ export class EquationItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('end')) {
       let mml = this.toMml();
       let tag = this.factory.configuration.tags.getTag();
       this.factory.configuration.tags.end();
-      return [tag ? this.factory.configuration.tags.enTag(mml, tag) : mml, item];
+      return [[tag ? this.factory.configuration.tags.enTag(mml, tag) : mml, item], true];
     }
     if (item.isKind('stop')) {
       // @test EnvMissingEnd Equation

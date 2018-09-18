@@ -89,18 +89,14 @@ export default class Stack {
       const item = NodeUtil.isNode(node) ?
         this._factory.create('mml', node) : node;
       item.global = this.global;
-      const top = this.stack.length ? this.Top().checkItem(item) : true;
-      if (!top) {
+      const [top, success] =
+        this.stack.length ? this.Top().checkItem(item) : [null, true];
+      if (!success) {
         continue;
       }
-      if (top instanceof Array) {
+      if (top) {
         this.Pop();
         this.Push(...top);
-        continue;
-      }
-      if (top instanceof BaseItem) {
-        this.Pop();
-        this.Push(top);
         continue;
       }
       this.stack.push(item);
