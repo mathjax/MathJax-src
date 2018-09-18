@@ -97,8 +97,9 @@ export default class StackItemFactory {
    * @return {}
    */
   public create(kind: string, ...parameters: any[]) {
-    return (this.item[kind] || this.item[this.defaultKind]).
-      apply(null, [this].concat(...parameters));
+    // return (this.item[kind] || this.item[this.defaultKind])(this, ...parameters);
+    return (this.item[kind] || this.item[this.defaultKind])
+      .apply(null, [this].concat(...parameters));
   }
 
 }

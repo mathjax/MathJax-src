@@ -49,7 +49,7 @@ export interface NodeStack {
 
   /**
    * Get or set the last element on the node stack without removing it.
-   * @return {MmlNode} The topmost node on the stack.
+   * @return {MmlNode} The last node on the stack.
    */
   Last: MmlNode;
 
@@ -114,7 +114,7 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public Push(...nodes: MmlNode[]) {
-    this._nodes.push.apply(this._nodes, nodes);
+    this._nodes.push(...nodes);
   }
 
 
@@ -130,7 +130,7 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public get Top(): MmlNode {
-    return this._nodes[0];
+    return this._nodes[this.Size() - 1];
   }
 
 
@@ -138,7 +138,7 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public set Top(node: MmlNode) {
-    this._nodes[0] = node;
+    this._nodes[this.Size() - 1] = node;
   }
 
 
@@ -146,7 +146,7 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public get Last(): MmlNode {
-    return this._nodes[this._nodes.length - 1];
+    return this._nodes[0];
   }
 
 
@@ -154,7 +154,7 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public set Last(node: MmlNode) {
-    this._nodes[this._nodes.length - 1] = node;
+    this._nodes[0] = node;
   }
 
 
@@ -165,7 +165,7 @@ export abstract class MmlStack implements NodeStack {
     if (n == null) {
       n = 1;
     }
-    return this._nodes.slice(0, n);
+    return this._nodes.slice(this.Size() - n);
   }
 
 
@@ -190,10 +190,7 @@ export abstract class MmlStack implements NodeStack {
   /**
    * @override
    */
-  public toMml(inferred?: boolean, forceRow?: boolean) {
-    if (inferred == null) {
-      inferred = true;
-    }
+  public toMml(inferred: boolean = true, forceRow?: boolean) {
     if (this._nodes.length === 1 && !forceRow) {
       return this.Top;
     }
@@ -437,8 +434,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     if (item.isClose && this.errors[item.kind]) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      const error = this.errors[item.kind].concat([item.getName()]);
-      throw new TexError(error[0], error[1], ...error.splice(2));
+      const [id, message] = this.errors[item.kind];
+      throw new TexError(id, message, item.getName());
     }
     if (!item.isFinal) {
       return true;
@@ -452,10 +449,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * Clears the item's environment.
    */
   public clearEnv() {
-    for (let id in this.env) {
-      if (this.env.hasOwnProperty(id)) {
-        delete this.env[id];
-      }
+    for (const id of Object.keys(this.env)) {
+      delete this.env[id];
     }
   }
 
@@ -466,11 +461,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @return {StackItem} Returns the stack item object for pipelining.
    */
   public setProperties(def: PropList) {
-    for (let id in def) {
-      if (def.hasOwnProperty(id)) {
-        this.setProperty(id, def[id]);
-      }
-    }
+    Object.assign(this._properties, def);
     return this;
   }
 
