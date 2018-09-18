@@ -218,7 +218,7 @@ export default class TexParser {
     if (!this.stack.Top().isKind('mml')) {
       return null;
     }
-    let node = this.stack.Top().Top;
+    let node = this.stack.Top().First;
     this.configuration.popParser();
     return node;
   }

@@ -146,7 +146,7 @@ export default class Stack {
    */
   public Prev(noPop?: boolean): MmlNode | void {
     const top = this.Top();
-    return noPop ? top.Last : top.Pop();
+    return noPop ? top.First : top.Pop();
   }
 
 

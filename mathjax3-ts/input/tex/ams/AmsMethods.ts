@@ -223,11 +223,11 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
                              chr: number, l: number, r: number) {
   let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
-  let top = parser.ParseArg(name);
+  let first = parser.ParseArg(name);
   let arrow = parser.create('token',
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCharCode(chr));
   let mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
-  let mpadded = parser.create('node', 'mpadded', [top], def);
+  let mpadded = parser.create('node', 'mpadded', [first], def);
   NodeUtil.setProperties(mpadded, {voffset: '.15em'});
   NodeUtil.setChild(mml, mml.over, mpadded);
   if (bot) {

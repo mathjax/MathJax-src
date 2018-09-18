@@ -181,7 +181,7 @@ export class PrimeItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    let [top0, top1] = this.TopN(2);
+    let [top0, top1] = this.Peek(2);
     if (!NodeUtil.isType(top0, 'msubsup')) {
       // @test Prime, Double Prime
       const node = this.create('node', 'msup', [top0, top1]);
@@ -224,7 +224,7 @@ export class SubsupItem extends BaseItem {
     if (item.isKind('open') || item.isKind('left')) {
       return true;
     }
-    const top = this.Top;
+    const top = this.First;
     const position = this.getProperty('position') as number;
     if (item.isKind('mml')) {
       if (this.getProperty('primes')) {
@@ -234,11 +234,11 @@ export class SubsupItem extends BaseItem {
         } else {
           // @test Prime on Prime
           NodeUtil.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
-          const node = this.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.Top]);
-          item.Top = node;
+          const node = this.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.First]);
+          item.First = node;
         }
       }
-      NodeUtil.setChild(top, position, item.Top);
+      NodeUtil.setChild(top, position, item.First);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
         NodeUtil.setProperties(top, {movesupsub: this.getProperty('movesupsub')} as PropertyList);
@@ -567,7 +567,7 @@ export class FnItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem) {
-    const top = this.Top;
+    const top = this.First;
     if (top) {
       if (item.isOpen) {
         // @test Fn Stretchy
@@ -575,7 +575,7 @@ export class FnItem extends BaseItem {
       }
       if (!item.isKind('fn')) {
         // @test Named Function
-        let mml = item.Top;
+        let mml = item.First;
         if (!item.isKind('mml') || !mml) {
           // @test Mathop Super
           return [top, item];
@@ -630,9 +630,9 @@ export class NotItem extends BaseItem {
       return true;
     }
     if (item.isKind('mml') &&
-        (NodeUtil.isType(item.Top, 'mo') || NodeUtil.isType(item.Top, 'mi') ||
-         NodeUtil.isType(item.Top, 'mtext'))) {
-      mml = item.Top;
+        (NodeUtil.isType(item.First, 'mo') || NodeUtil.isType(item.First, 'mi') ||
+         NodeUtil.isType(item.First, 'mtext'))) {
+      mml = item.First;
       c = NodeUtil.getText(mml as TextNode);
       if (c.length === 1 && !NodeUtil.getProperty(mml, 'movesupsub') &&
           NodeUtil.getChildren(mml).length === 1) {
@@ -675,7 +675,7 @@ export class DotsItem extends BaseItem {
       return true;
     }
     let dots = this.getProperty('ldots') as MmlNode;
-    let top = item.Top;
+    let top = item.First;
     // @test Operator Dots
     if (item.isKind('mml') && NodeUtil.isEmbellished(top)) {
       const tclass = NodeUtil.getTexClass(NodeUtil.getCoreMO(top));

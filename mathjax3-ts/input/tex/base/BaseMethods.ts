@@ -114,7 +114,7 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
   const top = parser.stack.Top();
   if (top.isKind('prime')) {
     // @test Prime on Prime
-    [base, primes] = top.TopN(2);
+    [base, primes] = top.Peek(2);
     parser.stack.Pop();
   } else {
     // @test Empty base2, Square, Cube
@@ -174,7 +174,7 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
   const top = parser.stack.Top();
   if (top.isKind('prime')) {
     // @test Prime on Sub
-    [base, primes] = top.TopN(2);
+    [base, primes] = top.Peek(2);
     parser.stack.Pop();
   } else {
     base = parser.stack.Prev();

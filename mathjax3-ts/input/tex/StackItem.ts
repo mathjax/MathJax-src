@@ -45,7 +45,7 @@ export interface NodeStack {
    * Get or set the topmost element on the node stack without removing it.
    * @return {MmlNode} The topmost node on the stack.
    */
-  Top: MmlNode;
+  First: MmlNode;
 
   /**
    * Get or set the last element on the node stack without removing it.
@@ -69,7 +69,7 @@ export interface NodeStack {
    * @param {number=} n Number of elements that should be returned.
    * @return {MmlNode[]} List of nodes on top of stack.
    */
-  TopN(n?: number): MmlNode[];
+  Peek(n?: number): MmlNode[];
 
   /**
    * @return {number} The size of the stack.
@@ -129,7 +129,7 @@ export abstract class MmlStack implements NodeStack {
   /**
    * @override
    */
-  public get Top(): MmlNode {
+  public get First(): MmlNode {
     return this._nodes[this.Size() - 1];
   }
 
@@ -137,7 +137,7 @@ export abstract class MmlStack implements NodeStack {
   /**
    * @override
    */
-  public set Top(node: MmlNode) {
+  public set First(node: MmlNode) {
     this._nodes[this.Size() - 1] = node;
   }
 
@@ -161,7 +161,7 @@ export abstract class MmlStack implements NodeStack {
   /**
    * @override
    */
-  public TopN(n?: number): MmlNode[] {
+  public Peek(n?: number): MmlNode[] {
     if (n == null) {
       n = 1;
     }
@@ -192,7 +192,7 @@ export abstract class MmlStack implements NodeStack {
    */
   public toMml(inferred: boolean = true, forceRow?: boolean) {
     if (this._nodes.length === 1 && !forceRow) {
-      return this.Top;
+      return this.First;
     }
     // @test Two Identifiers
     return this.create(
@@ -440,7 +440,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     if (!item.isFinal) {
       return true;
     }
-    this.Push(item.Top);
+    this.Push(item.First);
     return false;
   }
 
