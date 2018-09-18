@@ -302,8 +302,8 @@ BaseMethods.SetStyle = function(parser: TexParser, name: string,
   parser.stack.env['style'] = texStyle;
   parser.stack.env['level'] = level;
   parser.Push(
-    parser.itemFactory.create('style').setProperties(
-      {styles: {displaystyle: style, scriptlevel: level}}) );
+    parser.itemFactory.create('style').setProperty(
+      'styles', {displaystyle: style, scriptlevel: level}));
 };
 
 
@@ -316,7 +316,7 @@ BaseMethods.SetStyle = function(parser: TexParser, name: string,
 BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
   parser.stack.env['size'] = size;
   parser.Push(
-    parser.itemFactory.create('style').setProperties({styles: {mathsize: size + 'em'}}) );
+    parser.itemFactory.create('style').setProperty('styles', {mathsize: size + 'em'}));
 };
 
 // TODO: Will be replaced by the color extension!
@@ -364,7 +364,7 @@ BaseMethods.LeftRight = function(parser: TexParser, name: string) {
   const first = name.substr(1);
   parser.Push(
     parser.itemFactory.create(first)
-      .setProperties({delim: parser.GetDelimiter(name)}) );
+      .setProperty('delim', parser.GetDelimiter(name)));
 };
 
 /**
@@ -455,7 +455,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
     NodeUtil.copyChildren(op, node);
     op = top.Last = node;
   }
-  NodeUtil.setProperties(op, {'movesupsub': limits ? true : false});
+  NodeUtil.setProperty(op, 'movesupsub', limits ? true : false);
   NodeUtil.setProperties(NodeUtil.getCoreMO(op), {'movablelimits': false});
   if (NodeUtil.getAttribute(op, 'movablelimits') ||
       NodeUtil.getProperty(op, 'movablelimits')) {
@@ -473,7 +473,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
  */
 BaseMethods.Over = function(parser: TexParser, name: string, open: string, close: string) {
   // @test Over
-  const mml = parser.itemFactory.create('over').setProperties({name: parser.currentCS}) ;
+  const mml = parser.itemFactory.create('over').setProperty('name', parser.currentCS) ;
   if (open || close) {
     // @test Choose
     mml.setProperty('open', open);
@@ -672,7 +672,7 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
     node = parser.create('node', 'TeXAtom', [mml],
                                                    {texClass: TEXCLASS.OP, movesupsub: true});
   }
-  NodeUtil.setProperties(node, {subsupOK: true});
+  NodeUtil.setProperty(node, 'subsupOK', true);
   parser.Push(node);
 };
 
@@ -1109,7 +1109,7 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
     parser.i = 0;
   }
   // @test Matrix Braces, Matrix Columns, Matrix Rows.
-  const array = parser.itemFactory.create('array').setProperties({requireClose: true});
+  const array = parser.itemFactory.create('array').setProperty('requireClose', true);
   array.arraydef = {
     rowspacing: (vspacing || '4pt'),
     columnspacing: (spacing || '1em')
@@ -1148,7 +1148,7 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
 BaseMethods.Entry = function(parser: TexParser, name: string) {
   // @test Label, Array, Cross Product Formula
   parser.Push(
-    parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}) );
+    parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}));
   if (parser.stack.Top().getProperty('isCases')) {
     //
     //  Make second column be in \text{...} (unless it is already
@@ -1232,7 +1232,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
 BaseMethods.Cr = function(parser: TexParser, name: string) {
   // @test Cr Linebreak, Misplaced Cr
   parser.Push(
-    parser.itemFactory.create('cell').setProperties({isCR: true, name: name}) );
+    parser.itemFactory.create('cell').setProperties({isCR: true, name: name}));
 };
 
 
@@ -1356,7 +1356,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     // environment. Otherwise we have a standard LaTeX environment that is
     // handled with begin and end items.
     if (!macro.args[0]) {
-      const mml = parser.itemFactory.create('end').setProperties({name: env});
+      const mml = parser.itemFactory.create('end').setProperty('name', env);
       parser.Push(mml);
       return;
     }
@@ -1469,7 +1469,7 @@ BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: 
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
   return parser.itemFactory.create('equation', numbered).
-    setProperties({name: begin.getName()});
+    setProperty('name', begin.getName());
 };
 
 

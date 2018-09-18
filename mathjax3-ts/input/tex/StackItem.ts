@@ -269,8 +269,9 @@ export interface StackItem extends NodeStack {
    * Set a property.
    * @param {string} key Property name.
    * @param {Prop} value Property value.
+   * @return {StackItem} The item for pipelining.
    */
-  setProperty(key: string, value: Prop): void;
+  setProperty(key: string, value: Prop): StackItem;
 
   /**
    * Convenience method for returning the string property "name".
@@ -379,6 +380,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    */
   public setProperty(key: string, value: Prop) {
     this._properties[key] = value;
+    return this;
   }
 
 

@@ -247,7 +247,7 @@ NewcommandMethods.BeginEnv = function(parser: TexParser, begin: StackItem,
     parser.string = rest;
     parser.i = 0;
     // Close this environment.
-    return parser.itemFactory.create('end').setProperties({name: begin.getName()});
+    return parser.itemFactory.create('end').setProperty('name', begin.getName());
   }
   if (n) {
     // @test Newenvironment Optional, Newenvironment Arg Optional
@@ -267,7 +267,7 @@ NewcommandMethods.BeginEnv = function(parser: TexParser, begin: StackItem,
   parser.string = ParseUtil.addArgs(parser, bdef,
                                     parser.string.slice(parser.i));
   parser.i = 0;
-  return parser.itemFactory.create('beginEnv').setProperties({name: begin.getName()});
+  return parser.itemFactory.create('beginEnv').setProperty('name', begin.getName());
 };
 
 NewcommandMethods.Macro = BaseMethods.Macro;

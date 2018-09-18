@@ -228,18 +228,18 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCharCode(chr));
   let mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
   let mpadded = parser.create('node', 'mpadded', [first], def);
-  NodeUtil.setProperties(mpadded, {voffset: '.15em'});
+  NodeUtil.setAttribute(mpadded, 'voffset', '.15em');
   NodeUtil.setChild(mml, mml.over, mpadded);
   if (bot) {
     // @test Above Below Left Arrow, Above Below Right Arrow
     let bottom = new TexParser(bot, parser.stack.env, parser.configuration).mml();
     mpadded = parser.create('node', 'mpadded', [bottom], def);
-    NodeUtil.setProperties(mpadded, {voffset: '-.24em'});
+    NodeUtil.setAttribute(mpadded, 'voffset', '-.24em');
     NodeUtil.setChild(mml, mml.under, mpadded);
   }
   // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
   //       Above Right Arrow in Context
-  NodeUtil.setProperties(mml, {subsupOK: true});
+  NodeUtil.setProperty(mml, 'subsupOK', true);
   parser.Push(mml);
 };
 
@@ -331,7 +331,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
   }
   if (left || right) {
     // @test Normal Binomial, Text Binomial, Display Binomial
-    NodeUtil.setProperties(frac, {withDelims: true});
+    NodeUtil.setProperty(frac, 'withDelims', true);
     frac = ParseUtil.fixedFence(parser.configuration, left, frac, right);
   }
   if (style !== '') {

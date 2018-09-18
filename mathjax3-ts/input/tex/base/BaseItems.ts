@@ -248,7 +248,7 @@ export class SubsupItem extends BaseItem {
           NodeUtil.setChild(top, 2, this.getProperty('primes') as MmlNode);
         } else {
           // @test Prime on Prime
-          NodeUtil.setProperties(this.getProperty('primes') as MmlNode, {variantForm: true});
+          NodeUtil.setProperty(this.getProperty('primes') as MmlNode, 'variantForm', true);
           const node = this.create('node', 'mrow', [this.getProperty('primes') as MmlNode, item.First]);
           item.First = node;
         }
@@ -256,7 +256,7 @@ export class SubsupItem extends BaseItem {
       NodeUtil.setChild(top, position, item.First);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
-        NodeUtil.setProperties(top, {movesupsub: this.getProperty('movesupsub')} as PropertyList);
+        NodeUtil.setProperty(top, 'movesupsub', this.getProperty('movesupsub') as Property);
       }
       const result = this.factory.create('mml', top);
       return result;
@@ -320,7 +320,7 @@ export class OverItem extends BaseItem {
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Choose
-        NodeUtil.setProperties(mml, {'withDelims': true});
+        NodeUtil.setProperty(mml, 'withDelims', true);
         mml = ParseUtil.fixedFence(this.factory.configuration,
                                    this.getProperty('open') as string, mml,
                                    this.getProperty('close') as string);
@@ -842,7 +842,7 @@ export class ArrayItem extends BaseItem {
         if (this.arraydef['rowlines']) {
           // @test Enclosed dashed row, Enclosed solid row,
           this.arraydef['rowlines'] =
-            (this.arraydef['rowlines'] as string).replace(/none( none) + $/, 'none');
+            (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
         }
         // @test Enclosed left right
         mml = this.create('node', 'menclose', [mml],

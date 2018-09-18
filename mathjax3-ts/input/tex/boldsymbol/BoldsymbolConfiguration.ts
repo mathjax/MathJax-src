@@ -94,10 +94,10 @@ export function rewriteBoldTokens(arg: {data: ParseOptions}) {
     if (NodeUtil.getProperty(node, 'fixBold')) {
       let variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
       if (variant == null) {
-        NodeUtil.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
+        NodeUtil.setAttribute(node, 'mathvariant', TexConstant.Variant.BOLD);
       } else {
-        NodeUtil.setProperties(node,
-                               {mathvariant: BOLDVARIANT[variant] || variant});
+        NodeUtil.setAttribute(node,
+                              'mathvariant', BOLDVARIANT[variant] || variant);
       }
       NodeUtil.removeProperties(node, 'fixBold');
     }
