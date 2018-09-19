@@ -26,6 +26,7 @@
 import {StackItemClass, StackItem, BaseItem} from './StackItem.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import ParseOptions from './ParseOptions.js';
+import {AbstractFactory} from '../../core/Tree/Factory.js';
 
 
 class DummyItem extends BaseItem {}
@@ -35,34 +36,29 @@ class DummyItem extends BaseItem {}
  * classes. They can be changed, deleted or added to, if and when necessary.
  *
  * @constructor
+ * @extends {AbstractFactory}
  */
-export default class StackItemFactory {
+export default class StackItemFactory extends AbstractFactory<StackItem, StackItemClass>{
 
-  private static DefaultStackItems: {[kind: string]: StackItemClass} = {
+  /**
+   * @override
+   */
+  public static DefaultStackItems: {[kind: string]: StackItemClass} = {
     [DummyItem.prototype.kind]: DummyItem
   };
 
+
   /**
-   * A default item.
+   * @override
    */
-  public defaultKind: string = 'dummy';
+  public defaultKind = 'dummy';
+
 
   /**
    * The parser configuration.
    * @type {ParseOptions} 
    */
   public configuration: ParseOptions = null;
-
-  private itemMap: Map<string, StackItemClass> = new Map();
-
-  private item: {[kind: string]: (factory: StackItemFactory, ...args: any[]) => StackItem} = {};
-
-  /**
-   * @constructor
-   */
-  constructor() {
-    this.addStackItems(StackItemFactory.DefaultStackItems);
-  }
 
 
   /**
@@ -71,35 +67,8 @@ export default class StackItemFactory {
    */
   public addStackItems(stackItems: {[kind: string]: StackItemClass}) {
     for (const kind of Object.keys(stackItems)) {
-      this.itemMap.set(kind, stackItems[kind]);
-      let constr = this.itemMap.get(kind);
-      this.item[kind] = (factory: StackItemFactory, ...args: any[]) => {
-        return new constr(factory, ...args);
-      };
+      this.setNodeClass(kind, stackItems[kind]);
     }
-  }
-
-
-  /**
-   * Removes stack item classs from the factory.
-   * @param {string[]} keys The classes to remove.
-   */
-  public removeStackItems(keys: string[]) {
-    for (const key of keys) {
-      this.itemMap.delete(key);
-    }
-  }
-
-
-  /**
-   *
-   * @param {string} kind The type of
-   * @return {}
-   */
-  public create(kind: string, ...parameters: any[]) {
-    // return (this.item[kind] || this.item[this.defaultKind])(this, ...parameters);
-    return (this.item[kind] || this.item[this.defaultKind])
-      .apply(null, [this].concat(...parameters));
   }
 
 }

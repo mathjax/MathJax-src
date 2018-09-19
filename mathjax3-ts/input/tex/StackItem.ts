@@ -23,6 +23,7 @@
  */
 
 import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
+import {FactoryNodeClass} from '../../core/Tree/Factory.js';
 import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 
@@ -274,6 +275,13 @@ export interface StackItem extends NodeStack {
   setProperty(key: string, value: Prop): StackItem;
 
   /**
+   * Sets a list of properties.
+   * @param {PropList} def The properties to set.
+   * @return {StackItem} Returns the stack item object for pipelining.
+   */
+  setProperties(def: PropList): StackItem;
+  
+  /**
    * Convenience method for returning the string property "name".
    * @return {string} The value for the name property.
    */
@@ -306,8 +314,8 @@ export interface StackItem extends NodeStack {
 
 }
 
-export interface StackItemClass {
-  new (factory: StackItemFactory, ...args: any[]): StackItem;
+export interface StackItemClass extends FactoryNodeClass<StackItem> {
+  // new (factory: StackItemFactory, ...args: any[]): StackItem;
 }
 
 
@@ -469,9 +477,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
 
   /**
-   * Sets a list of properties.
-   * @param {PropList} def The properties to set.
-   * @return {StackItem} Returns the stack item object for pipelining.
+   * @override
    */
   public setProperties(def: PropList) {
     Object.assign(this._properties, def);

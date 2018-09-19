@@ -1109,7 +1109,7 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
     parser.i = 0;
   }
   // @test Matrix Braces, Matrix Columns, Matrix Rows.
-  const array = parser.itemFactory.create('array').setProperty('requireClose', true);
+  const array = parser.itemFactory.create('array').setProperty('requireClose', true) as sitem.ArrayItem;
   array.arraydef = {
     rowspacing: (vspacing || '4pt'),
     columnspacing: (spacing || '1em')
@@ -1395,7 +1395,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
   let lines = ('c' + align).replace(/[^clr|:]/g, '').replace(/[^|:]([|:])+/g, '$1');
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  const array = parser.itemFactory.create('array');
+  const array = parser.itemFactory.create('array') as sitem.ArrayItem;
   array.arraydef = {
     columnalign: align,
     columnspacing: (spacing || '1em'),
@@ -1492,7 +1492,8 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
   }
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  let newItem = parser.itemFactory.create('eqnarray', begin.getName(), numbered, taggable, parser.stack.global);
+  let newItem = parser.itemFactory.create('eqnarray', begin.getName(),
+                                          numbered, taggable, parser.stack.global) as sitem.ArrayItem;
   newItem.arraydef = {
     displaystyle: true,
     columnalign: align,

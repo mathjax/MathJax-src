@@ -87,7 +87,7 @@ export default class Stack {
         continue;
       }
       const item = NodeUtil.isNode(node) ?
-        this._factory.create('mml', node) : node;
+        this._factory.create('mml', node) : node as StackItem;
       item.global = this.global;
       const [top, success] =
         this.stack.length ? this.Top().checkItem(item) : [null, true];

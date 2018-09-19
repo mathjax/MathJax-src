@@ -117,7 +117,7 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
   // @test Shove*, Multline
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
-  const item = parser.itemFactory.create('multline', numbered, parser.stack);
+  const item = parser.itemFactory.create('multline', numbered, parser.stack) as ArrayItem;
   item.arraydef = {
     displaystyle: true,
     rowspacing: '.5em',
