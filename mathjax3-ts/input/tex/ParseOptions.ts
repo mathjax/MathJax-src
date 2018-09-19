@@ -28,7 +28,8 @@ import {HandlerType, SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
-import {OptionList} from '../../util/Options.js';
+import {defaultOptions, OptionList} from '../../util/Options.js';
+import {Configuration} from './Configuration.js';
 
 
 /**
@@ -46,19 +47,19 @@ export default class ParseOptions {
    * A set of options, mapping names to string or boolean values.
    * @type {OptionList}
    */
-  public options: OptionList;
+  public options: OptionList = {};
 
   /**
    * The current item factory.
    * @type {StackItemFactory}
    */
-  public itemFactory: StackItemFactory = new StackItemFactory();
+  public itemFactory: StackItemFactory;
 
   /**
    * The current node factory.
    * @type {NodeFactory}
    */
-  public nodeFactory: NodeFactory = new NodeFactory();
+  public nodeFactory: NodeFactory;
 
   /**
    * The current tagging object.
@@ -101,8 +102,18 @@ export default class ParseOptions {
    * @param {{[key: string]: (string|boolean)}} setting A list of option
    *     settings. Those are added to the default options.
    */
-  public constructor(setting: OptionList = {}) {
-    this.options = setting;
+  public constructor(configuration: Configuration, options: OptionList[] = []) {
+    this.handlers = new SubHandlers(configuration);
+    // Add node factory methods from packages.
+    this.nodeFactory = new NodeFactory();
+    this.nodeFactory.configuration = this;
+    this.nodeFactory.setCreators(configuration.nodes);
+    // Add stackitems from packages.
+    this.itemFactory = new StackItemFactory(configuration.items);
+    this.itemFactory.configuration = this;
+    // Set default options for parser from packages and for tags.
+    defaultOptions(this.options, ...options);
+    defaultOptions(this.options, configuration.options);
   }
 
 

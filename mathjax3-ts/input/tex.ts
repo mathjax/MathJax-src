@@ -35,7 +35,6 @@ import TexError from './tex/TexError.js';
 import ParseOptions from './tex/ParseOptions.js';
 import {TagsFactory} from './tex/Tags.js';
 import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
-import {SubHandlers} from './tex/MapHandler.js';
 // Import base as it is the default package loaded.
 import './tex/base/BaseConfiguration.js';
 
@@ -103,26 +102,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
 
   /**
-   * Initialises the parse options.
-   * @param {Configuration} configuration A configuration.
-   * @return {ParseOptions} The initialised parse options.
-   */
-  private static options(configuration: Configuration): ParseOptions {
-    let options = new ParseOptions();
-    options.handlers = new SubHandlers(configuration);
-    options.itemFactory.configuration = options;
-    // Add node factory methods from packages.
-    options.nodeFactory.configuration = options;
-    options.nodeFactory.setCreators(configuration.nodes);
-    // Add stackitems from packages.
-    options.itemFactory.addStackItems(configuration.items);
-    // Set default options for parser from packages and for tags.
-    defaultOptions(options.options, TeX.OPTIONS, TagsFactory.OPTIONS, configuration.options);
-    return options;
-  };
-
-
-  /**
    * Initialises the Tags factory. Add tagging structures from packages and set
    * tagging to given default.
    * @param {ParseOptions} options The parse options.
@@ -141,8 +120,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   constructor(options: OptionList = {}) {
     let packages = options['packages'] || TeX.OPTIONS['packages'];
     let configuration = TeX.configure(packages);
-    let parseOptions = TeX.options(configuration);
-    defaultOptions(parseOptions.options, {'packages': packages});
+    let parseOptions = new ParseOptions(configuration,
+                                        [TeX.OPTIONS, TagsFactory.OPTIONS, {'packages': packages}]);
     let [tex, find, rest] = separateOptions(options, FindTeX.OPTIONS, parseOptions.options);
     super(tex);
     userOptions(parseOptions.options, options);

@@ -38,7 +38,7 @@ class DummyItem extends BaseItem {}
  * @constructor
  * @extends {AbstractFactory}
  */
-export default class StackItemFactory extends AbstractFactory<StackItem, StackItemClass>{
+export default class StackItemFactory extends AbstractFactory<StackItem, StackItemClass> {
 
   /**
    * @override
@@ -59,16 +59,5 @@ export default class StackItemFactory extends AbstractFactory<StackItem, StackIt
    * @type {ParseOptions} 
    */
   public configuration: ParseOptions = null;
-
-
-  /**
-   * Adds a list of stack items to the current factory.
-   * @param {Object.<string, StackItemClass>} stackItems A list of stackitems.
-   */
-  public addStackItems(stackItems: {[kind: string]: StackItemClass}) {
-    for (const kind of Object.keys(stackItems)) {
-      this.setNodeClass(kind, stackItems[kind]);
-    }
-  }
 
 }
