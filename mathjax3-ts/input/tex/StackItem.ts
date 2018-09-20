@@ -341,7 +341,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * A list of basic errors.
    * @type {{[key: string]: string[]}}
    */
-  protected errors: {[key: string]: string[]} = {
+  protected static errors: {[key: string]: string[]} = {
     // @test ExtraOpenMissingClose
     end: ['MissingBeginExtraEnd', 'Missing \\begin{%1} or extra \\end{%1}'],
     // @test ExtraCloseMissingOpen
@@ -452,10 +452,10 @@ export abstract class BaseItem extends MmlStack implements StackItem {
       // @test Ampersand-error
       throw new TexError('Misplaced', 'Misplaced %1', item.getName());
     }
-    if (item.isClose && this.errors[item.kind]) {
+    if (item.isClose && this.getErrors(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      const [id, message] = this.errors[item.kind];
+      const [id, message] = this.getErrors(item.kind);
       throw new TexError(id, message, item.getName());
     }
     if (!item.isFinal) {
@@ -498,6 +498,19 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    */
   public toString() {
     return this.kind + '[' + this.nodes.join('; ') + ']';
+  }
+
+
+  /**
+   * Get error messages for a particular types of stack items. This reads error
+   * messages from the static errors object, which can be extended in
+   * subclasses.
+   * @param {string} kind The stack item type.
+   * @return {string[]} The list of arguments for the TeXError.
+   */
+  public getErrors(kind: string): string[] {
+    const CLASS = (this.constructor as typeof BaseItem);
+    return (CLASS.errors || {})[kind] || BaseItem.errors[kind];
   }
 
 }

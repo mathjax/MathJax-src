@@ -112,15 +112,15 @@ export class StopItem extends BaseItem {
  */
 export class OpenItem extends BaseItem {
 
+
   /**
    * @override
    */
-  constructor(factory: StackItemFactory) {
-    super(factory);
+  protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test ExtraOpenMissingClose
-    this.errors['stop'] = ['ExtraOpenMissingClose',
-                           'Extra open brace or missing close brace'];
-  }
+    'stop': ['ExtraOpenMissingClose',
+             'Extra open brace or missing close brace']
+  });
 
   /**
    * @override
@@ -212,18 +212,17 @@ export class SubsupItem extends BaseItem {
   /**
    * @override
    */
-  constructor(factory: StackItemFactory, ...nodes: MmlNode[]) {
-    super(factory, ...nodes);
+  protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test MissingScript Sub, MissingScript Sup
-    this.errors['stop'] = ['MissingScript',
-                           'Missing superscript or subscript argument'];
+    'stop': ['MissingScript',
+             'Missing superscript or subscript argument'],
     // @test MissingOpenForSup
-    this.errors['sup'] =  ['MissingOpenForSup',
-                           'Missing open brace for superscript'];
+    'sup': ['MissingOpenForSup',
+            'Missing open brace for superscript'],
     // @test MissingOpenForSub
-    this.errors['sub'] =  ['MissingOpenForSub',
-                           'Missing open brace for subscript'];
-  }
+    'sub': ['MissingOpenForSub',
+            'Missing open brace for subscript']
+  });
 
   /**
    * @override
@@ -263,7 +262,7 @@ export class SubsupItem extends BaseItem {
     }
     if (super.checkItem(item)[1]) {
       // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
-      const error = this.errors[['', 'sub', 'sup'][position]];
+      const error = this.getErrors(['', 'sub', 'sup'][position]);
       throw new TexError(error[0], error[1], ...error.splice(2));
     }
   }
@@ -350,12 +349,19 @@ export class LeftItem extends BaseItem {
   /**
    * @override
    */
+  protected static errors = Object.assign(Object.create(BaseItem.errors), {
+    // @test ExtraLeftMissingRight
+    'stop': ['ExtraLeftMissingRight',
+             'Extra \\left or missing \\right']
+  });
+
+
+  /**
+   * @override
+   */
   constructor(factory: StackItemFactory) {
     super(factory);
-    this.setProperty('delim', '('),
-    // @test ExtraLeftMissingRight
-    this.errors['stop'] = ['ExtraLeftMissingRight',
-                           'Extra \\left or missing \\right'];
+    this.setProperty('delim', '(');
   }
 
   /**

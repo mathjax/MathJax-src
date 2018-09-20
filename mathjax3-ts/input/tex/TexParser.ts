@@ -179,7 +179,8 @@ export default class TexParser {
    * Parses the current input string.
    */
   public Parse() {
-    let c, n;
+    let c: string;
+    let n: number;
     while (this.i < this.string.length) {
       c = this.string.charAt(this.i++);
       n = c.charCodeAt(0);
