@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import {Entities} from '../Entities.js';
+import * as Entities from '../Entities.js';
 
 Entities.add({
     QUOT: '\u0022',

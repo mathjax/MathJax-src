@@ -32,7 +32,7 @@ import {BBox} from '../BBox.js';
 import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmunder wrapper for the MmlMunder object
  *
  * @template N  The HTMLElement node class
@@ -45,6 +45,9 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
     public static useIC: boolean = true;
 
     public static styles: StyleList = {
+        'mjx-over': {
+            'text-align': 'left'
+        },
         'mjx-munder:not([limits="false"])': {
             display: 'inline-table',
         },
@@ -56,14 +59,14 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
         }
     };
 
-    /*
+    /**
      * @override
      */
     public get script() {
         return this.childNodes[(this.node as MmlMunder).under];
     }
 
-    /*
+    /**
      * @override
      * @constructor
      */
@@ -72,7 +75,7 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
         this.stretchChildren();
     }
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -101,7 +104,7 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
         this.adjustUnderDepth(under, underbox);
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
@@ -125,7 +128,7 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
 }
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmover wrapper for the MmlMover object
  *
  * @template N  The HTMLElement node class
@@ -147,14 +150,14 @@ export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
         }
     };
 
-    /*
+    /**
      * @override
      */
     public get script() {
         return this.childNodes[(this.node as MmlMover).over];
     }
 
-    /*
+    /**
      * @override
      * @constructor
      */
@@ -232,14 +235,14 @@ export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
     };
 
     /*
-     * @return{CHTMLWrapper)   The wrapped under node
+     * @return {CHTMLWrapper)   The wrapped under node
      */
     public get underChild() {
         return this.childNodes[(this.node as MmlMunderover).under];
     }
 
     /*
-     * @return{CHTMLWrapper)   The wrapped overder node
+     * @return {CHTMLWrapper)   The wrapped overder node
      */
     public get overChild() {
         return this.childNodes[(this.node as MmlMunderover).over];

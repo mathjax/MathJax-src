@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMroot node class (subclass of AbstractMmlBaseNode)
  */
 
@@ -36,21 +36,21 @@ export class MmlSemantics extends AbstractMmlBaseNode {
         encoding: null
     };
 
-    /*
+    /**
      * @return {string}  The semantics kind
      */
     public get kind() {
         return 'semantics';
     }
 
-    /*
+    /**
      * @return {number}  <semantics> requires at least one node
      */
     public get arity() {
         return 1;
     }
 
-    /*
+    /**
      * @return {boolean}  Ignore <semantics> when looking for partent node
      */
     public get notParent() {
@@ -60,7 +60,7 @@ export class MmlSemantics extends AbstractMmlBaseNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMroot node class (subclass of AbstractMmlNode)
  */
 
@@ -74,14 +74,14 @@ export class MmlAnnotationXML extends AbstractMmlNode {
         src: null
     };
 
-    /*
+    /**
      * @return {string}  The annotation-xml kind
      */
     public get kind() {
         return 'annotation-xml';
     }
 
-    /*
+    /**
      * Children are XMLNodes, so don't bother inheritting to them
      *
      * @override
@@ -90,7 +90,7 @@ export class MmlAnnotationXML extends AbstractMmlNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMroot node class (subclass of MmlAnnotationXML)
  */
 
@@ -102,7 +102,7 @@ export class MmlAnnotation extends MmlAnnotationXML {
         isChars: true
     };
 
-    /*
+    /**
      * @return {string}  The annotation-xml kind
      */
     public get kind() {

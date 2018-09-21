@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMi node class (subclass of AbstractMmlTokenNode)
  */
 
@@ -33,7 +33,7 @@ export class MmlMi extends AbstractMmlTokenNode {
     public static defaults: PropertyList = {
         ...AbstractMmlTokenNode.defaults
     };
-    /*
+    /**
      * Patterns for operator names and single-character texts
      */
     public static operatorName: RegExp = /^[a-z][a-z0-9]*$/i;
@@ -41,14 +41,14 @@ export class MmlMi extends AbstractMmlTokenNode {
 
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The mi kind
      */
     public get kind() {
         return 'mi';
     }
 
-    /*
+    /**
      * Do the usual inheritance, then check the text length to see
      *   if mathvariant should be normal or italic.
      *
@@ -63,7 +63,7 @@ export class MmlMi extends AbstractMmlTokenNode {
         }
     }
 
-    /*
+    /**
      * Mark multi-character texts as OP rather than ORD for spacing purposes
      *
      * @override

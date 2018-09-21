@@ -21,14 +21,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-/*
+/**
  * The data for a selector
  */
 export type StyleData = {
     [property: string]: string | number;
 };
 
-/*
+/**
  * A list of selectors and their data (basically a stylesheet)
  */
 export type StyleList = {
@@ -36,33 +36,33 @@ export type StyleList = {
 };
 
 /******************************************************************************/
-/*
+/**
  * The CssStyles class (for managing a collection of CSS style definitions)
  */
 
 export class CssStyles {
-    /*
+    /**
      * The styles as they currently stand
      */
     protected styles: StyleList = {};
 
-    /*
-     * @return{string}  The styles as a CSS string
+    /**
+     * @return {string}  The styles as a CSS string
      */
     get cssText() {
         return this.getStyleString();
     }
 
-    /*
-     * @param{StyleList} styles  The initial styles to use, if any
+    /**
+     * @param {StyleList} styles  The initial styles to use, if any
      * @constructor
      */
     constructor(styles: StyleList = null) {
         this.addStyles(styles);
     }
 
-    /*
-     * @param{StyleList} styles  The styles to combine with the existing ones
+    /**
+     * @param {StyleList} styles  The styles to combine with the existing ones
      */
     public addStyles(styles: StyleList) {
         if (!styles) return;
@@ -74,8 +74,8 @@ export class CssStyles {
         }
     }
 
-    /*
-     * @param{string[]} selectors  The selectors for the styles to remove
+    /**
+     * @param {string[]} selectors  The selectors for the styles to remove
      */
     public removeStyles(...selectors: string[]) {
         for (const selector of selectors) {
@@ -83,8 +83,8 @@ export class CssStyles {
         }
     }
 
-    /*
-     * @return{string} The CSS string for the style list
+    /**
+     * @return {string} The CSS string for the style list
      */
     public getStyleString() {
         const selectors = Object.keys(this.styles);
@@ -96,9 +96,9 @@ export class CssStyles {
         return defs.join('\n\n');
     }
 
-    /*
-     * @param{StyleData} styles  The style data to be stringified
-     * @return{string}           The CSS string for the given data
+    /**
+     * @param {StyleData} styles  The style data to be stringified
+     * @return {string}           The CSS string for the given data
      */
     public getStyleDefString(styles: StyleData) {
         const properties = Object.keys(styles);

@@ -27,7 +27,7 @@ import {INHERIT} from '../Attributes.js';
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMtr node class (subclass of AbstractMmlNode)
  */
 
@@ -39,21 +39,21 @@ export class MmlMtr extends AbstractMmlNode {
         groupalign: INHERIT
     };
 
-    /*
+    /**
      * @return {string}  The mtr kind
      */
     public get kind() {
         return 'mtr';
     }
 
-    /*
+    /**
      * @return {boolean}  <mtr> can contain linebreaks
      */
     public get linebreakContainer() {
         return true;
     }
 
-    /*
+    /**
      * Inherit the mtr attributes
      *
      * @override
@@ -79,7 +79,7 @@ export class MmlMtr extends AbstractMmlNode {
         }
     }
 
-    /*
+    /**
      * Check that parent is mtable and children are mtd
      *
      * @override
@@ -100,7 +100,7 @@ export class MmlMtr extends AbstractMmlNode {
         super.verifyChildren(options);
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {
@@ -113,20 +113,20 @@ export class MmlMtr extends AbstractMmlNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMlabeledtr node class (subclass of MmlMtr)
  */
 
 export class MmlMlabeledtr extends MmlMtr {
 
-    /*
+    /**
      * @return {string}  The mtr kind
      */
     public get kind() {
         return 'mlabeledtr';
     }
 
-    /*
+    /**
      * @return {number}  <mlabeledtr> requires at least one child (the label)
      */
     get arity() {

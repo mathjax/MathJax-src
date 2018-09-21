@@ -27,7 +27,7 @@ import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmspace wrapper for the MmlMspace object
  *
  * @template N  The HTMLElement node class
@@ -37,7 +37,7 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMspace.prototype.kind;
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -59,7 +59,7 @@ export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
@@ -69,7 +69,7 @@ export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
         bbox.d = this.length2em(attributes.get('depth'), 0);
     }
 
-    /*
+    /**
      * No contents, so no need for variant class
      *
      * @override

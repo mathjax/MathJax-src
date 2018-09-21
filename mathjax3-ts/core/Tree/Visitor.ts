@@ -24,19 +24,19 @@
 import {Node, NodeClass, AbstractNode} from './Node.js';
 import {NodeFactory} from './NodeFactory.js';
 
-/*
+/**
  * The type for the functions associated with each node class
  */
 export type VisitorFunction = (visitor: NodeFactory<Node, NodeClass>, node: Node, ...args: any[]) => any;
 
 /*****************************************************************/
-/*
+/**
  *  Implements the Visitor interface
  */
 
 export interface Visitor {
 
-    /*
+    /**
      * Visit the tree rooted at the given node (passing along any needed parameters)
      *
      * @param {Node} tree   The node that is the root of the tree
@@ -45,7 +45,7 @@ export interface Visitor {
      */
     visitTree(tree: Node, ...args: any[]): any;
 
-    /*
+    /**
      * Visit a node by calling the visitor function for the givn type of node
      *  (passing along any needed parameters)
      *
@@ -55,7 +55,7 @@ export interface Visitor {
      */
     visitNode(node: Node, ...args: any[]): any;
 
-    /*
+    /**
      * The default visitor function for when no node-specific function is defined
      *
      * @param {Node} node   The node to visit
@@ -64,7 +64,7 @@ export interface Visitor {
      */
     visitDefault(node: Node, ...args: any[]): any;
 
-    /*
+    /**
      * Define a visitor function for a given node kind
      *
      * @param {string} kind  The node kind for which the handler is being defined
@@ -72,31 +72,31 @@ export interface Visitor {
      */
     setNodeHandler(kind: string, handler: VisitorFunction): void;
 
-    /*
+    /**
      * Remove the visitor function for a given node kind
      *
      * @param {string} kind  The node kind whose visitor function is to be removed
      */
     removeNodeHandler(kind: string): void;
 
-    /*
+    /**
      * The various visitor functions implemented by the subclasses, and any data they need
      */
     [property: string]: any;
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the generic Visitor object
  */
 
 export abstract class AbstractVisitor implements Visitor {
-    /*
+    /**
      * Holds the mapping from node kinds to visitor funcitons
      */
     protected nodeHandlers: Map<string, VisitorFunction> = new Map();
 
-    /*
+    /**
      *  Visitor functions are named "visitKindNode" where "Kind" is replaced by
      *    the node kind; e.g., visitTextNode for kind = text.
      *
@@ -107,7 +107,7 @@ export abstract class AbstractVisitor implements Visitor {
         return 'visit' + kind.charAt(0).toUpperCase() + kind.substr(1) + 'Node';
     }
 
-    /*
+    /**
      * Create the node handler map by looking for methods with the correct names
      *   based on the node kinds available from the factory.
      *
@@ -123,14 +123,14 @@ export abstract class AbstractVisitor implements Visitor {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public visitTree(tree: Node, ...args: any[]) {
         return this.visitNode(tree, ...args);
     }
 
-    /*
+    /**
      * @override
      */
     public visitNode(node: Node, ...args: any[]) {
@@ -138,7 +138,7 @@ export abstract class AbstractVisitor implements Visitor {
         return handler.call(this, node, ...args);
     }
 
-    /*
+    /**
      * @override
      */
     public visitDefault(node: Node, ...args: any[]) {
@@ -149,14 +149,14 @@ export abstract class AbstractVisitor implements Visitor {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public setNodeHandler(kind: string, handler: VisitorFunction) {
         this.nodeHandlers.set(kind, handler);
     }
 
-    /*
+    /**
      * @override
      */
     public removeNodeHandler(kind: string) {

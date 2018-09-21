@@ -26,7 +26,7 @@ import {AbstractMmlBaseNode, MmlNode} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMtd node class (subclass of AbstractMmlBaseNode)
  */
 
@@ -40,28 +40,28 @@ export class MmlMtd extends AbstractMmlBaseNode {
         groupalign: INHERIT
     };
 
-    /*
+    /**
      * @return {string}  The mtd kind
      */
     public get kind() {
         return 'mtd';
     }
 
-    /*
+    /**
      * @return {number}  <mtd> has an inferred mrow
      */
     public get arity() {
         return -1;
     }
 
-    /*
+    /**
      * @return {boolean}  <mtd> can contain line breaks
      */
     public get linebreakContainer() {
         return true;
     }
 
-    /*
+    /**
      * Check that parent is mtr
      *
      * @override
@@ -74,7 +74,7 @@ export class MmlMtd extends AbstractMmlBaseNode {
         super.verifyChildren(options);
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {

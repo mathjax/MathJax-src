@@ -27,7 +27,7 @@ import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
 import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLTeXAtom wrapper for the TeXAtom object
  *
  * @template N  The HTMLElement node class
@@ -37,7 +37,7 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 export class CHTMLTeXAtom<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = TeXAtom.prototype.kind;
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -54,7 +54,7 @@ export class CHTMLTeXAtom<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {

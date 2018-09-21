@@ -63,7 +63,7 @@ import {TeXAtom} from './MmlNodes/TeXAtom.js';
 import {mathchoice} from './MmlNodes/mathchoice.js';
 
 /************************************************************************/
-/*
+/**
  *  This object collects all the MathML node types together so that
  *  they can be used to seed an MmlNodeFactory.  One could copy this
  *  object to override existing classes with subclasses, or to add new

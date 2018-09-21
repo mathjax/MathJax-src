@@ -27,11 +27,9 @@ import {HTMLDocument} from './HTMLDocument.js';
 import {OptionList} from '../../util/Options.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the HTMLHandler class (extends AbstractHandler)
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -40,7 +38,7 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
 
     adaptor: MinHTMLAdaptor<N, T, D>;
 
-    /*
+    /**
      * @override
      */
     public handlesDocument(document: any) {
@@ -57,7 +55,7 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
         return false;
     }
 
-    /*
+    /**
      * If the document isn't already a Document object, create one
      * using the given data
      *

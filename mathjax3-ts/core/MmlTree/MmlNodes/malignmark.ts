@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlNode} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMalignmark node class (subclass of AbstractMmlNode)
  */
 
@@ -35,21 +35,21 @@ export class MmlMalignmark extends AbstractMmlNode {
         edge: 'left'
     };
 
-    /*
+    /**
      * @return {string}  The malignmark kind
      */
     public get kind() {
         return 'malignmark';
     }
 
-    /*
+    /**
      * @return {number}  No children allowed
      */
     public get arity() {
         return 0;
     }
 
-    /*
+    /**
      * @return {boolen} <malignmark> is space-like
      */
     public get isSpacelike() {
