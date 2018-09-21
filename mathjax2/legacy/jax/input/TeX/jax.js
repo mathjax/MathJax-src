@@ -26,8 +26,10 @@
  *  limitations under the License.
  */
 
-let MapHandler = require('../../../../../mathjax3/input/tex/MapHandler.js').default;
 let TeXParser = require('../../../../../mathjax3/input/tex/TexParser.js').default;
+let NewTex = require('../../../../../mathjax3/input/tex/Translate.js').NewTex;
+require("./old-stackitem.js");
+
 
 
 // This is only necessary for the legacy tests.
