@@ -23,7 +23,7 @@
  */
 
 import {CommandMap} from '../SymbolMap.js';
-import BaseMethods from '../base/BaseMethods.js';
+import BraketMethods from './BraketMethods.js';
 
 
 /**
@@ -36,11 +36,11 @@ new CommandMap('Braket-macros', {
   'set': ['Macro', '{\\{ {#1} \\| {#2} \\}}', 2],
   Bra: ['Macro', '{\\left\\langle { #1} \\right\\vert}', 1],
   Ket: ['Macro', '{\\left\\vert { #1 } \\right\\rangle}', 1],
-  Braket: ['Macro', '{\\left\\langle {#1} \\mid { #2} \\right\\rangle}', 2],
+  Braket: ['Braket', '{\\left\\langle {#1} \\mid { #2} \\right\\rangle}', 2],
   Set: ['Macro', '{\\left\\{ {#1} \\middle \\| {#2} \\right\\}}', 2],
   // Not part of the LaTeX package:
   ketbra: ['Macro', '{\\vert { #1 } \\rangle\\langle { #2} \\vert}', 2],
   Ketbra: ['Macro', '{\\left\\vert { #1 } \\right\\rangle\\left\\langle { #2} \\right\\vert}', 2]
-}, BaseMethods);
+}, BraketMethods);
 
 
