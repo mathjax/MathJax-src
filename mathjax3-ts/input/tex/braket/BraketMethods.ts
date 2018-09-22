@@ -33,10 +33,26 @@ BraketMethods.Macro = BaseMethods.Macro;
 
 BraketMethods.Braket = function(parser: TexParser, name: string) {
   // let argument = parser.GetArgument(name);
-  console.log(parser.string.slice(parser.i));
+  // console.log(argument);
+  // console.log(parser.string.slice(parser.i));
   parser.i++;
-  let bra = parser.GetUpTo(name, '|');
-  console.log(bra);
+  // let bra = parser.GetUpTo(name, '|');
+  // console.log(bra);
+  parser.Push(parser.itemFactory.create('braket'));
 };
+
+let splitString = function(str: string, split: string[]): string[] {
+  str = str.trim();
+  let j = 0;
+  let parens = 0;
+  return [];
+};
+
+
+BraketMethods.Bar = function(parser: TexParser, name: string) {
+  console.log(name);
+  console.log(parser.stack.Top());
+};
+
 
 export default BraketMethods;

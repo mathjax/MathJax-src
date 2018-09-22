@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap, MacroMap} from '../SymbolMap.js';
 import BraketMethods from './BraketMethods.js';
 
 
@@ -40,7 +40,17 @@ new CommandMap('Braket-macros', {
   Set: ['Macro', '{\\left\\{ {#1} \\middle \\| {#2} \\right\\}}', 2],
   // Not part of the LaTeX package:
   ketbra: ['Macro', '{\\vert { #1 } \\rangle\\langle { #2} \\vert}', 2],
-  Ketbra: ['Macro', '{\\left\\vert { #1 } \\right\\rangle\\left\\langle { #2} \\right\\vert}', 2]
+  Ketbra: ['Macro', '{\\left\\vert { #1 } \\right\\rangle\\left\\langle { #2} \\right\\vert}', 2],
+  '|': ['Bar', '|']
+}, BraketMethods);
+
+
+/**
+ * Character map for bracket package.
+ */
+new MacroMap('Braket-characters', {
+  '|': ['Bar', '|'],
+  '||': ['Bar', '||'],
 }, BraketMethods);
 
 

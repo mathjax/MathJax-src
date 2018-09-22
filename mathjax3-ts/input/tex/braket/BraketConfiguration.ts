@@ -23,6 +23,7 @@
  */
 
 import {Configuration} from '../Configuration.js';
+import {BraketItem} from './BracketItems.js';
 import './BraketMappings.js';
 
 
@@ -30,7 +31,11 @@ export const BraketConfiguration = Configuration.create(
   'Braket',
   {
     handler: {
+      character: ['Braket-characters'],
       macro: ['Braket-macros']
+    },
+    items: {
+      [BraketItem.prototype.kind]: BraketItem,
     }
   }
 );
