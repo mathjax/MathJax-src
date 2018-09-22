@@ -28,33 +28,8 @@ import {HandlerType, SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
-
-
-const DefaultOptions: [string, string | boolean][] = [
-  //
-  //  This specifies the side on which \tag{} macros will place the tags.
-  //  Set to 'left' to place on the left-hand side.
-  //
-  ['TagSide', 'right'],
-
-  //
-  //  This is the amound of indentation (from right or left) for the tags.
-  //
-  ['TagIndent', '0.8em'],
-
-  //
-  //  This is the width to use for the multline environment
-  //
-  ['MultLineWidth', '85%'],
-
-  // make element ID's use \label name rather than equation number
-  // MJ puts in an equation prefix: mjx-eqn
-  // When true it uses the label name XXX as mjx-eqn-XXX
-  // If false it uses the actual number N that is displayed: mjx-eqn-N
-  ['useLabelIds', true],
-
-  ['refUpdate', false]
-];
+import {defaultOptions, OptionList} from '../../util/Options.js';
+import {Configuration} from './Configuration.js';
 
 
 /**
@@ -70,21 +45,21 @@ export default class ParseOptions {
 
   /**
    * A set of options, mapping names to string or boolean values.
-   * @type {Map<string, string|boolean>}
+   * @type {OptionList}
    */
-  public options: Map<string, string|boolean> = new Map();
+  public options: OptionList = {};
 
   /**
    * The current item factory.
    * @type {StackItemFactory}
    */
-  public itemFactory: StackItemFactory = new StackItemFactory();
+  public itemFactory: StackItemFactory;
 
   /**
    * The current node factory.
    * @type {NodeFactory}
    */
-  public nodeFactory: NodeFactory = new NodeFactory();
+  public nodeFactory: NodeFactory;
 
   /**
    * The current tagging object.
@@ -92,12 +67,34 @@ export default class ParseOptions {
    */
   public tags: Tags;
 
+  // Fields for ephemeral options, i.e., options that will be cleared for each
+  // run of the parser.
   /**
    * Stack of previous tex parsers. This is used to keep track of parser
-   * settings when expressions are recursively parser.
+   * settings when expressions are recursively parsed.
    * @type {TexParser[]}
    */
   public parsers: TexParser[] = [];
+
+
+  /**
+   * The current root node.
+   * @type {MmlNode}
+   */
+  public root: MmlNode = null;
+
+  /**
+   * List of node lists saved with respect to some property or their kind.
+   * @type {{[key: string]: MmlNode[]}}
+   */
+  public nodeLists: {[key: string]: MmlNode[]} = {};
+
+  /**
+   * Error state of the parser.
+   * @type {boolean}
+   */
+  public error: boolean = false;
+
 
 
   /**
@@ -105,12 +102,22 @@ export default class ParseOptions {
    * @param {{[key: string]: (string|boolean)}} setting A list of option
    *     settings. Those are added to the default options.
    */
-  public constructor(setting: {[key: string]: (string|boolean)} = {}) {
-    this.options = new Map(DefaultOptions);
-    Object.assign(this.options, setting);
+  public constructor(configuration: Configuration, options: OptionList[] = []) {
+    this.handlers = new SubHandlers(configuration);
+    // Add node factory methods from packages.
+    this.nodeFactory = new NodeFactory();
+    this.nodeFactory.configuration = this;
+    this.nodeFactory.setCreators(configuration.nodes);
+    // Add stackitems from packages.
+    this.itemFactory = new StackItemFactory(configuration.items);
+    this.itemFactory.configuration = this;
+    // Set default options for parser from packages and for tags.
+    defaultOptions(this.options, ...options);
+    defaultOptions(this.options, configuration.options);
   }
 
 
+  // Methods for dealing with ephemeral fields.
   /**
    * Pushes a new tex parser onto the stack.
    * @param {TexParser} parser The new parser.
@@ -136,12 +143,63 @@ export default class ParseOptions {
   }
 
   /**
-   * Convenience method to create nodes with this node factory.
-   * @param {string} kind The kind of node to create.
-   * @param {any[]} ...rest The remaining arguments for the creation method.
-   * @return {MmlNode} The newly created node.
+   * Clears all the ephemeral options.
    */
-  public createNode(kind: string, ...rest: any[]): MmlNode {
-    return this.nodeFactory.create(kind, ...rest);
+  public clear() {
+    this.parsers = [];
+    this.root = null;
+    this.nodeLists = {};
+    this.error = false;
   }
+
+
+  /**
+   * Saves a tree node to a list of nodes for post processing.
+   * @param {string} property The property name that will be used for
+   *     postprocessing.
+   * @param {MmlNode} node The node to save.
+   */
+  public addNode(property: string, node: MmlNode) {
+    let list = this.nodeLists[property];
+    if (!list) {
+      list = this.nodeLists[property] = [];
+    }
+    list.push(node);
+  }
+
+
+  /**
+   * Gets a saved node list with respect to a given property. It first ensures
+   * that all the nodes are "live", i.e., actually live in the current
+   * tree. Sometimes nodes are created, saved in the node list but discarded
+   * later in the parsing. These will be filtered out here.
+   *
+   * NB: Do not use this method before the root field of the options is
+   * set. Otherwise, your node list will always be empty!
+   * @param {string} property The property for which to retrieve the node list.
+   */
+  public getList(property: string) {
+    let list = this.nodeLists[property] || [];
+    let result = [];
+    for (let node of list) {
+      if (this.inTree(node)) {
+        result.push(node);
+      }
+    }
+    this.nodeLists[property] = result;
+    return result;
+  }
+
+
+  /**
+   * Tests if the node is in the tree spanned by the current root node.
+   * @param {MmlNode} node The node to test.
+   */
+  private inTree(node: MmlNode) {
+    while (node && node !== this.root) {
+      node = node.parent;
+    }
+    return !!node;
+  }
+
 }

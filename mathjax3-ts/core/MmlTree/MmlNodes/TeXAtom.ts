@@ -26,7 +26,7 @@ import {AbstractMmlBaseNode, MmlNode, TEXCLASS} from '../MmlNode.js';
 import {MmlMo} from './mo.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the TeXAtom node class (subclass of AbstractMmlBaseNode)
  */
 
@@ -36,28 +36,28 @@ export class TeXAtom extends AbstractMmlBaseNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      *  @return {string}  The TeXAtom kind
      */
     public get kind() {
         return 'TeXAtom';
     }
 
-    /*
+    /**
      *  @return {number}  Inferred mrow with any number of children
      */
     public get arity() {
         return -1;
     }
 
-    /*
+    /**
      *  @return {boolean}  This element is not considered a MathML container
      */
     public get notParent() {
         return true;
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {
@@ -65,7 +65,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
         return this.adjustTeXclass(prev);
     }
 
-    /*
+    /**
      * (Replaced below by the version from the MmlMo node)
      *
      * @override
@@ -74,7 +74,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
         return prev;
     }
 }
-/*
+/**
  *  Use the method from the MmlMo class
  */
 TeXAtom.prototype.adjustTeXclass = MmlMo.prototype.adjustTeXclass;

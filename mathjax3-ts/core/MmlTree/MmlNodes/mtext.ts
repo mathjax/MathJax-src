@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMtext node class (subclass of AbstractMmlTokenNode)
  */
 
@@ -35,14 +35,14 @@ export class MmlMtext extends AbstractMmlTokenNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The mtext kind
      */
     public get kind() {
         return 'mtext';
     }
 
-    /*
+    /**
      * @return {boolean}  <mtext> is always space-like according to the spec
      */
     public get isSpacelike() {

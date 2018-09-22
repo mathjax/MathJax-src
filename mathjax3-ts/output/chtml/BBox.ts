@@ -23,7 +23,7 @@
 
 import {BIGDIMEN, length2em} from '../../util/lengths.js';
 
-/*
+/**
  *  CSS styles that affect BBoxes
  */
 export const BBoxstyleAdjust = [
@@ -37,7 +37,7 @@ export const BBoxstyleAdjust = [
     ['paddingLeft', 'w', 0]
 ];
 
-/*
+/**
  *  The data used to initialie a BBox
  */
 export type BBoxData = {
@@ -47,12 +47,17 @@ export type BBoxData = {
 };
 
 /*****************************************************************/
-/*
+/**
  *  The BBox class
  */
 
 export class BBox {
-    /*
+    /**
+     * Constant for pwidth of full width box
+     */
+    public static fullWidth = '100%';
+
+    /**
      *  These are the data stored for a bounding box
      */
     public w: number;
@@ -68,24 +73,24 @@ export class BBox {
     public ic: number;     // italic correction
     public sk: number;     // skew
 
-    /*
-     * @return{BBox}  A BBox initialized to zeros
+    /**
+     * @return {BBox}  A BBox initialized to zeros
      */
     public static zero() {
         return new BBox({h: 0, d: 0, w: 0});
     }
 
-    /*
-     * @return{BBox}  A BBox with height and depth not set
+    /**
+     * @return {BBox}  A BBox with height and depth not set
      */
     public static empty() {
         return new BBox();
     }
 
-    /*
-     * @param{BBoxData} def  The data with which to initialize the BBox
+    /**
+     * @param {BBoxData} def  The data with which to initialize the BBox
      *
-     * @return{BBox}  The newly created BBox
+     * @return {BBox}  The newly created BBox
      *
      * @constructor
      */
@@ -98,9 +103,9 @@ export class BBox {
         this.pwidth = '';
     }
 
-    /*
+    /**
      * Set up a bbox for append() and combine() operations
-     * @return{BBOX}  the boox itself (for chaining calls)
+     * @return {BBOX}  the boox itself (for chaining calls)
      */
     public empty() {
         this.w = 0;
@@ -108,7 +113,7 @@ export class BBox {
         return this;
     }
 
-    /*
+    /**
      * Convert any unspecified values into zeros
      */
     public clean () {
@@ -117,8 +122,8 @@ export class BBox {
         if (this.d === -BIGDIMEN) this.d = 0;
     }
 
-    /*
-     * @param{number} scale  The scale to use to modify the bounding box size
+    /**
+     * @param {number} scale  The scale to use to modify the bounding box size
      */
     public rescale(scale: number) {
         this.w *= scale;
@@ -126,10 +131,10 @@ export class BBox {
         this.d *= scale;
     }
 
-    /*
-     * @param{BBox} cbox  A bounding to combine with this one
-     * @param{number} x   An x-offest for the child bounding box
-     * @param{number} y   A y-offset for the child bounding box
+    /**
+     * @param {BBox} cbox  A bounding to combine with this one
+     * @param {number} x   An x-offest for the child bounding box
+     * @param {number} y   A y-offset for the child bounding box
      */
     public combine(cbox: BBox, x: number = 0, y: number = 0) {
         cbox.x = x;
@@ -143,8 +148,8 @@ export class BBox {
         if (d > this.d) this.d = d;
     }
 
-    /*
-     * @param{BBox} cbox  A bounding box to be added to the right of this one
+    /**
+     * @param {BBox} cbox  A bounding box to be added to the right of this one
      */
     public append(cbox: BBox) {
         let scale = cbox.rscale;
@@ -157,8 +162,8 @@ export class BBox {
         }
     }
 
-    /*
-     * @param{BBox} cbox  The bounding box to use to overwrite this one
+    /**
+     * @param {BBox} cbox  The bounding box to use to overwrite this one
      */
     public updateFrom(cbox: BBox) {
         this.h = cbox.h;

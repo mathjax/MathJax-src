@@ -28,28 +28,26 @@ import {CHTMLWrappers} from './Wrappers.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  The CHTMLWrapperFactory class for creating CHTMLWrapper nodes
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export class CHTMLWrapperFactory<N, T, D> extends AbstractWrapperFactory<MmlNode, CHTMLWrapper<N, T, D>, CHTMLWrapperClass> {
 
-    /*
+    /**
      * The default list of wrapper nodes this factory can create
      */
     public static defaultNodes = CHTMLWrappers;
 
-    /*
+    /**
      * The CHTML output jax associated with this factory
      */
     public chtml: CHTML<N, T, D> = null;
 
-    /*
+    /**
      * @return {object}  The list of node-creation functions
      */
     get Wrappers() {

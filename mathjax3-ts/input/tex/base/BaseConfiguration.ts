@@ -54,13 +54,13 @@ function Other(parser: TexParser, char: string) {
   let def = font ?
     // @test Other Font
     {mathvariant: parser.stack.env['font']} : {};
-  const remap = (MapHandler.getInstance().getMap('remap') as CharacterMap).
+  const remap = (MapHandler.getMap('remap') as CharacterMap).
     lookup(char);
   // @test Other
   // @test Other Remap
-  let mo = parser.configuration.nodeFactory.create(
-    'token', 'mo', def, (remap ? remap.char : char));
+  let mo = parser.create('token', 'mo', def, (remap ? remap.char : char));
   NodeUtil.setProperty(mo, 'fixStretchy', true);
+  parser.configuration.addNode('fixStretchy', mo);
   parser.Push(mo);
 };
 
@@ -89,7 +89,6 @@ function envUndefined(parser: TexParser, env: string) {
 
 
 /**
- * Standard tagging.
  * @constructor
  * @extends {AbstractTags}
  */
@@ -137,4 +136,5 @@ export const BaseConfiguration: Configuration = Configuration.create(
     [bitem.EqnArrayItem.prototype.kind]: bitem.EqnArrayItem,
     [bitem.EquationItem.prototype.kind]: bitem.EquationItem
    },
+   options: {maxMacros: 1000},
    tags: {base: BaseTags}});

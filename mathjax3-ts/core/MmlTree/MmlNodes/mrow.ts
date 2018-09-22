@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMrow node class (subclass of AbstractMmlNode)
  */
 
@@ -34,19 +34,19 @@ export class MmlMrow extends AbstractMmlNode {
         ...AbstractMmlNode.defaults
     };
 
-    /*
+    /**
      * The index of the core child, when acting as an embellish mrow
      */
     protected _core: number = null;
 
-    /*
+    /**
      * @return {string}  The mrow kind
      */
     public get kind() {
         return 'mrow';
     }
 
-    /*
+    /**
      * An mrow is space-like if all its children are.
      *
      * @override
@@ -60,7 +60,7 @@ export class MmlMrow extends AbstractMmlNode {
         return true;
     }
 
-    /*
+    /**
      * An mrow is embellished if it contains one embellished operator
      * and any number of space-like nodes
      *
@@ -85,7 +85,7 @@ export class MmlMrow extends AbstractMmlNode {
         return embellished;
     }
 
-    /*
+    /**
      * @override
      */
     public core(): MmlNode {
@@ -95,7 +95,7 @@ export class MmlMrow extends AbstractMmlNode {
         return this.childNodes[this._core];
     }
 
-    /*
+    /**
      * @override
      */
     public coreMO(): MmlNode {
@@ -105,7 +105,7 @@ export class MmlMrow extends AbstractMmlNode {
         return this.childNodes[this._core].coreMO();
     }
 
-    /*
+    /**
      * @return {number}  The number of non-spacelike child nodes
      */
     public nonSpaceLength() {
@@ -118,7 +118,7 @@ export class MmlMrow extends AbstractMmlNode {
         return n;
     }
 
-    /*
+    /**
      * @return {MmlNode}  The first non-space-like child node
      */
     public firstNonSpace() {
@@ -130,7 +130,7 @@ export class MmlMrow extends AbstractMmlNode {
         return null;
     }
 
-    /*
+    /**
      * @return {MmlNode}  The last non-space-like child node
      */
     public lastNonSpace() {
@@ -144,7 +144,7 @@ export class MmlMrow extends AbstractMmlNode {
         return null;
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {
@@ -182,35 +182,35 @@ export class MmlMrow extends AbstractMmlNode {
 
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlInferredMrow node class (subclass of MmlMrow)
  */
 
 export class MmlInferredMrow extends MmlMrow {
     public static defaults: PropertyList = MmlMrow.defaults;
 
-    /*
+    /**
      * @return {string}  The inferred-mrow kind
      */
     public get kind() {
         return 'inferredMrow';
     }
 
-    /*
+    /**
      * @return {boolean}  This is inferred
      */
     public get isInferred() {
         return true;
     }
 
-    /*
+    /**
      * @override
      */
     public get notParent() {
         return true;
     }
 
-    /*
+    /**
      * Show the child nodes in brackets
      */
     public toString() {

@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMfrac node class (subclass of AbstractMmlBaseNode)
  */
 
@@ -38,28 +38,28 @@ export class MmlMfrac extends AbstractMmlBaseNode {
         bevelled: false
     };
 
-    /*
+    /**
      * @return {string}  The mfrac kind
      */
     public get kind() {
         return 'mfrac';
     }
 
-    /*
+    /**
      * @return {number}  <mfrac> requires two children
      */
     public get arity() {
         return 2;
     }
 
-    /*
+    /**
      * @return {boolean}  The children of <mfrac> can include line breaks
      */
     public get linebreakContainer() {
         return true;
     }
 
-    /*
+    /**
      * Update the children separately, and if embellished, update from the core
      *
      * @override
@@ -75,7 +75,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
         return this;
     }
 
-    /*
+    /**
      * Adjust the display level, and use prime style in denominator
      *
      * @override

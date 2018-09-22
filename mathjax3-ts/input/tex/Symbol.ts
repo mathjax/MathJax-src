@@ -61,7 +61,7 @@ export class Macro {
    * @constructor
    * @param {string} _symbol The symbol parsed
    * @param {ParseMethod} _func The parsing function for that symbol.
-   * @param {Attributes} _args Additional arguments for the function.
+   * @param {Args[]} _args Additional arguments for the function.
    */
   constructor(private _symbol: string, private _func: ParseMethod,
               private _args: Args[] = []) {

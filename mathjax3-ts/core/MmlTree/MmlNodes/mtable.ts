@@ -22,11 +22,11 @@
  */
 
 import {PropertyList, Node} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS, indentAttributes} from '../MmlNode.js';
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMtable node class (subclass of AbstractMmlNode)
  */
 
@@ -57,21 +57,40 @@ export class MmlMtable extends AbstractMmlNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The mtable kind
      */
     public get kind() {
         return 'mtable';
     }
 
-    /*
+    /**
      * @return {boolean}  Linebreaks are allowed in tables
      */
     public get linebreakContainer() {
         return true;
     }
 
-    /*
+    /**
+     * @override
+     */
+    setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+        //
+        // Force inheritance of shift and align values (since they are needed to output tables with labels)
+        //   but make sure they are not given explicitly on the <mtable> tag.
+        //
+        for (const name of indentAttributes) {
+            if (attributes[name]) {
+                this.attributes.setInherited(name, attributes[name][1]);
+            }
+            if (this.attributes.getExplicit(name) !== undefined) {
+                delete (this.attributes.getAllAttributes())[name];
+            }
+        }
+        super.setInheritedAttributes(attributes, display, level, prime);
+    };
+
+    /**
      * Make sure all children are mtr or mlabeledtr nodes
      * Inherit the table attributes, and set the display attribute based on the table's displaystyle attribute
      *
@@ -96,7 +115,7 @@ export class MmlMtable extends AbstractMmlNode {
         }
     }
 
-    /*
+    /**
      * Check that children are mtr or mlabeledtr
      *
      * @override
@@ -112,7 +131,7 @@ export class MmlMtable extends AbstractMmlNode {
         super.verifyChildren(options);
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {

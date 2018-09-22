@@ -25,12 +25,12 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMath node class (subclass of AbstractMmlLayoutNode)
  */
 
 export class MmlMath extends AbstractMmlLayoutNode {
-    /*
+    /**
      *  These are used as the defaults for any attributes marked INHERIT in other classes
      */
     public static defaults: PropertyList = {
@@ -65,21 +65,21 @@ export class MmlMath extends AbstractMmlLayoutNode {
         indentshiftlast:  'indentshift'
     };
 
-    /*
+    /**
      * @return {string}  The math kind
      */
     public get kind() {
         return 'math';
     }
 
-    /*
+    /**
      * @return {boolean} Linebreaking can occur in math nodes
      */
     public get linebreakContainer() {
         return true;
     }
 
-    /*
+    /**
      * The attributes of math nodes are inherited, so add them into the list.
      * The displaystyle attribute comes from the display attribute if not given explicitly
      * The scriptlevel comes from the scriptlevel attribute or default

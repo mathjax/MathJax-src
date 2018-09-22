@@ -31,6 +31,7 @@ import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 import {NodeFactory} from '../NodeFactory.js';
 import ParseOptions from '../ParseOptions.js';
+import {MathItem} from '../../../core/MathItem.js';
 
 let BOLDVARIANT: {[key: string]: string} = {};
 BOLDVARIANT[TexConstant.Variant.NORMAL] = TexConstant.Variant.BOLD;
@@ -77,6 +78,7 @@ export function createBoldToken(factory: NodeFactory, kind: string,
   if (kind !== 'mtext' &&
       factory.configuration.parser.stack.env['boldsymbol']) {
     NodeUtil.setProperty(token, 'fixBold', true);
+    factory.configuration.addNode('fixBold', token);
   }
   return token;
 }
@@ -87,18 +89,20 @@ export function createBoldToken(factory: NodeFactory, kind: string,
  * @param {MmlNode} node The node to rewrite.
  * @param {ParseOptions} options The parse options.
  */
-export function rewriteBoldTokens(node: MmlNode, options: ParseOptions)  {
-  if (NodeUtil.getProperty(node, 'fixBold')) {
-    let variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
-    if (variant == null) {
-      NodeUtil.setProperties(node, {mathvariant: TexConstant.Variant.BOLD});
-    } else {
-      NodeUtil.setProperties(node,
-                             {mathvariant: BOLDVARIANT[variant] || variant});
+export function rewriteBoldTokens(arg: {data: ParseOptions}) {
+  for (let node of arg.data.getList('fixBold')) {
+    if (NodeUtil.getProperty(node, 'fixBold')) {
+      let variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
+      if (variant == null) {
+        NodeUtil.setAttribute(node, 'mathvariant', TexConstant.Variant.BOLD);
+      } else {
+        NodeUtil.setAttribute(node,
+                              'mathvariant', BOLDVARIANT[variant] || variant);
+      }
+      NodeUtil.removeProperties(node, 'fixBold');
     }
-    NodeUtil.removeProperties(node, 'fixBold');
   }
-}
+};
 
 
 export const BoldsymbolConfiguration = Configuration.create(

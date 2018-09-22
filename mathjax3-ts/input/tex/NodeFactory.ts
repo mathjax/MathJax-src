@@ -1,12 +1,4 @@
 /*************************************************************
- *
- *  MathJax/jax/input/TeX/NodeFactory.js
- *  
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
  *  
  *  Copyright (c) 2009-2018 The MathJax Consortium
  * 
@@ -47,7 +39,7 @@ export type NodeFactoryMethod = (factory: NodeFactory, kind: string, ...rest: an
 export class NodeFactory {
 
   /**
-   * Parser configuration that can be used for passes information between node methods.
+   * Parser configuration that can be used to pass information between node methods.
    * @type {ParseOption}
    */
   public configuration: ParseOptions;
@@ -63,13 +55,12 @@ export class NodeFactory {
   /**
    * The factory table populated with some default methods.
    */
-  private factory: Map<string, NodeFactoryMethod> =
-    new Map([
-      ['node', NodeFactory.createNode],
-      ['token', NodeFactory.createToken],
-      ['text', NodeFactory.createText],
-      ['error', NodeFactory.createError],
-    ]);
+  private factory: {[kind: string]: NodeFactoryMethod} =
+    {'node': NodeFactory.createNode,
+     'token': NodeFactory.createToken,
+     'text': NodeFactory.createText,
+     'error': NodeFactory.createError
+    };
 
 
   /**
@@ -77,14 +68,14 @@ export class NodeFactory {
    * @param {NodeFactory} factory The current node factory.
    * @param {string} kind The type of node to create.
    * @param {MmlNode[]} children Its children.
-   * @param {any} def Its properties.
+   * @param {any=} def Its properties.
    * @param {TextNode=} text An optional text node if this is a token.
    * @return {MmlNode} The newly created Mml node.
    */
   public static createNode(factory: NodeFactory, kind: string,
-                           children: MmlNode[], def: any,
+                           children: MmlNode[] = [], def: any = {},
                            text?: TextNode): MmlNode {
-    const node = factory.mmlFactory.create(kind, {}, []);
+    const node = factory.mmlFactory.create(kind);
     // If infinity or -1 remove inferred mrow
     //
     // In all other cases replace inferred mrow with a regular mrow, before adding
@@ -125,8 +116,8 @@ export class NodeFactory {
    * @param {string} text Text of the token.
    * @return {MmlNode} The newly created token node.
    */
-  public static createToken(factory: NodeFactory, kind: string, def: any,
-                            text: string): MmlNode  {
+  public static createToken(factory: NodeFactory, kind: string,
+                            def: any = {}, text: string = ''): MmlNode  {
     const textNode = factory.create('text', text);
     return factory.create('node', kind, [], def, textNode);
   }
@@ -155,7 +146,7 @@ export class NodeFactory {
   public static createError(factory: NodeFactory, message: string): MmlNode  {
     let text = factory.create('text', message);
     let mtext = factory.create('node', 'mtext', [], {}, text);
-    let error = factory.create('node', 'merror', [mtext], {});
+    let error = factory.create('node', 'merror', [mtext]);
     return error;
   };
 
@@ -166,7 +157,7 @@ export class NodeFactory {
    * @param {NodeFactoryMethod} func The node creator.
    */
   public set(kind: string, func: NodeFactoryMethod) {
-    this.factory.set(kind, func);
+    this.factory[kind] = func;
   }
 
 
@@ -188,8 +179,10 @@ export class NodeFactory {
    * @return {MmlNode} The created node.
    */
   public create(kind: string, ...rest: any[]): MmlNode {
-    let func = this.factory.get(kind) || this.factory.get('node');
-    return func.apply(null, [this].concat(rest));
+    const func = this.factory[kind] || this.factory['node'];
+    const node = func(this, rest[0], ...rest.slice(1));
+    this.configuration.addNode(rest[0], node);
+    return node;
   }
 
 }

@@ -23,13 +23,13 @@
 
 import {AttributeData} from '../../core/DOMAdaptor.js';
 import {MinHTMLAdaptor, MinDOMParser} from '../HTMLAdaptor.js';
-import {Entities} from '../../util/Entities.js';
+import * as Entities from '../../util/Entities.js';
 import {LiteDocument} from './Document.js';
 import {LiteElement} from './Element.js';
 import {LiteText, LiteComment} from './Text.js';
 import {LiteAdaptor} from '../liteAdaptor.js';
 
-/*
+/**
  * Patterns used in parsing serialized HTML
  */
 export namespace PATTERNS {
@@ -49,13 +49,13 @@ export namespace PATTERNS {
 }
 
 /************************************************************/
-/*
+/**
  * Implements a lightweight DOMParser replacement
  * (Not perfect, but handles most well-formed HTML)
  */
 export class LiteParser implements MinDOMParser<LiteDocument> {
 
-    /*
+    /**
      * The list of self-closing tags
      */
     public static SELF_CLOSING: {[name: string]: boolean} = {
@@ -78,7 +78,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         wbr: true
     };
 
-    /*
+    /**
      * The list of tags chose content is not parsed (PCDATA)
      */
     public static PCDATA: {[name: string]: boolean} = {
@@ -90,7 +90,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         script: true
     };
 
-    /*
+    /**
      * The list of attributes that don't get entity translation
      */
     public static CDATA_ATTR: {[name: string]: boolean} = {
@@ -110,19 +110,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         scheme: true
     };
 
-    /*
-     * The entity translator object
-     */
-    protected entities: Entities;
-
-    /*
-     * @constructor
-     */
-    constructor() {
-        this.entities = new Entities({loadMissingEntities: false});
-    }
-
-    /*
+    /**
      * @override
      */
     public parseFromString(text: string, format: string = 'text/html', adaptor: LiteAdaptor = null) {
@@ -153,32 +141,32 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return root;
     }
 
-    /*
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node to add a text element to
-     * @param{string} text          The text for the text node
-     * @return{LiteText}            The text element
+    /**
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node to add a text element to
+     * @param {string} text          The text for the text node
+     * @return {LiteText}            The text element
      */
     protected addText(adaptor: LiteAdaptor, node: LiteElement, text: string) {
-        text = this.entities.translate(text);
+        text = Entities.translate(text);
         return adaptor.append(node, adaptor.text(text)) as LiteText;
     }
 
-    /*
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node to add a comment to
-     * @param{string} comment       The text for the comment node
-     * @return{LiteText}            The comment element
+    /**
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node to add a comment to
+     * @param {string} comment       The text for the comment node
+     * @return {LiteText}            The comment element
      */
     protected addComment(adaptor: LiteAdaptor, node: LiteElement, comment: string) {
         return adaptor.append(node, new LiteComment(comment)) as LiteComment;
     }
 
-    /*
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node to close
-     * @param{string} tag           The close tag being processed
-     * @return{LiteElement}         The first unclosed parent node
+    /**
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node to close
+     * @param {string} tag           The close tag being processed
+     * @return {LiteElement}         The first unclosed parent node
      */
     protected closeTag(adaptor: LiteAdaptor, node: LiteElement, tag: string) {
         const kind = tag.slice(2,tag.length - 1).toLowerCase();
@@ -188,12 +176,12 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return adaptor.parent(node);
     }
 
-    /*
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The parent node for the tag
-     * @param{string} tag           The tag being processed
-     * @param{string[]} parts       The rest of the text/tag array
-     * @return{LiteElement}         The node to which the next tag will be added
+    /**
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The parent node for the tag
+     * @param {string} tag           The tag being processed
+     * @param {string[]} parts       The rest of the text/tag array
+     * @return {LiteElement}         The node to which the next tag will be added
      */
     protected openTag(adaptor: LiteAdaptor, node: LiteElement, tag: string, parts: string[]) {
         const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
@@ -234,10 +222,10 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return node;
     }
 
-    /*
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node getting the attributes
-     * @param{string[]} attributes  The array of space, name, value1, value2, value3
+    /**
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node getting the attributes
+     * @param {string[]} attributes  The array of space, name, value1, value2, value3
      *                                as described above.
      */
     protected addAttributes(adaptor: LiteAdaptor, node: LiteElement, attributes: string[]) {
@@ -246,17 +234,17 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
             let [space, name, v1, v2, v3] = attributes.splice(0,5);
             let value = v1 || v2 || v3 || '';
             if (!CDATA_ATTR[name]) {
-                value = this.entities.translate(value);
+                value = Entities.translate(value);
             }
             adaptor.setAttribute(node, name, value);
         }
     }
 
-    /*
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node whose PCDATA content is being collected
-     * @param{string} kind          The tag name being handled
-     * @param{string[]} parts       The array of text/tag data for the document
+    /**
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node whose PCDATA content is being collected
+     * @param {string} kind          The tag name being handled
+     * @param {string[]} parts       The array of text/tag data for the document
      */
     protected handlePCDATA(adaptor: LiteAdaptor, node: LiteElement, kind: string, parts: string[]) {
         const pcdata = [] as string[];
@@ -278,13 +266,13 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         adaptor.append(node, adaptor.text(pcdata.join('')));
     }
 
-    /*
+    /**
      * Check the contents of the parsed document and move html, head, and body
      * tags into the document structure.  That way, you can parse fragements or
      * full documents and still get a valid document.
      *
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteDocuemnt} root    The document being checked
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteDocuemnt} root    The document being checked
      */
     protected checkDocument(adaptor: LiteAdaptor, root: LiteDocument) {
         if (adaptor.childNodes(adaptor.body(root)).length !== 1) return;
@@ -327,10 +315,10 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         }
     }
 
-    /*
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node to serialize
-     * @return{string}              The serialized element (like outerHTML)
+    /**
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node to serialize
+     * @return {string}              The serialized element (like outerHTML)
      */
     public serialize(adaptor: LiteAdaptor, node: LiteElement) {
         const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
@@ -345,12 +333,16 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         return html;
     }
 
-    /*
-     * @param{LiteAdaptor} adaptor  The adaptor for managing nodes
-     * @param{LiteElement} node     The node whose innerHTML is needed
-     * @return{string}              The serialized element (like innerHTML)
+    /**
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} node     The node whose innerHTML is needed
+     * @return {string}              The serialized element (like innerHTML)
      */
     public serializeInner(adaptor: LiteAdaptor, node: LiteElement) {
+        const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
+        if (PCDATA.hasOwnProperty(node.kind)) {
+            return adaptor.childNodes(node).map(x => adaptor.value(x)).join('');
+        }
         return adaptor.childNodes(node).map(x => {
             const kind = adaptor.kind(x);
             return (kind === '#text' ? this.protectHTML(adaptor.value(x)) :
@@ -359,17 +351,17 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         }).join('');
     }
 
-    /*
-     * @param{string} text  The attribute value to be HTML escaped
-     * @return{string}      The string with " replaced by entities
+    /**
+     * @param {string} text  The attribute value to be HTML escaped
+     * @return {string}      The string with " replaced by entities
      */
     public protectAttribute(text: string) {
         return text.replace(/"/, '&quot;');
     }
 
-    /*
-     * @param{string} text  The text to be HTML escaped
-     * @return{string}      The string with &, <, and > replaced by entities
+    /**
+     * @param {string} text  The text to be HTML escaped
+     * @return {string}      The string with &, <, and > replaced by entities
      */
     public protectHTML(text: string) {
         return text.replace(/&/g, '&amp;')

@@ -25,12 +25,17 @@
 
 import TexError from '../TexError.js';
 import {EndItem, BeginItem} from '../base/BaseItems.js';
-import {BaseItem, StackItem} from '../StackItem.js';
+import {CheckType, BaseItem, StackItem} from '../StackItem.js';
 import StackItemFactory from '../StackItemFactory.js';
 import ParseUtil from '../ParseUtil.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 
+/**
+ * Opening Item dealing with definitions of new environments. It's pushed onto
+ * the stack whenever a user defined environment is encountered and remains
+ * until a corresponding \\end collapses the stack.
+ */
 export class BeginEnvItem extends BaseItem {
 
   /**
@@ -52,7 +57,7 @@ export class BeginEnvItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('end')) {
       // @test Newenvironment Empty, Newenvironment Align
       if (item.getName() !== this.getName()) {
@@ -60,7 +65,7 @@ export class BeginEnvItem extends BaseItem {
         throw new TexError('EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
                             this.getName(), item.getName());
       }
-      return this.factory.create('mml', this.toMml());
+      return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('stop')) {
       // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc

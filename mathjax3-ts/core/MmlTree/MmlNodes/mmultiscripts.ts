@@ -26,7 +26,7 @@ import {AbstractMmlNode, AttributeList} from '../MmlNode.js';
 import {MmlMsubsup} from './msubsup.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMmultiscripts node class (subclass of MmlMsubsup)
  */
 
@@ -35,21 +35,21 @@ export class MmlMmultiscripts extends MmlMsubsup {
         ...MmlMsubsup.defaults
     };
 
-    /*
+    /**
      * @return {string}  The mmultiscripts kind
      */
     public get kind() {
         return 'mmultiscripts';
     }
 
-    /*
+    /**
      * @return {number}  <mmultiscripts> requires at least one child (the base)
      */
     public get arity() {
         return 1;
     }
 
-    /*
+    /**
      * Push the inherited values to the base
      * Make sure the number of pre- and post-scripts are even by adding mrows, if needed.
      * For the scripts, use displaystyle = false, scriptlevel + 1, and
@@ -84,7 +84,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
         }
     }
 
-    /*
+    /**
      * Check that mprescripts only occurs once, and that the number of pre- and post-scripts are even.
      *
      * @override
@@ -113,7 +113,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMprescripts node class (subclass of AbstractMmlNode)
  */
 
@@ -122,21 +122,21 @@ export class MmlMprescripts extends AbstractMmlNode {
         ...AbstractMmlNode.defaults
     };
 
-    /*
+    /**
      * @return {string}  The mprescripts kind
      */
     public get kind() {
         return 'mprescripts';
     }
 
-    /*
+    /**
      * @return {number}  <mprescripts> can have no children
      */
     public get arity() {
         return 0;
     }
 
-    /*
+    /**
      * Check that parent is mmultiscripts
      *
      * @override
@@ -150,7 +150,7 @@ export class MmlMprescripts extends AbstractMmlNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlNone node class (subclass of AbstractMmlNode)
  */
 
@@ -159,21 +159,21 @@ export class MmlNone extends AbstractMmlNode {
         ...AbstractMmlNode.defaults
     };
 
-    /*
+    /**
      * @return {string}  The none kind
      */
     public get kind() {
         return 'none';
     }
 
-    /*
+    /**
      * @return {number}  <none> can have no children
      */
     public get arity() {
         return 0;
     }
 
-    /*
+    /**
      * Check that parent is mmultiscripts
      *
      * @override

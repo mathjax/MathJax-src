@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlEnclose node class (subclass of AbstractMmlNode)
  */
 
@@ -36,28 +36,28 @@ export class MmlMenclose extends AbstractMmlNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The menclose kind
      */
     public get kind() {
         return 'menclose';
     }
 
-    /*
+    /**
      * @return {number}  <menclose> has an inferred mrow
      */
     public get arity() {
         return -1;
     }
 
-    /*
+    /**
      * @return {boolean}  <menclose> is a linebreak container
      */
     public get linebreakContininer() {
         return true;
     }
 
-    /*
+    /**
      * @override
      */
     public setTeXclass(prev: MmlNode) {

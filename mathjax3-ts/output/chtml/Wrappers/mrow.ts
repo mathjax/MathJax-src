@@ -29,7 +29,7 @@ import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmrow wrapper for the MmlMrow object
  *
  * @template N  The HTMLElement node class
@@ -39,16 +39,22 @@ import {DIRECTION} from '../FontData.js';
 export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMrow.prototype.kind;
 
-    /*
+    /**
      * @override
      * @constructor
      */
     constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
         this.stretchChildren();
+        for (const child of this.childNodes) {
+            if (child.bbox.pwidth) {
+                this.bbox.pwidth = BBox.fullWidth;
+                break;
+            }
+        }
     }
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -58,9 +64,6 @@ export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
             child.toCHTML(chtml);
             if (child.bbox.w < 0) {
                 hasNegative = true;
-            }
-            if (child.bbox.pwidth) {
-                this.makeFullWidth();
             }
         }
         // FIXME:  handle line breaks
@@ -75,16 +78,7 @@ export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
-     * Handle the case where a child has a percentage width by
-     * marking the parent as 100% width.
-     */
-    protected makeFullWidth() {
-        this.bbox.pwidth = '100%';
-        this.adaptor.setAttribute(this.chtml, 'width', 'full');
-    }
-
-    /*
+    /**
      * Handle vertical stretching of children to match height of
      *  other nodes in the row.
      */
@@ -128,14 +122,14 @@ export class CHTMLmrow<N, T, D> extends CHTMLWrapper<N, T, D> {
 }
 
 /*****************************************************************/
-/*
+/**
  *  The CHTMLinferredMrow wrapper for the MmlInferredMrow object
  */
 
 export class CHTMLinferredMrow<N, T, D> extends CHTMLmrow<N, T, D> {
     public static kind = MmlInferredMrow.prototype.kind;
 
-    /*
+    /**
      * Since inferred rows don't produce a container span, we can't
      * set a font-size for it, so we inherit the parent scale
      *

@@ -31,11 +31,9 @@ import {FindMathML} from './mathml/FindMathML.js';
 import {MathMLCompile} from './mathml/MathMLCompile.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MathML class (extends AbstractInputJax)
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -57,22 +55,22 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         }
     }, AbstractInputJax.OPTIONS);
 
-    /*
+    /**
      * The FindMathML instance used to locate MathML in the document
      */
     protected findMathML: FindMathML<N, T, D>;
 
-    /*
+    /**
      * The MathMLCompile instance used to convert the MathML tree to internal format
      */
     protected mathml: MathMLCompile<N, T, D>;
 
-    /*
+    /**
      * A list of functions to call on the parsed MathML DOM before conversion to internal structure
      */
     protected mmlFilters: FunctionList;
 
-    /*
+    /**
      * @override
      */
     constructor(options: OptionList = {}) {
@@ -83,13 +81,18 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         this.mmlFilters = new FunctionList();
     }
 
+    /**
+     * Set the adaptor in any of the objects that need it
+     *
+     * @param {DOMAdaptor} adaptor  The adaptor to save
+     */
     public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
         super.setAdaptor(adaptor);
         this.findMathML.adaptor = adaptor;
         this.mathml.adaptor = adaptor;
     }
 
-    /*
+    /**
      * Don't process strings (process nodes)
      *
      * @override
@@ -98,7 +101,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         return false;
     }
 
-    /*
+    /**
      * Convert a MathItem to internal format:
      *   If there is no existing MathML node, or we are asked to reparse everything
      *     Execute the preFilters on the math
@@ -133,11 +136,11 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         return this.executeFilters(this.postFilters, math, this.mathml.compile(mml as N));
     }
 
-    /*
+    /**
      * Check a parsed MathML string for errors.
      *
-     * @param{Document} doc  The document returns from the DOMParser
-     * @return{Document}     The document
+     * @param {Document} doc  The document returns from the DOMParser
+     * @return {Document}     The document
      */
     protected checkForErrors(doc: D) {
         let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
@@ -150,16 +153,16 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         return doc;
     }
 
-    /*
+    /**
      * Throw an error
      *
-     * @param{string} message  The error message to produce
+     * @param {string} message  The error message to produce
      */
     protected error(message: string) {
         throw new Error(message);
     }
 
-    /*
+    /**
      * @override
      */
     public findMath(node: N) {

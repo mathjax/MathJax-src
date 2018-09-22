@@ -5,7 +5,7 @@ class ParserTagAllTest extends ParserTest {
 
   constructor() {
     super();
-    this.tags = 'all';
+    this.settings = {tags: 'all'};
   }
 
 }

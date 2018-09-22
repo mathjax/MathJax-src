@@ -39,12 +39,12 @@ export type MmlJSON = {
 };
 
 /*****************************************************************/
-/*
+/**
  *  Implements the JsonMmlVisitor (subclass of MmlVisitor)
  */
 
 export class JsonMmlVisitor extends MmlVisitor {
-    /*
+    /**
      * Convert the tree rooted at a particular node into a JSON structure
      *
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
@@ -54,7 +54,7 @@ export class JsonMmlVisitor extends MmlVisitor {
         return this.visitNode(node);
     }
 
-    /*
+    /**
      * @param {TextNode} node   The text node to visit
      * @return {MmlJSON}        The JSON for the text element
      */
@@ -62,7 +62,7 @@ export class JsonMmlVisitor extends MmlVisitor {
         return {kind: node.kind, text: node.getText()};
     }
 
-    /*
+    /**
      * @param {XMLNode} node  The XML node to visit
      * @return {MmlJSON}      The JSON for the XML node
      */
@@ -70,7 +70,7 @@ export class JsonMmlVisitor extends MmlVisitor {
         return {kind: node.kind, xml: node.getXML()};
     }
 
-    /*
+    /**
      * The generic visiting function:
      *   Create a DOM node of the correct type.
      *   Add its explicit attributes.
@@ -101,7 +101,7 @@ export class JsonMmlVisitor extends MmlVisitor {
         return json;
     }
 
-    /*
+    /**
      * @param {MmlNode} node    The node whose children are to be copied
      * @return {MmlJSON[]}      The array of child JSON objects
      */
@@ -113,7 +113,7 @@ export class JsonMmlVisitor extends MmlVisitor {
         return children;
     }
 
-    /*
+    /**
      * @param {MmlNode} node    The node whose attributes are to be copied
      * @return {PropertyList}   The object containing the attributes;
      */
@@ -121,7 +121,7 @@ export class JsonMmlVisitor extends MmlVisitor {
         return Object.assign({}, node.attributes.getAllAttributes());
     }
 
-    /*
+    /**
      * @param {MmlNode} node    The node whose inherited attributes are to be copied
      * @return {PropertyList}   The object containing the inherited attributes;
      */
@@ -129,7 +129,7 @@ export class JsonMmlVisitor extends MmlVisitor {
         return Object.assign({}, node.attributes.getAllInherited());
     }
 
-    /*
+    /**
      * @param {MmlNode} node    The node whose properties are to be copied
      * @return {PropertyList}   The object containing the properties;
      */

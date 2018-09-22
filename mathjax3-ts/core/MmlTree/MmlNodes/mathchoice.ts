@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlBaseNode, MmlNode, TEXCLASS, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the mathchoice node class (subclass of AbstractMmlBaseNode)
  *
  *  This is used by TeX's \mathchoice macro, but removes itself
@@ -37,28 +37,28 @@ export class mathchoice extends AbstractMmlBaseNode {
         ...AbstractMmlBaseNode.defaults
     };
 
-    /*
+    /**
      *  @return {string}  The mathcoice kind
      */
     public get kind() {
         return 'mathchoice';
     }
 
-    /*
+    /**
      *  @return {number}  4 children (display, text, script, and scriptscript styles)
      */
     public get arity() {
         return 4;
     }
 
-    /*
+    /**
      *  @return {boolean}  This element is not considered a MathML container
      */
     public get notParent() {
         return true;
     }
 
-    /*
+    /**
      * Replace the mathchoice node with the selected on based on the displaystyle and scriptlevel settings
      * (so the mathchoice never ends up in a finished MmlNode tree)
      *

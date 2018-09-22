@@ -27,7 +27,7 @@ import {LiteList} from './List.js';
 import {LiteParser} from './Parser.js';
 
 /************************************************************/
-/*
+/**
  * Implements a lightweight Window replacement
  */
 export class LiteWindow {

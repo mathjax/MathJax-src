@@ -117,14 +117,14 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
   // @test Shove*, Multline
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
-  const item = parser.itemFactory.create('multline', numbered, parser.stack);
+  const item = parser.itemFactory.create('multline', numbered, parser.stack) as ArrayItem;
   item.arraydef = {
     displaystyle: true,
     rowspacing: '.5em',
     columnwidth: '100%',
-    width: parser.options.get('MultLineWidth'),
-    side: parser.options.get('TagSide'),
-    minlabelspacing: parser.options.get('TagIndent')
+    width: parser.options['MultLineWidth'],
+    side: parser.options['TagSide'],
+    minlabelspacing: parser.options['TagIndent']
   };
   return item;
 };
@@ -145,7 +145,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
   // TODO: Use a better dedicated handler.
   //       What about already defined commands?
-  (MapHandler.getInstance().getMap('new-Command') as CommandMap).
+  (MapHandler.getMap('new-Command') as CommandMap).
     add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
 };
 
@@ -223,23 +223,23 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
                              chr: number, l: number, r: number) {
   let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
   let bot = parser.GetBrackets(name);
-  let top = parser.ParseArg(name);
-  let arrow = parser.configuration.nodeFactory.create('token',
+  let first = parser.ParseArg(name);
+  let arrow = parser.create('token',
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCharCode(chr));
-  let mml = parser.configuration.nodeFactory.create('node', 'munderover', [arrow], {}) as MmlMunderover;
-  let mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [top], def);
-  NodeUtil.setProperties(mpadded, {voffset: '.15em'});
+  let mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
+  let mpadded = parser.create('node', 'mpadded', [first], def);
+  NodeUtil.setAttribute(mpadded, 'voffset', '.15em');
   NodeUtil.setChild(mml, mml.over, mpadded);
   if (bot) {
     // @test Above Below Left Arrow, Above Below Right Arrow
     let bottom = new TexParser(bot, parser.stack.env, parser.configuration).mml();
-    mpadded = parser.configuration.nodeFactory.create('node', 'mpadded', [bottom], def);
-    NodeUtil.setProperties(mpadded, {voffset: '-.24em'});
+    mpadded = parser.create('node', 'mpadded', [bottom], def);
+    NodeUtil.setAttribute(mpadded, 'voffset', '-.24em');
     NodeUtil.setChild(mml, mml.under, mpadded);
   }
   // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
   //       Above Right Arrow in Context
-  NodeUtil.setProperties(mml, {subsupOK: true});
+  NodeUtil.setProperty(mml, 'subsupOK', true);
   parser.Push(mml);
 };
 
@@ -284,7 +284,7 @@ AmsMethods.CFrac = function(parser: TexParser, name: string) {
                               parser.stack.env, parser.configuration).mml();
   let denNode = new TexParser('\\strut\\textstyle{' + den + '}',
                               parser.stack.env, parser.configuration).mml();
-  let frac = parser.configuration.nodeFactory.create('node', 'mfrac', [numNode, denNode], {});
+  let frac = parser.create('node', 'mfrac', [numNode, denNode]);
   lr = lrMap[lr];
   if (lr == null) {
     // @test Center Fraction Error
@@ -324,14 +324,14 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
   }
   let num = parser.ParseArg(name);
   let den = parser.ParseArg(name);
-  let frac = parser.configuration.nodeFactory.create('node', 'mfrac', [num, den], {});
+  let frac = parser.create('node', 'mfrac', [num, den]);
   if (thick !== '') {
     // @test Normal Binomial, Text Binomial, Display Binomial
     NodeUtil.setAttribute(frac, 'linethickness', thick);
   }
   if (left || right) {
     // @test Normal Binomial, Text Binomial, Display Binomial
-    NodeUtil.setProperties(frac, {withDelims: true});
+    NodeUtil.setProperty(frac, 'withDelims', true);
     frac = ParseUtil.fixedFence(parser.configuration, left, frac, right);
   }
   if (style !== '') {
@@ -341,7 +341,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
       // @test Genfrac Error
       throw new TexError('BadMathStyleFor', 'Bad math style for %1', parser.currentCS);
     }
-    frac = parser.configuration.nodeFactory.create('node', 'mstyle', [frac], {});
+    frac = parser.create('node', 'mstyle', [frac]);
     if (styleAlpha === 'D') {
       // @test Display Fraction, Display Sub Fraction, Display Binomial,
       //       Display Sub Binomial

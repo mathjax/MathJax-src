@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMunderover node class (subclass of AbstractMmlNode)
  */
 
@@ -36,54 +36,54 @@ export class MmlMunderover extends AbstractMmlBaseNode {
         accentunder: false,
         align: 'center'
     };
-    /*
+    /**
      * The names of attributes controling accents for each child node (reversed for mover below)
      */
     protected static ACCENTS = ['', 'accentunder', 'accent'];
 
-    /*
+    /**
      * @return {string}  The munderover kind
      */
     public get kind() {
         return 'munderover';
     }
 
-    /*
+    /**
      * @return {number}  <munderover> requires three children
      */
     public get arity() {
         return 3;
     }
 
-    /*
+    /**
      * @return {number}  The base is child 0
      */
     public get base() {
         return 0;
     }
 
-    /*
+    /**
      * @return {number}  Child 1 goes under (overriden by mover below)
      */
     public get under() {
         return 1;
     }
 
-    /*
+    /**
      * @return {number}  Child 2 goes over (overriden by mover below)
      */
     public get over() {
         return 2;
     }
 
-    /*
+    /**
      * @return {boolean}  <munderover> can contain line breaks
      */
     public get linebreakContainer() {
         return true;
     }
 
-    /*
+    /**
      * Base is in prime style if there is an over node
      * Force scriptlevel change if converted to sub-sup by movablelimits on the base in non-display mode
      * Adjust displaystyle, scriptlevel, and primestyle for the uncer/over nodes and check if accent
@@ -109,7 +109,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
         this.setInheritedAccent(2, ACCENTS[2], display, level, prime, force);
     }
 
-    /*
+    /**
      * @param {string} accent  The name of the accent attribute to check ("accent" or "accentunder")
      * @param {boolean} force  True if the scriptlevel change is to be forced to occur
      * @param {number} level   The current scriptlevel
@@ -122,7 +122,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
         return level;
     }
 
-    /*
+    /**
      * Check if an under or over accent should cause the appropriate accent attribute to eb inherited
      *   on the munderover node, and if it is not the default, re-inherit the scriptlevel, since that
      *   is affected by the accent attribute
@@ -148,7 +148,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMunder node class (subclass of MmlMunderover)
  */
 
@@ -157,14 +157,14 @@ export class MmlMunder extends MmlMunderover {
         ...MmlMunderover.defaults
     };
 
-    /*
+    /**
      * @return {string}  The munder kind
      */
     public get kind() {
         return 'munder';
     }
 
-    /*
+    /**
      * @return {number}  <munder> has only two children
      */
     public get arity() {
@@ -173,7 +173,7 @@ export class MmlMunder extends MmlMunderover {
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMover node class (subclass of MmlMunderover)
  */
 
@@ -181,33 +181,33 @@ export class MmlMover extends MmlMunderover {
     public static defaults: PropertyList = {
         ...MmlMunderover.defaults
     };
-    /*
+    /**
      *  The first child is the over accent (second never occurs)
      */
     protected static ACCENTS = ['', 'accent', 'accentunder'];
 
-    /*
+    /**
      * @return {string}  The mover kind
      */
     public get kind() {
         return 'mover';
     }
 
-    /*
+    /**
      * @return {number}  <mover> has only two children
      */
     get arity() {
         return 2;
     }
 
-    /*
+    /**
      * @return {number}  Child 1 is the over node
      */
     public get over() {
         return 1;
     }
 
-    /*
+    /**
      * @return {number}  Child 2 is the null (the under node)
      */
     public get under() {

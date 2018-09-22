@@ -27,7 +27,7 @@ import {MmlMn} from '../../../core/MmlTree/MmlNodes/mn.js';
 import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmn wrapper for the MmlMn object
  *
  * @template N  The HTMLElement node class
@@ -37,7 +37,7 @@ import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.
 export class CHTMLmn<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMn.prototype.kind;
 
-    /*
+    /**
      * @override
      */
     public remapChars(chars: number[]) {

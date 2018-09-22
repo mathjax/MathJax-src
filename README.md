@@ -1,4 +1,10 @@
-# Test repository for MathJax v3 #
+# Development repository for MathJax v3 #
+
+MathJax v3 is now in beta release; see the [beta branch](https://github.com/mathjax/mathjax-v3/tree/beta) for details.  See the [https://github.com/mathjax/mj3-demos](https://github.com/mathjax/mj3-demos) for examples and webpacked files for the beta release.
+
+The `master` branch is not the beta release.  It is the current development copy, set up for development testing, as described below.
+
+---
 
 There are two bootstrap files for running the code:
 

@@ -30,7 +30,7 @@ import {BBox} from '../BBox.js';
 import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmsub wrapper for the MmlMsub object
  *
  * @template N  The HTMLElement node class
@@ -40,14 +40,14 @@ import {StyleList} from '../CssStyles.js';
 export class CHTMLmsub<N, T, D> extends CHTMLscriptbase<N, T, D> {
     public static kind = MmlMsub.prototype.kind;
 
-    /*
+    /**
      * @override
      */
     public get script() {
         return this.childNodes[(this.node as MmlMsub).sub];
     }
 
-    /*
+    /**
      * Get the shift for the subscript
      *
      * @override
@@ -59,7 +59,7 @@ export class CHTMLmsub<N, T, D> extends CHTMLscriptbase<N, T, D> {
 }
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmsup wrapper for the MmlMsup object
  *
  * @template N  The HTMLElement node class
@@ -71,14 +71,14 @@ export class CHTMLmsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
 
     public static useIC: boolean = true;
 
-    /*
+    /**
      * @override
      */
     public get script() {
         return this.childNodes[(this.node as MmlMsup).sup];
     }
 
-    /*
+    /**
      * Get the shift for the superscript
      *
      * @override
@@ -91,7 +91,7 @@ export class CHTMLmsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
 }
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmsubsup wrapper for the MmlMsubsup object
  *
  * @template N  The HTMLElement node class
@@ -113,27 +113,27 @@ export class CHTMLmsubsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
 
     public static noIC: boolean = true;
 
-    /*
+    /**
      *  Cached values for the script offsets and separation (so if they are
      *  computed in computeBBox(), they don't have to be recomputed for toCHTML())
      */
     protected UVQ: number[] = null;
 
-    /*
-     * @return{CHTMLWrapper}  The wrapper for the subscript
+    /**
+     * @return {CHTMLWrapper}  The wrapper for the subscript
      */
     public get subChild() {
         return this.childNodes[(this.node as MmlMsubsup).sub];
     }
 
-    /*
-     * @return{CHTMLWrapper}  The wrapper for the superscript
+    /**
+     * @return {CHTMLWrapper}  The wrapper for the superscript
      */
     public get supChild() {
         return this.childNodes[(this.node as MmlMsubsup).sup];
     }
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -152,7 +152,7 @@ export class CHTMLmsubsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
@@ -169,13 +169,13 @@ export class CHTMLmsubsup<N, T, D> extends CHTMLscriptbase<N, T, D> {
         bbox.clean();
     }
 
-    /*
+    /**
      * Get the shift for the scripts and their separation (TeXBook Appendix G 18adef)
      *
-     * @param{BBox} basebox    The bounding box of the base
-     * @param{BBox} subbox     The bounding box of the superscript
-     * @param{BBox} supbox     The bounding box of the subscript
-     * @return{number[]}       The vertical offsets for super and subscripts, and the space between them
+     * @param {BBox} basebox    The bounding box of the base
+     * @param {BBox} subbox     The bounding box of the superscript
+     * @param {BBox} supbox     The bounding box of the subscript
+     * @return {number[]}       The vertical offsets for super and subscripts, and the space between them
      */
     protected getUVQ(basebox: BBox, subbox: BBox, supbox: BBox) {
         if (this.UVQ) return this.UVQ;
