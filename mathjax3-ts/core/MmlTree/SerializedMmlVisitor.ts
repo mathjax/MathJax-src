@@ -27,13 +27,13 @@ import {MmlFactory} from './MmlFactory.js';
 import {MmlNode, TextNode, XMLNode, TEXCLASSNAMES} from './MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the SerializedMmlVisitor (subclass of MmlVisitor)
  */
 
 export class SerializedMmlVisitor extends MmlVisitor {
 
-    /*
+    /**
      * Convert the tree rooted at a particular node into a serialized MathML string
      *
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
@@ -43,7 +43,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
         return this.visitNode(node, '');
     }
 
-    /*
+    /**
      * @param {TextNode} node  The text node to visit
      * @param {string} space  The amount of indenting for this node
      * @return {string}  The text of the node
@@ -52,7 +52,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
         return node.getText();
     }
 
-    /*
+    /**
      * @param {XMLNode} node  The XML node to visit
      * @param {string} space  The amount of indenting for this node
      * @return {string}  The serialization of the XML node (not implemented yet).
@@ -61,7 +61,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
         return '[XML Node not implemented]';
     }
 
-    /*
+    /**
      * Visit an inferred mrow, but don't add the inferred row itself (since
      * it is supposed to be inferred).
      *
@@ -98,7 +98,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
       return mml;
     }
 
-    /*
+    /**
      * The generic visiting function:
      *   Make the string versino of the open tag, properly indented, with it attributes
      *   Increate the indentation level
@@ -120,7 +120,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
         return mml;
     }
 
-    /*
+    /**
      * @param {MmlNode} node  The node whose attributes are to be produced
      * @return {string}  The attribute list as a string
      */
@@ -133,7 +133,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
         return ATTR;
     }
 
-    /*
+    /**
      *  Convert HTML special characters to entities (&amp;, &lt;, &gt;, &quot;)
      *  Convert multi-character Unicode characters to entities
      *  Convert non-ASCII characters to entities.

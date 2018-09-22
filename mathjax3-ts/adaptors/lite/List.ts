@@ -24,35 +24,33 @@
 import {LiteNode} from './Element.js';
 
 /************************************************************/
-/*
+/**
  * Implements a lightweight DocumentFragment or NodeList replacement
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  */
 export class LiteList<N> {
-    /*
+    /**
      * The nodes held in the fragment
      */
     public nodes: N[] = [];
 
-    /*
-     * @param{N[]} children  The children for the fragment
+    /**
+     * @param {N[]} children  The children for the fragment
      * @constructor
      */
     constructor(children: N[]) {
         this.nodes = [...children];
     }
 
-    /*
-     * @param{N} node  A node to append to the fragment
+    /**
+     * @param {N} node  A node to append to the fragment
      */
     public append(node: N) {
         this.nodes.push(node);
     }
 
-    /*
+    /**
      * Make this class iterable (so it can be used with Array.from())
      */
     public [Symbol.iterator](): Iterator<LiteNode> {

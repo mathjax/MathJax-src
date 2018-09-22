@@ -38,7 +38,7 @@ new sm.RegExpMap('letter', ParseMethods.variable, /[a-z]/i);
 /**
  * Digit pattern for parsing numbers.
  */
-new sm.RegExpMap('digit', ParseMethods.digit, /[0-9.]/);
+new sm.RegExpMap('digit', ParseMethods.digit, /[0-9.,]/);
 
 
 /**

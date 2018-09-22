@@ -22,51 +22,55 @@
  */
 
 /*****************************************************************/
-/*
+/**
  *  The PrioritizedListItem<DataClass> interface
+ *
+ * @template DataClass   The class of data stored in the item
  */
 
 export interface PrioritizedListItem<DataClass> {
 
-    /*
+    /**
      * The priority of this item
      */
     priority: number;
 
-    /*
+    /**
      * The data for the list item
      */
     item: DataClass;
 }
 
 /*****************************************************************/
-/*
+/**
  *  Implements the PrioritizedList<DataClass> class
+ *
+ * @template DataClass   The class of data stored in the list
  */
 
 export class PrioritizedList<DataClass> {
 
-    /*
+    /**
      * The default priority for items added to the list
      */
     public static DEFAULTPRIORITY: number = 5;
 
-    /*
+    /**
      * The list of items, sorted by priority (smallest number first)
      */
     protected items: PrioritizedListItem<DataClass>[] = [];
 
-    /*
+    /**
      * @constructor
      */
     constructor() {
         this.items = [];
     }
 
-    /*
+    /**
      * Make the list iterable, and return the data for the items in the list
      *
-     * @return{{next: Function}}  The object containing the iterator's next() function
+     * @return {{next: Function}}  The object containing the iterator's next() function
      */
     public [Symbol.iterator](): Iterator<PrioritizedListItem<DataClass>> {
         let i = 0;
@@ -78,12 +82,12 @@ export class PrioritizedList<DataClass> {
         };
     }
 
-    /*
+    /**
      * Add an item to the list
      *
-     * @param{DataClass} item   The data for the item to be added
-     * @param{number} priority  The priority for the item
-     * @return{DataClass}       The data itself
+     * @param {DataClass} item   The data for the item to be added
+     * @param {number} priority  The priority for the item
+     * @return {DataClass}       The data itself
      */
     public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY) {
         let i = this.items.length;
@@ -94,10 +98,10 @@ export class PrioritizedList<DataClass> {
         return item;
     }
 
-    /*
+    /**
      * Remove an item from the list
      *
-     * @param{DataClass} item   The data for the item to be removed
+     * @param {DataClass} item   The data for the item to be removed
      */
     public remove(item: DataClass) {
         let i = this.items.length;
@@ -109,14 +113,14 @@ export class PrioritizedList<DataClass> {
         }
     }
 
-    /*
+    /**
      * Typescript < 2.3 targeted at ES5 doesn't handle
      *
      *     for (const x of this) {...}
      *
      * so use toArray() to convert to array, when needed
      *
-     * @return{PrioritizedListItem<DataClass>[]}  The list converted to an array
+     * @return {PrioritizedListItem<DataClass>[]}  The list converted to an array
      */
     public toArray() {
         return Array.from(this);

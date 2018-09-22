@@ -33,9 +33,8 @@ import TexParser from '../TexParser.js';
  * @param {string} name The macro name.
  */
 function noUndefined(parser: TexParser, name: string) {
-  const textNode = parser.configuration.nodeFactory.create('text', '\\' + name);
-  parser.Push(parser.configuration.nodeFactory.create(
-    'node', 'mtext', [], {mathcolor: 'red'}, textNode));
+  const textNode = parser.create('text', '\\' + name);
+  parser.Push(parser.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
 };
 
 export const NoUndefinedConfiguration = Configuration.create(

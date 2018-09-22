@@ -84,7 +84,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
    * @param {ParseMethod} _parser The parser for the mappiong.
    */
   constructor(private _name: string, private _parser: ParseMethod) {
-    MapHandler.getInstance().register(this);
+    MapHandler.register(this);
   };
 
 
@@ -117,7 +117,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
     let parser = this.parserFor(symbol);
     let mapped = this.lookup(symbol);
     return (parser && mapped) ?
-      (parser.apply(env, [env, mapped]) || true) : null;
+      parser(env, mapped as any) || true as ParseResult : null;
   }
 
 
@@ -168,7 +168,7 @@ export class RegExpMap extends AbstractSymbolMap<string> {
   /**
    * @override
    */
-  public lookup(symbol: string) {
+  public lookup(symbol: string): string {
     return this.contains(symbol) ? symbol : null;
   }
 
@@ -188,7 +188,7 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   /**
    * @override
    */
-  public lookup(symbol: string) {
+  public lookup(symbol: string): K {
     return this.map.get(symbol);
   }
 
@@ -228,7 +228,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
   constructor(name: string, parser: ParseMethod,
               json: {[index: string]: string|[string, Attributes]}) {
     super(name, parser);
-    for (let key in json) {
+    for (const key of Object.keys(json)) {
       let value = json[key];
       let [char, attrs] = (typeof(value) === 'string') ? [value, null] : value;
       let character = new Symbol(key, char, attrs);
@@ -276,7 +276,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
               json: {[index: string]: string|Args[]},
               functionMap: Record<string, ParseMethod>) {
     super(name, null);
-    for (let key in json) {
+    for (const key of Object.keys(json)) {
       let value = json[key];
       let [func, ...attrs] = (typeof(value) === 'string') ? [value] : value;
       let character = new Macro(key, functionMap[func as string], attrs);
@@ -303,8 +303,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
     if (!macro || !parser) {
       return null;
     }
-    let args = [env, macro.symbol].concat(macro.args as string[]);
-    return parser ? (parser.apply(env, args) || true) : null;
+    return parser(env, macro.symbol, ...macro.args) || true as ParseResult;
   }
 
 }
@@ -327,15 +326,15 @@ export class CommandMap extends MacroMap {
     if (!macro || !parser) {
       return null;
     }
-    let args = [env, '\\' + macro.symbol].concat(macro.args as string[]);
+    let args = ['\\' + macro.symbol].concat(macro.args as string[]);
     if (!parser) {
       return null;
     }
     let saveCommand = env.currentCS;
     env.currentCS = '\\' + symbol;
-    let result = (parser.apply(env, args) || true);
+    let result = parser(env, '\\' + macro.symbol, ...macro.args);
     env.currentCS = saveCommand;
-    return result;
+    return result || true as ParseResult;
   }
 
 }

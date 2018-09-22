@@ -24,25 +24,25 @@
 import {LiteElement} from './Element.js';
 
 /************************************************************/
-/*
+/**
  * Implements a lightweight Document replacement
  */
 export class LiteDocument {
-    /*
+    /**
      * The <html>, <head>, and <body> elements
      */
     public root: LiteElement;
     public head: LiteElement;
     public body: LiteElement;
 
-    /*
+    /**
      * The kind is always #document
      */
     public get kind() {
         return '#document';
     }
 
-    /*
+    /**
      * @constructor
      */
     constructor() {

@@ -26,13 +26,10 @@
  *  limitations under the License.
  */
 
-let TeXParser = require('mathjax3/input/tex/TexParser.js').default;
-// let imp = require("./imp.js").imp;
-// let TexError = require('mathjax3/input/tex/TexError.js').default;
-// let ParseMethods = require('./ParseMethods.js').ParseMethods;
-let NewTex = require('mathjax3/input/tex/Translate.js').NewTex;
-// let Translate = require('./Translate.js').default;
+let TeXParser = require('../../../../../mathjax3/input/tex/TexParser.js').default;
+let NewTex = require('../../../../../mathjax3/input/tex/Translate.js').NewTex;
 require("./old-stackitem.js");
+
 
 
 // This is only necessary for the legacy tests.

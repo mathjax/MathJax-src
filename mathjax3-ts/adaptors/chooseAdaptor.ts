@@ -34,7 +34,7 @@ try {
     choose = liteAdaptor;
 }
 
-/*
+/**
  * Function to selecting which adaptor to use (depending on whether we are in a browser of node.js)
  */
 export const chooseAdaptor = choose;

@@ -67,7 +67,7 @@ const MmlTokenAllow: {[key: string]: number} = {
  */
 BaseMethods.Open = function(parser: TexParser, c: string) {
   // @test Identifier Font, Prime, Prime with subscript
-  parser.Push( parser.itemFactory.create('open') );
+  parser.Push(parser.itemFactory.create('open'));
 };
 
 /**
@@ -77,7 +77,7 @@ BaseMethods.Open = function(parser: TexParser, c: string) {
  */
 BaseMethods.Close = function(parser: TexParser, c: string) {
   // @test Identifier Font, Prime, Prime with subscript
-  parser.Push( parser.itemFactory.create('close') );
+  parser.Push(parser.itemFactory.create('close'));
 };
 
 
@@ -88,9 +88,7 @@ BaseMethods.Close = function(parser: TexParser, c: string) {
  */
 BaseMethods.Tilde = function(parser: TexParser, c: string) {
   // @test Tilde, Tilde2
-  const textNode = parser.configuration.nodeFactory.create('text', NBSP);
-  const node = parser.configuration.nodeFactory.create('node', 'mtext', [], {}, textNode);
-  parser.Push(node);
+  parser.Push(parser.create('token', 'mtext', {}, NBSP));
 };
 
 /**
@@ -116,14 +114,14 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
   const top = parser.stack.Top();
   if (top.isKind('prime')) {
     // @test Prime on Prime
-    [base, primes] = top.TopN(2);
+    [base, primes] = top.Peek(2);
     parser.stack.Pop();
   } else {
     // @test Empty base2, Square, Cube
     base = parser.stack.Prev();
     if (!base) {
       // @test Empty base
-      base = parser.configuration.nodeFactory.create('token', 'mi', {}, '');
+      base = parser.create('token', 'mi', {}, '');
     }
   }
   const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
@@ -144,12 +142,12 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
           base = ParseUtil.mi2mo(parser, base);
         }
         // @test Large Operator
-        base = parser.configuration.nodeFactory.create('node', 'munderover', [base], {movesupsub: true});
+        base = parser.create('node', 'munderover', [base], {movesupsub: true});
       }
       position = (base as MmlMunderover).over;
     } else {
       // @test Empty base, Empty base2, Square, Cube
-      base = parser.configuration.nodeFactory.create('node', 'msubsup', [base], {});
+      base = parser.create('node', 'msubsup', [base]);
       position = (base as MmlMsubsup).sup;
     }
   }
@@ -176,22 +174,20 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
   const top = parser.stack.Top();
   if (top.isKind('prime')) {
     // @test Prime on Sub
-    [base, primes] = top.TopN(2);
+    [base, primes] = top.Peek(2);
     parser.stack.Pop();
   } else {
     base = parser.stack.Prev();
     if (!base) {
       // @test Empty Base Index
-      base = parser.configuration.nodeFactory.create('token', 'mi', {}, '');
+      base = parser.create('token', 'mi', {}, '');
     }
   }
   const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
   let position = NodeUtil.isType(base, 'msubsup') ?
     (base as MmlMsubsup).sub : (base as MmlMunderover).under;
-  if ((NodeUtil.isType(base, 'msubsup') &&
-       NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
-      (NodeUtil.isType(base, 'munderover') &&
-       NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
+  if ((NodeUtil.isType(base, 'msubsup') && NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
+      (NodeUtil.isType(base, 'munderover') && NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
        !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double-sub-error, Double-under-error
     throw new TexError('DoubleSubscripts', 'Double subscripts: use braces to clarify');
@@ -199,20 +195,18 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
   if (!NodeUtil.isType(base, 'msubsup')) {
     if (movesupsub) {
       // @test Large Operator, Move Superscript
-      if (!NodeUtil.isType(base, 'munderover') ||
-          NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
-        if (NodeUtil.getProperty(base, 'movablelimits') &&
-            NodeUtil.isType(base, 'mi')) {
+      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
+        if (NodeUtil.getProperty(base, 'movablelimits') && NodeUtil.isType(base, 'mi')) {
           // @test Mathop Sub
           base = ParseUtil.mi2mo(parser, base);
         }
         // @test Move Superscript
-        base = parser.configuration.nodeFactory.create('node', 'munderover', [base], {movesupsub: true});
+        base = parser.create('node', 'munderover', [base], {movesupsub: true});
       }
       position = (base as MmlMunderover).under;
     } else {
       // @test Empty Base Index, Empty Base Index2, Index
-      base = parser.configuration.nodeFactory.create('node', 'msubsup', [base], {});
+      base = parser.create('node', 'msubsup', [base]);
       position = (base as MmlMsubsup).sub;
     }
   }
@@ -233,7 +227,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   let base = parser.stack.Prev();
   if (!base) {
     // @test PrimeSup, PrePrime, Prime on Sup
-    base = parser.configuration.nodeFactory.create('node', 'mi', [], {});
+    base = parser.create('node', 'mi');
   }
   if (NodeUtil.isType(base, 'msubsup') &&
       NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) {
@@ -247,7 +241,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
     sup += PRIME; parser.i++, c = parser.GetNext();
   } while (c === '\'' || c === SMARTQUOTE);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
-  const node = parser.configuration.nodeFactory.create('token', 'mo', {}, sup);
+  const node = parser.create('token', 'mo', {}, sup);
   parser.Push(
     parser.itemFactory.create('prime', base, node) );
 };
@@ -305,10 +299,11 @@ BaseMethods.SetFont = function(parser: TexParser, name: string, font: string) {
 BaseMethods.SetStyle = function(parser: TexParser, name: string,
                                 texStyle: string, style: boolean,
                                 level: string) {
-  parser.stack.env['style'] = texStyle; parser.stack.env['level'] = level;
+  parser.stack.env['style'] = texStyle;
+  parser.stack.env['level'] = level;
   parser.Push(
-    parser.itemFactory.create('style').setProperties(
-      {styles: {displaystyle: style, scriptlevel: level}}) );
+    parser.itemFactory.create('style').setProperty(
+      'styles', {displaystyle: style, scriptlevel: level}));
 };
 
 
@@ -321,10 +316,10 @@ BaseMethods.SetStyle = function(parser: TexParser, name: string,
 BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
   parser.stack.env['size'] = size;
   parser.Push(
-    parser.itemFactory.create('style').setProperties({styles: {mathsize: size + 'em'}}) );
+    parser.itemFactory.create('style').setProperty('styles', {mathsize: size + 'em'}));
 };
 
-// TODO: Will be replace by the color extension!
+// TODO: Will be replaced by the color extension!
 /**
  * Dummy color command.
  * @param {TexParser} parser The calling parser.
@@ -337,11 +332,11 @@ BaseMethods.Color = function(parser: TexParser, name: string) {
   parser.stack.env['color'] = color;
   const math = parser.ParseArg(name);
   if (old) {
-    parser.stack.env['color'];
+    parser.stack.env['color'] = old;
   } else {
     delete parser.stack.env['color'];
   }
-  const node = parser.configuration.nodeFactory.create('node', 'mstyle', [math], {mathcolor: color});
+  const node = parser.create('node', 'mstyle', [math], {mathcolor: color});
   parser.Push(node);
 };
 
@@ -353,9 +348,9 @@ BaseMethods.Color = function(parser: TexParser, name: string) {
  */
 BaseMethods.Spacer = function(parser: TexParser, name: string, space: string) {
   // @test Positive Spacing, Negative Spacing
-  const node = parser.configuration.nodeFactory.create('node', 'mspace', [],
-                                                       {width: space, scriptlevel: 0});
-  parser.Push(node);
+  const node = parser.create('node', 'mspace', [], {width: space});
+  const style = parser.create('node', 'mstyle', [node], {scriptlevel: 0});
+  parser.Push(style);
 };
 
 
@@ -366,10 +361,10 @@ BaseMethods.Spacer = function(parser: TexParser, name: string, space: string) {
  */
 BaseMethods.LeftRight = function(parser: TexParser, name: string) {
   // @test Fenced, Fenced3
-  const alpha = name.substr(1);
+  const first = name.substr(1);
   parser.Push(
-    parser.itemFactory.create(alpha)
-      .setProperties({delim: parser.GetDelimiter(name)}) );
+    parser.itemFactory.create(first)
+      .setProperty('delim', parser.GetDelimiter(name)));
 };
 
 /**
@@ -380,16 +375,16 @@ BaseMethods.LeftRight = function(parser: TexParser, name: string) {
 BaseMethods.Middle = function(parser: TexParser, name: string) {
   // @test Middle
   const delim = parser.GetDelimiter(name);
-  let node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE});
+  let node = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE});
   parser.Push(node);
   if (!parser.stack.Top().isKind('left')) {
     // @test Orphan Middle, Middle with Right
     throw new TexError('MisplacedMiddle',
                         '%1 must be within \\left and \\right', parser.currentCS);
   }
-  node = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true}, delim);
+  node = parser.create('token', 'mo', {stretchy: true}, delim);
   parser.Push(node);
-  node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN});
+  node = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN});
   parser.Push(node);
 };
 
@@ -404,8 +399,8 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
   if (!id) {
     id = name.substr(1);
   }
-  const mml = parser.configuration.nodeFactory.create('token', 'mi', {texClass: TEXCLASS.OP}, id);
-  parser.Push( parser.itemFactory.create('fn', mml) );
+  const mml = parser.create('token', 'mi', {texClass: TEXCLASS.OP}, id);
+  parser.Push(parser.itemFactory.create('fn', mml));
 };
 
 
@@ -421,7 +416,7 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
     id = name.substr(1);
   }
   id = id.replace(/&thinsp;/, '\u2006');
-  const mml = parser.configuration.nodeFactory.create('token', 'mo', {
+  const mml = parser.create('token', 'mo', {
     movablelimits: true,
     movesupsub: true,
     form: TexConstant.Form.PREFIX,
@@ -439,7 +434,7 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
 BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   // @test Limits
   let op = parser.stack.Prev(true);
-  // Get the texclass for the core operator. Q: Davide?
+  // Get the texclass for the core operator.
   if (!op || (NodeUtil.getTexClass(NodeUtil.getCoreMO(op)) !== TEXCLASS.OP &&
               NodeUtil.getProperty(op, 'movesupsub') == null)) {
     // @test Limits Error
@@ -449,18 +444,18 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
   let node;
   if (NodeUtil.isType(op, 'munderover') && !limits) {
     // @test Limits UnderOver
-    node = parser.configuration.nodeFactory.create('node', 'msubsup', [], {});
+    node = parser.create('node', 'msubsup');
     NodeUtil.copyChildren(op, node);
     op = top.Last = node;
   } else if (NodeUtil.isType(op, 'msubsup') && limits) {
     // @test Limits SubSup
-    // node = parser.configuration.nodeFactory.create('node', 'munderover', NodeUtil.getChildren(op), {});
+    // node = parser.create('node', 'munderover', NodeUtil.getChildren(op), {});
     // Needs to be copied, otherwise we get an error in MmlNode.appendChild!
-    node = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
+    node = parser.create('node', 'munderover');
     NodeUtil.copyChildren(op, node);
     op = top.Last = node;
   }
-  NodeUtil.setProperties(op, {'movesupsub': limits ? true : false});
+  NodeUtil.setProperty(op, 'movesupsub', limits ? true : false);
   NodeUtil.setProperties(NodeUtil.getCoreMO(op), {'movablelimits': false});
   if (NodeUtil.getAttribute(op, 'movablelimits') ||
       NodeUtil.getProperty(op, 'movablelimits')) {
@@ -478,7 +473,7 @@ BaseMethods.Limits = function(parser: TexParser, name: string, limits: string) {
  */
 BaseMethods.Over = function(parser: TexParser, name: string, open: string, close: string) {
   // @test Over
-  const mml = parser.itemFactory.create('over').setProperties({name: parser.currentCS}) ;
+  const mml = parser.itemFactory.create('over').setProperty('name', parser.currentCS) ;
   if (open || close) {
     // @test Choose
     mml.setProperty('open', open);
@@ -508,7 +503,7 @@ BaseMethods.Frac = function(parser: TexParser, name: string) {
   // @test Frac
   const num = parser.ParseArg(name);
   const den = parser.ParseArg(name);
-  const node = parser.configuration.nodeFactory.create('node', 'mfrac', [num, den], {});
+  const node = parser.create('node', 'mfrac', [num, den]);
   parser.Push(node);
 };
 
@@ -526,10 +521,10 @@ BaseMethods.Sqrt = function(parser: TexParser, name: string) {
   let mml = new TexParser(arg, parser.stack.env, parser.configuration).mml();
   if (!n) {
     // @test Square Root
-    mml = parser.configuration.nodeFactory.create('node', 'msqrt', [mml], {});
+    mml = parser.create('node', 'msqrt', [mml]);
   } else {
     // @test General Root
-    mml = parser.configuration.nodeFactory.create('node', 'mroot', [mml, parseRoot(parser, n)], {});
+    mml = parser.create('node', 'mroot', [mml, parseRoot(parser, n)]);
   }
   parser.Push(mml);
 };
@@ -559,7 +554,7 @@ function parseRoot(parser: TexParser, n: string) {
       def['voffset'] = global['upRoot'];
       def['height'] = global['upRoot'];
     }
-    node = parser.configuration.nodeFactory.create('node', 'mpadded', [node], def);
+    node = parser.create('node', 'mpadded', [node], def);
   }
   env['inRoot'] = inRoot;
   return node;
@@ -574,7 +569,7 @@ function parseRoot(parser: TexParser, n: string) {
 BaseMethods.Root = function(parser: TexParser, name: string) {
   const n = parser.GetUpTo(name, '\\of');
   const arg = parser.ParseArg(name);
-  const node = parser.configuration.nodeFactory.create('node', 'mroot', [arg, parseRoot(parser, n)], {});
+  const node = parser.create('node', 'mroot', [arg, parseRoot(parser, n)]);
   parser.Push(node);
 };
 
@@ -618,13 +613,11 @@ BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
 BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, stretchy: boolean) {
   // @test Vector
   const c = parser.ParseArg(name);
-  const def: EnvList = {accent: true};
-  if (parser.stack.env['font']) {
-    // @test Vector Font
-    def['mathvariant'] = parser.stack.env['font'];
-  }
+  // @test Vector Font
+  const def = ParseUtil.getFontDef(parser);
+  def['accent'] = true;
   const entity = NodeUtil.createEntity(accent);
-  const moNode = parser.configuration.nodeFactory.create('token', 'mo', def, entity);
+  const moNode = parser.create('token', 'mo', def, entity);
   const mml = moNode;
   NodeUtil.setAttribute(mml, 'stretchy', stretchy ? true : false);
   // @test Vector Op, Vector
@@ -633,12 +626,12 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
     // @test Vector Op
     NodeUtil.setProperties(mo, {'movablelimits': false});
   }
-  const muoNode = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
+  const muoNode = parser.create('node', 'munderover');
   // TODO: This is necessary to get the empty element into the children.
   NodeUtil.setChild(muoNode, 0, c);
   NodeUtil.setChild(muoNode, 1, null);
   NodeUtil.setChild(muoNode, 2, mml);
-  let texAtom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [muoNode], {});
+  let texAtom = parser.create('node', 'TeXAtom', [muoNode]);
   parser.Push(texAtom);
 };
 
@@ -664,23 +657,22 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
     // @test Overline Limits
     NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0});
-    mo = parser.configuration.nodeFactory.create('node', 'mo', [], {rspace: 0});
-    base = parser.configuration.nodeFactory.create('node', 'mrow', [mo, base], {});
+    mo = parser.create('node', 'mo', [], {rspace: 0});
+    base = parser.create('node', 'mrow', [mo, base]);
     // TODO? add an empty <mi> so it's not embellished any more
   }
-  const mml = parser.configuration.nodeFactory.create('node', 'munderover', [base], {}) as MmlMunderover;
+  const mml = parser.create('node', 'munderover', [base]) as MmlMunderover;
   const entity = NodeUtil.createEntity(c);
-  mo = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
+  mo = parser.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
 
-  NodeUtil.setChild(mml, name.charAt(1) === 'o' ?  mml.over : mml.under,
-                     mo);
+  NodeUtil.setChild(mml, name.charAt(1) === 'o' ?  mml.over : mml.under, mo);
   let node: MmlNode = mml;
   if (stack) {
     // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
-    node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mml],
+    node = parser.create('node', 'TeXAtom', [mml],
                                                    {texClass: TEXCLASS.OP, movesupsub: true});
   }
-  NodeUtil.setProperties(node, {subsupOK: true});
+  NodeUtil.setProperty(node, 'subsupOK', true);
   parser.Push(node);
 };
 
@@ -696,7 +688,7 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
   if (NodeUtil.getAttribute(base, 'movablelimits') || NodeUtil.getProperty(base, 'movablelimits')) {
     NodeUtil.setProperties(base, {'movablelimits': false});
   }
-  const node = parser.configuration.nodeFactory.create('node', 'mover', [base, top], {});
+  const node = parser.create('node', 'mover', [base, top]);
   parser.Push(node);
 };
 
@@ -713,7 +705,7 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
     // @test Overline Sum
     NodeUtil.setProperties(base, {'movablelimits': false});
   }
-  const node = parser.configuration.nodeFactory.create('node', 'munder', [base, bot], {});
+  const node = parser.create('node', 'munder', [base, bot]);
   parser.Push(node);
 };
 
@@ -736,18 +728,17 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
     if (match) {
       // @test Mathop
       def['mathvariant'] = TexConstant.Variant.NORMAL;
-      node = parser.configuration.nodeFactory.create('token', 'mi', def, match[1]);
-      mml = parser.itemFactory.create('fn', node);
+      node = parser.create('token', 'mi', def, match[1]);
     } else {
       // @test Mathop Cal
       parsed = new TexParser(arg, parser.stack.env, parser.configuration).mml();
-      node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [parsed], def);
-      mml = parser.itemFactory.create('fn', node);
+      node = parser.create('node', 'TeXAtom', [parsed], def);
     }
+    mml = parser.itemFactory.create('fn', node);
   } else {
     // @test Mathrel
     parsed = parser.ParseArg(name);
-    mml = parser.configuration.nodeFactory.create('node', 'TeXAtom', [parsed], def);
+    mml = parser.create('node', 'TeXAtom', [parsed], def);
   }
   parser.Push(mml);
 };
@@ -766,7 +757,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   const def: EnvList = {};
   let node: MmlNode;
   try {
-    node = parser.configuration.nodeFactory.create('node', kind, [], {});
+    node = parser.create('node', kind);
   } catch (e) {
     node = null;
   }
@@ -775,19 +766,19 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
     throw new TexError('NotMathMLToken', '%1 is not a token element', kind);
   }
   while (attr !== '') {
-    const match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|'[^']*'|[^ ,]*)\s*,?\s*/i);
+    const match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
     if (!match) {
       // @test Token Invalid Attribute
       throw new TexError('InvalidMathMLAttr', 'Invalid MathML attribute: %1', attr);
     }
-    if (node.attributes.getAllDefaults()[match[1]] == null && !MmlTokenAllow[match[1]]) {
+    if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
       // @test Token Unknown Attribute, Token Wrong Attribute
       throw new TexError('UnknownAttrForElement',
                           '%1 is not a recognized attribute for %2',
                           match[1], kind);
     }
     let value: string | boolean = ParseUtil.MmlFilterAttribute(
-      parser, match[1], match[2].replace(/^([''])(.*)\1$/, '$2'));
+      parser, match[1], match[2].replace(/^(['"])(.*)\1$/, '$2'));
     if (value) {
       if (value.toLowerCase() === 'true') {
         value = true;
@@ -799,7 +790,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
     }
     attr = attr.substr(match[0].length);
   }
-  const textNode = parser.configuration.nodeFactory.create('text', text);
+  const textNode = parser.create('text', text);
   node.appendChild(textNode);
   NodeUtil.setProperties(node, def);
   parser.Push(node);
@@ -813,9 +804,8 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
  */
 BaseMethods.Strut = function(parser: TexParser, name: string) {
   // @test Strut
-  // TODO: Do we still need this row as it is implicit?
-  const row = parser.configuration.nodeFactory.create('node', 'mrow', [], {});
-  const padded = parser.configuration.nodeFactory.create('node', 'mpadded', [row],
+  const row = parser.create('node', 'mrow');
+  const padded = parser.create('node', 'mpadded', [row],
                                                          {height: '8.6pt', depth: '3pt', width: 0});
   parser.Push(padded);
 };
@@ -829,10 +819,10 @@ BaseMethods.Strut = function(parser: TexParser, name: string) {
  */
 BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: string) {
   // @test Phantom
-  let box = parser.configuration.nodeFactory.create('node', 'mphantom', [parser.ParseArg(name)], {});
+  let box = parser.create('node', 'mphantom', [parser.ParseArg(name)]);
   if (v || h) {
     // TEMP: Changes here
-    box = parser.configuration.nodeFactory.create('node', 'mpadded', [box], {});
+    box = parser.create('node', 'mpadded', [box]);
     if (h) {
       // @test Horizontal Phantom
       NodeUtil.setAttribute(box, 'height', 0);
@@ -843,7 +833,7 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
       NodeUtil.setAttribute(box, 'width', 0);
     }
   }
-  const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [box], {});
+  const atom = parser.create('node', 'TeXAtom', [box]);
   parser.Push(atom);
 };
 
@@ -855,7 +845,7 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
 BaseMethods.Smash = function(parser: TexParser, name: string) {
   // @test Smash, Smash Top, Smash Bottom
   const bt = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
-  const smash = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {});
+  const smash = parser.create('node', 'mpadded', [parser.ParseArg(name)]);
   // TEMP: Changes here:
   switch (bt) {
   case 'b': NodeUtil.setAttribute(smash, 'depth', 0); break;
@@ -864,7 +854,7 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
     NodeUtil.setAttribute(smash, 'height', 0);
     NodeUtil.setAttribute(smash, 'depth', 0);
   }
-  const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [smash], {});
+  const atom = parser.create('node', 'TeXAtom', [smash]);
   parser.Push(atom);
 };
 
@@ -875,12 +865,12 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
  */
 BaseMethods.Lap = function(parser: TexParser, name: string) {
   // @test Llap, Rlap
-  const mml = parser.configuration.nodeFactory.create('node', 'mpadded', [parser.ParseArg(name)], {width: 0});
+  const mml = parser.create('node', 'mpadded', [parser.ParseArg(name)], {width: 0});
   if (name === '\\llap') {
     // @test Llap
     NodeUtil.setAttribute(mml, 'lspace', '-1width');
   }
-  const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mml], {});
+  const atom = parser.create('node', 'TeXAtom', [mml]);
   parser.Push(atom);
 };
 
@@ -930,8 +920,8 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
   parser.Push(
     parser.itemFactory.create('position').setProperties({
       name: parser.currentCS, move: 'horizontal',
-      left:  parser.configuration.nodeFactory.create('node', 'mspace', [], {width: h}),
-      right: parser.configuration.nodeFactory.create('node', 'mspace', [], {width: nh})}) );
+      left:  parser.create('node', 'mspace', [], {width: h}),
+      right: parser.create('node', 'mspace', [], {width: nh})}) );
 };
 
 
@@ -942,7 +932,7 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
  */
 BaseMethods.Hskip = function(parser: TexParser, name: string) {
   // @test Modulo
-  const node = parser.configuration.nodeFactory.create('node', 'mspace', [],
+  const node = parser.create('node', 'mspace', [],
                                                        {width: parser.GetDimen(name)});
   parser.Push(node);
 };
@@ -963,7 +953,7 @@ BaseMethods.Rule = function(parser: TexParser, name: string, style: string) {
   if (style !== 'blank') {
     def['mathbackground'] = (parser.stack.env['color'] || 'black');
   }
-  const node = parser.configuration.nodeFactory.create('node', 'mspace', [], def);
+  const node = parser.create('node', 'mspace', [], def);
   parser.Push(node);
 };
 
@@ -978,11 +968,11 @@ BaseMethods.rule = function(parser: TexParser, name: string) {
   const v = parser.GetBrackets(name),
   w = parser.GetDimen(name),
   h = parser.GetDimen(name);
-  let mml = parser.configuration.nodeFactory.create('node', 'mspace', [], {
+  let mml = parser.create('node', 'mspace', [], {
     width: w, height: h,
     mathbackground: (parser.stack.env['color'] || 'black') });
   if (v) {
-    mml = parser.configuration.nodeFactory.create('node', 'mpadded', [mml], {voffset: v});
+    mml = parser.create('node', 'mpadded', [mml], {voffset: v});
     if (v.match(/^\-/)) {
       NodeUtil.setAttribute(mml, 'height', v);
       NodeUtil.setAttribute(mml, 'depth', '+' + v.substr(1));
@@ -1005,11 +995,11 @@ BaseMethods.MakeBig = function(parser: TexParser, name: string, mclass: number, 
   size *= P_HEIGHT;
   let sizeStr = String(size).replace(/(\.\d\d\d).+/, '$1') + 'em';
   const delim = parser.GetDelimiter(name, true);
-  const mo = parser.configuration.nodeFactory.create('token', 'mo', {
+  const mo = parser.create('token', 'mo', {
     minsize: sizeStr, maxsize: sizeStr,
     fence: true, stretchy: true, symmetric: true
   }, delim);
-  const node = parser.configuration.nodeFactory.create('node', 'TeXAtom', [mo], {texClass: mclass});
+  const node = parser.create('node', 'TeXAtom', [mo], {texClass: mclass});
   parser.Push(node);
 };
 
@@ -1023,12 +1013,12 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   // @test BuildRel, BuildRel Expression
   const top = parser.ParseUpTo(name, '\\over');
   const bot = parser.ParseArg(name);
-  const node = parser.configuration.nodeFactory.create('node', 'munderover', [], {});
+  const node = parser.create('node', 'munderover');
   // TODO: This is necessary to get the empty element into the children.
   NodeUtil.setChild(node, 0, bot);
   NodeUtil.setChild(node, 1, null);
   NodeUtil.setChild(node, 2, top);
-  const atom = parser.configuration.nodeFactory.create('node', 'TeXAtom', [node], {texClass: TEXCLASS.REL});
+  const atom = parser.create('node', 'TeXAtom', [node], {texClass: TEXCLASS.REL});
   parser.Push(atom);
 };
 
@@ -1045,14 +1035,14 @@ BaseMethods.HBox = function(parser: TexParser, name: string, style: string) {
 };
 
 /**
- * Handle framce boxes.
+ * Handle framed boxes.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
 BaseMethods.FBox = function(parser: TexParser, name: string) {
   // @test Fbox
   const internal = ParseUtil.internalMath(parser, parser.GetArgument(name));
-  const node = parser.configuration.nodeFactory.create('node', 'menclose', internal, {notation: 'box'});
+  const node = parser.create('node', 'menclose', internal, {notation: 'box'});
   parser.Push(node);
 };
 
@@ -1065,7 +1055,7 @@ BaseMethods.FBox = function(parser: TexParser, name: string) {
 BaseMethods.Not = function(parser: TexParser, name: string) {
   // @test Negation Simple, Negation Complex, Negation Explicit,
   //       Negation Large
-  parser.Push( parser.itemFactory.create('not') );
+  parser.Push(parser.itemFactory.create('not'));
 };
 
 
@@ -1078,8 +1068,8 @@ BaseMethods.Dots = function(parser: TexParser, name: string) {
   // @test Operator Dots
   const ldotsEntity = NodeUtil.createEntity('2026');
   const cdotsEntity = NodeUtil.createEntity('22EF');
-  const ldots = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: false}, ldotsEntity);
-  const cdots = parser.configuration.nodeFactory.create('token', 'mo', {stretchy: false}, cdotsEntity);
+  const ldots = parser.create('token', 'mo', {stretchy: false}, ldotsEntity);
+  const cdots = parser.create('token', 'mo', {stretchy: false}, cdotsEntity);
   parser.Push(
     parser.itemFactory.create('dots').setProperties({
       ldots: ldots,
@@ -1119,7 +1109,7 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
     parser.i = 0;
   }
   // @test Matrix Braces, Matrix Columns, Matrix Rows.
-  const array = parser.itemFactory.create('array').setProperties({requireClose: true});
+  const array = parser.itemFactory.create('array').setProperty('requireClose', true) as sitem.ArrayItem;
   array.arraydef = {
     rowspacing: (vspacing || '4pt'),
     columnspacing: (spacing || '1em')
@@ -1158,7 +1148,7 @@ BaseMethods.Matrix = function(parser: TexParser, name: string,
 BaseMethods.Entry = function(parser: TexParser, name: string) {
   // @test Label, Array, Cross Product Formula
   parser.Push(
-    parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}) );
+    parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}));
   if (parser.stack.Top().getProperty('isCases')) {
     //
     //  Make second column be in \text{...} (unless it is already
@@ -1242,7 +1232,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
 BaseMethods.Cr = function(parser: TexParser, name: string) {
   // @test Cr Linebreak, Misplaced Cr
   parser.Push(
-    parser.itemFactory.create('cell').setProperties({isCR: true, name: name}) );
+    parser.itemFactory.create('cell').setProperties({isCR: true, name: name}));
 };
 
 
@@ -1288,11 +1278,11 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
   } else {
     if (n) {
       // @test Custom Linebreak
-      node = parser.configuration.nodeFactory.create('node', 'mspace', [], {depth: n});
+      node = parser.create('node', 'mspace', [], {depth: n});
       parser.Push(node);
     }
     // @test Linebreak
-    node = parser.configuration.nodeFactory.create('node', 'mspace', [], {linebreak: TexConstant.LineBreak.NEWLINE});
+    node = parser.create('node', 'mspace', [], {linebreak: TexConstant.LineBreak.NEWLINE});
     parser.Push(node);
   }
 };
@@ -1344,11 +1334,9 @@ BaseMethods.HFill = function(parser: TexParser, name: string) {
 };
 
 
-
 /**
  *   LaTeX environments
  */
-let MAXMACROS = 10000;    // maximum number of macro substitutions per equation
 
 /**
  * Handle begin and end environments. This is a macro method.
@@ -1364,14 +1352,18 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   }
   let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
   if (macro && name === '\\end') {
+    // If the first argument is true, we have some sort of user defined
+    // environment. Otherwise we have a standard LaTeX environment that is
+    // handled with begin and end items.
     if (!macro.args[0]) {
-      const mml = parser.itemFactory.create('end').setProperties({name: env});
+      const mml = parser.itemFactory.create('end').setProperty('name', env);
       parser.Push(mml);
       return;
     }
-    parser.stack.env['closing'] = macro.args[0];
+    // Remember the user defined environment we are closing.
+    parser.stack.env['closing'] = env;
   }
-  if (++parser.macroCount > MAXMACROS) {
+  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub2',
                         'MathJax maximum substitution count exceeded; ' +
                         'is there a recursive latex environment?');
@@ -1403,7 +1395,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
   let lines = ('c' + align).replace(/[^clr|:]/g, '').replace(/[^|:]([|:])+/g, '$1');
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  const array = parser.itemFactory.create('array');
+  const array = parser.itemFactory.create('array') as sitem.ArrayItem;
   array.arraydef = {
     columnalign: align,
     columnspacing: (spacing || '1em'),
@@ -1444,7 +1436,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
   if (style === 'S') {
     // @test Subarray, Small Matrix
     array.arraydef['scriptlevel'] = 1;
-  } // FIXME: should use mstyle?
+  }
   if (raggedHeight)  {
     // @test Subarray, Small Matrix
     array.arraydef['useHeight'] = false;
@@ -1477,7 +1469,7 @@ BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: 
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
   return parser.itemFactory.create('equation', numbered).
-    setProperties({name: begin.getName()});
+    setProperty('name', begin.getName());
 };
 
 
@@ -1500,14 +1492,15 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
   }
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  let newItem = parser.itemFactory.create('eqnarray', begin.getName(), numbered, taggable, parser.stack.global);
+  let newItem = parser.itemFactory.create('eqnarray', begin.getName(),
+                                          numbered, taggable, parser.stack.global) as sitem.ArrayItem;
   newItem.arraydef = {
     displaystyle: true,
     columnalign: align,
     columnspacing: (spacing || '1em'),
     rowspacing: '3pt',
-    side: parser.options.get('TagSide'),
-    minlabelspacing: parser.options.get('TagIndent')
+    side: parser.options['TagSide'],
+    minlabelspacing: parser.options['TagIndent']
   };
   return newItem;
 };
@@ -1530,14 +1523,14 @@ BaseMethods.HandleNoTag = function(parser: TexParser, name: string) {
  */
 BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
   // @test Label, Label Empty
-  let global = this.stack.global;
-  let label = this.GetArgument(name);
+  let global = parser.stack.global;
+  let label = parser.GetArgument(name);
   if (label === '') {
     // @test Label Empty
     return;
   }
   // TODO: refUpdate is currently not implemented.
-  if (!parser.options.get('refUpdate')) {
+  if (!parser.options['refUpdate']) {
     // @test Label, Ref, Ref Unknown
     if (parser.tags.label) {
       // @test Double Label Error
@@ -1568,7 +1561,7 @@ let baseURL = (typeof(document) === 'undefined' ||
  */
 BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
   // @test Ref, Ref Unknown, Eqref, Ref Default, Ref Named
-  let label = this.GetArgument(name);
+  let label = parser.GetArgument(name);
   let ref = parser.tags.allLabels[label] || parser.tags.labels[label];
   if (!ref) {
     // @test Ref Unknown
@@ -1579,7 +1572,7 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
     // @test Eqref
     tag = parser.tags.formatTag(tag);
   }
-  let node = parser.configuration.nodeFactory.create('node', 'mrow', ParseUtil.internalMath(parser, tag), {
+  let node = parser.create('node', 'mrow', ParseUtil.internalMath(parser, tag), {
     href: parser.tags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
   });
   parser.Push(node);
@@ -1602,11 +1595,11 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
     for (let i = args.length; i < argcount; i++) {
       args.push(parser.GetArgument(name));
     }
-    macro = ParseUtil.substituteArgs(args, macro);
+    macro = ParseUtil.substituteArgs(parser, args, macro);
   }
-  parser.string = ParseUtil.addArgs(macro, parser.string.slice(parser.i));
+  parser.string = ParseUtil.addArgs(parser, macro, parser.string.slice(parser.i));
   parser.i = 0;
-  if (++parser.macroCount > MAXMACROS) {
+  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
     throw new TexError('MaxMacroSub1',
                         'MathJax maximum macro substitution count exceeded; ' +
                         'is there a recursive macro call?');
@@ -1625,8 +1618,7 @@ BaseMethods.MathChoice = function(parser: TexParser, name: string) {
   const T  = parser.ParseArg(name);
   const S  = parser.ParseArg(name);
   const SS = parser.ParseArg(name);
-  parser.Push(parser.configuration.nodeFactory.create(
-      'node', 'mathchoice', [D, T, S, SS], {}));
+  parser.Push(parser.create('node', 'mathchoice', [D, T, S, SS]));
 };
 
 

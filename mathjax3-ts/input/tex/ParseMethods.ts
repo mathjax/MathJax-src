@@ -22,13 +22,13 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sitem from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import TexParser from './TexParser.js';
 import NodeUtil from './NodeUtil.js';
 import {TexConstant} from './TexConstants.js';
 import {ParseMethod, ParseInput} from './Types.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import ParseUtil from './ParseUtil.js';
 
 
 namespace ParseMethods {
@@ -36,16 +36,13 @@ namespace ParseMethods {
   /**
    * Handle a variable (a single letter).
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The string to parse.
+   * @param {string} c The single letter string to transform into an mi.
    */
   export function variable(parser: TexParser, c: string) {
-    const def: sitem.EnvList = {};
-    if (parser.stack.env['font']) {
-      // @test Identifier Font
-      def['mathvariant'] = parser.stack.env['font'];
-    }
+    // @test Identifier Font
+    const def = ParseUtil.getFontDef(parser);
     // @test Identifier
-    const node = parser.configuration.nodeFactory.create('token', 'mi', def, c);
+    const node = parser.create('token', 'mi', def, c);
     parser.Push(node);
   };
 
@@ -53,23 +50,22 @@ namespace ParseMethods {
   /**
    * Handle a number (a sequence of digits, with decimal separator, etc.).
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The string to parse.
+   * @param {string} c The first character of a number than can be parsed with
+   *     the digits pattern.
    */
   export function digit(parser: TexParser, c: string) {
     let mml: MmlNode;
-    const n = parser.string.slice(parser.i - 1).match(/^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)*|\.[0-9]+)/);
-    const def: sitem.EnvList = {};
-    if (parser.stack.env['font']) {
-      // @test Integer Font
-      def['mathvariant'] = parser.stack.env['font'];
-    }
+    const pattern = parser.configuration.options['digits'];
+    const n = parser.string.slice(parser.i - 1).match(pattern);
+    // @test Integer Font
+    const def = ParseUtil.getFontDef(parser);
     if (n) {
-      // @test Integer, Number
-      mml = parser.configuration.nodeFactory.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
+      // @test Integer, Number, Decimal (European)
+      mml = parser.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
       parser.i += n[0].length - 1;
     } else {
-      // @test Decimal
-      mml = parser.configuration.nodeFactory.create('token', 'mo', def, c);
+      // @test Decimal Point, Decimal Point European
+      mml = parser.create('token', 'mo', def, c);
     }
     parser.Push(mml);
   };
@@ -77,7 +73,7 @@ namespace ParseMethods {
   /**
    * Lookup a control-sequence and process it.
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The string to parse.
+   * @param {string} c The string '\'.
    */
   export function controlSequence(parser: TexParser, c: string) {
     const name = parser.GetCS();
@@ -88,26 +84,27 @@ namespace ParseMethods {
   /**
    * Handle normal mathchar (as an mi).
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The string to parse.
+   * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar0mi(parser: TexParser, mchar: Symbol) {
     const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
     // @test Greek
-    const node = parser.configuration.nodeFactory.create('token', 'mi', def, mchar.char);
+    const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
   };
 
   /**
    * Handle normal mathchar (as an mo).
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The string to parse.
+   * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar0mo(parser: TexParser, mchar: Symbol) {
     const def = mchar.attributes || {};
     def['stretchy'] = false;
     // @test Large Set
-    const node = parser.configuration.nodeFactory.create('token', 'mo', def, mchar.char);
+    const node = parser.create('token', 'mo', def, mchar.char);
     NodeUtil.setProperty(node, 'fixStretchy', true);
+    parser.configuration.addNode('fixStretchy', node);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(node);
   };
@@ -115,29 +112,29 @@ namespace ParseMethods {
   /**
    * Handle mathchar in current family.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The string to parse.
+   * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar7(parser: TexParser, mchar: Symbol) {
-        const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
+    const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
     if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
       def['mathvariant'] = parser.stack.env['font'];
     }
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
-    const node = parser.configuration.nodeFactory.create('token', 'mi', def, mchar.char);
+    const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
   };
 
   /**
    * Handle delimiter.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The string to parse.
+   * @param {Symbol} mchar The parsed symbol.
    */
   export function delimiter(parser: TexParser, delim: Symbol) {
     let def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({fence: false, stretchy: false}, def);
-    const node = parser.configuration.nodeFactory.create('token', 'mo', def, delim.char);
+    const node = parser.create('token', 'mo', def, delim.char);
     parser.Push(node);
   };
 
@@ -152,7 +149,7 @@ namespace ParseMethods {
   export function environment(parser: TexParser, env: string, func: Function, args: any[]) {
     const end = args[0];
     let mml = parser.itemFactory.create('begin').setProperties({name: env, end: end});
-    mml = func.apply(null, [parser, mml].concat(args.slice(1)));
+    mml = func(parser, mml, ...args.slice(1));
     parser.Push(mml);
   };
 

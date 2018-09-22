@@ -26,18 +26,16 @@ import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {OptionList} from '../../util/Options.js';
 import {ProtoItem} from '../../core/MathItem.js';
 
-/*
+/**
  * The MathML namespace
  */
 const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
 
 
 /*****************************************************************/
-/*
+/**
  *  Implements the FindMathML object (extends AbstractFindMath)
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -48,7 +46,7 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
 
     public adaptor: DOMAdaptor<N, T, D>;
 
-    /*
+    /**
      * Locates math nodes, possibly with namespace prefixes.
      *  Store them in a set so that if found more than once, they will only
      *  appear in the list once.
@@ -66,11 +64,11 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
         return this.processMath(set);
     }
 
-    /*
+    /**
      * Find plain <math> tags
      *
-     * @param{N} node       The container to seaerch for math
-     * @param{Set<N>} set   The set in which to store the math nodes
+     * @param {N} node       The container to seaerch for math
+     * @param {Set<N>} set   The set in which to store the math nodes
      */
     protected findMathNodes(node: N, set: Set<N>) {
         for (const math of this.adaptor.tags(node, 'math')) {
@@ -78,11 +76,11 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Find <m:math> tags (or whatever prefixes there are)
      *
-     * @param{N} node  The container to seaerch for math
-     * @param{NodeSet} set   The set in which to store the math nodes
+     * @param {N} node  The container to seaerch for math
+     * @param {NodeSet} set   The set in which to store the math nodes
      */
     protected findMathPrefixed(node: N, set: Set<N>) {
         let html = this.adaptor.root(this.adaptor.document);
@@ -96,11 +94,11 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
         }
     }
 
-    /*
+    /**
      * Find namespaced math in XHTML documents (is this really needed?)
      *
-     * @param{N} node  The container to seaerch for math
-     * @param{NodeSet} set   The set in which to store the math nodes
+     * @param {N} node  The container to seaerch for math
+     * @param {NodeSet} set   The set in which to store the math nodes
      */
     protected findMathNS(node: N, set: Set<N>) {
         for (const math of this.adaptor.tags(node, 'math', NAMESPACE)) {
@@ -108,7 +106,7 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
         }
     }
 
-    /*
+    /**
      *  Produce the array of proto math items from the node set
      */
     protected processMath(set: Set<N>) {

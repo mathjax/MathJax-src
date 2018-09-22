@@ -26,7 +26,7 @@ import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
 import {BBox} from '../BBox.js';
 
 /*****************************************************************/
-/*
+/**
  *  The CHTMLmi wrapper for the MmlMi object
  *
  * @template N  The HTMLElement node class
@@ -36,12 +36,12 @@ import {BBox} from '../BBox.js';
 export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlMi.prototype.kind;
 
-    /*
+    /**
      * True if no italic correction should be used
      */
     public noIC: boolean = false;
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -51,7 +51,7 @@ export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {

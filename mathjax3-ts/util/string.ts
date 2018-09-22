@@ -22,31 +22,31 @@
  */
 
 
-/*
+/**
  * Sort strings by length
  *
- * @param{string} a, b  The strings to be compared
- * @return{number}  -1 id a < b, 0 of a === b, 1 if a > b
+ * @param {string} a, b  The strings to be compared
+ * @return {number}  -1 id a < b, 0 of a === b, 1 if a > b
  */
 export function sortLength(a: string, b: string) {
     return a.length !== b.length ? b.length - a.length : a === b ? 0 : a < b ? -1 : 1;
 }
 
-/*
+/**
  * Quote a string for use in regular expressions
  *
- * @param{string} text  The text whose regex characters are to be quoted
- * @return{string}  The quoted string
+ * @param {string} text  The text whose regex characters are to be quoted
+ * @return {string}  The quoted string
  */
 export function quotePattern(text: string) {
     return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
 }
 
-/*
+/**
  * Convert a UTF-8 string to an array of unicode code points
  *
- * @param{string} text  The string to be turned into unicode positions
- * @return{number[]}  Array of numbers representing the string's unicode character positions
+ * @param {string} text  The string to be turned into unicode positions
+ * @return {number[]}  Array of numbers representing the string's unicode character positions
  */
 export function unicodeChars(text: string) {
     let unicode: number[] = [];
@@ -60,21 +60,21 @@ export function unicodeChars(text: string) {
     return unicode;
 }
 
-/*
+/**
  * Test if a value is a percentage
  *
- * @param{string} x   The string to test
- * @return{boolean}   True if the string ends with a percent sign
+ * @param {string} x   The string to test
+ * @return {boolean}   True if the string ends with a percent sign
  */
 export function isPercent(x: string) {
     return x.match(/%\s*$/);
 }
 
-/*
+/**
  * Split a space-separated string of values
  *
- * @param{string} x   The string to be split
- * @return{string[]}  The list of white-space-separated "words" in the string
+ * @param {string} x   The string to be split
+ * @return {string[]}  The list of white-space-separated "words" in the string
  */
 export function split(x: string) {
     return x.trim().split(/\s+/);

@@ -23,6 +23,7 @@
  */
 
 import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
+import {FactoryNodeClass} from '../../core/Tree/Factory.js';
 import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 
@@ -36,7 +37,7 @@ export type Prop = string | number | boolean | MmlNode | PropList;
 
 export type PropList = {[key: string]: Prop};
 
-export type CheckType = boolean | StackItem | (MmlNode | StackItem)[];
+export type CheckType = [(MmlNode | StackItem)[], boolean];
 
 
 export interface NodeStack {
@@ -45,11 +46,11 @@ export interface NodeStack {
    * Get or set the topmost element on the node stack without removing it.
    * @return {MmlNode} The topmost node on the stack.
    */
-  Top: MmlNode;
+  First: MmlNode;
 
   /**
    * Get or set the last element on the node stack without removing it.
-   * @return {MmlNode} The topmost node on the stack.
+   * @return {MmlNode} The last node on the stack.
    */
   Last: MmlNode;
 
@@ -69,7 +70,7 @@ export interface NodeStack {
    * @param {number=} n Number of elements that should be returned.
    * @return {MmlNode[]} List of nodes on top of stack.
    */
-  TopN(n?: number): MmlNode[];
+  Peek(n?: number): MmlNode[];
 
   /**
    * @return {number} The size of the stack.
@@ -114,7 +115,7 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public Push(...nodes: MmlNode[]) {
-    this._nodes.push.apply(this._nodes, nodes);
+    this._nodes.push(...nodes);
   }
 
 
@@ -129,16 +130,16 @@ export abstract class MmlStack implements NodeStack {
   /**
    * @override
    */
-  public get Top(): MmlNode {
-    return this._nodes[0];
+  public get First(): MmlNode {
+    return this._nodes[this.Size() - 1];
   }
 
 
   /**
    * @override
    */
-  public set Top(node: MmlNode) {
-    this._nodes[0] = node;
+  public set First(node: MmlNode) {
+    this._nodes[this.Size() - 1] = node;
   }
 
 
@@ -146,7 +147,7 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public get Last(): MmlNode {
-    return this._nodes[this._nodes.length - 1];
+    return this._nodes[0];
   }
 
 
@@ -154,18 +155,18 @@ export abstract class MmlStack implements NodeStack {
    * @override
    */
   public set Last(node: MmlNode) {
-    this._nodes[this._nodes.length - 1] = node;
+    this._nodes[0] = node;
   }
 
 
   /**
    * @override
    */
-  public TopN(n?: number): MmlNode[] {
+  public Peek(n?: number): MmlNode[] {
     if (n == null) {
       n = 1;
     }
-    return this._nodes.slice(0, n);
+    return this._nodes.slice(this.Size() - n);
   }
 
 
@@ -190,16 +191,24 @@ export abstract class MmlStack implements NodeStack {
   /**
    * @override
    */
-  public toMml(inferred?: boolean, forceRow?: boolean) {
-    if (inferred == null) {
-      inferred = true;
-    }
+  public toMml(inferred: boolean = true, forceRow?: boolean) {
     if (this._nodes.length === 1 && !forceRow) {
-      return this.Top;
+      return this.First;
     }
     // @test Two Identifiers
-    return this.factory.configuration.nodeFactory.create(
+    return this.create(
       'node', inferred ? 'inferredMrow' : 'mrow', this._nodes, {});
+  }
+
+
+  /**
+   * Convenience method to create nodes with the node factory on this stack.
+   * @param {string} kind The kind of node to create.
+   * @param {any[]} ...rest The remaining arguments for the creation method.
+   * @return {MmlNode} The newly created node.
+   */
+  public create(kind: string, ...rest: any[]): MmlNode {
+    return this.factory.configuration.nodeFactory.create(kind, ...rest);
   }
 
 }
@@ -226,7 +235,7 @@ export interface StackItem extends NodeStack {
   isOpen: boolean;
 
   /**
-   * Is this a finalising item, e.g., end.
+   * Is this a finalising item, i.e., one that only collects nodes.
    * @type {boolean}
    */
   isFinal: boolean;
@@ -261,9 +270,17 @@ export interface StackItem extends NodeStack {
    * Set a property.
    * @param {string} key Property name.
    * @param {Prop} value Property value.
+   * @return {StackItem} The item for pipelining.
    */
-  setProperty(key: string, value: Prop): void;
+  setProperty(key: string, value: Prop): StackItem;
 
+  /**
+   * Sets a list of properties.
+   * @param {PropList} def The properties to set.
+   * @return {StackItem} Returns the stack item object for pipelining.
+   */
+  setProperties(def: PropList): StackItem;
+  
   /**
    * Convenience method for returning the string property "name".
    * @return {string} The value for the name property.
@@ -297,8 +314,8 @@ export interface StackItem extends NodeStack {
 
 }
 
-export interface StackItemClass {
-  new (factory: StackItemFactory, ...nodes: MmlNode[]): StackItem;
+export interface StackItemClass extends FactoryNodeClass<StackItem> {
+  // new (factory: StackItemFactory, ...args: any[]): StackItem;
 }
 
 
@@ -308,12 +325,23 @@ export interface StackItemClass {
  */
 export abstract class BaseItem extends MmlStack implements StackItem {
 
+  /**
+   * The fail value.
+   * @type {CheckType}
+   */
+  protected static fail: CheckType = [null, false];
+
+  /**
+   * The success value.
+   * @type {CheckType}
+   */
+  protected static success: CheckType = [null, true];
 
   /**
    * A list of basic errors.
    * @type {{[key: string]: string[]}}
    */
-  protected errors: {[key: string]: string[]} = {
+  protected static errors: {[key: string]: string[]} = {
     // @test ExtraOpenMissingClose
     end: ['MissingBeginExtraEnd', 'Missing \\begin{%1} or extra \\end{%1}'],
     // @test ExtraCloseMissingOpen
@@ -371,6 +399,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    */
   public setProperty(key: string, value: Prop) {
     this._properties[key] = value;
+    return this;
   }
 
 
@@ -418,22 +447,22 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     }
     if (item.isKind('cell') && this.isOpen) {
       if (item.getProperty('linebreak')) {
-        return false;
+        return BaseItem.fail;
       }
       // @test Ampersand-error
       throw new TexError('Misplaced', 'Misplaced %1', item.getName());
     }
-    if (item.isClose && this.errors[item.kind]) {
+    if (item.isClose && this.getErrors(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,
       //       MissingLeftExtraRight, MissingBeginExtraEnd
-      const error = this.errors[item.kind].concat([item.getName()]);
-      throw new TexError(error[0], error[1], ...error.splice(2));
+      const [id, message] = this.getErrors(item.kind);
+      throw new TexError(id, message, item.getName());
     }
     if (!item.isFinal) {
-      return true;
+      return BaseItem.success;
     }
-    this.Push(item.Top);
-    return false;
+    this.Push(item.First);
+    return BaseItem.fail;
   }
 
 
@@ -441,25 +470,17 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * Clears the item's environment.
    */
   public clearEnv() {
-    for (let id in this.env) {
-      if (this.env.hasOwnProperty(id)) {
-        delete this.env[id];
-      }
+    for (const id of Object.keys(this.env)) {
+      delete this.env[id];
     }
   }
 
 
   /**
-   * Sets a list of properties.
-   * @param {PropList} def The properties to set.
-   * @return {StackItem} Returns the stack item object for pipelining.
+   * @override
    */
   public setProperties(def: PropList) {
-    for (let id in def) {
-      if (def.hasOwnProperty(id)) {
-        this.setProperty(id, def[id]);
-      }
-    }
+    Object.assign(this._properties, def);
     return this;
   }
 
@@ -477,6 +498,19 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    */
   public toString() {
     return this.kind + '[' + this.nodes.join('; ') + ']';
+  }
+
+
+  /**
+   * Get error messages for a particular types of stack items. This reads error
+   * messages from the static errors object, which can be extended in
+   * subclasses.
+   * @param {string} kind The stack item type.
+   * @return {string[]} The list of arguments for the TeXError.
+   */
+  public getErrors(kind: string): string[] {
+    const CLASS = (this.constructor as typeof BaseItem);
+    return (CLASS.errors || {})[kind] || BaseItem.errors[kind];
   }
 
 }

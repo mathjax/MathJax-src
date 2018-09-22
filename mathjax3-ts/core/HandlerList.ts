@@ -28,39 +28,37 @@ import {MathDocument} from './MathDocument.js';
 import {DOMAdaptor} from './DOMAdaptor.js';
 
 /*****************************************************************/
-/*
+/**
  *  The HandlerList class (extends PrioritizedList of Handlers)
  *
  *  This list is used to find the handler for a given document
  *  by asking each handler to test if it can handle the document,
  *  and when one can, it is asked to create its associated MathDocument.
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>>  {
 
-    /*
-     * @param{Handler} handler  The handler to register
-     * @return{PrioritizedListItem<Handler>}  The list item created for the handler
+    /**
+     * @param {Handler} handler  The handler to register
+     * @return {PrioritizedListItem<Handler>}  The list item created for the handler
      */
     public register(handler: Handler<N, T, D>) {
         return this.add(handler, handler.priority);
     }
 
-    /*
-     * @param{Handler} Handler  The handler to remove from the list
+    /**
+     * @param {Handler} Handler  The handler to remove from the list
      */
     public unregister(handler: Handler<N, T, D>) {
         this.remove(handler);
     }
 
-    /*
-     * @param{any} document  The document (string, window, DOM element, etc) to be handled
-     * @return{handler}      The handler from the list that can process the given document
+    /**
+     * @param {any} document  The document (string, window, DOM element, etc) to be handled
+     * @return {handler}      The handler from the list that can process the given document
      */
     public handlesDocument(document: any) {
         for (const item of this) {
@@ -72,10 +70,10 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>>  {
         throw new Error("Can't find handler for document");
     }
 
-    /*
-     * @param{any} document        The document to be processed
-     * @param{OptionList} options  The options for the handler
-     * @return{MathDocument}       The MathDocument created by the handler for this document
+    /**
+     * @param {any} document        The document to be processed
+     * @param {OptionList} options  The options for the handler
+     * @return {MathDocument}       The MathDocument created by the handler for this document
      */
     public document(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList = null) {
         return this.handlesDocument(document).create(document, adaptor, options);
