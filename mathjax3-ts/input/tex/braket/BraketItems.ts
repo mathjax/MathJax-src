@@ -25,6 +25,8 @@
 
 import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
+import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import ParseUtil from '../ParseUtil.js';
 
 
 export class BraketItem extends BaseItem {
@@ -47,21 +49,35 @@ export class BraketItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem): CheckType {
-    console.log('In Braket Item');
-   console.log(item);
     if (item.isKind('close')) {
       let node = this.toMml();
       // Add the closing angle or set bracket!
       return [[this.factory.create('mml', node)], true];
-    }
-    if (item.isKind('bar')) {
-      // Let's close here with a bar.
     }
     if (item.isKind('mml')) {
       this.Push(item.toMml());
       return [null, false];
     }
     return super.checkItem(item);
+  }
+
+
+  /**
+   * @override
+   */
+  public toMml() {
+    let inner = super.toMml();
+    let open = this.getProperty('open') as string;
+    let close = this.getProperty('close') as string;
+    if (this.getProperty('stretchy')) {
+      return ParseUtil.fenced(this.factory.configuration, open, inner, close);
+    }
+    let attrs = {fence: true, stretchy: false, symmetric: true, texClass: TEXCLASS.OPEN};
+    let openNode = this.create('token', 'mo', attrs, open);
+    let closeNode = this.create('token', 'mo', attrs, close);
+    let mrow = this.create('node', 'mrow', [openNode, inner, closeNode],
+                         {open: open, close: close, texClass: TEXCLASS.INNER});
+    return mrow;
   }
 
 }

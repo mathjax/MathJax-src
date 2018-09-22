@@ -23,7 +23,7 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {BraketItem} from './BracketItems.js';
+import {BraketItem} from './BraketItems.js';
 import './BraketMappings.js';
 
 

@@ -24,21 +24,22 @@
 
 import {ParseMethod} from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
+import {MapHandler} from '../MapHandler.js';
 import TexParser from '../TexParser.js';
+import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 
 
 let BraketMethods: Record<string, ParseMethod> = {};
 
 BraketMethods.Macro = BaseMethods.Macro;
 
-BraketMethods.Braket = function(parser: TexParser, name: string) {
-  // let argument = parser.GetArgument(name);
-  // console.log(argument);
-  // console.log(parser.string.slice(parser.i));
+BraketMethods.Braket = function(parser: TexParser, name: string,
+                                open: string, close: string,
+                                stretchy: boolean, barmax: number) {
   parser.i++;
-  // let bra = parser.GetUpTo(name, '|');
-  // console.log(bra);
-  parser.Push(parser.itemFactory.create('braket'));
+  parser.Push(parser.itemFactory.create('braket')
+              .setProperties({barmax: barmax, barcount: 0, open: open,
+                              close: close, stretchy: stretchy}));
 };
 
 let splitString = function(str: string, split: string[]): string[] {
@@ -50,8 +51,31 @@ let splitString = function(str: string, split: string[]): string[] {
 
 
 BraketMethods.Bar = function(parser: TexParser, name: string) {
-  console.log(name);
-  console.log(parser.stack.Top());
+  let c = name === '|' ? '|' : '\u2225';
+  let top = parser.stack.Top();
+  if (top.kind !== 'braket' ||
+      top.getProperty('barcount') >= top.getProperty('barmax')) {
+    let mml = parser.create('token', 'mo', {texClass: TEXCLASS.ORD, stretchy: false}, c);
+    parser.Push(mml);
+    return;
+  }
+  if (c === '|' && parser.GetNext() === '|') {
+    parser.i++;
+    c = '\u2225';
+  }
+  let stretchy = top.getProperty('stretchy');
+  if (!stretchy) {
+    let node = parser.create('token', 'mo', {stretchy: false, braketbar: true}, c);
+    parser.Push(node);
+    return;
+  }
+  let node = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE});
+  parser.Push(node);
+  top.setProperty('barcount', top.getProperty('barcount') as number + 1);
+  node = parser.create('token', 'mo', {stretchy: true, braketbar: true}, c);
+  parser.Push(node);
+  node = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN});
+  parser.Push(node);
 };
 
 
