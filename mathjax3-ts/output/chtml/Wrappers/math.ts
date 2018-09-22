@@ -28,7 +28,7 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmath wrapper for the MmlMath object
  *
  * @template N  The HTMLElement node class
@@ -61,17 +61,34 @@ export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
         },
         'mjx-chtml.MJX-DISPLAY mjx-math': {
             padding: 0
+        },
+        'mjx-chtml[justify="left"]': {
+            'text-align': 'left'
+        },
+        'mjx-chtml[justify="right"]': {
+            'text-align': 'right'
         }
     };
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
         super.toCHTML(parent);
-        if (this.node.attributes.get('display') === 'block') {
-            this.adaptor.setAttribute(this.chtml, 'display', 'true');
-            this.adaptor.addClass(parent, 'MJX-DISPLAY');
+        const chtml = this.chtml;
+        const adaptor = this.adaptor;
+        const attributes = this.node.attributes;
+        const display = (attributes.get('display') === 'block');
+        if (display) {
+            adaptor.setAttribute(chtml, 'display', 'true');
+            adaptor.addClass(parent, 'MJX-DISPLAY');
+        }
+        const [align, shift] = this.getAlignShift();
+        if (align !== 'center') {
+            adaptor.setAttribute(parent, 'justify', align);
+        }
+        if (display && shift && !adaptor.hasAttribute(chtml, 'width')) {
+            this.setIndent(chtml, align, shift);
         }
     }
 

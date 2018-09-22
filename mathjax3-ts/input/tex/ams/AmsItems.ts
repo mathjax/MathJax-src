@@ -1,13 +1,5 @@
 /*************************************************************
  *
- *  MathJax/jax/input/TeX/AmsItem.ts
- *
- *  Implements the TeX InputJax that reads mathematics in
- *  TeX and LaTeX format and converts it to the MML ElementJax
- *  internal format.
- *
- *  ---------------------------------------------------------------------
- *
  *  Copyright (c) 2009-2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,6 +33,13 @@ import TexError from '../TexError.js';
 import {TexConstant} from '../TexConstants.js';
 
 
+/**
+ * Item dealing with multiline environments as a special case of arrays. Note,
+ * that all other AMS equation environments (e.g., align, split) can be handled
+ * by the regular EqnArrayItem class.
+ *
+ * Handles tagging information according to the given tagging style.
+ */
 export class MultlineItem extends ArrayItem {
 
   /**
@@ -68,8 +67,8 @@ export class MultlineItem extends ArrayItem {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
     const shove = this.getProperty('shove');
-    const mtd = this.factory.configuration.nodeFactory.create('node',
-      'mtd', this.nodes, shove ? {columnalign: shove} : {});
+    const mtd = this.create('node',
+                            'mtd', this.nodes, shove ? {columnalign: shove} : {});
     this.setProperty('shove', null);
     this.row.push(mtd);
     this.Clear();
@@ -79,14 +78,14 @@ export class MultlineItem extends ArrayItem {
    * @override
    */
   public EndRow() {
-        if (this.row.length !== 1) {
-          // @test MultlineRowsOneCol
-          throw new TexError(
-            'MultlineRowsOneCol',
-            'The rows within the %1 environment must have exactly one column',
-            'multline');
-      }
-    let row = this.factory.configuration.nodeFactory.create('node', 'mtr', this.row, {});
+    if (this.row.length !== 1) {
+      // @test MultlineRowsOneCol
+      throw new TexError(
+        'MultlineRowsOneCol',
+        'The rows within the %1 environment must have exactly one column',
+        'multline');
+    }
+    let row = this.create('node', 'mtr', this.row);
     this.table.push(row);
     this.row = [];
   }
@@ -101,19 +100,19 @@ export class MultlineItem extends ArrayItem {
       if (!NodeUtil.getAttribute(
         NodeUtil.getChildren(this.table[0])[0], 'columnalign')) {
         NodeUtil.setAttribute(NodeUtil.getChildren(this.table[0])[0],
-                                'columnalign', TexConstant.Align.LEFT);
+                              'columnalign', TexConstant.Align.LEFT);
       }
       if (!NodeUtil.getAttribute(
         NodeUtil.getChildren(this.table[m])[0], 'columnalign')) {
         NodeUtil.setAttribute(NodeUtil.getChildren(this.table[m])[0],
-                                'columnalign', TexConstant.Align.RIGHT);
+                              'columnalign', TexConstant.Align.RIGHT);
       }
       let tag = this.factory.configuration.tags.getTag();
       if (tag) {
         label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
         const mtr = this.table[label];
-        const mlabel = this.factory.configuration.nodeFactory.create('node',
-          'mlabeledtr', [tag].concat(NodeUtil.getChildren(mtr)), {});
+        const mlabel = this.create('node', 'mlabeledtr',
+                                   [tag].concat(NodeUtil.getChildren(mtr)));
         NodeUtil.copyAttributes(mtr, mlabel);
         this.table[label] = mlabel;
       }

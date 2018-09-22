@@ -26,6 +26,7 @@ import TexParser from './TexParser.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {EnvList} from './StackItem.js';
 import ParseOptions from './ParseOptions.js';
+import {OptionList} from '../../util/Options.js';
 
 
 /**
@@ -430,11 +431,12 @@ export class AbstractTags implements Tags {
    * @override
    */
   public enTag = function(node: MmlNode, tag: MmlNode): MmlNode {
-    let cell = this.configuration.nodeFactory.create('node', 'mtd', [node], {});
-    let row = this.configuration.nodeFactory.create('node', 'mlabeledtr', [tag, cell], {});
-    let table = this.configuration.nodeFactory.create('node', 'mtable', [row], {
-      side: this.configuration.options.get('TagSide'),
-      minlabelspacing: this.configuration.options.get('TagIndent'),
+    let nf = this.configuration.nodeFactory;
+    let cell = nf.create('node', 'mtd', [node]);
+    let row = nf.create('node', 'mlabeledtr', [tag, cell]);
+    let table = nf.create('node', 'mtable', [row], {
+      side: this.configuration.options['TagSide'],
+      minlabelspacing: this.configuration.options['TagIndent'],
       displaystyle: true
     });
     return table;
@@ -447,7 +449,7 @@ export class AbstractTags implements Tags {
   private makeId() {
     // TODO: Test for uniqueness.
     this.currentTag.tagId = this.formatId(
-      this.configuration.options.get('useLabelIds') ?
+      this.configuration.options['useLabelIds'] ?
         (this.label || this.currentTag.tag) : this.currentTag.tag);
   }
 
@@ -491,7 +493,8 @@ export class NoTags extends AbstractTags {
 
 
 /**
- * Tags every display formula. Exceptions are:
+ * Tags every display formula. Exceptions are: Environments that explicitly
+ * disallow tags, e.g., equation*.
  * @constructor
  * @extends {AbstractTags}
  */
@@ -533,6 +536,29 @@ export namespace TagsFactory {
   let defaultTags = 'none';
 
   /**
+   * The default options for 
+   * @type {OptionList}
+   */
+  export let OPTIONS: OptionList = {
+    // Tagging style, used to be autonumber in v2.
+    tags: defaultTags,
+    //  This specifies the side on which \tag{} macros will place the tags.
+    //  Set to 'left' to place on the left-hand side.
+    TagSide: 'right',
+    //  This is the amound of indentation (from right or left) for the tags.
+    TagIndent: '0.8em',
+    //  This is the width to use for the multline environment
+    MultLineWidth: '85%',
+    // make element ID's use \label name rather than equation number
+    // MJ puts in an equation prefix: mjx-eqn
+    // When true it uses the label name XXX as mjx-eqn-XXX
+    // If false it uses the actual number N that is displayed: mjx-eqn-N
+    useLabelIds: true,
+    refUpdate: false
+  };
+
+
+  /**
    * Add a tagging object.
    * @param {string} name Name of the tagging object.
    * @param {TagsClass} constr The class of the Tagging object.
@@ -559,7 +585,7 @@ export namespace TagsFactory {
    * @return {Tags} The newly created object.
    */
   export let create = function(name: string): Tags {
-    let constr = tagsMapping.get(name) || tagsMapping.get('default');
+    let constr = tagsMapping.get(name) || this.defaultTags;
     return new constr();
   };
 

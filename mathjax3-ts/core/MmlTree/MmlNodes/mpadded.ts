@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlLayoutNode} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMpadded node class (subclass of AbstractMmlLayoutNode)
  */
 
@@ -39,7 +39,7 @@ export class MmlMpadded extends AbstractMmlLayoutNode {
         voffset: 0
     };
 
-    /*
+    /**
      * @return {string}  The mpadded kind
      */
     public get kind() {

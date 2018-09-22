@@ -81,10 +81,8 @@ export default class TexParser {
     let ENV: EnvList;
     if (env) {
       ENV = {};
-      for (let id in env) {
-        if (env.hasOwnProperty(id)) {
-          ENV[id] = env[id];
-        }
+      for (const id of Object.keys(env)) {
+        ENV[id] = env[id];
       }
     }
     this.configuration.pushParser(this);
@@ -94,7 +92,7 @@ export default class TexParser {
   }
 
   /**
-   * @return {Map<string, string|boolean>} The configuration options.
+   * @return {OptionList} The configuration options.
    */
   get options() {
     return this.configuration.options;
@@ -114,10 +112,17 @@ export default class TexParser {
     return this.configuration.tags;
   }
 
+  /**
+   * Sets the string that should be parsed.
+   * @param {string} str The new string to parse.
+   */
   set string(str: string) {
     this._string = str;
   }
 
+  /**
+   * @return {string} The string that is currently parsed.
+   */
   get string() {
     return this._string;
   }
@@ -136,7 +141,6 @@ export default class TexParser {
 
   /**
    * Maps a symbol to its "parse value" if it exists.
-   *
    * @param {HandlerType} kind Configuration name.
    * @param {string} symbol The symbol to parse.
    * @return {T} A boolean, Character, or Macro.
@@ -149,7 +153,6 @@ export default class TexParser {
   /**
    * Checks if a symbol is contained in one of the symbol mappings of the
    * specified kind.
-   *
    * @param {string} symbol The symbol to parse.
    * @return {boolean} True if the symbol is contained in the given types of
    *     symbol mapping.
@@ -176,9 +179,11 @@ export default class TexParser {
    * Parses the current input string.
    */
   public Parse() {
-    let c, n;
+    let c: string;
+    let n: number;
     while (this.i < this.string.length) {
-      c = this.string.charAt(this.i++); n = c.charCodeAt(0);
+      c = this.string.charAt(this.i++);
+      n = c.charCodeAt(0);
       if (n >= 0xD800 && n < 0xDC00) {
         c += this.string.charAt(this.i++);
       }
@@ -201,8 +206,8 @@ export default class TexParser {
    * @param {StackItem|MmlNode[]} args The new items.
    */
   public PushAll(args: (StackItem|MmlNode)[]) {
-    for (let i = 0, m = args.length; i < m; i++) {
-      this.stack.Push(args[i]);
+    for (const arg of args) {
+      this.stack.Push(arg);
     }
   }
 
@@ -214,7 +219,7 @@ export default class TexParser {
     if (!this.stack.Top().isKind('mml')) {
       return null;
     }
-    let node = this.stack.Top().Top;
+    let node = this.stack.Top().First;
     this.configuration.popParser();
     return node;
   }
@@ -225,7 +230,9 @@ export default class TexParser {
    */
 
   /**
-   *  Convert delimiter to character
+   * Convert delimiter to character.
+   * @param {string} c The delimiter name.
+   * @return {string} The corresponding character.
    */
   public convertDelimiter(c: string): string {
     const symbol = this.lookup('delimiter', c) as Symbol;
@@ -233,15 +240,14 @@ export default class TexParser {
   }
 
   /**
-   *   Check if the next character is a space
+   * @return {boolean} True if the next character to parse is a space.
    */
   public nextIsSpace() {
     return this.string.charAt(this.i).match(/\s/);
   }
 
-
   /**
-   *  Get the next non-space character
+   * @return {string} Get the next non-space character.
    */
   public GetNext(): string {
     while (this.nextIsSpace()) {
@@ -251,9 +257,9 @@ export default class TexParser {
   }
 
   /**
-   *  Get and return a control-sequence name
+   * @return {string} Get and return a control-sequence name
    */
-  public GetCS() {
+  public GetCS(): string {
     let CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
     if (CS) {
       this.i += CS[1].length;
@@ -265,10 +271,13 @@ export default class TexParser {
   }
 
   /**
-   *  Get and return a TeX argument (either a single character or control sequence,
-   *  or the contents of the next set of braces).
+   * Get and return a TeX argument (either a single character or control
+   *     sequence, or the contents of the next set of braces).
+   * @param {string} name Name of the current control sequence.
+   * @param {boolean} noneOK? True if no argument is OK.
+   * @return {string} The next argument.
    */
-  public GetArgument(name: string, noneOK?: boolean) {
+  public GetArgument(name: string, noneOK?: boolean): string {
     switch (this.GetNext()) {
     case '':
       if (!noneOK) {
@@ -307,7 +316,10 @@ export default class TexParser {
 
 
   /**
-   *  Get an optional LaTeX argument in brackets
+   * Get an optional LaTeX argument in brackets.
+   * @param {string} name Name of the current control sequence.
+   * @param {string} def? The default value for the optional argument.
+   * @return {string} The optional argument.
    */
   public GetBrackets(name: string, def?: string): string {
     if (this.GetNext() !== '[') {
@@ -339,8 +351,11 @@ export default class TexParser {
 
   /**
    *  Get the name of a delimiter (check it in the delimiter list).
+   * @param {string} name Name of the current control sequence.
+   * @param {boolean} braceOK? Are braces around the delimiter OK.
+   * @return {string} The delimiter name.
    */
-  public GetDelimiter(name: string, braceOK?: boolean) {
+  public GetDelimiter(name: string, braceOK?: boolean): string {
     while (this.nextIsSpace()) {
       this.i++;
     }
@@ -362,9 +377,11 @@ export default class TexParser {
   }
 
   /**
-   *  Get a dimension (including its units).
+   * Get a dimension (including its units).
+   * @param {string} name Name of the current control sequence.
+   * @return {string} The dimension string.
    */
-  public GetDimen(name: string) {
+  public GetDimen(name: string): string {
     if (this.nextIsSpace()) {
       this.i++;
     }
@@ -389,11 +406,13 @@ export default class TexParser {
                         'Missing dimension or its units for %1', this.currentCS);
   }
 
-
   /**
    *  Get everything up to the given control sequence (token)
+   * @param {string} name Name of the current control sequence.
+   * @param {string} token The element until where to parse.
+   * @return {string} The text between the current position and the given token.
    */
-  public GetUpTo(name: string, token: string) {
+  public GetUpTo(name: string, token: string): string {
     while (this.nextIsSpace()) {
       this.i++;
     }
@@ -424,30 +443,33 @@ export default class TexParser {
   }
 
   /**
-   *  Parse various substrings
+   * Parse the arguments of a control sequence in a new parser instance.
+   * @param {string} name Name of the current control sequence.
+   * @return {MmlNode} The parsed node.
    */
-  public ParseArg(name: string) {
+  public ParseArg(name: string): MmlNode  {
     return new TexParser(this.GetArgument(name), this.stack.env,
                          this.configuration).mml();
   }
 
   /**
-   * Parses a given string up to a given token.
-   * @param {string} name The string to parse.
+   * Parses a given string up to a given token in a new parser instance.
+   * @param {string} name Name of the current control sequence.
    * @param {string} token A Token at which to end parsing.
    * @return {MmlNode} The parsed node.
    */
-  public ParseUpTo(name: string, token: string) {
+  public ParseUpTo(name: string, token: string): MmlNode {
     return new TexParser(this.GetUpTo(name, token), this.stack.env,
                          this.configuration).mml();
   }
 
 
   /**
-   *  Get a delimiter or empty argument
+   * Get a delimiter or empty argument
+   * @param {string} name Name of the current control sequence.
+   * @return {string} The delimiter.
    */
-  // TODO: This is actually an AMS command.
-  public GetDelimiterArg(name: string) {
+  public GetDelimiterArg(name: string): string {
     let c = ParseUtil.trimSpaces(this.GetArgument(name));
     if (c === '') {
       return null;
@@ -461,14 +483,27 @@ export default class TexParser {
   }
 
   /**
-   *  Get a star following a control sequence name, if any
+   * @return {boolean} True if a star follows the control sequence name.
    */
-  public GetStar() {
+  public GetStar(): boolean {
     let star = (this.GetNext() === '*');
     if (star) {
       this.i++;
     }
     return star;
   }
+
+
+  /**
+   * Convenience method to create nodes with the node factory of the current
+   * configuration.
+   * @param {string} kind The kind of node to create.
+   * @param {any[]} ...rest The remaining arguments for the creation method.
+   * @return {MmlNode} The newly created node.
+   */
+  public create(kind: string, ...rest: any[]): MmlNode {
+    return this.configuration.nodeFactory.create(kind, ...rest);
+  }
+
 
 }

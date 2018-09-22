@@ -22,38 +22,42 @@
  */
 
 /*****************************************************************/
-/*
+/**
  *  A symbol used to mark the special node used to indicate
  *  the start and end of the list.
  */
 const END = Symbol();
 
-/*
+/**
  * Shorthand type for the functions used to sort the data items
+ *
+ * @template DataClass   The type of data stored in the list
  */
 export type SortFn<DataClass> = (a: DataClass, b: DataClass) => boolean;
 
 /*****************************************************************/
-/*
+/**
  *  The ListItem interface (for a specific type of data item)
  *
  *  These are the items in the doubly-linked list.
+ *
+ * @template DataClass   The type of data stored in the list
  */
 
 export class ListItem<DataClass> {
-    /*
+    /**
      * The data for the list item
      */
     public data: DataClass | symbol;
 
-    /*
+    /**
      * Pointers to the next and previous items in the list
      */
     public next: ListItem<DataClass> = null;
     public prev: ListItem<DataClass> = null;
 
-    /*
-     * @param{any} data  The data to be stored in the list item
+    /**
+     * @param {any} data  The data to be stored in the list item
      * @constructor
      */
     constructor (data: any = null) {
@@ -63,18 +67,20 @@ export class ListItem<DataClass> {
 
 
 /*****************************************************************/
-/*
+/**
  *  Implements the generic LinkedList class
+ *
+ * @template DataClass   The type of data stored in the list
  */
 
 export class LinkedList<DataClass> {
 
-    /*
+    /**
      * The linked list
      */
     protected list: ListItem<DataClass>;
 
-    /*
+    /**
      *  This.list is a special ListItem whose next property
      *    points to the head of the list and whose prev
      *    property points to the tail.  This lets us relink
@@ -82,7 +88,7 @@ export class LinkedList<DataClass> {
      *    item in the list, without having to handle special
      *    cases.
      *
-     * @param{DataClass[]} args  The data items that form the initial list
+     * @param {DataClass[]} args  The data items that form the initial list
      * @constructor
      */
     constructor(...args: DataClass[]) {
@@ -91,35 +97,35 @@ export class LinkedList<DataClass> {
         this.push(...args);
     }
 
-    /*
+    /**
      * Typescript < 2.3 targeted at ES5 doesn't handle
      *
      *     for (const x of this) {...}
      *
      * so use toArray() to convert to array, when needed
      *
-     * @return{DataClass[]}  The list converted to an array
+     * @return {DataClass[]}  The list converted to an array
      */
     public toArray() {
         return Array.from(this) as DataClass[];
     }
 
-    /*
+    /**
      *  Used for sorting and merging lists (Overridden by subclasses)
      *
-     * @param{DataClass} a   The first item to compare
-     * @param{DataClass} b   The second item to compare
-     * @return{boolean}      True if a is before b, false otherwise
+     * @param {DataClass} a   The first item to compare
+     * @param {DataClass} b   The second item to compare
+     * @return {boolean}      True if a is before b, false otherwise
      */
     public isBefore(a: DataClass, b: DataClass) {
         return (a < b);
     }
 
-    /*
+    /**
      * Push items on the end of the list
      *
-     * @param{DataClass[]} args   The list of data items to be pushed
-     * @return{LinkedList}        The LinkedList object (for chaining)
+     * @param {DataClass[]} args   The list of data items to be pushed
+     * @return {LinkedList}        The LinkedList object (for chaining)
      */
     public push(...args: DataClass[]) {
         for (const data of args) {
@@ -132,10 +138,10 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Pop the end item off the list and return its data
      *
-     * @return{DataClass}  The data from the last item in the list
+     * @return {DataClass}  The data from the last item in the list
      */
     public pop(): DataClass {
         let item = this.list.prev;
@@ -148,11 +154,11 @@ export class LinkedList<DataClass> {
         return item.data as DataClass;
     }
 
-    /*
+    /**
      * Push items at the head of the list
      *
-     * @param{DataClass[]} args   The list of data items to inserted
-     * @return{LinkedList}        The LinkedList object (for chaining)
+     * @param {DataClass[]} args   The list of data items to inserted
+     * @return {LinkedList}        The LinkedList object (for chaining)
      */
     public unshift(...args: DataClass[]) {
         for (const data of args.slice(0).reverse()) {
@@ -165,10 +171,10 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Remove an item from the head of the list and return its data
      *
-     * @return{DataClass}  The data from the first item in the list
+     * @return {DataClass}  The data from the first item in the list
      */
     public shift(): DataClass {
         let item = this.list.next;
@@ -181,10 +187,10 @@ export class LinkedList<DataClass> {
         return item.data as DataClass;
     }
 
-    /*
+    /**
      * Empty the list
      *
-     * @return{LinkedList}  The LinkedList object (for chaining)
+     * @return {LinkedList}  The LinkedList object (for chaining)
      */
     public clear() {
         this.list.next.prev = this.list.prev.next = null;
@@ -192,10 +198,10 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Make the list iterable and return the data from the items in the list
      *
-     * @return{{next: Function}}  The object containing the iterator's next() function
+     * @return {{next: Function}}  The object containing the iterator's next() function
      */
     public [Symbol.iterator](): Iterator<DataClass> {
         let current = this.list;
@@ -209,10 +215,10 @@ export class LinkedList<DataClass> {
         };
     }
 
-    /*
+    /**
      * An iterator for the list in reverse order
      *
-     * @return{Object}  The iterator for walking the list in reverse
+     * @return {Object}  The iterator for walking the list in reverse
      */
     public reversed() {
         let current = this.list;
@@ -232,12 +238,12 @@ export class LinkedList<DataClass> {
         };
     }
 
-    /*
+    /**
      * Insert a new item into a sorted list in the correct locations
      *
-     * @param{DataClass} data   The data item to add
-     * @param{SortFn} isBefore  The function used to order the data
-     * @param{LinkedList}       The LinkedList object (for chaining)
+     * @param {DataClass} data   The data item to add
+     * @param {SortFn} isBefore   The function used to order the data
+     * @param {LinkedList}        The LinkedList object (for chaining)
      */
     public insert(data: DataClass, isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) {
@@ -254,11 +260,11 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Sort the list using an optional sort function
      *
-     * @param{SortFn} isBefore  The function used to order the data
-     * @return{LinkedList}      The LinkedList object (for chaining)
+     * @param {SortFn} isBefore  The function used to order the data
+     * @return {LinkedList}      The LinkedList object (for chaining)
      */
     public sort(isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) {
@@ -293,12 +299,12 @@ export class LinkedList<DataClass> {
         return this;
     }
 
-    /*
+    /**
      * Merge a sorted list with another sorted list
      *
-     * @param{LinkedList} list  The list to merge into this instance's list
-     * @param{SortFn} isBefore  The function used to order the data
-     * @return{LinkedList}      The LinkedList instance (for chaining)
+     * @param {LinkedList} list  The list to merge into this instance's list
+     * @param {SortFn} isBefore  The function used to order the data
+     * @return {LinkedList}      The LinkedList instance (for chaining)
      */
     public merge(list: LinkedList<DataClass>, isBefore: SortFn<DataClass> = null) {
         if (isBefore === null) {
@@ -346,4 +352,5 @@ export class LinkedList<DataClass> {
         }
         return this;
     }
+
 }

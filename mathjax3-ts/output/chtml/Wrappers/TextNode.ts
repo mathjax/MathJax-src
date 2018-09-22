@@ -27,11 +27,9 @@ import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {CharOptions} from '../FontData.js';
 
 /*****************************************************************/
-/*
+/**
  *  The CHTMLTextNode wrapper for the TextNode object
- */
-
-/*
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -46,7 +44,7 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -62,7 +60,7 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     public computeBBox(bbox: BBox) {
@@ -90,10 +88,10 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /*
-     * @param{string} variant   The variant in which to look for the character
-     * @param{number} n         The number of the character to look up
-     * @return{CharData}        The full CharData object, with CharOptions guaranteed to be defined
+    /**
+     * @param {string} variant   The variant in which to look for the character
+     * @param {number} n         The number of the character to look up
+     * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
      */
     protected getChar(variant: string, n: number) {
         const char = this.font.getChar(variant, n) || [0, 0, 0, null];
@@ -106,18 +104,23 @@ export class CHTMLTextNode<N, T, D> extends CHTMLWrapper<N, T, D> {
      *   are inherited from the parent nodes
      */
 
-    /*
+    /**
      * @override
      */
     public getStyles() {}
 
-    /*
+    /**
      * @override
      */
     public getVariant() {}
 
-    /*
+    /**
      * @override
      */
     public getScale() {}
+
+    /**
+     * @override
+     */
+    public getSpace() {}
 }

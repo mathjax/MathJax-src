@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMglyph node class (subclass of AbstractMmlTokenNode)
  */
 
@@ -40,7 +40,7 @@ export class MmlMglyph extends AbstractMmlTokenNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The mglyph kind
      */
     public get kind() {

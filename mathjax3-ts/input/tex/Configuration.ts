@@ -23,18 +23,22 @@
  */
 
 import {ParseMethod} from './Types.js';
-import {HandlerType} from './MapHandler.js';
+import ParseMethods from './ParseMethods.js';
+import {ExtensionMaps, HandlerType} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {defaultOptions, OptionList} from '../../util/Options.js';
 import ParseOptions from './ParseOptions.js';
+import *  as sm from './SymbolMap.js';
+import {FunctionList} from '../../util/FunctionList.js';
 
 
 export type HandlerConfig = {[P in HandlerType]?: string[]}
 export type FallbackConfig = {[P in HandlerType]?: ParseMethod}
 export type StackItemConfig = {[kind: string]: StackItemClass}
 export type TagsConfig = {[kind: string]: TagsClass}
-export type OptionsConfig = {[key: string]: (string|boolean)}
+export type ProcessorList = (Function | [Function, number])[]
 
 
 export class Configuration {
@@ -51,9 +55,9 @@ export class Configuration {
    *  * _options_ parse options for the packages.
    *  * _nodes_ for the Node factory.
    *  * _preprocessors_ list of functions for preprocessing the LaTeX
-   *      string wrt. to given parse options.
+   *      string wrt. to given parse options. Can contain a priority.
    *  * _postprocessors_ list of functions for postprocessing the MmlNode
-   *      wrt. to given parse options.
+   *      wrt. to given parse options. Can contain a priority.
    * @return {Configuration} The newly generated configuration.
    */
   public static create(name: string,
@@ -61,11 +65,11 @@ export class Configuration {
                                 fallback?: FallbackConfig,
                                 items?: StackItemConfig,
                                 tags?: TagsConfig,
-                                options?: OptionsConfig,
+                                options?: OptionList,
                                 nodes?: {[key: string]: any},
-                                preprocessors?: ((input: string, options: ParseOptions) => string)[],
-                                postprocessors?: ((input: MmlNode, options: ParseOptions) => void)[]
-                               }) {
+                                preprocessors?: ProcessorList,
+                                postprocessors?: ProcessorList
+                               } = {}) {
     return new Configuration(name,
                              config.handler || {},
                              config.fallback || {},
@@ -78,9 +82,40 @@ export class Configuration {
                             );
   }
 
+
+  /**
+   * An empty configuration.
+   */
+  public static empty(): Configuration {
+    return Configuration.create('empty');
+  };
+
+
+  /**
+   * Initialises extension maps.
+   */
+  public static extension(): Configuration {
+    new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
+    new sm.DelimiterMap(ExtensionMaps.NEW_DELIMITER,
+                        ParseMethods.delimiter, {});
+    new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
+    new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT,
+                          ParseMethods.environment, {}, {});
+    return Configuration.create(
+      'extension',
+      {handler: {character: [],
+                 delimiter: [ExtensionMaps.NEW_DELIMITER],
+                 macro: [ExtensionMaps.NEW_DELIMITER,
+                         ExtensionMaps.NEW_COMMAND,
+                         ExtensionMaps.NEW_MACRO],
+                 environment: [ExtensionMaps.NEW_ENVIRONMENT]
+                }});
+  };
+
+
   /**
    * Appends configurations to this configuration. Note that fallbacks are
-   * overwritten.
+   * overwritten, while order of configurations is preserved.
    *
    * @param {Configuration} configuration A configuration setting for the TeX
    *       parser.
@@ -92,14 +127,17 @@ export class Configuration {
         this.handler[key].unshift(map);
       }
     }
-    handlers = Object.keys(config.fallback) as HandlerType[];
     Object.assign(this.fallback, config.fallback);
     Object.assign(this.items, config.items);
     Object.assign(this.tags, config.tags);
-    Object.assign(this.options, config.options);
+    defaultOptions(this.options, config.options);
     Object.assign(this.nodes, config.nodes);
-    this.preprocessors = this.preprocessors.concat(config.preprocessors);
-    this.postprocessors = this.postprocessors.concat(config.postprocessors);
+    for (let pre of config.preprocessors) {
+      this.preprocessors.push(pre);
+    };
+    for (let post of config.postprocessors) {
+      this.postprocessors.push(post);
+    };
   }
 
 
@@ -111,48 +149,31 @@ export class Configuration {
                       readonly fallback: FallbackConfig = {},
                       readonly items: StackItemConfig = {},
                       readonly tags: TagsConfig = {},
-                      readonly options: OptionsConfig = {},
+                      readonly options: OptionList = {},
                       readonly nodes: {[key: string]: any} = {},
-                      public preprocessors: ((input: string, options: ParseOptions) => string)[] = [],
-                      public postprocessors: ((input: MmlNode, options: ParseOptions) => void)[] = []
+                      readonly preprocessors: ProcessorList = [],
+                      readonly postprocessors: ProcessorList = []
              ) {
-    let _default: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
-    let handlers = Object.keys(handler) as HandlerType[];
-    for (const key of handlers) {
-      _default[key] = handler[key];
-    }
-    this.handler = _default;
-    ConfigurationHandler.getInstance().set(name, this);
+    this.handler = Object.assign(
+      {character: [], delimiter: [], macro: [], environment: []}, handler);
+    ConfigurationHandler.set(name, this);
   }
 
 };
 
 
-export class ConfigurationHandler {
+export namespace ConfigurationHandler {
 
-  private static instance: ConfigurationHandler;
-
-  private map: Map<string, Configuration> = new Map();
-
-  /**
-   * @return {ConfigurationHandler} The singleton ConfigurationHandler object.
-   */
-  public static getInstance(): ConfigurationHandler {
-    if (!ConfigurationHandler.instance) {
-      ConfigurationHandler.instance = new ConfigurationHandler();
-    }
-    return ConfigurationHandler.instance;
-  }
-
+  let maps: Map<string, Configuration> = new Map();
 
   /**
    * Adds a new configuration to the handler overwriting old ones.
    *
    * @param {SymbolConfiguration} map Registers a new symbol map.
    */
-  public set(name: string, map: Configuration): void {
-    this.map.set(name, map);
-  }
+  export let set = function(name: string, map: Configuration): void {
+    maps.set(name, map);
+  };
 
 
   /**
@@ -161,23 +182,16 @@ export class ConfigurationHandler {
    * @param {string} name The name of the configuration.
    * @return {SymbolConfiguration} The configuration with the given name or null.
    */
-  public get(name: string): Configuration {
-    return this.map.get(name);
-  }
+  export let get = function(name: string): Configuration {
+    return maps.get(name);
+  };
 
   /**
    * @return {string[]} All configurations in the handler.
    */
-  public keys(): IterableIterator<string> {
-    return this.map.keys();
-  }
-
-
-  /**
-   * Dummy constructor
-   * @constructor
-   */
-  private constructor() { }
+  export let keys = function(): IterableIterator<string> {
+    return maps.keys();
+  };
 
 }
 

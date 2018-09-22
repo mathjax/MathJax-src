@@ -24,18 +24,26 @@
 import {PropertyList} from '../Tree/Node.js';
 import {TEXCLASS} from './MmlNode.js';
 
-/*
+/**
  * Types needed for the operator dictionary
  */
 export type OperatorDef = [number, number, number, PropertyList];
 export type OperatorList = {[name: string]: OperatorDef};
 export type RangeDef = [number, number, number, string];
 
-export function OPDEF(lspace: number, rspace: number, texClass: number = TEXCLASS.BIN, properties: PropertyList = null): OperatorDef {
+/**
+ * @param {number} lspace            The operator's MathML left-hand spacing
+ * @param {number} rspace            The operator's MathML right-hand spacing
+ * @param {number} texClass          The default TeX class for the operator
+ * @param {PropertyList} properties  Any default properties from the operator dictionary
+ * @return {OperatorDef}             The operator definition array
+ */
+export function OPDEF(lspace: number, rspace: number, texClass: number = TEXCLASS.BIN,
+                      properties: PropertyList = null): OperatorDef {
     return [lspace, rspace, texClass, properties] as OperatorDef;
 }
 
-/*
+/**
  *  The various kinds of operators in the dictionary
  */
 export const MO = {
@@ -68,7 +76,7 @@ export const MO = {
     WIDEACCENT: OPDEF(0, 0, TEXCLASS.ORD, {accent: true, stretchy: true})
 };
 
-/*
+/**
  *  The default TeX classes for the various unicode blocks, and their names
  */
 export const RANGES: RangeDef[] = [
@@ -102,7 +110,20 @@ export const RANGES: RangeDef[] = [
     [0x1D400, 0x1D7FF, TEXCLASS.ORD, 'MathAlphabets']
 ];
 
-/*
+/**
+ * The default MathML spacing for the various TeX classes.
+ */
+export const MMLSPACING = [
+    [0, 0],  // ORD
+    [1, 2],  // OP
+    [3, 3],  // BIN
+    [4, 4],  // REL
+    [0, 0],  // OPEN
+    [0, 0],  // CLOSE
+    [0, 3]   // PUNCT
+];
+
+/**
  *  The operator dictionary, with sections for the three forms:  prefix, postfix, and infix
  */
 export const OPTABLE: {[form: string]: OperatorList} = {

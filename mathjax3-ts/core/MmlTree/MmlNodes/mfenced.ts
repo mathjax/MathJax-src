@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, TextNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMfenced node class (subclass of AbstractMmlNode)
  */
 
@@ -38,21 +38,21 @@ export class MmlMfenced extends AbstractMmlNode {
     };
     public texClass = TEXCLASS.INNER;
 
-    /*
+    /**
      *  Storage for "fake" nodes for the delimiters and separators
      */
     public separators: MmlNode[] = [];
     public open: MmlNode = null;
     public close: MmlNode = null;
 
-    /*
+    /**
      * @return {string}  The mfenced kind
      */
     public get kind() {
         return 'mfenced';
     }
 
-    /*
+    /**
      * Include the fake nodes in the process, since they will be used
      *  to produce the output.
      *
@@ -81,7 +81,7 @@ export class MmlMfenced extends AbstractMmlNode {
         return prev;
     }
 
-    /*
+    /**
      * Create the fake nodes and do their inheritance
      * Then do inheridence of usual children
      *
@@ -97,7 +97,7 @@ export class MmlMfenced extends AbstractMmlNode {
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
 
-    /*
+    /**
      * Create <mo> elements for the open and close delimiters, and for the separators (if any)
      */
     protected addFakeNodes() {
@@ -134,7 +134,7 @@ export class MmlMfenced extends AbstractMmlNode {
         }
     }
 
-    /*
+    /**
      * @param {string} c                 The character for the text of the node
      * @param {PropertyList} properties  The attributes for the node
      * @param {number} texClass          The TeX class for the node

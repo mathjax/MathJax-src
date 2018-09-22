@@ -29,7 +29,7 @@ import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmroot wrapper for the MmlMroot object (extends CHTMLmsqrt)
  *
  * @template N  The HTMLElement node class
@@ -39,21 +39,21 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 export class CHTMLmroot<N, T, D> extends CHTMLmsqrt<N, T, D> {
     public static kind = MmlMroot.prototype.kind;
 
-    /*
+    /**
      * @override
      */
     get surd() {
         return 2;
     }
 
-    /*
+    /**
      * @override
      */
     get root(): number {
         return 1;
     }
 
-    /*
+    /**
      * @override
      */
     protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox) {
@@ -67,7 +67,7 @@ export class CHTMLmroot<N, T, D> extends CHTMLmsqrt<N, T, D> {
         }
     }
 
-    /*
+    /**
      * @override
      */
     protected combineRootBBox(BBOX: BBox, sbox: BBox) {
@@ -76,7 +76,7 @@ export class CHTMLmroot<N, T, D> extends CHTMLmsqrt<N, T, D> {
         BBOX.combine(bbox, 0, h);
     }
 
-    /*
+    /**
      * @override
      */
     protected getRootDimens(sbox: BBox) {
@@ -91,11 +91,11 @@ export class CHTMLmroot<N, T, D> extends CHTMLmsqrt<N, T, D> {
         return [x, h, dx];
     }
 
-    /*
-     * @param{BBox} rbox      The bbox of the root
-     * @param{BBox} sbox      The bbox of the surd
-     * @param{number} size    The size of the surd
-     * @return{number}        The height of the root within the surd
+    /**
+     * @param {BBox} rbox      The bbox of the root
+     * @param {BBox} sbox      The bbox of the surd
+     * @param {number} size    The size of the surd
+     * @return {number}        The height of the root within the surd
      */
     protected rootHeight(rbox: BBox, sbox: BBox, size: number) {
         const H = sbox.h + sbox.d;

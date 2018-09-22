@@ -29,13 +29,13 @@ import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
 import {PropertyList} from '../Tree/Node.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the TestMmlVisitor (subclass of SerializedMmlVisitor)
  */
 
 export class TestMmlVisitor extends SerializedMmlVisitor {
 
-    /*
+    /**
      * The generic visiting function:
      *   Make the string versino of the open tag with it attributes (explicit and
      *     inherited) and properties
@@ -65,7 +65,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
         return mml;
     }
 
-    /*
+    /**
      * @param {MmlNode} node  The node whose attributes are to be produced
      * @return {string}  The attribute list as a string
      */
@@ -73,7 +73,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
         return this.attributeString(node.attributes.getAllAttributes(), '', '');
     }
 
-    /*
+    /**
      * @param {MmlNode} node  The node whose inherited attributes are to be produced
      * @return {string}  The inhertited attribute list as a string (with each in [...])
      */
@@ -81,7 +81,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
         return this.attributeString(node.attributes.getAllInherited(), '[', ']');
     }
 
-    /*
+    /**
      * @param {MmlNode} node  The node whose properties are to be produced
      * @return {string}  The property list as a string (with each in [[...]])
      */
@@ -89,7 +89,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
         return this.attributeString(node.getAllProperties(), '[[', ']]');
     }
 
-    /*
+    /**
      * @param {PropertyList} attributes  The attributes to be made into a list
      * @param {string} open  The opening delimiter to add before each attribute
      * @param {string} close  The closing delimiter to add after each attribute

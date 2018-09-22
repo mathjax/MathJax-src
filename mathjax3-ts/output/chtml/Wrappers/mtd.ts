@@ -28,7 +28,7 @@ import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
-/*
+/**
  * The CHTMLmtd wrapper for the MmlMtd object
  *
  * @template N  The HTMLElement node class
@@ -54,6 +54,12 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
             'padding-top': 0
         },
         'mjx-mtable > mjx-itable > *:last-child > mjx-mtd': {
+            'padding-bottom': 0
+        },
+        'mjx-mtable > mjx-labels > *:first-child > mjx-mtd': {
+            'padding-top': 0
+        },
+        'mjx-mtable > mjx-labels > *:last-child > mjx-mtd': {
             'padding-bottom': 0
         },
         'mjx-tstrut': {
@@ -84,7 +90,7 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     };
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {

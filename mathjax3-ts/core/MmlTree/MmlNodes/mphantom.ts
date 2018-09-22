@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlLayoutNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
-/*
+/**
  *  Implements the MmlMphantom node class (subclass of AbstractMmlLayoutNode)
  */
 
@@ -35,7 +35,7 @@ export class MmlMphantom extends AbstractMmlLayoutNode {
     };
     public texClass = TEXCLASS.ORD;
 
-    /*
+    /**
      * @return {string}  The mphantom kind
      */
     public get kind() {
