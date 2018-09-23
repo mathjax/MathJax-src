@@ -27,7 +27,7 @@ import BraketMethods from './BraketMethods.js';
 
 
 /**
- * Macros for bracket package.
+ * Macros for braket package.
  */
 new CommandMap('Braket-macros', {
   bra: ['Macro', '{\\langle {#1} \\vert}', 1],
@@ -47,7 +47,7 @@ new CommandMap('Braket-macros', {
 
 
 /**
- * Character map for bracket package.
+ * Character map for braket package.
  */
 new MacroMap('Braket-characters', {
   '|': 'Bar'

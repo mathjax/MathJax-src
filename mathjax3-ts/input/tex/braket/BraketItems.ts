@@ -55,9 +55,7 @@ export class BraketItem extends BaseItem {
    */
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('close')) {
-      let node = this.toMml();
-      // Add the closing angle or set bracket!
-      return [[this.factory.create('mml', node)], true];
+      return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('mml')) {
       this.Push(item.toMml());
