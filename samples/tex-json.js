@@ -8,13 +8,15 @@ import '../mathjax3/input/tex/ams/AmsConfiguration.js';
 import '../mathjax3/input/tex/noundefined/NoUndefinedConfiguration.js';
 import '../mathjax3/input/tex/boldsymbol/BoldsymbolConfiguration.js';
 import '../mathjax3/input/tex/newcommand/NewcommandConfiguration.js';
+import '../mathjax3/input/tex/braket/BraketConfiguration.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand']})
+  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'braket']})
 });
 
+console.log(html.inputJax[0].configuration);
 import {JsonMmlVisitor} from '../mathjax3/core/MmlTree/JsonMmlVisitor.js';
 let visitor = new JsonMmlVisitor();
 let toJSON = (node => visitor.visitTree(node));
