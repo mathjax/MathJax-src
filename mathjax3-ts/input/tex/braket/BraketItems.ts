@@ -29,6 +29,11 @@ import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
 
 
+/**
+ * A bra-ket command. Collates elements from the opening brace to the closing
+ * brace, adding bars to a given maximal number (e.g., only one in case of
+ * set). To finalise it adds the surrounding angle brackets or braces.
+ */
 export class BraketItem extends BaseItem {
 
   /**

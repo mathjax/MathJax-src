@@ -33,6 +33,16 @@ let BraketMethods: Record<string, ParseMethod> = {};
 
 BraketMethods.Macro = BaseMethods.Macro;
 
+
+/**
+ * Generate a bra-ket expression.
+ * @param {TexParser} parser The current TeX parser.
+ * @param {string} name Name of the current control sequence.
+ * @param {string} open Opening delimiter.
+ * @param {string} close Closing delimiter.
+ * @param {boolean} stretchy Is it stretchy.
+ * @param {number} barmax Maximum number of bars allowed.
+ */
 BraketMethods.Braket = function(parser: TexParser, name: string,
                                 open: string, close: string,
                                 stretchy: boolean, barmax: number) {
@@ -42,14 +52,12 @@ BraketMethods.Braket = function(parser: TexParser, name: string,
                               close: close, stretchy: stretchy}));
 };
 
-let splitString = function(str: string, split: string[]): string[] {
-  str = str.trim();
-  let j = 0;
-  let parens = 0;
-  return [];
-};
 
-
+/**
+ * Generate a bar. If inside a bra-ket expressions it's handled accordingly.
+ * @param {TexParser} parser The current TeX parser.
+ * @param {string} name Name of the current control sequence.
+ */
 BraketMethods.Bar = function(parser: TexParser, name: string) {
   let c = name === '|' ? '|' : '\u2225';
   let top = parser.stack.Top();
