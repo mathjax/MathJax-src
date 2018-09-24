@@ -80,6 +80,7 @@ export interface MinHTMLElement<N, T> {
     removeAttribute(name: string): void;
     hasAttribute(name: string): boolean;
     getBoundingClientRect(): Object;
+    getBBox?(): {x: number, y: number, width: number, height: number};
 }
 
 /*****************************************************************/
@@ -467,8 +468,12 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /**
      * @override
      */
-    public nodeSize(node: N) {
-        return [node.offsetWidth, node.offsetHeight] as [number, number];
+    public nodeSize(node: N, em: number = 1, local: boolean = false) {
+        if (local && node.getBBox) {
+            let {width, height} = node.getBBox();
+            return [width / em , height / em] as [number, number];
+        }
+        return [node.offsetWidth / em, node.offsetHeight / em] as [number, number];
     }
 
     /**

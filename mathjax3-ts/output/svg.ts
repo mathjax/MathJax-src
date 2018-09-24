@@ -101,18 +101,30 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
      * @param {N} parent      The HTML node to contain the SVG
      */
     protected processMath(math: MmlNode, parent: N) {
+        //
+        // Cache the container (tooltips process into separate containers)
+        //
         const container = this.container;
         this.container = parent;
+        //
+        //  Get the wrapped math element and its size
+        //
         const wrapper = this.factory.wrap(math);
         const {w, h, d, pwidth} = wrapper.getBBox();
-        const adaptor = this.adaptor;
         const px = (this.font.params.x_height / wrapper.metrics.ex);
-        const H = (Math.ceil(h / px) + 1) * px + 2/1000;  // round to pixels and add padding
+        const H = (Math.ceil(h / px) + 1) * px + 2/1000;  // round to pixels and add a little padding
         const D = (Math.ceil(d / px) + 1) * px + 2/1000;
+        //
+        //  The container that flips the y-axis and sets the colors to inherit from the surroundings
+        //
         const g = this.svg('g', {
             stroke: 'currentColor', fill: 'currentColor',
             'stroke-width': 0, transform: 'matrix(1 0 0 -1 0 0)'
         }) as N;
+        //
+        //  The svg element with its viewBox, size and alignment
+        //
+        const adaptor = this.adaptor;
         const svg = adaptor.append(parent, this.svg('svg', {
             xmlns: SVGNS,
             width: this.ex(w), height: this.ex(H + D),
@@ -120,10 +132,17 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
             viewBox: [0, this.fixed(-H * 1000, 1), this.fixed(w * 1000, 1), this.fixed((H + D) * 1000, 1)].join(' ')
         }, [g])) as N;
         if (pwidth) {
+            //
+            // These aren't needed for full-width tables
+            //
             adaptor.setAttribute(svg, 'width', pwidth);
             adaptor.removeAttribute(svg, 'viewBox');
             adaptor.removeAttribute(g, 'transform');
         }
+        //
+        //  Typeset the math and add minwith (from mtables), or set the alignment and indentation
+        //    of the finalized expression
+        //
         this.minwidth = this.shift = 0;
         wrapper.toSVG(g);
         if (this.minwidth) {
@@ -132,6 +151,9 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
             const align = adaptor.getAttribute(parent, 'justify') || 'center';
             this.setIndent(svg, align, this.shift);
         }
+        //
+        //  Put back the original container
+        //
         this.container = container;
     }
 
@@ -160,22 +182,62 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
     }
 
     /**
-     * @param {number} m    A number to be shown with a fixed number of digits
-     * @param {number=} n   The number of digits to use
-     * @return {string}     The formatted number
+     * @param {string} kind             The kind of node to create
+     * @param {OptionList} properties   The properties to set for the element
+     * @param {(N|T)[]} children            The child nodes for this node
+     * @return {N}                      The newly created node in the SVG namespace
      */
-    fixed(m: number, n: number = 3) {
-        if (Math.abs(m) < .0006) return "0";
-        return m.toFixed(n).replace(/\.?0+$/,"");
+    svg(kind: string, properties: OptionList = {}, children: (N|T)[] = []) {
+        return this.html(kind, properties, children, SVGNS);
     }
 
     /**
-     * @param {string} kind             The kind of node to create
-     * @param {OptionList} properties   The properties to set for the element
-     * @param {N[]} children            The child nodes for this node
-     * @return {N}                      The newly created node in the SVG namespace
+     * @param {string} text      The text to be displayed
+     * @param {string} variant   The name of the variant for the text
+     * @return {N}               The text element containing the text
      */
-    svg(kind: string, properties: OptionList = {}, children: N[] = []) {
-        return this.html(kind, properties, children, SVGNS);
+    public unknownText(text: string, variant: string) {
+        const metrics = this.math.metrics;
+        const scale = this.font.params.x_height / metrics.ex * metrics.em * 1000;
+        const svg = this.svg('text', {
+            'data-variant': variant,
+            transform: 'matrix(1 0 0 -1 0 0)', 'font-size': this.fixed(scale, 1) + 'px'
+        }, [this.text(text)]);
+        const adaptor = this.adaptor;
+        if (variant !== '-explicitFont') {
+            const [family, italic, bold] = this.font.getCssFont(variant);
+            adaptor.setAttribute(svg, 'font-family', family);
+            if (italic) {
+                adaptor.setAttribute(svg, 'font-style', 'italic');
+            }
+            if (bold) {
+                adaptor.setAttribute(svg, 'font-weight', 'bold');
+            }
+        }
+        return svg;
     }
+
+    /**
+     * Measure the width of a text element by placing it in the page
+     *  and looking up its size (fake the height and depth, since we can't measure that)
+     *
+     * @param {N} text         The text element to measure
+     * @return {Object}        The width, height and depth for the text
+     */
+    public measureTextNode(text: N) {
+        const adaptor = this.adaptor;
+        text = adaptor.clone(text);
+        adaptor.removeAttribute(text, 'transform');
+        const ex = this.fixed(this.font.params.x_height * 1000, 1);
+        const svg = this.svg('svg', {
+            position: 'absolute', visibility: 'hidden',
+            width: '1ex', height: '1ex',
+            viewBox: [0, 0, ex, ex].join(' ')
+        }, [text]);
+        adaptor.append(adaptor.body(adaptor.document), svg);
+        let w = adaptor.nodeSize(text, 1000, true)[0];
+        adaptor.remove(svg);
+        return {w: w, h: .75, d: .25};
+    }
+
 }

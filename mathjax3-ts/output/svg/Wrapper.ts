@@ -320,6 +320,11 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
             for (const n of this.unicodeChars(data.c)) {
                 x += this.placeChar(n, x, y, g, variant);
             }
+        } else if (data.unknown) {
+            const char = String.fromCharCode(n);
+            const text = this.adaptor.append(parent, this.jax.unknownText(char, variant));
+            this.place(x, y, text);
+            return this.jax.measureTextNodeWithCache(text, char, variant).w;
         }
         return w;
     }
@@ -395,10 +400,10 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
     /**
      * @param {string} type      The tag name of the svg node to be created
      * @param {OptionList} def   The properties to set for the created node
-     * @param {N[]} content      The child nodes for the created SVG node
+     * @param {(N|T)[]} content  The child nodes for the created SVG node
      * @return {N}               The generated SVG tree
      */
-    public svg(type: string, def: OptionList = {}, content: N[] = []) {
+    public svg(type: string, def: OptionList = {}, content: (N| T)[] = []) {
         return this.jax.svg(type, def, content);
     }
 

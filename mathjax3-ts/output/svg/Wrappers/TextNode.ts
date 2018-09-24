@@ -50,7 +50,7 @@ export class SVGTextNode<N, T, D> extends CommonTextNodeMixin<SVGConstructor<N, 
     public toSVG(parent: N) {
         const text = (this.node as TextNode).getText();
         if (this.parent.variant === '-explicitFont') {
-            this.adaptor.append(parent, this.html('text', {}, [this.text(text)]));
+            this.adaptor.append(parent, this.jax.unknownText(text, this.parent.variant));
         } else {
             const c = this.parent.stretch.c;
             const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));

@@ -25,13 +25,14 @@ import {AbstractOutputJax} from '../../core/OutputJax.js';
 import {MathDocument} from '../../core/MathDocument.js';
 import {MathItem, Metrics} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {FontData, FontDataClass} from './FontData.js';
+import {FontData, FontDataClass, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
 import {CssStyles} from './CssStyles.js';
 import {WrapperClass} from '../../core/Tree/Wrapper.js';
 import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {percent} from '../../util/lengths.js';
+import {StyleList, Styles} from '../../util/Styles.js';
 
 /*****************************************************************/
 
@@ -41,6 +42,13 @@ import {percent} from '../../util/lengths.js';
  */
 export type MetricMap<N> = Map<N, Metrics>;
 type MetricDomMap<N> = Map<N, N>;
+
+/**
+ * Maps for unknown characters
+ */
+export type UnknownBBox = {w: number, h: number, d: number};
+export type UnknownMap = Map<string, UnknownBBox>;
+export type UnknownVariantMap = Map<string, UnknownMap>;
 
 /*****************************************************************/
 
@@ -76,11 +84,13 @@ AbstractOutputJax<N, T, D> {
     public cssStyles: CssStyles;
 
     /**
-     * The MathDocument for the math we find
-     * and the MathItem currently being processed
+     * The MathDocument for the math we find,
+     * the MathItem currently being processed,
+     * and the container element for the math
      */
     public document: MathDocument<N, T, D>;
     public math: MathItem<N, T, D>;
+    public container: N;
 
     /**
      * The data for the font in use
@@ -100,6 +110,11 @@ AbstractOutputJax<N, T, D> {
      * Nodes used to test for metric data
      */
     public testNodes: N;
+
+    /**
+     * Cache of unknonw character bounding boxes for this element
+     */
+    protected unknownCache: UnknownVariantMap;
 
     /*****************************************************************/
 
@@ -121,6 +136,7 @@ AbstractOutputJax<N, T, D> {
         this.factory.jax = this;
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new defaultFont(fontOptions);
+        this.unknownCache = new Map();
     }
 
     /*****************************************************************/
@@ -178,12 +194,8 @@ AbstractOutputJax<N, T, D> {
         math.root.setTeXclass(null);
         this.setScale(node);
         this.nodeMap = new Map<MmlNode, W>();
-try {
+        this.container = node;
         this.processMath(math.root, node);
-} catch (e) {
-    console.log(e.stack);
-    throw e;
-}
         this.nodeMap = null;
         this.executeFilters(this.postFilters, math, node);
     }
@@ -367,6 +379,105 @@ try {
      */
     public text(text: string) {
         return this.adaptor.text(text);
+    }
+
+    /**
+     * @param {number} m    A number to be shown with a fixed number of digits
+     * @param {number=} n   The number of digits to use
+     * @return {string}     The formatted number
+     */
+    fixed(m: number, n: number = 3) {
+        if (Math.abs(m) < .0006) return "0";
+        return m.toFixed(n).replace(/\.?0+$/,"");
+    }
+
+    /*****************************************************************/
+    /*
+     *  Methods for handling text that is not in the current MathJax font
+     */
+
+    /**
+     * Create a DOM node for text from a specific CSS font, or that is
+     *  not in the current MathJax font
+     *
+     * @param {string} text        The text to be displayed
+     * @param {string} variant     The name of the variant for the text
+     * @param {CssFontData} font   The style cssText string containing the font information
+     * @return {N}                 The text element containing the text
+     */
+    public abstract unknownText(text: string, variant: string): N;
+
+    /**
+     * Measure text from a specific font, or that isn't in the MathJax font
+     *
+     * @param {string} text        The text to measure
+     * @param {string} variant     The variant for the text
+     * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
+     * @return {Object}            The width, height, and depth of the text (in ems)
+     */
+    public measureText(text: string, variant: string, font: CssFontData = ['', false, false]) {
+        const node = this.unknownText(text, variant);
+        if (variant === '-explicitFont') {
+            const styles = this.cssFontStyles(font);
+            this.adaptor.setAttributes(node, {style: styles});
+        }
+        return this.measureTextNodeWithCache(node, text, variant, font);
+    }
+
+    /**
+     * Get the size of a text node, caching the result, and using
+     *   a cached result, if there is one.
+     *
+     * @param {N} text         The text element to measure
+     * @param {string} chars   The string contained in the text node
+     * @return {Object}        The width, height and depth for the text
+     */
+    public measureTextNodeWithCache(text: N, chars: string, variant: string, font: CssFontData = ['', false, false]) {
+        if (variant === '-explicitFont') {
+            variant = [font[0], font[1] ? 'T' : 'F', font[2] ? 'T' : 'F', ''].join('-');
+        }
+        if (!this.unknownCache.has(variant)) {
+            this.unknownCache.set(variant, new Map());
+        }
+        const map = this.unknownCache.get(variant);
+        const cached = map.get(chars);
+        if (cached) return cached;
+        const bbox = this.measureTextNode(text);
+        map.set(chars, bbox);
+        return bbox;
+    }
+
+    /**
+     * Measure the width of a text element by placing it in the page
+     *  and looking up its size (fake the height and depth, since we can't measure that)
+     *
+     * @param {N} text            The text element to measure
+     * @return {Object}           The width, height and depth for the text (in ems)
+     */
+    public abstract measureTextNode(text: N): UnknownBBox;
+
+    /**
+     * @param {CssFontData} font   The family, style, and weight for the given font
+     * @param {Styles} styles      The style object to add the font data to
+     * @return {Styles}            The modified (or initialized) style object
+     */
+    public cssFontStyles(font: CssFontData, styles: StyleList = {}) {
+        const [family, italic, bold] = font;
+        styles['font-family'] = family;
+        if (italic) styles['font-style'] = 'italic';
+        if (bold) styles['font-style'] = 'bold';
+        return styles;
+    }
+
+    /**
+     * @param {Styles} styles   The style object to query
+     * @return {CssFontData}    The family, italic, and boolean values
+     */
+    public getFontData(styles: Styles) {
+        if (!styles) styles = new Styles();
+        return [styles.get('font-family'),
+                styles.get('font-style') === 'italic',
+                styles.get('font-weight') === 'bold'] as CssFontData;
     }
 
 }
