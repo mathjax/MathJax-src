@@ -42,7 +42,7 @@ export const options: OptionList = {
  *  The entity name-to-value translation table
  *  (basic math entities -- others are loaded from external files)
  */
-const entities: EntityList = {
+export const entities: EntityList = {
     ApplyFunction: '\u2061',
     Backslash: '\u2216',
     Because: '\u2235',
@@ -459,8 +459,8 @@ const loaded: {[name: string]: boolean} = {};
  * @param {EntityList} entities  The entities to add
  * @param {string} file          The name of the file that they came from
  */
-export function add(entities: EntityList, file: string) {
-    Object.assign(entities, entities);
+export function add(additions: EntityList, file: string) {
+    Object.assign(entities, additions);
    loaded[file] = true;
 }
 
