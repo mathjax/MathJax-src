@@ -38,6 +38,7 @@ export type CharOptions = {
     ic?: number;                  // italic correction value
     sk?: number;                  // skew value
     p?: string;                   // svg path
+    unknown?: boolean;            // true if not found in the given variant
 };
 
 /**
@@ -92,6 +93,16 @@ export type VariantData = {
 export type VariantMap = {
     [name: string]: VariantData;
 };
+
+
+/**
+ *  [fontname, italic, bold]
+ */
+export type CssFontData = [string, boolean, boolean];
+
+export type CssFontMap = {
+    [name: string]: CssFontData;
+}
 
 /****************************************************************************/
 
@@ -206,6 +217,26 @@ export class FontData {
         ['bold-sans-serif-italic', 'bold-italic', 'sans-serif'],
         ['monospace', 'normal']
     ];
+
+    /**
+     * The style and weight to use for each variant (for unkown characters)
+     */
+    protected static defaultCssFonts: CssFontMap = {
+        normal: ['serif', false, false],
+        bold: ['serif', false, true],
+        italic: ['serif', true, false],
+        'bold-italic': ['serif', true, true],
+        'double-struck': ['serif', false, true],
+        fraktur: ['serif', false, false],
+        'bold-fraktur': ['serif', false, true],
+        script: ['cursive', false, false],
+        'bold-script': ['cursive', false, true],
+        'sans-serif': ['sans-serif', false, false],
+        'bold-sans-serif': ['sans-serif', false, true],
+        'sans-serif-italic': ['sans-serif', true, false],
+        'bold-sans-serif-italic': ['sans-serif', true, true],
+        monospace: ['monospace', false, false]
+    };
 
     /**
      *  The default remappings
@@ -324,6 +355,7 @@ export class FontData {
     protected variant: VariantMap = {};
     protected delimiters: DelimiterMap = {};
     protected sizeVariants: string[];
+    protected cssFontMap: CssFontMap = {};
 
     /**
      * The character maps
@@ -348,7 +380,8 @@ export class FontData {
     constructor() {
         let CLASS = (this.constructor as typeof FontData);
         this.params = {...CLASS.defaultParams};
-        this.sizeVariants = CLASS.defaultSizeVariants.slice(0);
+        this.sizeVariants = [...CLASS.defaultSizeVariants];
+        this.cssFontMap = {...CLASS.defaultCssFonts};
         this.createVariants(CLASS.defaultVariants);
         this.defineDelimiters(CLASS.defaultDelimiters);
         for (const name of Object.keys(CLASS.defaultChars)) {
@@ -492,6 +525,14 @@ export class FontData {
      */
     public getVariant(name: string) {
         return this.variant[name];
+    }
+
+    /**
+     * @param {string} variant   The name of the variant whose data is to be obtained
+     * @return {CssFontData}     The CSS data for the requested variant
+     */
+    public getCssFont(variant: string) {
+        return this.cssFontMap[variant] || ['serif', false, false];
     }
 
     /**

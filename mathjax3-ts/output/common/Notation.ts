@@ -93,59 +93,83 @@ export type Side = keyof typeof sideIndex;
 export const sideNames = Object.keys(sideIndex) as Side[];
 
 /**
- * the spacing to leave for an arrowhead
- */
-export const arrowHead = (node: Menclose) => {
-    return Math.max(node.padding, node.thickness * (node.arrowhead.x + node.arrowhead.dx + 1));
-};
-
-/**
  * Common BBox and Border functions
  */
 export const fullBBox = ((node) => new Array(4).fill(node.thickness + node.padding)) as BBoxExtender<Menclose>;
 export const fullPadding = ((node) => new Array(4).fill(node.padding)) as BBoxExtender<Menclose>;
 export const fullBorder = ((node) => new Array(4).fill(node.thickness)) as BBoxBorder<Menclose>;
 
+/*****************************************************************/
+
+/**
+ * The length of an arrowhead
+ */
+export const arrowHead = (node: Menclose) => {
+    return Math.max(node.padding, node.thickness * (node.arrowhead.x + node.arrowhead.dx + 1));
+};
+
+/**
+ * Adjust short bbox for tall arrow heads
+ */
+export const arrowBBoxHD = (node: Menclose, TRBL: number[]) => {
+    if (node.childNodes[0]) {
+        const {h, d} = node.childNodes[0].getBBox();
+        TRBL[0] = TRBL[2] = Math.max(0, node.thickness * node.arrowhead.y - (h + d) / 2);
+    }
+    return TRBL;
+}
+
+/**
+ * Adjust thin bbox for wide arrow heads
+ */
+export const arrowBBoxW = (node: Menclose, TRBL: number[]) => {
+    if (node.childNodes[0]) {
+        const {w} = node.childNodes[0].getBBox();
+        TRBL[1] = TRBL[3] = Math.max(0, node.thickness * node.arrowhead.y - w / 2);
+    }
+    return TRBL;
+}
+
 /**
  * The data for horizontal and vertical arrow notations
- *   [angle, neg, double, origin, offset, isVertical, remove]
+ *   [angle, double, isVertical, remove]
  */
 export const arrowDef = {
-    up:    [-Math.PI / 2,  1, false, 'bottom left', 'X', true,  'verticalstrike'],
-    down:  [ Math.PI / 2, -1, false, 'top left',    'X', true,  'verticakstrike'],
-    right: [  0,          -1, false, 'top left',    'Y', false, 'horizontalstrike'],
-    left:  [  Math.PI,    -1, false, 'top right',   'Y', false, 'horizontalstrike'],
-    updown:    [Math.PI / 2, -1, true, 'top left',  'X', true,  'verticalstrike uparrow downarrow'],
-    leftright: [0,           -1, true, 'top left',  'Y', false, 'horizontalstrike leftarrow rightarrow']
-} as {[name: string]: [number, number, boolean, string, string, boolean, string]};
+    up:        [-Math.PI / 2, false, true,  'verticalstrike'],
+    down:      [ Math.PI / 2, false, true,  'verticakstrike'],
+    right:     [ 0,           false, false, 'horizontalstrike'],
+    left:      [ Math.PI,     false, false, 'horizontalstrike'],
+    updown:    [ Math.PI / 2, true,  true,  'verticalstrike uparrow downarrow'],
+    leftright: [ 0,           true,  false, 'horizontalstrike leftarrow rightarrow']
+} as {[name: string]: [number, boolean, boolean, string]};
 
 /**
  * The data for diagonal arrow notations
- *   [neg, c, pi, double, origin, remove]
+ *   [c, pi, double, remove]
  */
 export const diagonalArrowDef = {
-    updiagonal: [ 1, -1, 0,       false, 'bottom left',  'updiagonalstrike'],
-    northeast:  [ 1, -1, 0,       false, 'bottom left',  'updiagonalstrike'],
-    southeast:  [-1,  1, 0,       false, 'top left',     'downdiagonalstrike'],
-    northwest:  [ 1,  1, Math.PI, false, 'bottom right', 'downdiagonalstrike'],
-    southwest:  [-1, -1, Math.PI, false, 'top right',    'updiagonalstrike'],
-    northeastsouthwest: [ 1, -1, 0, true, 'bottom left',
-                          'updiagonalstrike northeastarrow updiagonalarrow southwestarrow'],
-    northwestsoutheast: [-1,  1, 0, true, 'top left',
-                          'downdiagonalstrike northwestarrow southeastarrow']
-} as {[name: string]: [number, number, number, boolean, string, string]};
+    updiagonal:         [-1, 0,       false, 'updiagonalstrike'],
+    northeast:          [-1, 0,       false, 'updiagonalstrike'],
+    southeast:          [ 1, 0,       false, 'downdiagonalstrike'],
+    northwest:          [ 1, Math.PI, false, 'downdiagonalstrike'],
+    southwest:          [-1, Math.PI, false, 'updiagonalstrike'],
+    northeastsouthwest: [-1, 0,       true,  'updiagonalstrike northeastarrow updiagonalarrow southwestarrow'],
+    northwestsoutheast: [ 1, 0,       true,  'downdiagonalstrike northwestarrow southeastarrow']
+} as {[name: string]: [number, number, boolean, string]};
 
 /**
  * The BBox functions for horizontal and vertical arrows
  */
 export const arrowBBox = {
-    up:    (node) => [arrowHead(node), 0, node.padding, 0],
-    down:  (node) => [node.padding, 0, arrowHead(node), 0],
-    right: (node) => [0, arrowHead(node), 0, node.padding],
-    left:  (node) => [0, node.padding, 0, arrowHead(node)],
-    updown:    (node) => [arrowHead(node), 0, arrowHead(node), 0],
-    leftright: (node) => [0, arrowHead(node), 0, arrowHead(node)]
+    up:    (node) => arrowBBoxW(node, [arrowHead(node), 0, node.padding, 0]),
+    down:  (node) => arrowBBoxW(node, [node.padding, 0, arrowHead(node), 0]),
+    right: (node) => arrowBBoxHD(node, [0, arrowHead(node), 0, node.padding]),
+    left:  (node) => arrowBBoxHD(node, [0, node.padding, 0, arrowHead(node)]),
+    updown:    (node) => arrowBBoxW(node, [arrowHead(node), 0, arrowHead(node), 0]),
+    leftright: (node) => arrowBBoxHD(node, [0, arrowHead(node), 0, arrowHead(node)])
 } as {[name: string]: BBoxExtender<Menclose>};
+
+/*****************************************************************/
 
 /**
  * @param {Renderer} render     The function for adding the border to the node
@@ -229,6 +253,8 @@ export const CommonBorder2 = <W extends Menclose, N>(render: Renderer<W, N>) => 
     }
 };
 
+/*****************************************************************/
+
 /**
  * @param {string => Renderer} render      The function for adding the strike to the node
  * @return {(string, number) => DefPair}   The function returning the notation definition for the diagonal strike
@@ -236,10 +262,9 @@ export const CommonBorder2 = <W extends Menclose, N>(render: Renderer<W, N>) => 
 export const CommonDiagonalStrike = <W extends Menclose, N>(render: (sname: string) => Renderer<W, N>) => {
     /**
      * @param {string} name  The name of the diagonal strike to define
-     * @param {number} neg   1 or -1 to use with the angle
      * @return {DefPair}     The notation definition for the diagonal strike
      */
-    return (name: string, neg: number) => {
+    return (name: string) => {
         const cname = 'mjx-' + name.charAt(0) + 'strike';
         return [name + 'diagonalstrike', {
             //
@@ -254,6 +279,8 @@ export const CommonDiagonalStrike = <W extends Menclose, N>(render: (sname: stri
     }
 };
 
+/*****************************************************************/
+
 /**
  * @param {Renderer} render     The function to add the arrow to the node
  * @return {string => DefPair}  The funciton returning the notation definition for the diagonal arrow
@@ -264,25 +291,27 @@ export const CommonDiagonalArrow = <W extends Menclose, N>(render: Renderer<W, N
      * @return {DefPair}      The notation definition for the diagonal arrow
      */
     return (name: string) => {
-        const [neg, c, pi, double, origin, remove] = diagonalArrowDef[name];
+        const [c, pi, double, remove] = diagonalArrowDef[name];
         return [name + 'arrow', {
             //
             // Find the angle and width from the bounding box size and create
             //   the arrow from them and the other arrow data
             //
             renderer: (node, child) => {
-                const {w, h, d} = node.getBBox();
-                const [a, W] = node.getArgMod(w, h + d);
-                const arrow = node.arrow(W, c * (a - pi), neg, origin, '', 0, double);
+                const {a, W} = node.arrowData();
+                const arrow = node.arrow(W, c * (a - pi), double);
                 render(node, arrow);
             },
             //
-            // Add roughly the right amount of space for the arrowhead all around
+            // Add space for the arrowhead all around
             //
             bbox: (node) => {
-                const t = Math.max(node.padding,
-                                   node.thickness * (node.arrowhead.x + node.arrowhead.dx) / Math.sqrt(2));
-                return [t, t, t, t];
+                const {a, x, y} = node.arrowData();
+                const [ax, ay, adx] = [node.arrowhead.x, node.arrowhead.y, node.arrowhead.dx];
+                const [b, ar] = node.getArgMod(ax + adx, ay);
+                const dy = y + (b > a ? node.thickness * ar * Math.sin(b - a) : 0);
+                const dx = x + (b > Math.PI / 2 - a ? node.thickness * ar * Math.sin(b + a - Math.PI / 2) : 0);
+                return [dy, dx, dy, dx];
             },
             //
             // Remove redundant notations
@@ -302,7 +331,7 @@ export const CommonArrow = <W extends Menclose, N>(render: Renderer<W, N>) => {
      * @return {DefPair}      The notation definition for the arrow
      */
     return (name: string) => {
-        const [angle, neg, double, origin, offset, isVertical, remove] = arrowDef[name];
+        const [angle, double, isVertical, remove] = arrowDef[name];
         return [name + 'arrow', {
             //
             // Get the arrow height and depth from the bounding box and the arrow direction
@@ -311,11 +340,11 @@ export const CommonArrow = <W extends Menclose, N>(render: Renderer<W, N>) => {
             renderer: (node, child) => {
                 const {w, h, d} = node.getBBox();
                 const [W, H] = (isVertical ? [h + d, w] : [w, h + d]);
-                const arrow = node.arrow(W, angle, neg, origin, offset, H / 2, double);
+                const arrow = node.arrow(W, angle, double);
                 render(node, arrow);
             },
             //
-            // Add the padding to teh proper sides
+            // Add the padding to the proper sides
             //
             bbox: arrowBBox[name],
             //

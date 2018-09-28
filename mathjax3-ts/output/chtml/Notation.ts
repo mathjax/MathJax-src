@@ -79,10 +79,10 @@ export const DiagonalStrike = <N, T, D>(name: string, neg: number) =>
         const t = neg * node.thickness / 2;
         const strike = node.adjustBorder(node.html(cname, {style: {
             width: node.em(W),
-            transform: 'rotate(' + node.units(-neg * a) + 'rad) translateY(' + t + 'em)',
+            transform: 'rotate(' + node.fixed(-neg * a) + 'rad) translateY(' + t + 'em)',
         }}));
         node.adaptor.append(node.chtml, strike);
-    });
+    })(name);
 
 /**
  * @param {string} name   The name of the diagonal arrow to define
