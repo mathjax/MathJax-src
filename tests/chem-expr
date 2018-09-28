@@ -1,0 +1,104 @@
+node load.js samples/tex-json.js "\\ce{CO2 + C -> 2 CO}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Hg^2+ ->[I-] HgI2 ->[I-] [Hg^{II}I4]^2-}" >> chem.json
+node load.js samples/tex-json.js "C_p[\\ce{H2O(l)}] = \\pu{75.3 J // mol K}" >> chem.json
+node load.js samples/tex-json.js "\\ce{H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Sb2O3}" >> chem.json
+node load.js samples/tex-json.js "\\ce{H+}" >> chem.json
+node load.js samples/tex-json.js "\\ce{CrO4^2-}" >> chem.json
+node load.js samples/tex-json.js "\\ce{[AgCl2]-}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Y^99+}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Y^{99+}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{2 H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{2H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{0.5 H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{1/2 H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{(1/2) H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{$n$ H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{^{227}_{90}Th+}" >> chem.json
+node load.js samples/tex-json.js "\\ce{^227_90Th+}" >> chem.json
+node load.js samples/tex-json.js "\\ce{^{0}_{-1}n^{-}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{^0_-1n-}" >> chem.json
+node load.js samples/tex-json.js "\\ce{H{}^3HO}" >> chem.json
+node load.js samples/tex-json.js "\\ce{H^3HO}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A -> B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A <- B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A <-> B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A <--> B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A <=> B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A <=>> B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A <<=> B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A ->[H2O] B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A ->[{text above}][{text below}] B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A ->[$x$][$x_i$] B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{(NH4)2S}" >> chem.json
+node load.js samples/tex-json.js "\\ce{[\\{(X2)3\\}2]^3+}" >> chem.json
+node load.js samples/tex-json.js "\\ce{CH4 + 2 $\\left( \\ce{O2 + 79/21 N2} \\right)$}" >> chem.json
+node load.js samples/tex-json.js "\\ce{H2(aq)}" >> chem.json
+node load.js samples/tex-json.js "\\ce{CO3^2-_{(aq)}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{NaOH(aq,$\\infty$)}" >> chem.json
+node load.js samples/tex-json.js "\\ce{ZnS($c$)}" >> chem.json
+node load.js samples/tex-json.js "\\ce{ZnS(\\ca$c$)}" >> chem.json
+node load.js samples/tex-json.js "\\ce{NO_x}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Fe^n+}" >> chem.json
+node load.js samples/tex-json.js "\\ce{x Na(NH4)HPO4 ->[\\Delta] (NaPO3)_x + x NH3 ^ + x H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{\\mu-Cl}" >> chem.json
+node load.js samples/tex-json.js "\\ce{[Pt(\\eta^2-C2H4)Cl3]-}" >> chem.json
+node load.js samples/tex-json.js "\\ce{\\beta +}" >> chem.json
+node load.js samples/tex-json.js "\\ce{^40_18Ar + \\gamma{} + \\nu_e}" >> chem.json
+node load.js samples/tex-json.js "\\ce{NaOH(aq,$\\infty$)}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Fe(CN)_{$\\frac{6}{2}$}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{X_{$i$}^{$x$}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{X_$i$^$x$}" >> chem.json
+node load.js samples/tex-json.js "\\ce{$cis${-}[PtCl2(NH3)2]}" >> chem.json
+node load.js samples/tex-json.js "\\ce{CuS($hP12$)}" >> chem.json
+node load.js samples/tex-json.js "\\ce{{Gluconic Acid} + H2O2}" >> chem.json
+node load.js samples/tex-json.js "\\ce{X_{{red}}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{{(+)}_589{-}[Co(en)3]Cl3}" >> chem.json
+node load.js samples/tex-json.js "\\ce{C6H5-CHO}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A-B=C#D}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A\\bond{-}B\\bond{=}C\\bond{#}D}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A\\bond{1}B\\bond{2}C\\bond{3}D}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A\\bond{~}B\\bond{~-}C}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A\\bond{~--}B\\bond{~=}C\\bond{-~-}D}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A\\bond{...}B\\bond{....}C}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A\\bond{->}B\\bond{<-}C}" >> chem.json
+node load.js samples/tex-json.js "\\ce{KCr(SO4)2*12H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{KCr(SO4)2.12H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{KCr(SO4)2 * 12 H2O}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Fe^{II}Fe^{III}2O4}" >> chem.json
+node load.js samples/tex-json.js "\\ce{OCO^{.-}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{NO^{(2.)-}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Li^x_{Li,1-2x}Mg^._{Li,x}$V$'_{Li,x}Cl^x_{Cl}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{O''_{i,x}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{M^{..}_i}" >> chem.json
+node load.js samples/tex-json.js "\\ce{$V$^{4'}_{Ti}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{V_{V,1}C_{C,0.8}$V$_{C,0.2}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A + B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A - B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A = B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A \\pm B}" >> chem.json
+node load.js samples/tex-json.js "\\ce{SO4^2- + Ba^2+ -> BaSO4 v}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A v B (v) -> B ^ B (^)}" >> chem.json
+node load.js samples/tex-json.js "\\ce{NO^*}" >> chem.json
+node load.js samples/tex-json.js "\\ce{1s^2-N}" >> chem.json
+node load.js samples/tex-json.js "\\ce{n-Pr}" >> chem.json
+node load.js samples/tex-json.js "\\ce{iPr}" >> chem.json
+node load.js samples/tex-json.js "\\ce{\\ca Fe}" >> chem.json
+node load.js samples/tex-json.js "\\ce{A, B, C; F}" >> chem.json
+node load.js samples/tex-json.js "\\ce{{and others}}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Zn^2+  <=>[+ 2OH-][+ 2H+]  $\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}$  <=>[+ 2OH-][+ 2H+]  $\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}$}" >> chem.json
+node load.js samples/tex-json.js "\\ce{$K = \\frac{[\\ce{Hg^2+}][\\ce{Hg}]}{[\\ce{Hg2^2+}]}$}" >> chem.json
+node load.js samples/tex-json.js "\\ce{$K = \\ce{\\frac{[Hg^2+][Hg]}{[Hg2^2+]}}$}" >> chem.json
+node load.js samples/tex-json.js "\\ce{Hg^2+ ->[I-]  $\\underset{\\mathrm{red}}{\\ce{HgI2}}$  ->[I-]  $\\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}}$}" >> chem.json
+node load.js samples/tex-json.js "\\pu{123 kJ}" >> chem.json
+node load.js samples/tex-json.js "\\pu{123 mm2}" >> chem.json
+node load.js samples/tex-json.js "\\pu{123 J s}" >> chem.json
+node load.js samples/tex-json.js "\\pu{123 J*s}" >> chem.json
+node load.js samples/tex-json.js "\\pu{123 kJ/mol}" >> chem.json
+node load.js samples/tex-json.js "\\pu{123 kJ//mol}" >> chem.json
+node load.js samples/tex-json.js "\\pu{123 kJ mol-1}" >> chem.json
+node load.js samples/tex-json.js "\\pu{123 kJ*mol-1}" >> chem.json
+node load.js samples/tex-json.js "\\pu{1.2e3 kJ}" >> chem.json
+node load.js samples/tex-json.js "\\pu{1,2e3 kJ}" >> chem.json
+node load.js samples/tex-json.js "\\pu{1.2E3 kJ}" >> chem.json
+node load.js samples/tex-json.js "\\pu{1,2E3 kJ}" >> chem.json
