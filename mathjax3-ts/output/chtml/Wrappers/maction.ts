@@ -21,27 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, StringMap} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {BBox} from '../BBox.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMaction, CommonMactionMixin} from '../../common/Wrappers/maction.js';
+import {ActionDef} from '../../common/Wrappers/maction.js';
+import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
-import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
-import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
-import {Property} from '../../../core/Tree/Node.js';
-import {StyleList} from '../CssStyles.js';
-
-/*****************************************************************/
-
-/*
- * The types needed to define the actiontypes
- */
-export type ActionData = {[name: string]: any};
-export type ActionHandler<N, T, D> = (node: CHTMLmaction<N, T, D>, data?: ActionData) => void;
-export type ActionMap = Map<string, ActionHandler<any, any, any>>;
-export type ActionPair = [string, [ActionHandler<any, any, any>, ActionData]];
-
-export type EventHandler = (event: Event) => void;
+import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -51,7 +37,9 @@ export type EventHandler = (event: Event) => void;
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmaction<N, T, D> extends
+CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlMaction.prototype.kind;
 
     public static styles: StyleList = {
@@ -93,7 +81,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * The valid action types and their handlers
      */
-    public static Actions = new Map([
+    public static actions = new Map([
         ['toggle', [(node, data) => {
             //
             // Mark which child is selected
@@ -102,8 +90,8 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
             //
             // Cache the data needed to select another node
             //
-            const math = node.factory.chtml.math;
-            const document = node.factory.chtml.document;
+            const math = node.factory.jax.math;
+            const document = node.factory.jax.document;
             const mml = node.node as MmlMaction;
             //
             // Add a click handler that changes the selection and rerenders the expression
@@ -153,27 +141,7 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
                     event.stopPropagation();
                 });
             }
-        }, {
-            postDelay: 600,      // milliseconds before tooltip posts
-            clearDelay: 100,     // milliseconds before tooltip is removed
-
-            hoverTimer: null,    // timer for posting tooltips
-            clearTimer: null,    // timer for removing tooltips
-
-            /*
-             * clear the timers if any are active
-             */
-            stopTimers: (data: ActionData) => {
-                if (data.clearTimer) {
-                    clearTimeout(data.clearTimer);
-                    data.clearTimer = null;
-                }
-                if (data.hoverTimer) {
-                    clearTimeout(data.hoverTimer);
-                    data.hoverTimer = null;
-                }
-            }
-        }]],
+        }, TooltipData]],
 
         ['statusline', [(node, data) => {
             const tip = node.childNodes[1];
@@ -204,46 +172,9 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
             status: null  // cached status line
         }]]
 
-    ] as ActionPair[]);
+    ] as ActionDef<CHTMLmaction<any, any, any>>[]);
 
     /*************************************************************/
-
-    /**
-     *  Delays before posting or clearing a math tooltip
-     */
-    public static postDelay = 600;
-    public static clearDelay = 100;
-
-    /*************************************************************/
-
-    /**
-     * The handler for the specified actiontype
-     */
-    protected action: ActionHandler<N, T, D> = null;
-    protected data: ActionData = null;
-
-    /**
-     * @return {CHTMLWrapper}  The selected child wrapper
-     */
-    public get selected(): CHTMLWrapper<N, T, D> {
-        const selection = this.node.attributes.get('selection') as number;
-        const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
-        return this.childNodes[i] || this.wrap((this.node as MmlMaction).selected);
-    }
-
-    /*************************************************************/
-
-    /**
-     * @override
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        const actions = (this.constructor as typeof CHTMLmaction).Actions;
-        const action = this.node.attributes.get('actiontype') as string;
-        const [handler, data] = actions.get(action) || [((node, data) => {}) as ActionHandler<N, T, D>, {}];
-        this.action = handler;
-        this.data = data;
-    }
 
     /**
      * @override
@@ -253,13 +184,6 @@ export class CHTMLmaction<N, T, D> extends CHTMLWrapper<N, T, D> {
         const child = this.selected;
         child.toCHTML(chtml);
         this.action(this, this.data);
-    }
-
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        bbox.updateFrom(this.selected.getBBox());
     }
 
     /**
