@@ -64,7 +64,7 @@ export class Explorer {
       this.active = false;
     }
   }
-  
+
   public Speech(walker: any) {
     console.log('In Speech');
     if (sre.Engine.isReady()) {
@@ -80,20 +80,30 @@ export class Explorer {
     const code = event.keyCode;
     if (code === 27) {
       this.Stop();
+      this.stopEvent(event);
       return;
     }
     if (this.active) {
       this.Move(code);
+      this.stopEvent(event);
       return;
     }
     if (code === 32 && event.shiftKey) {
       this.Start();
+      this.stopEvent(event);
     }
-    this.stopEvent(event);
   }
 
   private stopEvent(event: Event) {
-    event.stopPropagation();
+    if (event.preventDefault) {
+      event.preventDefault();
+    } else {
+      event.returnValue = false;
+    }
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    }
+    event.cancelBubble = true;
   }
   
   public Move(key: number) {
@@ -102,11 +112,6 @@ export class Explorer {
     this.highlighter.highlight(this.walker.getFocus().getNodes());
     this.region.Update(this.walker.speech());
   }
-
-  // public Explorer() {
-  //   console.log('In Explorer NEW');
-  //   // this.Start();
-  // }
 
 }
 
