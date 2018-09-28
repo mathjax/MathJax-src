@@ -37,7 +37,7 @@ MathJax.InputJax.TeX = MathJax.InputJax({
     MultLineWidth: "85%",
     
     equationNumbers: {
-      autoNumber: "none",  // "AMS" for standard AMS numbering,
+      autoNumber: "AMS",  // "AMS" for standard AMS numbering,
                            //  or "all" for all displayed equations
       formatNumber: function (n) {return n},
       formatTag:    function (n) {return '('+n+')'},

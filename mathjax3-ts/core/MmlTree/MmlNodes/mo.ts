@@ -284,7 +284,7 @@ export class MmlMo extends AbstractMmlTokenNode {
      *                                     order they should be tested, based on the
      *                                     position of the element in its parent.
      */
-    protected getForms() {
+    public getForms() {
         let core: MmlNode = this;
         let parent = this.parent;
         let Parent = this.Parent;

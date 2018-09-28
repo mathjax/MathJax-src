@@ -25,21 +25,6 @@
 
 export namespace TexConstant {
 
-  export const Inherit = '_inherit_';
-
-  export const Auto = '_auto_';
-
-  export const Size = {
-    INFINITY: 'infinity',
-    SMALL: 'small',
-    NORMAL: 'normal',
-    BIG: 'big'
-  };
-
-  export const Color = {
-    TRANSPARENT: 'transparent'
-  };
-
   export const Variant = {
     NORMAL: 'normal',
     BOLD: 'bold',
@@ -193,30 +178,5 @@ export namespace TexConstant {
     PT: 'pt',
     PC: 'pc'
   };
-
-  export const TexClass = {
-    ORD:   0,
-    OP:    1,
-    BIN:   2,
-    REL:   3,
-    OPEN:  4,
-    CLOSE: 5,
-    PUNCT: 6,
-    INNER: 7,
-    VCENTER: 8,
-    NONE:   -1
-  };
-
-  export const TexClassNames = [
-    'ORD',
-    'OP',
-    'BIN',
-    'REL',
-    'OPEN',
-    'CLOSE',
-    'PUNCT',
-    'INNER',
-    'VCENTER'
-  ];
 
 }
