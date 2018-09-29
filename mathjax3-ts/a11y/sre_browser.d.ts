@@ -1,8 +1,8 @@
 
 declare namespace sre {
 
-  type colorType = {color: string, alpha: number};
-  type colorString = {foreground: string, background: string};
+  export type colorType = {color: string, alpha: number};
+  export type colorString = {foreground: string, background: string};
 
   interface SpeechGenerator {
     speech(): string;

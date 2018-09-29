@@ -17,6 +17,8 @@ export class Explorer {
   private walker: sre.Walker;
   private highlighter: sre.Highlighter;
   private speechGenerator: sre.SpeechGenerator;
+  private foreground: sre.colorType = {color: 'red', alpha: 1};
+  private background: sre.colorType = {color: 'blue', alpha: .2};
   
   // Maybe the A11yDocument should have a get region?
   // Maybe we need more than one region (Braille)?
@@ -30,11 +32,14 @@ export class Explorer {
     this.Attach();
   }
 
+
+  /**
+   * Attaches navigator to a node.
+   */
   private Attach() {
     this.highlighter = sre.HighlighterFactory.highlighter(
-      {color: 'blue', alpha: .2},
-      {color: 'red', alpha: 1},
-      {renderer: 'CommonHTML', browser: 'Chrome'}
+      this.background, this.foreground,
+      {renderer: this.document.outputJax.name}
     );
     // Add speech
     this.speechGenerator = new sre.TreeSpeechGenerator();
@@ -46,6 +51,10 @@ export class Explorer {
       this.node, this.speechGenerator, this.highlighter, this.mml);
     this.node.tabIndex = 1;
     this.node.addEventListener('keydown', this.KeyDown.bind(this));
+    this.node.addEventListener('focus', this.FocusIn.bind(this));
+    this.node.addEventListener('focusout', this.FocusOut.bind(this));
+    this.node.addEventListener('mouseover', this.Hover.bind(this));
+    this.node.addEventListener('mouseout', this.Hover.bind(this));
   }
 
   public Start() {
@@ -76,6 +85,21 @@ export class Explorer {
     }
   }
 
+  public Hover(event: MouseEvent) {
+    console.log(event.target);
+  }
+  
+  public FocusIn(event: MouseEvent) {
+    console.log('Focus in');
+    // Announce?
+    this.Start();
+  }
+  
+  public FocusOut(event: MouseEvent) {
+    console.log('Focus out');
+    this.Stop();
+  }
+  
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
     if (code === 27) {
@@ -115,10 +139,79 @@ export class Explorer {
 
 }
 
-export class LiveRegion {
+
+export abstract class Region {
+
+
+  /**
+   * True if the style has already been added to the document.
+   * @type {boolean}
+   */
+  protected static styleAdded: boolean = false;
+
+  /**
+   * The CSS style that needs to be added for this type of region.
+   * @type {CssStyles}
+   */
+  protected static style: CssStyles;
+
+  protected div: HTMLElement;
+  protected inner: HTMLElement;
+
+  /**
+   * Adds a style sheet for the live region to the document.
+   * @param {A11yDocument} document The current document.
+   */
+  public addStyles(document: A11yDocument) {
+    let CLASS = this.constructor as typeof Region;
+    if (CLASS.styleAdded) {
+      return;
+    }
+    // TODO: should that be added to document.documentStyleSheet()?
+    let node = document.adaptor.node('style');
+    node.innerHTML = CLASS.style.cssText;
+    document.adaptor.head(document.adaptor.document).appendChild(node);
+  }
+
+  public addElement() {}
+}
+
+export class ToolTip {
 
   private static styleAdded: boolean = false;
   private static style: CssStyles =
+    new CssStyles({'.tooltip': {
+      position: 'relative',
+      display: 'inline-block',
+      'border-bottom': '1px dotted black',
+    },
+                   '.tooltip .tooltiptext': {
+                     visibility: 'hidden',
+                     width: '120px',
+                     'background-color': 'black',
+                     color: '#fff',
+                     'text-align': 'center',
+                     'border-radius': '6px',
+                     padding: '5px 0',
+                     position: 'absolute',
+                     'z-index': 1
+                   },
+                   '.tooltip:hover .tooltiptext': {
+                     visibility: 'visible',
+                   }
+                  }
+                 );
+
+  private div: HTMLElement;
+  private inner: HTMLElement;
+
+}
+
+export class LiveRegion {
+
+  protected static className = 'MJX_LiveRegion';
+  protected static styleAdded: boolean = false;
+  protected static style: CssStyles =
     new CssStyles({'.MJX_LiveRegion': {
       position: 'absolute', top: '0', height: '1px', width: '1px',
       padding: '1px', overflow: 'hidden'
@@ -155,27 +248,32 @@ export class LiveRegion {
    * @param {A11yDocument} document The document the live region is added to.
    */
   constructor(public document: A11yDocument) {
-    LiveRegion.Styles(document);
+    this.AddStyles();
+    this.AddElement();
+    this.div.setAttribute('aria-live', 'assertive');
+  }
+
+  public AddStyles() {
+    LiveRegion.Styles(this.document);
+  }
+
+  public AddElement() {
     let element = this.document.adaptor.node('div');
-    // var element = document.createElement('div');
-    element.classList.add('MJX_LiveRegion');
-    element.setAttribute('aria-live', 'assertive');
+    element.classList.add(LiveRegion.className);
     this.div = element;
-    // this.inner = document.createElement('div');
-    this.inner = document.adaptor.node('div');
+    this.inner = this.document.adaptor.node('div');
     this.div.appendChild(this.inner);
-    console.log(document.documentStyleSheet());
     this.document.adaptor.
       body(this.document.adaptor.document).
       appendChild(this.div);
-  }
 
+  }
 
   //
   // Shows the live region as a subtitle of a node.
   //
   public Show(node: HTMLElement, highlighter: sre.Highlighter) {
-    this.div.classList.add('MJX_LiveRegion_Show');
+    this.div.classList.add(LiveRegion.className + '_Show');
     const rect = node.getBoundingClientRect();
     const bot = rect.bottom + 10 + window.pageYOffset;
     const left = rect.left + window.pageXOffset;
@@ -191,21 +289,26 @@ export class LiveRegion {
   // Takes the live region out of the page flow.
   //
   public Hide() {
-    this.div.classList.remove('MJX_LiveRegion_Show');
+    this.div.classList.remove(LiveRegion.className + '_Show');
   }
-  
-  //
-  // Clears the speech div.
-  //
+
+
+  /**
+   * Clears the content of the region.
+   */
   public Clear() {
     this.Update('');
     this.inner.style.top = '';
     this.inner.style.backgroundColor = '';
   }
-  
+
+
+  /**
+   * Updates the content of the region.
+   */
   public Update(speech: string) {
     this.div.textContent = '';
     this.div.textContent = speech;
   }
-  
+
 }
