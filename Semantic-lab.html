@@ -5,7 +5,7 @@
 <script src="lib/traceur.min.js"></script>
 <script src="lib/system.js"></script>
 <style>
-#output {
+.output {
   border: 1px solid black;
   padding: 10px;
   width: auto;
@@ -25,14 +25,15 @@
 <textarea id="tex" cols="80" rows="15" onkeypress="Lab.checkKey(this,event)"></textarea><br>
 <span style="float:left">
 <input type="checkbox" id="display" onchange="Lab.setDisplay(this.checked)" checked /> display mode
-</span>
-<input type="button" value="Keep" onclick="Lab.Keep()" />
+</span><input type="button" value="Keep" onclick="Lab.Keep()" />
 <input type="button" value="Typeset" onclick="Lab.Typeset()" />
 </div>
 <p>
 <div id="package"></div>
 <p>
-<div id="output"></div>
+<div class="output" id="output"></div>
+
+<div class="output" id="output2"></div>
 
 <script>
 
