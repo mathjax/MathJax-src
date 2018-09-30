@@ -56,6 +56,7 @@ export interface Explorer {
 export class AbstractExplorer implements Explorer {
 
   protected events: [string, (x: Event) => void][] = [];
+
   protected active: boolean = false;
   private oldIndex: number = null;
 
@@ -156,9 +157,9 @@ export class AbstractExplorer implements Explorer {
 
 export interface KeyExplorer extends Explorer {
 
+  KeyDown(event: KeyboardEvent): void;
   FocusIn(event: FocusEvent): void;
   FocusOut(event: FocusEvent): void;
-  KeyDown(event: KeyboardEvent): void;
   
 }
 
@@ -170,12 +171,16 @@ export abstract class AbstractKeyExplorer extends AbstractExplorer implements Ke
       [['keydown', this.KeyDown.bind(this)],
        ['focusin', this.FocusIn.bind(this)],
        ['focusout', this.FocusOut.bind(this)]]);
-  
+
+  /**
+   * @override
+   */
+  public abstract KeyDown(event: KeyboardEvent): void;
+
   /**
    * @override
    */
   public FocusIn(event: FocusEvent) {
-    this.Start();
   }
   
 
@@ -186,11 +191,6 @@ export abstract class AbstractKeyExplorer extends AbstractExplorer implements Ke
     this.Stop();
   }
   
-
-  /**
-   * @override
-   */
-  public abstract KeyDown(event: KeyboardEvent): void;
 
 }
 
@@ -206,15 +206,14 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   private speechGenerator: sre.SpeechGenerator;
   private foreground: sre.colorType = {color: 'red', alpha: 1};
   private background: sre.colorType = {color: 'blue', alpha: .2};
-  private hoverRegion = new ToolTip(this.document);
 
-  /**
-   * @override
-   */
-  protected events: [string, (x: Event) => void][] =
-    super.Events().concat(
-      [['mouseover', this.Hover.bind(this)],
-       ['mouseout', this.UnHover.bind(this)]]);
+  // /**
+  //  * @override
+  //  */
+  // protected events: [string, (x: Event) => void][] =
+  //   super.Events().concat(
+  //     [['mouseover', this.Hover.bind(this)],
+  //      ['mouseout', this.UnHover.bind(this)]]);
 
   // Maybe the A11yDocument should have a get region?
   // Maybe we need more than one region (Braille)?
@@ -267,43 +266,6 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     }
   }
 
-  public UnHover(event: MouseEvent) {
-    this.highlighter.unhighlight();
-    this.hoverRegion.Hide();
-  }
-
-  public Hover(event: MouseEvent) {
-    let target = event.target as HTMLElement;
-    let [node, kind] = this.getType(target);
-    if (!node) {
-      return;
-    }
-    this.highlighter.unhighlight();
-    this.highlighter.highlight([node]);
-    this.hoverRegion.Show(node, this.highlighter);
-    this.hoverRegion.Update(kind);
-  }
-
-  public getType(node: HTMLElement): [HTMLElement, string] {
-    let original = node;
-    while (node && node !== this.node) {
-      console.log('up');
-      if (node.hasAttribute('data-semantic-type')) {
-        return [node, node.getAttribute('data-semantic-type')];
-      }
-      node = node.parentNode as HTMLElement;
-    }
-    node = original;
-    while (node) {
-      console.log('down');
-      if (node.hasAttribute('data-semantic-type')) {
-        return [node, node.getAttribute('data-semantic-type')];
-      }
-      node = node.childNodes[0] as HTMLElement;
-    }
-    return [null, ''];
-  }
-    
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
     if (code === 27) {
@@ -334,7 +296,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 
 export interface MouseExplorer extends Explorer {
 
-  MouseIn(event: MouseEvent): void;
+  MouseOver(event: MouseEvent): void;
   MouseOut(event: MouseEvent): void;
   MouseDown(event: MouseEvent): void;
   MouseUp(event: MouseEvent): void;
@@ -343,19 +305,19 @@ export interface MouseExplorer extends Explorer {
 
 export abstract class AbstractMouseExplorer extends AbstractExplorer implements MouseExplorer {
 
-
   protected events: [string, (x: Event) => void][] =
     super.Events().concat(
-      [['mousein', this.MouseIn.bind(this)],
-       ['mouseout', this.MouseOut.bind(this)],
-       ['mousedown', this.MouseDown.bind(this)],
-       ['mouseup', this.MouseUp.bind(this)],
+      [['mouseover', this.MouseOver.bind(this)],
+       ['mouseout', this.MouseOut.bind(this)]
+       // Should we have those?
+       // ['mousedown', this.MouseDown.bind(this)],
+       // ['mouseup', this.MouseUp.bind(this)],
       ]);
   
   /**
    * @override
    */
-  public MouseIn(event: MouseEvent) {
+  public MouseOver(event: MouseEvent) {
     this.Start();
   }
   
@@ -381,3 +343,113 @@ export abstract class AbstractMouseExplorer extends AbstractExplorer implements 
 }
 
 
+export class HoverExplorer extends AbstractMouseExplorer {
+
+  private foreground: sre.colorType = {color: 'red', alpha: 1};
+  private background: sre.colorType = {color: 'blue', alpha: .2};
+  private highlighter: sre.Highlighter;
+
+  protected nodeQuery = function(node: HTMLElement) {
+    return true;
+  };
+  protected nodeAccess = function(node: HTMLElement) {
+    return '';
+  };
+
+
+  constructor(public document: A11yDocument,
+              protected region: Region,
+              protected node: HTMLElement) {
+    super(document, region, node);
+    this.highlighter = sre.HighlighterFactory.highlighter(
+      this.background, this.foreground,
+      {renderer: this.document.outputJax.name}
+    );
+  }
+    
+  /**
+   * @override
+   */
+  public MouseDown(event: MouseEvent) {};
+
+
+  /**
+   * @override
+   */
+  public MouseUp(event: MouseEvent) {};
+
+  public MouseOut(event: MouseEvent) {
+    this.highlighter.unhighlight();
+    this.region.Hide();
+    super.MouseOut(event);
+  }
+
+  public MouseOver(event: MouseEvent) {
+    super.MouseOver(event);
+    let target = event.target as HTMLElement;
+    let [node, kind] = this.getNode(target);
+    if (!node) {
+      return;
+    }
+    this.highlighter.unhighlight();
+    this.highlighter.highlight([node]);
+    this.region.Show(node, this.highlighter);
+    this.region.Update(kind);
+  }
+
+  public getNode(node: HTMLElement): [HTMLElement, string] {
+    let original = node;
+    while (node && node !== this.node) {
+      if (this.nodeQuery(node)) {
+        return [node, this.nodeAccess(node)];
+      }
+      node = node.parentNode as HTMLElement;
+    }
+    node = original;
+    while (node) {
+      if (this.nodeQuery(node)) {
+        return [node, this.nodeAccess(node)];
+      }
+      node = node.childNodes[0] as HTMLElement;
+    }
+    return [null, ''];
+  }
+    
+
+}
+
+
+export class TypeExplorer extends HoverExplorer {
+  
+  protected nodeQuery = function(node: HTMLElement) {
+    return node.hasAttribute('data-semantic-type');
+  };
+  protected nodeAccess = function(node: HTMLElement) {
+    return node.getAttribute('data-semantic-type');
+  };
+
+}
+
+
+export class RoleExplorer extends HoverExplorer {
+  
+  protected nodeQuery = function(node: HTMLElement) {
+    return node.hasAttribute('data-semantic-role');
+  };
+  protected nodeAccess = function(node: HTMLElement) {
+    return node.getAttribute('data-semantic-role');
+  };
+
+}
+
+
+export class TagExplorer extends HoverExplorer {
+  
+  protected nodeQuery = function(node: HTMLElement) {
+    return !!node.tagName;
+  };
+  protected nodeAccess = function(node: HTMLElement) {
+    return node.tagName;
+  };
+
+}
