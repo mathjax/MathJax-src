@@ -1,7 +1,7 @@
 // import {MathDocument} from '../core/MathDocument.js';
 import {HTMLAdaptor} from '../adaptors/HTMLAdaptor.js';
 import {OptionList} from '../util/Options.js';
-import {A11yDocument, Region, ToolTip} from './Region.js';
+import {A11yDocument, HoverRegion, Region, ToolTip} from './Region.js';
 
 // import 'node_modules/speech-rule-engine/lib/sre_browser.js';
 import 'speech-rule-engine/lib/sre_browser.js';
@@ -201,8 +201,8 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 
   private started: boolean = false;
 
-  private walker: sre.Walker;
-  private highlighter: sre.Highlighter;
+  protected walker: sre.Walker;
+  protected highlighter: sre.Highlighter;
   private speechGenerator: sre.SpeechGenerator;
   private foreground: sre.colorType = {color: 'red', alpha: 1};
   private background: sre.colorType = {color: 'blue', alpha: .2};
@@ -289,6 +289,33 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.highlighter.unhighlight();
     this.highlighter.highlight(this.walker.getFocus().getNodes());
     this.region.Update(this.walker.speech());
+  }
+
+}
+
+
+// Reimplement without speech and proper setting of region.
+export class Magnifier extends SpeechExplorer {
+
+  public Start() {
+    super.Start();
+    this.region.Show(this.node, this.highlighter);
+    this.walker.activate();
+    this.highlighter.highlight(this.walker.getFocus().getNodes());
+    this.showFocus();
+  }
+
+  private showFocus() {
+    let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
+    let mjx = node.cloneNode(true) as HTMLElement;
+    const region = this.region as HoverRegion;
+    region.Show(node, this.highlighter);
+    region.AddNode(mjx);
+  }
+  
+  public Move(key: number) {
+    this.walker.move(key);
+    this.showFocus();
   }
 
 }
