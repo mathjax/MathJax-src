@@ -38,30 +38,6 @@ export {Constructor, StringMap} from '../common/Wrapper.js';
 /*****************************************************************/
 
 /**
- * Some standard sizes to use in predefind CSS properties
- */
-export const FONTSIZE: StringMap = {
-    '70.7%': 's',
-    '70%': 's',
-    '50%': 'ss',
-    '60%': 'Tn',
-    '85%': 'sm',
-    '120%': 'lg',
-    '144%': 'Lg',
-    '173%': 'LG',
-    '207%': 'hg',
-    '249%': 'HG'
-};
-
-export const SPACE: StringMap = {
-    [LENGTHS.em(2/18)]: '1',
-    [LENGTHS.em(3/18)]: '2',
-    [LENGTHS.em(4/18)]: '3',
-    [LENGTHS.em(5/18)]: '4',
-    [LENGTHS.em(6/18)]: '5'
-};
-
-/**
  * Needed to access node.style[id] using variable id
  */
 interface CSSStyle extends CSSStyleDeclaration {
@@ -137,7 +113,6 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
      * @param {N} parent  The HTML node where the output is added
      */
     public toSVG(parent: N) {
-        const adaptor = this.adaptor;
         this.addChildren(this.standardSVGnode(parent));
     }
 
