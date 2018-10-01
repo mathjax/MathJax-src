@@ -59,6 +59,7 @@ export class SVGTextNode<N, T, D> extends CommonTextNodeMixin<SVGConstructor<N, 
                 x += this.placeChar(n, x, 0, parent, this.parent.variant);
             }
         }
+        this.element = this.adaptor.lastChild(parent);
     }
 
 }
