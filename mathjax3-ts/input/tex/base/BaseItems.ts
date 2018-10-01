@@ -658,7 +658,6 @@ export class FnItem extends BaseItem {
         }
       }
       // @test Named Function, Named Function Arg
-      console.log(Entities);
       const node = this.create('token', 'mo', {texClass: TEXCLASS.NONE},
                                Entities.entities['ApplyFunction']);
       return [[top, node, item], true];
