@@ -344,7 +344,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
             const k = (accent ? tex.rule_thickness :
                        Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d))) -
                 (this.baseChild.node.isKind('munderover') ? .1 : 0);
-            return [k, basebox.h + k + d];
+            return [k, basebox.h * basebox.rscale + k + d];
         }
 
         /**
@@ -361,7 +361,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
             const k = (accent ? tex.rule_thickness :
                        Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h)) -
                 (this.baseChild.node.isKind('munderover') ? .1 : 0);
-            return [k, -(basebox.d + k + h)];
+            return [k, -(basebox.d * basebox.rscale + k + h)];
         }
 
         /**
