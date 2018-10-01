@@ -53,7 +53,7 @@ export class SVGmerror<N, T, D> extends SVGWrapper<N, T, D> {
         const {h, d, w} = this.getBBox();
         this.adaptor.append(this.element, this.svg('rect', {
             'data-background': true,
-            width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d),
+            width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
         }));
         this.addChildren(svg);
     }
