@@ -87,6 +87,9 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
      *  The default styles for SVG
      */
     public static styles: StyleList = {
+        'mjx-container[jax="SVG"] > svg a': {
+            fill: 'blue', stroke: 'blue'
+        }
     };
 
     /**
@@ -154,7 +157,12 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
     protected createSVGnode(parent: N) {
         const href = this.node.attributes.get('href');
         if (href) {
-            parent = this.adaptor.append(parent, this.html('a', {href: href})) as N;
+            parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
+            const {h, d, w} = this.getBBox();
+            this.adaptor.append(parent, this.svg('rect', {
+                'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
+                width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
+            }));
         }
         this.element = this.adaptor.append(parent, this.svg('g', {'data-mml-node': this.node.kind})) as N;
         return this.element;
