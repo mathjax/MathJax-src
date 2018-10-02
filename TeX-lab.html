@@ -5,6 +5,9 @@
 <script src="lib/traceur.min.js"></script>
 <script src="lib/system.js"></script>
 <style>
+body {
+  padding-left: .5em;
+}
 #output {
   border: 1px solid black;
   padding: 10px;
@@ -17,11 +20,19 @@
   display: inline-block;
   text-align: right;
 }
+#options {
+  float: left;
+}
+#options > span {
+  margin-left: 1em;
+}
 #package {
   margin-top: .25em;
 }
 #package > label {
   margin-right: .5em;
+#mathml {
+  font-size: 90%;
 }
 </style>
 </head>
@@ -33,13 +44,17 @@
 
 <div id="container">
 <textarea id="tex" cols="80" rows="15" onkeypress="Lab.checkKey(this,event)"></textarea><br>
-<span style="float:left">
+<span id="options">
 <input type="checkbox" id="display" onchange="Lab.setDisplay(this.checked)" checked /> Display mode
-<span style="margin-left:1em">Output:</span>
+<span>Output:
 <select id="renderer" onchange="Lab.setRenderer(this.value)">
 <option value="CHTML">CHTML</option>
 <option value="SVG">SVG</option>
 </select>
+</span>
+<span>
+<input type="checkbox" id="showMML" onchange="Lab.setMathML(this.checked)" /> Show MathML
+</span>
 </span>
 <input type="button" value="Keep" onclick="Lab.Keep()" />
 <input type="button" value="Typeset" onclick="Lab.Typeset()" />
@@ -47,6 +62,11 @@
 <div id="package"></div>
 <p>
 <div id="output"></div>
+
+<p>
+<pre id="mathml"></pre>
+
+<button onclick="Lab.sendToMathML()">Trasnfer to MathML Lab</button>
 
 <script>
 System.import('./lib/TeX-lab.js').catch(function (error) {console.log(error.message)});
