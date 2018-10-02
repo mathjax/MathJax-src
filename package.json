@@ -1,6 +1,6 @@
 {
   "name": "mathjax3",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "maintainers": [
     "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
   ],
@@ -8,8 +8,8 @@
   "main": "./mathjax3/mathjax.js",
   "types": "./mathjax3/mathjax.d.ts",
   "scripts": {
-    "compile": "npx tsc",
-    "prepublishOnly": "npx tsc"
+    "compile": "npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_parser.* mathjax3/input/tex/mhchem/",
+    "prepublishOnly": "npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_parser.* mathjax3/input/tex/mhchem/"
   },
   "dependencies": {},
   "devDependencies": {
