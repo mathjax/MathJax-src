@@ -73,6 +73,15 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
     }
 
     /**
+     * Don't set the scaling factor for the container (that is handled by the
+     *   viewBox and height and width settings)
+     *
+     * @override
+     */
+    protected setScale(node: N) {
+    }
+
+    /**
      * @override
      */
     public escaped(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {

@@ -24,6 +24,7 @@
 
 import {SVGWrapper, SVGConstructor, Constructor} from '../Wrapper.js';
 import {SVGscriptbase} from './scriptbase.js';
+import {SVGmsubsup, SVGmsub, SVGmsup} from './msubsup.js';
 import {CommonMunder, CommonMunderMixin} from '../../common/Wrappers/munderover.js';
 import {CommonMover, CommonMoverMixin} from '../../common/Wrappers/munderover.js';
 import {CommonMunderover, CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
@@ -38,7 +39,7 @@ import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes
  * @template D  The Document class
  */
 export class SVGmunder<N, T, D> extends
-CommonMunderMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGscriptbase)  {
+CommonMunderMixin<SVGWrapper<N, T, D>, Constructor<SVGmsub<N, T, D>>>(SVGmsub)  {
 
     public static kind = MmlMunder.prototype.kind;
 
@@ -79,7 +80,7 @@ CommonMunderMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGs
  * @template D  The Document class
  */
 export class SVGmover<N, T, D> extends
-CommonMoverMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGscriptbase)  {
+CommonMoverMixin<SVGWrapper<N, T, D>, Constructor<SVGmsup<N, T, D>>>(SVGmsup)  {
 
     public static kind = MmlMover.prototype.kind;
 
@@ -119,7 +120,7 @@ CommonMoverMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGsc
  * @template D  The Document class
  */
 export class SVGmunderover<N, T, D> extends
-CommonMunderoverMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGscriptbase)  {
+CommonMunderoverMixin<SVGWrapper<N, T, D>, Constructor<SVGmsubsup<N, T, D>>>(SVGmsubsup)  {
 
     public static kind = MmlMunderover.prototype.kind;
 

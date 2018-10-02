@@ -29,6 +29,7 @@ import {SVGmi} from './Wrappers/mi.js';
 import {SVGmo} from './Wrappers/mo.js';
 import {SVGmn} from './Wrappers/mn.js';
 import {SVGms} from './Wrappers/ms.js';
+import {SVGmerror} from './Wrappers/merror.js';
 import {SVGmspace} from './Wrappers/mspace.js';
 import {SVGmpadded} from './Wrappers/mpadded.js';
 import {SVGmphantom} from './Wrappers/mphantom.js';
@@ -59,6 +60,7 @@ export const SVGWrappers: {[kind: string]: WrapperConstructor}  = {
     [SVGmo.kind]: SVGmo,
     [SVGmn.kind]: SVGmn,
     [SVGms.kind]: SVGms,
+    [SVGmerror.kind]: SVGmerror,
     [SVGmspace.kind]: SVGmspace,
     [SVGmpadded.kind]: SVGmpadded,
     [SVGmphantom.kind]: SVGmphantom,

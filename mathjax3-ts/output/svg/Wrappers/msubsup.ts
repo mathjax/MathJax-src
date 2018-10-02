@@ -76,7 +76,7 @@ CommonMsubsupMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVG
 
     public static kind = MmlMsubsup.prototype.kind;
 
-    public static useIC = true;
+    public static useIC = false;
 
     /**
      * @override

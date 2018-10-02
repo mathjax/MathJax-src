@@ -24,6 +24,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {BBox} from '../BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {BIGDIMEN} from '../../../util/lengths.js';
 
 /*****************************************************************/
 /**
@@ -64,7 +65,7 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
            } else {
                const c = this.parent.stretch.c;
                const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));
-               bbox.x = bbox.h = bbox.d = 0;
+               bbox.empty();
                //
                // Loop through the characters and add them in one by one
                //
@@ -91,6 +92,7 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
                if (chars.length > 1) {
                    bbox.sk = 0;
                }
+               bbox.clean();
            }
        }
 

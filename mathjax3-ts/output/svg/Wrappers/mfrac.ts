@@ -84,9 +84,9 @@ export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<N, T, D>>
         const {T, u, v} = this.getTUV(display, t);
 
         num.toSVG(svg);
-        num.place(nx, a + u  + T);
+        num.place(nx, a + T + Math.max(nbox.d * nbox.rscale, u));
         den.toSVG(svg);
-        den.place(dx, a - v  - T);
+        den.place(dx, a - T - Math.max(dbox.h * dbox.rscale, v));
 
         this.adaptor.append(svg, this.svg('rect', {
             width: this.fixed(W + 2 * d), height: this.fixed(t),
