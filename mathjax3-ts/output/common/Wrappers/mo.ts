@@ -313,7 +313,10 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
          */
         public remapChars(chars: number[]) {
             if (chars.length == 1) {
-                const map = (this.isAccent ? 'accent' : 'mo');
+                const parent = this.node.parent;
+                const isAccent = this.isAccent &&
+                    (parent === (this.node as MmlMo).coreParent() || parent.isEmbellished);
+                const map = (isAccent ? 'accent' : 'mo');
                 const text = this.font.getRemappedChar(map, chars[0]);
                 if (text) {
                     chars = this.unicodeChars(text);

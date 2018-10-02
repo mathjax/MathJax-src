@@ -24,6 +24,7 @@
 
 import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
 import {CHTMLscriptbase} from './scriptbase.js';
+import {CHTMLmsubsup, CHTMLmsub, CHTMLmsup} from './msubsup.js';
 import {CommonMunder, CommonMunderMixin} from '../../common/Wrappers/munderover.js';
 import {CommonMover, CommonMoverMixin} from '../../common/Wrappers/munderover.js';
 import {CommonMunderover, CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
@@ -39,7 +40,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmunder<N, T, D> extends
-CommonMunderMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMunderMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsub<N, T, D>>>(CHTMLmsub)  {
 
     public static kind = MmlMunder.prototype.kind;
 
@@ -100,7 +101,7 @@ CommonMunderMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(
  * @template D  The Document class
  */
 export class CHTMLmover<N, T, D> extends
-CommonMoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsup<N, T, D>>>(CHTMLmsup)  {
 
     public static kind = MmlMover.prototype.kind;
 
@@ -150,7 +151,7 @@ CommonMoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(C
  * @template D  The Document class
  */
 export class CHTMLmunderover<N, T, D> extends
-CommonMunderoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMunderoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsubsup<N, T, D>>>(CHTMLmsubsup)  {
 
     public static kind = MmlMunderover.prototype.kind;
 

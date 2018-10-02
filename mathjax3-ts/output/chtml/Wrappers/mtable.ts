@@ -210,7 +210,6 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
     protected handleColumnLines() {
         if (this.node.attributes.get('columnlines') === 'none') return;
         const lines = this.getColumnAttributes('columnlines');
-        if (!lines) return;
         for (const row of this.childNodes) {
             let i = 0;
             for (const cell of this.adaptor.childNodes(row.chtml).slice(1) as N[]) {
@@ -282,7 +281,6 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
     protected handleRowLines() {
         if (this.node.attributes.get('rowlines') === 'none') return;
         const lines = this.getRowAttributes('rowlines');
-        if (!lines) return;
         let i = 0;
         for (const row of this.childNodes.slice(1)) {
             const line = lines[i++];

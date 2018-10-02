@@ -845,7 +845,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
          */
         public getAttributeArray(name: string) {
             const value = this.node.attributes.get(name) as string;
-            if (!value) return [];
+            if (!value) return [this.node.attributes.getDefault(name) as string];
             return split(value);
         }
 
