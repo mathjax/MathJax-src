@@ -193,14 +193,14 @@ export abstract class AbstractRegion implements Region {
 
 export class ToolTip extends AbstractRegion {
 
-  protected static className = 'ToolTip';
+  protected static className = 'MJX_ToolTip';
   protected static style: CssStyles =
-    new CssStyles({'.ToolTip': {
+    new CssStyles({['.' + ToolTip.className]: {
       position: 'absolute',
       display: 'inline-block',
       height: '1px', width: '1px'
     },
-                   '.ToolTip_Show': {
+                   ['.' + ToolTip.className + '_Show']: {
                      width: 'auto', height: 'auto',
                      opacity: 1,
                      'text-align': 'center',
@@ -252,11 +252,11 @@ export class LiveRegion extends AbstractRegion {
    * @override
    */
   protected static style: CssStyles =
-    new CssStyles({'.MJX_LiveRegion': {
+    new CssStyles({['.' + LiveRegion.className]: {
       position: 'absolute', top: '0', height: '1px', width: '1px',
       padding: '1px', overflow: 'hidden'
     },
-                   '.MJX_LiveRegion_Show':
+                   ['.' + LiveRegion.className + '_Show']:
                    {
                      top: '0', position: 'absolute', width: 'auto', height: 'auto',
                      padding: '0px 0px', opacity: 1, 'z-index': '202',
@@ -314,11 +314,11 @@ export class HoverRegion extends AbstractRegion {
    * @override
    */
   protected static style: CssStyles =
-    new CssStyles({'.MJX_HoverRegion': {
+    new CssStyles({['.' + HoverRegion.className]: {
       position: 'absolute', top: '0', height: '1px', width: '1px',
       padding: '1px', overflow: 'hidden'
     },
-                   '.MJX_HoverRegion_Show':
+                   ['.' + HoverRegion.className + '_Show']:
                    {
                      top: '0', position: 'absolute', width: 'max-content', height: 'auto',
                      padding: '0px 0px', opacity: 1, 'z-index': '202',
@@ -351,8 +351,8 @@ export class HoverRegion extends AbstractRegion {
 
   protected position(node: HTMLElement) {
     const rect = node.getBoundingClientRect();
-    const top = rect.top + window.pageYOffset;
-    const left = rect.left + window.pageXOffset;
+    const top = rect.top;
+    const left = rect.left;
     this.div.style.top = top + 'px';
     this.div.style.left = left + 'px';
   }

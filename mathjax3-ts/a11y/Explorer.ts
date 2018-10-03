@@ -448,10 +448,10 @@ export class HoverExplorer extends AbstractMouseExplorer {
 
 export class TypeExplorer extends HoverExplorer {
   
-  protected nodeQuery = function(node: HTMLElement) {
+  protected nodeQuery = (node: HTMLElement) => {
     return node.hasAttribute('data-semantic-type');
   };
-  protected nodeAccess = function(node: HTMLElement) {
+  protected nodeAccess = (node: HTMLElement) => {
     return node.getAttribute('data-semantic-type');
   };
 
@@ -460,10 +460,10 @@ export class TypeExplorer extends HoverExplorer {
 
 export class RoleExplorer extends HoverExplorer {
   
-  protected nodeQuery = function(node: HTMLElement) {
+  protected nodeQuery = (node: HTMLElement) => {
     return node.hasAttribute('data-semantic-role');
   };
-  protected nodeAccess = function(node: HTMLElement) {
+  protected nodeAccess = (node: HTMLElement) => {
     return node.getAttribute('data-semantic-role');
   };
 
@@ -472,11 +472,7 @@ export class RoleExplorer extends HoverExplorer {
 
 export class TagExplorer extends HoverExplorer {
   
-  protected nodeQuery = function(node: HTMLElement) {
-    return !!node.tagName;
-  };
-  protected nodeAccess = function(node: HTMLElement) {
-    return node.tagName;
-  };
+  protected nodeQuery = (node: HTMLElement) => {return !!node.tagName; };
+  protected nodeAccess = (node: HTMLElement) => {return node.tagName; };
 
 }
