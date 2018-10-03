@@ -76,7 +76,8 @@ export default class TexParser {
    */
   constructor(private _string: string, env: EnvList,
               public configuration: ParseOptions) {
-    const inner = env['isInner'] as boolean;
+    const inner = env.hasOwnProperty('isInner');
+    const isInner = env['isInner'] as boolean;
     delete env['isInner'];
     let ENV: EnvList;
     if (env) {
@@ -86,7 +87,7 @@ export default class TexParser {
       }
     }
     this.configuration.pushParser(this);
-    this.stack = new Stack(this.itemFactory, ENV, inner);
+    this.stack = new Stack(this.itemFactory, ENV, inner ? isInner : true);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
   }
