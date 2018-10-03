@@ -466,7 +466,7 @@ export class AbstractTags implements Tags {
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
                             this.configuration).mml();
     return this.configuration.nodeFactory.create('node', 'mtd', [mml],
-                                                 {id: this.currentTag.tagId, rowalign: 'center'});
+                                                 {id: this.currentTag.tagId});
   }
 
 };
