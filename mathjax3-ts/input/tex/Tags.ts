@@ -405,8 +405,8 @@ export class AbstractTags implements Tags {
   /**
    * @override
    */
-  public reset(n: number = 0, keepLabels: boolean = false) {
-    this.offset = n; // (n || 0);
+  public reset(n: number = 0, keepLabels: boolean = true) {
+    this.offset = n;
     this.history = [];
     this.clearTag();
     if (!keepLabels) {
@@ -465,7 +465,8 @@ export class AbstractTags implements Tags {
     }
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
                             this.configuration).mml();
-    return this.configuration.nodeFactory.create('node', 'mtd', [mml], {id: this.currentTag.tagId});
+    return this.configuration.nodeFactory.create('node', 'mtd', [mml],
+                                                 {id: this.currentTag.tagId, rowalign: 'center'});
   }
 
 };
