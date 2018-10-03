@@ -166,7 +166,7 @@ export interface Tags {
    * @param {number} offset A new offset value to start counting ids from.
    * @param {boolean} keep If sets, keep all previous labels and ids at reset.
    */
-  reset(offset: number, keep: boolean): void;
+  reset(offset?: number, keep?: boolean): void;
 
   /**
    * Finalizes tag creation.
@@ -405,9 +405,10 @@ export class AbstractTags implements Tags {
   /**
    * @override
    */
-  public reset(n: number, keepLabels: boolean) {
-    this.offset = (n || 0);
+  public reset(n: number = 0, keepLabels: boolean = true) {
+    this.offset = n;
     this.history = [];
+    this.clearTag();
     if (!keepLabels) {
       this.labels = {};
       this.ids = {};
@@ -464,7 +465,8 @@ export class AbstractTags implements Tags {
     }
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
                             this.configuration).mml();
-    return this.configuration.nodeFactory.create('node', 'mtd', [mml], {id: this.currentTag.tagId});
+    return this.configuration.nodeFactory.create('node', 'mtd', [mml],
+                                                 {id: this.currentTag.tagId, rowalign: 'center'});
   }
 
 };
