@@ -356,6 +356,9 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
      * @return {string}      The string with " replaced by entities
      */
     public protectAttribute(text: string) {
+        if (typeof text !== 'string') {
+            text = String(text);
+        }
         return text.replace(/"/, '&quot;');
     }
 
