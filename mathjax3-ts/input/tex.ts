@@ -124,7 +124,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
                                         [TeX.OPTIONS, TagsFactory.OPTIONS, {'packages': packages}]);
     let [tex, find, rest] = separateOptions(options, FindTeX.OPTIONS, parseOptions.options);
     super(tex);
-    userOptions(parseOptions.options, options);
+    userOptions(parseOptions.options, rest);
     TeX.tags(parseOptions, configuration);
     this.parseOptions = parseOptions;
     this.configuration = configuration;
