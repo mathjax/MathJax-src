@@ -27,6 +27,7 @@ import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
+import ParseUtil from '../ParseUtil.js';
 
 
 /**
@@ -39,27 +40,6 @@ const ALLOWED: {[key: string]: number} = {
   padding: 1,
   thickness: 1
 };
-
-
-/**
- * Rewrites tex parameter string into allowable attributes list.
- * @param {any} def 
- * @param {string} attrib 
- */
-function setAttributes(def: any, attrib: string) {
-    if (attrib !== '') {
-      const attr = attrib.replace(/ /g, '').split(/,/);
-      for (let i = 0, m = attr.length; i < m; i++) {
-        const keyvalue = attr[i].split(/[:=]/);
-        if (ALLOWED[keyvalue[0]]) {
-          let value = keyvalue[1];
-          def[keyvalue[0]] = (value === 'true') ? true :
-            (value === 'false') ? false : value;
-        }
-      }
-    }
-    return def;
-  };
 
 
 // Namespace
@@ -75,7 +55,8 @@ export let CancelMethods: Record<string, ParseMethod> = {};
 CancelMethods.Cancel = function(parser: TexParser, name: string, notation: string) {
   const attr = parser.GetBrackets(name, '');
   const math = parser.ParseArg(name);
-  const def = setAttributes({notation: notation}, attr);
+  const def = ParseUtil.splitPackageOptions(attr, ALLOWED);
+  def['notation'] = notation;
   parser.Push(parser.create('node', 'menclose', [math], def));
 };
 
@@ -87,13 +68,13 @@ CancelMethods.Cancel = function(parser: TexParser, name: string, notation: strin
  * @param {string} notation The type of cancel notation to use.
  */
 
-CancelMethods.CancelTo = function(parser: TexParser, name: string, notation: string) {
-  let value = parser.ParseArg(name);
+CancelMethods.CancelTo = function(parser: TexParser, name: string) {
   const attr = parser.GetBrackets(name, '');
+  let value = parser.ParseArg(name);
   const math = parser.ParseArg(name);
-  const def = setAttributes(
-    {notation: TexConstant.Notation.UPDIAGONALSTRIKE + ' ' +
-     TexConstant.Notation.UPDIAGONALARROW}, attr);
+  const def = ParseUtil.splitPackageOptions(attr, ALLOWED);
+  def ['notation'] = TexConstant.Notation.UPDIAGONALSTRIKE + ' ' +
+    TexConstant.Notation.UPDIAGONALARROW;
   value = parser.create('node', 'mpadded', [value],
                         {depth: '-.1em', height: ' + .1em', voffset: '.1em'});
   parser.Push(parser.create('node', 'msup',
