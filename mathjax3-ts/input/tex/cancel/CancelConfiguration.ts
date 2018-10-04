@@ -22,18 +22,11 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Configuration} from '../Configuration.js';
-import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
-import {NodeFactory} from '../NodeFactory.js';
-import ParseOptions from '../ParseOptions.js';
-import {MathItem} from '../../../core/MathItem.js';
-
-
 
 
 /**
