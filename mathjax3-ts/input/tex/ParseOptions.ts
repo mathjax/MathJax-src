@@ -150,7 +150,7 @@ export default class ParseOptions {
     this.root = null;
     this.nodeLists = {};
     this.error = false;
-    this.tags.reset();
+    this.tags.resetTag();
   }
 
 
