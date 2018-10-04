@@ -162,11 +162,16 @@ export interface Tags {
   clearTag(): void;
 
   /**
-   * Resets the tag structure.
-   * @param {number} offset A new offset value to start counting ids from.
-   * @param {boolean} keep If sets, keep all previous labels and ids at reset.
+   * Resets the tag structure after an expression has been typeset.
    */
-  reset(offset?: number, keep?: boolean): void;
+  resetTag(): void;
+
+  /**
+   * Fully resets the tag structure, in particular all the tagging and label
+   * history.
+   * @param {number} offset A new offset value to start counting ids from.
+   */
+  reset(offset?: number): void;
 
   /**
    * Finalizes tag creation.
@@ -405,14 +410,19 @@ export class AbstractTags implements Tags {
   /**
    * @override
    */
-  public reset(n: number = 0, keepLabels: boolean = true) {
-    this.offset = n;
+  public resetTag() {
     this.history = [];
     this.clearTag();
-    if (!keepLabels) {
-      this.labels = {};
-      this.ids = {};
-    }
+  }
+
+  /**
+   * @override
+   */
+  public reset(offset: number = 0) {
+    this.resetTag();
+    this.offset = offset;
+    this.labels = {};
+    this.ids = {};
   }
 
   /**
