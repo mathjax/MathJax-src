@@ -143,6 +143,9 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
         }, [g])) as N;
         if (W === .001) {
             adaptor.setAttribute(svg, 'preserveAspectRatio', 'xMidYMid slice');
+            if (w < 0) {
+                adaptor.setStyle(parent, 'margin-right', this.ex(w));
+            }
         }
         if (pwidth) {
             //
