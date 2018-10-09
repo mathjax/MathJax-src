@@ -123,6 +123,7 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
         const px = (this.font.params.x_height / wrapper.metrics.ex);
         const H = (Math.ceil(h / px) + 1) * px + 2/1000;  // round to pixels and add a little padding
         const D = (Math.ceil(d / px) + 1) * px + 2/1000;
+        const W = Math.max(w, .001); // make sure we are at least one unit wide (needed for e.g. \llap)
         //
         //  The container that flips the y-axis and sets the colors to inherit from the surroundings
         //
@@ -136,10 +137,13 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
         const adaptor = this.adaptor;
         const svg = adaptor.append(parent, this.svg('svg', {
             xmlns: SVGNS,
-            width: this.ex(w), height: this.ex(H + D),
+            width: this.ex(W), height: this.ex(H + D),
             style: {'vertical-align': this.ex(-D)},
-            viewBox: [0, this.fixed(-H * 1000, 1), this.fixed(w * 1000, 1), this.fixed((H + D) * 1000, 1)].join(' ')
+            viewBox: [0, this.fixed(-H * 1000, 1), this.fixed(W * 1000, 1), this.fixed((H + D) * 1000, 1)].join(' ')
         }, [g])) as N;
+        if (W === .001) {
+            adaptor.setAttribute(svg, 'preserveAspectRatio', 'xMidYMid slice');
+        }
         if (pwidth) {
             //
             // These aren't needed for full-width tables
