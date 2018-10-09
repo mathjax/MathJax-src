@@ -31,8 +31,7 @@ import {DIRECTION, NOSTRETCH, CharOptions, DelimiterData} from '../FontData.js';
 /*****************************************************************/
 
 const VFUZZ = 0.1;       // overlap for vertical stretchy glyphs
-const HFUZZ = 0.1;       // overlap for horizontal sgretchy glyphs
-const HBEARING = 0.05;   // extra space to accommodate horizontal glyphs that overlap their bounding boxes
+const HFUZZ = 0.1;       // overlap for horizontal stretchy glyphs
 
 /*****************************************************************/
 /**
@@ -170,16 +169,22 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<N, T, D>>(SVGWr
      */
     protected addExtV(n: number, H: number, D: number, T: number, B: number, W: number) {
         if (!n) return;
+        T = Math.max(0, T - VFUZZ);              // A little overlap on top
+        B = Math.max(0, B - VFUZZ);              // A little overlap on bottom
         const adaptor = this.adaptor;
         const [h, d, w] = this.getChar(n);
-        const s = (H + D) / (h + d);
-        this.addGlyph(n, 0, 0);
-        const glyph = adaptor.lastChild(this.element);
-        const scale = 'scale(1 ' + this.jax.fixed(s) + ')';
-        const translate = 'translate(' + this.fixed((W - w)/2) + ' ' + this.fixed(d * s - D) + ')';
-        adaptor.setAttribute(glyph, 'transform', translate + ' ' + scale);
-        const inset = 'inset(' + [this.fixed((B - VFUZZ) / s), 0, this.fixed((T - VFUZZ) / s), 0].join(' ') + ')';
-        adaptor.setAttribute(glyph, 'clip-path', inset);
+        const Y = H + D - T - B;                 // The height of the extender
+        const s = 1.5 * Y / (h + d);             // Scale height by 1.5 to avoid bad ends
+        const y = (s * (h - d) - Y) / 2;         // The bottom point to clip the extender
+        const svg = this.svg('svg', {
+            width: this.fixed(w), height: this.fixed(Y),
+            y: this.fixed(B - D), x: this.fixed((W - w) / 2),
+            viewBox: [0, y, w, Y].map(x => this.fixed(x)).join(' ')
+        });
+        this.addGlyph(n, 0, 0, svg);
+        const glyph = adaptor.lastChild(svg);
+        adaptor.setAttribute(glyph, 'transform', 'scale(1, ' + this.jax.fixed(s) + ')');
+        adaptor.append(this.element, svg);
     }
 
     /**
@@ -227,23 +232,22 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<N, T, D>>(SVGWr
      */
     protected addExtH(n: number, W: number, L: number, R: number, x: number = 0) {
         if (!n) return;
-        const [h, d, cw] = this.getChar(n);
-        const w = cw + 2 * HBEARING;  // add extra space for glyphs that extend beyond their width;
-        const s = 2 * (W / w);        // scale it so that left- and right-bearing won't hurt us
-        const scale = 'scale(' + this.jax.fixed(s) + ', 1)';
-        const inset = [0, this.fixed((Math.max(0, R - HFUZZ) + W / 2) / s),
-                       0, this.fixed((Math.max(0, L - HFUZZ) + W / 2) / s)];
-        //
-        // Use a group with a rect of the full width (since the glyph may have
-        // non-zero left- or right-bearing, which will throw off the svg path
-        // bounding box).
-        //
-        const char = this.svg('g', {
-            transform: 'translate(' + this.fixed(x - W / 2) + ', 0) ' + scale,
-            'clip-path': 'inset(' + inset.join(' ') + ')'
-        }, [this.svg('rect', {width: this.fixed(w), height: 1, fill: 'none'})]);
-        this.addGlyph(n, HBEARING, 0, char);
-        this.adaptor.append(this.element, char);
+        R = Math.max(0, R - HFUZZ);     // A little less than the width of the right glyph
+        L = Math.max(0, L - HFUZZ);     // A little less than the width of the left glyph
+        const adaptor = this.adaptor;
+        const [h, d, w] = this.getChar(n);
+        const X = W - L - R;            // The width of the extender
+        const Y = h + d + 2 * VFUZZ;    // The height (plus some fuzz) of the extender
+        const s = 1.5 * (X / w);        // Scale the width so that left- and right-bearing won't hurt us
+        const svg = this.svg('svg', {
+            width: this.fixed(X), height: this.fixed(Y),
+            x: this.fixed(x + L), y: this.fixed(-VFUZZ),
+            viewBox: [(s * w - X) / 2, -VFUZZ, X, Y].map(x => this.fixed(x)).join(' ')
+        });
+        this.addGlyph(n, 0, 0, svg);
+        const glyph = this.adaptor.lastChild(svg);
+        this.adaptor.setAttribute(glyph, 'transform', 'scale(' + this.jax.fixed(s) + ', 1)');
+        this.adaptor.append(this.element, svg);
     }
 
     /**
