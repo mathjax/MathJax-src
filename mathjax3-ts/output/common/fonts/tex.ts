@@ -92,5 +92,13 @@ export class CommonTeXFont extends FontData {
         return em(Math.max(0, n));
     }
 
+    /**
+     * @param {number} n    The character number to find
+     * @return {CharData}   The data for that character to be used for stretchy delimiters
+     */
+    protected getDelimiterData(n: number) {
+        return this.getChar('-smallop', n) || this.getChar('-size4', n);
+    }
+
 }
 
