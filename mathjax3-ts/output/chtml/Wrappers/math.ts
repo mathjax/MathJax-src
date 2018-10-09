@@ -82,6 +82,16 @@ export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
         if (display) {
             adaptor.setAttribute(chtml, 'display', 'true');
             adaptor.setAttribute(parent, 'display', 'true');
+        } else {
+            //
+            // Transfer right margin to container (for things like $x\hskip -2em y$)
+            //
+            const margin = adaptor.getStyle(chtml, 'margin-right');
+            if (margin) {
+                adaptor.setStyle(chtml, 'margin-right', '');
+                adaptor.setStyle(parent, 'margin-right', margin);
+                adaptor.setStyle(parent, 'width', '0');
+            }
         }
         adaptor.addClass(chtml, 'MJX-TEX');
         const [align, shift] = this.getAlignShift();
