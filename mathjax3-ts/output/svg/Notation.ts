@@ -105,7 +105,6 @@ export const Border2 = <N, T, D>(name: string, side1: Notation.Side, side2: Nota
  */
 export const DiagonalStrike = <N, T, D>(name: LineName) =>
     Notation.CommonDiagonalStrike<SVGmenclose<N, T, D>, N>((cname: string) => (node, child) => {
-        console.log(cname, name);
         node.adaptor.append(node.element, node.line(lineData(node, name)));
     })(name);
 
