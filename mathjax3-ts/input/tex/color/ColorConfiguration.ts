@@ -25,6 +25,7 @@
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
+import NodeUtil from '../NodeUtil.js';
 
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
@@ -255,33 +256,29 @@ export let ColorMethods: Record<string, ParseMethod> = {};
  * Override \color macro definition
 */
 ColorMethods.Color = function(parser: TexParser, name: string) {
-    var model = parser.GetBrackets(name, "");
-    var color = parser.GetArgument(name);
+    const model = parser.GetBrackets(name, "");
+    const color = getColor(model, parser.GetArgument(name));
     
-    var color = getColor(model, color);
+    const math = parser.ParseArg(name);
     
+    const node = parser.configuration.nodeFactory.create('node', 'mstyle', [math], {mathcolor: color});
     parser.stack.env['color'] = color;
-
-    // parser.Push(parser.configuration.nodeFactory.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
-    parser.itemFactory.create('style').setProperties({styles:{mathcolor:color}});
-    
+    parser.Push(node);
 }
 
 ColorMethods.TextColor = function(parser: TexParser, name: string) {
-    var model = parser.GetBrackets(name),
-        color = parser.GetArgument(name);
-    color = getColor(model, color);
-
-    var old = parser.stack.env['color']; 
+    const model = parser.GetBrackets(name, "");
+    const color = getColor(model, parser.GetArgument(name));
+    const old = parser.stack.env['color'];
     parser.stack.env['color'] = color;
-    var math = parser.ParseArg(name);
-    
-    if (!old) {  // TODO: Volker, please check if this is needed
-        delete parser.stack.env['color']
+    const math = parser.ParseArg(name);
+    if (old) {
+      parser.stack.env['color'];  // TODO: Volker, shouldn't we remove this?
+    } else {
+      delete parser.stack.env['color'];
     }
-
-    // parser.Push(parser.configuration.nodeFactory.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
-    parser.itemFactory.create('style', math).setProperties({mathcolor: color});
+    const node = parser.configuration.nodeFactory.create('node', 'mstyle', [math], {mathcolor: color});
+    parser.Push(node);
 }
 
 /**
@@ -300,12 +297,14 @@ ColorMethods.DefineColor =  function(parser: TexParser, name: string) {
 */
 ColorMethods.ColorBox = function (parser: TexParser, name: string) {
     var cname = parser.GetArgument(name),
-        arg = ParseUtil.internalMath(parser, parser.GetArgument(name));
+    math = ParseUtil.internalMath(parser, parser.GetArgument(name));
 
-    // parser.Push(parser.configuration.nodeFactory.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
-    parser.itemFactory.create('padded', arg).setProperties({
+    const node = parser.configuration.nodeFactory.create('node', 'mpadded', [math], {
         mathbackground: getColor("named", cname)
-      }).setProperties(padding())
+      });
+
+    NodeUtil.setProperties(node, padding())
+    parser.Push(node)
 };
 
 /**
@@ -314,13 +313,15 @@ ColorMethods.ColorBox = function (parser: TexParser, name: string) {
 ColorMethods.FColorBox = function (parser: TexParser, name : string) {
     var fname = parser.GetArgument(name),
         cname = parser.GetArgument(name),
-        arg = ParseUtil.internalMath(parser, parser.GetArgument(name));
+        math = ParseUtil.internalMath(parser, parser.GetArgument(name));
 
-    // parser.Push(parser.configuration.nodeFactory.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
-    parser.itemFactory.create('padded', arg).setProperties({
-            mathbackground: getColor("named", cname),
-            style: "border: " + ColorConfigs.border + " solid "+ getColor("named", fname),
-        }).setProperties(padding())
+    const node = parser.configuration.nodeFactory.create('node', 'mpadded', [math], {
+        mathbackground: getColor("named", cname),
+        style: "border: " + ColorConfigs.border + " solid "+ getColor("named", fname),
+        });
+
+    NodeUtil.setProperties(node, padding())
+    parser.Push(node)
 }
 
 new CommandMap('color', {
