@@ -19,21 +19,51 @@
 /**
  * @fileoverview Configuration file for the color package.
  *
- * @author v.sorge@mathjax.org (Volker Sorge)
+ * @author i@omardo.com (Omar Al-Ithawi)
  */
 
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {AllTags, NoTags} from '../Tags';
+import TexError from '../TexError.js';
 
-// This is from the 'no undefined' extension.
-function color(parser: TexParser, name: string) {
-    const textNode = parser.configuration.nodeFactory.create('text', '\\' + name);
-    parser.Push(parser.configuration.nodeFactory.create(
-        'node', 'mtext', [], {mathcolor: 'red'}, textNode));
+import {CommandMap} from '../SymbolMap.js';
+import {ParseMethod} from '../Types.js';
+import ParseUtil from '../ParseUtil.js';
+
+// function color(parser: TexParser, name: string) {
+//     const textNode = parser.configuration.nodeFactory.create('text', '\\' + name);
+//     parser.Push(parser.configuration.nodeFactory.create(
+//         'node', 'mtext', [], {mathcolor: 'red'}, textNode));
+// }
+
+
+// Namespace
+
+
+/*
+TODO: Activate this extensible configurations instead of ColorConfigs
+config: MathJax.Hub.CombineConfig("TeX.color",{
+    padding: "5px",
+    border: "2px"
+}),
+*/
+
+
+function padding() {
+    var pad = "+"+ColorConfigs.padding;
+    var unit = ColorConfigs.padding.replace(/^.*?([a-z]*)$/,"$1");
+    var pad2 = "+"+(2*parseFloat(pad))+unit;
+    return {width:pad2, height:pad, depth:pad, lspace: ColorConfigs.padding};
+  }
+
+
+const ColorConfigs = {
+    padding: "5px",
+    border: "2px"
 }
 
-const COLORS = new Map<string, string>([
+
+const COLORS : Map<string, string> = new Map<string, string>([
     ['Apricot',        '#FBB982'],
     ['Aquamarine',     '#00B5BE'],
     ['Bittersweet',    '#C04F17'],
@@ -101,101 +131,205 @@ const COLORS = new Map<string, string>([
     ['WildStrawberry', '#EE2967'],
     ['Yellow',         '#FFF200'],
     ['YellowGreen',    '#98CC70'],
-    ['YellowOrange',   '#FAA21A']
+    ['YellowOrange',   '#FAA21A'],
 ]);
 
-/*
+/**
  *  Look up a color based on its model and definition
  */
-function getColor(parser: TexParser, model: string, def: string) {
-    if (!model) {model = 'named'}
-    var fn = parser['get_' + model];
-    if (!fn) {parser.TEX.Error(['UndefinedColorModel', 'Color model \'%1\' not defined', model])}
-    return fn.call(parser,def);
+function getColor(model: string, def: string) {
+    if (!model) {
+        model = 'named';
+    }
+
+    switch (model) {
+        case 'named':
+            return get_named(def);
+    
+        case 'rgb':
+            return get_rgb(def);
+
+        case 'RGB':
+            return get_RGB(def);
+    
+        case 'gray':
+            return get_gray(def);
+            
+        default:
+            throw new TexError('UndefinedColorModel', 'Color model \'%1\' not defined', model);
+    }
 }
 
-/*
+/**
  *  Get an rgb color
  */
-function get_rgb(parser: TexParser, rgb: string) {
-    rgb = rgb.replace(/^\s+/,'').replace(/\s+$/,'').split(/\s*,\s*/); var RGB = '#';
-    if (rgb.length !== 3)
-    {parser.TEX.Error(['ModelArg1', 'Color values for the %1 model require 3 numbers', 'rgb'])}
+function get_rgb( rgb: string) {
+    var rgbParts: string[] = rgb.replace(/^\s+/, '').replace(/\s+$/, '').split(/\s*, \s*/); 
+    var RGB: string = '#';
+    if (rgbParts.length !== 3) {
+        throw new TexError('ModelArg1', 'Color values for the %1 model require 3 numbers', 'rgb');
+    }
+
     for (var i = 0; i < 3; i++) {
-        if (!rgb[i].match(/^(\d+(\.\d*)?|\.\d+)$/))
-        {parser.TEX.Error(['InvalidDecimalNumber', 'Invalid decimal number'])}
-        var n = parseFloat(rgb[i]);
-        if (n < 0 || n > 1) {
-            parser.TEX.Error(['ModelArg2',
-                'Color values for the %1 model must be between %2 and %3',
-                'rgb',0,1]);
+        if (!rgbParts[i].match(/^(\d+(\.\d*)?|\.\d+)$/)) {
+            throw new TexError('InvalidDecimalNumber', 'Invalid decimal number');
         }
-        n = Math.floor(n*255).toString(16); if (n.length < 2) {n = '0'+n}
-        RGB += n;
+
+        var n = parseFloat(rgbParts[i]);
+        if (n < 0 || n > 1) {
+            throw new TexError('ModelArg2',
+                'Color values for the %1 model must be between %2 and %3',
+                'rgb','0','0');
+        }
+        var pn = Math.floor(n*255).toString(16); 
+        if (pn.length < 2) {pn = '0'+pn}
+        RGB += pn;
     }
     return RGB;
 }
 
-/*
+/**
  *  Get an RGB color
  */
-function get_RGB(parser: TexParser, rgb: string) {
-    rgb = rgb.replace(/^\s+/,'').replace(/\s+$/,'').split(/\s*,\s*/); var RGB = '#';
-    if (rgb.length !== 3)
-    {parser.TEX.Error(['ModelArg1', 'Color values for the %1 model require 3 numbers', 'RGB'])}
+function get_RGB(rgb: string) {
+    var rgbParts : string[] = rgb.replace(/^\s+/,'').replace(/\s+$/,'').split(/\s*,\s*/); 
+    var RGB = '#';
+
+    if (rgbParts.length !== 3)
+    {throw new TexError('ModelArg1', 'Color values for the %1 model require 3 numbers', 'RGB')}
+    
     for (var i = 0; i < 3; i++) {
-        if (!rgb[i].match(/^\d+$/))
-        {parser.TEX.Error(['InvalidNumber', 'Invalid number'])}
-        var n = parseInt(rgb[i]);
+        if (!rgbParts[i].match(/^\d+$/))
+        {throw new TexError('InvalidNumber', 'Invalid number')}
+        var n = parseInt(rgbParts[i]);
         if (n > 255) {
-            parser.TEX.Error(['ModelArg2',
+            throw new TexError('ModelArg2',
                 'Color values for the %1 model must be between %2 and %3',
-                'RGB',0,255]);
+                'RGB', '0', '255');
         }
-        n = n.toString(16); if (n.length < 2) {n = '0'+n}
-        RGB += n;
+        var pN = n.toString(16); 
+        if (pN.length < 2) {pN = '0'+pN}
+        RGB += pN;
     }
     return RGB;
 }
 
-/*
+/**
  *  Get a gray-scale value
  */
-function get_gray(parser: TexParser, gray: string) {
-    if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/))
-    {parser.TEX.Error(['InvalidDecimalNumber','Invalid decimal number'])}
-    var n = parseFloat(gray);
-    if (n < 0 || n > 1) {
-        parser.TEX.Error(['ModelArg2',
-            'Color values for the %1 model must be between %2 and %3',
-            'gray',0,1]);
+function get_gray(gray: string) {
+    if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {
+        throw new TexError('InvalidDecimalNumber','Invalid decimal number')
     }
-    n = Math.floor(n*255).toString(16); if (n.length < 2) {n = '0'+n}
-    return '#'+n+n+n;
+
+    var n : number = parseFloat(gray);
+    if (n < 0 || n > 1) {    
+        throw new TexError('ModelArg2',
+            'Color values for the %1 model must be between %2 and %3',
+            'gray', "0", "1");
+    }
+    var pn = Math.floor(n*255).toString(16); 
+    if (pn.length < 2) {
+        pn = '0' + pn;
+    }
+
+    return '#' + pn + pn + pn;
 }
 
-/*
+/**
  *  Get a named value
  */
-function get_named(parser: TexParser, name: string) {
-    if (COLORS.hasOwnProperty(name)) {return COLORS[name]}
-    return name;
+function get_named(name: string) : string {
+    if (COLORS.has(name)) {
+        return COLORS.get(name);
+    } else {
+        return name;
+    }
 }
 
-function padding(parser: TexParser) {
-    var pad = '+'+parser.config.padding;
-    var unit = parser.config.padding.replace(/^.*?([a-z]*)$/, '$1');
-    var pad2 = '+'+(2*parseFloat(pad))+unit;
-    return {width:pad2, height:pad, depth:pad, lspace:this.config.padding};
-}
 
-/*
-TODO: Convert this part
-config: MathJax.Hub.CombineConfig("TeX.color",{
-    padding: "5px",
-    border: "2px"
-}),
+export let ColorMethods: Record<string, ParseMethod> = {};
+
+
+/**
+ * Override \color macro definition
 */
+ColorMethods.Color = function(parser: TexParser, name: string) {
+    var model = parser.GetBrackets(name, "");
+    var color = parser.GetArgument(name);
+    
+    var color = getColor(model, color);
+    
+    parser.stack.env['color'] = color;
+
+    // parser.Push(parser.configuration.nodeFactory.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
+    parser.itemFactory.create('style').setProperties({styles:{mathcolor:color}});
+    
+}
+
+ColorMethods.TextColor = function(parser: TexParser, name: string) {
+    var model = parser.GetBrackets(name),
+        color = parser.GetArgument(name);
+    color = getColor(model, color);
+
+    var old = parser.stack.env['color']; 
+    parser.stack.env['color'] = color;
+    var math = parser.ParseArg(name);
+    
+    if (!old) {  // TODO: Volker, please check if this is needed
+        delete parser.stack.env['color']
+    }
+
+    // parser.Push(parser.configuration.nodeFactory.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
+    parser.itemFactory.create('style', math).setProperties({mathcolor: color});
+}
+
+/**
+ * Define the \definecolor macro
+*/
+ColorMethods.DefineColor =  function(parser: TexParser, name: string) {
+    var cname = parser.GetArgument(name),
+        model = parser.GetArgument(name),
+        def = parser.GetArgument(name);
+    
+    COLORS.set(cname, getColor(model, def));
+};
+
+/**
+ * Produce a text box with a colored background
+*/
+ColorMethods.ColorBox = function (parser: TexParser, name: string) {
+    var cname = parser.GetArgument(name),
+        arg = ParseUtil.internalMath(parser, parser.GetArgument(name));
+
+    // parser.Push(parser.configuration.nodeFactory.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
+    parser.itemFactory.create('padded', arg).setProperties({
+        mathbackground: getColor("named", cname)
+      }).setProperties(padding())
+};
+
+/**
+ * Procude a framed text box with a colored background
+ */
+ColorMethods.FColorBox = function (parser: TexParser, name : string) {
+    var fname = parser.GetArgument(name),
+        cname = parser.GetArgument(name),
+        arg = ParseUtil.internalMath(parser, parser.GetArgument(name));
+
+    // parser.Push(parser.configuration.nodeFactory.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
+    parser.itemFactory.create('padded', arg).setProperties({
+            mathbackground: getColor("named", cname),
+            style: "border: " + ColorConfigs.border + " solid "+ getColor("named", fname),
+        }).setProperties(padding())
+}
+
+new CommandMap('color', {
+    color: "Color",
+    textcolor: "TextColor",
+    definecolor: "DefineColor",
+    colorbox: "ColorBox",
+    fcolorbox: "FColorBox"
+}, ColorMethods);
 
 export const ColorConfiguration = Configuration.create(
-    'color', {fallback: {macro: color}});
+    'color', {handler: {macro: ['color', 'textcolor', 'definecolor', 'colorbox', 'fcolorbox']}});
