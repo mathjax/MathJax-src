@@ -55,7 +55,7 @@ import {texVariant} from './tex/tex-variant.js';
 
 import {delimiters} from '../../common/fonts/tex/delimiters.js';
 
-/***********************************************************************************/
+/*=================================================================================*/
 /**
  *  The TeXFont class
  */
@@ -133,8 +133,7 @@ export class TeXFont extends CommonTeXFont {
         '-tex-variant': texVariant
     };
 
-    /*******************************************************/
-
+    /*=====================================================*/
     /**
      * The CSS styles needed for this font.
      */
@@ -348,8 +347,7 @@ export class TeXFont extends CommonTeXFont {
 
     protected options: OptionList;
 
-    /***********************************************************************/
-
+    /*=====================================================================*/
     /**
      * @override
      */
@@ -359,7 +357,10 @@ export class TeXFont extends CommonTeXFont {
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     }
 
-    /***********************************************************************/
+    /*=====================================================================*/
+    /*
+     * Handle creation of styles needed for this font
+     */
 
     /**
      * @return {StyleList}  The (computed) styles for this font
@@ -421,7 +422,10 @@ export class TeXFont extends CommonTeXFont {
         }
     }
 
-    /*******************************************************/
+    /*=====================================================*/
+    /*
+     *  Styles for stretchy characters
+     */
 
     /**
      * @param {StyleList} styles    The style object to add styles to
@@ -443,7 +447,10 @@ export class TeXFont extends CommonTeXFont {
         }
     }
 
-    /*******************************************************/
+    /*=====================================================*/
+    /*
+     *  Styles for vertical stretchy characters
+     */
 
     /**
      * @param {StyleList} styles    The style object to add styles to
@@ -494,7 +501,10 @@ export class TeXFont extends CommonTeXFont {
         return data[0] + data[1];
     }
 
-    /*******************************************************/
+    /*=====================================================*/
+    /*
+     *  Styles for horizontal stretchy characters
+     */
 
     /**
      * @param {StyleList} styles    The style object to add styles to
@@ -532,7 +542,10 @@ export class TeXFont extends CommonTeXFont {
         styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
     }
 
-    /*******************************************************/
+    /*=====================================================*/
+    /*
+     *  Utility functions
+     */
 
     /**
      * @param {StyleList} styles  The style object to add styles to

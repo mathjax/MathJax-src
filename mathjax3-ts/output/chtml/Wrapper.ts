@@ -68,7 +68,7 @@ interface CSSStyle extends CSSStyleDeclaration {
 }
 
 /**
- * Shorthand for makeing a CHTMLWrapper constructor
+ * Shorthand for making a CHTMLWrapper constructor
  */
 export type CHTMLConstructor<N, T, D> = Constructor<CHTMLWrapper<N, T, D>>;
 

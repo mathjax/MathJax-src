@@ -54,13 +54,13 @@ export interface DOMAdaptor<N, T, D> {
     parse(text: string, format?: string): D;
 
     /**
-     * @param {string} type      The tag name of the HTML node to be created
+     * @param {string} kind      The tag name of the HTML node to be created
      * @param {OptionList} def   The properties to set for the created node
      * @param {(N|T)[]} content  The child nodes for the created HTML node
      * @param {string} ns        The namespace in which to create the node
      * @return {N}               The generated HTML tree
      */
-    node(type: string, def?: OptionList, children?: (N | T)[], ns?: string): N;
+    node(kind: string, def?: OptionList, children?: (N | T)[], ns?: string): N;
 
     /**
      * @param {string} text   The text from which to create an HTML text node
@@ -217,8 +217,8 @@ export interface DOMAdaptor<N, T, D> {
 
     /**
      * @param {N} node               The HTML node whose attribute is to be set
-     * @param {string|number} name   The name of the attribute to set
-     * @param {string} value         The new value of the attribute
+     * @param {string} name          The name of the attribute to set
+     * @param {string|number} value  The new value of the attribute
      */
     setAttribute(node: N, name: string, value: string | number): void;
 
@@ -337,8 +337,8 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /**
      * @override
      */
-    public node(type: string, def: OptionList = {}, children: (N | T)[] = [], ns?: string) {
-        const node = this.create(type, ns);
+    public node(kind: string, def: OptionList = {}, children: (N | T)[] = [], ns?: string) {
+        const node = this.create(kind, ns);
         this.setAttributes(node, def);
         for (const child of children) {
             this.append(node, child);
@@ -347,11 +347,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     }
 
     /**
-     * @param {string} type  The type of the node to create
+     * @param {string} kind  The type of the node to create
      * @param {string} ns    The optional namespace in which to create the node
      * @return {N}           The created node
      */
-    protected abstract create(type: string, ns?: string): N;
+    protected abstract create(kind: string, ns?: string): N;
 
     /**
      * @override

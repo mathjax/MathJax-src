@@ -28,7 +28,7 @@ import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
 import {CHTMLWrappers} from './Wrappers.js';
 
 /*****************************************************************/
-/*
+/**
  *  The CHTMLWrapperFactory class for creating CHTMLWrapper nodes
  *
  * @template N  The HTMLElement node class
@@ -38,14 +38,14 @@ import {CHTMLWrappers} from './Wrappers.js';
 export class CHTMLWrapperFactory<N, T, D> extends
 CommonWrapperFactory<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>> {
 
-    /*
+    /**
      * The default list of wrapper nodes this factory can create
      */
     public static defaultNodes = CHTMLWrappers;
 
-    /*
+    /**
      * The CHTML output jax associated with this factory
      */
-    public jax: CHTML<N, T, D> = null;
+    public jax: CHTML<N, T, D>;
 
 }
