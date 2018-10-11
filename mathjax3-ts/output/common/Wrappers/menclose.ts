@@ -361,7 +361,8 @@ export function CommonMencloseMixin<W extends AnyWrapper,
             const {h, d, w} = this.childNodes[0].getBBox();
             const H = h + d;
             const R = Math.sqrt(H * H + w * w);
-            const [x, y] = [Math.max(p, r * w / R), Math.max(p, r * H / R)];
+            const x = Math.max(p, r * w / R);
+            const y = Math.max(p, r * H / R);
             const [a, W] = this.getArgMod(w + 2 * x, H + 2 * y);
             return {a, W, x, y};
         }

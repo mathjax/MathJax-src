@@ -448,8 +448,10 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
      * @return {string}     The formatted number
      */
     fixed(m: number, n: number = 3) {
-        if (Math.abs(m) < .0006) return "0";
-        return m.toFixed(n).replace(/\.?0+$/,"");
+        if (Math.abs(m) < .0006) {
+            return '0';
+        }
+        return m.toFixed(n).replace(/\.?0+$/, '');
     }
 
     /**
