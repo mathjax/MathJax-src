@@ -39,6 +39,11 @@ import NodeUtil from '../NodeUtil.js';
 let AmsCdMethods: Record<string, ParseMethod> = {};
 
 
+/**
+ * Handles CD environment for commutative diagrams.
+ * @param {TexParser} parser The calling parser.
+ * @param {StackItem} begin The opening stackitem.
+ */
 AmsCdMethods.CD = function(parser: TexParser, begin: StackItem) {
   parser.Push(begin);
   let item = parser.itemFactory.create('array') as ArrayItem;
@@ -57,13 +62,11 @@ AmsCdMethods.CD = function(parser: TexParser, begin: StackItem) {
 
 
 /**
- *
+ * Converts arrows.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
 AmsCdMethods.arrow = function(parser: TexParser, name: string) {
-  console.log('here?');
-  console.log(name);
   let c = parser.string.charAt(parser.i);
   if (!c.match(/[><VA.|=]/)) {
     return Other(parser, name);
@@ -103,17 +106,8 @@ AmsCdMethods.arrow = function(parser: TexParser, name: string) {
     // TODO: cleanup!
     let arrow: string = ({
       '>': '\u2192', '<': '\u2190', 'V': '\u2193', 'A': '\u2191'} as {[key: string]: string}) [c];
-    console.log(arrow);
-    console.log(c);
-    console.log(name + c);
-    console.log(parser.string);
-    console.log(parser.i);
-        console.log(parser.string.slice(parser.i));
     let a = parser.GetUpTo(name + c, c);
-        console.log(a);
     let b = parser.GetUpTo(name + c, c);
-    console.log(b);
-
     if (c === '>' || c === '<') {
       //
       //  Lay out horizontal arrows with munderover if it has labels
@@ -160,7 +154,6 @@ AmsCdMethods.arrow = function(parser: TexParser, name: string) {
       }
     }
   }
-  console.log(mml);
   if (mml) {
     parser.Push(mml);
   }
@@ -169,7 +162,7 @@ AmsCdMethods.arrow = function(parser: TexParser, name: string) {
 
 
 /**
- *
+ * Converts a cell in the diagram.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
@@ -187,7 +180,7 @@ AmsCdMethods.cell = function(parser: TexParser, name: string) {
 
 
 /**
- *
+ * Sets minimal width for arrows.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
@@ -197,7 +190,7 @@ AmsCdMethods.minwidth = function(parser: TexParser, name: string) {
 
 
 /**
- *
+ * Sets minimal height for arrows.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
