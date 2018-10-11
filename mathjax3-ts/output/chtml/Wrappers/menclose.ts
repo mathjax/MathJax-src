@@ -24,13 +24,23 @@
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMenclose, CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
 import {CHTMLmsqrt} from './msqrt.js';
-import {BBox} from '../BBox.js';
 import * as Notation from '../Notation.js';
 import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../../util/Options.js';
 import {StyleList, StyleData} from '../../common/CssStyles.js';
-import {split} from '../../../util/string.js';
+import {em} from '../../../util/lengths.js';
+
+/*****************************************************************/
+
+/**
+ *  The skew angle needed for the arrow head pieces
+ */
+function Angle(x: number, y: number) {
+    return Math.atan2(x, y).toFixed(3).replace(/\.?0+$/, '');
+}
+
+const ANGLE = Angle(Notation.ARROWDX, Notation.ARROWY);
 
 /*****************************************************************/
 /**
@@ -70,53 +80,85 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
             'border-top': Notation.SOLID,
             position: 'absolute',
             left: 0, right: 0, bottom: '50%',
-            transform: 'translateY(' + (Notation.THICKNESS / 2) + 'em)'
+            transform: 'translateY(' + em(Notation.THICKNESS / 2) + ')'
         },
         'mjx-menclose > mjx-vstrike': {
             'border-left': Notation.SOLID,
             position: 'absolute',
             top: 0, bottom: 0, right: '50%',
-            transform: 'translateX(' + (Notation.THICKNESS / 2) + 'em)'
+            transform: 'translateX(' + em(Notation.THICKNESS / 2) + ')'
         },
         'mjx-menclose > mjx-rbox': {
             position: 'absolute',
             top: 0, bottom: 0, right: 0, left: 0,
             'border': Notation.SOLID,
-            'border-radius': (Notation.THICKNESS + Notation.PADDING) + 'em'
+            'border-radius': em(Notation.THICKNESS + Notation.PADDING)
         },
-        'mjx-menclose > svg.mjx-circle': {
+        'mjx-menclose > mjx-cbox': {
             position: 'absolute',
             top: 0, bottom: 0, right: 0, left: 0,
-            width: '100%', height: '100%'
+            'border': Notation.SOLID,
+            'border-radius': '50%'
         },
-        'mjx-menclose > svg.mjx-circle > ellipse': {
-            'stroke-width': Notation.THICKNESS,
-            'stroke': 'currentColor',
-            'fill': 'none'
-        },
-        'mjx-menclose > svg.mjx-arrow': {
+        'mjx-menclose > mjx-arrow': {
             position: 'absolute',
+            left: 0, bottom: '50%', height: 0, width: 0
         },
-        'mjx-menclose > svg.mjx-arrow > path': {
-            'stroke': 'none',
-            'fill': 'currentColor'
-        },
-        'mjx-menclose > svg.mjx-arrow > line': {
-            'stroke': 'currentColor',
-            'stroke-width': Notation.THICKNESS,
-            'stroke-linecap': 'round'
-        },
-        'mjx-menclose > svg.mjx-longdiv': {
+        'mjx-menclose > mjx-arrow > *': {
+            display: 'block',
             position: 'absolute',
-            top: 0, bottom: 0, left: 0, right: 0,
-            width: '100%', height: '100%'
+            'transform-origin': 'bottom',
+            'border-left': em(Notation.THICKNESS * Notation.ARROWX) + ' solid',
+            'border-right': 0,
+            'box-sizing': 'border-box'
         },
-        'mjx-menclose > svg.mjx-longdiv > path': {
-            'stroke': 'currentColor',
-            'stroke-width': Notation.THICKNESS,
-            'stroke-linecap': 'round',
-            'stroke-linejoin': 'round',
-            fill: 'none',
+        'mjx-menclose > mjx-arrow > mjx-aline': {
+            left: 0, top: em(-Notation.THICKNESS / 2),
+            right: em(Notation.THICKNESS * (Notation.ARROWX - 1)), height: 0,
+            'border-top': em(Notation.THICKNESS) + ' solid',
+            'border-left': 0
+        },
+        'mjx-menclose > mjx-arrow[double] > mjx-aline': {
+            left: em(Notation.THICKNESS * (Notation.ARROWX - 1)), height: 0,
+        },
+        'mjx-menclose > mjx-arrow > mjx-rthead': {
+            transform: 'skewX(' + ANGLE + 'rad)',
+            right: 0, bottom: '-1px',
+            'border-bottom': '1px solid transparent',
+            'border-top': em(Notation.THICKNESS * Notation.ARROWY) + ' solid transparent'
+        },
+        'mjx-menclose > mjx-arrow > mjx-rbhead': {
+            transform: 'skewX(-' + ANGLE + 'rad)',
+            'transform-origin': 'top',
+            right: 0, top: '-1px',
+            'border-top': '1px solid transparent',
+            'border-bottom': em(Notation.THICKNESS * Notation.ARROWY) + ' solid transparent'
+        },
+        'mjx-menclose > mjx-arrow > mjx-lthead': {
+            transform: 'skewX(-' + ANGLE + 'rad)',
+            left: 0, bottom: '-1px',
+            'border-left': 0,
+            'border-right': em(Notation.THICKNESS * Notation.ARROWX) + ' solid',
+            'border-bottom': '1px solid transparent',
+            'border-top': em(Notation.THICKNESS * Notation.ARROWY) + ' solid transparent'
+        },
+        'mjx-menclose > mjx-arrow > mjx-lbhead': {
+            transform: 'skewX(' + ANGLE + 'rad)',
+            'transform-origin': 'top',
+            left: 0, top: '-1px',
+            'border-left': 0,
+            'border-right': em(Notation.THICKNESS * Notation.ARROWX) + ' solid',
+            'border-top': '1px solid transparent',
+            'border-bottom': em(Notation.THICKNESS * Notation.ARROWY) + ' solid transparent'
+        },
+        'mjx-menclose > dbox': {
+            position: 'absolute',
+            top: 0, bottom: 0, left: em(-1.5 * Notation.PADDING),
+            width: em(3 * Notation.PADDING),
+            border: em(Notation.THICKNESS) + ' solid',
+            'border-radius': '50%',
+            'clip-path': 'inset(0 0 0 ' + em(1.5 * Notation.PADDING) + ')',
+            'box-sizing': 'border-box'
         }
     };
 
@@ -138,7 +180,7 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
 
         ['horizontalstrike', {
             renderer: Notation.RenderElement('hstrike', 'Y'),
-            bbox: (node) => [0, 0, 0, 0]
+            bbox: (node) => [0, node.padding, 0, node.padding]
         }],
 
         ['verticalstrike', {
@@ -161,12 +203,7 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
         }],
 
         ['circle', {
-            renderer: (node, child) => {
-                const adaptor = node.adaptor;
-                const {w, h, d} = node.getBBox();
-                const circle = node.svg('circle', [0, 0, w, h + d], [node.ellipse(w, h + d)]);
-                adaptor.append(node.chtml, circle);
-            },
+            renderer: Notation.RenderElement('cbox'),
             bbox: Notation.fullBBox
         }],
 
@@ -181,7 +218,7 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
                 node.adaptor.setStyle(child, 'border-bottom', node.em(node.thickness) + ' solid');
                 const strike = node.adjustBorder(node.html('mjx-ustrike', {style: {
                     width: node.em(W),
-                    transform: 'translateX(' + node.em(t) + ') rotate(' + node.units(-a) + 'rad)',
+                    transform: 'translateX(' + node.em(t) + ') rotate(' + node.fixed(-a) + 'rad)',
                 }}));
                 node.adaptor.append(node.chtml, strike);
             },
@@ -213,19 +250,22 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
 
         ['longdiv', {
             //
-            // Use a line along the top followed by a half arc at the left
+            // Use a line along the top followed by a half ellipse at the left
             //
             renderer: (node, child) => {
                 const adaptor = node.adaptor;
-                const {w, h, d} = node.getBBox();
-                const t = node.thickness / 2;
-                const p = 1.5 * node.padding;
-                adaptor.append(node.chtml, node.svg('longdiv', [0, 0, w, h + d], [
-                    node.path(
-                        'M', w - t, t,  'L', t, t,
-                        'a', p, (h + d) / 2 - t,  0, 0, 1,  t, h + d - 3 * t
-                    )
-                ]));
+                adaptor.setStyle(child, 'border-top', node.em(node.thickness) + ' solid');
+                const arc = adaptor.append(node.chtml, node.html('dbox'));
+                const t = node.thickness;
+                const p = node.padding;
+                if (t !== Notation.THICKNESS) {
+                    adaptor.setStyle(arc, 'border-width', node.em(t));
+                }
+                if (p !== Notation.PADDING) {
+                    adaptor.setStyle(arc, 'left', node.em(-1.5 * p));
+                    adaptor.setStyle(arc, 'width', node.em(3 * p));
+                    adaptor.setStyle(arc, 'clip-path', 'inset(0 0 0 ' + node.em(1.5 * p) + ')');
+                }
             },
             bbox: (node) => {
                 const p = node.padding;
@@ -268,12 +308,13 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
      * @override
      */
     public toCHTML(parent: N) {
+        const adaptor = this.adaptor;
         const chtml = this.standardCHTMLnode(parent);
         //
         //  Create a box for the child (that can have padding and borders added by the notations)
         //    and add the child HTML into it
         //
-        const block = this.adaptor.append(chtml, this.html('mjx-box')) as N;
+        const block = adaptor.append(chtml, this.html('mjx-box')) as N;
         if (this.renderChild) {
             this.renderChild(this, block);
         } else {
@@ -290,7 +331,6 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
         //  Add the needed padding, if any
         //
         const pbox = this.getPadding();
-        const adaptor = this.adaptor;
         for (const name of Notation.sideNames) {
             const i = Notation.sideIndex[name];
             pbox[i] > 0 && adaptor.setStyle(block, 'padding-' + name, this.em(pbox[i]));
@@ -300,15 +340,85 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
     /********************************************************/
 
     /**
-     * @override
+     * Create an arrow using HTML elements
+     *
+     * @param {number} w        The length of the arrow
+     * @param {number} a        The angle for the arrow
+     * @param {boolean} double  True if this is a double-headed arrow
+     * @return {N}               The newly created arrow
      */
-    public svgNode(kind: string, properties: OptionList = {}, nodes: N[] = []) {
-        return this.html(kind, properties, nodes);
+    public arrow(w: number, a: number, double: boolean = false) {
+        const W = this.getBBox().w;
+        const style = {width: this.em(w)} as OptionList;
+        if (W !== w) {
+            style.left = this.em((W - w) / 2);
+        }
+        if (a) {
+            style.transform = 'rotate(' + this.fixed(a) + 'rad)';
+        }
+        const arrow = this.html('mjx-arrow', {style: style}, [
+            this.html('mjx-aline'), this.html('mjx-rthead'), this.html('mjx-rbhead')
+        ]);
+        if (double) {
+            this.adaptor.append(arrow, this.html('mjx-lthead'));
+            this.adaptor.append(arrow, this.html('mjx-lbhead'));
+            this.adaptor.setAttribute(arrow, 'double', 'true');
+        }
+        this.adjustArrow(arrow, double);
+        return arrow;
     }
 
     /**
+     * @param {N} arrow          The arrow whose thickness and arrow head is to be adjusted
+     * @param {boolean} double   True if the arrow is double-headed
+     */
+    protected adjustArrow(arrow: N, double: boolean) {
+        const t = this.thickness;
+        const head = this.arrowhead;
+        if (head.x === Notation.ARROWX && head.y === Notation.ARROWY &&
+            head.dx === Notation.ARROWDX && t === Notation.THICKNESS) return;
+        const [x, y, dx] = [t * head.x, t * head.y, t * head.dx].map(x => this.em(x));
+        const a = Angle(head.dx, head.y);
+        const [line, rthead, rbhead, lthead, lbhead] = this.adaptor.childNodes(arrow);
+        this.adjustHead(rthead, [y, '0', '1px', x], a);
+        this.adjustHead(rbhead, ['1px', '0', y, x], '-' + a);
+        this.adjustHead(lthead, [y, x, '1px', '0'], '-' + a);
+        this.adjustHead(lbhead, ['1px', x, y, '0'], a);
+        this.adjustLine(line, t, head.x, double);
+    }
+
+    /**
+     * @param {N} head            The piece of arrow head to be adjusted
+     * @param {string[]} border   The border sizes [T, R, B, L]
+     * @param {string} a          The skew angle for the piece
+     */
+    protected adjustHead(head: N, border: string[], a: string) {
+        if (head) {
+            this.adaptor.setStyle(head, 'border-width', border.join(' '));
+            this.adaptor.setStyle(head, 'transform', 'skewX(' + a + 'rad)');
+        }
+    }
+
+    /**
+     * @param {N} line           The arrow shaft to be adjusted
+     * @param {number} t         The arrow shaft thickness
+     * @param {number} x         The arrow head x size
+     * @param {boolean} double   True if the arrow is double-headed
+     */
+    protected adjustLine(line: N, t: number, x: number, double: boolean) {
+        this.adaptor.setStyle(line, 'borderTop', this.em(t) + ' solid');
+        this.adaptor.setStyle(line, 'top', this.em(-t / 2));
+        this.adaptor.setStyle(line, 'right', this.em(t * (x - 1)));
+        if (double) {
+            this.adaptor.setStyle(line, 'left', this.em(t * (x - 1)));
+        }
+    }
+
+    /********************************************************/
+
+    /**
      * @param {N} node   The HTML element whose border width must be
-     *                  adjusted if the thickness isn't the default
+     *                   adjusted if the thickness isn't the default
      * @return {N}       The adjusted element
      */
     public adjustBorder(node: N) {
@@ -318,7 +428,31 @@ CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstruc
         return node;
     }
 
+    /**
+     * @param {N} shape   The svg element whose stroke-thickness must be
+     *                    adjusted if the thickness isn't the default
+     * @return {N}        The adjusted element
+     */
+    public adjustThickness(shape: N) {
+        if (this.thickness !== Notation.THICKNESS) {
+            this.adaptor.setStyle(shape, 'strokeWidth', this.fixed(this.thickness));
+        }
+        return shape;
+    }
+
     /********************************************************/
+
+    /**
+     * @param {number} m    A number to be shown with a fixed number of digits
+     * @param {number=} n   The number of digits to use
+     * @return {string}     The formatted number
+     */
+    fixed(m: number, n: number = 3) {
+        if (Math.abs(m) < .0006) {
+            return '0';
+        }
+        return m.toFixed(n).replace(/\.?0+$/, '');
+    }
 
     /**
      * @override
