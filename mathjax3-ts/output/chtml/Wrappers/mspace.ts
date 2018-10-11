@@ -21,10 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMspace, CommonMspaceMixin} from '../../common/Wrappers/mspace.js';
 import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -34,7 +33,8 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmspace<N, T, D> extends CommonMspaceMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlMspace.prototype.kind;
 
     /**
@@ -59,21 +59,4 @@ export class CHTMLmspace<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
     }
 
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        const attributes = this.node.attributes;
-        bbox.w = this.length2em(attributes.get('width'), 0);
-        bbox.h = this.length2em(attributes.get('height'), 0);
-        bbox.d = this.length2em(attributes.get('depth'), 0);
-    }
-
-    /**
-     * No contents, so no need for variant class
-     *
-     * @override
-     */
-    protected handleVariant() {
-    }
 }
