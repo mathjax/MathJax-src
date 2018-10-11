@@ -49,7 +49,7 @@ new CharacterMap('remap', null, {
  * @param {TexParser} parser The calling parser.
  * @param {string} char The character to parse.
  */
-function Other(parser: TexParser, char: string) {
+export function Other(parser: TexParser, char: string) {
   const font = parser.stack.env['font'];
   let def = font ?
     // @test Other Font
