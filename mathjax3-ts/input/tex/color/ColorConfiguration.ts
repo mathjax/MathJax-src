@@ -31,17 +31,6 @@ import { CommandMap } from '../SymbolMap.js';
 import { ParseMethod } from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
 
-// Namespace
-
-
-/*
-TODO: Activate this extensible configurations instead of ColorConfigs
-config: MathJax.Hub.CombineConfig('TeX.color',{
-    padding: '5px',
-    border: '2px'
-}),
-*/
-
 
 function padding() {
     const pad = '+' + ColorConfigs.padding;
@@ -50,13 +39,13 @@ function padding() {
     return { width: pad2, height: pad, depth: pad, lspace: ColorConfigs.padding };
 }
 
-
+// TODO: Make this configurable
 const ColorConfigs = {
     padding: '5px',
     border: '2px'
 }
 
-
+// TODO: Should have a new instance per parser instead of being a global state effectively.
 const COLORS: Map<string, string> = new Map<string, string>([
     ['Apricot', '#FBB982'],
     ['Aquamarine', '#00B5BE'],
@@ -258,7 +247,7 @@ ColorMethods.Color = function (parser: TexParser, name: string) {
 
     const math = parser.ParseArg(name);
 
-    const node = parser.configuration.nodeFactory.create('node', 'mstyle', [math], { mathcolor: color });
+    const node = parser.configuration.nodeFactory.create('node', 'mstyle', math, { mathcolor: color });
     parser.stack.env['color'] = color;
     parser.Push(node);
 }
@@ -276,7 +265,7 @@ ColorMethods.TextColor = function (parser: TexParser, name: string) {
     } else {
         delete parser.stack.env['color'];
     }
-    const node = parser.configuration.nodeFactory.create('node', 'mstyle', [math], { mathcolor: color });
+    const node = parser.configuration.nodeFactory.create('node', 'mstyle', math, { mathcolor: color });
     parser.Push(node);
 }
 
@@ -298,7 +287,7 @@ ColorMethods.ColorBox = function (parser: TexParser, name: string) {
     const cname = parser.GetArgument(name),
         math = ParseUtil.internalMath(parser, parser.GetArgument(name));
 
-    const node = parser.configuration.nodeFactory.create('node', 'mpadded', [math], {
+    const node = parser.configuration.nodeFactory.create('node', 'mpadded', math, {
         mathbackground: getColor('named', cname)
     });
 
@@ -314,7 +303,7 @@ ColorMethods.FColorBox = function (parser: TexParser, name: string) {
         cname = parser.GetArgument(name),
         math = ParseUtil.internalMath(parser, parser.GetArgument(name));
 
-    const node = parser.configuration.nodeFactory.create('node', 'mpadded', [math], {
+    const node = parser.configuration.nodeFactory.create('node', 'mpadded', math, {
         mathbackground: getColor('named', cname),
         style: 'border: ' + ColorConfigs.border + ' solid ' + getColor('named', fname),
     });
