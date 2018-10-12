@@ -32,17 +32,34 @@ import { ParseMethod } from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
 
 
-function padding() {
+interface PaddingConfigs {
+    width: string,
+    height: string,
+    depth: string,
+    lspace: string,
+}
+
+/**
+ * TODO: What does this exactly do?
+ *
+ * @return {PaddingConfigs}
+ */
+function padding() : PaddingConfigs {
     const pad = '+' + ColorConfigs.padding;
     const unit = ColorConfigs.padding.replace(/^.*?([a-z]*)$/, '$1');
     const pad2 = '+' + (2 * parseFloat(pad)) + unit;
-    return { width: pad2, height: pad, depth: pad, lspace: ColorConfigs.padding };
+    return {
+        width: pad2,
+        height: pad,
+        depth: pad,
+        lspace: ColorConfigs.padding,
+    };
 }
 
 // TODO: Make this configurable
 const ColorConfigs = {
     padding: '5px',
-    border: '2px'
+    border: '2px',
 }
 
 // TODO: Should have a new instance per parser instead of being a global state effectively.
@@ -118,9 +135,13 @@ const COLORS: Map<string, string> = new Map<string, string>([
 ]);
 
 /**
- *  Look up a color based on its model and definition
+ * Look up a color based on its model and definition
+ *
+ * @param {string} model The coloring model type: `named`, `rgb` `RGB` or `gray`.
+ * @param {string} def The color definition: `red, `0.5,0,1`, `128,0,255`, `0.5`.
+ * @return {string} The color definition in CSS format e.g. #44ff00
  */
-function getColor(model: string, def: string) {
+function getColor(model: string, def: string) : string {
     if (!model) {
         model = 'named';
     }
@@ -144,7 +165,8 @@ function getColor(model: string, def: string) {
 }
 
 /**
- *  Get an rgb color
+ * Get an rgb color.
+ *
  */
 function get_rgb(rgb: string) {
     const rgbParts: string[] = rgb.trim().split(/\s*,\s*/);
@@ -167,8 +189,10 @@ function get_rgb(rgb: string) {
         }
 
         let pn = Math.floor(n * 255).toString(16);
-        if (pn.length < 2) { pn = '0' + pn }
-        
+        if (pn.length < 2) {
+            pn = '0' + pn;
+        }
+
         RGB += pn;
     }
 
@@ -182,12 +206,15 @@ function get_RGB(rgb: string) {
     const rgbParts: string[] = rgb.trim().split(/\s*,\s*/);
     let RGB = '#';
 
-    if (rgbParts.length !== 3) { 
+    if (rgbParts.length !== 3) {
         throw new TexError('ModelArg1', 'Color values for the %1 model require 3 numbers', 'RGB');
     }
 
     for (const rgbPart of rgbParts) {
-        if (!rgbPart.match(/^\d+$/)) { throw new TexError('InvalidNumber', 'Invalid number') }
+        if (!rgbPart.match(/^\d+$/)) {
+            throw new TexError('InvalidNumber', 'Invalid number');
+        }
+
         const n = parseInt(rgbPart);
         if (n > 255) {
             throw new TexError('ModelArg2',
@@ -196,7 +223,9 @@ function get_RGB(rgb: string) {
         }
 
         let pn = n.toString(16);
-        if (pn.length < 2) { pn = '0' + pn }
+        if (pn.length < 2) {
+            pn = '0' + pn;
+        }
         RGB += pn;
     }
     return RGB;
@@ -207,7 +236,7 @@ function get_RGB(rgb: string) {
  */
 function get_gray(gray: string) {
     if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {
-        throw new TexError('InvalidDecimalNumber', 'Invalid decimal number')
+        throw new TexError('InvalidDecimalNumber', 'Invalid decimal number');
     }
 
     const n: number = parseFloat(gray);
@@ -240,7 +269,7 @@ export let ColorMethods: Record<string, ParseMethod> = {};
 
 /**
  * Override \color macro definition
-*/
+ */
 ColorMethods.Color = function (parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
     const color = getColor(model, parser.GetArgument(name));
@@ -271,7 +300,7 @@ ColorMethods.TextColor = function (parser: TexParser, name: string) {
 
 /**
  * Define the \definecolor macro
-*/
+ */
 ColorMethods.DefineColor = function (parser: TexParser, name: string) {
     const cname = parser.GetArgument(name),
         model = parser.GetArgument(name),
@@ -282,7 +311,7 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
 
 /**
  * Produce a text box with a colored background
-*/
+ */
 ColorMethods.ColorBox = function (parser: TexParser, name: string) {
     const cname = parser.GetArgument(name),
         math = ParseUtil.internalMath(parser, parser.GetArgument(name));
