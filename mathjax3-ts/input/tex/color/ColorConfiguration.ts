@@ -30,37 +30,31 @@ import NodeUtil from '../NodeUtil.js';
 import { CommandMap } from '../SymbolMap.js';
 import { ParseMethod } from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
+import { PropertyList } from '../../../core/Tree/Node.js';
 
-
-interface PaddingConfigs {
-    width: string,
-    height: string,
-    depth: string,
-    lspace: string,
-}
 
 /**
- * TODO: What does this exactly do?
+ * Calculates padding and converts it into a PropertyList.
  *
- * @return {PaddingConfigs}
+ * @return {PropertyList} The padding properties.
  */
-function padding() : PaddingConfigs {
-    const pad = '+' + ColorConfigs.padding;
+function padding(): PropertyList {
+    const pad = `+${ColorConfigs.padding}`;
     const unit = ColorConfigs.padding.replace(/^.*?([a-z]*)$/, '$1');
-    const pad2 = '+' + (2 * parseFloat(pad)) + unit;
+    const pad2 = 2 * parseFloat(pad);
     return {
-        width: pad2,
+        width: `+${pad2}${unit}`,
         height: pad,
         depth: pad,
         lspace: ColorConfigs.padding,
     };
-}
+};
 
 // TODO: Make this configurable
 const ColorConfigs = {
     padding: '5px',
     border: '2px',
-}
+};
 
 // TODO: Should have a new instance per parser instead of being a global state effectively.
 const COLORS: Map<string, string> = new Map<string, string>([
@@ -139,9 +133,9 @@ const COLORS: Map<string, string> = new Map<string, string>([
  *
  * @param {string} model The coloring model type: `named`, `rgb` `RGB` or `gray`.
  * @param {string} def The color definition: `red, `0.5,0,1`, `128,0,255`, `0.5`.
- * @return {string} The color definition in CSS format e.g. #44ff00
+ * @return {string} The color definition in CSS format e.g. `#44ff00`.
  */
-function getColor(model: string, def: string) : string {
+function getColor(model: string, def: string): string {
     if (!model) {
         model = 'named';
     }
@@ -167,8 +161,10 @@ function getColor(model: string, def: string) : string {
 /**
  * Get an rgb color.
  *
+ * @param {string} rgb The color definition in rgb: `0.5,0,1`.
+ * @return {string} The color definition in CSS format e.g. `#44ff00`.
  */
-function get_rgb(rgb: string) {
+function get_rgb(rgb: string): string {
     const rgbParts: string[] = rgb.trim().split(/\s*,\s*/);
     let RGB: string = '#';
 
@@ -200,9 +196,12 @@ function get_rgb(rgb: string) {
 }
 
 /**
- *  Get an RGB color
+ * Get an RGB color.
+ *
+ * @param {string} rgb The color definition in RGB: `128,0,255`.
+ * @return {string} The color definition in CSS format e.g. `#44ff00`.
  */
-function get_RGB(rgb: string) {
+function get_RGB(rgb: string): string {
     const rgbParts: string[] = rgb.trim().split(/\s*,\s*/);
     let RGB = '#';
 
@@ -232,9 +231,12 @@ function get_RGB(rgb: string) {
 }
 
 /**
- *  Get a gray-scale value
+ * Get a gray-scale value.
+ * 
+ * @param {string} gray The color definition in RGB: `0.5`.
+ * @return {string} The color definition in CSS format e.g. `#808080`.
  */
-function get_gray(gray: string) {
+function get_gray(gray: string): string {
     if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {
         throw new TexError('InvalidDecimalNumber', 'Invalid decimal number');
     }
@@ -250,11 +252,14 @@ function get_gray(gray: string) {
         pn = '0' + pn;
     }
 
-    return '#' + pn + pn + pn;
+    return `#${pn}${pn}${pn}`;
 }
 
 /**
- *  Get a named value
+ * Get a named color.
+ *
+ * @param {string} name The color definition in RGB: `128,0,255`.
+ * @return {string} The color definition in CSS format e.g. `#44ff00`.
  */
 function get_named(name: string): string {
     if (COLORS.has(name)) {
@@ -268,7 +273,10 @@ export let ColorMethods: Record<string, ParseMethod> = {};
 
 
 /**
- * Override \color macro definition
+ * Override \color macro definition.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the control sequence.
  */
 ColorMethods.Color = function (parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
@@ -279,8 +287,15 @@ ColorMethods.Color = function (parser: TexParser, name: string) {
     const node = parser.configuration.nodeFactory.create('node', 'mstyle', math, { mathcolor: color });
     parser.stack.env['color'] = color;
     parser.Push(node);
-}
+};
 
+
+/**
+ * Define the \textcolor macro.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the control sequence.
+ */
 ColorMethods.TextColor = function (parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
     const color = getColor(model, parser.GetArgument(name));
@@ -296,10 +311,13 @@ ColorMethods.TextColor = function (parser: TexParser, name: string) {
     }
     const node = parser.configuration.nodeFactory.create('node', 'mstyle', math, { mathcolor: color });
     parser.Push(node);
-}
+};
 
 /**
- * Define the \definecolor macro
+ * Define the \definecolor macro.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the control sequence.
  */
 ColorMethods.DefineColor = function (parser: TexParser, name: string) {
     const cname = parser.GetArgument(name),
@@ -310,7 +328,10 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
 };
 
 /**
- * Produce a text box with a colored background
+ * Produce a text box with a colored background: `\colorbox`.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the control sequence.
  */
 ColorMethods.ColorBox = function (parser: TexParser, name: string) {
     const cname = parser.GetArgument(name),
@@ -320,12 +341,15 @@ ColorMethods.ColorBox = function (parser: TexParser, name: string) {
         mathbackground: getColor('named', cname)
     });
 
-    NodeUtil.setProperties(node, padding())
-    parser.Push(node)
+    NodeUtil.setProperties(node, padding());
+    parser.Push(node);
 };
 
 /**
- * Procude a framed text box with a colored background
+ * Procude a framed text box with a colored background: `\fcolorbox`.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The name of the control sequence.
  */
 ColorMethods.FColorBox = function (parser: TexParser, name: string) {
     const fname = parser.GetArgument(name),
@@ -334,12 +358,12 @@ ColorMethods.FColorBox = function (parser: TexParser, name: string) {
 
     const node = parser.configuration.nodeFactory.create('node', 'mpadded', math, {
         mathbackground: getColor('named', cname),
-        style: 'border: ' + ColorConfigs.border + ' solid ' + getColor('named', fname),
+        style: `border: ${ColorConfigs.border} solid ${getColor('named', fname)}`
     });
 
-    NodeUtil.setProperties(node, padding())
-    parser.Push(node)
-}
+    NodeUtil.setProperties(node, padding());
+    parser.Push(node);
+};
 
 new CommandMap('color', {
     color: 'Color',
