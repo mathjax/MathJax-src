@@ -23,7 +23,6 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import {NodeFactory} from '../NodeFactory.js';
 
