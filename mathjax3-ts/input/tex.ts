@@ -195,7 +195,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   private formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
-    return this.parseOptions.nodeFactory.create('error', message);
+    return this.parseOptions.nodeFactory.create(
+      'error', message, err.id, this.latex);
   };
 
 }
