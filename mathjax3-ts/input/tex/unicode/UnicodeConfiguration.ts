@@ -22,20 +22,15 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Configuration} from '../Configuration.js';
-import NodeUtil from '../NodeUtil.js';
 import {EnvList} from '../StackItem.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
-import {NodeFactory} from '../NodeFactory.js';
-import ParseOptions from '../ParseOptions.js';
 import ParseUtil from '../ParseUtil.js';
-import {MathItem} from '../../../core/MathItem.js';
-
+import {numeric} from '../../../util/Entities.js';
 
 // Namespace
 export let UnicodeMethods: Record<string, ParseMethod> = {};
@@ -89,8 +84,7 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   } else if (variant) {
     def.mathvariant = variant;
   }
-  let node = parser.create('token', 'mtext', def, String.fromCharCode(N));
-  parser.Push(node);
+  parser.Push(parser.create('token', 'mtext', def, numeric(n)));
 };
 
 
