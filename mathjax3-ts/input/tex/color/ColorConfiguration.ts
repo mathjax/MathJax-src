@@ -22,15 +22,14 @@
  * @author i@omardo.com (Omar Al-Ithawi)
  */
 
-import { Configuration } from '../Configuration.js';
-import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
-import NodeUtil from '../NodeUtil.js';
-
 import { CommandMap } from '../SymbolMap.js';
+import { Configuration } from '../Configuration.js';
 import { ParseMethod } from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
 import { PropertyList } from '../../../core/Tree/Node.js';
+import NodeUtil from '../NodeUtil.js';
+import TexError from '../TexError.js';
+import TexParser from '../TexParser.js';
 
 
 /**
@@ -282,11 +281,11 @@ ColorMethods.Color = function (parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
     const color = getColor(model, parser.GetArgument(name));
 
-    const math = parser.ParseArg(name);
-
-    const node = parser.configuration.nodeFactory.create('node', 'mstyle', math, { mathcolor: color });
+    const style = parser.itemFactory.create('style')
+                        .setProperties({styles: { mathcolor: color }});
     parser.stack.env['color'] = color;
-    parser.Push(node);
+
+    parser.Push(style);
 };
 
 
@@ -302,7 +301,7 @@ ColorMethods.TextColor = function (parser: TexParser, name: string) {
     const old = parser.stack.env['color'];
 
     parser.stack.env['color'] = color;
-    const math = parser.ParseArg(name);
+    const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
 
     if (old) {
         parser.stack.env['color'] = old;
@@ -374,4 +373,4 @@ new CommandMap('color', {
 }, ColorMethods);
 
 export const ColorConfiguration = Configuration.create(
-    'color', { handler: { macro: ['color', 'textcolor', 'definecolor', 'colorbox', 'fcolorbox'] } });
+    'color', { handler: { macro: ['color'] } });
