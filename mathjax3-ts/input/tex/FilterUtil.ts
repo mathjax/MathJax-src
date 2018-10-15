@@ -66,7 +66,6 @@ namespace FilterUtil {
    * @param {MmlNode} mml The node to clean.
    * @param {ParseOptions} options The parse options.
    */
-  // TODO (DC): Move this maybe into setInheritedAttributes method?
   export let cleanAttributes = function(arg: {data: ParseOptions}) {
     let node = arg.data.root as MmlNode;
     node.walkTree((mml: MmlNode, d: any) => {
@@ -108,14 +107,15 @@ namespace FilterUtil {
               NodeUtil.getProperty(m2, 'variantForm') &&
               NodeUtil.getAttribute(m1, 'mathvariant') ===
               NodeUtil.getAttribute(m2, 'mathvariant')) {
-            // @test Shift Left, Less Equal
+            // @test Shift Left, Less Equal,
+            //       Multirel Font X, Multirel Mathvariant X
             NodeUtil.appendChildren(m1, NodeUtil.getChildren(m2));
             children.splice(i + 1, 1);
             m2.parent = null;
             m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
             m--;
           } else {
-            // TODO (VS): Find a test.
+            // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
             NodeUtil.setAttribute(m1, 'rspace', '0pt');
             NodeUtil.setAttribute(m2, 'lspace', '0pt');
             i++;
