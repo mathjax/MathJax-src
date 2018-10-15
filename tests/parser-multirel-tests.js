@@ -1,10 +1,22 @@
 import {ParserTest} from './parser-tests.js';
+import {Configuration} from 'mathjax3/input/tex/Configuration.js';
+import {CharacterMap} from 'mathjax3/input/tex/SymbolMap.js';
+import ParseMethods from 'mathjax3/input/tex/ParseMethods.js';
 
 
 class ParserMultirelTest extends ParserTest {
 
   constructor() {
+    // Just some things bogus attributes for testing.
+    new CharacterMap('shadow', ParseMethods.mathchar0mo, {
+      sim: ['\u223C', {something: 'nothing'}],
+      simeq: ['\u2243', {something: 'nothing'}],
+      asymp: ['\u224D', {something: 'else'}],
+      cong: ['\u224D', {anything: 'nothing'}]
+    });
+    Configuration.create('multirel-test', {handler: {macro: ['shadow']}});
     super();
+    this.packages = ['base', 'ams', 'multirel-test'];
   }
 
 }
@@ -127,7 +139,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Infix Op Op", "a++b",
+  'Infix Op Op', 'a++b',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -189,7 +201,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Infix Op Rel", "a+=b",
+  'Infix Op Rel', 'a+=b',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -251,7 +263,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Postfix Op Op", "a++",
+  'Postfix Op Op', 'a++',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -303,7 +315,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Postfix Rel Rel", "a==",
+  'Postfix Rel Rel', 'a==',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -346,7 +358,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Infix Bars", "a||b",
+  'Infix Bars', 'a||b',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -448,7 +460,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Infix Fences", "a))b",
+  'Infix Fences', 'a))b',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -516,7 +528,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Infix Rel Rel", "a\\rightarrow=b",
+  'Infix Rel Rel', 'a\\rightarrow=b',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -571,7 +583,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Infix 4Rel", "a=<>=b",
+  'Infix 4Rel', 'a=<>=b',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -628,7 +640,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Prefix Rel Rel", "==a",
+  'Prefix Rel Rel', '==a',
   {"kind": "math",
  "texClass": 3,
  "attributes": {"display": "block"},
@@ -671,7 +683,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Prefix Op Op", "++a",
+  'Prefix Op Op', '++a',
   {"kind": "math",
  "texClass": 0,
  "attributes": {"display": "block"},
@@ -723,7 +735,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Mulitrel Font 1", "a <=\\mathrm{>} b",
+  'Mulitrel Font 1', 'a <=\\mathrm{>} b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -804,7 +816,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Mulitrel Font 2", "a <=\\mathrm{=>} b",
+  'Mulitrel Font 2', 'a <=\\mathrm{=>} b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -887,7 +899,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Mulitrel Font 3", "a <=\\mathrm{=}\\mathrm{>} b",
+  'Mulitrel Font 3', 'a <=\\mathrm{=}\\mathrm{>} b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -996,7 +1008,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Mulitrel Mathvariant 1", "a <\\equiv \\mathrm{=>}\\thickapprox b",
+  'Mulitrel Mathvariant 1', 'a <\\equiv \\mathrm{=>}\\thickapprox b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1090,7 +1102,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Mulitrel Mathvariant 2", "a <\\equiv \\mathrm{=>}\\thickapprox\\thicksim b",
+  'Mulitrel Mathvariant 2', 'a <\\equiv \\mathrm{=>}\\thickapprox\\thicksim b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1186,7 +1198,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Mulitrel Mathvariant 3", "a <\\equiv =>\\thickapprox\\thicksim b",
+  'Mulitrel Mathvariant 3', 'a <\\equiv =>\\thickapprox\\thicksim b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1234,8 +1246,7 @@ parserTest.runTest(
           "inherited": {"displaystyle": true,
             "scriptlevel": 0,
             "form": "infix"},
-          "properties": {"variantForm": true,
-            "relationsCombined": true},
+          "properties": {"variantForm": true},
           "childNodes": [
             {"kind": "text",
               "text": "≈"},
@@ -1257,8 +1268,8 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Mulitrel Mathvariant 4", "a <\\equiv \\mathrm{=}\\mathrm{>}" +
-    "\\thickapprox\\thicksim\\frown\\smile=\\updownarrow b",
+  'Mulitrel Mathvariant 4', 'a <\\equiv \\mathrm{=}\\mathrm{>}' +
+    '\\thickapprox\\thicksim\\frown\\smile=\\updownarrow b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1371,7 +1382,7 @@ parserTest.runTest(
           "inherited": {"displaystyle": true,
             "scriptlevel": 0,
             "form": "infix"},
-          "properties": {"relationsCombined": true},
+          "properties": {},
           "childNodes": [
             {"kind": "text",
               "text": "⌢"},
@@ -1381,6 +1392,379 @@ parserTest.runTest(
               "text": "="},
             {"kind": "text",
               "text": "↕"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Simple Shadow Rel', 'a \\sim b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {something: "nothing"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "∼"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Extra Attribute Rel 1', 'a =\\sim b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "="},
+            {"kind": "text",
+              "text": "∼"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Extra Attribute Rel 2', 'a \\sim\\simeq b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "nothing"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "∼"},
+            {"kind": "text",
+              "text": "≃"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Extra Attribute Rel 3', 'a \\sim\\asymp b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "nothing"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "∼"},
+            {"kind": "text",
+              "text": "≍"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Extra Attribute Rel 4', 'a \\sim\\simeq\\asymp b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "nothing"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+         "childNodes": [
+            {"kind": "text",
+              "text": "∼"},
+            {"kind": "text",
+              "text": "≃"},
+            {"kind": "text",
+              "text": "≍"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Extra Attribute Rel 5', 'a \\sim\\asymp\\simeq b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "nothing"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+         "childNodes": [
+            {"kind": "text",
+              "text": "∼"},
+            {"kind": "text",
+              "text": "≍"},
+            {"kind": "text",
+              "text": "≃"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Extra Attribute Rel 6', 'a \\sim\\cong b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "nothing"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "∼"},
+            {"kind": "text",
+              "text": "≍"}],
           "isEmbellished": true},
         {"kind": "mi",
           "texClass": 0,

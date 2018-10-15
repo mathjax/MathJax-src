@@ -102,11 +102,11 @@ namespace FilterUtil {
                NodeUtil.isType(m1, 'mo') && NodeUtil.isType(m2, 'mo') &&
                NodeUtil.getTexClass(m1) === TEXCLASS.REL &&
                NodeUtil.getTexClass(m2) === TEXCLASS.REL) {
-          m2.setProperty('relationsCombined', true);
           if (NodeUtil.getProperty(m1, 'variantForm') ===
               NodeUtil.getProperty(m2, 'variantForm') &&
               NodeUtil.getAttribute(m1, 'mathvariant') ===
               NodeUtil.getAttribute(m2, 'mathvariant')) {
+          m2.setProperty('relationsCombined', true);
             // @test Shift Left, Less Equal,
             //       Multirel Font X, Multirel Mathvariant X
             NodeUtil.appendChildren(m1, NodeUtil.getChildren(m2));
@@ -116,6 +116,7 @@ namespace FilterUtil {
             m--;
           } else {
             // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
+            console.log(23);
             NodeUtil.setAttribute(m1, 'rspace', '0pt');
             NodeUtil.setAttribute(m2, 'lspace', '0pt');
             i++;
