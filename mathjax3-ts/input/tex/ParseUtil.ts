@@ -30,6 +30,8 @@ import ParseOptions from './ParseOptions.js';
 import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
+import {entities} from '../../util/Entities.js';
+import '../../util/entities/n.js';
 
 
 namespace ParseUtil {
@@ -320,7 +322,6 @@ namespace ParseUtil {
     return mml;
   }
 
-  const NBSP = '\u00A0';
 
   /**
    * Parses text internal to boxes or labels.
@@ -331,7 +332,7 @@ namespace ParseUtil {
    */
   function internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
-    text = text.replace(/^\s+/, NBSP).replace(/\s+$/, NBSP);
+    text = text.replace(/^\s+/, entities.nbsp).replace(/\s+$/, entities.nbsp);
     let textNode = parser.create('text', text);
     return parser.create('node', 'mtext', [], def, textNode);
   }

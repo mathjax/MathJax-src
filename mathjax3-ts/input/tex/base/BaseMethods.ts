@@ -36,18 +36,16 @@ import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {Label} from '../Tags.js';
+import {entities} from '../../../util/Entities.js';
+import '../../../util/entities/n.js';
+import '../../../util/entities/p.js';
+import '../../../util/entities/r.js';
 
 
 // Namespace
 let BaseMethods: Record<string, ParseMethod> = {};
 
-// TODO: Once we can properly load AllEntities, there should be no need for
-//       those anymore.
-const PRIME = '\u2032';
-const SMARTQUOTE = '\u2019';
-const NBSP = '\u00A0';
 const P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
-
 const MmlTokenAllow: {[key: string]: number} = {
   fontfamily: 1, fontsize: 1, fontweight: 1, fontstyle: 1,
   color: 1, background: 1,
@@ -88,7 +86,7 @@ BaseMethods.Close = function(parser: TexParser, c: string) {
  */
 BaseMethods.Tilde = function(parser: TexParser, c: string) {
   // @test Tilde, Tilde2
-  parser.Push(parser.create('token', 'mtext', {}, NBSP));
+  parser.Push(parser.create('token', 'mtext', {}, entities.nbsp));
 };
 
 /**
@@ -238,8 +236,9 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   let sup = '';
   parser.i--;
   do {
-    sup += PRIME; parser.i++, c = parser.GetNext();
-  } while (c === '\'' || c === SMARTQUOTE);
+    // @test Prime, PrimeSup, Double Prime, PrePrime
+    sup += entities.prime; parser.i++, c = parser.GetNext();
+  } while (c === '\'' || c === entities.rquote);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
   const node = parser.create('token', 'mo', {}, sup);
   parser.Push(
