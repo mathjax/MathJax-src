@@ -1546,12 +1546,6 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
 };
 
 
-// TODO: What to do with this?
-let baseURL = (typeof(document) === 'undefined' ||
-               document.getElementsByTagName('base').length === 0) ?
-  '' : String(document.location).replace(/#.*$/, '');
-
-
 /**
  * Handle a label reference.
  * @param {TexParser} parser The calling parser.
@@ -1572,7 +1566,7 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
     tag = parser.tags.formatTag(tag);
   }
   let node = parser.create('node', 'mrow', ParseUtil.internalMath(parser, tag), {
-    href: parser.tags.formatUrl(ref.id, baseURL), 'class': 'MathJax_ref'
+    href: parser.tags.formatUrl(ref.id, parser.options.baseURL), 'class': 'MathJax_ref'
   });
   parser.Push(node);
 };
