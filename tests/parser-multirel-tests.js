@@ -2019,3 +2019,6 @@ parserTest.runTest(
               "text": "b"}]}],
       "isInferred": true}]}
 );
+
+
+parserTest.printTime();
