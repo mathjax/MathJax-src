@@ -21,10 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonTeXAtom, CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
 import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
-import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -34,7 +34,8 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLTeXAtom<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLTeXAtom<N, T, D> extends CommonTeXAtomMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = TeXAtom.prototype.kind;
 
     /**
@@ -51,26 +52,6 @@ export class CHTMLTeXAtom<N, T, D> extends CHTMLWrapper<N, T, D> {
             const a = this.font.params.axis_height;
             const dh = ((h + d) / 2 + a) - h;  // new height minus old height
             this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(dh));
-        }
-    }
-
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        super.computeBBox(bbox);
-        if (this.childNodes[0] && this.childNodes[0].bbox.ic) {
-            bbox.ic = this.childNodes[0].bbox.ic;
-        }
-        //
-        // Center VCENTER atoms vertically
-        //
-        if (this.node.texClass === TEXCLASS.VCENTER) {
-            const {h, d} = bbox;
-            const a = this.font.params.axis_height;
-            const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-            bbox.h += dh;
-            bbox.d += dh;
         }
     }
 

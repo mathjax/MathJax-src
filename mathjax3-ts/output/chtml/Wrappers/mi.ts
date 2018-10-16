@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMi, CommonMiMixin} from '../../common/Wrappers/mi.js';
 import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
-import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -33,13 +33,9 @@ import {BBox} from '../BBox.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
-    public static kind = MmlMi.prototype.kind;
+export class CHTMLmi<N, T, D> extends CommonMiMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
-    /**
-     * True if no italic correction should be used
-     */
-    public noIC: boolean = false;
+    public static kind = MmlMi.prototype.kind;
 
     /**
      * @override
@@ -49,14 +45,6 @@ export class CHTMLmi<N, T, D> extends CHTMLWrapper<N, T, D> {
         if (this.noIC) {
             this.adaptor.setAttribute(this.chtml, 'noIC', 'true');
         }
-    }
-
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        super.computeBBox(bbox);
-        this.copySkewIC(bbox);
     }
 
 }

@@ -210,3 +210,4 @@ parserTest.runTest(
 );
 
 
+parserTest.printTime();

@@ -91,3 +91,6 @@ parserTest.runTest(
               "text": "c"}]}],
       "isInferred": true}]}
 );
+
+
+parserTest.printTime();

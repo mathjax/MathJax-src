@@ -189,7 +189,6 @@ export class SubHandler {
 }
 
 
-// TODO: This should be an extension of Map, but that only works in ES6 proper!
 export class SubHandlers {
 
   private map = new Map<HandlerType, SubHandler>();
