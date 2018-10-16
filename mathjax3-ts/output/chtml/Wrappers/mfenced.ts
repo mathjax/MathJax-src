@@ -21,13 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLinferredMrow} from './mrow.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMfenced, CommonMfencedMixin} from '../../common/Wrappers/mfenced.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
-import {MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
-import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
-import {BBox} from '../BBox.js';
+import {CHTMLinferredMrow} from './mrow.js';
 
 /*****************************************************************/
 /**
@@ -37,88 +34,16 @@ import {BBox} from '../BBox.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmfenced<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmfenced<N, T, D> extends CommonMfencedMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlMfenced.prototype.kind;
-
-    //
-    // An mrow to use for the layout of the mfenced
-    //
-    protected mrow: CHTMLinferredMrow<N, T, D> = null;
-
-    /**
-     * @override
-     * @constructor
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        this.createMrow();
-        this.addMrowChildren();
-    }
-
-    /**
-     * Creates the mrow wrapper to use for the layout
-     */
-    protected createMrow() {
-        const mmlFactory = (this.node as AbstractMmlNode).factory;
-        const mrow = mmlFactory.create('inferredMrow');
-        const attributes = this.node.attributes;
-        const display = attributes.get('display') as boolean;
-        const scriptlevel = attributes.get('scriptlevel') as number;
-        const defaults: AttributeList = {
-            mathsize: ['math', attributes.get('mathsize')]
-        };
-        mrow.setInheritedAttributes(defaults, display, scriptlevel, false);
-        this.mrow = this.wrap(mrow) as CHTMLinferredMrow<N, T, D>;
-        this.mrow.parent = this;
-    }
-
-    /**
-     * Populate the mrow with wrapped mo elements interleaved
-     *   with the mfenced children (the mo's are already created
-     *   in the mfenced object)
-     */
-    protected addMrowChildren() {
-        const mfenced = this.node as MmlMfenced;
-        const mrow = this.mrow;
-        this.addMo(mfenced.open);
-        if (this.childNodes.length) {
-            mrow.childNodes.push(this.childNodes[0]);
-        }
-        let i = 0;
-        for (const child of this.childNodes.slice(1)) {
-            this.addMo(mfenced.separators[i++]);
-            mrow.childNodes.push(child);
-        }
-        this.addMo(mfenced.close);
-        mrow.stretchChildren();
-    }
-
-    /**
-     * Wrap an mo element and push it onto the mrow
-     *
-     * @param {MmlNode} node  The mo element to push on the mrow
-     */
-    protected addMo(node: MmlNode) {
-        if (!node) return;
-        const mo = this.wrap(node);
-        this.mrow.childNodes.push(mo);
-        mo.parent = this.mrow;
-    }
 
     /**
      * @override
      */
     public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
-        this.mrow.toCHTML(chtml);
-        this.drawBBox();
-    }
-
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        bbox.updateFrom(this.mrow.getBBox());
+        (this.mrow as CHTMLinferredMrow<N, T, D>).toCHTML(chtml);
     }
 
 }

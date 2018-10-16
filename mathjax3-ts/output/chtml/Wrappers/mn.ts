@@ -21,10 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMn, CommonMnMixin} from '../../common/Wrappers/mn.js';
 import {MmlMn} from '../../../core/MmlTree/MmlNodes/mn.js';
-import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -34,28 +33,8 @@ import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmn<N, T, D> extends CHTMLWrapper<N, T, D> {
-    public static kind = MmlMn.prototype.kind;
+export class CHTMLmn<N, T, D> extends CommonMnMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
-    /**
-     * @override
-     */
-    public remapChars(chars: number[]) {
-        //
-        //  Convert a leading hyphen to a minus
-        //
-        if (chars.length) {
-            const string = this.font.getRemappedChar('mn', chars[0]);
-            if (string) {
-                const c = this.unicodeChars(string);
-                if (c.length === 1) {
-                    chars[0] = c[0];
-                } else {
-                    chars = c.concat(chars.slice(1));
-                }
-            }
-        }
-        return chars;
-    }
+    public static kind = MmlMn.prototype.kind;
 
 }

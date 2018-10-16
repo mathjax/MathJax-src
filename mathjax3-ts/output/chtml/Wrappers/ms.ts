@@ -21,10 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMs, CommonMsMixin} from '../../common/Wrappers/ms.js';
 import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
-import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -34,36 +33,8 @@ import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLms<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLms<N, T, D> extends CommonMsMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlMs.prototype.kind;
-
-    /**
-     * Add the quote characters to the wrapper children so they will be output
-     *
-     * @override
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        const attributes = this.node.attributes;
-        let quotes = attributes.getList('lquote', 'rquote');
-        if (this.variant !== 'monospace') {
-            if (!attributes.isSet('lquote') && quotes.lquote === '"') quotes.lquote = '\u201C';
-            if (!attributes.isSet('rquote') && quotes.rquote === '"') quotes.rquote = '\u201D';
-        }
-        this.childNodes.unshift(this.createText(quotes.lquote as string));
-        this.childNodes.push(this.createText(quotes.rquote as string));
-    }
-
-    /**
-     * Create a text wrapper with the given text;
-     *
-     * @param {string} text  The text for the wrapped element
-     * @return {CHTMLWrapper}   The wrapped text node
-     */
-    protected createText(text: string) {
-        const node = this.wrap(this.mmlText(text));
-        node.parent = this;
-        return node;
-    }
 
 }
