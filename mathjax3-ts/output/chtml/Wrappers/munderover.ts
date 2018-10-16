@@ -22,14 +22,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
+import {CHTMLscriptbase} from './scriptbase.js';
 import {CHTMLmsubsup, CHTMLmsub, CHTMLmsup} from './msubsup.js';
-import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
+import {CommonMunder, CommonMunderMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMover, CommonMoverMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMunderover, CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {BBox} from '../BBox.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -39,7 +39,9 @@ import {StyleList} from '../CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
+export class CHTMLmunder<N, T, D> extends
+CommonMunderMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsub<N, T, D>>>(CHTMLmsub)  {
+
     public static kind = MmlMunder.prototype.kind;
 
     public static useIC: boolean = true;
@@ -58,22 +60,6 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
             'padding-bottom': '.1em'           // big_op_spacing5
         }
     };
-
-    /**
-     * @override
-     */
-    public get script() {
-        return this.childNodes[(this.node as MmlMunder).under];
-    }
-
-    /**
-     * @override
-     * @constructor
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        this.stretchChildren();
-    }
 
     /**
      * @override
@@ -104,27 +90,6 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
         this.adjustUnderDepth(under, underbox);
     }
 
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        if (this.hasMovableLimits()) {
-            super.computeBBox(bbox);
-            return;
-        }
-        bbox.empty();
-        const basebox = this.baseChild.getBBox();
-        const underbox = this.script.getBBox();
-        const [k, v] = this.getUnderKV(basebox, underbox);
-        const delta = this.getDelta(true);
-        const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
-        bbox.combine(basebox, bw, 0);
-        bbox.combine(underbox, uw, v);
-        bbox.d += this.font.params.big_op_spacing5;
-        bbox.ic = -this.baseCore.bbox.ic;
-        bbox.clean();
-    }
-
 }
 
 /*****************************************************************/
@@ -135,7 +100,9 @@ export class CHTMLmunder<N, T, D> extends CHTMLmsub<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
+export class CHTMLmover<N, T, D> extends
+CommonMoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsup<N, T, D>>>(CHTMLmsup)  {
+
     public static kind = MmlMover.prototype.kind;
 
     public static useIC: boolean = true;
@@ -149,22 +116,6 @@ export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
             'text-align': 'left'
         }
     };
-
-    /**
-     * @override
-     */
-    public get script() {
-        return this.childNodes[(this.node as MmlMover).over];
-    }
-
-    /**
-     * @override
-     * @constructor
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        this.stretchChildren();
-    }
 
     /*
      * @override
@@ -189,27 +140,6 @@ export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
         this.adjustOverDepth(over, overbox);
     }
 
-    /*
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        if (this.hasMovableLimits()) {
-            super.computeBBox(bbox);
-            return;
-        }
-        bbox.empty();
-        const basebox = this.baseChild.getBBox();
-        const overbox = this.script.getBBox();
-        const [k, u] = this.getOverKU(basebox, overbox);
-        const delta = this.getDelta();
-        const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
-        bbox.combine(basebox, bw, 0);
-        bbox.combine(overbox, ow, u);
-        bbox.h += this.font.params.big_op_spacing5;
-        bbox.ic = -this.baseCore.bbox.ic;
-        bbox.clean();
-    }
-
 }
 
 /*****************************************************************/
@@ -220,7 +150,9 @@ export class CHTMLmover<N, T, D> extends CHTMLmsup<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
+export class CHTMLmunderover<N, T, D> extends
+CommonMunderoverMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsubsup<N, T, D>>>(CHTMLmsubsup)  {
+
     public static kind = MmlMunderover.prototype.kind;
 
     public static useIC: boolean = true;
@@ -233,47 +165,6 @@ export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
             display: 'block'
         },
     };
-
-    /*
-     * @return {CHTMLWrapper)   The wrapped under node
-     */
-    public get underChild() {
-        return this.childNodes[(this.node as MmlMunderover).under];
-    }
-
-    /*
-     * @return {CHTMLWrapper)   The wrapped overder node
-     */
-    public get overChild() {
-        return this.childNodes[(this.node as MmlMunderover).over];
-    }
-
-    /*
-     * Needed for movablelimits
-     *
-     * @override
-     */
-    public get subChild() {
-        return this.underChild;
-    }
-
-    /*
-     * Needed for movablelimits
-     *
-     * @override
-     */
-    public get supChild() {
-        return this.overChild;
-    }
-
-    /*
-     * @override
-     * @constructor
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        this.stretchChildren();
-    }
 
     /*
      * @override
@@ -312,32 +203,6 @@ export class CHTMLmunderover<N, T, D> extends CHTMLmsubsup<N, T, D> {
         this.setDeltaW([base, under, over], this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]));
         this.adjustOverDepth(over, overbox);
         this.adjustUnderDepth(under, underbox);
-    }
-
-    /*
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        if (this.hasMovableLimits()) {
-            super.computeBBox(bbox);
-            return;
-        }
-        bbox.empty();
-        const overbox = this.overChild.getBBox();
-        const basebox = this.baseChild.getBBox();
-        const underbox = this.underChild.getBBox();
-        const [ok, u] = this.getOverKU(basebox, overbox);
-        const [uk, v] = this.getUnderKV(basebox, underbox);
-        const delta = this.getDelta();
-        const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]);
-        bbox.combine(basebox, bw, 0);
-        bbox.combine(overbox, ow, u);
-        bbox.combine(underbox, uw, v);
-        const z = this.font.params.big_op_spacing5;
-        bbox.h += z;
-        bbox.d += z;
-        bbox.ic = -this.baseCore.bbox.ic;
-        bbox.clean();
     }
 
 }

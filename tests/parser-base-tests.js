@@ -3348,12 +3348,11 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mo",
          "texClass": 1,
-         "attributes": {"movablelimits": true,
-                        "form": "prefix"},
+         "attributes": {"movablelimits": true},
          "inherited": {
            "displaystyle": true,
            "scriptlevel": 0,
-           "form": "infix"},
+           "form": "prefix"},
          "properties": {"movesupsub": true,
                         "movablelimits": true},
          "childNodes": [
@@ -6905,106 +6904,6 @@ parserTest.runTest(
                        {"kind": "text",
                         "text": "b"}]}],
                   "isInferred": true}]}]}]}],
-      "isInferred": true}]}
-);
-
-parserTest.runTest(
-  'Interspersed Text', 'a\\text{c$d$e}b',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {
-        "displaystyle": true,
-        "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "mi",
-         "texClass": 0,
-         "attributes": {},
-         "inherited": {
-           "displaystyle": true,
-           "scriptlevel": 0,
-           "mathvariant": "italic"},
-         "properties": {},
-         "childNodes": [
-           {"kind": "text",
-            "text": "a"}]},
-        {"kind": "mrow",
-         "texClass": 0,
-         "attributes": {},
-         "inherited": {
-           "displaystyle": true,
-           "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "mtext",
-            "texClass": 0,
-            "attributes": {},
-            "inherited": {
-              "displaystyle": true,
-              "scriptlevel": 0},
-            "properties": {},
-            "childNodes": [
-              {"kind": "text",
-               "text": "c"}],
-            "isSpacelike": true},
-           {"kind": "TeXAtom",
-            "texClass": 0,
-            "attributes": {},
-            "inherited": {
-              "displaystyle": true,
-              "scriptlevel": 0},
-            "properties": {},
-            "childNodes": [
-              {"kind": "mrow",
-               "texClass": 0,
-               "attributes": {},
-               "inherited": {
-                 "displaystyle": true,
-                 "scriptlevel": 0},
-               "properties": {},
-               "childNodes": [
-                 {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {
-                    "displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                     "text": "d"}]}],
-               "isInferred": true}]},
-           {"kind": "mtext",
-            "texClass": 0,
-            "attributes": {},
-            "inherited": {
-              "displaystyle": true,
-              "scriptlevel": 0},
-            "properties": {},
-            "childNodes": [
-              {"kind": "text",
-               "text": "e"}],
-            "isSpacelike": true}]},
-        {"kind": "mi",
-         "texClass": 0,
-         "attributes": {},
-         "inherited": {
-           "displaystyle": true,
-           "scriptlevel": 0,
-           "mathvariant": "italic"},
-         "properties": {},
-         "childNodes": [
-           {"kind": "text",
-            "text": "b"}]}],
       "isInferred": true}]}
 );
 

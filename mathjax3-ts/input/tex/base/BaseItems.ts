@@ -25,7 +25,7 @@
 
 import {MapHandler} from '../MapHandler.js';
 import {CharacterMap} from '../SymbolMap.js';
-import * as Entities from '../../../util/Entities.js';
+import {entities} from '../../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {TexConstant} from '../TexConstants.js';
@@ -460,6 +460,7 @@ export class BeginItem extends BaseItem {
                            this.getName(), item.getName());
       }
       if (!this.getProperty('end')) {
+        // @test Hfill
         return [[this.factory.create('mml', this.toMml())], true];
       }
       return BaseItem.fail;  // TODO: This case could probably go!
@@ -659,7 +660,7 @@ export class FnItem extends BaseItem {
       }
       // @test Named Function, Named Function Arg
       const node = this.create('token', 'mo', {texClass: TEXCLASS.NONE},
-                               Entities.entities['ApplyFunction']);
+                               entities.ApplyFunction);
       return [[top, node, item], true];
     }
     // @test Mathop Super, Mathop Sub
@@ -683,7 +684,6 @@ export class NotItem extends BaseItem {
     return 'not';
   }
 
-  // TODO: There is a lot of recasting that should go away!
   /**
    * @override
    */

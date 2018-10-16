@@ -111,7 +111,8 @@ export interface Tags {
    * @type {MmlNode[]}
    */
   // TODO: Not sure how to handle this at the moment.
-  refs: MmlNode[]; // array of nodes with unresolved references
+  //       array of nodes with unresolved references
+  refs: MmlNode[];
 
   /**
    * The label to use for the next tag.
@@ -162,11 +163,16 @@ export interface Tags {
   clearTag(): void;
 
   /**
-   * Resets the tag structure.
-   * @param {number} offset A new offset value to start counting ids from.
-   * @param {boolean} keep If sets, keep all previous labels and ids at reset.
+   * Resets the tag structure after an expression has been typeset.
    */
-  reset(offset: number, keep: boolean): void;
+  resetTag(): void;
+
+  /**
+   * Fully resets the tag structure, in particular all the tagging and label
+   * history.
+   * @param {number} offset A new offset value to start counting ids from.
+   */
+  reset(offset?: number): void;
 
   /**
    * Finalizes tag creation.
@@ -405,13 +411,19 @@ export class AbstractTags implements Tags {
   /**
    * @override
    */
-  public reset(n: number, keepLabels: boolean) {
-    this.offset = (n || 0);
+  public resetTag() {
     this.history = [];
-    if (!keepLabels) {
-      this.labels = {};
-      this.ids = {};
-    }
+    this.clearTag();
+  }
+
+  /**
+   * @override
+   */
+  public reset(offset: number = 0) {
+    this.resetTag();
+    this.offset = offset;
+    this.labels = {};
+    this.ids = {};
   }
 
   /**
@@ -447,7 +459,6 @@ export class AbstractTags implements Tags {
    * Sets the tag id.
    */
   private makeId() {
-    // TODO: Test for uniqueness.
     this.currentTag.tagId = this.formatId(
       this.configuration.options['useLabelIds'] ?
         (this.label || this.currentTag.tag) : this.currentTag.tag);
@@ -464,7 +475,8 @@ export class AbstractTags implements Tags {
     }
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
                             this.configuration).mml();
-    return this.configuration.nodeFactory.create('node', 'mtd', [mml], {id: this.currentTag.tagId});
+    return this.configuration.nodeFactory.create('node', 'mtd', [mml],
+                                                 {id: this.currentTag.tagId});
   }
 
 };
@@ -524,8 +536,6 @@ export interface TagsClass {
 }
 
 
-// TODO: Factory needs functionality to create one Tags object from an existing one
-//       to hand over label values, equation ids etc.
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([
