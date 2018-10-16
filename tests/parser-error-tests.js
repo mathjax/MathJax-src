@@ -1753,7 +1753,7 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  'ExtraCloseMissingOpen', '\\sqrt}',
+  'ExtraCloseMissingOpen 2', '\\sqrt}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},

@@ -21,13 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, StringMap} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {BBox} from '../BBox.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMglyph, CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {Property} from '../../../core/Tree/Node.js';
-import {StyleList, StyleData} from '../CssStyles.js';
+import {StyleList, StyleData} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -37,7 +34,8 @@ import {StyleList, StyleData} from '../CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmglyph<N, T, D> extends CommonMglyphMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlMglyph.prototype.kind;
 
     public static styles: StyleList = {
@@ -47,36 +45,6 @@ export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
             padding: 0
         }
     };
-
-    /**
-     * The image's width, height, and voffset values converted to em's
-     */
-    public width: number;
-    public height: number;
-    public voffset: number;
-
-    /**
-     * @override
-     * @constructor
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        this.getParameters();
-    }
-
-    /**
-     * Obtain the width, height, and voffset.
-     * Note:  Currently, the width and height must be specified explicitly, or they default to 1em
-     *   Since loading the image may be asynchronous, it would require a restart.
-     *   A future extension could implement this either by subclassing this object, or
-     *   perhaps as a post-filter on the MathML input jax that adds the needed dimensions
-     */
-    protected getParameters() {
-        const {width, height, voffset} = this.node.attributes.getList('width', 'height', 'voffset');
-        this.width = (width === 'auto' ? 1 : this.length2em(width));
-        this.height = (height === 'auto' ? 1 : this.length2em(height));
-        this.voffset = this.length2em(voffset || '0');
-    }
 
     /**
      * @override
@@ -93,15 +61,6 @@ export class CHTMLmglyph<N, T, D> extends CHTMLWrapper<N, T, D> {
         }
         const img = this.html('img', {src: src, style: styles, alt: alt, title: alt});
         this.adaptor.append(chtml, img);
-    }
-
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        bbox.w = this.width;
-        bbox.h = this.height - this.voffset;
-        bbox.d = this.voffset;
     }
 
 }

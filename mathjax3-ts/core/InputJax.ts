@@ -157,7 +157,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
      * @param {FunctionList} filters  The list of functions to be performed
      * @param {MathItem} math         The math item that is being processed
      * @param {any} data              Whatever other data is needed
-     * @return {any}                  The (possibly modidied) data
+     * @return {any}                  The (possibly modified) data
      */
     protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>, data: any) {
         let args = {math: math, data: data};
