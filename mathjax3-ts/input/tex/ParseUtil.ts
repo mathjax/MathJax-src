@@ -345,7 +345,7 @@ namespace ParseUtil {
     if (typeof(text) !== 'string') {
       return text;
     }
-    let TEXT = text.replace(/^\s+|\s+$/g, '');
+    let TEXT = text.trim();
     if (TEXT.match(/\\$/) && text.match(/ $/)) {
       TEXT += ' ';
     }
