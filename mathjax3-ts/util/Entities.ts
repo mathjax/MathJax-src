@@ -459,8 +459,8 @@ const loaded: {[name: string]: boolean} = {};
  * @param {EntityList} entities  The entities to add
  * @param {string} file          The name of the file that they came from
  */
-export function add(entities: EntityList, file: string) {
-    Object.assign(entities, entities);
+export function add(additions: EntityList, file: string) {
+    Object.assign(entities, additions);
    loaded[file] = true;
 }
 
