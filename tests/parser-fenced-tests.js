@@ -1234,3 +1234,5 @@ parserTest.runTest(
       "isInferred": true}]}
 );
 
+
+parserTest.printTime();

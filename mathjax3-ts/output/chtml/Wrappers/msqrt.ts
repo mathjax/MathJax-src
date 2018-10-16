@@ -21,14 +21,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMsqrt, CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
 import {CHTMLmo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
-import {MmlNode, AbstractMmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../CssStyles.js';
-import {DIRECTION} from '../FontData.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -38,7 +36,8 @@ import {DIRECTION} from '../FontData.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlMsqrt.prototype.kind;
 
     public static styles: StyleList = {
@@ -62,57 +61,6 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
             'margin-left': '-.3em'
         }
     };
-
-    /**
-     * @return {number}  The index of the base of the root in childNodes
-     */
-    get base() {
-        return 0;
-    }
-
-    /**
-     * @return {number}  The index of the surd in childNodes
-     */
-    get surd() {
-        return 1;
-    }
-
-    /**
-     * @return {number}  The index of the root in childNodes (or null if none)
-     */
-    get root(): number {
-        return null;
-    }
-
-    /**
-     * The requested height of the stretched surd character
-     */
-    protected surdH: number;
-
-    /**
-     * Add the surd character so we can display it later
-     *
-     * @override
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        const surd = this.createMo('\u221A');
-        surd.canStretch(DIRECTION.Vertical);
-        const {h, d} = this.childNodes[this.base].getBBox();
-        const t = this.font.params.rule_thickness;
-        const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
-        this.surdH = h + d + 2 * t + p / 4;
-        surd.getStretchedVariant([this.surdH - d, d], true);
-    }
-
-    /**
-     * @override
-     */
-    protected createMo(text: string) {
-        const node = super.createMo(text);
-        this.childNodes.push(node);
-        return node;
-    }
 
     /**
      * @override
@@ -163,51 +111,6 @@ export class CHTMLmsqrt<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @param {BBox} sbox          The bounding box of the surd
      */
     protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox) {
-    }
-
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        const surdbox = this.childNodes[this.surd].getBBox();
-        const basebox = new BBox(this.childNodes[this.base].getBBox());
-        const [p, q] = this.getPQ(surdbox);
-        const [x] = this.getRootDimens(surdbox);
-        const t = this.font.params.rule_thickness;
-        const H = basebox.h + q + t;
-        bbox.h = H + t;
-        this.combineRootBBox(bbox, surdbox);
-        bbox.combine(surdbox, x, H - surdbox.h);
-        bbox.combine(basebox, x + surdbox.w, 0);
-        bbox.clean();
-    }
-
-    /**
-     * Combine the bounding box of the root (overridden in mroot)
-     *
-     * @param {BBox} bbox  The bounding box so far
-     * @param {BBox} sbox  The bounding box of the surd
-     */
-    protected combineRootBBox(bbox: BBox, sbox: BBox) {
-    }
-
-    /**
-     * @param {BBox} sbox  The bounding box for the surd character
-     * @return {number[]}  The p, q, and x values for the TeX layout computations
-     */
-    protected getPQ(sbox: BBox) {
-        const t = this.font.params.rule_thickness;
-        const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
-        const q = (sbox.h + sbox.d > this.surdH ? ((sbox.h + sbox.d) - (this.surdH - t)) / 2 : t + p / 4);
-        return [p, q];
-    }
-
-    /**
-     * @param {BBox} sbox  The bounding box of the surd
-     * @return {number[]}  The x offset of the surd, and the height, x offset, and scale of the root
-     */
-    protected getRootDimens(sbox: BBox) {
-        return [0, 0, 0, 0];
     }
 
 }

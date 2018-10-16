@@ -111,7 +111,8 @@ export interface Tags {
    * @type {MmlNode[]}
    */
   // TODO: Not sure how to handle this at the moment.
-  refs: MmlNode[]; // array of nodes with unresolved references
+  //       array of nodes with unresolved references
+  refs: MmlNode[];
 
   /**
    * The label to use for the next tag.
@@ -458,7 +459,6 @@ export class AbstractTags implements Tags {
    * Sets the tag id.
    */
   private makeId() {
-    // TODO: Test for uniqueness.
     this.currentTag.tagId = this.formatId(
       this.configuration.options['useLabelIds'] ?
         (this.label || this.currentTag.tag) : this.currentTag.tag);
@@ -536,8 +536,6 @@ export interface TagsClass {
 }
 
 
-// TODO: Factory needs functionality to create one Tags object from an existing one
-//       to hand over label values, equation ids etc.
 export namespace TagsFactory {
 
   let tagsMapping = new Map<string, TagsClass>([

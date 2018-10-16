@@ -242,7 +242,7 @@ export class MathMLCompile<N, T, D> {
      *
      * @param {MmlNode} mml      The node to be updated
      * @param {string} texClass  The texClass indicated in the MJX class identifier
-     * @param {boolena} limits   Whether MJX-fixedlimits was found in teh class list
+     * @param {boolena} limits   Whether MJX-fixedlimits was found in the class list
      */
     protected texAtom(mml: MmlNode, texClass: string, limits: boolean) {
         mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
