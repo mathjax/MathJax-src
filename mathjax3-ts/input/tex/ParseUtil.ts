@@ -227,7 +227,6 @@ namespace ParseUtil {
    * @param {number|string=} level The scriptlevel.
    * @return {MmlNode[]} The nodes corresponding to the internal math expression.
    */
-  // TODO: Write tests!
   export function internalMath(parser: TexParser, text: string,
                                level?: number|string): MmlNode[] {
     let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
@@ -238,58 +237,64 @@ namespace ParseUtil {
         if (c === '$') {
           if (match === '$' && braces === 0) {
             // @test Interspersed Text
-            node = parser.create('node', 'TeXAtom',
-                                         [(new TexParser(text.slice(k, i - 1), {}, parser.configuration)).mml()]);
+            node = parser.create(
+              'node', 'TeXAtom',
+              [(new TexParser(text.slice(k, i - 1), {}, parser.configuration)).mml()]);
             mml.push(node);
             match = '';
             k = i;
           } else if (match === '') {
             // @test Interspersed Text
             if (k < i - 1) {
+              // @test Interspersed Text
               mml.push(internalText(parser, text.slice(k, i - 1), def));
             }
             match = '$';
             k = i;
           }
         } else if (c === '{' && match !== '') {
-          // TODO: write test: a\mbox{ b $a\mbox{ b c } c$ c } c
+          // @test Mbox Mbox, Mbox Math
           braces++;
         } else if (c === '}') {
+          // @test Mbox Mbox, Mbox Math
           if (match === '}' && braces === 0) {
-            // TODO: test a\mbox{ \eqref{1} } c
+            // @test Mbox Eqref, Mbox Math
             let atom = (new TexParser(text.slice(k, i), {}, parser.configuration)).mml();
             node = parser.create('node', 'TeXAtom', [atom], def);
             mml.push(node);
             match = '';
             k = i;
           } else if (match !== '') {
-            // TODO: test: a\mbox{ ${ab}$ } c
+            // @test Mbox Math, Mbox Mbox
             if (braces) {
-              // TODO: test: a\mbox{ ${ab}$ } c
+              // @test Mbox Math, Mbox Mbox
               braces--;
             }
           }
         } else if (c === '\\') {
-          // TODO: test a\mbox{aa \\ bb} c
+          // @test Mbox Eqref, Mbox CR
           if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
-            // TODO: test a\mbox{ \eqref{1} } c
-            // (check once eqref is implemented)
+            // @test Mbox Eqref
             let len = ((RegExp as any)['$&'] as string).length;
             if (k < i - 1) {
-              // TODO: test a\mbox{ \eqref{1} } c
+              // @test Mbox Eqref
               mml.push(internalText(parser, text.slice(k, i - 1), def));
             }
             match = '}';
             k = i - 1;
             i += len;
           } else {
+            // @test Mbox CR, Mbox Mbox
             c = text.charAt(i++);
             if (c === '(' && match === '') {
+              // @test Mbox Internal Display
               if (k < i - 2) {
+                // @test Mbox Internal Display
                 mml.push(internalText(parser, text.slice(k, i - 2), def));
               }
               match = ')'; k = i;
             } else if (c === ')' && match === ')' && braces === 0) {
+              // @test Mbox Internal Display
               node = parser.create(
                 'node', 'TeXAtom',
                 [(new TexParser(text.slice(k, i - 2), {}, parser.configuration)).mml()]);
@@ -297,7 +302,7 @@ namespace ParseUtil {
               match = '';
               k = i;
             } else if (c.match(/[${}\\]/) && match === '')  {
-              // TODO: test  a\mbox{aa \\ bb} c
+              // @test Mbox CR
               i--;
               text = text.substr(0, i - 1) + text.substr(i); // remove \ from \$, \{, \}, or \\
             }
@@ -305,11 +310,12 @@ namespace ParseUtil {
         }
       }
       if (match !== '') {
-        // TODO: test a\mbox{$}} c
+        // @test Internal Math Error
         throw new TexError('MathNotTerminated', 'Math not terminated in text box');
       }
     }
     if (k < text.length) {
+      // @test Interspersed Text, Mbox Mbox
       mml.push(internalText(parser, text.slice(k), def));
     }
     if (level != null) {
