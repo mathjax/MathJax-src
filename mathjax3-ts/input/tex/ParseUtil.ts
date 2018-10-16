@@ -456,7 +456,7 @@ namespace ParseUtil {
    * @return {string} The filtered value.
    */
   export function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
-    // TODO: Implement this.
+    // TODO: Implement in security package.
     return value;
   };
 

@@ -683,7 +683,6 @@ export class NotItem extends BaseItem {
     return 'not';
   }
 
-  // TODO: There is a lot of recasting that should go away!
   /**
    * @override
    */

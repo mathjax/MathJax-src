@@ -626,7 +626,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
     NodeUtil.setProperties(mo, {'movablelimits': false});
   }
   const muoNode = parser.create('node', 'munderover');
-  // TODO: This is necessary to get the empty element into the children.
+  // This is necessary to get the empty element into the children.
   NodeUtil.setChild(muoNode, 0, c);
   NodeUtil.setChild(muoNode, 1, null);
   NodeUtil.setChild(muoNode, 2, mml);
@@ -1013,7 +1013,7 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   const top = parser.ParseUpTo(name, '\\over');
   const bot = parser.ParseArg(name);
   const node = parser.create('node', 'munderover');
-  // TODO: This is necessary to get the empty element into the children.
+  // This is necessary to get the empty element into the children.
   NodeUtil.setChild(node, 0, bot);
   NodeUtil.setChild(node, 1, null);
   NodeUtil.setChild(node, 2, top);
