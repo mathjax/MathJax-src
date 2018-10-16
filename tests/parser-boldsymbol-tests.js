@@ -395,3 +395,6 @@ parserTest.runTest(
               "text": "q"}]}],
       "isInferred": true}]}
 );
+
+
+parserTest.printTime();

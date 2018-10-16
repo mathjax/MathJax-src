@@ -22,10 +22,10 @@
  */
 
 import {CHTML} from '../chtml.js';
-import {AbstractWrapperFactory} from '../../core/Tree/WrapperFactory.js';
+import {CommonWrapper} from '../common/Wrapper.js';
+import {CommonWrapperFactory} from '../common/WrapperFactory.js';
 import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
 import {CHTMLWrappers} from './Wrappers.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -35,7 +35,8 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLWrapperFactory<N, T, D> extends AbstractWrapperFactory<MmlNode, CHTMLWrapper<N, T, D>, CHTMLWrapperClass> {
+export class CHTMLWrapperFactory<N, T, D> extends
+CommonWrapperFactory<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>> {
 
     /**
      * The default list of wrapper nodes this factory can create
@@ -45,13 +46,6 @@ export class CHTMLWrapperFactory<N, T, D> extends AbstractWrapperFactory<MmlNode
     /**
      * The CHTML output jax associated with this factory
      */
-    public chtml: CHTML<N, T, D> = null;
-
-    /**
-     * @return {object}  The list of node-creation functions
-     */
-    get Wrappers() {
-        return this.node;
-    }
+    public jax: CHTML<N, T, D>;
 
 }
