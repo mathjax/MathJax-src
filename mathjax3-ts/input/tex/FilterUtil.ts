@@ -26,6 +26,7 @@ import {TEXCLASS, MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
 import NodeUtil from './NodeUtil.js';
 import ParseOptions from './ParseOptions.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
+import {Attributes} from '../../core/MmlTree/Attributes.js';
 
 
 namespace FilterUtil {
@@ -66,7 +67,6 @@ namespace FilterUtil {
    * @param {MmlNode} mml The node to clean.
    * @param {ParseOptions} options The parse options.
    */
-  // TODO (DC): Move this maybe into setInheritedAttributes method?
   export let cleanAttributes = function(arg: {data: ParseOptions}) {
     let node = arg.data.root as MmlNode;
     node.walkTree((mml: MmlNode, d: any) => {
@@ -89,42 +89,101 @@ namespace FilterUtil {
   export let combineRelations = function(arg: {data: ParseOptions}) {
     for (let mo of arg.data.getList('mo')) {
       if (mo.getProperty('relationsCombined') || !mo.parent ||
-          (mo.parent && !NodeUtil.isType(mo.parent, 'mrow'))) {
+          (mo.parent && !NodeUtil.isType(mo.parent, 'mrow')) ||
+          NodeUtil.getTexClass(mo) !== TEXCLASS.REL) {
+        // @test Prime, PrimeSup, Named Function
         continue;
       }
       let mml = mo.parent;
-      let m1: MmlNode, m2: MmlNode;
+      let m2: MmlNode;
       let children = mml.childNodes as (MmlNode|TextNode)[];
-      for (let i = 0, m = children.length; i < m; i++) {
-        if (!children[i]) {
+      let next = children.indexOf(mo) + 1;
+      let variantForm = NodeUtil.getProperty(mo, 'variantForm');
+      while (next < children.length && (m2 = children[next]) &&
+             NodeUtil.isType(m2, 'mo') &&
+             NodeUtil.getTexClass(m2) === TEXCLASS.REL) {
+        if (variantForm === NodeUtil.getProperty(m2, 'variantForm') &&
+            _compareExplicit(mo, m2)) {
+          // @test Shift Left, Less Equal,
+          //       Multirel Font X, Multirel Mathvariant X
+          NodeUtil.appendChildren(mo, NodeUtil.getChildren(m2));
+          // This treatment means we might loose some inheritance structure, but
+          // no properties.
+          _copyExplicit(['stretchy', 'rspace'], mo, m2);
+          NodeUtil.setProperties(mo, m2.getAllProperties());
+          children.splice(next, 1);
+          m2.parent = null;
+          m2.setProperty('relationsCombined', true);
+        } else {
+          // @test Preset Rspace Lspace
+          if (mo.attributes.getExplicit('rspace') == null) {
+            // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
+            NodeUtil.setAttribute(mo, 'rspace', '0pt');
+          }
+          if (m2.attributes.getExplicit('lspace') == null) {
+            // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
+            NodeUtil.setAttribute(m2, 'lspace', '0pt');
+          }
           break;
         }
-        while (i + 1 < m && (m1 = children[i]) && (m2 = children[i + 1]) &&
-               NodeUtil.isType(m1, 'mo') && NodeUtil.isType(m2, 'mo') &&
-               NodeUtil.getTexClass(m1) === TEXCLASS.REL &&
-               NodeUtil.getTexClass(m2) === TEXCLASS.REL) {
-          m2.setProperty('relationsCombined', true);
-          if (NodeUtil.getProperty(m1, 'variantForm') ===
-              NodeUtil.getProperty(m2, 'variantForm') &&
-              NodeUtil.getAttribute(m1, 'mathvariant') ===
-              NodeUtil.getAttribute(m2, 'mathvariant')) {
-            // @test Shift Left, Less Equal
-            NodeUtil.appendChildren(m1, NodeUtil.getChildren(m2));
-            children.splice(i + 1, 1);
-            m2.parent = null;
-            m1.attributes.setInherited('form', (m1 as MmlMo).getForms()[0]);
-            m--;
-          } else {
-            // TODO (VS): Find a test.
-            NodeUtil.setAttribute(m1, 'rspace', '0pt');
-            NodeUtil.setAttribute(m2, 'lspace', '0pt');
-            i++;
-          }
-        }
       }
-    }
+      mo.attributes.setInherited('form', (mo as MmlMo).getForms()[0]);
+      }
   };
 
+
+  /**
+   * Copies the specified explicit attributes from node2 to node1.
+   * @param {string[]} attrs List of explicit attribute names.
+   * @param {MmlNode} node1 The goal node.
+   * @param {MmlNode} node2 The source node.
+   */
+  let _copyExplicit = function(attrs: string[],
+                               node1: MmlNode, node2: MmlNode) {
+    let attr1 = node1.attributes;
+    let attr2 = node2.attributes;
+    attrs.forEach(x => {
+      let attr = attr2.getExplicit(x);
+      if (attr != null) {
+        // @test Infix Stretchy Right, Preset Lspace Rspace
+        attr1.set(x, attr);
+      }
+    });
+  };
+
+
+  /**
+   * Compares the explicit attributes of two nodes. Returns true if they
+   * coincide, with the following exceptions:
+   *   - lspace attribute of node1 is ignored.
+   *   - rspace attribute of node2 is ignored.
+   *   - stretchy=false attributes are ignored.
+   * @param {MmlNode} node1 The first node.
+   * @param {MmlNode} node2 Its next sibling.
+   */
+  let _compareExplicit = function(node1: MmlNode, node2: MmlNode) {
+    let filter = (attr: Attributes, space: string): string[] => {
+      let exp = attr.getExplicitNames();
+      return exp.filter(x => {
+        return x !== space &&
+          (x !== 'stretchy' ||
+           attr.getExplicit('stretchy'));
+      });
+    };
+    let attr1 = node1.attributes;
+    let attr2 = node2.attributes;
+    let exp1 = filter(attr1, 'lspace');
+    let exp2 = filter(attr2, 'rspace');
+    if (exp1.length !== exp2.length) {
+      return false;
+    }
+    for (let name of exp1) {
+      if (attr1.getExplicit(name) !== attr2.getExplicit(name)) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   /**
    * Cleans msubsup and munderover elements.
