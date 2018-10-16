@@ -22,7 +22,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonSemantics, CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
 import {BBox} from '../BBox.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
 import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
@@ -35,30 +36,17 @@ import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLsemantics<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLsemantics<N, T, D> extends CommonSemanticsMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlSemantics.prototype.kind;
 
     /**
-     * Only the first child of <semantics> is displayed
-     *
      * @override
      */
     public toCHTML(parent: N) {
         const chtml = this.standardCHTMLnode(parent);
         if (this.childNodes.length) {
             this.childNodes[0].toCHTML(chtml);
-        }
-    }
-
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        if (this.childNodes.length) {
-            const {w, h, d} = this.childNodes[0].getBBox();
-            bbox.w = w;
-            bbox.h = h;
-            bbox.d = d;
         }
     }
 

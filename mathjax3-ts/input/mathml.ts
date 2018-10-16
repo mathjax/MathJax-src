@@ -45,7 +45,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
         forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
         FindMathML: null,        // The FindMathML instance to override the default one
-        MathMLCompile: null,     // The MathMLCompile instnace to override the default one
+        MathMLCompile: null,     // The MathMLCompile instance to override the default one
         DOMParser: null,         // The DOMParser class to override the default one
         /*
          * The function to use to handle a parsing error (throw an error by default)

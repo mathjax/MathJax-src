@@ -21,13 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLmo} from './mo.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMfrac, CommonMfracMixin} from '../../common/Wrappers/mfrac.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {BBox} from '../BBox.js';
-import {StyleList} from '../CssStyles.js';
+import {CHTMLmo} from './mo.js';
+import {StyleList} from '../../common/CssStyles.js';
 import {OptionList} from '../../../util/Options.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -39,7 +37,8 @@ import {DIRECTION} from '../FontData.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmfrac<N, T, D> extends CommonMfracMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlMfrac.prototype.kind;
 
     public static styles: StyleList = {
@@ -124,26 +123,9 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
 
     };
 
-    protected bevel: CHTMLmo<N, T, D> = null;
+    public bevel: CHTMLmo<N, T, D>;
 
     /************************************************/
-
-    /**
-     * @override
-     * @constructor
-     */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
-        super(factory, node, parent);
-        //
-        //  create internal bevel mo element
-        //
-        if (this.node.attributes.get('bevelled')) {
-            const {H} = this.getBevelData(this.isDisplay());
-            const bevel = this.bevel = this.createMo('/');
-            bevel.canStretch(DIRECTION.Vertical);
-            bevel.getStretchedVariant([H], true);
-        }
-    }
 
     /**
      * @override
@@ -162,26 +144,6 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
                 this.makeFraction(display, thickness);
             }
         }
-    }
-
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox) {
-        bbox.empty();
-        const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
-        const display = this.isDisplay();
-        if (bevelled) {
-            this.getBevelledBBox(bbox, display);
-        } else {
-            const thickness = this.length2em(String(linethickness));
-            if (thickness === 0) {
-                this.getAtopBBox(bbox, display);
-            } else {
-                this.getFractionBBox(bbox, display, thickness);
-            }
-        }
-        bbox.clean();
     }
 
     /************************************************/
@@ -235,38 +197,6 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.childNodes[1].toCHTML(den);
     }
 
-    /**
-     * @param {BBox} bbox        The buonding box to modify
-     * @param {boolean} display  True for display-mode fractions
-     * @param {number} t         The thickness of the line
-     */
-    protected getFractionBBox(bbox: BBox, display: boolean, t: number) {
-        const nbox = this.childNodes[0].getBBox();
-        const dbox = this.childNodes[1].getBBox();
-        const tex = this.font.params;
-        const pad = (this.node.getProperty('withDelims') as boolean ? 0 : tex.nulldelimiterspace);
-        const a = tex.axis_height;
-        const {T, u, v} = this.getTUV(display, t);
-        bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, u));
-        bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, v));
-        bbox.w += 2 * pad + .2;
-    }
-
-    /**
-     * @param {boolean} display  True for display-mode fractions
-     * @param {number} t         The thickness of the line
-     * @return {Object}          The expanded rule thickness (T), and baeline offsets
-     *                             for numerator and denomunator (u and v)
-     */
-    protected getTUV(display: boolean, t: number) {
-        const tex = this.font.params;
-        const a = tex.axis_height;
-        const T = (display ? 3.5 : 1.5) * t;
-        return {T: (display ? 3.5 : 1.5) * t,
-                u: (display ? tex.num1 : tex.num2) - a - T,
-                v: (display ? tex.denom1 : tex.denom2) + a - T};
-    }
-
     /************************************************/
 
     /**
@@ -300,48 +230,6 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         this.childNodes[1].toCHTML(den);
     }
 
-    /**
-     * @param {BBox} bbox        The bounding box to modify
-     * @param {boolean} display  True for display-mode fractions
-     */
-    protected getAtopBBox(bbox: BBox, display: boolean) {
-        const tex = this.font.params;
-        const pad = (this.node.getProperty('withDelims') as boolean ? 0 : tex.nulldelimiterspace);
-        const {u, v, nbox, dbox} = this.getUVQ(display);
-        bbox.combine(nbox, 0, u);
-        bbox.combine(dbox, 0, -v);
-        bbox.w += 2 * pad;
-    }
-
-    /**
-     * @param {boolean} display  True for diplay-mode fractions
-     * @return {Object}
-     *    The vertical offsets of the numerator (u), the denominator (v),
-     *    the separation between the two, and the bboxes themselves.
-     */
-    protected getUVQ(display: boolean) {
-        const nbox = this.childNodes[0].getBBox();
-        const dbox = this.childNodes[1].getBBox();
-        const tex = this.font.params;
-        //
-        //  Initial offsets (u, v)
-        //  Minimum separation (p)
-        //  Actual separation with initial positions (q)
-        //
-        let [u, v] = (display ? [tex.num1, tex.denom1] : [tex.num3, tex.denom2]);
-        let p = (display ? 7 : 3) * tex.rule_thickness;
-        let q = (u - nbox.d * nbox.scale) - (dbox.h * dbox.scale - v);
-        //
-        //  If actual separation is less than minimum, move them farther apart
-        //
-        if (q < p) {
-            u += (p - q)/2;
-            v += (p - q)/2;
-            q = p;
-        }
-        return {u, v, q, nbox, dbox};
-    }
-
     /************************************************/
 
     /**
@@ -372,50 +260,4 @@ export class CHTMLmfrac<N, T, D> extends CHTMLWrapper<N, T, D> {
         adaptor.setStyle(this.bevel.chtml, 'marginRight', dx);
     }
 
-    /**
-     * @param {BBox} bbox        The boundng box to modify
-     * @param {boolean} display  True for display-mode fractions
-     */
-    protected getBevelledBBox(bbox: BBox, display: boolean) {
-        const {u, v, delta, nbox, dbox} = this.getBevelData(display);
-        const lbox = this.bevel.getBBox();
-        bbox.combine(nbox, 0, u);
-        bbox.combine(lbox, bbox.w - delta / 2, 0);
-        bbox.combine(dbox, bbox.w - delta / 2, v);
-    }
-
-    /**
-     * @param {boolean} display  True for display-style fractions
-     * @return {Object}          The height (H) of the bevel, horizontal offest (delta)
-     *                             vertical offsets (u and v) of the parts, and
-     *                             bounding boxes of the parts.
-     */
-    protected getBevelData(display: boolean) {
-        const nbox = this.childNodes[0].getBBox();
-        const dbox = this.childNodes[1].getBBox();
-        const delta = (display ? .4 : .15);
-        const H = Math.max(nbox.scale * (nbox.h + nbox.d), dbox.scale * (dbox.h + dbox.d)) + 2 * delta;
-        const a = this.font.params.axis_height;
-        const u = nbox.scale * (nbox.d - nbox.h) / 2 + a + delta;
-        const v = dbox.scale * (dbox.d - dbox.h) / 2 + a - delta;
-        return {H, delta, u, v, nbox, dbox};
-    }
-
-
-    /************************************************/
-
-    /**
-     * @override
-     */
-    public canStretch(direction: DIRECTION) {
-        return false;
-    }
-
-    /**
-     * @return {boolean}   True if in display mode, false otherwise
-     */
-    protected isDisplay() {
-        const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');
-        return displaystyle && scriptlevel === 0;
-    }
 }

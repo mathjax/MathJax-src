@@ -456,11 +456,11 @@ const loaded: {[name: string]: boolean} = {};
 /**
  * Used by entity files to add more entities to the table
  *
- * @param {EntityList} entities  The entities to add
+ * @param {EntityList} additions The entities to add
  * @param {string} file          The name of the file that they came from
  */
-export function add(entities: EntityList, file: string) {
-    Object.assign(entities, entities);
+export function add(additions: EntityList, file: string) {
+    Object.assign(entities, additions);
    loaded[file] = true;
 }
 

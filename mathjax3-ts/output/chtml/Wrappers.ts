@@ -21,6 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {WrapperConstructor} from '../common/Wrapper.js';
 import {CHTMLWrapper} from './Wrapper.js';
 import {CHTMLmath} from './Wrappers/math.js';
 import {CHTMLmi} from './Wrappers/mi.js';
@@ -47,7 +48,7 @@ import {CHTMLsemantics, CHTMLannotation, CHTMLannotationXML, CHTMLxml} from './W
 import {CHTMLTeXAtom} from './Wrappers/TeXAtom.js';
 import {CHTMLTextNode} from './Wrappers/TextNode.js';
 
-export const CHTMLWrappers: {[kind: string]: typeof CHTMLWrapper}  = {
+export const CHTMLWrappers: {[kind: string]: WrapperConstructor}  = {
     [CHTMLmath.kind]: CHTMLmath,
     [CHTMLmrow.kind]: CHTMLmrow,
     [CHTMLinferredMrow.kind]: CHTMLinferredMrow,
