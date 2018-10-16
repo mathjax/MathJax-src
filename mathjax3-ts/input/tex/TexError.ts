@@ -23,7 +23,6 @@
  */
 
 
-// TODO: Should extend Error. This only works when transpiling to ES6.
 export default class TexError {
 
   private static pattern =

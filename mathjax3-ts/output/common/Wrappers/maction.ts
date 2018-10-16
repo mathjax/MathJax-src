@@ -1,0 +1,156 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2018 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements the CommonMaction wrapper mixin for the MmlMaction object
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
+import {AnyWrapper, WrapperConstructor, Constructor, CommonWrapperClass} from '../Wrapper.js';
+import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
+import {BBox} from '../BBox.js';
+import {Property} from '../../../core/Tree/Node.js';
+
+/*****************************************************************/
+/**
+ * The types needed to define the actiontypes
+ *
+ * @template W  The maction wrapper type
+ */
+export type ActionData = {[name: string]: any};
+export type ActionHandler<W extends AnyWrapper> = (node: W, data?: ActionData) => void;
+export type ActionPair<W extends AnyWrapper> = [ActionHandler<W>, ActionData];
+export type ActionMap<W extends AnyWrapper> = Map<string, ActionPair<W>>;
+export type ActionDef<W extends AnyWrapper> = [string, [ActionHandler<W>, ActionData]];
+
+export type EventHandler = (event: Event) => void;
+
+/**
+ * Data used for tooltip actions
+ */
+export const TooltipData = {
+    postDelay: 600,      // milliseconds before tooltip posts
+    clearDelay: 100,     // milliseconds before tooltip is removed
+
+    hoverTimer: null as number,    // timer for posting tooltips
+    clearTimer: null as number,    // timer for removing tooltips
+
+    /*
+     * clear the timers if any are active
+     */
+    stopTimers: (data: ActionData) => {
+        if (data.clearTimer) {
+            clearTimeout(data.clearTimer);
+            data.clearTimer = null;
+        }
+        if (data.hoverTimer) {
+            clearTimeout(data.hoverTimer);
+            data.hoverTimer = null;
+        }
+    }
+
+};
+
+/*****************************************************************/
+/**
+ * The CommonMaction interface
+ *
+ * @template W  The maction wrapper type
+ */
+export interface CommonMaction<W extends AnyWrapper> extends AnyWrapper {
+    /**
+     * The handler for the specified actiontype
+     */
+    action: ActionHandler<W>;
+    data: ActionData;
+
+    /**
+     * The selected child wrapper
+     */
+    readonly selected: W;
+}
+
+/**
+ * The CommonMaction class interface
+ *
+ * @template W  The maction wrapper type
+ */
+export interface CommonMactionClass<W extends AnyWrapper> extends CommonWrapperClass<any, any, any> {
+    /**
+     * The valid action types and their handlers
+     */
+    actions: ActionMap<W>;
+}
+
+/**
+ * Shorthand for the CommonMaction constructor
+ *
+ * @template W  The maction wrapper type
+ */
+export type MactionConstructor<W extends AnyWrapper> = Constructor<CommonMaction<W>>;
+
+/*****************************************************************/
+/**
+ * The CommonMaction wrapper mixin for the MmlMaction object
+ *
+ * @template W  The maction wrapper type
+ * @template T  The Wrapper class constructor type
+ */
+export function CommonMactionMixin<W extends AnyWrapper,
+                                   T extends WrapperConstructor>(Base: T): MactionConstructor<W> & T {
+    return class extends Base {
+
+        /**
+         * The handler and data for the specified actiontype
+         */
+        public action: ActionHandler<W>;
+        public data: ActionData;
+
+        /**
+         * @return {W}  The selected child wrapper
+         */
+        public get selected(): W {
+            const selection = this.node.attributes.get('selection') as number;
+            const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
+            return this.childNodes[i] || this.wrap((this.node as MmlMaction).selected);
+        }
+
+        /*************************************************************/
+
+        /**
+         * @override
+         */
+        constructor(...args: any[]) {
+            super(...args);
+            const actions = (this.constructor as CommonMactionClass<W>).actions;
+            const action = this.node.attributes.get('actiontype') as string;
+            const [handler, data] = actions.get(action) || [((node, data) => {}) as ActionHandler<W>, {}];
+            this.action = handler;
+            this.data = data;
+        }
+
+        /**
+         * @override
+         */
+        public computeBBox(bbox: BBox) {
+            bbox.updateFrom(this.selected.getBBox());
+        }
+
+    };
+
+}

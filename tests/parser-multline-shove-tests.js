@@ -1416,3 +1416,6 @@ parserTest.runTest(
               "isSpacelike": true}]}],
       "isInferred": true}]}
 );
+
+
+parserTest.printTime();
