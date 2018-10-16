@@ -103,21 +103,48 @@ namespace FilterUtil {
              NodeUtil.getTexClass(m2) === TEXCLASS.REL) {
         if (variantForm === NodeUtil.getProperty(m2, 'variantForm') &&
             _compareExplicit(mo, m2)) {
-            // @test Shift Left, Less Equal,
-            //       Multirel Font X, Multirel Mathvariant X
-            m2.setProperty('relationsCombined', true);
-            NodeUtil.appendChildren(mo, NodeUtil.getChildren(m2));
-            children.splice(next, 1);
-            m2.parent = null;
-          } else {
-            // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
+          // @test Shift Left, Less Equal,
+          //       Multirel Font X, Multirel Mathvariant X
+          NodeUtil.appendChildren(mo, NodeUtil.getChildren(m2));
+          // This treatment means we might loose some inheritance structure, but
+          // no properties.
+          _copyExplicit(['stretchy', 'rspace'], mo, m2);
+          NodeUtil.setProperties(mo, m2.getAllProperties());
+          children.splice(next, 1);
+          m2.parent = null;
+          m2.setProperty('relationsCombined', true);
+        } else {
+          // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
+          if (mo.attributes.getExplicit('rspace') == null) {
             NodeUtil.setAttribute(mo, 'rspace', '0pt');
-            NodeUtil.setAttribute(m2, 'lspace', '0pt');
-            break;
           }
+          if (m2.attributes.getExplicit('lspace') == null) {
+            NodeUtil.setAttribute(m2, 'lspace', '0pt');
+          }
+          break;
+        }
       }
       mo.attributes.setInherited('form', (mo as MmlMo).getForms()[0]);
       }
+  };
+
+
+  /**
+   * Copies the specified explicit attributes from node2 to node1.
+   * @param {string[]} attrs List of explicit attribute names.
+   * @param {MmlNode} node1 The goal node.
+   * @param {MmlNode} node2 The source node.
+   */
+  let _copyExplicit = function(attrs: string[],
+                               node1: MmlNode, node2: MmlNode) {
+    let attr1 = node1.attributes;
+    let attr2 = node2.attributes;
+    attrs.forEach(x => {
+      let attr = attr2.getExplicit(x);
+      if (attr != null) {
+        attr1.set(x, attr);
+      }
+    });
   };
 
 

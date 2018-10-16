@@ -12,7 +12,9 @@ class ParserMultirelTest extends ParserTest {
       sim: ['\u223C', {something: 'nothing'}],
       simeq: ['\u2243', {something: 'nothing'}],
       asymp: ['\u224D', {something: 'else'}],
-      cong: ['\u224D', {anything: 'nothing'}]
+      cong: ['\u224D', {anything: 'nothing'}],
+      lesssim: ['\u2272', {lspace: '1pt'}],
+      gtrsim: ['\u2278', {rspace: '1pt'}]
     });
     Configuration.create('multirel-test', {handler: {macro: ['shadow']}});
     super();
@@ -1378,7 +1380,8 @@ parserTest.runTest(
           "isEmbellished": true},
         {"kind": "mo",
           "texClass": 3,
-          "attributes": {"lspace": "0pt"},
+          "attributes": {"lspace": "0pt",
+                         "stretchy": false},
           "inherited": {"displaystyle": true,
             "scriptlevel": 0,
             "form": "infix"},
@@ -1834,6 +1837,176 @@ parserTest.runTest(
             {"kind": "text",
               "text": "≍"}],
          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Infix Stretchy Right', 'a=\\rightarrow b',
+  {"kind": "math",
+ "texClass": 0,
+ "attributes": {"display": "block"},
+ "inherited": {"displaystyle": true,
+               "scriptlevel": 0},
+ "properties": {},
+ "childNodes": [
+   {"kind": "mrow",
+    "texClass": 0,
+    "attributes": {},
+    "inherited": {"displaystyle": true,
+                  "scriptlevel": 0},
+    "properties": {},
+    "childNodes": [
+      {"kind": "mi",
+       "texClass": 0,
+       "attributes": {},
+       "inherited": {"displaystyle": true,
+                     "scriptlevel": 0,
+                     "mathvariant": "italic"},
+       "properties": {},
+       "childNodes": [
+         {"kind": "text",
+          "text": "a"}]},
+      {"kind": "mo",
+       "texClass": 3,
+       "attributes": {"stretchy": false},
+       "inherited": {"displaystyle": true,
+                     "scriptlevel": 0,
+                     "form": "infix"},
+       "properties": {},
+          "childNodes": [
+            {"kind": "text",
+             "text": "="},
+            {"kind": "text",
+              "text": "→"}
+            ],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Preset Lspace Rspace', 'a\\lesssim\\gtrsim b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"lspace": "1pt",
+                        "rspace": "1pt"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "≲"},
+            {"kind": "text",
+              "text": "≸"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Preset Rspace Lspace', 'a\\gtrsim\\lesssim b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"rspace": "1pt"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "≸"}],
+         "isEmbellished": true},
+        {"kind": "mo",
+         "texClass": 3,
+          "attributes": {"lspace": "1pt"},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "form": "infix"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "≲"}],
+          "isEmbellished": true},
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
