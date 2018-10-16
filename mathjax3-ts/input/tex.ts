@@ -76,17 +76,32 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   protected findTeX: FindTeX<N, T, D>;
 
-  private configuration: Configuration;
-  private parseOptions: ParseOptions;
-  private latex: string;
-  private mathNode: MmlNode;
+  /**
+   * The configuration of the TeX jax.
+   * @type {Configuration}
+   */
+  protected configuration: Configuration;
+
+  /**
+   * The LaTeX code that is parsed.
+   * @type {string}
+   */
+  protected latex: string;
+
+  /**
+   * The Math node that results from parsing.
+   * @type {MmlNode}
+   */
+  protected mathNode: MmlNode;
+
+  private _parseOptions: ParseOptions;
 
   /**
    * Initialises the configurations.
    * @param {string[]} packages Names of packages.
    * @return {Configuration} The configuration object.
    */
-  private static configure(packages: string[]): Configuration {
+  protected static configure(packages: string[]): Configuration {
     let configuration = Configuration.empty();
     // Combine package configurations
     for (let key of packages) {
@@ -100,19 +115,19 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   }
 
 
-
   /**
    * Initialises the Tags factory. Add tagging structures from packages and set
    * tagging to given default.
    * @param {ParseOptions} options The parse options.
    * @param {Configuration} configuration The configuration.
    */
-  private static tags(options: ParseOptions, configuration: Configuration) {
+  protected static tags(options: ParseOptions, configuration: Configuration) {
     TagsFactory.addTags(configuration.tags);
     TagsFactory.setDefault(options.options.tags);
     options.tags = TagsFactory.getDefault();
     options.tags.configuration = options;
   }
+
 
   /**
    * @override
@@ -124,9 +139,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
                                         [TeX.OPTIONS, TagsFactory.OPTIONS, {'packages': packages}]);
     let [tex, find, rest] = separateOptions(options, FindTeX.OPTIONS, parseOptions.options);
     super(tex);
-    userOptions(parseOptions.options, options);
+    userOptions(parseOptions.options, rest);
     TeX.tags(parseOptions, configuration);
-    this.parseOptions = parseOptions;
+    this._parseOptions = parseOptions;
     this.configuration = configuration;
     for (let pre of configuration.preprocessors) {
       typeof pre === 'function' ? this.preFilters.add(pre) :
@@ -145,6 +160,14 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
 
   /**
+   * @return {ParseOptions} The parse options that configure this JaX instance.
+   */
+  public get parseOptions(): ParseOptions {
+    return this._parseOptions;
+  }
+
+
+  /**
    * @override
    */
   public compile(math: MathItem<N, T, D>): MmlNode {
@@ -152,8 +175,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     let node: MmlNode;
     let parser: TexParser;
     let display = math.display;
-    this.latex = math.math;
     this.executeFilters(this.preFilters, math, this.parseOptions);
+    this.latex = math.math;
     try {
       parser = new TexParser(this.latex,
                              {display: display, isInner: false},
@@ -166,11 +189,11 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       this.parseOptions.error = true;
       node = this.formatError(err);
     }
-    this.mathNode = this.parseOptions.nodeFactory.create('node', 'math', [node]);
-    this.parseOptions.root = this.mathNode;
+    node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
     if (display) {
-      NodeUtil.setAttribute(this.mathNode, 'display', 'block');
+      NodeUtil.setAttribute(node, 'display', 'block');
     }
+    this.parseOptions.root = node;
     this.executeFilters(this.postFilters, math, this.parseOptions);
     if (this.parseOptions.error) {
       this.parseOptions.root.setInheritedAttributes({}, display, 0, false);
@@ -193,7 +216,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {TeXError} err The TexError.
    * @return {Node} The merror node.
    */
-  private formatError(err: TexError): MmlNode {
+  protected formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
     return this.parseOptions.nodeFactory.create('error', message);
   };
