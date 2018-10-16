@@ -294,7 +294,9 @@ export abstract class AbstractNode implements Node {
     public walkTree(func: (node: Node, data?: any) => void, data?: any) {
         func(this, data);
         for (const child of this.childNodes) {
+          if (child) {
             child.walkTree(func, data);
+          }
         }
         return data;
     }

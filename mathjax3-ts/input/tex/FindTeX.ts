@@ -59,10 +59,8 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
 
         processEscapes: true,      // set to true to allow \$ to produce a dollar without
                                    //   starting in-line math mode
-
         processEnvironments: true, // set to true to process \begin{xxx}...\end{xxx} outside
                                    //   of math mode, false to prevent that
-
         processRefs: true,         // set to true to process \ref{...} outside of math mode
     };
 

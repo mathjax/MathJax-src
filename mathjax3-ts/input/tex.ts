@@ -22,58 +22,203 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {LegacyTeX} from '../../mathjax2/input/TeX.js';
-import {separateOptions, OptionList} from '../util/Options.js';
+import {defaultOptions, userOptions, separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
+import {MmlNode} from '../core/MmlTree/MmlNode.js';
 
 import {FindTeX} from './tex/FindTeX.js';
+
+import FilterUtil from './tex/FilterUtil.js';
+import NodeUtil from './tex/NodeUtil.js';
+import TexParser from './tex/TexParser.js';
+import TexError from './tex/TexError.js';
+import ParseOptions from './tex/ParseOptions.js';
+import {TagsFactory} from './tex/Tags.js';
+import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
+// Import base as it is the default package loaded.
+import './tex/base/BaseConfiguration.js';
+
 
 /*****************************************************************/
 /*
  *  Implements the TeX class (extends AbstractInputJax)
  */
 
-/*
+/**
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
 export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
-    public static NAME: string = 'TeX';
-    public static OPTIONS: OptionList = {
-        ...AbstractInputJax.OPTIONS,
-        FindTeX: null
-    };
+  /**
+   * Name of input jax.
+   * @type {string}
+   */
+  public static NAME: string = 'TeX';
 
-    /*
-     * The FindTeX instance used for locating TeX in strings
-     */
-    protected findTeX: FindTeX<N, T, D>;
+  /**
+   * Default options for the jax.
+   * @type {OptionList}
+   */
+  public static OPTIONS: OptionList = {
+    ...AbstractInputJax.OPTIONS,
+    FindTeX: null,
+    packages: ['base'],
+    // Digit pattern to match numbers.
+    digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    // Maximum size of TeX string to process.
+    maxBuffer: 5 * 1024
+  };
 
-    /*
-     * @override
-     */
-    constructor(options: OptionList) {
-        let [tex, find] = separateOptions(options, FindTeX.OPTIONS);
-        super(tex);
-        this.findTeX = this.options['FindTeX'] || new FindTeX(find);
+  /**
+   * The FindTeX instance used for locating TeX in strings
+   */
+  protected findTeX: FindTeX<N, T, D>;
+
+  /**
+   * The configuration of the TeX jax.
+   * @type {Configuration}
+   */
+  protected configuration: Configuration;
+
+  /**
+   * The LaTeX code that is parsed.
+   * @type {string}
+   */
+  protected latex: string;
+
+  /**
+   * The Math node that results from parsing.
+   * @type {MmlNode}
+   */
+  protected mathNode: MmlNode;
+
+  private _parseOptions: ParseOptions;
+
+  /**
+   * Initialises the configurations.
+   * @param {string[]} packages Names of packages.
+   * @return {Configuration} The configuration object.
+   */
+  protected static configure(packages: string[]): Configuration {
+    let configuration = Configuration.empty();
+    // Combine package configurations
+    for (let key of packages) {
+      let conf = ConfigurationHandler.get(key);
+      if (conf) {
+        configuration.append(conf);
+      }
     }
+    configuration.append(Configuration.extension());
+    return configuration;
+  }
 
-    /*
-     * Use the legacy TeX input jax for now
-     *
-     * @override
-     */
-    public compile(math: MathItem<N, T, D>) {
-        return LegacyTeX.Compile(math.math, math.display);
-    }
 
-    /*
-     * @override
-     */
-    public findMath(strings: string[]) {
-        return this.findTeX.findMath(strings);
+  /**
+   * Initialises the Tags factory. Add tagging structures from packages and set
+   * tagging to given default.
+   * @param {ParseOptions} options The parse options.
+   * @param {Configuration} configuration The configuration.
+   */
+  protected static tags(options: ParseOptions, configuration: Configuration) {
+    TagsFactory.addTags(configuration.tags);
+    TagsFactory.setDefault(options.options.tags);
+    options.tags = TagsFactory.getDefault();
+    options.tags.configuration = options;
+  }
+
+
+  /**
+   * @override
+   */
+  constructor(options: OptionList = {}) {
+    let packages = options['packages'] || TeX.OPTIONS['packages'];
+    let configuration = TeX.configure(packages);
+    let parseOptions = new ParseOptions(configuration,
+                                        [TeX.OPTIONS, TagsFactory.OPTIONS, {'packages': packages}]);
+    let [tex, find, rest] = separateOptions(options, FindTeX.OPTIONS, parseOptions.options);
+    super(tex);
+    userOptions(parseOptions.options, rest);
+    TeX.tags(parseOptions, configuration);
+    this._parseOptions = parseOptions;
+    this.configuration = configuration;
+    for (let pre of configuration.preprocessors) {
+      typeof pre === 'function' ? this.preFilters.add(pre) :
+        this.preFilters.add(pre[0], pre[1]);
     }
+    for (let post of configuration.postprocessors) {
+      typeof post === 'function' ? this.postFilters.add(post) :
+        this.postFilters.add(post[0], post[1]);
+    }
+    this.postFilters.add(FilterUtil.cleanSubSup, -4);
+    this.postFilters.add(FilterUtil.cleanStretchy, -3);
+    this.postFilters.add(FilterUtil.cleanAttributes, -2);
+    this.postFilters.add(FilterUtil.combineRelations, -1);
+    this.findTeX = this.parseOptions.options['FindTeX'] || new FindTeX(find);
+  }
+
+
+  /**
+   * @return {ParseOptions} The parse options that configure this JaX instance.
+   */
+  public get parseOptions(): ParseOptions {
+    return this._parseOptions;
+  }
+
+
+  /**
+   * @override
+   */
+  public compile(math: MathItem<N, T, D>): MmlNode {
+    this.parseOptions.clear();
+    let node: MmlNode;
+    let parser: TexParser;
+    let display = math.display;
+    this.executeFilters(this.preFilters, math, this.parseOptions);
+    this.latex = math.math;
+    try {
+      parser = new TexParser(this.latex,
+                             {display: display, isInner: false},
+                             this.parseOptions);
+      node = parser.mml();
+    } catch (err) {
+      if (!(err instanceof TexError)) {
+        throw err;
+      }
+      this.parseOptions.error = true;
+      node = this.formatError(err);
+    }
+    node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
+    if (display) {
+      NodeUtil.setAttribute(node, 'display', 'block');
+    }
+    this.parseOptions.root = node;
+    this.executeFilters(this.postFilters, math, this.parseOptions);
+    if (this.parseOptions.error) {
+      this.parseOptions.root.setInheritedAttributes({}, display, 0, false);
+    }
+    this.mathNode = this.parseOptions.root;
+    return this.mathNode;
+  };
+
+
+  /**
+   * @override
+   */
+  public findMath(strings: string[]) {
+    return this.findTeX.findMath(strings);
+  }
+
+
+  /**
+   * Wraps an error into a node for output.
+   * @param {TeXError} err The TexError.
+   * @return {Node} The merror node.
+   */
+  protected formatError(err: TexError): MmlNode {
+    let message = err.message.replace(/\n.*/, '');
+    return this.parseOptions.nodeFactory.create('error', message);
+  };
 
 }
