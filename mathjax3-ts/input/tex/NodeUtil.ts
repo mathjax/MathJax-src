@@ -78,7 +78,7 @@ namespace NodeUtil {
 
 
   /**
-   * Applend children to a node.
+   * Append children to a node.
    * @param {MmlNode} node The node.
    * @param {(MmlNode|TextNode)[]} children A list of new children.
    */
