@@ -3348,12 +3348,11 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "mo",
          "texClass": 1,
-         "attributes": {"movablelimits": true,
-                        "form": "prefix"},
+         "attributes": {"movablelimits": true},
          "inherited": {
            "displaystyle": true,
            "scriptlevel": 0,
-           "form": "infix"},
+           "form": "prefix"},
          "properties": {"movesupsub": true,
                         "movablelimits": true},
          "childNodes": [

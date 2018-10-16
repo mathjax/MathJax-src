@@ -460,6 +460,7 @@ export class BeginItem extends BaseItem {
                            this.getName(), item.getName());
       }
       if (!this.getProperty('end')) {
+        // @test Hfill
         return [[this.factory.create('mml', this.toMml())], true];
       }
       return BaseItem.fail;  // TODO: This case could probably go!

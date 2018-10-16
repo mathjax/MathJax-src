@@ -91,6 +91,7 @@ namespace FilterUtil {
       if (mo.getProperty('relationsCombined') || !mo.parent ||
           (mo.parent && !NodeUtil.isType(mo.parent, 'mrow')) ||
           NodeUtil.getTexClass(mo) !== TEXCLASS.REL) {
+        // @test Prime, PrimeSup, Named Function
         continue;
       }
       let mml = mo.parent;
@@ -114,11 +115,13 @@ namespace FilterUtil {
           m2.parent = null;
           m2.setProperty('relationsCombined', true);
         } else {
-          // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
+          // @test Preset Rspace Lspace
           if (mo.attributes.getExplicit('rspace') == null) {
+            // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
             NodeUtil.setAttribute(mo, 'rspace', '0pt');
           }
           if (m2.attributes.getExplicit('lspace') == null) {
+            // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
             NodeUtil.setAttribute(m2, 'lspace', '0pt');
           }
           break;
@@ -142,6 +145,7 @@ namespace FilterUtil {
     attrs.forEach(x => {
       let attr = attr2.getExplicit(x);
       if (attr != null) {
+        // @test Infix Stretchy Right, Preset Lspace Rspace
         attr1.set(x, attr);
       }
     });
