@@ -106,7 +106,7 @@ export function copy(def: OptionList): OptionList {
  *
  * @param {OptionList} dst  The option list to merge into
  * @param {OptionList} src  The options to be merged
- * @param {boolean} warn    True if a warning shoudl be issued for a src option that isn't already in dst
+ * @param {boolean} warn    True if a warning should be issued for a src option that isn't already in dst
  * @return {OptionList}     The modified destination option list (dst)
  */
 export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
@@ -115,7 +115,7 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
             if (typeof key === 'symbol') {
                 key = key.toString();
             }
-            throw new Error("Invalid option '" + key + "' (no default value).");
+            throw new Error('Invalid option "' + key + '" (no default value).');
         }
         let sval = src[key], dval = dst[key];
         if (isObject(sval) && dval !== null &&

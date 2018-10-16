@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,33 +15,33 @@
  *  limitations under the License.
  */
 
-import {CharMap} from '../../FontData.js';
+import {CharMap, AddCSS} from '../../FontData.js';
+import {texSize3 as font} from '../../../common/fonts/tex/tex-size3.js';
 
-export const texSize3: CharMap = {
-    0x20: [0, 0, .25],
-    0x28: [1.45, .949, .736, {css: 3}],
-    0x29: [1.45, .949, .736, {css: 3}],
-    0x2F: [1.45, .949, 1.044, {css: 3}],
-    0x5B: [1.45, .949, .528, {css: 3}],
-    0x5C: [1.45, .949, 1.044, {css: 3}],
-    0x5D: [1.45, .949, .528, {css: 3}],
-    0x7B: [1.45, .949, .75, {css: 3}],
-    0x7D: [1.45, .949, .75, {css: 3}],
-    0xA0: [0, 0, .25],
-    0x2C6: [.772, -0.564, 1.444, {css: 3}],
-    0x2DC: [.749, -0.61, 1.444, {css: 3}],
-    0x302: [.772, -0.564, 0, {css: 2}],
-    0x303: [.749, -0.61, 0, {css: 2}],
-    0x2044: [1.45, .949, 1.044, {css: 3}],
-    0x221A: [1.45, .95, 1, {css: 3}],
-    0x2308: [1.45, .949, .583, {css: 3}],
-    0x2309: [1.45, .949, .583, {css: 3}],
-    0x230A: [1.45, .949, .583, {css: 3}],
-    0x230B: [1.45, .949, .583, {css: 3}],
-    0x2329: [1.45, .95, .75, {css: 3}],
-    0x232A: [1.45, .949, .75, {css: 3}],
-    0x27E8: [1.45, .95, .75, {css: 3}],
-    0x27E9: [1.45, .949, .75, {css: 3}],
-    0x3008: [1.45, .95, .75, {css: 3}],
-    0x3009: [1.45, .949, .75, {css: 3}],
-};
+export const texSize3: CharMap = AddCSS(font, {
+    0x28: 3,
+    0x29: 3,
+    0x2F: 3,
+    0x5B: 3,
+    0x5C: 3,
+    0x5D: 3,
+    0x7B: 3,
+    0x7D: 3,
+    0x2C6: 3,
+    0x2DC: 3,
+    0x302: 2,
+    0x303: 2,
+    0x2044: 3,
+    0x221A: 3,
+    0x2308: 3,
+    0x2309: 3,
+    0x230A: 3,
+    0x230B: 3,
+    0x2329: 3,
+    0x232A: 3,
+    0x27E8: 3,
+    0x27E9: 3,
+    0x3008: 3,
+    0x3009: 3,
+},{
+});

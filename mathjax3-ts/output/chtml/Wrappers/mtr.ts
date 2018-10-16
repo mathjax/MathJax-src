@@ -22,15 +22,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
+import {CommonMtr, CommonMtrMixin} from '../../common/Wrappers/mtr.js';
+import {CommonMlabeledtr, CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
 import {CHTMLmtable} from './mtable.js';
 import {CHTMLmtd} from './mtd.js';
-import {BBox} from '../BBox.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../CssStyles.js';
-import {DIRECTION} from '../FontData.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -40,7 +38,8 @@ import {DIRECTION} from '../FontData.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmtr<N, T, D> extends CommonMtrMixin<CHTMLmtd<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+
     public static kind = MmlMtr.prototype.kind;
 
     public static styles: StyleList = {
@@ -65,42 +64,6 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
     };
 
     /**
-     * @return {number}   The number of mtd's in the mtr
-     */
-    get numCells() {
-        return this.childNodes.length;
-    }
-
-    /**
-     * @return {boolean}   True if this is a labeled row
-     */
-    get labeled() {
-        return false;
-    }
-
-    /**
-     * @return {CHTMLmtd[]}  The child nodes that are part of the table (no label node)
-     */
-    get tableCells() {
-        return this.childNodes as CHTMLmtd<N, T, D>[];
-    }
-
-    /**
-     * @param {nunber} i   The index of the child to get (skipping labels)
-     * @return {Wrapper}   The ith child node wrapper
-     */
-    public getChild(i: number) {
-        return this.childNodes[i] as CHTMLmtd<N, T, D>;
-    }
-
-    /**
-     * @return {BBox[]}  An array of the bounding boxes for the mtd's in the row
-     */
-    public getChildBBoxes() {
-        return this.childNodes.map(cell => cell.getBBox());
-    }
-
-    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -108,61 +71,6 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
         const align = this.node.attributes.get('rowalign') as string;
         if (align !== 'baseline') {
             this.adaptor.setAttribute(this.chtml, 'rowalign', align);
-        }
-    }
-
-    /**
-     * Handle vertical stretching of cells to match height of
-     *  other cells in the row.
-     *
-     * @param {number[]} HD   The total height and depth for the row [H, D]
-     *
-     * If this isn't specified, the maximum height and depth is computed.
-     */
-    public stretchChildren(HD: number[] = null) {
-        let stretchy: CHTMLWrapper<N, T, D>[] = [];
-        let children = (this.labeled ? this.childNodes.slice(1) : this.childNodes);
-        //
-        //  Locate and count the stretchy children
-        //
-        for (const mtd of children) {
-            const child = mtd.childNodes[0];
-            if (child.canStretch(DIRECTION.Vertical)) {
-                stretchy.push(child);
-            }
-        }
-        let count = stretchy.length;
-        let nodeCount = this.childNodes.length;
-        if (count && nodeCount > 1) {
-            if (HD === null) {
-                let H = 0, D = 0;
-                //
-                //  If all the children are stretchy, find the largest one,
-                //  otherwise, find the height and depth of the non-stretchy
-                //  children.
-                //
-                let all = (count > 1 && count === nodeCount);
-                for (const mtd of children) {
-                    const child = mtd.childNodes[0];
-                    const noStretch = (child.stretch.dir === DIRECTION.None);
-                    if (all || noStretch) {
-                        const {h, d} = child.getBBox(noStretch);
-                        if (h > H) {
-                            H = h;
-                        }
-                        if (d > D) {
-                            D = d;
-                        }
-                    }
-                }
-                HD = [H, D];
-            }
-            //
-            //  Stretch the stretchable children
-            //
-            for (const child of stretchy) {
-                child.coreMO().getStretchedVariant(HD);
-            }
         }
     }
 
@@ -176,7 +84,9 @@ export class CHTMLmtr<N, T, D> extends CHTMLWrapper<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmlabeledtr<N, T, D> extends CHTMLmtr<N, T, D> {
+export class CHTMLmlabeledtr<N, T, D> extends
+CommonMlabeledtrMixin<CHTMLmtd<N, T, D>, Constructor<CHTMLmtr<N, T, D>>>(CHTMLmtr) {
+
     public static kind = MmlMlabeledtr.prototype.kind;
 
     public static styles: StyleList = {
@@ -216,47 +126,6 @@ export class CHTMLmlabeledtr<N, T, D> extends CHTMLmtr<N, T, D> {
             const row = this.html('mjx-mtr', attr, [child]);
             this.adaptor.append((this.parent as CHTMLmtable<N, T, D>).labels, row);
         }
-    }
-
-    /**
-     * @override
-     */
-    get numCells() {
-        //
-        //  Don't include the label mtd
-        //
-        return Math.max(0, this.childNodes.length - 1);
-    }
-
-    /**
-     * @override
-     */
-    get labeled() {
-        return true;
-    }
-
-    /**
-     * @override
-     */
-    get tableCells() {
-        return this.childNodes.slice(1) as CHTMLmtd<N, T, D>[];
-    }
-
-    /**
-     * @override
-     */
-    public getChild(i: number) {
-        return this.childNodes[i + 1] as CHTMLmtd<N, T, D>;
-    }
-
-    /**
-     * @override
-     */
-    public getChildBBoxes() {
-        //
-        //  Don't include the label mtd
-        //
-        return this.childNodes.slice(1).map(cell => cell.getBBox());
     }
 
 }

@@ -85,8 +85,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     /**
      * @override
      */
-    protected create(type: string) {
-        return new LiteElement(type);
+    protected create(kind: string, ns: string = null) {
+        return new LiteElement(kind);
     }
 
     /**
@@ -402,6 +402,9 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         }, "");
     }
 
+    /**
+     * @override
+     */
     public innerHTML(node: LiteElement) {
         return this.parser.serializeInner(this, node);
     }
@@ -416,7 +419,10 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     /**
      * @override
      */
-    public setAttribute(node: LiteElement, name: string, value: string) {
+    public setAttribute(node: LiteElement, name: string, value: string | number) {
+        if (typeof value !== 'string') {
+            value = String(value);
+        }
         node.attributes[name] = value;
         if (name === 'style') {
             node.styles = null;

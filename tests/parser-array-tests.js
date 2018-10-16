@@ -3584,3 +3584,6 @@ parserTest.runTest(
               "isEmbellished": true}]}],
       "isInferred": true}]}
 );
+
+
+parserTest.printTime();

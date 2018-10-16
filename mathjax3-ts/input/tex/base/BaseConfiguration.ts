@@ -136,5 +136,9 @@ export const BaseConfiguration: Configuration = Configuration.create(
     [bitem.EqnArrayItem.prototype.kind]: bitem.EqnArrayItem,
     [bitem.EquationItem.prototype.kind]: bitem.EquationItem
    },
-   options: {maxMacros: 1000},
+   options: {maxMacros: 1000,
+             baseURL: (typeof(document) === 'undefined' ||
+                       document.getElementsByTagName('base').length === 0) ?
+             '' : String(document.location).replace(/#.*$/, '')
+            },
    tags: {base: BaseTags}});
