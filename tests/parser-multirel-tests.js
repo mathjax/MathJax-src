@@ -735,7 +735,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Mulitrel Font 1', 'a <=\\mathrm{>} b',
+  'Multirel Font 1', 'a <=\\mathrm{>} b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -816,7 +816,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Mulitrel Font 2', 'a <=\\mathrm{=>} b',
+  'Multirel Font 2', 'a <=\\mathrm{=>} b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -899,7 +899,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Mulitrel Font 3', 'a <=\\mathrm{=}\\mathrm{>} b',
+  'Multirel Font 3', 'a <=\\mathrm{=}\\mathrm{>} b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1008,7 +1008,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Mulitrel Mathvariant 1', 'a <\\equiv \\mathrm{=>}\\thickapprox b',
+  'Multirel Mathvariant 1', 'a <\\equiv \\mathrm{=>}\\thickapprox b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1102,7 +1102,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Mulitrel Mathvariant 2', 'a <\\equiv \\mathrm{=>}\\thickapprox\\thicksim b',
+  'Multirel Mathvariant 2', 'a <\\equiv \\mathrm{=>}\\thickapprox\\thicksim b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1198,7 +1198,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Mulitrel Mathvariant 3', 'a <\\equiv =>\\thickapprox\\thicksim b',
+  'Multirel Mathvariant 3', 'a <\\equiv =>\\thickapprox\\thicksim b',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -1268,7 +1268,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'Mulitrel Mathvariant 4', 'a <\\equiv \\mathrm{=}\\mathrm{>}' +
+  'Multirel Mathvariant 4', 'a <\\equiv \\mathrm{=}\\mathrm{>}' +
     '\\thickapprox\\thicksim\\frown\\smile=\\updownarrow b',
   {"kind": "math",
    "texClass": 0,
@@ -1486,14 +1486,24 @@ parserTest.runTest(
             "text": "a"}]},
         {"kind": "mo",
          "texClass": 3,
-         "attributes": {},
+         "attributes": {"rspace":"0pt"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
          "properties": {},
           "childNodes": [
             {"kind": "text",
-              "text": "="},
+              "text": "="}],
+         "isEmbellished": true},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "nothing",
+                        "lspace":"0pt"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+          "childNodes": [
             {"kind": "text",
               "text": "∼"}],
           "isEmbellished": true},
@@ -1592,17 +1602,28 @@ parserTest.runTest(
             "text": "a"}]},
         {"kind": "mo",
          "texClass": 3,
-         "attributes": {"something": "nothing"},
+         "attributes": {"something": "nothing",
+                        "rspace":"0pt"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
          "properties": {},
           "childNodes": [
             {"kind": "text",
-              "text": "∼"},
+              "text": "∼"}],
+          "isEmbellished": true},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "else",
+                        "lspace":"0pt"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+          "childNodes": [
             {"kind": "text",
               "text": "≍"}],
-          "isEmbellished": true},
+         "isEmbellished": true},
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
@@ -1645,7 +1666,8 @@ parserTest.runTest(
             "text": "a"}]},
         {"kind": "mo",
          "texClass": 3,
-         "attributes": {"something": "nothing"},
+         "attributes": {"something": "nothing",
+                        "rspace":"0pt"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
@@ -1654,10 +1676,20 @@ parserTest.runTest(
             {"kind": "text",
               "text": "∼"},
             {"kind": "text",
-              "text": "≃"},
+              "text": "≃"}],
+          "isEmbellished": true},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "else",
+                        "lspace":"0pt"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+         "childNodes": [
             {"kind": "text",
               "text": "≍"}],
-          "isEmbellished": true},
+         "isEmbellished": true},
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
@@ -1700,19 +1732,43 @@ parserTest.runTest(
             "text": "a"}]},
         {"kind": "mo",
          "texClass": 3,
-         "attributes": {"something": "nothing"},
+         "attributes": {"something": "nothing",
+                        "rspace":"0pt"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
          "properties": {},
          "childNodes": [
             {"kind": "text",
-              "text": "∼"},
+             "text": "∼"}
+         ],
+         "isEmbellished": true},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "else",
+                        "lspace":"0pt",
+                        "rspace":"0pt"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+         "childNodes": [
             {"kind": "text",
-              "text": "≍"},
+             "text": "≍"}
+         ],
+         "isEmbellished": true},
+                {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"something": "nothing",
+                        "lspace":"0pt"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+         "childNodes": [
             {"kind": "text",
               "text": "≃"}],
-          "isEmbellished": true},
+                 "isEmbellished": true},
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
@@ -1755,17 +1811,29 @@ parserTest.runTest(
             "text": "a"}]},
         {"kind": "mo",
          "texClass": 3,
-         "attributes": {"something": "nothing"},
+         "attributes": {"something": "nothing",
+                        "rspace":"0pt"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
          "properties": {},
           "childNodes": [
             {"kind": "text",
-              "text": "∼"},
+              "text": "∼"}
+            ],
+          "isEmbellished": true},
+        {"kind": "mo",
+         "texClass": 3,
+         "attributes": {"anything": "nothing",
+                        "lspace":"0pt"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "form": "infix"},
+         "properties": {},
+          "childNodes": [
             {"kind": "text",
               "text": "≍"}],
-          "isEmbellished": true},
+         "isEmbellished": true},
         {"kind": "mi",
           "texClass": 0,
           "attributes": {},
