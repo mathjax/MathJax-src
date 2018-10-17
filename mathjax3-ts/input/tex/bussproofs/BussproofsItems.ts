@@ -25,7 +25,7 @@
 
 import TexError from '../TexError.js';
 import {EndItem, BeginItem} from '../base/BaseItems.js';
-import {BaseItem, StackItem} from '../StackItem.js';
+import {BaseItem, CheckType, StackItem} from '../StackItem.js';
 import StackItemFactory from '../StackItemFactory.js';
 import ParseUtil from '../ParseUtil.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
@@ -60,15 +60,15 @@ export class ProofTreeItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem) {
+  public checkItem(item: StackItem): CheckType {
     if (item.isKind('end') && item.getName() === 'prooftree') {
-      return [this.toMml(), item];
+      return [[this.factory.create('mml', this.toMml()), item], true];
     }
     if (item.isKind('stop')) {
       throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
     }
     this.innerStack.Push(item);
-    return false;
+    return BaseItem.fail;
   }
 
 
@@ -83,7 +83,6 @@ export class ProofTreeItem extends BaseItem {
     }
     this.innerStack.Push(this.factory.create('stop'));
     let prefix = this.innerStack.Top().toMml();
-    return this.factory.configuration.nodeFactory.create(
-        'node', 'mrow', [prefix, tree], {});
+    return this.create('node', 'mrow', [prefix, tree], {});
   }
 }
