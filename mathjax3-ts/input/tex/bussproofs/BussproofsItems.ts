@@ -62,7 +62,9 @@ export class ProofTreeItem extends BaseItem {
    */
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('end') && item.getName() === 'prooftree') {
-      return [[this.factory.create('mml', this.toMml()), item], true];
+      let node = this.toMml();
+      node.setProperty('proof', true);
+      return [[this.factory.create('mml', node), item], true];
     }
     if (item.isKind('stop')) {
       throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());

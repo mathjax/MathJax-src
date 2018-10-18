@@ -24,6 +24,7 @@
 
 import {Configuration} from '../Configuration.js';
 import {ProofTreeItem} from './BussproofsItems.js';
+import {balanceRules} from './BussproofsUtil.js';
 import './BussproofsMappings.js';
 
 
@@ -35,6 +36,7 @@ export const BussproofsConfiguration = Configuration.create(
   },
    items: {
      [ProofTreeItem.prototype.kind]: ProofTreeItem,
-   }
+   },
+   postprocessors: [[balanceRules, 1]]
   }
 );

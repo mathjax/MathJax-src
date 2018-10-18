@@ -32,6 +32,22 @@ import {StackItem} from '../StackItem.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {NodeFactory} from '../NodeFactory.js';
 import NodeUtil from '../NodeUtil.js';
+import {CHTML} from '../../../output/chtml.js';
+import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
+import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
+import {browserAdaptor} from '../../../adaptors/browserAdaptor.js';
+
+
+// export class Dummy<N, T, D> extends CHTMLOutputJax<N, T, D, CHTMLWrapper<any, any, any>, CHTMLWrapperFactory<any, any, any>> {
+//   public static OPTIONS = {};
+  
+//   public escaped(item: any, document?: any): N {
+//     return null;
+//   }
+
+//   public processMath() {}
+// }
+
 
 // Namespace
 let BussproofsMethods: Record<string, ParseMethod> = {};
@@ -74,8 +90,7 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   let children: MmlNode[] = [];
   do {
     if (children.length) {
-      let space = parser.create('node', 'mspace', [], {'width': '.5em'});
-      children.unshift(parser.create('node', 'mtd', [space], {}));
+      children.unshift(parser.create('node', 'mtd', [], {}));
     }
     children.unshift(
       parser.create('node', 'mtd', [top.Pop()],
@@ -98,6 +113,8 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
                style, rootAtTop);
   top.setProperty('left', null);
   top.setProperty('right', null);
+  rule.setProperty('inference', Math.round(children.length / 2));
+  parser.configuration.addNode('inference', rule);
   top.Push(rule);
 };
 
