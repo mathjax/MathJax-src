@@ -135,7 +135,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             const stretchy = (this.stretch.dir !== DIRECTION.None);
             if (stretchy && this.size === null) {
                 this.getStretchedVariant([0]);

@@ -83,6 +83,10 @@ export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): Mpadd
             if (values.depth !== '')   d = this.dimen(values.depth, bbox, 'd', 0);
             if (values.voffset !== '') y = this.dimen(values.voffset, bbox);
             if (values.lspace !== '')  x = this.dimen(values.lspace, bbox);
+            const align = this.node.attributes.get('data-align') as string;
+            if (align) {
+                x += this.getAlignX(w, bbox, align);
+            }
             return [H, D, W, h - H, d - D, w - W, x, y];
         }
 
@@ -114,12 +118,26 @@ export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): Mpadd
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             const [H, D, W, dh, dd, dw, x, y] = this.getDimens();
             bbox.w = W + dw;
             bbox.h = H + dh;
             bbox.d = D + dd;
+            this.setChildPWidths(recompute, bbox.w);
         }
 
+        /**
+         * @override
+         */
+        public getWrapWidth(i: number) {
+            return this.getBBox().w;
+        }
+
+        /**
+         * @override
+         */
+        public getChildAlign(i: number) {
+            return this.node.attributes.get('data-align') as string || 'left';
+        }
     };
 }

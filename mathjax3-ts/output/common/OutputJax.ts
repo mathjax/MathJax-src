@@ -93,6 +93,11 @@ AbstractOutputJax<N, T, D> {
     public container: N;
 
     /**
+     * The pixels per em for the math item being processed
+     */
+    public pxPerEm: number;
+
+    /**
      * The data for the font in use
      */
     public font: FontData;
@@ -191,6 +196,7 @@ AbstractOutputJax<N, T, D> {
     public toDOM(math: MathItem<N, T, D>, node: N, html: MathDocument<N, T, D> = null) {
         this.setDocument(html);
         this.math = math;
+        this.pxPerEm = math.metrics.ex / this.font.params.x_height;
         math.root.setTeXclass(null);
         this.setScale(node);
         this.nodeMap = new Map<MmlNode, W>();

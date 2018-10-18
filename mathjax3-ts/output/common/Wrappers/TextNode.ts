@@ -50,7 +50,7 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
        /**
         * @override
         */
-       public computeBBox(bbox: BBox) {
+       public computeBBox(bbox: BBox, recompute: boolean = false) {
            const variant = this.parent.variant;
            const text = (this.node as TextNode).getText();
            if (variant === '-explicitFont') {

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMspace wrapper mixin for the MmlMspace object
+ * @fileoverview  Implements the CommonMath wrapper mixin for the MmlMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -26,41 +26,37 @@ import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
- * The CommonMspance interface
+ * The CommonMath interface
  */
-export interface CommonMspace extends AnyWrapper {
+export interface CommonMath extends AnyWrapper {
 }
 
 /**
- * Shorthand for the CommonMspace constructor
+ * Shorthand for the CommonMath constructor
  */
-export type MspaceConstructor = Constructor<CommonMspace>;
+export type MathConstructor = Constructor<CommonMath>;
 
 /*****************************************************************/
 /**
- * The CommonMspace wrapper mixin for the MmlMspace object
+ *  The CommonMath wrapper mixin for the MmlMath object
  *
  * @template T  The Wrapper class constructor type
  */
-export function CommonMspaceMixin<T extends WrapperConstructor>(Base: T): MspaceConstructor & T {
+export function CommonMathMixin<T extends WrapperConstructor>(Base: T): MathConstructor & T {
     return class extends Base {
 
         /**
          * @override
          */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
-            const attributes = this.node.attributes;
-            bbox.w = this.length2em(attributes.get('width'), 0);
-            bbox.h = this.length2em(attributes.get('height'), 0);
-            bbox.d = this.length2em(attributes.get('depth'), 0);
+        public setChildPWidths(recompute: boolean, w: number = null, clear: boolean = true) {
+            return (this.parent ? super.setChildPWidths(recompute, w) : false);
         }
 
         /**
-         * No contents, so no need for variant class
-         *
          * @override
          */
-        public handleVariant() {
+        public getWrapWidth(i: number) {
+            return (this.parent ? this.getBBox().w : this.metrics.containerWidth / this.jax.pxPerEm);
         }
 
     };
