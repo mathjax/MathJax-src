@@ -114,6 +114,7 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   top.setProperty('left', null);
   top.setProperty('right', null);
   rule.setProperty('inference', Math.round(children.length / 2));
+  console.log('HERE');
   parser.configuration.addNode('inference', rule);
   top.Push(rule);
 };
@@ -151,12 +152,14 @@ function createRule(parser: TexParser, premise: MmlNode,
                             {align: 'top 2', rowlines: style, framespacing: '0 0'});
   let leftLabel, rightLabel;
   if (left) {
-    leftLabel = parser.create('node', 'mpadded', [left],
-                               {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+    leftLabel = parser.create(
+      'node', 'mpadded', [left],
+      {height: '+.5em', width: '+.5em', voffset: '-.15em', prooflabel: 'left'});
   }
   if (right) {
-    rightLabel = parser.create('node', 'mpadded', [right],
-                                {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+    rightLabel = parser.create(
+      'node', 'mpadded', [right],
+      {height: '+.5em', width: '+.5em', voffset: '-.15em', prooflabel: 'right'});
   }
   if (left && right) {
     return parser.create('node', 'mrow', [leftLabel, rule, rightLabel], {});
