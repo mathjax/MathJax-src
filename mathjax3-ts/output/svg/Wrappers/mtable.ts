@@ -31,7 +31,7 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {isPercent} from '../../../util/string.js';
 import {OptionList} from '../../../util/Options.js';
 import {StyleList} from '../../common/CssStyles.js';
-
+import {BBox} from '../BBox.js';
 
 const WFUZZ = .25;  // a little padding for min-width
 
@@ -60,6 +60,9 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
             'outline-width': '70px',
             'outline-offset': '-70px',
             fill: 'none'
+        },
+        'g[data-mml-node="mtable"] > svg': {
+            overflow: 'visible'
         }
     }
 
@@ -75,7 +78,11 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      */
     constructor(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent: SVGWrapper<N, T, D> = null) {
         super(factory, node, parent);
-        this.labels = this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)'});
+        const def: OptionList = {'data-labels': true};
+        if (this.isTop) {
+            def.transform = 'matrix(1 0 0 -1 0 0)';
+        }
+        this.labels = this.svg('g', def);
     }
 
     /**
@@ -247,62 +254,35 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
     /******************************************************************/
 
     /**
-     * Force percentage width to fixed width of current container width
-     *
-     * @override
-     */
-    public getColumnWidthsPercent(swidths: string[], width: string) {
-        const W = this.length2em(width, this.metrics.containerWidth / this.metrics.em);
-        return this.getColumnWidthsFixed(swidths, W);
-    }
-
-    /******************************************************************/
-
-
-    /**
      * Handle addition of labels to the table
      *
      * @param {N} svg     The container for the table contents
      * @param {N} parent  The parent containing the the table
      */
     protected handleLabels(svg: N, parent: N) {
+        if (!this.hasLabels) return;
         const labels = this.labels;
         const attributes = this.node.attributes;
         const adaptor = this.adaptor;
-        if (adaptor.childNodes(labels).length === 0) return;
         //
         //  Set the side for the labels
         //
         const side = attributes.get('side') as string;
         //
-        //  Make sure labels don't overlap table
-        //
-        const {L} = this.getTableData();
-        const sep = this.length2em(attributes.get('minlabelspacing'));
-        let pad = L + sep;
-        const [lpad, rpad] = (this.styles == null ? ['', ''] :
-                              [this.styles.get('padding-left'), this.styles.get('padding-right')]);
-        if (lpad || rpad) {
-            pad = Math.max(pad, this.length2em(lpad || '0'), this.length2em(rpad || '0'));
-        }
-        //
-        //  Handle indentation
-        //
-        let [align, shift] = this.getAlignShift();
-        if (align === side) {
-            shift = (side === 'left' ? Math.max(pad, shift) - pad : Math.min(-pad, shift) + pad);
-        }
-        //
         // Add the labels to the table
         //
-        this.placeLabels();
-        this.nestTable(svg, labels, side, align, pad, shift);
+        this.spaceLabels();
+        //
+        // Handle top-level table to make it adapt to container size
+        //   but place subtables explicitly
+        //
+        this.isTop ? this.nestTable(svg, labels, side) : this.subTable(svg, labels, side);
     }
 
     /**
      * Add spacing elements between the label rows to align them with the rest of the table
      */
-    protected placeLabels() {
+    protected spaceLabels() {
         const adaptor = this.adaptor;
         const equal = this.node.attributes.get('equalrows') as boolean;
         const {h, d} = this.getBBox();
@@ -332,28 +312,48 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @param {N} svg         The SVG container for the table
      * @param {N} labels      The group of labels
      * @param {string} side   The side alignment (left or right)
-     * @param {string} align  The table alignment (left, center, right)
-     * @param {number} pad    The padding for the label
-     * @param {number} shift  The shift of the table
      */
-    protected nestTable(svg: N, labels: N, side: string, align: string, pad: number, shift: number) {
+    protected nestTable(svg: N, labels: N, side: string) {
         const adaptor = this.adaptor;
-        const {h, d, w} = this.getBBox();
-        const L = this.getTableData().L;
-        const [x, dw] = (side === align  ? [side === 'left' ? -pad : 0, pad] : [0, 0]);
-        const translate = (shift ? 'translate(' + this.fixed(shift) + ' 0)' : '');
+        const {h, d, w, L, R} = this.getBBox();
+        const LW = this.getTableData().L;
+        const [pad, align, shift] = this.getPadAlignShift(side);
+        const translate = (shift ? ` translate(${this.fixed(shift)} 0)` : '');
+        const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
+        const transform = `translate(0, ${this.fixed(h)}) matrix(1 0 0 -1 0 0) ${scale}`;
         let table = this.svg('svg', {
-            'data-table': true,
+            'data-table': true, transform: transform,
             preserveAspectRatio: (align === 'left' ? 'xMinYMid' : align === 'right' ? 'xMaxYMid' : 'xMidYMid'),
-            viewBox: [this.fixed(x), this.fixed(-h), this.fixed(w + dw), this.fixed(h + d)].join(' ')
-        }, [this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)' + translate}, adaptor.childNodes(svg))]);
+            viewBox: [this.fixed(-L), this.fixed(-h), this.fixed(L + w + R), this.fixed(h + d)].join(' ')
+        }, [
+            this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)' + translate}, adaptor.childNodes(svg))
+        ]);
         labels = this.svg('svg', {
-            'data-labels': true,
+            'data-labels': true, transform: transform,
             preserveAspectRatio: (side === 'left' ? 'xMinYMid' : 'xMaxYMid'),
-            viewBox: [0, this.fixed(-h), this.fixed(L), this.fixed(h + d)].join(' ')
+            viewBox: [0, this.fixed(-h), this.fixed(LW), this.fixed(h + d)].join(' ')
         }, [labels]);
-        this.jax.minwidth = w + pad + (align === 'center' ? pad : 0) + WFUZZ;
         adaptor.append(svg, table)
+        adaptor.append(svg, labels);
+        this.place(-L, 0, svg);  // remove spacing for L, which is added by the parent during appending
+    }
+
+    /**
+     * @param {N} svg         The SVG container for the table
+     * @param {N} labels      The group of labels
+     * @param {string} side   The side alignment (left or right)
+     */
+    protected subTable(svg: N, labels: N, side: string) {
+        const adaptor = this.adaptor;
+        const {h, d, w, L, R} = this.getBBox();
+        const W = L + w + R;
+        const labelW = this.getTableData().L;
+        const [align, shift] = this.getAlignShift();
+        const CW = Math.max(W, this.container.getWrapWidth(this.containerI));
+        this.place(side === 'left' ?
+                   (align === 'left' ? 0 : align === 'right' ? W - CW : (W - CW) / 2) - L :
+                   (align === 'left' ? CW : align === 'right' ? W : (CW + W) / 2) - L - labelW,
+                   0, labels);
         adaptor.append(svg, labels);
     }
 

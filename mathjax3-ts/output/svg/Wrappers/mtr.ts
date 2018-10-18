@@ -55,6 +55,8 @@ export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<N, T, D>, SVGConstruc
 
     public static kind = MmlMtr.prototype.kind;
 
+    public parent: SVGmtable<N, T, D>;
+
     public H: number;       // height of row
     public D: number;       // depth of row
     public tSpace: number;  // space above row

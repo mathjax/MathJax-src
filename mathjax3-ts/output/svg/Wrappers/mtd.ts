@@ -21,7 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper} from '../Wrapper.js';
+import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
+import {CommonMtd, CommonMtdMixin} from '../../common/Wrappers/mtd.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 
 /*****************************************************************/
@@ -32,7 +33,7 @@ import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmtd<N, T, D> extends SVGWrapper<N, T, D> {
+export class SVGmtd<N, T, D> extends CommonMtdMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
 
     public static kind = MmlMtd.prototype.kind;
 
@@ -50,7 +51,7 @@ export class SVGmtd<N, T, D> extends SVGWrapper<N, T, D> {
         const d = Math.max(bbox.d, .25);
         const calign = this.node.attributes.get('columnalign') as string;
         const ralign = this.node.attributes.get('rowalign') as string;
-        const alignX = this.getAlignX(W, bbox.w, calign);
+        const alignX = this.getAlignX(W, bbox, calign);
         const alignY = this.getAlignY(H, D, h, d, ralign);
         this.place(x + alignX, y + alignY);
         return [alignX, alignY];
@@ -72,4 +73,5 @@ export class SVGmtd<N, T, D> extends SVGWrapper<N, T, D> {
             adaptor.setAttribute(child, 'height', this.fixed(H));
         }
     }
+
 }

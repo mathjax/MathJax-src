@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
+import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
+import {CommonMath, CommonMathMixin} from '../../common/Wrappers/math.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -34,7 +34,8 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmath<N, T, D> extends SVGWrapper<N, T, D> {
+export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+
     public static kind = MmlMath.prototype.kind;
 
     public static styles: StyleList = {
@@ -68,6 +69,15 @@ export class SVGmath<N, T, D> extends SVGWrapper<N, T, D> {
         if (display && shift) {
             this.jax.shift = shift;
         }
+    }
+
+    /**
+     * @override
+     */
+    public setChildPWidths(recompute: boolean, w: number = null, clear: boolean = true) {
+        return super.setChildPWidths(recompute,
+                                     this.parent ? w : this.metrics.containerWidth / this.jax.pxPerEm,
+                                     false);
     }
 
 }
