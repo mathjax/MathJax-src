@@ -21,8 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CommonMath, CommonMathMixin} from '../../common/Wrappers/math.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../common/CssStyles.js';
@@ -35,7 +36,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
     public static kind = MmlMath.prototype.kind;
 
     public static styles: StyleList = {
@@ -91,6 +92,13 @@ export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
         if (display && shift && !adaptor.hasAttribute(chtml, 'width')) {
             this.setIndent(chtml, align, shift);
         }
+    }
+
+    /**
+     * @override
+     */
+    public setChildPWidths(recompute: boolean, w: number = null, clear: boolean = true) {
+        return (this.parent ? super.setChildPWidths(recompute, w) : false);
     }
 
 }

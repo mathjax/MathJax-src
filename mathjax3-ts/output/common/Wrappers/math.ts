@@ -48,13 +48,6 @@ export function CommonMathMixin<T extends WrapperConstructor>(Base: T): MathCons
         /**
          * @override
          */
-        public setChildPWidths(recompute: boolean, w: number = null, clear: boolean = true) {
-            return (this.parent ? super.setChildPWidths(recompute, w) : false);
-        }
-
-        /**
-         * @override
-         */
         public getWrapWidth(i: number) {
             return (this.parent ? this.getBBox().w : this.metrics.containerWidth / this.jax.pxPerEm);
         }

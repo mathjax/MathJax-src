@@ -77,7 +77,7 @@ export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): Mpadd
             const values = this.node.attributes.getList('width', 'height', 'depth', 'lspace', 'voffset');
             const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
             let {w, h, d} = bbox;
-            let W = w, H = h, D = d, x = 0, y = 0;
+            let W = w, H = h, D = d, x = 0, y = 0, dx = 0;
             if (values.width !== '')   w = this.dimen(values.width, bbox, 'w', 0);
             if (values.height !== '')  h = this.dimen(values.height, bbox, 'h', 0);
             if (values.depth !== '')   d = this.dimen(values.depth, bbox, 'd', 0);
@@ -85,9 +85,9 @@ export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): Mpadd
             if (values.lspace !== '')  x = this.dimen(values.lspace, bbox);
             const align = this.node.attributes.get('data-align') as string;
             if (align) {
-                x += this.getAlignX(w, bbox, align);
+                dx = this.getAlignX(w, bbox, align);
             }
-            return [H, D, W, h - H, d - D, w - W, x, y];
+            return [H, D, W, h - H, d - D, w - W, x, y, dx];
         }
 
         /**
