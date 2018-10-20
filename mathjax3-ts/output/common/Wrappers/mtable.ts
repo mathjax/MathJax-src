@@ -99,6 +99,11 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
     data: TableData;
 
     /**
+     * The table cells that have percentage-width content
+     */
+    pwidthCells: [C, number][];
+
+    /**
      * The rows of the table
      */
     readonly tableRows: R[];
@@ -363,6 +368,11 @@ export function CommonMtableMixin<C extends AnyWrapper,
          */
         public data: TableData = null;
 
+        /**
+         * The table cells that have percentage-width content
+         */
+        public pwidthCells: [C, number][] = [];
+
 
         /**
          * @return {R[]}  The rows of the table
@@ -535,7 +545,9 @@ export function CommonMtableMixin<C extends AnyWrapper,
             for (let j = 0; j < rows.length; j++) {
                 const row = rows[j];
                 for (let i = 0; i < row.numCells; i++) {
-                    this.updateHDW(row.getChild(i), i, j, H, D, W);
+                    const cell = row.getChild(i);
+                    this.updateHDW(cell, i, j, H, D, W);
+                    this.recordPWidthCell(cell, i);
                 }
                 NH[j] = H[j];
                 ND[j] = D[j];
@@ -558,12 +570,22 @@ export function CommonMtableMixin<C extends AnyWrapper,
          * @param {number[]=} W    The maximum width for each column
          */
         public updateHDW(cell: C, i: number, j: number, H: number[], D: number[], W: number[] = null) {
-            let {h, d, w} = cell.getBBox();
+            let {h, d, w, pwidth} = cell.getBBox();
             if (h < .75) h = .75;
             if (d < .25) d = .25;
             if (h > H[j]) H[j] = h;
             if (d > D[j]) D[j] = d;
             if (W && w > W[i]) W[i] = w;
+        }
+
+        /**
+         * @param {C} cell     The cell to check for percentage widths
+         * @param {number} i   The column index of the cell
+         */
+        public recordPWidthCell(cell: C, i: number) {
+            if (cell.childNodes[0] && cell.childNodes[0].getBBox().pwidth) {
+                this.pwidthCells.push([cell, i]);
+            }
         }
 
         /**
@@ -643,17 +665,14 @@ export function CommonMtableMixin<C extends AnyWrapper,
         }
 
         /**
-         * Finalize any cells that have percentage width content
+         * Finalize any cells that have percentage-width content
          */
         public setColumnPWidths() {
-            const W = this.cWidths;
-            for (const row of this.tableRows) {
-                const cells = row.tableCells;
-                for (let i = 0; i < cells.length; i++) {
-                    if (cells[i].setChildPWidths(false, W[i])) {
-                        cells[i].invalidateBBox();
-                        cells[i].getBBox();
-                    }
+            const W = this.cWidths as number[];
+            for (const [cell, i] of this.pwidthCells) {
+                if (cell.setChildPWidths(false, W[i])) {
+                    cell.invalidateBBox();
+                    cell.getBBox();
                 }
             }
         }
