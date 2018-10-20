@@ -158,10 +158,15 @@ let adjustValue = function(wrapper: MmlNode): number {
 };
 
 
-let wrapInSpace = function(config: ParseOptions, wrapper: MmlNode,
+let prependSpace = function(config: ParseOptions, wrapper: MmlNode,
                            space: number, sign: string = '') {
   const mspace = config.nodeFactory.create('node', 'mspace', [],
                                            {width: sign + space + 'em'});
+  if (NodeUtil.isType(wrapper, 'mrow')) {
+    mspace.parent = wrapper;
+    wrapper.childNodes.unshift(mspace);
+    return;
+  }
   const mrow = config.nodeFactory.create('node', 'mrow');
   wrapper.parent.replaceChild(mrow, wrapper);
   mrow.setChildren([mspace, wrapper]);
@@ -182,7 +187,7 @@ let appendSpace = function(config: ParseOptions, inf: MmlNode,
 };
 
 let moveProperties = function(src: MmlNode, dest: MmlNode) {
-  let props = ['inference', 'labelledRule'];
+  let props = ['inference', 'labelledRule', 'proof'];
   props.forEach(x => {
     let value = getProperty(src, x);
     if (value != null) {
@@ -249,6 +254,8 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
   let inferences = config.nodeLists['inference'] || [];
   let topAdjust = 0;
   for (let inf of inferences) {
+    console.log('label? ' + getProperty(inf, 'labelledRule'));
+    console.log('rule? ' + getProperty(inf, 'inferenceRule'));
     // This currently only works for inference rules without or with right labels only!
     // (And downwards. Needs to be excluded or tested.)
     let label = getProperty(inf, 'labelledRule');
@@ -263,8 +270,8 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       let wrapperF = getWrapped(premiseF);
       let adjust = adjustValue(wrapperF);
       if (adjust) {
-        wrapInSpace(config, wrapperF, adjust, '-');
-        wrapInSpace(config, wrapper, adjust);
+        prependSpace(config, wrapperF, adjust, '-');
+        prependSpace(config, wrapper, adjust);
       }
     }
     // Right adjust:
