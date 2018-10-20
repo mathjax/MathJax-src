@@ -142,7 +142,6 @@ let getSibling = function(inf: MmlNode): MmlNode {
 };
 
 let getParentInf = function(inf: MmlNode): MmlNode {
-  inf = inf.parent;
   while (inf && getProperty(inf, 'inference') == null) {
     inf = inf.parent as MmlNode;
   }
@@ -254,7 +253,6 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     // (And downwards. Needs to be excluded or tested.)
     let label = getProperty(inf, 'labelledRule');
     if (label === 'left' || label === 'both') {
-      console.log('Continuing');
       continue;
     }
     let wrapper = getWrapped(inf);
@@ -276,9 +274,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     }
     // Temporary 
     label = getProperty(premiseL, 'labelledRule');
-    console.log(label);
     if (label === 'left' || label === 'both') {
-      console.log('Continuing');
       continue;
     }
     //
@@ -286,23 +282,17 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     let adjust = adjustValue(wrappedL);
     if (NodeUtil.isType(premiseL, 'mrow') && premiseL.childNodes[1]) {
       // Here we add the space for a label!
-      console.log(premiseL.childNodes[1]);
       adjust += getBBox(premiseL.childNodes[1] as MmlNode);
     }
     appendSpace(config, premiseL, adjust, '-');
     let maxAdjust = getProperty(inf, 'maxAdjust') as number;
-    console.log('maxAdjust: ' + maxAdjust);
     if (maxAdjust != null) {
       adjust = Math.max(adjust, maxAdjust);
     }
-    console.log('Adjust: ' + adjust);
-    if (getProperty(inf, 'proof')) {
+    let column: MmlNode;
+    if (getProperty(inf, 'proof') ||
+        !(column = getColumn(inf))) {
       // After the tree we add a space with the accumulated max value.
-      appendSpace(config, inf, adjust);
-      continue;
-    }
-    let column = getColumn(inf);
-    if (!column) {
       // If the element is not in a column, we know we have some noise and the
       // proof is an mrow around the final inference.
       appendSpace(config, inf, adjust);
@@ -326,7 +316,6 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     // correction value up in the tree.
     adjust = getProperty(parentRule, 'maxAdjust') ?
       Math.max(getProperty(parentRule, 'maxAdjust') as number, adjust) : adjust;
-    console.log('Setting property: ' + adjust);
     setProperty(parentRule, 'maxAdjust', adjust);
   }
 };
