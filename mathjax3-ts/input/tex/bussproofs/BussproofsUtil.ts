@@ -130,14 +130,23 @@ let getWrapped = function(inf: MmlNode): MmlNode {
   return NodeUtil.isType(inf, 'mtable') ? inf : inf.childNodes[0] as MmlNode;
 };
 
-let getSibling = function(inf: MmlNode): MmlNode {
+let getColumn = function(inf: MmlNode): MmlNode {
   while (inf && !NodeUtil.isType(inf, 'mtd')) {
     inf = inf.parent as MmlNode;
   }
-  if (!inf) {
-    return null;
-  }
+  return inf;
+};
+
+let getSibling = function(inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) + 1] as MmlNode;
+};
+
+let getParentInf = function(inf: MmlNode): MmlNode {
+  inf = inf.parent;
+  while (inf && getProperty(inf, 'inference') == null) {
+    inf = inf.parent as MmlNode;
+  }
+  return inf;
 };
 
 let adjustValue = function(wrapper: MmlNode): number {
@@ -239,6 +248,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
   let config = arg.data;
   item = new HTMLMathItem('', null, arg.math.display);
   let inferences = config.nodeLists['inference'] || [];
+  let topAdjust = 0;
   for (let inf of inferences) {
     // This currently only works for inference rules without or with right labels only!
     // (And downwards. Needs to be excluded or tested.)
@@ -291,14 +301,14 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       appendSpace(config, inf, adjust);
       continue;
     }
-    let srow = inf;
-    while (srow && !NodeUtil.isType(srow, 'mtd')) {
-      srow = srow.parent as MmlNode;
-    }
-    if (!srow) {
+    let column = getColumn(inf);
+    if (!column) {
+      // If the element is not in a column, we know we have some noise and the
+      // proof is an mrow around the final inference.
+      appendSpace(config, inf, adjust);
       continue;
     }
-    let sibling = srow.parent.childNodes[srow.parent.childNodes.indexOf(srow) + 1] as MmlNode;
+    let sibling = getSibling(column);
     if (sibling) {
       // If there is a next column, it is the empty one and we make it wider by
       // the accumulated max value.
@@ -308,18 +318,16 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       inf.removeProperty('maxAdjust');
       continue;
     }
-    while (srow && getProperty(srow, 'inference') == null) {
-      srow = srow.parent as MmlNode;
-    }
-    if (!srow) {
+    let parentRule = getParentInf(column);
+    if (!parentRule) {
       continue;
     }
     // We are currently in rightmost inference, so we propagate the max
     // correction value up in the tree.
-    adjust = getProperty(srow, 'maxAdjust') ?
-      Math.max(getProperty(srow, 'maxAdjust') as number, adjust) : adjust;
+    adjust = getProperty(parentRule, 'maxAdjust') ?
+      Math.max(getProperty(parentRule, 'maxAdjust') as number, adjust) : adjust;
     console.log('Setting property: ' + adjust);
-    setProperty(srow, 'maxAdjust', adjust);
+    setProperty(parentRule, 'maxAdjust', adjust);
   }
 };
 
