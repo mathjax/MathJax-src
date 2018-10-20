@@ -34,7 +34,20 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MathJax} from '../../../mathjax.js';
 import {RegisterHTMLHandler} from '../../../handlers/html.js';
 import {chooseAdaptor} from '../../../adaptors/chooseAdaptor.js';
+import {Property, PropertyList} from '../../../core/Tree/Node.js';
 
+
+// Trying to create a dummy output jax.
+// 
+// export class Dummy<N, T, D> extends CHTMLOutputJax<N, T, D, CHTMLWrapper<any, any, any>, CHTMLWrapperFactory<any, any, any>> {
+//   public static OPTIONS = {};
+
+//   public escaped(item: any, document?: any): N {
+//     return null;
+//   }
+
+//   public processMath() {}
+// }
 
 
 /**
@@ -70,7 +83,10 @@ let getBBox = function(node: MmlNode) {
  */
 let getTable = function(node: MmlNode): MmlNode {
   let i = 0;
-  while (!NodeUtil.isType(node, 'mtable')) {
+  while (node && !NodeUtil.isType(node, 'mtable')) {
+    if (NodeUtil.isType(node, 'text')) {
+      return null;
+    }
     if (NodeUtil.isType(node, 'mrow')) {
       node = node.childNodes[0] as MmlNode;
       i = 0;
@@ -83,6 +99,29 @@ let getTable = function(node: MmlNode): MmlNode {
 };
 
 
+/**
+ * 
+ * @param {MmlNode} table 
+ * @return {MmlNode} The premises in the table rule.
+ */
+let getPremises = function(table: MmlNode): MmlNode {
+    return table.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0] as MmlNode;
+};
+
+let getPremise = function(premises: MmlNode, n: number): MmlNode {
+  return premises.childNodes[n].childNodes[0].childNodes[0] as MmlNode;
+};
+
+let firstPremise = function(premises: MmlNode): MmlNode {
+  return getPremise(premises, 0) as MmlNode;
+};
+
+
+let lastPremise = function(premises: MmlNode): MmlNode {
+  return getPremise(premises, premises.childNodes.length - 1);
+};
+
+
 let getConclusion = function(table: MmlNode): MmlNode {
   return table.childNodes[1].childNodes[0].childNodes[0].childNodes[0] as MmlNode;
 };
@@ -91,79 +130,165 @@ let getWrapped = function(inf: MmlNode): MmlNode {
   return NodeUtil.isType(inf, 'mtable') ? inf : inf.childNodes[0] as MmlNode;
 };
 
-let appendInference = function(inf: MmlNode, space: MmlNode, config: ParseOptions) {
+let getSibling = function(inf: MmlNode): MmlNode {
+  while (inf && !NodeUtil.isType(inf, 'mtd')) {
+    inf = inf.parent as MmlNode;
+  }
+  if (!inf) {
+    return null;
+  }
+  return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) + 1] as MmlNode;
+};
+
+let adjustValue = function(wrapper: MmlNode): number {
+  let table = getTable(wrapper);
+  let conc = getConclusion(table);
+  let w = getBBox(wrapper);
+  let x = getBBox(table);
+  let y = getBBox(conc);
+  return (w - x) + ((x - y) / 2);
+};
+
+
+let wrapInSpace = function(config: ParseOptions, wrapper: MmlNode,
+                           space: number, sign: string = '') {
+  const mspace = config.nodeFactory.create('node', 'mspace', [],
+                                           {width: sign + space + 'em'});
+  const mrow = config.nodeFactory.create('node', 'mrow');
+  wrapper.parent.replaceChild(mrow, wrapper);
+  mrow.setChildren([mspace, wrapper]);
+};
+
+let appendSpace = function(config: ParseOptions, inf: MmlNode,
+                           space: number, sign: string = '') {
+  const mspace = config.nodeFactory.create('node', 'mspace', [],
+                                           {width: sign + space + 'em'});
   if (NodeUtil.isType(inf, 'mrow')) {
-    inf.appendChild(space);
+    inf.appendChild(mspace);
     return;
   }
   const mrow = config.nodeFactory.create('node', 'mrow');
   inf.parent.replaceChild(mrow, inf);
-  mrow.setChildren([inf, space]);
-  mrow.setProperty('inference', inf.getProperty('inference'));
+  mrow.setChildren([inf, mspace]);
+  moveProperties(inf, mrow);
 };
 
+let moveProperties = function(src: MmlNode, dest: MmlNode) {
+  let props = ['inference', 'labelledRule'];
+  props.forEach(x => {
+    let value = getProperty(src, x);
+    if (value != null) {
+      setProperty(dest, x, value);
+      removeProperty(src, x);
+    }
+  });
+};
+
+// For every inference rule we adjust the width of ruler by subtracting and
+// adding suitable spaces around the rule. The algorithm in detail.
+// 
+// Notions that we need:
+// 
+// * Table: The rule without the labels.
+// 
+// * Wrapper: The part of the rule that contains the table. I.e., without
+//            the labels but it can contain additonal spacing elements.
+//
+// * Conclusion: The element forming the conclusion of the rule. In
+//               downwards inferences this is the final row of the table.
+//
+// * Premises: The premises of the rule. In downwards inferences this is the
+//             first row of the table. Note that this is a table itself,
+//             with one column for each premise and an empty column
+//             inbetween.
+//
+// * |x|: Width of bounding box of element x.
+// 
+// Left adjustment:
+// 
+// * For the given inference rule I:
+//    + compute wrapper W of I
+//    + compute table T of I
+//    + compute premises P of I
+//    + compute premise P_f, P_l as first and last premise of I
+// 
+// * If P_f is an inference rule:
+//    + compute adjust value a_f for wrapper W_f of P_f
+//    + add -a_f space to wrapper W_f
+//    + add  a_f space to wrapper W
+// 
+// * If P_l is an inference rule:
+//   + compute adjust value a_l for wrapper W_l of P_l
+//   + if I has (right) label L: a_l = a_l + |L|
+//   + add -a_l space to P_l
+//   + a_l = max(a_l, A_I), where A_I is saved ajust value in the
+//     "maxAdjust" attribute of I.
+//
+//   + Case I is proof: Add a_l space to inf. (Correct after proof.)
+//   + Case I has sibling: Add a_l space to sibling.  (Correct after column.)
+//   + Otherwise: Propagate a_l by
+//                ++ find direct parent infererence rule I'
+//                ++ Set A_{I'} = a_l.
+// 
+/**
+ * Implements the above algorithm.
+ * @param {{data: ParseOptions, math: any}} arg The parser configuration and
+ *     mathitem to filter.
+ */
 export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
   let config = arg.data;
   item = new HTMLMathItem('', null, arg.math.display);
   let inferences = config.nodeLists['inference'] || [];
   for (let inf of inferences) {
-
-    // Left adjustmust:
-    // * Compute the 
-    let wrapped1 = getWrapped(inf); //  First node in row is a (wrapped) table.
-    let table1 = getTable(wrapped1);     // Unpack the table in the wrapper.
-    let conc1 = getConclusion(table1);  // Get the conclusion.
-    let frow = table1.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0];
-    let inf2 = frow.childNodes[0].childNodes[0].childNodes[0] as MmlNode;
-    if (inf2.getProperty('inference')) {
-      getBBox(inf2 as MmlNode);
-      let i = 0;
-      let wrapped2 = getWrapped(inf2);
-      let table2 = getTable(wrapped2);
-      let conc2 = getConclusion(table2);
-      let w = getBBox(wrapped2);
-      let x = getBBox(table2);
-      let y = getBBox(conc2);
-      let adjust = (w - x) + ((x - y) / 2);
+    // This currently only works for inference rules without or with right labels only!
+    // (And downwards. Needs to be excluded or tested.)
+    let label = getProperty(inf, 'labelledRule');
+    if (label === 'left' || label === 'both') {
+      console.log('Continuing');
+      continue;
+    }
+    let wrapper = getWrapped(inf);
+    let table = getTable(wrapper);
+    let premises = getPremises(table);
+    let premiseF = firstPremise(premises);
+    if (getProperty(premiseF, 'inference')) {
+      let wrapperF = getWrapped(premiseF);
+      let adjust = adjustValue(wrapperF);
       if (adjust) {
-        const pos = config.nodeFactory.create('node', 'mspace', [], {width: adjust + 'em'});
-        const neg = config.nodeFactory.create('node', 'mspace', [], {width: '-' + adjust + 'em'});
-        const mrow1 = config.nodeFactory.create('node', 'mrow');
-        const mrow2 = config.nodeFactory.create('node', 'mrow');
-        wrapped1.parent.replaceChild(mrow1, wrapped1);
-        wrapped2.parent.replaceChild(mrow2, wrapped2);
-        mrow1.setChildren([pos, wrapped1]);
-        mrow2.setChildren([neg, wrapped2]);
+        wrapInSpace(config, wrapperF, adjust, '-');
+        wrapInSpace(config, wrapper, adjust);
       }
     }
     // Right adjust:
-    let inf3 = frow.childNodes[frow.childNodes.length - 1].childNodes[0].childNodes[0] as MmlNode;
-    if (inf3.getProperty('inference') == null) {
+    let premiseL = lastPremise(premises);
+    if (getProperty(premiseL, 'inference') == null) {
       continue;
     }
-    let oldInf = getBBox(inf);
-    let wrapped3 = getWrapped(inf3);
-    let table3 = getTable(wrapped3);
-    let conc3 = getConclusion(table3);
-    let x = getBBox(table3);
-    let y = getBBox(conc3);
-    let adjust = (x - y) / 2;
-    if (NodeUtil.isType(inf3, 'mrow') && inf3.childNodes[1]) {
-      adjust += getBBox(inf3.childNodes[1] as MmlNode);
+    // Temporary 
+    label = getProperty(premiseL, 'labelledRule');
+    console.log(label);
+    if (label === 'left' || label === 'both') {
+      console.log('Continuing');
+      continue;
     }
-    const neg = config.nodeFactory.create('node', 'mspace', [], {width: '-' + adjust + 'em'});
-    appendInference(inf3, neg, config);
-    let maxAdjust = inf.getProperty('maxAdjust') as number;
+    //
+    let wrappedL = getWrapped(premiseL);
+    let adjust = adjustValue(wrappedL);
+    if (NodeUtil.isType(premiseL, 'mrow') && premiseL.childNodes[1]) {
+      // Here we add the space for a label!
+      console.log(premiseL.childNodes[1]);
+      adjust += getBBox(premiseL.childNodes[1] as MmlNode);
+    }
+    appendSpace(config, premiseL, adjust, '-');
+    let maxAdjust = getProperty(inf, 'maxAdjust') as number;
     console.log('maxAdjust: ' + maxAdjust);
     if (maxAdjust != null) {
       adjust = Math.max(adjust, maxAdjust);
     }
     console.log('Adjust: ' + adjust);
-    if (inf.getProperty('proof')) {
+    if (getProperty(inf, 'proof')) {
       // After the tree we add a space with the accumulated max value.
-      const pos = config.nodeFactory.create('node', 'mspace', [],
-                                            {width: adjust + 'em'});
-      appendInference(inf, pos, config);
+      appendSpace(config, inf, adjust);
       continue;
     }
     let srow = inf;
@@ -183,7 +308,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       inf.removeProperty('maxAdjust');
       continue;
     }
-    while (srow && srow.getProperty('inference') == null) {
+    while (srow && getProperty(srow, 'inference') == null) {
       srow = srow.parent as MmlNode;
     }
     if (!srow) {
@@ -191,9 +316,48 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     }
     // We are currently in rightmost inference, so we propagate the max
     // correction value up in the tree.
-    adjust = srow.getProperty('maxAdjust') ?
-      Math.max(srow.getProperty('maxAdjust') as number, adjust) : adjust;
+    adjust = getProperty(srow, 'maxAdjust') ?
+      Math.max(getProperty(srow, 'maxAdjust') as number, adjust) : adjust;
     console.log('Setting property: ' + adjust);
-    srow.setProperty('maxAdjust', adjust);
+    setProperty(srow, 'maxAdjust', adjust);
   }
+};
+
+
+// Facilities for semantically relevant properties.
+let property_prefix = 'bspr_';
+let blacklistedProperties = {
+  [property_prefix + 'maxAdjust']: true
+};
+
+// Maybe expand the node utils to extend the list of attributes that can be
+// properties. Use init method to add them.
+
+export let setProperty = function(node: MmlNode, property: string, value: Property){
+  NodeUtil.setProperty(node, property_prefix + property, value);
+};
+
+
+export let getProperty = function(node: MmlNode, property: string): Property {
+  return NodeUtil.getProperty(node, property_prefix + property);
+};
+
+
+export let removeProperty = function(node: MmlNode, property: string) {
+  node.removeProperty(property_prefix + property);
+};
+
+
+export let makeBsprAttributes = function(arg: {data: ParseOptions, math: any}) {
+  arg.data.root.walkTree((mml: MmlNode, data?: any) => {
+    let attr: string[] = [];
+    mml.getPropertyNames().forEach(x => {
+      if (!blacklistedProperties[x] && x.match(RegExp('^' + property_prefix))) {
+        attr.push(x + ':' + mml.getProperty(x));
+      }
+    });
+    if (attr.length) {
+      NodeUtil.setAttribute(mml, 'semantics', attr.join(';'));
+    }
+  });
 };

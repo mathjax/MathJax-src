@@ -30,6 +30,7 @@ import StackItemFactory from '../StackItemFactory.js';
 import ParseUtil from '../ParseUtil.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 import Stack from '../Stack.js';
+import * as BussproofsUtil from './BussproofsUtil.js';
 
 
 export class ProofTreeItem extends BaseItem {
@@ -63,7 +64,7 @@ export class ProofTreeItem extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('end') && item.getName() === 'prooftree') {
       let node = this.toMml();
-      node.setProperty('proof', true);
+      BussproofsUtil.setProperty(node, 'proof', true);
       return [[this.factory.create('mml', node), item], true];
     }
     if (item.isKind('stop')) {

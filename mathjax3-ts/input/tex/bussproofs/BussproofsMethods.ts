@@ -32,21 +32,7 @@ import {StackItem} from '../StackItem.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {NodeFactory} from '../NodeFactory.js';
 import NodeUtil from '../NodeUtil.js';
-import {CHTML} from '../../../output/chtml.js';
-import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
-import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
-import {browserAdaptor} from '../../../adaptors/browserAdaptor.js';
-
-
-// export class Dummy<N, T, D> extends CHTMLOutputJax<N, T, D, CHTMLWrapper<any, any, any>, CHTMLWrapperFactory<any, any, any>> {
-//   public static OPTIONS = {};
-  
-//   public escaped(item: any, document?: any): N {
-//     return null;
-//   }
-
-//   public processMath() {}
-// }
+import * as BussproofsUtil from './BussproofsUtil.js';
 
 
 // Namespace
@@ -113,8 +99,7 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
                style, rootAtTop);
   top.setProperty('left', null);
   top.setProperty('right', null);
-  rule.setProperty('inference', Math.round(children.length / 2));
-  console.log('HERE');
+  BussproofsUtil.setProperty(rule, 'inference', Math.round(children.length / 2));
   parser.configuration.addNode('inference', rule);
   top.Push(rule);
 };
@@ -149,27 +134,36 @@ function createRule(parser: TexParser, premise: MmlNode,
   const lower = parser.create(
     'node', 'mtr', [parser.create('node', 'mtd', conclusions, {})], {});
   let rule = parser.create('node', 'mtable', rootAtTop ? [lower, upper] : [upper, lower],
-                            {align: 'top 2', rowlines: style, framespacing: '0 0'});
+                           {align: 'top 2', rowlines: style, framespacing: '0 0'});
+  BussproofsUtil.setProperty(rule, 'inferenceRule', rootAtTop ? 'up' : 'down');
   let leftLabel, rightLabel;
   if (left) {
     leftLabel = parser.create(
       'node', 'mpadded', [left],
-      {height: '+.5em', width: '+.5em', voffset: '-.15em', prooflabel: 'left'});
+      {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+    BussproofsUtil.setProperty(leftLabel, 'prooflabel', 'left');
   }
   if (right) {
     rightLabel = parser.create(
       'node', 'mpadded', [right],
-      {height: '+.5em', width: '+.5em', voffset: '-.15em', prooflabel: 'right'});
+      {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+    BussproofsUtil.setProperty(rightLabel, 'prooflabel', 'right');
   }
+  let children, label;
   if (left && right) {
-    return parser.create('node', 'mrow', [leftLabel, rule, rightLabel], {});
+    children = [leftLabel, rule, rightLabel];
+    label = 'both';
+  } else if (left) {
+    children = [leftLabel, rule];
+    label = 'left';
+  } else if (right) {
+    children = [rule, rightLabel];
+    label = 'right';
+  } else {
+    return rule;
   }
-  if (left) {
-    return parser.create('node', 'mrow', [leftLabel, rule], {});
-  }
-  if (right) {
-    return parser.create('node', 'mrow', [rule, rightLabel], {});
-  }
+  rule = parser.create('node', 'mrow', children);
+  BussproofsUtil.setProperty(rule, 'labelledRule', label);
   return rule;
 };
 
