@@ -12682,3 +12682,7 @@ parserTest.runTest(
 );
 
 
+parserTest.runTest(
+  'Extreme', '\\begin{prooftree}\\LL{HHHHH}\\RL{11111111111111111}\\AxiomC{D}\\AxiomC{A1}\\AxiomC{A2}\\TrinaryInfC{Q}\\RightLabel{AAAA}\\AxiomC{A}\\AxiomC{B}\\AxiomC{R}\\LL{qqqq}\\BinaryInfC{$C \\rightarrow D \\rightarrow Q$}\\LeftLabel{BBBB}\\RightLabel{MMM}\\BinaryInfC{E}\\RightLabel{CCCCC}\\LL{WWW}\\BinaryInfC{F}\\RightLabel{QERE}\\AxiomC{M}\\LL{BBB}\\BinaryInfC{$N \\rightarrow R$}\\RightLabel{Nowhere}\\end{prooftree}',
+  {}
+);
