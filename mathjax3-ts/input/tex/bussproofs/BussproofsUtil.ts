@@ -95,6 +95,7 @@ let getTable = function(node: MmlNode): MmlNode {
     node = node.parent.childNodes[i] as MmlNode;
     i++;
   }
+  console.log('table: ' + node);
   return node;
 };
 
@@ -126,8 +127,12 @@ let getConclusion = function(table: MmlNode): MmlNode {
   return table.childNodes[1].childNodes[0].childNodes[0].childNodes[0] as MmlNode;
 };
 
-let getWrapped = function(inf: MmlNode): MmlNode {
-  return NodeUtil.isType(inf, 'mtable') ? inf : inf.childNodes[0] as MmlNode;
+let getWrapper = function(inf: MmlNode): MmlNode {
+  const side = getProperty(inf, 'labelledRule');
+  const index = (side === 'left' || side === 'both') ? 1 : 0;
+  let result = NodeUtil.isType(inf, 'mtable') ? inf : inf.childNodes[index] as MmlNode;
+  console.log('Wrapper: ' + result);
+  return NodeUtil.isType(inf, 'mtable') ? inf : inf.childNodes[index] as MmlNode;
 };
 
 let getColumn = function(inf: MmlNode): MmlNode {
@@ -148,6 +153,11 @@ let getParentInf = function(inf: MmlNode): MmlNode {
   return inf;
 };
 
+
+// - Get table T from Wrapper W.
+// - Get conclusion C in T.
+// - |w - x|: Preceding space/label.
+// - |x - y|/2: Distance from left boundary to middle of conclusion. 
 let adjustValue = function(wrapper: MmlNode): number {
   let table = getTable(wrapper);
   let conc = getConclusion(table);
@@ -158,18 +168,75 @@ let adjustValue = function(wrapper: MmlNode): number {
 };
 
 
-let prependSpace = function(config: ParseOptions, wrapper: MmlNode,
+let getPrecedingSpace = function(inf: MmlNode, table: MmlNode): number {
+  if (inf === table) {
+    return 0;
+  }
+  // Now inf is an mrow!
+  console.log(inf.childNodes);
+  let index = inf.childNodes.indexOf(table);
+  console.log(index);
+  console.log('Boxes: ');
+  console.log(inf.childNodes.slice(0, index)
+    .map(getBBox));
+  console.log(inf.childNodes.slice(0, index)
+    .map(getBBox)
+    .reduce((x, y) => { return x + Math.abs(y); }, 0));
+  return inf.childNodes.slice(0, index)
+    .map(getBBox)
+    .reduce((x, y) => { return x + Math.abs(y); }, 0);
+};
+
+// - Get table T from Wrapper W.
+// - Get conclusion C in T.
+// - |w - x|: Preceding space/label.
+// - |x - y|/2: Distance from left boundary to middle of conclusion. 
+let adjustLeftValue = function(inf: MmlNode): number {
+  let table = getTable(inf);
+  let conc = getConclusion(table);
+  let w = getPrecedingSpace(inf, table);
+  let x = getBBox(table);
+  let y = getBBox(conc);
+  console.log(w);
+  console.log(x);
+  console.log(y);
+  return w + ((x - y) / 2);
+};
+
+
+let getFollowingSpace = function(inf: MmlNode, table: MmlNode): number {
+  if (inf === table) {
+    return 0;
+  }
+  // Now inf is an mrow!
+  let index = inf.childNodes.indexOf(table);
+  return inf.childNodes.slice(index + 1)
+    .map(getBBox)
+    .reduce((x, y) => { return x + Math.abs(y); }, 0);
+};
+
+let adjustRightValue = function(inf: MmlNode): number {
+  let table = getTable(inf);
+  let conc = getConclusion(table);
+  let w = getFollowingSpace(inf, table);
+  let x = getBBox(table);
+  let y = getBBox(conc);
+  return w + ((x - y) / 2);
+};
+
+
+let prependSpace = function(config: ParseOptions, inf: MmlNode,
                            space: number, sign: string = '') {
   const mspace = config.nodeFactory.create('node', 'mspace', [],
                                            {width: sign + space + 'em'});
-  if (NodeUtil.isType(wrapper, 'mrow')) {
-    mspace.parent = wrapper;
-    wrapper.childNodes.unshift(mspace);
+  if (NodeUtil.isType(inf, 'mrow')) {
+    mspace.parent = inf;
+    inf.childNodes.unshift(mspace);
     return;
   }
   const mrow = config.nodeFactory.create('node', 'mrow');
-  wrapper.parent.replaceChild(mrow, wrapper);
-  mrow.setChildren([mspace, wrapper]);
+  inf.parent.replaceChild(mrow, inf);
+  mrow.setChildren([mspace, inf]);
 };
 
 let appendSpace = function(config: ParseOptions, inf: MmlNode,
@@ -201,12 +268,16 @@ let moveProperties = function(src: MmlNode, dest: MmlNode) {
 // adding suitable spaces around the rule. The algorithm in detail.
 // 
 // Notions that we need:
+//
+// * Inference: The inference rule consisting either of a single table or a list
+//              containing the table plus 0 - 2 labels and spacing elements.
+//              s_1....s_n l{0,1} t r{0,1} s'_1....s'_m, m,n \in IN_0
 // 
-// * Table: The rule without the labels.
+// * Table: The rule without the labels and spacing.
 // 
 // * Wrapper: The part of the rule that contains the table. I.e., without
 //            the labels but it can contain additonal spacing elements.
-//
+//            (Do we need this?) 
 // * Conclusion: The element forming the conclusion of the rule. In
 //               downwards inferences this is the final row of the table.
 //
@@ -254,24 +325,23 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
   let inferences = config.nodeLists['inference'] || [];
   let topAdjust = 0;
   for (let inf of inferences) {
-    console.log('label? ' + getProperty(inf, 'labelledRule'));
-    console.log('rule? ' + getProperty(inf, 'inferenceRule'));
     // This currently only works for inference rules without or with right labels only!
     // (And downwards. Needs to be excluded or tested.)
+    // let wrapper = getWrapper(inf);
+    let table = getTable(inf);
     let label = getProperty(inf, 'labelledRule');
     if (label === 'left' || label === 'both') {
       continue;
     }
-    let wrapper = getWrapped(inf);
-    let table = getTable(wrapper);
     let premises = getPremises(table);
     let premiseF = firstPremise(premises);
     if (getProperty(premiseF, 'inference')) {
-      let wrapperF = getWrapped(premiseF);
-      let adjust = adjustValue(wrapperF);
+      // let wrapperF = getWrapper(premiseF);
+      let adjust = adjustLeftValue(premiseF);
+      console.log(adjust);
       if (adjust) {
-        prependSpace(config, wrapperF, adjust, '-');
-        prependSpace(config, wrapper, adjust);
+        prependSpace(config, premiseF, adjust, '-');
+        prependSpace(config, inf, adjust);
       }
     }
     // Right adjust:
@@ -280,17 +350,21 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       continue;
     }
     // Temporary 
+    // let label = getProperty(inf, 'labelledRule');
+    // if (label === 'left' || label === 'both') {
+    //   continue;
+    // }
+    // let wrappedL = getWrapper(premiseL);
     label = getProperty(premiseL, 'labelledRule');
     if (label === 'left' || label === 'both') {
       continue;
     }
     //
-    let wrappedL = getWrapped(premiseL);
-    let adjust = adjustValue(wrappedL);
-    if (NodeUtil.isType(premiseL, 'mrow') && premiseL.childNodes[1]) {
-      // Here we add the space for a label!
-      adjust += getBBox(premiseL.childNodes[1] as MmlNode);
-    }
+    let adjust = adjustRightValue(premiseL);
+    // if (NodeUtil.isType(premiseL, 'mrow') && premiseL.childNodes[1]) {
+    //   // Here we add the space for a label!
+    //   adjust += getBBox(premiseL.childNodes[1] as MmlNode);
+    // }
     appendSpace(config, premiseL, adjust, '-');
     let maxAdjust = getProperty(inf, 'maxAdjust') as number;
     if (maxAdjust != null) {
