@@ -25,6 +25,7 @@
 
 import ParseOptions from '../ParseOptions.js';
 import NodeUtil from '../NodeUtil.js';
+import ParseUtil from '../ParseUtil.js';
 
 import {CHTML} from '../../../output/chtml.js';
 import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
@@ -173,15 +174,7 @@ let getPrecedingSpace = function(inf: MmlNode, table: MmlNode): number {
     return 0;
   }
   // Now inf is an mrow!
-  console.log(inf.childNodes);
   let index = inf.childNodes.indexOf(table);
-  console.log(index);
-  console.log('Boxes: ');
-  console.log(inf.childNodes.slice(0, index)
-    .map(getBBox));
-  console.log(inf.childNodes.slice(0, index)
-    .map(getBBox)
-    .reduce((x, y) => { return x + Math.abs(y); }, 0));
   return inf.childNodes.slice(0, index)
     .map(getBBox)
     .reduce((x, y) => { return x + Math.abs(y); }, 0);
@@ -197,9 +190,6 @@ let adjustLeftValue = function(inf: MmlNode): number {
   let w = getPrecedingSpace(inf, table);
   let x = getBBox(table);
   let y = getBBox(conc);
-  console.log(w);
-  console.log(x);
-  console.log(y);
   return w + ((x - y) / 2);
 };
 
@@ -226,9 +216,19 @@ let adjustRightValue = function(inf: MmlNode): number {
 
 
 let prependSpace = function(config: ParseOptions, inf: MmlNode,
-                           space: number, sign: string = '') {
+                           space: number) {
+  if (NodeUtil.isType(inf, 'mrow')) {
+    let mspace = inf.childNodes[0] as MmlNode;
+    if (NodeUtil.isType(mspace, 'mspace')) {
+      NodeUtil.setAttribute(
+        mspace, 'width',
+        ParseUtil.Em(ParseUtil.dimen2em(
+          NodeUtil.getAttribute(mspace, 'width') as string) + space));
+      return;
+    }
+  }
   const mspace = config.nodeFactory.create('node', 'mspace', [],
-                                           {width: sign + space + 'em'});
+                                           {width: ParseUtil.Em(space)});
   if (NodeUtil.isType(inf, 'mrow')) {
     mspace.parent = inf;
     inf.childNodes.unshift(mspace);
@@ -240,9 +240,19 @@ let prependSpace = function(config: ParseOptions, inf: MmlNode,
 };
 
 let appendSpace = function(config: ParseOptions, inf: MmlNode,
-                           space: number, sign: string = '') {
+                           space: number) {
+  if (NodeUtil.isType(inf, 'mrow')) {
+    let mspace = inf.childNodes[inf.childNodes.length - 1] as MmlNode;
+    if (NodeUtil.isType(mspace, 'mspace')) {
+      NodeUtil.setAttribute(
+        mspace, 'width',
+        ParseUtil.Em(ParseUtil.dimen2em(
+          NodeUtil.getAttribute(mspace, 'width') as string) + space));
+      return;
+    }
+  }
   const mspace = config.nodeFactory.create('node', 'mspace', [],
-                                           {width: sign + space + 'em'});
+                                           {width: ParseUtil.Em(space)});
   if (NodeUtil.isType(inf, 'mrow')) {
     inf.appendChild(mspace);
     return;
@@ -340,7 +350,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       let adjust = adjustLeftValue(premiseF);
       console.log(adjust);
       if (adjust) {
-        prependSpace(config, premiseF, adjust, '-');
+        prependSpace(config, premiseF, -1 * adjust);
         prependSpace(config, inf, adjust);
       }
     }
@@ -365,7 +375,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     //   // Here we add the space for a label!
     //   adjust += getBBox(premiseL.childNodes[1] as MmlNode);
     // }
-    appendSpace(config, premiseL, adjust, '-');
+    appendSpace(config, premiseL, -1 * adjust);
     let maxAdjust = getProperty(inf, 'maxAdjust') as number;
     if (maxAdjust != null) {
       adjust = Math.max(adjust, maxAdjust);
