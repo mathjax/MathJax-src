@@ -114,7 +114,8 @@ AbstractOutputJax<N, T, D> {
     /**
      * Nodes used to test for metric data
      */
-    public testNodes: N;
+    public testInline: N;
+    public testDisplay: N;
 
     /**
      * Cache of unknonw character bounding boxes for this element
@@ -240,8 +241,7 @@ AbstractOutputJax<N, T, D> {
         const adaptor = this.adaptor;
         const map = this.getMetricMap(html);
         for (const math of html.math) {
-            const parent = adaptor.parent(math.start.node);
-            const {em, ex, containerWidth, lineWidth, scale} = map.get(parent);
+            const {em, ex, containerWidth, lineWidth, scale} = map.get(math.start.node as N);
             math.setMetrics(em, ex, containerWidth, lineWidth, scale);
         }
     }
@@ -259,10 +259,8 @@ AbstractOutputJax<N, T, D> {
         // Add the test elements all at once (so only one reflow)
         //
         for (const math of html.math) {
-            const parent = adaptor.parent(math.start.node);
-            if (!domMap.has(parent)) {
-                domMap.set(parent, this.getTestElement(parent));
-            }
+            const node = math.start.node as N;
+            domMap.set(node, this.getTestElement(node, math.display));
         }
         //
         // Measure the metrics for all the mapped elements
@@ -281,14 +279,15 @@ AbstractOutputJax<N, T, D> {
     }
 
     /**
-     * @param {N} node    The container to add the test elements to
+     * @param {N} node    The math element to be measured
      * @return {N}        The test elements that were added
      */
-    protected getTestElement(node: N) {
+    protected getTestElement(node: N, display: boolean) {
         const adaptor = this.adaptor;
-        if (!this.testNodes) {
-            this.testNodes = this.html('mjx-test', {style: {
+        if (!this.testInline) {
+            this.testInline = this.html('mjx-test', {style: {
                 display:           'inline-block',
+                width:             '100%',
                 'font-style':      'normal',
                 'font-weight':     'normal',
                 'font-size':       '100%',
@@ -298,16 +297,37 @@ AbstractOutputJax<N, T, D> {
                 'letter-spacing':  'normal',
                 'word-spacing':    'normal',
                 overflow:          'hidden',
-                height:            '1px'
+                height:            '1px',
+                'margin-right':    '-1px'
             }}, [
+                this.html('mjx-left-box', {style: {
+                    display: 'inline-block',
+                    width: 0,
+                    'float': 'left'
+                }}),
                 this.html('mjx-ex-box', {style: {
                     position: 'absolute',
                     overflow: 'hidden',
                     width: '1px', height: '60ex'
+                }}),
+                this.html('mjx-right-box', {style: {
+                    display: 'inline-block',
+                    width: 0,
+                    'float': 'right'
                 }})
             ]);
+            this.testDisplay = adaptor.clone(this.testInline);
+            adaptor.setStyle(this.testDisplay, 'display', 'table');
+            adaptor.setStyle(this.testDisplay, 'margin-right', '');
+            adaptor.setStyle(adaptor.firstChild(this.testDisplay) as N, 'display', 'none');
+            const right = adaptor.lastChild(this.testDisplay) as N;
+            adaptor.setStyle(right, 'display', 'table-cell');
+            adaptor.setStyle(right, 'width', '10000em');
+            adaptor.setStyle(right, 'float', '');
         }
-        return adaptor.append(node, adaptor.clone(this.testNodes)) as N;
+        const test = adaptor.clone(display? this.testDisplay : this.testInline) as N;
+        adaptor.insert(test, node);
+        return test;
     }
 
     /**
@@ -317,8 +337,11 @@ AbstractOutputJax<N, T, D> {
     protected measureMetrics(node: N) {
         const adaptor = this.adaptor;
         const em = adaptor.fontSize(node);
-        const ex = (adaptor.nodeSize(adaptor.firstChild(node) as N)[1] / 60) || (em * this.options.exFactor);
-        const containerWidth = 80 * em; // for now (should be measured in the DOM)
+        const ex = (adaptor.nodeSize(adaptor.childNode(node, 1) as N)[1] / 60) || (em * this.options.exFactor);
+        const containerWidth = (adaptor.getStyle(node, 'display') === 'table' ?
+                                adaptor.nodeSize(adaptor.lastChild(node) as N)[0] - 1 :
+                                adaptor.nodeBBox(adaptor.lastChild(node) as N).left -
+                                adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);
         const scale = ex / this.font.params.x_height / em;
         const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
         return {em, ex, containerWidth, lineWidth, scale} as Metrics;
