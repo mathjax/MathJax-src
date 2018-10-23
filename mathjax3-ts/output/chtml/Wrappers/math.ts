@@ -60,7 +60,7 @@ export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<N, T, D
             'text-align': 'center',
             margin: '1em 0'
         },
-        'mjx-container[display="true"] mjx-math': {
+        'mjx-container[jax="CHTML"][display="true"] mjx-math': {
             padding: 0
         },
         'mjx-container[jax="CHTML"][justify="left"]': {

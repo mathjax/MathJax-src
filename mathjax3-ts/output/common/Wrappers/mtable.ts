@@ -648,10 +648,11 @@ export function CommonMtableMixin<C extends AnyWrapper,
             if (!isPercent(width)) return;
             if (!this.hasLabels) {
                 this.bbox.pwidth = '';
+                this.container.bbox.pwidth = '';
             }
             const {w, L, R} = this.bbox;
             const W = Math.max(w, this.length2em(width, cwidth));
-            const cols = (this.node.attributes.get('equalcolumns') ?
+            const cols = (this.node.attributes.get('equalcolumns') as boolean ?
                           Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols))) :
                           this.getColumnAttributes('columnwidth', 0));
             this.cWidths = this.getColumnWidthsFixed(cols, W);

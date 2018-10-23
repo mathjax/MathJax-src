@@ -134,13 +134,14 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
                 this.getBevelledBBox(bbox, display);
             } else {
                 const thickness = this.length2em(String(linethickness));
-                w = bbox.w - 2 * this.pad;
+                w = -2 * this.pad;
                 if (thickness === 0) {
                     this.getAtopBBox(bbox, display);
                 } else {
                     this.getFractionBBox(bbox, display, thickness);
                     w -= .2;
                 }
+                w += bbox.w;
             }
             bbox.clean();
             this.setChildPWidths(recompute, w);

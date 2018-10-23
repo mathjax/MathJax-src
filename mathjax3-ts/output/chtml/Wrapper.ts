@@ -354,11 +354,14 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      * @param {number} shift  The indent (positive or negative) for the node
      */
     protected setIndent(chtml: N, align: string, shift: number) {
+        const adaptor = this.adaptor;
         if (align === 'center' || align === 'left') {
-            this.adaptor.setStyle(chtml, 'margin-left', this.em(shift));
+            const L = this.getBBox().L;
+            adaptor.setStyle(chtml, 'margin-left', this.em(shift + L));
         }
         if (align === 'center' || align === 'right') {
-            this.adaptor.setStyle(chtml, 'margin-right', this.em(-shift));
+            const R = this.getBBox().R;
+            adaptor.setStyle(chtml, 'margin-right', this.em(-shift + R));
         }
     }
 
