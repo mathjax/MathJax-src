@@ -311,6 +311,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
         console.log('Adding space ' + adjust + ' to inf: ' + inf);
         let table = getTable(inf);
         let w = getSpaces(inf, table, false);
+
         console.log('Subtracting adjustment value: ' + w);
         addSpace(config, inf, adjust - w);
         // if (isProof) {
@@ -345,16 +346,18 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     }
     let adjust = adjustValue(premiseL, true);
     addSpace(config, premiseL, -1 * adjust, true);
+    table = getTable(inf);
+    let w = getSpaces(inf, table, true);
     let maxAdjust = getProperty(inf, 'maxAdjust') as number;
     if (maxAdjust != null) {
-      adjust = Math.max(adjust, maxAdjust);
+      adjust = Math.max(adjust - w, maxAdjust);
     }
     let column: MmlNode;
     if (isProof || !(column = getColumn(inf))) {
       // After the tree we add a space with the accumulated max value.
       // If the element is not in a column, we know we have some noise and the
       // proof is an mrow around the final inference.
-      addSpace(config, inf, adjust, true);
+      addSpace(config, inf, adjust - w, true);
       continue;
     }
     let sibling = nextSibling(column);
