@@ -151,21 +151,22 @@ let getParentInf = function(inf: MmlNode): MmlNode {
 };
 
 
+let getSpaces = function(inf: MmlNode, table: MmlNode, right: boolean = false): number {
+  if (inf === table) {
+    return 0;
+  }
+  // Now inf is an mrow!
+  let index = inf.childNodes.indexOf(table);
+  return (right ? inf.childNodes.slice(index + 1) : inf.childNodes.slice(0, index))
+    .map(getBBox)
+    .reduce((x, y) => { return x + y; }, 0);
+};
+
 // - Get table T from Wrapper W.
 // - Get conclusion C in T.
 // - w: Preceding/following space/label.
 // - |x - y|/2: Distance from left boundary to middle of conclusion. 
 let adjustValue = function(inf: MmlNode, right: boolean = false): number {
-  let getSpaces = function(table: MmlNode): number {
-    if (inf === table) {
-      return 0;
-    }
-    // Now inf is an mrow!
-    let index = inf.childNodes.indexOf(table);
-    return (right ? inf.childNodes.slice(index + 1) : inf.childNodes.slice(0, index))
-      .map(getBBox)
-      .reduce((x, y) => { return x + y; }, 0);
-  };
   let getSpaces2 = function(table: MmlNode): number {
     if (inf === table) {
       return 0;
@@ -184,7 +185,7 @@ let adjustValue = function(inf: MmlNode, right: boolean = false): number {
   };
   let table = getTable(inf);
   let conc = getConclusion(table);
-  let w = getSpaces(table);
+  let w = getSpaces(inf, table, right);
   let x = getBBox(table);
   let y = getBBox(conc);
   return w + ((x - y) / 2);
@@ -308,7 +309,10 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       if (adjust) {
         addSpace(config, premiseF, -1 * adjust);
         console.log('Adding space ' + adjust + ' to inf: ' + inf);
-        addSpace(config, inf, adjust);
+        let table = getTable(inf);
+        let w = getSpaces(inf, table, false);
+        console.log('Subtracting adjustment value: ' + w);
+        addSpace(config, inf, adjust - w);
         // if (isProof) {
         //   let minAdjust = getProperty(inf, 'minAdjust') as number;
         //   console.log('MinAdjust: ' + minAdjust);
