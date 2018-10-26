@@ -96,7 +96,6 @@ let getTable = function(node: MmlNode): MmlNode {
     node = node.parent.childNodes[i] as MmlNode;
     i++;
   }
-  console.log('table: ' + node);
   return node;
 };
 
@@ -167,22 +166,6 @@ let getSpaces = function(inf: MmlNode, table: MmlNode, right: boolean = false): 
 // - w: Preceding/following space/label.
 // - |x - y|/2: Distance from left boundary to middle of conclusion. 
 let adjustValue = function(inf: MmlNode, right: boolean = false): number {
-  let getSpaces2 = function(table: MmlNode): number {
-    if (inf === table) {
-      return 0;
-    }
-    // Now inf is an mrow!
-    let index = inf.childNodes.indexOf(table);
-    let surround = (right ? inf.childNodes.slice(index + 1) : inf.childNodes.slice(0, index)) as MmlNode[];
-    let space = 0;
-    surround.forEach(x => { if (getProperty(x, 'prooflabel')) {
-      space += getBBox(x);
-    }; });
-    console.log('Surround: ' + surround.length);
-    console.log(surround);
-    console.log(space);
-    return space;
-  };
   let table = getTable(inf);
   let conc = getConclusion(table);
   let w = getSpaces(inf, table, right);
@@ -198,7 +181,6 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
     const index = right ? inf.childNodes.length - 1 : 0;
     let mspace = inf.childNodes[index] as MmlNode;
     if (NodeUtil.isType(mspace, 'mspace')) {
-    console.log('Is an mspace !');
       NodeUtil.setAttribute(
         mspace, 'width',
         ParseUtil.Em(ParseUtil.dimen2em(
@@ -209,7 +191,6 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
   const mspace = config.nodeFactory.create('node', 'mspace', [],
                                            {width: ParseUtil.Em(space)});
   if (NodeUtil.isType(inf, 'mrow')) {
-    console.log('Is an mrow!');
     if (right) {
       inf.appendChild(mspace);
       return;
@@ -226,7 +207,7 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
 
 
 let moveProperties = function(src: MmlNode, dest: MmlNode) {
-  let props = ['inference', 'labelledRule', 'proof', 'maxAdjust', 'minAdjust'];
+  let props = ['inference', 'labelledRule', 'proof', 'maxAdjust'];
   props.forEach(x => {
     let value = getProperty(src, x);
     if (value != null) {
@@ -308,35 +289,8 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       let adjust = adjustValue(premiseF);
       if (adjust) {
         addSpace(config, premiseF, -1 * adjust);
-        console.log('Adding space ' + adjust + ' to inf: ' + inf);
-        let table = getTable(inf);
         let w = getSpaces(inf, table, false);
-
-        console.log('Subtracting adjustment value: ' + w);
         addSpace(config, inf, adjust - w);
-        // if (isProof) {
-        //   let minAdjust = getProperty(inf, 'minAdjust') as number;
-        //   console.log('MinAdjust: ' + minAdjust);
-        //   if (minAdjust != null) {
-        //     adjust = Math.max(adjust, minAdjust);
-        //   }
-        //   addSpace(config, inf, adjust);
-        // } else {
-        //   let column = getColumn(inf);
-        //   console.log('Previous Sibling: ' + previousSibling(column));
-        //   if (previousSibling(column)) {
-        //     let minAdjust = getProperty(inf, 'minAdjust') as number;
-        //     console.log('MinAdjust: ' + minAdjust);
-        //     if (minAdjust != null) {
-        //       adjust = Math.max(adjust, minAdjust);
-        //     }
-        //     addSpace(config, inf, adjust);
-        //   } else {
-        //     console.log('Leftmost - adjust: ' + adjust);
-        //     let parentRule = getParentInf(inf.parent);
-        //     setProperty(parentRule, 'minAdjust', adjust);
-        //   }
-        // }
       }
     }
     // Right adjust:
@@ -346,11 +300,10 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     }
     let adjust = adjustValue(premiseL, true);
     addSpace(config, premiseL, -1 * adjust, true);
-    table = getTable(inf);
     let w = getSpaces(inf, table, true);
     let maxAdjust = getProperty(inf, 'maxAdjust') as number;
     if (maxAdjust != null) {
-      adjust = Math.max(adjust - w, maxAdjust);
+      adjust = Math.max(adjust, maxAdjust);
     }
     let column: MmlNode;
     if (isProof || !(column = getColumn(inf))) {
@@ -365,7 +318,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       // If there is a next column, it is the empty one and we make it wider by
       // the accumulated max value.
       const pos = config.nodeFactory.create('node', 'mspace', [],
-                                            {width: adjust + 'em'});
+                                            {width: adjust - w + 'em'});
       sibling.appendChild(pos);
       inf.removeProperty('maxAdjust');
       continue;
@@ -386,8 +339,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
 // Facilities for semantically relevant properties.
 let property_prefix = 'bspr_';
 let blacklistedProperties = {
-  [property_prefix + 'maxAdjust']: true,
-  [property_prefix + 'minAdjust']: true
+  [property_prefix + 'maxAdjust']: true
 };
 
 // Maybe expand the node utils to extend the list of attributes that can be
