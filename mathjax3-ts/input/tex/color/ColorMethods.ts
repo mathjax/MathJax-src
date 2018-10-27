@@ -28,10 +28,10 @@ import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 
-import { COLORS } from './ColorConstants';
+import { COLORS } from './ColorConstants.js';
 
-type ColorModelProcessor = (def: string) => string;
-type MethodsMap = Record<string, ColorModelProcessor>;
+export type ColorModelProcessor = (def: string) => string;
+export type MethodsMap = Record<string, ColorModelProcessor>;
 
 
 /**
