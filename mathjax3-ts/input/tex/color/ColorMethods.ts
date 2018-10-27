@@ -21,16 +21,17 @@
  * @author i@omardo.com (Omar Al-Ithawi)
  */
 
+import NodeUtil from '../NodeUtil.js';
+import { OptionList } from '../../../util/Options.js';
 import { ParseMethod } from '../Types.js';
 import { PropertyList } from '../../../core/Tree/Node.js';
 import ParseUtil from '../ParseUtil.js';
-import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 
 import { COLORS } from './ColorConstants.js';
 
-export type ColorModelProcessor = (def: string) => string;
+export type ColorModelProcessor = (parserOptions: OptionList, def: string) => string;
 export type MethodsMap = Record<string, ColorModelProcessor>;
 
 
@@ -56,15 +57,20 @@ export const ColorModelProcessors: MethodsMap = {};
 
 /**
  * Look up a color based on its model and definition
- *
+ * 
+ * @param {OptionList} parserOptions The parser options object.
  * @param {string} model The coloring model type: `named`, `rgb` `RGB` or `gray`.
  * @param {string} def The color definition: `red, `0.5,0,1`, `128,0,255`, `0.5`.
  * @return {string} The color definition in CSS format e.g. `#44ff00`.
  */
-export function getColor(model: string = 'named', def: string): string {
-    if (ColorModelProcessors.hasOwnPrperty(model)) {
+export function getColor(parserOptions: OptionList, model: string, def: string): string {
+    if (!model) {
+        model = 'named';
+    }
+
+    if (ColorModelProcessors.hasOwnProperty(model)) {
         const modelProcessor = ColorModelProcessors[model];
-        return modelProcessor(def);
+        return modelProcessor(parserOptions, def);
     } else {
         throw new TexError('UndefinedColorModel', 'Color model \'%1\' not defined', model);
     }
@@ -72,12 +78,15 @@ export function getColor(model: string = 'named', def: string): string {
 
 /**
  * Get a named color.
- *
+ * 
+ * @param {OptionList} parserOptions The parser options object.
  * @param {string} name The color definition in RGB: `128,0,255`.
  * @return {string} The color definition in CSS format e.g. `#44ff00`.
  */
-ColorModelProcessors.named = function (name: string): string {
-    if (COLORS.has(name)) {
+ColorModelProcessors.named = function (parserOptions: OptionList, name: string): string {
+    if (parserOptions.definedColors && parserOptions.definedColors.has(name)) {
+        return parserOptions.definedColors.get(name);
+    } else if (COLORS.has(name)) {
         return COLORS.get(name);
     } else {
         return name;
@@ -86,11 +95,12 @@ ColorModelProcessors.named = function (name: string): string {
 
 /**
  * Get an rgb color.
- *
+ * 
+ * @param {OptionList} parserOptions The parser options object.
  * @param {string} rgb The color definition in rgb: `0.5,0,1`.
  * @return {string} The color definition in CSS format e.g. `#44ff00`.
  */
-ColorModelProcessors.rgb = function (rgb: string): string {
+ColorModelProcessors.rgb = function (parserOptions: OptionList, rgb: string): string {
     const rgbParts: string[] = rgb.trim().split(/\s*,\s*/);
     let RGB: string = '#';
 
@@ -123,11 +133,12 @@ ColorModelProcessors.rgb = function (rgb: string): string {
 
 /**
  * Get an RGB color.
- *
+ * 
+ * @param {OptionList} parserOptions The parser options object.
  * @param {string} rgb The color definition in RGB: `128,0,255`.
  * @return {string} The color definition in CSS format e.g. `#44ff00`.
  */
-ColorModelProcessors.RGB = function (rgb: string): string {
+ColorModelProcessors.RGB = function (parserOptions: OptionList, rgb: string): string {
     const rgbParts: string[] = rgb.trim().split(/\s*,\s*/);
     let RGB = '#';
 
@@ -159,10 +170,11 @@ ColorModelProcessors.RGB = function (rgb: string): string {
 /**
  * Get a gray-scale value.
  * 
+ * @param {OptionList} parserOptions The parser options object.
  * @param {string} gray The color definition in RGB: `0.5`.
  * @return {string} The color definition in CSS format e.g. `#808080`.
  */
-ColorModelProcessors.gray = function (gray: string): string {
+ColorModelProcessors.gray = function (parserOptions: OptionList, gray: string): string {
     if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {
         throw new TexError('InvalidDecimalNumber', 'Invalid decimal number');
     }
@@ -193,7 +205,8 @@ export const ColorMethods: Record<string, ParseMethod> = {};
  */
 ColorMethods.Color = function (parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
-    const color = getColor(model, parser.GetArgument(name));
+    const colorDef = parser.GetArgument(name);
+    const color = getColor(parser.options, model, colorDef);
 
     const style = parser.itemFactory.create('style')
                         .setProperties({styles: { mathcolor: color }});
@@ -211,7 +224,8 @@ ColorMethods.Color = function (parser: TexParser, name: string) {
  */
 ColorMethods.TextColor = function (parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
-    const color = getColor(model, parser.GetArgument(name));
+    const colorDef = parser.GetArgument(name);
+    const color = getColor(parser.options, model, colorDef);
     const old = parser.stack.env['color'];
 
     parser.stack.env['color'] = color;
@@ -223,7 +237,7 @@ ColorMethods.TextColor = function (parser: TexParser, name: string) {
         delete parser.stack.env['color'];
     }
 
-    const node = parser.configuration.nodeFactory.create('node', 'mstyle', math, { mathcolor: color });
+    const node = parser.configuration.nodeFactory.create('node', 'mstyle', [math], { mathcolor: color });
     parser.Push(node);
 };
 
@@ -238,7 +252,11 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
         model = parser.GetArgument(name),
         def = parser.GetArgument(name);
 
-    COLORS.set(cname, getColor(model, def));
+    if (!parser.options.definedColors) {
+        parser.options.definedColors = new Map<string, string>();
+    }
+    
+    parser.options.definedColors.set(cname, getColor(parser.options, model, def));
 };
 
 /**
@@ -252,10 +270,10 @@ ColorMethods.ColorBox = function (parser: TexParser, name: string) {
         math = ParseUtil.internalMath(parser, parser.GetArgument(name));
 
     const node = parser.configuration.nodeFactory.create('node', 'mpadded', math, {
-        mathbackground: getColor('named', cname)
+        mathbackground: getColor(parser.options, 'named', cname)
     });
 
-    NodeUtil.setProperties(node, padding(parser.options.get('colorPadding') as string));
+    NodeUtil.setProperties(node, padding(parser.options.colorPadding));
     parser.Push(node);
 };
 
@@ -271,10 +289,10 @@ ColorMethods.FColorBox = function (parser: TexParser, name: string) {
         math = ParseUtil.internalMath(parser, parser.GetArgument(name));
 
     const node = parser.configuration.nodeFactory.create('node', 'mpadded', math, {
-        mathbackground: getColor('named', cname),
-        style: `border: ${parser.options.get('colorBorderWidth')} solid ${getColor('named', fname)}`
+        mathbackground: getColor(parser.options, 'named', cname),
+        style: `border: ${parser.options.colorBorderWidth} solid ${getColor(parser.options, 'named', fname)}`
     });
 
-    NodeUtil.setProperties(node, padding(parser.options.get('colorPadding') as string));
+    NodeUtil.setProperties(node, padding(parser.options.colorPadding));
     parser.Push(node);
 };

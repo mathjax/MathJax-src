@@ -21,8 +21,7 @@
  * @author i@omardo.com (Omar Al-Ithawi)
  */
 
-// TODO: Should have a new instance per parser instead of being a global state effectively.
-export const COLORS: Map<string, string> = new Map<string, string>([
+ export const COLORS: Map<string, string> = new Map<string, string>([
     ['Apricot', '#FBB982'],
     ['Aquamarine', '#00B5BE'],
     ['Bittersweet', '#C04F17'],
