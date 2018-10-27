@@ -104,6 +104,11 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
     pwidthCells: [C, number][];
 
     /**
+     * The full width of a percentage-width table
+     */
+    pWidth: number;
+
+    /**
      * The rows of the table
      */
     readonly tableRows: R[];
@@ -180,6 +185,11 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
      * @return {[number, string, number]}   The padding, alignment, and shift amounts
      */
     getPadAlignShift(side: string): [number, string, number];
+
+    /**
+     * @return {number}    The true width of the table (without labels)
+     */
+    getWidth(): number;
 
     /**
      * @return {number}   The maximum height of a row
@@ -373,6 +383,10 @@ export function CommonMtableMixin<C extends AnyWrapper,
          */
         public pwidthCells: [C, number][] = [];
 
+        /**
+         * The full width of a percentage-width table
+         */
+        public pWidth: number = 0;
 
         /**
          * @return {R[]}  The rows of the table
@@ -651,18 +665,21 @@ export function CommonMtableMixin<C extends AnyWrapper,
                 this.container.bbox.pwidth = '';
             }
             const {w, L, R} = this.bbox;
-            const W = Math.max(w, this.length2em(width, cwidth));
+            const W = Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R)));
             const cols = (this.node.attributes.get('equalcolumns') as boolean ?
                           Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols))) :
                           this.getColumnAttributes('columnwidth', 0));
             this.cWidths = this.getColumnWidthsFixed(cols, W);
             const CW = this.getComputedWidths();
-            this.bbox.w = sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+            this.pWidth = sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+            if (this.isTop) {
+                this.bbox.w = this.pWidth;
+            }
             this.setColumnPWidths();
-            if (this.bbox.w !== w) {
+            if (this.pWidth !== w) {
                 this.parent.invalidateBBox();
             }
-            return this.bbox.w !== w;
+            return this.pWidth !== w;
         }
 
         /**
@@ -746,6 +763,13 @@ export function CommonMtableMixin<C extends AnyWrapper,
         public getAlignShift() {
             return (this.isTop ? super.getAlignShift() :
                     [this.container.getChildAlign(this.containerI), 0] as [string, number]);
+        }
+
+        /**
+         * @return {number}    The true width of the table (without labels)
+         */
+        public getWidth() {
+            return this.pWidth || this.getBBox().w;
         }
 
         /******************************************************************/

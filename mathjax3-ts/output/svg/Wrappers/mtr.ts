@@ -122,7 +122,7 @@ export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<N, T, D>, SVGConstruc
             const [TS, BS] = [this.tSpace, this.bSpace];
             const [H, D] = [this.H, this.D];
             adaptor.setAttribute(child, 'y', this.fixed(-(D + BS + BL)));
-            adaptor.setAttribute(child, 'width', this.fixed(this.parent.getBBox().w));
+            adaptor.setAttribute(child, 'width', this.fixed(this.parent.getWidth()));
             adaptor.setAttribute(child, 'height', this.fixed(TL + TS + H + D + BS + BL));
         }
     }

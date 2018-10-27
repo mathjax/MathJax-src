@@ -94,7 +94,8 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         this.handleColumnLines(svg);
         this.handleRowLines(svg);
         this.handleFrame(svg);
-        this.handleLabels(svg, parent);
+        const dx = this.handlePWidth(svg);
+        this.handleLabels(svg, parent, dx);
     }
 
     /**
@@ -130,6 +131,17 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
     }
 
     /******************************************************************/
+
+    /**
+     * @override
+     */
+    public handleColor() {
+        super.handleColor();
+        const rect = this.adaptor.firstChild(this.element);
+        if (rect) {
+            this.adaptor.setAttribute(rect, 'width', this.fixed(this.getWidth()));
+        }
+    }
 
     /**
      * Add vertical lines between columns
@@ -186,6 +198,25 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
             const style = this.node.attributes.get('frame') as string;
             this.adaptor.append(svg, this.makeFrame(w, h, d, style));
         }
+    }
+
+    /**
+     * @return {number}   The x-adjustement needed to handle the true size of percentage-width tables
+     */
+    protected handlePWidth(svg: N) {
+        if (!this.pWidth) return 0;
+        const {w, L, R} = this.getBBox();
+        const W = L + this.pWidth + R;
+        const [align, shift] = this.getAlignShift();
+        const CW = Math.max(this.isTop ? W : 0, this.container.getWrapWidth(this.containerI)) - L - R;
+        const dw = w - (this.pWidth > CW ? CW: this.pWidth);
+        const dx = (align === 'left' ? 0 : align === 'right' ? dw : dw / 2);
+        if (dx) {
+            const table = this.svg('g', {}, this.adaptor.childNodes(svg));
+            this.place(dx, 0, table);
+            this.adaptor.append(svg, table);
+        }
+        return dx;
     }
 
     /******************************************************************/
@@ -256,10 +287,11 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
     /**
      * Handle addition of labels to the table
      *
-     * @param {N} svg     The container for the table contents
-     * @param {N} parent  The parent containing the the table
+     * @param {N} svg       The container for the table contents
+     * @param {N} parent    The parent containing the the table
+     * @param {number} dx   The adjustement for percentage width tables
      */
-    protected handleLabels(svg: N, parent: N) {
+    protected handleLabels(svg: N, parent: N, dx: number) {
         if (!this.hasLabels) return;
         const labels = this.labels;
         const attributes = this.node.attributes;
@@ -276,7 +308,7 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         // Handle top-level table to make it adapt to container size
         //   but place subtables explicitly
         //
-        this.isTop ? this.nestTable(svg, labels, side) : this.subTable(svg, labels, side);
+        this.isTop ? this.topTable(svg, labels, side) : this.subTable(svg, labels, side, dx);
     }
 
     /**
@@ -313,9 +345,10 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @param {N} labels      The group of labels
      * @param {string} side   The side alignment (left or right)
      */
-    protected nestTable(svg: N, labels: N, side: string) {
+    protected topTable(svg: N, labels: N, side: string) {
         const adaptor = this.adaptor;
         const {h, d, w, L, R} = this.getBBox();
+        const W = L + (this.pWidth || w) + R;
         const LW = this.getTableData().L;
         const [pad, align, shift] = this.getPadAlignShift(side);
         const translate = (shift ? ` translate(${this.fixed(shift)} 0)` : '');
@@ -324,7 +357,7 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         let table = this.svg('svg', {
             'data-table': true, transform: transform,
             preserveAspectRatio: (align === 'left' ? 'xMinYMid' : align === 'right' ? 'xMaxYMid' : 'xMidYMid'),
-            viewBox: [this.fixed(-L), this.fixed(-h), this.fixed(L + w + R), this.fixed(h + d)].join(' ')
+            viewBox: [this.fixed(-L), this.fixed(-h), this.fixed(W), this.fixed(h + d)].join(' ')
         }, [
             this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)' + translate}, adaptor.childNodes(svg))
         ]);
@@ -342,17 +375,18 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @param {N} svg         The SVG container for the table
      * @param {N} labels      The group of labels
      * @param {string} side   The side alignment (left or right)
+     * @param {number} dx     The adjustement for percentage width tables
      */
-    protected subTable(svg: N, labels: N, side: string) {
+    protected subTable(svg: N, labels: N, side: string, dx: number) {
         const adaptor = this.adaptor;
-        const {h, d, w, L, R} = this.getBBox();
-        const W = L + w + R;
+        const {w, L, R} = this.getBBox();
+        const W = L + (this.pWidth || w) + R;
         const labelW = this.getTableData().L;
         const [align, shift] = this.getAlignShift();
         const CW = Math.max(W, this.container.getWrapWidth(this.containerI));
         this.place(side === 'left' ?
-                   (align === 'left' ? 0 : align === 'right' ? W - CW : (W - CW) / 2) - L :
-                   (align === 'left' ? CW : align === 'right' ? W : (CW + W) / 2) - L - labelW,
+                   (align === 'left' ? 0 : align === 'right' ? W - CW + dx : (W - CW) / 2 + dx) - L :
+                   (align === 'left' ? CW : align === 'right' ? W + dx : (CW + W) / 2 + dx) - L - labelW,
                    0, labels);
         adaptor.append(svg, labels);
     }

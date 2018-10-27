@@ -415,7 +415,8 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
             W = this.em(this.length2em(W) + 2 * this.fLine);
         }
         const table = adaptor.firstChild(this.chtml) as N;
-        adaptor.setStyle(table, 'minWidth', W);
+        adaptor.setStyle(table, 'width', W);
+        adaptor.setStyle(table, 'minWidth', this.em(w));
         if (L || R) {
             adaptor.setStyle(this.chtml, 'margin', '');
             if (L === R) {
