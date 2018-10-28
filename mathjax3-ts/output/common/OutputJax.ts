@@ -239,9 +239,10 @@ AbstractOutputJax<N, T, D> {
     public getMetrics(html: MathDocument<N, T, D>) {
         this.setDocument(html);
         const adaptor = this.adaptor;
-        const map = this.getMetricMap(html);
+        const maps = this.getMetricMaps(html);
         for (const math of html.math) {
-            const {em, ex, containerWidth, lineWidth, scale} = map.get(math.start.node as N);
+            const map = maps[math.display ? 1 : 0];
+            const {em, ex, containerWidth, lineWidth, scale} = map.get(adaptor.parent(math.start.node));
             math.setMetrics(em, ex, containerWidth, lineWidth, scale);
         }
     }
@@ -250,32 +251,41 @@ AbstractOutputJax<N, T, D> {
      * Get a MetricMap for the math list
      *
      * @param {MathDocument} html  The math document whose math list is to be processed.
-     * @return {MetricMap}         The node-to-metrics map for all the containers that have math
+     * @return {MetricMap[]}       The node-to-metrics maps for all the containers that have math
      */
-    protected getMetricMap(html: MathDocument<N, T, D>) {
+    protected getMetricMaps(html: MathDocument<N, T, D>) {
         const adaptor = this.adaptor;
-        const domMap = new Map() as MetricDomMap<N>;
+        const domMaps = [new Map() as MetricDomMap<N>, new Map() as MetricDomMap<N>];
         //
         // Add the test elements all at once (so only one reflow)
+        // Currently, we do one test for each container element for in-line and one for display math
+        //   (since we need different techniques for the two forms to avoid a WebKit bug).
+        //   This may need to be changed to handle floating elements better, since that has to be
+        //   done at the location of the math itself, not necessarily the end of the container.
         //
         for (const math of html.math) {
-            const node = math.start.node as N;
-            domMap.set(node, this.getTestElement(node, math.display));
+            const node = adaptor.parent(math.start.node);
+            const map = domMaps[math.display? 1 : 0];
+            map.set(node, this.getTestElement(node, math.display));
         }
         //
         // Measure the metrics for all the mapped elements
         //
-        const map = new Map() as MetricMap<N>;
-        for (const node of domMap.keys()) {
-            map.set(node, this.measureMetrics(domMap.get(node)));
+        const maps = [new Map() as MetricMap<N>, new Map() as MetricMap<N>];
+        for (const i of maps.keys()) {
+            for (const node of domMaps[i].keys()) {
+                maps[i].set(node, this.measureMetrics(domMaps[0].get(node)));
+            }
         }
         //
         // Remove the test elements
         //
-        for (const node of domMap.values()) {
-            adaptor.remove(node);
+        for (const i of maps.keys()) {
+            for (const node of domMaps[i].values()) {
+                adaptor.remove(node);
+            }
         }
-        return map;
+        return maps;
     }
 
     /**
@@ -325,9 +335,7 @@ AbstractOutputJax<N, T, D> {
             adaptor.setStyle(right, 'width', '10000em');
             adaptor.setStyle(right, 'float', '');
         }
-        const test = adaptor.clone(display? this.testDisplay : this.testInline) as N;
-        adaptor.insert(test, node);
-        return test;
+        return adaptor.append(node, adaptor.clone(display? this.testDisplay : this.testInline) as N);
     }
 
     /**
