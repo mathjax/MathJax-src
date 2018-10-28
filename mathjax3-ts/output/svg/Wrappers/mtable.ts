@@ -49,17 +49,20 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
     public static kind = MmlMtable.prototype.kind;
 
     public static styles: StyleList = {
-        'g[data-mml-node="mtable"] rect[data-line]': {
-            'outline-style': 'solid',
-            'outline-width': '70px',
-            'outline-offset': '-70px',
+        'g[data-mml-node="mtable"] > line[data-line]': {
+            'stroke-width': '70px',
             fill: 'none'
         },
-        'g[data-mml-node="mtable"] rect[data-frame]': {
-            'outline-style': 'solid',
-            'outline-width': '70px',
-            'outline-offset': '-70px',
+        'g[data-mml-node="mtable"] > rect[data-frame]': {
+            'stroke-width': '70px',
             fill: 'none'
+        },
+        'g[data-mml-node="mtable"] > .mjx-dashed': {
+            'stroke-dasharray': '140'
+        },
+        'g[data-mml-node="mtable"] > .mjx-dotted': {
+            'stroke-linecap': 'round',
+            'stroke-dasharray': '0,140'
         },
         'g[data-mml-node="mtable"] > svg': {
             overflow: 'visible'
@@ -158,7 +161,7 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         let x = this.fLine;
         for (let i = 0; i < lines.length; i++) {
             x += cSpace[i] + cWidth[i] + cSpace[i+1];
-            this.adaptor.append(svg, this.makeVLine(x, lines[i]));
+            this.adaptor.append(svg, this.makeVLine(x, lines[i], cLines[i]));
             x += cLines[i];
         }
     }
@@ -181,7 +184,7 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         for (let i = 0; i < lines.length; i++) {
             const [rH, rD] = this.getRowHD(equal, HD, H[i], D[i]);
             y -= rSpace[i] + rH + rD + rSpace[i+1]
-            this.adaptor.append(svg, this.makeHLine(y, lines[i]));
+            this.adaptor.append(svg, this.makeHLine(y, lines[i], rLines[i]));
             y -= rLines[i];
         }
 
@@ -229,57 +232,60 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @return {N}             The SVG element for the frame
      */
     protected makeFrame(w: number, h: number, d: number, style: string) {
-        const properties: OptionList = {
-            'data-frame': true,
-            width: this.fixed(w), height: this.fixed(h+d), y: this.fixed(-d)
-        }
-        if (style !== 'solid') {
-            properties.style = {'outline-style': style};
-        }
-        return this.svg('rect', properties);
+        const t = this.fLine;
+        return this.svg('rect', this.setLineThickness(t, style, {
+            'data-frame': true, 'class': 'mjx-' + style,
+            width: this.fixed(w - t), height: this.fixed(h + d - t),
+            x: this.fixed(t / 2), y: this.fixed(t / 2 - d)
+        }));
     }
 
     /**
      * @param {number} x       The x location of the line
      * @param {string} style   The border style for the line
+     * @param {number} t       The line thickness
      * @return {N}             The SVG element for the line
      */
-    protected makeVLine(x: number, style: string) {
+    protected makeVLine(x: number, style: string, t: number) {
         const {h, d} = this.getBBox();
-        const p = (style === 'dashed' || style === 'dotted' || style === 'solid' ? 0 : .07);
-        const properties: OptionList = {
-            width: this.fixed(.07 + 2 * p), height: this.fixed(h + d + 2 * p),
-            x: this.fixed(x), y: this.fixed(-d - p), 'data-line': 'v'
-        };
-        if (style !== 'solid') {
-            properties.style = {'outline-style': style};
-        }
-        if (p) {
-            properties['clip-path'] = 'inset(70 130 70 0)';
-        }
-        return this.svg('rect', properties);
+        const dt = (style === 'dotted' ? t / 2 : 0);
+        const X = this.fixed(x + t / 2);
+        return this.svg('line', this.setLineThickness(t, style, {
+            'data-line': 'v', 'class': 'mjx-' + style,
+            x1: X, y1: this.fixed(dt - d), x2: X, y2: this.fixed(h - dt)
+        }));
     }
 
     /**
      * @param {number} y       The y location of the line
      * @param {string} style   The border style for the line
+     * @param {number} t       The line thickness
      * @return {N}             The SVG element for the line
      */
-    protected makeHLine(y: number, style: string) {
+    protected makeHLine(y: number, style: string, t: number) {
         const w = this.getBBox().w;
-        const p = (style === 'dashed' || style === 'dotted' || style === 'solid' ? 0 : .07);
-        const properties: OptionList = {
-            width: this.fixed(w + 2 * p), height: this.fixed(.07 + 2 * p),
-            y: this.fixed(y - .07), 'data-line': 'h'
+        const dt = (style === 'dotted' ? t / 2 : 0);
+        const Y = this.fixed(y - t / 2);
+        return this.svg('line', this.setLineThickness(t, style, {
+            'data-line': 'h', 'class': 'mjx-' + style,
+            x1: this.fixed(dt), y1: Y, x2: this.fixed(w - dt), y2: Y
+        }));
+    }
+
+    /**
+     * @param {number} t                The thickness of the line
+     * @param {string} style            The border style for the line
+     * @param {OptionList} properties   The list of properties to modify
+     * @param {OptionList}              The modified properties
+     */
+    protected setLineThickness(t: number, style: string, properties: OptionList) {
+        if (t !== .07) {
+            properties['stroke-thickness'] = this.fixed(t);
+            if (style !== 'solid') {
+                properties['stroke-dasharray'] = (style === 'dotted' ? '0,' : '') + this.fixed(2 * t);
+            }
         }
-        if (style !== 'solid') {
-            properties.style = {'outline-style': style};
-        }
-        if (p) {
-            properties['clip-path'] = 'inset(0 70 130 70)';
-            properties['x'] = this.fixed(-p);
-        }
-        return this.svg('rect', properties);
+        return properties
     }
 
     /******************************************************************/
