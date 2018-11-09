@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
+import {MathDocument, AbstractMathDocument, ProcessBits} from '../../core/MathDocument.js';
 import {userOptions, separateOptions, OptionList} from '../../util/Options.js';
 import {HTMLMathItem} from './HTMLMathItem.js';
 import {HTMLMathList} from './HTMLMathList.js';
@@ -134,7 +134,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @override
      */
     public findMath(options: OptionList) {
-        if (!this.processed.findMath) {
+        if (!this.processed.isSet('findMath')) {
             this.adaptor.document = this.document;
             options = userOptions({elements: [this.adaptor.body(this.document)]}, options);
             for (const container of this.adaptor.getElements(options['elements'], this.document)) {
@@ -157,7 +157,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
                     this.math.merge(list);
                 }
             }
-            this.processed.findMath = true;
+            this.processed.set('findMath');
         }
         return this;
     }
@@ -166,7 +166,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @override
      */
     public updateDocument() {
-        if (!this.processed.updateDocument) {
+        if (!this.processed.isSet('updateDocument')) {
             super.updateDocument();
             const sheet = this.documentStyleSheet();
             if (sheet) {
@@ -178,7 +178,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
                     this.adaptor.append(head, sheet);
                 }
             }
-            this.processed.updateDocument = true;
+            this.processed.set('updateDocument');
         }
         return this;
     }
@@ -203,14 +203,14 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @override
      */
     public removeFromDocument(restore: boolean = false) {
-        if (this.processed.updateDocument) {
+        if (this.processed.isSet('updateDocument')) {
             for (const math of this.math) {
                 if (math.state() >= STATE.INSERTED) {
                     math.state(STATE.TYPESET, restore);
                 }
             }
         }
-        this.processed.updateDocument = false;
+        this.processed.clear('updateDocument');
         return this;
     }
 
@@ -225,15 +225,17 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * Temporary function for testing purposes.  Will be removed
      */
     public TestMath(text: string, display: boolean = true) {
-        if (!this.processed['TestMath']) {
+        if (!this.processed.isSet('TestMath')) {
             let math = new HTMLMathItem<N, T, D>(text, this.inputJax[0], display);
             math.setMetrics(16, 8, 1000000, 1000000, 1);
             this.math.push(math);
-            this.processed['TestMath'] = true;
+            this.processed.set('TestMath');
         }
         return this;
     }
 
 }
+
+ProcessBits.allocate('TestMath');  // Temporary
 
 let STATE = HTMLDocument.STATE;

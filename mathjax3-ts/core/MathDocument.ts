@@ -29,6 +29,7 @@ import {MathItem, AbstractMathItem} from './MathItem.js';
 import {MmlNode, TextNode} from './MmlTree/MmlNode.js';
 import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
+import {BitField, BitFieldClass} from '../util/BitField.js';
 
 /*****************************************************************/
 /**
@@ -79,7 +80,7 @@ export interface MathDocument<N, T, D> {
      *  asynchronous operations are used), the ones that have already been
      *  completed won't be performed again.
      */
-    processed: {[name: string]: boolean};
+    processed: BitField;
 
     /**
      * An array of input jax to run on the document
@@ -178,19 +179,8 @@ export interface MathDocument<N, T, D> {
 }
 
 /*****************************************************************/
-/**
- *  The booleans used to keep track of what processing has been
- *  performed.
- */
 
-export type MathProcessed = {
-    findMath: boolean;
-    compile: boolean;
-    getMetrics: boolean;
-    typeset: boolean;
-    updateDocument: boolean;
-    [name: string]: boolean;
-};
+export const ProcessBits = BitFieldClass('findMath', 'compile', 'getMetrics', 'typeset', 'updateDocument');
 
 /**
  * Defaults used when input jax isn't specified
@@ -264,7 +254,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     public document: D;
     public options: OptionList;
     public math: MathList<N, T, D>;
-    public processed: MathProcessed;
+    public processed: BitField;
     public inputJax: InputJax<N, T, D>[];
     public outputJax: OutputJax<N, T, D>;
     public adaptor: DOMAdaptor<N, T, D>;
@@ -280,13 +270,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         this.document = document;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
         this.math = new (this.options['MathList'] || DefaultMathList)();
-        this.processed = {
-            findMath: false,
-            compile: false,
-            typeset: false,
-            getMetrics: false,
-            updateDocument: false
-        };
+        this.processed = new ProcessBits();
         this.outputJax = this.options['OutputJax'] || new DefaultOutputJax<N, T, D>();
         let inputJax = this.options['InputJax'] || [new DefaultInputJax<N, T, D>()];
         if (!Array.isArray(inputJax)) {
@@ -312,7 +296,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @override
      */
     public findMath(options: OptionList = null) {
-        this.processed.findMath = true;
+        this.processed.set('findMath');
         return this;
     }
 
@@ -320,7 +304,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @override
      */
     public compile() {
-        if (!this.processed.compile) {
+        if (!this.processed.isSet('compile')) {
             for (const math of this.math) {
                 try {
                     math.compile(this);
@@ -332,7 +316,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
                     math.inputData['error'] = err;
                 }
             }
-            this.processed.compile = true;
+            this.processed.set('compile');
         }
         return this;
     }
@@ -360,7 +344,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @override
      */
     public typeset() {
-        if (!this.processed.typeset) {
+        if (!this.processed.isSet('typeset')) {
             for (const math of this.math) {
                 try {
                     math.typeset(this);
@@ -372,7 +356,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
                     math.outputData['error'] = err;
                 }
             }
-            this.processed.typeset = true;
+            this.processed.set('typeset');
         }
         return this;
     }
@@ -393,9 +377,9 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @override
      */
     public getMetrics() {
-        if (!this.processed.getMetrics) {
+        if (!this.processed.isSet('getMetrics')) {
             this.outputJax.getMetrics(this);
-            this.processed.getMetrics = true;
+            this.processed.set('getMetrics');
         }
         return this;
     }
@@ -404,11 +388,11 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @override
      */
     public updateDocument() {
-        if (!this.processed.updateDocument) {
+        if (!this.processed.isSet('updateDocument')) {
             for (const math of this.math.reversed()) {
                 math.updateDocument(this);
             }
-            this.processed.updateDocument = true;
+            this.processed.set('updateDocument');
         }
         return this;
     }
@@ -428,14 +412,14 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             math.state(state, restore);
         }
         if (state < STATE.INSERTED) {
-            this.processed.updateDocument = false;
+            this.processed.clear('updateDocument');
         }
         if (state < STATE.TYPESET) {
-            this.processed.typeset = false;
-            this.processed.getMetrics = false;
+            this.processed.clear('typeset');
+            this.processed.clear('getMetrics');
         }
         if (state < STATE.COMPILED) {
-            this.processed.compile = false;
+            this.processed.clear('compile');
         }
         return this;
     }
@@ -444,9 +428,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @override
      */
     public reset() {
-        for (const key of Object.keys(this.processed)) {
-            this.processed[key] = false;
-        }
+        this.processed.reset();
         return this;
     }
 
