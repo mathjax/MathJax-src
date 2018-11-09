@@ -62,11 +62,10 @@ export interface Handler<N, T, D> {
      * Creates a MathDocument for the given handler
      *
      * @param {any} document        The document to be handled
-     * @param {DOMAdaptor} adaptor  The DOM adaptor for managing HTML elements
      * @param {OptionList} options  The options for the handling of the document
      * @return {MathDocument}       The MathDocument object that manages the processing
      */
-    create(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList): MathDocument<N, T, D>;
+    create(document: any, options: OptionList): MathDocument<N, T, D>;
 }
 
 /*****************************************************************/
