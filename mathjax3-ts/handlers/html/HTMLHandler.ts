@@ -36,20 +36,26 @@ import {OptionList} from '../../util/Options.js';
  */
 export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
 
-    adaptor: MinHTMLAdaptor<N, T, D>;
+    public adaptor: MinHTMLAdaptor<N, T, D>;  // declare a more specific adaptor type
+
+    /**
+     * @override
+     */
+    public documentClass = HTMLDocument;
 
     /**
      * @override
      */
     public handlesDocument(document: any) {
+        const adaptor = this.adaptor;
         if (typeof(document) === 'string') {
             try {
-                document = this.adaptor.parse(document, 'text/html');
+                document = adaptor.parse(document, 'text/html');
             } catch (err) {}
         }
-        if (document instanceof this.adaptor.window.Document ||
-            document instanceof this.adaptor.window.HTMLElement ||
-            document instanceof this.adaptor.window.DocumentFragment) {
+        if (document instanceof adaptor.window.Document ||
+            document instanceof adaptor.window.HTMLElement ||
+            document instanceof adaptor.window.DocumentFragment) {
             return true;
         }
         return false;
@@ -62,15 +68,16 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
      * @override
      */
     public create(document: any, options: OptionList) {
+        const adaptor = this.adaptor;
         if (typeof(document) === 'string') {
-            document = this.adaptor.parse(document, 'text/html');
-        } else if (document instanceof this.adaptor.window.HTMLElement ||
-                   document instanceof this.adaptor.window.DocumentFragment) {
+            document = adaptor.parse(document, 'text/html');
+        } else if (document instanceof adaptor.window.HTMLElement ||
+                   document instanceof adaptor.window.DocumentFragment) {
             let child = document as N;
-            document = this.adaptor.parse('', 'text/html');
-            this.adaptor.append(this.adaptor.body(document), child);
+            document = adaptor.parse('', 'text/html');
+            adaptor.append(adaptor.body(document), child);
         }
-        return new HTMLDocument<N, T, D>(document, this.adaptor, options);
+        return super.create(document, options) as HTMLDocument<N, T, D>;
     }
 
 }
