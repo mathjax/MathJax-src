@@ -223,6 +223,14 @@ class DefaultOutputJax<N, T, D> extends AbstractOutputJax<N, T, D> {
  * @template D  The Document class
  */
 class DefaultMathList<N, T, D> extends AbstractMathList<N, T, D> {}
+/**
+ * Default for the Mathitem when one isn't specified
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+class DefaultMathItem<N, T, D> extends AbstractMathItem<N, T, D> {}
 
 let errorFactory = new MmlFactory();
 
@@ -241,7 +249,8 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     public static OPTIONS: OptionList = {
         OutputJax: null,           // instance of an OutputJax for the document
         InputJax: null,            // instance of an InputJax or an array of them
-        MathList: DefaultMathList, // instance of a MathList to use for the document
+        MathList: DefaultMathList, // constructor for a MathList to use for the document
+        MathItem: DefaultMathItem, // constructor for a MathItem to use for the MathList
         compileError: (doc: AbstractMathDocument<any, any, any>, math: MathItem<any, any, any>, err: Error) => {
             doc.compileError(math, err);
         },

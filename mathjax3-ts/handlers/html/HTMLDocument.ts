@@ -113,7 +113,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         let math = item.math;
         let start = this.findPosition(item.n, item.start.n, item.open, nodes);
         let end = this.findPosition(item.n, item.end.n, item.close, nodes);
-        return new HTMLMathItem(math, jax, item.display, start, end);
+        return new this.options.MathItem(math, jax, item.display, start, end) as HTMLMathItem<N, T, D>;
     }
 
     /**
@@ -150,7 +150,8 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
                         }
                     } else {
                         for (const math of jax.findMath(container)) {
-                            let item = new HTMLMathItem(math.math, jax, math.display, math.start, math.end);
+                            let item: HTMLMathItem<N, T, D> =
+                                new this.options.MathItem(math.math, jax, math.display, math.start, math.end);
                             list.push(item);
                         }
                     }
@@ -226,7 +227,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      */
     public TestMath(text: string, display: boolean = true) {
         if (!this.processed.isSet('TestMath')) {
-            let math = new HTMLMathItem<N, T, D>(text, this.inputJax[0], display);
+            let math = new this.options.MathItem(text, this.inputJax[0], display) as HTMLMathItem<N, T, D>;
             math.setMetrics(16, 8, 1000000, 1000000, 1);
             this.math.push(math);
             this.processed.set('TestMath');
