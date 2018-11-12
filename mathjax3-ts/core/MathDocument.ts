@@ -98,6 +98,11 @@ export interface MathDocument<N, T, D> {
     adaptor: DOMAdaptor<N, T, D>;
 
     /**
+     * The MmlFactory to be used for input jax and error processing
+     */
+    mmlFactory: MmlFactory;
+
+    /**
      * Locates the math in the document and constructs the MathList
      *  for the document.
      *
@@ -232,9 +237,6 @@ class DefaultMathList<N, T, D> extends AbstractMathList<N, T, D> {}
  */
 class DefaultMathItem<N, T, D> extends AbstractMathItem<N, T, D> {}
 
-let errorFactory = new MmlFactory();
-
-
 /*****************************************************************/
 /**
  *  Implements the abstract MathDocument class
@@ -249,6 +251,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     public static OPTIONS: OptionList = {
         OutputJax: null,           // instance of an OutputJax for the document
         InputJax: null,            // instance of an InputJax or an array of them
+        MmlFactory: null,          // instance of a MmlFactory for this document
         MathList: DefaultMathList, // constructor for a MathList to use for the document
         MathItem: DefaultMathItem, // constructor for a MathItem to use for the MathList
         compileError: (doc: AbstractMathDocument<any, any, any>, math: MathItem<any, any, any>, err: Error) => {
@@ -267,11 +270,13 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     public inputJax: InputJax<N, T, D>[];
     public outputJax: OutputJax<N, T, D>;
     public adaptor: DOMAdaptor<N, T, D>;
+    public mmlFactory: MmlFactory;
 
 
     /**
-     * @param {any} document        The document (HTML string, parsed DOM, etc.) to be processed
-     * @param {OptionList} options  The options for this document
+     * @param {any} document           The document (HTML string, parsed DOM, etc.) to be processed
+     * @param {DOMAdaptor} adaptor     The DOM adaptor for this document
+     * @param {OptionList} options     The options for this document
      * @constructor
      */
     constructor (document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
@@ -292,6 +297,11 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         this.adaptor = adaptor;
         this.outputJax.setAdaptor(adaptor);
         this.inputJax.map(jax => jax.setAdaptor(adaptor));
+        //
+        // Pass the MmlFactory to the jax
+        //
+        this.mmlFactory = this.options['MmlFactory'] || new MmlFactory();
+        this.inputJax.map(jax => jax.setMmlFactory(this.mmlFactory));
     }
 
     /**
@@ -337,10 +347,10 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @param {Error} err      The Error object for the error
      */
     public compileError(math: MathItem<N, T, D>, err: Error) {
-        math.root = errorFactory.create('math', {'data-mjx-error': err.message}, [
-            errorFactory.create('merror', null, [
-                errorFactory.create('mtext', null, [
-                    (errorFactory.create('text') as TextNode).setText('Math input error')
+        math.root = this.mmlFactory.create('math', {'data-mjx-error': err.message}, [
+            this.mmlFactory.create('merror', null, [
+                this.mmlFactory.create('mtext', null, [
+                    (this.mmlFactory.create('text') as TextNode).setText('Math input error')
                 ])
             ])
         ]);
