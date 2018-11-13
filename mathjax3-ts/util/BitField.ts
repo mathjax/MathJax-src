@@ -43,12 +43,23 @@ export class BitField {
      */
     public static allocate(...names: string[]) {
         for (const name of names) {
+            if (this.has(name)) {
+                throw new Error('Bit already allocated for '+name);
+            }
             if (this.next === 0x80000000) {
                 throw new Error('Maximum number of bits already allocated');
             }
             this.names.set(name, this.next);
             this.next <<= 1;
         }
+    }
+
+    /**
+     * @param {string} name   The name of the bit to check for being defined
+     * @return {boolean}      True if the named bit is already allocated
+     */
+    public static has(name: string) {
+        return this.names.has(name);
     }
 
     /**

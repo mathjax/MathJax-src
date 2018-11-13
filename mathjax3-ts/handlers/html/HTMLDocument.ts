@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument, AbstractMathDocument, ProcessBits} from '../../core/MathDocument.js';
+import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
 import {userOptions, separateOptions, OptionList} from '../../util/Options.js';
 import {HTMLMathItem} from './HTMLMathItem.js';
 import {HTMLMathList} from './HTMLMathList.js';
@@ -237,6 +237,6 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
 }
 
-ProcessBits.allocate('TestMath');  // Temporary
+AbstractMathDocument.ProcessBits.allocate('TestMath');  // Temporary
 
 let STATE = HTMLDocument.STATE;

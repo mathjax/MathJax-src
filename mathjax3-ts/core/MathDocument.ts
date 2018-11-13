@@ -185,8 +185,6 @@ export interface MathDocument<N, T, D> {
 
 /*****************************************************************/
 
-export const ProcessBits = BitFieldClass('findMath', 'compile', 'getMetrics', 'typeset', 'updateDocument');
-
 /**
  * Defaults used when input jax isn't specified
  *
@@ -263,6 +261,11 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     };
     public static STATE = AbstractMathItem.STATE;
 
+    /**
+     * A bit-field for the actions that heve been processed
+     */
+    public static ProcessBits = BitFieldClass('findMath', 'compile', 'getMetrics', 'typeset', 'updateDocument');
+
     public document: D;
     public options: OptionList;
     public math: MathList<N, T, D>;
@@ -284,7 +287,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         this.document = document;
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
         this.math = new (this.options['MathList'] || DefaultMathList)();
-        this.processed = new ProcessBits();
+        this.processed = new AbstractMathDocument.ProcessBits();
         this.outputJax = this.options['OutputJax'] || new DefaultOutputJax<N, T, D>();
         let inputJax = this.options['InputJax'] || [new DefaultInputJax<N, T, D>()];
         if (!Array.isArray(inputJax)) {
