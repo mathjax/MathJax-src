@@ -68,7 +68,8 @@ export class Configuration {
                                 options?: OptionList,
                                 nodes?: {[key: string]: any},
                                 preprocessors?: ProcessorList,
-                                postprocessors?: ProcessorList
+                                postprocessors?: ProcessorList,
+                                init?: () => void
                                } = {}) {
     return new Configuration(name,
                              config.handler || {},
@@ -78,7 +79,8 @@ export class Configuration {
                              config.options || {},
                              config.nodes || {},
                              config.preprocessors || [],
-                             config.postprocessors || []
+                             config.postprocessors || [],
+                             config.init || (() => {})
                             );
   }
 
