@@ -49,7 +49,7 @@ export class NodeFactory {
    * The external node factory.
    * @type {MmlFactory}
    */
-  protected mmlFactory: MmlFactory;
+  protected mmlFactory: MmlFactory = null;
 
 
   /**

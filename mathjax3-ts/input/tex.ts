@@ -164,7 +164,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   public setMmlFactory(mmlFactory: MmlFactory) {
     super.setMmlFactory(mmlFactory);
-    this._parseOptions.nodeFactory.setMmlFactory(this.mmlFactory);
+    this._parseOptions.nodeFactory.setMmlFactory(mmlFactory);
   }
 
 
