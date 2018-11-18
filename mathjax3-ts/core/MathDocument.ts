@@ -479,5 +479,5 @@ let STATE = AbstractMathDocument.STATE;
  * The constructor type for a MathDocument
  */
 export type MathDocumentConstructor<N, T, D> = {
-    new (document:any, adaptor: DOMAdaptor<N, T, D>, options: OptionList): AbstractMathDocument<N, T, D>;
+    new (document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList): AbstractMathDocument<N, T, D>;
 };
