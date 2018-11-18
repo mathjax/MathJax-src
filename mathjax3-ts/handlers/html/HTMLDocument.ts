@@ -56,7 +56,8 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     public static KIND: string = 'HTML';
     public static OPTIONS: OptionList = {
         ...AbstractMathDocument.OPTIONS,
-        MathList: HTMLMathList,           // Use the HTMLMathList for Mathlists
+        MathList: HTMLMathList,           // Use the HTMLMathList for MathLists
+        MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
         DomStrings: null                  // Use the default DomString parser
     };
     public static STATE = AbstractMathDocument.STATE;
