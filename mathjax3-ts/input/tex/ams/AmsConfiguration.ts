@@ -23,6 +23,7 @@
  */
 
 import {Configuration} from '../Configuration.js';
+import {CommandMap} from '../SymbolMap.js';
 import TexParser from '../TexParser.js';
 import {MultlineItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
@@ -37,6 +38,15 @@ import './AmsMappings.js';
 export class AmsTags extends AbstractTags { }
 
 
+/**
+ * Init method for AMS package.
+ * @param {Configuration} config The current configuration.
+ */
+let init = function(config: Configuration) {
+  let extension = new CommandMap('ams-ops', {}, {});
+  config.handler['macro'].unshift('ams-ops');
+};
+
 export const AmsConfiguration = Configuration.create(
   'ams',
   {handler: {
@@ -47,7 +57,9 @@ export const AmsConfiguration = Configuration.create(
     environment: ['AMSmath-environment']
   },
    items: {[MultlineItem.prototype.kind]: MultlineItem},
-   tags: {'AMS': AmsTags}}
+   tags: {'AMS': AmsTags},
+   init: init
+  }
 );
 
 
