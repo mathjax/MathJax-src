@@ -92,13 +92,7 @@ export function CommonMfencedMixin<T extends WrapperConstructor>(Base: T): Mfenc
         public createMrow() {
             const mmlFactory = (this.node as AbstractMmlNode).factory;
             const mrow = mmlFactory.create('inferredMrow');
-            const attributes = this.node.attributes;
-            const display = attributes.get('display') as boolean;
-            const scriptlevel = attributes.get('scriptlevel') as number;
-            const defaults: AttributeList = {
-                mathsize: ['math', attributes.get('mathsize')]
-            };
-            mrow.setInheritedAttributes(defaults, display, scriptlevel, false);
+            mrow.inheritAttributesFrom(this.node);
             this.mrow = this.wrap(mrow) as CommonInferredMrow;
             this.mrow.parent = this;
         }

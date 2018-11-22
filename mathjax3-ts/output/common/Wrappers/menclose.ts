@@ -381,14 +381,8 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         public createMsqrt(child: W) {
             const mmlFactory = (this.node as AbstractMmlNode).factory;
             const mml = mmlFactory.create('msqrt');
+            mml.inheritAttributesFrom(this.node);
             mml.childNodes[0] = child.node;
-            const attributes = this.node.attributes;
-            const display = attributes.get('display') as boolean;
-            const scriptlevel = attributes.get('scriptlevel') as number;
-            const defaults: AttributeList = {
-                mathsize: ['math', attributes.get('mathsize')]
-            };
-            mml.setInheritedAttributes(defaults, display, scriptlevel, false);
             const node = this.wrap(mml) as S;
             node.parent = this;
             return node;
