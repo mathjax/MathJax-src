@@ -143,7 +143,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   }
   let op = parser.GetArgument(name);
   op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
-  (parser.configuration.handlers.retrieve('ams-ops') as CommandMap).
+  (parser.configuration.handlers.retrieve(ExtensionMaps.NEW_COMMAND) as CommandMap).
     add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
 };
 

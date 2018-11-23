@@ -43,8 +43,7 @@ export class AmsTags extends AbstractTags { }
  * @param {Configuration} config The current configuration.
  */
 let init = function(config: Configuration) {
-  let extension = new CommandMap('ams-ops', {}, {});
-  config.handler['macro'].unshift('ams-ops');
+  config.append(Configuration.extension());
 };
 
 export const AmsConfiguration = Configuration.create(
