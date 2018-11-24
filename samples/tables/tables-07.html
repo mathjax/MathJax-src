@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax v3 Tables Sample 07</title>
+<link rel="stylesheet" type="text/css" href="lib/dual-tables.css">
+<script src="../../lib/traceur.min.js"></script>
+<script src="../../lib/system.js"></script>
+<style>
+mjx-tables {
+  width: 50%;
+  margin-left: 2em;
+}
+svg {
+  overflow: visible;
+}
+</style>
+</head>
+<body>
+
+<h1>MathJax v3 Tables Sample 07</h1>
+
+<mjx-template>
+  <math display="block" indentalign="{indentalign}" indentshift="{indentshift}">
+    <mtable width="10em" mathbackground="yellow" side="{side}" minlabelspacing="0">
+      <mlabeledtr>
+        <mtd><mspace width="2em" height=".75em" depth=".25em" background="blue"/></mtd>
+        <mtd mathbackground="green"><mi>a</mi></mtd>
+        <mtd mathbackground="red"><mi>bbb</mi></mtd>
+      </mlabeledtr>
+    </mtable>
+  </math>
+</mjx-template>
+
+<script>
+var variables = [
+  ['indentalign', ['left', 'center', 'right']],
+  ['side', ['left', 'right']],
+  ['indentshift', ['0em', '1em', '3em', '-1em', '-3em']]
+];
+</script>
+
+<script>
+System.import('./lib/dual-tables.js').catch(function (error) {console.log(error.message)});
+</script>
+</body>
+</html>
+
+

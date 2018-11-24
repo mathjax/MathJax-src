@@ -27,6 +27,7 @@ import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';
 import {split, isPercent} from '../../../util/string.js';
 import {sum, max} from '../../../util/numeric.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -64,6 +65,23 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
     numRows: number;
 
     /**
+     * True if there are labeled rows
+     */
+    hasLabels: boolean;
+
+    /**
+     * True if this mtable is the top element, or in a top-most mrow
+     */
+    isTop: boolean;
+
+    /**
+     * The parent node of this table (skipping non-parents and mrows)
+     *   and the position of the table as a child node
+     */
+    container: AnyWrapper;
+    containerI: number;
+
+    /**
      * The spacing and line data
      */
     frame: boolean;
@@ -81,6 +99,16 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
     data: TableData;
 
     /**
+     * The table cells that have percentage-width content
+     */
+    pwidthCells: [C, number][];
+
+    /**
+     * The full width of a percentage-width table
+     */
+    pWidth: number;
+
+    /**
      * The rows of the table
      */
     readonly tableRows: R[];
@@ -89,6 +117,11 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
      * @override
      */
     childNodes: R[];
+
+    /**
+     * Find the container and the child position of the table
+     */
+    findContainer(): void;
 
     /**
      * If the table has a precentage width or has labels, set the pwidth of the bounding box
@@ -132,10 +165,31 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
     updateHDW(cell: C, i: number, j: number, H: number[], D: number[], W?: number[]): void;
 
     /**
+     * Set cell widths for columns with percentage width children
+     */
+    setColumnPWidths(): void;
+
+    /**
      * @param {number} height   The total height of the table
      * @return {number[]}       The [height, depth] for the aligned table
      */
     getBBoxHD(height: number): number[];
+
+    /**
+     * Get bbox left and right amounts to cover labels
+     */
+    getBBoxLR(): number[];
+
+    /**
+     * @param {string} side                 The side for the labels
+     * @return {[number, string, number]}   The padding, alignment, and shift amounts
+     */
+    getPadAlignShift(side: string): [number, string, number];
+
+    /**
+     * @return {number}    The true width of the table (without labels)
+     */
+    getWidth(): number;
 
     /**
      * @return {number}   The maximum height of a row
@@ -291,6 +345,23 @@ export function CommonMtableMixin<C extends AnyWrapper,
         public numRows: number = 0;
 
         /**
+         * True if there are labeled rows
+         */
+        public hasLabels: boolean;
+
+        /**
+         * True if this mtable is the top element, or in a top-most mrow
+         */
+        public isTop: boolean;
+
+        /**
+         * The parent node of this table (skipping non-parents and mrows)
+         *   and the position of the table as a child node
+         */
+        container: AnyWrapper;
+        containerI: number;
+
+        /**
          * The spacing and line data
          */
         public frame: boolean;
@@ -307,6 +378,15 @@ export function CommonMtableMixin<C extends AnyWrapper,
          */
         public data: TableData = null;
 
+        /**
+         * The table cells that have percentage-width content
+         */
+        public pwidthCells: [C, number][] = [];
+
+        /**
+         * The full width of a percentage-width table
+         */
+        public pWidth: number = 0;
 
         /**
          * @return {R[]}  The rows of the table
@@ -328,6 +408,9 @@ export function CommonMtableMixin<C extends AnyWrapper,
             //
             this.numCols = max(this.tableRows.map(row => row.numCells));
             this.numRows = this.childNodes.length;
+            this.hasLabels = this.childNodes.reduce((value, row) => value || row.node.isKind('mlabeledtr'), false);
+            this.findContainer();
+            this.isTop = (top && this.container.node.isKind('math') && !this.container.parent);
             this.getPercentageWidth();
             //
             // Get the frame, row, and column parameters
@@ -349,18 +432,30 @@ export function CommonMtableMixin<C extends AnyWrapper,
         }
 
         /**
+         * Find the container and the child position of the table
+         */
+        public findContainer() {
+            let node = this as AnyWrapper;
+            let parent = node.parent as AnyWrapper;
+            while (parent && (parent.node.notParent || parent.node.isKind('mrow'))) {
+                node = parent;
+                parent = parent.parent;
+            }
+            this.container = parent;
+            this.containerI = node.node.childPosition();
+        }
+
+        /**
          * If the table has a precentage width or has labels, set the pwidth of the bounding box
          */
         public getPercentageWidth() {
-            for (const row of this.childNodes) {
-                if (row.node.isKind('mlabeledtr')) {
-                    this.bbox.pwidth = BBox.fullWidth;
-                    return;
+            if (this.hasLabels) {
+                this.bbox.pwidth = BBox.fullWidth;
+            } else {
+                const width = this.node.attributes.get('width') as string;
+                if (isPercent(width)) {
+                    this.bbox.pwidth = width;
                 }
-            }
-            const width = this.node.attributes.get('width') as string;
-            if (isPercent(width)) {
-                this.bbox.pwidth = width;
             }
         }
 
@@ -464,7 +559,9 @@ export function CommonMtableMixin<C extends AnyWrapper,
             for (let j = 0; j < rows.length; j++) {
                 const row = rows[j];
                 for (let i = 0; i < row.numCells; i++) {
-                    this.updateHDW(row.getChild(i), i, j, H, D, W);
+                    const cell = row.getChild(i);
+                    this.updateHDW(cell, i, j, H, D, W);
+                    this.recordPWidthCell(cell, i);
                 }
                 NH[j] = H[j];
                 ND[j] = D[j];
@@ -487,7 +584,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
          * @param {number[]=} W    The maximum width for each column
          */
         public updateHDW(cell: C, i: number, j: number, H: number[], D: number[], W: number[] = null) {
-            let {h, d, w} = cell.getBBox();
+            let {h, d, w, pwidth} = cell.getBBox();
             if (h < .75) h = .75;
             if (d < .25) d = .25;
             if (h > H[j]) H[j] = h;
@@ -496,9 +593,19 @@ export function CommonMtableMixin<C extends AnyWrapper,
         }
 
         /**
+         * @param {C} cell     The cell to check for percentage widths
+         * @param {number} i   The column index of the cell
+         */
+        public recordPWidthCell(cell: C, i: number) {
+            if (cell.childNodes[0] && cell.childNodes[0].getBBox().pwidth) {
+                this.pwidthCells.push([cell, i]);
+            }
+        }
+
+        /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             const {H, D} = this.getTableData();
             let height, width;
             //
@@ -527,8 +634,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
             //
             const w = this.node.attributes.get('width') as string;
             if (w !== 'auto') {
-                const cwidth = this.metrics.containerWidth / this.metrics.em;
-                width = Math.max(this.length2em(w, cwidth) + 2 * this.fLine, width);
+                width = Math.max(this.length2em(w, 0) + 2 * this.fLine, width);
             }
             //
             //  Return the bounding box information
@@ -537,6 +643,56 @@ export function CommonMtableMixin<C extends AnyWrapper,
             bbox.h = h;
             bbox.d = d;
             bbox.w = width;
+            let [L, R] = this.getBBoxLR();
+            bbox.L = L;
+            bbox.R = R;
+            //
+            //  Handle cell widths if width is not a percent
+            //
+            if (!isPercent(w)) {
+                this.setColumnPWidths();
+            }
+        }
+
+        /**
+         * @override
+         */
+        public setChildPWidths(recompute: boolean, cwidth: number, clear: boolean) {
+            const width = this.node.attributes.get('width') as string;
+            if (!isPercent(width)) return;
+            if (!this.hasLabels) {
+                this.bbox.pwidth = '';
+                this.container.bbox.pwidth = '';
+            }
+            const {w, L, R} = this.bbox;
+            const W = Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R)));
+            const cols = (this.node.attributes.get('equalcolumns') as boolean ?
+                          Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols))) :
+                          this.getColumnAttributes('columnwidth', 0));
+            this.cWidths = this.getColumnWidthsFixed(cols, W);
+            const CW = this.getComputedWidths();
+            this.pWidth = sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+            if (this.isTop) {
+                this.bbox.w = this.pWidth;
+            }
+            this.setColumnPWidths();
+            if (this.pWidth !== w) {
+                this.parent.invalidateBBox();
+            }
+            return this.pWidth !== w;
+        }
+
+        /**
+         * Finalize any cells that have percentage-width content
+         */
+        public setColumnPWidths() {
+            const W = this.cWidths as number[];
+            for (const [cell, i] of this.pwidthCells) {
+                if (cell.setChildPWidths(false, W[i])) {
+                    cell.invalidateBBox();
+                    cell.getBBox();
+                }
+            }
         }
 
         /**
@@ -562,6 +718,60 @@ export function CommonMtableMixin<C extends AnyWrapper,
             }
         }
 
+        /**
+         * Get bbox left and right amounts to cover labels
+         */
+        getBBoxLR() {
+            if (this.hasLabels) {
+                const side = this.node.attributes.get('side') as string;
+                const [pad, align, shift] = this.getPadAlignShift(side);
+                return (align === 'center' ? [pad, pad] :
+                        side === 'left' ? [pad, 0] : [0, pad]);
+            }
+            return [0, 0];
+        }
+
+        /**
+         * @param {string} side                 The side for the labels
+         * @return {[number, string, number]}   The padding, alignment, and shift amounts
+         */
+        public getPadAlignShift(side: string) {
+            //
+            //  Make sure labels don't overlap table
+            //
+            const {L} = this.getTableData();
+            const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
+            let pad = L + sep;
+            const [lpad, rpad] = (this.styles == null ? ['', ''] :
+                                  [this.styles.get('padding-left'), this.styles.get('padding-right')]);
+            if (lpad || rpad) {
+                pad = Math.max(pad, this.length2em(lpad || '0'), this.length2em(rpad || '0'));
+            }
+            //
+            //  Handle indentation
+            //
+            let [align, shift] = this.getAlignShift();
+            if (align === side) {
+                shift = (side === 'left' ? Math.max(pad, shift) - pad : Math.min(-pad, shift) + pad);
+            }
+            return [pad, align, shift] as [number, string, number];
+        }
+
+        /**
+         * @override
+         */
+        public getAlignShift() {
+            return (this.isTop ? super.getAlignShift() :
+                    [this.container.getChildAlign(this.containerI), 0] as [string, number]);
+        }
+
+        /**
+         * @return {number}    The true width of the table (without labels)
+         */
+        public getWidth() {
+            return this.pWidth || this.getBBox().w;
+        }
+
         /******************************************************************/
 
         /**
@@ -578,9 +788,13 @@ export function CommonMtableMixin<C extends AnyWrapper,
          */
         public getComputedWidths() {
             const W = this.getTableData().W;
-            return Array.from(W.keys()).map(i => {
+            let CW = Array.from(W.keys()).map(i => {
                 return (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : W[i]);
             });
+            if (this.node.attributes.get('equalcolumns') as boolean) {
+                CW = Array(CW.length).fill(max(CW));
+            }
+            return CW;
         }
 
         /**
@@ -700,7 +914,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
             //
             const fw = (n && dw > 0 ? dw / n : 0);
             //
-            // Return the column widths (plus extr space for those that are stretching
+            // Return the column widths (plus extra space for those that are stretching
             //
             return indices.map(i => {
                 const x = swidths[i];

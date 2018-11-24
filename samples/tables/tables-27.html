@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax v3 Tables Sample 27</title>
+<link rel="stylesheet" type="text/css" href="lib/dual-tables.css">
+<script src="../../lib/traceur.min.js"></script>
+<script src="../../lib/system.js"></script>
+</head>
+<body>
+
+<h1>MathJax v3 Tables Sample 27</h1>
+
+<mjx-template>
+  <math display="block" indentalign="{indentalign}">
+    <mtable width="20em" mathbackground="yellow"
+            columnspacing="0" columnwidth="15em fit" side="{o-side}">
+      <mlabeledtr>
+        <mtd><mtext>(2)</mtext></mtd>
+        <mtd columnalign="{columnalign}">
+          <mtable width="50%" mathbackground="pink" side="{side}" minlabelspacing="0">
+            <mlabeledtr>
+              <mtd><mtext>(1)</mtext></mtd>
+              <mtd mathbackground="green"><mi>a</mi></mtd>
+              <mtd mathbackground="red"><mi>bbb</mi></mtd>
+            </mlabeledtr>
+          </mtable>
+        </mtd>
+        <mtd mathbackground="orange"><mi>xyz</mi></mtd>
+      </mlabeledtr>
+    </mtable>
+  </math>
+</mjx-template>
+
+<script>
+var variables = [
+  ['columnalign', ['left', 'center', 'right']],
+  ['indentalign', ['left', 'center', 'right']],
+  ['side', ['left', 'right']],
+  ['o-side', ['left', 'right']]
+];
+</script>
+
+<script>
+System.import('./lib/dual-tables.js').catch(function (error) {console.log(error.message)});
+</script>
+</body>
+</html>
+
+

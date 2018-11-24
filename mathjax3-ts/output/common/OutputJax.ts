@@ -93,6 +93,11 @@ AbstractOutputJax<N, T, D> {
     public container: N;
 
     /**
+     * The pixels per em for the math item being processed
+     */
+    public pxPerEm: number;
+
+    /**
      * The data for the font in use
      */
     public font: FontData;
@@ -109,7 +114,8 @@ AbstractOutputJax<N, T, D> {
     /**
      * Nodes used to test for metric data
      */
-    public testNodes: N;
+    public testInline: N;
+    public testDisplay: N;
 
     /**
      * Cache of unknonw character bounding boxes for this element
@@ -191,6 +197,7 @@ AbstractOutputJax<N, T, D> {
     public toDOM(math: MathItem<N, T, D>, node: N, html: MathDocument<N, T, D> = null) {
         this.setDocument(html);
         this.math = math;
+        this.pxPerEm = math.metrics.ex / this.font.params.x_height;
         math.root.setTeXclass(null);
         this.setScale(node);
         this.nodeMap = new Map<MmlNode, W>();
@@ -232,10 +239,10 @@ AbstractOutputJax<N, T, D> {
     public getMetrics(html: MathDocument<N, T, D>) {
         this.setDocument(html);
         const adaptor = this.adaptor;
-        const map = this.getMetricMap(html);
+        const maps = this.getMetricMaps(html);
         for (const math of html.math) {
-            const parent = adaptor.parent(math.start.node);
-            const {em, ex, containerWidth, lineWidth, scale} = map.get(parent);
+            const map = maps[math.display ? 1 : 0];
+            const {em, ex, containerWidth, lineWidth, scale} = map.get(adaptor.parent(math.start.node));
             math.setMetrics(em, ex, containerWidth, lineWidth, scale);
         }
     }
@@ -244,45 +251,53 @@ AbstractOutputJax<N, T, D> {
      * Get a MetricMap for the math list
      *
      * @param {MathDocument} html  The math document whose math list is to be processed.
-     * @return {MetricMap}         The node-to-metrics map for all the containers that have math
+     * @return {MetricMap[]}       The node-to-metrics maps for all the containers that have math
      */
-    protected getMetricMap(html: MathDocument<N, T, D>) {
+    protected getMetricMaps(html: MathDocument<N, T, D>) {
         const adaptor = this.adaptor;
-        const domMap = new Map() as MetricDomMap<N>;
+        const domMaps = [new Map() as MetricDomMap<N>, new Map() as MetricDomMap<N>];
         //
         // Add the test elements all at once (so only one reflow)
+        // Currently, we do one test for each container element for in-line and one for display math
+        //   (since we need different techniques for the two forms to avoid a WebKit bug).
+        //   This may need to be changed to handle floating elements better, since that has to be
+        //   done at the location of the math itself, not necessarily the end of the container.
         //
         for (const math of html.math) {
-            const parent = adaptor.parent(math.start.node);
-            if (!domMap.has(parent)) {
-                domMap.set(parent, this.getTestElement(parent));
-            }
+            const node = adaptor.parent(math.start.node);
+            const map = domMaps[math.display? 1 : 0];
+            map.set(node, this.getTestElement(node, math.display));
         }
         //
         // Measure the metrics for all the mapped elements
         //
-        const map = new Map() as MetricMap<N>;
-        for (const node of domMap.keys()) {
-            map.set(node, this.measureMetrics(domMap.get(node)));
+        const maps = [new Map() as MetricMap<N>, new Map() as MetricMap<N>];
+        for (const i of maps.keys()) {
+            for (const node of domMaps[i].keys()) {
+                maps[i].set(node, this.measureMetrics(domMaps[0].get(node)));
+            }
         }
         //
         // Remove the test elements
         //
-        for (const node of domMap.values()) {
-            adaptor.remove(node);
+        for (const i of maps.keys()) {
+            for (const node of domMaps[i].values()) {
+                adaptor.remove(node);
+            }
         }
-        return map;
+        return maps;
     }
 
     /**
-     * @param {N} node    The container to add the test elements to
+     * @param {N} node    The math element to be measured
      * @return {N}        The test elements that were added
      */
-    protected getTestElement(node: N) {
+    protected getTestElement(node: N, display: boolean) {
         const adaptor = this.adaptor;
-        if (!this.testNodes) {
-            this.testNodes = this.html('mjx-test', {style: {
+        if (!this.testInline) {
+            this.testInline = this.html('mjx-test', {style: {
                 display:           'inline-block',
+                width:             '100%',
                 'font-style':      'normal',
                 'font-weight':     'normal',
                 'font-size':       '100%',
@@ -292,16 +307,35 @@ AbstractOutputJax<N, T, D> {
                 'letter-spacing':  'normal',
                 'word-spacing':    'normal',
                 overflow:          'hidden',
-                height:            '1px'
+                height:            '1px',
+                'margin-right':    '-1px'
             }}, [
+                this.html('mjx-left-box', {style: {
+                    display: 'inline-block',
+                    width: 0,
+                    'float': 'left'
+                }}),
                 this.html('mjx-ex-box', {style: {
                     position: 'absolute',
                     overflow: 'hidden',
                     width: '1px', height: '60ex'
+                }}),
+                this.html('mjx-right-box', {style: {
+                    display: 'inline-block',
+                    width: 0,
+                    'float': 'right'
                 }})
             ]);
+            this.testDisplay = adaptor.clone(this.testInline);
+            adaptor.setStyle(this.testDisplay, 'display', 'table');
+            adaptor.setStyle(this.testDisplay, 'margin-right', '');
+            adaptor.setStyle(adaptor.firstChild(this.testDisplay) as N, 'display', 'none');
+            const right = adaptor.lastChild(this.testDisplay) as N;
+            adaptor.setStyle(right, 'display', 'table-cell');
+            adaptor.setStyle(right, 'width', '10000em');
+            adaptor.setStyle(right, 'float', '');
         }
-        return adaptor.append(node, adaptor.clone(this.testNodes)) as N;
+        return adaptor.append(node, adaptor.clone(display? this.testDisplay : this.testInline) as N);
     }
 
     /**
@@ -311,8 +345,11 @@ AbstractOutputJax<N, T, D> {
     protected measureMetrics(node: N) {
         const adaptor = this.adaptor;
         const em = adaptor.fontSize(node);
-        const ex = (adaptor.nodeSize(adaptor.firstChild(node) as N)[1] / 60) || (em * this.options.exFactor);
-        const containerWidth = 80 * em; // for now (should be measured in the DOM)
+        const ex = (adaptor.nodeSize(adaptor.childNode(node, 1) as N)[1] / 60) || (em * this.options.exFactor);
+        const containerWidth = (adaptor.getStyle(node, 'display') === 'table' ?
+                                adaptor.nodeSize(adaptor.lastChild(node) as N)[0] - 1 :
+                                adaptor.nodeBBox(adaptor.lastChild(node) as N).left -
+                                adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);
         const scale = ex / this.font.params.x_height / em;
         const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
         return {em, ex, containerWidth, lineWidth, scale} as Metrics;

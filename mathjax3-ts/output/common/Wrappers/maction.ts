@@ -175,8 +175,9 @@ export function CommonMactionMixin<W extends AnyWrapper,
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             bbox.updateFrom(this.selected.getBBox());
+            this.selected.setChildPWidths(recompute);
         }
 
     };

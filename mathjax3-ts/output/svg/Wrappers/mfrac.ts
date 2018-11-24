@@ -78,9 +78,10 @@ export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<N, T, D>>
         const a = tex.axis_height;
         const d = .1; // line's extra left- and right-padding
         const pad = (this.node.getProperty('withDelims') ? 0 : tex.nulldelimiterspace);
-        const W = Math.max(nbox.w * nbox.rscale, dbox.w * dbox.rscale);
-        const nx = this.getAlignX(W, nbox.w * nbox.rscale, numalign as string) + d + pad;
-        const dx = this.getAlignX(W, dbox.w * dbox.rscale, denomalign as string) + d + pad;
+        const W = Math.max((nbox.L + nbox.w + nbox.R) * nbox.rscale,
+                           (dbox.L + dbox.w + dbox.R) * dbox.rscale);
+        const nx = this.getAlignX(W, nbox, numalign as string) + d + pad;
+        const dx = this.getAlignX(W, dbox, denomalign as string) + d + pad;
         const {T, u, v} = this.getTUV(display, t);
 
         num.toSVG(svg);
@@ -108,9 +109,10 @@ export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<N, T, D>>
 
         const tex = this.font.params;
         const pad = (this.node.getProperty('withDelims') ? 0 : tex.nulldelimiterspace);
-        const W = Math.max(nbox.w * nbox.rscale, dbox.w * dbox.rscale);
-        const nx = this.getAlignX(W, nbox.w * nbox.rscale, numalign as string) + pad;
-        const dx = this.getAlignX(W, dbox.w * dbox.rscale, denomalign as string) + pad;
+        const W = Math.max((nbox.L + nbox.w + nbox.R) * nbox.rscale,
+                           (dbox.L + dbox.w + dbox.R) * dbox.rscale);
+        const nx = this.getAlignX(W, nbox, numalign as string) + pad;
+        const dx = this.getAlignX(W, dbox, denomalign as string) + pad;
         const {u, v} = this.getUVQ(display);
 
         num.toSVG(svg);
@@ -127,16 +129,16 @@ export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<N, T, D>>
     protected makeBevelled(display: boolean) {
         const svg = this.element;
         const [num, den] = this.childNodes;
-        const {u, v, delta, nbox} = this.getBevelData(display);
-        const w = nbox.w * nbox.rscale;
+        const {u, v, delta, nbox, dbox} = this.getBevelData(display);
+        const w = (nbox.L + nbox.w + nbox.R) * nbox.rscale;
 
         num.toSVG(svg);
         this.bevel.toSVG(svg);
         den.toSVG(svg);
 
-        num.place(0, u);
+        num.place(nbox.L * nbox.rscale, u);
         this.bevel.place(w - delta / 2, 0);
-        den.place(w + this.bevel.getBBox().w - delta, v);
+        den.place(w + this.bevel.getBBox().w + dbox.L * dbox.rscale - delta, v);
     }
 
 }

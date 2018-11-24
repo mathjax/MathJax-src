@@ -82,6 +82,7 @@ export const MATHSPACE: {[name: string]: number} = {
  * @param {string|number} length  A dimension (giving number and units) to be converted to ems
  * @param {number} size           The default size of the dimension (for percentage values)
  * @param {number} scale          The current scaling factor (to handle absolute units)
+ * @param {number} ex             The size of an ex in pixels
  * @return {number}               The dimension converted to ems
  */
 export function length2em(length: string | number, size: number = 0, scale: number = 1, em: number = 16) {
