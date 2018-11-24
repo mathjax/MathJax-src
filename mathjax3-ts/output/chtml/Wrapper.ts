@@ -152,6 +152,9 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
         'mjx-mtext': {
             display: 'inline-block'
         },
+        'mjx-mstyle': {
+            display: 'inline-block'
+        },
         'mjx-merror': {
             display: 'inline-block',
             color: 'red',
