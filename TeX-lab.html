@@ -21,10 +21,19 @@
 </head>
 <body>
 
+<h1>MathJax v3 Interactive TeX Lab
+<a href="MML-Lab.html" style="margin-left:1em; vertical-align:5px"><button>Switch to MathML Lab</button></a>
+</h1>
+
 <div id="container">
 <textarea id="tex" cols="80" rows="15" onkeypress="Lab.checkKey(this,event)"></textarea><br>
 <span style="float:left">
-<input type="checkbox" id="display" onchange="Lab.setDisplay(this.checked)" checked /> display mode
+<input type="checkbox" id="display" onchange="Lab.setDisplay(this.checked)" checked /> Display mode
+<span style="margin-left:1em">Output:</span>
+<select id="renderer" onchange="Lab.setRenderer(this.value)">
+<option value="CHTML">CHTML</option>
+<option value="SVG">SVG</option>
+</select>
 </span>
 <input type="button" value="Keep" onclick="Lab.Keep()" />
 <input type="button" value="Typeset" onclick="Lab.Typeset()" />

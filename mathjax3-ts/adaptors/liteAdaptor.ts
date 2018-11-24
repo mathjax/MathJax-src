@@ -535,10 +535,17 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     /**
      * @override
      */
-    public nodeSize(node: LiteElement) {
-        return [0, 0] as [number, number];
+    public nodeSize(node: LiteElement, em: number = 1, local: boolean = null) {
+        const text = this.textContent(node);
+        return [.6 * text.length, 0] as [number, number];
     }
 
+    /**
+     * @override
+     */
+    public nodeBBox(node: LiteElement) {
+        return {left: 0, right: 0, top: 0, bottom: 0};
+    }
 }
 
 /************************************************************/

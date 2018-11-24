@@ -423,12 +423,6 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
             scale *= this.length2em(mathsize, 1, 1);
         }
         //
-        // For explicit font family, go back to the scaing of the surrounding text
-        //
-        if (this.variant === '-explicitFont') {
-           scale /= this.metrics.scale;
-        }
-        //
         // Record the scaling factors and set the element's CSS
         //
         this.bbox.scale = scale;
@@ -679,7 +673,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
      */
     protected getVariantChar(variant: string, n: number) {
-        const char = this.font.getChar(variant, n) || [0, 0, 0, null];
+        const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true}];
         return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CharOptions];
     }
 
