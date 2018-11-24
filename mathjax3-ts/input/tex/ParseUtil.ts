@@ -477,6 +477,30 @@ namespace ParseUtil {
     return (font ? {mathvariant: font} : {});
   };
 
+
+  /**
+   * Splits a package option list of the form [x=y,z=1] into an attribute list
+   * of the form {x: y, z: 1}.
+   * @param {string} attrib The attributes of the package.
+   * @param {{[key: string]: number}?} allowed A list of allowed options.
+   * @return {EnvList} The attribute list.
+   */
+  export function splitPackageOptions(attrib: string, allowed: {[key: string]: number} = {}): EnvList {
+    let def: EnvList = {};
+    if (attrib !== '') {
+      const attr = attrib.replace(/ /g, '').split(/,/);
+      for (let i = 0, m = attr.length; i < m; i++) {
+        const keyvalue = attr[i].split(/[:=]/);
+        if (allowed[keyvalue[0]]) {
+          let value = keyvalue[1];
+          def[keyvalue[0]] = (value === 'true') ? true :
+            (value === 'false') ? false : value;
+        }
+      }
+    }
+    return def;
+  }
+
 }
 
 export default ParseUtil;
