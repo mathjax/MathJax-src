@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "MathJax version 3 testbed",
   "main": "load.js",
+  "scripts": {  
+    "compile": "npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_parser.* mathjax3/input/tex/mhchem/",
+    "prepublishOnly": "npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_parser.* mathjax3/input/tex/mhchem/"
+  },
   "devDependencies": {
     "typescript": "2.3.*",
     "tape": "^4.8.0",
