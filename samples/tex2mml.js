@@ -11,11 +11,13 @@ import '../mathjax3/input/tex/newcommand/NewcommandConfiguration.js';
 import '../mathjax3/input/tex/action/ActionConfiguration.js';
 import '../mathjax3/input/tex/bbox/BboxConfiguration.js';
 import '../mathjax3/input/tex/extpfeil/ExtpfeilConfiguration.js';
+import '../mathjax3/input/tex/braket/BraketConfiguration.js';
+import '../mathjax3/input/tex/physics/PhysicsConfiguration.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'action', 'bbox', 'extpfeil']})
+  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'action', 'bbox', 'extpfeil', 'braket', 'physics']})
 });
 
 // import {TestMmlVisitor as MmlVisitor} from '../mathjax3/core/MmlTree/TestMmlVisitor.js';
