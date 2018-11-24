@@ -1,8 +1,17 @@
 {
   "name": "mathjax3",
-  "version": "0.1.0",
-  "description": "MathJax version 3 testbed",
-  "main": "load.js",
+  "version": "3.0.0-beta.1",
+  "maintainers": [
+    "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
+  ],
+  "description": "MathJax version 3 beta release testbed",
+  "main": "./mathjax3/mathjax.js",
+  "types": "./mathjax3/mathjax.d.ts",
+  "scripts": {
+    "compile": "npx tsc",
+    "prepublishOnly": "npx tsc"
+  },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "2.3.*",
     "tape": "^4.8.0",
@@ -20,16 +29,22 @@
     "type": "git",
     "url": "https://github.com/mathjax/mathjax-v3/"
   },
+  "bugs": {
+    "url": "http://github.com/mathjax/mathjax-v3/issues"
+  },
   "keywords": [
     "MathJax",
     "math",
     "svg",
-    "HTML",
-    "MathML",
-    "TeX",
-    "AsciiMath"
+    "mathml",
+    "tex",
+    "latex",
+    "asciimath",
+    "browser",
+    "nodejs",
+    "equations",
+    "formula"
   ],
-  "license": "Apache-2.0",
   "dependencies": {
     "esm": "^3.0.34",
     "speech-rule-engine": "^2.3.0-beta.0"
