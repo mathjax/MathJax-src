@@ -30,7 +30,7 @@ const DELIM2013 = {c: 0x2013, dir: H, sizes: [.5], stretch: [0, 0x2013], HDW: [.
 const DELIM2190 = {c: 0x2190, dir: H, sizes: [1], stretch: [0x2190, 0x2212], HDW: HDW2};
 const DELIM2192 = {c: 0x2192, dir: H, sizes: [1], stretch: [0, 0x2212, 0x2192], HDW: HDW2};
 const DELIM2194 = {c: 0x2194, dir: H, sizes: [1], stretch: [0x2190, 0x2212, 0x2192], HDW: HDW2};
-const DELIM21A4 = {c: 0x21A4, dir: H, stretch: [0x2190, 0x2212, 0x2223], HDW: HDW3, min: 1};
+const DELIM21A4 = {c: 0x21A4, dir: H, stretch: [0x2190, 0x2212, 0x2223], HDW: HDW3, min: 1.278};
 const DELIM21A6 = {c: 0x21A6, dir: H, sizes: [1], stretch: [0x2223, 0x2212, 0x2192], HDW: HDW2};
 const DELIM21D0 = {c: 0x21D0, dir: H, sizes: [1], stretch: [0x21D0, 0x3D], HDW: HDW2};
 const DELIM21D2 = {c: 0x21D2, dir: H, sizes: [1], stretch: [0, 0x3D, 0x21D2], HDW: HDW2};
@@ -41,12 +41,12 @@ const DELIM23DC = {c: 0x23DC, dir: H, sizes: [.778, 1], schar: [0x2322, 0x2322],
                    HDW: [.32, .2, .5]};
 const DELIM23DD = {c: 0x23DD, dir: H, sizes: [.778, 1], schar: [0x2323, 0x2323], stretch: [0xE152, 0xE154, 0xE153],
                    HDW: [.32, .2, .5]};
-const DELIM23DE = {c: 0x23DE, dir: H, stretch: [0xE150, 0xE154, 0xE151, 0xE155], HDW: [.32, .2, .5], min: .9};
-const DELIM23DF = {c: 0x23DF, dir: H, stretch: [0xE152, 0xE154, 0xE153, 0xE156], HDW: [.32, .2, .5], min: .9};
+const DELIM23DE = {c: 0x23DE, dir: H, stretch: [0xE150, 0xE154, 0xE151, 0xE155], HDW: [.32, .2, .5], min: 1.8};
+const DELIM23DF = {c: 0x23DF, dir: H, stretch: [0xE152, 0xE154, 0xE153, 0xE156], HDW: [.32, .2, .5], min: 1.8};
 const DELIM27E8 = {c: 0x27E8, dir: V, sizes: VSIZES};
 const DELIM27E9 = {c: 0x27E9, dir: V, sizes: VSIZES};
-const DELIM2906 = {c: 0x2906, dir: H, stretch: [0x21D0, 0x3D, 0x2223], HDW: HDW3, min: 1};
-const DELIM2907 = {c: 0x2907, dir: H, stretch: [0x22A8, 0x3D, 0x21D2], HDW: HDW3, min: .7};
+const DELIM2906 = {c: 0x2906, dir: H, stretch: [0x21D0, 0x3D, 0x2223], HDW: HDW3, min: 1.278};
+const DELIM2907 = {c: 0x2907, dir: H, stretch: [0x22A8, 0x3D, 0x21D2], HDW: HDW3, min: 1.278};
 
 
 export const delimiters: DelimiterMap = {
@@ -87,9 +87,9 @@ export const delimiters: DelimiterMap = {
   0x219E: {dir: H, sizes: [1], stretch: [0x219E, 0x2212], HDW: HDW2},
   0x21A0: {dir: H, sizes: [1], stretch: [0, 0x2212, 0x21A0], HDW: HDW2},
   0x21A4: DELIM21A4,
-  0x21A5: {dir: V, stretch: [0x2191, 0x23D0, 0x22A5], HDW: HDW1, min: .6},
+  0x21A5: {dir: V, stretch: [0x2191, 0x23D0, 0x22A5], HDW: HDW1, min: 1.555},
   0x21A6: DELIM21A6,
-  0x21A7: {dir: V, stretch: [0x22A4, 0x23D0, 0x2193], HDW: HDW1, min: .6},
+  0x21A7: {dir: V, stretch: [0x22A4, 0x23D0, 0x2193], HDW: HDW1, min: 1.555},
   0x21B0: {dir: V, sizes: [.722], stretch: [0x21B0, 0x23D0], HDW: [.722, 0, .667]},
   0x21B1: {dir: V, sizes: [.722], stretch: [0x21B1, 0x23D0], HDW: [.722, 0, .667]},
   0x21BC: {dir: H, sizes: [1], stretch: [0x21BC, 0x2212], HDW: HDW2},
@@ -101,11 +101,11 @@ export const delimiters: DelimiterMap = {
   0x21C2: {dir: V, sizes: [.888], stretch: [0, 0x23D0, 0x21C2], HDW: [.694, .194, .667]},
   0x21C3: {dir: V, sizes: [.888], stretch: [0, 0x23D0, 0x21C3], HDW: [.694, .194, .667]},
   0x21D0: DELIM21D0,
-  0x21D1: {dir: V, sizes: [.888], stretch: [0x21D1, 0x2016], HDW: [.694, .194, .5]},
+  0x21D1: {dir: V, sizes: [.888], stretch: [0x21D1, 0x2016], HDW: [.694, .194, .778]},
   0x21D2: DELIM21D2,
-  0x21D3: {dir: V, sizes: [.888], stretch: [0, 0x2016, 0x21D3], HDW: [.694, .194, .5]},
+  0x21D3: {dir: V, sizes: [.888], stretch: [0, 0x2016, 0x21D3], HDW: [.694, .194, .778]},
   0x21D4: DELIM21D4,
-  0x21D5: {dir: V, sizes: [1.044], stretch: [0x21D1, 0x2016, 0x21D3], HDW: [.772, .272, .5]},
+  0x21D5: {dir: V, sizes: [1.044], stretch: [0x21D1, 0x2016, 0x21D3], HDW: [.772, .272, .778]},
   0x21DA: {dir: H, sizes: [1], stretch: [0x21DA, 0x2261], HDW: [.464, -0.036, 1]},
   0x21DB: {dir: H, sizes: [1], stretch: [0, 0x2261, 0x21DB], HDW: [.464, -0.036, 1]},
   0x2212: DELIM2212,
@@ -126,15 +126,15 @@ export const delimiters: DelimiterMap = {
   0x23AF: DELIM2013,
   0x23B0: {dir: V, sizes: [.989], stretch: [0x23A7, 0x23AA, 0x23AD], HDW: [.744, .244, .889]},
   0x23B1: {dir: V, sizes: [.989], stretch: [0x23AB, 0x23AA, 0x23A9], HDW: [.744, .244, .889]},
-  0x23B4: {dir: H, stretch: [0x250C, 0x2212, 0x2510], HDW: HDW3, min: .5},
-  0x23B5: {dir: H, stretch: [0x2514, 0x2212, 0x2518], HDW: HDW3, min: .5},
+  0x23B4: {dir: H, stretch: [0x250C, 0x2212, 0x2510], HDW: HDW3, min: 1},
+  0x23B5: {dir: H, stretch: [0x2514, 0x2212, 0x2518], HDW: HDW3, min: 1},
   0x23D0: {dir: V, sizes: [.602, 1], schar: [0, 0x2223], stretch: [0, 0x2223], HDW: [.602, 0, .278]},
   0x23DC: DELIM23DC,
   0x23DD: DELIM23DD,
   0x23DE: DELIM23DE,
   0x23DF: DELIM23DF,
-  0x23E0: {dir: H, stretch: [0x2CA, 0x2C9, 0x2CB], HDW: [.59, -0.544, .5], min: 1.25},
-  0x23E1: {dir: H, stretch: [0x2CB, 0x2C9, 0x2CA], HDW: [.59, -0.544, .5], min: 1.5},
+  0x23E0: {dir: H, stretch: [0x2CA, 0x2C9, 0x2CB], HDW: [.59, -0.544, .5], min: 1},
+  0x23E1: {dir: H, stretch: [0x2CB, 0x2C9, 0x2CA], HDW: [.59, -0.544, .5], min: 1},
   0x2500: DELIM2013,
   0x2758: DELIM2223,
   0x27E8: DELIM27E8,
@@ -153,18 +153,18 @@ export const delimiters: DelimiterMap = {
   0x27FE: DELIM2907,
   0x2906: DELIM2906,
   0x2907: DELIM2907,
-  0x294E: {dir: H, stretch: [0x21BC, 0x2212, 0x21C0], HDW: HDW3, min: .5},
-  0x294F: {dir: V, stretch: [0x21BE, 0x23D0, 0x21C2], HDW: HDW1, min: .5},
-  0x2950: {dir: H, stretch: [0x21BD, 0x2212, 0x21C1], HDW: HDW3, min: .5},
+  0x294E: {dir: H, stretch: [0x21BC, 0x2212, 0x21C0], HDW: HDW3, min: 2},
+  0x294F: {dir: V, stretch: [0x21BE, 0x23D0, 0x21C2], HDW: HDW1, min: 1.776},
+  0x2950: {dir: H, stretch: [0x21BD, 0x2212, 0x21C1], HDW: HDW3, min: 2},
   0x2951: {dir: V, stretch: [0x21BF, 0x23D0, 0x21C3], HDW: HDW1, min: .5},
-  0x295A: {dir: H, stretch: [0x21BC, 0x2212, 0x2223], HDW: HDW3, min: 1},
-  0x295B: {dir: H, stretch: [0x2223, 0x2212, 0x21C0], HDW: HDW3, min: 1},
-  0x295C: {dir: V, stretch: [0x21BE, 0x23D0, 0x22A5], HDW: HDW1, min: .7},
-  0x295D: {dir: V, stretch: [0x22A4, 0x23D0, 0x21C2], HDW: HDW1, min: .7},
-  0x295E: {dir: H, stretch: [0x21BD, 0x2212, 0x2223], HDW: HDW3, min: 1},
-  0x295F: {dir: H, stretch: [0x2223, 0x2212, 0x21C1], HDW: HDW3, min: 1},
-  0x2960: {dir: V, stretch: [0x21BF, 0x23D0, 0x22A5], HDW: HDW1, min: .7},
-  0x2961: {dir: V, stretch: [0x22A4, 0x23D0, 0x21C3], HDW: HDW1, min: .7},
+  0x295A: {dir: H, stretch: [0x21BC, 0x2212, 0x2223], HDW: HDW3, min: 1.278},
+  0x295B: {dir: H, stretch: [0x2223, 0x2212, 0x21C0], HDW: HDW3, min: 1.278},
+  0x295C: {dir: V, stretch: [0x21BE, 0x23D0, 0x22A5], HDW: HDW1, min: 1.556},
+  0x295D: {dir: V, stretch: [0x22A4, 0x23D0, 0x21C2], HDW: HDW1, min: 1.556},
+  0x295E: {dir: H, stretch: [0x21BD, 0x2212, 0x2223], HDW: HDW3, min: 1.278},
+  0x295F: {dir: H, stretch: [0x2223, 0x2212, 0x21C1], HDW: HDW3, min: 1.278},
+  0x2960: {dir: V, stretch: [0x21BF, 0x23D0, 0x22A5], HDW: HDW1, min: 1.776},
+  0x2961: {dir: V, stretch: [0x22A4, 0x23D0, 0x21C3], HDW: HDW1, min: 1.776},
   0x3008: DELIM27E8,
   0x3009: DELIM27E9,
   0xFE37: DELIM23DE,

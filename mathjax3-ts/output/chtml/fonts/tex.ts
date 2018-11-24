@@ -229,7 +229,7 @@ export class TeXFont extends CommonTeXFont {
         },
 
         '.MJX-TEX mjx-stretchy-v mjx-c, .MJX-TEX mjx-stretchy-h mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX, MJXTEX-S4 ! important'
+            'font-family': 'MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important'
         }
     };
 
@@ -458,13 +458,14 @@ export class TeXFont extends CommonTeXFont {
      * @param {DelimiterData} data  The data for the delimiter whose CSS is to be added
      */
     protected addDelimiterVStyles(styles: StyleList, c: string, data: DelimiterData) {
+        const W = data.HDW[2];
         const [beg, ext, end, mid] = data.stretch;
-        const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
-        this.addDelimiterVPart(styles, c, 'ext', ext);
-        const He = this.addDelimiterVPart(styles, c, 'end', end);
+        const Hb = this.addDelimiterVPart(styles, c, W, 'beg', beg);
+        this.addDelimiterVPart(styles, c, W, 'ext', ext);
+        const He = this.addDelimiterVPart(styles, c, W, 'end', end);
         const css: StyleData = {};
         if (mid) {
-            const Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
+            const Hm = this.addDelimiterVPart(styles, c, W, 'mid', mid);
             css.height = '50%';
             styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
                 'margin-top': this.em(-Hm/2),
@@ -490,12 +491,15 @@ export class TeXFont extends CommonTeXFont {
      * @param {number} n          The unicode character to use for the part
      * @return {number}           The total height of the character
      */
-    protected addDelimiterVPart(styles: StyleList, c: string, part: string, n: number) {
+    protected addDelimiterVPart(styles: StyleList, c: string, W: number, part: string, n: number) {
         if (!n) return 0;
-        const data = this.getChar('normal', n) || this.getChar('-size4', n);
-        const css: StyleData = {content: '"' + this.char(n, true) + '"'};
+        const data = this.getDelimiterData(n);
+        const dw = (W - data[2]) / 2
+        const css: StyleData = {content: '"' + this.char(n, true) + '"', width: this.em0(W - dw)};
         if (part !== 'ext') {
-            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
+            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]) + (dw ? ' ' + this.em0(dw) : '');
+        } else if (dw) {
+            css['padding-left'] = this.em0(dw);
         }
         styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
         return data[0] + data[1];
@@ -532,12 +536,12 @@ export class TeXFont extends CommonTeXFont {
         if (!n) {
             return 0;
         }
-        const data = this.getChar('normal', n) || this.getChar('-size4', n);
+        const data = this.getDelimiterData(n);
         const options = data[3] as CharOptions;
         const C = (options && options.c ? options.c : this.char(n, true));
         const css: StyleData = {content: '"' + C + '"'};
         if (part !== 'ext' || force) {
-          css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
+            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
         }
         styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
     }
@@ -580,4 +584,3 @@ export class TeXFont extends CommonTeXFont {
     }
 
 }
-
