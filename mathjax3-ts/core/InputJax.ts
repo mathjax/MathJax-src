@@ -23,6 +23,7 @@
 
 import {MathItem, ProtoItem} from './MathItem.js';
 import {MmlNode} from './MmlTree/MmlNode.js';
+import {MmlFactory} from './MmlTree/MmlFactory.js';
 import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
@@ -64,9 +65,19 @@ export interface InputJax<N, T, D> {
     adaptor: DOMAdaptor<N, T, D>;
 
     /**
+     * The MmlFactory for this input jax
+     */
+    mmlFactory: MmlFactory;
+
+    /**
      * @param {DOMAdaptor}  The adaptor to use in this jax
      */
     setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
+
+    /**
+     * @param {MmlFactory}  The MmlFactory to use in this jax
+     */
+    setMmlFactory(mmlFactory: MmlFactory): void;
 
     /**
      * Finds the math within the DOM or the list of strings
@@ -104,6 +115,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     public preFilters: FunctionList;
     public postFilters: FunctionList;
     public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
+    public mmlFactory: MmlFactory = null;        // set by the handler
 
     /**
      * @param {OptionList} options  The options to applyt to this input jax
@@ -129,6 +141,13 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
      */
     public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
         this.adaptor = adaptor;
+    }
+
+    /**
+     * @override
+     */
+    public setMmlFactory(mmlFactory: MmlFactory) {
+        this.mmlFactory = mmlFactory;
     }
 
     /**

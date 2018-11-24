@@ -24,6 +24,7 @@
 import {HandlerList} from './core/HandlerList.js';
 import {handleRetriesFor, retryAfter} from './util/Retries.js';
 import {OptionList} from './util/Options.js';
+import {MathDocument} from './core/MathDocument.js';
 
 /*****************************************************************/
 /**
@@ -38,7 +39,7 @@ export const MathJax = {
     /**
      *  The list of registers document handlers
      */
-    handlers: new HandlerList(),
+    handlers: new HandlerList<any, any, any>(),
 
     /**
      * Creates a MathDocument using a registered handler that knows how to handl it
@@ -48,7 +49,7 @@ export const MathJax = {
      * @return {MathDocument}       The MathDocument to handle the document
      */
     document: function (document: any, options: OptionList) {
-        return this.handlers.document(document, options);
+        return MathJax.handlers.document(document, options);
     },
 
     /**

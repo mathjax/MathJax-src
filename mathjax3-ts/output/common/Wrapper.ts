@@ -742,13 +742,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         const mmlFactory = (this.node as AbstractMmlNode).factory;
         const textNode = (mmlFactory.create('text') as TextNode).setText(text);
         const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
-        const attributes = this.node.attributes;
-        const display = attributes.get('display') as boolean;
-        const scriptlevel = attributes.get('scriptlevel') as number;
-        const defaults: AttributeList = {
-            mathsize: ['math', attributes.get('mathsize')]
-        };
-        mml.setInheritedAttributes(defaults, display, scriptlevel, false);
+        mml.inheritAttributesFrom(this.node);
         const node = this.wrap(mml);
         node.parent = this as any as W;
         return node;

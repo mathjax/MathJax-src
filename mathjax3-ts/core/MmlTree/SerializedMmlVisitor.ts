@@ -46,10 +46,10 @@ export class SerializedMmlVisitor extends MmlVisitor {
     /**
      * @param {TextNode} node  The text node to visit
      * @param {string} space  The amount of indenting for this node
-     * @return {string}  The text of the node
+     * @return {string}  The (HTML-quoted) text of the node
      */
     public visitTextNode(node: TextNode, space: string) {
-        return node.getText();
+        return this.quoteHTML(node.getText());
     }
 
     /**
@@ -128,7 +128,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
         let ATTR = '';
         let attributes = node.attributes.getAllAttributes();
         for (const name of Object.keys(attributes)) {
-            ATTR += ' ' + name + '="' + this.quoteAttribute(attributes[name].toString()) + '"';
+            ATTR += ' ' + name + '="' + this.quoteHTML(attributes[name].toString()) + '"';
         }
         return ATTR;
     }
@@ -141,7 +141,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @param {string} value  The string to be made HTML escaped
      * @return {string}  The string with escaping performed
      */
-    protected quoteAttribute(value: string) {
+    protected quoteHTML(value: string) {
         return value
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;').replace(/>/g, '&gt;')
