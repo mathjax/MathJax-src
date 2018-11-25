@@ -3073,7 +3073,7 @@ parserTest.runTest(
             "text": "∫"}],
          "isEmbellished": true}],
       "isInferred": true}]}
-);      
+);
 
 
 parserTest.runTest(
@@ -3323,7 +3323,7 @@ parserTest.runTest(
               {"kind": "mrow",
                "texClass": 0,
                "attributes": {},
-               "inherited": {"displaystyle": true, 
+               "inherited": {"displaystyle": true,
                             "scriptlevel": 0},
                "properties": {"texprimestyle": true,
                               "movablelimits": false},

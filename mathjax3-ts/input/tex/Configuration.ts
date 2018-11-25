@@ -96,14 +96,7 @@ export class Configuration {
 
 
   /**
-   * Init method for the configuration.
-   */
-  public init(configuration: Configuration) {
-    this.initMethod.execute(configuration);
-  }
-
-  /**
-   * An empty configuration.
+   * @return {Configuration} An empty configuration.
    */
   public static empty(): Configuration {
     return Configuration.create('empty');
@@ -111,7 +104,7 @@ export class Configuration {
 
 
   /**
-   * Initialises extension maps.
+   * @return {Configuration} Initialises and returns the extension maps.
    */
   public static extension(): Configuration {
     new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
@@ -130,6 +123,14 @@ export class Configuration {
                  environment: [ExtensionMaps.NEW_ENVIRONMENT]
                 }});
   };
+
+
+  /**
+   * Init method for the configuration.
+   */
+  public init(configuration: Configuration) {
+    this.initMethod.execute(configuration);
+  }
 
 
   /**
