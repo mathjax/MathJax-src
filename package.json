@@ -7,7 +7,7 @@
   "description": "MathJax version 3 beta release testbed",
   "main": "./mathjax3/mathjax.js",
   "types": "./mathjax3/mathjax.d.ts",
-  "scripts": {  
+  "scripts": {
     "compile": "npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_parser.* mathjax3/input/tex/mhchem/",
     "prepublishOnly": "npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_parser.* mathjax3/input/tex/mhchem/"
   },
