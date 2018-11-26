@@ -266,7 +266,9 @@ AbstractOutputJax<N, T, D> {
         for (const math of html.math) {
             const node = adaptor.parent(math.start.node);
             const map = domMaps[math.display? 1 : 0];
-            map.set(node, this.getTestElement(node, math.display));
+            if (!map.has(node)) {
+                map.set(node, this.getTestElement(node, math.display));
+            }
         }
         //
         // Measure the metrics for all the mapped elements
