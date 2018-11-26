@@ -39,6 +39,7 @@ import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
 import './mhchem/MhchemConfiguration.js';
+import './color/ColorConfiguration.js';
 
 export const AllPackages: string[] = [
     'base',
