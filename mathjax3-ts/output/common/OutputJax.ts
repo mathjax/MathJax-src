@@ -274,7 +274,7 @@ AbstractOutputJax<N, T, D> {
         const maps = [new Map() as MetricMap<N>, new Map() as MetricMap<N>];
         for (const i of maps.keys()) {
             for (const node of domMaps[i].keys()) {
-                maps[i].set(node, this.measureMetrics(domMaps[0].get(node)));
+                maps[i].set(node, this.measureMetrics(domMaps[i].get(node)));
             }
         }
         //
@@ -335,7 +335,7 @@ AbstractOutputJax<N, T, D> {
             adaptor.setStyle(right, 'width', '10000em');
             adaptor.setStyle(right, 'float', '');
         }
-        return adaptor.append(node, adaptor.clone(display? this.testDisplay : this.testInline) as N);
+        return adaptor.append(node, adaptor.clone(display? this.testDisplay : this.testInline) as N) as N;
     }
 
     /**
