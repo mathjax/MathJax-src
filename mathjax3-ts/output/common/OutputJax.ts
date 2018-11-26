@@ -274,7 +274,7 @@ AbstractOutputJax<N, T, D> {
         const maps = [new Map() as MetricMap<N>, new Map() as MetricMap<N>];
         for (const i of maps.keys()) {
             for (const node of domMaps[i].keys()) {
-                maps[i].set(node, this.measureMetrics(domMaps[0].get(node)));
+                maps[i].set(node, this.measureMetrics(domMaps[i].get(node)));
             }
         }
         //
