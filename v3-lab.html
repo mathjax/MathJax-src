@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax v3 Interactive Lab</title>
+<script src="lib/traceur.min.js"></script>
+<script src="lib/system.js"></script>
+<style>
+h1 {
+  margin-left: 1.5em;
+}
+#layout {
+  padding-left: .5em;
+  display: table;
+  width: 100%;
+  box-sizing: border-box;
+}
+#layout > div {
+  display: table-row;
+}
+#layout > div > div {
+  display: table-cell;
+  vertical-align: top;
+}
+#layout > div > div:last-child {
+  width: 18em;
+  max-width: 18em;
+}
+
+#main {
+  display: inline-block;
+}
+#input {
+  width: 100%;
+  box-sizing: border-box;
+}
+#buttons {
+  text-align: right;
+  margin-bottom: 1em;
+}
+#output {
+  border: 1px solid black;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 200%;
+}
+#mathml {
+  margin-top: 1.1em;
+  font-size: 90%;
+}
+
+#controls {
+  padding-left: 1em;
+}
+#controls > div {
+  margin-bottom: .5em;
+}
+#controls > hr {
+  border: none;
+  border-top: 2px dotted;
+  margin: 1em;
+  margin-left: 0;
+}
+#package {
+  margin-top: .5em;
+}
+#package > span > span {
+  display: inline-block;
+  width: 9em;
+  white-space: nowrap;
+}
+#package.disabled {
+  color: #888888;
+}
+
+</style>
+</head>
+<body>
+
+<h1>MathJax v3 Interactive Lab</h1>
+
+<div id="layout">
+<div>
+<div id="main">
+<textarea id="input" rows="15" onkeypress="Lab.checkKey(this,event)"></textarea>
+<div id="buttons">
+<input type="button" value="Keep" onclick="Lab.Keep()" />
+<input type="button" value="Typeset" onclick="Lab.Typeset()" />
+</div>
+<div id="output"></div>
+<pre id="mathml"></pre>
+</div>
+
+<div id="controls">
+<div>
+Input:
+<select id="format" onchange="Lab.setFormat(this.value)">
+<option value="TeX D">Display TeX</option>
+<option value="TeX I">Inline TeX</option>
+<option value="MathML">MathML</option>
+</select>
+</div>
+<div>
+Output:
+<select id="renderer" onchange="Lab.setRenderer(this.value)">
+<option value="CHTML">CHTML</option>
+<option value="SVG">SVG</option>
+</select>
+</div>
+<div>
+<input type="checkbox" id="showMML" onchange="Lab.setMathML(this.checked)" /> Show MathML
+</div>
+<hr/>
+<div id="package"></div>
+</div>
+</div>
+</div>
+
+<script>
+System.import('./lib/v3-lab.js').catch(function (error) {console.log(error.message)});
+</script>
+</body>
+</html>
+
+
