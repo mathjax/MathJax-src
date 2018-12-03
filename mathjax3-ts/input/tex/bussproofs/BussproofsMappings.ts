@@ -81,6 +81,5 @@ new CommandMap('Bussproofs-macros', {
 
 
 new EnvironmentMap('Bussproofs-environments', ParseMethods.environment, {
-  prooftreeold:     ['Prooftree', null, true],
   prooftree:        ['Prooftree', null, false]
 }, BussproofsMethods);

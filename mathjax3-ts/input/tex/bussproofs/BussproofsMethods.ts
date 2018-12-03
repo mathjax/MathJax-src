@@ -40,12 +40,11 @@ let BussproofsMethods: Record<string, ParseMethod> = {};
 
 // TODO: Error handling if we have leftover elements or elements are not in the
 // required order.
-// fraction is temporary!
-BussproofsMethods.Prooftree = function(parser: TexParser, begin: StackItem, fraction: boolean) {
+BussproofsMethods.Prooftree = function(parser: TexParser, begin: StackItem) {
   parser.Push(begin);
   // TODO: Check if opening a proof tree is legal.
   let newItem = parser.itemFactory.create('proofTree').
-    setProperties({name: begin.getName(), fraction: fraction, // fraction is temporary! 
+    setProperties({name: begin.getName(),
                    line: 'solid', currentLine: 'solid', rootAtTop: false});
   // parser.Push(item);
   return newItem;
@@ -58,7 +57,8 @@ BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
     throw new TexError('IllegalProofCommand',
                        'Proof commands only allowed in prooftree environment.');
   }
-  let content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
+  let axiom = ParseUtil.trimSpaces(parser.GetArgument(name));
+  let content = ParseUtil.internalMath(parser, axiom, 0);
   top.Push(...content);
 };
 
@@ -80,7 +80,7 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
     }
     children.unshift(
       parser.create('node', 'mtd', [top.Pop()],
-                     {'rowalign': (rootAtTop ? 'top' : 'bottom')}));
+                    {'rowalign': (rootAtTop ? 'top' : 'bottom')}));
     n--;
   } while (n > 0);
   let row = parser.create('node', 'mtr', children, {});
@@ -90,38 +90,14 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   if (style !== top.getProperty('line')) {
     top.setProperty('currentLine', top.getProperty('line'));
   }
-  let rule = top.getProperty('fraction') ?
-    createRuleOld(parser, table, conclusion,
-                  top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
-                  style, rootAtTop) :
-    createRule(parser, table, conclusion,
-               top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
-               style, rootAtTop);
+  let rule = createRule(
+    parser, table, conclusion, top.getProperty('left') as MmlNode,
+    top.getProperty('right') as MmlNode, style, rootAtTop);
   top.setProperty('left', null);
   top.setProperty('right', null);
   BussproofsUtil.setProperty(rule, 'inference', Math.round(children.length / 2));
   parser.configuration.addNode('inference', rule);
   top.Push(rule);
-};
-
-
-function createRuleOld(parser: TexParser, premise: MmlNode,
-                       conclusions: MmlNode[], left: MmlNode|null,
-                       right: MmlNode|null, style: string,
-                       rootAtTop: boolean) {
-  let conclusion = parser.create('node', 'mrow', conclusions, {});
-  let frac = parser.create('node', 'mfrac',
-                            rootAtTop ? [conclusion, premise] : [premise, conclusion], {});
-  if (left && right) {
-    return parser.create('node', 'mrow', [left, frac, right], {});
-  }
-  if (left) {
-    return parser.create('node', 'mrow', [left, frac], {});
-  }
-  if (right) {
-    return parser.create('node', 'mrow', [frac, right], {});
-  }
-  return frac;
 };
 
 
