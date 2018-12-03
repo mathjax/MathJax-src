@@ -59,7 +59,7 @@ BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
                        'Proof commands only allowed in prooftree environment.');
   }
   let content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
-  top.Push.apply(top, content);
+  top.Push(...content);
 };
 
 

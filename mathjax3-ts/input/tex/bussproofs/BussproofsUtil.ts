@@ -52,7 +52,7 @@ import {Property, PropertyList} from '../../../core/Tree/Node.js';
 
 
 /**
- *  Global constants local the module. They instantiate an output jax for
+ *  Global constants local to the module. They instantiate an output jax for
  *  bounding box computation.
  */
 const adaptor: any = chooseAdaptor();
@@ -76,13 +76,13 @@ let getBBox = function(node: MmlNode) {
 
 
 /**
- * Get the table that is part of an inference rule, i.e., the rule without the
- * label. We ignore preceding elements or spaces.
+ * Get the actual table that represents the inference rule, i.e., the rule
+ * without the label. We ignore preceding elements or spaces.
  * 
- * @param {MmlNode} node The out node representing the inference rule.
- * @return {MmlNode} The inner node which is the actual table.
+ * @param {MmlNode} node The out node representing the inference.
+ * @return {MmlNode} The actual table representing the inference rule.
  */
-let getTable = function(node: MmlNode): MmlNode {
+let getRule = function(node: MmlNode): MmlNode {
   let i = 0;
   while (node && !NodeUtil.isType(node, 'mtable')) {
     if (NodeUtil.isType(node, 'text')) {
@@ -105,8 +105,9 @@ let getTable = function(node: MmlNode): MmlNode {
  * @param {MmlNode} table 
  * @return {MmlNode} The premises in the table rule.
  */
-let getPremises = function(table: MmlNode): MmlNode {
-    return table.childNodes[0].childNodes[0].childNodes[0].childNodes[0].childNodes[0] as MmlNode;
+let getPremises = function(rule: MmlNode, direction: string): MmlNode {
+  return rule.childNodes[direction === 'up' ? 1 : 0].childNodes[0].
+    childNodes[0].childNodes[0].childNodes[0] as MmlNode;
 };
 
 let getPremise = function(premises: MmlNode, n: number): MmlNode {
@@ -123,8 +124,8 @@ let lastPremise = function(premises: MmlNode): MmlNode {
 };
 
 
-let getConclusion = function(table: MmlNode): MmlNode {
-  return table.childNodes[1].childNodes[0].childNodes[0].childNodes[0] as MmlNode;
+let getConclusion = function(rule: MmlNode, direction: string): MmlNode {
+  return rule.childNodes[direction === 'up' ? 0 : 1].childNodes[0].childNodes[0].childNodes[0] as MmlNode;
 };
 
 let getColumn = function(inf: MmlNode): MmlNode {
@@ -155,39 +156,39 @@ let getParentInf = function(inf: MmlNode): MmlNode {
 // right: right space + right label
 // left: left space + left label
 // 
-let getSpaces = function(inf: MmlNode, table: MmlNode, right: boolean = false): number {
+let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): number {
   let result = 0;
-  if (inf === table) {
+  if (inf === rule) {
     return result;
   }
-  if (inf !== table.parent) {
+  if (inf !== rule.parent) {
     let children = inf.childNodes as MmlNode[];
     let index = right ? children.length - 1 : 0;
     if (NodeUtil.isType(children[index], 'mspace')) {
       result += getBBox(children[index]);
     }
-    inf = table.parent;
+    inf = rule.parent;
   }
-  if (inf === table) {
+  if (inf === rule) {
     return result;
   }
   let children = inf.childNodes as MmlNode[];
   let index = right ? children.length - 1 : 0;
-  if (children[index] !== table) {
+  if (children[index] !== rule) {
     result += getBBox(children[index]);
   }
   return result;
 };
 
-// - Get table T from Wrapper W.
+// - Get rule T from Wrapper W.
 // - Get conclusion C in T.
 // - w: Preceding/following space/label.
 // - |x - y|/2: Distance from left boundary to middle of conclusion. 
 let adjustValue = function(inf: MmlNode, right: boolean = false): number {
-  let table = getTable(inf);
-  let conc = getConclusion(table);
-  let w = getSpaces(inf, table, right);
-  let x = getBBox(table);
+  let rule = getRule(inf);
+  let conc = getConclusion(rule, getProperty(rule, 'inferenceRule') as string);
+  let w = getSpaces(inf, rule, right);
+  let x = getBBox(rule);
   let y = getBBox(conc);
   return w + ((x - y) / 2);
 };
@@ -241,20 +242,22 @@ let moveProperties = function(src: MmlNode, dest: MmlNode) {
 // 
 // Notions that we need:
 //
-// * Inference: The inference rule consisting either of a single table or a list
-//              containing the table plus 0 - 2 labels and spacing elements.
-//              s_1....s_n l{0,1} t r{0,1} s'_1....s'_m, m,n \in IN_0
+//
+// * Inference: The inference consisting either of an inference rule or a
+//              structure containing the rule plus 0 - 2 labels and spacing
+//              elements.  s l{0,1} t r{0,1} s', m,n \in IN_0
 // 
-// * Table: The rule without the labels and spacing.
+//              Technically this is realised as nested rows, if the spaces
+//              and/or labels exist:
+//              mr s mr l t r /mr s' /mr
 // 
-// * Wrapper: The part of the rule that contains the table. I.e., without
-//            the labels but it can contain additonal spacing elements.
-//            (Do we need this?) 
+// * InferenceRule: The rule without the labels and spacing.
+// 
 // * Conclusion: The element forming the conclusion of the rule. In
 //               downwards inferences this is the final row of the table.
 //
 // * Premises: The premises of the rule. In downwards inferences this is the
-//             first row of the table. Note that this is a table itself,
+//             first row of the rule. Note that this is a rule itself,
 //             with one column for each premise and an empty column
 //             inbetween.
 //
@@ -262,9 +265,8 @@ let moveProperties = function(src: MmlNode, dest: MmlNode) {
 // 
 // Left adjustment:
 // 
-// * For the given inference rule I:
-//    + compute wrapper W of I
-//    + compute table T of I
+// * For the given inference I:
+//    + compute rule R of I
 //    + compute premises P of I
 //    + compute premise P_f, P_l as first and last premise of I
 // 
@@ -300,14 +302,14 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     let isProof = getProperty(inf, 'proof');
     let label = getProperty(inf, 'labelledRule');
     // This currently only works with downwards rules.
-    let table = getTable(inf);
-    let premises = getPremises(table);
+    let rule = getRule(inf);
+    let premises = getPremises(rule, getProperty(rule, 'inferenceRule') as string);
     let premiseF = firstPremise(premises);
     if (getProperty(premiseF, 'inference')) {
       let adjust = adjustValue(premiseF);
       if (adjust) {
         addSpace(config, premiseF, -1 * adjust);
-        let w = getSpaces(inf, table, false);
+        let w = getSpaces(inf, rule, false);
         addSpace(config, inf, adjust - w);
       }
     }
@@ -318,7 +320,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     }
     let adjust = adjustValue(premiseL, true);
     addSpace(config, premiseL, -1 * adjust, true);
-    let w = getSpaces(inf, table, true);
+    let w = getSpaces(inf, rule, true);
     let maxAdjust = getProperty(inf, 'maxAdjust') as number;
     if (maxAdjust != null) {
       adjust = Math.max(adjust, maxAdjust);
