@@ -150,15 +150,33 @@ let getParentInf = function(inf: MmlNode): MmlNode {
 };
 
 
+// Computes bbox spaces
+// In the case of
+// right: right space + right label
+// left: left space + left label
+// 
 let getSpaces = function(inf: MmlNode, table: MmlNode, right: boolean = false): number {
+  let result = 0;
   if (inf === table) {
-    return 0;
+    return result;
   }
-  // Now inf is an mrow!
-  let index = inf.childNodes.indexOf(table);
-  return (right ? inf.childNodes.slice(index + 1) : inf.childNodes.slice(0, index))
-    .map(getBBox)
-    .reduce((x, y) => { return x + y; }, 0);
+  if (inf !== table.parent) {
+    let children = inf.childNodes as MmlNode[];
+    let index = right ? children.length - 1 : 0;
+    if (NodeUtil.isType(children[index], 'mspace')) {
+      result += getBBox(children[index]);
+    }
+    inf = table.parent;
+  }
+  if (inf === table) {
+    return result;
+  }
+  let children = inf.childNodes as MmlNode[];
+  let index = right ? children.length - 1 : 0;
+  if (children[index] !== table) {
+    result += getBBox(children[index]);
+  }
+  return result;
 };
 
 // - Get table T from Wrapper W.
@@ -177,37 +195,37 @@ let adjustValue = function(inf: MmlNode, right: boolean = false): number {
 
 let addSpace = function(config: ParseOptions, inf: MmlNode,
                         space: number, right: boolean = false) {
-  if (NodeUtil.isType(inf, 'mrow')) {
-    const index = right ? inf.childNodes.length - 1 : 0;
-    let mspace = inf.childNodes[index] as MmlNode;
-    if (NodeUtil.isType(mspace, 'mspace')) {
-      NodeUtil.setAttribute(
-        mspace, 'width',
-        ParseUtil.Em(ParseUtil.dimen2em(
-          NodeUtil.getAttribute(mspace, 'width') as string) + space));
-      return;
-    }
+  if (getProperty(inf, 'inferenceRule') ||
+      getProperty(inf, 'labelledRule')) {
+    const mrow = config.nodeFactory.create('node', 'mrow');
+    inf.parent.replaceChild(mrow, inf);
+    mrow.setChildren([inf]);
+    moveProperties(inf, mrow);
+    inf = mrow;
   }
-  const mspace = config.nodeFactory.create('node', 'mspace', [],
-                                           {width: ParseUtil.Em(space)});
-  if (NodeUtil.isType(inf, 'mrow')) {
-    if (right) {
-      inf.appendChild(mspace);
-      return;
-    }
-    mspace.parent = inf;
-    inf.childNodes.unshift(mspace);
+  // TODO: Simplify below as we now have a definite mrow.
+  const index = right ? inf.childNodes.length - 1 : 0;
+  let mspace = inf.childNodes[index] as MmlNode;
+  if (NodeUtil.isType(mspace, 'mspace')) {
+    NodeUtil.setAttribute(
+      mspace, 'width',
+      ParseUtil.Em(ParseUtil.dimen2em(
+        NodeUtil.getAttribute(mspace, 'width') as string) + space));
     return;
   }
-  const mrow = config.nodeFactory.create('node', 'mrow');
-  inf.parent.replaceChild(mrow, inf);
-  mrow.setChildren(right ? [inf, mspace] : [mspace, inf]);
-  moveProperties(inf, mrow);
+  mspace = config.nodeFactory.create('node', 'mspace', [],
+                                     {width: ParseUtil.Em(space)});
+  if (right) {
+    inf.appendChild(mspace);
+    return;
+  }
+  mspace.parent = inf;
+  inf.childNodes.unshift(mspace);
 };
 
 
 let moveProperties = function(src: MmlNode, dest: MmlNode) {
-  let props = ['inference', 'labelledRule', 'proof', 'maxAdjust'];
+  let props = ['inference', 'proof', 'maxAdjust', 'labelledRule']; // 
   props.forEach(x => {
     let value = getProperty(src, x);
     if (value != null) {
@@ -310,7 +328,9 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       // After the tree we add a space with the accumulated max value.
       // If the element is not in a column, we know we have some noise and the
       // proof is an mrow around the final inference.
-      addSpace(config, inf, adjust - w, true);
+      addSpace(config,
+               // in case the rule has been moved into an mrow in Left Adjust.
+               getProperty(inf, 'proof') ? inf : inf.parent, adjust - w, true);
       continue;
     }
     let sibling = nextSibling(column);
