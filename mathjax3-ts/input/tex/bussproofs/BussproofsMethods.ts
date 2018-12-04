@@ -57,9 +57,20 @@ BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
     throw new TexError('IllegalProofCommand',
                        'Proof commands only allowed in prooftree environment.');
   }
-  let axiom = ParseUtil.trimSpaces(parser.GetArgument(name));
-  let content = ParseUtil.internalMath(parser, axiom, 0);
-  top.Push(...content);
+  let content = paddedContent(parser, parser.GetArgument(name));
+  top.Push(content);
+};
+
+
+const paddedContent = function(parser: TexParser, content: string): MmlNode {
+  // Add padding on either site.
+  let nodes = ParseUtil.internalMath(parser, ParseUtil.trimSpaces(content), 0);
+  if (!nodes[0].childNodes[0].childNodes.length) {
+    return parser.create('node', 'mrow', []);
+  }
+  let lpad = parser.create('node', 'mspace', [], {width: '.5ex'});
+  let rpad = parser.create('node', 'mspace', [], {width: '.5ex'});
+  return parser.create('node', 'mrow', [lpad, ...nodes, rpad]);
 };
 
 
@@ -73,6 +84,7 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
     throw new TexError('BadProofTree', 'Proof tree badly specified.');
   }
   const rootAtTop = top.getProperty('rootAtTop') as boolean;
+  const childCount = (n === 1 && !top.Peek()[0].childNodes.length) ? 0 : n;
   let children: MmlNode[] = [];
   do {
     if (children.length) {
@@ -85,17 +97,17 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   } while (n > 0);
   let row = parser.create('node', 'mtr', children, {});
   let table = parser.create('node', 'mtable', [row], {framespacing: '0 0'});
-  let conclusion = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
+  let conclusion = paddedContent(parser, parser.GetArgument(name));
   let style = top.getProperty('currentLine') as string;
   if (style !== top.getProperty('line')) {
     top.setProperty('currentLine', top.getProperty('line'));
   }
   let rule = createRule(
-    parser, table, conclusion, top.getProperty('left') as MmlNode,
+    parser, table, [conclusion], top.getProperty('left') as MmlNode,
     top.getProperty('right') as MmlNode, style, rootAtTop);
   top.setProperty('left', null);
   top.setProperty('right', null);
-  BussproofsUtil.setProperty(rule, 'inference', Math.round(children.length / 2));
+  BussproofsUtil.setProperty(rule, 'inference', childCount);
   parser.configuration.addNode('inference', rule);
   top.Push(rule);
 };
