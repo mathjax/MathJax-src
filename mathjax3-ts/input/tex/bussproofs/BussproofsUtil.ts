@@ -262,9 +262,6 @@ let adjustSequents = function(config: ParseOptions) {
       removeProperty(seq, 'sequentProcessed');
       continue;
     }
-    // let num = config.nodeFactory.create('token', 'mn', {}, count.toString());
-    // let cell = config.nodeFactory.create('node', 'mtd', [num]);
-    // seq.appendChild(cell);
     let collect = [];
     let inf = getParentInf(seq);
     if (getProperty(inf, 'inference') !== 1) {
@@ -274,19 +271,14 @@ let adjustSequents = function(config: ParseOptions) {
     let oldInf = inf;
     collect.push(seq);
     while (getProperty(inf, 'inference') === 1) {
-      console.log('In loop');
+      // In case we have a table with a label.
+      inf = getRule(inf);
       let premise = firstPremise(getPremises(inf, getProperty(inf, 'inferenceRule') as string));
-
-      // console.log('Inference?');
-      // inf = premises.childNodes[0].childNodes[0].childNodes[0] as MmlNode;
-      // console.log(inf);
-      // console.log(getProperty(inf, 'inference'));
-      // If the first premise is an inference rule, check the conclusions for a sequence.
-      //
       let sequent = (getProperty(premise, 'inferenceRule')) ?
+        // If the first premise is an inference rule, check the conclusions for a sequent.
         getConclusion(premise, getProperty(premise, 'inferenceRule') as string) :
+        // Otherwise it is a hyp and we have to check the formula itself.
         premise;
-      // Otherwise it is a hyp and we have to check the formula itself.
       if (getProperty(sequent, 'sequent')) {
         seq = sequent.childNodes[0] as MmlNode;
         collect.push(seq);
@@ -294,21 +286,8 @@ let adjustSequents = function(config: ParseOptions) {
       }
       inf = premise;
     }
-
-    console.log(collect);
-    // console.log(getSequentMax(collect, 0));
-    // console.log(getSequentMax(collect, 2));
     addSequentMax(config, collect, 0, 'left');
     addSequentMax(config, collect, 2, 'right');
-    // do {
-    //   collect.push(seq);
-    //   let premise = getPremises(inf, getProperty(inf, 'inferenceRule') as string);
-    // } while (getProperty(inf, 'inference') === '1');
-    // console.log(seq);
-    // console.log(inf);
-    // console.log(getProperty(inf, 'inference'));
-    // console.log('Premises');
-    // console.log(getPremises(inf, getProperty(inf, 'inferenceRule') as string));
   }
 };
 
