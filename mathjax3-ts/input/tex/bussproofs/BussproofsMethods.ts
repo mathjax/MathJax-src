@@ -98,6 +98,7 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   let row = parser.create('node', 'mtr', children, {});
   let table = parser.create('node', 'mtable', [row], {framespacing: '0 0'});
   let conclusion = paddedContent(parser, parser.GetArgument(name));
+  console.log(conclusion);
   let style = top.getProperty('currentLine') as string;
   if (style !== top.getProperty('line')) {
     top.setProperty('currentLine', top.getProperty('line'));
@@ -233,33 +234,52 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   const middle = parser.create('node', 'mtd', [fcenter], {});
   const right = parser.create('node', 'mtd', [conclusion], {});
   const row = parser.create('node', 'mtr', [left, middle, right], {});
-  row.setProperty('sequent', true);
   const table = parser.create('node', 'mtable', [row], {columnspacing: '.5ex', columnalign: 'center 2'});
+  BussproofsUtil.setProperty(table, 'sequent', true);
+  parser.configuration.addNode('sequent', row);
   return table;
 };
 
 
 BussproofsMethods.FCenter = function(parser: TexParser, name: string) { };
 
-BussproofsMethods.InferenceF = function(parser: TexParser, name: string) { 
+BussproofsMethods.InferenceF = function(parser: TexParser, name: string, n: number) {
   let top = parser.stack.Top();
   if (top.kind !== 'proofTree') {
     throw new TexError('IllegalProofCommand',
                        'Proof commands only allowed in prooftree environment.');
   }
+  if (top.Size() < n) {
+    throw new TexError('BadProofTree', 'Proof tree badly specified.');
+  }
   const rootAtTop = top.getProperty('rootAtTop') as boolean;
+  const childCount = (n === 1 && !top.Peek()[0].childNodes.length) ? 0 : n;
+  let children: MmlNode[] = [];
+  do {
+    if (children.length) {
+      children.unshift(parser.create('node', 'mtd', [], {}));
+    }
+    children.unshift(
+      parser.create('node', 'mtd', [top.Pop()],
+                    {'rowalign': (rootAtTop ? 'top' : 'bottom')}));
+    n--;
+  } while (n > 0);
+  let row = parser.create('node', 'mtr', children, {});
+  let table = parser.create('node', 'mtable', [row], {framespacing: '0 0'});
+
+  let conclusion = parseFCenterLine(parser, name); // TODO: Padding
   let style = top.getProperty('currentLine') as string;
   if (style !== top.getProperty('line')) {
     top.setProperty('currentLine', top.getProperty('line'));
   }
-  let conclusion = parseFCenterLine(parser, name);
-  let premise = top.Pop() as MmlNode;
-  let rule = createRule(parser, premise, [conclusion],
-                        top.getProperty('left') as MmlNode, top.getProperty('right') as MmlNode,
-                        style, rootAtTop);
-  NodeUtil.setAttribute(rule, 'columnalign', 'center 2');
+  let rule = createRule(
+    parser, table, [conclusion], top.getProperty('left') as MmlNode,
+    top.getProperty('right') as MmlNode, style, rootAtTop);
+  //NodeUtil.setAttribute(rule, 'columnalign', 'center 2');
   top.setProperty('left', null);
   top.setProperty('right', null);
+  BussproofsUtil.setProperty(rule, 'inference', childCount);
+  parser.configuration.addNode('inference', rule);
   top.Push(rule);
 };
 

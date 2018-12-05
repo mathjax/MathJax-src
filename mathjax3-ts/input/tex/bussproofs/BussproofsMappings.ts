@@ -72,11 +72,11 @@ new CommandMap('Bussproofs-macros', {
 
   fCenter:         'FCenter',
   Axiom:           'AxiomF',
-  UnaryInf:        'InferenceF',
-  BrinaryInf:        'InferenceF',
-  TrinaryInf:        'InferenceF',
-  QuaternaryInf:        'InferenceF',
-  QuinaryInf:        'InferenceF'
+  UnaryInf:        ['InferenceF', 1],
+  BinaryInf:        ['InferenceF', 2],
+  TrinaryInf:        ['InferenceF', 3],
+  QuaternaryInf:        ['InferenceF', 4],
+  QuinaryInf:        ['InferenceF', 5]
 }, BussproofsMethods);
 
 

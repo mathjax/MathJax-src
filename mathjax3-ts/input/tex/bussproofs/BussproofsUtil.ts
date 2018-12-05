@@ -187,11 +187,27 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
 let adjustValue = function(inf: MmlNode, right: boolean = false): number {
   let rule = getRule(inf);
   let conc = getConclusion(rule, getProperty(rule, 'inferenceRule') as string);
+  console.log(getProperty(conc, 'sequent'));
   let w = getSpaces(inf, rule, right);
   let x = getBBox(rule);
   let y = getBBox(conc);
   return w + ((x - y) / 2);
 };
+
+
+  // if (getProperty(conc, 'sequent')) {
+  //   console.log(conc);
+  //   console.log(right);
+  //   console.log(y);
+  //   if (right) {
+  //     console.log(conc.childNodes[0].childNodes[2].childNodes[0].childNodes[conc.childNodes.length - 1]);
+  //     let children = conc.childNodes[0].childNodes[2].childNodes[0].childNodes;
+  //     y = y - getBBox(children[children.length - 1] as MmlNode);
+  //   } else {
+  //     y = y - getBBox(conc.childNodes[0].childNodes[0].childNodes[0].childNodes[0] as MmlNode);
+  //   }
+  //   console.log(y);
+  // }
 
 
 let addSpace = function(config: ParseOptions, inf: MmlNode,
@@ -236,6 +252,90 @@ let moveProperties = function(src: MmlNode, dest: MmlNode) {
   });
 };
 
+let adjustSequents = function(config: ParseOptions) {
+  let sequents = config.nodeLists['sequent'];
+  if (!sequents) {
+    return;
+  }
+  for (let i = sequents.length - 1, seq; seq = sequents[i]; i--) {
+    if (getProperty(seq, 'sequentProcessed')) {
+      removeProperty(seq, 'sequentProcessed');
+      continue;
+    }
+    // let num = config.nodeFactory.create('token', 'mn', {}, count.toString());
+    // let cell = config.nodeFactory.create('node', 'mtd', [num]);
+    // seq.appendChild(cell);
+    let collect = [];
+    let inf = getParentInf(seq);
+    if (getProperty(inf, 'inference') !== 1) {
+      continue;
+    }
+    let oldSeq = seq;
+    let oldInf = inf;
+    collect.push(seq);
+    while (getProperty(inf, 'inference') === 1) {
+      console.log('In loop');
+      let premise = firstPremise(getPremises(inf, getProperty(inf, 'inferenceRule') as string));
+
+      // console.log('Inference?');
+      // inf = premises.childNodes[0].childNodes[0].childNodes[0] as MmlNode;
+      // console.log(inf);
+      // console.log(getProperty(inf, 'inference'));
+      // If the first premise is an inference rule, check the conclusions for a sequence.
+      //
+      let sequent = (getProperty(premise, 'inferenceRule')) ?
+        getConclusion(premise, getProperty(premise, 'inferenceRule') as string) :
+        premise;
+      // Otherwise it is a hyp and we have to check the formula itself.
+      if (getProperty(sequent, 'sequent')) {
+        seq = sequent.childNodes[0] as MmlNode;
+        collect.push(seq);
+        setProperty(seq, 'sequentProcessed', true);
+      }
+      inf = premise;
+    }
+
+    console.log(collect);
+    // console.log(getSequentMax(collect, 0));
+    // console.log(getSequentMax(collect, 2));
+    addSequentMax(config, collect, 0, 'left');
+    addSequentMax(config, collect, 2, 'right');
+    // do {
+    //   collect.push(seq);
+    //   let premise = getPremises(inf, getProperty(inf, 'inferenceRule') as string);
+    // } while (getProperty(inf, 'inference') === '1');
+    // console.log(seq);
+    // console.log(inf);
+    // console.log(getProperty(inf, 'inference'));
+    // console.log('Premises');
+    // console.log(getPremises(inf, getProperty(inf, 'inferenceRule') as string));
+  }
+};
+
+const getSequentMax = function(sequents: MmlNode[], position: number): number {
+  let max = 0;
+  for (let sequent of sequents) {
+    max = Math.max(max, getBBox(sequent.childNodes[position] as MmlNode));
+  }
+  return max;
+};
+
+const addSequentMax = function(config: ParseOptions, sequents: MmlNode[],
+                               position: number, direction: string) {
+  let max = getSequentMax(sequents, position);
+  for (let sequent of sequents) {
+    let width = getBBox(sequent.childNodes[position] as MmlNode);
+    let mspace = config.nodeFactory.create(
+      'node', 'mspace', [], {width: ParseUtil.Em(max - width)});
+    if (direction === 'left') {
+      let row = sequent.childNodes[position].childNodes[0] as MmlNode;
+      mspace.parent = row;
+      row.childNodes.unshift(mspace);
+    } else {
+      sequent.childNodes[position].appendChild(mspace);
+    }
+  }
+};
 
 // For every inference rule we adjust the width of ruler by subtracting and
 // adding suitable spaces around the rule. The algorithm in detail.
@@ -294,8 +394,9 @@ let moveProperties = function(src: MmlNode, dest: MmlNode) {
  *     mathitem to filter.
  */
 export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
-  let config = arg.data;
   item = new HTMLMathItem('', null, arg.math.display);
+  let config = arg.data;
+  adjustSequents(config);
   let inferences = config.nodeLists['inference'] || [];
   let topAdjust = 0;
   for (let inf of inferences) {
