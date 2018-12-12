@@ -1,0 +1,41 @@
+{
+    "component": "mathjax3-tex-input",
+    "targets": ["input/tex.ts", "input/tex"],
+
+    "extra": [
+        ["input/tex/ams/AmsConfiguration.ts", [
+            "import {Configuration} from '../../../../../../mathjax3/input/tex/Configuration.js';"
+        ]],
+        ["input/tex/ams/AmsMethods.ts", [
+            "import {StackItem} from '../../../../../../mathjax3/input/tex/StackItem.js';",
+            "import {Symbol} from '../../../../../../mathjax3/input/tex/Symbol.js';",
+            "import TexParser from '../../../../../../mathjax3/input/tex/TexParser.js';"
+        ]],
+        ["input/tex/base/BaseConfiguration.ts", [
+            "import {Configuration} from '../../../../../../mathjax3/input/tex/Configuration.js';"
+        ]],
+        ["input/tex/base/BaseMethods.ts", [
+            "import {StackItem} from '../../../../../../mathjax3/input/tex/StackItem.js';",
+            "import {Symbol} from '../../../../../../mathjax3/input/tex/Symbol.js';",
+            "import TexParser from '../../../../../../mathjax3/input/tex/TexParser.js';"
+        ]],
+        ["input/tex/boldsymbol/BoldsymbolConfiguration.ts", [
+            "import {Configuration} from '../../../../../../mathjax3/input/tex/Configuration.js';",
+            "import {StackItem} from '../../../../../../mathjax3/input/tex/StackItem.js';",
+            "import {Symbol} from '../../../../../../mathjax3/input/tex/Symbol.js';",
+            "import TexParser from '../../../../../../mathjax3/input/tex/TexParser.js';"
+        ]],
+        ["input/tex/newcommand/NewcommandConfiguration.ts", [
+            "import {Configuration} from '../../../../../../mathjax3/input/tex/Configuration.js';"
+        ]],
+        ["input/tex/newcommand/NewcommandMethods.ts", [
+            "import {StackItem} from '../../../../../../mathjax3/input/tex/StackItem.js';",
+            "import {Symbol} from '../../../../../../mathjax3/input/tex/Symbol.js';",
+            "import TexParser from '../../../../../../mathjax3/input/tex/TexParser.js';"
+        ]],
+        ["input/tex/noundefined/NoUndefinedConfiguration.ts", [
+            "import {Configuration} from '../../../../../../mathjax3/input/tex/Configuration.js';"
+        ]]
+    ]
+}
+
