@@ -18,16 +18,6 @@ export interface MathJaxObject {
 
 declare const global: {MathJax: MathJaxObject | MathJaxConfig};
 
-if (typeof global.MathJax === 'undefined') {
-    global.MathJax = {} as MathJaxConfig;
-}
-
-export const MathJax = {
-    version: '3.0.0',
-    _: {},
-    config: {}
-};
-
 export function combineConfig(dst: any, src: any) {
     for (const id of Object.keys(src)) {
         if (typeof dst[id] === 'object' && typeof src[id] === 'object') {
@@ -43,6 +33,17 @@ export function combineWithMathJax(config: any): MathJaxObject {
     return combineConfig(global.MathJax, config);
 }
 
-if (!(global.MathJax as MathJaxObject).version) {
-    global.MathJax = combineConfig(MathJax, {config: global.MathJax});
+
+if (typeof global.MathJax === 'undefined') {
+    global.MathJax = {} as MathJaxConfig;
 }
+
+if (!(global.MathJax as MathJaxObject).version) {
+    global.MathJax = {
+        version: '3.0.0',
+        _: {},
+        config: global.MathJax
+    };
+}
+
+export const MathJax = global.MathJax;
