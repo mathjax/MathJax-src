@@ -4,4 +4,5 @@ mathjax3
 components/*/lib
 components/*/ts
 components/*.dist.js
-
+components/*/*.dist.js
+components/samples/*/*.dist.js
