@@ -110,7 +110,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         configuration.append(conf);
       }
     }
-    configuration.append(Configuration.extension());
+    configuration.init(configuration);
     return configuration;
   }
 
