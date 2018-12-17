@@ -280,7 +280,7 @@ export interface StackItem extends NodeStack {
    * @return {StackItem} Returns the stack item object for pipelining.
    */
   setProperties(def: PropList): StackItem;
-  
+
   /**
    * Convenience method for returning the string property "name".
    * @return {string} The value for the name property.
@@ -292,10 +292,10 @@ export interface StackItem extends NodeStack {
    * automaton. That is the tex parser works on a stack, and each item on the
    * stack can have a data stack of its own. Data on the stack is either a stack
    * item or a node.
-   * 
+   *
    * The checkItem method effectively implements the recursive checking of
    * input data from the parser against data recursively given on the stack.
-   * 
+   *
    * I.e., new input is parsed resulting in a new item. When pushed on the stack
    * it is checked against the top most item on the stack. This either leads to
    * the item being pushed onto the stack or combined with the top most
@@ -306,7 +306,7 @@ export interface StackItem extends NodeStack {
    * the stack. Nodes on the stack are collapsed into content of the 'foo'
    * environment, until a beginItem for 'foo' is found.  If a beginItem is not
    * for 'foo' or does not exist an error is thrown.
-   * 
+   *
    * @param {StackItem} item The pushed item.
    * @return {CheckType} True/false or an item or node.
    */
