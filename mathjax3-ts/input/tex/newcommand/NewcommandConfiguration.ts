@@ -28,7 +28,7 @@ import './NewcommandMappings.js';
 
 
 /**
- * Init method for AMS package.
+ * Init method for Newcommand package.
  * @param {Configuration} config The current configuration.
  */
 let init = function(config: Configuration) {
