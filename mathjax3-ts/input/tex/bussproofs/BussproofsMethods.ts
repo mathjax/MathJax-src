@@ -58,6 +58,7 @@ BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
                        'Proof commands only allowed in prooftree environment.');
   }
   let content = paddedContent(parser, parser.GetArgument(name));
+  BussproofsUtil.setProperty(content, 'axiom', true);
   top.Push(content);
 };
 
@@ -209,6 +210,7 @@ BussproofsMethods.AxiomF = function(parser: TexParser, name: string) {
                        'Proof commands only allowed in prooftree environment.');
   }
   let line = parseFCenterLine(parser, name);
+  BussproofsUtil.setProperty(line, 'axiom', true);
   top.Push(line);
 };
 
