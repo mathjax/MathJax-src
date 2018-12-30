@@ -55,5 +55,11 @@ export const MathJax = {
      * The functions for handling retries if a file must be loaded dynamically
      */
     handleRetriesFor: handleRetriesFor,
-    retryAfter: retryAfter
+    retryAfter: retryAfter,
+
+    /**
+     * A function for loading external files (can be changed for node/browser use)
+     */
+    asyncLoad: null as ((file: string) => any),
+
 };

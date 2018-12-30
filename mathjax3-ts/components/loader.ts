@@ -3,6 +3,15 @@ import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary as MJLibr
 import {Package} from './package.js';
 export {Package} from './package.js';
 
+declare var __dirname: string;
+declare var document: {currentScript: any};
+
+const root = (typeof document === 'undefined' || !document.currentScript ? __dirname :
+              document.currentScript.getAttribute('src')).replace(/\/[^\/]*$/, '');
+
+export const MathJax = MJGlobal as MathJaxObject;
+
+
 export interface MathJaxConfig extends MJConfig {
     loader?: {
         paths?: {[name: string]: string};          // The path prefixes for use in locations
@@ -11,6 +20,7 @@ export interface MathJaxConfig extends MJConfig {
         load?: string[];                           // The packages to load (found in locations or [mathjax]/name])
         ready?: () => void;                        // A function to call when MathJax is ready
         failed?: (message: string) => void;        // A function to call when MathJax fails to load
+        pacakgefailed?: (message: string) => void; // A function to call when a package fails to load
         require?: (url: string) => any;            // A function for loading URLs
         [name: string]: any;                       // Other configuration blocks
     };
@@ -69,27 +79,33 @@ export namespace Loader {
     };
 
     export function defaultReady() {
+        setupAsyncLoad();
         if (typeof MathJax.startup !== 'undefined') {
             MathJax.config.startup.ready();
         }
     };
 
-};
+    export function setupAsyncLoad() {
+        if (MathJax._.mathjax) {
+            MathJax._.mathjax.MathJax.asyncLoad = (name: string) => MathJax.loader.load(name);
+        }
+    };
 
-export const MathJax = MJGlobal as MathJaxObject;
+};
 
 if (typeof MathJax._.components === 'undefined') {
 
     const config = MathJax.config.loader || {};
     MathJax.config.loader = {
         paths: {
-            mathjax: '.'
+            mathjax: root
         },
         source: {},
         dependencies: {},
         load: [],
         ready: Loader.defaultReady.bind(Loader),
-        failed: (message: string, name: string = '*') => console.log(`MathJax(${name}): ${message}`),
+        failed: (message: string, name: string = '?') => console.log(`MathJax(${name}): ${message}`),
+        packageFailed: (message: string) => console.log(message),
         require: null
     };
     combineWithMathJax({
@@ -101,6 +117,3 @@ if (typeof MathJax._.components === 'undefined') {
 }
 
 export const CONFIG = MathJax.config.loader;
-
-declare var __dirname: string;
-console.log(__dirname);

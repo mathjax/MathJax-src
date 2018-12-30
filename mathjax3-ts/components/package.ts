@@ -58,7 +58,7 @@ export class Package {
         if (config.ready) {
             this.promise = this.promise.then(() => config.ready(this.name));
         }
-        this.promise.catch(config.failed || ((message: string) => {}));
+        this.promise.catch(config.failed || CONFIG.packageFailed);
     }
 
     public load() {
@@ -123,16 +123,19 @@ export class Package {
     }
 
     protected resolvePath() {
-        let path = CONFIG.source[this.name] || '[mathjax]/' + this.name;
-        if (!path.match(/\.[^\/]+$/)) {
-            path += '.js';
+        let file = CONFIG.source[this.name] || this.name;
+        if (!file.match(/^(?:[a-z]+:\/)?\//)) {
+            file = '[mathjax]/' + file.replace(/^\.\//, '');
+        }
+        if (!file.match(/\.[^\/]+$/)) {
+            file += '.js';
         }
         let match;
-        while ((match = path.match(/^\[([^\]]*)\]/))) {
+        while ((match = file.match(/^\[([^\]]*)\]/))) {
             if (!CONFIG.paths.hasOwnProperty(match[1])) break;
-            path = CONFIG.paths[match[1]] + path.substr(match[0].length);
+            file = CONFIG.paths[match[1]] + file.substr(match[0].length);
         }
-        return path;
+        return file;
     }
 
     public addDependent(extension: Package, never: boolean) {

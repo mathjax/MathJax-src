@@ -9,17 +9,7 @@ const PLUGINS = function (mathjax3, libs, dir) {
     const mj3 = new RegExp('^' + mj3dir.replace(/([\\\/.{}[\]()?*^$])/g, '\$1') + '\\/');
     const root = path.dirname(mj3dir);
 
-    const plugins = [
-        // Disable asyncLoad()
-/*
-        new webpack.NormalModuleReplacementPlugin(
-            /AsyncLoad\.js/,
-            function (resource) {
-                resource.request = resource.request.replace(/AsyncLoad/,"AsyncLoad-disabled")
-            }
-        )
-*/
-    ];
+    const plugins = [];
     if (libs.length) {
         plugins.push(
             // Move mathjax3 to component libraries

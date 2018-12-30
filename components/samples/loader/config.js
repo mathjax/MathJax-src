@@ -2,13 +2,12 @@ MathJax = {
     loader: {
         load: ["tex-input", "chtml-output"],
         paths: {
-            mathjax: '../../dist'
+//            mathjax: '../../dist'
         }
     },
     startup: {
         ready() {
             MathJax.startup.defaultReady();
-console.log(MathJax._.mathjax);
 //            console.log(MathJax.chtmlStylesheet());
 //            console.log(MathJax.tex2mml('x+1'));
 //            console.log(MathJax.startup.adaptor.outerHTML(MathJax.tex2chtml('x+1')));
@@ -28,7 +27,7 @@ console.log(MathJax._.mathjax);
 if (typeof require !== 'undefined') {
     MathJax.loader.require = require;
     MathJax.loader.load.push('liteDOM');
-//    MathJax.loader.source = require('../../src/source.js').source;
+    MathJax.loader.source = require('../../src/source.js').source;
     MathJax.startup.document = '$$x+1$$';
     MathJax.startup.typeset = false;
 }
