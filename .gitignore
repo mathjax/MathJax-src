@@ -1,8 +1,7 @@
 *~
 node_modules
 mathjax3
-components/*/lib
-components/*/ts
-components/*.dist.js
-components/*/*.dist.js
-components/samples/*/*.dist.js
+components/src/*/lib
+components/samples/*/lib
+components/samples/*/*.min.js
+components/dist
