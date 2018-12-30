@@ -1,0 +1,19 @@
+{
+    "component": "core",
+    
+    "targets": [
+        "mathjax.ts",
+        "core", "util", "handlers",
+        "adaptors/HTMLAdaptor.ts",
+        "adaptors/browserAdaptor.ts"
+    ],
+
+    "exclude": [
+        "core/MmlTree/JsonMmlVisitor.ts",
+        "core/MmlTree/LegacyMmlVisitor.ts",
+        "core/MmlTree/TestMmlVisitor.ts",
+        "util/AsyncLoad-disabled.ts",
+        "util/entities"
+    ]
+}
+

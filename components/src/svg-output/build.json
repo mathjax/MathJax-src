@@ -1,0 +1,5 @@
+{
+    "component": "svg-output",
+    "targets": ["output/svg.ts", "output/svg"]
+}
+

@@ -101,3 +101,6 @@ if (typeof MathJax._.components === 'undefined') {
 }
 
 export const CONFIG = MathJax.config.loader;
+
+declare var __dirname: string;
+console.log(__dirname);

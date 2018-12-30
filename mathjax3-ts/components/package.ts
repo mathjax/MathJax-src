@@ -85,6 +85,7 @@ export class Package {
     protected loadScript(url: string) {
         const script = document.createElement('script');
         script.src = url;
+        script.charset = 'UTF-8';
         script.onload = (event) => this.checkLoad();
         script.onerror = (event) => this.failed('Can\'t load "' + url + '"');
         // Should there be a timeout failure as well?
@@ -123,7 +124,7 @@ export class Package {
 
     protected resolvePath() {
         let path = CONFIG.source[this.name] || '[mathjax]/' + this.name;
-        if (!path.match(/\.[^\/]+/)) {
+        if (!path.match(/\.[^\/]+$/)) {
             path += '.js';
         }
         let match;

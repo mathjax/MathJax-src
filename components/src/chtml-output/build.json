@@ -1,0 +1,5 @@
+{
+    "component": "chtml-output",
+    "targets": ["output/chtml.ts", "output/chtml"]
+}
+

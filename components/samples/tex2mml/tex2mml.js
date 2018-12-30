@@ -17,5 +17,5 @@ window.Typeset = function (value, display) {
     const math = new HTMLMathItem(value, html.inputJax[0], display);
     math.setMetrics(16,8,16*20,100000,1);
     math.compile(html);
-    console.log(toMml(math.root));
+    return toMml(math.root);
 };

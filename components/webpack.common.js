@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const Uglify = require('uglifyjs-webpack-plugin');
 
 /**************************************************************/
 
@@ -11,19 +10,15 @@ const PLUGINS = function (mathjax3, libs, dir) {
     const root = path.dirname(mj3dir);
 
     const plugins = [
-        // For minifcation
-        new Uglify({
-            uglifyOptions: {
-                ie8: true
-            }
-        }),
         // Disable asyncLoad()
+/*
         new webpack.NormalModuleReplacementPlugin(
             /AsyncLoad\.js/,
             function (resource) {
                 resource.request = resource.request.replace(/AsyncLoad/,"AsyncLoad-disabled")
             }
         )
+*/
     ];
     if (libs.length) {
         plugins.push(
@@ -47,31 +42,19 @@ const PLUGINS = function (mathjax3, libs, dir) {
     return plugins;
 };
 
-const MODULE = function () {
-    return {
-        // NOTE: for babel transpilation
-        rules: [{
-            test: /\.js$/,
-            exclude: /(node_modules|bower_components)/,
-            use: {
-                loader: 'babel-loader'
-            }
-        }]
-    };
-};
-
 //
 //  Create a configuration for a distribution file
 //
-const PACKAGE = function (name, mathjax3, components, dir) {
+const PACKAGE = function (name, mathjax3, components, dir, dist) {
+    const distDir = dist ? path.resolve(dir, dist) :
+                           path.resolve(path.dirname(mathjax3), 'components', dist || 'dist');
     return {
         name: name,
         entry: path.join(dir, name + '.js'),
         output: {
-            path: dir,
-            filename: name + '.dist.js'
+            path: distDir,
+            filename: name + (dist === '.' ? '.min.js' : '.js')
         },
-        module: MODULE(),
         plugins: PLUGINS(mathjax3, components, dir),
         performance: {
             hints: false

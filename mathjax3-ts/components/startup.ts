@@ -73,6 +73,7 @@ namespace Startup {
     export let adaptor: DOMADAPTOR = null;
     export let elements: any[] = null;
     export let document: MATHDOCUMENT = null;
+    export let promise: Promise<void> = null;
 
     export function toMML(node: MmlNode) {return visitor.visitTree(node, document)};
 
@@ -136,7 +137,7 @@ namespace Startup {
         getComponents();
         makeMethods();
         if (CONFIG.typeset && MathJax.TypesetPromise) {
-            MathJax.TypesetPromise();
+            promise = MathJax.TypesetPromise();
         }
     };
 
