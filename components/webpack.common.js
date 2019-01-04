@@ -4,9 +4,13 @@ const webpack = require('webpack');
 
 /**************************************************************/
 
+function quoteRE(string) {
+    return string.replace(/([\\.{}[\]()?*^$])/g, '\$1')
+}
+
 const PLUGINS = function (mathjax3, libs, dir) {
     const mj3dir = path.resolve(dir, mathjax3);
-    const mj3 = new RegExp('^' + mj3dir.replace(/([\\\/.{}[\]()?*^$])/g, '\$1') + '\\/');
+    const mj3 = new RegExp('^' + quoteRE(mj3dir) + '\\/');
     const root = path.dirname(mj3dir);
 
     const plugins = [];
@@ -32,6 +36,26 @@ const PLUGINS = function (mathjax3, libs, dir) {
     return plugins;
 };
 
+const MODULE = function (dir) {
+    //
+    // Only need to transpile our directory and components directory
+    //
+    const dirRE = (dir.substr(0, __dirname.length) === __dirname ? quoteRE(__dirname) :
+                   '(?:' + quoteRE(__dirname) + '|' + quoteRE(dir) + ')');
+    return {
+        // NOTE: for babel transpilation
+        rules: [{
+            test: new RegExp(dirRE + '\\/.*\\.js$'),
+            use: {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['env']
+                }
+            }
+        }]
+    }
+};
+
 //
 //  Create a configuration for a distribution file
 //
@@ -46,6 +70,7 @@ const PACKAGE = function (name, mathjax3, components, dir, dist) {
             filename: name + (dist === '.' ? '.min.js' : '.js')
         },
         plugins: PLUGINS(mathjax3, components, dir),
+        module: MODULE(dir),
         performance: {
             hints: false
         },
