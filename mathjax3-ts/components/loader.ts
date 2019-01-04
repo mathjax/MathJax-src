@@ -1,5 +1,5 @@
 import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary as MJLibrary,
-        MathJaxConfig as MJConfig, combineWithMathJax} from './global.js';
+        MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 export {Package, PackageError, PackageReady, PackageFailed} from './package.js';
@@ -103,8 +103,7 @@ export const MathJax = MJGlobal as MathJaxObject;
 
 if (typeof MathJax._.components === 'undefined') {
 
-    const config = MathJax.config.loader || {};
-    MathJax.config.loader = {
+    combineDefaults(MathJax.config, 'loader', {
         paths: {
             mathjax: Loader.getRoot()
         },
@@ -114,11 +113,10 @@ if (typeof MathJax._.components === 'undefined') {
         ready: Loader.defaultReady.bind(Loader),
         failed: (error: PackageError) => console.log(`MathJax(${error.package || '?'}): ${error.message}`),
         require: null
-    };
+    });
     combineWithMathJax({
         _: {components: {package: {Package: Package}}} as MathJaxLibrary,
-        loader: Loader,
-        config: {loader: config}
+        loader: Loader
     });
 
 }

@@ -1,16 +1,12 @@
-const combineWithMathJax = require('../../../mathjax3/components/global.js').combineWithMathJax;
+const combineDefaults = require('../../../mathjax3/components/global.js').combineDefaults;
 require('./lib/chtml-output.js');
 
 if (MathJax.loader) {
-    const config = MathJax.config.loader['chtml-output'];
-    MathJax.config.loader['chtml-output'] = {
+    combineDefaults(MathJax.config.loader, 'chtml-output', {
         checkReady() {
             return MathJax.loader.load("chtml-fonts/tex");
         }
-    };
-    if (config) {
-        combineWithMathJax({config: {loader: {'chtml-output': config}}});
-    }
+    });
 }
 
 if (MathJax.startup) {

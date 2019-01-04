@@ -1,5 +1,5 @@
 import {MathJax as MJGlobal, MathJaxObject as MJObject,
-        MathJaxConfig as MJConfig, combineWithMathJax} from './global.js';
+        MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
@@ -282,8 +282,7 @@ export const MathJax = MJGlobal as MathJaxObject;
 
 if (typeof MathJax._.startup === 'undefined') {
 
-    const config = MathJax.config.startup || {};
-    MathJax.config.startup = {
+    combineDefaults(MathJax.config, 'startup', {
         input: [],
         output: '',
         handler: null,
@@ -292,10 +291,9 @@ if (typeof MathJax._.startup === 'undefined') {
         elements: null,
         typeset: true,
         ready: Startup.defaultReady.bind(Startup)
-    };
+    });
     combineWithMathJax({
-        startup: Startup,
-        config: {startup: config}
+        startup: Startup
     });
 
     Startup.typesetCall(
