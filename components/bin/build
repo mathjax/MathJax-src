@@ -10,7 +10,7 @@ const exclude = new Map((config.exclude || []).map(name => [name, true]));
 const MATHJAX3 = config.mathjax3 || '../../../mathjax3';
 const LIB = config.lib || './lib';
 const COMPONENT = config.component || 'part';
-const GLOBAL = config.global || '../../../../mathjax3/components/global.js';
+const GLOBAL = config.global || `../${MATHJAX3}/components/global.js`;
 
 let PACKAGE = [];
 
@@ -143,7 +143,8 @@ function processGlobal() {
     const packages = [];
     PACKAGE = PACKAGE.sort(sortDir);
     while (PACKAGE.length) {
-        packages.push(processPackage(lines, '    ', path.dirname(PACKAGE[0])));
+        const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
+        packages.push(processPackage(lines, '    ', dir));
     }
     lines.push('    ' + packages.join(',\n    '));
     lines.push('}});');
@@ -171,7 +172,11 @@ function processPackage(lines, space, dir) {
             }
             packages.push(`${property}: ${component}`);
         } else {
-            packages.push(processPackage(lines, space + (dir === '.' ? '' : '    '), path.dirname(PACKAGE[0])));
+            let subdir = path.dirname(PACKAGE[0]);
+            while (path.dirname(subdir) !== dir && subdir !== '.') {
+                subdir = path.dirname(subdir);
+            }
+            packages.push(processPackage(lines, space + (dir === '.' ? '' : '    '), subdir));
         }
     }
     if (dir === '.') return packages.join(',\n    ');
