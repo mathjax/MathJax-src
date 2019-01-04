@@ -4,12 +4,21 @@ declare var document: Document;
 
 export type PackageMap = Map<string, Package>;
 
-export type PromiseFunction = (resolve: (name: string) => void,
-                               reject: (message: string, name?: string) => void) => void;
+export class PackageError extends Error {
+    public package: string;
+    constructor(message: string, name: string) {
+        super(message);
+        this.package = name;
+    }
+};
+
+export type PackageReady = (name: string) => string;
+export type PackageFailed = (message: PackageError) => void;
+export type PackagePromise = (resolve: PackageReady, reject: PackageFailed) => void;
 
 export interface PackageConfig {
-    ready: (name: string) => void;
-    failed: (message: string, name?: string) => void;
+    ready: PackageReady,
+    failed: PackageFailed,
     checkReady: () => Promise<void>;
 };
 
@@ -19,10 +28,10 @@ export class Package {
 
     public name: string;
     public isLoaded: boolean = false;
-    public promise: Promise<any>;
+    public promise: Promise<string>;
     protected isLoading: boolean = false;
-    protected resolve: (name: string) => void;
-    protected reject: (message: string, name?:string) => void;
+    protected resolve: PackageReady;
+    protected reject: PackageFailed;
     protected dependents: Package[] = [];
     protected dependencies: Package[] = [];
     protected dependentCount: number;
@@ -35,8 +44,16 @@ export class Package {
     constructor(name: string, never: boolean = false) {
         this.name = name;
         this.noLoad = never;
+        Package.packages.set(name, this);
+        const promises = [] as Promise<string>[];
+        this.makeDependencies(promises);
+        this.makePromise(promises)
+    }
+
+    protected makeDependencies(promises: Promise<string>[]) {
         const map = Package.packages;
-        map.set(name, this);
+        const never = this.noLoad;
+        const name = this.name;
         const dependencies = CONFIG.dependencies[name] || [];
         if (!CONFIG.dependencies.hasOwnProperty(name) && name !== 'core') {
             dependencies.push('core');
@@ -49,16 +66,24 @@ export class Package {
             if (extension.isLoaded) {
                 this.dependentCount--;
             }
+            promises.push(extension.promise);
         }
-        this.promise = new Promise<string>(((resolve, reject) => {
+    }
+
+    protected makePromise(promises: Promise<string>[]) {
+        let promise = new Promise<string>(((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
-        }) as PromiseFunction);
-        const config = (CONFIG[name] || {}) as PackageConfig;
+        }) as PackagePromise);
+        const config = (CONFIG[this.name] || {}) as PackageConfig;
         if (config.ready) {
-            this.promise = this.promise.then(() => config.ready(this.name));
+            promise = promise.then((name: string) => config.ready(this.name));
         }
-        this.promise.catch(config.failed || CONFIG.packageFailed);
+        if (promises.length) {
+            promises.push(promise);
+            promise = Promise.all(promises).then((names: string[]) => names.join(', '));
+        }
+        this.promise = promise;
     }
 
     public load() {
@@ -103,7 +128,12 @@ export class Package {
 
     protected failed(message: string) {
         this.isLoading = false;
-        this.reject(message, this.name);
+        const config = (CONFIG[this.name] || {}) as PackageConfig;
+        const error = new PackageError(message, this.name);
+        if (config.failed) {
+            config.failed(error);
+        }
+        this.reject(error);
     }
 
     protected checkLoad() {

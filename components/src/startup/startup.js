@@ -3,4 +3,4 @@ const {Loader, CONFIG} = require('../../../mathjax3/components/loader.js');
 
 Loader.load(...CONFIG.load)
     .then(() => CONFIG.ready())
-    .catch((message) => CONFIG.failed(message));
+    .catch(error => CONFIG.failed(error));

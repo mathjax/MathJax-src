@@ -23,7 +23,6 @@
 
 import {MathJax} from '../mathjax.js';
 
-
 /**
  * Load a file asynchronously using the MathJax.asynchLoad method, if there is one
  *

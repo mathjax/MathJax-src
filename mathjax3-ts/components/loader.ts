@@ -1,16 +1,11 @@
 import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary as MJLibrary,
         MathJaxConfig as MJConfig, combineWithMathJax} from './global.js';
-import {Package} from './package.js';
-export {Package} from './package.js';
+
+import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
+export {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 
 declare var __dirname: string;
-declare var document: {currentScript: any};
-
-const root = (typeof document === 'undefined' || !document.currentScript ? __dirname :
-              document.currentScript.getAttribute('src')).replace(/\/[^\/]*$/, '');
-
-export const MathJax = MJGlobal as MathJaxObject;
-
+declare var document: Document;
 
 export interface MathJaxConfig extends MJConfig {
     loader?: {
@@ -18,9 +13,8 @@ export interface MathJaxConfig extends MJConfig {
         source?: {[name: string]: string};         // The URLs for the extensions, e.g., tex: [mathjax]/input/tex.js
         dependencies?: {[name: string]: string[]}; // The depenedcies for each package
         load?: string[];                           // The packages to load (found in locations or [mathjax]/name])
-        ready?: () => void;                        // A function to call when MathJax is ready
-        failed?: (message: string) => void;        // A function to call when MathJax fails to load
-        pacakgefailed?: (message: string) => void; // A function to call when a package fails to load
+        ready?: PackageReady;                      // A function to call when MathJax is ready
+        failed?: PackageFailed;                    // A function to call when MathJax fails to load
         require?: (url: string) => any;            // A function for loading URLs
         [name: string]: any;                       // Other configuration blocks
     };
@@ -91,21 +85,34 @@ export namespace Loader {
         }
     };
 
+    export function getRoot() {
+        let root = __dirname;
+        if (typeof document !== 'undefined') {
+            const script = document.currentScript || document.getElementById('MathJax-script');
+            if (script) {
+                root = script.getAttribute('src').replace(/\/[^\/]*$/, '');
+            }
+        }
+        return root;
+    }
+
 };
+
+export const MathJax = MJGlobal as MathJaxObject;
+
 
 if (typeof MathJax._.components === 'undefined') {
 
     const config = MathJax.config.loader || {};
     MathJax.config.loader = {
         paths: {
-            mathjax: root
+            mathjax: Loader.getRoot()
         },
         source: {},
         dependencies: {},
         load: [],
         ready: Loader.defaultReady.bind(Loader),
-        failed: (message: string, name: string = '?') => console.log(`MathJax(${name}): ${message}`),
-        packageFailed: (message: string) => console.log(message),
+        failed: (error: PackageError) => console.log(`MathJax(${error.package || '?'}): ${error.message}`),
         require: null
     };
     combineWithMathJax({

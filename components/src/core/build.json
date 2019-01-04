@@ -12,7 +12,7 @@
         "core/MmlTree/JsonMmlVisitor.ts",
         "core/MmlTree/LegacyMmlVisitor.ts",
         "core/MmlTree/TestMmlVisitor.ts",
-        "util/AsyncLoad-disabled.ts",
+        "util/asyncLoad",
         "util/entities"
     ]
 }
