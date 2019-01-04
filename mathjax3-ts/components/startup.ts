@@ -48,10 +48,10 @@ export interface MathJaxObject extends MJObject {
         adaptor: DOMADAPTOR;
         document: MATHDOCUMENT;
         registerConstructor(name: string, constructor: any): void;
-        useHander(name: string): void;
-        useAdaptor(name: string): void;
-        useOutput(name: string): void;
-        useInput(name:string): void;
+        useHander(name: string, force?: boolean): void;
+        useAdaptor(name: string, force?: boolean): void;
+        useOutput(name: string, force?: boolean): void;
+        useInput(name:string, force?: boolean): void;
         extendHandler(extend: HandlerExtension): void;
         toMML(node: MmlNode): string;
     };
@@ -81,26 +81,26 @@ namespace Startup {
         constructors[name] = constructor;
     };
 
-    export function useHandler(name: string) {
-        if (!CONFIG.handler) {
+    export function useHandler(name: string, force: boolean = false) {
+        if (!CONFIG.handler || force) {
             CONFIG.handler = name;
         }
     };
 
-    export function useAdaptor(name: string) {
-        if (!CONFIG.adaptor) {
+    export function useAdaptor(name: string, force: boolean = false) {
+        if (!CONFIG.adaptor || force) {
             CONFIG.adaptor = name;
         }
     };
 
-    export function useInput(name: string) {
-        if (!inputSpecified) {
+    export function useInput(name: string, force: boolean = false) {
+        if (!inputSpecified || force) {
             CONFIG.input.push(name);
         }
     };
 
-    export function useOutput(name: string) {
-        if (!CONFIG.output) {
+    export function useOutput(name: string, force: boolean = false) {
+        if (!CONFIG.output || force) {
             CONFIG.output = name;
         }
     };
