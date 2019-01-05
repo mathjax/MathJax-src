@@ -34,6 +34,10 @@ export interface MathJaxObject extends MJObject {
     loader: {
         ready: (...names: string[]) => Promise<void>;
         load: (...names: string[]) => Promise<string>;
+        preLoad: (...names: string[]) => void;
+        defaultReady: () => void;
+        setupAsyncLoad: () => void;
+        getRoot: () => string;
     };
     startup?: any;
 }
@@ -70,6 +74,15 @@ export namespace Loader {
         }
         Package.loadAll();
         return Promise.all(promises);
+    };
+
+    export function preLoad(...names: string[]) {
+        for (const name of names) {
+            let extension = Package.packages.get(name);
+            if (!extension) {
+                extension = new Package(name, true, true);
+            }
+        }
     };
 
     export function defaultReady() {

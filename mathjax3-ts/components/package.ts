@@ -41,13 +41,16 @@ export class Package {
         return this.dependentCount === 0 && !this.noLoad;
     }
 
-    constructor(name: string, never: boolean = false) {
+    constructor(name: string, never: boolean = false, preloaded: boolean = false) {
         this.name = name;
         this.noLoad = never;
         Package.packages.set(name, this);
         const promises = [] as Promise<string>[];
         this.makeDependencies(promises);
-        this.makePromise(promises)
+        this.makePromise(promises);
+        if (preloaded) {
+            this.loaded();
+        }
     }
 
     protected makeDependencies(promises: Promise<string>[]) {
