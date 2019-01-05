@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Test of MathJax3 components loaded individually</title>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+<script src="config.js"></script>
+<script src="../../dist/startup.js" id="MathJax-script"></script>
+<script>
+MathJax.loader.preLoad(
+    'core',
+    'tex-input',
+    'chtml-output',
+    'chtml-fonts/tex'
+);
+</script>
+<script src="../../dist/core.js"></script>
+<script src="../../dist/tex-input.js"></script>
+<script src="../../dist/chtml-output.js"></script>
+<script src="../../dist/chtml-fonts/tex.js"></script>
+</head>
+<body>
+
+$$x+1\over x-1$$
+
+Done!
+<script src="run.js"></script>
+</body>
+</html>
