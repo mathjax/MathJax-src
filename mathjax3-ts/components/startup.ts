@@ -20,8 +20,10 @@ export interface MathJaxConfig extends MJConfig {
         handler?: string;        // The handler to register
         adaptor?: string;        // The name for the DOM adaptor to use
         document?: any;          // The document (or fragment or string) to work in
-        elements: any[];         // The elements to typeset (default is document body)
-        typeset: boolean;        // Perform initial typeset?
+        elements?: any[];        // The elements to typeset (default is document body)
+        typeset?: boolean;       // Perform initial typeset?
+        ready?: () => void;      // Function to perform when components are ready
+        pageReady?: () => void;  // Function to perform when page is ready
         [name: string]: any;     // Other configuration blocks
     };
 };
@@ -46,7 +48,10 @@ export interface MathJaxObject extends MJObject {
         output: OUTPUTJAX;
         handler: HANDLER;
         adaptor: DOMADAPTOR;
+        elements: any[];
         document: MATHDOCUMENT;
+        promise: Promise<void>;
+        pagePromise: Promise<void>;
         registerConstructor(name: string, constructor: any): void;
         useHander(name: string, force?: boolean): void;
         useAdaptor(name: string, force?: boolean): void;
@@ -54,9 +59,27 @@ export interface MathJaxObject extends MJObject {
         useInput(name:string, force?: boolean): void;
         extendHandler(extend: HandlerExtension): void;
         toMML(node: MmlNode): string;
+        typesetCall(fn: string | TypesetCall, priority: number): void;
+        clearTypesetCalls(): void;
+        convertCall(fn: string | ConvertCall, priority: number): void;
+        clearConvertCalls(): void;
+        defaultReady(): void;
+        getComponents(): void;
+        makeMethods(): void;
+        makeTypesetMethods(): void;
+        makeOutputMethods(iname: string, oname: string, input: INPUTJAX): void;
+        makeMmlMethods(name: string, input: INPUTJAX): void;
+        makeResetMethod(name: string, input: INPUTJAX): void;
+        convertMath(mitem: MATHITEM, document: MATHDOCUMENT, maxPriority?: number): void;
+        getInputJax(): void;
+        getOutputJax(): void;
+        getAdaptor(): void;
+        getHandler(): void;
     };
     [name: string]: any;
 }
+
+declare var global: {document: Document};
 
 namespace Startup {
 
@@ -75,7 +98,20 @@ namespace Startup {
     export let document: MATHDOCUMENT = null;
     export let promise: Promise<void> = null;
 
-    export function toMML(node: MmlNode) {return visitor.visitTree(node, document)};
+    export let pagePromise: Promise<void> = new Promise<void>((resolve, reject) => {
+        const doc = global.document;
+        if (!doc || !doc.readyState || doc.readyState === 'complete' || doc.readyState === 'interactive') {
+            resolve();
+        } else {
+            const listener = () => resolve();
+            doc.defaultView.addEventListener('load', listener, true);
+            doc.defaultView.addEventListener('DOMContentLoaded', listener, true);
+        }
+    });
+
+    export function toMML(node: MmlNode) {
+        return visitor.visitTree(node, document);
+    };
 
     export function registerConstructor(name: string, constructor: any) {
         constructors[name] = constructor;
@@ -137,7 +173,7 @@ namespace Startup {
         getComponents();
         makeMethods();
         if (CONFIG.typeset && MathJax.TypesetPromise) {
-            promise = MathJax.TypesetPromise();
+            promise = pagePromise.then(() => MathJax.TypesetPromise());
         }
     };
 
@@ -169,14 +205,14 @@ namespace Startup {
     };
 
     export function makeTypesetMethods() {
-        MathJax.Typeset = (elements: any = null) => {
-            elements = elements;
+        MathJax.Typeset = (which: any = null) => {
+            elements = which;
             for (const fn of typesetCalls) {
                 fn.item(document);
             }
         };
-        MathJax.TypesetPromise = (elements: any = null) => {
-            elements = elements;
+        MathJax.TypesetPromise = (which: any = null) => {
+            elements = which;
             return MathJax._.mathjax.MathJax.handleRetriesFor(() => {
                 for (const fn of typesetCalls) {
                     fn.item(document);
@@ -296,10 +332,12 @@ if (typeof MathJax._.startup === 'undefined') {
         startup: Startup
     });
 
-    Startup.typesetCall(
-        (document: MATHDOCUMENT) => document.findMath(Startup.elements ? {elements: Startup.elements} : {}),
-        10
-    );
+    const findMath = (document: MATHDOCUMENT) => {
+        const elements = Startup.elements;
+        return document.findMath(elements ? {elements} : {});
+    }
+
+    Startup.typesetCall(findMath, 10);
     Startup.typesetCall('compile', 20);
     Startup.typesetCall('getMetrics', 110);
     Startup.typesetCall('typeset', 120);
