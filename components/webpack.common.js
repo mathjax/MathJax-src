@@ -46,6 +46,7 @@ const MODULE = function (dir) {
         // NOTE: for babel transpilation
         rules: [{
             test: new RegExp(dirRE + '\\/.*\\.js$'),
+            exclude: new RegExp(quoteRE(__dirname) + '\\/dist\\/'),
             use: {
                 loader: 'babel-loader',
                 options: {
