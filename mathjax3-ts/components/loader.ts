@@ -1,12 +1,43 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2018 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  A dynamic loader for loading MathJax components based
+ *                on a user configuration, while handling timing of
+ *                dependencies properly
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary as MJLibrary,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 export {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 
+/*
+ * The current directory (for webpack), and the browser document (if any)
+ */
 declare var __dirname: string;
 declare var document: Document;
 
+/**
+ * Update the configuration structure to include the loader configuration
+ */
 export interface MathJaxConfig extends MJConfig {
     loader?: {
         paths?: {[name: string]: string};          // The path prefixes for use in locations
@@ -20,6 +51,9 @@ export interface MathJaxConfig extends MJConfig {
     };
 };
 
+/**
+ * Update The common library to include components.package
+ */
 export interface MathJaxLibrary extends MJLibrary {
     components: {
         package: {
@@ -28,22 +62,33 @@ export interface MathJaxLibrary extends MJLibrary {
     }
 }
 
+/**
+ * Update the MathJax object to inclide the loader information
+ */
 export interface MathJaxObject extends MJObject {
     _: MathJaxLibrary;
     config: MathJaxConfig;
     loader: {
-        ready: (...names: string[]) => Promise<void>;
-        load: (...names: string[]) => Promise<string>;
-        preLoad: (...names: string[]) => void;
-        defaultReady: () => void;
-        setupAsyncLoad: () => void;
-        getRoot: () => string;
+        ready: (...names: string[]) => Promise<void>;    // Get a promise for when all the named packages are loaded
+        load: (...names: string[]) => Promise<string>;   // Load the packages and return a promise for when ready
+        preLoad: (...names: string[]) => void;           // Indicate that packages are already loaded by hand
+        defaultReady: () => void;                        // The function performed when all packages are loaded
+        getRoot: () => string;                           // Find the root URL for the MathJax files
     };
     startup?: any;
 }
 
+/**
+ * The implementation of the dynamic loader
+ */
 export namespace Loader {
 
+    /**
+     * Get a promise that is resolved when all the named packages have been loaded.
+     *
+     * @param {string[]} names  The packages to wait for
+     * @return {Promise}        A promise that resolves when all the named packages are ready
+     */
     export function ready(...names: string[]) {
         if (names.length === 0) {
             names = Array.from(Package.packages.keys());
@@ -59,6 +104,12 @@ export namespace Loader {
         return Promise.all(promises);
     };
 
+    /**
+     * Load the named pacakges and return a promise that is resolved when they are all loaded
+     *
+     * @param {string[]} names  The packages to load
+     * @return {Promise}        A promise that resolves when all the named packages are ready
+     */
     export function load(...names: string[]) {
         if (names.length === 0) {
             return Promise.resolve();
@@ -76,6 +127,11 @@ export namespace Loader {
         return Promise.all(promises);
     };
 
+    /**
+     * Indicate that the named packages are being loaded by hand (e.g., as part of a lerger package).
+     *
+     * @param {string[]} names  The packages to load
+     */
     export function preLoad(...names: string[]) {
         for (const name of names) {
             let extension = Package.packages.get(name);
@@ -85,19 +141,20 @@ export namespace Loader {
         }
     };
 
+    /**
+     * The default function to perform when all the packages are loaded
+     */
     export function defaultReady() {
-        setupAsyncLoad();
         if (typeof MathJax.startup !== 'undefined') {
             MathJax.config.startup.ready();
         }
     };
 
-    export function setupAsyncLoad() {
-        if (MathJax._.mathjax) {
-            MathJax._.mathjax.MathJax.asyncLoad = (name: string) => MathJax.loader.load(name);
-        }
-    };
-
+    /**
+     * Get the root location for where the MathJax package files are found
+     *
+     * return {string}   The root location (directory for node.js, URL for browser)
+     */
     export function getRoot() {
         let root = __dirname;
         if (typeof document !== 'undefined') {
@@ -111,10 +168,16 @@ export namespace Loader {
 
 };
 
+/**
+ * Export the global MathJax object for convenience
+ */
 export const MathJax = MJGlobal as MathJaxObject;
 
-
-if (typeof MathJax._.components === 'undefined') {
+/*
+ * If the loader hasn't been added to the MathJax variable,
+ *   Add the loader configuration, library, and data objects.
+ */
+if (typeof MathJax.loader === 'undefined') {
 
     combineDefaults(MathJax.config, 'loader', {
         paths: {
@@ -134,4 +197,7 @@ if (typeof MathJax._.components === 'undefined') {
 
 }
 
+/**
+ * Export the loader configuration for convenience
+ */
 export const CONFIG = MathJax.config.loader;

@@ -1,6 +1,42 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2018 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Handles using MathJax global as config object, and to hold
+ *                methods and data to be available to the page author
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
+/**
+ * The MathJax variable as a configuration object
+ */
 export interface MathJaxConfig {[name: string]: any};
+
+/**
+ * The object used to store class and pther definitions
+ * from the various MathJax modules so that they can be shared
+ * among the various component webpack files
+ */
 export interface MathJaxLibrary {[name: string]: any};
 
+/**
+ * The MathJax global object structure
+ */
 export interface MathJaxObject {
     version: string;
     _: MathJaxLibrary;
@@ -9,6 +45,14 @@ export interface MathJaxObject {
 
 declare const global: {MathJax: MathJaxObject | MathJaxConfig};
 
+/**
+ * Combine user-produced configuration with existing defaults.  Values
+ * from src will replace those in dst.
+ *
+ * @param {any} dst      The destination config object (to be merged into)
+ * @param {any} src      The source configuration object (to replace defaul values in dst}
+ * @return {any}         The resulting (modified) config object
+ */
 export function combineConfig(dst: any, src: any) {
     for (const id of Object.keys(src)) {
         if (typeof dst[id] === 'object' && typeof src[id] === 'object') {
@@ -20,6 +64,16 @@ export function combineConfig(dst: any, src: any) {
     return dst;
 }
 
+/**
+ * Comibine defaults into a configuraiton that may already have
+ * user-provided values.  Values in src only go into dst if
+ * there is not already a value for that key.
+ *
+ * @param {any} dst      The destination config object (to be merged into)
+ * @param {string} name  The id of the configuration block to modify (created if doesn't exist)
+ * @param {any} src      The source configuration object (to replace defaul values in dst}
+ * @return {any}         The resulting (modified) config object
+ */
 export function combineDefaults(dst: any, name: string, src: any) {
     if (!dst[name]) {
         dst[name] = {};
@@ -35,15 +89,28 @@ export function combineDefaults(dst: any, name: string, src: any) {
     return dst;
 }
 
+/**
+ * Combine configuration or data with the existing MathJax object
+ *
+ * @param {any} config   The data to be merged into the MathJax object
+ */
 export function combineWithMathJax(config: any): MathJaxObject {
     return combineConfig(MathJax, config);
 }
 
 
+/*
+ * Create the MathJax global, if it doesn't exist
+ */
 if (typeof global.MathJax === 'undefined') {
     global.MathJax = {} as MathJaxConfig;
 }
 
+/*
+ * If the global is currently a config object, convert it to the
+ * MathJaxObject containing the version, class library, and user
+ * configuration.
+ */
 if (!(global.MathJax as MathJaxObject).version) {
     global.MathJax = {
         version: '3.0.0',
@@ -52,4 +119,7 @@ if (!(global.MathJax as MathJaxObject).version) {
     };
 }
 
+/**
+ * Export the global MathJax object for convenience
+ */
 export const MathJax = global.MathJax as MathJaxObject;

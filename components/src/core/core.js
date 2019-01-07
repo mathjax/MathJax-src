@@ -6,3 +6,6 @@ if (MathJax.startup) {
     MathJax.startup.useHandler('HTMLHandler');
     MathJax.startup.useAdaptor('browserAdaptor');
 }
+if (MathJax.loader) {
+    MathJax._.mathjax.MathJax.asyncLoad = (name => MathJax.loader.load(name));
+}
