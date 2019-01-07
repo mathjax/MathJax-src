@@ -110,7 +110,7 @@ function processFile(base, name) {
  * @return {string[]}            An array of names of exported objects
  */
 function processParts(parts) {
-    const obejcts = [];
+    const objects = [];
     for (let i = 1; i < parts.length; i += 2) {
         const words = parts[i].split(/\s+/);
         const type = words[words.length - 2];
@@ -293,9 +293,26 @@ function processPackage(lines, space, dir) {
     return path.basename(dir) + ': {\n    ' + space + packages.join(',\n    '+space) + '\n' + space + '}';
 }
 
+function rmDir(dir) {
+    if (!dir) return;
+    if (fs.existsSync(dir)) {
+        for (const name of fs.readdirSync(dir)) {
+            const file = path.join(dir, name);
+            if (fs.lstatSync(file).isDirectory()) {
+                rmDir(file);
+            } else {
+                fs.unlinkSync(file);
+            }
+        }
+        fs.rmdirSync(dir);
+    }
+}
+
 //
-// Load all the targe files from the MathJax .ts directory, then
-//   create the file that loads all the target objects into the MathJax global object
+// Remove the existing lib directory contents, if any.
+// Load all the target files from the MathJax .ts directory.
+// DCcreate the file that loads all the target objects into the MathJax global object.
 //
+rmDir(LIB);
 processList(MATHJAX3 + '-ts', '', targets);
 processGlobal();
