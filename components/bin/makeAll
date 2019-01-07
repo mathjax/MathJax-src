@@ -51,37 +51,40 @@ const rootRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'math
                           .replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
 
 /**
- * Process the builds in an array of directories
+ * Process the contents of an array of directories
  *
  * @param {string} dirs   The directories to process
  */
 function processList(dirs) {
     for (const dir of dirs) {
-        processDir(path.resolve(dir));
+        const fulldir = path.resolve(dir);
+        processDir(fulldir, buildLib);
+        processDir(fulldir, webpackLib);
     }
 }
 
 /**
- * Build the lib directory, run webpack, and process subdirectories
+ * Run an action (build or webpack) on a directory and its subdirectories
  *
- * @param {string} dir    The directory to process
+ * @param {string} dir        The directory to process
+ * @param {Function} action   The action to take
  */
-function processDir(dir) {
-    buildLib(dir);
-    webpackLib(dir);
-    processSubdirs(dir);
+function processDir(dir, action) {
+    action(dir);
+    processSubdirs(dir, action);
 }
 
 /**
  * Look for subdirectories and process them
  *
- * @param {string} dir   The directory whose subdirectories are to be processed
+ * @param {string} dir        The directory whose subdirectories are to be processed
+ * @param {Function} action   The action to take
  */
-function processSubdirs(dir) {
+function processSubdirs(dir, action) {
     for (const name of fs.readdirSync(dir)) {
         const file = path.join(dir, name);
         if (fs.lstatSync(file).isDirectory()) {
-            processDir(file);
+            processDir(file, action);
         }
     }
 }
