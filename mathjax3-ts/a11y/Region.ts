@@ -24,9 +24,10 @@
 
 
 import {HTMLDocument} from '../handlers/html/HTMLDocument.js';
-import {CssStyles, StyleList} from '../output/chtml/CssStyles.js';
+import {CssStyles, StyleList} from '../output/common/CssStyles.js';
 
-import 'speech-rule-engine/lib/sre_browser.js';
+import 'node_modules/speech-rule-engine/lib/sre_browser.js';
+//import 'speech-rule-engine/lib/sre_browser.js';
 
 
 export type A11yDocument = HTMLDocument<HTMLElement, Text, Document>;
@@ -45,8 +46,8 @@ export interface Region {
 
   /**
    * Shows the live region in the document.
-   * @param {HTMLElement} node 
-   * @param {sre.Highlighter} highlighter 
+   * @param {HTMLElement} node
+   * @param {sre.Highlighter} highlighter
    */
   Show(node: HTMLElement, highlighter: sre.Highlighter): void;
 
@@ -212,7 +213,7 @@ export class ToolTip extends AbstractRegion {
                    }
                   }
                  );
-  
+
   protected position(node: HTMLElement) {
     const rect = node.getBoundingClientRect();
     let baseBottom = 0;
@@ -237,7 +238,7 @@ export class ToolTip extends AbstractRegion {
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
   }
-  
+
 }
 
 
@@ -298,7 +299,7 @@ export class LiveRegion extends AbstractRegion {
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
   }
-  
+
 }
 
 
@@ -367,5 +368,5 @@ export class HoverRegion extends AbstractRegion {
     this.Clear();
     this.inner.appendChild(node);
   }
-  
+
 }
