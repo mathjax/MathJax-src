@@ -23,6 +23,7 @@
 
 import {MathItem, ProtoItem} from './MathItem.js';
 import {MmlNode} from './MmlTree/MmlNode.js';
+import {MmlFactory} from './MmlTree/MmlFactory.js';
 import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
@@ -64,9 +65,19 @@ export interface InputJax<N, T, D> {
     adaptor: DOMAdaptor<N, T, D>;
 
     /**
+     * The MmlFactory for this input jax
+     */
+    mmlFactory: MmlFactory;
+
+    /**
      * @param {DOMAdaptor}  The adaptor to use in this jax
      */
     setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
+
+    /**
+     * @param {MmlFactory}  The MmlFactory to use in this jax
+     */
+    setMmlFactory(mmlFactory: MmlFactory): void;
 
     /**
      * Finds the math within the DOM or the list of strings
@@ -104,6 +115,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     public preFilters: FunctionList;
     public postFilters: FunctionList;
     public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
+    public mmlFactory: MmlFactory = null;        // set by the handler
 
     /**
      * @param {OptionList} options  The options to applyt to this input jax
@@ -132,6 +144,13 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     }
 
     /**
+     * @override
+     */
+    public setMmlFactory(mmlFactory: MmlFactory) {
+        this.mmlFactory = mmlFactory;
+    }
+
+    /**
      * @return {boolean}  True means find math in string array, false means in DOM element
      */
     public get processStrings() {
@@ -157,7 +176,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
      * @param {FunctionList} filters  The list of functions to be performed
      * @param {MathItem} math         The math item that is being processed
      * @param {any} data              Whatever other data is needed
-     * @return {any}                  The (possibly modidied) data
+     * @return {any}                  The (possibly modified) data
      */
     protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>, data: any) {
         let args = {math: math, data: data};

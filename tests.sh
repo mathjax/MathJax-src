@@ -12,6 +12,9 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-array-tests.js
     node load.js tests/parser-error-tests.js
     node load.js tests/parser-complex-tests.js
+    node load.js tests/parser-internal-math-tests.js
+
+    # AMS package tests.
     node load.js tests/parser-ams-tests.js
     node load.js tests/parser-amsenv-tests.js
     node load.js tests/parser-amserror-tests.js

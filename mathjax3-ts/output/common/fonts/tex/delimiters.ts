@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2018 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,9 +32,9 @@ const DELIM2192 = {c: 0x2192, dir: H, sizes: [1], stretch: [0, 0x2212, 0x2192], 
 const DELIM2194 = {c: 0x2194, dir: H, sizes: [1], stretch: [0x2190, 0x2212, 0x2192], HDW: HDW2};
 const DELIM21A4 = {c: 0x21A4, dir: H, stretch: [0x2190, 0x2212, 0x2223], HDW: HDW3, min: 1};
 const DELIM21A6 = {c: 0x21A6, dir: H, sizes: [1], stretch: [0x2223, 0x2212, 0x2192], HDW: HDW2};
-const DELIM21D0 = {c: 0x21D0, dir: H, sizes: [1], stretch: [0x21D0, 0x3D], HDW: [.367, -0.133, 1]};
-const DELIM21D2 = {c: 0x21D2, dir: H, sizes: [1], stretch: [0, 0x3D, 0x21D2], HDW: [.367, -0.133, 1]};
-const DELIM21D4 = {c: 0x21D4, dir: H, sizes: [1], stretch: [0x21D0, 0x3D, 0x21D2], HDW: [.367, -0.133, 1]};
+const DELIM21D0 = {c: 0x21D0, dir: H, sizes: [1], stretch: [0x21D0, 0x3D], HDW: HDW2};
+const DELIM21D2 = {c: 0x21D2, dir: H, sizes: [1], stretch: [0, 0x3D, 0x21D2], HDW: HDW2};
+const DELIM21D4 = {c: 0x21D4, dir: H, sizes: [1], stretch: [0x21D0, 0x3D, 0x21D2], HDW: HDW2};
 const DELIM2212 = {c: 0x2212, dir: H, sizes: [.778], stretch: [0, 0x2212], HDW: [.583, .082, .778]};
 const DELIM2223 = {c: 0x2223, dir: V, sizes: [1], stretch: [0, 0x2223], HDW: [.75, .249, .278]};
 const DELIM23DC = {c: 0x23DC, dir: H, sizes: [.778, 1], schar: [0x2322, 0x2322], stretch: [0xE150, 0xE154, 0xE151],
@@ -45,8 +45,8 @@ const DELIM23DE = {c: 0x23DE, dir: H, stretch: [0xE150, 0xE154, 0xE151, 0xE155],
 const DELIM23DF = {c: 0x23DF, dir: H, stretch: [0xE152, 0xE154, 0xE153, 0xE156], HDW: [.32, .2, .5], min: .9};
 const DELIM27E8 = {c: 0x27E8, dir: V, sizes: VSIZES};
 const DELIM27E9 = {c: 0x27E9, dir: V, sizes: VSIZES};
-const DELIM2906 = {c: 0x2906, dir: H, stretch: [0x21D0, 0x3D, 0x2223], HDW: [.367, -0.133, .5], min: 1};
-const DELIM2907 = {c: 0x2907, dir: H, stretch: [0x22A8, 0x3D, 0x21D2], HDW: [.367, -0.133, .5], min: .7};
+const DELIM2906 = {c: 0x2906, dir: H, stretch: [0x21D0, 0x3D, 0x2223], HDW: HDW3, min: 1};
+const DELIM2907 = {c: 0x2907, dir: H, stretch: [0x22A8, 0x3D, 0x21D2], HDW: HDW3, min: .7};
 
 
 export const delimiters: DelimiterMap = {
@@ -54,7 +54,7 @@ export const delimiters: DelimiterMap = {
   0x29: {dir: V, sizes: VSIZES, stretch: [0x239E, 0x239F, 0x23A0], HDW: [.75, .25, .875]},
   0x2D: DELIM2212,
   0x2F: DELIM2F,
-  0x3D: {dir: H, sizes: [.767], stretch: [0, 0x3D], HDW: [.367, -0.133, .778]},
+  0x3D: {dir: H, sizes: [.767], stretch: [0, 0x3D], HDW: [.583, .082, .778]},
   0x5B: {dir: V, sizes: VSIZES, stretch: [0x23A1, 0x23A2, 0x23A3], HDW: HDW1},
   0x5C: {dir: V, sizes: VSIZES},
   0x5D: {dir: V, sizes: VSIZES, stretch: [0x23A4, 0x23A5, 0x23A6], HDW: HDW1},

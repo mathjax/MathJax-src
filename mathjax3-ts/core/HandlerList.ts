@@ -75,8 +75,8 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>>  {
      * @param {OptionList} options  The options for the handler
      * @return {MathDocument}       The MathDocument created by the handler for this document
      */
-    public document(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList = null) {
-        return this.handlesDocument(document).create(document, adaptor, options);
+    public document(document: any, options: OptionList = null) {
+        return this.handlesDocument(document).create(document, options);
     }
 
 }
