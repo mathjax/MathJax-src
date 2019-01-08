@@ -35,7 +35,7 @@ const {execSync} = require('child_process');
  */
 const dirs = process.argv.slice(2);
 if (dirs.length === 0) {
-    dirs.push('src', 'samples');
+    dirs.push('.');
 }
 
 /**
