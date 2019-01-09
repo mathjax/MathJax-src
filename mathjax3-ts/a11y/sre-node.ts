@@ -30,5 +30,6 @@ const SRE = require('speech-rule-engine');
 /**
  * The global sre with sre.Engine.isReady() and sre.toEnriched()
  */
+global.SRE = SRE;
 global.sre = Object.create(SRE);
 global.sre.Engine = {isReady() {return SRE.engineReady()}};

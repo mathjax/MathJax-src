@@ -255,13 +255,10 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   }
 
   public Speech(walker: any) {
-    if (sre.Engine.isReady()) {
+    sreReady.then(() => {
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
-    } else {
-        sreReady.then(() => this.Speech(walker))
-                 .catch((error: Error) => console.log(error.message));
-    }
+    }).catch((error: Error) => console.log(error.message));
   }
 
   public KeyDown(event: KeyboardEvent) {

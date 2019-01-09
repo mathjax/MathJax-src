@@ -4,7 +4,6 @@
 <title>MathJax v3 Interactive Lab</title>
 <script src="lib/traceur.min.js"></script>
 <script src="lib/system.js"></script>
-<script src="node_modules/speech-rule-engine/lib/sre_browser.js"></script>
 <style>
 h1 {
   margin-left: 1.5em;
@@ -89,8 +88,8 @@ input[disabled] + label {
 <div id="main">
 <textarea id="input" rows="15" onkeypress="Lab.checkKey(this,event)"></textarea>
 <div id="buttons">
-<input type="button" value="Keep" onclick="Lab.Keep()" />
-<input type="button" value="Typeset" onclick="Lab.Typeset()" />
+<input id="keep" type="button" value="Keep" onclick="Lab.Keep()" disabled />
+<input id="typeset" type="button" value="Typeset" onclick="Lab.Typeset()" disabled />
 </div>
 <div id="output"></div>
 <pre id="mathml"></pre>
@@ -133,5 +132,3 @@ System.import('./lib/v3-lab.js').catch(function (error) {console.log(error.messa
 </script>
 </body>
 </html>
-
-

@@ -31,14 +31,6 @@ import {ComplexityVisitor} from './complexity/visitor.js';
 import {OptionList, selectOptionsFromKeys} from '../util/Options.js';
 
 /**
- * The only funciton we need from SRE
- */
-export type SRE = {
-    toEnriched(mml: string): Element;
-    engineReady(): boolean;
-};
-
-/**
  * Generic constructor for Mixins
  */
 export type Constructor<T> = new(...args: any[]) => T;
@@ -121,7 +113,6 @@ export interface ComplexityMathDocument<N, T, D> extends EnrichedMathDocument<N,
  *
  * @param {B} BaseMathDocument     The MathDocument class to be extended
  * @param {MathML} MmlJax          The MathML input jax used to convert the enriched MathML
- * @param {SRE} sre                The SRE object to do the enrichment
  * @return {EnrichedMathDocument}  The enriched MathDocument class
  *
  * @template N  The HTMLElement node class
@@ -188,11 +179,10 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends Constructor<Enric
  *
  * @param {Handler} handler   The Handler instance to enhance
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
- * @param {SRE} sre           The SRE object to perform the enrichment
  * @return {Handler}          The handler that was modified (for purposes of chainging extensions)
  */
-export function ComplexityHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>, sre: SRE) {
-    handler = EnrichHandler(handler, MmlJax, sre);
+export function ComplexityHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>) {
+    handler = EnrichHandler(handler, MmlJax);
     handler.documentClass =
         ComplexityMathDocumentMixin<N, T, D, Constructor<EnrichedMathDocument<N, T, D>>>(
             handler.documentClass as any as Constructor<EnrichedMathDocument<N, T, D>>

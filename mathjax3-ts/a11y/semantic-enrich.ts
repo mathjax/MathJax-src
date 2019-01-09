@@ -21,6 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {MathJax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
 import {MathDocument, AbstractMathDocument} from '../core/MathDocument.js';
 import {MathItem, AbstractMathItem} from '../core/MathItem.js';
@@ -28,14 +29,12 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
+import {sreReady} from './sre.js';
 
 /**
- * The only funciton we need from SRE
+ * The only function we need from SRE
  */
-export type SRE = {
-    toEnriched(mml: string): Element;
-    engineReady(): boolean;
-};
+declare const SRE: {toEnriched(mml: string): Element};
 
 /**
  * Generic constructor for Mixins
@@ -69,7 +68,6 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
  *
  * @param {B} BaseMathItem     The MathItem class to be extended
  * @param {MathML} MmlJax          The MathML input jax used to convert the enriched MathML
- * @param {SRE} sre            The SRE object to do the enrichment
  * @return {EnrichedMathItem}  The enriched MathItem class
  *
  * @template N  The HTMLElement node class
@@ -80,7 +78,6 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
 export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMathItem<N, T, D>>>(
     BaseMathItem: B,
     MmlJax: MathML<N, T, D>,
-    sre: SRE,
     toMathML: (node: MmlNode) => string
 ): Constructor<EnrichedMathItem<N, T, D>> & B {
 
@@ -93,8 +90,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
          */
         public enrich(document: MathDocument<N, T, D>) {
             if (this.isEnriched) return;
+            if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
+                MathJax.retryAfter(sreReady);
+            }
             const math = new document.options.MathItem('', MmlJax);
-            math.math = sre.toEnriched(toMathML(this.root)).outerHTML;
+            math.math = SRE.toEnriched(toMathML(this.root)).outerHTML;
             math.display = this.display;
             math.compile(document);
             this.root = math.root;
@@ -131,7 +131,6 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
  *
  * @param {B} BaseMathDocument     The MathDocument class to be extended
  * @param {MathML} MmlJax          The MathML input jax used to convert the enriched MathML
- * @param {SRE} sre                The SRE object to do the enrichment
  * @return {EnrichedMathDocument}  The enriched MathDocument class
  *
  * @template N  The HTMLElement node class
@@ -142,7 +141,6 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
 export function EnrichedMathDocumentMixin<N, T, D, B extends Constructor<AbstractMathDocument<N, T, D>>>(
     BaseDocument: B,
     MmlJax: MathML<N, T, D>,
-    sre: SRE
 ): Constructor<EnrichedMathDocument<N, T, D>> & B {
 
     return class extends BaseDocument {
@@ -165,7 +163,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends Constructor<Abstrac
             const toMathML = ((node: MmlNode) => visitor.visitTree(node));
             this.options.MathItem =
                 EnrichedMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(
-                    this.options.MathItem, MmlJax, sre, toMathML
+                    this.options.MathItem, MmlJax, toMathML
                 );
         }
 
@@ -193,14 +191,13 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends Constructor<Abstrac
  *
  * @param {Handler} handler   The Handler instance to enhance
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
- * @param {SRE} sre           The SRE object to perform the enrichment
  * @return {Handler}          The handler that was modified (for purposes of chainging extensions)
  */
-export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>, sre: SRE) {
+export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>) {
     MmlJax.setAdaptor(handler.adaptor);
     handler.documentClass =
         EnrichedMathDocumentMixin<N, T, D, Constructor<AbstractMathDocument<N, T, D>>>(
-            handler.documentClass, MmlJax, sre
+            handler.documentClass, MmlJax
         );
     return handler;
 }
