@@ -3,8 +3,7 @@ import {HTMLAdaptor} from '../adaptors/HTMLAdaptor.js';
 import {OptionList} from '../util/Options.js';
 import {A11yDocument, HoverRegion, Region, ToolTip} from './Region.js';
 
-import 'node_modules/speech-rule-engine/lib/sre_browser.js';
-//import 'speech-rule-engine/lib/sre_browser.js';
+import {sreReady} from './sre.js';
 
 
 export interface Explorer {
@@ -45,11 +44,11 @@ export interface Explorer {
 
 /**
  * Abstract class implementing the very basic explorer functionality.
- * 
+ *
  * Explorers use creator pattern to ensure they automatically attach themselves
  * to their node. This class provides the create method and is consequently not
  * declared abstract.
- * 
+ *
  * @constructor
  * @implements {Explorer}
  */
@@ -79,13 +78,13 @@ export class AbstractExplorer implements Explorer {
                         protected region: Region,
                         protected node: HTMLElement, ...rest: any[]) {
   }
-  
+
 
   protected Events(): [string, (x: Event) => void][] {
     return this.events;
   }
 
-  
+
   // The creator pattern!
   static create(document: A11yDocument,
                 region: Region,
@@ -160,7 +159,7 @@ export interface KeyExplorer extends Explorer {
   KeyDown(event: KeyboardEvent): void;
   FocusIn(event: FocusEvent): void;
   FocusOut(event: FocusEvent): void;
-  
+
 }
 
 export abstract class AbstractKeyExplorer extends AbstractExplorer implements KeyExplorer {
@@ -182,7 +181,7 @@ export abstract class AbstractKeyExplorer extends AbstractExplorer implements Ke
    */
   public FocusIn(event: FocusEvent) {
   }
-  
+
 
   /**
    * @override
@@ -190,7 +189,6 @@ export abstract class AbstractKeyExplorer extends AbstractExplorer implements Ke
   public FocusOut(event: FocusEvent) {
     this.Stop();
   }
-  
 
 }
 
@@ -240,7 +238,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.walker = new sre.TableWalker(
       this.node, this.speechGenerator, this.highlighter, this.mml);
   }
-  
+
   public Start() {
     super.Start();
     this.region.Show(this.node, this.highlighter);
@@ -248,7 +246,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.highlighter.highlight(this.walker.getFocus().getNodes());
     this.region.Update(this.walker.speech());
   }
-  
+
   public Stop() {
     if (this.active) {
       this.highlighter.unhighlight();
@@ -261,8 +259,8 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
     } else {
-      setTimeout(
-        function() { this.Speech(walker); }.bind(this), 100);
+        sreReady.then(() => this.Speech(walker))
+                 .catch((error: Error) => console.log(error.message));
     }
   }
 
@@ -312,7 +310,7 @@ export class Magnifier extends SpeechExplorer {
     region.Show(node, this.highlighter);
     region.AddNode(mjx);
   }
-  
+
   public Move(key: number) {
     this.walker.move(key);
     this.showFocus();
@@ -327,7 +325,7 @@ export interface MouseExplorer extends Explorer {
   MouseOut(event: MouseEvent): void;
   MouseDown(event: MouseEvent): void;
   MouseUp(event: MouseEvent): void;
-  
+
 }
 
 export abstract class AbstractMouseExplorer extends AbstractExplorer implements MouseExplorer {
@@ -340,14 +338,14 @@ export abstract class AbstractMouseExplorer extends AbstractExplorer implements 
        // ['mousedown', this.MouseDown.bind(this)],
        // ['mouseup', this.MouseUp.bind(this)],
       ]);
-  
+
   /**
    * @override
    */
   public MouseOver(event: MouseEvent) {
     this.Start();
   }
-  
+
 
   /**
    * @override
@@ -355,12 +353,12 @@ export abstract class AbstractMouseExplorer extends AbstractExplorer implements 
   public MouseOut(event: MouseEvent) {
     this.Stop();
   }
-  
+
   /**
    * @override
    */
   public abstract MouseDown(event: MouseEvent): void;
-  
+
 
   /**
    * @override
@@ -393,7 +391,7 @@ export class HoverExplorer extends AbstractMouseExplorer {
       {renderer: this.document.outputJax.name}
     );
   }
-    
+
   /**
    * @override
    */
@@ -441,13 +439,12 @@ export class HoverExplorer extends AbstractMouseExplorer {
     }
     return [null, ''];
   }
-    
 
 }
 
 
 export class TypeExplorer extends HoverExplorer {
-  
+
   protected nodeQuery = (node: HTMLElement) => {
     return node.hasAttribute('data-semantic-type');
   };
@@ -459,7 +456,7 @@ export class TypeExplorer extends HoverExplorer {
 
 
 export class RoleExplorer extends HoverExplorer {
-  
+
   protected nodeQuery = (node: HTMLElement) => {
     return node.hasAttribute('data-semantic-role');
   };
@@ -471,7 +468,7 @@ export class RoleExplorer extends HoverExplorer {
 
 
 export class TagExplorer extends HoverExplorer {
-  
+
   protected nodeQuery = (node: HTMLElement) => {return !!node.tagName; };
   protected nodeAccess = (node: HTMLElement) => {return node.tagName; };
 

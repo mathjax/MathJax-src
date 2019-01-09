@@ -26,9 +26,7 @@
 import {HTMLDocument} from '../handlers/html/HTMLDocument.js';
 import {CssStyles, StyleList} from '../output/common/CssStyles.js';
 
-import 'node_modules/speech-rule-engine/lib/sre_browser.js';
-//import 'speech-rule-engine/lib/sre_browser.js';
-
+import './sre.js';
 
 export type A11yDocument = HTMLDocument<HTMLElement, Text, Document>;
 
