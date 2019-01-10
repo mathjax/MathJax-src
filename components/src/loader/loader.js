@@ -1,4 +1,4 @@
-const {Loader, CONFIG} = require('../../../mathjax3/components/loader.js');
+const {Loader, CONFIG} = require('./lib/loader.js');
 
 Loader.load(...CONFIG.load)
     .then(() => CONFIG.ready())

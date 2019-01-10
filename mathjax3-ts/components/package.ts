@@ -281,7 +281,7 @@ export class Package {
      *   has been loaded (may cause dependents to load themselves).
      * Resolve the promise that says this package is loaded.
      */
-    protected loaded() {
+    public loaded() {
         this.isLoaded = true;
         this.isLoading = false;
         for (const dependent of this.dependents) {

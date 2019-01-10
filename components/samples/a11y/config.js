@@ -1,15 +1,22 @@
 MathJax = {
     loader: {
-        load: ["tex-input", "chtml-output"],
+        load: ["a11y/semantic-enrich"],
         paths: {
-//            mathjax: '../../dist'
+            mathjax: '../../dist'
+        },
+        dependencies: {
+            'a11y/semantic-enrich': ['core', 'sre']
+        },
+        source: {
+            sre: '../../node_modules/speech-rule-engine/lib/sre_browser.js'
         }
     },
     startup: {
         ready() {
             MathJax.startup.defaultReady();
+console.log('ready');
 //            console.log(MathJax.chtmlStylesheet());
-            console.log(MathJax.tex2mml('x+1'));
+//            console.log(MathJax.tex2mml('x+1'));
 //            console.log(MathJax.startup.adaptor.outerHTML(MathJax.tex2chtml('x+1')));
 //            MathJax.tex2mmlPromise('x+1').then((mml) => console.log(mml));
 //            MathJax.Typeset();
@@ -23,7 +30,6 @@ MathJax = {
 };
 
 
-
 const useDist = false;
 
 if (typeof require !== 'undefined') {
@@ -31,11 +37,10 @@ if (typeof require !== 'undefined') {
     MathJax.loader.load.push('liteDOM');
     if (useDist) {
         MathJax.loader.paths = {mathjax: '../../dist'};
-        MathJax.loader.source = {sre: '../../mathjax3/a11y/sre-node.js'};
+        MathJax.loader.source.sre = '../../mathjax3/a11y/sre-node.js';
     } else {
         MathJax.loader.source = require('../../src/source.js').source;
     }
     MathJax.startup.document = '$$x+1$$';
     MathJax.startup.typeset = false;
 }
-

@@ -1,0 +1,6 @@
+{
+    "component": "semantic-enrich",
+    "targets": ["a11y/semantic-enrich.ts", "a11y/sre.ts"],
+    "mathjax3": "../../../../mathjax3"
+}
+

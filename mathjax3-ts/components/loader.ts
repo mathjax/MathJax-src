@@ -23,11 +23,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary as MJLibrary,
+import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 export {Package, PackageError, PackageReady, PackageFailed} from './package.js';
+export {MathJaxLibrary} from './global.js';
 
 /*
  * The current directory (for webpack), and the browser document (if any)
@@ -50,17 +51,6 @@ export interface MathJaxConfig extends MJConfig {
         [name: string]: any;                       // Other configuration blocks
     };
 };
-
-/**
- * Update The common library to include components.package
- */
-export interface MathJaxLibrary extends MJLibrary {
-    components: {
-        package: {
-            Package: typeof Package;
-        }
-    }
-}
 
 /**
  * Update the MathJax object to inclide the loader information
@@ -128,14 +118,16 @@ export namespace Loader {
     };
 
     /**
-     * Indicate that the named packages are being loaded by hand (e.g., as part of a lerger package).
+     * Indicate that the named packages are being loaded by hand (e.g., as part of a larger package).
      *
      * @param {string[]} names  The packages to load
      */
     export function preLoad(...names: string[]) {
         for (const name of names) {
             let extension = Package.packages.get(name);
-            if (!extension) {
+            if (extension) {
+                extension.loaded();
+            } else {
                 extension = new Package(name, true, true);
             }
         }
@@ -191,7 +183,6 @@ if (typeof MathJax.loader === 'undefined') {
         require: null
     });
     combineWithMathJax({
-        _: {components: {package: {Package: Package}}} as MathJaxLibrary,
         loader: Loader
     });
 

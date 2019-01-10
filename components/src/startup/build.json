@@ -1,0 +1,4 @@
+{
+    "component": "startup",
+    "targets": ["components"]
+}
