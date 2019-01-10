@@ -94,7 +94,8 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
                 MathJax.retryAfter(sreReady);
             }
             const math = new document.options.MathItem('', MmlJax);
-            math.math = SRE.toEnriched(toMathML(this.root)).outerHTML;
+            const enriched = SRE.toEnriched(toMathML(this.root));
+            math.math = ('outerHTML' in enriched ? enriched.outerHTML : enriched.toString());
             math.display = this.display;
             math.compile(document);
             this.root = math.root;
