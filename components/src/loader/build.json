@@ -1,7 +1,6 @@
 {
     "component": "loader",
     "targets": [
-        "components/global.ts",
         "components/loader.ts",
         "components/package.ts"
     ]

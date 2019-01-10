@@ -5,7 +5,8 @@
         "mathjax.ts",
         "core", "util", "handlers",
         "adaptors/HTMLAdaptor.ts",
-        "adaptors/browserAdaptor.ts"
+        "adaptors/browserAdaptor.ts",
+        "components/global.ts"
     ],
 
     "exclude": [
