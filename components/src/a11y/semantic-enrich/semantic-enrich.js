@@ -9,9 +9,7 @@ if (MathJax.loader) {
 if (MathJax.startup) {
     const EnrichHandler = require('./lib/a11y/semantic-enrich.js').EnrichHandler;
     const MathML = require('../../../../mathjax3/input/mathml.js').MathML;
-    MathJax.startup.extendHandler(handler => {
-        return EnrichHandler(handler, new MathML());
-    });
+    MathJax.startup.extendHandler(handler => EnrichHandler(handler, new MathML()));
     MathJax.startup.typesetCall('enrich', 30);
     MathJax.startup.convertCall('enrich', 30);
 }

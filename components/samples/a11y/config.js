@@ -1,11 +1,12 @@
 MathJax = {
     loader: {
-        load: ["a11y/semantic-enrich", "tex-input"],
+        load: ["a11y/complexity", "tex-input"],
         paths: {
             mathjax: '../../dist'
         },
         dependencies: {
-            'a11y/semantic-enrich': ['core', 'sre', 'mml-input']
+            'a11y/semantic-enrich': ['core', 'sre', 'mml-input'],
+            'a11y/complexity': ['core', 'sre', 'mml-input']
         },
         source: {
             sre: '../../node_modules/speech-rule-engine/lib/sre_browser.js'
@@ -16,7 +17,7 @@ MathJax = {
         ready() {
             MathJax.startup.defaultReady();
 //            console.log(MathJax.chtmlStylesheet());
-            console.log(MathJax.tex2mml('x+1'));
+            console.log(MathJax.tex2mml('a+b+c+d+e'));
 //            console.log(MathJax.startup.adaptor.outerHTML(MathJax.tex2chtml('x+1')));
 //            MathJax.tex2mmlPromise('x+1').then((mml) => console.log(mml));
 //            MathJax.Typeset();
@@ -26,6 +27,9 @@ MathJax = {
     },
     chtml: {
         fontURL: 'https://cdn.rawgit.com/mathjax/mathjax-v3/3.0.0-beta.3/mathjax2/css'
+    },
+    'a11y/complexity': {
+        makeCollapsible: false
     }
 };
 

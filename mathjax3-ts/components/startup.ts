@@ -343,7 +343,7 @@ export namespace Startup {
     export function makeMethods() {
         if (!handler) return;
         mathjax.handlers.register(handler);
-        document = mathjax.document(CONFIG.document, {InputJax: input, OutputJax: output});
+        document = mathjax.document(CONFIG.document, {...MathJax.config.options, InputJax: input, OutputJax: output});
         if (input && output) {
             makeTypesetMethods();
         }
@@ -532,7 +532,7 @@ export namespace Startup {
         if (!handlerClass) {
             throw Error('Handler "' + name + '" is not defined (has it been loaded?)');
         }
-        const handler = new handlerClass(adaptor, 5, MathJax.config[name]);
+        const handler = new handlerClass(adaptor, 5);
         return extensions.reduce((handler, extend) => extend(handler), handler);
     };
 
@@ -561,7 +561,8 @@ if (typeof MathJax._.startup === 'undefined') {
         ready: Startup.defaultReady.bind(Startup)
     });
     combineWithMathJax({
-        startup: Startup
+        startup: Startup,
+        options: {}
     });
 
     const findMath = (document: MATHDOCUMENT) => {

@@ -10,6 +10,7 @@ exports.source = {
     'chtml-fonts/tex': `${src}/chtml-output/fonts/tex/tex.js`,
     'svg-output': `${src}/svg-output/svg-output.js`,
     'a11y/semantic-enrich': `${src}/a11y/semantic-enrich/semantic-enrich.js`,
+    'a11y/complexity': `${src}/a11y/complexity/complexity.js`,
     'sre': `../../mathjax3/a11y/sre-node.js`,
     'loader': `${src}/loader/loader.js`,
     'startup': `${src}/startup/startup.js`
