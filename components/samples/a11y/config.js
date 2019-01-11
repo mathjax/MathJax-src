@@ -1,22 +1,22 @@
 MathJax = {
     loader: {
-        load: ["a11y/semantic-enrich"],
+        load: ["a11y/semantic-enrich", "tex-input"],
         paths: {
             mathjax: '../../dist'
         },
         dependencies: {
-            'a11y/semantic-enrich': ['core', 'sre']
+            'a11y/semantic-enrich': ['core', 'sre', 'mml-input']
         },
         source: {
             sre: '../../node_modules/speech-rule-engine/lib/sre_browser.js'
         }
     },
     startup: {
+        input: ['tex'],
         ready() {
             MathJax.startup.defaultReady();
-console.log('ready');
 //            console.log(MathJax.chtmlStylesheet());
-//            console.log(MathJax.tex2mml('x+1'));
+            console.log(MathJax.tex2mml('x+1'));
 //            console.log(MathJax.startup.adaptor.outerHTML(MathJax.tex2chtml('x+1')));
 //            MathJax.tex2mmlPromise('x+1').then((mml) => console.log(mml));
 //            MathJax.Typeset();
