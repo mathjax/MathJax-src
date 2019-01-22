@@ -365,19 +365,18 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
         const transform = `translate(0, ${this.fixed(h)}) matrix(1 0 0 -1 0 0) ${scale}`;
         let table = this.svg('svg', {
-            'data-table': true, transform: transform,
+            'data-table': true,
             preserveAspectRatio: (align === 'left' ? 'xMinYMid' : align === 'right' ? 'xMaxYMid' : 'xMidYMid'),
             viewBox: [this.fixed(-L), this.fixed(-h), this.fixed(W), this.fixed(h + d)].join(' ')
         }, [
             this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)' + translate}, adaptor.childNodes(svg))
         ]);
         labels = this.svg('svg', {
-            'data-labels': true, transform: transform,
+            'data-labels': true,
             preserveAspectRatio: (side === 'left' ? 'xMinYMid' : 'xMaxYMid'),
             viewBox: [0, this.fixed(-h), this.fixed(LW), this.fixed(h + d)].join(' ')
         }, [labels]);
-        adaptor.append(svg, table)
-        adaptor.append(svg, labels);
+        adaptor.append(svg, this.svg('g', {transform: transform}, [table, labels]));
         this.place(-L, 0, svg);  // remove spacing for L, which is added by the parent during appending
     }
 
