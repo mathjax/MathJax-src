@@ -161,7 +161,9 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         let x = this.fLine;
         for (let i = 0; i < lines.length; i++) {
             x += cSpace[i] + cWidth[i] + cSpace[i+1];
-            this.adaptor.append(svg, this.makeVLine(x, lines[i], cLines[i]));
+            if (lines[i] !== 'none') {
+                this.adaptor.append(svg, this.makeVLine(x, lines[i], cLines[i]));
+            }
             x += cLines[i];
         }
     }
@@ -184,7 +186,9 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         for (let i = 0; i < lines.length; i++) {
             const [rH, rD] = this.getRowHD(equal, HD, H[i], D[i]);
             y -= rSpace[i] + rH + rD + rSpace[i+1]
-            this.adaptor.append(svg, this.makeHLine(y, lines[i], rLines[i]));
+            if (lines[i] !== 'none') {
+                this.adaptor.append(svg, this.makeHLine(y, lines[i], rLines[i]));
+            }
             y -= rLines[i];
         }
 
