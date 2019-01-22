@@ -65,6 +65,8 @@ AbstractOutputJax<N, T, D> {
         mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
         skipAttributes: {},            // RFDa and other attributes NOT to copy to the output
         exFactor: .5,                  // default size of ex in em units
+        displayAlign: 'center',        // default for indentalign when set to 'auto'
+        displayIndent: '0',            // default for indentshift when set to 'auto'
         wrapperFactory: null,          // The wrapper factory to use
         font: null,                    // The FontData object to use
         cssStyles: null                // The CssStyles object to use
