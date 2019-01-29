@@ -474,7 +474,9 @@ AbstractOutputJax<N, T, D> {
      * @return {CssFontData}    The family, italic, and boolean values
      */
     public getFontData(styles: Styles) {
-        if (!styles) styles = new Styles();
+        if (!styles) {
+            styles = new Styles();
+        }
         return [styles.get('font-family'),
                 styles.get('font-style') === 'italic',
                 styles.get('font-weight') === 'bold'] as CssFontData;

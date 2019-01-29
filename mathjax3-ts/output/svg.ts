@@ -186,8 +186,7 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
      */
     ex(m: number) {
         m /= this.font.params.x_height;
-        if (Math.abs(m) < .001) return '0';
-        return (m.toFixed(3).replace(/\.?0+$/, '')) + 'ex';
+        return (Math.abs(m) < .001 ? '0' : m.toFixed(3).replace(/\.?0+$/, '') + 'ex');
     }
 
     /**

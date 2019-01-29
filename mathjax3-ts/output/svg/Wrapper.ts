@@ -264,18 +264,16 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
     /**
      * @param {number} x   The x-offset for the element
      * @param {number} y   The y-offset for the element
-     * @param {N} eleemnt  The element to be placed
+     * @param {N} element  The element to be placed
      */
     public place(x: number, y: number, element: N = null) {
+        if (!(x || y)) return;
         if (!element) {
             element = this.element;
         }
-        if (x || y) {
-            let transform = this.adaptor.getAttribute(element, 'transform') || '';
-            transform = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')'
-                      + (transform ? ' ' + transform : '');
-            this.adaptor.setAttribute(element, 'transform', transform);
-        }
+        let transform = this.adaptor.getAttribute(element, 'transform') || '';
+        transform = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')' + (transform ? ' ' + transform : '');
+        this.adaptor.setAttribute(element, 'transform', transform);
     }
 
     /**
@@ -333,10 +331,10 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
      * @return {number}         The y position of the aligned baseline
      */
     protected getAlignY(H: number, D: number, h: number, d: number, align: string) {
-        if (align === 'top') return H - h ;
-        if (align === 'bottom') return d - D;
-        if (align === 'middle') return ((H - h) - (D - d)) / 2;
-        return 0; // baseline and axis
+        return (align === 'top' ? H - h :
+                align === 'bottom' ? d - D :
+                align === 'middle' ? ((H - h) - (D - d)) / 2 :
+                0); // baseline and axis
     }
 
     /*******************************************************************/

@@ -39,25 +39,31 @@ export type Menclose = SVGmenclose<any, any, any>;
 export type LineName = Notation.Side | ('vertical' | 'horizontal' | 'up' | 'down');
 
 /**
+ * Functions for computing the line data for each type of line
+ */
+export const computeLineData = {
+    top: (h, d, w, t) => [0, h - t, w, h - t],
+    right: (h, d, w, t) => [w - t, -d, w - t, h],
+    bottom: (h, d, w, t) => [0, t - d, w, t - d],
+    left: (h, d, w, t) => [t, -d, t, h],
+    vertical: (h, d, w, t) => [w / 2 - t, h, w / 2 - t, -d],
+    horizontal: (h, d, w, t) => [0, (h - d) / 2 - t, w, (h - d) / 2 - t],
+    up: (h, d, w, t) => [t, t - d, w - t, h - t],
+    down: (h, d, w, t) => [t, h - t, w - t, t - d]
+} as {[kind: string]: (h: number, d: number, w: number, t: number) => [number, number, number, number]};
+
+/**
  * The data for a given line as two endpoints: [x1, y1, x2, y1]
  *
  * @param {Menclose} node   The node whose line is to be drawn
  * @param {LineName} line   The type of line to draw for the node
  * @return {[number, number, number, number]}   The coordinates of the two nedpoints
  */
+
 export const lineData = (node: Menclose, kind: LineName) => {
     const {h, d, w} = node.getBBox();
     const t = node.thickness / 2;
-    return ({
-        top: [0, h - t, w, h - t],
-        right: [w - t, -d, w - t, h],
-        bottom: [0, t - d, w, t - d],
-        left: [t, -d, t, h],
-        vertical: [w / 2 - t, h, w / 2 - t, -d],
-        horizontal: [0, (h - d) / 2 - t, w, (h - d) / 2 - t],
-        up: [t, t - d, w - t, h - t],
-        down: [t, h - t, w - t, t - d]
-    } as {[name: string]: [number, number, number, number]})[kind];
+    return computeLineData[kind](h, d, w, t);
 }
 
 
