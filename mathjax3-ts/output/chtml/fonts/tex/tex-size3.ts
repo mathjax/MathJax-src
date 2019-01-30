@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {texSize3 as font} from '../../../common/fonts/tex/tex-size3.js';
 
-export const texSize3: CharMap = AddCSS(font, {
+export const texSize3: CHTMLCharMap = AddCSS(font, {
     0x28: 3,
     0x29: 3,
     0x2F: 3,

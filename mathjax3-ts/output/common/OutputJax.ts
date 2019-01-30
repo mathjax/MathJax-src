@@ -25,7 +25,7 @@ import {AbstractOutputJax} from '../../core/OutputJax.js';
 import {MathDocument} from '../../core/MathDocument.js';
 import {MathItem, Metrics} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {FontData, FontDataClass, CssFontData} from './FontData.js';
+import {FontData, FontDataClass, CharOptions, VariantData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
 import {CssStyles} from './CssStyles.js';
 import {WrapperClass} from '../../core/Tree/Wrapper.js';
@@ -63,7 +63,9 @@ export type UnknownVariantMap = Map<string, UnknownMap>;
  */
 export abstract class CommonOutputJax<N, T, D,
                                       W extends CommonWrapper<any, any, any>,
-                                      F extends CommonWrapperFactory<any, any, any>> extends
+                                      F extends CommonWrapperFactory<any, any, any>,
+                                      C extends CharOptions,
+                                      V extends VariantData<C>> extends
 AbstractOutputJax<N, T, D> {
 
     public static NAME: string = 'Common';
@@ -95,7 +97,7 @@ AbstractOutputJax<N, T, D> {
     /**
      * The data for the font in use
      */
-    public font: FontData;
+    public font: FontData<C, V>;
 
     public factory: F;
 
@@ -128,11 +130,11 @@ AbstractOutputJax<N, T, D> {
      */
     constructor(options: OptionList = null,
                 defaultFactory: typeof CommonWrapperFactory = null,
-                defaultFont: FontDataClass = null) {
+                defaultFont: FontDataClass<C, V> = null) {
         const [jaxOptions, fontOptions] = separateOptions(options, defaultFont.OPTIONS);
         super(jaxOptions);
         this.factory = this.options.wrapperFactory ||
-            new defaultFactory<CommonOutputJax<N, T, D, W, F>, W, CommonWrapperClass<any, W, any>>();
+            new defaultFactory<CommonOutputJax<N, T, D, W, F, C, V>, W, CommonWrapperClass<any, W, any>>();
         this.factory.jax = this;
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new defaultFont(fontOptions);

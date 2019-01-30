@@ -28,6 +28,7 @@ import * as LENGTHS from '../../util/lengths.js';
 import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {SVG} from '../svg.js';
 import {SVGWrapperFactory} from './WrapperFactory.js';
+import {SVGCharOptions} from './FontData.js';
 import {SVGmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
 import {StyleList} from '../common/CssStyles.js';
@@ -308,6 +309,13 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
             return this.jax.measureTextNodeWithCache(text, char, variant).w;
         }
         return w;
+    }
+
+    /**
+     * @override
+     */
+    protected getVariantChar(variant: string, n: number) {
+        return super.getVariantChar(variant, n) as [number, number, number, SVGCharOptions];
     }
 
     /**

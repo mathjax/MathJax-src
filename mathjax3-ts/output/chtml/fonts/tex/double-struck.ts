@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {doubleStruck as font} from '../../../common/fonts/tex/double-struck.js';
 
-export const doubleStruck: CharMap = AddCSS(font, {
+export const doubleStruck: CHTMLCharMap = AddCSS(font, {
     0x41: 1,
     0x42: 1,
     0x44: 1,

@@ -22,7 +22,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {StringMap} from './Wrapper.js';
 import {OptionList} from '../../util/Options.js';
 import {StyleList} from './CssStyles.js';
 
@@ -31,25 +30,11 @@ import {StyleList} from './CssStyles.js';
 /**
  * The extra options allowed in a CharData array
  */
-export type CharOptions = {
-    c?: string;                   // the content value (for css)
-    f?: string;                   // the font postfix (for css)
-    css?: number;                 // a bitmap for whether CSS is needed for content, padding, or width
+export interface CharOptions {
     ic?: number;                  // italic correction value
     sk?: number;                  // skew value
-    p?: string;                   // svg path
     unknown?: boolean;            // true if not found in the given variant
 };
-
-/**
- * The bit values for CharOptions.css
- */
-export const enum CSS {
-    width = 1 << 0,
-    padding = 1 << 1,
-    content = 1 << 2
-}
-
 
 /****************************************************************************/
 
@@ -57,16 +42,16 @@ export const enum CSS {
  * Data about a character
  *   [height, depth, width, {italic-correction, skew, options}]
  */
-export type CharData =
+export type CharData<C extends CharOptions> =
     [number, number, number] |
-    [number, number, number, CharOptions];
+    [number, number, number, C];
 
-export type CharMap = {
-    [n: number]: CharData;
+export type CharMap<C extends CharOptions> = {
+    [n: number]: CharData<C>;
 };
 
-export type CharMapMap = {
-    [name: string]: CharMap;
+export type CharMapMap<C extends CharOptions> = {
+    [name: string]: CharMap<C>;
 };
 
 /****************************************************************************/
@@ -74,24 +59,20 @@ export type CharMapMap = {
 /**
  * Data for a variant
  */
-export type VariantData = {
+export interface VariantData<C extends CharOptions> {
     /**
      * A list of CharMaps that must be updated when characters are
      * added to this variant
      */
-    linked: CharMap[];
+    linked: CharMap<C>[];
     /**
      * The character data for this variant
      */
-    chars: CharMap;
-    /**
-     * The classes to use for this variant
-     */
-    classes?: string;
+    chars: CharMap<C>;
 };
 
-export type VariantMap = {
-    [name: string]: VariantData;
+export type VariantMap<C extends CharOptions, V extends VariantData<C>> = {
+    [name: string]: V;
 };
 
 
@@ -124,7 +105,7 @@ export type DelimiterData = {
     HDW?: number[];              // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
                                  //            for horizontal, h and d are the multi-character ones, w is for the normal size).
     min?: number;                // The minimum size a multi-character version can be
-    c?: number;                   // The character number (for aliased delimiters)
+    c?: number;                  // The character number (for aliased delimiters)
 };
 
 export type DelimiterMap = {
@@ -191,7 +172,7 @@ export type FontParameters = {
  *  The FontData class (for storing character bounding box data by variant,
  *                      and the stretchy delimiter data).
  */
-export class FontData {
+export class FontData<C extends CharOptions, V extends VariantData<C>> {
 
     /**
      * Subclasses may need options
@@ -201,7 +182,7 @@ export class FontData {
     /**
      *  The standard variants to define
      */
-    protected static defaultVariants = [
+    public static defaultVariants = [
         ['normal'],
         ['bold', 'normal'],
         ['italic', 'normal'],
@@ -323,7 +304,7 @@ export class FontData {
      * The default delimiter and character data
      */
     protected static defaultDelimiters: DelimiterMap = {};
-    protected static defaultChars: CharMapMap = {};
+    protected static defaultChars: CharMapMap<any> = {};
 
     /**
      * The default variants for the fixed size stretchy delimiters
@@ -331,20 +312,14 @@ export class FontData {
     protected static defaultSizeVariants: string[] = [];
 
     /**
-     * The default class names to use for each variant
-     */
-    protected static defaultVariantClasses: StringMap = {};
-
-
-    /**
      * @param {CharMap} font   The font to check
      * @param {number} n       The character to get options for
      * @return {CharOptions}   The options for the character
      */
-    public static charOptions(font: CharMap, n: number) {
+    public static charOptions(font: CharMap<CharOptions>, n: number) {
         const char = font[n];
         if (char.length === 3) {
-            char[3] = {};
+            char[3] = {} as CharOptions;
         }
         return char[3] as CharOptions;
     }
@@ -352,7 +327,7 @@ export class FontData {
     /**
      * The actual variant, delimiter, and size information for this font
      */
-    protected variant: VariantMap = {};
+    protected variant: VariantMap<C, V> = {};
     protected delimiters: DelimiterMap = {};
     protected sizeVariants: string[];
     protected cssFontMap: CssFontMap = {};
@@ -386,9 +361,6 @@ export class FontData {
         this.defineDelimiters(CLASS.defaultDelimiters);
         for (const name of Object.keys(CLASS.defaultChars)) {
             this.defineChars(name, CLASS.defaultChars[name]);
-        }
-        for (const name of Object.keys(CLASS.defaultVariantClasses)) {
-            this.variant[name].classes = CLASS.defaultVariantClasses[name];
         }
         this.defineRemap('accent', CLASS.defaultAccentMap);
         this.defineRemap('mo', CLASS.defaultMoMap);
@@ -428,9 +400,9 @@ export class FontData {
      */
     public createVariant(name: string, inherit: string = null, link: string = null) {
         let variant = {
-            linked: [] as CharMap[],
-            chars: (inherit ? Object.create(this.variant[inherit].chars) : {}) as CharMap
-        };
+            linked: [] as CharMap<C>[],
+            chars: (inherit ? Object.create(this.variant[inherit].chars) : {}) as CharMap<C>
+        } as V;
         if (link && this.variant[link]) {
             Object.assign(variant.chars, this.variant[link].chars);
             this.variant[link].linked.push(variant.chars);
@@ -460,7 +432,7 @@ export class FontData {
      * @param {string} name    The variant for these characters
      * @param {CharMap} chars  The characters to define
      */
-    public defineChars(name: string, chars: CharMap) {
+    public defineChars(name: string, chars: CharMap<C>) {
         let variant = this.variant[name];
         Object.assign(variant.chars, chars);
         for (const link of variant.linked) {
@@ -561,7 +533,9 @@ export class FontData {
 /**
  * The class interface for the FontData class
  */
-export interface FontDataClass {
+
+export interface FontDataClass<C extends CharOptions, V extends VariantData<C>> {
     OPTIONS: OptionList;
-    new(options?: OptionList): FontData;
+    defaultVariants: string[][];
+    new(...args: any[]): FontData<C, V>;
 }

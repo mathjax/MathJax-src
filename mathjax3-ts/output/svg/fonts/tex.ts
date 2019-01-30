@@ -21,7 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontData, DelimiterData, CharData, CharOptions, DelimiterMap, CharMapMap, CSS, V, H} from '../FontData.js';
+import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, DelimiterData,
+        CharData, CharOptions, DelimiterMap, CharMapMap, FontDataClass} from '../FontData.js';
+import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
 import {StyleList, StyleData} from '../../common/CssStyles.js';
 import {em} from '../../../util/lengths.js';
 import {OptionList, defaultOptions, userOptions} from '../../../util/Options.js';
@@ -59,38 +61,17 @@ import {delimiters} from '../../common/fonts/tex/delimiters.js';
 /**
  *  The TeXFont class
  */
-export class TeXFont extends FontData {
+export class TeXFont extends CommonTeXFontMixin<SVGCharOptions, SVGVariantData, SVGFontDataClass>(SVGFontData) {
 
     /**
-     *  Add the extra variants for the TeX fonts
-     */
-    protected static defaultVariants = FontData.defaultVariants.concat([
-        ['-smallop', 'normal'],
-        ['-largeop', 'normal'],
-        ['-size3', 'normal'],
-        ['-size4', 'normal'],
-        ['-tex-caligraphic', 'italic'],
-        ['-tex-bold-caligraphic', 'bold-italic'],
-        ['-tex-oldstyle', 'normal'],
-        ['-tex-bold-oldstyle', 'bold'],
-        ['-tex-mathit', 'italic'],
-        ['-tex-variant', 'normal']
-    ]);
-
-    /**
-     *  The stretchy delimiter data (incomplete at the moment)
+     *  The stretchy delimiter data
      */
     protected static defaultDelimiters: DelimiterMap = delimiters;
 
     /**
-     *  The default variants for the standard stretchy sizes
-     */
-    protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
-
-    /**
      *  The character data by variant
      */
-    protected static defaultChars: CharMapMap = {
+    protected static defaultChars: CharMapMap<SVGCharOptions> = {
         'normal': normal,
         'bold': bold,
         'italic': italic,
@@ -116,13 +97,6 @@ export class TeXFont extends FontData {
         '-tex-bold-oldstyle': texOldstyleBold,
         '-tex-variant': texVariant
     };
-
-   /**
-     * @return {StyleList}  no styles needed for SVG
-     */
-    get styles() {
-        return {} as StyleList;
-    }
 
 }
 

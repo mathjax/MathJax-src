@@ -29,6 +29,7 @@ import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
+import {CHTMLCharOptions, CHTMLVariantData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 
 /*****************************************************************/
@@ -39,7 +40,8 @@ import {TeXFont} from './chtml/fonts/tex.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>> {
+export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>,
+                                                    CHTMLCharOptions, CHTMLVariantData> {
 
     public static NAME: string = 'CHTML';
     public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};

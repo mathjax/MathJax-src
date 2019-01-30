@@ -69,9 +69,10 @@ export type WrapperConstructor = Constructor<AnyWrapper>;
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
  */
-export interface CommonWrapperClass<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>>,
-                                    W extends CommonWrapper<J, W, C>,
-                                    C extends CommonWrapperClass<J, W, C>> extends
+export interface CommonWrapperClass<
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>, any, any>,
+    W extends CommonWrapper<J, W, C>,
+    C extends CommonWrapperClass<J, W, C>> extends
 WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * @override
@@ -87,7 +88,7 @@ WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
  */
-export class CommonWrapper<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>>,
+export class CommonWrapper<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>, any, any>,
                            W extends CommonWrapper<J, W, C>,
                            C extends CommonWrapperClass<J, W, C>> extends
 AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
@@ -197,7 +198,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * Easy access to the font parameters
      */
-    public font: FontData = null;
+    public font: FontData<any, any> = null;
 
     /**
      * Easy access to the output jax for this node

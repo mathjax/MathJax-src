@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {monospace as font} from '../../../common/fonts/tex/monospace.js';
 
-export const monospace: CharMap = AddCSS(font, {
+export const monospace: CHTMLCharMap = AddCSS(font, {
     0x20: 1,
     0x21: 3,
     0x22: 3,

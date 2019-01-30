@@ -21,12 +21,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {DelimiterData, CharData, CharOptions, DelimiterMap, CharMapMap, CSS, V, H} from '../../common/FontData.js';
-import {CommonTeXFont} from '../../common/fonts/tex.js';
+import {CHTMLFontData, CHTMLCharOptions, CHTMLCharData, CHTMLVariantData, CHTMLFontDataClass,
+        CssFontMap, DelimiterData, DelimiterMap, CharMapMap, FontDataClass, CSS, V, H} from '../FontData.js';
+import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
 import {StyleList, StyleData} from '../../common/CssStyles.js';
 import {OptionList, defaultOptions, userOptions} from '../../../util/Options.js';
 import {StringMap} from '../Wrapper.js';
 import {DIRECTION} from '../FontData.js';
+import {FontData} from '../FontData.js';
 
 import {boldItalic} from './tex/bold-italic.js';
 import {bold} from './tex/bold.js';
@@ -59,7 +61,7 @@ import {delimiters} from '../../common/fonts/tex/delimiters.js';
 /**
  *  The TeXFont class
  */
-export class TeXFont extends CommonTeXFont {
+export class TeXFont extends CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLFontDataClass>(CHTMLFontData) {
 
     /**
      * Default options
@@ -98,15 +100,24 @@ export class TeXFont extends CommonTeXFont {
         '-tex-variant': 'mjx-v'
     };
 
+    protected static defaultCssFonts: CssFontMap = {
+        ...CHTMLFontData.defaultCssFonts,
+        '-tex-caligraphic': ['cursive', true, false],
+        '-tex-bold-caligraphic': ['cursive', true, true],
+        '-tex-oldstyle': ['serif', false, false],
+        '-tex-bold-oldstyle': ['serif', false, true],
+        '-tex-mathit': ['serif', true, false]
+    };
+
     /**
-     *  The stretchy delimiter data (incomplete at the moment)
+     *  The stretchy delimiter data
      */
     protected static defaultDelimiters: DelimiterMap = delimiters;
 
     /**
      *  The character data by variant
      */
-    protected static defaultChars: CharMapMap = {
+    protected static defaultChars: CharMapMap<CHTMLCharOptions> = {
         'normal': normal,
         'bold': bold,
         'italic': italic,
@@ -346,6 +357,9 @@ export class TeXFont extends CommonTeXFont {
         },
     };
 
+    /**
+     * The font options
+     */
     protected options: OptionList;
 
     /***********************************************************************/
@@ -523,7 +537,7 @@ export class TeXFont extends CommonTeXFont {
             return 0;
         }
         const data = this.getChar('normal', n) || this.getChar('-size4', n);
-        const options = data[3] as CharOptions;
+        const options = data[3] as CHTMLCharOptions;
         const C = (options && options.c ? options.c : this.char(n, true));
         const css: StyleData = {content: '"' + C + '"'};
         if (part !== 'ext' || force) {
@@ -540,8 +554,8 @@ export class TeXFont extends CommonTeXFont {
      * @param {number} n          The unicode character being defined
      * @param {CharData} data     The bounding box data and options for the character
      */
-    protected addCharStyles(styles: StyleList, vclass: string, n: number, data: CharData) {
-        const [h, d, w, options] = data as [number, number, number, CharOptions];
+    protected addCharStyles(styles: StyleList, vclass: string, n: number, data: CHTMLCharData) {
+        const [h, d, w, options] = data as [number, number, number, CHTMLCharOptions];
         const css: StyleData = {};
         if (options.css) {
             if (options.css & CSS.width) {
@@ -567,4 +581,3 @@ export class TeXFont extends CommonTeXFont {
     }
 
 }
-

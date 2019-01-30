@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {scriptBold as font} from '../../../common/fonts/tex/script-bold.js';
 
-export const scriptBold: CharMap = AddCSS(font, {
+export const scriptBold: CHTMLCharMap = AddCSS(font, {
 },{
     0x391: {f: 'B'},
     0x392: {f: 'B'},
