@@ -467,7 +467,7 @@ AbstractOutputJax<N, T, D> {
         const [family, italic, bold] = font;
         styles['font-family'] = family;
         if (italic) styles['font-style'] = 'italic';
-        if (bold) styles['font-style'] = 'bold';
+        if (bold) styles['font-weight'] = 'bold';
         return styles;
     }
 

@@ -124,6 +124,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      *
      * @override
      */
+
     public measureTextNode(text: N) {
         const adaptor = this.adaptor;
         text = adaptor.clone(text);
