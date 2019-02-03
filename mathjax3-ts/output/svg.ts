@@ -52,7 +52,6 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      *  the FontData object, and the CssStyles object.
      */
     public factory: SVGWrapperFactory<N, T, D>;
-    public font: TeXFont;
 
     /**
      * Minimum width for tables with labels,

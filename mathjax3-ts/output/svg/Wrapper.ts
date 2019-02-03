@@ -312,13 +312,6 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>, SVGCh
     }
 
     /**
-     * @override
-     */
-    protected getVariantChar(variant: string, n: number) {
-        return super.getVariantChar(variant, n) as [number, number, number, SVGCharOptions];
-    }
-
-    /**
      * @param {number} W       The total width
      * @param {number} w       The width to be aligned
      * @param {string} align   How to align (left, center, right)

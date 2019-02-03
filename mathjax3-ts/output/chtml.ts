@@ -51,7 +51,6 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      *  the FontData object, and the CssStyles object.
      */
     public factory: CHTMLWrapperFactory<N, T, D>;
-    public font: TeXFont;
 
     /**
      * @override

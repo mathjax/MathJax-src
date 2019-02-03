@@ -25,7 +25,7 @@ import {SVGWrapper, SVGConstructor, StringMap} from '../Wrapper.js';
 import {CommonMo, CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../BBox.js';
-import {DIRECTION, NOSTRETCH, CharOptions, DelimiterData} from '../FontData.js';
+import {DIRECTION, NOSTRETCH, SVGCharOptions, DelimiterData} from '../FontData.js';
 
 
 /*****************************************************************/
@@ -131,7 +131,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<N, T, D>>(SVGWr
      */
     protected getChar(n: number) {
         const char = this.font.getChar('-size4', n) || [0, 0, 0, null];
-        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CharOptions];
+        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, SVGCharOptions];
     }
 
     /**
