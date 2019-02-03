@@ -25,11 +25,12 @@ import {PropertyList} from '../../core/Tree/Node.js';
 import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
+import {CHTMLFontData, CHTMLCharOptions} from './FontData.js';
 import {StyleList} from '../common/CssStyles.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
@@ -77,7 +78,7 @@ export type CHTMLConstructor<N, T, D> = Constructor<CHTMLWrapper<N, T, D>>;
 /**
  *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
  */
-export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<any, any, any> {
+export interface CHTMLWrapperClass<N, T, D> extends AnyWrapperClass {
 
     kind: string;
 
@@ -102,7 +103,7 @@ export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<any, any,
  * @template D  The Document class
  */
 export class CHTMLWrapper<N, T, D> extends
-CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>> {
+CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>, CHTMLCharOptions, CHTMLFontData> {
 
     public static kind: string = 'unknown';
 

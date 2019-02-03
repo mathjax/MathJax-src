@@ -26,6 +26,7 @@ import {CommonWrapper} from '../common/Wrapper.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
 import {SVGWrapper, SVGWrapperClass} from './Wrapper.js';
 import {SVGWrappers} from './Wrappers.js';
+import {SVGCharOptions, SVGFontData} from './FontData.js';
 
 /*****************************************************************/
 /*
@@ -36,7 +37,7 @@ import {SVGWrappers} from './Wrappers.js';
  * @template D  The Document class
  */
 export class SVGWrapperFactory<N, T, D> extends
-CommonWrapperFactory<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
+CommonWrapperFactory<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>, SVGCharOptions, SVGFontData> {
 
     /*
      * The default list of wrapper nodes this factory can create

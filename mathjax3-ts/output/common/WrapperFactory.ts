@@ -24,6 +24,7 @@
 import {CommonOutputJax} from './OutputJax.js';
 import {AbstractWrapperFactory} from '../../core/Tree/WrapperFactory.js';
 import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
+import {CharOptions, FontData} from './FontData.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
@@ -35,16 +36,19 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
  * @template C  The WrapperClass type
  */
 export class CommonWrapperFactory<
-    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>, any, any>,
-    W extends CommonWrapper<J, W, C>,
-    C extends CommonWrapperClass<J, W, C>> extends
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, FD>, any, any>,
+    W extends CommonWrapper<J, W, C, CC, FD>,
+    C extends CommonWrapperClass<J, W, C, CC, FD>,
+    CC extends CharOptions,
+    FD extends FontData<CC, any, any>
+> extends
 AbstractWrapperFactory<MmlNode, W, C> {
 
     /**
      * The default list of wrapper nodes this factory can create
      *   (filled in by subclasses)
      */
-    public static defaultNodes: {[kind: string]: CommonWrapperClass<any, any, any>} = {};
+    public static defaultNodes: {[kind: string]: CommonWrapperClass<any, any, any, any, any>} = {};
 
     /**
      * The output jax associated with this factory

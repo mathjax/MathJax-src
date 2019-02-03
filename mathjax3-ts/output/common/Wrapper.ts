@@ -58,7 +58,8 @@ export type Constructor<T> = new(...args: any[]) => T;
 /**
  * Shorthands for wrappers and their constructors
  */
-export type AnyWrapper = CommonWrapper<any, any, any>;
+export type AnyWrapper = CommonWrapper<any, any, any, any, any>;
+export type AnyWrapperClass = CommonWrapperClass<any, any, any, any, any>;
 export type WrapperConstructor = Constructor<AnyWrapper>;
 
 /*********************************************************/
@@ -70,14 +71,16 @@ export type WrapperConstructor = Constructor<AnyWrapper>;
  * @template C  The WrapperClass type
  */
 export interface CommonWrapperClass<
-    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>, any, any>,
-    W extends CommonWrapper<J, W, C>,
-    C extends CommonWrapperClass<J, W, C>> extends
-WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, FD>, FD, any>,
+    W extends CommonWrapper<J, W, C, CC, FD>,
+    C extends CommonWrapperClass<J, W, C, CC, FD>,
+    CC extends CharOptions,
+    FD extends FontData<CC, any, any>> extends
+WrapperClass<MmlNode, CommonWrapper<J, W, C, CC, FD>> {
     /**
      * @override
      */
-    new(factory: CommonWrapperFactory<J, W, C>, node: MmlNode, ...args: any[]): W;
+    new(factory: CommonWrapperFactory<J, W, C, CC, FD>, node: MmlNode, ...args: any[]): W;
 }
 
 /*****************************************************************/
@@ -88,10 +91,12 @@ WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
  */
-export class CommonWrapper<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>, any, any>,
-                           W extends CommonWrapper<J, W, C>,
-                           C extends CommonWrapperClass<J, W, C>> extends
-AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
+export class CommonWrapper<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, FD>, FD, any>,
+                           W extends CommonWrapper<J, W, C, CC, FD>,
+                           C extends CommonWrapperClass<J, W, C, CC, FD>,
+                           CC extends CharOptions,
+                           FD extends FontData<CC, any, any>> extends
+AbstractWrapper<MmlNode, CommonWrapper<J, W, C, CC, FD>> {
 
     public static kind: string = 'unknown';
 
@@ -161,7 +166,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * The factory used to create more wrappers
      */
-    protected factory: CommonWrapperFactory<J, W, C>;
+    protected factory: CommonWrapperFactory<J, W, C, CC, FD>;
 
     /**
      * The parent and children of this node
@@ -226,7 +231,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * @override
      */
-    constructor(factory: CommonWrapperFactory<J, W, C>, node: MmlNode, parent: W = null) {
+    constructor(factory: CommonWrapperFactory<J, W, C, CC, FD>, node: MmlNode, parent: W = null) {
         super(factory, node);
         this.parent = parent;
         this.font = factory.jax.font;
@@ -675,7 +680,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      */
     protected getVariantChar(variant: string, n: number) {
         const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true}];
-        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CharOptions];
+        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CC];
     }
 
 }

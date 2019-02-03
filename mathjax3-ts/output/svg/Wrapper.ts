@@ -25,10 +25,10 @@ import {PropertyList} from '../../core/Tree/Node.js';
 import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {SVG} from '../svg.js';
 import {SVGWrapperFactory} from './WrapperFactory.js';
-import {SVGCharOptions} from './FontData.js';
+import {SVGFontData, SVGCharOptions} from './FontData.js';
 import {SVGmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
 import {StyleList} from '../common/CssStyles.js';
@@ -55,7 +55,7 @@ export type SVGConstructor<N, T, D> = Constructor<SVGWrapper<N, T, D>>;
 /**
  *  The type of the SVGWrapper class (used when creating the wrapper factory for this class)
  */
-export interface SVGWrapperClass<N, T, D> extends CommonWrapperClass<any, any, any> {
+export interface SVGWrapperClass<N, T, D> extends AnyWrapperClass {
 
     kind: string;
 
@@ -74,7 +74,7 @@ export interface SVGWrapperClass<N, T, D> extends CommonWrapperClass<any, any, a
  * @template D  The Document class
  */
 export class SVGWrapper<N, T, D> extends
-CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
+CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>, SVGCharOptions, SVGFontData> {
 
     public static kind: string = 'unknown';
 
