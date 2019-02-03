@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, DelimiterData,
+import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, SVGDelimiterData,
         CharData, CharOptions, DelimiterMap, CharMapMap, CssFontMap, FontDataClass} from '../FontData.js';
 import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
 import {StyleList, StyleData} from '../../common/CssStyles.js';
@@ -61,7 +61,8 @@ import {delimiters} from '../../common/fonts/tex/delimiters.js';
 /**
  *  The TeXFont class
  */
-export class TeXFont extends CommonTeXFontMixin<SVGCharOptions, SVGVariantData, SVGFontDataClass>(SVGFontData) {
+export class TeXFont extends
+CommonTeXFontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDataClass>(SVGFontData) {
 
     /**
      * The data used for CSS for undefined characters each variant
@@ -82,7 +83,7 @@ export class TeXFont extends CommonTeXFontMixin<SVGCharOptions, SVGVariantData, 
     /**
      *  The stretchy delimiter data
      */
-    protected static defaultDelimiters: DelimiterMap = delimiters;
+    protected static defaultDelimiters: DelimiterMap<SVGDelimiterData> = delimiters;
 
     /**
      *  The character data by variant

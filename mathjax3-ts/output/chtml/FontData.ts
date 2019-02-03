@@ -53,6 +53,9 @@ export interface CHTMLVariantData extends VariantData<CHTMLCharOptions> {
     classes?: string;             // the classes to use for this variant
 };
 
+export interface CHTMLDelimiterData extends DelimiterData {
+};
+
 /**
  * The bit values for CharOptions.css
  */
@@ -67,7 +70,7 @@ export const enum CSS {
 /**
  * The CHTML FontData class
  */
-export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData> {
+export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData> {
     /**
      * Default options
      */
@@ -187,11 +190,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData> 
     /*******************************************************/
 
     /**
-     * @param {StyleList} styles    The style object to add styles to
-     * @param {number} n            The unicode character number of the delimiter
-     * @param {DelimiterData} data  The data for the delimiter whose CSS is to be added
+     * @param {StyleList} styles         The style object to add styles to
+     * @param {number} n                 The unicode character number of the delimiter
+     * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
      */
-    protected addDelimiterStyles(styles: StyleList, n: number, data: DelimiterData) {
+    protected addDelimiterStyles(styles: StyleList, n: number, data: CHTMLDelimiterData) {
         const c = this.char(n);
         if (data.c && data.c !== n) {
             styles[this.cssRoot + '.mjx-stretched mjx-c[c="' + c + '"]::before'] = {
@@ -209,11 +212,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData> 
     /*******************************************************/
 
     /**
-     * @param {StyleList} styles    The style object to add styles to
-     * @param {string} c            The delimiter character string
-     * @param {DelimiterData} data  The data for the delimiter whose CSS is to be added
+     * @param {StyleList} styles         The style object to add styles to
+     * @param {string} c                 The delimiter character string
+     * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
      */
-    protected addDelimiterVStyles(styles: StyleList, c: string, data: DelimiterData) {
+    protected addDelimiterVStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
         const [beg, ext, end, mid] = data.stretch;
         const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
         this.addDelimiterVPart(styles, c, 'ext', ext);
@@ -261,11 +264,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData> 
     /*******************************************************/
 
     /**
-     * @param {StyleList} styles    The style object to add styles to
-     * @param {string} c            The delimiter character string
-     * @param {DelimiterData} data  The data for the delimiter whose CSS is to be added
+     * @param {StyleList} styles         The style object to add styles to
+     * @param {string} c                 The delimiter character string
+     * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
      */
-    protected addDelimiterHStyles(styles: StyleList, c: string, data: DelimiterData) {
+    protected addDelimiterHStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
         const [beg, ext, end, mid] = data.stretch;
         this.addDelimiterHPart(styles, c, 'beg', beg);
         this.addDelimiterHPart(styles, c, 'ext', ext, !(beg || end));

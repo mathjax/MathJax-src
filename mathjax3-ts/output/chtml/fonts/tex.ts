@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLFontData, CHTMLCharOptions, CHTMLCharData, CHTMLVariantData, CHTMLFontDataClass,
+import {CHTMLFontData, CHTMLCharOptions, CHTMLCharData, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass,
         CssFontMap, DelimiterData, DelimiterMap, CharMapMap, FontDataClass, CSS, V, H} from '../FontData.js';
 import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
 import {StringMap} from '../Wrapper.js';
@@ -57,7 +57,8 @@ import {delimiters} from '../../common/fonts/tex/delimiters.js';
 /**
  *  The TeXFont class
  */
-export class TeXFont extends CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLFontDataClass>(CHTMLFontData) {
+export class TeXFont extends
+CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass>(CHTMLFontData) {
 
     /**
      * The classes to use for each variant
@@ -108,7 +109,7 @@ export class TeXFont extends CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantDa
     /**
      *  The stretchy delimiter data
      */
-    protected static defaultDelimiters: DelimiterMap = delimiters;
+    protected static defaultDelimiters: DelimiterMap<CHTMLDelimiterData> = delimiters;
 
     /**
      *  The character data by variant

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontData, FontDataClass, CharOptions, VariantData} from '../FontData.js';
+import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData} from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -31,8 +31,8 @@ import {FontData, FontDataClass, CharOptions, VariantData} from '../FontData.js'
  * @template V  The VariantData class for this font
  * @template B  The FontData class to extend
  */
-export function CommonTeXFontMixin<C extends CharOptions, V extends VariantData<C>,
-                                   B extends FontDataClass<C, V>>(Base: B): FontDataClass<C, V> & B {
+export function CommonTeXFontMixin<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData,
+                                   B extends FontDataClass<C, V, D>>(Base: B): FontDataClass<C, V, D> & B {
     return class extends Base {
 
         /**

@@ -108,8 +108,8 @@ export type DelimiterData = {
     c?: number;                  // The character number (for aliased delimiters)
 };
 
-export type DelimiterMap = {
-    [n: number]: DelimiterData;
+export type DelimiterMap<D extends DelimiterData> = {
+    [n: number]: D;
 };
 
 export const NOSTRETCH: DelimiterData = {dir: DIRECTION.None};
@@ -172,7 +172,7 @@ export type FontParameters = {
  *  The FontData class (for storing character bounding box data by variant,
  *                      and the stretchy delimiter data).
  */
-export class FontData<C extends CharOptions, V extends VariantData<C>> {
+export class FontData<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
 
     /**
      * Subclasses may need options
@@ -303,7 +303,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>> {
     /**
      * The default delimiter and character data
      */
-    protected static defaultDelimiters: DelimiterMap = {};
+    protected static defaultDelimiters: DelimiterMap<any> = {};
     protected static defaultChars: CharMapMap<any> = {};
 
     /**
@@ -328,7 +328,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>> {
      * The actual variant, delimiter, and size information for this font
      */
     protected variant: VariantMap<C, V> = {};
-    protected delimiters: DelimiterMap = {};
+    protected delimiters: DelimiterMap<D> = {};
     protected sizeVariants: string[];
     protected cssFontMap: CssFontMap = {};
 
@@ -445,7 +445,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>> {
      *
      * @param {DelimiterMap} delims  The delimiters to define
      */
-    public defineDelimiters(delims: DelimiterMap) {
+    public defineDelimiters(delims: DelimiterMap<D>) {
         Object.assign(this.delimiters, delims);
     }
 
@@ -534,8 +534,8 @@ export class FontData<C extends CharOptions, V extends VariantData<C>> {
  * The class interface for the FontData class
  */
 
-export interface FontDataClass<C extends CharOptions, V extends VariantData<C>> {
+export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
     OPTIONS: OptionList;
     defaultVariants: string[][];
-    new(...args: any[]): FontData<C, V>;
+    new(...args: any[]): FontData<C, V, D>;
 }

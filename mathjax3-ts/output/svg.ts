@@ -28,7 +28,7 @@ import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {SVGWrapper} from './svg/Wrapper.js';
 import {SVGWrapperFactory} from './svg/WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData} from './svg/FontData.js';
+import {SVGFontData} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
 
 export const SVGNS = "http://www.w3.org/2000/svg";
@@ -42,7 +42,7 @@ export const SVGNS = "http://www.w3.org/2000/svg";
  * @template D  The Document class
  */
 export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>,
-                                                  SVGCharOptions, SVGVariantData> {
+                                                  SVGFontData, typeof SVGFontData> {
 
     public static NAME: string = 'SVG';
     public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};

@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CharMap, CharOptions, CharData, VariantData, FontData} from '../common/FontData.js';
+import {CharMap, CharOptions, CharData, VariantData, DelimiterData, FontData} from '../common/FontData.js';
 export * from '../common/FontData.js';
 
 export type CharStringMap = {[name: number]: string};
@@ -42,9 +42,15 @@ export type SVGCharMap = CharMap<SVGCharOptions>;
 export type SVGCharData = CharData<SVGCharOptions>;
 
 /**
- * The extra data needed for a Variant in CHTML output
+ * The extra data needed for a Variant in SVG output
  */
 export interface SVGVariantData extends VariantData<SVGCharOptions> {
+};
+
+/**
+ * the extra data neede for a Delimiter in SVG output
+ */
+export interface SVGDelimiterData extends DelimiterData {
 };
 
 
@@ -53,7 +59,7 @@ export interface SVGVariantData extends VariantData<SVGCharOptions> {
 /**
  * The SVG FontData class
  */
-export class SVGFontData extends FontData<SVGCharOptions, SVGVariantData> {
+export class SVGFontData extends FontData<SVGCharOptions, SVGVariantData, SVGDelimiterData> {
     /**
      * @override
      */

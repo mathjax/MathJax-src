@@ -198,7 +198,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * Easy access to the font parameters
      */
-    public font: FontData<any, any> = null;
+    public font: FontData<any, any, any> = null;
 
     /**
      * Easy access to the output jax for this node
