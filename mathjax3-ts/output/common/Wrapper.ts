@@ -210,7 +210,7 @@ export class CommonWrapper<
     /**
      * Easy access to the font parameters
      */
-    public font: FontData<any, any, any> = null;
+    public font: FD = null;
 
     /**
      * Easy access to the output jax for this node
