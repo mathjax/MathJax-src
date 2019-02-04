@@ -28,7 +28,7 @@ import * as LENGTHS from '../../util/lengths.js';
 import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {SVG} from '../svg.js';
 import {SVGWrapperFactory} from './WrapperFactory.js';
-import {SVGFontData, SVGCharOptions} from './FontData.js';
+import {SVGFontData, SVGDelimiterData, SVGCharOptions} from './FontData.js';
 import {SVGmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
 import {StyleList} from '../common/CssStyles.js';
@@ -74,7 +74,14 @@ export interface SVGWrapperClass<N, T, D> extends AnyWrapperClass {
  * @template D  The Document class
  */
 export class SVGWrapper<N, T, D> extends
-CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>, SVGCharOptions, SVGFontData> {
+CommonWrapper<
+    SVG<N, T, D>,
+    SVGWrapper<N, T, D>,
+    SVGWrapperClass<N, T, D>,
+    SVGCharOptions,
+    SVGDelimiterData,
+    SVGFontData
+> {
 
     public static kind: string = 'unknown';
 

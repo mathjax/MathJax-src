@@ -30,7 +30,7 @@ import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
-import {CHTMLFontData, CHTMLCharOptions} from './FontData.js';
+import {CHTMLFontData, CHTMLCharOptions, CHTMLDelimiterData} from './FontData.js';
 import {StyleList} from '../common/CssStyles.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
@@ -103,7 +103,14 @@ export interface CHTMLWrapperClass<N, T, D> extends AnyWrapperClass {
  * @template D  The Document class
  */
 export class CHTMLWrapper<N, T, D> extends
-CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>, CHTMLCharOptions, CHTMLFontData> {
+CommonWrapper<
+    CHTML<N, T, D>,
+    CHTMLWrapper<N, T, D>,
+    CHTMLWrapperClass<N, T, D>,
+    CHTMLCharOptions,
+    CHTMLDelimiterData,
+    CHTMLFontData
+> {
 
     public static kind: string = 'unknown';
 

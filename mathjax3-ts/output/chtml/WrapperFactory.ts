@@ -26,7 +26,7 @@ import {CommonWrapper} from '../common/Wrapper.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
 import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
 import {CHTMLWrappers} from './Wrappers.js';
-import {CHTMLCharOptions, CHTMLFontData} from './FontData.js';
+import {CHTMLCharOptions, CHTMLDelimiterData, CHTMLFontData} from './FontData.js';
 
 /*****************************************************************/
 /*
@@ -42,6 +42,7 @@ CommonWrapperFactory<
     CHTMLWrapper<N, T, D>,
     CHTMLWrapperClass<N, T, D>,
     CHTMLCharOptions,
+    CHTMLDelimiterData,
     CHTMLFontData
 > {
 

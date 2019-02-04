@@ -25,12 +25,12 @@ import {AbstractOutputJax} from '../../core/OutputJax.js';
 import {MathDocument} from '../../core/MathDocument.js';
 import {MathItem, Metrics} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {FontData, FontDataClass, CharOptions, CssFontData} from './FontData.js';
+import {FontData, FontDataClass, CharOptions, DelimiterData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
 import {CssStyles} from './CssStyles.js';
 import {WrapperClass} from '../../core/Tree/Wrapper.js';
-import {CommonWrapper, AnyWrapperClass} from './Wrapper.js';
-import {CommonWrapperFactory} from './WrapperFactory.js';
+import {CommonWrapper, AnyWrapper, AnyWrapperClass} from './Wrapper.js';
+import {CommonWrapperFactory, AnyWrapperFactory} from './WrapperFactory.js';
 import {percent} from '../../util/lengths.js';
 import {StyleList, Styles} from '../../util/Styles.js';
 
@@ -65,8 +65,8 @@ export type UnknownVariantMap = Map<string, UnknownMap>;
  */
 export abstract class CommonOutputJax<
     N, T, D,
-    W extends CommonWrapper<any, any, any, any, any>,
-    F extends CommonWrapperFactory<any, any, any, any, any>,
+    W extends AnyWrapper,
+    F extends AnyWrapperFactory,
     FD extends FontData<any, any, any>,
     FC extends FontDataClass<any, any, any>
 > extends AbstractOutputJax<N, T, D> {
@@ -138,7 +138,8 @@ export abstract class CommonOutputJax<
         const [jaxOptions, fontOptions] = separateOptions(options, defaultFont.OPTIONS);
         super(jaxOptions);
         this.factory = this.options.wrapperFactory ||
-            new defaultFactory<CommonOutputJax<N, T, D, W, F, FD, FC>, W, AnyWrapperClass, CharOptions, FD>();
+            new defaultFactory<CommonOutputJax<N, T, D, W, F, FD, FC>, W,
+                               AnyWrapperClass, CharOptions, DelimiterData, FD>();
         this.factory.jax = this;
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new defaultFont(fontOptions);
