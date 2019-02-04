@@ -80,6 +80,11 @@ export interface InputJax<N, T, D> {
     setMmlFactory(mmlFactory: MmlFactory): void;
 
     /**
+     * Do any initialization that depends on the document being set up
+     */
+    initialize(): void;
+
+    /**
      * Finds the math within the DOM or the list of strings
      *
      * @param {N | string[]} which   The element or array of strings to be searched for math
@@ -148,6 +153,12 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
      */
     public setMmlFactory(mmlFactory: MmlFactory) {
         this.mmlFactory = mmlFactory;
+    }
+
+    /**
+     * @override
+     */
+    public initialize() {
     }
 
     /**

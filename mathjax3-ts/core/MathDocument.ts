@@ -305,6 +305,11 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         //
         this.mmlFactory = this.options['MmlFactory'] || new MmlFactory();
         this.inputJax.map(jax => jax.setMmlFactory(this.mmlFactory));
+        //
+        // Do any initialization that requires adaptors or factories
+        //
+        this.outputJax.initialize();
+        this.inputJax.map(jax => jax.initialize());
     }
 
     /**

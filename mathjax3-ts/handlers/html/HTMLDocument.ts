@@ -169,20 +169,39 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      */
     public updateDocument() {
         if (!this.processed.isSet('updateDocument')) {
+            this.addPageElements();
+            this.addStyleSheet();
             super.updateDocument();
-            const sheet = this.documentStyleSheet();
-            if (sheet) {
-                const head = this.adaptor.head(this.document);
-                let styles = this.findSheet(head, this.adaptor.getAttribute(sheet, 'id'));
-                if (styles) {
-                    this.adaptor.replace(sheet, styles);
-                } else {
-                    this.adaptor.append(head, sheet);
-                }
-            }
             this.processed.set('updateDocument');
         }
         return this;
+    }
+
+    /**
+     *  Add any elements needed for the document
+     */
+    protected addPageElements() {
+        const body = this.adaptor.body(this.document);
+        const node = this.documentPageElements();
+        if (node) {
+            this.adaptor.append(body, node);
+        }
+    }
+
+    /**
+     * Add the stylesheet to the document
+     */
+    protected addStyleSheet() {
+        const sheet = this.documentStyleSheet();
+        if (sheet) {
+            const head = this.adaptor.head(this.document);
+            let styles = this.findSheet(head, this.adaptor.getAttribute(sheet, 'id'));
+            if (styles) {
+                this.adaptor.replace(sheet, styles);
+            } else {
+                this.adaptor.append(head, sheet);
+            }
+        }
     }
 
     /**
@@ -221,6 +240,13 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      */
     public documentStyleSheet() {
         return this.outputJax.styleSheet(this);
+    }
+
+    /**
+     * @override
+     */
+    public documentPageElements() {
+        return this.outputJax.pageElements(this);
     }
 
     /**
