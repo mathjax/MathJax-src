@@ -41,15 +41,27 @@ export interface CharOptions {
 /**
  * Data about a character
  *   [height, depth, width, {italic-correction, skew, options}]
+ *
+ * @template C  The CharOptions type
  */
 export type CharData<C extends CharOptions> =
     [number, number, number] |
     [number, number, number, C];
 
+/**
+ * An object making character positions to character data
+ *
+ * @template C  The CharOptions type
+ */
 export type CharMap<C extends CharOptions> = {
     [n: number]: CharData<C>;
 };
 
+/**
+ * An object making variants to character maps
+ *
+ * @template C  The CharOptions type
+ */
 export type CharMapMap<C extends CharOptions> = {
     [name: string]: CharMap<C>;
 };
@@ -58,6 +70,8 @@ export type CharMapMap<C extends CharOptions> = {
 
 /**
  * Data for a variant
+ *
+ * @template C  The CharOptions type
  */
 export interface VariantData<C extends CharOptions> {
     /**
@@ -71,16 +85,28 @@ export interface VariantData<C extends CharOptions> {
     chars: CharMap<C>;
 };
 
+/**
+ * An object making variants names to variant data
+ *
+ * @template C  The CharOptions type
+ * @template V  The VariantData type
+ */
 export type VariantMap<C extends CharOptions, V extends VariantData<C>> = {
     [name: string]: V;
 };
 
 
 /**
- *  [fontname, italic, bold]
+ * Data to use to map unknown characters in a variant to a
+ * generic CSS font:
+ *
+ *    [fontname, italic, bold]
  */
 export type CssFontData = [string, boolean, boolean];
 
+/**
+ * An object mapping a variant name to the CSS data needed for it
+ */
 export type CssFontMap = {
     [name: string]: CssFontData;
 }
@@ -96,22 +122,33 @@ export const H = DIRECTION.Horizontal;
 
 /****************************************************************************/
 
+/**
+ * Data needed for stretchy vertical and horizontal characters
+ */
 export type DelimiterData = {
-    dir: DIRECTION;              // vertical or horizontal direction
-    sizes?: number[];            // Array of fixed sizes for this character
-    variants?: number[];         // The variants in which the different sizes can be found (if not the default)
-    schar?: number[];            // The character number to use for each size (if different from the default)
-    stretch?: number[];          // The unicode character numbers for the parts of multi-character versions [beg, ext, end, mid?]
-    HDW?: number[];              // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
-                                 //            for horizontal, h and d are the multi-character ones, w is for the normal size).
-    min?: number;                // The minimum size a multi-character version can be
-    c?: number;                  // The character number (for aliased delimiters)
+    dir: DIRECTION;       // vertical or horizontal direction
+    sizes?: number[];     // Array of fixed sizes for this character
+    variants?: number[];  // The variants in which the different sizes can be found (if not the default)
+    schar?: number[];     // The character number to use for each size (if different from the default)
+    stretch?: number[];   // The unicode code points for the parts of multi-character versions [beg, ext, end, mid?]
+    HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
+                          //            for horizontal, h and d are the multi-character ones, w is for the normal size).
+    min?: number;         // The minimum size a multi-character version can be
+    c?: number;           // The character number (for aliased delimiters)
 };
 
+/**
+ * An object mapping character numbers to delimiter data
+ *
+ * @template D  The DelimiterData type
+ */
 export type DelimiterMap<D extends DelimiterData> = {
     [n: number]: D;
 };
 
+/**
+ * Delimiter data for a non-stretchy character
+ */
 export const NOSTRETCH: DelimiterData = {dir: DIRECTION.None};
 
 /****************************************************************************/
@@ -171,6 +208,10 @@ export type FontParameters = {
 /**
  *  The FontData class (for storing character bounding box data by variant,
  *                      and the stretchy delimiter data).
+ *
+ * @template C  The CharOptions type
+ * @template V  The VariantData type
+ * @template D  The DelimiterData type
  */
 export class FontData<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
 
@@ -532,10 +573,15 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
 /**
  * The class interface for the FontData class
+ *
+ * @template C  The CharOptions type
+ * @template V  The VariantData type
+ * @template D  The DelimiterData type
  */
-
 export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
     OPTIONS: OptionList;
     defaultVariants: string[][];
+    defaultParams: FontParameters;
+    charOptions(font: CharMap<C>, n: number): C
     new(...args: any[]): FontData<C, V, D>;
 }

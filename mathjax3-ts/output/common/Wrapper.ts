@@ -69,14 +69,16 @@ export type WrapperConstructor = Constructor<AnyWrapper>;
  * @template J  The OutputJax type
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
+ * @template CC The CharOptions type
+ * @template FD The FontData type
  */
 export interface CommonWrapperClass<
     J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, FD>, FD, any>,
     W extends CommonWrapper<J, W, C, CC, FD>,
     C extends CommonWrapperClass<J, W, C, CC, FD>,
     CC extends CharOptions,
-    FD extends FontData<CC, any, any>> extends
-WrapperClass<MmlNode, CommonWrapper<J, W, C, CC, FD>> {
+    FD extends FontData<CC, any, any>
+> extends WrapperClass<MmlNode, CommonWrapper<J, W, C, CC, FD>> {
     /**
      * @override
      */
@@ -90,13 +92,16 @@ WrapperClass<MmlNode, CommonWrapper<J, W, C, CC, FD>> {
  * @template J  The OutputJax type
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
+ * @template CC The CharOptions type
+ * @template FD The FontData type
  */
-export class CommonWrapper<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, FD>, FD, any>,
-                           W extends CommonWrapper<J, W, C, CC, FD>,
-                           C extends CommonWrapperClass<J, W, C, CC, FD>,
-                           CC extends CharOptions,
-                           FD extends FontData<CC, any, any>> extends
-AbstractWrapper<MmlNode, CommonWrapper<J, W, C, CC, FD>> {
+export class CommonWrapper<
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, FD>, FD, any>,
+    W extends CommonWrapper<J, W, C, CC, FD>,
+    C extends CommonWrapperClass<J, W, C, CC, FD>,
+    CC extends CharOptions,
+    FD extends FontData<CC, any, any>
+> extends AbstractWrapper<MmlNode, CommonWrapper<J, W, C, CC, FD>> {
 
     public static kind: string = 'unknown';
 
@@ -488,6 +493,10 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C, CC, FD>> {
         }
     }
 
+    /**
+     * @return {boolean}   True if this is the top-most container of an embellished operator that is
+     *                       itself an embellished operator (the maxiamal embellished operator for its core)
+     */
     protected isTopEmbellished() {
         return (this.node.isEmbellished &&
                 !(this.node.Parent && this.node.Parent.isEmbellished));

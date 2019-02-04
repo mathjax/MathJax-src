@@ -34,6 +34,8 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
  * @template J  The OutputJax type
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
+ * @template CC The CharOptions type
+ * @template FD The FontData type
  */
 export class CommonWrapperFactory<
     J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, FD>, any, any>,
@@ -41,8 +43,7 @@ export class CommonWrapperFactory<
     C extends CommonWrapperClass<J, W, C, CC, FD>,
     CC extends CharOptions,
     FD extends FontData<CC, any, any>
-> extends
-AbstractWrapperFactory<MmlNode, W, C> {
+> extends AbstractWrapperFactory<MmlNode, W, C> {
 
     /**
      * The default list of wrapper nodes this factory can create

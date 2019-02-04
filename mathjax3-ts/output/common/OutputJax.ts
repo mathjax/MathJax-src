@@ -63,14 +63,16 @@ export type UnknownVariantMap = Map<string, UnknownMap>;
  * @template FD The FontData class
  * @template FC The FontDataClass object
  */
-export abstract class CommonOutputJax<N, T, D,
-                                      W extends CommonWrapper<any, any, any, any, any>,
-                                      F extends CommonWrapperFactory<any, any, any, any, any>,
-                                      FD extends FontData<any, any, any>,
-                                      FC extends FontDataClass<any, any, any>> extends
-AbstractOutputJax<N, T, D> {
+export abstract class CommonOutputJax<
+    N, T, D,
+    W extends CommonWrapper<any, any, any, any, any>,
+    F extends CommonWrapperFactory<any, any, any, any, any>,
+    FD extends FontData<any, any, any>,
+    FC extends FontDataClass<any, any, any>
+> extends AbstractOutputJax<N, T, D> {
 
     public static NAME: string = 'Common';
+
     public static OPTIONS: OptionList = {
         ...AbstractOutputJax.OPTIONS,
         scale: 1,                      // Global scaling factor for all expressions

@@ -37,8 +37,13 @@ import {CHTMLCharOptions, CHTMLFontData} from './FontData.js';
  * @template D  The Document class
  */
 export class CHTMLWrapperFactory<N, T, D> extends
-CommonWrapperFactory<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>,
-CHTMLCharOptions, CHTMLFontData> {
+CommonWrapperFactory<
+    CHTML<N, T, D>,
+    CHTMLWrapper<N, T, D>,
+    CHTMLWrapperClass<N, T, D>,
+    CHTMLCharOptions,
+    CHTMLFontData
+> {
 
     /*
      * The default list of wrapper nodes this factory can create

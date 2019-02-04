@@ -53,6 +53,9 @@ export interface CHTMLVariantData extends VariantData<CHTMLCharOptions> {
     classes?: string;             // the classes to use for this variant
 };
 
+/**
+ * The extra data needed for a Delimiter in CHTML output
+ */
 export interface CHTMLDelimiterData extends DelimiterData {
 };
 
