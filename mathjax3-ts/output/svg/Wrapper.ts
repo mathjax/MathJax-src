@@ -412,8 +412,8 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
 
     /**
      * @param {number} x   The dimension to display
-     * @param {number} n   The number of digits to disoplay
-     * @return {string}    The dimension with the given nuber of digits (minus trailing zeros)
+     * @param {number=} n  The number of digits to display
+     * @return {string}    The dimension with the given number of digits (minus trailing zeros)
      */
     public fixed(x: number, n: number = 1) {
         return this.jax.fixed(x * 1000, n);
