@@ -67,7 +67,7 @@ export class ColorModel {
      * @param {string} def The color definition: `red, `0.5,0,1`, `128,0,255`, `0.5`.
      * @return {string} The color definition in CSS format e.g. `#44ff00`.
      */
-    private getColor(model: string, def: string): string {
+    public getColor(model: string, def: string): string {
         if (!model || model === 'named') {
             return this.getColorByName(def);
         }
