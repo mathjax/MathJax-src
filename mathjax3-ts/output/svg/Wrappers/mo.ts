@@ -175,6 +175,8 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<N, T, D>>(SVGWr
         const [h, d, w] = this.getChar(n);
         const Y = H + D - T - B;                 // The height of the extender
         const s = 1.5 * Y / (h + d);             // Scale height by 1.5 to avoid bad ends
+                                                 //   (glyphs with rounded or anti-aliased ends don't stretch well,
+                                                 //    so this makes for sharper ends)
         const y = (s * (h - d) - Y) / 2;         // The bottom point to clip the extender
         const svg = this.svg('svg', {
             width: this.fixed(w), height: this.fixed(Y),
