@@ -56,7 +56,8 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
             width: '100%'
         },
         'mjx-stretchy-h > mjx-ext > mjx-c': {
-            transform: 'scalex(500)'
+            transform: 'scalex(500)',
+            'margin-right': '-2em'
         },
         'mjx-stretchy-h > mjx-ext > mjx-c::before': {
             padding: '.001em 0'                  // for blink

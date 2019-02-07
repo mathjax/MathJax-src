@@ -261,6 +261,9 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
          * @param {DelimiterData} C  The delimiter data for the stretchy character
          */
         public getStretchBBox(WHD: number[], D: number, C: DelimiterData) {
+            if (C.hasOwnProperty('min') && C.min > D) {
+                D = C.min;
+            }
             let [h, d, w] = C.HDW;
             if (this.stretch.dir === DIRECTION.Vertical) {
                 [h, d] = this.getBaseline(WHD, D, C);
