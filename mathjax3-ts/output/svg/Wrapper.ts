@@ -87,6 +87,9 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
      *  The default styles for SVG
      */
     public static styles: StyleList = {
+        'mjx-container[jax="SVG"] > svg': {
+            'overflow': 'visible'
+        },
         'mjx-container[jax="SVG"] > svg a': {
             fill: 'blue', stroke: 'blue'
         }
