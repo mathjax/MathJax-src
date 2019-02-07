@@ -21,8 +21,19 @@
 </head>
 <body>
 
+<h1>MathJax v3 Interactive MathML Lab
+<a href="TeX-Lab.html" style="margin-left:1em; vertical-align:5px"><button>Switch to TeX Lab</button></a>
+</h1>
+
 <div id="container">
 <textarea id="mml" cols="80" rows="15" onkeypress="Lab.checkKey(this,event)"></textarea><br>
+<span style="float:left">
+Output:
+<select id="renderer" onchange="Lab.setRenderer(this.value)">
+<option value="CHTML">CHTML</option>
+<option value="SVG">SVG</option>
+</select>
+</span>
 <input type="button" value="Keep" onclick="Lab.Keep()" />
 <input type="button" value="Typeset" onclick="Lab.Typeset()" />
 </div>
