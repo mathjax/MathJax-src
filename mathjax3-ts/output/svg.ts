@@ -30,6 +30,7 @@ import {SVGWrapper} from './svg/Wrapper.js';
 import {SVGWrapperFactory} from './svg/WrapperFactory.js';
 import {SVGFontData} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
+import {StyleList as CssStyleList} from './common/CssStyles.js';
 
 export const SVGNS = "http://www.w3.org/2000/svg";
 
@@ -46,6 +47,18 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
 
     public static NAME: string = 'SVG';
     public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};
+
+    /**
+     *  The default styles for SVG
+     */
+    public static commonStyles: CssStyleList = {
+        'mjx-container[jax="SVG"] > svg': {
+            'overflow': 'visible'
+        },
+        'mjx-container[jax="SVG"] > svg a': {
+            fill: 'blue', stroke: 'blue'
+        }
+    };
 
     /**
      *  Used to store the CHTMLWrapper factory,

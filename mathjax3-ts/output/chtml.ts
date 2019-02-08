@@ -23,6 +23,7 @@
 
 import {CommonOutputJax} from './common/OutputJax.js';
 import {StyleList, Styles} from '../util/Styles.js';
+import {StyleList as CssStyleList} from './common/CssStyles.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
@@ -44,7 +45,58 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
                                                     CHTMLFontData, typeof CHTMLFontData> {
 
     public static NAME: string = 'CHTML';
-    public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};
+
+    /**
+     *  The default styles for CommonHTML
+     */
+    public static commonStyles: CssStyleList = {
+        'mjx-container [space="1"]': {'margin-left': '.111em'},
+        'mjx-container [space="2"]': {'margin-left': '.167em'},
+        'mjx-container [space="3"]': {'margin-left': '.222em'},
+        'mjx-container [space="4"]': {'margin-left': '.278em'},
+        'mjx-container [space="5"]': {'margin-left': '.333em'},
+
+        'mjx-container [rspace="1"]': {'margin-right': '.111em'},
+        'mjx-container [rspace="2"]': {'margin-right': '.167em'},
+        'mjx-container [rspace="3"]': {'margin-right': '.222em'},
+        'mjx-container [rspace="4"]': {'margin-right': '.278em'},
+        'mjx-container [rspace="5"]': {'margin-right': '.333em'},
+
+        'mjx-container [size="s"]' : {'font-size': '70.7%'},
+        'mjx-container [size="ss"]': {'font-size': '50%'},
+        'mjx-container [size="Tn"]': {'font-size': '60%'},
+        'mjx-container [size="sm"]': {'font-size': '85%'},
+        'mjx-container [size="lg"]': {'font-size': '120%'},
+        'mjx-container [size="Lg"]': {'font-size': '144%'},
+        'mjx-container [size="LG"]': {'font-size': '173%'},
+        'mjx-container [size="hg"]': {'font-size': '207%'},
+        'mjx-container [size="HG"]': {'font-size': '249%'},
+
+        'mjx-container [width="full"]': {width: '100%'},
+
+        'mjx-box': {display: 'inline-block'},
+        'mjx-block': {display: 'block'},
+        'mjx-itable': {display: 'inline-table'},
+        'mjx-row': {display: 'table-row'},
+        'mjx-row > *': {display: 'table-cell'},
+
+        //
+        //  These don't have Wrapper subclasses, so add their styles here
+        //
+        'mjx-mtext': {
+            display: 'inline-block'
+        },
+        'mjx-mstyle': {
+            display: 'inline-block'
+        },
+        'mjx-merror': {
+            display: 'inline-block',
+            color: 'red',
+            'background-color': 'yellow'
+        },
+        'mjx-mphantom': {visibility: 'hidden'}
+
+    };
 
     /**
      *  Used to store the CHTMLWrapper factory,
