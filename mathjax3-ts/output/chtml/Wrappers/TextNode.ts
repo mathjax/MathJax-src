@@ -63,6 +63,7 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
      * @override
      */
     public toCHTML(parent: N) {
+        this.markUsed();
         const adaptor = this.adaptor;
         const variant = this.parent.variant;
         const text = (this.node as TextNode).getText();
@@ -76,8 +77,9 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
                 const data = this.getVariantChar(variant, n)[3];
                 const node = (data.unknown ?
                               this.jax.unknownText(String.fromCharCode(n), variant) :
-                              this.html('mjx-c', {c: this.char(n)}));
+                              this.html('mjx-c', {class: this.char(n)}));
                 adaptor.append(parent, node);
+                data.used = true;
             }
         }
     }

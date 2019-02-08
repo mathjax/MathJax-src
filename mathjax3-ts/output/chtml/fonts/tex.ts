@@ -22,7 +22,7 @@
  */
 
 import {CHTMLFontData, CHTMLCharOptions, CHTMLCharData, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass,
-        CssFontMap, DelimiterData, DelimiterMap, CharMapMap, FontDataClass, CSS, V, H} from '../FontData.js';
+        CssFontMap, DelimiterData, DelimiterMap, CharMapMap, FontDataClass} from '../FontData.js';
 import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
 import {StringMap} from '../Wrapper.js';
 
@@ -130,6 +130,8 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
      * The CSS styles needed for this font.
      */
     protected static defaultStyles = {
+        ...CHTMLFontData.defaultStyles,
+
         '.MJX-TEX .mjx-n mjx-c': {
             'font-family': 'MJXZERO, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },

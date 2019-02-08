@@ -25,7 +25,6 @@ import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMo, CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../BBox.js';
-import {DelimiterData} from '../FontData.js';
 import {StyleList} from '../../common/CssStyles.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -144,6 +143,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
     protected stretchHTML(chtml: N, symmetric: boolean) {
         const c = this.getText().charCodeAt(0);
         const delim = this.stretch;
+        delim.used = true;
         const stretch = delim.stretch;
         const content: N[] = [];
         //
@@ -185,7 +185,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
         //  Make the main element and add it to the parent
         //
         const dir = DirectionVH[delim.dir];
-        const properties = {c: this.char(delim.c || c), style: styles};
+        const properties = {class: this.char(delim.c || c), style: styles};
         const html = this.html('mjx-stretchy-' + dir, properties, content);
         this.adaptor.append(chtml, html);
     }

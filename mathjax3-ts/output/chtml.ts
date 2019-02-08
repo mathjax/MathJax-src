@@ -41,10 +41,14 @@ import {TeXFont} from './chtml/fonts/tex.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>,
-                                                    CHTMLFontData, typeof CHTMLFontData> {
+export class CHTML<N, T, D> extends
+CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLFontData, typeof CHTMLFontData> {
 
     public static NAME: string = 'CHTML';
+    public static OPTIONS: OptionList = {
+        ...CommonOutputJax.OPTIONS,
+        adaptiveCSS: true,            // true means only produce CSS that is used in the processed equations
+    };
 
     /**
      *  The default styles for CommonHTML
@@ -110,6 +114,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      */
     constructor(options: OptionList = null) {
         super(options, CHTMLWrapperFactory, TeXFont);
+        this.font.adaptiveCSS(this.options.adaptiveCSS);
     }
 
     /**
@@ -133,15 +138,17 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      * @override
      */
     protected addClassStyles(CLASS: typeof CHTMLWrapper) {
-        if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
-            this.cssStyles.addStyles({
-                ['mjx-' + CLASS.kind]: {
-                    display: 'inline-block',
-                    'text-align': 'left'
-                }
-            });
+        if (!this.options.adaptiveCSS || CLASS.used) {
+            if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
+                this.cssStyles.addStyles({
+                    ['mjx-' + CLASS.kind]: {
+                        display: 'inline-block',
+                        'text-align': 'left'
+                    }
+                });
+            }
+            super.addClassStyles(CLASS);
         }
-        super.addClassStyles(CLASS);
     }
 
     /**
@@ -150,6 +157,18 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      */
     protected processMath(math: MmlNode, parent: N) {
         this.factory.wrap(math).toCHTML(parent);
+    }
+
+    /**
+     * Clear the cache of which items need their styles to be output
+     */
+    public clearCache() {
+        this.cssStyles.clear();
+        this.font.clearCache();
+        for (const kind of this.factory.getKinds()) {
+            this.factory.getNodeClass(kind).used = false;
+        }
+
     }
 
     /*****************************************************************/

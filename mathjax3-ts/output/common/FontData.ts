@@ -558,17 +558,6 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         return map[c];
     }
 
-    /**
-     * @param {number} n  A unicode code point to be converted to a character reference for use with the
-     *                    CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
-     *                    for higher values, or for the double quote and backslash characters).
-     * @return {string}   The character as a properly encoded string.
-     */
-    public char(n: number, escape: boolean = false) {
-        return (n >= 0x20 && n <= 0x7E && n !== 0x22 && n !== 0x27 && n !== 0x5C ?
-                String.fromCharCode(n) : (escape ? '\\' : '') + n.toString(16).toUpperCase());
-    }
-
 }
 
 /**

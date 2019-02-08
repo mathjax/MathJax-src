@@ -25,6 +25,7 @@ import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {BBox} from '../BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {BIGDIMEN} from '../../../util/lengths.js';
+import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /**

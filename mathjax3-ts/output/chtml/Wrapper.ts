@@ -87,6 +87,12 @@ export interface CHTMLWrapperClass<N, T, D> extends AnyWrapperClass {
      */
     autoStyle: boolean;
 
+    /**
+     * True when an instance of this class has been typeset
+     * (used to control whether the styles for this class need to be output)
+     */
+    used: boolean;
+
 }
 
 /*****************************************************************/
@@ -114,6 +120,12 @@ CommonWrapper<
      * that sets display:inline-block (as needed for the output for MmlNodes).
      */
     public static autoStyle = true;
+
+    /**
+     * True when an instance of this class has been typeset
+     * (used to control whether the styles for this class need to be output)
+     */
+    public static used: boolean = false;
 
     /**
      * The factory used to create more CHTMLWrappers
@@ -154,6 +166,7 @@ CommonWrapper<
      * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
     protected standardCHTMLnode(parent: N) {
+        this.markUsed();
         const chtml = this.createCHTMLnode(parent);
         this.handleStyles();
         this.handleVariant();
@@ -163,6 +176,13 @@ CommonWrapper<
         this.handleAttributes();
         this.handlePWidth();
         return chtml;
+    }
+
+    /**
+     * Mark this class as having been typeset (so styles will be output
+     */
+    public markUsed() {
+        (this.constructor as CHTMLWrapperClass<N, T, D>).used = true;
     }
 
     /**
@@ -390,6 +410,14 @@ CommonWrapper<
      */
     public coreMO(): CHTMLmo<N, T, D> {
         return super.coreMO() as CHTMLmo<N, T, D>;
+    }
+
+    /**
+     * @param {number} n  A unicode code point to be converted to a character className reference.
+     * @return {string}  The className for the character
+     */
+    protected char(n: number) {
+        return this.font.charSelector(n).substr(1);
     }
 
 }
