@@ -113,10 +113,10 @@ export interface MathJaxObject extends MJObject {
         makeMmlMethods(name: string, input: INPUTJAX): void;
         makeResetMethod(name: string, input: INPUTJAX): void;
         convertMath(mitem: MATHITEM, document: MATHDOCUMENT, maxPriority?: number): void;
-        getInputJax(): void;
-        getOutputJax(): void;
-        getAdaptor(): void;
-        getHandler(): void;
+        getInputJax(): INPUTJAX[];
+        getOutputJax(): OUTPUTJAX;
+        getAdaptor(): DOMADAPTOR;
+        getHandler(): HANDLER;
     };
     [name: string]: any;    // Needed for the methods created by the startup module
 }
