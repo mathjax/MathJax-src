@@ -62,6 +62,6 @@ export const sreReady = new Promise<void>((resolve, reject) => {
             }
         }
         checkSRE();
-    }).catch((error: Error) => reject(error.message));
+    }).catch((error: Error) => reject(error.message || error));
 });
 
