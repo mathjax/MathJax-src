@@ -36,6 +36,7 @@ h1 {
 }
 #buttons {
   text-align: right;
+  margin-top: 3px;
   margin-bottom: 1em;
 }
 #output {
@@ -71,6 +72,9 @@ h1 {
   display: inline-block;
   width: 9em;
   white-space: nowrap;
+}
+#package label {
+  padding-left: 5px;
 }
 
 input[disabled] + label {
@@ -108,7 +112,7 @@ input[disabled] + label {
 <label for="renderer">Output:</label>
 <select id="renderer" onchange="Lab.setRenderer(this.value)">
 <option value="CHTML">CHTML</option>
-<!--<option value="SVG">SVG</option>-->
+<option value="SVG">SVG</option>
 </select>
 </div>
 <div>
@@ -119,7 +123,7 @@ input[disabled] + label {
 <input type="checkbox" id="enrich" onchange="Lab.setEnrich(this.checked)" /><label for="enrich"> Enrich MathML</label><br/>
 <input type="checkbox" id="compute" onchange="Lab.setCompute(this.checked)" disabled /><label for="compute"> Compute Complexity</label><br/>
 <input type="checkbox" id="collapse" onchange="Lab.setCollapse(this.checked)" disabled /><label for="collapse"> Collapse Complex Math</label><br/>
-<input type="checkbox" id="explore" onchange="Lab.setExplorer(this.checked)" checked /><label for="explore"> Math Explorer</label><br/>
+<input type="checkbox" id="explore" onchange="Lab.setExplorer(this.checked)" /><label for="explore"> Math Explorer</label><br/>
 </div>
 <hr/>
 <div id="package"></div>
