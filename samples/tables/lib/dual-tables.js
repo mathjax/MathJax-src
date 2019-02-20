@@ -34,7 +34,7 @@ const samples = [
 const div = document.createElement('div');
 const template = document.getElementsByTagName('mjx-template')[0];
 
-function  CreateMathML() {
+function CreateMathML() {
     const mathml = template.innerHTML;
     template.innerHTML = mathml.replace(/\&/g, '&amp;')
                                .replace(/</g, '&lt;')
@@ -47,14 +47,14 @@ function  CreateMathML() {
 function Substitute(mml, data, descr) {
   if (data.length === 0) {
     addMathML(mml, descr);
-  } else {
-    const n = data.length - 1;
-    const [name, values] = data[n];
-    const rest = data.slice(0, n);
-    const re = new RegExp('\\{'+name+'\\}', 'g');
-    for (const value of values) {
-      Substitute(mml.replace(re, value), rest, name + ': <b>' + value + '</b><br/>' + descr);
-    }
+    return;
+  }
+  const n = data.length - 1;
+  const [name, values] = data[n];
+  const rest = data.slice(0, n);
+  const re = new RegExp('\\{'+name+'\\}', 'g');
+  for (const value of values) {
+    Substitute(mml.replace(re, value), rest, name + ': <b>' + value + '</b><br/>' + descr);
   }
 }
 
@@ -92,6 +92,7 @@ docs.CHTML
   .getMetrics()
   .typeset()
   .updateDocument();
+
 docs.SVG
   .findMath({elements: ['mjx-svg-table']})
   .compile()

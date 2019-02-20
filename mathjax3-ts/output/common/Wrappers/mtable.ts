@@ -647,7 +647,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
             bbox.L = L;
             bbox.R = R;
             //
-            //  Handle cell widths if width is not a percent
+            //  Handle cell widths if width is not a percentage
             //
             if (!isPercent(w)) {
                 this.setColumnPWidths();

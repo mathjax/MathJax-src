@@ -35,6 +35,8 @@ import {BBox} from '../BBox.js';
 
 const WFUZZ = .25;  // a little padding for min-width
 
+const CLASSPREFIX = 'mjx-';
+
 /*****************************************************************/
 /**
  * The SVGmtable wrapper for the MmlMtable object
@@ -127,7 +129,7 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @param {number} HD       The height of equal-height rows
      * @param {number} H        The natural height of the row
      * @param {number} D        The natural depth of the row
-     * @return {number[]}       The (possibly scaled) height and depth to use
+     * @returns {number[]}      The (possibly scaled) height and depth to use
      */
     protected getRowHD(equal: boolean, HD: number, H: number, D: number) {
         return (equal ? [(HD + H - D) / 2, (HD - H + D) / 2] : [H, D]);
@@ -208,10 +210,12 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
     }
 
     /**
-     * @return {number}   The x-adjustement needed to handle the true size of percentage-width tables
+     * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
      */
     protected handlePWidth(svg: N) {
-        if (!this.pWidth) return 0;
+        if (!this.pWidth) {
+            return 0;
+        }
         const {w, L, R} = this.getBBox();
         const W = L + this.pWidth + R;
         const [align, shift] = this.getAlignShift();
@@ -229,16 +233,24 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
     /******************************************************************/
 
     /**
+     * @param {string} style   The line style whose class is to be obtained
+     * @returns {string}       The class name for the style
+     */
+    protected lineClass(style: string) {
+        return CLASSPREFIX + style;
+    }
+
+    /**
      * @param {number} w       The width of the frame
      * @param {number} h       The height of the frame
      * @param {number} d       The depth of the frame
      * @param {string} style   The border style for the frame
-     * @return {N}             The SVG element for the frame
+     * @returns {N}            The SVG element for the frame
      */
     protected makeFrame(w: number, h: number, d: number, style: string) {
         const t = this.fLine;
         return this.svg('rect', this.setLineThickness(t, style, {
-            'data-frame': true, 'class': 'mjx-' + style,
+            'data-frame': true, 'class': this.lineClass(style),
             width: this.fixed(w - t), height: this.fixed(h + d - t),
             x: this.fixed(t / 2), y: this.fixed(t / 2 - d)
         }));
@@ -248,14 +260,14 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @param {number} x       The x location of the line
      * @param {string} style   The border style for the line
      * @param {number} t       The line thickness
-     * @return {N}             The SVG element for the line
+     * @returns {N}            The SVG element for the line
      */
     protected makeVLine(x: number, style: string, t: number) {
         const {h, d} = this.getBBox();
         const dt = (style === 'dotted' ? t / 2 : 0);
         const X = this.fixed(x + t / 2);
         return this.svg('line', this.setLineThickness(t, style, {
-            'data-line': 'v', 'class': 'mjx-' + style,
+            'data-line': 'v', 'class': this.lineClass(style),
             x1: X, y1: this.fixed(dt - d), x2: X, y2: this.fixed(h - dt)
         }));
     }
@@ -264,14 +276,14 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @param {number} y       The y location of the line
      * @param {string} style   The border style for the line
      * @param {number} t       The line thickness
-     * @return {N}             The SVG element for the line
+     * @returns {N}            The SVG element for the line
      */
     protected makeHLine(y: number, style: string, t: number) {
         const w = this.getBBox().w;
         const dt = (style === 'dotted' ? t / 2 : 0);
         const Y = this.fixed(y - t / 2);
         return this.svg('line', this.setLineThickness(t, style, {
-            'data-line': 'h', 'class': 'mjx-' + style,
+            'data-line': 'h', 'class': this.lineClass(style),
             x1: this.fixed(dt), y1: Y, x2: this.fixed(w - dt), y2: Y
         }));
     }

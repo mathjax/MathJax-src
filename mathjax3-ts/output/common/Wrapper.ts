@@ -284,7 +284,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
 
     /**
      * @param {BBox} bbox           The bounding box to modify (either this.bbox, or an empty one)
-     * @param {boolean} recompute   True if we are recomputing due to changes in percentage width children
+     * @param {boolean} recompute   True if we are recomputing due to changes in children that have percentage widths
      */
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
         bbox.empty();
@@ -292,10 +292,8 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
             bbox.append(child.getBBox());
         }
         bbox.clean();
-        if (this.fixesPWidth) {
-            if (this.setChildPWidths(recompute)) {
-                this.computeBBox(bbox, true);
-            }
+        if (this.fixesPWidth && this.setChildPWidths(recompute)) {
+            this.computeBBox(bbox, true);
         }
     }
 
@@ -318,10 +316,8 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         let changed = false;
         for (const child of this.childNodes) {
             const cbox = child.getBBox();
-            if (cbox.pwidth) {
-                if (child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)) {
-                    changed = true;
-                }
+            if (cbox.pwidth && child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)) {
+                changed = true;
             }
         }
         return changed;
@@ -608,9 +604,9 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      * @return {number}        The x position of the aligned width
      */
     protected getAlignX(W: number, bbox: BBox, align: string) {
-        if (align === 'right') return W - (bbox.w + bbox.R) * bbox.rscale;
-        if (align === 'left') return bbox.L * bbox.rscale;
-        return (W - bbox.w * bbox.rscale) / 2;
+        return (align === 'right' ? W - (bbox.w + bbox.R) * bbox.rscale :
+                align === 'left' ? bbox.L * bbox.rscale :
+                (W - bbox.w * bbox.rscale) / 2);
     }
 
     /**
@@ -622,10 +618,10 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      * @return {number}         The y position of the aligned baseline
      */
     protected getAlignY(H: number, D: number, h: number, d: number, align: string) {
-        if (align === 'top') return H - h ;
-        if (align === 'bottom') return d - D;
-        if (align === 'middle') return ((H - h) - (D - d)) / 2;
-        return 0; // baseline and axis
+        return (align === 'top' ? H - h :
+                align === 'bottom' ? d - D :
+                align === 'middle' ? ((H - h) - (D - d)) / 2 :
+                0); // baseline and axis
     }
 
     /**
