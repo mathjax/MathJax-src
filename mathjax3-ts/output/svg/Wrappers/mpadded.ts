@@ -42,14 +42,16 @@ export class SVGmpadded<N, T, D> extends CommonMpaddedMixin<SVGConstructor<N, T,
      */
     public toSVG(parent: N) {
         let svg = this.standardSVGnode(parent);
-        const [H, D, W, dh, dd, dw, x, y] = this.getDimens();
+        const [H, D, W, dh, dd, dw, x, y, dx] = this.getDimens();
+        const align = (this.node.attributes.get('data-align') as string) || 'left';
+        const X = x + dx - (dw < 0 && align !== 'left' ? align === 'center' ? dw / 2 : dw : 0);
         //
         // If there is a horizontal or vertical shift,
         //   use relative positioning to move the contents
         //
-        if (x || y) {
-            const translate = 'translate(' + this.fixed(x) + ' ' + this.fixed(y) + ')';
-            svg = this.adaptor.append(svg, this.svg('g', {transform: translate}));
+        if (X || y) {
+            svg = this.adaptor.append(svg, this.svg('g'));
+            this.place(X, y, svg);
         }
         this.addChildren(svg);
     }
