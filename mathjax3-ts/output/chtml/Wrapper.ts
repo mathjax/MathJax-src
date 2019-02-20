@@ -149,6 +149,12 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
         //
         //  These don't have Wrapper subclasses, so add their styles here
         //
+        'mjx-mtext': {
+            display: 'inline-block'
+        },
+        'mjx-mstyle': {
+            display: 'inline-block'
+        },
         'mjx-merror': {
             display: 'inline-block',
             color: 'red',
@@ -229,6 +235,10 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
         const styles = this.styles.cssText;
         if (styles) {
             this.adaptor.setAttribute(this.chtml, 'style', styles);
+            const family = this.styles.get('font-family');
+            if (family) {
+                this.adaptor.setStyle(this.chtml, 'font-family', 'MJXZERO, ' + family);
+            }
         }
     }
 
@@ -347,11 +357,14 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      * @param {number} shift  The indent (positive or negative) for the node
      */
     protected setIndent(chtml: N, align: string, shift: number) {
+        const adaptor = this.adaptor;
         if (align === 'center' || align === 'left') {
-            this.adaptor.setStyle(chtml, 'margin-left', this.em(shift));
+            const L = this.getBBox().L;
+            adaptor.setStyle(chtml, 'margin-left', this.em(shift + L));
         }
         if (align === 'center' || align === 'right') {
-            this.adaptor.setStyle(chtml, 'margin-right', this.em(-shift));
+            const R = this.getBBox().R;
+            adaptor.setStyle(chtml, 'margin-right', this.em(-shift + R));
         }
     }
 
@@ -397,12 +410,12 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      */
 
     /**
-     * @param {string} type  The tag name of the HTML node to be created
-     * @param {OptionList} def  The properties to set for the created node
-     * @param {N[]} content  The child nodes for the created HTML node
-     * @return {N}   The generated HTML tree
+     * @param {string} type      The tag name of the HTML node to be created
+     * @param {OptionList} def   The properties to set for the created node
+     * @param {(N|T)[]} content  The child nodes for the created HTML node
+     * @return {N}               The generated HTML tree
      */
-    public html(type: string, def: OptionList = {}, content: N[] = []) {
+    public html(type: string, def: OptionList = {}, content: (N | T)[] = []) {
         return this.jax.html(type, def, content);
     }
 

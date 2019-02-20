@@ -33,7 +33,7 @@ import TexError from '../TexError.js';
 import {Label} from '../Tags.js';
 import {Macro} from '../Symbol.js';
 import {CommandMap} from '../SymbolMap.js';
-import {MapHandler} from '../MapHandler.js';
+import {MapHandler, ExtensionMaps} from '../MapHandler.js';
 import {ArrayItem} from '../base/BaseItems.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
@@ -143,9 +143,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   }
   let op = parser.GetArgument(name);
   op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
-  // TODO: Use a better dedicated handler.
-  //       What about already defined commands?
-  (MapHandler.getMap('new-Command') as CommandMap).
+  (parser.configuration.handlers.retrieve(ExtensionMaps.NEW_COMMAND) as CommandMap).
     add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
 };
 

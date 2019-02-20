@@ -31,6 +31,16 @@ export type AttributeData = {
     value: string
 };
 
+/**
+ * The data for an elements page-based bounding box
+ */
+export type PageBBox = {
+    left: number,
+    right: number,
+    top: number,
+    bottom: number
+};
+
 
 /*****************************************************************/
 /**
@@ -224,6 +234,12 @@ export interface DOMAdaptor<N, T, D> {
     setAttribute(node: N, name: string, value: string | number, ns?: string): void;
 
     /**
+     * @param {N} node           The HTML element whose attributes are to be set
+     * @param {OptionList} def   The attributes to set on that node
+     */
+    setAttributes(node: N, def: OptionList): void;
+
+    /**
      * @param {N} node        The HTML node whose attribute is to be obtained
      * @param {string} name   The name of the attribute to get
      * @return {string}       The value of the given attribute of the given node
@@ -302,9 +318,18 @@ export interface DOMAdaptor<N, T, D> {
 
     /**
      * @param {N} node            The HTML node whose dimensions are to be determined
-     * @return {[number, number]} The width and height (in pixels) of the element
+     * @param {number} em         The number of pixels in an em
+     * @param {boolean} local     True if local coordinates are to be used in SVG elements
+     * @return {[number, number]} The width and height (in ems) of the element
      */
-    nodeSize(node: N): [number, number];
+    nodeSize(node: N, em?: number, local?: boolean): [number, number];
+
+
+    /**
+     * @param {N} node            The HTML node whose BBox is to be determined
+     * @return {PageBBox}         BBox as {left, right, top, bottom} position on the page (in pixels)
+     */
+    nodeBBox(node: N): PageBBox;
 }
 
 /*****************************************************************/
@@ -575,6 +600,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /**
      * @override
      */
-    public abstract nodeSize(node: N): [number, number];
+    public abstract nodeSize(node: N, em?: number, local?: boolean): [number, number];
+
+    /**
+     * @override
+     */
+    public abstract nodeBBox(node: N): PageBBox;
 
 }

@@ -46,7 +46,7 @@ export interface Visitor {
     visitTree(tree: Node, ...args: any[]): any;
 
     /**
-     * Visit a node by calling the visitor function for the givn type of node
+     * Visit a node by calling the visitor function for the given type of node
      *  (passing along any needed parameters)
      *
      * @param {Node} node   The node to visit

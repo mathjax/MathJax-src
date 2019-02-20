@@ -48,7 +48,7 @@ export function CommonMspaceMixin<T extends WrapperConstructor>(Base: T): Mspace
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             const attributes = this.node.attributes;
             bbox.w = this.length2em(attributes.get('width'), 0);
             bbox.h = this.length2em(attributes.get('height'), 0);

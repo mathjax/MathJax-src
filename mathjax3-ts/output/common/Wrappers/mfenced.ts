@@ -133,8 +133,9 @@ export function CommonMfencedMixin<T extends WrapperConstructor>(Base: T): Mfenc
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             bbox.updateFrom(this.mrow.getBBox());
+            this.setChildPWidths(recompute);
         }
 
     };

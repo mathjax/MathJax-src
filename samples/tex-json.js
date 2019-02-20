@@ -8,11 +8,12 @@ import '../mathjax3/input/tex/ams/AmsConfiguration.js';
 import '../mathjax3/input/tex/noundefined/NoUndefinedConfiguration.js';
 import '../mathjax3/input/tex/boldsymbol/BoldsymbolConfiguration.js';
 import '../mathjax3/input/tex/newcommand/NewcommandConfiguration.js';
+import '../mathjax3/input/tex/mhchem/MhchemConfiguration.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand']})
+  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'mhchem']})
 });
 
 import {JsonMmlVisitor} from '../mathjax3/core/MmlTree/JsonMmlVisitor.js';

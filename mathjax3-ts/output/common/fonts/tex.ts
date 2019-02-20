@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontData} from '../FontData.js';
+import {FontData, CssFontMap} from '../FontData.js';
 import {StyleList} from '../../common/CssStyles.js';
 import {em} from '../../../util/lengths.js';
 import {StringMap} from '../Wrapper.js';
@@ -35,7 +35,8 @@ export class CommonTeXFont extends FontData {
     /**
      *  Add the extra variants for the TeX fonts
      */
-    protected static defaultVariants = FontData.defaultVariants.concat([
+    protected static defaultVariants = [
+        ...FontData.defaultVariants,
         ['-smallop', 'normal'],
         ['-largeop', 'normal'],
         ['-size3', 'normal'],
@@ -46,7 +47,16 @@ export class CommonTeXFont extends FontData {
         ['-tex-bold-oldstyle', 'bold'],
         ['-tex-mathit', 'italic'],
         ['-tex-variant', 'normal']
-    ]);
+    ];
+
+    protected static defaultCssFonts: CssFontMap = {
+        ...FontData.defaultCssFonts,
+        '-tex-caligraphic': ['cursive', true, false],
+        '-tex-bold-caligraphic': ['cursive', true, true],
+        '-tex-oldstyle': ['serif', false, false],
+        '-tex-bold-oldstyle': ['serif', false, true],
+        '-tex-mathit': ['serif', true, false]
+    };
 
     /**
      * The classes to use for each variant
@@ -80,6 +90,14 @@ export class CommonTeXFont extends FontData {
      */
     protected em0(n: number) {
         return em(Math.max(0, n));
+    }
+
+    /**
+     * @param {number} n    The character number to find
+     * @return {CharData}   The data for that character to be used for stretchy delimiters
+     */
+    protected getDelimiterData(n: number) {
+        return this.getChar('-smallop', n) || this.getChar('-size4', n);
     }
 
 }
