@@ -78,7 +78,7 @@ export class BitField {
 
     /**
      * @param {string} name   The name of the bit to check if set
-     * @return {boolean}      True if the named but is set
+     * @return {boolean}      True if the named bit is set
      */
     public isSet(name: string) {
         return !!(this.bits & this.getBit(name));

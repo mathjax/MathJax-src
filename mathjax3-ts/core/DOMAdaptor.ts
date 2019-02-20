@@ -219,7 +219,7 @@ export interface DOMAdaptor<N, T, D> {
      * @param {N} node               The HTML node whose attribute is to be set
      * @param {string|number} name   The name of the attribute to set
      * @param {string} value         The new value of the attribute
-     * @param {string} ns            The namespace to use for the attribute
+     * @param {string=} ns           The namespace to use for the attribute
      */
     setAttribute(node: N, name: string, value: string | number, ns?: string): void;
 
