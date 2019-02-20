@@ -43,7 +43,7 @@ export interface MathJaxConfig extends MJConfig {
     loader?: {
         paths?: {[name: string]: string};          // The path prefixes for use in locations
         source?: {[name: string]: string};         // The URLs for the extensions, e.g., tex: [mathjax]/input/tex.js
-        dependencies?: {[name: string]: string[]}; // The depenedcies for each package
+        dependencies?: {[name: string]: string[]}; // The dependencies for each package
         load?: string[];                           // The packages to load (found in locations or [mathjax]/name])
         ready?: PackageReady;                      // A function to call when MathJax is ready
         failed?: PackageFailed;                    // A function to call when MathJax fails to load
@@ -77,7 +77,7 @@ export namespace Loader {
      * Get a promise that is resolved when all the named packages have been loaded.
      *
      * @param {string[]} names  The packages to wait for
-     * @return {Promise}        A promise that resolves when all the named packages are ready
+     * @returns {Promise}       A promise that resolves when all the named packages are ready
      */
     export function ready(...names: string[]) {
         if (names.length === 0) {
@@ -85,20 +85,17 @@ export namespace Loader {
         }
         const promises = [];
         for (const name of names) {
-            let extension = Package.packages.get(name);
-            if (!extension) {
-                extension = new Package(name, true);
-            }
+            const extension = Package.packages.get(name) || new Package(name, true);
             promises.push(extension.promise);
         }
         return Promise.all(promises);
     };
 
     /**
-     * Load the named pacakges and return a promise that is resolved when they are all loaded
+     * Load the named packages and return a promise that is resolved when they are all loaded
      *
      * @param {string[]} names  The packages to load
-     * @return {Promise}        A promise that resolves when all the named packages are ready
+     * @returns {Promise}       A promise that resolves when all the named packages are ready
      */
     export function load(...names: string[]) {
         if (names.length === 0) {

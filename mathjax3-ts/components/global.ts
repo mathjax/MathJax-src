@@ -28,7 +28,7 @@
 export interface MathJaxConfig {[name: string]: any};
 
 /**
- * The object used to store class and pther definitions
+ * The object used to store class and other definitions
  * from the various MathJax modules so that they can be shared
  * among the various component webpack files
  */
@@ -65,7 +65,7 @@ export function combineConfig(dst: any, src: any) {
 }
 
 /**
- * Comibine defaults into a configuraiton that may already have
+ * Combine defaults into a configuration that may already have
  * user-provided values.  Values in src only go into dst if
  * there is not already a value for that key.
  *
@@ -99,14 +99,14 @@ export function combineWithMathJax(config: any): MathJaxObject {
 }
 
 
-/*
+/**
  * Create the MathJax global, if it doesn't exist
  */
 if (typeof global.MathJax === 'undefined') {
     global.MathJax = {} as MathJaxConfig;
 }
 
-/*
+/**
  * If the global is currently a config object, convert it to the
  * MathJaxObject containing the version, class library, and user
  * configuration.
