@@ -142,7 +142,7 @@ export namespace Loader {
     /**
      * Get the root location for where the MathJax package files are found
      *
-     * return {string}   The root location (directory for node.js, URL for browser)
+     * @returns {string}   The root location (directory for node.js, URL for browser)
      */
     export function getRoot() {
         let root = __dirname;
