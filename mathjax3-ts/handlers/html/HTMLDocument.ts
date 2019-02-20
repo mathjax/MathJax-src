@@ -56,7 +56,8 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     public static KIND: string = 'HTML';
     public static OPTIONS: OptionList = {
         ...AbstractMathDocument.OPTIONS,
-        MathList: HTMLMathList,           // Use the HTMLMathList for Mathlists
+        MathList: HTMLMathList,           // Use the HTMLMathList for MathLists
+        MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
         DomStrings: null                  // Use the default DomString parser
     };
     public static STATE = AbstractMathDocument.STATE;
@@ -113,7 +114,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         let math = item.math;
         let start = this.findPosition(item.n, item.start.n, item.open, nodes);
         let end = this.findPosition(item.n, item.end.n, item.close, nodes);
-        return new HTMLMathItem(math, jax, item.display, start, end);
+        return new this.options.MathItem(math, jax, item.display, start, end) as HTMLMathItem<N, T, D>;
     }
 
     /**
@@ -134,7 +135,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @override
      */
     public findMath(options: OptionList) {
-        if (!this.processed.findMath) {
+        if (!this.processed.isSet('findMath')) {
             this.adaptor.document = this.document;
             options = userOptions({elements: [this.adaptor.body(this.document)]}, options);
             for (const container of this.adaptor.getElements(options['elements'], this.document)) {
@@ -150,14 +151,15 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
                         }
                     } else {
                         for (const math of jax.findMath(container)) {
-                            let item = new HTMLMathItem(math.math, jax, math.display, math.start, math.end);
+                            let item: HTMLMathItem<N, T, D> =
+                                new this.options.MathItem(math.math, jax, math.display, math.start, math.end);
                             list.push(item);
                         }
                     }
                     this.math.merge(list);
                 }
             }
-            this.processed.findMath = true;
+            this.processed.set('findMath');
         }
         return this;
     }
@@ -166,21 +168,40 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @override
      */
     public updateDocument() {
-        if (!this.processed.updateDocument) {
+        if (!this.processed.isSet('updateDocument')) {
+            this.addPageElements();
+            this.addStyleSheet();
             super.updateDocument();
-            const sheet = this.documentStyleSheet();
-            if (sheet) {
-                const head = this.adaptor.head(this.document);
-                let styles = this.findSheet(head, this.adaptor.getAttribute(sheet, 'id'));
-                if (styles) {
-                    this.adaptor.replace(sheet, styles);
-                } else {
-                    this.adaptor.append(head, sheet);
-                }
-            }
-            this.processed.updateDocument = true;
+            this.processed.set('updateDocument');
         }
         return this;
+    }
+
+    /**
+     *  Add any elements needed for the document
+     */
+    protected addPageElements() {
+        const body = this.adaptor.body(this.document);
+        const node = this.documentPageElements();
+        if (node) {
+            this.adaptor.append(body, node);
+        }
+    }
+
+    /**
+     * Add the stylesheet to the document
+     */
+    protected addStyleSheet() {
+        const sheet = this.documentStyleSheet();
+        if (sheet) {
+            const head = this.adaptor.head(this.document);
+            let styles = this.findSheet(head, this.adaptor.getAttribute(sheet, 'id'));
+            if (styles) {
+                this.adaptor.replace(sheet, styles);
+            } else {
+                this.adaptor.append(head, sheet);
+            }
+        }
     }
 
     /**
@@ -203,14 +224,14 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @override
      */
     public removeFromDocument(restore: boolean = false) {
-        if (this.processed.updateDocument) {
+        if (this.processed.isSet('updateDocument')) {
             for (const math of this.math) {
                 if (math.state() >= STATE.INSERTED) {
                     math.state(STATE.TYPESET, restore);
                 }
             }
         }
-        this.processed.updateDocument = false;
+        this.processed.clear('updateDocument');
         return this;
     }
 
@@ -222,18 +243,27 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     }
 
     /**
+     * @override
+     */
+    public documentPageElements() {
+        return this.outputJax.pageElements(this);
+    }
+
+    /**
      * Temporary function for testing purposes.  Will be removed
      */
     public TestMath(text: string, display: boolean = true) {
-        if (!this.processed['TestMath']) {
-            let math = new HTMLMathItem<N, T, D>(text, this.inputJax[0], display);
+        if (!this.processed.isSet('TestMath')) {
+            let math = new this.options.MathItem(text, this.inputJax[0], display) as HTMLMathItem<N, T, D>;
             math.setMetrics(16, 8, 1000000, 1000000, 1);
             this.math.push(math);
-            this.processed['TestMath'] = true;
+            this.processed.set('TestMath');
         }
         return this;
     }
 
 }
+
+AbstractMathDocument.ProcessBits.allocate('TestMath');  // Temporary
 
 let STATE = HTMLDocument.STATE;

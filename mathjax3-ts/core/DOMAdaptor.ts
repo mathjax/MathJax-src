@@ -227,10 +227,11 @@ export interface DOMAdaptor<N, T, D> {
 
     /**
      * @param {N} node               The HTML node whose attribute is to be set
-     * @param {string} name          The name of the attribute to set
-     * @param {string|number} value  The new value of the attribute
+     * @param {string|number} name   The name of the attribute to set
+     * @param {string} value         The new value of the attribute
+     * @param {string=} ns           The namespace to use for the attribute
      */
-    setAttribute(node: N, name: string, value: string | number): void;
+    setAttribute(node: N, name: string, value: string | number, ns?: string): void;
 
     /**
      * @param {N} node           The HTML element whose attributes are to be set
@@ -529,7 +530,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     /**
      * @override
      */
-    public abstract setAttribute(node: N, name: string, value: string): void;
+    public abstract setAttribute(node: N, name: string, value: string, ns?: string): void;
 
     /**
      * @override
@@ -571,8 +572,9 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
      * @override
      */
     public allClasses(node: N) {
-        const classes = this.getAttribute(node, 'class') || '';
-        return classes.replace(/  +/g, ' ').replace(/^ /, '').replace(/ $/, '').split(/ /);
+        const classes = this.getAttribute(node, 'class');
+        return (!classes ? [] as string[] :
+                classes.replace(/  +/g, ' ').replace(/^ /, '').replace(/ $/, '').split(/ /));
     }
 
     /**

@@ -62,6 +62,11 @@ export interface OutputJax<N, T, D> {
     setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
 
     /**
+     * Do any initialization that depends on the document being set up
+     */
+    initialize(): void;
+
+    /**
      * Typset a given MathItem
      *
      * @param {MathItem} math          The MathItem to be typeset
@@ -92,6 +97,13 @@ export interface OutputJax<N, T, D> {
      * @param {MathDocument} document  The MathDocument being processed
      */
     styleSheet(document: MathDocument<N, T, D>): N;
+
+    /**
+     * Produce any page-specific elements needed for this output jax
+     *
+     * @param {MathDocument} document  The MathDocument being processed
+     */
+    pageElements(document: MathDocument<N, T, D>): N;
 }
 
 
@@ -138,6 +150,12 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     /**
      * @override
      */
+    public initialize() {
+    }
+
+    /**
+     * @override
+     */
     public abstract typeset(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
     /**
@@ -155,6 +173,13 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
      * @override
      */
     public styleSheet(document: MathDocument<N, T, D>) {
+        return null as N;
+    }
+
+    /**
+     * @override
+     */
+    public pageElements(document: MathDocument<N, T, D>) {
         return null as N;
     }
 

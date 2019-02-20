@@ -165,6 +165,14 @@ export interface MmlNode extends Node {
     setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
 
     /**
+     * Set the nodes inherited attributes based on the attributes of the given node
+     *   (used for creating extra nodes in the tree after setInheritedAttributes has already run)
+     *
+     * @param {MmlNode} node   The node whose attributes are to be used as a template
+     */
+    inheritAttributesFrom(node: MmlNode): void;
+
+    /**
      * Replace the current node with an error message (or the name of the node)
      *
      * @param {string} message         The error message to use
@@ -587,6 +595,23 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             }
         }
         return updated;
+    }
+
+    /**
+     * Set the nodes inherited attributes based on the attributes of the given node
+     *   (used for creating extra nodes in the tree after setInheritedAttributes has already run)
+     *
+     * @param {MmlNode} node   The node whose attributes are to be used as a template
+     */
+    public inheritAttributesFrom(node: MmlNode) {
+        const attributes = node.attributes;
+        const display = attributes.get('display') as boolean;
+        const scriptlevel = attributes.get('scriptlevel') as number;
+        const defaults: AttributeList = {
+            mathsize: ['math', attributes.get('mathsize')]
+        };
+        const prime = node.getProperty('texprimestyle') as boolean || false
+        this.setInheritedAttributes(defaults, display, scriptlevel, prime);
     }
 
     /**
@@ -1025,6 +1050,13 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
      * @override
      */
     public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {}
+
+    /**
+     * No children or attributes, so ignore this call.
+     *
+     * @override
+     */
+    public inheritAttributesFrom(node: MmlNode) {}
 
     /**
      * No children or attributes, so ignore this call.

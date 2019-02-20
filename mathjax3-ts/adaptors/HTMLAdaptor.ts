@@ -76,6 +76,7 @@ export interface MinHTMLElement<N, T> {
     insertBefore(nchild: N | T, ochild: N | T): void;
     cloneNode(deep: boolean): N | Node;
     setAttribute(name: string, value: string): void;
+    setAttributeNS(ns: string, name: string, value: string): void;
     getAttribute(name: string): string;
     removeAttribute(name: string): void;
     hasAttribute(name: string): boolean;
@@ -379,8 +380,8 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /**
      * @override
      */
-    public setAttribute(node: N, name: string, value: string) {
-        return node.setAttribute(name, value);
+    public setAttribute(node: N, name: string, value: string, ns: string = null) {
+        return (ns ? node.setAttributeNS(ns, name, value) : node.setAttribute(name, value));
     }
 
     /**
