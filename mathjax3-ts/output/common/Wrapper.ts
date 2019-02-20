@@ -585,13 +585,16 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
             indentalign = indentalignfirst;
         }
         if (indentalign === 'auto') {
-            indentalign = 'center';
+            indentalign = this.jax.options.displayAlign;
         }
         if (indentshiftfirst !== 'indentshift') {
             indentshift = indentshiftfirst;
         }
         if (indentshift === 'auto') {
-            indentshift = '0';
+            indentshift = this.jax.options.displayIndent;
+            if (indentalign === 'right' && !indentshift.match(/^\s*0[a-z]*\s*$/)) {
+                indentshift = ('-' + indentshift.trim()).replace(/^--/, '');
+            }
         }
         const shift = this.length2em(indentshift, this.metrics.containerWidth);
         return [indentalign, shift] as [string, number];
