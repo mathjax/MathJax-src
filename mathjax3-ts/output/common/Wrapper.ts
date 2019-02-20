@@ -220,6 +220,13 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         return this.factory.jax.math.metrics;
     }
 
+    /**
+     * True if children with percentage widths should be resolved by this container
+     */
+    get fixesPWidth() {
+        return !this.node.notParent && !this.node.isToken;
+    }
+
     /*******************************************************************/
 
     /**
@@ -234,9 +241,9 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         this.getVariant();
         this.getScale();
         this.getSpace();
-        this.childNodes = node.childNodes.map((child: Node) => {
-            const wrapped = this.wrap(child as MmlNode);
-            if (wrapped.bbox.pwidth) {
+        this.childNodes = node.childNodes.map((child: MmlNode) => {
+            const wrapped = this.wrap(child);
+            if (wrapped.bbox.pwidth && (node.notParent || node.isKind('math'))) {
                 this.bbox.pwidth = BBox.fullWidth;
             }
             return wrapped;
@@ -276,14 +283,44 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     }
 
     /**
-     * @param {BBox} bbox  The bounding box to modify (either this.bbox, or an empty one)
+     * @param {BBox} bbox           The bounding box to modify (either this.bbox, or an empty one)
+     * @param {boolean} recompute   True if we are recomputing due to changes in children that have percentage widths
      */
-    protected computeBBox(bbox: BBox) {
+    protected computeBBox(bbox: BBox, recompute: boolean = false) {
         bbox.empty();
         for (const child of this.childNodes) {
             bbox.append(child.getBBox());
         }
         bbox.clean();
+        if (this.fixesPWidth && this.setChildPWidths(recompute)) {
+            this.computeBBox(bbox, true);
+        }
+    }
+
+    /**
+     * Recursively resolve any percentage widths in the child nodes using the given
+     *   container width (or the child width, if none was passed).
+     *   Overriden for mtables in order to compute the width.
+     *
+     * @param {(number|null)=} w   The width of the container (from which percentages are computed)
+     * @param {boolean=} clear     True if pwidth marker is to be cleared
+     * @return {boolean}           True if a percentage width was found
+     */
+    public setChildPWidths(recompute: boolean, w: (number | null) = null, clear: boolean = true) {
+        if (recompute) {
+            return false;
+        }
+        if (clear) {
+           this.bbox.pwidth = '';
+        }
+        let changed = false;
+        for (const child of this.childNodes) {
+            const cbox = child.getBBox();
+            if (cbox.pwidth && child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)) {
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     /**
@@ -482,6 +519,9 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         }
     }
 
+    /**
+     * @return {boolean}   True if the parent element is an embellished operator
+     */
     protected isTopEmbellished() {
         return (this.node.isEmbellished &&
                 !(this.node.Parent && this.node.Parent.isEmbellished));
@@ -557,6 +597,49 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         return [indentalign, shift] as [string, number];
     }
 
+    /**
+     * @param {number} W       The total width
+     * @param {BBox} bbox      The bbox to be aligned
+     * @param {string} align   How to align (left, center, right)
+     * @return {number}        The x position of the aligned width
+     */
+    protected getAlignX(W: number, bbox: BBox, align: string) {
+        return (align === 'right' ? W - (bbox.w + bbox.R) * bbox.rscale :
+                align === 'left' ? bbox.L * bbox.rscale :
+                (W - bbox.w * bbox.rscale) / 2);
+    }
+
+    /**
+     * @param {number} H        The total height
+     * @param {number} D        The total depth
+     * @param {number} h        The height to be aligned
+     * @param {number} d        The depth to be aligned
+     * @param {string} align    How to align (top, bottom, middle, axis, baseline)
+     * @return {number}         The y position of the aligned baseline
+     */
+    protected getAlignY(H: number, D: number, h: number, d: number, align: string) {
+        return (align === 'top' ? H - h :
+                align === 'bottom' ? d - D :
+                align === 'middle' ? ((H - h) - (D - d)) / 2 :
+                0); // baseline and axis
+    }
+
+    /**
+     * @param {number} i   The index of the child element whose container is needed
+     * @return {number}    The inner width as a container (for percentage widths)
+     */
+    public getWrapWidth(i: number) {
+        return this.childNodes[i].getBBox().w;
+    }
+
+    /**
+     * @param {number} i   The index of the child element whose container is needed
+     * @return {string}    The alignment child element
+     */
+    public getChildAlign(i: number) {
+        return 'left';
+    }
+
     /*******************************************************************/
     /*
      * Easy access to some utility routines
@@ -597,7 +680,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         if (scale === null) {
             scale = this.bbox.scale;
         }
-        return LENGTHS.length2em(length as string, size, scale, this.metrics.em);
+        return LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm);
     }
 
     /**

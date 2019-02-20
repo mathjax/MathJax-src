@@ -273,7 +273,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             //
             //  Combine the BBox from the child and add the extenders
             //
@@ -283,6 +283,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
             bbox.h += T;
             bbox.d += B;
             bbox.w += R;
+            this.setChildPWidths(recompute);
         }
 
         /**

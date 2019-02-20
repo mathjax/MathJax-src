@@ -92,7 +92,7 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             bbox.w = this.width;
             bbox.h = this.height - this.voffset;
             bbox.d = this.voffset;

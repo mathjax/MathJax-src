@@ -97,6 +97,11 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
 
         public bevel: CommonMo = null;
 
+        /**
+         * Padding around fractions
+         */
+        public pad: number;
+
         /************************************************/
 
         /**
@@ -105,6 +110,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
          */
         constructor(...args: any[]) {
             super(...args);
+            this.pad = (this.node.getProperty('withDelims') as boolean ? 0 : this.font.params.nulldelimiterspace);
             //
             //  create internal bevel mo element
             //
@@ -119,21 +125,26 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             bbox.empty();
             const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
             const display = this.isDisplay();
+            let w = null as (number | null);
             if (bevelled) {
                 this.getBevelledBBox(bbox, display);
             } else {
                 const thickness = this.length2em(String(linethickness));
+                w = -2 * this.pad;
                 if (thickness === 0) {
                     this.getAtopBBox(bbox, display);
                 } else {
                     this.getFractionBBox(bbox, display, thickness);
+                    w -= .2;
                 }
+                w += bbox.w;
             }
             bbox.clean();
+            this.setChildPWidths(recompute, w);
         }
 
         /************************************************/
@@ -147,12 +158,11 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
             const nbox = this.childNodes[0].getBBox();
             const dbox = this.childNodes[1].getBBox();
             const tex = this.font.params;
-            const pad = (this.node.getProperty('withDelims') as boolean ? 0 : tex.nulldelimiterspace);
             const a = tex.axis_height;
             const {T, u, v} = this.getTUV(display, t);
             bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, u));
             bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, v));
-            bbox.w += 2 * pad + .2;
+            bbox.w += 2 * this.pad + .2;
         }
 
         /**
@@ -178,11 +188,10 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
          */
         public getAtopBBox(bbox: BBox, display: boolean) {
             const tex = this.font.params;
-            const pad = (this.node.getProperty('withDelims') as boolean ? 0 : tex.nulldelimiterspace);
             const {u, v, nbox, dbox} = this.getUVQ(display);
             bbox.combine(nbox, 0, u);
             bbox.combine(dbox, 0, -v);
-            bbox.w += 2 * pad;
+            bbox.w += 2 * this.pad;
         }
 
         /**
@@ -260,6 +269,27 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
         public isDisplay() {
             const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');
             return displaystyle && scriptlevel === 0;
+        }
+
+        /**
+         * @override
+         */
+        public getWrapWidth(i: number) {
+            const attributes = this.node.attributes;
+            if (attributes.get('bevelled')) {
+                return this.childNodes[i].getBBox().w;
+            }
+            const w = this.getBBox().w;
+            const thickness = this.length2em(attributes.get('linethickness'));
+            return w - (thickness ? .2 : 0) -  2 * this.pad;
+        }
+
+        /**
+         * @override
+         */
+        public getChildAlign(i: number) {
+            const attributes = this.node.attributes;
+            return (attributes.get('bevelled') ? 'left' : attributes.get(['numalign', 'denomalign'][i]) as string);
         }
 
     };

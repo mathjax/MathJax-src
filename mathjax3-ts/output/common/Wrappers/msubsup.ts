@@ -198,7 +198,7 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             const basebox = this.baseChild.getBBox();
             const subbox  = this.subChild.getBBox();
             const supbox  = this.supChild.getBBox();
@@ -210,6 +210,7 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
             bbox.combine(supbox, w + this.coreIC(), u);
             bbox.w += this.font.params.scriptspace;
             bbox.clean();
+            this.setChildPWidths(recompute);
         }
 
         /**
