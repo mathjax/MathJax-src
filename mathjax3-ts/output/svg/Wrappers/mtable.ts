@@ -116,11 +116,11 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         for (let i = 0; i < this.numRows; i++) {
             const row = this.childNodes[i];
             [row.H, row.D] = this.getRowHD(equal, HD, H[i], D[i]);
-            [row.tSpace, row.bSpace] = [rSpace[i], rSpace[i+1]];
-            [row.tLine, row.bLine] = [rLines[i], rLines[i+1]];
+            [row.tSpace, row.bSpace] = [rSpace[i], rSpace[i + 1]];
+            [row.tLine, row.bLine] = [rLines[i], rLines[i + 1]];
             row.toSVG(svg);
             row.place(0, y - rSpace[i] - row.H);
-            y -= rSpace[i] + row.H + row.D + rSpace[i+1] + rLines[i+1];
+            y -= rSpace[i] + row.H + row.D + rSpace[i + 1] + rLines[i + 1];
         }
     }
 
@@ -162,7 +162,7 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         const cWidth = this.getComputedWidths();
         let x = this.fLine;
         for (let i = 0; i < lines.length; i++) {
-            x += cSpace[i] + cWidth[i] + cSpace[i+1];
+            x += cSpace[i] + cWidth[i] + cSpace[i + 1];
             if (lines[i] !== 'none') {
                 this.adaptor.append(svg, this.makeVLine(x, lines[i], cLines[i]));
             }
@@ -187,7 +187,7 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         let y = this.getBBox().h - this.fLine;
         for (let i = 0; i < lines.length; i++) {
             const [rH, rD] = this.getRowHD(equal, HD, H[i], D[i]);
-            y -= rSpace[i] + rH + rD + rSpace[i+1]
+            y -= rSpace[i] + rH + rD + rSpace[i + 1];
             if (lines[i] !== 'none') {
                 this.adaptor.append(svg, this.makeHLine(y, lines[i], rLines[i]));
             }
@@ -363,6 +363,8 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
     }
 
     /**
+     * Handles tables with labels so that the label will move with the size of the container
+     *
      * @param {N} svg         The SVG container for the table
      * @param {N} labels      The group of labels
      * @param {string} side   The side alignment (left or right)

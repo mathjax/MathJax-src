@@ -87,6 +87,9 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
      *  The default styles for SVG
      */
     public static styles: StyleList = {
+        'mjx-container[jax="SVG"] > svg': {
+            'overflow': 'visible'
+        },
         'mjx-container[jax="SVG"] > svg a': {
             fill: 'blue', stroke: 'blue'
         }
@@ -250,18 +253,16 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
     /**
      * @param {number} x   The x-offset for the element
      * @param {number} y   The y-offset for the element
-     * @param {N} eleemnt  The element to be placed
+     * @param {N} element  The element to be placed
      */
     public place(x: number, y: number, element: N = null) {
+        if (!(x || y)) return;
         if (!element) {
             element = this.element;
         }
-        if (x || y) {
-            let transform = this.adaptor.getAttribute(element, 'transform') || '';
-            transform = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')'
-                      + (transform ? ' ' + transform : '');
-            this.adaptor.setAttribute(element, 'transform', transform);
-        }
+        let transform = this.adaptor.getAttribute(element, 'transform') || '';
+        transform = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')' + (transform ? ' ' + transform : '');
+        this.adaptor.setAttribute(element, 'transform', transform);
     }
 
     /**
@@ -373,8 +374,8 @@ CommonWrapper<SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperClass<N, T, D>> {
 
     /**
      * @param {number} x   The dimension to display
-     * @param {number} n   The number of digits to disoplay
-     * @return {string}    The dimension with the given nuber of digits (minus trailing zeros)
+     * @param {number=} n  The number of digits to display
+     * @return {string}    The dimension with the given number of digits (minus trailing zeros)
      */
     public fixed(x: number, n: number = 1) {
         return this.jax.fixed(x * 1000, n);

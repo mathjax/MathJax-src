@@ -163,11 +163,8 @@ export function CommonMactionMixin<W extends AnyWrapper,
          * Look up attribute parameters
          */
         public getParameters() {
-            let [dx, dy] = ['', ''];
             const offsets = this.node.attributes.get('data-offsets') as string;
-            if (offsets) {
-                [dx, dy] = split(offsets);
-            }
+            let [dx, dy] = split(offsets || '');
             this.dx = this.length2em(dx || TooltipData.dx);
             this.dy = this.length2em(dy || TooltipData.dy);
         }

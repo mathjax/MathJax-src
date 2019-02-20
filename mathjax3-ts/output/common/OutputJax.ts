@@ -425,9 +425,11 @@ AbstractOutputJax<N, T, D> {
      * @param {number=} n   The number of digits to use
      * @return {string}     The formatted number
      */
-    fixed(m: number, n: number = 3) {
-        if (Math.abs(m) < .0006) return "0";
-        return m.toFixed(n).replace(/\.?0+$/,"");
+    public fixed(m: number, n: number = 3) {
+        if (Math.abs(m) < .0006) {
+          return '0';
+        }
+        return m.toFixed(n).replace(/\.?0+$/, '');
     }
 
     /*****************************************************************/
@@ -513,7 +515,9 @@ AbstractOutputJax<N, T, D> {
      * @return {CssFontData}    The family, italic, and boolean values
      */
     public getFontData(styles: Styles) {
-        if (!styles) styles = new Styles();
+        if (!styles) {
+            styles = new Styles();
+        }
         return [styles.get('font-family'),
                 styles.get('font-style') === 'italic',
                 styles.get('font-weight') === 'bold'] as CssFontData;

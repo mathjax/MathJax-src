@@ -119,7 +119,7 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
         //
         const wrapper = this.factory.wrap(math);
         const {w, h, d, pwidth} = wrapper.getBBox();
-        const px = (this.font.params.x_height / wrapper.metrics.ex);
+        const W = Math.max(w, .001); // make sure we are at least one unit wide (needed for e.g. \llap)
         //
         //  The container that flips the y-axis and sets the colors to inherit from the surroundings
         //
@@ -133,10 +133,16 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
         const adaptor = this.adaptor;
         const svg = adaptor.append(parent, this.svg('svg', {
             xmlns: SVGNS,
-            width: this.ex(w), height: this.ex(h + d),
+            width: this.ex(W), height: this.ex(h + d),
             style: {'vertical-align': this.ex(-d)},
-            viewBox: [0, this.fixed(-h * 1000, 1), this.fixed(w * 1000, 1), this.fixed((h + d) * 1000, 1)].join(' ')
+            viewBox: [0, this.fixed(-h * 1000, 1), this.fixed(W * 1000, 1), this.fixed((h + d) * 1000, 1)].join(' ')
         }, [g])) as N;
+        if (W === .001) {
+            adaptor.setAttribute(svg, 'preserveAspectRatio', 'xMidYMid slice');
+            if (w < 0) {
+                adaptor.setStyle(parent, 'margin-right', this.ex(w));
+            }
+        }
         if (pwidth) {
             //
             // Use width 100% with no viewbox, and instead scale and translate to achieve the same result
@@ -185,8 +191,7 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
      */
     ex(m: number) {
         m /= this.font.params.x_height;
-        if (Math.abs(m) < .001) return '0';
-        return (m.toFixed(3).replace(/\.?0+$/, '')) + 'ex';
+        return (Math.abs(m) < .001 ? '0' : m.toFixed(3).replace(/\.?0+$/, '') + 'ex');
     }
 
     /**

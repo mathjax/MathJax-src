@@ -104,8 +104,9 @@ CommonMencloseMixin<SVGWrapper<N, T, D>, SVGmsqrt<N, T, D>, N, SVGConstructor<N,
                 const [a, W] = node.getArgMod(1.75 * node.padding, h + d);
                 const t = node.thickness / 2;
                 const HD = h + d;
+                const cos = Math.cos(a);
                 node.adaptor.append(node.element, node.path('mitre',
-                    'M', w, t - d,  'L', t + Math.cos(a) * t, t - d,  'L' , Math.cos(a) * HD + t, HD - d - t
+                    'M', w, t - d,  'L', t + cos * t, t - d,  'L' , cos * HD + t, HD - d - t
                 ));
             },
             bbox: (node) => {
@@ -228,24 +229,25 @@ CommonMencloseMixin<SVGWrapper<N, T, D>, SVGmsqrt<N, T, D>, N, SVGConstructor<N,
         const dw = (W - w) / 2;
         const m = (h - d) / 2;
         const t = this.thickness;
+        const t2 = t / 2;
         const [x, y, dx] = [t * this.arrowhead.x, t * this.arrowhead.y, t * this.arrowhead.dx];
         const arrow =
             (double ?
              this.fill(
                  'M', w + dw, m,                            // point of arrow
-                 'l', -(x + dx), y,  'l', dx, t / 2 - y,    // upper right head
-                 'L', x - dw, m + t / 2,                    // upper side of shaft
-                 'l', dx, y - t / 2, 'l', -(x + dx), - y,   // left point
-                 'l', x + dx, -y,    'l', -dx, y - t / 2,   // lower left head
-                 'L', w + dw - x, m - t / 2,                // lower side of shaft
-                 'l', -dx, t / 2 - y, 'Z'                   // lower head
+                 'l', -(x + dx), y,  'l', dx, t2 - y,       // upper right head
+                 'L', x - dw, m + t2,                       // upper side of shaft
+                 'l', dx, y - t2, 'l', -(x + dx), - y,      // left point
+                 'l', x + dx, -y,    'l', -dx, y - t2,      // lower left head
+                 'L', w + dw - x, m - t2,                   // lower side of shaft
+                 'l', -dx, t2 - y, 'Z'                      // lower head
              ) :
              this.fill(
                  'M', w + dw, m,                            // point of arrow
-                 'l', -(x + dx), y,  'l', dx, t / 2 - y,    // upper head
-                 'L', -dw, m + t / 2, 'l', 0, -t,           // upper side of shaft
-                 'L', w + dw - x, m - t / 2,                // lower side of shaft
-                 'l', -dx, t / 2 - y, 'Z'                   // lower head
+                 'l', -(x + dx), y,  'l', dx, t2 - y,       // upper head
+                 'L', -dw, m + t2, 'l', 0, -t,              // upper side of shaft
+                 'L', w + dw - x, m - t2,                   // lower side of shaft
+                 'l', -dx, t2 - y, 'Z'                      // lower head
              ));
         if (a) {
             const A = this.jax.fixed(-a * 180 / Math.PI);
