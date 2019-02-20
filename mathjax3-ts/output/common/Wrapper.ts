@@ -396,7 +396,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
             if (values.family) {
                     variant = this.explicitVariant(values.family, values.weight, values.style);
             } else {
-                if (this.node.getProperty('variantForm')) variant = '-TeX-variant';
+                if (this.node.getProperty('variantForm')) variant = '-tex-variant';
                 variant = (CommonWrapper.BOLDVARIANTS[values.weight] || {})[variant] || variant;
                 variant = (CommonWrapper.ITALICVARIANTS[values.style] || {})[variant] || variant;
             }
