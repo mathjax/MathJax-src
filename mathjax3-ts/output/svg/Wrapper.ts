@@ -26,7 +26,7 @@ import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} fro
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
-import {SVG} from '../svg.js';
+import {SVG, XLINKNS} from '../svg.js';
 import {SVGWrapperFactory} from './WrapperFactory.js';
 import {SVGFontData, SVGDelimiterData, SVGCharOptions} from './FontData.js';
 import {SVGmo} from './Wrappers/mo.js';
@@ -34,7 +34,6 @@ import {BBox} from './BBox.js';
 import {StyleList} from '../common/CssStyles.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
-
 
 /*****************************************************************/
 
@@ -118,6 +117,11 @@ CommonWrapper<
      * The SVG element generated for this wrapped node
      */
     public element: N = null;
+
+    /**
+     * @override
+     */
+    public font: SVGFontData;
 
     /*******************************************************************/
 
@@ -288,9 +292,8 @@ CommonWrapper<
         const C = n.toString(16).toUpperCase();
         const [h, d, w, data] = this.getVariantChar(variant, n);
         if ('p' in data) {
-            this.place(x, y, this.adaptor.append(parent, this.svg('path', {
-                'data-c': C, d: (data.p ? 'M' + data.p + 'Z' : '')
-            })));
+            const path = (data.p ? 'M' + data.p + 'Z' : '');
+            this.place(x, y, this.adaptor.append(parent, this.charNode(variant, C, path)));
         } else if ('c' in data) {
             const g = this.adaptor.append(parent, this.svg('g', {'data-c': C}));
             this.place(x, y, g);
@@ -305,6 +308,39 @@ CommonWrapper<
             return this.jax.measureTextNodeWithCache(text, char, variant).w;
         }
         return w;
+    }
+
+    /**
+     * @param {string} variant    The name of the variant being used
+     * @param {string} C          The hex string for the character code
+     * @param {string} path       The data from the character
+     * @return {N}                The <path> or <use> node for the glyph
+     */
+    protected charNode(variant: string, C: string, path: string) {
+        const cache = this.jax.options.fontCache;
+        return (cache !== 'none' ? this.useNode(variant, C, path) : this.pathNode(C, path));
+    }
+
+    /**
+     * @param {string} C          The hex string for the character code
+     * @param {string} path       The data from the character
+     * @return {N}                The <path> for the glyph
+     */
+    protected pathNode(C: string, path: string) {
+        return this.svg('path', {'data-c': C, d: path});
+    }
+
+    /**
+     * @param {string} variant    The name of the variant being used
+     * @param {string} C          The hex string for the character code
+     * @param {string} path       The data from the character
+     * @return {N}                The <use> node for the glyph
+     */
+    protected useNode(variant: string, C: string, path: string) {
+        const use = this.svg('use');
+        const id = '#' + this.jax.fontCache.cachePath(variant, C, path);
+        this.adaptor.setAttribute(use, 'href', id, XLINKNS);
+        return use;
     }
 
     /*******************************************************************/

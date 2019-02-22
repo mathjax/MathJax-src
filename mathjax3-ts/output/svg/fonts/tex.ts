@@ -99,5 +99,49 @@ CommonTeXFontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData
         '-tex-variant': texVariant
     };
 
+    /**
+     * The cacheIDs to use for the variants in font-caching
+     */
+    protected static variantCacheIds: {[name: string]: string} = {
+        'normal': 'N',
+        'bold': 'B',
+        'italic': 'I',
+        'bold-italic': 'BI',
+        'double-struck': 'D',
+        'fraktur': 'F',
+        'bold-fraktur': 'BF',
+        'script': 'S',
+        'bold-script': 'BS',
+        'sans-serif': 'SS',
+        'bold-sans-serif': 'BSS',
+        'sans-serif-italic': 'SSI',
+        'bold-sans-serif-italic': 'BSSI',
+        'monospace': 'M',
+        '-smallop': 'SO',
+        '-largeop': 'LO',
+        '-size3': 'S3',
+        '-size4': 'S4',
+        '-tex-caligraphic': 'C',
+        '-tex-bold-caligraphic': 'BC',
+        '-tex-mathit': 'MI',
+        '-tex-oldstyle': 'OS',
+        '-tex-bold-oldstyle': 'BOS',
+        '-tex-variant': 'V'
+    };
+
+    /**
+     * @override
+     */
+    constructor() {
+        super();
+        //
+        //  Add the cacheIDs to the variants
+        //
+        const CLASS = this.constructor as typeof TeXFont;
+        for (const variant of Object.keys(CLASS.variantCacheIds)) {
+            this.variant[variant].cacheID = 'TEX-' + CLASS.variantCacheIds[variant];
+        }
+    }
+
 }
 
