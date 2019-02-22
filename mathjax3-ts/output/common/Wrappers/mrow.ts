@@ -54,6 +54,13 @@ export function CommonMrowMixin<T extends WrapperConstructor>(Base: T): MrowCons
 
         /**
          * @override
+         */
+        get fixesPWidth() {
+            return false;
+        }
+
+        /**
+         * @override
          * @constructor
          */
         constructor(...args: any[]) {
@@ -139,7 +146,7 @@ export function CommonInferredMrowMixin<T extends MrowConstructor>(Base: T): Inf
          *
          * @override
          */
-        protected getScale() {
+        public getScale() {
             this.bbox.scale = this.parent.bbox.scale;
             this.bbox.rscale = 1;
         }

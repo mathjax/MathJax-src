@@ -220,14 +220,15 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
      */
     protected addDelimiterVStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
+        const W = data.HDW[2];
         const [beg, ext, end, mid] = data.stretch;
-        const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
-        this.addDelimiterVPart(styles, c, 'ext', ext);
-        const He = this.addDelimiterVPart(styles, c, 'end', end);
+        const Hb = this.addDelimiterVPart(styles, c, W, 'beg', beg);
+        this.addDelimiterVPart(styles, c, W, 'ext', ext);
+        const He = this.addDelimiterVPart(styles, c, W, 'end', end);
         const css: StyleData = {};
         const root = this.cssRoot;
         if (mid) {
-            const Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
+            const Hm = this.addDelimiterVPart(styles, c, W, 'mid', mid);
             css.height = '50%';
             styles[root + 'mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
                 'margin-top': this.em(-Hm/2),
@@ -249,16 +250,20 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     /**
      * @param {StyleList} styles  The style object to add styles to
      * @param {string} c          The vertical character whose part is being added
+     * @param {number} W          The width for the stretchy delimiter as a whole
      * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
      * @param {number} n          The unicode character to use for the part
      * @return {number}           The total height of the character
      */
-    protected addDelimiterVPart(styles: StyleList, c: string, part: string, n: number) {
+    protected addDelimiterVPart(styles: StyleList, c: string, W: number, part: string, n: number) {
         if (!n) return 0;
-        const data = this.getChar('normal', n) || this.getChar('-size4', n);
-        const css: StyleData = {content: '"' + this.char(n, true) + '"'};
+        const data = this.getDelimiterData(n);
+        const dw = (W - data[2]) / 2
+        const css: StyleData = {content: '"' + this.char(n, true) + '"', width: this.em0(W - dw)};
         if (part !== 'ext') {
-            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
+            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]) + (dw ? ' ' + this.em0(dw) : '');
+        } else if (dw) {
+            css['padding-left'] = this.em0(dw);
         }
         styles[this.cssRoot + 'mjx-stretchy-v[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
         return data[0] + data[1];
@@ -292,12 +297,12 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         if (!n) {
             return 0;
         }
-        const data = this.getChar('normal', n) || this.getChar('-size4', n);
+        const data = this.getDelimiterData(n);
         const options = data[3] as CHTMLCharOptions;
         const C = (options && options.c ? options.c : this.char(n, true));
         const css: StyleData = {content: '"' + C + '"'};
         if (part !== 'ext' || force) {
-          css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
+            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
         }
         styles[this.cssRoot + 'mjx-stretchy-h[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
     }
@@ -340,6 +345,14 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     }
 
     /***********************************************************************/
+
+    /**
+     * @param {number} n    The character number to find
+     * @return {CharData}   The data for that character to be used for stretchy delimiters
+     */
+    protected getDelimiterData(n: number) {
+        return this.getChar('-smallop', n);
+    }
 
     /**
      * @override

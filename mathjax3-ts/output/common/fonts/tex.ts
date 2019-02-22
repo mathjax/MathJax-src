@@ -73,6 +73,13 @@ export function CommonTeXFontMixin<C extends CharOptions, V extends VariantData<
          */
         protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
 
+        /**
+         * @override
+         */
+        protected getDelimiterData(n: number) {
+            return this.getChar('-smallop', n) || this.getChar('-size4', n);
+        }
+
     }
 
 }

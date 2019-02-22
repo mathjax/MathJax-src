@@ -57,7 +57,6 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * Minimum width for tables with labels,
      * and shift and align for main equation
      */
-    public minwidth: number = 0;
     public shift: number = 0;
 
     /**
@@ -121,9 +120,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         //
         const wrapper = this.factory.wrap(math);
         const {w, h, d, pwidth} = wrapper.getBBox();
-        const px = (this.font.params.x_height / wrapper.metrics.ex);
-        const H = (Math.ceil(h / px) + 1) * px + 2/1000;  // round to pixels and add a little padding
-        const D = (Math.ceil(d / px) + 1) * px + 2/1000;
+        const W = Math.max(w, .001); // make sure we are at least one unit wide (needed for e.g. \llap)
         //
         //  The container that flips the y-axis and sets the colors to inherit from the surroundings
         //
@@ -137,26 +134,34 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         const adaptor = this.adaptor;
         const svg = adaptor.append(parent, this.svg('svg', {
             xmlns: SVGNS,
-            width: this.ex(w), height: this.ex(H + D),
-            style: {'vertical-align': this.ex(-D)},
-            viewBox: [0, this.fixed(-H * 1000, 1), this.fixed(w * 1000, 1), this.fixed((H + D) * 1000, 1)].join(' ')
+            width: this.ex(W), height: this.ex(h + d),
+            style: {'vertical-align': this.ex(-d)},
+            viewBox: [0, this.fixed(-h * 1000, 1), this.fixed(W * 1000, 1), this.fixed((h + d) * 1000, 1)].join(' ')
         }, [g])) as N;
+        if (W === .001) {
+            adaptor.setAttribute(svg, 'preserveAspectRatio', 'xMidYMid slice');
+            if (w < 0) {
+                adaptor.setStyle(parent, 'margin-right', this.ex(w));
+            }
+        }
         if (pwidth) {
             //
-            // These aren't needed for full-width tables
+            // Use width 100% with no viewbox, and instead scale and translate to achieve the same result
             //
             adaptor.setAttribute(svg, 'width', pwidth);
             adaptor.removeAttribute(svg, 'viewBox');
-            adaptor.removeAttribute(g, 'transform');
+            const scale = wrapper.metrics.ex / (this.font.params.x_height * 1000);
+            adaptor.setAttribute(g, 'transform', 'matrix(1 0 0 -1 0 0) scale(' +
+                                 this.fixed(scale, 6) + ') translate(0, ' + this.fixed(-h * 1000, 1) + ')');
         }
         //
-        //  Typeset the math and add minwith (from mtables), or set the alignment and indentation
+        //  Typeset the math and add minWith (from mtables), or set the alignment and indentation
         //    of the finalized expression
         //
-        this.minwidth = this.shift = 0;
+        this.shift = 0;
         wrapper.toSVG(g);
-        if (this.minwidth) {
-            adaptor.setStyle(svg, 'minWidth', this.ex(this.minwidth));
+        if (wrapper.bbox.pwidth) {
+            adaptor.setStyle(svg, 'minWidth', this.ex(wrapper.bbox.w));
         } else if (this.shift) {
             const align = adaptor.getAttribute(parent, 'justify') || 'center';
             this.setIndent(svg, align, this.shift);

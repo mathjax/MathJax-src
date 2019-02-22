@@ -95,6 +95,9 @@ CommonWrapper<
      *  The default styles for SVG
      */
     public static styles: StyleList = {
+        'mjx-container[jax="SVG"] > svg': {
+            'overflow': 'visible'
+        },
         'mjx-container[jax="SVG"] > svg a': {
             fill: 'blue', stroke: 'blue'
         }
@@ -256,20 +259,6 @@ CommonWrapper<
     /*******************************************************************/
 
     /**
-     * @param {N} svg         The HTML node whose indentation is to be adjusted
-     * @param {string} align  The alignment for the node
-     * @param {number} shift  The indent (positive or negative) for the node
-     */
-    protected setIndent(svg: N, align: string, shift: number) {
-        if (align === 'center' || align === 'left') {
-            // FIXME
-        }
-        if (align === 'center' || align === 'right') {
-            // FIXME
-        }
-    }
-
-    /**
      * @param {number} x   The x-offset for the element
      * @param {number} y   The y-offset for the element
      * @param {N} element  The element to be placed
@@ -316,33 +305,6 @@ CommonWrapper<
             return this.jax.measureTextNodeWithCache(text, char, variant).w;
         }
         return w;
-    }
-
-    /**
-     * @param {number} W       The total width
-     * @param {number} w       The width to be aligned
-     * @param {string} align   How to align (left, center, right)
-     * @return {number}        The x position of the aligned width
-     */
-    protected getAlignX(W: number, w: number, align: string) {
-        if (align === 'right') return W - w ;
-        if (align === 'left') return 0;
-        return (W - w) / 2;
-    }
-
-    /**
-     * @param {number} H        The total height
-     * @param {number} D        The total depth
-     * @param {number} h        The height to be aligned
-     * @param {number} d        The depth to be aligned
-     * @param {string} align    How to align (top, bottom, middle, axis, baseline)
-     * @return {number}         The y position of the aligned baseline
-     */
-    protected getAlignY(H: number, D: number, h: number, d: number, align: string) {
-        return (align === 'top' ? H - h :
-                align === 'bottom' ? d - D :
-                align === 'middle' ? ((H - h) - (D - d)) / 2 :
-                0); // baseline and axis
     }
 
     /*******************************************************************/
@@ -420,8 +382,8 @@ CommonWrapper<
 
     /**
      * @param {number} x   The dimension to display
-     * @param {number} n   The number of digits to disoplay
-     * @return {string}    The dimension with the given nuber of digits (minus trailing zeros)
+     * @param {number=} n  The number of digits to display
+     * @return {string}    The dimension with the given number of digits (minus trailing zeros)
      */
     public fixed(x: number, n: number = 1) {
         return this.jax.fixed(x * 1000, n);

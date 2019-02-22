@@ -222,7 +222,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         },
 
         '.MJX-TEX mjx-stretchy-v mjx-c, .MJX-TEX mjx-stretchy-h mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX, MJXTEX-S4 ! important'
+            'font-family': 'MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important'
         }
     };
 

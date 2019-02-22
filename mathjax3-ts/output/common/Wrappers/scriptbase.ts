@@ -232,7 +232,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          *
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             const basebox = this.baseChild.getBBox();
             const scriptbox = this.script.getBBox();
             const [x, y] = this.getOffset(basebox, scriptbox);
@@ -240,6 +240,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
             bbox.combine(scriptbox, bbox.w + x, y);
             bbox.w += this.font.params.scriptspace;
             bbox.clean();
+            this.setChildPWidths(recompute);
         }
 
         /**

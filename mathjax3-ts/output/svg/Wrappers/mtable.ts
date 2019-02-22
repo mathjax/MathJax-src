@@ -31,9 +31,11 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {isPercent} from '../../../util/string.js';
 import {OptionList} from '../../../util/Options.js';
 import {StyleList} from '../../common/CssStyles.js';
-
+import {BBox} from '../BBox.js';
 
 const WFUZZ = .25;  // a little padding for min-width
+
+const CLASSPREFIX = 'mjx-';
 
 /*****************************************************************/
 /**
@@ -49,17 +51,23 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
     public static kind = MmlMtable.prototype.kind;
 
     public static styles: StyleList = {
-        'g[data-mml-node="mtable"] rect[data-line]': {
-            'outline-style': 'solid',
-            'outline-width': '70px',
-            'outline-offset': '-70px',
+        'g[data-mml-node="mtable"] > line[data-line]': {
+            'stroke-width': '70px',
             fill: 'none'
         },
-        'g[data-mml-node="mtable"] rect[data-frame]': {
-            'outline-style': 'solid',
-            'outline-width': '70px',
-            'outline-offset': '-70px',
+        'g[data-mml-node="mtable"] > rect[data-frame]': {
+            'stroke-width': '70px',
             fill: 'none'
+        },
+        'g[data-mml-node="mtable"] > .mjx-dashed': {
+            'stroke-dasharray': '140'
+        },
+        'g[data-mml-node="mtable"] > .mjx-dotted': {
+            'stroke-linecap': 'round',
+            'stroke-dasharray': '0,140'
+        },
+        'g[data-mml-node="mtable"] > svg': {
+            overflow: 'visible'
         }
     }
 
@@ -75,7 +83,11 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      */
     constructor(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent: SVGWrapper<N, T, D> = null) {
         super(factory, node, parent);
-        this.labels = this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)'});
+        const def: OptionList = {'data-labels': true};
+        if (this.isTop) {
+            def.transform = 'matrix(1 0 0 -1 0 0)';
+        }
+        this.labels = this.svg('g', def);
     }
 
     /**
@@ -87,7 +99,8 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         this.handleColumnLines(svg);
         this.handleRowLines(svg);
         this.handleFrame(svg);
-        this.handleLabels(svg, parent);
+        const dx = this.handlePWidth(svg);
+        this.handleLabels(svg, parent, dx);
     }
 
     /**
@@ -116,13 +129,24 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @param {number} HD       The height of equal-height rows
      * @param {number} H        The natural height of the row
      * @param {number} D        The natural depth of the row
-     * @return {number[]}       The (possibly scaled) height and depth to use
+     * @returns {number[]}      The (possibly scaled) height and depth to use
      */
     protected getRowHD(equal: boolean, HD: number, H: number, D: number) {
         return (equal ? [(HD + H - D) / 2, (HD - H + D) / 2] : [H, D]);
     }
 
     /******************************************************************/
+
+    /**
+     * @override
+     */
+    public handleColor() {
+        super.handleColor();
+        const rect = this.adaptor.firstChild(this.element);
+        if (rect) {
+            this.adaptor.setAttribute(rect, 'width', this.fixed(this.getWidth()));
+        }
+    }
 
     /**
      * Add vertical lines between columns
@@ -139,7 +163,9 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         let x = this.fLine;
         for (let i = 0; i < lines.length; i++) {
             x += cSpace[i] + cWidth[i] + cSpace[i + 1];
-            this.adaptor.append(svg, this.makeVLine(x, lines[i]));
+            if (lines[i] !== 'none') {
+                this.adaptor.append(svg, this.makeVLine(x, lines[i], cLines[i]));
+            }
             x += cLines[i];
         }
     }
@@ -161,8 +187,10 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         let y = this.getBBox().h - this.fLine;
         for (let i = 0; i < lines.length; i++) {
             const [rH, rD] = this.getRowHD(equal, HD, H[i], D[i]);
-            y -= rSpace[i] + rH + rD + rSpace[i + 1]
-            this.adaptor.append(svg, this.makeHLine(y, lines[i]));
+            y -= rSpace[i] + rH + rD + rSpace[i + 1];
+            if (lines[i] !== 'none') {
+                this.adaptor.append(svg, this.makeHLine(y, lines[i], rLines[i]));
+            }
             y -= rLines[i];
         }
 
@@ -181,128 +209,134 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
         }
     }
 
+    /**
+     * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
+     */
+    protected handlePWidth(svg: N) {
+        if (!this.pWidth) {
+            return 0;
+        }
+        const {w, L, R} = this.getBBox();
+        const W = L + this.pWidth + R;
+        const [align, shift] = this.getAlignShift();
+        const CW = Math.max(this.isTop ? W : 0, this.container.getWrapWidth(this.containerI)) - L - R;
+        const dw = w - (this.pWidth > CW ? CW: this.pWidth);
+        const dx = (align === 'left' ? 0 : align === 'right' ? dw : dw / 2);
+        if (dx) {
+            const table = this.svg('g', {}, this.adaptor.childNodes(svg));
+            this.place(dx, 0, table);
+            this.adaptor.append(svg, table);
+        }
+        return dx;
+    }
+
     /******************************************************************/
+
+    /**
+     * @param {string} style   The line style whose class is to be obtained
+     * @returns {string}       The class name for the style
+     */
+    protected lineClass(style: string) {
+        return CLASSPREFIX + style;
+    }
 
     /**
      * @param {number} w       The width of the frame
      * @param {number} h       The height of the frame
      * @param {number} d       The depth of the frame
      * @param {string} style   The border style for the frame
-     * @return {N}             The SVG element for the frame
+     * @returns {N}            The SVG element for the frame
      */
     protected makeFrame(w: number, h: number, d: number, style: string) {
-        const properties: OptionList = {
-            'data-frame': true,
-            width: this.fixed(w), height: this.fixed(h+d), y: this.fixed(-d)
-        }
-        if (style !== 'solid') {
-            properties.style = {'outline-style': style};
-        }
-        return this.svg('rect', properties);
+        const t = this.fLine;
+        return this.svg('rect', this.setLineThickness(t, style, {
+            'data-frame': true, 'class': this.lineClass(style),
+            width: this.fixed(w - t), height: this.fixed(h + d - t),
+            x: this.fixed(t / 2), y: this.fixed(t / 2 - d)
+        }));
     }
 
     /**
      * @param {number} x       The x location of the line
      * @param {string} style   The border style for the line
-     * @return {N}             The SVG element for the line
+     * @param {number} t       The line thickness
+     * @returns {N}            The SVG element for the line
      */
-    protected makeVLine(x: number, style: string) {
+    protected makeVLine(x: number, style: string, t: number) {
         const {h, d} = this.getBBox();
-        const p = (style === 'dashed' || style === 'dotted' || style === 'solid' ? 0 : .07);
-        const properties: OptionList = {
-            width: this.fixed(.07 + 2 * p), height: this.fixed(h + d + 2 * p),
-            x: this.fixed(x), y: this.fixed(-d - p), 'data-line': 'v'
-        };
-        if (style !== 'solid') {
-            properties.style = {'outline-style': style};
-        }
-        if (p) {
-            properties['clip-path'] = 'inset(70 130 70 0)';
-        }
-        return this.svg('rect', properties);
+        const dt = (style === 'dotted' ? t / 2 : 0);
+        const X = this.fixed(x + t / 2);
+        return this.svg('line', this.setLineThickness(t, style, {
+            'data-line': 'v', 'class': this.lineClass(style),
+            x1: X, y1: this.fixed(dt - d), x2: X, y2: this.fixed(h - dt)
+        }));
     }
 
     /**
      * @param {number} y       The y location of the line
      * @param {string} style   The border style for the line
-     * @return {N}             The SVG element for the line
+     * @param {number} t       The line thickness
+     * @returns {N}            The SVG element for the line
      */
-    protected makeHLine(y: number, style: string) {
+    protected makeHLine(y: number, style: string, t: number) {
         const w = this.getBBox().w;
-        const p = (style === 'dashed' || style === 'dotted' || style === 'solid' ? 0 : .07);
-        const properties: OptionList = {
-            width: this.fixed(w + 2 * p), height: this.fixed(.07 + 2 * p),
-            y: this.fixed(y - .07), 'data-line': 'h'
-        }
-        if (style !== 'solid') {
-            properties.style = {'outline-style': style};
-        }
-        if (p) {
-            properties['clip-path'] = 'inset(0 70 130 70)';
-            properties['x'] = this.fixed(-p);
-        }
-        return this.svg('rect', properties);
+        const dt = (style === 'dotted' ? t / 2 : 0);
+        const Y = this.fixed(y - t / 2);
+        return this.svg('line', this.setLineThickness(t, style, {
+            'data-line': 'h', 'class': this.lineClass(style),
+            x1: this.fixed(dt), y1: Y, x2: this.fixed(w - dt), y2: Y
+        }));
     }
-
-    /******************************************************************/
 
     /**
-     * Force percentage width to fixed width of current container width
-     *
-     * @override
+     * @param {number} t                The thickness of the line
+     * @param {string} style            The border style for the line
+     * @param {OptionList} properties   The list of properties to modify
+     * @param {OptionList}              The modified properties
      */
-    public getColumnWidthsPercent(swidths: string[], width: string) {
-        const W = this.length2em(width, this.metrics.containerWidth / this.metrics.em);
-        return this.getColumnWidthsFixed(swidths, W);
+    protected setLineThickness(t: number, style: string, properties: OptionList) {
+        if (t !== .07) {
+            properties['stroke-thickness'] = this.fixed(t);
+            if (style !== 'solid') {
+                properties['stroke-dasharray'] = (style === 'dotted' ? '0,' : '') + this.fixed(2 * t);
+            }
+        }
+        return properties
     }
 
     /******************************************************************/
-
 
     /**
      * Handle addition of labels to the table
      *
-     * @param {N} svg     The container for the table contents
-     * @param {N} parent  The parent containing the table
+     * @param {N} svg       The container for the table contents
+     * @param {N} parent    The parent containing the the table
+     * @param {number} dx   The adjustement for percentage width tables
      */
-    protected handleLabels(svg: N, parent: N) {
+    protected handleLabels(svg: N, parent: N, dx: number) {
+        if (!this.hasLabels) return;
         const labels = this.labels;
         const attributes = this.node.attributes;
         const adaptor = this.adaptor;
-        if (adaptor.childNodes(labels).length === 0) return;
         //
         //  Set the side for the labels
         //
         const side = attributes.get('side') as string;
         //
-        //  Make sure labels don't overlap table
-        //
-        const {L} = this.getTableData();
-        const sep = this.length2em(attributes.get('minlabelspacing'));
-        let pad = L + sep;
-        const [lpad, rpad] = (this.styles == null ? ['', ''] :
-                              [this.styles.get('padding-left'), this.styles.get('padding-right')]);
-        if (lpad || rpad) {
-            pad = Math.max(pad, this.length2em(lpad || '0'), this.length2em(rpad || '0'));
-        }
-        //
-        //  Handle indentation
-        //
-        let [align, shift] = this.getAlignShift();
-        if (align === side) {
-            shift = (side === 'left' ? Math.max(pad, shift) - pad : Math.min(-pad, shift) + pad);
-        }
-        //
         // Add the labels to the table
         //
-        this.placeLabels();
-        this.nestTable(svg, labels, side, align, pad, shift);
+        this.spaceLabels();
+        //
+        // Handle top-level table to make it adapt to container size
+        //   but place subtables explicitly
+        //
+        this.isTop ? this.topTable(svg, labels, side) : this.subTable(svg, labels, side, dx);
     }
 
     /**
      * Add spacing elements between the label rows to align them with the rest of the table
      */
-    protected placeLabels() {
+    protected spaceLabels() {
         const adaptor = this.adaptor;
         const equal = this.node.attributes.get('equalrows') as boolean;
         const {h, d} = this.getBBox();
@@ -334,28 +368,49 @@ CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVG
      * @param {N} svg         The SVG container for the table
      * @param {N} labels      The group of labels
      * @param {string} side   The side alignment (left or right)
-     * @param {string} align  The table alignment (left, center, right)
-     * @param {number} pad    The padding for the label
-     * @param {number} shift  The shift of the table
      */
-    protected nestTable(svg: N, labels: N, side: string, align: string, pad: number, shift: number) {
+    protected topTable(svg: N, labels: N, side: string) {
         const adaptor = this.adaptor;
-        const {h, d, w} = this.getBBox();
-        const L = this.getTableData().L;
-        const [x, dw] = (side === align  ? [side === 'left' ? -pad : 0, pad] : [0, 0]);
-        const translate = (shift ? 'translate(' + this.fixed(shift) + ' 0)' : '');
+        const {h, d, w, L, R} = this.getBBox();
+        const W = L + (this.pWidth || w) + R;
+        const LW = this.getTableData().L;
+        const [pad, align, shift] = this.getPadAlignShift(side);
+        const translate = (shift ? ` translate(${this.fixed(shift)} 0)` : '');
+        const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
+        const transform = `translate(0, ${this.fixed(h)}) matrix(1 0 0 -1 0 0) ${scale}`;
         let table = this.svg('svg', {
             'data-table': true,
             preserveAspectRatio: (align === 'left' ? 'xMinYMid' : align === 'right' ? 'xMaxYMid' : 'xMidYMid'),
-            viewBox: [this.fixed(x), this.fixed(-h), this.fixed(w + dw), this.fixed(h + d)].join(' ')
-        }, [this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)' + translate}, adaptor.childNodes(svg))]);
+            viewBox: [this.fixed(-L), this.fixed(-h), this.fixed(W), this.fixed(h + d)].join(' ')
+        }, [
+            this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)' + translate}, adaptor.childNodes(svg))
+        ]);
         labels = this.svg('svg', {
             'data-labels': true,
             preserveAspectRatio: (side === 'left' ? 'xMinYMid' : 'xMaxYMid'),
-            viewBox: [0, this.fixed(-h), this.fixed(L), this.fixed(h + d)].join(' ')
+            viewBox: [0, this.fixed(-h), this.fixed(LW), this.fixed(h + d)].join(' ')
         }, [labels]);
-        this.jax.minwidth = w + pad + (align === 'center' ? pad : 0) + WFUZZ;
-        adaptor.append(svg, table)
+        adaptor.append(svg, this.svg('g', {transform: transform}, [table, labels]));
+        this.place(-L, 0, svg);  // remove spacing for L, which is added by the parent during appending
+    }
+
+    /**
+     * @param {N} svg         The SVG container for the table
+     * @param {N} labels      The group of labels
+     * @param {string} side   The side alignment (left or right)
+     * @param {number} dx     The adjustement for percentage width tables
+     */
+    protected subTable(svg: N, labels: N, side: string, dx: number) {
+        const adaptor = this.adaptor;
+        const {w, L, R} = this.getBBox();
+        const W = L + (this.pWidth || w) + R;
+        const labelW = this.getTableData().L;
+        const [align, shift] = this.getAlignShift();
+        const CW = Math.max(W, this.container.getWrapWidth(this.containerI));
+        this.place(side === 'left' ?
+                   (align === 'left' ? 0 : align === 'right' ? W - CW + dx : (W - CW) / 2 + dx) - L :
+                   (align === 'left' ? CW : align === 'right' ? W + dx : (CW + W) / 2 + dx) - L - labelW,
+                   0, labels);
         adaptor.append(svg, labels);
     }
 
