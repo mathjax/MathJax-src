@@ -1,0 +1,11 @@
+{
+    "component": "complexity",
+    "targets": [
+        "a11y/complexity.ts",
+        "a11y/complexity",
+        "a11y/semantic-enrich.ts",
+        "a11y/sre.ts"
+    ],
+    "mathjax3": "../../../../mathjax3"
+}
+
