@@ -353,7 +353,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         const [h, d, w, options] = data as [number, number, number, CHTMLCharOptions];
         if (this.options.adaptiveCSS && !options.used) return;
         const css: StyleData = {};
-        const selector = `mjx-c${this.charSelector(n)}`;
+        const selector = 'mjx-c' + this.charSelector(n);
         const root = this.cssRoot;
         css.padding = this.padding(data, 0, options.ic || 0);
         const content = (options.c ? '"' + options.c + '"' : this.charContent(n));
