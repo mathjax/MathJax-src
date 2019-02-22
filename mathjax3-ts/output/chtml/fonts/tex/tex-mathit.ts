@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {texMathit as font} from '../../../common/fonts/tex/tex-mathit.js';
 
-export const texMathit: CharMap = AddCSS(font, {
+export const texMathit: CHTMLCharMap = AddCSS(font, {
     0x2F: 1,
     0x41: 1,
     0x42: 1,

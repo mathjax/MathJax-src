@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {CharMap} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../FontData.js';
 
-export const boldItalic: CharMap = {
+export const boldItalic: CharMap<CharOptions> = {
     0x20: [0, 0, .25],
     0x2F: [.711, .21, .894],
     0x41: [.711, 0, .869, {sk: 0.16}],

@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddPaths} from '../../FontData.js';
+import {SVGCharMap, AddPaths} from '../../FontData.js';
 import {sansSerifItalic as font} from '../../../common/fonts/tex/sans-serif-italic.js';
 
-export const sansSerifItalic: CharMap = AddPaths(font, {
+export const sansSerifItalic: SVGCharMap = AddPaths(font, {
     0x20: '',
     0x21: '160 187L257 694H306Q355 694 355 693L238 186H199Q160 186 160 187ZM110 2Q111 3 120 49T131 96Q131 98 180 98T229 96L219 50Q209 3 208 2V0H110V2',
     0x22: '171 647L180 694H229Q278 694 278 693L276 686Q275 680 273 668T268 644L258 597L182 471H157Q133 471 133 472L189 595Q189 596 174 596H160V598Q160 601 171 647ZM365 647L374 694H423Q472 694 472 693L470 686Q469 680 467 668T462 644L452 597L376 471H351Q327 471 327 472L383 595Q383 596 368 596H354V598Q354 601 365 647',

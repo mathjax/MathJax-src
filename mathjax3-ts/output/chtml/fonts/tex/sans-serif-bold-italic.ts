@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {sansSerifBoldItalic as font} from '../../../common/fonts/tex/sans-serif-bold-italic.js';
 
-export const sansSerifBoldItalic: CharMap = AddCSS(font, {
+export const sansSerifBoldItalic: CHTMLCharMap = AddCSS(font, {
 },{
 });

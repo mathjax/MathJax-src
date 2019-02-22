@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {sansSerif as font} from '../../../common/fonts/tex/sans-serif.js';
 
-export const sansSerif: CharMap = AddCSS(font, {
+export const sansSerif: CHTMLCharMap = AddCSS(font, {
     0x21: 3,
     0x26: 1,
     0x2C: 2,

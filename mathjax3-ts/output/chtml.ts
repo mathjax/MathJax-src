@@ -29,6 +29,7 @@ import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
+import {CHTMLFontData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 
 /*****************************************************************/
@@ -39,7 +40,8 @@ import {TeXFont} from './chtml/fonts/tex.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>> {
+export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>,
+                                                    CHTMLFontData, typeof CHTMLFontData> {
 
     public static NAME: string = 'CHTML';
     public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};
@@ -49,7 +51,6 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      *  the FontData object, and the CssStyles object.
      */
     public factory: CHTMLWrapperFactory<N, T, D>;
-    public font: TeXFont;
 
     /**
      * @override
@@ -122,6 +123,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      *
      * @override
      */
+
     public measureTextNode(text: N) {
         const adaptor = this.adaptor;
         text = adaptor.clone(text);

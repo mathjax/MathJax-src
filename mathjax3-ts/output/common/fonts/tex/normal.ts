@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {CharMap} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../FontData.js';
 
-export const normal: CharMap = {
+export const normal: CharMap<CharOptions> = {
     0x20: [0, 0, .25],
     0x21: [.716, 0, .278],
     0x22: [.694, -0.379, .5],

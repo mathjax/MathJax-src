@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddPaths} from '../../FontData.js';
+import {SVGCharMap, AddPaths} from '../../FontData.js';
 import {frakturBold as font} from '../../../common/fonts/tex/fraktur-bold.js';
 
-export const frakturBold: CharMap = AddPaths(font, {
+export const frakturBold: SVGCharMap = AddPaths(font, {
     0x20: '',
     0x21: '121 621Q121 657 132 673T177 689Q223 689 223 644V635Q223 604 222 595Q221 590 210 490T187 292T175 190V186L166 185L156 184Q156 185 139 393T121 621ZM107 47Q107 70 127 87T174 104Q201 104 221 89T241 48Q241 24 222 6T174 -12Q147 -12 127 6T107 47',
     0x22: '53 695Q74 695 90 679V622L65 433L52 432H39L27 516Q10 626 10 655Q10 680 26 688Q33 693 39 693Q49 695 53 695ZM151 668Q151 691 191 691Q217 691 224 685T231 661V652Q230 634 219 531L207 433L195 432Q183 432 183 433L168 541Q151 664 151 668',

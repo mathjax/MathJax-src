@@ -25,12 +25,12 @@ import {AbstractOutputJax} from '../../core/OutputJax.js';
 import {MathDocument} from '../../core/MathDocument.js';
 import {MathItem, Metrics} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {FontData, FontDataClass, CssFontData} from './FontData.js';
+import {FontData, FontDataClass, CharOptions, DelimiterData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
 import {CssStyles} from './CssStyles.js';
 import {WrapperClass} from '../../core/Tree/Wrapper.js';
-import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
-import {CommonWrapperFactory} from './WrapperFactory.js';
+import {CommonWrapper, AnyWrapper, AnyWrapperClass} from './Wrapper.js';
+import {CommonWrapperFactory, AnyWrapperFactory} from './WrapperFactory.js';
 import {percent} from '../../util/lengths.js';
 import {StyleList, Styles} from '../../util/Styles.js';
 
@@ -60,13 +60,19 @@ export type UnknownVariantMap = Map<string, UnknownMap>;
  * @template D  The Document class
  * @template W  The Wrapper class
  * @template F  The WrapperFactory class
+ * @template FD The FontData class
+ * @template FC The FontDataClass object
  */
-export abstract class CommonOutputJax<N, T, D,
-                                      W extends CommonWrapper<any, any, any>,
-                                      F extends CommonWrapperFactory<any, any, any>> extends
-AbstractOutputJax<N, T, D> {
+export abstract class CommonOutputJax<
+    N, T, D,
+    W extends AnyWrapper,
+    F extends AnyWrapperFactory,
+    FD extends FontData<any, any, any>,
+    FC extends FontDataClass<any, any, any>
+> extends AbstractOutputJax<N, T, D> {
 
     public static NAME: string = 'Common';
+
     public static OPTIONS: OptionList = {
         ...AbstractOutputJax.OPTIONS,
         scale: 1,                      // Global scaling factor for all expressions
@@ -102,7 +108,7 @@ AbstractOutputJax<N, T, D> {
     /**
      * The data for the font in use
      */
-    public font: FontData;
+    public font: FD;
 
     public factory: F;
 
@@ -136,11 +142,12 @@ AbstractOutputJax<N, T, D> {
      */
     constructor(options: OptionList = null,
                 defaultFactory: typeof CommonWrapperFactory = null,
-                defaultFont: FontDataClass = null) {
+                defaultFont: FC = null) {
         const [jaxOptions, fontOptions] = separateOptions(options, defaultFont.OPTIONS);
         super(jaxOptions);
         this.factory = this.options.wrapperFactory ||
-            new defaultFactory<CommonOutputJax<N, T, D, W, F>, W, CommonWrapperClass<any, W, any>>();
+            new defaultFactory<CommonOutputJax<N, T, D, W, F, FD, FC>, W,
+                               AnyWrapperClass, CharOptions, DelimiterData, FD>();
         this.factory.jax = this;
         this.cssStyles = this.options.cssStyles || new CssStyles();
         this.font = this.options.font || new defaultFont(fontOptions);
@@ -508,7 +515,7 @@ AbstractOutputJax<N, T, D> {
         const [family, italic, bold] = font;
         styles['font-family'] = family;
         if (italic) styles['font-style'] = 'italic';
-        if (bold) styles['font-style'] = 'bold';
+        if (bold) styles['font-weight'] = 'bold';
         return styles;
     }
 

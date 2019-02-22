@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {CharMap} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../FontData.js';
 
-export const sansSerifBold: CharMap = {
+export const sansSerifBold: CharMap<CharOptions> = {
     0x20: [0, 0, .25],
     0x21: [.694, 0, .367],
     0x22: [.694, -0.442, .558],
