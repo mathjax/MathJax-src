@@ -58,7 +58,8 @@ export type Constructor<T> = new(...args: any[]) => T;
 /**
  * Shorthands for wrappers and their constructors
  */
-export type AnyWrapper = CommonWrapper<any, any, any>;
+export type AnyWrapper = CommonWrapper<any, any, any, any, any, any>;
+export type AnyWrapperClass = CommonWrapperClass<any, any, any, any, any, any>;
 export type WrapperConstructor = Constructor<AnyWrapper>;
 
 /*********************************************************/
@@ -68,15 +69,21 @@ export type WrapperConstructor = Constructor<AnyWrapper>;
  * @template J  The OutputJax type
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
+ * @template CC The CharOptions type
+ * @template FD The FontData type
  */
-export interface CommonWrapperClass<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>>,
-                                    W extends CommonWrapper<J, W, C>,
-                                    C extends CommonWrapperClass<J, W, C>> extends
-WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
+export interface CommonWrapperClass<
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, FD, any>,
+    W extends CommonWrapper<J, W, C, CC, DD, FD>,
+    C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
+    CC extends CharOptions,
+    DD extends DelimiterData,
+    FD extends FontData<CC, any, DD>
+> extends WrapperClass<MmlNode, CommonWrapper<J, W, C, CC, DD, FD>> {
     /**
      * @override
      */
-    new(factory: CommonWrapperFactory<J, W, C>, node: MmlNode, ...args: any[]): W;
+    new(factory: CommonWrapperFactory<J, W, C, CC, DD, FD>, node: MmlNode, ...args: any[]): W;
 }
 
 /*****************************************************************/
@@ -86,11 +93,17 @@ WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
  * @template J  The OutputJax type
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
+ * @template CC The CharOptions type
+ * @template FD The FontData type
  */
-export class CommonWrapper<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>>,
-                           W extends CommonWrapper<J, W, C>,
-                           C extends CommonWrapperClass<J, W, C>> extends
-AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
+export class CommonWrapper<
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, FD, any>,
+    W extends CommonWrapper<J, W, C, CC, DD, FD>,
+    C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
+    CC extends CharOptions,
+    DD extends DelimiterData,
+    FD extends FontData<CC, any, DD>
+> extends AbstractWrapper<MmlNode, CommonWrapper<J, W, C, CC, DD, FD>> {
 
     public static kind: string = 'unknown';
 
@@ -160,7 +173,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * The factory used to create more wrappers
      */
-    protected factory: CommonWrapperFactory<J, W, C>;
+    protected factory: CommonWrapperFactory<J, W, C, CC, DD, FD>;
 
     /**
      * The parent and children of this node
@@ -192,12 +205,12 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * Delimiter data for stretching this node (NOSTRETCH means not yet determined)
      */
-    public stretch: DelimiterData = NOSTRETCH;
+    public stretch: DD = NOSTRETCH as DD;
 
     /**
      * Easy access to the font parameters
      */
-    public font: FontData = null;
+    public font: FD = null;
 
     /**
      * Easy access to the output jax for this node
@@ -232,7 +245,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * @override
      */
-    constructor(factory: CommonWrapperFactory<J, W, C>, node: MmlNode, parent: W = null) {
+    constructor(factory: CommonWrapperFactory<J, W, C, CC, DD, FD>, node: MmlNode, parent: W = null) {
         super(factory, node);
         this.parent = parent;
         this.font = factory.jax.font;
@@ -520,7 +533,8 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     }
 
     /**
-     * @return {boolean}   True if the parent element is an embellished operator
+     * @return {boolean}   True if this is the top-most container of an embellished operator that is
+     *                       itself an embellished operator (the maximal embellished operator for its core)
      */
     protected isTopEmbellished() {
         return (this.node.isEmbellished &&
@@ -563,7 +577,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      * @return {boolean}             Whether the node can stretch in that direction
      */
     public canStretch(direction: DIRECTION): boolean {
-        this.stretch = NOSTRETCH;
+        this.stretch = NOSTRETCH as DD;
         if (this.node.isEmbellished) {
             let core = this.core();
             if (core && core.node !== this.node) {
@@ -757,7 +771,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      */
     protected getVariantChar(variant: string, n: number) {
         const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true}];
-        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CharOptions];
+        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CC];
     }
 
 }

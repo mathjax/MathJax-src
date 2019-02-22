@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor, CommonWrapperClass} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {BBox} from '../BBox.js';
 import {Property} from '../../../core/Tree/Node.js';
@@ -101,7 +101,7 @@ export interface CommonMaction<W extends AnyWrapper> extends AnyWrapper {
  *
  * @template W  The maction wrapper type
  */
-export interface CommonMactionClass<W extends AnyWrapper> extends CommonWrapperClass<any, any, any> {
+export interface CommonMactionClass<W extends AnyWrapper> extends AnyWrapperClass {
     /**
      * The valid action types and their handlers
      */

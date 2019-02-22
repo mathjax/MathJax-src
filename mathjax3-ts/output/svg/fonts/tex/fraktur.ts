@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddPaths} from '../../FontData.js';
+import {SVGCharMap, AddPaths} from '../../FontData.js';
 import {fraktur as font} from '../../../common/fonts/tex/fraktur.js';
 
-export const fraktur: CharMap = AddPaths(font, {
+export const fraktur: SVGCharMap = AddPaths(font, {
     0x20: '',
     0x21: '102 582T102 620T112 673T152 689Q190 689 190 638Q190 605 167 373L148 187L133 184Q102 582 102 620ZM91 24T91 48T107 88T148 104Q171 104 187 87T204 48Q204 22 188 5T149 -12Q124 -12 108 6',
     0x22: '33 436Q8 603 8 648Q8 663 9 671T19 687T43 695Q63 695 74 681Q76 678 76 650V623L66 532Q57 443 55 436V432H33V436ZM128 666Q128 691 162 691T196 668Q196 634 186 531Q176 441 176 432H166Q155 432 155 434L142 545Q135 603 130 647Q128 664 128 666',

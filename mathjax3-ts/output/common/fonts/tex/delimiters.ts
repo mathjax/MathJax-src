@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import {DelimiterMap, V, H} from '../../FontData.js';
+import {DelimiterMap, DelimiterData, V, H} from '../../FontData.js';
 
 export const HDW1 = [.75, .25, .875];
 export const HDW2 = [.583, .082, 1];
@@ -49,7 +49,7 @@ const DELIM2906 = {c: 0x2906, dir: H, stretch: [0x21D0, 0x3D, 0x2223], HDW: HDW3
 const DELIM2907 = {c: 0x2907, dir: H, stretch: [0x22A8, 0x3D, 0x21D2], HDW: HDW3, min: 1.278};
 
 
-export const delimiters: DelimiterMap = {
+export const delimiters: DelimiterMap<DelimiterData> = {
   0x28: {dir: V, sizes: VSIZES, stretch: [0x239B, 0x239C, 0x239D], HDW: [.75, .25, .875]},
   0x29: {dir: V, sizes: VSIZES, stretch: [0x239E, 0x239F, 0x23A0], HDW: [.75, .25, .875]},
   0x2D: DELIM2212,

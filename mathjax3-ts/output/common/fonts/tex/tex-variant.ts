@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {CharMap} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../FontData.js';
 
-export const texVariant: CharMap = {
+export const texVariant: CharMap<CharOptions> = {
     0x20: [0, 0, .25],
     0x41: [.701, 0, .722],
     0x42: [.683, 0, .667],

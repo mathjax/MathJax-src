@@ -28,6 +28,7 @@ import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {SVGWrapper} from './svg/Wrapper.js';
 import {SVGWrapperFactory} from './svg/WrapperFactory.js';
+import {SVGFontData} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
 
 export const SVGNS = "http://www.w3.org/2000/svg";
@@ -40,7 +41,8 @@ export const SVGNS = "http://www.w3.org/2000/svg";
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>> {
+export class SVG<N, T, D> extends
+CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFontData, typeof SVGFontData> {
 
     public static NAME: string = 'SVG';
     public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};
@@ -50,7 +52,6 @@ export class SVG<N, T, D> extends CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, 
      *  the FontData object, and the CssStyles object.
      */
     public factory: SVGWrapperFactory<N, T, D>;
-    public font: TeXFont;
 
     /**
      * Minimum width for tables with labels,

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor, CommonWrapperClass} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import * as Notation from '../Notation.js';
 import {CommonMsqrt} from './msqrt.js';
 import {BBox} from '../BBox.js';
@@ -144,7 +144,7 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
  * @template W  The menclose wrapper type
  * @templare N  The DOM node class
  */
-export interface CommonMencloseClass<W extends AnyWrapper, N> extends CommonWrapperClass<any, any, any> {
+export interface CommonMencloseClass<W extends AnyWrapper, N> extends AnyWrapperClass {
     /**
      *  The definitions of the various notations
      */

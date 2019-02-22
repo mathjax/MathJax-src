@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {smallop as font} from '../../../common/fonts/tex/smallop.js';
 
-export const smallop: CharMap = AddCSS(font, {
+export const smallop: CHTMLCharMap = AddCSS(font, {
     0x28: 3,
     0x29: 3,
     0x2F: 3,

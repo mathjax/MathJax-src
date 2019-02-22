@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {texCaligraphic as font} from '../../../common/fonts/tex/tex-caligraphic.js';
 
-export const texCaligraphic: CharMap = AddCSS(font, {
+export const texCaligraphic: CHTMLCharMap = AddCSS(font, {
     0x30: 2,
     0x31: 2,
     0x32: 2,
