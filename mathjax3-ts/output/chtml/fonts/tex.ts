@@ -91,22 +91,6 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
     };
 
     /**
-     * The data used for CSS for undefined characters each variant
-     */
-    protected static defaultCssFonts: CssFontMap = {
-        ...CHTMLFontData.defaultCssFonts,
-        '-smallop': ['serif', false, false],
-        '-largeop': ['serif', false, false],
-        '-size3': ['serif', false, false],
-        '-size4': ['serif', false, false],
-        '-tex-caligraphic': ['cursive', true, false],
-        '-tex-bold-caligraphic': ['cursive', true, true],
-        '-tex-oldstyle': ['serif', false, false],
-        '-tex-bold-oldstyle': ['serif', false, true],
-        '-tex-mathit': ['serif', true, false]
-    };
-
-    /**
      *  The stretchy delimiter data
      */
     protected static defaultDelimiters: DelimiterMap<CHTMLDelimiterData> = delimiters;

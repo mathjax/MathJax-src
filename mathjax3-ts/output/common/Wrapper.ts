@@ -497,7 +497,7 @@ export class CommonWrapper<
 
     /**
      * @return {boolean}   True if this is the top-most container of an embellished operator that is
-     *                       itself an embellished operator (the maxiamal embellished operator for its core)
+     *                       itself an embellished operator (the maximal embellished operator for its core)
      */
     protected isTopEmbellished() {
         return (this.node.isEmbellished &&

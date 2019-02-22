@@ -243,7 +243,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     /**
      * The style and weight to use for each variant (for unkown characters)
      */
-    protected static defaultCssFonts: CssFontMap = {
+    public static defaultCssFonts: CssFontMap = {
         normal: ['serif', false, false],
         bold: ['serif', false, true],
         italic: ['serif', true, false],
@@ -580,8 +580,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
  */
 export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
     OPTIONS: OptionList;
+    defaultCssFonts: CssFontMap;
     defaultVariants: string[][];
     defaultParams: FontParameters;
     charOptions(font: CharMap<C>, n: number): C
     new(...args: any[]): FontData<C, V, D>;
-}
+};

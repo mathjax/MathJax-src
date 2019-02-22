@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData} from '../FontData.js';
+import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap} from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -51,6 +51,22 @@ export function CommonTeXFontMixin<C extends CharOptions, V extends VariantData<
             ['-tex-mathit', 'italic'],
             ['-tex-variant', 'normal']
         ];
+
+        /**
+         * The data used for CSS for undefined characters for each variant
+         */
+        protected static defaultCssFonts: CssFontMap = {
+            ...Base.defaultCssFonts,
+            '-smallop': ['serif', false, false],
+            '-largeop': ['serif', false, false],
+            '-size3': ['serif', false, false],
+            '-size4': ['serif', false, false],
+            '-tex-caligraphic': ['cursive', true, false],
+            '-tex-bold-caligraphic': ['cursive', true, true],
+            '-tex-oldstyle': ['serif', false, false],
+            '-tex-bold-oldstyle': ['serif', false, true],
+            '-tex-mathit': ['serif', true, false]
+        };
 
         /**
          *  The default variants for the standard stretchy sizes

@@ -324,7 +324,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
                 css.content = '"' + (options.c || this.char(n, true)) + '"';
             }
         }
-        if (options.f !== undefined) css['font-family'] = 'MJXZERO, MJXTEX' + (options.f ? '-' + options.f : '');
+        if (options.f !== undefined) {
+            css['font-family'] = 'MJXZERO, MJXTEX' + (options.f ? '-' + options.f : '');
+        }
         const char = vclass + ' mjx-c[c="' + this.char(n) + '"]';
         const root = this.cssRoot;
         styles[root + char + '::before'] = css;
