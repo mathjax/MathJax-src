@@ -409,13 +409,13 @@ export namespace Startup {
         const name = iname + '2' + oname;
         MathJax[name] =
             (math: string, display: boolean = true, em: number = 16, ex: number = 8, cwidth:number = 80 * 16) => {
-                const mitem = new MathJax._.core.MathItem.AbstractMathItem(math, input, display);
+                const mitem = new document.options.MathItem(math, input, display);
                 mitem.setMetrics(em, ex, cwidth, 1000000, 1);
                 return convertMath(mitem, document);
             };
         MathJax[name + 'Promise'] =
             (math: string, display: boolean = true, em: number = 16, ex: number = 8, cwidth:number = 80 * 16) => {
-                const mitem = new MathJax._.core.MathItem.AbstractMathItem(math, input, display);
+                const mitem = new document.options.MathItem(math, input, display);
                 mitem.setMetrics(em, ex, cwidth, 1000000, 1);
                 return mathjax.handleRetriesFor(() => convertMath(mitem, document));
             };
@@ -436,13 +436,13 @@ export namespace Startup {
     export function makeMmlMethods(name: string, input: INPUTJAX) {
         MathJax[name + '2mml'] =
             (math: string, display: boolean = true, em: number = 16, ex: number = 8, cwidth:number = 80 * 16) => {
-                const mitem = new MathJax._.core.MathItem.AbstractMathItem(math, input, display);
+                const mitem = new document.options.MathItem(math, input, display);
                 mitem.setMetrics(em, ex, cwidth, 1000000, 1);
                 return convertMath(mitem, document, 100);
             };
         MathJax[name + '2mmlPromise'] =
             (math: string, display: boolean = true, em: number = 16, ex: number = 8, cwidth:number = 80 * 16) => {
-                const mitem = new MathJax._.core.MathItem.AbstractMathItem(math, input, display);
+                const mitem = new document.options.MathItem(math, input, display);
                 mitem.setMetrics(em, ex, cwidth, 1000000, 1);
                 return mathjax.handleRetriesFor(() => convertMath(mitem, document, 100));
             };

@@ -1,5 +1,6 @@
-require('./lib/startup.js');
-const {Loader, CONFIG} = require('../../../mathjax3/components/loader.js');
+import './lib/startup.js';
+
+import {Loader, CONFIG} from '../../../mathjax3/components/loader.js';
 
 Loader.preLoad('loader');
 

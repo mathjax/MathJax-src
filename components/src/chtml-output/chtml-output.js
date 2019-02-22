@@ -1,7 +1,9 @@
-require('./lib/chtml-output.js');
+import './lib/chtml-output.js';
+
+import {combineDefaults} from '../../../mathjax3/components/global.js';
+import {CHTML} from '../../../mathjax3/output/chtml.js';
 
 if (MathJax.loader) {
-    const combineDefaults = require('../../../mathjax3/components/global.js').combineDefaults;
     combineDefaults(MathJax.config.loader, 'chtml-output', {
         checkReady() {
             return MathJax.loader.load("chtml-fonts/tex");
@@ -10,6 +12,6 @@ if (MathJax.loader) {
 }
 
 if (MathJax.startup) {
-    MathJax.startup.registerConstructor('chtml', MathJax._.output.chtml_ts.CHTML);
+    MathJax.startup.registerConstructor('chtml', CHTML);
     MathJax.startup.useOutput('chtml');
 }

@@ -1,6 +1,8 @@
-require('./lib/tex-input.js');
+import './lib/tex-input.js';
+
+import {TeX} from '../../../mathjax3/input/tex.js';
 
 if (MathJax.startup) {
-    MathJax.startup.registerConstructor('tex', MathJax._.input.tex_ts.TeX);
+    MathJax.startup.registerConstructor('tex', TeX);
     MathJax.startup.useInput('tex');
 }

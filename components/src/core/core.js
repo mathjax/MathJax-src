@@ -1,8 +1,11 @@
-require('./lib/core.js');
+import './lib/core.js';
+
+import {HTMLHandler} from '../../../mathjax3/handlers/html/HTMLHandler.js';
+import {browserAdaptor} from '../../../mathjax3/adaptors/browserAdaptor.js';
 
 if (MathJax.startup) {
-    MathJax.startup.registerConstructor('HTMLHandler', MathJax._.handlers.html.HTMLHandler.HTMLHandler);
-    MathJax.startup.registerConstructor('browserAdaptor', MathJax._.adaptors.browserAdaptor.browserAdaptor);
+    MathJax.startup.registerConstructor('HTMLHandler', HTMLHandler);
+    MathJax.startup.registerConstructor('browserAdaptor', browserAdaptor);
     MathJax.startup.useHandler('HTMLHandler');
     MathJax.startup.useAdaptor('browserAdaptor');
 }

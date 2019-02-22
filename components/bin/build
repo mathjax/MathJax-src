@@ -212,9 +212,8 @@ function makeFile(file, lines) {
 function processGlobal() {
     console.log('  ' + COMPONENT + '.ts');
     const lines = [
-        '"use strict";',
-        `Object.defineProperty(exports, '__esModule', {value: true});`,
-        `require('${GLOBAL}').combineWithMathJax({_: {`
+        `import {combineWithMathJax} from '${GLOBAL}';`,
+        '',
     ];
     const packages = [];
     PACKAGE = PACKAGE.sort(sortDir);
@@ -222,6 +221,7 @@ function processGlobal() {
         const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
         packages.push(processPackage(lines, INDENT, dir));
     }
+    lines.push('', `combineWithMathJax({_: {`);
     lines.push(INDENT + packages.join(',\n' + INDENT));
     lines.push('}});');
     fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');
@@ -236,6 +236,7 @@ function sortDir(a, b) {
     return (A === B ? 0 : A < B ? -1 : 1);
  }
 
+let importCount = 0;
 /**
  * Recursively process packages, collecting them into groups by subdirectory, properly indented
  *
@@ -263,7 +264,8 @@ function processPackage(lines, space, dir) {
             const file = PACKAGE.shift();
             const name = path.basename(file);
             const relativefile = path.join('..', MATHJAX3, dir, name).replace(/\.ts$/, '.js');
-            const component = `require('${relativefile}')`;
+            const component = 'module' + (++importCount);
+            lines.push(`import * as ${component} from '${relativefile}';`);
             let property = name.replace(/\.ts$/, '');
             if (property !== name && exists(path.resolve(MATHJAX3, file.replace(/\.ts$/, '')))) {
                 property += '_ts';

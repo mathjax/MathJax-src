@@ -1,5 +1,7 @@
-const combineDefaults = require('../../../mathjax3/components/global.js').combineDefaults;
-require('./lib/svg-output.js');
+import './lib/svg-output.js';
+
+import {combineDefaults} from '../../../mathjax3/components/global.js';
+import {SVG} from '../../../mathjax3/output/svg.js';
 
 if (MathJax.loader) {
     combineDefaults(MathJax.config.loader, 'svg-output', {
@@ -10,6 +12,6 @@ if (MathJax.loader) {
 }
 
 if (MathJax.startup) {
-    MathJax.startup.registerConstructor('svg', MathJax._.output.svg_ts.SVG);
+    MathJax.startup.registerConstructor('svg', SVG);
     MathJax.startup.useOutput('svg');
 }
