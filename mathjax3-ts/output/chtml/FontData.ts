@@ -355,8 +355,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         const css: StyleData = {};
         const selector = `mjx-c${this.charSelector(n)}`;
         const root = this.cssRoot;
-        const W = this.em0(w + (options.ic || 0));
-        css.padding = this.padding(data);
+        css.padding = this.padding(data, 0, options.ic || 0);
         const content = (options.c ? '"' + options.c + '"' : this.charContent(n));
         if (charUsed.get(n) !== content) {
             if (!charUsed.has(n) && !options.c) {
@@ -415,11 +414,12 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
 
     /**
      * @param {CHTMLCharData} data   The [h, d, w, options] data for the character
-     * @param {number} dw            The (options) left offset of the glyph
+     * @param {number} dw            The (optional) left offset of the glyph
+     * @param {number} ic            The (optional) italic correction value
      * @return {string}              The padding string for the h, d, w.
      */
-    public padding(data: CHTMLCharData, dw: number = 0) {
-        return [data[0], data[2], data[1], dw].map(n => this.em0(n)).join(' ');
+    public padding(data: CHTMLCharData, dw: number = 0, ic: number = 0) {
+        return [data[0], data[2] + ic, data[1], dw].map(n => this.em0(n)).join(' ');
     }
 
     /**
