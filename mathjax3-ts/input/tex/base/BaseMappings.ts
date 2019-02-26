@@ -548,7 +548,6 @@ new sm.CommandMap('macros', {
 
   vcenter:           ['TeXAtom', TEXCLASS.VCENTER],
 
-  // mathchoice:        ['Extension', 'mathchoice'],
   buildrel:           'BuildRel',
 
   hbox:               ['HBox', 0],

@@ -25,7 +25,7 @@ import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -54,18 +54,18 @@ export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
             'direction': 'ltr',
             'padding': '1px 0'
         },
-        'mjx-chtml.MJX-DISPLAY': {
+        'mjx-container[jax="CHTML"][display="true"]': {
             display: 'block',
             'text-align': 'center',
             margin: '1em 0'
         },
-        'mjx-chtml.MJX-DISPLAY mjx-math': {
+        'mjx-container[display="true"] mjx-math': {
             padding: 0
         },
-        'mjx-chtml[justify="left"]': {
+        'mjx-container[jax="CHTML"][justify="left"]': {
             'text-align': 'left'
         },
-        'mjx-chtml[justify="right"]': {
+        'mjx-container[jax="CHTML"][justify="right"]': {
             'text-align': 'right'
         }
     };
@@ -81,8 +81,9 @@ export class CHTMLmath<N, T, D> extends CHTMLWrapper<N, T, D> {
         const display = (attributes.get('display') === 'block');
         if (display) {
             adaptor.setAttribute(chtml, 'display', 'true');
-            adaptor.addClass(parent, 'MJX-DISPLAY');
+            adaptor.setAttribute(parent, 'display', 'true');
         }
+        adaptor.addClass(chtml, 'MJX-TEX');
         const [align, shift] = this.getAlignShift();
         if (align !== 'center') {
             adaptor.setAttribute(parent, 'justify', align);

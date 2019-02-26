@@ -99,10 +99,10 @@ parserTest.runTest(
          "childNodes": [
            {"kind": "mo",
             "texClass": 1,
-            "attributes": {"form": "prefix"},
+            "attributes": {},
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0,
-                          "form": "infix"},
+                          "form": "prefix"},
             "properties": {"movablelimits": false,
                            "movesupsub": true},
             "childNodes": [
@@ -1542,3 +1542,4 @@ parserTest.runTest(
 );
 
 
+parserTest.printTime();

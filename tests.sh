@@ -12,6 +12,9 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-array-tests.js
     node load.js tests/parser-error-tests.js
     node load.js tests/parser-complex-tests.js
+    node load.js tests/parser-internal-math-tests.js
+
+    # AMS package tests.
     node load.js tests/parser-ams-tests.js
     node load.js tests/parser-amsenv-tests.js
     node load.js tests/parser-amserror-tests.js
@@ -31,6 +34,19 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-boldsymbol-tests.js
     node load.js tests/parser-newcommand-tests.js
     node load.js tests/parser-ncerrors-tests.js
+
+    node load.js tests/parser-mhchem0-tests.js
+    node load.js tests/parser-mhchem1-tests.js
+    node load.js tests/parser-mhchem2-tests.js
+    node load.js tests/parser-mhchem3-tests.js
+    node load.js tests/parser-mhchem4-tests.js
+    node load.js tests/parser-mhchem5-tests.js
+    node load.js tests/parser-mhchem6-tests.js
+    node load.js tests/parser-mhchem7-tests.js
+    node load.js tests/parser-mhchem8-tests.js
+    node load.js tests/parser-mhchem9-tests.js
+
+    node load.js tests/parser-noerrors-tests.js
     exit 0
 else
     repeat=$1
