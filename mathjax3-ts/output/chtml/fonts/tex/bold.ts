@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {bold as font} from '../../../common/fonts/tex/bold.js';
 
-export const bold: CharMap = AddCSS(font, {
+export const bold: CHTMLCharMap = AddCSS(font, {
     0x21: 3,
     0x22: 1,
     0x23: 1,

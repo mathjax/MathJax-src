@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {CharMap} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../FontData.js';
 
-export const monospace: CharMap = {
+export const monospace: CharMap<CharOptions> = {
     0x20: [0, 0, .525],
     0x21: [.622, 0, .525],
     0x22: [.623, -0.333, .525],

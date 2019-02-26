@@ -24,6 +24,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {BBox} from '../BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {BIGDIMEN} from '../../../util/lengths.js';
 
 /*****************************************************************/
 /**
@@ -49,28 +50,49 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
        /**
         * @override
         */
-       public computeBBox(bbox: BBox) {
+       public computeBBox(bbox: BBox, recompute: boolean = false) {
            const variant = this.parent.variant;
+           const text = (this.node as TextNode).getText();
            if (variant === '-explicitFont') {
-               // FIXME:  measure this using DOM, if possible
-           } else {
-               const c = this.parent.stretch.c;
-               const text = (this.node as TextNode).getText();
-               const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));
-               let [h, d, w, data] = this.getVariantChar(variant, chars[0]);
+               //
+               // Measure the size of the text (using the DOM if possible)
+               //
+               const font = this.jax.getFontData(this.parent.styles);
+               const {w, h, d} = this.jax.measureText(text, variant, font);
                bbox.h = h;
                bbox.d = d;
                bbox.w = w;
-               bbox.ic = data.ic || 0;
-               bbox.sk = data.sk || 0;
-               for (let i = 1, m = chars.length; i < m; i++) {
-                   [h, d, w, data] = this.getVariantChar(variant, chars[i]);
+           } else {
+               const c = this.parent.stretch.c;
+               const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));
+               bbox.empty();
+               //
+               // Loop through the characters and add them in one by one
+               //
+               for (const char of chars) {
+                   let [h, d, w, data] = this.getVariantChar(variant, char);
+                   if (data.unknown) {
+                       //
+                       // Measure unknown characters using the DOM (if possible)
+                       //
+                       const cbox = this.jax.measureText(String.fromCharCode(char), variant);
+                       w = cbox.w;
+                       h = cbox.h;
+                       d = cbox.d;
+                   }
+                   //
+                   // Update the bounding box
+                   //
                    bbox.w += w;
                    if (h > bbox.h) bbox.h = h;
                    if (d > bbox.d) bbox.d = d;
                    bbox.ic = data.ic || 0;
+                   bbox.sk = data.sk || 0;
+               }
+               if (chars.length > 1) {
                    bbox.sk = 0;
                }
+               bbox.clean();
            }
        }
 

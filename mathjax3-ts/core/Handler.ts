@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument, AbstractMathDocument} from './MathDocument.js';
+import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from './MathDocument.js';
 import {OptionList} from '../util/Options.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 
@@ -51,6 +51,12 @@ export interface Handler<N, T, D> {
     priority: number;
 
     /**
+     * The class implementing the MathDocument for this handler
+     *   (so it can be subclassed by extensions as needed)
+     */
+    documentClass: MathDocumentConstructor<N, T, D>;
+
+    /**
      * Checks to see if the handler can process a given document
      *
      * @param {any} document  The document to be processed (string, window, etc.)
@@ -62,11 +68,10 @@ export interface Handler<N, T, D> {
      * Creates a MathDocument for the given handler
      *
      * @param {any} document        The document to be handled
-     * @param {DOMAdaptor} adaptor  The DOM adaptor for managing HTML elements
      * @param {OptionList} options  The options for the handling of the document
      * @return {MathDocument}       The MathDocument object that manages the processing
      */
-    create(document: any, adaptor: DOMAdaptor<N, T, D>, options: OptionList): MathDocument<N, T, D>;
+    create(document: any, options: OptionList): MathDocument<N, T, D>;
 }
 
 /*****************************************************************/
@@ -105,6 +110,12 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     public priority: number;
 
     /**
+     * The class implementing the MathDocument for this handler
+     *   (so it can be subclassed by extensions as needed)
+     */
+    public documentClass: MathDocumentConstructor<N, T, D> = DefaultMathDocument;
+
+    /**
      * @param {number} priority  The priority to use for this handler
      *
      * @constructor
@@ -132,7 +143,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
      * @override
      */
     public create(document: any, options: OptionList) {
-        return new DefaultMathDocument<N, T, D>(document, this.adaptor, options) as MathDocument<N, T, D>;
+        return new this.documentClass(document, this.adaptor, options) as MathDocument<N, T, D>;
     }
 
 }

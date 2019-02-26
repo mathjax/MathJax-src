@@ -50,9 +50,7 @@ namespace FilterUtil {
         if (!NodeUtil.getTexClass(mo) && (!symbol || !symbol[2])) {
           const texAtom = options.nodeFactory.create('node', 'TeXAtom', [mo]);
           parent.replaceChild(texAtom, mo);
-          texAtom.setInheritedAttributes({}, arg.math['display'],
-                                         parent.attributes.get('scriptlevel') as number,
-                                         parent.getProperty('texprimestyle') as boolean);
+          texAtom.inheritAttributesFrom(mo);
         }
         NodeUtil.removeProperties(mo, 'fixStretchy');
       }

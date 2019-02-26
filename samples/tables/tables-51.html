@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax v3 Tables Sample 51</title>
+<link rel="stylesheet" type="text/css" href="lib/dual-tables.css">
+<script src="../../lib/traceur.min.js"></script>
+<script src="../../lib/system.js"></script>
+</head>
+<body>
+
+<h1>MathJax v3 Tables Sample 51</h1>
+
+<mjx-template>
+  <math display="block">
+    <mfrac mathbackground="yellow" numalign="{numalign}" linethickness="0">
+      <mtable width="{width}">
+        <mtr>
+          <mtd mathbackground="green"><mi>a</mi></mtd>
+          <mtd mathbackground="red"><mi>bbb</mi></mtd>
+        </mtr>
+      </mtable>
+      <mi>xxxxxxxxyyyyyyyy</mi>
+    </mfrac>
+  </math>
+</mjx-template>
+
+<script>
+var variables = [
+  ['numalign', ['left', 'center', 'right']],
+  ['width', ['auto', '50%', '5em', '15em']]
+];
+</script>
+
+<script>
+System.import('./lib/dual-tables.js').catch(function (error) {console.log(error.message)});
+</script>
+</body>
+</html>
+
+

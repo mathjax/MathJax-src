@@ -359,7 +359,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         if (typeof text !== 'string') {
             text = String(text);
         }
-        return text.replace(/"/, '&quot;');
+        return text.replace(/"/g, '&quot;');
     }
 
     /**

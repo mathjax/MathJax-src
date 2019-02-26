@@ -51,6 +51,13 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
     }
 
     /**
+     * @override
+     */
+    public get notParent() {
+        return true;
+    }
+
+    /**
      * Handle scriptlevel changes, and add mstyle attributes to the ones being inherited.
      *
      * @override

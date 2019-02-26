@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor, CommonWrapperClass} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import * as Notation from '../Notation.js';
 import {CommonMsqrt} from './msqrt.js';
 import {BBox} from '../BBox.js';
@@ -144,7 +144,7 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
  * @template W  The menclose wrapper type
  * @templare N  The DOM node class
  */
-export interface CommonMencloseClass<W extends AnyWrapper, N> extends CommonWrapperClass<any, any, any> {
+export interface CommonMencloseClass<W extends AnyWrapper, N> extends AnyWrapperClass {
     /**
      *  The definitions of the various notations
      */
@@ -273,7 +273,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             //
             //  Combine the BBox from the child and add the extenders
             //
@@ -283,6 +283,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
             bbox.h += T;
             bbox.d += B;
             bbox.w += R;
+            this.setChildPWidths(recompute);
         }
 
         /**
@@ -381,14 +382,8 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         public createMsqrt(child: W) {
             const mmlFactory = (this.node as AbstractMmlNode).factory;
             const mml = mmlFactory.create('msqrt');
+            mml.inheritAttributesFrom(this.node);
             mml.childNodes[0] = child.node;
-            const attributes = this.node.attributes;
-            const display = attributes.get('display') as boolean;
-            const scriptlevel = attributes.get('scriptlevel') as number;
-            const defaults: AttributeList = {
-                mathsize: ['math', attributes.get('mathsize')]
-            };
-            mml.setInheritedAttributes(defaults, display, scriptlevel, false);
             const node = this.wrap(mml) as S;
             node.parent = this;
             return node;
