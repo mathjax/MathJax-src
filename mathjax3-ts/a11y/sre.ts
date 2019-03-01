@@ -24,8 +24,6 @@
 
 import {asyncLoad} from '../util/AsyncLoad.js';
 
-declare const window: Window;
-
 /**
  * The name of the modiule to load, if necessary
  */
