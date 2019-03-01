@@ -44,14 +44,43 @@ export type OptionList = {[name: string]: any};
  *  E.g., an option of the form
  *
  *    {
- *      name: {APPEND: [1, 2, 3]}
+ *      name: {[APPEND]: [1, 2, 3]}
  *    }
  *
  *  where 'name' is an array in the default options would end up with name having its
  *  original value with 1, 2, and 3 appended.
  */
-export const APPEND = Symbol('Append to option array');
+export const APPEND = '[+]';
 
+/**
+ * A Class to use for options that should not produce warnings if an undefined key is used
+ */
+export class Expandable {};
+
+/**
+ * Produces an instance of Expandable with the given values (to be used in defining options
+ * that can use keys that don't have default values).  E.g., default options of the form:
+ *
+ *  OPTIONS = {
+ *     types: expandable({
+ *       a: 1,
+ *       b: 2
+ *     })
+ *  }
+ *
+ *  would allow user options of
+ *
+ *  {
+ *     types: {
+ *       c: 3
+ *     }
+ *  }
+ *
+ *  without reporting an error.
+ */
+export function expandable(def: OptionList) {
+    return Object.assign(Object.create(Expandable.prototype), def);
+}
 
 /*****************************************************************/
 /**
@@ -111,7 +140,7 @@ export function copy(def: OptionList): OptionList {
  */
 export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
     for (let key of keys(src)) {
-        if (warn && dst[key] === undefined) {
+        if (warn && dst[key] === undefined && !(dst instanceof Expandable)) {
             if (typeof key === 'symbol') {
                 key = key.toString();
             }
