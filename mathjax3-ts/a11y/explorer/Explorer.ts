@@ -1,5 +1,5 @@
 import {A11yDocument, HoverRegion, Region, ToolTip} from './Region.js';
-import {sreReady} from './sre.js';
+import {sreReady} from '../sre.js';
 
 
 export interface Explorer {

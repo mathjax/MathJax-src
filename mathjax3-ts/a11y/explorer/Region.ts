@@ -23,10 +23,10 @@
  */
 
 
-import {HTMLDocument} from '../handlers/html/HTMLDocument.js';
-import {CssStyles, StyleList} from '../output/common/CssStyles.js';
+import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
+import {CssStyles, StyleList} from '../../output/common/CssStyles.js';
 
-import './sre.js';
+import '../sre.js';
 
 export type A11yDocument = HTMLDocument<HTMLElement, Text, Document>;
 
