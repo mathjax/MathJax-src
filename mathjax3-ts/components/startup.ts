@@ -113,6 +113,7 @@ export interface MathJaxObject extends MJObject {
         makeMmlMethods(name: string, input: INPUTJAX): void;
         makeResetMethod(name: string, input: INPUTJAX): void;
         convertMath(mitem: MATHITEM, document: MATHDOCUMENT, maxPriority?: number): void;
+        typesetMath(document: MATHDOCUMENT, minPriority?: number): void;
         getInputJax(): INPUTJAX[];
         getOutputJax(): OUTPUTJAX;
         getAdaptor(): DOMADAPTOR;
@@ -134,7 +135,7 @@ export namespace Startup {
     /**
      * The array of handler extensions
      */
-    const extensions: HandlerExtension[] = [];
+    const extensions = new PrioritizedList<HandlerExtension>();
 
     /**
      * The prioritized list of functions to call duing typesetting and conversion
@@ -258,9 +259,10 @@ export namespace Startup {
 
     /**
      * @param {HandlerExtension} extend    A function to extend the handler class
+     * @param {number} priority            The priority of the extension
      */
-    export function extendHandler(extend: HandlerExtension) {
-        extensions.push(extend);
+    export function extendHandler(extend: HandlerExtension, priority: number = 10) {
+        extensions.add(extend, priority);
     };
 
     /**
@@ -343,7 +345,7 @@ export namespace Startup {
     export function makeMethods() {
         if (!handler) return;
         mathjax.handlers.register(handler);
-        document = mathjax.document(CONFIG.document, {...MathJax.config.options, InputJax: input, OutputJax: output});
+        getDocument();
         if (input && output) {
             makeTypesetMethods();
         }
@@ -480,6 +482,22 @@ export namespace Startup {
     };
 
     /**
+     * Perform the typesetting calls from a particular priority onward.
+     * Default is to do typeset() and beyond, so this is a rerender command.
+     *
+     * @param {DOCUMENT} document   The MathDocument in which the conversion takes palce
+     * @param {number} minPriority  The priority where processing should begin (default = 110, which is typeset)
+     * @return {any}                The serialized MathML or the DOM node for the converted result
+     */
+    export function typesetMath(document: MATHDOCUMENT, minPriority: number = 110) {
+        for (const {item, priority} of typesetCalls) {
+            if (priority > minPriority) {
+                item(document);
+            }
+        }
+    }
+
+    /**
      * @return {INPUTJAX[]}  The array of instances of the registered input jax
      */
     export function getInputJax() {
@@ -532,10 +550,22 @@ export namespace Startup {
         if (!handlerClass) {
             throw Error('Handler "' + name + '" is not defined (has it been loaded?)');
         }
-        const handler = new handlerClass(adaptor, 5);
-        return extensions.reduce((handler, extend) => extend(handler), handler);
+        let handler = new handlerClass(adaptor, 5);
+        for (const extend of extensions) {
+            handler = extend.item(handler);
+        }
+        return handler;
     };
 
+    /**
+     * Create the document with the given input and output jax
+     *
+     * @returns {MathDocument}   The MathDocument with the configured input and output jax
+     */
+    export function getDocument() {
+        document = mathjax.document(CONFIG.document, {...MathJax.config.options, InputJax: input, OutputJax: output});
+        return document;
+    }
 };
 
 /**
@@ -573,12 +603,12 @@ if (typeof MathJax._.startup === 'undefined') {
     Startup.typesetCall(findMath, 10);
     Startup.typesetCall('compile', 20);
     Startup.typesetCall('getMetrics', 110);
-    Startup.typesetCall('typeset', 120);
-    Startup.typesetCall('updateDocument', 130);
-    Startup.typesetCall('reset', 200);
+    Startup.typesetCall('typeset', 150);
+    Startup.typesetCall('updateDocument', 200);
+    Startup.typesetCall('reset', 500);
 
     Startup.convertCall('compile', 20);
-    Startup.convertCall('typeset', 120);
+    Startup.convertCall('typeset', 150);
 }
 
 /**
