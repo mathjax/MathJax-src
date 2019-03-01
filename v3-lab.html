@@ -9,11 +9,15 @@ h1 {
   margin-left: 1.5em;
   margin-top: .25em;
 }
+body {
+  min-height: 50em;
+}
 #layout {
   padding-left: .5em;
   display: table;
   width: 100%;
   box-sizing: border-box;
+  min-height: 20em;
 }
 #layout > div {
   display: table-row;
@@ -43,6 +47,8 @@ h1 {
   border: 1px solid black;
   padding: 10px;
   width: 100%;
+  max-width: 45em;
+  overflow: auto;
   box-sizing: border-box;
   font-size: 150%;
 }
@@ -54,6 +60,7 @@ h1 {
 
 #controls {
   padding-left: 1em;
+  font-size: 80%;
 }
 #controls > div {
   margin-bottom: .5em;
@@ -121,8 +128,8 @@ input[disabled] + label {
 <hr/>
 <div>
 <input type="checkbox" id="enrich" onchange="Lab.setEnrich(this.checked)" /><label for="enrich"> Enrich MathML</label><br/>
-<input type="checkbox" id="compute" onchange="Lab.setCompute(this.checked)" disabled /><label for="compute"> Compute Complexity</label><br/>
-<input type="checkbox" id="collapse" onchange="Lab.setCollapse(this.checked)" disabled /><label for="collapse"> Collapse Complex Math</label><br/>
+<input type="checkbox" id="compute" onchange="Lab.setCompute(this.checked)" /><label for="compute"> Compute Complexity</label><br/>
+<input type="checkbox" id="collapse" onchange="Lab.setCollapse(this.checked)" /><label for="collapse"> Collapse Complex Math</label><br/>
 <input type="checkbox" id="explore" onchange="Lab.setExplorer(this.checked)" /><label for="explore"> Math Explorer</label><br/>
 </div>
 <hr/>
@@ -132,7 +139,9 @@ input[disabled] + label {
 </div>
 
 <script>
-System.import('./lib/v3-lab.js').catch(function (error) {console.log(error.message)});
+System.import('./lib/v3-lab.js')
+  .then(() => System.import('./components/src/startup/startup.js'))
+  .catch(function (error) {console.log(error.message)});
 </script>
 </body>
 </html>
