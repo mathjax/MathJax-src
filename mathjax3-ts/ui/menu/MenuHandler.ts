@@ -3,6 +3,7 @@ import {MathJax} from '../../mathjax.js';
 import {MathItem, AbstractMathItem} from '../../core/MathItem.js';
 import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
 import {Handler} from '../../core/Handler.js';
+import {ComplexityMathDocument} from '../../a11y/complexity.js';
 
 import {Menu} from './Menu.js';
 
@@ -60,8 +61,11 @@ export function MenuMathItemMixin<N, T, D, B extends Constructor<AbstractMathIte
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface MenuMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
+export interface MenuMathDocument<N, T, D> extends ComplexityMathDocument<N, T, D> {
 
+    /**
+     * The menu associated with this document
+     */
     menu: Menu<N, T, D>;
 
     /**
@@ -72,11 +76,18 @@ export interface MenuMathDocument<N, T, D> extends AbstractMathDocument<N, T, D>
     addMenu(): MathDocument<N, T, D>;
 
     /**
-     * Rerender the math on the page
+     * Rerender the math on the page using the rerender option
      *
      * @return {MathDocument}   The MathDocument (so calls can be chained)
      */
     rerender(): MathDocument<N, T, D>;
+
+    /**
+     * The default rerender function
+     *
+     * @return {MathDocument}   The MathDocument (so calls can be chained)
+     */
+    defaultRerender(): MathDocument<N, T, D>;
 }
 
 /**
@@ -90,7 +101,7 @@ export interface MenuMathDocument<N, T, D> extends AbstractMathDocument<N, T, D>
  * @template D  The Document class
  * @template B  The MathDocument class to extend
  */
-export function MenuMathDocumentMixin<N, T, D, B extends Constructor<AbstractMathDocument<N, T, D>>>(
+export function MenuMathDocumentMixin<N, T, D, B extends Constructor<ComplexityMathDocument<N, T, D>>>(
     BaseDocument: B
 ): Constructor<MenuMathDocument<N, T, D>> & B {
 
@@ -98,11 +109,9 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<AbstractMat
 
         public static OPTIONS = {
             ...(BaseDocument as any).OPTIONS,
+            rerender: (document: MenuMathDocument<any, any, any>) => document.rerender(),
             MenuClass: Menu,
-            menuOptions: {
-                settings: {},
-                jax: {CHTML: null, SVG: null}
-            }
+            menuOptions: Menu.OPTIONS
         }
 
         public menu: Menu<N, T, D>;
@@ -149,10 +158,22 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<AbstractMat
         }
 
         public rerender() {
+            this.options.rerender(this);
+            return this;
+        }
+
+        public defaultRerender() {
             this.state(AbstractMathDocument.STATE.COMPILED);
             this.typeset();
             this.addMenu();
             this.updateDocument();
+            return this;
+        }
+
+        public complexity() {
+            if (this.menu.settings.collapsible) {
+                super.complexity();
+            }
             return this;
         }
 
@@ -170,6 +191,6 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<AbstractMat
  */
 export function MenuHandler<N, T, D>(handler: Handler<N, T, D>) {
     handler.documentClass =
-        MenuMathDocumentMixin<N, T, D, Constructor<AbstractMathDocument<N, T, D>>>(handler.documentClass);
+        MenuMathDocumentMixin<N, T, D, Constructor<ComplexityMathDocument<N, T, D>>>(handler.documentClass as any);
     return handler;
 }

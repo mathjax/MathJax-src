@@ -1,10 +1,10 @@
-import {MathJax} from '../../mathjax.js';
+import {MathJax as mathjax} from '../../mathjax.js';
 
 import {MathItem} from '../../core/MathItem.js';
 import {OutputJax} from '../../core/OutputJax.js';
 import {MathJaxObject as StartupObject} from '../../components/startup.js';
 import {MathJaxObject as LoaderObject} from '../../components/loader.js';
-import {OptionList, userOptions, defaultOptions} from '../../util/Options.js';
+import {OptionList, userOptions, defaultOptions, expandable} from '../../util/Options.js';
 
 import {MJContextMenu} from './MJContextMenu.js';
 import {MmlVisitor} from './MmlVisitor.js';
@@ -27,14 +27,22 @@ export interface MenuSettings {
     cmd: boolean;
     ctrl: boolean;
     shift: boolean;
-    scale: number;
+    scale: string;
     explorer: boolean;
+    highlight: string;
+    background: string;
+    foreground: string;
+    speech: boolean;
+    subtitles: boolean;
+    speechrules: string;
     autocollapse: boolean;
     collapsible: boolean;
     inTabOrder: boolean;
 }
 
 export class Menu<N, T, D> {
+
+    public static MENU_STORAGE = 'MathJax-Menu-Settings';
 
     public static OPTIONS: OptionList = {
         settings: {
@@ -49,6 +57,12 @@ export class Menu<N, T, D> {
             shift: false,
             scale: 1,
             explorer: false,
+            highlight: 'None',
+            background: 'Blue',
+            foreground: 'Black',
+            speech: true,
+            subtitles: false,
+            speechrules: 'mathspeak-default',
             autocollapse: false,
             collapsible: false,
             inTabOrder: true,
@@ -56,12 +70,20 @@ export class Menu<N, T, D> {
         jax: {
             CHTML: null,
             SVG: null
-        }
+        },
+        annotationTypes: expandable({
+            TeX: ['TeX', 'LaTeX', 'application/x-tex'],
+            StarMath: ['StarMath 5.0'],
+            Maple: ['Maple'],
+            ContentMathML: ['MathML-Content', 'application/mathml-content+xml'],
+            OpenMath: ['OpenMath']
+        })
     };
 
     public options: OptionList;
 
     public settings: MenuSettings = null;
+    public defaultSettings: MenuSettings = null;
 
     public zscale: number = 1.25 * 200;
 
@@ -76,8 +98,10 @@ export class Menu<N, T, D> {
         SVG: null
     };
 
+    public loading: boolean = false;
+
     protected about = new ContextMenu.Info(
-        '<b style="font-size:120%;">MathJax</b> v' + MathJax.version,
+        '<b style="font-size:120%;">MathJax</b> v' + mathjax.version,
         () => {
             const lines = [] as string[];
             lines.push('Input Jax: ' + this.document.inputJax.map(jax => jax.name).join(', '));
@@ -100,22 +124,28 @@ export class Menu<N, T, D> {
                 '<p><b>Math Menu</b>: MathJax adds a contextual menu to equations.',
                 ' Right-click or CTRL-click on any mathematics to access the menu.</p>',
                 '<div style="margin-left: 1em;">',
-                '<p><b>Show Math As</b> allows you to view the formula\'s source markup',
-                ' for copy &amp; paste (as MathML or in its original format).</p>',
-                '<p><b>Math Settings</b> gives you control over features of MathJax, such as',
-                ' the size of the mathematics, and the mechanism used',
+                '<p><b>Show Math As:</b> These options allow you to view the formula\'s',
+                ' source markup (as MathML or in its original format).</p>',
+                '<p><b>Copy to Clipboard:</b> These options copy the formula\'s source markup,',
+                ' as MathML or in its original format, to the clipboard',
+                ' (in browsers that support that).</p>',
+                '<p><b>Math Settings:</b> These give you control over features of MathJax,',
+                ' such the size of the mathematics, and the mechanism used',
                 ' to display equations.</p>',
                 '<p><b>Accessibility</b>: MathJax can work with screen',
                 ' readers to make mathematics accessible to the visually impaired.',
                 ' Turn on the explorer to enable generation of speech strings',
                 ' and the ability to investigate expressions interactively.</p>',
-                '<p><b>Language</b> lets you select the language used by MathJax for',
-                ' its menus and warning messages. (Not yet implemented.)</p>',
+                '<p><b>Language</b>: This menu lets you select the language used by MathJax',
+                ' for its menus and warning messages. (Not yet implemented in version 3.)</p>',
                 '</div>',
                 '<p><b>Math Zoom</b>: If you are having difficulty reading an',
                 ' equation, MathJax can enlarge it to help you see it better, or',
                 ' you can scall all the math on the page to make it larger.',
-                ' Turn these features on in the <b>Math Settings</b> menu.</p>'
+                ' Turn these features on in the <b>Math Settings</b> menu.</p>',
+                '<p><b>Cookies</b>: MathJax uses cookies to store the preferences set',
+                ' via this menu locally in your browser.  These are not used to track you,',
+                ' and are not transferred or used remotely by MathJax in any way.</p>'
             ]. join('\n');
         },
         '<a href="https://www.mathjax.org">www.mathjax.org</a>'
@@ -132,10 +162,20 @@ export class Menu<N, T, D> {
     );
 
     protected originalText = new SelectableInfo(
-        'MathJax original Source',
+        'MathJax Original Source',
         () => {
             if (!this.menu.mathItem) return '';
             const text = this.menu.mathItem.math;
+            return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
+        },
+        '<input type="button" value="Copy to Clipboard" />'
+    );
+
+    protected annotationText = new SelectableInfo(
+        'MathJax Annotation Text',
+        () => {
+            if (!this.menu.mathItem) return '';
+            const text = this.menu.annotation;
             return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
         },
         '<input type="button" value="Copy to Clipboard" />'
@@ -156,16 +196,46 @@ export class Menu<N, T, D> {
         this.document = document;
         this.options = userOptions(defaultOptions({}, (this.constructor as typeof Menu).OPTIONS), options);
         this.initSettings();
+        this.mergeUserSettings();
         this.initMenu();
     }
 
     protected initSettings() {
-        this.settings = this.options.settings);
+        this.settings = this.options.settings;
         this.jax = this.options.jax;
         const jax = this.document.outputJax;
         this.jax[jax.name] = jax;
         this.settings.renderer = jax.name;
         this.settings.scale = jax.options.scale;
+        this.defaultSettings = Object.assign({}, this.settings);
+    }
+
+    protected mergeUserSettings() {
+        try {
+            const settings = localStorage.getItem(Menu.MENU_STORAGE);
+            if (!settings) return;
+            Object.assign(this.settings, JSON.parse(settings));
+        } catch (err) {
+            console.log('MathJax localStorage error: ' + err.message);
+        }
+    }
+
+    protected saveUserSettings() {
+        const settings = {} as {[key: string]: any};
+        for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
+            if (this.settings[name] !== this.defaultSettings[name]) {
+                settings[name] = this.settings[name];
+            }
+        }
+        try {
+            if (Object.keys(settings).length) {
+                localStorage.setItem(Menu.MENU_STORAGE, JSON.stringify(settings));
+            } else {
+                localStorage.removeItem(Menu.MENU_STORAGE);
+            }
+        } catch (err) {
+            console.log('MathJax localStorage error: ' + err.message);
+        }
     }
 
     protected initMenu() {
@@ -182,10 +252,17 @@ export class Menu<N, T, D> {
                     this.variable<boolean>('cmd'),
                     this.variable<boolean>('ctrl'),
                     this.variable<boolean>('shift'),
-                    this.variable<boolean>('explorer'),
+                    this.variable<string> ('scale', (scale: string) => this.setScale(scale)),
+                    this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
+                    this.variable<string> ('highlight'),
+                    this.variable<string> ('background'),
+                    this.variable<string> ('foreground'),
+                    this.variable<boolean>('speech'),
+                    this.variable<boolean>('subtitles'),
+                    this.variable<string> ('speechrules'),
                     this.variable<boolean>('autocollapse'),
-                    this.variable<boolean>('collapsible'),
-                    this.variable<boolean>('inTabOrder', (tab: boolean) => this.menu.getStore().inTaborder(tab))
+                    this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
+                    this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab))
                 ],
                 items: [
                     this.submenu('Show', 'Show Math As', [
@@ -220,17 +297,41 @@ export class Menu<N, T, D> {
                         this.command('Scale', 'Scale All Math...', () => this.scaleAllMath()),
                         this.rule(),
                         this.checkbox('texHints', 'Add TeX hints to MathML', 'texHints'),
-                        this.checkbox('semantics', 'Add original as annotation', 'semantics')
+                        this.checkbox('semantics', 'Add original as annotation', 'semantics'),
+                        this.rule(),
+                        this.command('Reset', 'Reset to defaults', () => this.resetDefaults())
                     ]),
                     this.submenu('Accessibility', 'Accessibility', [
                         this.submenu('Explorer', 'Explorer', [
-                            this.checkbox('Active', 'Activate', 'explorer'),
+                            this.checkbox('Active', 'Active', 'explorer'),
                             this.rule(),
-                            this.command('WhenActive', '(Options when Active)', () => {}, {disabled: true})
+                            this.submenu('Highlight', 'Highlight', this.radioGroup('highlight', [
+                                ['None'], ['Hover'], ['Flame']
+                            ]), true),
+                            this.submenu('Background', 'Background', this.radioGroup('background', [
+                                ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
+                            ])),
+                            this.submenu('Foreground', 'Foreground', this.radioGroup('foreground', [
+                                ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
+                            ])),
+                            this.rule(),
+                            this.checkbox('Speech', 'Speech Output', 'speech'),
+                            this.checkbox('Subtitles', 'Subtities', 'subtitles'),
+                            this.rule(),
+                            this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechrules', [
+                                ['mathspeak-default', 'Verbose'],
+                                ['mathspeak-brief', 'Brief'],
+                                ['mathspeak-sbrief', 'Superbrief']
+                            ])),
+                            this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechrules', [
+                                ['chromvox-default', 'Verbose'],
+                                ['chromevox-short', 'Short'],
+                                ['chromevox-alternative', 'Alternative']
+                            ]))
                         ]),
                         this.rule(),
                         this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
-                        this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse'),
+                        this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {disabled: true}),
                         this.rule(),
                         this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder')
                     ]),
@@ -245,9 +346,13 @@ export class Menu<N, T, D> {
         this.about.attachMenu(menu);
         this.help.attachMenu(menu);
         this.originalText.attachMenu(menu);
+        this.annotationText.attachMenu(menu);
         this.mathmlCode.attachMenu(menu);
         this.zoomBox.attachMenu(menu);
         this.disableUnloadableItems();
+        menu.showAnnotation = this.annotationText;
+        menu.copyAnnotation = this.copyAnnotation.bind(this);
+        menu.annotationTypes = this.options.annotationTypes;
         ContextMenu.CssStyles.addInfoStyles(this.document.document as any);
         ContextMenu.CssStyles.addMenuStyles(this.document.document as any);
     }
@@ -272,29 +377,101 @@ export class Menu<N, T, D> {
         this.zscale = 1.25 * parseFloat(scale);
     }
 
+    protected setScale(scale: string) {
+        this.settings.scale = scale;
+        this.document.outputJax.options.scale = parseFloat(scale);
+        this.document.rerender();
+    }
+
     protected setRenderer(jax: string) {
         this.settings.renderer = jax;
         if (this.jax[jax]) {
-            this.setOutputJax(this.jax[jax]);
+            this.setOutputJax(jax);
         } else {
-            const MathJax = window.MathJax;
-            MathJax.loader.load(name + '-output').then(() => {
-                const startup = MathJax.startup;
-                const name = jax.toLowerCase();
-                if (name in startup.constructor) {
-                    startup.useOutput(jax, true);
+            const name = jax.toLowerCase();
+            this.loadComponent(name + '-output', () => {
+                const startup = window.MathJax.startup;
+                if (name in startup.constructors) {
+                    startup.useOutput(name, true);
                     startup.output = startup.getOutputJax();
                     this.jax[jax] = startup.output;
-                    this.setOutputJax(this.jax[jax]);
+                    this.setOutputJax(jax);
                 }
-            }).catch((err) => {throw err});
+            });
         }
     }
 
-    protected setOutputJax(jax: OutputJax<N, T, D>) {
-        jax.setAdaptor(this.document.adaptor);
-        this.document.outputJax = jax;
-        this.document.rerender();
+    protected setOutputJax(jax: string) {
+        this.jax[jax].setAdaptor(this.document.adaptor);
+        this.document.outputJax = this.jax[jax];
+        this.rerender();
+    }
+
+    protected setTabOrder(tab: boolean) {
+        this.settings.inTabOrder = tab;
+        this.menu.getStore().inTaborder(tab);
+    }
+
+    protected setExplorer(explore: boolean) {
+        this.settings.explorer = explore;
+        //
+        //  Enable/disable the submenu items
+        //
+        const menu = (this.menu.findID('Accessibility', 'Explorer') as ContextMenu.Submenu).getSubmenu();
+        for (const item of menu.getItems().slice(3)) {
+            if (!(item instanceof ContextMenu.Rule)) {
+                explore ? item.enable() : item.disable();
+            }
+        }
+        //
+        // If already loaded, rerender otherwise load the component (and rerender afterward)
+        //
+        if (!explore || (window.MathJax._.a11y && window.MathJax._.a11y.Explorer)) {
+            this.rerender();
+        } else {
+            this.loadA11y('explorer');
+        }
+    }
+
+    protected setCollapsible(collapse: boolean) {
+        this.settings.collapsible = collapse;
+        if (!collapse || (window.MathJax._.a11y && window.MathJax._.a11y.complexity)) {
+            this.rerender();
+        } else {
+            this.loadA11y('complexity');
+        }
+    }
+
+    public loadA11y(component: string) {
+        const startup = window.MathJax.startup;
+        this.loadComponent('a11y/' + component, () => {
+            mathjax.handlers.unregister(startup.handler);
+            startup.handler = startup.getHandler();
+            mathjax.handlers.register(startup.handler);
+            const document = this.document;
+            this.document = startup.getDocument();
+            this.document.menu = this;
+            this.transferMathList(document);
+            this.rerender();
+        });
+    }
+
+    protected transferMathList(document: MenuMathDocument<N, T, D>) {
+        const MathItem = this.document.options.MathItem;
+        for (const item of document.math) {
+            const math = new MathItem();
+            Object.assign(math, item);    // copy old data to new math item
+            this.document.math.push(math);
+        }
+    }
+
+    protected loadComponent(name: string, callback: () => void) {
+        if (!window.MathJax.loader) return;
+        this.loading = true;
+        window.MathJax.loader.load(name).then(() => {
+            this.loading = false;
+            callback();
+        }).catch((err) => console.log(err));
     }
 
     protected formatSource(text: string) {
@@ -308,12 +485,42 @@ export class Menu<N, T, D> {
         });
     }
 
+    protected resetDefaults() {
+        this.loading = true;
+        const pool = this.menu.getPool();
+        const settings = this.defaultSettings;
+        for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
+            const variable = pool.lookup(name);
+            if (variable) {
+                variable.setValue(settings[name] as (string | boolean));
+                const item = (variable as any).items[0];
+                if (item) {
+                    item.executeCallbacks_();
+                }
+            } else {
+                this.settings[name] = settings[name];
+            }
+        }
+        this.loading = false;
+        this.rerender();
+    }
+
+    protected rerender() {
+        if (!this.loading) {
+            this.document.rerender();
+        }
+    }
+
     protected copyMathML() {
         this.copyToClipboard(this.toMML(this.menu.mathItem));
     }
 
     protected copyOriginal() {
         this.copyToClipboard(this.menu.mathItem.math);
+    }
+
+    public copyAnnotation() {
+        this.copyToClipboard(this.menu.annotation);
     }
 
     protected copyToClipboard(text: string) {
@@ -341,17 +548,13 @@ export class Menu<N, T, D> {
     }
 
     protected scaleAllMath() {
-        const scale = (this.settings.scale * 100).toFixed(1).replace(/.0$/, '');
+        const scale = (parseFloat(this.settings.scale) * 100).toFixed(1).replace(/.0$/, '');
         const percent = prompt('Scale all mathematics (compared to surrounding text) by', scale + '%');
         if (percent) {
             if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
                 const scale = parseFloat(percent) / 100;
                 if (scale) {
-                    if (scale !== this.settings.scale) {
-                        this.settings.scale = scale;
-                        this.document.outputJax.options.scale = scale;
-                        this.document.rerender();
-                    }
+                    this.setScale(String(scale));
                 } else {
                     alert('The scale should not be zero');
                 }
@@ -385,11 +588,15 @@ export class Menu<N, T, D> {
         return {
             name: name,
             getter: () => this.settings[name],
-            setter: setter || ((value: T) => this.settings[name] = value as T)
+            setter: (value: T) => {
+console.log('setting '+name+' to '+value);
+                (setter || (v => this.settings[name] = v))(value);
+                this.saveUserSettings();
+            }
         };
     }
 
-    public submenu(id: string, content: string, entries: any[] = []) {
+    public submenu(id: string, content: string, entries: any[] = [], disabled: boolean = false) {
         let items = [] as Array<Object>;
         for (const entry of entries) {
             if (Array.isArray(entry)) {
@@ -398,7 +605,7 @@ export class Menu<N, T, D> {
                 items.push(entry);
             }
         }
-        return {type: 'submenu', id, content, menu: {items}, disabled: (items.length === 0)};
+        return {type: 'submenu', id, content, menu: {items}, disabled: (items.length === 0) || disabled};
     }
 
     public command(id: string, content: string, action: () => void, other: Object = {}) {
