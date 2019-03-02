@@ -98,7 +98,7 @@ export class Menu<N, T, D> {
         SVG: null
     };
 
-    public loading: boolean = false;
+    public loading: number = 0;
 
     protected about = new ContextMenu.Info(
         '<b style="font-size:120%;">MathJax</b> v' + mathjax.version,
@@ -355,6 +355,7 @@ export class Menu<N, T, D> {
         menu.annotationTypes = this.options.annotationTypes;
         ContextMenu.CssStyles.addInfoStyles(this.document.document as any);
         ContextMenu.CssStyles.addMenuStyles(this.document.document as any);
+        this.enableExplorerItems(this.settings.explorer);
     }
 
     protected disableUnloadableItems() {
@@ -414,23 +415,22 @@ export class Menu<N, T, D> {
 
     protected setExplorer(explore: boolean) {
         this.settings.explorer = explore;
-        //
-        //  Enable/disable the submenu items
-        //
-        const menu = (this.menu.findID('Accessibility', 'Explorer') as ContextMenu.Submenu).getSubmenu();
-        for (const item of menu.getItems().slice(3)) {
-            if (!(item instanceof ContextMenu.Rule)) {
-                explore ? item.enable() : item.disable();
-            }
-        }
-        //
-        // If already loaded, rerender otherwise load the component (and rerender afterward)
-        //
+        this.enableExplorerItems(explore);
         if (!explore || (window.MathJax._.a11y && window.MathJax._.a11y.Explorer)) {
             this.rerender();
         } else {
             this.loadA11y('explorer');
         }
+    }
+
+    protected enableExplorerItems(enable: boolean) {
+        const menu = (this.menu.findID('Accessibility', 'Explorer') as ContextMenu.Submenu).getSubmenu();
+        for (const item of menu.getItems().slice(3)) {
+            if (!(item instanceof ContextMenu.Rule)) {
+                enable ? item.enable() : item.disable();
+            }
+        }
+
     }
 
     protected setCollapsible(collapse: boolean) {
@@ -467,9 +467,9 @@ export class Menu<N, T, D> {
 
     protected loadComponent(name: string, callback: () => void) {
         if (!window.MathJax.loader) return;
-        this.loading = true;
+        this.loading++;
         window.MathJax.loader.load(name).then(() => {
-            this.loading = false;
+            this.loading--;
             callback();
         }).catch((err) => console.log(err));
     }
@@ -486,7 +486,7 @@ export class Menu<N, T, D> {
     }
 
     protected resetDefaults() {
-        this.loading = true;
+        this.loading++;
         const pool = this.menu.getPool();
         const settings = this.defaultSettings;
         for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
@@ -501,7 +501,7 @@ export class Menu<N, T, D> {
                 this.settings[name] = settings[name];
             }
         }
-        this.loading = false;
+        this.loading--;
         this.rerender();
     }
 
@@ -589,7 +589,6 @@ export class Menu<N, T, D> {
             name: name,
             getter: () => this.settings[name],
             setter: (value: T) => {
-console.log('setting '+name+' to '+value);
                 (setter || (v => this.settings[name] = v))(value);
                 this.saveUserSettings();
             }
