@@ -1,3 +1,26 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2019 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Implements a subclass of ContextMenu specific to MathJax
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {MathJax as mathjax} from '../../mathjax.js';
 
 import {MathItem} from '../../core/MathItem.js';
@@ -11,12 +34,26 @@ import {MmlVisitor} from './MmlVisitor.js';
 import {SelectableInfo} from './SelectableInfo.js';
 import {MenuMathDocument} from './MenuHandler.js';
 
-const isMac = false;
+/*==========================================================================*/
 
+/**
+ * Declare the MathJax global and the navigator object (to check platform for MacOS)
+ */
 declare namespace window {
     const MathJax: StartupObject & LoaderObject;
+    const navigator: {platform: string}
 }
 
+/**
+ * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
+ */
+const isMac = (window.navigator && window.navigator.platform.substr(0,3) === 'Mac');
+
+/*==========================================================================*/
+
+/**
+ * The various values that are stored in the menu
+ */
 export interface MenuSettings {
     texHints: boolean;
     semantics: boolean;
@@ -40,10 +77,22 @@ export interface MenuSettings {
     inTabOrder: boolean;
 }
 
+/*==========================================================================*/
+
+/**
+ * The Menu object that handles the MathJax contextual menu and its actions
+ */
 export class Menu<N, T, D> {
 
+    /**
+     * The key for the localStorage for the menu settings
+     */
     public static MENU_STORAGE = 'MathJax-Menu-Settings';
 
+    /**
+     * The options for the menu, including the default settings, the various output jax
+     * and the list of annotation types and their encodings
+     */
     public static OPTIONS: OptionList = {
         settings: {
             texHints: true,
@@ -80,26 +129,54 @@ export class Menu<N, T, D> {
         })
     };
 
+    /**
+     * The options for this menu
+     */
     public options: OptionList;
 
+    /**
+     * The current settings for this menu (the variables attached to the menu's pool)
+     */
     public settings: MenuSettings = null;
+
+    /**
+     * The original settings (with page options factored in) for use with the reset command
+     */
     public defaultSettings: MenuSettings = null;
 
-    public zscale: number = 1.25 * 200;
-
+    /**
+     * The contextual menu object that is managed by this Menu
+     */
     public menu: MJContextMenu<N, T, D> = null;
 
+    /**
+     * A MathML serializer that has options corresponding to the menu settings
+     */
     public MmlVisitor = new MmlVisitor<N, T, D>();
 
+    /**
+     * The MathDocument in which we are working
+     */
     protected document: MenuMathDocument<N, T, D>;
 
+    /**
+     * Instances of the various output jax that we can switch to
+     */
     protected jax: {[name: string]: OutputJax<N, T, D>} = {
         CHTML: null,
         SVG: null
     };
 
-    public loading: number = 0;
+    /**
+     * The number of startup modules that are currently being loaded
+     */
+    protected loading: number = 0;
 
+    /*======================================================================*/
+
+    /**
+     * The "About MathJax" info box
+     */
     protected about = new ContextMenu.Info(
         '<b style="font-size:120%;">MathJax</b> v' + mathjax.version,
         () => {
@@ -112,6 +189,9 @@ export class Menu<N, T, D> {
         '<a href="https://www.mathjax.org">www.mathjax.org</a>'
     );
 
+    /**
+     * The "MathJax Help" info box
+     */
     protected help = new ContextMenu.Info(
         '<b>MathJax Help</b>',
         () => {
@@ -151,6 +231,9 @@ export class Menu<N, T, D> {
         '<a href="https://www.mathjax.org">www.mathjax.org</a>'
     );
 
+    /**
+     * The "Show As MathML" info box
+     */
     protected mathmlCode = new SelectableInfo(
         'MathJax MathML Expression',
         () => {
@@ -158,9 +241,12 @@ export class Menu<N, T, D> {
             const text = this.toMML(this.menu.mathItem);
             return '<pre>' + this.formatSource(text) + '</pre>';
         },
-        '<input type="button" value="Copy to Clipboard" />'
+        ''
     );
 
+    /**
+     * The "Show As (original form)" info box
+     */
     protected originalText = new SelectableInfo(
         'MathJax Original Source',
         () => {
@@ -168,9 +254,12 @@ export class Menu<N, T, D> {
             const text = this.menu.mathItem.math;
             return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
         },
-        '<input type="button" value="Copy to Clipboard" />'
+        ''
     );
 
+    /**
+     * The "Show As Annotation" info box
+     */
     protected annotationText = new SelectableInfo(
         'MathJax Annotation Text',
         () => {
@@ -178,20 +267,34 @@ export class Menu<N, T, D> {
             const text = this.menu.annotation;
             return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
         },
-        '<input type="button" value="Copy to Clipboard" />'
+        ''
     );
 
+    /**
+     * The info box for zoomed expressions
+     */
     protected zoomBox = new ContextMenu.Info(
         'MathJax Zoomed Expression',
         () => {
             if (!this.menu.mathItem) return '';
             const element = (this.menu.mathItem.typesetRoot as any).cloneNode(true) as HTMLElement;
             element.style.margin = '0';
-            return '<div style="font-size: ' + this.zscale + '%">' + element.outerHTML + '</div>';
+            const scale = 1.25 * parseFloat(this.settings.zscale);  // 1.25 is to reverse the default 80% font-size
+            return '<div style="font-size: ' + scale + '%">' + element.outerHTML + '</div>';
         },
         ''
     );
 
+    /*======================================================================*/
+
+    /**
+     * Accept options in addition to the MathDocument, and set up the menu based
+     *  on the defaults, the passed options, and the user's saved settings.
+     *
+     * @param {MenuMathDocument} document   The MathDcument where this menu will post
+     * @param {OptionList} options          The options for the menu
+     * @override
+     */
     constructor(document: MenuMathDocument<N, T, D>, options: OptionList = {}) {
         this.document = document;
         this.options = userOptions(defaultOptions({}, (this.constructor as typeof Menu).OPTIONS), options);
@@ -200,6 +303,9 @@ export class Menu<N, T, D> {
         this.initMenu();
     }
 
+    /**
+     * Set up the settings and jax objects, and transfer the output jax name and scale to the settings
+     */
     protected initSettings() {
         this.settings = this.options.settings;
         this.jax = this.options.jax;
@@ -210,34 +316,9 @@ export class Menu<N, T, D> {
         this.defaultSettings = Object.assign({}, this.settings);
     }
 
-    protected mergeUserSettings() {
-        try {
-            const settings = localStorage.getItem(Menu.MENU_STORAGE);
-            if (!settings) return;
-            Object.assign(this.settings, JSON.parse(settings));
-        } catch (err) {
-            console.log('MathJax localStorage error: ' + err.message);
-        }
-    }
-
-    protected saveUserSettings() {
-        const settings = {} as {[key: string]: any};
-        for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
-            if (this.settings[name] !== this.defaultSettings[name]) {
-                settings[name] = this.settings[name];
-            }
-        }
-        try {
-            if (Object.keys(settings).length) {
-                localStorage.setItem(Menu.MENU_STORAGE, JSON.stringify(settings));
-            } else {
-                localStorage.removeItem(Menu.MENU_STORAGE);
-            }
-        } catch (err) {
-            console.log('MathJax localStorage error: ' + err.message);
-        }
-    }
-
+    /**
+     * Create the menu object, attach the info boxes to it, and output any CSS needed for it
+     */
     protected initMenu() {
         this.menu = MJContextMenu.parse({
             menu: {
@@ -246,7 +327,7 @@ export class Menu<N, T, D> {
                     this.variable<boolean>('texHints'),
                     this.variable<boolean>('semantics'),
                     this.variable<string> ('zoom'),
-                    this.variable<string> ('zscale', (scale: string) => this.setZScale(scale)),
+                    this.variable<string> ('zscale'),
                     this.variable<string> ('renderer', (jax: string) => this.setRenderer(jax)),
                     this.variable<boolean>('alt'),
                     this.variable<boolean>('cmd'),
@@ -280,6 +361,8 @@ export class Menu<N, T, D> {
                         this.submenu('Renderer', 'Math Renderer', this.radioGroup('renderer', [['CHTML'], ['SVG']])),
                         this.rule(),
                         this.submenu('ZoomTrigger', 'Zoom Trigger', [
+                            this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '', this.menu.mathItem)),
+                            this.rule(),
                             this.radioGroup('zoom', [
                                 ['Click'], ['DoubleClick', 'Double-Click'], ['NoZoom', 'No Zoom']
                             ]),
@@ -350,14 +433,19 @@ export class Menu<N, T, D> {
         this.mathmlCode.attachMenu(menu);
         this.zoomBox.attachMenu(menu);
         this.disableUnloadableItems();
+        this.enableExplorerItems(this.settings.explorer);
         menu.showAnnotation = this.annotationText;
         menu.copyAnnotation = this.copyAnnotation.bind(this);
         menu.annotationTypes = this.options.annotationTypes;
         ContextMenu.CssStyles.addInfoStyles(this.document.document as any);
         ContextMenu.CssStyles.addMenuStyles(this.document.document as any);
-        this.enableExplorerItems(this.settings.explorer);
     }
 
+    /**
+     * Check whether the startup and loader modules are available, and
+     *   if not, disable the a11y modules (since we can't load them
+     *   or know if they are available).
+     */
     protected disableUnloadableItems() {
         const MathJax = window.MathJax;
         if (!(MathJax && MathJax._ && MathJax.loader && MathJax.startup)) {
@@ -373,19 +461,73 @@ export class Menu<N, T, D> {
         }
     }
 
-    protected setZScale(scale: string) {
-        this.settings.zscale = scale;
-        this.zscale = 1.25 * parseFloat(scale);
+    /**
+     * Enable/disable the Explorer submenu items
+     *
+     * @param {boolean} enable  True to enable, false to disable
+     */
+    protected enableExplorerItems(enable: boolean) {
+        const menu = (this.menu.findID('Accessibility', 'Explorer') as ContextMenu.Submenu).getSubmenu();
+        for (const item of menu.getItems().slice(3)) {
+            if (!(item instanceof ContextMenu.Rule)) {
+                enable ? item.enable() : item.disable();
+            }
+        }
+
     }
 
+    /*======================================================================*/
+
+    /**
+     * Look up the saved settings from localStorage and merge them into the menu settings
+     */
+    protected mergeUserSettings() {
+        try {
+            const settings = localStorage.getItem(Menu.MENU_STORAGE);
+            if (!settings) return;
+            Object.assign(this.settings, JSON.parse(settings));
+        } catch (err) {
+            console.log('MathJax localStorage error: ' + err.message);
+        }
+    }
+
+    /**
+     * Save any non-default menu settings in localStorage
+     */
+    protected saveUserSettings() {
+        const settings = {} as {[key: string]: any};
+        for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
+            if (this.settings[name] !== this.defaultSettings[name]) {
+                settings[name] = this.settings[name];
+            }
+        }
+        try {
+            if (Object.keys(settings).length) {
+                localStorage.setItem(Menu.MENU_STORAGE, JSON.stringify(settings));
+            } else {
+                localStorage.removeItem(Menu.MENU_STORAGE);
+            }
+        } catch (err) {
+            console.log('MathJax localStorage error: ' + err.message);
+        }
+    }
+
+    /*======================================================================*/
+
+    /**
+     * @param {string} scale   The new scaling value
+     */
     protected setScale(scale: string) {
-        this.settings.scale = scale;
         this.document.outputJax.options.scale = parseFloat(scale);
         this.document.rerender();
     }
 
+    /**
+     * If the jax is already on record, just use it, otherwise load the new one
+     *
+     * @param {string} jax   The name of the jax to switch to
+     */
     protected setRenderer(jax: string) {
-        this.settings.renderer = jax;
         if (this.jax[jax]) {
             this.setOutputJax(jax);
         } else {
@@ -402,39 +544,40 @@ export class Menu<N, T, D> {
         }
     }
 
+    /**
+     * Set up the new jax and link it to the document, then rerender the math
+     *
+     * @param {string} jax   The name of the jax to switch to
+     */
     protected setOutputJax(jax: string) {
         this.jax[jax].setAdaptor(this.document.adaptor);
         this.document.outputJax = this.jax[jax];
         this.rerender();
     }
 
+    /**
+     * @param {boolean} tab   True for including math in the tab other, false for not
+     */
     protected setTabOrder(tab: boolean) {
-        this.settings.inTabOrder = tab;
         this.menu.getStore().inTaborder(tab);
     }
 
+    /**
+     * @param {boolean} explore   True to enable the explorer, false to not
+     */
     protected setExplorer(explore: boolean) {
-        this.settings.explorer = explore;
         this.enableExplorerItems(explore);
-        if (!explore || (window.MathJax._.a11y && window.MathJax._.a11y.Explorer)) {
+        if (!explore || (window.MathJax._.a11y && window.MathJax._.a11y.explorer)) {
             this.rerender();
         } else {
             this.loadA11y('explorer');
         }
     }
 
-    protected enableExplorerItems(enable: boolean) {
-        const menu = (this.menu.findID('Accessibility', 'Explorer') as ContextMenu.Submenu).getSubmenu();
-        for (const item of menu.getItems().slice(3)) {
-            if (!(item instanceof ContextMenu.Rule)) {
-                enable ? item.enable() : item.disable();
-            }
-        }
-
-    }
-
+    /**
+     * @param {boolean} collapse   True to enable collapsible math, false to not
+     */
     protected setCollapsible(collapse: boolean) {
-        this.settings.collapsible = collapse;
         if (!collapse || (window.MathJax._.a11y && window.MathJax._.a11y.complexity)) {
             this.rerender();
         } else {
@@ -442,51 +585,31 @@ export class Menu<N, T, D> {
         }
     }
 
-    public loadA11y(component: string) {
-        const startup = window.MathJax.startup;
-        this.loadComponent('a11y/' + component, () => {
-            mathjax.handlers.unregister(startup.handler);
-            startup.handler = startup.getHandler();
-            mathjax.handlers.register(startup.handler);
-            const document = this.document;
-            this.document = startup.getDocument();
-            this.document.menu = this;
-            this.transferMathList(document);
-            this.rerender();
-        });
-    }
-
-    protected transferMathList(document: MenuMathDocument<N, T, D>) {
-        const MathItem = this.document.options.MathItem;
-        for (const item of document.math) {
-            const math = new MathItem();
-            Object.assign(math, item);    // copy old data to new math item
-            this.document.math.push(math);
+    /**
+     * Request the scaling value from the user and save it in the settings
+     */
+    protected scaleAllMath() {
+        const scale = (parseFloat(this.settings.scale) * 100).toFixed(1).replace(/.0$/, '');
+        const percent = prompt('Scale all mathematics (compared to surrounding text) by', scale + '%');
+        if (percent) {
+            if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
+                const scale = parseFloat(percent) / 100;
+                if (scale) {
+                    this.setScale(String(scale));
+                } else {
+                    alert('The scale should not be zero');
+                }
+            } else {
+                alert('The scale should be a percentage (e.g., 120%)');
+            }
         }
     }
 
-    protected loadComponent(name: string, callback: () => void) {
-        if (!window.MathJax.loader) return;
-        this.loading++;
-        window.MathJax.loader.load(name).then(() => {
-            this.loading--;
-            callback();
-        }).catch((err) => console.log(err));
-    }
-
-    protected formatSource(text: string) {
-        return text.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    protected toMML(math: MathItem<N, T, D>) {
-        return this.MmlVisitor.visitTree(math.root, math, {
-            texHints: this.settings.texHints,
-            semantics: (this.settings.semantics && math.inputJax.name !== 'MathML')
-        });
-    }
-
+    /**
+     * Reset all menu settings to the (page) defaults
+     */
     protected resetDefaults() {
-        this.loading++;
+        this.loading++;    // pretend we're loading, to suppress rerendering for each variable change
         const pool = this.menu.getPool();
         const settings = this.defaultSettings;
         for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
@@ -505,24 +628,149 @@ export class Menu<N, T, D> {
         this.rerender();
     }
 
+    /*======================================================================*/
+
+    /**
+     * Attempt to load a component and perform a callback when done
+     */
+    protected loadComponent(name: string, callback: () => void) {
+        if (!window.MathJax.loader) return;
+        this.loading++;
+        window.MathJax.loader.load(name).then(() => {
+            this.loading--;
+            callback();
+        }).catch((err) => console.log(err));
+    }
+
+    /**
+     * Attempt to load an a11y component
+     *
+     * @param {string} component   The name of the a11y component to load
+     */
+    public loadA11y(component: string) {
+        this.loadComponent('a11y/' + component, () => {
+            const startup = window.MathJax.startup;
+            //
+            // Unregister the handler and get a new one (since the component
+            // will have added a handler extension), then register the new one
+            //
+            mathjax.handlers.unregister(startup.handler);
+            startup.handler = startup.getHandler();
+            mathjax.handlers.register(startup.handler);
+            //
+            // Save the old document and get a new one, attaching the
+            //   original menu (this), and transfering any math items
+            //   from the original document, then rerender with the
+            //   updated document (from the new handler)
+            //
+            const document = this.document;
+            this.document = startup.getDocument();
+            this.document.menu = this;
+            this.transferMathList(document);
+            this.rerender();
+        });
+    }
+
+    /**
+     * @param {MenuMathDocument} document  The original document whose list is to be transferred
+     */
+    protected transferMathList(document: MenuMathDocument<N, T, D>) {
+        const MathItem = this.document.options.MathItem;  // This has been updated by the new handler
+        for (const item of document.math) {
+            const math = new MathItem();    // Make a new MathItem
+            Object.assign(math, item);      // Copy the old data to the new math item
+            this.document.math.push(math);  // Add it to the current document
+        }
+    }
+
+    /**
+     * @param {string} text   The text to be displayed in an Info box
+     * @returns {string}      The text with HTML specials being escaped
+     */
+    protected formatSource(text: string) {
+        return text.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    /**
+     * @param {MathItem} math   The MathItem to serialize as MathML
+     * @returns {string}        The serialized version of the internal MathML
+     */
+    protected toMML(math: MathItem<N, T, D>) {
+        return this.MmlVisitor.visitTree(math.root, math, {
+            texHints: this.settings.texHints,
+            semantics: (this.settings.semantics && math.inputJax.name !== 'MathML')
+        });
+    }
+
+    /*======================================================================*/
+
+    /**
+     * @param {MouseEvent|null} event   The event triggering the zoom (or null for from a menu pick)
+     * @param {string} type             The type of event occurring (click, dblclick)
+     * @param {MathItem} math           The MathItem triggering the event
+     */
+    protected zoom(event: MouseEvent, type: string, math: MathItem<N, T, D>) {
+        if (!event || this.isZoomEvent(event, type)) {
+            this.menu.mathItem = math;
+            if (event) {
+                //
+                // The zoomBox.post() below assumes the menu is open,
+                //   so if this zoom() call is from an event (not the menu),
+                //   make sure the menu is open before posting the zoom box
+                //
+                this.menu.post(event);
+            }
+            this.zoomBox.post();
+        }
+    }
+
+    /**
+     * @param {MouseEvent} Event   The event triggering the zoom action
+     * @param {string} zoom        The type of event (click, dblclick) that occurred
+     * @returns {boolean}          True if the event is the right type and has the needed modifiers
+     */
+    protected isZoomEvent(event: MouseEvent, zoom: string) {
+        return (this.settings.zoom === zoom &&
+                (!this.settings.alt   || event.altKey) &&
+                (!this.settings.ctrl  || event.ctrlKey) &&
+                (!this.settings.cmd   || event.metaKey) &&
+                (!this.settings.shift || event.shiftKey));
+    }
+
+    /**
+     * Rerender the output if we aren't in the middle of loading a new component
+     *   (in which case, we will rerender in the callback performed  after it is loaded)
+     */
     protected rerender() {
         if (!this.loading) {
             this.document.rerender();
         }
     }
 
+    /**
+     * Copy the serialzied MathML to the clipboard
+     */
     protected copyMathML() {
         this.copyToClipboard(this.toMML(this.menu.mathItem));
     }
 
+    /**
+     * Copy the original form to the clipboard
+     */
     protected copyOriginal() {
         this.copyToClipboard(this.menu.mathItem.math);
     }
 
+    /**
+     * Copy the original annotation text to the clipboard
+     */
     public copyAnnotation() {
         this.copyToClipboard(this.menu.annotation);
     }
 
+    /**
+     * @param {string} text   The text to be copied ot the clopboard
+     */
     protected copyToClipboard(text: string) {
         const input = document.createElement('textarea');
         input.value = text;
@@ -538,6 +786,11 @@ export class Menu<N, T, D> {
         document.body.removeChild(input);
     }
 
+    /*======================================================================*/
+
+    /**
+     * @param {MathItem} math   The math to attach the context menu and zoom triggers to
+     */
     public addMenu(math: MathItem<N, T, D>) {
         const element = math.typesetRoot as any as HTMLElement;
         element.addEventListener('contextmenu', () => this.menu.mathItem = math, true);
@@ -547,54 +800,45 @@ export class Menu<N, T, D> {
         this.menu.getStore().insert(element);
     }
 
-    protected scaleAllMath() {
-        const scale = (parseFloat(this.settings.scale) * 100).toFixed(1).replace(/.0$/, '');
-        const percent = prompt('Scale all mathematics (compared to surrounding text) by', scale + '%');
-        if (percent) {
-            if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
-                const scale = parseFloat(percent) / 100;
-                if (scale) {
-                    this.setScale(String(scale));
-                } else {
-                    alert('The scale should not be zero');
-                }
-            } else {
-                alert('The scale should be a percentage (e.g., 120%)');
-            }
-        }
-    }
-
-    protected zoom(event: MouseEvent, type: string, math: MathItem<N, T, D>) {
-        if (this.isZoomEvent(event, type)) {
-            this.menu.mathItem = math;
-            this.menu.post(event);
-            this.zoomBox.post();
-        }
-    }
-
-    protected isZoomEvent(event: MouseEvent, zoom: string) {
-        return (this.settings.zoom === zoom &&
-                (!this.settings.alt   || event.altKey) &&
-                (!this.settings.ctrl  || event.ctrlKey) &&
-                (!this.settings.cmd   || event.metaKey) &&
-                (!this.settings.shift || event.shiftKey));
-    }
-
+    /**
+     * Clear the information about stored context menus
+     */
     public clear() {
         this.menu.getStore().clear();
     }
 
-    public variable<T extends (string | boolean)>(name: keyof MenuSettings, setter?: (value: T) => void) {
+    /*======================================================================*/
+
+    /**
+     * Create JSON for a variable constrolling a menu setting
+     *
+     * @param {keyof MenuSettings} name   The setting for which to make a variable
+     * @param {(T) => void} action        Optional function to perform after setting the value
+     * @returns {Object}                  The JSON for the variable
+     *
+     * @tempate T    The type of variable being defined
+     */
+    public variable<T extends (string | boolean)>(name: keyof MenuSettings, action?: (value: T) => void) {
         return {
             name: name,
             getter: () => this.settings[name],
             setter: (value: T) => {
-                (setter || (v => this.settings[name] = v))(value);
+                this.settings[name] = value;
+                action && action(value);
                 this.saveUserSettings();
             }
         };
     }
 
+    /**
+     * Create JSON for a submenu item
+     *
+     * @param {string} id           The id for the item
+     * @param {string} content      The content for the item
+     * @param {any[]} entries       The JSON for the entries
+     * @param {boolean=} disabled   True if this item is diabled initially
+     * @returns {Object}            The JSON for the submenu item
+     */
     public submenu(id: string, content: string, entries: any[] = [], disabled: boolean = false) {
         let items = [] as Array<Object>;
         for (const entry of entries) {
@@ -607,28 +851,77 @@ export class Menu<N, T, D> {
         return {type: 'submenu', id, content, menu: {items}, disabled: (items.length === 0) || disabled};
     }
 
+    /**
+     * Create JSON for a command item
+     *
+     * @param {string} id           The id for the item
+     * @param {string} content      The content for the item
+     * @param {() => void} action   The action function for the command
+     * @param {Object} other        Other values to include in the generated JSON object
+     * @returns {Object}            The JSON for the command item
+     */
     public command(id: string, content: string, action: () => void, other: Object = {}) {
         return Object.assign({type: 'command', id, content, action}, other);
     }
 
+    /**
+     * Create JSON for a checkbox item
+     *
+     * @param {string} id           The id for the item
+     * @param {string} content      The content for the item
+     * @param {string} variable     The (pool) variable to attach to this checkbox
+     * @param {Object} other        Other values to include in the generated JSON object
+     * @returns {Object}            The JSON for the checkbox item
+     */
     public checkbox(id: string, content: string, variable: string, other: Object = {}) {
         return Object.assign({type: 'checkbox', id, content, variable}, other);
     }
 
+    /**
+     * Create JSON for a group of connected radio buttons
+     *
+     * @param {string} variable     The (pool) variable to attach to each radio button
+     * @param {string[][]} radios   An array of [string] or [string, string], giving the id and content
+     *                                for each radio button (if only one string is given it is ued for both)
+     * @returns {Object[]}          An array of JSON objects for radion buttons
+     */
     public radioGroup(variable: string, radios: string[][]) {
         return radios.map(def => this.radio(def[0], def[1] || def[0], variable));
     }
 
+    /**
+     * Create JSON for a radio button item
+     *
+     * @param {string} id           The id for the item
+     * @param {string} content      The content for the item
+     * @param {string} variable     The (pool) variable to attach to this radio button
+     * @param {Object} other        Other values to include in the generated JSON object
+     * @returns {Object}            The JSON for the radio button item
+     */
     public radio(id: string, content: string, variable: string, other: Object = {}) {
         return Object.assign({type: 'radio', id, content, variable}, other);
     }
 
+    /**
+     * Create JSON for a label item
+     *
+     * @param {string} id           The id for the item
+     * @param {string} content      The content for the item
+     * @returns {Object}            The JSON for the label item
+     */
     public label(id: string, content: string) {
         return {type: 'label', id, content};
     }
 
+    /**
+     * Create JSON for a menu rule
+     *
+     * @returns {Object}            The JSON for the rule item
+     */
     public rule() {
         return {type: 'rule'};
     }
+
+    /*======================================================================*/
 
 }

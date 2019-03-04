@@ -1,3 +1,26 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2019 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Mixin that adds a context-menu to MathJax output
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
 import {MathJax} from '../../mathjax.js';
 
 import {MathItem, AbstractMathItem} from '../../core/MathItem.js';
@@ -15,7 +38,7 @@ export type Constructor<T> = new(...args: any[]) => T;
 /*==========================================================================*/
 
 /**
- * The funtions added to MathItem for adding the context menu
+ * The new function for MathItem that adds the context menu
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -45,17 +68,27 @@ export function MenuMathItemMixin<N, T, D, B extends Constructor<AbstractMathIte
 ): Constructor<MenuMathItem<N, T, D>> & B {
     return class extends BaseMathItem {
 
+        /**
+         * @param {MathDocument} document  The document where the menu is being added
+         */
         public addMenu(document: MenuMathDocument<N, T, D>) {
             document.menu.addMenu(this);
         }
 
+        /**
+         * @override
+         */
+        public rerender(document: MenuMathDocument<N, T, D>) {
+            super.rerender(document);
+            this.addMenu(document);
+        }
     }
 }
 
 /*==========================================================================*/
 
 /**
- * The funtions added to MathDocument for context menus
+ * The properties needed in the MathDocument for context menus
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -107,6 +140,9 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<ComplexityM
 
     return class extends BaseDocument {
 
+        /**
+         * @override
+         */
         public static OPTIONS = {
             ...(BaseDocument as any).OPTIONS,
             rerender: (document: MenuMathDocument<any, any, any>) => document.rerender(),
@@ -114,6 +150,9 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<ComplexityM
             menuOptions: Menu.OPTIONS
         }
 
+        /**
+         * The menu associated with this document
+         */
         public menu: Menu<N, T, D>;
 
         /**
@@ -133,6 +172,11 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<ComplexityM
                 MenuMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(this.options.MathItem);
         }
 
+        /**
+         * Add context menus to the MathItems in the MathDocument
+         *
+         * @return {MathDocument}   The MathDocument (so calls can be chained)
+         */
         public addMenu() {
             if (!this.processed.isSet('context-menu')) {
                 for (const math of this.math) {
@@ -143,6 +187,9 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<ComplexityM
             return this;
         }
 
+        /**
+         * @override
+         */
         public state(state: number, restore: boolean = false) {
             super.state(state, restore);
             if (state <= AbstractMathDocument.STATE.TYPESET) {
@@ -151,17 +198,30 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<ComplexityM
             return this;
         }
 
+        /**
+         * @override
+         */
         public updateDocument() {
             super.updateDocument();
             (this.menu.menu.getStore() as any).sort();
             return this;
         }
 
+        /**
+         * Rerender the math on the page using the rerender option
+         *
+         * @return {MathDocument}   The MathDocument (so calls can be chained)
+         */
         public rerender() {
             this.options.rerender(this);
             return this;
         }
 
+        /**
+         * The default rerender function
+         *
+         * @return {MathDocument}   The MathDocument (so calls can be chained)
+         */
         public defaultRerender() {
             this.state(AbstractMathDocument.STATE.COMPILED);
             this.typeset();
@@ -170,6 +230,9 @@ export function MenuMathDocumentMixin<N, T, D, B extends Constructor<ComplexityM
             return this;
         }
 
+        /**
+         * @override
+         */
         public complexity() {
             if (this.menu.settings.collapsible) {
                 super.complexity();
