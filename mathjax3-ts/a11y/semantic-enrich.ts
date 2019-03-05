@@ -206,6 +206,10 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends Constructor<Abstrac
  * @param {Handler} handler   The Handler instance to enhance
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
  * @return {Handler}          The handler that was modified (for purposes of chainging extensions)
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>) {
     MmlJax.setAdaptor(handler.adaptor);

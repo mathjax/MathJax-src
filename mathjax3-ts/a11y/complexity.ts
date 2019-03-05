@@ -214,6 +214,10 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EnrichedDocumentC
  * @param {Handler} handler   The Handler instance to enhance
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
  * @return {Handler}          The handler that was modified (for purposes of chainging extensions)
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export function ComplexityHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>) {
     handler = EnrichHandler(handler, MmlJax);
