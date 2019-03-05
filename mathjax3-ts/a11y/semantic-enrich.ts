@@ -24,12 +24,14 @@
 import {MathJax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
 import {MathDocument, AbstractMathDocument} from '../core/MathDocument.js';
-import {MathItem, AbstractMathItem} from '../core/MathItem.js';
+import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
 import {sreReady} from './sre.js';
+
+/*==========================================================================*/
 
 /**
  * The only function we need from SRE
@@ -44,6 +46,11 @@ export type Constructor<T> = new(...args: any[]) => T;
 /*==========================================================================*/
 
 /**
+ * Add STATE value for being enriched (after COMPILED and before TYPESET)
+ */
+newState('ENRICHED', 30);
+
+/**
  * The funtions added to MathItem for enrichment
  *
  * @template N  The HTMLElement node class
@@ -53,14 +60,10 @@ export type Constructor<T> = new(...args: any[]) => T;
 export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
 
     /**
-     * True when this MathItem has already been enriched
-     */
-    isEnriched: boolean;
-
-    /**
      * @param {MathDocument} document  The document where enrchment is occurring
      */
     enrich(document: MathDocument<N, T, D>): void;
+
 }
 
 /**
@@ -84,13 +87,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
 
     return class extends BaseMathItem {
 
-        public isEnriched: boolean = false;
-
         /**
          * @param {MathDocument} docuemnt   The MathDocument for the MathItem
          */
         public enrich(document: MathDocument<N, T, D>) {
-            if (this.isEnriched) return;
+            if (this.state() >= STATE.ENRICHED) return;
             if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
                 MathJax.retryAfter(sreReady);
             }
@@ -101,7 +102,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             math.compile(document);
             this.root = math.root;
             this.inputData.originalMml = math.math;
-            this.isEnriched = true;
+            this.state(STATE.ENRICHED);
         }
 
     };
@@ -158,8 +159,8 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends Constructor<Abstrac
             super(...args);
             MmlJax.setMmlFactory(this.mmlFactory);
             const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
-            if (!ProcessBits.has('enrich')) {
-                ProcessBits.allocate('enrich');
+            if (!ProcessBits.has('enriched')) {
+                ProcessBits.allocate('enriched');
             }
             const visitor = new SerializedMmlVisitor(this.mmlFactory);
             const toMathML = ((node: MmlNode) => visitor.visitTree(node));
@@ -173,11 +174,22 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends Constructor<Abstrac
          * Enrich the MathItems in this MathDocument
          */
         public enrich() {
-            if (!this.processed.isSet('enrich')) {
+            if (!this.processed.isSet('enriched')) {
                 for (const math of this.math) {
                     (math as EnrichedMathItem<N, T, D>).enrich(this);
                 }
-                this.processed.set('enrich');
+                this.processed.set('enriched');
+            }
+            return this;
+        }
+
+        /**
+         * @override
+         */
+        public state(state: number, restore: boolean = false) {
+            super.state(state, restore);
+            if (state < STATE.ENRICHED) {
+                this.processed.clear('enriched');
             }
             return this;
         }

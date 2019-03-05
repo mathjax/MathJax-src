@@ -24,11 +24,12 @@
 import {MathJax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
+import {STATE, newState} from '../core/MathItem.js';
 import {HTMLDocument} from '../handlers/html/HTMLDocument.js';
 import {HTMLMathItem} from '../handlers/html/HTMLMathItem.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {SpeechExplorer, Magnifier} from './explorer/Explorer.js';
+import {Explorer, SpeechExplorer, Magnifier} from './explorer/Explorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 import {sreReady} from './sre.js';
 
@@ -44,19 +45,20 @@ export type HTMLMATHITEM = HTMLMathItem<HTMLElement, Text, Document>;
 /*==========================================================================*/
 
 /**
+ * Add STATE value for having the Explorer added (after TYPESET and before INSERTED or CONTEXT_MENU)
+ */
+newState('EXPLORER', 160);
+
+/**
  * The properties added to MathItem for the Explorer
  */
 export interface ExplorerMathItem extends HTMLMATHITEM {
 
     /**
-     * True when this MathItem has already had the Explorer added to it
-     */
-    hasExplorer: boolean;
-
-    /**
      * @param {HTMLDocument} document  The document where the Explorer is being added
      */
     explorable(document: HTMLDOCUMENT): void;
+
 }
 
 /**
@@ -76,9 +78,19 @@ export function ExplorerMathItemMixin(
     return class extends BaseMathItem {
 
         /**
-         * True when this MathItem has already had the Explorer added to it
+         * The Explorer object for this math item
          */
-        public hasExplorer: boolean = false;
+        protected explorer: Explorer = null;
+
+        /**
+         * True when a rerendered element should restart the explorer
+         */
+        protected restart: boolean = false;
+
+        /**
+         * True when a rerendered element should regain the focus
+         */
+        protected refocus: boolean = false;
 
         /**
          * Add the explorer to the output for this math item
@@ -86,14 +98,37 @@ export function ExplorerMathItemMixin(
          * @param {HTMLDocument} docuemnt   The MathDocument for the MathItem
          */
         public explorable(document: ExplorerMathDocument) {
-            if (this.hasExplorer) return;
+            if (this.state() >= STATE.EXPLORER) return;
             if (!(sre && sre.Engine.isReady())) {
                 MathJax.retryAfter(sreReady);
             }
             const node = this.typesetRoot;
             const mml = toMathML(this.root);
-            SpeechExplorer.create(document, document.explorerObjects.region, node, mml);
-            this.hasExplorer = true;
+            this.explorer = SpeechExplorer.create(document, document.explorerObjects.region, node, mml);
+            this.state(STATE.EXPLORER);
+        }
+
+        /**
+         * @override
+         */
+        public rerender(document: ExplorerMathDocument) {
+            this.refocus = (window.document.activeElement === this.typesetRoot);
+            if ((this.explorer as any).active) {
+                this.restart = true;
+                this.explorer.Stop();
+            }
+            super.rerender(document);
+            this.explorable(document);
+        }
+
+        /**
+         * @override
+         */
+        public updateDocument(document: ExplorerMathDocument) {
+            super.updateDocument(document);
+            this.refocus && this.typesetRoot.focus();
+            this.restart && this.explorer.Start();
+            this.refocus = this.restart = false;
         }
 
     };
@@ -181,6 +216,17 @@ export function ExplorerMathDocumentMixin(BaseDocument: Constructor<HTMLDOCUMENT
                     (math as ExplorerMathItem).explorable(this);
                 }
                 this.processed.set('explorer');
+            }
+            return this;
+        }
+
+        /**
+         * @override
+         */
+        public state(state: number, restore: boolean = false) {
+            super.state(state, restore);
+            if (state < STATE.EXPLORER) {
+                this.processed.clear('explorer');
             }
             return this;
         }
