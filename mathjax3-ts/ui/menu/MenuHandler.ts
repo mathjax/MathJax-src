@@ -40,11 +40,16 @@ import {Menu} from './Menu.js';
 export type Constructor<T> = new(...args: any[]) => T;
 
 /**
+ * Constructor for base MathItem for MenuMathItem
+ */
+export type A11yMathItemConstructor = Constructor<AbstractMathItem<HTMLElement, Text, Document>>;
+
+/**
  * Constructor for base document for MenuMathDocument
  */
-export type A11yDocumentConstructor<N, T, D> = {
+export type A11yDocumentConstructor = {
     OPTIONS: OptionList;
-    new(...args: any[]): ComplexityMathDocument<N, T, D> & ExplorerMathDocument;
+    new(...args: any[]): ComplexityMathDocument<HTMLElement, Text, Document> & ExplorerMathDocument;
 }
 
 /*==========================================================================*/
@@ -56,17 +61,13 @@ newState('CONTEXT_MENU', 170);
 
 /**
  * The new function for MathItem that adds the context menu
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export interface MenuMathItem<N, T, D> extends MathItem<N, T, D> {
+export interface MenuMathItem extends MathItem<HTMLElement, Text, Document> {
 
     /**
      * @param {MathDocument} document  The document where the menu is being added
      */
-    addMenu(document: MathDocument<N, T, D>): void;
+    addMenu(document: MathDocument<HTMLElement, Text, Document>): void;
 }
 
 /**
@@ -75,21 +76,18 @@ export interface MenuMathItem<N, T, D> extends MathItem<N, T, D> {
  * @param {B} BaseMathItem   The MathItem class to be extended
  * @return {MathMathItem}    The extended MathItem class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template B  The MathItem class to extend
  */
-export function MenuMathItemMixin<N, T, D, B extends Constructor<AbstractMathItem<N, T, D>>>(
+export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
     BaseMathItem: B
-): Constructor<MenuMathItem<N, T, D>> & B {
+): Constructor<MenuMathItem> & B {
 
     return class extends BaseMathItem {
 
         /**
          * @param {MathDocument} document  The document where the menu is being added
          */
-        public addMenu(document: MenuMathDocument<N, T, D>) {
+        public addMenu(document: MenuMathDocument) {
             if (this.state() < STATE.CONTEXT_MENU) {
                 document.menu.addMenu(this);
                 this.state(STATE.CONTEXT_MENU);
@@ -99,7 +97,7 @@ export function MenuMathItemMixin<N, T, D, B extends Constructor<AbstractMathIte
         /**
          * @override
          */
-        public rerender(document: MenuMathDocument<N, T, D>) {
+        public rerender(document: MenuMathDocument) {
             super.rerender(document);
             this.addMenu(document);
         }
@@ -111,24 +109,20 @@ export function MenuMathItemMixin<N, T, D, B extends Constructor<AbstractMathIte
 
 /**
  * The properties needed in the MathDocument for context menus
- *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  */
-export interface MenuMathDocument<N, T, D> extends ComplexityMathDocument<N, T, D> {
+export interface MenuMathDocument extends ComplexityMathDocument<HTMLElement, Text, Document> {
 
     /**
      * The menu associated with this document
      */
-    menu: Menu<N, T, D>;
+    menu: Menu;
 
     /**
      * Add context menus to the MathItems in the MathDocument
      *
      * @return {MathDocument}   The MathDocument (so calls can be chained)
      */
-    addMenu(): MathDocument<N, T, D>;
+    addMenu(): MenuMathDocument;
 
 }
 
@@ -138,14 +132,11 @@ export interface MenuMathDocument<N, T, D> extends ComplexityMathDocument<N, T, 
  * @param {B} BaseMathDocument     The MathDocument class to be extended
  * @return {MenuMathDocument}      The extended MathDocument class
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
- * @template D  The Document class
  * @template B  The MathDocument class to extend
  */
-export function MenuMathDocumentMixin<N, T, D, B extends A11yDocumentConstructor<N, T, D>>(
+export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     BaseDocument: B
-): Constructor<MenuMathDocument<N, T, D>> & B {
+): Constructor<MenuMathDocument> & B {
 
     return class extends BaseDocument {
 
@@ -161,7 +152,7 @@ export function MenuMathDocumentMixin<N, T, D, B extends A11yDocumentConstructor
         /**
          * The menu associated with this document
          */
-        public menu: Menu<N, T, D>;
+        public menu: Menu;
 
         /**
          * Extend the MathItem class used for this MathDocument
@@ -176,8 +167,7 @@ export function MenuMathDocumentMixin<N, T, D, B extends A11yDocumentConstructor
             if (!ProcessBits.has('context-menu')) {
                 ProcessBits.allocate('context-menu');
             }
-            this.options.MathItem =
-                MenuMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(this.options.MathItem);
+            this.options.MathItem = MenuMathItemMixin<A11yMathItemConstructor>(this.options.MathItem);
         }
 
         /**
@@ -188,7 +178,7 @@ export function MenuMathDocumentMixin<N, T, D, B extends A11yDocumentConstructor
         public addMenu() {
             if (!this.processed.isSet('context-menu')) {
                 for (const math of this.math) {
-                    (math as MenuMathItem<N, T, D>).addMenu(this);
+                    (math as MenuMathItem).addMenu(this);
                 }
                 this.processed.set('context-menu');
             }
@@ -247,8 +237,7 @@ export function MenuMathDocumentMixin<N, T, D, B extends A11yDocumentConstructor
  * @param {Handler} handler   The Handler instance to enhance
  * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
-export function MenuHandler<N, T, D>(handler: Handler<N, T, D>) {
-    handler.documentClass =
-        MenuMathDocumentMixin<N, T, D, A11yDocumentConstructor<N, T, D>>(handler.documentClass as any);
+export function MenuHandler(handler: Handler<HTMLElement, Text, Document>) {
+    handler.documentClass = MenuMathDocumentMixin<A11yDocumentConstructor>(handler.documentClass as any);
     return handler;
 }

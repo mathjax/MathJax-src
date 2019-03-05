@@ -77,12 +77,14 @@ export interface MenuSettings {
     inTabOrder: boolean;
 }
 
+export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
+
 /*==========================================================================*/
 
 /**
  * The Menu object that handles the MathJax contextual menu and its actions
  */
-export class Menu<N, T, D> {
+export class Menu {
 
     /**
      * The key for the localStorage for the menu settings
@@ -147,22 +149,22 @@ export class Menu<N, T, D> {
     /**
      * The contextual menu object that is managed by this Menu
      */
-    public menu: MJContextMenu<N, T, D> = null;
+    public menu: MJContextMenu = null;
 
     /**
      * A MathML serializer that has options corresponding to the menu settings
      */
-    public MmlVisitor = new MmlVisitor<N, T, D>();
+    public MmlVisitor = new MmlVisitor<HTMLElement, Text, Document>();
 
     /**
      * The MathDocument in which we are working
      */
-    protected document: MenuMathDocument<N, T, D>;
+    protected document: MenuMathDocument;
 
     /**
      * Instances of the various output jax that we can switch to
      */
-    protected jax: {[name: string]: OutputJax<N, T, D>} = {
+    protected jax: {[name: string]: OutputJax<HTMLElement, Text, Document>} = {
         CHTML: null,
         SVG: null
     };
@@ -295,7 +297,7 @@ export class Menu<N, T, D> {
      * @param {OptionList} options          The options for the menu
      * @override
      */
-    constructor(document: MenuMathDocument<N, T, D>, options: OptionList = {}) {
+    constructor(document: MenuMathDocument, options: OptionList = {}) {
         this.document = document;
         this.options = userOptions(defaultOptions({}, (this.constructor as typeof Menu).OPTIONS), options);
         this.initSettings();
@@ -424,7 +426,7 @@ export class Menu<N, T, D> {
                     this.command('Help', 'MathJax Help', () => this.help.post())
                 ]
             }
-        }) as MJContextMenu<N, T, D>;
+        }) as MJContextMenu;
         const menu = this.menu;
         this.about.attachMenu(menu);
         this.help.attachMenu(menu);
@@ -674,7 +676,7 @@ export class Menu<N, T, D> {
     /**
      * @param {MenuMathDocument} document  The original document whose list is to be transferred
      */
-    protected transferMathList(document: MenuMathDocument<N, T, D>) {
+    protected transferMathList(document: MenuMathDocument) {
         const MathItem = this.document.options.MathItem;  // This has been updated by the new handler
         for (const item of document.math) {
             const math = new MathItem();    // Make a new MathItem
@@ -695,7 +697,7 @@ export class Menu<N, T, D> {
      * @param {MathItem} math   The MathItem to serialize as MathML
      * @returns {string}        The serialized version of the internal MathML
      */
-    protected toMML(math: MathItem<N, T, D>) {
+    protected toMML(math: HTMLMATHITEM) {
         return this.MmlVisitor.visitTree(math.root, math, {
             texHints: this.settings.texHints,
             semantics: (this.settings.semantics && math.inputJax.name !== 'MathML')
@@ -709,7 +711,7 @@ export class Menu<N, T, D> {
      * @param {string} type             The type of event occurring (click, dblclick)
      * @param {MathItem} math           The MathItem triggering the event
      */
-    protected zoom(event: MouseEvent, type: string, math: MathItem<N, T, D>) {
+    protected zoom(event: MouseEvent, type: string, math: HTMLMATHITEM) {
         if (!event || this.isZoomEvent(event, type)) {
             this.menu.mathItem = math;
             if (event) {
@@ -791,8 +793,8 @@ export class Menu<N, T, D> {
     /**
      * @param {MathItem} math   The math to attach the context menu and zoom triggers to
      */
-    public addMenu(math: MathItem<N, T, D>) {
-        const element = math.typesetRoot as any as HTMLElement;
+    public addMenu(math: HTMLMATHITEM) {
+        const element = math.typesetRoot;
         element.addEventListener('contextmenu', () => this.menu.mathItem = math, true);
         element.addEventListener('keydown', () => this.menu.mathItem = math, true);
         element.addEventListener('click', (event: MouseEvent) => this.zoom(event, 'Click', math), true);

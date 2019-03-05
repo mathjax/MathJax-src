@@ -44,7 +44,7 @@ export type PoolItem = {name: string, getter: () => string | boolean, setter: (x
  * The subclass of ContextMenu that handles the needs of the MathJax
  *   contextual menu (in particular, tying it to a MathItem).
  */
-export class MJContextMenu<N, T, D> extends ContextMenu.ContextMenu {
+export class MJContextMenu extends ContextMenu.ContextMenu {
 
     /**
      * @param {MenuJSON} menu     Create a menu object from a menu definition
@@ -75,7 +75,7 @@ export class MJContextMenu<N, T, D> extends ContextMenu.ContextMenu {
     /**
      * The MathItem that has posted the menu
      */
-    public mathItem: MathItem<N, T, D> = null;
+    public mathItem: MathItem<HTMLElement, Text, Document> = null;
 
     /**
      * The annotation selected in the Annotation submenu (neede for the info box to be able to show it)
