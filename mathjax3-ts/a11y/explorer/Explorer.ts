@@ -222,9 +222,10 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   }
 
   private initWalker() {
+    const jax = this.document.outputJax.name;
     this.highlighter = sre.HighlighterFactory.highlighter(
       this.background, this.foreground,
-      {renderer: this.document.outputJax.name}
+      {renderer: jax === 'CHTML' ? 'CommonHTML' : jax}
     );
     // Add speech
     this.speechGenerator = new sre.TreeSpeechGenerator();
