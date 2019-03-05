@@ -144,7 +144,7 @@ export interface MathItem<N, T, D> {
     typeset(document: MathDocument<N, T, D>): void;
 
     /**
-     * Rerenders an already rendered item and re-inserts it into the document
+     * Rerenders an already rendered item (but must updateDocument() afterward)
      *
      * @param {MathDocument} document  The MathDocument in which the math resides
      */
@@ -184,6 +184,7 @@ export interface MathItem<N, T, D> {
      * @param {number} state    The state to set for the expression
      * @param {number} restore  True if the original form should be restored
      *                           when rolling back a typeset version
+     * @returns {number}        The current state
      */
     state(state?: number, restore?: boolean): number;
 
@@ -233,13 +234,6 @@ export function protoItem<N, T>(open: string, math: string, close: string, n: nu
  * @template D  The Document class
  */
 export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
-
-    public static STATE = {
-        UNPROCESSED: 0,
-        COMPILED: 1,
-        TYPESET: 2,
-        INSERTED: 3
-    };
 
     public math: string;
     public inputJax: InputJax<N, T, D>;
@@ -302,9 +296,8 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
      * @override
      */
     public rerender(document: MathDocument<N, T, D>) {
-        this.state(AbstractMathItem.STATE.COMPILED);
+        this.state(STATE.PRE_TYPESET);  // reset to just before typesetting
         this.typeset(document);
-        this.updateDocument(document);
     }
 
     /**
@@ -351,4 +344,29 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
 }
 
-let STATE = AbstractMathItem.STATE;
+/*****************************************************************/
+/**
+ * The various states that a MathItem (or MathDocument) can be in
+ *   (open-ended to so that extensions can add to it)
+ */
+export const STATE: {[state: string]: number} = {
+    UNPROCESSED: 0,
+    COMPILED: 20,
+    METRICS: 110,
+    PRE_TYPESET: 149,
+    TYPESET: 150,
+    INSERTED: 200
+};
+
+/**
+ * Allocate a new named state
+ *
+ * @param {string} name    The name of the new state
+ * @param {number} state   The value for the new state
+ */
+export function newState(name: string, state: number) {
+    if (name in STATE) {
+        throw Error('State ' + name + ' already exists');
+    }
+    STATE[name] = state;
+}

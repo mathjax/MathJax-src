@@ -28,7 +28,7 @@ import {HTMLMathList} from './HTMLMathList.js';
 import {HTMLDomStrings} from './HTMLDomStrings.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {InputJax} from '../../core/InputJax.js';
-import {MathItem, ProtoItem, Location} from '../../core/MathItem.js';
+import {MathItem, STATE, ProtoItem, Location} from '../../core/MathItem.js';
 
 /*****************************************************************/
 /**
@@ -60,7 +60,6 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
         DomStrings: null                  // Use the default DomString parser
     };
-    public static STATE = AbstractMathDocument.STATE;
 
     /**
      * The DomString parser for locating the text in DOM trees
@@ -265,5 +264,3 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 }
 
 AbstractMathDocument.ProcessBits.allocate('TestMath');  // Temporary
-
-let STATE = HTMLDocument.STATE;

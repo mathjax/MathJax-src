@@ -107,6 +107,7 @@ CommonMactionMixin<SVGWrapper<N, T, D>, SVGConstructor<N, T, D>>(SVGWrapper) {
                 }
                 mml.nextToggleSelection();
                 math.rerender(document);
+                math.updateDocument(document);
                 event.stopPropagation();
             });
         }, {}]],

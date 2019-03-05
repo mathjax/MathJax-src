@@ -25,7 +25,7 @@ import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {InputJax, AbstractInputJax} from './InputJax.js';
 import {OutputJax, AbstractOutputJax} from './OutputJax.js';
 import {MathList, AbstractMathList} from './MathList.js';
-import {MathItem, AbstractMathItem} from './MathItem.js';
+import {MathItem, AbstractMathItem, STATE} from './MathItem.js';
 import {MmlNode, TextNode} from './MmlTree/MmlNode.js';
 import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
@@ -159,6 +159,13 @@ export interface MathDocument<N, T, D> {
     state(state: number, restore?: boolean): MathDocument<N, T, D>;
 
     /**
+     * Rerender the MathItems on the page
+     *
+     * @return {MathDocument}    The math document instance
+     */
+    rerender(): MathDocument<N, T, D>;
+
+    /**
      * Clear the processed values so that the document can be reprocessed
      *
      * @return {MathDocument}  The math document instance
@@ -259,7 +266,6 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             doc.typesetError(math, err);
         }
     };
-    public static STATE = AbstractMathItem.STATE;
 
     /**
      * A bit-field for the actions that heve been processed
@@ -454,6 +460,18 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     /**
      * @override
      */
+    public rerender() {
+        this.state(STATE.PRE_TYPESET);  // reset to just before typesetting
+        for (const math of this.math) {
+            math.rerender(this);
+        }
+        this.updateDocument();
+        return this;
+    }
+
+    /**
+     * @override
+     */
     public reset() {
         this.processed.reset();
         return this;
@@ -477,8 +495,6 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     }
 
 }
-
-let STATE = AbstractMathDocument.STATE;
 
 /**
  * The constructor type for a MathDocument
