@@ -28,7 +28,7 @@ import {MathJax as MJGlobal, MathJaxObject as MJObject,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {MathDocument} from '../core/MathDocument.js';
-import {MathItem} from '../core/MathItem.js';
+import {MathItem, STATE} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {Handler} from '../core/Handler.js';
 import {InputJax, AbstractInputJax} from '../core/InputJax.js';
@@ -601,14 +601,14 @@ if (typeof MathJax._.startup === 'undefined') {
     }
 
     Startup.typesetCall(findMath, 10);
-    Startup.typesetCall('compile', 20);
-    Startup.typesetCall('getMetrics', 110);
-    Startup.typesetCall('typeset', 150);
-    Startup.typesetCall('updateDocument', 200);
+    Startup.typesetCall('compile', STATE.COMPILED);
+    Startup.typesetCall('getMetrics', STATE.METRICS);
+    Startup.typesetCall('typeset', STATE.TYPESET);
+    Startup.typesetCall('updateDocument', STATE.INSERTED);
     Startup.typesetCall('reset', 500);
 
-    Startup.convertCall('compile', 20);
-    Startup.convertCall('typeset', 150);
+    Startup.convertCall('compile', STATE.COMPILED);
+    Startup.convertCall('typeset', STATE.TYPESET);
 }
 
 /**
