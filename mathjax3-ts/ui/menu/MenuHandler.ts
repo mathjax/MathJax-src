@@ -116,6 +116,7 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
          */
         public complexity(document: MenuMathDocument) {
             if (document.menu.settings.collapsible) {
+                document.menu.checkComponent('a11y/complexity');
                 super.complexity(document);
             }
         }
@@ -125,6 +126,7 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
          */
         public explorable(document: MenuMathDocument) {
             if (document.menu.settings.explorer) {
+                document.menu.checkComponent('a11y/explorer');
                 super.explorable(document as any);
             }
         }
@@ -237,6 +239,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          */
         public complexity() {
             if (this.menu.settings.collapsible) {
+                this.menu.checkComponent('a11y/complexity');
                 super.complexity();
             }
             return this;
@@ -247,6 +250,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          */
         public explorable() {
             if (this.menu.settings.explorer) {
+                this.menu.checkComponent('a11y/explorer');
                 super.explorable();
             }
             return this;

@@ -174,6 +174,16 @@ export class Menu {
      */
     protected loading: number = 0;
 
+    /**
+     * Promises for the loading components
+     */
+    protected loadingPromises: Map<string, Promise<void>> = new Map();
+
+    /**
+     * The minium initial state for pending rerender requests (so final rerender gets the right start)
+     */
+    protected rerenderStart: number = STATE.LAST;
+
     /*======================================================================*/
 
     /**
@@ -641,15 +651,30 @@ export class Menu {
     /*======================================================================*/
 
     /**
+     * Check it a component is loading, and restart if it is
+     *
+     * @param {string} name        The name of the component to check if it is loading
+     */
+    public checkComponent(name: string) {
+        const promise = this.loadingPromises.get(name);
+        if (promise) {
+            mathjax.retryAfter(promise);
+        }
+    }
+
+    /**
      * Attempt to load a component and perform a callback when done
      */
     protected loadComponent(name: string, callback: () => void) {
-        if (!window.MathJax.loader) return;
+        const loader = window.MathJax.loader;
+        if (!loader) return;
         this.loading++;
-        window.MathJax.loader.load(name).then(() => {
+        const promise = loader.load(name).then(() => {
             this.loading--;
+            this.loadingPromises.delete(name);
             callback();
         }).catch((err) => console.log(err));
+        this.loadingPromises.set(name, promise);
     }
 
     /**
@@ -754,8 +779,10 @@ export class Menu {
      * @param {number=} start   The state at which to start rerendering
      */
     protected rerender(start: number = STATE.TYPESET) {
+        this.rerenderStart = Math.min(start, this.rerenderStart);
         if (!this.loading) {
-            this.document.rerender(start);
+            this.document.rerender(this.rerenderStart);
+            this.rerenderStart = STATE.LAST;
         }
     }
 
