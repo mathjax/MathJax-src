@@ -13,6 +13,7 @@ exports.source = {
     'a11y/complexity': `${src}/a11y/complexity/complexity.js`,
     'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
     'sre': `../../mathjax3/a11y/sre-node.js`,
+    'context-menu': `${src}/context-menu/context-menu.js`,
     'loader': `${src}/loader/loader.js`,
     'startup': `${src}/startup/startup.js`
 };
