@@ -23,7 +23,7 @@
 
 import {MathJax as mathjax} from '../../mathjax.js';
 
-import {MathItem} from '../../core/MathItem.js';
+import {MathItem, STATE} from '../../core/MathItem.js';
 import {OutputJax} from '../../core/OutputJax.js';
 import {MathJaxObject as StartupObject} from '../../components/startup.js';
 import {MathJaxObject as LoaderObject} from '../../components/loader.js';
@@ -434,7 +434,7 @@ export class Menu {
         this.annotationText.attachMenu(menu);
         this.mathmlCode.attachMenu(menu);
         this.zoomBox.attachMenu(menu);
-        this.disableUnloadableItems();
+        this.checkLoadableItems();
         this.enableExplorerItems(this.settings.explorer);
         menu.showAnnotation = this.annotationText;
         menu.copyAnnotation = this.copyAnnotation.bind(this);
@@ -447,10 +447,18 @@ export class Menu {
      * Check whether the startup and loader modules are available, and
      *   if not, disable the a11y modules (since we can't load them
      *   or know if they are available).
+     * Otherwise, check if any need to be loaded
      */
-    protected disableUnloadableItems() {
+    protected checkLoadableItems() {
         const MathJax = window.MathJax;
-        if (!(MathJax && MathJax._ && MathJax.loader && MathJax.startup)) {
+        if (MathJax && MathJax._ && MathJax.loader && MathJax.startup) {
+            if (this.settings.collapsible && (!MathJax._.a11y || !MathJax._.a11y.complexity)) {
+                this.loadA11y('complexity');
+            }
+            if (this.settings.explorer && (!MathJax._.a11y || !MathJax._.a11y.explorer)) {
+                this.loadA11y('explorer');
+            }
+        } else {
             const menu = this.menu;
             for (const name of Object.keys(this.jax)) {
                 if (!this.jax[name]) {
@@ -581,7 +589,7 @@ export class Menu {
      */
     protected setCollapsible(collapse: boolean) {
         if (!collapse || (window.MathJax._.a11y && window.MathJax._.a11y.complexity)) {
-            this.rerender();
+            this.rerender(STATE.COMPILED);
         } else {
             this.loadA11y('complexity');
         }
@@ -627,7 +635,7 @@ export class Menu {
             }
         }
         this.loading--;
-        this.rerender();
+        this.rerender(STATE.COMPILED);
     }
 
     /*======================================================================*/
@@ -669,7 +677,7 @@ export class Menu {
             this.document = startup.getDocument();
             this.document.menu = this;
             this.transferMathList(document);
-            this.rerender();
+            this.rerender(component === 'complexity' ? STATE.COMPILED : STATE.TYPESET);
         });
     }
 
@@ -742,10 +750,12 @@ export class Menu {
     /**
      * Rerender the output if we aren't in the middle of loading a new component
      *   (in which case, we will rerender in the callback performed  after it is loaded)
+     *
+     * @param {number=} start   The state at which to start rerendering
      */
-    protected rerender() {
+    protected rerender(start: number = STATE.TYPESET) {
         if (!this.loading) {
-            this.document.rerender();
+            this.document.rerender(start);
         }
     }
 

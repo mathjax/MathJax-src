@@ -23,11 +23,12 @@
 
 import {MathJax} from '../../mathjax.js';
 
-import {MathItem, AbstractMathItem, STATE, newState} from '../../core/MathItem.js';
+import {MathItem, STATE, newState} from '../../core/MathItem.js';
 import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
+import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {Handler} from '../../core/Handler.js';
-import {ComplexityMathDocument} from '../../a11y/complexity.js';
-import {ExplorerMathDocument} from '../../a11y/explorer.js';
+import {ComplexityMathDocument, ComplexityMathItem} from '../../a11y/complexity.js';
+import {ExplorerMathDocument, ExplorerMathItem} from '../../a11y/explorer.js';
 import {OptionList} from '../../util/Options.js';
 
 import {Menu} from './Menu.js';
@@ -42,7 +43,9 @@ export type Constructor<T> = new(...args: any[]) => T;
 /**
  * Constructor for base MathItem for MenuMathItem
  */
-export type A11yMathItemConstructor = Constructor<AbstractMathItem<HTMLElement, Text, Document>>;
+export type A11yMathItemConstructor = {
+    new(...args: any[]): ComplexityMathItem<HTMLElement, Text, Document> & ExplorerMathItem;
+}
 
 /**
  * Constructor for base document for MenuMathDocument
@@ -97,9 +100,33 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
         /**
          * @override
          */
-        public rerender(document: MenuMathDocument) {
-            super.rerender(document);
-            this.addMenu(document);
+        public rerender(document: MenuMathDocument, start: number = STATE.TYPESET, end: number = STATE.LAST) {
+            const state = STATE.CONTEXT_MENU;
+            if (start <= state && state <= end) {
+                super.rerender(document, start, state);
+                this.addMenu(document);
+                super.rerender(document, state + 1, end);
+            } else {
+                super.rerender(document, start, end);
+            }
+        }
+
+        /**
+         * @override
+         */
+        public complexity(document: MenuMathDocument) {
+            if (document.menu.settings.collapsible) {
+                super.complexity(document);
+            }
+        }
+
+        /**
+         * @override
+         */
+        public explorable(document: MenuMathDocument) {
+            if (document.menu.settings.explorer) {
+                super.explorable(document as any);
+            }
         }
 
     }
