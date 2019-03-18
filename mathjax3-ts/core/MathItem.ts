@@ -130,9 +130,26 @@ export interface MathItem<N, T, D> {
     outputData: OptionList;
 
     /**
+     * Perform the renderActions on the document
+     *
+     * @param {MathDocument} document  The MathDocument in which the math resides
+     */
+    render(document: MathDocument<N, T, D>): void;
+
+    /**
+     * Rerenders an already rendered item and inserts it into the document
+     *
+     * @param {MathDocument} document  The MathDocument in which the math resides
+     * @param {number=} start          The state to start rerendering at (default = RERENDER)
+     */
+    rerender(document: MathDocument<N, T, D>, start?: number): void;
+
+    /**
      * Converts the expression into the internal format by calling the input jax
      *
      * @param {MathDocument} document  The MathDocument in which the math resides
+     * @param {number=} start          The state to start rerendering at (default = TYPESET)
+     * @param {number=} end            The state to end rerendering at (default = LAST)
      */
     compile(document: MathDocument<N, T, D>): void;
 
@@ -142,15 +159,6 @@ export interface MathItem<N, T, D> {
      * @param {MathDocument} document  The MathDocument in which the math resides
      */
     typeset(document: MathDocument<N, T, D>): void;
-
-    /**
-     * Rerenders an already rendered item and inserts it into the document
-     *
-     * @param {MathDocument} document  The MathDocument in which the math resides
-     * @param {number=} start          The state to start rerendering at (default = TYPESET)
-     * @param {number=} end            The state to end rerendering at (default = LAST)
-     */
-    rerender(document: MathDocument<N, T, D>, start?: number, end?: number): void;
 
     /**
      * Inserts the typeset version in place of the original form in the document
@@ -277,6 +285,30 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     /**
      * @override
      */
+    public render(document: MathDocument<N, T, D>) {
+        document.renderActions.renderMath(this, document);
+    }
+
+    /**
+     * @override
+     */
+    public rerender(document: MathDocument<N, T, D>, start: number = STATE.RERENDER) {
+        if (this.state() >= start) {
+            this.state(start - 1);
+        }
+        document.renderActions.renderMath(this, document, start);
+    }
+
+    /**
+     * @override
+     */
+    convert(document: MathDocument<N, T, D>, end: number = STATE.LAST) {
+        document.renderActions.renderConvert(this, document, end);
+    }
+
+    /**
+     * @override
+     */
     public compile(document: MathDocument<N, T, D>) {
         if (this.state() < STATE.COMPILED) {
             this.root = this.inputJax.compile(this);
@@ -291,25 +323,6 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         if (this.state() < STATE.TYPESET) {
             this.typesetRoot = document.outputJax[this.display === null ? 'escaped' : 'typeset'](this, document);
             this.state(STATE.TYPESET);
-        }
-    }
-
-    /**
-     * @override
-     */
-    public rerender(document: MathDocument<N, T, D>, start: number = STATE.TYPESET, end: number = STATE.LAST) {
-        if (start > end) return;
-        if (this.state() >= start) {
-            this.state(start - 1);
-        }
-        if (end > STATE.COMPILED) {
-            this.compile(document);
-        }
-        if (end > STATE.TYPESET) {
-            this.typeset(document);
-        }
-        if (end > STATE.INSERTED) {
-            this.updateDocument(document);
         }
     }
 
@@ -355,6 +368,10 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         return this._state;
     }
 
+    public reset() {
+        this.state(STATE.UNPROCESSED);
+    }
+
 }
 
 /*****************************************************************/
@@ -364,10 +381,14 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
  */
 export const STATE: {[state: string]: number} = {
     UNPROCESSED: 0,
+    FINDMATH: 10,
     COMPILED: 20,
+    CONVERT: 100,
     METRICS: 110,
+    RERENDER: 125,
     TYPESET: 150,
     INSERTED: 200,
+    RESET: 500,
     LAST: 10000
 };
 

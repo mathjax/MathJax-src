@@ -54,7 +54,7 @@ export interface Handler<N, T, D> {
      * The class implementing the MathDocument for this handler
      *   (so it can be subclassed by extensions as needed)
      */
-    documentClass: MathDocumentConstructor<N, T, D>;
+    documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>>;
 
     /**
      * Checks to see if the handler can process a given document
@@ -113,7 +113,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
      * The class implementing the MathDocument for this handler
      *   (so it can be subclassed by extensions as needed)
      */
-    public documentClass: MathDocumentConstructor<N, T, D> = DefaultMathDocument;
+    public documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>> = DefaultMathDocument;
 
     /**
      * @param {number} priority  The priority to use for this handler
