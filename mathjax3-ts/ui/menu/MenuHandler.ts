@@ -24,12 +24,12 @@
 import {MathJax} from '../../mathjax.js';
 
 import {MathItem, STATE, newState} from '../../core/MathItem.js';
-import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
+import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../../core/MathDocument.js';
 import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {Handler} from '../../core/Handler.js';
 import {ComplexityMathDocument, ComplexityMathItem} from '../../a11y/complexity.js';
 import {ExplorerMathDocument, ExplorerMathItem} from '../../a11y/explorer.js';
-import {OptionList} from '../../util/Options.js';
+import {OptionList, expandable} from '../../util/Options.js';
 
 import {Menu} from './Menu.js';
 
@@ -50,10 +50,8 @@ export type A11yMathItemConstructor = {
 /**
  * Constructor for base document for MenuMathDocument
  */
-export type A11yDocumentConstructor = {
-    OPTIONS: OptionList;
-    new(...args: any[]): ComplexityMathDocument<HTMLElement, Text, Document> & ExplorerMathDocument;
-}
+export type A11yDocumentConstructor =
+    MathDocumentConstructor<ComplexityMathDocument<HTMLElement, Text, Document> & ExplorerMathDocument>;
 
 /*==========================================================================*/
 
@@ -94,20 +92,6 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
             if (this.state() < STATE.CONTEXT_MENU) {
                 document.menu.addMenu(this);
                 this.state(STATE.CONTEXT_MENU);
-            }
-        }
-
-        /**
-         * @override
-         */
-        public rerender(document: MenuMathDocument, start: number = STATE.TYPESET, end: number = STATE.LAST) {
-            const state = STATE.CONTEXT_MENU;
-            if (start <= state && state <= end) {
-                super.rerender(document, start, state);
-                this.addMenu(document);
-                super.rerender(document, state + 1, end);
-            } else {
-                super.rerender(document, start, end);
             }
         }
 
@@ -175,7 +159,11 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
         public static OPTIONS = {
             ...BaseDocument.OPTIONS,
             MenuClass: Menu,
-            menuOptions: Menu.OPTIONS
+            menuOptions: Menu.OPTIONS,
+            renderActions: expandable({
+                ...BaseDocument.OPTIONS.renderActions,
+                addMenu: [STATE.CONTEXT_MENU]
+            })
         }
 
         /**
