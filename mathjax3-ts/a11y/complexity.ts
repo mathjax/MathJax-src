@@ -22,13 +22,13 @@
  */
 
 import {Handler} from '../core/Handler.js';
-import {MathDocument, AbstractMathDocument} from '../core/MathDocument.js';
+import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
 import {MathItem, STATE, newState} from '../core/MathItem.js';
 import {MathML} from '../input/mathml.js';
 import {MmlNode, AbstractMmlTokenNode} from '../core/MmlTree/MmlNode.js';
 import {EnrichHandler, EnrichedMathItem, EnrichedMathDocument} from './semantic-enrich.js';
 import {ComplexityVisitor} from './complexity/visitor.js';
-import {OptionList, selectOptionsFromKeys} from '../util/Options.js';
+import {OptionList, selectOptionsFromKeys, expandable} from '../util/Options.js';
 
 /**
  * Generic constructor for Mixins
@@ -38,10 +38,7 @@ export type Constructor<T> = new(...args: any[]) => T;
 /**
  * Constructor for base document for ComplexityMathDocument
  */
-export type EnrichedDocumentConstructor<N, T, D> = {
-    OPTIONS: OptionList;
-    new(...args: any[]): EnrichedMathDocument<N, T, D>;
-}
+export type EnrichedDocumentConstructor<N, T, D> =  MathDocumentConstructor<EnrichedMathDocument<N, T, D>>;
 
 /*==========================================================================*/
 
@@ -95,21 +92,6 @@ export function ComplexityMathItemMixin<N, T, D, B extends Constructor<EnrichedM
             }
         }
 
-        /**
-         * @override
-         */
-        public rerender(document: ComplexityMathDocument<N, T, D>,
-                        start: number = STATE.TYPESET, end: number = STATE.LAST) {
-            const state = STATE.COMPLEXITY;
-            if (start <= state && state <= end) {
-                super.rerender(document, start, STATE.ENRICHED - 1);
-                this.complexity(document);
-                super.rerender(document, state + 1, end);
-            } else {
-                super.rerender(document, start, end);
-            }
-        }
-
     };
 
 }
@@ -156,7 +138,11 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EnrichedDocumentC
         public static OPTIONS: OptionList = {
             ...BaseDocument.OPTIONS,
             ...ComplexityVisitor.OPTIONS,
-            ComplexityVisitor: ComplexityVisitor
+            ComplexityVisitor: ComplexityVisitor,
+            renderActions: expandable({
+                ...BaseDocument.OPTIONS.renderActions,
+                complexity: [STATE.COMPLEXITY]
+            })
         };
 
         /**

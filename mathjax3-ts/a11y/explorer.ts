@@ -25,8 +25,10 @@ import {MathJax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {STATE, newState} from '../core/MathItem.js';
-import {AbstractMathDocument} from '../core/MathDocument.js';
+import {AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
 import {AbstractMathItem} from '../core/MathItem.js';
+import {OptionList, expandable} from '../util/Options.js';
+import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
 import {Explorer, SpeechExplorer, Magnifier} from './explorer/Explorer.js';
@@ -38,6 +40,9 @@ import {sreReady} from './sre.js';
  */
 export type Constructor<T> = new(...args: any[]) => T;
 
+/**
+ * Shorthands for types with HTMLElement, Text, and Document instead of generics
+ */
 export type HANDLER = Handler<HTMLElement, Text, Document>;
 export type HTMLDOCUMENT = AbstractMathDocument<HTMLElement, Text, Document>;
 export type HTMLMATHITEM = AbstractMathItem<HTMLElement, Text, Document>;
@@ -70,10 +75,10 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
  *
  * @template B  The MathItem class to extend
  */
-export function ExplorerMathItemMixin(
-    BaseMathItem: Constructor<HTMLMATHITEM>,
+export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
+    BaseMathItem: B,
     toMathML: (node: MmlNode) => string
-): Constructor<ExplorerMathItem> {
+): Constructor<ExplorerMathItem> & B {
 
     return class extends BaseMathItem {
 
@@ -111,20 +116,13 @@ export function ExplorerMathItemMixin(
         /**
          * @override
          */
-        public rerender(document: ExplorerMathDocument, start: number = STATE.TYPESET, end: number = STATE.LAST) {
+        public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
             this.refocus = (window.document.activeElement === this.typesetRoot);
             if (this.explorer && (this.explorer as any).active) {
                 this.restart = true;
                 this.explorer.Stop();
             }
-            const state = STATE.EXPLORER;
-            if (start <= state && state <= end) {
-                super.rerender(document, start, state);
-                this.explorable(document);
-                super.rerender(document, state + 1, end);
-            } else {
-                super.rerender(document, start, end);
-            }
+            super.rerender(document, start);
         }
 
         /**
@@ -179,9 +177,19 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
  * @param {B} BaseMathDocument      The MathDocument class to be extended
  * @returns {ExplorerMathDocument}  The extended MathDocument class
  */
-export function ExplorerMathDocumentMixin(BaseDocument: Constructor<HTMLDOCUMENT>): Constructor<ExplorerMathDocument> {
+export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTMLDOCUMENT>>(
+    BaseDocument: B
+): MathDocumentConstructor<ExplorerMathDocument> & B {
 
     return class extends BaseDocument {
+
+        public static OPTIONS: OptionList = {
+            ...BaseDocument.OPTIONS,
+            renderActions: expandable({
+                ...BaseDocument.OPTIONS.renderActions,
+                explorable: [STATE.EXPLORER]
+            })
+        };
 
         /**
          * The objects needed for the explorer
@@ -249,7 +257,7 @@ export function ExplorerMathDocumentMixin(BaseDocument: Constructor<HTMLDOCUMENT
  * @param {Handler} handler   The Handler instance to enhance
  * @returns {Handler}         The handler that was modified (for purposes of chainging extensions)
  */
-export function ExplorerHandler(handler: Handler<HTMLElement, Text, Document>) {
-    handler.documentClass = ExplorerMathDocumentMixin(handler.documentClass as any);
+export function ExplorerHandler(handler: HANDLER) {
+    handler.documentClass = ExplorerMathDocumentMixin(handler.documentClass);
     return handler;
 }

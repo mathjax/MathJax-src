@@ -23,11 +23,12 @@
 
 import {MathJax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
-import {MathDocument, AbstractMathDocument} from '../core/MathDocument.js';
+import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
 import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
+import {OptionList, expandable} from '../util/Options.js';
 
 import {sreReady} from './sre.js';
 
@@ -105,20 +106,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             this.state(STATE.ENRICHED);
         }
 
-        /**
-         * @override
-         */
-        public rerender(document: MathDocument<N, T, D>, start: number = STATE.TYPESET, end: number = STATE.LAST) {
-            const state = STATE.ENRICHED;
-            if (start <= state && state <= end) {
-                super.rerender(document, start, state);
-                this.enrich(document);
-                super.rerender(document, state + 1, end);
-            } else {
-                super.rerender(document, start, end);
-            }
-        }
-
     };
 
 }
@@ -137,9 +124,9 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
     /**
      * Perform enrichment on the MathItems in the MathDocument
      *
-     * @return {MathDocument}   The MathDocument (so calls can be chained)
+     * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
      */
-    enrich(): MathDocument<N, T, D>;
+    enrich(): EnrichedMathDocument<N, T, D>;
 
 }
 
@@ -155,12 +142,20 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
  * @template D  The Document class
  * @template B  The MathDocument class to extend
  */
-export function EnrichedMathDocumentMixin<N, T, D, B extends Constructor<AbstractMathDocument<N, T, D>>>(
+export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
     BaseDocument: B,
     MmlJax: MathML<N, T, D>,
-): Constructor<EnrichedMathDocument<N, T, D>> & B {
+): MathDocumentConstructor<EnrichedMathDocument<N, T, D>> & B {
 
     return class extends BaseDocument {
+
+        public static OPTIONS: OptionList = {
+            ...BaseDocument.OPTIONS,
+            renderActions: expandable({
+                ...BaseDocument.OPTIONS.renderActions,
+                enrich: [STATE.ENRICHED]
+            })
+        };
 
         /**
          * Enrich the MathItem class used for this MathDocument, and create the
@@ -228,7 +223,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends Constructor<Abstrac
 export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>) {
     MmlJax.setAdaptor(handler.adaptor);
     handler.documentClass =
-        EnrichedMathDocumentMixin<N, T, D, Constructor<AbstractMathDocument<N, T, D>>>(
+        EnrichedMathDocumentMixin<N, T, D, MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
             handler.documentClass, MmlJax
         );
     return handler;
