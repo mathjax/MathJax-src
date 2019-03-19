@@ -21,19 +21,18 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
+import {MathML} from '../input/mathml.js';
 import {STATE, newState} from '../core/MathItem.js';
-import {AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
-import {AbstractMathItem} from '../core/MathItem.js';
+import {EnrichedMathItem, EnrichedMathDocument, EnrichHandler} from './semantic-enrich.js';
+import {MathDocumentConstructor} from '../core/MathDocument.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
 import {Explorer, SpeechExplorer, Magnifier} from './explorer/Explorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
-import {sreReady} from './sre.js';
 
 /**
  * Generic constructor for Mixins
@@ -44,8 +43,9 @@ export type Constructor<T> = new(...args: any[]) => T;
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
  */
 export type HANDLER = Handler<HTMLElement, Text, Document>;
-export type HTMLDOCUMENT = AbstractMathDocument<HTMLElement, Text, Document>;
-export type HTMLMATHITEM = AbstractMathItem<HTMLElement, Text, Document>;
+export type HTMLDOCUMENT = EnrichedMathDocument<HTMLElement, Text, Document>;
+export type HTMLMATHITEM = EnrichedMathItem<HTMLElement, Text, Document>;
+export type MATHML = MathML<HTMLElement, Text, Document>;
 
 /*==========================================================================*/
 
@@ -104,9 +104,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
          */
         public explorable(document: ExplorerMathDocument) {
             if (this.state() >= STATE.EXPLORER) return;
-            if (!(sre && sre.Engine.isReady())) {
-                MathJax.retryAfter(sreReady);
-            }
             const node = this.typesetRoot;
             const mml = toMathML(this.root);
             this.explorer = SpeechExplorer.create(document, document.explorerObjects.region, node, mml);
@@ -205,7 +202,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
          */
         constructor(...args: any[]) {
             super(...args);
-            const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
+            const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
             if (!ProcessBits.has('explorer')) {
                 ProcessBits.allocate('explorer');
             }
@@ -257,7 +254,10 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
  * @param {Handler} handler   The Handler instance to enhance
  * @returns {Handler}         The handler that was modified (for purposes of chainging extensions)
  */
-export function ExplorerHandler(handler: HANDLER) {
-    handler.documentClass = ExplorerMathDocumentMixin(handler.documentClass);
+export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null) {
+    if (!handler.documentClass.prototype.enrich && MmlJax) {
+        handler = EnrichHandler(handler, MmlJax);
+    }
+    handler.documentClass = ExplorerMathDocumentMixin(handler.documentClass as any);
     return handler;
 }
