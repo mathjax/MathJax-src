@@ -132,6 +132,27 @@ export class Menu {
     };
 
     /**
+     * The number of startup modules that are currently being loaded
+     */
+    protected static loading: number = 0;
+
+    /**
+     * Promises for the loading components
+     */
+    protected static loadingPromises: Map<string, Promise<void>> = new Map();
+
+    /**
+     * A promise that is resolved when all components are loaded
+     */
+    protected static _loadingPromise: Promise<void> = null;
+
+    /**
+     * Functions used to resolve or reject the _loadingPromise
+     */
+    protected static _loadingOK: Function = null;
+    protected static _loadingFailed: Function = null;
+
+    /**
      * The options for this menu
      */
     public options: OptionList;
@@ -170,19 +191,32 @@ export class Menu {
     };
 
     /**
-     * The number of startup modules that are currently being loaded
-     */
-    protected loading: number = 0;
-
-    /**
-     * Promises for the loading components
-     */
-    protected loadingPromises: Map<string, Promise<void>> = new Map();
-
-    /**
      * The minium initial state for pending rerender requests (so final rerender gets the right start)
      */
     protected rerenderStart: number = STATE.LAST;
+
+    /**
+     * @returns {boolean}   true when the menu is loading some component
+     */
+    public get isLoading() {
+        return Menu.loading > 0;
+    }
+
+    /**
+     * @returns {Promise}   A promise that is resolved when all pending loads are complete
+     */
+    public get loadingPromise() {
+        if (!this.isLoading) {
+            return Promise.resolve();
+        }
+        if (!Menu._loadingPromise) {
+            Menu._loadingPromise = new Promise<void>((ok, failed) => {
+                Menu._loadingOK = ok;
+                Menu._loadingFailed = failed;
+            });
+        }
+        return Menu._loadingPromise;
+    }
 
     /*======================================================================*/
 
@@ -629,7 +663,7 @@ export class Menu {
      * Reset all menu settings to the (page) defaults
      */
     protected resetDefaults() {
-        this.loading++;    // pretend we're loading, to suppress rerendering for each variable change
+        Menu.loading++;    // pretend we're loading, to suppress rerendering for each variable change
         const pool = this.menu.getPool();
         const settings = this.defaultSettings;
         for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
@@ -644,19 +678,19 @@ export class Menu {
                 this.settings[name] = settings[name];
             }
         }
-        this.loading--;
+        Menu.loading--;
         this.rerender(STATE.COMPILED);
     }
 
     /*======================================================================*/
 
     /**
-     * Check it a component is loading, and restart if it is
+     * Check if a component is loading, and restart if it is
      *
      * @param {string} name        The name of the component to check if it is loading
      */
     public checkComponent(name: string) {
-        const promise = this.loadingPromises.get(name);
+        const promise = Menu.loadingPromises.get(name);
         if (promise) {
             mathjax.retryAfter(promise);
         }
@@ -666,15 +700,27 @@ export class Menu {
      * Attempt to load a component and perform a callback when done
      */
     protected loadComponent(name: string, callback: () => void) {
+        if (Menu.loadingPromises.has(name)) return;
         const loader = window.MathJax.loader;
         if (!loader) return;
-        this.loading++;
+        Menu.loading++;
         const promise = loader.load(name).then(() => {
-            this.loading--;
-            this.loadingPromises.delete(name);
+            Menu.loading--;
+            Menu.loadingPromises.delete(name);
             callback();
-        }).catch((err) => console.log(err));
-        this.loadingPromises.set(name, promise);
+            if (Menu.loading === 0 && Menu._loadingPromise) {
+                Menu._loadingPromise = null;
+                Menu._loadingOK();
+            }
+        }).catch((err) => {
+            if (Menu._loadingPromise) {
+                Menu._loadingPromise = null;
+                Menu._loadingFailed(err);
+            } else {
+                console.log(err);
+            }
+        });
+        Menu.loadingPromises.set(name, promise);
     }
 
     /**
@@ -683,6 +729,7 @@ export class Menu {
      * @param {string} component   The name of the a11y component to load
      */
     public loadA11y(component: string) {
+        const noEnrich = !STATE.ENRICHED;
         this.loadComponent('a11y/' + component, () => {
             const startup = window.MathJax.startup;
             //
@@ -702,7 +749,9 @@ export class Menu {
             this.document = startup.getDocument();
             this.document.menu = this;
             this.transferMathList(document);
-            this.rerender(component === 'complexity' ? STATE.COMPILED : STATE.TYPESET);
+            if (!Menu._loadingPromise) {
+                this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
+            }
         });
     }
 
@@ -780,7 +829,7 @@ export class Menu {
      */
     protected rerender(start: number = STATE.TYPESET) {
         this.rerenderStart = Math.min(start, this.rerenderStart);
-        if (!this.loading) {
+        if (!Menu.loading) {
             this.document.rerender(this.rerenderStart);
             this.rerenderStart = STATE.LAST;
         }

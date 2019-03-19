@@ -24,7 +24,7 @@
 import {MathJax} from '../../mathjax.js';
 
 import {MathItem, STATE, newState} from '../../core/MathItem.js';
-import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../../core/MathDocument.js';
+import {MathDocumentConstructor} from '../../core/MathDocument.js';
 import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {Handler} from '../../core/Handler.js';
 import {ComplexityMathDocument, ComplexityMathItem} from '../../a11y/complexity.js';
@@ -66,9 +66,12 @@ newState('CONTEXT_MENU', 170);
 export interface MenuMathItem extends MathItem<HTMLElement, Text, Document> {
 
     /**
-     * @param {MathDocument} document  The document where the menu is being added
+     * @param {MenuMathDocument} document  The document where the menu is being added
      */
-    addMenu(document: MathDocument<HTMLElement, Text, Document>): void;
+    addMenu(document: MenuMathDocument): void;
+
+    checkLoading(document: MenuMathDocument): void;
+
 }
 
 /**
@@ -86,12 +89,21 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
     return class extends BaseMathItem {
 
         /**
-         * @param {MathDocument} document  The document where the menu is being added
+         * @param {MenuMathDocument} document   The document where the menu is being added
          */
         public addMenu(document: MenuMathDocument) {
             if (this.state() < STATE.CONTEXT_MENU) {
                 document.menu.addMenu(this);
                 this.state(STATE.CONTEXT_MENU);
+            }
+        }
+
+        /**
+         * @param {MenuMathDocument} document   The document to check for if anything is being loaded
+         */
+        public checkLoading(document: MenuMathDocument) {
+            if (document.menu.isLoading) {
+                MathJax.retryAfter(document.menu.loadingPromise.catch((err) => console.log(err)));
             }
         }
 
@@ -133,7 +145,7 @@ export interface MenuMathDocument extends ComplexityMathDocument<HTMLElement, Te
     /**
      * Add context menus to the MathItems in the MathDocument
      *
-     * @return {MathDocument}   The MathDocument (so calls can be chained)
+     * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
      */
     addMenu(): MenuMathDocument;
 
@@ -162,7 +174,8 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
             menuOptions: Menu.OPTIONS,
             renderActions: expandable({
                 ...BaseDocument.OPTIONS.renderActions,
-                addMenu: [STATE.CONTEXT_MENU]
+                addMenu: [STATE.CONTEXT_MENU],
+                checkLoading: [STATE.UNPROCESSED + 1]
             })
         }
 
@@ -180,7 +193,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
         constructor(...args: any[]) {
             super(...args);
             this.menu = new this.options.MenuClass(this, this.options.menuOptions);
-            const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
+            const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
             if (!ProcessBits.has('context-menu')) {
                 ProcessBits.allocate('context-menu');
             }
@@ -190,7 +203,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
         /**
          * Add context menus to the MathItems in the MathDocument
          *
-         * @return {MathDocument}   The MathDocument (so calls can be chained)
+         * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
          */
         public addMenu() {
             if (!this.processed.isSet('context-menu')) {
@@ -198,6 +211,18 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
                     (math as MenuMathItem).addMenu(this);
                 }
                 this.processed.set('context-menu');
+            }
+            return this;
+        }
+
+        /**
+         * Checks if there are files being loaded by the menu, and restarts the typesetting if so
+         *
+         * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+         */
+        public checkLoading() {
+            if (this.menu.isLoading) {
+                MathJax.retryAfter(this.menu.loadingPromise.catch((err) => console.log(err)));
             }
             return this;
         }
