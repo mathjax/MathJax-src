@@ -63,13 +63,34 @@ newState('CONTEXT_MENU', 170);
 /**
  * The new function for MathItem that adds the context menu
  */
-export interface MenuMathItem extends MathItem<HTMLElement, Text, Document> {
+export interface MenuMathItem extends ComplexityMathItem<HTMLElement, Text, Document> {
 
     /**
-     * @param {MenuMathDocument} document  The document where the menu is being added
+     * @param {MenuMathDocument} document   The document where the menu is being added
      */
     addMenu(document: MenuMathDocument): void;
 
+    /**
+     * @param {MenuMathDocument} document   The document where the menu is being added
+     * @param {boolean=} force              True if enrichment should not depend on the menu setting
+     */
+    enrich(document: MenuMathDocument, force?: boolean): void;
+
+    /**
+     * @param {MenuMathDocument} document   The document where the menu is being added
+     * @param {boolean=} force              True if complexity computation should not depend on the menu setting
+     */
+    complexity(document: MenuMathDocument, force?: boolean): void;
+
+    /**
+     * @param {MenuMathDocument} document   The document where the menu is being added
+     * @param {boolean=} force              True if exploration should not depend on the menu setting
+     */
+    explorable(document: MenuMathDocument, force?: boolean): void;
+
+    /**
+     * @param {MenuMathDocument} document   The document to check for if anything is being loaded
+     */
     checkLoading(document: MenuMathDocument): void;
 
 }
@@ -110,8 +131,20 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
         /**
          * @override
          */
-        public complexity(document: MenuMathDocument) {
-            if (document.menu.settings.collapsible) {
+        public enrich(document: MenuMathDocument, force: boolean = false) {
+            const settings = document.menu.settings;
+            if (settings.collapsible || settings.explorer || force) {
+                settings.collapsible && document.menu.checkComponent('a11y/complexity');
+                settings.explorer    && document.menu.checkComponent('a11y/explorer');
+                super.enrich(document);
+            }
+        }
+
+        /**
+         * @override
+         */
+        public complexity(document: MenuMathDocument, force: boolean = false) {
+            if (document.menu.settings.collapsible || force) {
                 document.menu.checkComponent('a11y/complexity');
                 super.complexity(document);
             }
@@ -120,10 +153,10 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
         /**
          * @override
          */
-        public explorable(document: MenuMathDocument) {
-            if (document.menu.settings.explorer) {
+        public explorable(document: MenuMathDocument, force: boolean = false) {
+            if (document.menu.settings.explorer || force) {
                 document.menu.checkComponent('a11y/explorer');
-                super.explorable(document as any);
+                super.explorable(document);
             }
         }
 
@@ -149,6 +182,30 @@ export interface MenuMathDocument extends ComplexityMathDocument<HTMLElement, Te
      */
     addMenu(): MenuMathDocument;
 
+    /**
+     * @param {boolean=} force      True if enrichment should not depend on the menu settings
+     * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+     */
+    enrich(force?: boolean): MenuMathDocument;
+
+    /**
+     * @param {boolean=} force      True if complexity computation should not depend on the menu settings
+     * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+     */
+    complexity(force?: boolean): MenuMathDocument;
+
+    /**
+     * @param {boolean=} force      True if exploration should not depend on the menu settings
+     * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+     */
+    explorable(force?: boolean): MenuMathDocument;
+
+    /**
+     * Checks if there are files being loaded by the menu, and restarts the typesetting if so
+     *
+     * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+     */
+    checkLoading(): MenuMathDocument;
 }
 
 /**
@@ -248,23 +305,48 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
         }
 
         /**
-         * @override
+         * @param {boolean=} force       True if enrichment should not depend on menu settings
+         * @returns {MenuMathDocument}   The MathDocument (for chaining of calls)
          */
-        public complexity() {
-            if (this.menu.settings.collapsible) {
-                this.menu.checkComponent('a11y/complexity');
-                super.complexity();
+        public enrich(force: boolean = false) {
+            const settings = this.menu.settings;
+            if (!this.processed.isSet('enriched') && (settings.collapsible || settings.explorer || force)) {
+                settings.collapsible && this.menu.checkComponent('a11y/complexity');
+                settings.explorer    && this.menu.checkComponent('a11y/explorer');
+                for (const math of this.math) {
+                    (math as MenuMathItem).enrich(this, force);
+                }
+                this.processed.set('enriched');
             }
             return this;
         }
 
         /**
-         * @override
+         * @param {boolean=} force       True if complexity computations should not depend on menu settings
+         * @returns {MenuMathDocument}   The MathDocument (for chaining of calls)
          */
-        public explorable() {
-            if (this.menu.settings.explorer) {
+        public complexity(force: boolean = false) {
+            if (!this.processed.isSet('complexity') && (this.menu.settings.collapsible || force)) {
+                this.menu.checkComponent('a11y/complexity');
+                for (const math of this.math) {
+                    (math as MenuMathItem).complexity(this, force);
+                }
+                this.processed.set('complexity');
+            }
+            return this;
+        }
+
+        /**
+         * @param {boolean=} force       True if exploration should not depend on menu settings
+         * @returns {MenuMathDocument}   The MathDocument (for chaining of calls)
+         */
+        public explorable(force: boolean = false) {
+            if (!this.processed.isSet('explorer') && (this.menu.settings.explorer || force)) {
                 this.menu.checkComponent('a11y/explorer');
-                super.explorable();
+                for (const math of this.math) {
+                    (math as MenuMathItem).explorable(this, force);
+                }
+                this.processed.set('explorer');
             }
             return this;
         }
