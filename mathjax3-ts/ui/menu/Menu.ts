@@ -622,7 +622,7 @@ export class Menu {
     protected setExplorer(explore: boolean) {
         this.enableExplorerItems(explore);
         if (!explore || (window.MathJax._.a11y && window.MathJax._.a11y.explorer)) {
-            this.rerender();
+            this.rerender(this.settings.collapsible ? STATE.RERENDER : STATE.COMPILED);
         } else {
             this.loadA11y('explorer');
         }
