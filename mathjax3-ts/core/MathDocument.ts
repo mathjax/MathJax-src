@@ -161,9 +161,11 @@ export interface MathDocument<N, T, D> {
     /**
      * Rerender the MathItems on the page
      *
+     * @param {number=} start    The state to start rerendering at
+     * @param {number=} end      The state to end rerendering at
      * @return {MathDocument}    The math document instance
      */
-    rerender(): MathDocument<N, T, D>;
+    rerender(start?: number, end?: number): MathDocument<N, T, D>;
 
     /**
      * Clear the processed values so that the document can be reprocessed
@@ -460,10 +462,10 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     /**
      * @override
      */
-    public rerender() {
-        this.state(STATE.PRE_TYPESET);  // reset to just before typesetting
+    public rerender(start: number = STATE.TYPESET, end: number = STATE.LAST) {
+        if (start > end) return;
         for (const math of this.math) {
-            math.rerender(this);
+            math.rerender(this, start, end);
         }
         this.updateDocument();
         return this;

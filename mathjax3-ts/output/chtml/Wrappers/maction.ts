@@ -107,7 +107,6 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
                 }
                 mml.nextToggleSelection();
                 math.rerender(document);
-                math.updateDocument(document);
                 event.stopPropagation();
             });
         }, {}]],

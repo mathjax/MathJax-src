@@ -144,11 +144,13 @@ export interface MathItem<N, T, D> {
     typeset(document: MathDocument<N, T, D>): void;
 
     /**
-     * Rerenders an already rendered item (but must updateDocument() afterward)
+     * Rerenders an already rendered item and inserts it into the document
      *
      * @param {MathDocument} document  The MathDocument in which the math resides
+     * @param {number=} start          The state to start rerendering at (default = TYPESET)
+     * @param {number=} end            The state to end rerendering at (default = LAST)
      */
-    rerender(document: MathDocument<N, T, D>): void;
+    rerender(document: MathDocument<N, T, D>, start?: number, end?: number): void;
 
     /**
      * Inserts the typeset version in place of the original form in the document
@@ -295,9 +297,20 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     /**
      * @override
      */
-    public rerender(document: MathDocument<N, T, D>) {
-        this.state(STATE.PRE_TYPESET);  // reset to just before typesetting
-        this.typeset(document);
+    public rerender(document: MathDocument<N, T, D>, start: number = STATE.TYPESET, end: number = STATE.LAST) {
+        if (start > end) return;
+        if (this.state() >= start) {
+            this.state(start - 1);
+        }
+        if (end > STATE.COMPILED) {
+            this.compile(document);
+        }
+        if (end > STATE.TYPESET) {
+            this.typeset(document);
+        }
+        if (end > STATE.INSERTED) {
+            this.updateDocument(document);
+        }
     }
 
     /**
@@ -353,9 +366,9 @@ export const STATE: {[state: string]: number} = {
     UNPROCESSED: 0,
     COMPILED: 20,
     METRICS: 110,
-    PRE_TYPESET: 149,
     TYPESET: 150,
-    INSERTED: 200
+    INSERTED: 200,
+    LAST: 10000
 };
 
 /**
