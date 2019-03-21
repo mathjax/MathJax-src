@@ -28,13 +28,14 @@ import {MathJax as MJGlobal, MathJaxObject as MJObject,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {MathDocument} from '../core/MathDocument.js';
-import {MathItem} from '../core/MathItem.js';
+import {MathItem, STATE} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {Handler} from '../core/Handler.js';
 import {InputJax, AbstractInputJax} from '../core/InputJax.js';
 import {OutputJax, AbstractOutputJax} from '../core/OutputJax.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {PrioritizedList} from '../util/PrioritizedList.js';
+import {OptionList} from '../util/Options.js';
 
 import {TeX} from '../input/tex.js';
 
@@ -74,12 +75,6 @@ export type TEX = TeX<any, any, any>;
 export type HandlerExtension = (handler: HANDLER) => HANDLER;
 
 /**
- * Functions to be called in typeset and conversion methods created for the registered packages
- */
-export type TypesetCall = (document: MATHDOCUMENT) => void;
-export type ConvertCall = (math: MATHITEM, document: MATHDOCUMENT) => void;
-
-/**
  * Update the MathJax object to inclide the startup information
  */
 export interface MathJaxObject extends MJObject {
@@ -101,10 +96,6 @@ export interface MathJaxObject extends MJObject {
         useInput(name:string, force?: boolean): void;
         extendHandler(extend: HandlerExtension): void;
         toMML(node: MmlNode): string;
-        typesetCall(fn: string | TypesetCall, priority: number): void;
-        clearTypesetCalls(): void;
-        convertCall(fn: string | ConvertCall, priority: number): void;
-        clearConvertCalls(): void;
         defaultReady(): void;
         getComponents(): void;
         makeMethods(): void;
@@ -112,7 +103,6 @@ export interface MathJaxObject extends MJObject {
         makeOutputMethods(iname: string, oname: string, input: INPUTJAX): void;
         makeMmlMethods(name: string, input: INPUTJAX): void;
         makeResetMethod(name: string, input: INPUTJAX): void;
-        convertMath(mitem: MATHITEM, document: MATHDOCUMENT, maxPriority?: number): void;
         getInputJax(): INPUTJAX[];
         getOutputJax(): OUTPUTJAX;
         getAdaptor(): DOMADAPTOR;
@@ -134,13 +124,7 @@ export namespace Startup {
     /**
      * The array of handler extensions
      */
-    const extensions: HandlerExtension[] = [];
-
-    /**
-     * The prioritized list of functions to call duing typesetting and conversion
-     */
-    let typesetCalls = new PrioritizedList<TypesetCall>();
-    let convertCalls = new PrioritizedList<ConvertCall>();
+    const extensions = new PrioritizedList<HandlerExtension>();
 
     let visitor: any;  // the visitor for toMML();
     let mathjax: any;  // variable for the MathJax variable from mathjax.js
@@ -258,49 +242,11 @@ export namespace Startup {
 
     /**
      * @param {HandlerExtension} extend    A function to extend the handler class
+     * @param {number} priority            The priority of the extension
      */
-    export function extendHandler(extend: HandlerExtension) {
-        extensions.push(extend);
+    export function extendHandler(extend: HandlerExtension, priority: number = 10) {
+        extensions.add(extend, priority);
     };
-
-    /**
-     * @param {string | TypesetCall} fn    The name of a Handler method or a function to call during typesetting
-     * @param {number} priority            The priority of the call (so extensions can add calls at the right place)
-     */
-    export function typesetCall(fn: string | TypesetCall, priority: number) {
-        if (typeof fn === 'string') {
-            typesetCalls.add((doc: any) => doc[fn](), priority);
-        } else {
-            typesetCalls.add(fn, priority);
-        }
-    };
-
-    /**
-     * Clear the typeset calls (in case you need to remove the default ones)
-     */
-    export function clearTypesetCalls() {
-        typesetCalls = new PrioritizedList<TypesetCall>();
-    };
-
-    /**
-     * @param {string | TypesetCall} fn    The name of a Handler method or a function to call during typesetting
-     * @param {number} priority            The priority of the call (so extensions can add calls at the right place)
-     *                                        priorities of 100 or higher aren't performed for the *2mml() methods
-     */
-    export function convertCall(fn: string | ConvertCall, priority: number) {
-        if (typeof fn === 'string') {
-            convertCalls.add((math: any, doc: any) => math[fn](doc), priority);
-        } else {
-            convertCalls.add(fn, priority);
-        }
-    };
-
-    /**
-     * Clear the convert calls (in case you need to remove the default ones)
-     */
-    export function clearConvertCalls() {
-        convertCalls = new PrioritizedList<ConvertCall>();
-    }
 
     /**
      * The default ready() function called when all the packages have been loaded
@@ -343,13 +289,13 @@ export namespace Startup {
     export function makeMethods() {
         if (!handler) return;
         mathjax.handlers.register(handler);
-        document = mathjax.document(CONFIG.document, {...MathJax.config.options, InputJax: input, OutputJax: output});
+        getDocument();
         if (input && output) {
             makeTypesetMethods();
         }
-        const oname = (output ? (output.constructor as typeof AbstractOutputJax).NAME.toLowerCase() : '');
+        const oname = (output ? output.name.toLowerCase() : '');
         for (const jax of input) {
-            const iname = (jax.constructor as typeof AbstractInputJax).NAME.toLowerCase();
+            const iname = jax.name.toLowerCase();
             makeMmlMethods(iname, jax);
             makeResetMethod(iname, jax);
             if (output) {
@@ -361,38 +307,31 @@ export namespace Startup {
     /**
      * Create the Typeset(elements?), TypesetPromise(elements?), and TypesetClear() methods.
      *
-     * The first two call the registered typesetCalls in prioritized order, with the latter
+     * The first two call the document's render() function, the latter
      *   wrapped in handleRetriesFor() and returning the resulting promise.
      *
      * TypeseClear() clears all the MathItems from the document.
      */
     export function makeTypesetMethods() {
-        MathJax.Typeset = (which: any = null) => {
-            elements = which;
-            for (const fn of typesetCalls) {
-                fn.item(document);
-            }
+        MathJax.Typeset = (elements: any = null) => {
+            document.options.elements = elements;
+            document.render();
         };
-        MathJax.TypesetPromise = (which: any = null) => {
-            elements = which;
+        MathJax.TypesetPromise = (elements: any = null) => {
+            document.options.elements = elements;
             return mathjax.handleRetriesFor(() => {
-                for (const fn of typesetCalls) {
-                    fn.item(document);
-                }
+                document.render();
             })
         };
-        MathJax.Clear = () => document.clear();
+        MathJax.TypesetClear = () => document.clear();
     };
 
     /**
-     * Make the input2output(math, display?, em?, ex?, cwidth?)
-     *   and input2outuputPromise(math, display? , em?, ex?, cwidth?) methods,
+     * Make the input2output(math, options?) and input2outuputPromise(math, options?) methods,
      *   and outputStylesheet() method, where "input" and "output" are replaced by the
      *   jax names (e.g., tex2chtml() and chtmlStyleSheet()).
      *
-     * The first two create a MathItem for the given math string (in display mode if display is true),
-     *   with the given em and ex metrics, with the specified container width, and then
-     *   performs the registered convertCalls on it, with the Promise version wrapped in
+     * The first two perform the document's convert() call, with the Promise version wrapped in
      *   handlerRetriesFor() and returning the resulting promise.  The return value is the
      *   DOM object for the converted math.  Use MathJax.startup.adaptor.outerHTML(result)
      *   to get the serialized string version of the output.
@@ -408,43 +347,41 @@ export namespace Startup {
     export function makeOutputMethods(iname: string, oname: string, input: INPUTJAX) {
         const name = iname + '2' + oname;
         MathJax[name] =
-            (math: string, display: boolean = true, em: number = 16, ex: number = 8, cwidth:number = 80 * 16) => {
-                const mitem = new MathJax._.core.MathItem.AbstractMathItem(math, input, display);
-                mitem.setMetrics(em, ex, cwidth, 1000000, 1);
-                return convertMath(mitem, document);
+            (math: string, options: OptionList = {}) => {
+                options.format = input.name;
+                return document.convert(math, options);
             };
         MathJax[name + 'Promise'] =
-            (math: string, display: boolean = true, em: number = 16, ex: number = 8, cwidth:number = 80 * 16) => {
-                const mitem = new MathJax._.core.MathItem.AbstractMathItem(math, input, display);
-                mitem.setMetrics(em, ex, cwidth, 1000000, 1);
-                return mathjax.handleRetriesFor(() => convertMath(mitem, document));
+            (math: string, options: OptionList = {}) => {
+                options.format = input.name;
+                return mathjax.handleRetriesFor(() => document.convert(math, options));
             };
         MathJax[oname + 'Stylesheet'] = () => output.styleSheet(document);
     };
 
     /**
-     * Make the input2mml(math, display?, em? , ex?, cwidth?) and
-     *   input2mmlPromise(math, display?, em? , ex?, cwidth?) methods, where "input" is
-     *   replaced by the name of the input jax (e.g., "tex2mml").
+     * Make the input2mml(math, options?) and input2mmlPromise(math, options?) methods,
+     *   where "input" is replaced by the name of the input jax (e.g., "tex2mml").
      *
-     * These convert the math to its serialized MathML representation.  The second wraps the conversion
-     *   in handleRetriesFor() and returns the resulting promise.
+     * These convert the math to its serialized MathML representation.
+     *   The second wraps the conversion in handleRetriesFor() and
+     *   returns the resulting promise.
      *
      * @param {string} name     The name of the input jax
      * @param {input} INPUTJAX  The input jax itself
      */
     export function makeMmlMethods(name: string, input: INPUTJAX) {
         MathJax[name + '2mml'] =
-            (math: string, display: boolean = true, em: number = 16, ex: number = 8, cwidth:number = 80 * 16) => {
-                const mitem = new MathJax._.core.MathItem.AbstractMathItem(math, input, display);
-                mitem.setMetrics(em, ex, cwidth, 1000000, 1);
-                return convertMath(mitem, document, 100);
+            (math: string, options: OptionList = {}) => {
+                options.end = STATE.CONVERT;
+                options.format = input.name;
+                return toMML(document.convert(math, options));
             };
         MathJax[name + '2mmlPromise'] =
-            (math: string, display: boolean = true, em: number = 16, ex: number = 8, cwidth:number = 80 * 16) => {
-                const mitem = new MathJax._.core.MathItem.AbstractMathItem(math, input, display);
-                mitem.setMetrics(em, ex, cwidth, 1000000, 1);
-                return mathjax.handleRetriesFor(() => convertMath(mitem, document, 100));
+            (math: string, options: OptionList = {}) => {
+                options.end = STATE.CONVERT;
+                options.format = input.name;
+                return mathjax.handleRetriesFor(() => toMML(document.convert(math, options)));
             };
     };
 
@@ -460,23 +397,6 @@ export namespace Startup {
         if (name === 'tex') {
             MathJax.texReset = () => (input as TEX).parseOptions.tags.reset();
         }
-    };
-
-    /**
-     * Called by input2output() and input2mml() methods to perform the conversions
-     *
-     * @param {MATHITEM} mitem      The MathItem whose math is to be converted
-     * @param {DOCUMENT} document   The MathDocument in which the conversion takes palce
-     * @param {number} maxPriority  The priority where processing should stop (for input2mml())
-     * @return {any}                The serialized MathML or the DOM node for the converted result
-     */
-    export function convertMath(mitem: MATHITEM, document: MATHDOCUMENT, maxPriority: number = 0) {
-        for (const {item, priority} of convertCalls) {
-            if (maxPriority === 0 || priority < maxPriority) {
-                item(mitem, document);
-            }
-        }
-        return (maxPriority ? toMML(mitem.root) : mitem.typesetRoot);
     };
 
     /**
@@ -532,10 +452,22 @@ export namespace Startup {
         if (!handlerClass) {
             throw Error('Handler "' + name + '" is not defined (has it been loaded?)');
         }
-        const handler = new handlerClass(adaptor, 5);
-        return extensions.reduce((handler, extend) => extend(handler), handler);
+        let handler = new handlerClass(adaptor, 5);
+        for (const extend of extensions) {
+            handler = extend.item(handler);
+        }
+        return handler;
     };
 
+    /**
+     * Create the document with the given input and output jax
+     *
+     * @returns {MathDocument}   The MathDocument with the configured input and output jax
+     */
+    export function getDocument() {
+        document = mathjax.document(CONFIG.document, {...MathJax.config.options, InputJax: input, OutputJax: output});
+        return document;
+    }
 };
 
 /**
@@ -565,20 +497,6 @@ if (typeof MathJax._.startup === 'undefined') {
         options: {}
     });
 
-    const findMath = (document: MATHDOCUMENT) => {
-        const elements = Startup.elements;
-        return document.findMath(elements ? {elements} : {});
-    }
-
-    Startup.typesetCall(findMath, 10);
-    Startup.typesetCall('compile', 20);
-    Startup.typesetCall('getMetrics', 110);
-    Startup.typesetCall('typeset', 120);
-    Startup.typesetCall('updateDocument', 130);
-    Startup.typesetCall('reset', 200);
-
-    Startup.convertCall('compile', 20);
-    Startup.convertCall('typeset', 120);
 }
 
 /**

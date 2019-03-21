@@ -1,6 +1,8 @@
-require('./lib/mml-input.js');
+import './lib/mml-input.js';
+
+import {MathML} from '../../../mathjax3/input/mathml.js';
 
 if (MathJax.startup) {
-    MathJax.startup.registerConstructor('mml', MathJax._.input.mathml_ts.MathML);
+    MathJax.startup.registerConstructor('mml', MathML);
     MathJax.startup.useInput('mml');
 }
