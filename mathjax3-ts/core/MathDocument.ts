@@ -330,7 +330,14 @@ export interface MathDocument<N, T, D> {
      */
     rerender(start?: number): MathDocument<N, T, D>;
 
-    convert(math: string, options?: OptionList): MmlNode;
+    /**
+     * Convert a math string to the document's output format
+     *
+     * @param {string} math           The math string to convert
+     * @params {OptionList} optoins   The options for the conversion (e.g., format, ex, em, etc.)
+     * @return {MmlNode|N}            The MmlNode or N node for the converted content
+     */
+    convert(math: string, options?: OptionList): MmlNode | N;
 
     /**
      * Locates the math in the document and constructs the MathList
@@ -753,18 +760,6 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         if (state < STATE.COMPILED) {
             this.processed.clear('compile');
         }
-        return this;
-    }
-
-    /**
-     * @override
-     */
-    public rerender(start: number = STATE.TYPESET, end: number = STATE.LAST) {
-        if (start > end) return;
-        for (const math of this.math) {
-            math.rerender(this, start, end);
-        }
-        this.updateDocument();
         return this;
     }
 

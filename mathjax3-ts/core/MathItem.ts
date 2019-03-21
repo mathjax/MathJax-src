@@ -193,11 +193,18 @@ export interface MathItem<N, T, D> {
      *
      * @param {number} state    The state to set for the expression
      * @param {number} restore  True if the original form should be restored
-     *                           when rolling back a typeset version
+     *                           to the document when rolling back a typeset version
      * @returns {number}        The current state
      */
     state(state?: number, restore?: boolean): number;
 
+    /**
+     * Reset the item to its unprocessed state
+     *
+     * @param {number} restore  True if the original form should be restored
+     *                           to the document when rolling back a typeset version
+     */
+    reset(restore?: boolean): void;
 }
 
 /*****************************************************************/
@@ -368,7 +375,10 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         return this._state;
     }
 
-    public reset() {
+    /**
+     * @override
+     */
+    public reset(restore: boolean = false) {
         this.state(STATE.UNPROCESSED);
     }
 
