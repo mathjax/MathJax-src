@@ -105,6 +105,20 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             this.state(STATE.ENRICHED);
         }
 
+        /**
+         * @override
+         */
+        public rerender(document: MathDocument<N, T, D>, start: number = STATE.TYPESET, end: number = STATE.LAST) {
+            const state = STATE.ENRICHED;
+            if (start <= state && state <= end) {
+                super.rerender(document, start, state);
+                this.enrich(document);
+                super.rerender(document, state + 1, end);
+            } else {
+                super.rerender(document, start, end);
+            }
+        }
+
     };
 
 }

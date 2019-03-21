@@ -25,8 +25,8 @@ import {MathJax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {STATE, newState} from '../core/MathItem.js';
-import {HTMLDocument} from '../handlers/html/HTMLDocument.js';
-import {HTMLMathItem} from '../handlers/html/HTMLMathItem.js';
+import {AbstractMathDocument} from '../core/MathDocument.js';
+import {AbstractMathItem} from '../core/MathItem.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
 import {Explorer, SpeechExplorer, Magnifier} from './explorer/Explorer.js';
@@ -39,8 +39,8 @@ import {sreReady} from './sre.js';
 export type Constructor<T> = new(...args: any[]) => T;
 
 export type HANDLER = Handler<HTMLElement, Text, Document>;
-export type HTMLDOCUMENT = HTMLDocument<HTMLElement, Text, Document>;
-export type HTMLMATHITEM = HTMLMathItem<HTMLElement, Text, Document>;
+export type HTMLDOCUMENT = AbstractMathDocument<HTMLElement, Text, Document>;
+export type HTMLMATHITEM = AbstractMathItem<HTMLElement, Text, Document>;
 
 /*==========================================================================*/
 
@@ -111,14 +111,20 @@ export function ExplorerMathItemMixin(
         /**
          * @override
          */
-        public rerender(document: ExplorerMathDocument) {
+        public rerender(document: ExplorerMathDocument, start: number = STATE.TYPESET, end: number = STATE.LAST) {
             this.refocus = (window.document.activeElement === this.typesetRoot);
-            if ((this.explorer as any).active) {
+            if (this.explorer && (this.explorer as any).active) {
                 this.restart = true;
                 this.explorer.Stop();
             }
-            super.rerender(document);
-            this.explorable(document);
+            const state = STATE.EXPLORER;
+            if (start <= state && state <= end) {
+                super.rerender(document, start, state);
+                this.explorable(document);
+                super.rerender(document, state + 1, end);
+            } else {
+                super.rerender(document, start, end);
+            }
         }
 
         /**
@@ -191,7 +197,7 @@ export function ExplorerMathDocumentMixin(BaseDocument: Constructor<HTMLDOCUMENT
          */
         constructor(...args: any[]) {
             super(...args);
-            const ProcessBits = (this.constructor as typeof HTMLDocument).ProcessBits;
+            const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
             if (!ProcessBits.has('explorer')) {
                 ProcessBits.allocate('explorer');
             }

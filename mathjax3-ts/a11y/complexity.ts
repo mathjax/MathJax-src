@@ -98,9 +98,16 @@ export function ComplexityMathItemMixin<N, T, D, B extends Constructor<EnrichedM
         /**
          * @override
          */
-        public rerender(document: ComplexityMathDocument<N, T, D>) {
-            super.rerender(document);
-            this.complexity(document);
+        public rerender(document: ComplexityMathDocument<N, T, D>,
+                        start: number = STATE.TYPESET, end: number = STATE.LAST) {
+            const state = STATE.COMPLEXITY;
+            if (start <= state && state <= end) {
+                super.rerender(document, start, STATE.ENRICHED - 1);
+                this.complexity(document);
+                super.rerender(document, state + 1, end);
+            } else {
+                super.rerender(document, start, end);
+            }
         }
 
     };
