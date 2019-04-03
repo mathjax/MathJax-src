@@ -1154,7 +1154,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "\\mmlToken{mo}[nothing="something"]{}"}],
+                      "text": "\\mmlToken{mo}[nothing=\"something\"]{}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],

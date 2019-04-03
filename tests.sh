@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]; then 
+
     node load.js tests/parser-base-tests.js
     node load.js tests/parser-digits-tests.js
     node load.js tests/parser-digits-european-tests.js
@@ -34,6 +35,8 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-boldsymbol-tests.js
     node load.js tests/parser-newcommand-tests.js
     node load.js tests/parser-ncerrors-tests.js
+
+    node load.js tests/parser-braket-tests.js
 
     node load.js tests/parser-mhchem0-tests.js
     node load.js tests/parser-mhchem1-tests.js
