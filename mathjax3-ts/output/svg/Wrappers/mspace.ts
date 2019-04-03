@@ -16,15 +16,25 @@
  */
 
 /**
- * @fileoverview  A disabled version of asyncLoad that always fails
+ * @fileoverview  Implements the SVGmspace wrapper for the MmlMspace object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
+import {CommonMspace, CommonMspaceMixin} from '../../common/Wrappers/mspace.js';
+import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
+
+/*****************************************************************/
 /**
- * @param {string} name  The name of the file to load
- * @return {Promise}     The promise that always fails (indicating file not loaded)
+ * The SVGmspace wrapper for the MmlMspace object
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-export function asyncLoad(name: string) {
-    return new Promise((ok, fail) => fail());
+export class SVGmspace<N, T, D> extends CommonMspaceMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+
+    public static kind = MmlMspace.prototype.kind;
+
 }

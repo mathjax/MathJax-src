@@ -24,7 +24,8 @@
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonTextNode, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList, StyleData} from '../../common/CssStyles.js';
+import {OptionList} from '../../../util/Options.js';
 
 /*****************************************************************/
 /**
@@ -39,9 +40,22 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
     public static kind = TextNode.prototype.kind;
 
     public static autoStyle = false;
+
     public static styles: StyleList = {
         'mjx-c, mjx-c::before': {
             display: 'inline-block'
+        },
+        'mjx-utext': {
+            display: 'inline-block',
+            padding: '.75em 0 .25em 0'
+        },
+        'mjx-measure-text': {
+            position: 'absolute',
+            'font-family': 'MJXZERO',
+            'white space': 'nowrap',
+            height: '1px',
+            width: '1px',
+            overflow: 'hidden'
         }
     };
 
@@ -49,14 +63,21 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
      * @override
      */
     public toCHTML(parent: N) {
+        const adaptor = this.adaptor;
+        const variant = this.parent.variant;
         const text = (this.node as TextNode).getText();
-        if (this.parent.variant === '-explicitFont') {
-            this.adaptor.append(parent, this.text(text));
+        if (variant === '-explicitFont') {
+            const font = this.jax.getFontData(this.parent.styles);
+            adaptor.append(parent, this.jax.unknownText(text, variant, font));
         } else {
             const c = this.parent.stretch.c;
             const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));
             for (const n of chars) {
-                this.adaptor.append(parent, this.html('mjx-c', {c: this.char(n)}));
+                const data = this.getVariantChar(variant, n)[3];
+                const node = (data.unknown ?
+                              this.jax.unknownText(String.fromCharCode(n), variant) :
+                              this.html('mjx-c', {c: this.char(n)}));
+                adaptor.append(parent, node);
             }
         }
     }

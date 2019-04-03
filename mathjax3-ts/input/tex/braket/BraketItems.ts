@@ -77,6 +77,7 @@ export class BraketItem extends BaseItem {
     }
     let attrs = {fence: true, stretchy: false, symmetric: true, texClass: TEXCLASS.OPEN};
     let openNode = this.create('token', 'mo', attrs, open);
+    attrs.texClass = TEXCLASS.CLOSE;
     let closeNode = this.create('token', 'mo', attrs, close);
     let mrow = this.create('node', 'mrow', [openNode, inner, closeNode],
                          {open: open, close: close, texClass: TEXCLASS.INNER});

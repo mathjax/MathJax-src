@@ -34,6 +34,7 @@ import {DIRECTION} from '../FontData.js';
  * @template C  The class for table cells
  */
 export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
+
     /**
      * The number of mtd's in the mtr
      */
@@ -93,6 +94,13 @@ export type MtrConstructor<C extends AnyWrapper> = Constructor<CommonMtr<C>>;
 export function CommonMtrMixin<C extends AnyWrapper,
                                T extends WrapperConstructor>(Base: T): MtrConstructor<C> & T {
     return class extends Base {
+
+        /**
+         * @override
+         */
+        get fixesPWidth() {
+            return false;
+        }
 
         /**
          * @return {number}   The number of mtd's in the mtr

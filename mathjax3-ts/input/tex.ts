@@ -25,6 +25,7 @@ import {AbstractInputJax} from '../core/InputJax.js';
 import {defaultOptions, userOptions, separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
+import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 
 import {FindTeX} from './tex/FindTeX.js';
 
@@ -110,7 +111,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         configuration.append(conf);
       }
     }
-    configuration.append(Configuration.extension());
+    configuration.init(configuration);
     return configuration;
   }
 
@@ -156,6 +157,14 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this.postFilters.add(FilterUtil.cleanAttributes, -2);
     this.postFilters.add(FilterUtil.combineRelations, -1);
     this.findTeX = this.parseOptions.options['FindTeX'] || new FindTeX(find);
+  }
+
+  /**
+   * @override
+   */
+  public setMmlFactory(mmlFactory: MmlFactory) {
+    super.setMmlFactory(mmlFactory);
+    this._parseOptions.nodeFactory.setMmlFactory(mmlFactory);
   }
 
 
@@ -218,7 +227,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   protected formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
-    return this.parseOptions.nodeFactory.create('error', message);
+    return this.parseOptions.nodeFactory.create(
+      'error', message, err.id, this.latex);
   };
 
 }

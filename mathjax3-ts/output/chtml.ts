@@ -22,12 +22,14 @@
  */
 
 import {CommonOutputJax} from './common/OutputJax.js';
+import {StyleList, Styles} from '../util/Styles.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
+import {CHTMLFontData} from './chtml/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 
 /*****************************************************************/
@@ -38,7 +40,8 @@ import {TeXFont} from './chtml/fonts/tex.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>> {
+export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>,
+                                                    CHTMLFontData, typeof CHTMLFontData> {
 
     public static NAME: string = 'CHTML';
     public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};
@@ -48,7 +51,6 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      *  the FontData object, and the CssStyles object.
      */
     public factory: CHTMLWrapperFactory<N, T, D>;
-    public font: TeXFont;
 
     /**
      * @override
@@ -95,7 +97,52 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      * @param {N} parent      The HTML node to contain the HTML
      */
     protected processMath(math: MmlNode, parent: N) {
-        return this.factory.wrap(math).toCHTML(parent);
+        this.factory.wrap(math).toCHTML(parent);
+    }
+
+    /*****************************************************************/
+
+    /**
+     * @override
+     */
+    public unknownText(text: string, variant: string) {
+        const styles: StyleList = {};
+        const scale = 100 / this.math.metrics.scale;
+        if (scale !== 100) {
+            styles['font-size'] = this.fixed(scale, 1) + '%';
+        }
+        if (variant !== '-explicitFont') {
+            this.cssFontStyles(this.font.getCssFont(variant), styles);
+        }
+        return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);
+    }
+
+    /**
+     * Measure the width of a text element by placing it in the page
+     *  and looking up its size (fake the height and depth, since we can't measure that)
+     *
+     * @override
+     */
+
+    public measureTextNode(text: N) {
+        const adaptor = this.adaptor;
+        text = adaptor.clone(text);
+        const node = this.html('mjx-measure-text', {}, [text]);
+        adaptor.append(adaptor.parent(this.math.start.node), this.container);
+        adaptor.append(this.container, node);
+        let w = adaptor.nodeSize(text, this.math.metrics.em)[0] / this.math.metrics.scale;
+        adaptor.remove(this.container);
+        adaptor.remove(node);
+        return {w: w, h: .75, d: .25};
+    }
+
+    /**
+     * @override
+     */
+    public getFontData(styles: Styles) {
+        const font = super.getFontData(styles);
+        font[0] = 'MJXZERO, ' + font[0];
+        return font;
     }
 
 }

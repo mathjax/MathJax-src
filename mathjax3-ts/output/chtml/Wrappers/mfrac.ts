@@ -70,9 +70,6 @@ export class CHTMLmfrac<N, T, D> extends CommonMfracMixin<CHTMLConstructor<N, T,
             display: 'block',
             'font-size': '5%'
         },
-        'mjx-row': {
-            display: 'table-row'
-        },
         'mjx-num': {
             display: 'block',
             'text-align': 'center'
@@ -80,6 +77,12 @@ export class CHTMLmfrac<N, T, D> extends CommonMfracMixin<CHTMLConstructor<N, T,
         'mjx-den': {
             display: 'block',
             'text-align': 'center'
+        },
+        'mjx-mfrac[bevelled] > mjx-num': {
+            display: 'inline-block'
+        },
+        'mjx-mfrac[bevelled] > mjx-den': {
+            display: 'inline-block'
         },
 
         'mjx-den[align="right"], mjx-num[align="right"]': {
@@ -240,20 +243,21 @@ export class CHTMLmfrac<N, T, D> extends CommonMfracMixin<CHTMLConstructor<N, T,
         //
         //  Create HTML tree
         //
-        this.childNodes[0].toCHTML(this.chtml);
+        adaptor.setAttribute(this.chtml, 'bevelled', 'ture');
+        const num = adaptor.append(this.chtml, this.html('mjx-num'));
+        this.childNodes[0].toCHTML(num);
         this.bevel.toCHTML(this.chtml);
-        this.childNodes[1].toCHTML(this.chtml);
+        const den = adaptor.append(this.chtml, this.html('mjx-den'));
+        this.childNodes[1].toCHTML(den);
         //
         //  Place the parts
         //
         const {u, v, delta, nbox, dbox} = this.getBevelData(display);
         if (u) {
-            const num = this.childNodes[0].chtml;
             adaptor.setStyle(num, 'verticalAlign', this.em(u / nbox.scale));
         }
         if (v) {
-            const denom = this.childNodes[1].chtml;
-            adaptor.setStyle(denom, 'verticalAlign', this.em(v / dbox.scale));
+            adaptor.setStyle(den, 'verticalAlign', this.em(v / dbox.scale));
         }
         const dx = this.em(-delta / 2);
         adaptor.setStyle(this.bevel.chtml, 'marginLeft', dx);

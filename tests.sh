@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]; then 
+
     node load.js tests/parser-base-tests.js
     node load.js tests/parser-digits-tests.js
     node load.js tests/parser-digits-european-tests.js
@@ -34,6 +35,21 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-boldsymbol-tests.js
     node load.js tests/parser-newcommand-tests.js
     node load.js tests/parser-ncerrors-tests.js
+
+    node load.js tests/parser-braket-tests.js
+
+    node load.js tests/parser-mhchem0-tests.js
+    node load.js tests/parser-mhchem1-tests.js
+    node load.js tests/parser-mhchem2-tests.js
+    node load.js tests/parser-mhchem3-tests.js
+    node load.js tests/parser-mhchem4-tests.js
+    node load.js tests/parser-mhchem5-tests.js
+    node load.js tests/parser-mhchem6-tests.js
+    node load.js tests/parser-mhchem7-tests.js
+    node load.js tests/parser-mhchem8-tests.js
+    node load.js tests/parser-mhchem9-tests.js
+
+    node load.js tests/parser-noerrors-tests.js
     exit 0
 else
     repeat=$1

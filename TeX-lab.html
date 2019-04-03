@@ -5,6 +5,9 @@
 <script src="lib/traceur.min.js"></script>
 <script src="lib/system.js"></script>
 <style>
+body {
+  padding-left: .5em;
+}
 #output {
   border: 1px solid black;
   padding: 10px;
@@ -17,22 +20,64 @@
   display: inline-block;
   text-align: right;
 }
+#options {
+  float: left;
+}
+#options > span {
+  margin-left: 1em;
+}
+#package {
+  margin-top: .5em;
+}
+#package > span > span {
+  display: inline-block;
+  width: 9em;
+  white-space: nowrap;
+}
+#package span:nth-of-type(5n)::after {
+  content: '\A';
+  white-space: pre;
+}
+#mathml {
+  font-size: 90%;
+}
+#link {
+  margin-left: 1em;
+  vertical-align: 5px;
+}
 </style>
 </head>
 <body>
 
+<h1>MathJax v3 Interactive TeX Lab
+<a href="MML-Lab.html" id="link"><button>Switch to MathML Lab</button></a>
+</h1>
+
 <div id="container">
 <textarea id="tex" cols="80" rows="15" onkeypress="Lab.checkKey(this,event)"></textarea><br>
-<span style="float:left">
-<input type="checkbox" id="display" onchange="Lab.setDisplay(this.checked)" checked /> display mode
+<span id="options">
+<input type="checkbox" id="display" onchange="Lab.setDisplay(this.checked)" checked /> Display mode
+<span>Output:
+<select id="renderer" onchange="Lab.setRenderer(this.value)">
+<option value="CHTML">CHTML</option>
+<option value="SVG">SVG</option>
+</select>
+</span>
+<span>
+<input type="checkbox" id="showMML" onchange="Lab.setMathML(this.checked)" /> Show MathML
+</span>
 </span>
 <input type="button" value="Keep" onclick="Lab.Keep()" />
 <input type="button" value="Typeset" onclick="Lab.Typeset()" />
 </div>
-<p>
 <div id="package"></div>
 <p>
 <div id="output"></div>
+
+<p>
+<pre id="mathml"></pre>
+
+<button onclick="Lab.sendToMathML()">Transfer to MathML Lab</button>
 
 <script>
 System.import('./lib/TeX-lab.js').catch(function (error) {console.log(error.message)});

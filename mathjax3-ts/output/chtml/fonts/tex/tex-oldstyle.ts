@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {texOldstyle as font} from '../../../common/fonts/tex/tex-oldstyle.js';
 
-export const texOldstyle: CharMap = AddCSS(font, {
+export const texOldstyle: CHTMLCharMap = AddCSS(font, {
     0x30: 2,
     0x31: 2,
     0x32: 2,

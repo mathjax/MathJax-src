@@ -26,6 +26,7 @@ import {defaultOptions, separateOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {MathItem} from '../core/MathItem.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
+import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 
 import {FindMathML} from './mathml/FindMathML.js';
 import {MathMLCompile} from './mathml/MathMLCompile.js';
@@ -84,12 +85,20 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
     /**
      * Set the adaptor in any of the objects that need it
      *
-     * @param {DOMAdaptor} adaptor  The adaptor to save
+     * @override
      */
     public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
         super.setAdaptor(adaptor);
         this.findMathML.adaptor = adaptor;
         this.mathml.adaptor = adaptor;
+    }
+
+    /**
+     * @param {MmlFactory} mmlFactory  The MmlFactory to use for this MathML input jax
+     */
+    public setMmlFactory(mmlFactory: MmlFactory) {
+        super.setMmlFactory(mmlFactory);
+        this.mathml.setMmlFactory(mmlFactory);
     }
 
     /**

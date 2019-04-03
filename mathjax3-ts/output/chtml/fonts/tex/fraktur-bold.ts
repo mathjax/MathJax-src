@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {CharMap, AddCSS} from '../../FontData.js';
+import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {frakturBold as font} from '../../../common/fonts/tex/fraktur-bold.js';
 
-export const frakturBold: CharMap = AddCSS(font, {
+export const frakturBold: CHTMLCharMap = AddCSS(font, {
     0x21: 1,
     0x22: 1,
     0x26: 3,
