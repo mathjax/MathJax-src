@@ -605,11 +605,11 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
      */
     public inheritAttributesFrom(node: MmlNode) {
         const attributes = node.attributes;
-        const display = attributes.get('display') as boolean;
+        const display = attributes.get('displaystyle') as boolean;
         const scriptlevel = attributes.get('scriptlevel') as number;
-        const defaults: AttributeList = {
+        const defaults: AttributeList = (!attributes.isSet('mathsize') ? {} : {
             mathsize: ['math', attributes.get('mathsize')]
-        };
+        });
         const prime = node.getProperty('texprimestyle') as boolean || false
         this.setInheritedAttributes(defaults, display, scriptlevel, prime);
     }
