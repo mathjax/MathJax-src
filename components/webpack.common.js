@@ -112,7 +112,8 @@ const MODULE = function (dir) {
  */
 const PACKAGE = function (name, mathjax3, libs, dir, dist) {
     const distDir = dist ? path.resolve(dir, dist) :
-                           path.resolve(path.dirname(mathjax3), 'components', 'dist');
+                           path.resolve(path.dirname(mathjax3), 'components', 'dist', path.dirname(name));
+    name = path.basename(name);
     return {
         name: name,
         entry: path.join(dir, name + '.js'),
