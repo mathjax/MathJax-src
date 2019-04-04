@@ -22,13 +22,14 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {CommandMap, MacroMap} from '../SymbolMap.js';
+import {CommandMap, MacroMap, CharacterMap} from '../SymbolMap.js';
 import PhysicsMethods from './PhysicsMethods.js';
 import {TexConstant} from '../TexConstants.js';
+import ParseMethods from '../ParseMethods.js';
 
 
 /**
- * Macros for physics package.
+ * Macros for physics package (section 2.1).
  */
 new CommandMap('Physics-automatic-bracing-macros', {
   'quantity':       'Quantity',
@@ -53,6 +54,38 @@ new CommandMap('Physics-automatic-bracing-macros', {
 }, PhysicsMethods);
 
 
+/**
+ * Macros for physics package (section 2.2).
+ */
+new CharacterMap('Physics-vector-chars', ParseMethods.mathchar0mi, {
+  dotproduct: ['\u22C5', {mathvariant: TexConstant.Variant.BOLD}],
+  vdot: ['\u22C5', {mathvariant: TexConstant.Variant.BOLD}],
+  crossproduct: '\u00D7',
+  cross: '\u00D7',
+  cp: '\u00D7',
+  // This is auxiliary!
+  gradientnabla: ['\u2207', {mathvariant: TexConstant.Variant.BOLD}]
+});
+
+new CommandMap('Physics-vector-macros', {
+  'vectorbold': 'VectorBold',
+  'vb': 'VectorBold',
+  'vectorarrow': ['StarMacro', 1, '\\vec{\\vb', '{#1}}'],
+  'va': ['StarMacro', 1, '\\vec{\\vb', '{#1}}'],
+  'vectorunit': ['StarMacro', 1, '\\hat{\\vb', '{#1}}'],
+  'vu': ['StarMacro', 1, '\\hat{\\vb', '{#1}}'],
+  'gradient': ['OperatorApplication', '\\gradientnabla'],
+  'grad': ['OperatorApplication', '\\gradientnabla'],
+  'divergence': ['OperatorApplication', '\\gradientnabla\\vdot'],
+  'div': ['OperatorApplication', '\\gradientnabla\\vdot'],
+  'curl': ['OperatorApplication', '\\gradientnabla\\crossproduct'],
+  'laplacian': ['OperatorApplication', '\\nabla^2'],
+}, PhysicsMethods);
+
+
+/**
+ * Macros for physics package (section 2.3).
+ */
 new CommandMap('Physics-expressions-macros', {
   'sin':              'Expression',
   'sinh':             'Expression',
@@ -90,6 +123,12 @@ new CommandMap('Physics-expressions-macros', {
   'Trace':            ['Expression', false, 'Tr'],
   'rank':             'NamedFn',
   'erf':              ['Expression', false],
+  //
+  // TODO:
+  // Res
+  // principalvalue
+  // Re
+  // Im
   // Old named functions.
   'sine':             ['NamedFn', 'sin'],
   'hypsine':          ['NamedFn', 'sinh'],
@@ -123,6 +162,9 @@ new CommandMap('Physics-expressions-macros', {
 }, PhysicsMethods);
 
 
+/**
+ * Macros for physics package (section 2.4).
+ */
 new CommandMap('Physics-quick-quad-macros', {
   'qqtext':     'Qqtext',
   'qq':         'Qqtext',

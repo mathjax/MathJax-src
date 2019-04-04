@@ -23,6 +23,8 @@
  */
 
 import {Configuration} from '../Configuration.js';
+import ParseOptions from '../ParseOptions.js';
+import NodeUtil from '../NodeUtil.js';
 import './PhysicsMappings.js';
 
 
@@ -32,6 +34,8 @@ export const PhysicsConfiguration = Configuration.create(
     handler: {
       macro: [
         'Physics-automatic-bracing-macros',
+        'Physics-vector-macros',
+        'Physics-vector-chars',
         'Physics-expressions-macros',
         'Physics-quick-quad-macros'
       ]

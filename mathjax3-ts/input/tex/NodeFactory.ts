@@ -191,4 +191,9 @@ export class NodeFactory {
     return node;
   }
 
+  // Maybe better use a clone?
+  public get(kind: string) {
+    return this.factory[kind];
+  }
+
 }

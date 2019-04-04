@@ -27,9 +27,10 @@ import BaseMethods from '../base/BaseMethods.js';
 import {MapHandler} from '../MapHandler.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
+import {NodeFactory} from '../NodeFactory.js';
 
 
 let PhysicsMethods: Record<string, ParseMethod> = {};
@@ -151,6 +152,44 @@ PhysicsMethods.Commutator = function(parser: TexParser, name: string,
 };
 
 
+
+/**
+ * An operator that needs to be parsed and applied. Applications can involve
+ * bracketed expressions.
+ * @param {TexParser} parser 
+ * @param {string} name 
+ * @param {boolean = true} opt 
+ * @param {string = ''} id 
+ */
+PhysicsMethods.OperatorApplication = function(
+  parser: TexParser, name: string, operator: string) {
+  let first = parser.GetNext();
+  let lfence = '', rfence = '', arg = '';
+  switch (first) {
+  case '(':
+    parser.i++;
+    arg = parser.GetUpTo(name, ')');
+    lfence = '\\left(';
+    rfence = '\\right)';
+    parser.i++;
+    break;
+  case '[':
+    arg = parser.GetBrackets(name);
+    lfence = '\\left[';
+    rfence = '\\right]';
+    break;
+  case '{':
+    arg = parser.GetArgument(name);
+    break;
+  default:
+  }
+  let macro = operator + ' ' + lfence + ' ' + arg + ' ' + rfence;
+  console.log(macro);
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
+
+
 PhysicsMethods.Expression = function(parser: TexParser, name: string,
                                      opt: boolean = true, id: string = '') {
   id = id || name.slice(1);
@@ -177,6 +216,76 @@ PhysicsMethods.Qqtext = function(parser: TexParser, name: string, text: string) 
   let replace = (star ? '' : '\\quad') + '\\text{' + arg + '}\\quad ';
   parser.string = parser.string.slice(0, parser.i) + replace +
     parser.string.slice(parser.i);
+};
+
+let latinCap: [number, number] = [0x41, 0x5A];
+let latinSmall: [number, number] = [0x61, 0x7A];
+let greekCap: [number, number] = [0x391, 0x3A9];
+let greekSmall: [number, number] = [0x3B1, 0x3C9];
+let digits: [number, number] = [0x30, 0x39];
+
+function inRange(value: number, range: [number, number]) {
+  return (value >= range[0] && value <= range[1])
+}
+
+export function createVectorToken(factory: NodeFactory, kind: string,
+                                  def: any, text: string): MmlNode  {
+  let parser = factory.configuration.parser;
+  let token = NodeFactory.createToken(factory, kind, def, text);
+  let code: number = text.charCodeAt(0);
+  if (text.length === 1 && !parser.stack.env.font &&
+      parser.stack.env.vectorFont &&
+      (inRange(code, latinCap) || inRange(code, latinSmall) ||
+       inRange(code, greekCap) || inRange(code, digits) ||
+       (inRange(code, greekSmall) && parser.stack.env.vectorStar) ||
+       NodeUtil.getAttribute(token, 'accent'))) {
+    NodeUtil.setAttribute(token, 'mathvariant', parser.stack.env.vectorFont);
+  }
+  return token;
+}
+
+// Vector bold should be combined with all other vector methods.
+PhysicsMethods.VectorBold = function(parser: TexParser, name: string, text: string) {
+  let star = parser.GetStar();
+  let arg = parser.GetArgument(name);
+  let oldToken = parser.configuration.nodeFactory.get('token');
+  let oldFont = parser.stack.env.font;
+  delete parser.stack.env.font;
+  parser.configuration.nodeFactory.set('token', createVectorToken);
+  parser.stack.env.vectorFont = star ? 'bold-italic' : 'bold';
+  parser.stack.env.vectorStar = star;
+  let node = new TexParser(arg, parser.stack.env, parser.configuration).mml();
+  if (oldFont) {
+    parser.stack.env.font = oldFont;
+  }
+  delete parser.stack.env.vectorFont;
+  delete parser.stack.env.vectorStar;
+  parser.configuration.nodeFactory.set('token', oldToken);
+  parser.Push(node);
+};
+
+
+/**
+ * Macros that can have an optional star.
+ */
+PhysicsMethods.StarMacro = function(parser: TexParser, name: string,
+                                argcount: number, ...parts: string[]) {
+  let star = parser.GetStar();
+  const args: string[] = [];
+  if (argcount) {
+    for (let i = args.length; i < argcount; i++) {
+      args.push(parser.GetArgument(name));
+    }
+  }
+  let macro = parts.join(star ? '*' : '');
+  macro = ParseUtil.substituteArgs(parser, args, macro);
+  parser.string = ParseUtil.addArgs(parser, macro, parser.string.slice(parser.i));
+  parser.i = 0;
+  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
+    throw new TexError('MaxMacroSub1',
+                        'MathJax maximum macro substitution count exceeded; ' +
+                        'is there a recursive macro call?');
+  }
 };
 
 
