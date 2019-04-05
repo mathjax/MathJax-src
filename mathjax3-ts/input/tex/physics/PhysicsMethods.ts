@@ -27,6 +27,7 @@ import BaseMethods from '../base/BaseMethods.js';
 import {MapHandler} from '../MapHandler.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
+import {TexConstant} from '../TexConstants.js';
 import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
@@ -171,7 +172,6 @@ PhysicsMethods.OperatorApplication = function(
     arg = parser.GetUpTo(name, ')');
     lfence = '\\left(';
     rfence = '\\right)';
-    parser.i++;
     break;
   case '[':
     arg = parser.GetBrackets(name);
@@ -184,7 +184,75 @@ PhysicsMethods.OperatorApplication = function(
   default:
   }
   let macro = operator + ' ' + lfence + ' ' + arg + ' ' + rfence;
-  console.log(macro);
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
+
+
+PhysicsMethods.Differential = function(parser: TexParser, name: string,
+                                       op: string) {
+  const optArg = parser.GetBrackets(name);
+  const power = optArg != null ? '^{' + optArg + '}' : ' ';
+  const parens = parser.GetNext() === '(';
+  const braces = parser.GetNext() === '{';
+  let macro = op + power;
+  if (!(parens || braces)) {
+    macro += parser.GetArgument(name, true) || '';
+    let mml = new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml();
+    parser.Push(mml);
+    return;
+  }
+  if (parens) {
+    parser.i++;
+    macro += '{\\left(' + parser.GetUpTo(name, ')') + '\\right)}';
+  } else {
+    macro += parser.GetArgument(name);
+  }
+  const mml = new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml();
+  // Ideally I would like to set this row to be a TEXCLASS.OP.
+  const lspace = parser.create('node', 'mspace', [], {width: TexConstant.Length.THINMATHSPACE});
+  const rspace = parser.create('node', 'mspace', [], {width: TexConstant.Length.THINMATHSPACE});
+  parser.Push(parser.create('node', 'mrow', [lspace, mml, rspace]));
+};
+
+PhysicsMethods.Derivative = function(parser: TexParser, name: string,
+                                     argMax: number, op: string) {
+  const star = parser.GetStar();
+  const optArg = parser.GetBrackets(name);
+  let argCounter = 1;
+  const args = [];
+  args.push(parser.GetArgument(name));
+  while (parser.GetNext() === '{' && argCounter < argMax) {
+    args.push(parser.GetArgument(name));
+    argCounter++;
+  }
+  let parens = '';
+  if (parser.GetNext() === '(') {
+    parser.i++;
+    parens = '\\left(' + parser.GetUpTo(name, ')') + '\\right)';
+  }
+  let power1 = ' ';
+  let power2 = ' ';
+  if (argMax > 2 && args.length > 2) {
+    power1 = '^{' + (args.length - 1) + '}';
+    parens = '';  // This is a potential error in the physics
+                  // package. Parenthesised arguments are "swallowed" in the \dv
+                  // commands if all arguments are given.
+  } else if (optArg != null) {
+    power1 = '^{' + optArg + '}';
+    power2 = power1;
+  }
+  const frac = star ? '\\flatfrac' : '\\frac';
+  const first = args.length > 1 ? args[0] : '';
+  const second = args.length > 1 ? args[1] : args[0];
+  let rest = '';
+  for (let i = 2, arg; arg = args[i]; i++) {
+    rest += op + ' ' + arg;
+  }
+  const macro = frac + '{' + op + power1 + first + '}' +
+    '{' + op + ' ' + second + power2 + ' ' + rest + '}' + parens;
   parser.Push(new TexParser(macro, parser.stack.env,
                             parser.configuration).mml());
 };
@@ -225,8 +293,8 @@ let greekSmall: [number, number] = [0x3B1, 0x3C9];
 let digits: [number, number] = [0x30, 0x39];
 
 function inRange(value: number, range: [number, number]) {
-  return (value >= range[0] && value <= range[1])
-}
+  return (value >= range[0] && value <= range[1]);
+};
 
 export function createVectorToken(factory: NodeFactory, kind: string,
                                   def: any, text: string): MmlNode  {
@@ -288,6 +356,135 @@ PhysicsMethods.StarMacro = function(parser: TexParser, name: string,
   }
 };
 
+
+PhysicsMethods.Bra = function(parser: TexParser, name: string) {
+  let starBra = parser.GetStar();
+  let bra = parser.GetArgument(name);
+  let ket = '';
+  let hasKet = false;
+  let starKet = false;
+  if (parser.GetNext() === '\\') {
+    let saveI = parser.i;
+    parser.i++;
+    if (parser.GetCS() === 'ket') {   // TODO: This won't work with a let!
+      hasKet = true;
+      saveI = parser.i;
+      starKet = parser.GetStar();
+      if (parser.GetNext() === '{') {
+        ket = parser.GetArgument('ket', true);
+      } else {
+        parser.i = saveI;
+        starKet = false;
+      }
+    } else {
+      parser.i = saveI;
+    }
+  }
+  let macro = '';
+  if (hasKet) {
+    macro = (starBra || starKet) ?
+    `\\langle{${bra}}\\vert{${ket}}\\rangle` :
+      `\\left\\langle{${bra}}\\middle\\vert{${ket}}\\right\\rangle`;
+  } else {
+    macro = (starBra || starKet) ?
+    `\\langle{${bra}}\\vert` : `\\left\\langle{${bra}}\\right\\vert{${ket}}`;
+  }
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
+
+
+PhysicsMethods.Ket = function(parser: TexParser, name: string) {
+  let star = parser.GetStar();
+  let ket = parser.GetArgument(name);
+  let macro = star ? `\\vert{${ket}}\\rangle` :
+    `\\left\\vert{${ket}}\\right\\rangle`;
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
+
+
+PhysicsMethods.BraKet = function(parser: TexParser, name: string) {
+  let star = parser.GetStar();
+  let bra = parser.GetArgument(name);
+  let ket = null;
+  if (parser.GetNext() === '{') {
+    ket = parser.GetArgument(name, true);
+  }
+  let macro = '';
+  if (ket == null) {
+    macro = star ?
+      `\\langle{${bra}}\\vert{${bra}}\\rangle` :
+      `\\left\\langle{${bra}}\\middle\\vert{${bra}}\\right\\rangle`;
+  } else {
+    macro = star ?
+      `\\langle{${bra}}\\vert{${ket}}\\rangle` :
+      `\\left\\langle{${bra}}\\middle\\vert{${ket}}\\right\\rangle`;
+  }
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
+
+
+PhysicsMethods.KetBra = function(parser: TexParser, name: string) {
+  let star = parser.GetStar();
+  let ket = parser.GetArgument(name);
+  let bra = null;
+  if (parser.GetNext() === '{') {
+    bra = parser.GetArgument(name, true);
+  }
+  let macro = '';
+  if (bra == null) {
+    macro = star ?
+      `\\vert{${ket}}\\rangle\\!\\langle{${ket}}\\vert` :
+      `\\left\\vert{${ket}}\\middle\\rangle\\!\\middle\\langle{${ket}}\\right\\vert`;
+  } else {
+    macro = star ?
+      `\\vert{${ket}}\\rangle\\!\\langle{${bra}}\\vert` :
+      `\\left\\vert{${ket}}\\middle\\rangle\\!\\middle\\langle{${bra}}\\right\\vert`;
+  }
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
+
+
+function outputBraket([arg1, arg2, arg3]: [string, string, string],
+                      star1: boolean, star2: boolean) {
+  return (star1 && star2) ?
+    `\\left\\langle{${arg1}}\\middle\\vert{${arg2}}\\middle\\vert{${arg3}}\\right\\rangle` :
+    (star1 ? `\\langle{${arg1}}\\vert{${arg2}}\\vert{${arg3}}\\rangle` :
+     `\\left\\langle{${arg1}}\\right\\vert{${arg2}}\\left\\vert{${arg3}}\\right\\rangle`);
+};
+
+PhysicsMethods.Expectation = function(parser: TexParser, name: string) {
+  let star1 = parser.GetStar();
+  let star2 = star1 && parser.GetStar();
+  let braket = parser.GetNext() === '{';
+  let arg1 = parser.GetArgument(name);
+  let arg2 = null;
+  if (parser.GetNext() === '{') {
+    arg2 = parser.GetArgument(name, true);
+  }
+  let macro = (arg1 && arg2) ?
+    outputBraket([arg2, arg1, arg2], star1, star2) :
+    // Braces for semantics, similar to braket package.
+    (star1 ? `\\langle {${arg1}} \\rangle` :
+     `\\left\\langle {${arg1}} \\right\\rangle`);
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
+
+PhysicsMethods.MatrixElement = function(parser: TexParser, name: string) {
+  let star1 = parser.GetStar();
+  let star2 = star1 && parser.GetStar();
+  let braket = parser.GetNext() === '{';
+  let arg1 = parser.GetArgument(name);
+  let arg2 = parser.GetArgument(name);
+  let arg3 = parser.GetArgument(name);
+  let macro = outputBraket([arg1, arg2, arg3], star1, star2);
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
 
 PhysicsMethods.Macro = BaseMethods.Macro;
 

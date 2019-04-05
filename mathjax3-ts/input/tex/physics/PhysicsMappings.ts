@@ -83,6 +83,22 @@ new CommandMap('Physics-vector-macros', {
 }, PhysicsMethods);
 
 
+new CommandMap('Physics-derivative-macros', {
+  'flatfrac': ['Macro', '\\left.#1\\middle/#2\\right.', 2],
+  'differential': ['Differential', '{\\rm d}'],
+  'dd':           ['Differential', '{\\rm d}'],
+  'variation': ['Differential', '\\delta'],
+  'var':       ['Differential', '\\delta'],
+  'derivative':   ['Derivative', 2, '{\\rm d}'],
+  'dv':           ['Derivative', 2, '{\\rm d}'],
+  'partialderivative': ['Derivative', 3, '\\partial'],
+  'pderivative':       ['Derivative', 3, '\\partial'],
+  'pdv':                ['Derivative', 3, '\\partial'],
+  'functionalderivative': ['Derivative', 2, '\\delta'],
+  'fderivative':          ['Derivative', 2, '\\delta'],
+  'fdv':                  ['Derivative', 2, '\\delta'],
+}, PhysicsMethods);
+
 /**
  * Macros for physics package (section 2.3).
  */
@@ -190,4 +206,25 @@ new CommandMap('Physics-quick-quad-macros', {
   'qor':        ['Qqtext', 'or'],
   'qas':        ['Qqtext', 'as'],
   'qin':        ['Qqtext', 'in'],
+}, PhysicsMethods);
+
+
+/**
+ * Macros for physics package (section 2.5).
+ */
+new CommandMap('Physics-bra-ket-macros', {
+  'bra': 'Bra',
+  'ket': 'Ket',
+  'innerproduct': 'BraKet',
+  'braket': 'BraKet',
+  'outerproduct': 'KetBra',
+  'dyad': 'KetBra',
+  'ketbra': 'KetBra',
+  'op': 'KetBra',
+  'expectationvalue': 'Expectation',
+  'expval': 'Expectation',
+  'ev': 'Expectation',
+  'matrixelement': 'MatrixElement',
+  'matrixel': 'MatrixElement',
+  'mel': 'MatrixElement',
 }, PhysicsMethods);

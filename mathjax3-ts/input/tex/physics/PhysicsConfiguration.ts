@@ -36,8 +36,10 @@ export const PhysicsConfiguration = Configuration.create(
         'Physics-automatic-bracing-macros',
         'Physics-vector-macros',
         'Physics-vector-chars',
+        'Physics-derivative-macros',
         'Physics-expressions-macros',
-        'Physics-quick-quad-macros'
+        'Physics-quick-quad-macros',
+        'Physics-bra-ket-macros'
       ]
     }
   }
