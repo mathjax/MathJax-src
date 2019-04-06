@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {CommandMap, MacroMap, CharacterMap} from '../SymbolMap.js';
+import {EnvironmentMap, CommandMap, MacroMap, CharacterMap} from '../SymbolMap.js';
 import PhysicsMethods from './PhysicsMethods.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';
@@ -227,4 +227,43 @@ new CommandMap('Physics-bra-ket-macros', {
   'matrixelement': 'MatrixElement',
   'matrixel': 'MatrixElement',
   'mel': 'MatrixElement',
+}, PhysicsMethods);
+
+
+/**
+ * Macros for physics package (section 2.6).
+ */
+new CommandMap('Physics-matrix-macros', {
+  'matrixquantity': 'MatrixQuantity',
+  'mqty'          : 'MatrixQuantity',
+  'pmqty':          ['Macro', '\\mqty(#1)', 1],
+  'Pmqty':          ['Macro', '\\mqty*(#1)', 1],
+  'bmqty':          ['Macro', '\\mqty[#1]', 1],
+  'vmqty':          ['Macro', '\\mqty|#1|', 1],
+  // Smallmatrices
+  'smallmatrixquantity': ['MatrixQuantity', true],
+  'smqty':               ['MatrixQuantity', true],
+  'spmqty':          ['Macro', '\\smqty(#1)', 1],
+  'sPmqty':          ['Macro', '\\smqty*(#1)', 1],
+  'sbmqty':          ['Macro', '\\smqty[#1]', 1],
+  'svmqty':          ['Macro', '\\smqty|#1|', 1],
+  'matrixdeterminant': ['Macro', '\\vmqty{#1}', 1],
+  'mdet':  ['Macro', '\\vmqty{#1}', 1],
+  'smdet':  ['Macro', '\\svmqty{#1}', 1],
+  'identitymatrix': 'IdentityMatrix',
+  'imat': 'IdentityMatrix',
+  'xmatrix': 'XMatrix',
+  'xmat': 'XMatrix',
+  'zeromatrix': ['Macro', '\\xmat{0}{#1}{#2}', 2],
+  'zmat': ['Macro', '\\xmat{0}{#1}{#2}', 2],
+  'paulimatrix': 'PauliMatrix',
+  'pmat': 'PauliMatrix',
+  'diagonalmatrix': 'DiagonalMatrix',
+  'dmat': 'DiagonalMatrix'
+}, PhysicsMethods);
+
+
+new EnvironmentMap('Physics-aux-envs', ParseMethods.environment, {
+  // Define smallmatrix to be independent of AmsMath.
+  smallmatrix:   ['Array', null, null, null, 'c', '0.333em', '.2em', 'S', 1]
 }, PhysicsMethods);

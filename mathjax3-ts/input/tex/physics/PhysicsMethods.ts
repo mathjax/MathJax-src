@@ -475,20 +475,207 @@ PhysicsMethods.Expectation = function(parser: TexParser, name: string) {
 };
 
 PhysicsMethods.MatrixElement = function(parser: TexParser, name: string) {
-  let star1 = parser.GetStar();
-  let star2 = star1 && parser.GetStar();
-  let braket = parser.GetNext() === '{';
-  let arg1 = parser.GetArgument(name);
-  let arg2 = parser.GetArgument(name);
-  let arg3 = parser.GetArgument(name);
-  let macro = outputBraket([arg1, arg2, arg3], star1, star2);
+  const star1 = parser.GetStar();
+  const star2 = star1 && parser.GetStar();
+  const braket = parser.GetNext() === '{';
+  const arg1 = parser.GetArgument(name);
+  const arg2 = parser.GetArgument(name);
+  const arg3 = parser.GetArgument(name);
+  const macro = outputBraket([arg1, arg2, arg3], star1, star2);
   parser.Push(new TexParser(macro, parser.stack.env,
                             parser.configuration).mml());
+};
+
+
+PhysicsMethods.MatrixQuantity = function(parser: TexParser, name: string, small?: boolean) {
+  const star = parser.GetStar();
+  const next = parser.GetNext();
+  const array = small ? 'smallmatrix' : 'array';
+  let arg = '';
+  let open = '';
+  let close = '';
+  switch (next) {
+  case '{':
+    arg = parser.GetArgument(name);
+    break;
+  case '(':
+    parser.i++;
+    open = star ? '\\lgroup' : '(';
+    close = star ? '\\rgroup' : ')';
+    arg = parser.GetUpTo(name, ')');
+    break;
+  case '[':
+    parser.i++;
+    open = '[';
+    close = ']';
+    arg = parser.GetUpTo(name, ']');
+    break;
+  case '|':
+    parser.i++;
+    open = '|';
+    close = '|';
+    arg = parser.GetUpTo(name, '|');
+    break;
+  default:
+    open = '(';
+    close = ')';
+    break;
+  }
+  const macro = (open ? '\\left' : '') + open +
+    '\\begin{' + array + '}{} ' + arg + '\\end{' + array + '}' +
+    (open ? '\\right' : '') + close;
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+};
+
+PhysicsMethods.IdentityMatrix = function(parser: TexParser, name: string) {
+  const arg = parser.GetArgument(name);
+  const size = parseInt(arg, 10);
+  if (isNaN(size)) {
+    throw new TexError('InvalidNumber', 'Invalid number');
+  }
+  if (size <= 1) {
+    parser.string = '1' + parser.string.slice(parser.i);
+    parser.i = 0;
+    return;
+  }
+  let zeros = Array(size).fill('0');
+  let columns = [];
+  for (let i = 0; i < size; i++) {
+    let row = zeros.slice();
+    row[i] = '1';
+    columns.push(row.join(' & '));
+  }
+  parser.string = columns.join('\\\\ ') + parser.string.slice(parser.i);
+  parser.i = 0;
+};
+
+
+PhysicsMethods.XMatrix = function(parser: TexParser, name: string) {
+  const star = parser.GetStar();
+  const arg1 = parser.GetArgument(name);
+  const arg2 = parser.GetArgument(name);
+  const arg3 = parser.GetArgument(name);
+  let n = parseInt(arg2, 10);
+  let m = parseInt(arg3, 10);
+  if (isNaN(n) || isNaN(m) || m.toString() !== arg3 || n.toString() !== arg2) {
+    throw new TexError('InvalidNumber', 'Invalid number');
+  }
+  n = n < 1 ? 1 : n;
+  m = m < 1 ? 1 : m;
+  // Elements
+  if (!star) {
+    const row = Array(m).fill(arg1).join(' & ');
+    const matrix = Array(n).fill(row).join('\\\\ ');
+    parser.string = matrix + parser.string.slice(parser.i);
+    parser.i = 0;
+    return;
+  }
+  // 4 cases: n=m=1, n=1, m=1, o/w
+  let matrix = '';
+  if (n === 1 && m === 1) {
+    matrix = arg1;
+  } else if (n === 1) {
+    let row = [];
+    for (let i = 1; i <= m; i++) {
+      row.push(`${arg1}_{${i}}`);
+    }
+    matrix = row.join(' & ');
+  } else if (m === 1) {
+    let row = [];
+    for (let i = 1; i <= n; i++) {
+      row.push(`${arg1}_{${i}}`);
+    }
+    matrix = row.join('\\\\ ');
+  } else {
+    let rows = [];
+    for (let i = 1; i <= n; i++) {
+      let row = [];
+      for (let j = 1; j <= m; j++) {
+        row.push(`${arg1}_{{${i}}{${j}}}`);  // Note the extra mrows!
+      }
+      rows.push(row.join(' & '));
+    }
+    matrix = rows.join('\\\\ ');
+  }
+  parser.string = matrix + parser.string.slice(parser.i);
+  parser.i = 0;
+  return;
+};
+
+
+PhysicsMethods.PauliMatrix = function(parser: TexParser, name: string) {
+  const arg = parser.GetArgument(name);
+  let matrix = arg.slice(1);
+  switch (arg[0]) {
+  case '0':
+    matrix += ' 1 & 0\\\\ 0 & 1';
+    break;
+  case '1':
+  case 'x':
+    matrix += ' 0 & 1\\\\ 1 & 0';
+    break;
+  case '2':
+  case 'y':
+    matrix += ' 0 & -i\\\\ i & 0';
+    break;
+  case '3':
+  case 'z':
+    matrix += ' 1 & 0\\\\ 0 & -1';
+    break;
+  default:
+  }
+  parser.string = matrix + parser.string.slice(parser.i);
+  parser.i = 0;
+};
+
+
+PhysicsMethods.DiagonalMatrix = function(parser: TexParser, name: string,
+                                         anti?: boolean) {
+  if (parser.GetNext() !== '{') {
+    return;
+  };
+  let startI = parser.i;
+  let arg = parser.GetArgument(name);
+  let endI = parser.i;
+  parser.i = startI + 1;
+  let elements = [];
+  let element = '';
+  let currentI = parser.i;
+  let indent = 1;
+  let makeElement = function(element: string) {
+    return Array(indent).join('&') + '\\mqty{' + element + '}';
+  };
+  while (currentI < endI) {
+    try {
+      element = parser.GetUpTo(name, ',');
+    } catch (e) {
+      parser.i = endI;
+      elements.push(makeElement(parser.string.slice(currentI, endI - 1)));
+      break;
+    }
+    if (parser.i >= endI) {
+      elements.push(makeElement(parser.string.slice(currentI, endI)));
+      break;
+    }
+    currentI = parser.i;
+    elements.push(makeElement(element));
+    indent++;
+  }
+  console.log('Elements');
+  console.log(elements);
+  let matrix = elements.join('\\\\ ');
+  console.log(matrix);
+  parser.string = matrix + parser.string.slice(endI);
+  console.log(parser.string);
+  parser.i = 0;
 };
 
 PhysicsMethods.Macro = BaseMethods.Macro;
 
 PhysicsMethods.NamedFn = BaseMethods.NamedFn;
+
+PhysicsMethods.Array = BaseMethods.Array;
 
 
 export default PhysicsMethods;

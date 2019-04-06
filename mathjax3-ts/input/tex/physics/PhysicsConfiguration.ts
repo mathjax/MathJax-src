@@ -39,8 +39,10 @@ export const PhysicsConfiguration = Configuration.create(
         'Physics-derivative-macros',
         'Physics-expressions-macros',
         'Physics-quick-quad-macros',
-        'Physics-bra-ket-macros'
-      ]
+        'Physics-bra-ket-macros',
+        'Physics-matrix-macros'
+      ],
+      environment: ['Physics-aux-envs']
     }
   }
 );
