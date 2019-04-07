@@ -83,22 +83,6 @@ new CommandMap('Physics-vector-macros', {
 }, PhysicsMethods);
 
 
-new CommandMap('Physics-derivative-macros', {
-  'flatfrac': ['Macro', '\\left.#1\\middle/#2\\right.', 2],
-  'differential': ['Differential', '{\\rm d}'],
-  'dd':           ['Differential', '{\\rm d}'],
-  'variation': ['Differential', '\\delta'],
-  'var':       ['Differential', '\\delta'],
-  'derivative':   ['Derivative', 2, '{\\rm d}'],
-  'dv':           ['Derivative', 2, '{\\rm d}'],
-  'partialderivative': ['Derivative', 3, '\\partial'],
-  'pderivative':       ['Derivative', 3, '\\partial'],
-  'pdv':                ['Derivative', 3, '\\partial'],
-  'functionalderivative': ['Derivative', 2, '\\delta'],
-  'fderivative':          ['Derivative', 2, '\\delta'],
-  'fdv':                  ['Derivative', 2, '\\delta'],
-}, PhysicsMethods);
-
 /**
  * Macros for physics package (section 2.3).
  */
@@ -212,6 +196,26 @@ new CommandMap('Physics-quick-quad-macros', {
 /**
  * Macros for physics package (section 2.5).
  */
+new CommandMap('Physics-derivative-macros', {
+  'flatfrac': ['Macro', '\\left.#1\\middle/#2\\right.', 2],
+  'differential': ['Differential', '{\\rm d}'],
+  'dd':           ['Differential', '{\\rm d}'],
+  'variation': ['Differential', '\\delta'],
+  'var':       ['Differential', '\\delta'],
+  'derivative':   ['Derivative', 2, '{\\rm d}'],
+  'dv':           ['Derivative', 2, '{\\rm d}'],
+  'partialderivative': ['Derivative', 3, '\\partial'],
+  'pderivative':       ['Derivative', 3, '\\partial'],
+  'pdv':                ['Derivative', 3, '\\partial'],
+  'functionalderivative': ['Derivative', 2, '\\delta'],
+  'fderivative':          ['Derivative', 2, '\\delta'],
+  'fdv':                  ['Derivative', 2, '\\delta'],
+}, PhysicsMethods);
+
+
+/**
+ * Macros for physics package (section 2.6).
+ */
 new CommandMap('Physics-bra-ket-macros', {
   'bra': 'Bra',
   'ket': 'Ket',
@@ -231,7 +235,7 @@ new CommandMap('Physics-bra-ket-macros', {
 
 
 /**
- * Macros for physics package (section 2.6).
+ * Macros for physics package (section 2.7).
  */
 new CommandMap('Physics-matrix-macros', {
   'matrixquantity': 'MatrixQuantity',
@@ -259,11 +263,17 @@ new CommandMap('Physics-matrix-macros', {
   'paulimatrix': 'PauliMatrix',
   'pmat': 'PauliMatrix',
   'diagonalmatrix': 'DiagonalMatrix',
-  'dmat': 'DiagonalMatrix'
+  'dmat': 'DiagonalMatrix',
+  'antidiagonalmatrix': ['DiagonalMatrix', true],
+  'admat': ['DiagonalMatrix', true]
 }, PhysicsMethods);
 
 
+
+/**
+ * Auxiliary environment map to define smallmatrix. This makes Physics
+ * independent of AmsMath.
+ */
 new EnvironmentMap('Physics-aux-envs', ParseMethods.environment, {
-  // Define smallmatrix to be independent of AmsMath.
   smallmatrix:   ['Array', null, null, null, 'c', '0.333em', '.2em', 'S', 1]
 }, PhysicsMethods);
