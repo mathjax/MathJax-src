@@ -129,7 +129,7 @@ PhysicsMethods.Quantity = function(parser: TexParser, name: string,
 
 
 /**
- * Implementaton of the evaluate macro.
+ * The evaluate macro.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
@@ -155,7 +155,7 @@ PhysicsMethods.Eval = function(parser: TexParser, name: string) {
 
 
 /**
- * Implemetation of anti/commutator and poisson macros.
+ * The anti/commutator and poisson macros.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  * @param {string=} open Opening fence.
@@ -388,7 +388,7 @@ PhysicsMethods.Qqtext = function(parser: TexParser, name: string,
  */
 
 /**
- * Implementation of the differential and variation macros.
+ * The differential and variation macros.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  * @param {string} op The operator. It will be parsed.
@@ -425,7 +425,7 @@ PhysicsMethods.Differential = function(parser: TexParser, name: string,
 
 
 /**
- * Implementation of the derivative macros. Its behaviour depends on the number
+ * The derivative macros. Its behaviour depends on the number
  * of arguments provided. In case of
  * 1 argument: will be part of the denominator.
  * 2 arguments: argument one is numerator, argument two is denominator.
@@ -484,7 +484,7 @@ PhysicsMethods.Derivative = function(parser: TexParser, name: string,
  */
 
 /**
- * Implementation of the bra macro.
+ * The bra macro.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
@@ -528,6 +528,11 @@ PhysicsMethods.Bra = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * The ket macro.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.Ket = function(parser: TexParser, name: string) {
   let star = parser.GetStar();
   let ket = parser.GetArgument(name);
@@ -538,6 +543,11 @@ PhysicsMethods.Ket = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * The braket macro.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.BraKet = function(parser: TexParser, name: string) {
   let star = parser.GetStar();
   let bra = parser.GetArgument(name);
@@ -560,6 +570,11 @@ PhysicsMethods.BraKet = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * The ketbra macro.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.KetBra = function(parser: TexParser, name: string) {
   let star = parser.GetStar();
   let ket = parser.GetArgument(name);
@@ -582,6 +597,13 @@ PhysicsMethods.KetBra = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Generates the expanded braket LaTeX code for matrix operations.
+ * @param {[string, string, string]} [arg1, arg2, arg3] The three arguments
+ *     <arg1|arg2|arg3>.
+ * @param {boolean} star1 No automatic sizing of fences.
+ * @param {boolean} star2 Automatic sizing of fences wrt. to arg1 & arg3 only.
+ */
 function outputBraket([arg1, arg2, arg3]: [string, string, string],
                       star1: boolean, star2: boolean) {
   return (star1 && star2) ?
@@ -590,6 +612,12 @@ function outputBraket([arg1, arg2, arg3]: [string, string, string],
      `\\left\\langle{${arg1}}\\right\\vert{${arg2}}\\left\\vert{${arg3}}\\right\\rangle`);
 };
 
+
+/**
+ * The expectation value macro.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.Expectation = function(parser: TexParser, name: string) {
   let star1 = parser.GetStar();
   let star2 = star1 && parser.GetStar();
@@ -608,6 +636,12 @@ PhysicsMethods.Expectation = function(parser: TexParser, name: string) {
                             parser.configuration).mml());
 };
 
+
+/**
+ * The matrix element macro.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.MatrixElement = function(parser: TexParser, name: string) {
   const star1 = parser.GetStar();
   const star2 = star1 && parser.GetStar();
@@ -625,6 +659,12 @@ PhysicsMethods.MatrixElement = function(parser: TexParser, name: string) {
 /********************
  * Physics package Section 2.7
  * Matrix macros
+ */
+/**
+ * The matrix quantity macro.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {boolean=} small Use small matrix.
  */
 PhysicsMethods.MatrixQuantity = function(parser: TexParser, name: string, small?: boolean) {
   const star = parser.GetStar();
@@ -667,6 +707,12 @@ PhysicsMethods.MatrixQuantity = function(parser: TexParser, name: string, small?
                             parser.configuration).mml());
 };
 
+
+/**
+ * Generation of identity matrices.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.IdentityMatrix = function(parser: TexParser, name: string) {
   const arg = parser.GetArgument(name);
   const size = parseInt(arg, 10);
@@ -690,6 +736,11 @@ PhysicsMethods.IdentityMatrix = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Generation of matrices with fixed value.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.XMatrix = function(parser: TexParser, name: string) {
   const star = parser.GetStar();
   const arg1 = parser.GetArgument(name);
@@ -746,6 +797,11 @@ PhysicsMethods.XMatrix = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Generation of Pauli matrices. Matrix 0 is the 2x2 identity.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.PauliMatrix = function(parser: TexParser, name: string) {
   const arg = parser.GetArgument(name);
   let matrix = arg.slice(1);
@@ -772,6 +828,12 @@ PhysicsMethods.PauliMatrix = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Generation of anti/diagonal matrices.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {boolean=} anti True if constructing anti-diagonal matrix.
+ */
 PhysicsMethods.DiagonalMatrix = function(parser: TexParser, name: string,
                                          anti?: boolean) {
   if (parser.GetNext() !== '{') {
