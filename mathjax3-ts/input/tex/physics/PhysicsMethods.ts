@@ -32,6 +32,7 @@ import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {NodeFactory} from '../NodeFactory.js';
+import {Macro} from '../Symbol.js';
 
 
 let PhysicsMethods: Record<string, ParseMethod> = {};
@@ -482,6 +483,11 @@ PhysicsMethods.Derivative = function(parser: TexParser, name: string,
  * Dirac bra-ket notation
  */
 
+/**
+ * Implementation of the bra macro.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
 PhysicsMethods.Bra = function(parser: TexParser, name: string) {
   let starBra = parser.GetStar();
   let bra = parser.GetArgument(name);
@@ -491,12 +497,15 @@ PhysicsMethods.Bra = function(parser: TexParser, name: string) {
   if (parser.GetNext() === '\\') {
     let saveI = parser.i;
     parser.i++;
-    if (parser.GetCS() === 'ket') {   // TODO: This won't work with a let!
+    // This ensures that bra-ket also works if \let bound versions of \ket.
+    let cs = parser.GetCS();
+    let symbol = parser.lookup('macro', cs) as Macro;
+    if (symbol && symbol.symbol === 'ket') {
       hasKet = true;
       saveI = parser.i;
       starKet = parser.GetStar();
       if (parser.GetNext() === '{') {
-        ket = parser.GetArgument('ket', true);
+        ket = parser.GetArgument(cs, true);
       } else {
         parser.i = saveI;
         starKet = false;
