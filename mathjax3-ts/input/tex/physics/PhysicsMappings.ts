@@ -64,7 +64,9 @@ new CharacterMap('Physics-vector-chars', ParseMethods.mathchar0mi, {
   cross: '\u00D7',
   cp: '\u00D7',
   // This is auxiliary!
-  gradientnabla: ['\u2207', {mathvariant: TexConstant.Variant.BOLD}]
+  gradientnabla: ['\u2207', {mathvariant: TexConstant.Variant.BOLD}],
+  real:           ['\u211C', {mathvariant: TexConstant.Variant.NORMAL}],
+  imaginary:      ['\u2111', {mathvariant: TexConstant.Variant.NORMAL}]
 });
 
 new CommandMap('Physics-vector-macros', {
@@ -123,12 +125,15 @@ new CommandMap('Physics-expressions-macros', {
   'Trace':            ['Expression', false, 'Tr'],
   'rank':             'NamedFn',
   'erf':              ['Expression', false],
+  // TODO: {} is missing.
+  'Res':              ['OperatorApplication', '{\\rm Res}'],
   //
-  // TODO:
-  // Res
-  // principalvalue
-  // Re
-  // Im
+  // TODO: This should be done via expression with parsable id.
+  'principalvalue':   ['OperatorApplication', '{\\cal P}'],
+  'pv':   ['OperatorApplication', '{\\cal P}'],
+  'PV':   ['OperatorApplication', '{\\rm P.V.}'],
+  'Re':  ['OperatorApplication', '{\\rm Re}'],
+  'Im':  ['OperatorApplication', '{\\rm Im}'],
   // Old named functions.
   'sine':             ['NamedFn', 'sin'],
   'hypsine':          ['NamedFn', 'sinh'],

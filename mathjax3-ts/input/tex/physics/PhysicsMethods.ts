@@ -333,6 +333,7 @@ PhysicsMethods.OperatorApplication = function(
  * Operators
  */
 
+// This works better than in the actual physics package.
 /**
  * Operator expression with automatic fences and optional exponent.
  * @param {TexParser} parser The calling parser.
