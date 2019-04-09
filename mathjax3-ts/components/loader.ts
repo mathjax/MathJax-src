@@ -129,7 +129,7 @@ export namespace Loader {
                     CONFIG.dependencies[id] = [];
                 }
                 CONFIG.dependencies[id].push(name);
-                new Package(id, true);
+                new Package(id, true, true);
             }
         }
     }

@@ -140,10 +140,12 @@ export class Package {
     /**
      * @param {string} name        The name of the package
      * @param {boolean} noLoad     True when the package is just for reference, not loading
+     * @param {boolean} preLoad    True when this package is being preloaded by another
      */
-    constructor(name: string, noLoad: boolean = false) {
+    constructor(name: string, noLoad: boolean = false, preLoad: boolean = false) {
         this.name = name;
         this.noLoad = noLoad;
+        this.isLoading = preLoad;
         Package.packages.set(name, this);
         this.promise = this.makePromise(this.makeDependencies());
     }
