@@ -126,7 +126,7 @@ export class Package {
     /**
      * The number of dependencies that haven't yet been loaded
      */
-    protected dependencyCount: number;
+    protected dependencyCount: number = 0;
 
     /**
      * @return {boolean}  True when the package can be loaded (i.e., its depedencies are all loaded,
@@ -139,18 +139,13 @@ export class Package {
 
     /**
      * @param {string} name        The name of the package
-     * @param {boolean} noLoad      True when the package is just for reference, not loading
-     * @param {boolean} preloaded  True when the package is being preloaded by hand (e.g.,
-     *                               as part of a larger combined package)
+     * @param {boolean} noLoad     True when the package is just for reference, not loading
      */
-    constructor(name: string, noLoad: boolean = false, preloaded: boolean = false) {
+    constructor(name: string, noLoad: boolean = false) {
         this.name = name;
         this.noLoad = noLoad;
         Package.packages.set(name, this);
         this.promise = this.makePromise(this.makeDependencies());
-        if (preloaded) {
-            this.loaded();
-        }
     }
 
     /**
@@ -175,15 +170,15 @@ export class Package {
         //  Add all the dependencies (creating them, if needed)
         //    and record the promises of unloaded ones
         //
-        this.dependencyCount = dependencies.length;
         for (const dependent of dependencies) {
             const extension = map.get(dependent) || new Package(dependent, noLoad);
-            extension.addDependent(this, noLoad);
-            this.dependencies.push(extension);
-            if (extension.isLoaded) {
-                this.dependencyCount--;
-            } else {
-                promises.push(extension.promise);
+            if (this.dependencies.indexOf(extension) < 0) {
+                extension.addDependent(this, noLoad);
+                this.dependencies.push(extension);
+                if (!extension.isLoaded) {
+                    this.dependencyCount++;
+                    promises.push(extension.promise);
+                }
             }
         }
         //

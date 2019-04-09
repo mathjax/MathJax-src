@@ -44,6 +44,7 @@ export interface MathJaxConfig extends MJConfig {
         paths?: {[name: string]: string};          // The path prefixes for use in locations
         source?: {[name: string]: string};         // The URLs for the extensions, e.g., tex: [mathjax]/input/tex.js
         dependencies?: {[name: string]: string[]}; // The dependencies for each package
+        provides?: {[name: string]: string[]};     // The sub-packges provided by each package
         load?: string[];                           // The packages to load (found in locations or [mathjax]/name])
         ready?: PackageReady;                      // A function to call when MathJax is ready
         failed?: PackageFailed;                    // A function to call when MathJax fails to load
@@ -106,6 +107,7 @@ export namespace Loader {
             let extension = Package.packages.get(name);
             if (!extension) {
                 extension = new Package(name);
+                addProvided(name);
             }
             extension.checkNoLoad();
             promises.push(extension.promise);
@@ -115,6 +117,30 @@ export namespace Loader {
     };
 
     /**
+     * Add packages that are provided by the named one (which will be marked as loaded by preLoad()
+     *   when this package loads).
+     *
+     * @param {string} name    The name of the package whose subpackages are being provided
+     */
+    function addProvided(name: string) {
+        for (const id of CONFIG.provides[name] || []) {
+            if (!Package.packages.get(id)) {
+                if (!CONFIG.dependencies[id]) {
+                    CONFIG.dependencies[id] = [];
+                }
+                CONFIG.dependencies[id].push(name);
+                new Package(id, true);
+            }
+        }
+    }
+
+    function loadProvided(name: string) {
+        for (const id of CONFIG.provides[name] || []) {
+            Package.packages.get(id).loaded();
+        }
+    }
+
+    /**
      * Indicate that the named packages are being loaded by hand (e.g., as part of a larger package).
      *
      * @param {string[]} names  The packages to load
@@ -122,11 +148,12 @@ export namespace Loader {
     export function preLoad(...names: string[]) {
         for (const name of names) {
             let extension = Package.packages.get(name);
-            if (extension) {
-                extension.loaded();
-            } else {
-                extension = new Package(name, true, true);
+            if (!extension) {
+                extension = new Package(name, true);
+                addProvided(name);
             }
+            extension.loaded();
+            loadProvided(name);
         }
     };
 
@@ -174,6 +201,7 @@ if (typeof MathJax.loader === 'undefined') {
         },
         source: {},
         dependencies: {},
+        provides: {},
         load: [],
         ready: Loader.defaultReady.bind(Loader),
         failed: (error: PackageError) => console.log(`MathJax(${error.package || '?'}): ${error.message}`),
