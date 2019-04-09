@@ -150,6 +150,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
         let ATTR = '';
         let attributes = node.attributes.getAllAttributes();
         for (const name of Object.keys(attributes)) {
+            if (attributes[name] === undefined) continue;
             ATTR += ' ' + name + '="' + this.quoteHTML(attributes[name].toString()) + '"';
         }
         return ATTR;
