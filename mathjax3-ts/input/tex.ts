@@ -22,7 +22,7 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {defaultOptions, userOptions, separateOptions, OptionList} from '../util/Options.js';
+import {defaultOptions, userOptions, separateOptions, selectOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
@@ -134,13 +134,14 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   constructor(options: OptionList = {}) {
-    let packages = options['packages'] || TeX.OPTIONS['packages'];
+    let packages = defaultOptions({packages: TeX.OPTIONS.packages}, selectOptions(options, 'packages')).packages;
     let configuration = TeX.configure(packages);
     let parseOptions = new ParseOptions(configuration,
                                         [TeX.OPTIONS, TagsFactory.OPTIONS, {'packages': packages}]);
-    let [tex, find, rest] = separateOptions(options, FindTeX.OPTIONS, parseOptions.options);
+    let [tex, find, skip, rest] = separateOptions(options, FindTeX.OPTIONS, {packages: []}, parseOptions.options);
     super(tex);
     userOptions(parseOptions.options, rest);
+    parseOptions.options.jax = this;
     TeX.tags(parseOptions, configuration);
     this._parseOptions = parseOptions;
     this.configuration = configuration;
