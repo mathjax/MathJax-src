@@ -123,9 +123,10 @@ export class SerializedMmlVisitor extends MmlVisitor {
     public visitDefault(node: MmlNode, space: string) {
         let kind = node.kind;
         let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space]);
-        return space + '<' + kind + this.getAttributes(node) + '>' + nl
-               + this.childNodeMml(node, space + '  ', nl)
-               + endspace + '</' + kind + '>';
+        const children = this.childNodeMml(node, space + '  ', nl);
+        return space + '<' + kind + this.getAttributes(node) + '>'
+            + (children.match(/\S/) ? nl + children + endspace : '')
+            + '</' + kind + '>';
     }
 
     /**
