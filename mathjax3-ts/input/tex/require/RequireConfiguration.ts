@@ -34,11 +34,14 @@ import {Loader, CONFIG as LOADERCONFIG} from '../../../components/loader.js';
 import {MathJax as mathjax} from '../../../mathjax.js';
 import {userOptions, OptionList} from '../../../util/Options.js';
 
+export const TEXPATHNAME = 'tex';
+export const TEXPATH = '[tex]/';
+
 /**
  * Initialize the path to TeX extensions, if it isn't set
  */
-if (!LOADERCONFIG.paths.tex) {
-    LOADERCONFIG.paths.tex = '[mathjax]/input/tex/extensions';
+if (!LOADERCONFIG.paths[TEXPATHNAME]) {
+    LOADERCONFIG.paths[TEXPATHNAME] = '[mathjax]/input/tex/extensions';
 }
 
 /**
@@ -93,9 +96,24 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
  */
 function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []) {
     for (const name of names) {
-        if (name.substr(0,6) === '[tex]/') {
+        if (name.substr(0,TEXPATH.length) === TEXPATH) {
             RegisterExtension(jax, name);
         }
+    }
+}
+
+/**
+ * Load a required package
+ *
+ * @param {TexParser} parser   The current tex parser.
+ * @param {string} name        The name of the package to load.
+ */
+export function RequireLoad(parser: TexParser, name: string) {
+    const extension = TEXPATH + name;
+    if (Package.packages.has(extension)) {
+        RegisterExtension(parser.options.jax, extension);
+    } else {
+        mathjax.retryAfter(Loader.load(extension));
     }
 }
 
@@ -124,12 +142,7 @@ export const RequireMethods: Record<string, ParseMethod> = {
         if (required.match(/[^-_a-zA-Z0-9]/) || required === '') {
             throw new TexError('BadPackageName', 'Argument for %1 is not a valid package name', name);
         }
-        const extension = '[tex]/' + required;
-        if (Package.packages.get(extension)) {
-            RegisterExtension(parser.options.jax, extension);
-        } else {
-            mathjax.retryAfter(Loader.load(extension));
-        }
+        RequireLoad(parser, required);
     }
 
 };
