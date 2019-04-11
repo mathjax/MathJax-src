@@ -70,10 +70,6 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
         const handler = ConfigurationHandler.get(extension);
         if (handler) {
             //
-            //  Register the extension with the jax's configuration
-            //
-            (jax as any).configuration.register(handler, jax);
-            //
             //  Check if ther eare user-supplied options, and set those
             //    (place them in a block for the extension, if needed)
             //
@@ -82,8 +78,13 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
                 if (Object.keys(handler.options).length === 1 && handler.options[extension]) {
                     options = {[extension]: options};
                 }
-                userOptions(jax.parseOptions.options, options);
+            } else {
+                options = {};
             }
+            //
+            //  Register the extension with the jax's configuration
+            //
+            (jax as any).configuration.register(handler, jax, options);
         }
     }
 }
