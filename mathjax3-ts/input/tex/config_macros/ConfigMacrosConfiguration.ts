@@ -22,12 +22,11 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration, ConfigurationHandler} from '../Configuration.js';
+import {Configuration} from '../Configuration.js';
 import {expandable} from '../../../util/Options.js';
-import {NewcommandConfiguration} from '../newcommand/NewcommandConfiguration.js';
+import {CommandMap} from '../SymbolMap.js';
+import {Macro} from '../Symbol.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
-import NewcommandUtil from '../newcommand/NewcommandUtil.js';
-import {ExtensionMaps} from '../MapHandler.js';
 import {TeX} from '../../tex.js';
 
 /**
@@ -39,33 +38,26 @@ import {TeX} from '../../tex.js';
 function configMacrosConfig(config: Configuration, jax: TeX<any, any, any>) {
     const macros = config.options.macros;
     for (const cs of Object.keys(macros)) {
-        const parser = {configuration: jax.parseOptions} as any;
         const def = (typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs]);
-        Array.isArray(def[2]) ?
-            NewcommandUtil.addMacro(parser, cs, NewcommandMethods.MacroWithTemplate, def.slice(0,2).concat(def[2])) :
-            NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, def);
+        const macro = Array.isArray(def[2]) ?
+            new Macro(cs, NewcommandMethods.MacroWithTemplate, def.slice(0,2).concat(def[2])) :
+            new Macro(cs, NewcommandMethods.Macro, def);
+        ConfigMacrosMap.add(cs, macro);
     }
 }
 
 /**
- * Load the newcommand extension if it hasn't been already
- *
- * @param {Configuration} config   The configuration object for the input jax
+ * The command map for the autoloaded macros
  */
-function configMacrosInit(config: Configuration) {
-    if (config.handler.macro.indexOf(ExtensionMaps.NEW_COMMAND) < 0) {
-        config.append(NewcommandConfiguration);
-        NewcommandConfiguration.init(config);
-    }
-}
+const ConfigMacrosMap = new CommandMap('configMacros', {}, {});
 
 /**
  * The configuration object for configMacros
  */
 export const ConfigMacrosConfiguration = Configuration.create(
     'configMacros', {
-        config: configMacrosConfig, configPriority: 10,
-        init: configMacrosInit,
+        handler: {macro: ['configMacros']},
+        config: configMacrosConfig,
         options: {macros: expandable({})}
     }
 );
