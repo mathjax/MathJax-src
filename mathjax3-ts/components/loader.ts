@@ -107,7 +107,7 @@ export namespace Loader {
             let extension = Package.packages.get(name);
             if (!extension) {
                 extension = new Package(name);
-                addProvided(name);
+                extension.provides(CONFIG.provides[name]);
             }
             extension.checkNoLoad();
             promises.push(extension.promise);
@@ -115,30 +115,6 @@ export namespace Loader {
         Package.loadAll();
         return Promise.all(promises);
     };
-
-    /**
-     * Add packages that are provided by the named one (which will be marked as loaded by preLoad()
-     *   when this package loads).
-     *
-     * @param {string} name    The name of the package whose subpackages are being provided
-     */
-    function addProvided(name: string) {
-        for (const id of CONFIG.provides[name] || []) {
-            if (!Package.packages.get(id)) {
-                if (!CONFIG.dependencies[id]) {
-                    CONFIG.dependencies[id] = [];
-                }
-                CONFIG.dependencies[id].push(name);
-                new Package(id, true, true);
-            }
-        }
-    }
-
-    function loadProvided(name: string) {
-        for (const id of CONFIG.provides[name] || []) {
-            Package.packages.get(id).loaded();
-        }
-    }
 
     /**
      * Indicate that the named packages are being loaded by hand (e.g., as part of a larger package).
@@ -150,10 +126,10 @@ export namespace Loader {
             let extension = Package.packages.get(name);
             if (!extension) {
                 extension = new Package(name, true);
-                addProvided(name);
+                extension.provides(CONFIG.provides[name]);
             }
             extension.loaded();
-            loadProvided(name);
+//            loadProvided(name);
         }
     };
 

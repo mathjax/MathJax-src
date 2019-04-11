@@ -129,6 +129,11 @@ export class Package {
     protected dependencyCount: number = 0;
 
     /**
+     * The sub-packages that this one provides
+     */
+    protected provided: Package[] = [];
+
+    /**
      * @return {boolean}  True when the package can be loaded (i.e., its depedencies are all loaded,
      *                    it is allowed to be loaded, isn't already loading, and hasn't failed to load
      *                    in the past)
@@ -140,12 +145,10 @@ export class Package {
     /**
      * @param {string} name        The name of the package
      * @param {boolean} noLoad     True when the package is just for reference, not loading
-     * @param {boolean} preLoad    True when this package is being preloaded by another
      */
-    constructor(name: string, noLoad: boolean = false, preLoad: boolean = false) {
+    constructor(name: string, noLoad: boolean = false) {
         this.name = name;
         this.noLoad = noLoad;
-        this.isLoading = preLoad;
         Package.packages.set(name, this);
         this.promise = this.makePromise(this.makeDependencies());
     }
@@ -281,6 +284,7 @@ export class Package {
      *
      * Mark it as loaded, and tell its dependents that this package
      *   has been loaded (may cause dependents to load themselves).
+     *   Mark any provided packages as loaded.
      * Resolve the promise that says this package is loaded.
      */
     public loaded() {
@@ -288,6 +292,9 @@ export class Package {
         this.isLoading = false;
         for (const dependent of this.dependents) {
             dependent.requirementSatisfied();
+        }
+        for (const provided of this.provided) {
+            provided.loaded();
         }
         this.resolve(this.name);
     }
@@ -335,6 +342,24 @@ export class Package {
             if (this.canLoad) {
                 this.load();
             }
+        }
+    }
+
+    /**
+     * @param {string[]} names    The names of the packages that this package provides
+     */
+    public provides(names: string[] = []) {
+        for (const name of names) {
+            let provided = Package.packages.get(name);
+            if (!provided) {
+                if (!CONFIG.dependencies[name]) {
+                    CONFIG.dependencies[name] = [];
+                }
+                CONFIG.dependencies[name].push(name);
+                provided = new Package(name, true);
+                provided.isLoading = true;
+            }
+            this.provided.push(provided);
         }
     }
 
