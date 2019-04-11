@@ -45,21 +45,23 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
             display: 'inline-table',
             width: '100%'
         },
-        'mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-end': {
+        'mjx-stretchy-h > *': {
             display: 'table-cell',
             width: 0
         },
+        'mjx-stretchy-h > * > mjx-c': {
+            display: 'inline-block'
+        },
+        'mjx-stretchy-h > * > mjx-c::before': {
+            padding: '.001em 0',                  // for blink
+            width: 'initial'
+        },
         'mjx-stretchy-h > mjx-ext': {
-            display: 'table-cell',
             overflow: 'hidden',
             width: '100%'
         },
         'mjx-stretchy-h > mjx-ext > mjx-c': {
-            transform: 'scalex(500)',
-            'margin-right': '-2em'
-        },
-        'mjx-stretchy-h > mjx-ext > mjx-c::before': {
-            padding: '.001em 0'                  // for blink
+            transform: 'scalex(500)'
         },
         'mjx-stretchy-h > mjx-beg > mjx-c': {
             'margin-right': '-.1em'
@@ -81,7 +83,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
             display: 'block'
         },
         'mjx-stretchy-v > * > mjx-c': {
-            transform: 'scale(1)',   // improves Firefox positioning
+            transform: 'scale(1)',                // improves Firefox positioning
             'transform-origin': 'left center',
             overflow: 'hidden'
         },
