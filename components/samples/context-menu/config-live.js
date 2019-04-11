@@ -2,7 +2,7 @@ import {source} from '../../src/source.js';
 
 window.MathJax = {
     loader: {
-        load: ["tex-input", "chtml-output", "context-menu"],
+        load: ["input/tex", "output/chtml", "ui/menu"],
         paths: {
             mathjax: '../../dist'
         },
