@@ -28,7 +28,7 @@ import {ExtensionMaps, HandlerType} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {defaultOptions, OptionList} from '../../util/Options.js';
+import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 import ParseOptions from './ParseOptions.js';
 import *  as sm from './SymbolMap.js';
 import {SubHandlers} from './MapHandler.js';
@@ -204,12 +204,13 @@ export class Configuration {
    * @param {Configuration} config   The configuration to be registered in this one
    * @param {TeX} jax                The TeX jax where it is being registered
    */
-  register(config: Configuration, jax: TeX<any, any, any>) {
+  register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
     this.append(config);
     config.init(this);
     jax.parseOptions.handlers = new SubHandlers(this);
     jax.parseOptions.nodeFactory.setCreators(config.nodes);
     defaultOptions(jax.parseOptions.options, config.options);
+    userOptions(jax.parseOptions.options, options);
     config.config(this, jax);
     for (const pre of config.preprocessors) {
       Array.isArray(pre) ? jax.preFilters.add(pre[0], pre[1]) : jax.preFilters.add(pre);
