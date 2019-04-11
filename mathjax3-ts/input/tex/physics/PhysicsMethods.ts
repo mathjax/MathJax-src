@@ -122,7 +122,6 @@ PhysicsMethods.Quantity = function(parser: TexParser, name: string,
     }
     parser.Push(parser.itemFactory.create('fn', mml));
   }
-  // TODO: Maybe include this in the old parser via replacement?
   parser.Push(new TexParser(argument, parser.stack.env,
                             parser.configuration).mml());
 };
@@ -185,7 +184,6 @@ PhysicsMethods.Commutator = function(parser: TexParser, name: string,
     (big ?
      '\\' + big + 'l' + open + ' ' + argument + ' ' + '\\' + big + 'r' + close :
      '\\left' + open + ' ' + argument + ' ' + '\\right' + close);
-  // TODO: Maybe include this in the old parser via replacement?
   parser.Push(new TexParser(argument, parser.stack.env,
                             parser.configuration).mml());
 };
@@ -296,32 +294,38 @@ PhysicsMethods.StarMacro = function(parser: TexParser, name: string,
 
 /**
  * An operator that needs to be parsed (e.g., a gree letter or nabla) and
- * applied to a possibly fenced expression.
+ * applied to a possibly fenced expression. By default automatic fences are
+ * parentheses and brakets, with braces being ignored.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  * @param {string} operator The operator expression.
+ * @param {string[]} ...fences List of opening fences that should be
+ *     automatically sized and paired to its corresponding closing fence.
  */
 PhysicsMethods.OperatorApplication = function(
-  parser: TexParser, name: string, operator: string) {
-  let first = parser.GetNext();
-  let lfence = '', rfence = '', arg = '';
-  switch (first) {
-  case '(':
-    parser.i++;
-    arg = parser.GetUpTo(name, ')');
-    lfence = '\\left(';
-    rfence = '\\right)';
-    break;
-  case '[':
-    arg = parser.GetBrackets(name);
-    lfence = '\\left[';
-    rfence = '\\right]';
-    break;
-  case '{':
-    arg = parser.GetArgument(name);
-    break;
-  default:
+  parser: TexParser, name: string, operator: string,
+  ...fences: string[]) {
+  let left = parser.GetNext();
+  let right = pairs[left];
+  if (!right) {
+    parser.Push(new TexParser(operator, parser.stack.env,
+                              parser.configuration).mml());
+    return;
   }
+  let lfence = '', rfence = '', arg = '';
+  let enlarge = fences.indexOf(left) !== -1;
+  if (left === '{') {
+    arg = parser.GetArgument(name);
+    if (enlarge) {
+      left = '\\{';
+      right = '\\}';
+    }
+  } else {
+      parser.i++;
+      arg = parser.GetUpTo(name, right);
+    }
+  lfence = (enlarge ? '\\left' : '') + left;
+  rfence = (enlarge ? '\\right' : '') + right;
   let macro = operator + ' ' + lfence + ' ' + arg + ' ' + rfence;
   parser.Push(new TexParser(macro, parser.stack.env,
                             parser.configuration).mml());

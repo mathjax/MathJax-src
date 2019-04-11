@@ -76,12 +76,12 @@ new CommandMap('Physics-vector-macros', {
   'va': ['StarMacro', 1, '\\vec{\\vb', '{#1}}'],
   'vectorunit': ['StarMacro', 1, '\\hat{\\vb', '{#1}}'],
   'vu': ['StarMacro', 1, '\\hat{\\vb', '{#1}}'],
-  'gradient': ['OperatorApplication', '\\gradientnabla'],
-  'grad': ['OperatorApplication', '\\gradientnabla'],
-  'divergence': ['OperatorApplication', '\\gradientnabla\\vdot'],
-  'div': ['OperatorApplication', '\\gradientnabla\\vdot'],
-  'curl': ['OperatorApplication', '\\gradientnabla\\crossproduct'],
-  'laplacian': ['OperatorApplication', '\\nabla^2'],
+  'gradient': ['OperatorApplication', '\\gradientnabla', '(', '['],
+  'grad': ['OperatorApplication', '\\gradientnabla', '(', '['],
+  'divergence': ['OperatorApplication', '\\gradientnabla\\vdot', '(', '['],
+  'div': ['OperatorApplication', '\\gradientnabla\\vdot', '(', '['],
+  'curl': ['OperatorApplication', '\\gradientnabla\\crossproduct', '(', '['],
+  'laplacian': ['OperatorApplication', '\\nabla^2', '(', '['],
 }, PhysicsMethods);
 
 
@@ -125,15 +125,12 @@ new CommandMap('Physics-expressions-macros', {
   'Trace':            ['Expression', false, 'Tr'],
   'rank':             'NamedFn',
   'erf':              ['Expression', false],
-  // TODO: {} is missing.
-  'Res':              ['OperatorApplication', '{\\rm Res}'],
-  //
-  // TODO: This should be done via expression with parsable id.
+  'Res':              ['OperatorApplication', '{\\rm Res}', '(', '[', '{'],
   'principalvalue':   ['OperatorApplication', '{\\cal P}'],
   'pv':   ['OperatorApplication', '{\\cal P}'],
   'PV':   ['OperatorApplication', '{\\rm P.V.}'],
-  'Re':  ['OperatorApplication', '{\\rm Re}'],
-  'Im':  ['OperatorApplication', '{\\rm Im}'],
+  'Re':  ['OperatorApplication', '{\\rm Re}', '{'],
+  'Im':  ['OperatorApplication', '{\\rm Im}', '{'],
   // Old named functions.
   'sine':             ['NamedFn', 'sin'],
   'hypsine':          ['NamedFn', 'sinh'],
