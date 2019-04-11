@@ -129,7 +129,6 @@ export namespace Loader {
                 extension.provides(CONFIG.provides[name]);
             }
             extension.loaded();
-//            loadProvided(name);
         }
     };
 
