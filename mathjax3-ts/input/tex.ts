@@ -134,30 +134,19 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   constructor(options: OptionList = {}) {
-    let packages = defaultOptions({packages: TeX.OPTIONS.packages}, selectOptions(options, 'packages')).packages;
-    let configuration = TeX.configure(packages);
-    let parseOptions = new ParseOptions(configuration,
-                                        [TeX.OPTIONS, TagsFactory.OPTIONS, {'packages': packages}]);
-    let [tex, find, skip, rest] = separateOptions(options, FindTeX.OPTIONS, {packages: []}, parseOptions.options);
+    const [rest, tex, find] = separateOptions(options, TeX.OPTIONS, FindTeX.OPTIONS);
     super(tex);
+    this.findTeX = this.options['FindTeX'] || new FindTeX(find);
+    const packages = this.options.packages;
+    const configuration = this.configuration = TeX.configure(packages);
+    const parseOptions = this._parseOptions = new ParseOptions(configuration, [this.options, TagsFactory.OPTIONS]);
     userOptions(parseOptions.options, rest);
-    parseOptions.options.jax = this;
     TeX.tags(parseOptions, configuration);
-    this._parseOptions = parseOptions;
-    this.configuration = configuration;
-    for (let pre of configuration.preprocessors) {
-      typeof pre === 'function' ? this.preFilters.add(pre) :
-        this.preFilters.add(pre[0], pre[1]);
-    }
-    for (let post of configuration.postprocessors) {
-      typeof post === 'function' ? this.postFilters.add(post) :
-        this.postFilters.add(post[0], post[1]);
-    }
+    configuration.config(configuration, this);
     this.postFilters.add(FilterUtil.cleanSubSup, -4);
     this.postFilters.add(FilterUtil.cleanStretchy, -3);
     this.postFilters.add(FilterUtil.cleanAttributes, -2);
     this.postFilters.add(FilterUtil.combineRelations, -1);
-    this.findTeX = this.parseOptions.options['FindTeX'] || new FindTeX(find);
   }
 
   /**
