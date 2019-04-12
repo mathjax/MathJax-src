@@ -30,6 +30,7 @@ import './boldsymbol/BoldsymbolConfiguration.js';
 import './braket/BraketConfiguration.js';
 import './cancel/CancelConfiguration.js';
 import './color/ColorConfiguration.js';
+import './config_macros/ConfigMacrosConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
 import './html/HtmlConfiguration.js';
@@ -38,6 +39,7 @@ import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
 import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
+import './require/RequireConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
@@ -50,7 +52,8 @@ export const AllPackages: string[] = [
     'boldsymbol',
     'braket',
     'cancel',
-//  'color',
+    'color',
+    'configMacros',
     'enclose',
     'extpfeil',
     'html',
@@ -59,6 +62,7 @@ export const AllPackages: string[] = [
     'noerrors',
     'noundefined',
     'physics',
+    'require',
     'unicode',
     'verb'
 ];
