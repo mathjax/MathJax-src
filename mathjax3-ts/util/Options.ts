@@ -53,6 +53,20 @@ export type OptionList = {[name: string]: any};
 export const APPEND = '[+]';
 
 /**
+ *  Used to remove elements from an array in default options
+ *  E.g., an option of the form
+ *
+ *    {
+ *      name: {[REMOVE]: [2]}
+ *    }
+ *
+ *  where 'name' is an array in the default options would end up with name having its
+ *  original value but with any entry of 2 removed  So if the original value was [1, 2, 3, 2],
+ *  then the final value will be [1, 3] instead.
+ */
+export const REMOVE = '[-]';
+
+/**
  * A Class to use for options that should not produce warnings if an undefined key is used
  */
 export class Expandable {};
@@ -149,8 +163,17 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
         let sval = src[key], dval = dst[key];
         if (isObject(sval) && dval !== null &&
             (typeof dval === 'object' || typeof dval === 'function')) {
-            if (Array.isArray(dval) && Array.isArray(sval[APPEND]) && keys(sval).length === 1) {
-                dval.push(...sval[APPEND]);
+            const ids = keys(sval);
+            if (Array.isArray(dval) &&
+                ((ids.length === 1 && (ids[0] === APPEND || ids[0] === REMOVE) && Array.isArray(sval[ids[0]])) ||
+                  (ids.length === 2 && ids.sort().join(',') === APPEND + ',' + REMOVE &&
+                   Array.isArray(sval[APPEND]) && Array.isArray(sval[REMOVE])))) {
+                if (sval[REMOVE]) {
+                    dval = dst[key] = dval.filter(x => sval[REMOVE].indexOf(x) < 0);
+                }
+                if (sval[APPEND]) {
+                    dval.push(...sval[APPEND]);
+                }
             } else {
                 insert(dval, sval, warn);
             }
