@@ -32,17 +32,7 @@ import {TeX} from '../../tex.js';
 import {Package} from '../../../components/package.js';
 import {Loader, CONFIG as LOADERCONFIG} from '../../../components/loader.js';
 import {MathJax as mathjax} from '../../../mathjax.js';
-import {userOptions, OptionList} from '../../../util/Options.js';
-
-export const TEXPATHNAME = 'tex';
-export const TEXPATH = '[tex]/';
-
-/**
- * Initialize the path to TeX extensions, if it isn't set
- */
-if (!LOADERCONFIG.paths[TEXPATHNAME]) {
-    LOADERCONFIG.paths[TEXPATHNAME] = '[mathjax]/input/tex/extensions';
-}
+import {userOptions, OptionList, expandable} from '../../../util/Options.js';
 
 /**
  * The MathJax configuration block (for looking up user-defined package options)
@@ -56,7 +46,7 @@ const MJCONFIG = (global.MathJax ? global.MathJax.config || {} : {});
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amsCd')
  */
 function RegisterExtension(jax: TeX<any, any, any>, name: string) {
-    const required = jax.parseOptions.options.required;
+    const required = jax.parseOptions.options.require.required;
     if (required.indexOf(name) < 0) {
         const extension = name.substr(6);
         required.push(name);
@@ -96,8 +86,9 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
  * @param {string[]} names   The names of the dependencies to register
  */
 function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []) {
+    const prefix = jax.parseOptions.options.require.prefix;
     for (const name of names) {
-        if (name.substr(0,TEXPATH.length) === TEXPATH) {
+        if (name.substr(0, prefix.length) === prefix) {
             RegisterExtension(jax, name);
         }
     }
@@ -110,9 +101,16 @@ function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []) {
  * @param {string} name        The name of the package to load.
  */
 export function RequireLoad(parser: TexParser, name: string) {
-    const extension = TEXPATH + name;
+    const options = parser.options.require;
+    const allow = options.allow
+    const extension = (name.substr(0,1) === '[' ? '' : options.prefix) + name;
+    const allowed = (allow.hasOwnProperty(extension) ? allow[extension] :
+                     allow.hasOwnProperty(name) ? allow[name] : options.defaultAllow);
+    if (!allowed) {
+        throw new TexError('BadRequire', 'Extension "%1" is now allowed to be loaded', extension);
+    }
     if (Package.packages.has(extension)) {
-        RegisterExtension(parser.options.jax, extension);
+        RegisterExtension(options.jax, extension);
     } else {
         mathjax.retryAfter(Loader.load(extension));
     }
@@ -122,8 +120,17 @@ export function RequireLoad(parser: TexParser, name: string) {
  * Save the jax so that it can be used when \require{} is processed.
  */
 function config(config: Configuration, jax: TeX<any, any, any>) {
-    jax.parseOptions.options.jax = jax;      // \require needs access to this
-    jax.parseOptions.options.required = [];  // stores the names of the packages that have been added
+    const options = jax.parseOptions.options.require;
+    options.jax = jax;             // \require needs access to this
+    options.required = [];         // stores the names of the packages that have been added
+    const prefix = options.prefix;
+    if (prefix.match(/[^_a-zA-Z0-9]/)) {
+        throw Error('Illegal characters used in \\require prefix');
+    }
+    if (!LOADERCONFIG.paths[prefix]) {
+        LOADERCONFIG.paths[prefix] = '[mathjax]/input/tex/extensions';
+    }
+    options.prefix = '[' + prefix + ']/';
 }
 
 
@@ -140,13 +147,39 @@ export const RequireMethods: Record<string, ParseMethod> = {
      */
     Require(parser: TexParser, name: string) {
         const required = parser.GetArgument(name);
-        if (required.match(/[^-_a-zA-Z0-9]/) || required === '') {
+        if (required.match(/[^_a-zA-Z0-9]/) || required === '') {
             throw new TexError('BadPackageName', 'Argument for %1 is not a valid package name', name);
         }
         RequireLoad(parser, required);
     }
 
 };
+
+/**
+ * The options for the require extension
+ */
+export const options = {
+    require: {
+        //
+        // Specifies which extensions can/can't be required.
+        // The keys are the names of extensions, and the value is true
+        //   if the extension can be required, and false if it can't
+        //
+        allow: expandable({
+            base: false,
+            'all-packages': false
+        }),
+        //
+        //  The default allow value if the extension isn't in the list above
+        //
+        defaultAllow: true,
+        //
+        //  The path prefix to use for exensions:  'tex' means use '[tex]/'
+        //  before the extension name.
+        //
+        prefix: 'tex'
+    }
+ }
 
 /**
  * The command map for the \require macro
@@ -157,8 +190,5 @@ new CommandMap('require', {require: 'Require'}, RequireMethods);
  * The configuration for the \require macro
  */
 export const RequireConfiguration = Configuration.create(
-    'require', {
-        handler: {macro: ['require']},
-        config: config
-    }
+    'require', {handler: {macro: ['require']}, config, options}
 );
