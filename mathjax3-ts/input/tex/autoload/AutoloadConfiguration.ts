@@ -29,9 +29,9 @@ import {CommandMap} from '../SymbolMap.js';
 import {Macro} from '../Symbol.js';
 import {TeX} from '../../tex.js';
 
-import {RequireLoad, TEXPATH} from '../require/RequireConfiguration.js';
+import {RequireLoad, RequireConfiguration} from '../require/RequireConfiguration.js';
 import {Package} from '../../../components/package.js';
-import {expandable} from '../../../util/Options.js';
+import {expandable, defaultOptions} from '../../../util/Options.js';
 
 /**
  * A CommandMap class that allows removal of macros
@@ -53,13 +53,26 @@ export class AutoloadCommandMap extends CommandMap {
  * @param {string} extension   The extension to load
  */
 function Autoload(parser: TexParser, name: string, extension: string) {
-    if (Package.packages.has(TEXPATH + extension)) {
+    if (Package.packages.has(parser.options.require.prefix + extension)) {
         for (const macro of parser.options.autoload[extension]) {
             AutoloadMap.remove(macro);
         }
         parser.i -= name.length;  // back up and read the macro again
     }
     RequireLoad(parser, extension);
+}
+
+/**
+ * Check if the require extension has been initialized
+ * (If autoload has been included in the TeX packages, but require isn't, then we need
+ *  to set up the options here and configure the require package in configAutoload below.
+ *  the priorities of the initialization and configuration are set so that autoload
+ *  will run after require when both are used.)
+ */
+function initAutoload(config: Configuration) {
+    if (!config.options.require) {
+        defaultOptions(config.options, RequireConfiguration.options);
+    }
 }
 
 /**
@@ -78,6 +91,12 @@ function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
             }
         }
     }
+    //
+    //  Check if the require extension needs to be configured
+    //
+    if (!parser.options.require.jax) {
+        RequireConfiguration.config(config, jax);
+    }
 }
 
 /**
@@ -93,9 +112,10 @@ export const AutoloadConfiguration = Configuration.create(
         handler: {macro: ['autoload']},
         options: {
             //
-            //  These are an extension and the macros it contains.
+            //  These are the extension names and the macros they contains.
             //  You can prevent one from being autoloaded by setting
             //    it to [] in the options when the TeX input jax is created.
+            //  You can include the prefix if it is not the default one from require
             //
             autoload: expandable({
                 action: ['toggle', 'mathtip', 'texttip'],
@@ -114,7 +134,7 @@ export const AutoloadConfiguration = Configuration.create(
                 verb: ['verb']
             })
         },
-        config: configAutoload,
-        configPriority: 10
+        config: configAutoload, configPriority: 10,
+        init: initAutoload, priority: 10
     }
 );
