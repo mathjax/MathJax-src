@@ -31,6 +31,7 @@ import {TeX} from '../../tex.js';
 
 import {RequireLoad, TEXPATH} from '../require/RequireConfiguration.js';
 import {Package} from '../../../components/package.js';
+import {expandable} from '../../../util/Options.js';
 
 /**
  * A CommandMap class that allows removal of macros
@@ -96,7 +97,7 @@ export const AutoloadConfiguration = Configuration.create(
             //  You can prevent one from being autoloaded by setting
             //    it to [] in the options when the TeX input jax is created.
             //
-            autoload: {
+            autoload: expandable({
                 action: ['toggle', 'mathtip', 'texttip'],
                 bbox: ['bbox'],
                 boldsymbol: ['boldsymbol'],
@@ -111,7 +112,7 @@ export const AutoloadConfiguration = Configuration.create(
                 newcommand: ['newcommand', 'renewcommand', 'newenvironment', 'renewenvironment', 'def', 'let'],
                 unicode: ['unicode'],
                 verb: ['verb']
-            }
+            })
         },
         config: configAutoload,
         configPriority: 10
