@@ -1,29 +1,7 @@
 {
     "component": "input/tex-base",
     "targets": ["input/tex.ts", "input/tex"],
-    "exclude": [
-        "input/tex/AllPackages.ts",
-        "input/tex/action",
-        "input/tex/ams",
-        "input/tex/ams_cd",
-        "input/tex/autoload",
-        "input/tex/bbox",
-        "input/tex/boldsymbol",
-        "input/tex/braket",
-        "input/tex/cancel",
-        "input/tex/color",
-        "input/tex/config_macros",
-        "input/tex/enclose",
-        "input/tex/extpfeil",
-        "input/tex/html",
-        "input/tex/mhchem",
-        "input/tex/newcommand",
-        "input/tex/noerrors",
-        "input/tex/noundefined",
-        "input/tex/physics",
-        "input/tex/require",
-        "input/tex/unicode",
-        "input/tex/verb"
-    ]
+    "exclude": ["input/tex/AllPackages.ts"],
+    "excludeSubdirs": "true"
 }
 
