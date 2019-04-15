@@ -37,7 +37,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * Convert the tree rooted at a particular node into a serialized MathML string
      *
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
-     * @returns {string}      The MathML string representing the internal tree
+     * @return {string}       The MathML string representing the internal tree
      */
     public visitTree(node: MmlNode) {
         return this.visitNode(node, '');
@@ -46,7 +46,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
     /**
      * @param {TextNode} node  The text node to visit
      * @param {string} space   The amount of indenting for this node
-     * @returns {string}       The (HTML-quoted) text of the node
+     * @return {string}        The (HTML-quoted) text of the node
      */
     public visitTextNode(node: TextNode, space: string) {
         return this.quoteHTML(node.getText());
@@ -55,7 +55,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
     /**
      * @param {XMLNode} node  The XML node to visit
      * @param {string} space  The amount of indenting for this node
-     * @returns {string}      The serialization of the XML node (not implemented yet).
+     * @return {string}       The serialization of the XML node (not implemented yet).
      */
     public visitXMLNode(node: XMLNode, space: string) {
         return '[XML Node not implemented]';
@@ -67,7 +67,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
      *
      * @param {MmlNode} node  The inferred mrow to visit
      * @param {string} space  The amount of indenting for this node
-     * @returns {string}      The serialized contents of the mrow, properly indented
+     * @return {string}       The serialized contents of the mrow, properly indented
      */
     public visitInferredMrowNode(node: MmlNode, space: string) {
         let mml = [];
@@ -83,7 +83,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
      *
      * @param {MmlNode} node  The TeXAtom to visit.
      * @param {string} space  The amount of indenting for this node.
-     * @returns {string}      The serialized contents of the mrow, properly indented.
+     * @return {string}       The serialized contents of the mrow, properly indented.
      */
     public visitTeXAtomNode(node: MmlNode, space: string) {
       let texclass = node.texClass < 0 ? 'NONE' : TEXCLASSNAMES[node.texClass];
@@ -101,7 +101,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
     /**
      * @param {MmlNode} node    The annotation node to visit
      * @param {string} space    The number of spaces to use for indentation
-     * @returns {string}        The serializied annotation element
+     * @return {string}         The serializied annotation element
      */
     public visitAnnotationNode(node: MmlNode, space: string) {
         return space + '<annotation' + this.getAttributes(node) + '>'
@@ -118,7 +118,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
      *
      * @param {MmlNode} node    The node to visit
      * @param {Element} parent  The DOM parent to which this node should be added
-     * @returns {string}        The serialization of the given node
+     * @return {string}         The serialization of the given node
      */
     public visitDefault(node: MmlNode, space: string) {
         let kind = node.kind;
@@ -132,7 +132,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @param {MmlNode} node    The node whose children are to ne added
      * @param {string} space    The spaces to use for indentation
      * @param {string} nl       The newline character (or empty)
-     * @returns {string}        The serializied children
+     * @return {string}         The serializied children
      */
     protected childNodeMml(node: MmlNode, space: string, nl: string) {
         let mml = '';
@@ -144,7 +144,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
 
     /**
      * @param {MmlNode} node  The node whose attributes are to be produced
-     * @returns {string}      The attribute list as a string
+     * @return {string}       The attribute list as a string
      */
     protected getAttributes(node: MmlNode) {
         let ATTR = '';
@@ -161,7 +161,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
      *  Convert non-ASCII characters to entities.
      *
      * @param {string} value  The string to be made HTML escaped
-     * @returns {string}      The string with escaping performed
+     * @return {string}       The string with escaping performed
      */
     protected quoteHTML(value: string) {
         return value
