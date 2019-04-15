@@ -361,7 +361,7 @@ export class ComplexityVisitor extends MmlVisitor {
 
     /**
      * @param {MmlNode} node   The node whose children complexities are to be added
-     * @return {number]        The sum of the complexities, plus child complexity for each one
+     * @return {number}        The sum of the complexities, plus child complexity for each one
      */
     protected childrenComplexity(node: MmlNode) {
         super.visitDefault(node, true);
