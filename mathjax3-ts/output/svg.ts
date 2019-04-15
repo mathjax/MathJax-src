@@ -250,7 +250,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     protected typesetSVG(wrapper: SVGWrapper<N, T, D>, svg: N, g: N) {
         const adaptor = this.adaptor;
         //
-        //  Typeset the math and add minWith (from mtables), or set the alignment and indentation
+        //  Typeset the math and add minWidth (from mtables), or set the alignment and indentation
         //    of the finalized expression
         //
         this.minwidth = this.shift = 0;
