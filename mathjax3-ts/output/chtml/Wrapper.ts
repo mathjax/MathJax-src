@@ -179,7 +179,7 @@ CommonWrapper<
     }
 
     /**
-     * Mark this class as having been typeset (so styles will be output
+     * Mark this class as having been typeset (so its styles will be output)
      */
     public markUsed() {
         (this.constructor as CHTMLWrapperClass<N, T, D>).used = true;

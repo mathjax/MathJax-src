@@ -413,13 +413,13 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     }
 
     /**
-     * @param {CHTMLCharData} data   The [h, d, w, options] data for the character
+     * @param {CHTMLCharData} data   The [h, d, w] data for the character
      * @param {number} dw            The (optional) left offset of the glyph
      * @param {number} ic            The (optional) italic correction value
      * @return {string}              The padding string for the h, d, w.
      */
-    public padding(data: CHTMLCharData, dw: number = 0, ic: number = 0) {
-        return [data[0], data[2] + ic, data[1], dw].map(n => this.em0(n)).join(' ');
+    public padding([h, d, w]: CHTMLCharData, dw: number = 0, ic: number = 0) {
+        return [h, w + ic, d, dw].map(this.em0).join(' ');
     }
 
     /**
