@@ -16,8 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the FontData class for character bbox data
- *                and stretchy delimiters.
+ * @fileoverview  Implements the SVGFontData class for font data in SVG output.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -45,6 +44,7 @@ export type SVGCharData = CharData<SVGCharOptions>;
  * The extra data needed for a Variant in SVG output
  */
 export interface SVGVariantData extends VariantData<SVGCharOptions> {
+    cacheID: string;
 };
 
 /**
@@ -60,6 +60,7 @@ export interface SVGDelimiterData extends DelimiterData {
  * The SVG FontData class
  */
 export class SVGFontData extends FontData<SVGCharOptions, SVGVariantData, SVGDelimiterData> {
+
     /**
      * @override
      */

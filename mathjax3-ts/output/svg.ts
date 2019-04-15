@@ -31,8 +31,10 @@ import {SVGWrapperFactory} from './svg/WrapperFactory.js';
 import {SVGFontData} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from './common/CssStyles.js';
+import {FontCache} from './svg/FontCache.js';
 
 export const SVGNS = "http://www.w3.org/2000/svg";
+export const XLINKNS = 'http://www.w3.org/1999/xlink';
 
 /*****************************************************************/
 /**
@@ -46,7 +48,11 @@ export class SVG<N, T, D> extends
 CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFontData, typeof SVGFontData> {
 
     public static NAME: string = 'SVG';
-    public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};
+    public static OPTIONS: OptionList = {
+        ...CommonOutputJax.OPTIONS,
+        fontCache: 'local',             // or 'global' or 'none'
+        localID: null,                  // ID to use for local font cache (for single equation processing)
+    };
 
     /**
      *  The default styles for SVG
@@ -61,15 +67,30 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     };
 
     /**
-     *  Used to store the CHTMLWrapper factory,
-     *  the FontData object, and the CssStyles object.
+     * The ID for the SVG element that stores the cached font paths
+     */
+    public static FONTCACHEID = 'MJX-SVG-global-cache';
+
+    /**
+     * The ID for the stylesheet element for the styles for the SVG output
+     */
+    public static STYLESHEETID = 'MJX-SVG-styles';
+
+    /**
+     * Stores the CHTMLWrapper factory
      */
     public factory: SVGWrapperFactory<N, T, D>;
+
+    /**
+     * Stores the information about the cached character glyphs
+     */
+    public fontCache: FontCache<N, T, D>;
 
     /**
      * Minimum width for tables with labels,
      * and shift and align for main equation
      */
+    public minwidth: number = 0;
     public shift: number = 0;
 
     /**
@@ -83,6 +104,23 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      */
     constructor(options: OptionList = null) {
         super(options, SVGWrapperFactory, TeXFont);
+        this.fontCache = new FontCache(this);
+    }
+
+    /**
+     * @override
+     */
+    public initialize() {
+        if (this.options.fontCache === 'global') {
+            this.fontCache.clearCache();
+        }
+    }
+
+    /**
+     * Clear the font cache (use for resetting the global font cache)
+     */
+    public clearFontCache() {
+        this.fontCache.clearCache();
     }
 
     /**
@@ -107,7 +145,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      */
     public styleSheet(html: MathDocument<N, T, D>) {
         const sheet = super.styleSheet(html);
-        this.adaptor.setAttribute(sheet, 'id', 'SVG-styles');
+        this.adaptor.setAttribute(sheet, 'id', SVG.STYLESHEETID);
         return sheet;
     }
 
@@ -116,6 +154,33 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      */
     protected addClassStyles(CLASS: typeof SVGWrapper) {
         super.addClassStyles(CLASS);
+    }
+
+    /**
+     * @override
+     */
+    public documentPageElements(html: MathDocument<N, T, D>) {
+        if (this.options.fontCache === 'global' && !this.findCache(html)) {
+            return this.svg('svg', {id: SVG.FONTCACHEID, style: {display: 'none'}}, [this.fontCache.getCache()]);
+        }
+        return null as N;
+    }
+
+    /**
+     * Checks if there is already a font-cache element in the page
+     *
+     * @param {MathDocument} html   The document to search
+     * @return {boolean}            True if a font cache already exists in the page
+     */
+    protected findCache(html: MathDocument<N, T, D>) {
+        const adaptor = this.adaptor;
+        const svgs = adaptor.tags(adaptor.body(html.document), 'svg');
+        for (let i = svgs.length - 1; i >= 0; i--) {
+            if (this.adaptor.getAttribute(svgs[i], 'id') === SVG.FONTCACHEID) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -129,9 +194,23 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         const container = this.container;
         this.container = parent;
         //
-        //  Get the wrapped math element and its size
+        //  Get the wrapped math element and the SVG container
+        //  Then typeset the math into the SVG
         //
         const wrapper = this.factory.wrap(math);
+        const [svg, g] = this.createRoot(wrapper);
+        this.typesetSVG(wrapper, svg, g);
+        //
+        //  Put back the original container
+        //
+        this.container = container;
+    }
+
+    /**
+     * @param {SVGWrapper} wrapper   The wrapped math to process
+     * @return {[N, N]}              The svg and g nodes for the math
+     */
+    protected createRoot(wrapper: SVGWrapper<N, T, D>) {
         const {w, h, d, pwidth} = wrapper.getBBox();
         const W = Math.max(w, .001); // make sure we are at least one unit wide (needed for e.g. \llap)
         //
@@ -145,7 +224,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         //  The svg element with its viewBox, size and alignment
         //
         const adaptor = this.adaptor;
-        const svg = adaptor.append(parent, this.svg('svg', {
+        const svg = adaptor.append(this.container, this.svg('svg', {
             xmlns: SVGNS,
             width: this.ex(W), height: this.ex(h + d),
             style: {'vertical-align': this.ex(-d)},
@@ -154,7 +233,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         if (W === .001) {
             adaptor.setAttribute(svg, 'preserveAspectRatio', 'xMidYMid slice');
             if (w < 0) {
-                adaptor.setStyle(parent, 'margin-right', this.ex(w));
+                adaptor.setStyle(this.container, 'margin-right', this.ex(w));
             }
         }
         if (pwidth) {
@@ -167,22 +246,40 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
             adaptor.setAttribute(g, 'transform', 'matrix(1 0 0 -1 0 0) scale(' +
                                  this.fixed(scale, 6) + ') translate(0, ' + this.fixed(-h * 1000, 1) + ')');
         }
+        if (this.options.fontCache !== 'none') {
+            adaptor.setAttribute(svg, 'xmlns:xlink', XLINKNS);
+        }
+        return [svg, g];
+    }
+
+    /**
+     * Typeset the math and add minwidth (from mtables), or set the alignment and indentation
+     * of the finalized expression.
+     *
+     * @param {SVGWrapper} wrapper   The wrapped math to typeset
+     * @param {N} svg                The main svg element for the typeet math
+     * @param {N} g                  The group in which the math is typeset
+     */
+    protected typesetSVG(wrapper: SVGWrapper<N, T, D>, svg: N, g: N) {
+        const adaptor = this.adaptor;
         //
-        //  Typeset the math and add minWith (from mtables), or set the alignment and indentation
+        //  Typeset the math and add minWidth (from mtables), or set the alignment and indentation
         //    of the finalized expression
         //
-        this.shift = 0;
+        this.minwidth = this.shift = 0;
+        if (this.options.fontCache === 'local') {
+            this.fontCache.clearCache();
+            this.fontCache.useLocalID(this.options.localID);
+            adaptor.insert(this.fontCache.getCache(), g);
+        }
         wrapper.toSVG(g);
-        if (wrapper.bbox.pwidth) {
-            adaptor.setStyle(svg, 'minWidth', this.ex(wrapper.bbox.w));
+        this.fontCache.clearLocalID();
+        if (this.minwidth) {
+            adaptor.setStyle(svg, 'minWidth', this.ex(this.minwidth));
         } else if (this.shift) {
-            const align = adaptor.getAttribute(parent, 'justify') || 'center';
+            const align = adaptor.getAttribute(this.container, 'justify') || 'center';
             this.setIndent(svg, align, this.shift);
         }
-        //
-        //  Put back the original container
-        //
-        this.container = container;
     }
 
     /**

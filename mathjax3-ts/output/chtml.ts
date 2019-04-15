@@ -103,6 +103,11 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
     };
 
     /**
+     * The ID for the stylesheet element for the styles for the SVG output
+     */
+    public static STYLESHEETID = 'MJX-CHTML-styles';
+
+    /**
      *  Used to store the CHTMLWrapper factory,
      *  the FontData object, and the CssStyles object.
      */
@@ -130,7 +135,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
      */
     public styleSheet(html: MathDocument<N, T, D>) {
         const sheet = super.styleSheet(html);
-        this.adaptor.setAttribute(sheet, 'id', 'CHTML-styles');
+        this.adaptor.setAttribute(sheet, 'id', CHTML.STYLSHEETID);
         return sheet;
     }
 
