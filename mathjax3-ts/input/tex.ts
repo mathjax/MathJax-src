@@ -141,8 +141,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     const configuration = this.configuration = TeX.configure(packages);
     const parseOptions = this._parseOptions = new ParseOptions(configuration, [this.options, TagsFactory.OPTIONS]);
     userOptions(parseOptions.options, rest);
-    TeX.tags(parseOptions, configuration);
     configuration.config(configuration, this);
+    TeX.tags(parseOptions, configuration);
     this.postFilters.add(FilterUtil.cleanSubSup, -4);
     this.postFilters.add(FilterUtil.cleanStretchy, -3);
     this.postFilters.add(FilterUtil.cleanAttributes, -2);
