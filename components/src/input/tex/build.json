@@ -1,5 +1,23 @@
 {
     "component": "input/tex",
-    "targets": ["input/tex.ts", "input/tex"]
+    "targets": ["input/tex.ts", "input/tex"],
+    "exclude": [
+        "input/tex/AllPackages.ts",
+        "input/tex/action",
+        "input/tex/ams_cd",
+        "input/tex/bbox",
+        "input/tex/boldsymbol",
+        "input/tex/braket",
+        "input/tex/cancel",
+        "input/tex/color",
+        "input/tex/enclose",
+        "input/tex/extpfeil",
+        "input/tex/html",
+        "input/tex/mhchem",
+        "input/tex/noerrors",
+        "input/tex/physics",
+        "input/tex/unicode",
+        "input/tex/verb"
+    ]
 }
 

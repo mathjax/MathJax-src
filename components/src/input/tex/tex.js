@@ -1,8 +1,24 @@
 import './lib/tex.js';
 
-import {TeX} from '../../../../mathjax3/input/tex.js';
+import {registerTeX} from './register.js';
+import {Loader} from '../../../../mathjax3/components/loader.js';
 
-if (MathJax.startup) {
-    MathJax.startup.registerConstructor('tex', TeX);
-    MathJax.startup.useInput('tex');
-}
+Loader.preLoad(
+    'input/tex-base',
+    '[tex]/ams',
+    '[tex]/newcommand',
+    '[tex]/noundefined',
+    '[tex]/require',
+    '[tex]/autoload',
+    '[tex]/configMacros'
+);
+
+registerTeX([
+    'base',
+    'ams',
+    'newcommand',
+    'noundefined',
+    'require',
+    'autoload',
+    'configMacros'
+]);
