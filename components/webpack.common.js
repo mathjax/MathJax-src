@@ -24,6 +24,7 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+const Uglify = require('uglifyjs-webpack-plugin');
 
 /**************************************************************/
 
@@ -125,6 +126,15 @@ const PACKAGE = function (name, mathjax3, libs, dir, dist) {
         module: MODULE(dir),
         performance: {
             hints: false
+        },
+        optimization: {
+            minimizer: [new Uglify({
+                uglifyOptions: {
+                    output: {
+                        ascii_only: true
+                    },
+                },
+            })]
         },
         mode: 'production'
     };
