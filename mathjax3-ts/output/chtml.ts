@@ -47,6 +47,11 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
     public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};
 
     /**
+     * The ID for the stylesheet element for the styles for the SVG output
+     */
+    public static STYLESHEETID = 'MJX-CHTML-styles';
+
+    /**
      *  Used to store the CHTMLWrapper factory,
      *  the FontData object, and the CssStyles object.
      */
@@ -73,7 +78,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      */
     public styleSheet(html: MathDocument<N, T, D>) {
         const sheet = super.styleSheet(html);
-        this.adaptor.setAttribute(sheet, 'id', 'CHTML-styles');
+        this.adaptor.setAttribute(sheet, 'id', CHTML.STYLSHEETID);
         return sheet;
     }
 

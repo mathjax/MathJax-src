@@ -54,10 +54,23 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     };
 
     /**
-     *  Used to store the CHTMLWrapper factory,
-     *  the FontData object, and the CssStyles object.
+     * The ID for the SVG element that stores the cached font paths
+     */
+    public static FONTCACHEID = 'MJX-SVG-global-cache';
+
+    /**
+     * The ID for the stylesheet element for the styles for the SVG output
+     */
+    public static STYLESHEETID = 'MJX-SVG-styles';
+
+    /**
+     * Stores the CHTMLWrapper factory
      */
     public factory: SVGWrapperFactory<N, T, D>;
+
+    /**
+     * Stores the information about the cached character glyphs
+     */
     public fontCache: FontCache<N, T, D>;
 
     /**
@@ -119,7 +132,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      */
     public styleSheet(html: MathDocument<N, T, D>) {
         const sheet = super.styleSheet(html);
-        this.adaptor.setAttribute(sheet, 'id', 'SVG-styles');
+        this.adaptor.setAttribute(sheet, 'id', SVG.STYLESHEETID);
         return sheet;
     }
 
@@ -135,16 +148,22 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      */
     public documentPageElements(html: MathDocument<N, T, D>) {
         if (this.options.fontCache === 'global' && !this.findCache(html)) {
-            return this.svg('svg', {id: 'SVG-global-cache', style: {display: 'none'}}, [this.fontCache.getCache()]);
+            return this.svg('svg', {id: SVG.FONTCACHEID, style: {display: 'none'}}, [this.fontCache.getCache()]);
         }
         return null as N;
     }
 
+    /**
+     * Checks if there is already a font-cache element in the page
+     *
+     * @param {MathDocument} html   The document to search
+     * @return {boolean}            True if a font cache already exists in the page
+     */
     protected findCache(html: MathDocument<N, T, D>) {
         const adaptor = this.adaptor;
         const svgs = adaptor.tags(adaptor.body(html.document), 'svg');
         for (let i = svgs.length - 1; i >= 0; i--) {
-            if (this.adaptor.getAttribute(svgs[i], 'id') === 'SVG-global-cache') {
+            if (this.adaptor.getAttribute(svgs[i], 'id') === SVG.FONTCACHEID) {
                 return true;
             }
         }
@@ -221,7 +240,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     }
 
     /**
-     * Typeset the math and add minwith (from mtables), or set the alignment and indentation
+     * Typeset the math and add minwidth (from mtables), or set the alignment and indentation
      * of the finalized expression.
      *
      * @param {SVGWrapper} wrapper   The wrapped math to typeset
