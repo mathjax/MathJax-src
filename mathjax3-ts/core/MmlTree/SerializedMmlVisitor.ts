@@ -129,7 +129,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
     }
 
     /**
-     * @param {MmlNode} node    The node whose children are to ne added
+     * @param {MmlNode} node    The node whose children are to be added
      * @param {string} space    The spaces to use for indentation
      * @param {string} nl       The newline character (or empty)
      * @return {string}         The serializied children
