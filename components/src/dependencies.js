@@ -25,6 +25,7 @@ exports.dependencies = {
     '[tex]/noundefined': ['input/tex-base'],
     '[tex]/physics': ['input/tex-base'],
     '[tex]/require': ['input/tex-base'],
+    '[tex]/tagFormat': ['input/tex-base'],
     '[tex]/unicode': ['input/tex-base'],
     '[tex]/verb': ['input/tex-base']
 };
