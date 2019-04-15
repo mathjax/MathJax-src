@@ -709,16 +709,6 @@ export class CommonWrapper<
     }
 
     /**
-     * @param {number} n  A unicode code point to be converted to a character reference for use with the
-     *                   CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
-     *                   for higher values, or for the double quote and backslash characters).
-     * @return {string}  The character as a properly encoded string.
-     */
-    protected char(n: number, escape: boolean = false) {
-        return this.font.char(n, escape);
-    }
-
-    /**
      * @param {number[]} chars    The array of unicode character numbers to remap
      * @return {number[]}         The converted array
      */
@@ -768,7 +758,10 @@ export class CommonWrapper<
      */
     protected getVariantChar(variant: string, n: number) {
         const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true}];
-        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CC];
+        if (char.length === 3) {
+            char[3] = {} as CC;
+        }
+        return char as [number, number, number, CC];
     }
 
 }

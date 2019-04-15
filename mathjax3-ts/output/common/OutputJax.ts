@@ -33,6 +33,7 @@ import {CommonWrapper, AnyWrapper, AnyWrapperClass} from './Wrapper.js';
 import {CommonWrapperFactory, AnyWrapperFactory} from './WrapperFactory.js';
 import {percent} from '../../util/lengths.js';
 import {StyleList, Styles} from '../../util/Styles.js';
+import {StyleList as CssStyleList} from './CssStyles.js';
 
 /*****************************************************************/
 
@@ -85,6 +86,11 @@ export abstract class CommonOutputJax<
         font: null,                    // The FontData object to use
         cssStyles: null                // The CssStyles object to use
     };
+
+    /**
+     *  The default styles for the output jax
+     */
+    public static commonStyles: CssStyleList = {};
 
     /**
      * Used for collecting styles needed for the output jax
@@ -373,6 +379,11 @@ export abstract class CommonOutputJax<
      */
     public styleSheet(html: MathDocument<N, T, D>) {
         this.setDocument(html);
+        //
+        //  Start with the common styles
+        //
+        this.cssStyles.clear();
+        this.cssStyles.addStyles((this.constructor as typeof CommonOutputJax).commonStyles);
         //
         // Gather the CSS from the classes
         //

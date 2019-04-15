@@ -23,6 +23,7 @@
 
 import {CommonOutputJax} from './common/OutputJax.js';
 import {StyleList, Styles} from '../util/Styles.js';
+import {StyleList as CssStyleList} from './common/CssStyles.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
@@ -40,11 +41,66 @@ import {TeXFont} from './chtml/fonts/tex.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>,
-                                                    CHTMLFontData, typeof CHTMLFontData> {
+export class CHTML<N, T, D> extends
+CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLFontData, typeof CHTMLFontData> {
 
     public static NAME: string = 'CHTML';
-    public static OPTIONS: OptionList = {...CommonOutputJax.OPTIONS};
+    public static OPTIONS: OptionList = {
+        ...CommonOutputJax.OPTIONS,
+        adaptiveCSS: true,            // true means only produce CSS that is used in the processed equations
+    };
+
+    /**
+     *  The default styles for CommonHTML
+     */
+    public static commonStyles: CssStyleList = {
+        'mjx-container [space="1"]': {'margin-left': '.111em'},
+        'mjx-container [space="2"]': {'margin-left': '.167em'},
+        'mjx-container [space="3"]': {'margin-left': '.222em'},
+        'mjx-container [space="4"]': {'margin-left': '.278em'},
+        'mjx-container [space="5"]': {'margin-left': '.333em'},
+
+        'mjx-container [rspace="1"]': {'margin-right': '.111em'},
+        'mjx-container [rspace="2"]': {'margin-right': '.167em'},
+        'mjx-container [rspace="3"]': {'margin-right': '.222em'},
+        'mjx-container [rspace="4"]': {'margin-right': '.278em'},
+        'mjx-container [rspace="5"]': {'margin-right': '.333em'},
+
+        'mjx-container [size="s"]' : {'font-size': '70.7%'},
+        'mjx-container [size="ss"]': {'font-size': '50%'},
+        'mjx-container [size="Tn"]': {'font-size': '60%'},
+        'mjx-container [size="sm"]': {'font-size': '85%'},
+        'mjx-container [size="lg"]': {'font-size': '120%'},
+        'mjx-container [size="Lg"]': {'font-size': '144%'},
+        'mjx-container [size="LG"]': {'font-size': '173%'},
+        'mjx-container [size="hg"]': {'font-size': '207%'},
+        'mjx-container [size="HG"]': {'font-size': '249%'},
+
+        'mjx-container [width="full"]': {width: '100%'},
+
+        'mjx-box': {display: 'inline-block'},
+        'mjx-block': {display: 'block'},
+        'mjx-itable': {display: 'inline-table'},
+        'mjx-row': {display: 'table-row'},
+        'mjx-row > *': {display: 'table-cell'},
+
+        //
+        //  These don't have Wrapper subclasses, so add their styles here
+        //
+        'mjx-mtext': {
+            display: 'inline-block'
+        },
+        'mjx-mstyle': {
+            display: 'inline-block'
+        },
+        'mjx-merror': {
+            display: 'inline-block',
+            color: 'red',
+            'background-color': 'yellow'
+        },
+        'mjx-mphantom': {visibility: 'hidden'}
+
+    };
 
     /**
      * The ID for the stylesheet element for the styles for the SVG output
@@ -63,6 +119,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      */
     constructor(options: OptionList = null) {
         super(options, CHTMLWrapperFactory, TeXFont);
+        this.font.adaptiveCSS(this.options.adaptiveCSS);
     }
 
     /**
@@ -86,15 +143,17 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      * @override
      */
     protected addClassStyles(CLASS: typeof CHTMLWrapper) {
-        if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
-            this.cssStyles.addStyles({
-                ['mjx-' + CLASS.kind]: {
-                    display: 'inline-block',
-                    'text-align': 'left'
-                }
-            });
+        if (!this.options.adaptiveCSS || CLASS.used) {
+            if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
+                this.cssStyles.addStyles({
+                    ['mjx-' + CLASS.kind]: {
+                        display: 'inline-block',
+                        'text-align': 'left'
+                    }
+                });
+            }
+            super.addClassStyles(CLASS);
         }
-        super.addClassStyles(CLASS);
     }
 
     /**
@@ -103,6 +162,18 @@ export class CHTML<N, T, D> extends CommonOutputJax<N, T, D, CHTMLWrapper<N, T, 
      */
     protected processMath(math: MmlNode, parent: N) {
         this.factory.wrap(math).toCHTML(parent);
+    }
+
+    /**
+     * Clear the cache of which items need their styles to be output
+     */
+    public clearCache() {
+        this.cssStyles.clear();
+        this.font.clearCache();
+        for (const kind of this.factory.getKinds()) {
+            this.factory.getNodeClass(kind).used = false;
+        }
+
     }
 
     /*****************************************************************/

@@ -31,7 +31,6 @@ import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
 import {CHTMLFontData, CHTMLCharOptions, CHTMLDelimiterData} from './FontData.js';
-import {StyleList} from '../common/CssStyles.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
@@ -89,9 +88,11 @@ export interface CHTMLWrapperClass<N, T, D> extends AnyWrapperClass {
     autoStyle: boolean;
 
     /**
-     *  The default styles for CommonHTML
+     * True when an instance of this class has been typeset
+     * (used to control whether the styles for this class need to be output)
      */
-    styles: StyleList;
+    used: boolean;
+
 }
 
 /*****************************************************************/
@@ -121,56 +122,10 @@ CommonWrapper<
     public static autoStyle = true;
 
     /**
-     *  The default styles for CommonHTML
+     * True when an instance of this class has been typeset
+     * (used to control whether the styles for this class need to be output)
      */
-    public static styles: StyleList = {
-        'mjx-container [space="1"]': {'margin-left': '.111em'},
-        'mjx-container [space="2"]': {'margin-left': '.167em'},
-        'mjx-container [space="3"]': {'margin-left': '.222em'},
-        'mjx-container [space="4"]': {'margin-left': '.278em'},
-        'mjx-container [space="5"]': {'margin-left': '.333em'},
-
-        'mjx-container [rspace="1"]': {'margin-right': '.111em'},
-        'mjx-container [rspace="2"]': {'margin-right': '.167em'},
-        'mjx-container [rspace="3"]': {'margin-right': '.222em'},
-        'mjx-container [rspace="4"]': {'margin-right': '.278em'},
-        'mjx-container [rspace="5"]': {'margin-right': '.333em'},
-
-        'mjx-container [size="s"]' : {'font-size': '70.7%'},
-        'mjx-container [size="ss"]': {'font-size': '50%'},
-        'mjx-container [size="Tn"]': {'font-size': '60%'},
-        'mjx-container [size="sm"]': {'font-size': '85%'},
-        'mjx-container [size="lg"]': {'font-size': '120%'},
-        'mjx-container [size="Lg"]': {'font-size': '144%'},
-        'mjx-container [size="LG"]': {'font-size': '173%'},
-        'mjx-container [size="hg"]': {'font-size': '207%'},
-        'mjx-container [size="HG"]': {'font-size': '249%'},
-
-        'mjx-container [width="full"]': {width: '100%'},
-
-        'mjx-box': {display: 'inline-block'},
-        'mjx-block': {display: 'block'},
-        'mjx-itable': {display: 'inline-table'},
-        'mjx-row': {display: 'table-row'},
-        'mjx-row > *': {display: 'table-cell'},
-
-        //
-        //  These don't have Wrapper subclasses, so add their styles here
-        //
-        'mjx-mtext': {
-            display: 'inline-block'
-        },
-        'mjx-mstyle': {
-            display: 'inline-block'
-        },
-        'mjx-merror': {
-            display: 'inline-block',
-            color: 'red',
-            'background-color': 'yellow'
-        },
-        'mjx-mphantom': {visibility: 'hidden'}
-
-    };
+    public static used: boolean = false;
 
     /**
      * The factory used to create more CHTMLWrappers
@@ -211,6 +166,7 @@ CommonWrapper<
      * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
     protected standardCHTMLnode(parent: N) {
+        this.markUsed();
         const chtml = this.createCHTMLnode(parent);
         this.handleStyles();
         this.handleVariant();
@@ -220,6 +176,13 @@ CommonWrapper<
         this.handleAttributes();
         this.handlePWidth();
         return chtml;
+    }
+
+    /**
+     * Mark this class as having been typeset (so its styles will be output)
+     */
+    public markUsed() {
+        (this.constructor as CHTMLWrapperClass<N, T, D>).used = true;
     }
 
     /**
@@ -447,6 +410,14 @@ CommonWrapper<
      */
     public coreMO(): CHTMLmo<N, T, D> {
         return super.coreMO() as CHTMLmo<N, T, D>;
+    }
+
+    /**
+     * @param {number} n  A unicode code point to be converted to a character className reference.
+     * @return {string}  The className for the character
+     */
+    protected char(n: number) {
+        return this.font.charSelector(n).substr(1);
     }
 
 }

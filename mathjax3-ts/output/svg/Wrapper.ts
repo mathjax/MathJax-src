@@ -31,7 +31,6 @@ import {SVGWrapperFactory} from './WrapperFactory.js';
 import {SVGFontData, SVGDelimiterData, SVGCharOptions} from './FontData.js';
 import {SVGmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
-import {StyleList} from '../common/CssStyles.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
@@ -58,10 +57,6 @@ export interface SVGWrapperClass<N, T, D> extends AnyWrapperClass {
 
     kind: string;
 
-    /**
-     *  The default styles for SVG
-     */
-    styles: StyleList;
 }
 
 /*****************************************************************/
@@ -83,24 +78,6 @@ CommonWrapper<
 > {
 
     public static kind: string = 'unknown';
-
-    /**
-     * If true, this causes a style for the node type to be generated automatically
-     * that sets display:inline-block (as needed for the output for MmlNodes).
-     */
-    public static autoStyle = true;
-
-    /**
-     *  The default styles for SVG
-     */
-    public static styles: StyleList = {
-        'mjx-container[jax="SVG"] > svg': {
-            'overflow': 'visible'
-        },
-        'mjx-container[jax="SVG"] > svg a': {
-            fill: 'blue', stroke: 'blue'
-        }
-    };
 
     /**
      * The factory used to create more SVGWrappers
