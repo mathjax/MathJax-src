@@ -1,9 +1,10 @@
-require('./lib/tex.js');
-const combineDefaults = require('../../../../../mathjax3/components/global.js').combineDefaults;
-const selectOptionsFromKeys = require('../../../../../mathjax3/util/Options.js').selectOptionsFromKeys;
+import './lib/tex.js';
+
+import {combineDefaults} from '../../../../../mathjax3/components/global.js';
+import {selectOptionsFromKeys} from '../../../../../mathjax3/util/Options.js';
+import {TeXFont} from '../../../../../mathjax3/output/chtml/fonts/tex.js';
 
 if (MathJax.startup) {
-    const TeXFont = MathJax._.output.chtml.fonts.tex_ts.TeXFont;
     const options = selectOptionsFromKeys(MathJax.config.chtml || {}, TeXFont.OPTIONS);
     combineDefaults(MathJax.config, 'chtml', {font: new TeXFont(options)});
 }

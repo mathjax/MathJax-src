@@ -23,12 +23,12 @@
  */
 
 
-import {HTMLDocument} from '../handlers/html/HTMLDocument.js';
-import {CssStyles, StyleList} from '../output/common/CssStyles.js';
+import {MathDocument} from '../../core/MathDocument.js';
+import {CssStyles, StyleList} from '../../output/common/CssStyles.js';
 
-import './sre.js';
+import '../sre.js';
 
-export type A11yDocument = HTMLDocument<HTMLElement, Text, Document>;
+export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
 export interface Region {
 
