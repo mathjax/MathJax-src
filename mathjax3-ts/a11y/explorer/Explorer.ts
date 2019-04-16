@@ -1,9 +1,5 @@
-// import {MathDocument} from '../core/MathDocument.js';
-import {HTMLAdaptor} from '../adaptors/HTMLAdaptor.js';
-import {OptionList} from '../util/Options.js';
 import {A11yDocument, HoverRegion, Region, ToolTip} from './Region.js';
-
-import {sreReady} from './sre.js';
+import {sreReady} from '../sre.js';
 
 
 export interface Explorer {
@@ -65,7 +61,9 @@ export class AbstractExplorer implements Explorer {
     } else {
       event.returnValue = false;
     }
-    if (event.stopPropagation) {
+    if (event.stopImmediatePropagation) {
+      event.stopImmediatePropagation();
+    } else if (event.stopPropagation) {
       event.stopPropagation();
     }
     event.cancelBubble = true;
@@ -224,9 +222,10 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   }
 
   private initWalker() {
+    const jax = this.document.outputJax.name;
     this.highlighter = sre.HighlighterFactory.highlighter(
       this.background, this.foreground,
-      {renderer: this.document.outputJax.name}
+      {renderer: jax === 'CHTML' ? 'CommonHTML' : jax}
     );
     // Add speech
     this.speechGenerator = new sre.TreeSpeechGenerator();
