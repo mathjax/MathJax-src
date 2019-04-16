@@ -2,12 +2,7 @@ window.MathJax = {
     loader: {
         load: ["tex-input", "chtml-output", "context-menu"],
         paths: {
-            mathjax: '../../dist',
-            node: '../../../node_modules',
-            sre: '[node]/speech-rule-engine/lib'
-        },
-        source: {
-            sre: '[sre]/sre_browser.js'
+            mathjax: '../../dist'
         },
         failed: (error) => {
             console.log(`MathJax(${error.package || '?'}): ${error.message}`);

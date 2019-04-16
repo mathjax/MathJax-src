@@ -154,7 +154,7 @@ export interface MathItem<N, T, D> {
     compile(document: MathDocument<N, T, D>): void;
 
     /**
-     * Converts the internal format to the typeset version by caling the output jax
+     * Converts the internal format to the typeset version by calling the output jax
      *
      * @param {MathDocument} document  The MathDocument in which the math resides
      */
@@ -387,7 +387,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 /*****************************************************************/
 /**
  * The various states that a MathItem (or MathDocument) can be in
- *   (open-ended to so that extensions can add to it)
+ *   (open-ended so that extensions can add to it)
  */
 export const STATE: {[state: string]: number} = {
     UNPROCESSED: 0,
