@@ -29,48 +29,10 @@ import {SelectableInfo} from './SelectableInfo.js';
 /*==========================================================================*/
 
 /**
- * The data needed to define a menu
- */
-export type MenuJSON = {menu: {pool: Array<Object>, items: Array<Object>, id: string}};
-
-/**
- * The data for a variable in the variable pool
- */
-export type PoolItem = {name: string, getter: () => string | boolean, setter: (x: (string | boolean)) => void};
-
-/*==========================================================================*/
-
-/**
  * The subclass of ContextMenu that handles the needs of the MathJax
  *   contextual menu (in particular, tying it to a MathItem).
  */
 export class MJContextMenu extends ContextMenu.ContextMenu {
-
-    /**
-     * @param {MenuJSON} menu     Create a menu object from a menu definition
-     * @returns {MJContextMenu}   The MJContextMenu created from the definition
-     *
-     * @override
-     *
-     * NOTE:  If the original used "new this()" rather than "new ContextMenu()",
-     *        we would not have to override it.
-     */
-    public static parse({menu}: MenuJSON): ContextMenu.ContextMenu {
-        if (!menu) {
-            ContextMenu.MenuUtil.error(null, 'Wrong JSON format for menu.');
-            return;
-        }
-        const {pool, items, id} = menu;
-        const ctxtMenu = new this();
-        const menuPool = ctxtMenu.getPool();
-        pool.forEach(({name, getter, setter}: PoolItem) => {
-            menuPool.insert(new ContextMenu.Variable(name, getter, setter));
-        });
-        ctxtMenu.parseItems(items);
-        return ctxtMenu;
-    }
-
-    /*======================================================================*/
 
     /**
      * The MathItem that has posted the menu
@@ -201,7 +163,7 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
 
     /**
      * @param {MmlNode} child    The annotation node to check if its encoding is one of the displayable ones
-     * @returns {string}         The annotation type if it does, or null iof it doesn't
+     * @returns {string}         The annotation type if it does, or null if it doesn't
      */
     protected annotationMatch(child: MmlNode) {
         const encoding = child.attributes.get('encoding') as string;

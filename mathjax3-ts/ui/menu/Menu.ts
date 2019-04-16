@@ -610,7 +610,7 @@ export class Menu {
     }
 
     /**
-     * @param {boolean} tab   True for including math in the tab other, false for not
+     * @param {boolean} tab   True for including math in the tab order, false for not
      */
     protected setTabOrder(tab: boolean) {
         this.menu.getStore().inTaborder(tab);

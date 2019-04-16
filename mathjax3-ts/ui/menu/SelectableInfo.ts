@@ -67,7 +67,7 @@ export class SelectableInfo extends ContextMenu.Info {
     }
 
     /**
-     * Attach the cop-to-clipboard action to its button
+     * Attach the copy-to-clipboard action to its button
      */
     public generateHtml() {
         super.generateHtml();
