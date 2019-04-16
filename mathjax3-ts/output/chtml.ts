@@ -135,7 +135,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
      */
     public styleSheet(html: MathDocument<N, T, D>) {
         const sheet = super.styleSheet(html);
-        this.adaptor.setAttribute(sheet, 'id', CHTML.STYLSHEETID);
+        this.adaptor.setAttribute(sheet, 'id', CHTML.STYLESHEETID);
         return sheet;
     }
 

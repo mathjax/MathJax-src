@@ -22,7 +22,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-declare const global: any;
 declare const require: (name: string) => any;
 
 const SRE = require('speech-rule-engine');
