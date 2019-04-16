@@ -254,8 +254,13 @@ export class Package {
      */
     protected loadCustom(url: string) {
         try {
-            CONFIG.require(url);
-            this.checkLoad();
+            const result = CONFIG.require(url);
+            if (result instanceof Promise) {
+                result.then(() => this.checkLoad())
+                      .catch(() => this.failed('Can\'t load "' + url + '"'));
+            } else {
+                this.checkLoad();
+            }
         } catch (err) {
             this.failed(err.message);
         }

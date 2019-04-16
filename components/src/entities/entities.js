@@ -1,2 +1,2 @@
-require('../../../mathjax3/util/entities/all.js');
+import '../../../mathjax3/util/entities/all.js';
 
