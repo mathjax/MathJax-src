@@ -72,7 +72,7 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
  *
  * @param {B} BaseMathItem     The MathItem class to be extended
  * @param {MathML} MmlJax      The MathML input jax used to convert the enriched MathML
- * @param {Function} toMathML  The function serialize the internal MathML
+ * @param {Function} toMathML  The function to serialize the internal MathML
  * @return {EnrichedMathItem}  The enriched MathItem class
  *
  * @template N  The HTMLElement node class

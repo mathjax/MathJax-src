@@ -195,7 +195,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
 
         /**
          * Extend the MathItem class used for this MathDocument
-         *   and create the visitor and exporer objects needed for the explorer
+         *   and create the visitor and explorer objects needed for the explorer
          *
          * @override
          * @constructor
@@ -220,6 +220,8 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
 
         /**
          * Add the Explorer to the MathItems in this MathDocument
+         *
+         * @return {ExplorerMathDocument}   The MathDocument (so calls can be chained)
          */
         public explorable() {
             if (!this.processed.isSet('explorer')) {
@@ -252,6 +254,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
  * Add Explorer functions to a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
+ * @param {MathML} MmlJax     A MathML input jax to be used for the semantic enrichment
  * @returns {Handler}         The handler that was modified (for purposes of chainging extensions)
  */
 export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null) {
