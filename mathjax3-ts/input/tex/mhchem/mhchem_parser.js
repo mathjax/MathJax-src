@@ -2,7 +2,7 @@
 // Core parser for mhchem syntax  (recursive)
 //
 /** @type {MhchemParser} */
-var mhchemParser = {
+export var mhchemParser = {
   //
   // Parses mchem \ce syntax
   //
@@ -1283,7 +1283,7 @@ mhchemParser.stateMachines = {
 // texify: Take MhchemParser output and convert it to TeX
 //
 /** @type {Texify} */
-var texify = {
+export var texify = {
   go: function (input, isInner) {  // (recursive, max 4 levels)
     if (!input) { return ""; }
     var res = "";
@@ -1606,7 +1606,7 @@ var texify = {
 // Will show type error at calling position
 //
 /** @param {number} a */
-function assertNever(a) {}
+export function assertNever(a) {}
 /** @param {string} a */
-function assertString(a) {}
+export function assertString(a) {}
 
