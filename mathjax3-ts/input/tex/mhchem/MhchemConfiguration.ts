@@ -29,7 +29,7 @@ import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 import AmsMethods from '../ams/AmsMethods.js';
-import './mhchem_parser.js';
+import {mhchemParser, texify} from './mhchem_parser.js';
 
 // Namespace
 let MhchemMethods: Record<string, ParseMethod> = {};
