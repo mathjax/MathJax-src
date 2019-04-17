@@ -14,7 +14,8 @@
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "webpack": "4.19.0",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "uglifyjs-webpack-plugin": "^2.1.2"
   },
   "repository": {
     "type": "git",
