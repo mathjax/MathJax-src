@@ -521,12 +521,13 @@ export class Menu {
      * @param {boolean} enable  True to enable, false to disable
      */
     protected enableExplorerItems(enable: boolean) {
-        const menu = (this.menu.findID('Accessibility', 'Explorer') as ContextMenu.Submenu).getSubmenu();
-        for (const item of menu.getItems().slice(3)) {
-            if (!(item instanceof ContextMenu.Rule)) {
-                enable ? item.enable() : item.disable();
-            }
-        }
+      // console.log(this.menu);
+      //   const menu = (this.menu.findID('Accessibility', 'Explorer') as ContextMenu.Submenu).getSubmenu();
+      //   for (const item of menu.getItems().slice(3)) {
+      //       if (!(item instanceof ContextMenu.Rule)) {
+      //           enable ? item.enable() : item.disable();
+      //       }
+      //   }
 
     }
 
