@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2019 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,17 @@
  */
 
 /**
- * @fileoverview  Loads SRE for node and creates the global sre variable
- *                with sre.Engine.isReady(), like in the browser version
+ * @fileoverview  Combines all TeX packages into a single import file.
  *
- * @author dpvc@mathjax.org (Davide Cervone)
+ * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-declare const require: (name: string) => any;
-
-const SRE = require('speech-rule-engine');
-
-declare const global: any;
-
-/**
- * The global sre with sre.Engine.isReady() and sre.toEnriched()
- */
-global.SRE = SRE;
-global.sre = Object.create(SRE);
-global.sre.Engine = {isReady() {return SRE.engineReady()}};
+import './ams/AmsConfiguration.js';
+import './base/BaseConfiguration.js';
+import './boldsymbol/BoldsymbolConfiguration.js';
+import './braket/BraketConfiguration.js';
+import './color/ColorConfiguration.js';
+import './mhchem/MhchemConfiguration.js';
+import './newcommand/NewcommandConfiguration.js';
+import './noerrors/NoErrorsConfiguration.js';
+import './noundefined/NoUndefinedConfiguration.js';
