@@ -44,6 +44,7 @@ export interface MathJaxConfig extends MJConfig {
         paths?: {[name: string]: string};          // The path prefixes for use in locations
         source?: {[name: string]: string};         // The URLs for the extensions, e.g., tex: [mathjax]/input/tex.js
         dependencies?: {[name: string]: string[]}; // The dependencies for each package
+        provides?: {[name: string]: string[]};     // The sub-packages provided by each package
         load?: string[];                           // The packages to load (found in locations or [mathjax]/name])
         ready?: PackageReady;                      // A function to call when MathJax is ready
         failed?: PackageFailed;                    // A function to call when MathJax fails to load
@@ -106,6 +107,7 @@ export namespace Loader {
             let extension = Package.packages.get(name);
             if (!extension) {
                 extension = new Package(name);
+                extension.provides(CONFIG.provides[name]);
             }
             extension.checkNoLoad();
             promises.push(extension.promise);
@@ -122,11 +124,11 @@ export namespace Loader {
     export function preLoad(...names: string[]) {
         for (const name of names) {
             let extension = Package.packages.get(name);
-            if (extension) {
-                extension.loaded();
-            } else {
-                extension = new Package(name, true, true);
+            if (!extension) {
+                extension = new Package(name, true);
+                extension.provides(CONFIG.provides[name]);
             }
+            extension.loaded();
         }
     };
 
@@ -174,6 +176,7 @@ if (typeof MathJax.loader === 'undefined') {
         },
         source: {},
         dependencies: {},
+        provides: {},
         load: [],
         ready: Loader.defaultReady.bind(Loader),
         failed: (error: PackageError) => console.log(`MathJax(${error.package || '?'}): ${error.message}`),
