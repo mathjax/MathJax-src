@@ -88,6 +88,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      */
     protected static defaultStyles = {
         'mjx-c::before': {
+            display: 'inline-block',
             width: 0
         }
     };
@@ -293,7 +294,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         if (!n) return 0;
         const data = this.getDelimiterData(n);
         const dw = (W - data[2]) / 2
-        const css: StyleData = {content: this.charContent(n), width: this.em0(W - dw)};
+        const css: StyleData = {content: this.charContent(n)};
         if (part !== 'ext') {
             css.padding = this.padding(data, dw);
         } else if (dw) {
@@ -335,7 +336,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         const options = data[3] as CHTMLCharOptions;
         const css: StyleData = {content: (options && options.c ? '"' + options.c + '"' : this.charContent(n))};
         if (part !== 'ext' || force) {
-            css.padding = this.padding(data);
+            css.padding = this.padding(data, 0, -data[2]);
         }
         styles[this.cssRoot + 'mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c::before'] = css;
     }
