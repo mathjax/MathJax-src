@@ -47,7 +47,8 @@ declare namespace window {
 /**
  * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
  */
-const isMac = (window.navigator && window.navigator.platform.substr(0,3) === 'Mac');
+const isMac = (typeof window !== 'undefined' &&
+               window.navigator && window.navigator.platform.substr(0,3) === 'Mac');
 
 /*==========================================================================*/
 
@@ -1013,3 +1014,4 @@ export class Menu {
     /*======================================================================*/
 
 }
+
