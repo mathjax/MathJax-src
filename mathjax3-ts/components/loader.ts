@@ -44,7 +44,7 @@ export interface MathJaxConfig extends MJConfig {
         paths?: {[name: string]: string};          // The path prefixes for use in locations
         source?: {[name: string]: string};         // The URLs for the extensions, e.g., tex: [mathjax]/input/tex.js
         dependencies?: {[name: string]: string[]}; // The dependencies for each package
-        provides?: {[name: string]: string[]};     // The sub-packges provided by each package
+        provides?: {[name: string]: string[]};     // The sub-packages provided by each package
         load?: string[];                           // The packages to load (found in locations or [mathjax]/name])
         ready?: PackageReady;                      // A function to call when MathJax is ready
         failed?: PackageFailed;                    // A function to call when MathJax fails to load
