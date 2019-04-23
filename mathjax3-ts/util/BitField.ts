@@ -23,6 +23,8 @@
 
 export class BitField {
 
+    protected static MAXBIT = 1 << 31;
+
     /**
      * The next bit to be allocated
      */
@@ -46,7 +48,7 @@ export class BitField {
             if (this.has(name)) {
                 throw new Error('Bit already allocated for '+name);
             }
-            if (this.next === 0x80000000) {
+            if (this.next === BitField.MAXBIT) {
                 throw new Error('Maximum number of bits already allocated');
             }
             this.names.set(name, this.next);
