@@ -23,7 +23,6 @@
 
 import {MathItem} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import '../../../../context-menu/scripts/js/context_menu.js';
 import {SelectableInfo} from './SelectableInfo.js';
 
 /*==========================================================================*/

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, '__esModule', {value: true});
 
 exports.dependencies = {
-    'a11y/semantic-enrich': ['input/mml'],
+    'a11y/semantic-enrich': ['input/mml', '[sre]'],
     'a11y/complexity': ['a11y/semantic-enrich'],
     'a11y/explorer': ['a11y/semantic-enrich'],
     '[tex]/all-packages': ['input/tex-base'],
@@ -31,7 +31,8 @@ exports.dependencies = {
 };
 
 exports.paths = {
-    tex: '[mathjax]/input/tex/extensions'
+    tex: '[mathjax]/input/tex/extensions',
+    sre: '[mathjax]/sre/sre_browser'
 }
 
 const allPackages = [
