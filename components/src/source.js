@@ -40,6 +40,12 @@ exports.source = {
     'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
     'sre': `../../mathjax3/a11y/sre-node.js`,
     'ui/menu': `${src}/ui/menu/menu.js`,
+    'mml-chtml': `${src}/mml-chtml/mml-chtml.js`,
+    'mml-svg': `${src}/mml-svg/mml-svg.js`,
+    'tex-chtml': `${src}/tex-chtml/tex-chtml.js`,
+    'tex-svg': `${src}/tex-svg/tex-svg.js`,
+    'tex-mml-chtml': `${src}/tex-mml-chtml/tex-mml-chtml.js`,
+    'tex-mml-svg': `${src}/tex-mml-svg/tex-mml-svg.js`,
     'loader': `${src}/loader/loader.js`,
     'startup': `${src}/startup/startup.js`
 };
