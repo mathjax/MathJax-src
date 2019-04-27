@@ -169,12 +169,10 @@ function copyLib(dir) {
  * @param {string} name     The name of the file or directory to copy
  */
 function copyFile(from, to, name) {
+    !fs.existsSync(to) && fs.mkdirSync(to);
     const copy = path.resolve(from, name);
     const dest = path.resolve(to, name);
     if (fs.lstatSync(copy).isDirectory()) {
-        if (!fs.existsSync(dest)) {
-            fs.mkdirSync(dest);
-        }
         for (const file of fs.readdirSync(copy)) {
             copyFile(copy, dest, file);
         }
