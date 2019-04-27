@@ -44,6 +44,13 @@ if (dirs.length === 0) {
 const build = path.join(__dirname, 'build');
 
 /**
+ * Get the directory for node modules (either the parent of the MathJax3 directory,
+ * or the MathJax3 node_modules directory, if it exists).
+ */
+const parent = path.resolve(__dirname, '..', '..');
+const nodeDir = (dir => (fs.existsSync(dir) ? dir : path.resolve(parent, '..')))(path.join(parent, 'node_modules'));
+
+/**
  * Regular expressions for the components directory and the mathjax3 .js location
  */
 const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
@@ -60,6 +67,7 @@ function processList(dirs) {
         const fulldir = path.resolve(dir);
         processDir(fulldir, buildLib);
         processDir(fulldir, webpackLib);
+        processDir(fulldir, copyLib);
     }
 }
 
@@ -103,7 +111,9 @@ function buildLib(dir) {
         process.chdir(dir);
         const result = execSync(build);
         console.log('    ' + String(result).replace(/\n/g, '\n    '));
-    } catch (err) {}
+    } catch (err) {
+        console.log('    ' + err.message);
+    }
     process.chdir(wd);
 }
 
@@ -124,8 +134,53 @@ function webpackLib(dir) {
                                            .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
                                            .replace(compRE, '[components]')
                                            .replace(rootRE, '[mathjax3]'));
-    } catch (err) {}
+    } catch (err) {
+        console.log('    ' + err.message);
+    }
     process.chdir(wd);
+}
+
+/**
+ * Copy the designated files if there is a configurtion file for it
+ *
+ * @param {string} dir   The directory to check
+ */
+function copyLib(dir) {
+    const file = path.join(dir, 'copy.json');
+    if (!fs.existsSync(file)) return;
+    console.log('Copying ' + dir.replace(compRE, ''));
+    try {
+        const config = JSON.parse(fs.readFileSync(file));
+        const to = path.resolve(dir, config.to);
+        const from = path.resolve(dir, config.from.replace(/\[node\]/, nodeDir));
+        for (const name of config.copy) {
+            copyFile(from, to, name);
+        }
+    } catch (err) {
+        console.log('    ' + err.message);
+    }
+}
+
+/**
+ * Copy a file or directory tree
+ *
+ * @param {string} from     The directory to copy from
+ * @param {string} to       The directory to copy to
+ * @param {string} name     The name of the file or directory to copy
+ */
+function copyFile(from, to, name) {
+    const copy = path.resolve(from, name);
+    const dest = path.resolve(to, name);
+    if (fs.lstatSync(copy).isDirectory()) {
+        if (!fs.existsSync(dest)) {
+            fs.mkdirSync(dest);
+        }
+        for (const file of fs.readdirSync(copy)) {
+            copyFile(copy, dest, file);
+        }
+    } else {
+        fs.copyFileSync(copy, dest);
+    }
 }
 
 
