@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 
-
 /*************************************************************
  *
  *  Copyright (c) 2018 The MathJax Consortium
@@ -42,13 +41,7 @@ if (dirs.length === 0) {
  * The path to the bin/build executable
  */
 const build = path.join(__dirname, 'build');
-
-/**
- * Get the directory for node modules (either the parent of the MathJax3 directory,
- * or the MathJax3 node_modules directory, if it exists).
- */
-const parent = path.resolve(__dirname, '..', '..');
-const nodeDir = (dir => (fs.existsSync(dir) ? dir : path.resolve(parent, '..')))(path.join(parent, 'node_modules'));
+const copy = path.join(__dirname, 'copy');
 
 /**
  * Regular expressions for the components directory and the mathjax3 .js location
@@ -150,37 +143,13 @@ function copyLib(dir) {
     if (!fs.existsSync(file)) return;
     console.log('Copying ' + dir.replace(compRE, ''));
     try {
-        const config = JSON.parse(fs.readFileSync(file));
-        const to = path.resolve(dir, config.to);
-        const from = path.resolve(dir, config.from.replace(/\[node\]/, nodeDir));
-        for (const name of config.copy) {
-            copyFile(from, to, name);
-        }
+        process.chdir(dir);
+        const result = execSync(copy);
+        console.log('    ' + String(result).replace(/\n/g, '\n    '));
     } catch (err) {
         console.log('    ' + err.message);
     }
 }
-
-/**
- * Copy a file or directory tree
- *
- * @param {string} from     The directory to copy from
- * @param {string} to       The directory to copy to
- * @param {string} name     The name of the file or directory to copy
- */
-function copyFile(from, to, name) {
-    !fs.existsSync(to) && fs.mkdirSync(to);
-    const copy = path.resolve(from, name);
-    const dest = path.resolve(to, name);
-    if (fs.lstatSync(copy).isDirectory()) {
-        for (const file of fs.readdirSync(copy)) {
-            copyFile(copy, dest, file);
-        }
-    } else {
-        fs.copyFileSync(copy, dest);
-    }
-}
-
 
 /**
  * Process all the specified directories
