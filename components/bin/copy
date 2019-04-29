@@ -81,8 +81,9 @@ function makeDir(dir) {
 /**
  * Copy the given files
  */
-const to = path.resolve(__dirname, config.to);
-const from = path.resolve(__dirname, config.from.replace(/\[node\]/, nodeDir));
+const wd = process.cwd();
+const to = path.resolve(wd, config.to);
+const from = path.resolve(wd, config.from.replace(/\[node\]/, nodeDir));
 for (const name of config.copy) {
     copyFile(from, to, name, '');
 }
