@@ -74,7 +74,7 @@ function processList(base, dir, list) {
             const stat = fs.statSync(path.resolve(base, file));
             if (stat.isDirectory()) {
                 processDir(base, file);
-            } else if (file.match(/\.ts/)) {
+            } else if (file.match(/\.ts$/)) {
                 processFile(base, file);
             }
         }
