@@ -293,7 +293,7 @@ PhysicsMethods.StarMacro = function(parser: TexParser, name: string,
 
 
 /**
- * An operator that needs to be parsed (e.g., a gree letter or nabla) and
+ * An operator that needs to be parsed (e.g., a Greek letter or nabla) and
  * applied to a possibly fenced expression. By default automatic fences are
  * parentheses and brakets, with braces being ignored.
  * @param {TexParser} parser The calling parser.
@@ -321,9 +321,9 @@ PhysicsMethods.OperatorApplication = function(
       right = '\\}';
     }
   } else {
-      parser.i++;
-      arg = parser.GetUpTo(name, right);
-    }
+    parser.i++;
+    arg = parser.GetUpTo(name, right);
+  }
   lfence = (enlarge ? '\\left' : '') + left;
   rfence = (enlarge ? '\\right' : '') + right;
   let macro = operator + ' ' + lfence + ' ' + arg + ' ' + rfence;
@@ -425,13 +425,13 @@ PhysicsMethods.Differential = function(parser: TexParser, name: string,
                                {width: TexConstant.Length.THINMATHSPACE});
   const rspace = parser.create('node', 'mspace', [],
                                {width: TexConstant.Length.THINMATHSPACE});
-  parser.Push(parser.create('node', 'mrow', [lspace, mml, rspace]));
+  parser.Push(parser.create('node', 'TeXAtom', [lspace, mml, rspace], {texClass: TEXCLASS.OP}));
 };
 
 
 /**
- * The derivative macros. Its behaviour depends on the number
- * of arguments provided. In case of
+ * The derivative macro. Its behaviour depends on the number of arguments
+ * provided. In case of
  * 1 argument: will be part of the denominator.
  * 2 arguments: argument one is numerator, argument two is denominator.
  * 3+ arguments: arguments above 2 will be part of the denominator and the
