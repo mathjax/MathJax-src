@@ -75,7 +75,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      * Default options
      */
     public static OPTIONS = {
-        fontURL: 'mathjax2/css/'
+        fontURL: 'mathjax2/css/woff'
     };
 
     /**
@@ -99,7 +99,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     protected static defaultFonts = {
         '@font-face /* 0 */': {
             'font-family': 'MJXZERO',
-            src: 'url("%%URL%%/otf/MathJax_Zero.otf") format("opentype")'
+            src: 'url("%%URL%%/MathJax_Zero.woff") format("woff")'
         }
     };
 
