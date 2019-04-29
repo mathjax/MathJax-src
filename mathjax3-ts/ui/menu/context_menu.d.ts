@@ -283,7 +283,6 @@ declare namespace ContextMenu {
         private parseVariable({name: name, getter: getter, setter: setter});
     }
 }
-declare const global: any;
 declare namespace ContextMenu {
     class SubMenu extends AbstractMenu {
         baseMenu: ContextMenu;

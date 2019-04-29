@@ -26,6 +26,8 @@ declare const require: (name: string) => any;
 
 const SRE = require('speech-rule-engine');
 
+declare const global: any;
+
 /**
  * The global sre with sre.Engine.isReady() and sre.toEnriched()
  */
