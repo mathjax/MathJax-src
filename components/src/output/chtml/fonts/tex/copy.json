@@ -1,6 +1,6 @@
 {
-    "to": "../../../../../dist/output/chtml/fonts/tex-v2",
-    "from": "../../../../../../mathjax2/css/woff",
+    "to": "../../../../../dist/output/chtml/fonts/woff-v2",
+    "from": "../../../../../../mathjax3-ts/output/chtml/fonts/tex-woff",
     "copy": [
         "MathJax_AMS-Regular.woff",
         "MathJax_Caligraphic-Bold.woff",
