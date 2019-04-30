@@ -33,11 +33,13 @@ export const AmsCdConfiguration = Configuration.create(
     macro: ['amsCd_macros'],
     environment: ['amsCd_environment']
   },
-   options: {
-    colspace: '5pt',
-    rowspace: '5pt',
-    harrowsize: '2.75em',
-    varrowsize: '1.75em',
-    hideHorizontalLabels: false
+  options: {
+    amsCd: {
+      colspace: '5pt',
+      rowspace: '5pt',
+      harrowsize: '2.75em',
+      varrowsize: '1.75em',
+      hideHorizontalLabels: false
+    }
   }}
 );

@@ -28,7 +28,11 @@ import { Configuration } from '../Configuration.js';
 import { ColorMethods } from './ColorMethods.js';
 import { ColorModel } from './ColorUtil.js';
 
+import { TeX } from '../../tex.js';
 
+/**
+ * The color macros
+ */
 new CommandMap('color', {
     color: 'Color',
     textcolor: 'TextColor',
@@ -38,19 +42,29 @@ new CommandMap('color', {
 }, ColorMethods);
 
 /**
- * Init method for Color package.
+ * Config method for Color package.
+ *
  * @param {Configuration} config The current configuration.
+ * @param {TeX} jax              The TeX jax having that configuration
  */
-const init = function(config: Configuration) {
-    config.options['colorModel'] = new ColorModel();
+const config = function(config: Configuration, jax: TeX<any, any, any>) {
+    jax.parseOptions.options.color.model = new ColorModel();
 };
 
-export const ColorConfiguration = Configuration.create('color', {
-    handler: {
-        macro: ['color'],
-    }, options: {
-        colorPadding: '5px',
-        colorBorderWidth: '2px',
-    },
-    init: init
-});
+/**
+ * The configuration for the color macros
+ */
+export const ColorConfiguration = Configuration.create(
+    'color', {
+        handler: {
+            macro: ['color'],
+        },
+        options: {
+            color: {
+                padding: '5px',
+                borderWidth: '2px'
+            }
+        },
+        config: config
+    }
+);
