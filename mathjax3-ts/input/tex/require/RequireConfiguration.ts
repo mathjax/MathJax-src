@@ -40,9 +40,9 @@ import {userOptions, OptionList, expandable} from '../../../util/Options.js';
 const MJCONFIG = (global.MathJax ? global.MathJax.config || {} : {});
 
 /**
- * Add an extension to the configuration, and configure it's user options
+ * Add an extension to the configuration, and configure its user options
  *
- * @param {TeX} jax       The TeX jax whose configruation is to be modified
+ * @param {TeX} jax       The TeX jax whose configuration is to be modified
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amsCd')
  */
 function RegisterExtension(jax: TeX<any, any, any>, name: string) {
@@ -51,7 +51,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
         const extension = name.substr(6);
         required.push(name);
         //
-        //  Register andy dependencies that were loaded to handle this one
+        //  Register any dependencies that were loaded to handle this one
         //
         RegisterDependencies(jax, LOADERCONFIG.dependencies[name]);
         //
@@ -60,16 +60,12 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
         const handler = ConfigurationHandler.get(extension);
         if (handler) {
             //
-            //  Check if ther eare user-supplied options, and set those
+            //  Check if there are user-supplied options
             //    (place them in a block for the extension, if needed)
             //
-            let options = MJCONFIG[name];
-            if (handler.options && options) {
-                if (Object.keys(handler.options).length === 1 && handler.options[extension]) {
-                    options = {[extension]: options};
-                }
-            } else {
-                options = {};
+            let options = MJCONFIG[name] || {};
+            if (handler.options && Object.keys(handler.options).length === 1 && handler.options[extension]) {
+                options = {[extension]: options};
             }
             //
             //  Register the extension with the jax's configuration
