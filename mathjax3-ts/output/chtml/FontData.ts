@@ -75,7 +75,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      * Default options
      */
     public static OPTIONS = {
-        fontURL: 'mathjax23-ts/output/chtml/fonts/tex-woff-v2'
+        fontURL: 'mathjax3-ts/output/chtml/fonts/tex-woff-v2'
     };
 
     /**
