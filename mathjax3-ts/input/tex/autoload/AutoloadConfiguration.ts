@@ -44,20 +44,27 @@ export class AutoloadCommandMap extends CommandMap {
 
 /**
  * Autoload an extension when the first macro for it is encountered
- *   (if the extension has already been loaded, remove the autoload macros
- *    so they won't try to load it again, and back up to read the macro again,
- *    call the RequireLoad command to either load the extension, or initialize it.)
+ *   (if the extension has already been loaded, remove the autoload
+ *    macros and environments so they won't try to load it again, and
+ *    back up to read the macro again, call the RequireLoad command to
+ *    either load the extension, or initialize it.)
  *
  * @param {TexParser} parser   The TeX input parser
  * @param {string} name        The control sequence that is running
  * @param {string} extension   The extension to load
+ * @param {boolean} isMacro    True if this is a macro, false if an environment
  */
-function Autoload(parser: TexParser, name: string, extension: string) {
+function Autoload(parser: TexParser, name: string, extension: string, isMacro: boolean) {
     if (Package.packages.has(parser.options.require.prefix + extension)) {
-        for (const macro of parser.options.autoload[extension]) {
-            AutoloadMap.remove(macro);
+        const def = parser.options.autoload[extension];
+        const [macros, envs] = (def.length === 2 && Array.isArray(def[0]) ? def : [def, []]);
+        for (const macro of macros) {
+            AutoloadMacros.remove(macro);
         }
-        parser.i -= name.length;  // back up and read the macro again
+        for (const env of envs) {
+            AutoloadEnvironments.remove(env);
+        }
+        parser.i -= name.length + (isMacro ? 0 : 7);  // back up and read the macro or \begin again
     }
     RequireLoad(parser, extension);
 }
@@ -76,18 +83,35 @@ function initAutoload(config: Configuration) {
 }
 
 /**
- * Create the macros for the extensions that need to be loaded.
+ * Create the macros and environments for the extensions that need to be loaded.
  * Only ones that aren't already defined are made to autoload
  *   (except for \color, which is overridden if present)
  */
 function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
     const parser = jax.parseOptions;
     const macros = parser.handlers.get('macro');
+    const environments = parser.handlers.get('environment');
     const autoload = parser.options.autoload;
+    //
+    // Loop through the autoload definitions
+    //
     for (const extension of Object.keys(autoload)) {
-        for (const name of autoload[extension]) {
+        const def = autoload[extension];
+        const [macs, envs] = (def.length === 2 && Array.isArray(def[0]) ? def : [def, []]);
+        //
+        // Create the macros
+        //
+        for (const name of macs) {
             if (!macros.lookup(name) || name === 'color') {
-                AutoloadMap.add(name, new Macro(name, Autoload, [extension]));
+                AutoloadMacros.add(name, new Macro(name, Autoload, [extension, true]));
+            }
+        }
+        //
+        // Create the environments
+        //
+        for (const name of envs) {
+            if (!environments.lookup(name)) {
+                AutoloadEnvironments.add(name, new Macro(name, Autoload, [extension, false]));
             }
         }
     }
@@ -100,25 +124,32 @@ function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
 }
 
 /**
- * The command map for the macros that autoload extensions
+ * The command and environment maps for the macros that autoload extensions
  */
-const AutoloadMap = new AutoloadCommandMap('autoload', {}, {});
+const AutoloadMacros = new AutoloadCommandMap('autoload-macros', {}, {});
+const AutoloadEnvironments = new AutoloadCommandMap('autoload-environments', {}, {});
+
 
 /**
  * The configuration object for configMacros
  */
 export const AutoloadConfiguration = Configuration.create(
     'autoload', {
-        handler: {macro: ['autoload']},
+        handler: {
+            macro: ['autoload-macros'],
+            environment: ['autoload-environments']
+        },
         options: {
             //
-            //  These are the extension names and the macros they contains.
+            //  These are the extension names and the macros and environments they contain.
+            //    The format is [macros...] or [[macros...], [environments...]]
             //  You can prevent one from being autoloaded by setting
             //    it to [] in the options when the TeX input jax is created.
             //  You can include the prefix if it is not the default one from require
             //
             autoload: expandable({
                 action: ['toggle', 'mathtip', 'texttip'],
+                amsCd: [[], ['CD']],
                 bbox: ['bbox'],
                 boldsymbol: ['boldsymbol'],
                 braket: ['bra', 'ket', 'braket', 'set', 'Bra', 'Ket', 'Braket', 'Set', 'ketbra', 'Ketbra'],
