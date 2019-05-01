@@ -135,21 +135,24 @@ PhysicsMethods.Quantity = function(parser: TexParser, name: string,
 PhysicsMethods.Eval = function(parser: TexParser, name: string) {
   let star = parser.GetStar();
   let next = parser.GetNext();
-  let arg, left: string;
   if (next === '{') {
-    next = '.';
-    arg = parser.GetArgument(name);
-  } else if (next === '(' || next === '[') {
-    parser.i++;
-    arg = parser.GetUpTo(name, '|');     // TODO: fix 
-  } else {
-    throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+    let arg = parser.GetArgument(name);
+    let replace = '\\left. ' +
+      (star ? '\\smash{' + arg + '}' : arg) +
+      ' ' + '\\vphantom{\\int}\\right|';
+    parser.string = parser.string.slice(0, parser.i) + replace +
+      parser.string.slice(parser.i);
+    return;
   }
-  let replace = '\\left' + next + ' ' +
-    (star ? '\\smash{' + arg + '}' : arg) +
-    ' ' + '\\vphantom{\\int}\\right|';
-  parser.string = parser.string.slice(0, parser.i) + replace +
-    parser.string.slice(parser.i);
+  if (next === '(' || next === '[') {
+    parser.i++;
+    parser.Push(parser.itemFactory.create('auto open')
+                .setProperties(
+                  {open: next, close: '|',
+                   smash: star, right: '\\vphantom{\\int}'}));
+    return;
+  }
+  throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
 };
 
 

@@ -27,6 +27,8 @@ import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
+import TexParser from '../TexParser.js';
+import NodeUtil from '../NodeUtil.js';
 
 
 export class AutoOpen extends BaseItem {
@@ -51,9 +53,24 @@ export class AutoOpen extends BaseItem {
    * @override
    */
   public toMml() {
+    // Smash and right/left
+    let parser = this.factory.configuration.parser;
+    let right = this.getProperty('right') as string;
+    if (this.getProperty('smash')) {
+      let mml = super.toMml();
+      const smash = parser.create('node', 'mpadded', [mml],
+                                  {height: 0, depth: 0});
+      this.Clear();
+      this.Push(parser.create('node', 'TeXAtom', [smash]));
+    }
+    if (right) {
+      this.Push(new TexParser(right, parser.stack.env,
+                              parser.configuration).mml());
+    }
+    let mml = super.toMml();
     return ParseUtil.fenced(this.factory.configuration,
                             this.getProperty('open') as string,
-                            super.toMml(),
+                            mml,
                             this.getProperty('close') as string);
   }
 
