@@ -61,23 +61,11 @@ export class AutoOpen extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem): CheckType {
-    if (item.isKind('auto close') &&
-        item.getProperty('close') === this.getProperty('close')) {
+    let close = item.getProperty('close');
+    if (close && close === this.getProperty('close')) {
       return [[this.toMml()], true];
     }
     return super.checkItem(item);
-  }
-
-}
-
-
-export class AutoClose extends BaseItem {
-
-  /**
-   * @override
-   */
-  public get kind() {
-    return 'auto close';
   }
 
 }

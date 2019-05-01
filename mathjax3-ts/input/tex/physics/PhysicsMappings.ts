@@ -26,6 +26,7 @@ import {EnvironmentMap, CommandMap, MacroMap, CharacterMap} from '../SymbolMap.j
 import PhysicsMethods from './PhysicsMethods.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';
+import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 
 
 /**
@@ -286,7 +287,7 @@ new EnvironmentMap('Physics-aux-envs', ParseMethods.environment, {
  * Character map for braket package.
  */
 new MacroMap('Physics-characters', {
-  // '|': 'AutoClose',
+  '|': ['AutoClose', TEXCLASS.ORD],   // texClass: TEXCLASS.ORD, // Have to push the closer as mml with special property
   ')': 'AutoClose',
   ']': 'AutoClose'
 }, PhysicsMethods);

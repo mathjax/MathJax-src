@@ -25,7 +25,7 @@
 import {Configuration} from '../Configuration.js';
 import ParseOptions from '../ParseOptions.js';
 import NodeUtil from '../NodeUtil.js';
-import {AutoOpen, AutoClose} from './PhysicsItems.js';
+import {AutoOpen} from './PhysicsItems.js';
 import './PhysicsMappings.js';
 
 
@@ -47,8 +47,7 @@ export const PhysicsConfiguration = Configuration.create(
       environment: ['Physics-aux-envs']
     },
     items: {
-      [AutoOpen.prototype.kind]: AutoOpen,
-      [AutoClose.prototype.kind]: AutoClose
+      [AutoOpen.prototype.kind]: AutoOpen
     }
   }
 );

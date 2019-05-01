@@ -894,14 +894,11 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
  * @param {TexParser} parser The calling parser.
  * @param {string} fence The fence.
  */
-PhysicsMethods.AutoClose = function(parser: TexParser, fence: string) {
-  let item = parser.itemFactory.create('auto close')
-    .setProperties({close: fence});
+PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, texclass: number) {
+  const mo = parser.create('token', 'mo', {stretchy: false}, fence);
+  const item = parser.itemFactory.create('mml', mo).
+    setProperties({close: fence});
   parser.Push(item);
-  if (parser.stack.Top() === item) {
-    parser.stack.Pop();
-    parser.Push(parser.create('token', 'mo', {stretchy: false}, fence));
-  }
 };
 
 
