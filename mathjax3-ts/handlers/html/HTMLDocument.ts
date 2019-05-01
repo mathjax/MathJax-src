@@ -248,19 +248,4 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         return this.outputJax.pageElements(this);
     }
 
-    /**
-     * Temporary function for testing purposes.  Will be removed
-     */
-    public TestMath(text: string, display: boolean = true) {
-        if (!this.processed.isSet('TestMath')) {
-            let math = new this.options.MathItem(text, this.inputJax[0], display) as HTMLMathItem<N, T, D>;
-            math.setMetrics(16, 8, 1000000, 1000000, 1);
-            this.math.push(math);
-            this.processed.set('TestMath');
-        }
-        return this;
-    }
-
 }
-
-AbstractMathDocument.ProcessBits.allocate('TestMath');  // Temporary
