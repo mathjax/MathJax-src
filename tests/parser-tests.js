@@ -4,6 +4,7 @@ import {TeX} from 'mathjax3/input/tex.js';
 import {RegisterHTMLHandler} from "mathjax3/handlers/html.js";
 import {chooseAdaptor} from "mathjax3/adaptors/chooseAdaptor.js";
 import {JsonMmlVisitor} from 'mathjax3/core/MmlTree/JsonMmlVisitor.js';
+import {STATE} from 'mathjax3/core/MathItem.js';
 
 import {TagsFactory} from 'mathjax3/input/tex/Tags.js';
 import {MapHandler} from "mathjax3/input/tex/MapHandler.js";
@@ -38,9 +39,8 @@ export class ParserTest extends Test {
           let html = MathJax.document('<html></html>', {
             InputJax: new TeX(options)
           });
-          html.TestMath(tex).compile();
+          let root = html.convert(tex, {end: STATE.CONVERT});
           let jv = new JsonMmlVisitor();
-          let root = html.math.pop().root;
           root.setTeXclass(null);
           let actual = jv.visitTree(root);
           t.deepEqual(actual, expected, name);
