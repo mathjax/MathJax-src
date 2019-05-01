@@ -25,6 +25,7 @@
 import {Configuration} from '../Configuration.js';
 import ParseOptions from '../ParseOptions.js';
 import NodeUtil from '../NodeUtil.js';
+import {AutoOpen, AutoClose} from './PhysicsItems.js';
 import './PhysicsMappings.js';
 
 
@@ -42,7 +43,12 @@ export const PhysicsConfiguration = Configuration.create(
         'Physics-bra-ket-macros',
         'Physics-matrix-macros'
       ],
+      character: ['Physics-characters'],
       environment: ['Physics-aux-envs']
+    },
+    items: {
+      [AutoOpen.prototype.kind]: AutoOpen,
+      [AutoClose.prototype.kind]: AutoClose
     }
   }
 );

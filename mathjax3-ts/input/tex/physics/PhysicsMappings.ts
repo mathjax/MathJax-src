@@ -280,3 +280,13 @@ new CommandMap('Physics-matrix-macros', {
 new EnvironmentMap('Physics-aux-envs', ParseMethods.environment, {
   smallmatrix:   ['Array', null, null, null, 'c', '0.333em', '.2em', 'S', 1]
 }, PhysicsMethods);
+
+
+/**
+ * Character map for braket package.
+ */
+new MacroMap('Physics-characters', {
+  // '|': 'AutoClose',
+  ')': 'AutoClose',
+  ']': 'AutoClose'
+}, PhysicsMethods);

@@ -103,7 +103,7 @@ PhysicsMethods.Quantity = function(parser: TexParser, name: string,
     return;
   }
   // Get the fences
-  let argument = parser.GetUpTo(name, right).slice(1);
+  let argument = parser.GetUpTo(name, right).slice(1);   // TODO: fix 
   if (arg) {
     next = open;
     right = close;
@@ -141,7 +141,7 @@ PhysicsMethods.Eval = function(parser: TexParser, name: string) {
     arg = parser.GetArgument(name);
   } else if (next === '(' || next === '[') {
     parser.i++;
-    arg = parser.GetUpTo(name, '|');
+    arg = parser.GetUpTo(name, '|');     // TODO: fix 
   } else {
     throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
   }
@@ -322,7 +322,7 @@ PhysicsMethods.OperatorApplication = function(
     }
   } else {
     parser.i++;
-    arg = parser.GetUpTo(name, right);
+    arg = parser.GetUpTo(name, right);     // TODO: fix 
   }
   lfence = (enlarge ? '\\left' : '') + left;
   rfence = (enlarge ? '\\right' : '') + right;
@@ -360,9 +360,11 @@ PhysicsMethods.Expression = function(parser: TexParser, name: string,
     return;
   }
   parser.i++;
-  let arg = parser.GetUpTo(name, ')');
-  parser.Push(new TexParser('\\left(' + arg + '\\right)', parser.stack.env,
-                            parser.configuration).mml());
+  parser.Push(parser.itemFactory.create('auto open')
+              .setProperties({open: '(', close: ')'}));
+  // let arg = parser.GetUpTo(name, ')');      // TODO: fix 
+  // parser.Push(new TexParser('\\left(' + arg + '\\right)', parser.stack.env,
+  //                           parser.configuration).mml());
 };
 
 
@@ -414,7 +416,7 @@ PhysicsMethods.Differential = function(parser: TexParser, name: string,
   }
   if (parens) {
     parser.i++;
-    macro += '{\\left(' + parser.GetUpTo(name, ')') + '\\right)}';
+    macro += '{\\left(' + parser.GetUpTo(name, ')') + '\\right)}';      // TODO: fix 
   } else {
     macro += parser.GetArgument(name);
   }
@@ -456,7 +458,7 @@ PhysicsMethods.Derivative = function(parser: TexParser, name: string,
   let parens = '';
   if (parser.GetNext() === '(') {
     parser.i++;
-    parens = '\\left(' + parser.GetUpTo(name, ')') + '\\right)';
+    parens = '\\left(' + parser.GetUpTo(name, ')') + '\\right)';  // TODO: fix 
   }
   let power1 = ' ';
   let power2 = ' ';
@@ -885,6 +887,22 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
   }
   return matrix.join('\\\\ ');
 }
+
+
+/**
+ * Closes an automatic fence if one was opened.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} fence The fence.
+ */
+PhysicsMethods.AutoClose = function(parser: TexParser, fence: string) {
+  let item = parser.itemFactory.create('auto close')
+    .setProperties({close: fence});
+  parser.Push(item);
+  if (parser.stack.Top() === item) {
+    parser.stack.Pop();
+    parser.Push(parser.create('token', 'mo', {stretchy: false}, fence));
+  }
+};
 
 
 /**
