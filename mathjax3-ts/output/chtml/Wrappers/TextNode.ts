@@ -42,7 +42,7 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
     public static autoStyle = false;
 
     public static styles: StyleList = {
-        'mjx-c, mjx-c::before': {
+        'mjx-c': {
             display: 'inline-block'
         },
         'mjx-utext': {
