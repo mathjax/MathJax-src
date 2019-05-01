@@ -293,6 +293,56 @@ PhysicsMethods.StarMacro = function(parser: TexParser, name: string,
 
 
 /**
+ * Computes the application of a vector operation.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} kind The type of stack item to parse the operator into.
+ * @param {string} name The macro name.
+ * @param {string} operator The operator expression.
+ * @param {string[]} ...fences List of opening fences that should be
+ *     automatically sized and paired to its corresponding closing fence.
+ */
+let vectorApplication = function(
+  parser: TexParser, kind: string, name: string, operator: string,
+  fences: string[]) {
+  let op = new TexParser(operator, parser.stack.env,
+                         parser.configuration).mml();
+  parser.Push(parser.itemFactory.create(kind, op));
+  let left = parser.GetNext();
+  let right = pairs[left];
+  if (!right) {
+    return;
+  }
+  let lfence = '', rfence = '', arg = '';
+  let enlarge = fences.indexOf(left) !== -1;
+  if (left === '{') {
+    arg = parser.GetArgument(name);
+    lfence = enlarge ? '\\left\\{' : '';
+    rfence = enlarge ? '\\right\\}' : '';
+    let macro = lfence + ' ' + arg + ' ' + rfence;
+    parser.string = macro + parser.string.slice(parser.i);
+    parser.i = 0;
+    return;
+  }
+  if (!enlarge) {
+    return;
+  }
+  parser.i++;
+  parser.Push(parser.itemFactory.create('auto open')
+              .setProperties({open: left, close: right}));
+  // arg = parser.GetUpTo(name, right);     // TODO: fix 
+  // lfence = (enlarge ? '\\left' : '') + left;
+  // rfence = (enlarge ? '\\right' : '') + right;
+  // let macro = lfence + ' ' + arg + ' ' + rfence;
+  // parser.string = macro + parser.string.slice(parser.i);
+  // parser.i = 0;
+  // return;
+  // let macro = operator + ' ' + lfence + ' ' + arg + ' ' + rfence;
+  // parser.Push(new TexParser(macro, parser.stack.env,
+  //                           parser.configuration).mml());
+};
+
+
+/**
  * An operator that needs to be parsed (e.g., a Greek letter or nabla) and
  * applied to a possibly fenced expression. By default automatic fences are
  * parentheses and brakets, with braces being ignored.
@@ -305,30 +355,23 @@ PhysicsMethods.StarMacro = function(parser: TexParser, name: string,
 PhysicsMethods.OperatorApplication = function(
   parser: TexParser, name: string, operator: string,
   ...fences: string[]) {
-  let left = parser.GetNext();
-  let right = pairs[left];
-  if (!right) {
-    parser.Push(new TexParser(operator, parser.stack.env,
-                              parser.configuration).mml());
-    return;
-  }
-  let lfence = '', rfence = '', arg = '';
-  let enlarge = fences.indexOf(left) !== -1;
-  if (left === '{') {
-    arg = parser.GetArgument(name);
-    if (enlarge) {
-      left = '\\{';
-      right = '\\}';
-    }
-  } else {
-    parser.i++;
-    arg = parser.GetUpTo(name, right);     // TODO: fix 
-  }
-  lfence = (enlarge ? '\\left' : '') + left;
-  rfence = (enlarge ? '\\right' : '') + right;
-  let macro = operator + ' ' + lfence + ' ' + arg + ' ' + rfence;
-  parser.Push(new TexParser(macro, parser.stack.env,
-                            parser.configuration).mml());
+  vectorApplication(parser, 'fn', name, operator, fences);
+};
+
+/**
+ * A vector operator that needs to be parsed (e.g., a Greek letter or nabla with
+ * a crossproduct) and connected to a possibly fenced expression. By default
+ * automatic fences are parentheses and brakets.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} operator The operator expression.
+ * @param {string[]} ...fences List of opening fences that should be
+ *     automatically sized and paired to its corresponding closing fence.
+ */
+PhysicsMethods.VectorOperator = function(
+  parser: TexParser, name: string, operator: string,
+  ...fences: string[]) {
+  vectorApplication(parser, 'mml', name, operator, fences);
 };
 
 
@@ -897,7 +940,7 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
 PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, texclass: number) {
   const mo = parser.create('token', 'mo', {stretchy: false}, fence);
   const item = parser.itemFactory.create('mml', mo).
-    setProperties({close: fence});
+    setProperties({autoclose: fence});
   parser.Push(item);
 };
 

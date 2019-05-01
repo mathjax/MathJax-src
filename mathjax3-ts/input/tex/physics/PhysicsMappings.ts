@@ -79,9 +79,9 @@ new CommandMap('Physics-vector-macros', {
   'vu':          ['StarMacro', 1, '\\hat{\\vb', '{#1}}'],
   'gradient':    ['OperatorApplication', '\\gradientnabla', '(', '['],
   'grad':        ['OperatorApplication', '\\gradientnabla', '(', '['],
-  'divergence':  ['OperatorApplication', '\\gradientnabla\\vdot', '(', '['],
-  'div':         ['OperatorApplication', '\\gradientnabla\\vdot', '(', '['],
-  'curl':        ['OperatorApplication',
+  'divergence':  ['VectorOperator', '\\gradientnabla\\vdot', '(', '['],
+  'div':         ['VectorOperator', '\\gradientnabla\\vdot', '(', '['],
+  'curl':        ['VectorOperator',
                   '\\gradientnabla\\crossproduct', '(', '['],
   'laplacian':   ['OperatorApplication', '\\nabla^2', '(', '['],
 }, PhysicsMethods);
