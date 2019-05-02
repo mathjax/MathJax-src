@@ -97,6 +97,9 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
             border: '0px solid transparent',
             overflow: 'hidden'
         },
+        'mjx-stretchy-v > mjx-ext > mjx-c::before': {
+            width: 'initial'
+        },
         'mjx-stretchy-v > mjx-ext > mjx-c': {
             transform: 'scaleY(500) translateY(.1em)',
             overflow: 'visible'
