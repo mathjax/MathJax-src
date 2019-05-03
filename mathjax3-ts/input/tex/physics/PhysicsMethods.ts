@@ -501,19 +501,16 @@ PhysicsMethods.Derivative = function(parser: TexParser, name: string,
     args.push(parser.GetArgument(name));
     argCounter++;
   }
-  let parens = '';
-  if (parser.GetNext() === '(') {
-    parser.i++;
-    parens = '\\left(' + parser.GetUpTo(name, ')') + '\\right)';  // TODO: fix 
-  }
+  let ignore = false;
   let power1 = ' ';
   let power2 = ' ';
   if (argMax > 2 && args.length > 2) {
     power1 = '^{' + (args.length - 1) + '}';
-    parens = '';  // This is a potential error in the physics
-                  // package. Parenthesised arguments are "swallowed" in the \dv
-                  // commands if all arguments are given.
+    ignore = true;
   } else if (optArg != null) {
+    if (argMax > 2 && args.length > 1) {
+      ignore = true;
+    }
     power1 = '^{' + optArg + '}';
     power2 = power1;
   }
@@ -525,9 +522,14 @@ PhysicsMethods.Derivative = function(parser: TexParser, name: string,
     rest += op + ' ' + arg;
   }
   const macro = frac + '{' + op + power1 + first + '}' +
-    '{' + op + ' ' + second + power2 + ' ' + rest + '}' + parens;
+    '{' + op + ' ' + second + power2 + ' ' + rest + '}';
   parser.Push(new TexParser(macro, parser.stack.env,
                             parser.configuration).mml());
+  if (parser.GetNext() === '(') {
+    parser.i++;
+    parser.Push(parser.itemFactory.create('auto open')
+                .setProperties({open: '(', close: ')', ignore: ignore}));
+  }
 };
 
 

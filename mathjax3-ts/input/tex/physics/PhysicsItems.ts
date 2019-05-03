@@ -80,6 +80,10 @@ export class AutoOpen extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     let close = item.getProperty('autoclose');
     if (close && close === this.getProperty('close')) {
+      if (this.getProperty('ignore')) {
+        this.Clear();
+        return [[], true];
+      }
       return [[this.toMml()], true];
     }
     return super.checkItem(item);
