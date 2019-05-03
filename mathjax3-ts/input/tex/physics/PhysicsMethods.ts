@@ -468,12 +468,7 @@ PhysicsMethods.Differential = function(parser: TexParser, name: string,
   }
   const mml = new TexParser(macro, parser.stack.env,
                             parser.configuration).mml();
-  // Ideally I would like to set this row to be a TEXCLASS.OP.
-  const lspace = parser.create('node', 'mspace', [],
-                               {width: TexConstant.Length.THINMATHSPACE});
-  const rspace = parser.create('node', 'mspace', [],
-                               {width: TexConstant.Length.THINMATHSPACE});
-  parser.Push(parser.create('node', 'TeXAtom', [lspace, mml, rspace], {texClass: TEXCLASS.OP}));
+  parser.Push(parser.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP}));
 };
 
 
