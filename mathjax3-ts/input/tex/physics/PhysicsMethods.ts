@@ -468,7 +468,7 @@ PhysicsMethods.Differential = function(parser: TexParser, name: string,
   }
   const mml = new TexParser(macro, parser.stack.env,
                             parser.configuration).mml();
-  parser.Push(parser.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP}));
+  parser.Push(braces ? parser.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP}) : mml);
 };
 
 
