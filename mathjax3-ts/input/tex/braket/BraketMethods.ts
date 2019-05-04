@@ -46,7 +46,13 @@ BraketMethods.Macro = BaseMethods.Macro;
 BraketMethods.Braket = function(parser: TexParser, name: string,
                                 open: string, close: string,
                                 stretchy: boolean, barmax: number) {
-  parser.i++;
+  const next = parser.GetNext();
+  if (next === '{') {
+    parser.i++;
+  } else {
+    parser.string = parser.string.slice(0, parser.i++) + '{' + next + '}' +
+      parser.string.slice(parser.i);
+  }
   parser.Push(parser.itemFactory.create('braket')
               .setProperties({barmax: barmax, barcount: 0, open: open,
                               close: close, stretchy: stretchy}));
