@@ -460,15 +460,18 @@ PhysicsMethods.Differential = function(parser: TexParser, name: string,
     parser.Push(mml);
     return;
   }
-  if (parens) {
-    parser.i++;
-    macro += '{\\left(' + parser.GetUpTo(name, ')') + '\\right)}';      // TODO: fix 
-  } else {
+  if (braces) {
     macro += parser.GetArgument(name);
+    const mml = new TexParser(macro, parser.stack.env,
+                              parser.configuration).mml();
+    parser.Push(parser.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP}));
+    return;
   }
-  const mml = new TexParser(macro, parser.stack.env,
-                            parser.configuration).mml();
-  parser.Push(braces ? parser.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP}) : mml);
+  parser.Push(new TexParser(macro, parser.stack.env,
+                            parser.configuration).mml());
+  parser.i++;
+  parser.Push(parser.itemFactory.create('auto open')
+              .setProperties({open: '(', close: ')'}));
 };
 
 
