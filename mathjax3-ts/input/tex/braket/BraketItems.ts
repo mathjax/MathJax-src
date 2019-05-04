@@ -59,7 +59,10 @@ export class BraketItem extends BaseItem {
     }
     if (item.isKind('mml')) {
       this.Push(item.toMml());
-      return [null, false];
+      if (this.getProperty('single')) {
+        return [[this.toMml()], true];
+      }
+      return BaseItem.fail;
     }
     return super.checkItem(item);
   }
