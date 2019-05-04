@@ -103,18 +103,6 @@ PhysicsMethods.Quantity = function(parser: TexParser, name: string,
     return;
   }
   // Get the fences
-  let argument = parser.GetUpTo(name, right).slice(1);   // TODO: fix 
-  if (arg) {
-    next = open;
-    right = close;
-  } else if (next === '{') {
-    next = '\\{';
-    right = '\\}';
-  }
-  argument = star ? next + ' ' + argument + ' ' + right :
-    (big ?
-     '\\' + big + 'l' + next + ' ' + argument + ' ' + '\\' + big + 'r' + right :
-     '\\left' + next + ' ' + argument + ' ' + '\\right' + right);
   if (named) {
     const mml = parser.create('token', 'mi', {texClass: TEXCLASS.OP}, named);
     if (variant) {
@@ -122,8 +110,26 @@ PhysicsMethods.Quantity = function(parser: TexParser, name: string,
     }
     parser.Push(parser.itemFactory.create('fn', mml));
   }
-  parser.Push(new TexParser(argument, parser.stack.env,
-                            parser.configuration).mml());
+  if (next === '{') {
+    let argument = parser.GetArgument(name);
+    next = arg ? open : '\\{';
+    right = arg ? close : '\\}';
+    // TODO: Make all these fenced expressions.
+    argument = star ? next + ' ' + argument + ' ' + right :
+      (big ?
+       '\\' + big + 'l' + next + ' ' + argument + ' ' + '\\' + big + 'r' + right :
+       '\\left' + next + ' ' + argument + ' ' + '\\right' + right);
+    parser.Push(new TexParser(argument, parser.stack.env,
+                              parser.configuration).mml());
+    return;
+  }
+  if (arg) {
+    next = open;
+    right = close;
+  }
+  parser.i++;
+  parser.Push(parser.itemFactory.create('auto open')
+              .setProperties({open: next, close: right, big: big}));
 };
 
 
@@ -332,16 +338,6 @@ let vectorApplication = function(
   parser.i++;
   parser.Push(parser.itemFactory.create('auto open')
               .setProperties({open: left, close: right}));
-  // arg = parser.GetUpTo(name, right);     // TODO: fix 
-  // lfence = (enlarge ? '\\left' : '') + left;
-  // rfence = (enlarge ? '\\right' : '') + right;
-  // let macro = lfence + ' ' + arg + ' ' + rfence;
-  // parser.string = macro + parser.string.slice(parser.i);
-  // parser.i = 0;
-  // return;
-  // let macro = operator + ' ' + lfence + ' ' + arg + ' ' + rfence;
-  // parser.Push(new TexParser(macro, parser.stack.env,
-  //                           parser.configuration).mml());
 };
 
 
@@ -383,7 +379,6 @@ PhysicsMethods.VectorOperator = function(
  * Operators
  */
 
-// This works better than in the actual physics package.
 /**
  * Operator expression with automatic fences and optional exponent.
  * @param {TexParser} parser The calling parser.
@@ -408,9 +403,6 @@ PhysicsMethods.Expression = function(parser: TexParser, name: string,
   parser.i++;
   parser.Push(parser.itemFactory.create('auto open')
               .setProperties({open: '(', close: ')'}));
-  // let arg = parser.GetUpTo(name, ')');      // TODO: fix 
-  // parser.Push(new TexParser('\\left(' + arg + '\\right)', parser.stack.env,
-  //                           parser.configuration).mml());
 };
 
 

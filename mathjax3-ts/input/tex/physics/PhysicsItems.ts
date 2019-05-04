@@ -71,7 +71,8 @@ export class AutoOpen extends BaseItem {
     return ParseUtil.fenced(this.factory.configuration,
                             this.getProperty('open') as string,
                             mml,
-                            this.getProperty('close') as string);
+                            this.getProperty('close') as string,
+                            this.getProperty('big') as string);
   }
 
   /**
