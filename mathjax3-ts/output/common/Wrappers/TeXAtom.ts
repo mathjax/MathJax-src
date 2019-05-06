@@ -49,8 +49,8 @@ export function CommonTeXAtomMixin<T extends WrapperConstructor>(Base: T): TeXAt
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
-            super.computeBBox(bbox);
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
+            super.computeBBox(bbox, recompute);
             if (this.childNodes[0] && this.childNodes[0].bbox.ic) {
                 bbox.ic = this.childNodes[0].bbox.ic;
             }

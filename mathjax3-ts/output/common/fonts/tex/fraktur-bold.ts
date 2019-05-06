@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {CharMap} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../FontData.js';
 
-export const frakturBold: CharMap = {
+export const frakturBold: CharMap<CharOptions> = {
     0x20: [0, 0, .25],
     0x21: [.689, .012, .349],
     0x22: [.695, -0.432, .254],
