@@ -50,6 +50,8 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-mhchem9-tests.js
 
     node load.js tests/parser-noerrors-tests.js
+
+    node load.js tests/parser-amscd-tests.js
     exit 0
 else
     repeat=$1
