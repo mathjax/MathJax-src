@@ -21,7 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper} from '../Wrapper.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMtd, CommonMtdMixin} from '../../common/Wrappers/mtd.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -33,7 +34,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
+export class CHTMLmtd<N, T, D> extends CommonMtdMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
 
     public static kind = MmlMtd.prototype.kind;
 
@@ -49,16 +50,10 @@ export class CHTMLmtd<N, T, D> extends CHTMLWrapper<N, T, D> {
         'mjx-mtd:last-child': {
             'padding-right': 0
         },
-        'mjx-mtable > mjx-itable > *:first-child > mjx-mtd': {
+        'mjx-mtable > * > mjx-itable > *:first-child > mjx-mtd': {
             'padding-top': 0
         },
-        'mjx-mtable > mjx-itable > *:last-child > mjx-mtd': {
-            'padding-bottom': 0
-        },
-        'mjx-mtable > mjx-labels > *:first-child > mjx-mtd': {
-            'padding-top': 0
-        },
-        'mjx-mtable > mjx-labels > *:last-child > mjx-mtd': {
+        'mjx-mtable > * > mjx-itable > *:last-child > mjx-mtd': {
             'padding-bottom': 0
         },
         'mjx-tstrut': {

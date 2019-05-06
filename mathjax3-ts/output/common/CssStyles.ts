@@ -84,6 +84,13 @@ export class CssStyles {
     }
 
     /**
+     * Clear all the styles
+     */
+    clear() {
+        this.styles = {};
+    }
+
+    /**
      * @return {string} The CSS string for the style list
      */
     public getStyleString() {

@@ -21,65 +21,65 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontData} from '../FontData.js';
-import {StyleList} from '../../common/CssStyles.js';
-import {em} from '../../../util/lengths.js';
-import {StringMap} from '../Wrapper.js';
+import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap} from '../FontData.js';
 
-/***********************************************************************************/
+/*****************************************************************/
 /**
- *  The TeXFont class
+ *  The CommonTeXFont mixin for the CommonTeXFont object
+ *
+ * @template C  The CharOptions class for this font
+ * @template V  The VariantData class for this font
+ * @template B  The FontData class to extend
  */
-export class CommonTeXFont extends FontData {
+export function CommonTeXFontMixin<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData,
+                                   B extends FontDataClass<C, V, D>>(Base: B): FontDataClass<C, V, D> & B {
+    return class extends Base {
 
-    /**
-     *  Add the extra variants for the TeX fonts
-     */
-    protected static defaultVariants = FontData.defaultVariants.concat([
-        ['-smallop', 'normal'],
-        ['-largeop', 'normal'],
-        ['-size3', 'normal'],
-        ['-size4', 'normal'],
-        ['-tex-caligraphic', 'italic'],
-        ['-tex-bold-caligraphic', 'bold-italic'],
-        ['-tex-oldstyle', 'normal'],
-        ['-tex-bold-oldstyle', 'bold'],
-        ['-tex-mathit', 'italic'],
-        ['-tex-variant', 'normal']
-    ]);
+        /**
+         *  Add the extra variants for the TeX fonts
+         */
+        protected static defaultVariants = [
+            ...Base.defaultVariants,
+            ['-smallop', 'normal'],
+            ['-largeop', 'normal'],
+            ['-size3', 'normal'],
+            ['-size4', 'normal'],
+            ['-tex-caligraphic', 'italic'],
+            ['-tex-bold-caligraphic', 'bold-italic'],
+            ['-tex-oldstyle', 'normal'],
+            ['-tex-bold-oldstyle', 'bold'],
+            ['-tex-mathit', 'italic'],
+            ['-tex-variant', 'normal']
+        ];
 
-    /**
-     * The classes to use for each variant
-     */
-    protected static defaultVariantClasses: StringMap = {
-    };
+        /**
+         * The data used for CSS for undefined characters for each variant
+         */
+        protected static defaultCssFonts: CssFontMap = {
+            ...Base.defaultCssFonts,
+            '-smallop': ['serif', false, false],
+            '-largeop': ['serif', false, false],
+            '-size3': ['serif', false, false],
+            '-size4': ['serif', false, false],
+            '-tex-caligraphic': ['cursive', true, false],
+            '-tex-bold-caligraphic': ['cursive', true, true],
+            '-tex-oldstyle': ['serif', false, false],
+            '-tex-bold-oldstyle': ['serif', false, true],
+            '-tex-mathit': ['serif', true, false]
+        };
 
-    /**
-     *  The default variants for the standard stretchy sizes
-     */
-    protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
+        /**
+         *  The default variants for the standard stretchy sizes
+         */
+        protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
 
-    /**
-     * @return {StyleList}  The (computed) styles for this font
-     */
-    get styles() {
-        return {} as StyleList;
-    }
+        /**
+         * @override
+         */
+        protected getDelimiterData(n: number) {
+            return this.getChar('-smallop', n) || this.getChar('-size4', n);
+        }
 
-    /**
-     * @param {number} n  The number of ems
-     * @return {string}   The string representing the number with units of "em"
-     */
-    protected em(n: number) {
-        return em(n);
-    }
-
-    /**
-     * @param {number} n  The number of ems (will be restricted to non-negative values)
-     * @return {string}   The string representing the number with units of "em"
-     */
-    protected em0(n: number) {
-        return em(Math.max(0, n));
     }
 
 }

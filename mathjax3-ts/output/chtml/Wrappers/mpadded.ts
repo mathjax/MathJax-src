@@ -55,7 +55,7 @@ export class CHTMLmpadded<N, T, D> extends CommonMpaddedMixin<CHTMLConstructor<N
         let chtml = this.standardCHTMLnode(parent);
         const content: N[] = [];
         const style: StringMap = {};
-        const [H, D, W, dh, dd, dw, x, y] = this.getDimens();
+        const [H, D, W, dh, dd, dw, x, y, dx] = this.getDimens();
         //
         // If the width changed, set the width explicitly
         //
@@ -72,9 +72,14 @@ export class CHTMLmpadded<N, T, D> extends CommonMpaddedMixin<CHTMLConstructor<N
         // If there is a horizontal or vertical shift,
         //   use relative positioning to move the contents
         //
-        if (x || y) {
+        if (x + dx || y) {
             style.position = 'relative';
-            content.push(this.html('mjx-rbox', {style: {left: this.em(x), top: this.em(-y)}}));
+            const rbox = this.html('mjx-rbox', {style: {left: this.em(x + dx), top: this.em(-y)}});
+            if (x + dx && this.childNodes[0].getBBox().pwidth) {
+                this.adaptor.setAttribute(rbox, 'width', 'full');
+                this.adaptor.setStyle(rbox, 'left', this.em(x));
+            }
+            content.push(rbox);
         }
         //
         //  Create the HTML with the proper styles and content

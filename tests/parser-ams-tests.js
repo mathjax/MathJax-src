@@ -3073,7 +3073,7 @@ parserTest.runTest(
             "text": "∫"}],
          "isEmbellished": true}],
       "isInferred": true}]}
-);      
+);
 
 
 parserTest.runTest(
@@ -3324,7 +3324,7 @@ parserTest.runTest(
                "texClass": 0,
                "attributes": {},
                "inherited": {"displaystyle": true,
-                             "scriptlevel": 0},
+                            "scriptlevel": 0},
                "properties": {"texprimestyle": true,
                               "movablelimits": false},
                "childNodes": [
@@ -3454,6 +3454,68 @@ parserTest.runTest(
          "childNodes": [
            {"kind": "text",
             "text": "3"}]}],
+      "isInferred": true}]}
+);
+
+parserTest.runTest(
+  'DeclareMathOp', '\\DeclareMathOperator{\\R}{R}a\\R b',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "mi",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {},
+         "childNodes": [
+           {"kind": "text",
+            "text": "a"}]},
+        {"kind": "mi",
+         "texClass": 1,
+         "attributes": {"mathvariant": "normal"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0,
+                       "mathvariant": "italic"},
+         "properties": {"movablelimits": false,
+                        "movesupsub": false,
+                        "fnOP": true},
+         "childNodes": [
+           {"kind": "text",
+            "text": "R"}]},
+        {"kind": "mo",
+          "texClass": -1,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "form": "infix"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "⁡"}],
+          "isEmbellished": true},
+        {"kind": "mi",
+          "texClass": 0,
+          "attributes": {},
+          "inherited": {"displaystyle": true,
+            "scriptlevel": 0,
+            "mathvariant": "italic"},
+          "properties": {},
+          "childNodes": [
+            {"kind": "text",
+              "text": "b"}]}],
       "isInferred": true}]}
 );
 

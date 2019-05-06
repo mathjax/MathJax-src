@@ -16,15 +16,21 @@
  */
 
 /**
- * @fileoverview  A disabled version of asyncLoad that always fails
+ * @fileoverview  Loads SRE for node and creates the global sre variable
+ *                with sre.Engine.isReady(), like in the browser version
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+declare const require: (name: string) => any;
+
+const SRE = require('speech-rule-engine');
+
+declare const global: any;
+
 /**
- * @param {string} name  The name of the file to load
- * @return {Promise}     The promise that always fails (indicating file not loaded)
+ * The global sre with sre.Engine.isReady() and sre.toEnriched()
  */
-export function asyncLoad(name: string) {
-    return new Promise((ok, fail) => fail());
-}
+global.SRE = SRE;
+global.sre = Object.create(SRE);
+global.sre.Engine = {isReady() {return SRE.engineReady()}};

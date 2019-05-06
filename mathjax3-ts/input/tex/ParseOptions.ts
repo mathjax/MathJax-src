@@ -101,6 +101,7 @@ export default class ParseOptions {
    * @constructor
    * @param {{[key: string]: (string|boolean)}} setting A list of option
    *     settings. Those are added to the default options.
+   * @param {OptionList[]} options   [TeX options, Tag options, {packages}]
    */
   public constructor(configuration: Configuration, options: OptionList[] = []) {
     this.handlers = new SubHandlers(configuration);

@@ -44,14 +44,57 @@ export type OptionList = {[name: string]: any};
  *  E.g., an option of the form
  *
  *    {
- *      name: {APPEND: [1, 2, 3]}
+ *      name: {[APPEND]: [1, 2, 3]}
  *    }
  *
  *  where 'name' is an array in the default options would end up with name having its
  *  original value with 1, 2, and 3 appended.
  */
-export const APPEND = Symbol('Append to option array');
+export const APPEND = '[+]';
 
+/**
+ *  Used to remove elements from an array in default options
+ *  E.g., an option of the form
+ *
+ *    {
+ *      name: {[REMOVE]: [2]}
+ *    }
+ *
+ *  where 'name' is an array in the default options would end up with name having its
+ *  original value but with any entry of 2 removed  So if the original value was [1, 2, 3, 2],
+ *  then the final value will be [1, 3] instead.
+ */
+export const REMOVE = '[-]';
+
+/**
+ * A Class to use for options that should not produce warnings if an undefined key is used
+ */
+export class Expandable {};
+
+/**
+ * Produces an instance of Expandable with the given values (to be used in defining options
+ * that can use keys that don't have default values).  E.g., default options of the form:
+ *
+ *  OPTIONS = {
+ *     types: expandable({
+ *       a: 1,
+ *       b: 2
+ *     })
+ *  }
+ *
+ *  would allow user options of
+ *
+ *  {
+ *     types: {
+ *       c: 3
+ *     }
+ *  }
+ *
+ *  without reporting an error.
+ */
+export function expandable(def: OptionList) {
+    return Object.assign(Object.create(Expandable.prototype), def);
+}
 
 /*****************************************************************/
 /**
@@ -111,26 +154,81 @@ export function copy(def: OptionList): OptionList {
  */
 export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
     for (let key of keys(src)) {
-        if (warn && dst[key] === undefined) {
+        //
+        // Check if the key is valid (i.e., is in the defaults or in an expandable block)
+        //
+        if (warn && dst[key] === undefined && !(dst instanceof Expandable)) {
             if (typeof key === 'symbol') {
                 key = key.toString();
             }
             throw new Error('Invalid option "' + key + '" (no default value).');
         }
+        //
+        // Shorthands for the source and destination values
+        //
         let sval = src[key], dval = dst[key];
+        //
+        // If the source is an object literal and the destination exists and is either an
+        //   object or a function (so can have properties added to it)...
+        //
         if (isObject(sval) && dval !== null &&
             (typeof dval === 'object' || typeof dval === 'function')) {
-            if (Array.isArray(dval) && Array.isArray(sval[APPEND]) && keys(sval).length === 1) {
-                dval.push(...sval[APPEND]);
+            const ids = keys(sval);
+            //
+            // Check for APPEND or REMOVE objects:
+            //
+            if (
+                //
+                // If the destination value is an array...
+                //
+                Array.isArray(dval) &&
+                (
+                    //
+                    // If there is only one key and it is APPEND or REMOVE and the keys value is an array...
+                    //
+                    (ids.length === 1 && (ids[0] === APPEND || ids[0] === REMOVE) && Array.isArray(sval[ids[0]])) ||
+                    //
+                    // Or if there are two keys and they are APPEND and REMOVE and both keys' values
+                    //   are arrays...
+                    //
+                    (ids.length === 2 && ids.sort().join(',') === APPEND + ',' + REMOVE &&
+                     Array.isArray(sval[APPEND]) && Array.isArray(sval[REMOVE]))
+                )
+             ) {
+                //
+                // Then remove any values to be removed
+                //
+                if (sval[REMOVE]) {
+                    dval = dst[key] = dval.filter(x => sval[REMOVE].indexOf(x) < 0);
+                }
+                //
+                // And append any values to be added (make a copy so as not to modify the original)
+                //
+                if (sval[APPEND]) {
+                    dst[key] = [...dval, ...sval[APPEND]];
+                }
             } else {
+                //
+                // Otherwise insert the values of the source object into the destination object
+                //
                 insert(dval, sval, warn);
             }
         } else if (Array.isArray(sval)) {
+            //
+            // If the source is an array, replace the destination with an empty array
+            //   and copy the source values into it.
+            //
             dst[key] = [];
             insert(dst[key], sval, false);
         } else if (isObject(sval)) {
+            //
+            // If the source is an object literal, set the destination to a copy of it
+            //
             dst[key] = copy(sval);
         } else {
+            //
+            // Otherwise set the destination to the source value
+            //
             dst[key] = sval;
         }
     }

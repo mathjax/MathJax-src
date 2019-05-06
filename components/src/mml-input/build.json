@@ -1,0 +1,5 @@
+{
+    "component": "mml-input",
+    "targets": ["input/mathml.ts", "input/mathml"]
+}
+

@@ -38,7 +38,7 @@ export const BBoxStyleAdjust = [
 ];
 
 /**
- *  The data used to initialie a BBox
+ *  The data used to initialize a BBox
  */
 export type BBoxData = {
     w?: number,
@@ -63,8 +63,6 @@ export class BBox {
     public w: number;
     public h: number;
     public d: number;
-    public x: number;
-    public y: number;
     public scale: number;
     public rscale: number; // scale relative to the parent's scale
     public L: number;      // extra space on the left
@@ -98,7 +96,7 @@ export class BBox {
         this.w = def.w || 0;
         this.h = ('h' in def ? def.h : -BIGDIMEN);
         this.d = ('d' in def ? def.d : -BIGDIMEN);
-        this.x = this.y = this.L = this.R = this.ic = this.sk = 0;
+        this.L = this.R = this.ic = this.sk = 0;
         this.scale = this.rscale = 1;
         this.pwidth = '';
     }
@@ -137,8 +135,6 @@ export class BBox {
      * @param {number} y   A y-offset for the child bounding box
      */
     public combine(cbox: BBox, x: number = 0, y: number = 0) {
-        cbox.x = x;
-        cbox.x = y;
         let rscale = cbox.rscale;
         let w = x + rscale * (cbox.w + cbox.L + cbox.R);
         let h = y + rscale * cbox.h;

@@ -25,12 +25,12 @@ import {PropertyList} from '../../core/Tree/Node.js';
 import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
-import {StyleList} from '../common/CssStyles.js';
+import {CHTMLFontData, CHTMLCharOptions, CHTMLDelimiterData} from './FontData.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
@@ -77,7 +77,7 @@ export type CHTMLConstructor<N, T, D> = Constructor<CHTMLWrapper<N, T, D>>;
 /**
  *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
  */
-export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<any, any, any> {
+export interface CHTMLWrapperClass<N, T, D> extends AnyWrapperClass {
 
     kind: string;
 
@@ -88,9 +88,11 @@ export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<any, any,
     autoStyle: boolean;
 
     /**
-     *  The default styles for CommonHTML
+     * True when an instance of this class has been typeset
+     * (used to control whether the styles for this class need to be output)
      */
-    styles: StyleList;
+    used: boolean;
+
 }
 
 /*****************************************************************/
@@ -102,7 +104,14 @@ export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<any, any,
  * @template D  The Document class
  */
 export class CHTMLWrapper<N, T, D> extends
-CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>> {
+CommonWrapper<
+    CHTML<N, T, D>,
+    CHTMLWrapper<N, T, D>,
+    CHTMLWrapperClass<N, T, D>,
+    CHTMLCharOptions,
+    CHTMLDelimiterData,
+    CHTMLFontData
+> {
 
     public static kind: string = 'unknown';
 
@@ -113,50 +122,10 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
     public static autoStyle = true;
 
     /**
-     *  The default styles for CommonHTML
+     * True when an instance of this class has been typeset
+     * (used to control whether the styles for this class need to be output)
      */
-    public static styles: StyleList = {
-        'mjx-container [space="1"]': {'margin-left': '.111em'},
-        'mjx-container [space="2"]': {'margin-left': '.167em'},
-        'mjx-container [space="3"]': {'margin-left': '.222em'},
-        'mjx-container [space="4"]': {'margin-left': '.278em'},
-        'mjx-container [space="5"]': {'margin-left': '.333em'},
-
-        'mjx-container [rspace="1"]': {'margin-right': '.111em'},
-        'mjx-container [rspace="2"]': {'margin-right': '.167em'},
-        'mjx-container [rspace="3"]': {'margin-right': '.222em'},
-        'mjx-container [rspace="4"]': {'margin-right': '.278em'},
-        'mjx-container [rspace="5"]': {'margin-right': '.333em'},
-
-        'mjx-container [size="s"]' : {'font-size': '70.7%'},
-        'mjx-container [size="ss"]': {'font-size': '50%'},
-        'mjx-container [size="Tn"]': {'font-size': '60%'},
-        'mjx-container [size="sm"]': {'font-size': '85%'},
-        'mjx-container [size="lg"]': {'font-size': '120%'},
-        'mjx-container [size="Lg"]': {'font-size': '144%'},
-        'mjx-container [size="LG"]': {'font-size': '173%'},
-        'mjx-container [size="hg"]': {'font-size': '207%'},
-        'mjx-container [size="HG"]': {'font-size': '249%'},
-
-        'mjx-container [width="full"]': {width: '100%'},
-
-        'mjx-box': {display: 'inline-block'},
-        'mjx-block': {display: 'block'},
-        'mjx-itable': {display: 'inline-table'},
-        'mjx-row': {display: 'table-row'},
-        'mjx-row > *': {display: 'table-cell'},
-
-        //
-        //  These don't have Wrapper subclasses, so add their styles here
-        //
-        'mjx-merror': {
-            display: 'inline-block',
-            color: 'red',
-            'background-color': 'yellow'
-        },
-        'mjx-mphantom': {visibility: 'hidden'}
-
-    };
+    public static used: boolean = false;
 
     /**
      * The factory used to create more CHTMLWrappers
@@ -197,6 +166,7 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
     protected standardCHTMLnode(parent: N) {
+        this.markUsed();
         const chtml = this.createCHTMLnode(parent);
         this.handleStyles();
         this.handleVariant();
@@ -206,6 +176,13 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
         this.handleAttributes();
         this.handlePWidth();
         return chtml;
+    }
+
+    /**
+     * Mark this class as having been typeset (so its styles will be output)
+     */
+    public markUsed() {
+        (this.constructor as CHTMLWrapperClass<N, T, D>).used = true;
     }
 
     /**
@@ -229,6 +206,10 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
         const styles = this.styles.cssText;
         if (styles) {
             this.adaptor.setAttribute(this.chtml, 'style', styles);
+            const family = this.styles.get('font-family');
+            if (family) {
+                this.adaptor.setStyle(this.chtml, 'font-family', 'MJXZERO, ' + family);
+            }
         }
     }
 
@@ -347,11 +328,14 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      * @param {number} shift  The indent (positive or negative) for the node
      */
     protected setIndent(chtml: N, align: string, shift: number) {
+        const adaptor = this.adaptor;
         if (align === 'center' || align === 'left') {
-            this.adaptor.setStyle(chtml, 'margin-left', this.em(shift));
+            const L = this.getBBox().L;
+            adaptor.setStyle(chtml, 'margin-left', this.em(shift + L));
         }
         if (align === 'center' || align === 'right') {
-            this.adaptor.setStyle(chtml, 'margin-right', this.em(-shift));
+            const R = this.getBBox().R;
+            adaptor.setStyle(chtml, 'margin-right', this.em(-shift + R));
         }
     }
 
@@ -397,12 +381,12 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      */
 
     /**
-     * @param {string} type  The tag name of the HTML node to be created
-     * @param {OptionList} def  The properties to set for the created node
-     * @param {N[]} content  The child nodes for the created HTML node
-     * @return {N}   The generated HTML tree
+     * @param {string} type      The tag name of the HTML node to be created
+     * @param {OptionList} def   The properties to set for the created node
+     * @param {(N|T)[]} content  The child nodes for the created HTML node
+     * @return {N}               The generated HTML tree
      */
-    public html(type: string, def: OptionList = {}, content: N[] = []) {
+    public html(type: string, def: OptionList = {}, content: (N | T)[] = []) {
         return this.jax.html(type, def, content);
     }
 
@@ -426,6 +410,14 @@ CommonWrapper<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>>
      */
     public coreMO(): CHTMLmo<N, T, D> {
         return super.coreMO() as CHTMLmo<N, T, D>;
+    }
+
+    /**
+     * @param {number} n  A unicode code point to be converted to a character className reference.
+     * @return {string}  The className for the character
+     */
+    protected char(n: number) {
+        return this.font.charSelector(n).substr(1);
     }
 
 }

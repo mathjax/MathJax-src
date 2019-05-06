@@ -1,0 +1,40 @@
+mjx-samples {
+    position: relative;
+    display: block;
+    margin-bottom: 1em;
+}
+mjx-description {
+    display: block;
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 24%;
+    border: 1px solid black;
+    padding: .5em;
+}
+mjx-tables {
+    display: block;
+    width: 72%;
+    border: 1px solid black;
+    font-size: 150%;
+}
+mjx-tempalte {
+    white-space: pre;
+    padding: 5em;
+    border: 2px solid black;
+}
+#navigation {
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    background-color: white;
+    padding: .5em;
+    border: 1px solid black;
+}
+#navigation a {
+    text-decoration: none;
+    font-family: 'Times New Roman';
+}
+#navigation a[disabled] {
+    pointer-events: none;
+    color: #CCC;
+}
