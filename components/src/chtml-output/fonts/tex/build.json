@@ -1,0 +1,6 @@
+{
+    "component": "tex",
+    "targets": ["output/chtml/fonts/tex.ts", "output/chtml/fonts/tex", "output/common/fonts/tex"],
+    "mathjax3": "../../../../../mathjax3"
+}
+

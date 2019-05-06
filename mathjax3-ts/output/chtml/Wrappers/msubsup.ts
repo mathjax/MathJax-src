@@ -87,7 +87,7 @@ CommonMsubsupMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>
         }
     };
 
-    public static useIC = true;
+    public static useIC = false;
 
     /**
      * @override

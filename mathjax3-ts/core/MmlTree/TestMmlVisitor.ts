@@ -98,7 +98,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
     protected attributeString(attributes: PropertyList, open: string, close: string) {
         let ATTR = '';
         for (const name of Object.keys(attributes)) {
-            ATTR += ' ' + open + name + '="' + this.quoteAttribute(String(attributes[name])) + '"' + close;
+            ATTR += ' ' + open + name + '="' + this.quoteHTML(String(attributes[name])) + '"' + close;
         }
         return ATTR;
     }

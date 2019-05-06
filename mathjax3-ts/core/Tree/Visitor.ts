@@ -46,7 +46,7 @@ export interface Visitor {
     visitTree(tree: Node, ...args: any[]): any;
 
     /**
-     * Visit a node by calling the visitor function for the givn type of node
+     * Visit a node by calling the visitor function for the given type of node
      *  (passing along any needed parameters)
      *
      * @param {Node} node   The node to visit
@@ -104,7 +104,7 @@ export abstract class AbstractVisitor implements Visitor {
      *  @return {string}  The name of the visitor method for the given node kind
      */
     protected static methodName(kind: string) {
-        return 'visit' + kind.charAt(0).toUpperCase() + kind.substr(1) + 'Node';
+        return 'visit' + (kind.charAt(0).toUpperCase() + kind.substr(1)).replace(/[^a-z0-9_]/ig,'_') + 'Node';
     }
 
     /**
