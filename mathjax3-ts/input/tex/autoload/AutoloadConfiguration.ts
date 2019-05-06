@@ -17,7 +17,7 @@
 
 
 /**
- * @fileoverview    Configuration file for the config-macros package.
+ * @fileoverview    Configuration file for the autoload package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -112,7 +112,7 @@ export const AutoloadConfiguration = Configuration.create(
         handler: {macro: ['autoload']},
         options: {
             //
-            //  These are the extension names and the macros they contains.
+            //  These are the extension names and the macros they contain.
             //  You can prevent one from being autoloaded by setting
             //    it to [] in the options when the TeX input jax is created.
             //  You can include the prefix if it is not the default one from require
