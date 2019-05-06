@@ -191,4 +191,12 @@ export class NodeFactory {
     return node;
   }
 
+
+  /**
+   * @param {string} kind The method for generating a node of given kind.
+   */
+  public get(kind: string) {
+    return this.factory[kind];
+  }
+
 }

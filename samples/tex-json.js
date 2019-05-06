@@ -11,11 +11,12 @@ import '../mathjax3/input/tex/boldsymbol/BoldsymbolConfiguration.js';
 import '../mathjax3/input/tex/newcommand/NewcommandConfiguration.js';
 import '../mathjax3/input/tex/mhchem/MhchemConfiguration.js';
 import '../mathjax3/input/tex/braket/BraketConfiguration.js';
+import '../mathjax3/input/tex/physics/PhysicsConfiguration.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'mhchem', 'braket']})
+  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'mhchem', 'braket', 'physics']})
 });
 
 import {JsonMmlVisitor} from '../mathjax3/core/MmlTree/JsonMmlVisitor.js';
