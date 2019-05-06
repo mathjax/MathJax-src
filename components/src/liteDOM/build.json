@@ -1,5 +1,0 @@
-{
-    "component": "liteDOM",
-    "targets": ["adaptors/liteAdaptor.ts", "adaptors/lite"]
-}
-

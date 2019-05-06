@@ -587,7 +587,7 @@ export class Menu {
             this.setOutputJax(jax);
         } else {
             const name = jax.toLowerCase();
-            this.loadComponent(name + '-output', () => {
+            this.loadComponent('output/' + name, () => {
                 const startup = window.MathJax.startup;
                 if (name in startup.constructors) {
                     startup.useOutput(name, true);

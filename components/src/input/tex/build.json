@@ -1,0 +1,5 @@
+{
+    "component": "input/tex",
+    "targets": ["input/tex.ts", "input/tex"]
+}
+

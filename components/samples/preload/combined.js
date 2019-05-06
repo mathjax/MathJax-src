@@ -2,12 +2,12 @@ require('../../dist/startup.js');
 
 MathJax.loader.preLoad(
     'core',
-    'tex-input',
-    'chtml-output',
-    'chtml-fonts/tex'
+    'input/tex',
+    'output/chtml',
+    'output/chtml/fonts/tex'
 );
 
 require('../../dist/core.js');
-require('../../dist/tex-input.js');
-require('../../dist/chtml-output.js');
-require('../../dist/chtml-fonts/tex.js');
+require('../../dist/input/tex.js');
+require('../../dist/output/chtml.js');
+require('../../dist/output/chtml/fonts/tex.js');
