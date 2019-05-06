@@ -36,7 +36,7 @@ import TexError from '../TexError.js';
 export let BboxMethods: Record<string, ParseMethod> = {};
 
 /**
- * Implements \Newextarrow to define a new arrow.
+ * Implements MathJax Bbox macro to pad and colorize background boxes.
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
@@ -49,11 +49,14 @@ BboxMethods.BBox = function(parser: TexParser, name: string) {
     const part = parts[i].replace(/^\s+/, '').replace(/\s+$/, '');
     const match = part.match(/^(\.\d+|\d+(\.\d*)?)(pt|em|ex|mu|px|in|cm|mm)$/);
     if (match) {
+      // @test Bbox-Padding
       if (def) {
+        // @test Bbox-Padding-Error
         throw new TexError('MultipleBBoxProperty', '%1 specified twice in %2', 'Padding', name);
       }
       const pad = BBoxPadding(match[1] + match[3]);
       if (pad) {
+        // @test Bbox-Padding
         def = {
           height: '+' + pad,
           depth: '+' + pad,
@@ -62,18 +65,23 @@ BboxMethods.BBox = function(parser: TexParser, name: string) {
         };
       }
     } else if (part.match(/^([a-z0-9]+|\#[0-9a-f]{6}|\#[0-9a-f]{3})$/i)) {
+      // @test Bbox-Background
       if (background) {
+        // @test Bbox-Background-Error
         throw new TexError('MultipleBBoxProperty', '%1 specified twice in %2',
                            'Background', name);
       }
       background = part;
     } else if (part.match(/^[-a-z]+:/i)) {
+      // @test Bbox-Frame
       if (style) {
+        // @test Bbox-Frame-Error
         throw new TexError('MultipleBBoxProperty', '%1 specified twice in %2',
                            'Style', name);
       }
       style = BBoxStyle(part);
     } else if (part !== '') {
+      // @test Bbox-General-Error
       throw new TexError(
         'InvalidBBoxProperty',
         '"%1" doesn\'t look like a color, a padding dimension, or a style',
@@ -81,11 +89,20 @@ BboxMethods.BBox = function(parser: TexParser, name: string) {
     }
   }
   if (def) {
+    // @test Bbox-Padding
     math = parser.create('node', 'mpadded', [math], def);
   }
   if (background || style) {
-    math = parser.create('node', 'mstyle', [math],
-                         {mathbackground: background, style: style});
+    def = {};
+    if (background) {
+      // @test Bbox-Background
+      Object.assign(def, {mathbackground: background});
+    }
+    if (style) {
+      // @test Bbox-Frame
+      Object.assign(def, {style: style});
+    }
+    math = parser.create('node', 'mstyle', [math], def);
   }
   parser.Push(math);
 };
