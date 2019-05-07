@@ -29,6 +29,7 @@ import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 import AmsMethods from '../ams/AmsMethods.js';
 import NewcommandUtil from '../newcommand/NewcommandUtil.js';
+import {NewcommandConfiguration} from '../newcommand/NewcommandConfiguration.js';
 import TexError from '../TexError.js';
 
 
@@ -79,6 +80,11 @@ new CommandMap('extpfeil', {
 }, ExtpfeilMethods);
 
 
+let init = function(config: Configuration) {
+  NewcommandConfiguration.init(config);
+};
+
 export const ExtpfeilConfiguration = Configuration.create(
-  'extpfeil', {handler: {macro: ['extpfeil']}}
+  'extpfeil', {handler: {macro: ['extpfeil']},
+               init: init}
 );
