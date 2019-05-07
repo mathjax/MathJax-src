@@ -173,7 +173,7 @@ export function CommonMmultiscriptsMixin<W extends AnyWrapper,
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             //
             // Get the bounding boxes, and combine the pre- and post-scripts
             //  to get a common offset for both
@@ -199,6 +199,7 @@ export function CommonMmultiscriptsMixin<W extends AnyWrapper,
                 bbox.w += scriptspace;
             }
             bbox.clean();
+            this.setChildPWidths(recompute);
         }
 
         /**

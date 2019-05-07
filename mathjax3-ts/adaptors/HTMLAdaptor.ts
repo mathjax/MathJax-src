@@ -22,7 +22,7 @@
  */
 
 import {OptionList} from '../util/Options.js';
-import {AttributeData, AbstractDOMAdaptor, DOMAdaptor} from '../core/DOMAdaptor.js';
+import {AttributeData, AbstractDOMAdaptor, DOMAdaptor, PageBBox} from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /**
@@ -76,9 +76,12 @@ export interface MinHTMLElement<N, T> {
     insertBefore(nchild: N | T, ochild: N | T): void;
     cloneNode(deep: boolean): N | Node;
     setAttribute(name: string, value: string): void;
+    setAttributeNS(ns: string, name: string, value: string): void;
     getAttribute(name: string): string;
     removeAttribute(name: string): void;
     hasAttribute(name: string): boolean;
+    getBoundingClientRect(): Object;
+    getBBox?(): {x: number, y: number, width: number, height: number};
 }
 
 /*****************************************************************/
@@ -377,8 +380,8 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /**
      * @override
      */
-    public setAttribute(node: N, name: string, value: string) {
-        return node.setAttribute(name, value);
+    public setAttribute(node: N, name: string, value: string, ns: string = null) {
+        return (ns ? node.setAttributeNS(ns, name, value) : node.setAttribute(name, value));
     }
 
     /**
@@ -466,7 +469,19 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /**
      * @override
      */
-    public nodeSize(node: N) {
-        return [node.offsetWidth, node.offsetHeight] as [number, number];
+    public nodeSize(node: N, em: number = 1, local: boolean = false) {
+        if (local && node.getBBox) {
+            let {width, height} = node.getBBox();
+            return [width / em , height / em] as [number, number];
+        }
+        return [node.offsetWidth / em, node.offsetHeight / em] as [number, number];
+    }
+
+    /**
+     * @override
+     */
+    public nodeBBox(node: N) {
+        const {left, right, top, bottom} = node.getBoundingClientRect() as PageBBox;
+        return {left, right, top, bottom};
     }
 }

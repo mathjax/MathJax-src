@@ -141,7 +141,7 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             const surdbox = this.childNodes[this.surd].getBBox();
             const basebox = new BBox(this.childNodes[this.base].getBBox());
             const [p, q] = this.getPQ(surdbox);
@@ -153,6 +153,7 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
             bbox.combine(surdbox, x, H - surdbox.h);
             bbox.combine(basebox, x + surdbox.w, 0);
             bbox.clean();
+            this.setChildPWidths(recompute);
         }
 
         /**

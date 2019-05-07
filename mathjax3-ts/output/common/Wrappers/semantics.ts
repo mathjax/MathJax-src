@@ -48,7 +48,7 @@ export function CommonSemanticsMixin<T extends WrapperConstructor>(Base: T): Sem
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             if (this.childNodes.length) {
                 const {w, h, d} = this.childNodes[0].getBBox();
                 bbox.w = w;

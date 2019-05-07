@@ -28,10 +28,12 @@ import {ExtensionMaps, HandlerType} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {defaultOptions, OptionList} from '../../util/Options.js';
+import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 import ParseOptions from './ParseOptions.js';
 import *  as sm from './SymbolMap.js';
+import {SubHandlers} from './MapHandler.js';
 import {FunctionList} from '../../util/FunctionList.js';
+import {TeX} from '../tex.js';
 
 
 export type HandlerConfig = {[P in HandlerType]?: string[]}
@@ -42,6 +44,19 @@ export type ProcessorList = (Function | [Function, number])[]
 
 
 export class Configuration {
+
+
+  /**
+   * Priority list of init methods.
+   * @type {FunctionList}
+   */
+  protected initMethod: FunctionList = new FunctionList();
+
+  /**
+   * Priority list of init methods to call once jax is ready.
+   * @type {FunctionList}
+   */
+  protected configMethod: FunctionList = new FunctionList();
 
   /**
    * Creates a configuration for a package.
@@ -58,6 +73,8 @@ export class Configuration {
    *      string wrt. to given parse options. Can contain a priority.
    *  * _postprocessors_ list of functions for postprocessing the MmlNode
    *      wrt. to given parse options. Can contain a priority.
+   *  * _init_ init method.
+   *  * _priority_ priority of the init method.
    * @return {Configuration} The newly generated configuration.
    */
   public static create(name: string,
@@ -68,7 +85,11 @@ export class Configuration {
                                 options?: OptionList,
                                 nodes?: {[key: string]: any},
                                 preprocessors?: ProcessorList,
-                                postprocessors?: ProcessorList
+                                postprocessors?: ProcessorList,
+                                init?: Function,
+                                priority?: number,
+                                config?: Function,
+                                configPriority?: number
                                } = {}) {
     return new Configuration(name,
                              config.handler || {},
@@ -78,13 +99,15 @@ export class Configuration {
                              config.options || {},
                              config.nodes || {},
                              config.preprocessors || [],
-                             config.postprocessors || []
+                             config.postprocessors || [],
+                             [config.init, config.priority],
+                             [config.config, config.configPriority]
                             );
   }
 
 
   /**
-   * An empty configuration.
+   * @return {Configuration} An empty configuration.
    */
   public static empty(): Configuration {
     return Configuration.create('empty');
@@ -92,7 +115,7 @@ export class Configuration {
 
 
   /**
-   * Initialises extension maps.
+   * @return {Configuration} Initialises and returns the extension maps.
    */
   public static extension(): Configuration {
     new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
@@ -111,6 +134,34 @@ export class Configuration {
                  environment: [ExtensionMaps.NEW_ENVIRONMENT]
                 }});
   };
+
+
+  /**
+   * Init method for the configuration.
+   *
+   * @param {Configuration} configuration   The configuration where this one is being initialized
+   */
+  public init(configuration: Configuration) {
+    this.initMethod.execute(configuration);
+  }
+
+  /**
+   * Init method for when the jax is ready
+   *
+   * @param {Configuration} configuration   The configuration where this one is being initialized
+   * @param {TeX} jax                       The TeX jax for this configuration
+   */
+  public config(configuration: Configuration, jax: TeX<any, any, any>) {
+    this.configMethod.execute(configuration, jax);
+    for (const pre of this.preprocessors) {
+      typeof pre === 'function' ? jax.preFilters.add(pre) :
+        jax.preFilters.add(pre[0], pre[1]);
+    }
+    for (const post of this.postprocessors) {
+      typeof post === 'function' ? jax.postFilters.add(post) :
+        jax.postFilters.add(post[0], post[1]);
+    }
+  }
 
 
   /**
@@ -138,8 +189,36 @@ export class Configuration {
     for (let post of config.postprocessors) {
       this.postprocessors.push(post);
     };
+    for (let init of config.initMethod) {
+      this.initMethod.add(init.item, init.priority);
+    };
+    for (let init of config.configMethod) {
+      this.configMethod.add(init.item, init.priority);
+    };
   }
 
+  /**
+   * Appends configurations to this configuration. Note that fallbacks are
+   * overwritten, while order of configurations is preserved.
+   *
+   * @param {Configuration} config   The configuration to be registered in this one
+   * @param {TeX} jax                The TeX jax where it is being registered
+   */
+  register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
+    this.append(config);
+    config.init(this);
+    jax.parseOptions.handlers = new SubHandlers(this);
+    jax.parseOptions.nodeFactory.setCreators(config.nodes);
+    defaultOptions(jax.parseOptions.options, config.options);
+    userOptions(jax.parseOptions.options, options);
+    config.config(this, jax);
+    for (const pre of config.preprocessors) {
+      Array.isArray(pre) ? jax.preFilters.add(pre[0], pre[1]) : jax.preFilters.add(pre);
+    }
+    for (const post of config.postprocessors) {
+      Array.isArray(post) ? jax.postFilters.add(post[0], post[1]) : jax.postFilters.add(post);
+    }
+  }
 
   /**
    * @constructor
@@ -152,8 +231,16 @@ export class Configuration {
                       readonly options: OptionList = {},
                       readonly nodes: {[key: string]: any} = {},
                       readonly preprocessors: ProcessorList = [],
-                      readonly postprocessors: ProcessorList = []
+                      readonly postprocessors: ProcessorList = [],
+                      [init, priority]: [Function, number],
+                      [config, configPriority]: [Function, number]
              ) {
+    if (init) {
+      this.initMethod.add(init, priority || 0);
+    }
+    if (config) {
+      this.configMethod.add(config, configPriority || priority || 0);
+    }
     this.handler = Object.assign(
       {character: [], delimiter: [], macro: [], environment: []}, handler);
     ConfigurationHandler.set(name, this);
@@ -194,5 +281,3 @@ export namespace ConfigurationHandler {
   };
 
 }
-
-

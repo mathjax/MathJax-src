@@ -15,9 +15,9 @@
  *  limitations under the License.
  */
 
-import {CharMap} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../FontData.js';
 
-export const italic: CharMap = {
+export const italic: CharMap<CharOptions> = {
     0x20: [0, 0, .25],
     0x21: [.716, 0, .307, {ic: .073}],
     0x22: [.694, -0.379, .514],
