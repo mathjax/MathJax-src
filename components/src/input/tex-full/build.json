@@ -1,0 +1,9 @@
+{
+    "component": "input/tex-full",
+    "targets": ["input/tex.ts", "input/tex"],
+    "exclude": [
+        "input/tex/tag_format",
+        "input/tex/mhchem/mhchem_parser.d.ts"
+    ]
+}
+

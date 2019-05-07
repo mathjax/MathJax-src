@@ -55,6 +55,7 @@ const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
  */
 const TARGETS = config.targets || [];                                       // the files to include in the component
 const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // files to exclude from the component
+const EXCLUDESUBDIRS = config.excludeSubdirs === 'true';                    // exclude subdirectories
 const MATHJAX3 = config.mathjax3 || mj3path;                                // path to the mathjax3 .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
 const COMPONENT = path.basename(config.component || 'part');                // name of the component
@@ -71,14 +72,17 @@ let PACKAGE = [];
  * @param {string} base    The root directory for the .ts files
  * @param {string} dir     The relative path within the root for the files to process
  * @param {string[]} list  An array of file/directory names to process
+ * @param {boolean} top    True if this is the initial list of files
  */
-function processList(base, dir, list) {
+function processList(base, dir, list, top = true) {
     for (const item of list) {
         const file = path.join(dir, item);
         if (!EXCLUDE.has(file)) {
             const stat = fs.statSync(path.resolve(base, file));
             if (stat.isDirectory()) {
-                processDir(base, file);
+                if (top || !EXCLUDESUBDIRS) {
+                    processDir(base, file);
+                }
             } else if (file.match(/\.ts/)) {
                 processFile(base, file);
             }
@@ -94,7 +98,7 @@ function processList(base, dir, list) {
  */
 function processDir(base, dir) {
     const root = path.resolve(base, dir);
-    processList(base, dir, fs.readdirSync(root));
+    processList(base, dir, fs.readdirSync(root), false);
 }
 
 /**

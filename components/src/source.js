@@ -27,6 +27,7 @@ exports.source = {
     '[tex]/noundefined': `${src}/input/tex/extensions/noundefined/noundefined.js`,
     '[tex]/physics': `${src}/input/tex/extensions/physics/physics.js`,
     '[tex]/require': `${src}/input/tex/extensions/require/require.js`,
+    '[tex]/tagFormat': `${src}/input/tex/extensions/tag_format/tagFormat.js`,
     '[tex]/unicode': `${src}/input/tex/extensions/unicode/unicode.js`,
     '[tex]/verb': `${src}/input/tex/extensions/verb/verb.js`,
     'input/mml': `${src}/input/mml/mml.js`,
