@@ -67,7 +67,7 @@ export function unicodeChars(text: string) {
  * @return {boolean}   True if the string ends with a percent sign
  */
 export function isPercent(x: string) {
-    return x.match(/%\s*$/);
+    return !!x.match(/%\s*$/);
 }
 
 /**

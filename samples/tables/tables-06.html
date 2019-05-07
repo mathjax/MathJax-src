@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax v3 Tables Sample 06</title>
+<link rel="stylesheet" type="text/css" href="lib/dual-tables.css">
+<script src="../../lib/traceur.min.js"></script>
+<script src="../../lib/system.js"></script>
+<style>
+mjx-tables {
+  width: 50%;
+  margin-left: 2em;
+}
+svg {
+  overflow: visible;
+}
+</style>
+</head>
+<body>
+
+<h1>MathJax v3 Tables Sample 06</h1>
+
+<mjx-template>
+  <math display="block" indentalign="{indentalign}" indentshift="{indentshift}">
+    <mtable mathbackground="yellow">
+      <mtr>
+        <mtd mathbackground="green"><mi>a</mi></mtd>
+        <mtd mathbackground="red"><mi>bbb</mi></mtd>
+      </mtr>
+    </mtable>
+  </math>
+</mjx-template>
+
+<script>
+var variables = [
+  ['indentalign', ['left', 'center', 'right']],
+  ['indentshift', ['0em', '1em', '3em', '-1em', '-3em']]
+];
+</script>
+
+<script>
+System.import('./lib/dual-tables.js').catch(function (error) {console.log(error.message)});
+</script>
+</body>
+</html>
+
+

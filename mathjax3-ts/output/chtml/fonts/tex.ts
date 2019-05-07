@@ -21,12 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {DelimiterData, CharData, CharOptions, DelimiterMap, CharMapMap, CSS, V, H} from '../../common/FontData.js';
-import {CommonTeXFont} from '../../common/fonts/tex.js';
-import {StyleList, StyleData} from '../../common/CssStyles.js';
-import {OptionList, defaultOptions, userOptions} from '../../../util/Options.js';
+import {CHTMLFontData, CHTMLCharOptions, CHTMLCharData, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass,
+        CssFontMap, DelimiterData, DelimiterMap, CharMapMap, FontDataClass} from '../FontData.js';
+import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
 import {StringMap} from '../Wrapper.js';
-import {DIRECTION} from '../FontData.js';
 
 import {boldItalic} from './tex/bold-italic.js';
 import {bold} from './tex/bold.js';
@@ -59,14 +57,8 @@ import {delimiters} from '../../common/fonts/tex/delimiters.js';
 /**
  *  The TeXFont class
  */
-export class TeXFont extends CommonTeXFont {
-
-    /**
-     * Default options
-     */
-    public static OPTIONS = {
-        fontURL: 'mathjax2/css/'
-    };
+export class TeXFont extends
+CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass>(CHTMLFontData) {
 
     /**
      * The classes to use for each variant
@@ -99,14 +91,14 @@ export class TeXFont extends CommonTeXFont {
     };
 
     /**
-     *  The stretchy delimiter data (incomplete at the moment)
+     *  The stretchy delimiter data
      */
-    protected static defaultDelimiters: DelimiterMap = delimiters;
+    protected static defaultDelimiters: DelimiterMap<CHTMLDelimiterData> = delimiters;
 
     /**
      *  The character data by variant
      */
-    protected static defaultChars: CharMapMap = {
+    protected static defaultChars: CharMapMap<CHTMLCharOptions> = {
         'normal': normal,
         'bold': bold,
         'italic': italic,
@@ -138,6 +130,8 @@ export class TeXFont extends CommonTeXFont {
      * The CSS styles needed for this font.
      */
     protected static defaultStyles = {
+        ...CHTMLFontData.defaultStyles,
+
         '.MJX-TEX .mjx-n mjx-c': {
             'font-family': 'MJXZERO, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
@@ -229,15 +223,15 @@ export class TeXFont extends CommonTeXFont {
         },
 
         '.MJX-TEX mjx-stretchy-v mjx-c, .MJX-TEX mjx-stretchy-h mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX, MJXTEX-S4 ! important'
+            'font-family': 'MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important'
         }
     };
 
+    /**
+     * The default @font-face declarations with %%URL%% where the font path should go
+     */
     protected static defaultFonts = {
-        '@font-face /* 0 */': {
-            'font-family': 'MJXZERO',
-            src: 'url("%%URL%%/otf/MathJax_Zero.otf") format("opentype")'
-        },
+        ...CHTMLFontData.defaultFonts,
 
         '@font-face /* 1 */': {
             'font-family': 'MJXTEX',
@@ -345,239 +339,4 @@ export class TeXFont extends CommonTeXFont {
         },
     };
 
-    protected options: OptionList;
-
-    /*=====================================================================*/
-    /**
-     * @override
-     */
-    constructor(options: OptionList = null) {
-        super();
-        let CLASS = this.constructor as typeof TeXFont;
-        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-    }
-
-    /*=====================================================================*/
-    /*
-     * Handle creation of styles needed for this font
-     */
-
-    /**
-     * @return {StyleList}  The (computed) styles for this font
-     *                     (could be used to limit styles to those actually used, for example)
-     */
-    get styles() {
-        const CLASS = this.constructor as typeof TeXFont;
-        //
-        //  Include the default styles
-        //
-        let styles: StyleList = {...CLASS.defaultStyles};
-        //
-        //  Add fonts with proper URL
-        //
-        this.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
-        //
-        //  Create styles needed for the delimiters
-        //
-        for (const n of Object.keys(this.delimiters)) {
-            const N = parseInt(n);
-            this.addDelimiterStyles(styles, N, this.delimiters[N]);
-        }
-        //
-        //  Create styles needed for the characters in each variant
-        //
-        this.addVariantChars(styles);
-        //
-        //  Return the final style sheet
-        //
-        return styles;
-    }
-
-    /**
-     * @param {StyleList} styles  The style list to add characters to
-     */
-    protected addVariantChars(styles: StyleList) {
-        for (const name of Object.keys(this.variant)) {
-            const variant = this.variant[name];
-            const vclass = (name === 'normal' ? '' : ' .' + variant.classes.replace(/ /g, '.'));
-            for (const n of Object.keys(variant.chars)) {
-                const N = parseInt(n);
-                if (variant.chars[N].length === 4) {
-                    this.addCharStyles(styles, vclass, N, variant.chars[N]);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param {StyleList} styles    The style object to add styles to
-     * @param {StyleList} fonts     The default font-face directives with %%URL%% where the url should go
-     * @param {string} url          The actual URL to insert into the src strings
-     */
-    protected addFontURLs(styles: StyleList, fonts: StyleList, url: string) {
-        for (const name of Object.keys(fonts)) {
-            const font = {...fonts[name]};
-            font.src = (font.src as string).replace(/%%URL%%/, url);
-            styles[name] = font;
-        }
-    }
-
-    /*=====================================================*/
-    /*
-     *  Styles for stretchy characters
-     */
-
-    /**
-     * @param {StyleList} styles    The style object to add styles to
-     * @param {number} n            The unicode character number of the delimiter
-     * @param {DelimiterData} data  The data for the delimiter whose CSS is to be added
-     */
-    protected addDelimiterStyles(styles: StyleList, n: number, data: DelimiterData) {
-        const c = this.char(n);
-        if (data.c && data.c !== n) {
-            styles['.MJX-TEX .mjx-stretched mjx-c[c="' + c + '"]::before'] = {
-                content: '"' + this.char(data.c, true) + '"'
-            };
-        }
-        if (!data.stretch) return;
-        if (data.dir === DIRECTION.Vertical) {
-            this.addDelimiterVStyles(styles, c, data);
-        } else {
-            this.addDelimiterHStyles(styles, c, data);
-        }
-    }
-
-    /*=====================================================*/
-    /*
-     *  Styles for vertical stretchy characters
-     */
-
-    /**
-     * @param {StyleList} styles    The style object to add styles to
-     * @param {string} c            The delimiter character string
-     * @param {DelimiterData} data  The data for the delimiter whose CSS is to be added
-     */
-    protected addDelimiterVStyles(styles: StyleList, c: string, data: DelimiterData) {
-        const [beg, ext, end, mid] = data.stretch;
-        const Hb = this.addDelimiterVPart(styles, c, 'beg', beg);
-        this.addDelimiterVPart(styles, c, 'ext', ext);
-        const He = this.addDelimiterVPart(styles, c, 'end', end);
-        const css: StyleData = {};
-        if (mid) {
-            const Hm = this.addDelimiterVPart(styles, c, 'mid', mid);
-            css.height = '50%';
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-mid'] = {
-                'margin-top': this.em(-Hm/2),
-                'margin-bottom': this.em(-Hm/2)
-            };
-        }
-        if (Hb) {
-            css['border-top-width'] = this.em0(Hb - .03);
-        }
-        if (He) {
-            css['border-bottom-width'] = this.em0(He - .03);
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-end'] = {'margin-top': this.em(-He)};
-        }
-        if (Object.keys(css).length) {
-            styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] > mjx-ext'] = css;
-        }
-    }
-
-    /**
-     * @param {StyleList} styles  The style object to add styles to
-     * @param {string} c          The vertical character whose part is being added
-     * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
-     * @param {number} n          The unicode character to use for the part
-     * @return {number}           The total height of the character
-     */
-    protected addDelimiterVPart(styles: StyleList, c: string, part: string, n: number) {
-        if (!n) return 0;
-        const data = this.getChar('normal', n) || this.getChar('-size4', n);
-        const css: StyleData = {content: '"' + this.char(n, true) + '"'};
-        if (part !== 'ext') {
-            css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
-        }
-        styles['.MJX-TEX mjx-stretchy-v[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
-        return data[0] + data[1];
-    }
-
-    /*=====================================================*/
-    /*
-     *  Styles for horizontal stretchy characters
-     */
-
-    /**
-     * @param {StyleList} styles    The style object to add styles to
-     * @param {string} c            The delimiter character string
-     * @param {DelimiterData} data  The data for the delimiter whose CSS is to be added
-     */
-    protected addDelimiterHStyles(styles: StyleList, c: string, data: DelimiterData) {
-        const [beg, ext, end, mid] = data.stretch;
-        this.addDelimiterHPart(styles, c, 'beg', beg);
-        this.addDelimiterHPart(styles, c, 'ext', ext, !(beg || end));
-        this.addDelimiterHPart(styles, c, 'end', end);
-        if (mid) {
-            this.addDelimiterHPart(styles, c, 'mid', mid);
-            styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] > mjx-ext'] = {width: '50%'};
-        }
-    }
-
-    /**
-     * @param {StyleList} styles  The style object to add styles to
-     * @param {string} c          The vertical character whose part is being added
-     * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
-     * @param {number} n          The unicode character to use for the part
-     */
-    protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, force: boolean = false) {
-        if (!n) {
-            return 0;
-        }
-        const data = this.getChar('normal', n) || this.getChar('-size4', n);
-        const options = data[3] as CharOptions;
-        const C = (options && options.c ? options.c : this.char(n, true));
-        const css: StyleData = {content: '"' + C + '"'};
-        if (part !== 'ext' || force) {
-          css.padding = this.em0(data[0]) + ' 0 ' + this.em0(data[1]);
-        }
-        styles['.MJX-TEX mjx-stretchy-h[c="' + c + '"] mjx-' + part + ' mjx-c::before'] = css;
-    }
-
-    /*=====================================================*/
-    /*
-     *  Utility functions
-     */
-
-    /**
-     * @param {StyleList} styles  The style object to add styles to
-     * @param {string} vclass     The variant class string (e.g., .mjx-b) where this character is being defined
-     * @param {number} n          The unicode character being defined
-     * @param {CharData} data     The bounding box data and options for the character
-     */
-    protected addCharStyles(styles: StyleList, vclass: string, n: number, data: CharData) {
-        const [h, d, w, options] = data as [number, number, number, CharOptions];
-        const css: StyleData = {};
-        if (options.css) {
-            if (options.css & CSS.width) {
-                css.width = this.em(w);
-            }
-            if (options.css & CSS.padding) {
-                css.padding = this.em0(h) + ' 0 ' + this.em0(d);
-            }
-            if (options.css & CSS.content) {
-                css.content = '"' + (options.c || this.char(n, true)) + '"';
-            }
-        }
-        if (options.f !== undefined) css['font-family'] = 'MJXZERO, MJXTEX' + (options.f ? '-' + options.f : '');
-        const char = vclass + ' mjx-c[c="' + this.char(n) + '"]';
-        styles['.MJX-TEX' + char + '::before'] = css;
-        if (options.ic) {
-            const [MJX, noIC] = ['.MJX-TEX mjx-', ':not([noIC="true"])' + char.substr(1) + ':last-child::before'];
-            styles[MJX + 'mi' + noIC] =
-            styles[MJX + 'mo' + noIC] = {
-                width: this.em(w + options.ic)
-            };
-        }
-    }
-
 }
-

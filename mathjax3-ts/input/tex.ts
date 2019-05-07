@@ -22,9 +22,10 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {defaultOptions, userOptions, separateOptions, OptionList} from '../util/Options.js';
+import {defaultOptions, userOptions, separateOptions, selectOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
+import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 
 import {FindTeX} from './tex/FindTeX.js';
 
@@ -110,7 +111,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         configuration.append(conf);
       }
     }
-    configuration.append(Configuration.extension());
+    configuration.init(configuration);
     return configuration;
   }
 
@@ -133,29 +134,27 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   constructor(options: OptionList = {}) {
-    let packages = options['packages'] || TeX.OPTIONS['packages'];
-    let configuration = TeX.configure(packages);
-    let parseOptions = new ParseOptions(configuration,
-                                        [TeX.OPTIONS, TagsFactory.OPTIONS, {'packages': packages}]);
-    let [tex, find, rest] = separateOptions(options, FindTeX.OPTIONS, parseOptions.options);
+    const [rest, tex, find] = separateOptions(options, TeX.OPTIONS, FindTeX.OPTIONS);
     super(tex);
+    this.findTeX = this.options['FindTeX'] || new FindTeX(find);
+    const packages = this.options.packages;
+    const configuration = this.configuration = TeX.configure(packages);
+    const parseOptions = this._parseOptions = new ParseOptions(configuration, [this.options, TagsFactory.OPTIONS]);
     userOptions(parseOptions.options, rest);
+    configuration.config(configuration, this);
     TeX.tags(parseOptions, configuration);
-    this._parseOptions = parseOptions;
-    this.configuration = configuration;
-    for (let pre of configuration.preprocessors) {
-      typeof pre === 'function' ? this.preFilters.add(pre) :
-        this.preFilters.add(pre[0], pre[1]);
-    }
-    for (let post of configuration.postprocessors) {
-      typeof post === 'function' ? this.postFilters.add(post) :
-        this.postFilters.add(post[0], post[1]);
-    }
     this.postFilters.add(FilterUtil.cleanSubSup, -4);
     this.postFilters.add(FilterUtil.cleanStretchy, -3);
     this.postFilters.add(FilterUtil.cleanAttributes, -2);
     this.postFilters.add(FilterUtil.combineRelations, -1);
-    this.findTeX = this.parseOptions.options['FindTeX'] || new FindTeX(find);
+  }
+
+  /**
+   * @override
+   */
+  public setMmlFactory(mmlFactory: MmlFactory) {
+    super.setMmlFactory(mmlFactory);
+    this._parseOptions.nodeFactory.setMmlFactory(mmlFactory);
   }
 
 
@@ -218,7 +217,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   protected formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
-    return this.parseOptions.nodeFactory.create('error', message);
+    return this.parseOptions.nodeFactory.create(
+      'error', message, err.id, this.latex);
   };
 
 }

@@ -30,6 +30,8 @@ import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../common/CssStyles.js';
 import {isPercent} from '../../../util/string.js';
+import {OptionList} from '../../../util/Options.js';
+import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -51,45 +53,54 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
             'position': 'relative',
             'box-sizing': 'border-box'
         },
-        'mjx-mtable > mjx-itable': {
+        'mjx-labels': {
+            position: 'absolute',
+            left: 0,
+            top: 0
+        },
+        'mjx-table': {
+            'display': 'inline-block',
+        },
+        'mjx-table > mjx-itable': {
             'vertical-align': 'middle',
             'text-align': 'left',
             'box-sizing': 'border-box'
         },
-        'mjx-labels': {
-            display: 'inline-table',
+        'mjx-labels > mjx-itable': {
             position: 'absolute',
             top: 0
         },
+        'mjx-mtable[justify="left"]': {
+            'text-align': 'left'
+        },
+        'mjx-mtable[justify="right"]': {
+            'text-align': 'right'
+        },
         'mjx-mtable[justify="left"][side="left"]': {
-            'text-align': 'left',
             'padding-right': '0 ! important'
         },
         'mjx-mtable[justify="left"][side="right"]': {
-            'text-align': 'left',
             'padding-left': '0 ! important'
         },
         'mjx-mtable[justify="right"][side="left"]': {
-            'text-align': 'right',
             'padding-right': '0 ! important'
         },
         'mjx-mtable[justify="right"][side="right"]': {
-            'text-align': 'right',
             'padding-left': '0 ! important'
         },
         'mjx-mtable[align]': {
             'vertical-align': 'baseline'
         },
-        'mjx-mtable[align="top"] > mjx-itable': {
+        'mjx-mtable[align="top"] > mjx-table': {
             'vertical-align': 'top'
         },
-        'mjx-mtable[align="bottom"] > mjx-itable': {
+        'mjx-mtable[align="bottom"] > mjx-table': {
             'vertical-align': 'bottom'
         },
-        'mjx-mtable[align="center"] > mjx-itable': {
+        'mjx-mtable[align="center"] > mjx-table': {
             'vertical-align': 'middle'
         },
-        'mjx-mtable[align="baseline"] > mjx-itable': {
+        'mjx-mtable[align="baseline"] > mjx-table': {
             'vertical-align': 'middle'
         }
     };
@@ -99,6 +110,11 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
      */
     public labels: N;
 
+    /**
+     * The inner table DOM node
+     */
+    public itable: N;
+
     /******************************************************************/
 
     /**
@@ -106,7 +122,19 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
      */
     constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
         super(factory, node, parent);
-        this.labels = this.html('mjx-labels');
+        this.itable = this.html('mjx-itable');
+        this.labels = this.html('mjx-itable');
+    }
+
+    /**
+     * @override
+     */
+    public getAlignShift() {
+        const data = super.getAlignShift();
+        if (!this.isTop) {
+            data[1] = 0;
+        }
+        return data;
     }
 
     /**
@@ -117,9 +145,9 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
         //  Create the rows inside an mjx-itable (which will be used to center the table on the math axis)
         //
         const chtml = this.standardCHTMLnode(parent);
-        const table = this.adaptor.append(chtml, this.html('mjx-itable')) as N;
+        this.adaptor.append(chtml, this.html('mjx-table', {}, [this.itable]));
         for (const child of this.childNodes) {
-            child.toCHTML(table);
+            child.toCHTML(this.itable);
         }
         //
         //  Pad the rows of the table, if needed
@@ -146,10 +174,11 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
      * only colored on the main part of the table.
      */
     protected shiftColor() {
-        const color = this.adaptor.getStyle(this.chtml, 'backgroundColor');
+        const adaptor = this.adaptor;
+        const color = adaptor.getStyle(this.chtml, 'backgroundColor');
         if (color) {
-            this.adaptor.setStyle(this.chtml, 'backgroundColor', '');
-            this.adaptor.setStyle(this.adaptor.firstChild(this.chtml) as N, 'backgroundColor', color);
+            adaptor.setStyle(this.chtml, 'backgroundColor', '');
+            adaptor.setStyle(this.itable, 'backgroundColor', color);
         }
     }
 
@@ -159,9 +188,10 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
      * Pad any short rows with extra cells
      */
     protected padRows() {
-        for (const row of this.adaptor.childNodes(this.adaptor.firstChild(this.chtml) as N) as N[]) {
-            while (this.adaptor.childNodes(row).length < this.numCols) {
-                this.adaptor.append(row, this.html('mjx-mtd'));
+        const adaptor = this.adaptor;
+        for (const row of adaptor.childNodes(this.itable) as N[]) {
+            while (adaptor.childNodes(row).length < this.numCols) {
+                adaptor.append(row, this.html('mjx-mtd'));
             }
         }
     }
@@ -363,8 +393,7 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
      */
     protected handleFrame() {
         if (this.frame) {
-            this.adaptor.setStyle(this.adaptor.firstChild(this.chtml) as N,
-                                  'border', '.07em ' + this.node.attributes.get('frame'));
+            this.adaptor.setStyle(this.itable, 'border', '.07em ' + this.node.attributes.get('frame'));
         }
     }
 
@@ -372,14 +401,29 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
      * Handle percentage widths and fixed widths
      */
     protected handleWidth() {
-        let w = this.node.attributes.get('width') as string;
-        const hasLabels = (this.adaptor.childNodes(this.labels).length > 0);
-        if (!(isPercent(w) || hasLabels)) {
-            if (w === 'auto') return;
-            w = this.em(this.length2em(w) + 2 * this.fLine);
+        const adaptor = this.adaptor;
+        const {w, L, R} = this.getBBox();
+        adaptor.setStyle(this.chtml, 'minWidth', this.em(L + w + R));
+        let W = this.node.attributes.get('width') as string;
+        if (isPercent(W)) {
+            adaptor.setStyle(this.chtml, 'width', '');
+            adaptor.setAttribute(this.chtml, 'width', 'full');
+        } else if (!this.hasLabels) {
+            if (W === 'auto') return;
+            W = this.em(this.length2em(W) + 2 * this.fLine);
         }
-        const table = this.adaptor.firstChild(this.chtml) as N;
-        this.adaptor.setStyle(table, 'minWidth', w);
+        const table = adaptor.firstChild(this.chtml) as N;
+        adaptor.setStyle(table, 'width', W);
+        adaptor.setStyle(table, 'minWidth', this.em(w));
+        if (L || R) {
+            adaptor.setStyle(this.chtml, 'margin', '');
+            if (L === R) {
+                adaptor.setStyle(table, 'margin', '0 ' + this.em(R));
+            } else {
+                adaptor.setStyle(table, 'margin', '0 ' + this.em(R) + ' 0 ' + this.em(L));
+            }
+        }
+        adaptor.setAttribute(this.itable, 'width', 'full');
     }
 
     /**
@@ -414,10 +458,10 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
      * Handle addition of labels to the table
      */
     protected handleLabels() {
+        if (!this.hasLabels) return;
         const labels = this.labels;
         const attributes = this.node.attributes;
         const adaptor = this.adaptor;
-        if (adaptor.childNodes(labels).length === 0) return;
         //
         //  Set the side for the labels
         //
@@ -428,22 +472,10 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
         //
         //  Make sure labels don't overlap table
         //
-        const {L} = this.getTableData();
-        const sep = this.length2em(attributes.get('minlabelspacing'));
-        let pad = L + sep;
-        const [lpad, rpad] = (this.styles == null ? ['', ''] :
-                              [this.styles.get('padding-left'), this.styles.get('padding-right')]);
-        if (lpad || rpad) {
-            pad = Math.max(pad, this.length2em(lpad || '0'), this.length2em(rpad || '0'));
-        }
-        adaptor.setStyle(this.chtml, 'padding', '0 ' + this.em(pad));
+        const [align, shift] = this.addLabelPadding(side);
         //
         //  Handle indentation
         //
-        let [align, shift] = this.getAlignShift();
-        if (align === side) {
-            shift = (side === 'left' ? Math.max(pad, shift) - pad : Math.min(-pad, shift) + pad);
-        }
         if (shift) {
             const table = adaptor.firstChild(this.chtml) as N;
             this.setIndent(table, align, shift);
@@ -453,7 +485,25 @@ CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D
         //
         this.updateRowHeights();
         this.addLabelSpacing();
-        adaptor.append(this.chtml, labels);
+    }
+
+    /**
+     * @param {string} side         The side for the labels
+     * @return {[string, number]}   The alignment and shift values
+     */
+    protected addLabelPadding(side: string) {
+        const [pad, align, shift] = this.getPadAlignShift(side);
+        const styles: OptionList = {};
+        if (side === 'right') {
+            const W = this.node.attributes.get('width') as string;
+            const {w, L, R} = this.getBBox();
+            styles.style = {
+                width: (isPercent(W) ? 'calc(' + W + ' + ' + this.em(L + R) + ')' : this.em(L + w + R)),
+                minWidth: '100%'
+            };
+        }
+        this.adaptor.append(this.chtml, this.html('mjx-labels', styles, [this.labels]));
+        return [align, shift] as [string, number];
     }
 
     /**
