@@ -10,13 +10,14 @@ import '../mathjax3/input/tex/noundefined/NoUndefinedConfiguration.js';
 import '../mathjax3/input/tex/boldsymbol/BoldsymbolConfiguration.js';
 import '../mathjax3/input/tex/newcommand/NewcommandConfiguration.js';
 import '../mathjax3/input/tex/extpfeil/ExtpfeilConfiguration.js';
+import '../mathjax3/input/tex/action/ActionConfiguration.js';
 import '../mathjax3/input/tex/braket/BraketConfiguration.js';
 import '../mathjax3/input/tex/physics/PhysicsConfiguration.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'extpfeil', 'braket', 'physics']})
+  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'extpfeil', 'braket', 'physics', 'action']})
 });
 
 import {SerializedMmlVisitor as MmlVisitor} from '../mathjax3/core/MmlTree/SerializedMmlVisitor.js';

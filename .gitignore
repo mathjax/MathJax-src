@@ -7,3 +7,4 @@ components/src/*/*/*/lib
 components/samples/*/lib
 components/samples/*/*.min.js
 components/dist
+tup
