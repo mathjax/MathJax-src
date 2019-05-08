@@ -104,7 +104,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
                 MathJax.retryAfter(sreReady);
             }
-            if (document.options.enrochSpeech !== currentSpeech) {
+            if (document.options.enrichSpeech !== currentSpeech) {
                 SRE.setupEngine({speech: document.options.enrichSpeech});
                 currentSpeech = document.options.enrichSpeech;
             }
