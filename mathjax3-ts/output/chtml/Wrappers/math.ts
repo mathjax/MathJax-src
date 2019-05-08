@@ -103,7 +103,7 @@ export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<N, T, D
             this.setIndent(chtml, align, shift);
         }
         //
-        // Transver speech to aria-label and hide child nodes
+        // Transfer speech to aria-label and hide child nodes
         //
         const speech = attributes.get('data-semantic-speech') as string;
         if (speech && !attributes.get('aria-label')) {
