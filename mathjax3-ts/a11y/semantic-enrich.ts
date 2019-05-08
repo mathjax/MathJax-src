@@ -37,7 +37,15 @@ import {sreReady} from './sre.js';
 /**
  * The only function we need from SRE
  */
-declare const SRE: {toEnriched(mml: string): Element};
+declare const SRE: {
+    toEnriched(mml: string): Element;
+    setupEngine(options: OptionList): void;
+};
+
+/**
+ *  The current speech setting for SRE
+ */
+let currentSpeech = 'none';
 
 /**
  * Generic constructor for Mixins
@@ -96,6 +104,10 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
                 MathJax.retryAfter(sreReady);
             }
+            if (document.options.enrichSpeech !== currentSpeech) {
+                SRE.setupEngine({speech: document.options.enrichSpeech});
+                currentSpeech = document.options.enrichSpeech;
+            }
             const math = new document.options.MathItem('', MmlJax);
             const enriched = SRE.toEnriched(toMathML(this.root));
             math.math = ('outerHTML' in enriched ? enriched.outerHTML : enriched.toString());
@@ -151,6 +163,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
 
         public static OPTIONS: OptionList = {
             ...BaseDocument.OPTIONS,
+            enrichSpeech: 'none',                   // or 'shallow', or 'deep'
             renderActions: expandable({
                 ...BaseDocument.OPTIONS.renderActions,
                 enrich: [STATE.ENRICHED]
