@@ -22,7 +22,7 @@
  */
 
 import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
-import {userOptions, separateOptions, OptionList} from '../../util/Options.js';
+import {userOptions, separateOptions, OptionList, expandable} from '../../util/Options.js';
 import {HTMLMathItem} from './HTMLMathItem.js';
 import {HTMLMathList} from './HTMLMathList.js';
 import {HTMLDomStrings} from './HTMLDomStrings.js';
@@ -56,6 +56,10 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     public static KIND: string = 'HTML';
     public static OPTIONS: OptionList = {
         ...AbstractMathDocument.OPTIONS,
+        renderActions: expandable({
+            ...AbstractMathDocument.OPTIONS.renderActions,
+            styles: [STATE.INSERTED + 1, '', 'updateStyleSheet', false]  // update styles on a rerender() call
+        }),
         MathList: HTMLMathList,           // Use the HTMLMathList for MathLists
         MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
         DomStrings: null                  // Use the default DomString parser
@@ -190,7 +194,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     /**
      * Add the stylesheet to the document
      */
-    protected addStyleSheet() {
+    public addStyleSheet() {
         const sheet = this.documentStyleSheet();
         if (sheet) {
             const head = this.adaptor.head(this.document);
