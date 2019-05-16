@@ -184,7 +184,7 @@ AmsCdMethods.cell = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-AmsCdMethods.minwidth = function(parser: TexParser, name: string) {
+AmsCdMethods.minCDarrowwidth = function(parser: TexParser, name: string) {
   parser.stack.env.CD_minw = parser.GetDimen(name);
 };
 
@@ -194,7 +194,7 @@ AmsCdMethods.minwidth = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-AmsCdMethods.minheight = function(parser: TexParser, name: string) {
+AmsCdMethods.minCDarrowheight = function(parser: TexParser, name: string) {
   parser.stack.env.CD_minh = parser.GetDimen(name);
 };
 
