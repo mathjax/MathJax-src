@@ -275,10 +275,10 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
      * @param {LiteDocuemnt} root    The document being checked
      */
     protected checkDocument(adaptor: LiteAdaptor, root: LiteDocument) {
-        if (adaptor.childNodes(adaptor.body(root)).length !== 1) return;
-        let node = adaptor.firstChild(adaptor.body(root)) as LiteElement;
+        let node = this.getOnlyChild(adaptor, adaptor.body(root));
+        if (!node) return;
         switch (adaptor.kind(node)) {
-        case 'html':
+          case 'html':
             //
             //  Look through the children for the head and body
             //
@@ -313,6 +313,25 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
             root.body = adaptor.replace(node, root.body) as LiteElement;
             break;
         }
+    }
+
+    /**
+     * Checks if the body has only one element child (as opposed to comments or text nodes)
+     * and returns that sole element (or null if none or more than one)
+     *
+     * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+     * @param {LiteElement} body     The body element being checked
+     * @return {LiteElement}         The sole LiteElement child of the body, or null if none or more than one
+     */
+    protected getOnlyChild(adaptor: LiteAdaptor, body: LiteElement) {
+        let node: LiteElement = null;
+        for (const child of adaptor.childNodes(body)) {
+            if (child instanceof LiteElement) {
+                if (node) return null;
+                node = child;
+            }
+        }
+        return node;
     }
 
     /**
