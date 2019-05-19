@@ -132,89 +132,89 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
     protected static defaultStyles = {
         ...CHTMLFontData.defaultStyles,
 
-        '.MJX-TEX .mjx-n mjx-c': {
+        '.mjx-n mjx-c': {
             'font-family': 'MJXZERO, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-i mjx-c': {
+        '.mjx-i mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-b mjx-c': {
+        '.mjx-b mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-b.mjx-i mjx-c': {
+        '.mjx-b.mjx-i mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-BI, MJXTEX-B, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-cal mjx-c': {
+        '.mjx-cal mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-C, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-cal.mjx-b mjx-c': {
+        '.mjx-cal.mjx-b mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-ds mjx-c': {
+        '.mjx-ds mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-A, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1'
         },
 
-        '.MJX-TEX .mjx-fr mjx-c': {
+        '.mjx-fr mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-FR, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-fr.mjx-b mjx-c': {
+        '.mjx-fr.mjx-b mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-FR-B, MJXTEX-FR, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-sc mjx-c': {
+        '.mjx-sc mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SC, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-sc.mjx-b mjx-c': {
+        '.mjx-sc.mjx-b mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SC-B, MJXTEX-SC, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-ss mjx-c': {
+        '.mjx-ss mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SS, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-ss.mjx-b mjx-c': {
+        '.mjx-ss.mjx-b mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SS-B, MJXTEX-SS, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-ss.mjx-i mjx-c': {
+        '.mjx-ss.mjx-i mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SS-I, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-ss.mjx-b.mjx-i mjx-c': {
+        '.mjx-ss.mjx-b.mjx-i mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-SS-B, MJXTEX-SS-I, MJXTEX-BI, MJXTEX-B, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-ty mjx-c': {
+        '.mjx-ty mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-T, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-var mjx-c': {
+        '.mjx-var mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-A, MJXTEX, MJXTEX-I, MJXTEX-S1'
         },
 
-        '.MJX-TEX .mjx-os mjx-c': {
+        '.mjx-os mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-C, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
-        '.MJX-TEX .mjx-os.mjx-b mjx-c': {
+        '.mjx-os.mjx-b mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-mit mjx-c': {
+        '.mjx-mit mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-MI, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-lop mjx-c': {
+        '.mjx-lop mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-S2, MJXTEX-S1, MJXTEX, MJXTEX-I, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-sop mjx-c': {
+        '.mjx-sop mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-S1, MJXTEX, MJXTEX-I, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-s3 mjx-c': {
+        '.mjx-s3 mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-S3, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
-        '.MJX-TEX .mjx-s4 mjx-c': {
+        '.mjx-s4 mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-S4, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
 
@@ -222,7 +222,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
             'font-family': 'MJXZERO'
         },
 
-        '.MJX-TEX mjx-stretchy-v mjx-c, .MJX-TEX mjx-stretchy-h mjx-c': {
+        'mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-S1, MJXTEX-S4, MJXTEX, MJXTEX-A ! important'
         }
     };
