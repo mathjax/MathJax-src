@@ -46,8 +46,10 @@ function quoteRE(string) {
  */
 const PLUGINS = function (mathjax3, libs, dir) {
     const mj3dir = path.resolve(dir, mathjax3);
-    const mj3 = new RegExp('^' + quoteRE(mj3dir) + '\\/');
+    const mj3RE = new RegExp('^' + quoteRE(mj3dir + '/'));
     const root = path.dirname(mj3dir);
+    const rootRE = new RegExp('^' + quoteRE(root + '/'));
+    const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + '/'));
 
     const plugins = [];
     if (libs.length) {
@@ -59,13 +61,27 @@ const PLUGINS = function (mathjax3, libs, dir) {
                 /^[^\/].*\.js$/,
                 function (resource) {
                     const request = path.resolve(resource.context, resource.request);
-                    if (!request.match(mj3)) return;
+                    if (!request.match(mj3RE)) return;
                     for (const lib of libs) {
-                        const file = request.replace(mj3, path.join(root, lib) + '/');
+                        const file = request.replace(mj3RE, path.join(root, lib) + '/');
                         if (fs.existsSync(file)) {
                             resource.request = file;
                             break;
                         }
+                    }
+                }
+            ),
+            //
+            // Check for packages that should be rerouted to node_modules
+            //
+            new webpack.NormalModuleReplacementPlugin(
+                /^[^\/].*\.js$/,
+                function (resource) {
+                    const request = path.resolve(resource.context, resource.request);
+                    if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
+                    const file = request.replace(nodeRE, path.join(root, 'node_modules') + '/');
+                    if (fs.existsSync(file)) {
+                        resource.request = file;
                     }
                 }
             )
