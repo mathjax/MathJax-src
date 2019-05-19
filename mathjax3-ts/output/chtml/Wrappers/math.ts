@@ -102,6 +102,18 @@ export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<N, T, D
         if (display && shift && !adaptor.hasAttribute(chtml, 'width')) {
             this.setIndent(chtml, align, shift);
         }
+        //
+        // Transfer speech to aria-label and hide child nodes
+        //
+        const speech = attributes.get('data-semantic-speech') as string;
+        if (speech && !attributes.get('aria-label')) {
+            adaptor.setAttribute(this.chtml, 'aria-label', speech);
+            if (attributes.get('data-semantic-speech')) {
+                for (const child of this.childNodes[0].childNodes) {
+                    adaptor.setAttribute(child.chtml, 'aria-hidden', 'true');
+                }
+            }
+        }
     }
 
     /**
