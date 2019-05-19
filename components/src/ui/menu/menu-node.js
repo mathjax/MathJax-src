@@ -1,4 +1,4 @@
-require('context-menu');
+require('mj-context-menu');
 require('./lib/menu.js');
 
 const {MenuHandler} = require('../../../../mathjax3/ui/menu/MenuHandler.js');
