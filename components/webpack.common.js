@@ -70,23 +70,25 @@ const PLUGINS = function (mathjax3, libs, dir) {
                         }
                     }
                 }
-            ),
-            //
-            // Check for packages that should be rerouted to node_modules
-            //
-            new webpack.NormalModuleReplacementPlugin(
-                /^[^\/].*\.js$/,
-                function (resource) {
-                    const request = path.resolve(resource.context, resource.request);
-                    if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
-                    const file = request.replace(nodeRE, path.join(root, 'node_modules') + '/');
-                    if (fs.existsSync(file)) {
-                        resource.request = file;
-                    }
-                }
             )
         );
     }
+    plugins.push(
+        //
+        // Check for packages that should be rerouted to node_modules
+        //
+        new webpack.NormalModuleReplacementPlugin(
+            /^[^\/].*\.js$/,
+            function (resource) {
+                const request = path.resolve(resource.context, resource.request);
+                if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
+                const file = request.replace(nodeRE, path.join(root, 'node_modules') + '/');
+                if (fs.existsSync(file)) {
+                    resource.request = file;
+                }
+            }
+        )
+    );
     return plugins;
 };
 
