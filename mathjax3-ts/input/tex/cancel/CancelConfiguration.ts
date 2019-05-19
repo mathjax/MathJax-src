@@ -31,7 +31,7 @@ import ParseUtil from '../ParseUtil.js';
 
 
 /**
- * The attributes allowed in \enclose{notation}[attributes]{math}
+ * The attributes allowed in \cancel{notation}[attributes]{math}
  * @type {{[key: string]: number}}
  */
 const ALLOWED: {[key: string]: number} = {
@@ -47,7 +47,7 @@ export let CancelMethods: Record<string, ParseMethod> = {};
 
 
 /**
- * Parse function for cancel macros of the form \(b|x)cancel[attributes]{math}
+ * Parse function for cancel macros of the form \(b|x)?cancel[attributes]{math}
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  * @param {string} notation The type of cancel notation to use.
@@ -76,7 +76,7 @@ CancelMethods.CancelTo = function(parser: TexParser, name: string) {
   def ['notation'] = TexConstant.Notation.UPDIAGONALSTRIKE + ' ' +
     TexConstant.Notation.UPDIAGONALARROW;
   value = parser.create('node', 'mpadded', [value],
-                        {depth: '-.1em', height: ' + .1em', voffset: '.1em'});
+                        {depth: '-.1em', height: '+.1em', voffset: '.1em'});
   parser.Push(parser.create('node', 'msup',
                             [parser.create('node', 'menclose', [math], def), value]));
 };
