@@ -1,18 +1,23 @@
 {
   "name": "mathjax3",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.4",
   "maintainers": [
     "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
   ],
-  "description": "MathJax version 3 beta release testbed",
+  "description": "MathJax version 4 beta release testbed",
   "main": "./mathjax3/mathjax.js",
   "types": "./mathjax3/mathjax.d.ts",
   "scripts": {
+    "make-components": "cd components && bin/makeAll src",
     "compile": "npx tsc",
     "prepublishOnly": "npx tsc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "mj-context-menu": "^0.2.0",
+    "speech-rule-engine": "^2.3.0-beta.0"
+  },
   "devDependencies": {
+    "esm": "^3.0.34",
     "typescript": "2.3.*",
     "tape": "^4.8.0",
     "tslint": "^3.15.0",
@@ -23,7 +28,8 @@
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "webpack": "4.19.0",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.2.3",
+    "uglifyjs-webpack-plugin": "^2.1.2"
   },
   "repository": {
     "type": "git",
@@ -32,6 +38,7 @@
   "bugs": {
     "url": "http://github.com/mathjax/mathjax-v3/issues"
   },
+  "license": "Apache-2.0",
   "keywords": [
     "MathJax",
     "math",
@@ -40,13 +47,10 @@
     "tex",
     "latex",
     "asciimath",
+    "html",
     "browser",
     "nodejs",
-    "equations",
+    "equation",
     "formula"
-  ],
-  "dependencies": {
-    "esm": "^3.0.34",
-    "speech-rule-engine": "^2.3.0-beta.0"
-  }
+  ]
 }
