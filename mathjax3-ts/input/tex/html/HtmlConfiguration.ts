@@ -15,26 +15,26 @@
  *  limitations under the License.
  */
 
+
 /**
- * @fileoverview  Chooses between jdsom and browser DOM adaptors
+ * @fileoverview Configuration file for the Html package.
  *
- * @author dpvc@mathjax.org (Davide Cervone)
+ * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {liteAdaptor, LiteAdaptor} from './liteAdaptor.js';
-import {browserAdaptor} from './browserAdaptor.js';
-import {HTMLAdaptor} from './HTMLAdaptor.js';
+import {Configuration} from '../Configuration.js';
+import {CommandMap} from '../SymbolMap.js';
+import ParseMethods from '../ParseMethods.js';
+import HtmlMethods from './HtmlMethods.js';
 
-let choose;
 
-try {
-    document;  // errors if not in browser
-    choose = browserAdaptor;
-} catch(e) {
-    choose = liteAdaptor;
-}
+new CommandMap('html_macros', {
+  href:    'Href',
+  'class': 'Class',
+  style:   'Style',
+  cssId:   'Id'
+}, HtmlMethods);
 
-/**
- * Function to select which adaptor to use (depending on whether we are in a browser or node.js)
- */
-export const chooseAdaptor = choose;
+export const HtmlConfiguration = Configuration.create(
+  'html',
+  {handler: { macro: ['html_macros']}});

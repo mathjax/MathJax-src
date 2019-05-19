@@ -667,8 +667,8 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @param {Error} err      The Error object for the error
      */
     public compileError(math: MathItem<N, T, D>, err: Error) {
-        math.root = this.mmlFactory.create('math', {'data-mjx-error': err.message}, [
-            this.mmlFactory.create('merror', null, [
+        math.root = this.mmlFactory.create('math', null, [
+            this.mmlFactory.create('merror', {'data-mjx-error': err.message}, [
                 this.mmlFactory.create('mtext', null, [
                     (this.mmlFactory.create('text') as TextNode).setText('Math input error')
                 ])

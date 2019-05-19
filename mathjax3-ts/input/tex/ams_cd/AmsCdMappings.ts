@@ -15,26 +15,24 @@
  *  limitations under the License.
  */
 
+
 /**
- * @fileoverview  Chooses between jdsom and browser DOM adaptors
+ * @fileoverview Symbol mappings for the AMScd package.
  *
- * @author dpvc@mathjax.org (Davide Cervone)
+ * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {liteAdaptor, LiteAdaptor} from './liteAdaptor.js';
-import {browserAdaptor} from './browserAdaptor.js';
-import {HTMLAdaptor} from './HTMLAdaptor.js';
+import * as sm from '../SymbolMap.js';
+import ParseMethods from '../ParseMethods.js';
+import AmsCdMethods from './AmsCdMethods.js';
 
-let choose;
 
-try {
-    document;  // errors if not in browser
-    choose = browserAdaptor;
-} catch(e) {
-    choose = liteAdaptor;
-}
+new sm.EnvironmentMap('amsCd_environment', ParseMethods.environment,
+                      {CD: 'CD'}, AmsCdMethods);
 
-/**
- * Function to select which adaptor to use (depending on whether we are in a browser or node.js)
- */
-export const chooseAdaptor = choose;
+new sm.CommandMap('amsCd_macros', {
+  minwidth: 'minwidth',
+  minheight: 'minheight',
+}, AmsCdMethods);
+
+new sm.MacroMap('amsCd_special', {'@': 'arrow'}, AmsCdMethods);
