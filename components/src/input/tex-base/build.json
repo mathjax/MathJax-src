@@ -1,0 +1,7 @@
+{
+    "component": "input/tex-base",
+    "targets": ["input/tex.ts", "input/tex"],
+    "exclude": ["input/tex/AllPackages.ts"],
+    "excludeSubdirs": "true"
+}
+

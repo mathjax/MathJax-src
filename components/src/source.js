@@ -27,6 +27,7 @@ exports.source = {
     '[tex]/noundefined': `${src}/input/tex/extensions/noundefined/noundefined.js`,
     '[tex]/physics': `${src}/input/tex/extensions/physics/physics.js`,
     '[tex]/require': `${src}/input/tex/extensions/require/require.js`,
+    '[tex]/tagFormat': `${src}/input/tex/extensions/tag_format/tagFormat.js`,
     '[tex]/unicode': `${src}/input/tex/extensions/unicode/unicode.js`,
     '[tex]/verb': `${src}/input/tex/extensions/verb/verb.js`,
     'input/mml': `${src}/input/mml/mml.js`,
@@ -39,6 +40,12 @@ exports.source = {
     'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
     'sre': `../../mathjax3/a11y/sre-node.js`,
     'ui/menu': `${src}/ui/menu/menu.js`,
+    'mml-chtml': `${src}/mml-chtml/mml-chtml.js`,
+    'mml-svg': `${src}/mml-svg/mml-svg.js`,
+    'tex-chtml': `${src}/tex-chtml/tex-chtml.js`,
+    'tex-svg': `${src}/tex-svg/tex-svg.js`,
+    'tex-mml-chtml': `${src}/tex-mml-chtml/tex-mml-chtml.js`,
+    'tex-mml-svg': `${src}/tex-mml-svg/tex-mml-svg.js`,
     'loader': `${src}/loader/loader.js`,
     'startup': `${src}/startup/startup.js`
 };
