@@ -41,6 +41,11 @@ const EXPORT_IGNORE = ['type', 'interface'];
 const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace'];
 
 /**
+ * The relative path to the mathjax3 directory
+ */
+const mj3path = path.relative(process.cwd(), path.resolve(__dirname,'../../mathjax3'));
+
+/**
  * Read the configuration for the component
  */
 const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
@@ -50,9 +55,9 @@ const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
  */
 const TARGETS = config.targets || [];                                       // the files to include in the component
 const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // files to exclude from the component
-const MATHJAX3 = config.mathjax3 || '../../../mathjax3';                    // path to the mathjax3 .js files
+const MATHJAX3 = config.mathjax3 || mj3path;                                // path to the mathjax3 .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
-const COMPONENT = config.component || 'part';                               // name of the component
+const COMPONENT = path.basename(config.component || 'part');                // name of the component
 const GLOBAL = config.global || `../${MATHJAX3}/components/global.js`;      // the location of global.js
 
 /**
