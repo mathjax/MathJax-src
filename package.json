@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "mj-context-menu": "^0.2.0",
-    "speech-rule-engine": "^2.3.0-beta.0"
+    "speech-rule-engine": "^2.4.0"
   },
   "devDependencies": {
     "esm": "^3.0.34",
