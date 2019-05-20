@@ -258,9 +258,11 @@ export namespace Startup {
     export function defaultReady() {
         getComponents();
         makeMethods();
-        if (CONFIG.typeset && MathJax.TypesetPromise) {
-            promise = pagePromise.then(() => MathJax.TypesetPromise());
+        if (CONFIG.pageReady) {
+            pagePromise = pagePromise.then(CONFIG.pageReady);
         }
+        promise = (CONFIG.typeset && MathJax.TypesetPromise ?
+                   pagePromise.then(MathJax.TypesetPromise) : pagePromise);
     };
 
     /**
