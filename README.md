@@ -8,6 +8,14 @@ The `master` branch is not the beta release.  It is the current development copy
 
 ---
 
+Clone the repository and compile the files using the commands
+
+    git clone https://github.com/mathjax/mathjax-v3.git mathjax-v3
+    cd mathjax-v3
+    npm install
+    npm run compile
+    npm run make-components
+
 There are three bootstrap files for running the code:
 
 * `load.js` for running in node (`node load`), 
@@ -46,8 +54,4 @@ The `load.mjs` file uses node's native implementation of ES6 modules, and proces
 
 and simply import the needed MathJax code.
 
-The file `v3-lab.html` is an interactive lab that you can open in a browser to experiment with MathJax v3.  it relies on the MathJax components, which you will need to build using the command
-
-    npm run make-components
-
-from the main directory of this repository.
+The file `v3-lab.html` is an interactive lab that you can open in a browser to experiment with MathJax v3.
