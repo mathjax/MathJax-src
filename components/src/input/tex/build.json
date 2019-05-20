@@ -9,7 +9,10 @@
         "input/tex/noundefined",
         "input/tex/require",
         "input/tex/autoload",
-        "input/tex/config_macros"
+        "input/tex/config_macros",
+        "util/entities/n.ts",
+        "util/entities/p.ts",
+        "util/entities/r.ts"
     ],
     "exclude": ["input/tex/AllPackages.ts"],
     "excludeSubdirs": "true"
