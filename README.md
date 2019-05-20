@@ -1,6 +1,6 @@
 # Development repository for MathJax v3 #
 
-MathJax v3 is now in beta release; see the [beta branch](https://github.com/mathjax/mathjax-v3/tree/beta) for details.  See the [https://github.com/mathjax/mj3-demos](https://github.com/mathjax/mj3-demos) for examples of using MathJax v3 in webpages, and [https://github.com/mathjax/mj3-demos-node](https://github.com/mathjax/mj3-demos-node) for examples of using MathJax v3 in node applications.
+MathJax v3 is now in beta release; see the [beta branch](https://github.com/mathjax/mathjax-v3/tree/beta) for details.  See the [mj3-demos repository](https://github.com/mathjax/mj3-demos) for examples of using MathJax v3 in webpages, and the [mj3-demos-node repository](https://github.com/mathjax/mj3-demos-node) for examples of using MathJax v3 in node applications.
 
 See the [release notes](https://github.com/mathjax/mathjax-v3/releases) for details of the changes in this beta release.  See the examples linked above for documentation on how to use and configure MathJax for use in browsers or node applications.  More documentation will be forthcoming as part of the official version 3.0.0 release currently being prepared.
 
@@ -44,4 +44,10 @@ The `load.mjs` file uses node's native implementation of ES6 modules, and proces
 
     node -r esm filename.js
 
-and simply import the needed MathJax code. 
+and simply import the needed MathJax code.
+
+The file `v3-lab.html` is an interactive lab that you can open in a browser to experiment with MathJax v3.  it relies on the MathJax components, which you will need to build using the command
+
+    npm run make-components
+
+from the main directory of this repository.
