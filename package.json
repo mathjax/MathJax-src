@@ -9,8 +9,8 @@
   "types": "./mathjax3/mathjax.d.ts",
   "scripts": {
     "make-components": "cd components && bin/makeAll src",
-    "compile": "npx tsc",
-    "prepublishOnly": "npx tsc"
+    "compile": "npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_parser.* mathjax3/input/tex/mhchem/",
+    "prepublishOnly": "npx tsc && cp mathjax3-ts/input/tex/mhchem/mhchem_parser.* mathjax3/input/tex/mhchem/"
   },
   "dependencies": {
     "mj-context-menu": "^0.2.0",
