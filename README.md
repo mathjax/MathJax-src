@@ -1,19 +1,26 @@
 # Development repository for MathJax v3 #
 
-MathJax v3 is now in beta release; see the [beta branch](https://github.com/mathjax/mathjax-v3/tree/beta) for details.  See the [https://github.com/mathjax/mj3-demos](https://github.com/mathjax/mj3-demos) for examples and webpacked files for the beta release.
+MathJax v3 is now in beta release; see the [beta branch](https://github.com/mathjax/mathjax-v3/tree/beta) for details.  See the [https://github.com/mathjax/mj3-demos](https://github.com/mathjax/mj3-demos) for examples of using MathJax v3 in webpages, and [https://github.com/mathjax/mj3-demos-node](https://github.com/mathjax/mj3-demos-node) for examples of using MathJax v3 in node applications.
 
-The `master` branch is not the beta release.  It is the current development copy, set up for development testing, as described below.
+See the [release notes](https://github.com/mathjax/mathjax-v3/releases) for details of the changes in this beta release.  See the examples linked above for documentation on how to use and configure MathJax for use in browsers or node applications.  More documentation will be forthcoming as part of the official version 3.0.0 release currently being prepared.
+
+The `master` branch is not the beta release.  It is the current development copy, set up for development testing, as described below.  Check out the `beta.4` branch to obtain the beta release code.
 
 ---
 
-There are two bootstrap files for running the code:
+There are three bootstrap files for running the code:
 
-* `load.js` for running in node (`node load`), and 
+* `load.js` for running in node (`node load`), 
+* `load.mjs` for running node in ES6 module mode, and 
 * `load.html` for running in a browser.
 
 These allow you to specify a test file to run.  For example,
 
     node load samples/filename.js
+
+or
+
+    node load.mjs samples/filename.js
 
 will run the file `samples/filename.js`, while entering
 
@@ -33,4 +40,8 @@ would load `tex2html.js` passing it `x+1` in `process.argv[3]`.
 
 Both `load.js` and `load.html` use `System.js` to manage the loading of version 3 files.  In some browsers (e.g., Firefox), you get syntax errors for the files as they load, but that seems to be some side-effect of how `System.js` works.  The code is OK and runs properly anyway.
 
-There is a tiny document in the `docs` directory that gives the basic structures and some sample code, but it is woefully inadequate at the moment, and may be out of date.  More to come later.
+The `load.mjs` file uses node's native implementation of ES6 modules, and processes the `import` and `export` commands automatically.  To write files that don't rely on `load.mjs`, you can use
+
+    node -r esm filename.js
+
+and simply import the needed MathJax code. 
