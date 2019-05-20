@@ -46,10 +46,10 @@ const MJCONFIG = (global.MathJax ? global.MathJax.config || {} : {});
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amsCd')
  */
 function RegisterExtension(jax: TeX<any, any, any>, name: string) {
-    const required = jax.parseOptions.options.require.required;
-    if (required.indexOf(name) < 0) {
-        const extension = name.substr(6);
-        required.push(name);
+    const require = jax.parseOptions.options.require;
+    const extension = name.substr(require.prefix.length);
+    if (require.required.indexOf(extension) < 0) {
+        require.required.push(extension);
         //
         //  Register any dependencies that were loaded to handle this one
         //
@@ -117,8 +117,8 @@ export function RequireLoad(parser: TexParser, name: string) {
  */
 function config(config: Configuration, jax: TeX<any, any, any>) {
     const options = jax.parseOptions.options.require;
-    options.jax = jax;             // \require needs access to this
-    options.required = [];         // stores the names of the packages that have been added
+    options.jax = jax;                             // \require needs access to this
+    options.required = [...jax.options.packages];  // stores the names of the packages that have been added
     const prefix = options.prefix;
     if (prefix.match(/[^_a-zA-Z0-9]/)) {
         throw Error('Illegal characters used in \\require prefix');
