@@ -52,7 +52,7 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
         'mjx-measure-text': {
             position: 'absolute',
             'font-family': 'MJXZERO',
-            'white space': 'nowrap',
+            'white-space': 'nowrap',
             height: '1px',
             width: '1px',
             overflow: 'hidden'

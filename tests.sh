@@ -101,7 +101,9 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-physics-7-10-test.js
     node load.js tests/parser-physics-7-11-test.js 
 
+    # More Packages
     node load.js tests/parser-bbox-tests.js
+    node load.js tests/parser-action-tests.js
     exit 0
 else
     repeat=$1
