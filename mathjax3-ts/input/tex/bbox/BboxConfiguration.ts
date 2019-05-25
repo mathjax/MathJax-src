@@ -43,7 +43,7 @@ BboxMethods.BBox = function(parser: TexParser, name: string) {
   const parts = bbox.split(/,/);
   let def, background, style;
   for (let i = 0, m = parts.length; i < m; i++) {
-    const part = parts[i].replace(/^\s+/, '').replace(/\s+$/, '');
+    const part = parts[i].trim();
     const match = part.match(/^(\.\d+|\d+(\.\d*)?)(pt|em|ex|mu|px|in|cm|mm)$/);
     if (match) {
       // @test Bbox-Padding
