@@ -103,6 +103,15 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
     }
 
     /**
+     * Update the style sheet for any changes due to rerendering
+     *
+     * @param {HTMLDocument} document   The document whose styles are to be updated
+     */
+    public updateStyleSheet(document: HTMLDocument<N, T, D>) {
+        document.addStyleSheet();
+    }
+
+    /**
      * Remove the typeset math from the document, and put back the original
      *  expression and its delimiters, if requested.
      *
