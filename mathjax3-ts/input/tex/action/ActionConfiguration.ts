@@ -17,8 +17,7 @@
 
 
 /**
- * @fileoverview Configuration file for the action package. Note that this is
- *     based on AMS package and Newcommand utilities.
+ * @fileoverview Configuration file for the action package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -27,8 +26,6 @@ import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
-import AmsMethods from '../ams/AmsMethods.js';
-import NewcommandUtil from '../newcommand/NewcommandUtil.js';
 import TexError from '../TexError.js';
 import BaseMethods from '../base/BaseMethods.js';
 
