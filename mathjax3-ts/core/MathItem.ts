@@ -130,25 +130,35 @@ export interface MathItem<N, T, D> {
     outputData: OptionList;
 
     /**
+     * Perform the renderActions on the document
+     *
+     * @param {MathDocument} document  The MathDocument in which the math resides
+     */
+    render(document: MathDocument<N, T, D>): void;
+
+    /**
+     * Rerenders an already rendered item and inserts it into the document
+     *
+     * @param {MathDocument} document  The MathDocument in which the math resides
+     * @param {number=} start          The state to start rerendering at (default = RERENDER)
+     */
+    rerender(document: MathDocument<N, T, D>, start?: number): void;
+
+    /**
      * Converts the expression into the internal format by calling the input jax
      *
      * @param {MathDocument} document  The MathDocument in which the math resides
+     * @param {number=} start          The state to start rerendering at (default = TYPESET)
+     * @param {number=} end            The state to end rerendering at (default = LAST)
      */
     compile(document: MathDocument<N, T, D>): void;
 
     /**
-     * Converts the internal format to the typeset version by caling the output jax
+     * Converts the internal format to the typeset version by calling the output jax
      *
      * @param {MathDocument} document  The MathDocument in which the math resides
      */
     typeset(document: MathDocument<N, T, D>): void;
-
-    /**
-     * Rerenders an already rendered item and re-inserts it into the document
-     *
-     * @param {MathDocument} document  The MathDocument in which the math resides
-     */
-    rerender(document: MathDocument<N, T, D>): void;
 
     /**
      * Inserts the typeset version in place of the original form in the document
@@ -183,10 +193,18 @@ export interface MathItem<N, T, D> {
      *
      * @param {number} state    The state to set for the expression
      * @param {number} restore  True if the original form should be restored
-     *                           when rolling back a typeset version
+     *                           to the document when rolling back a typeset version
+     * @returns {number}        The current state
      */
     state(state?: number, restore?: boolean): number;
 
+    /**
+     * Reset the item to its unprocessed state
+     *
+     * @param {number} restore  True if the original form should be restored
+     *                           to the document when rolling back a typeset version
+     */
+    reset(restore?: boolean): void;
 }
 
 /*****************************************************************/
@@ -234,13 +252,6 @@ export function protoItem<N, T>(open: string, math: string, close: string, n: nu
  */
 export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
-    public static STATE = {
-        UNPROCESSED: 0,
-        COMPILED: 1,
-        TYPESET: 2,
-        INSERTED: 3
-    };
-
     public math: string;
     public inputJax: InputJax<N, T, D>;
     public display: boolean;
@@ -281,6 +292,30 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     /**
      * @override
      */
+    public render(document: MathDocument<N, T, D>) {
+        document.renderActions.renderMath(this, document);
+    }
+
+    /**
+     * @override
+     */
+    public rerender(document: MathDocument<N, T, D>, start: number = STATE.RERENDER) {
+        if (this.state() >= start) {
+            this.state(start - 1);
+        }
+        document.renderActions.renderMath(this, document, start);
+    }
+
+    /**
+     * @override
+     */
+    convert(document: MathDocument<N, T, D>, end: number = STATE.LAST) {
+        document.renderActions.renderConvert(this, document, end);
+    }
+
+    /**
+     * @override
+     */
     public compile(document: MathDocument<N, T, D>) {
         if (this.state() < STATE.COMPILED) {
             this.root = this.inputJax.compile(this);
@@ -296,15 +331,6 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
             this.typesetRoot = document.outputJax[this.display === null ? 'escaped' : 'typeset'](this, document);
             this.state(STATE.TYPESET);
         }
-    }
-
-    /**
-     * @override
-     */
-    public rerender(document: MathDocument<N, T, D>) {
-        this.state(AbstractMathItem.STATE.COMPILED);
-        this.typeset(document);
-        this.updateDocument(document);
     }
 
     /**
@@ -349,6 +375,42 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         return this._state;
     }
 
+    /**
+     * @override
+     */
+    public reset(restore: boolean = false) {
+        this.state(STATE.UNPROCESSED);
+    }
+
 }
 
-let STATE = AbstractMathItem.STATE;
+/*****************************************************************/
+/**
+ * The various states that a MathItem (or MathDocument) can be in
+ *   (open-ended so that extensions can add to it)
+ */
+export const STATE: {[state: string]: number} = {
+    UNPROCESSED: 0,
+    FINDMATH: 10,
+    COMPILED: 20,
+    CONVERT: 100,
+    METRICS: 110,
+    RERENDER: 125,
+    TYPESET: 150,
+    INSERTED: 200,
+    RESET: 500,
+    LAST: 10000
+};
+
+/**
+ * Allocate a new named state
+ *
+ * @param {string} name    The name of the new state
+ * @param {number} state   The value for the new state
+ */
+export function newState(name: string, state: number) {
+    if (name in STATE) {
+        throw Error('State ' + name + ' already exists');
+    }
+    STATE[name] = state;
+}

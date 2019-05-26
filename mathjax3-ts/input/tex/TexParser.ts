@@ -72,7 +72,7 @@ export default class TexParser {
    * @param {string} _string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
    *     state of the overall expression translation.
-   * @param {Configuration=} config A parser configuration.
+   * @param {ParseOptions=} config A parser configuration.
    */
   constructor(private _string: string, env: EnvList,
               public configuration: ParseOptions) {

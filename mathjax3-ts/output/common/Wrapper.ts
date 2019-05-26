@@ -58,7 +58,8 @@ export type Constructor<T> = new(...args: any[]) => T;
 /**
  * Shorthands for wrappers and their constructors
  */
-export type AnyWrapper = CommonWrapper<any, any, any>;
+export type AnyWrapper = CommonWrapper<any, any, any, any, any, any>;
+export type AnyWrapperClass = CommonWrapperClass<any, any, any, any, any, any>;
 export type WrapperConstructor = Constructor<AnyWrapper>;
 
 /*********************************************************/
@@ -68,15 +69,21 @@ export type WrapperConstructor = Constructor<AnyWrapper>;
  * @template J  The OutputJax type
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
+ * @template CC The CharOptions type
+ * @template FD The FontData type
  */
-export interface CommonWrapperClass<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>>,
-                                    W extends CommonWrapper<J, W, C>,
-                                    C extends CommonWrapperClass<J, W, C>> extends
-WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
+export interface CommonWrapperClass<
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, FD, any>,
+    W extends CommonWrapper<J, W, C, CC, DD, FD>,
+    C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
+    CC extends CharOptions,
+    DD extends DelimiterData,
+    FD extends FontData<CC, any, DD>
+> extends WrapperClass<MmlNode, CommonWrapper<J, W, C, CC, DD, FD>> {
     /**
      * @override
      */
-    new(factory: CommonWrapperFactory<J, W, C>, node: MmlNode, ...args: any[]): W;
+    new(factory: CommonWrapperFactory<J, W, C, CC, DD, FD>, node: MmlNode, ...args: any[]): W;
 }
 
 /*****************************************************************/
@@ -86,11 +93,17 @@ WrapperClass<MmlNode, CommonWrapper<J, W, C>> {
  * @template J  The OutputJax type
  * @template W  The Wrapper type
  * @template C  The WrapperClass type
+ * @template CC The CharOptions type
+ * @template FD The FontData type
  */
-export class CommonWrapper<J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C>>,
-                           W extends CommonWrapper<J, W, C>,
-                           C extends CommonWrapperClass<J, W, C>> extends
-AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
+export class CommonWrapper<
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, FD, any>,
+    W extends CommonWrapper<J, W, C, CC, DD, FD>,
+    C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
+    CC extends CharOptions,
+    DD extends DelimiterData,
+    FD extends FontData<CC, any, DD>
+> extends AbstractWrapper<MmlNode, CommonWrapper<J, W, C, CC, DD, FD>> {
 
     public static kind: string = 'unknown';
 
@@ -160,7 +173,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * The factory used to create more wrappers
      */
-    protected factory: CommonWrapperFactory<J, W, C>;
+    protected factory: CommonWrapperFactory<J, W, C, CC, DD, FD>;
 
     /**
      * The parent and children of this node
@@ -192,12 +205,12 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     /**
      * Delimiter data for stretching this node (NOSTRETCH means not yet determined)
      */
-    public stretch: DelimiterData = NOSTRETCH;
+    public stretch: DD = NOSTRETCH as DD;
 
     /**
      * Easy access to the font parameters
      */
-    public font: FontData = null;
+    public font: FD = null;
 
     /**
      * Easy access to the output jax for this node
@@ -220,12 +233,19 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         return this.factory.jax.math.metrics;
     }
 
+    /**
+     * True if children with percentage widths should be resolved by this container
+     */
+    get fixesPWidth() {
+        return !this.node.notParent && !this.node.isToken;
+    }
+
     /*******************************************************************/
 
     /**
      * @override
      */
-    constructor(factory: CommonWrapperFactory<J, W, C>, node: MmlNode, parent: W = null) {
+    constructor(factory: CommonWrapperFactory<J, W, C, CC, DD, FD>, node: MmlNode, parent: W = null) {
         super(factory, node);
         this.parent = parent;
         this.font = factory.jax.font;
@@ -234,9 +254,9 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         this.getVariant();
         this.getScale();
         this.getSpace();
-        this.childNodes = node.childNodes.map((child: Node) => {
-            const wrapped = this.wrap(child as MmlNode);
-            if (wrapped.bbox.pwidth) {
+        this.childNodes = node.childNodes.map((child: MmlNode) => {
+            const wrapped = this.wrap(child);
+            if (wrapped.bbox.pwidth && (node.notParent || node.isKind('math'))) {
                 this.bbox.pwidth = BBox.fullWidth;
             }
             return wrapped;
@@ -276,14 +296,44 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
     }
 
     /**
-     * @param {BBox} bbox  The bounding box to modify (either this.bbox, or an empty one)
+     * @param {BBox} bbox           The bounding box to modify (either this.bbox, or an empty one)
+     * @param {boolean} recompute   True if we are recomputing due to changes in children that have percentage widths
      */
-    protected computeBBox(bbox: BBox) {
+    protected computeBBox(bbox: BBox, recompute: boolean = false) {
         bbox.empty();
         for (const child of this.childNodes) {
             bbox.append(child.getBBox());
         }
         bbox.clean();
+        if (this.fixesPWidth && this.setChildPWidths(recompute)) {
+            this.computeBBox(bbox, true);
+        }
+    }
+
+    /**
+     * Recursively resolve any percentage widths in the child nodes using the given
+     *   container width (or the child width, if none was passed).
+     *   Overriden for mtables in order to compute the width.
+     *
+     * @param {(number|null)=} w   The width of the container (from which percentages are computed)
+     * @param {boolean=} clear     True if pwidth marker is to be cleared
+     * @return {boolean}           True if a percentage width was found
+     */
+    public setChildPWidths(recompute: boolean, w: (number | null) = null, clear: boolean = true) {
+        if (recompute) {
+            return false;
+        }
+        if (clear) {
+           this.bbox.pwidth = '';
+        }
+        let changed = false;
+        for (const child of this.childNodes) {
+            const cbox = child.getBBox();
+            if (cbox.pwidth && child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)) {
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     /**
@@ -359,7 +409,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
             if (values.family) {
                     variant = this.explicitVariant(values.family, values.weight, values.style);
             } else {
-                if (this.node.getProperty('variantForm')) variant = '-TeX-variant';
+                if (this.node.getProperty('variantForm')) variant = '-tex-variant';
                 variant = (CommonWrapper.BOLDVARIANTS[values.weight] || {})[variant] || variant;
                 variant = (CommonWrapper.ITALICVARIANTS[values.style] || {})[variant] || variant;
             }
@@ -423,12 +473,6 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
             scale *= this.length2em(mathsize, 1, 1);
         }
         //
-        // For explicit font family, go back to the scaing of the surrounding text
-        //
-        if (this.variant === '-explicitFont') {
-           scale /= this.metrics.scale;
-        }
-        //
         // Record the scaling factors and set the element's CSS
         //
         this.bbox.scale = scale;
@@ -488,6 +532,10 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         }
     }
 
+    /**
+     * @return {boolean}   True if this is the top-most container of an embellished operator that is
+     *                       itself an embellished operator (the maximal embellished operator for its core)
+     */
     protected isTopEmbellished() {
         return (this.node.isEmbellished &&
                 !(this.node.Parent && this.node.Parent.isEmbellished));
@@ -529,7 +577,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      * @return {boolean}             Whether the node can stretch in that direction
      */
     public canStretch(direction: DIRECTION): boolean {
-        this.stretch = NOSTRETCH;
+        this.stretch = NOSTRETCH as DD;
         if (this.node.isEmbellished) {
             let core = this.core();
             if (core && core.node !== this.node) {
@@ -551,16 +599,62 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
             indentalign = indentalignfirst;
         }
         if (indentalign === 'auto') {
-            indentalign = 'center';
+            indentalign = this.jax.options.displayAlign;
         }
         if (indentshiftfirst !== 'indentshift') {
             indentshift = indentshiftfirst;
         }
         if (indentshift === 'auto') {
-            indentshift = '0';
+            indentshift = this.jax.options.displayIndent;
+            if (indentalign === 'right' && !indentshift.match(/^\s*0[a-z]*\s*$/)) {
+                indentshift = ('-' + indentshift.trim()).replace(/^--/, '');
+            }
         }
         const shift = this.length2em(indentshift, this.metrics.containerWidth);
         return [indentalign, shift] as [string, number];
+    }
+
+    /**
+     * @param {number} W       The total width
+     * @param {BBox} bbox      The bbox to be aligned
+     * @param {string} align   How to align (left, center, right)
+     * @return {number}        The x position of the aligned width
+     */
+    protected getAlignX(W: number, bbox: BBox, align: string) {
+        return (align === 'right' ? W - (bbox.w + bbox.R) * bbox.rscale :
+                align === 'left' ? bbox.L * bbox.rscale :
+                (W - bbox.w * bbox.rscale) / 2);
+    }
+
+    /**
+     * @param {number} H        The total height
+     * @param {number} D        The total depth
+     * @param {number} h        The height to be aligned
+     * @param {number} d        The depth to be aligned
+     * @param {string} align    How to align (top, bottom, middle, axis, baseline)
+     * @return {number}         The y position of the aligned baseline
+     */
+    protected getAlignY(H: number, D: number, h: number, d: number, align: string) {
+        return (align === 'top' ? H - h :
+                align === 'bottom' ? d - D :
+                align === 'middle' ? ((H - h) - (D - d)) / 2 :
+                0); // baseline and axis
+    }
+
+    /**
+     * @param {number} i   The index of the child element whose container is needed
+     * @return {number}    The inner width as a container (for percentage widths)
+     */
+    public getWrapWidth(i: number) {
+        return this.childNodes[i].getBBox().w;
+    }
+
+    /**
+     * @param {number} i   The index of the child element whose container is needed
+     * @return {string}    The alignment child element
+     */
+    public getChildAlign(i: number) {
+        return 'left';
     }
 
     /*******************************************************************/
@@ -603,7 +697,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         if (scale === null) {
             scale = this.bbox.scale;
         }
-        return LENGTHS.length2em(length as string, size, scale, this.metrics.em);
+        return LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm);
     }
 
     /**
@@ -612,16 +706,6 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      */
     protected unicodeChars(text: string) {
         return unicodeChars(text);
-    }
-
-    /**
-     * @param {number} n  A unicode code point to be converted to a character reference for use with the
-     *                   CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
-     *                   for higher values, or for the double quote and backslash characters).
-     * @return {string}  The character as a properly encoded string.
-     */
-    protected char(n: number, escape: boolean = false) {
-        return this.font.char(n, escape);
     }
 
     /**
@@ -661,13 +745,7 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
         const mmlFactory = (this.node as AbstractMmlNode).factory;
         const textNode = (mmlFactory.create('text') as TextNode).setText(text);
         const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
-        const attributes = this.node.attributes;
-        const display = attributes.get('display') as boolean;
-        const scriptlevel = attributes.get('scriptlevel') as number;
-        const defaults: AttributeList = {
-            mathsize: ['math', attributes.get('mathsize')]
-        };
-        mml.setInheritedAttributes(defaults, display, scriptlevel, false);
+        mml.inheritAttributesFrom(this.node);
         const node = this.wrap(mml);
         node.parent = this as any as W;
         return node;
@@ -679,8 +757,11 @@ AbstractWrapper<MmlNode, CommonWrapper<J, W, C>> {
      * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
      */
     protected getVariantChar(variant: string, n: number) {
-        const char = this.font.getChar(variant, n) || [0, 0, 0, null];
-        return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, CharOptions];
+        const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true}];
+        if (char.length === 3) {
+            char[3] = {} as CC;
+        }
+        return char as [number, number, number, CC];
     }
 
 }

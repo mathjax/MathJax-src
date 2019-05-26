@@ -49,8 +49,8 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
         'mjx-maction > mjx-tool': {
             display: 'none',
             position: 'absolute',
-            bottom: '-.33em', right: 0,
-            width: 0, height: 0
+            bottom: 0, right: 0,
+            Width: 0, height: 0
         },
         'mjx-tool > mjx-tip': {
             display: 'inline-block',
@@ -125,7 +125,9 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
                 // Math tooltips are handled through hidden nodes and event handlers
                 //
                 const adaptor = node.adaptor;
-                const tool = adaptor.append(node.chtml, node.html('mjx-tool', {}, [node.html('mjx-tip')]));
+                const tool = adaptor.append(node.chtml, node.html('mjx-tool', {
+                    style: {bottom: node.em(-node.dy), right: node.em(-node.dx)}
+                }, [node.html('mjx-tip')]));
                 tip.toCHTML(adaptor.firstChild(tool));
                 //
                 // Set up the event handlers to display and remove the tooltip

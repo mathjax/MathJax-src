@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMathItem, Location} from '../../core/MathItem.js';
+import {AbstractMathItem, Location, STATE} from '../../core/MathItem.js';
 import {InputJax} from '../../core/InputJax.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {HTMLDocument} from './HTMLDocument.js';
@@ -35,8 +35,6 @@ import {HTMLDocument} from './HTMLDocument.js';
  * @template D  The Document class
  */
 export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
-
-    public static STATE = AbstractMathItem.STATE;
 
     /**
      * Easy access to DOM adaptor
@@ -105,6 +103,15 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
     }
 
     /**
+     * Update the style sheet for any changes due to rerendering
+     *
+     * @param {HTMLDocument} document   The document whose styles are to be updated
+     */
+    public updateStyleSheet(document: HTMLDocument<N, T, D>) {
+        document.addStyleSheet();
+    }
+
+    /**
      * Remove the typeset math from the document, and put back the original
      *  expression and its delimiters, if requested.
      *
@@ -130,5 +137,3 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
     }
 
 }
-
-let STATE = HTMLMathItem.STATE;

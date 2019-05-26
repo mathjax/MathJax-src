@@ -25,7 +25,6 @@ import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMo, CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../BBox.js';
-import {DelimiterData} from '../FontData.js';
 import {StyleList} from '../../common/CssStyles.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -46,20 +45,23 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
             display: 'inline-table',
             width: '100%'
         },
-        'mjx-stretchy-h > mjx-beg, mjx-stretchy-h > mjx-end': {
+        'mjx-stretchy-h > *': {
             display: 'table-cell',
             width: 0
         },
+        'mjx-stretchy-h > * > mjx-c': {
+            display: 'inline-block'
+        },
+        'mjx-stretchy-h > * > mjx-c::before': {
+            padding: '.001em 0',                  // for blink
+            width: 'initial'
+        },
         'mjx-stretchy-h > mjx-ext': {
-            display: 'table-cell',
             overflow: 'hidden',
             width: '100%'
         },
         'mjx-stretchy-h > mjx-ext > mjx-c': {
             transform: 'scalex(500)'
-        },
-        'mjx-stretchy-h > mjx-ext > mjx-c::before': {
-            padding: '.001em 0'                  // for blink
         },
         'mjx-stretchy-h > mjx-beg > mjx-c': {
             'margin-right': '-.1em'
@@ -81,7 +83,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
             display: 'block'
         },
         'mjx-stretchy-v > * > mjx-c': {
-            transform: 'scale(1)',   // improves Firefox positioning
+            transform: 'scale(1)',                // improves Firefox positioning
             'transform-origin': 'left center',
             overflow: 'hidden'
         },
@@ -143,6 +145,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
     protected stretchHTML(chtml: N, symmetric: boolean) {
         const c = this.getText().charCodeAt(0);
         const delim = this.stretch;
+        delim.used = true;
         const stretch = delim.stretch;
         const content: N[] = [];
         //
@@ -184,7 +187,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
         //  Make the main element and add it to the parent
         //
         const dir = DirectionVH[delim.dir];
-        const properties = {c: this.char(delim.c || c), style: styles};
+        const properties = {class: this.char(delim.c || c), style: styles};
         const html = this.html('mjx-stretchy-' + dir, properties, content);
         this.adaptor.append(chtml, html);
     }

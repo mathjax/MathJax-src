@@ -79,7 +79,10 @@ export class MathMLCompile<N, T, D> {
         if (this.options['verify']) {
             this.options['verify'] = userOptions(defaultOptions({}, Class.VERIFY), this.options['verify']);
         }
-        this.factory = this.options['MmlFactory'] || new MmlFactory();
+    }
+
+    public setMmlFactory(mmlFactory: MmlFactory) {
+        this.factory = mmlFactory;
     }
 
     /**

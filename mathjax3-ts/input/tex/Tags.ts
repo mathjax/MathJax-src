@@ -372,7 +372,7 @@ export class AbstractTags implements Tags {
   public autoTag() {
     if (this.currentTag.tag == null) {
       this.counter++;
-      this.tag(this.counter.toString(), false);
+      this.tag(this.formatNumber(this.counter), false);
     }
   }
 
