@@ -53,7 +53,7 @@ export function unicodeChars(text: string) {
     for (let i = 0, m = text.length; i < m; i++) {
         let n = text.charCodeAt(i);
         if (n >= 0xD800 && n < 0xDBFF) {
-            n = (((n - 0xD800) << 10) + (text.charCodeAt(i++) - 0xDC00)) + 0x10000;
+            n = (((n - 0xD800) << 10) + (text.charCodeAt(++i) - 0xDC00)) + 0x10000;
         }
         unicode.push(n);
     }
