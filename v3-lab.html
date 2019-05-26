@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MathJax v3 Interactive Lab</title>
+<script src="lib/traceur.min.js"></script>
+<script src="lib/system.js"></script>
+<style>
+h1 {
+  margin-left: 1.5em;
+  margin-top: .25em;
+}
+body {
+  min-height: 50em;
+}
+#layout {
+  padding-left: .5em;
+  display: table;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 20em;
+}
+#layout > div {
+  display: table-row;
+}
+#layout > div > div {
+  display: table-cell;
+  vertical-align: top;
+}
+#layout > div > div:last-child {
+  width: 18em;
+  max-width: 18em;
+}
+
+#main {
+  display: inline-block;
+}
+#input {
+  width: 100%;
+  box-sizing: border-box;
+}
+#buttons {
+  text-align: right;
+  margin-top: 3px;
+  margin-bottom: 1em;
+}
+#output {
+  border: 1px solid black;
+  padding: 10px;
+  width: 100%;
+  max-width: 45em;
+  overflow: auto;
+  box-sizing: border-box;
+  font-size: 150%;
+}
+#mathml {
+  margin-top: 1.1em;
+  font-size: 90%;
+  width: 0;
+}
+
+#controls {
+  padding-left: 1em;
+  font-size: 80%;
+}
+#controls > div {
+  margin-bottom: .5em;
+  white-space: nowrap;
+}
+#controls > hr {
+  border: none;
+  border-top: 2px dotted;
+  margin: .7em 1em .7em 0;
+}
+#package {
+  margin-top: .5em;
+  white-space: initial ! important;
+}
+#package > span > span {
+  display: inline-block;
+  width: 9em;
+  white-space: nowrap;
+}
+#package label {
+  padding-left: 5px;
+}
+
+input[disabled] + label {
+  color: #AAAAAA;
+}
+
+</style>
+</head>
+<body>
+
+<h1>MathJax v3 Interactive Lab</h1>
+
+<div id="layout">
+<div>
+<div id="main">
+<textarea id="input" rows="15" onkeypress="Lab.checkKey(this,event)"></textarea>
+<div id="buttons">
+<input id="keep" type="button" value="Keep" onclick="Lab.Keep()" disabled />
+<input id="typeset" type="button" value="Typeset" onclick="Lab.Typeset()" disabled />
+</div>
+<div id="output"></div>
+<pre id="mathml"></pre>
+</div>
+
+<div id="controls">
+<div>
+<label for="foramt">Input:</label>
+<select id="format" onchange="Lab.setFormat(this.value)">
+<option value="TeX D">Display TeX</option>
+<option value="TeX I">Inline TeX</option>
+<option value="MathML">MathML</option>
+</select>
+</div>
+<div>
+<label for="renderer">Output:</label>
+<select id="renderer" onchange="Lab.setRenderer(this.value)">
+<option value="CHTML">CHTML</option>
+<option value="SVG">SVG</option>
+</select>
+</div>
+<div>
+<input type="checkbox" id="showMML" onchange="Lab.setMathML(this.checked)" /><label for="showMML"> Show MathML</label><br/>
+</div>
+<hr/>
+<div>
+<input type="checkbox" id="enrich" onchange="Lab.setEnrich(this.checked)" /><label for="enrich"> Enrich MathML</label><br/>
+<input type="checkbox" id="compute" onchange="Lab.setCompute(this.checked)" /><label for="compute"> Compute Complexity</label><br/>
+<input type="checkbox" id="collapse" onchange="Lab.setCollapse(this.checked)" /><label for="collapse"> Collapse Complex Math</label><br/>
+<input type="checkbox" id="explore" onchange="Lab.setExplorer(this.checked)" /><label for="explore"> Math Explorer</label><br/>
+</div>
+<hr/>
+<div id="package"></div>
+</div>
+</div>
+</div>
+
+<script>
+System.import('./lib/v3-lab.js')
+  .then(() => System.import('./components/src/startup/startup.js'))
+  .catch(function (error) {console.log(error.message)});
+</script>
+</body>
+</html>

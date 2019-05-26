@@ -21,10 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor, CommonWrapperClass} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {BBox} from '../BBox.js';
 import {Property} from '../../../core/Tree/Node.js';
+import {split} from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -44,6 +45,9 @@ export type EventHandler = (event: Event) => void;
  * Data used for tooltip actions
  */
 export const TooltipData = {
+    dx: '.2em',          // x-offset of tooltip from right side of maction bbox
+    dy: '.1em',          // y-offset of tooltip from bottom of maction bbox
+
     postDelay: 600,      // milliseconds before tooltip posts
     clearDelay: 100,     // milliseconds before tooltip is removed
 
@@ -80,9 +84,16 @@ export interface CommonMaction<W extends AnyWrapper> extends AnyWrapper {
     data: ActionData;
 
     /**
+     * Tooltip offsets
+     */
+    dx: number;
+    dy: number;
+
+    /**
      * The selected child wrapper
      */
     readonly selected: W;
+
 }
 
 /**
@@ -90,7 +101,7 @@ export interface CommonMaction<W extends AnyWrapper> extends AnyWrapper {
  *
  * @template W  The maction wrapper type
  */
-export interface CommonMactionClass<W extends AnyWrapper> extends CommonWrapperClass<any, any, any> {
+export interface CommonMactionClass<W extends AnyWrapper> extends AnyWrapperClass {
     /**
      * The valid action types and their handlers
      */
@@ -121,6 +132,9 @@ export function CommonMactionMixin<W extends AnyWrapper,
         public action: ActionHandler<W>;
         public data: ActionData;
 
+        public dx: number;
+        public dy: number;
+
         /**
          * @return {W}  The selected child wrapper
          */
@@ -142,13 +156,25 @@ export function CommonMactionMixin<W extends AnyWrapper,
             const [handler, data] = actions.get(action) || [((node, data) => {}) as ActionHandler<W>, {}];
             this.action = handler;
             this.data = data;
+            this.getParameters();
+        }
+
+        /**
+         * Look up attribute parameters
+         */
+        public getParameters() {
+            const offsets = this.node.attributes.get('data-offsets') as string;
+            let [dx, dy] = split(offsets || '');
+            this.dx = this.length2em(dx || TooltipData.dx);
+            this.dy = this.length2em(dy || TooltipData.dy);
         }
 
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             bbox.updateFrom(this.selected.getBBox());
+            this.selected.setChildPWidths(recompute);
         }
 
     };
