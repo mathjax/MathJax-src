@@ -52,6 +52,8 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-noerrors-tests.js
     node load.js tests/parser-extpfeil-tests.js
 
+    node load.js tests/parser-amscd-tests.js
+
     ## Physics package.
     node load.js tests/parser-physics-1-0-test.js
     node load.js tests/parser-physics-1-1-test.js
