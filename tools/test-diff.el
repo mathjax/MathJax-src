@@ -91,26 +91,6 @@
       (list name actual))))
 
 
-;;; Generate basic latex tests.
-
-(defun generate-latex-test ()
-  (interactive)
-  (whitespace-cleanup)
-  (beginning-of-buffer)
-  (query-replace "\\" "\\\\")
-  (beginning-of-buffer)
-  (while t
-    (when (not (equal (line-beginning-position) (line-end-position)))
-      (insert "parserTest.runTest(\n")
-      (insert "  'NAME ', '")
-      (move-end-of-line nil)
-      (insert "',\n  {\"kind\":\"math\"}\n);")
-      )
-    (move-beginning-of-line nil)
-    (next-line)
-    ))
-
-
 ;;; Special function for json element rewriting.
 
 (defun json-reformat:tree-to-string (root level)
