@@ -30,6 +30,7 @@ import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
+import NodeUtil from '../NodeUtil.js';
 import {numeric} from '../../../util/Entities.js';
 
 // Namespace
@@ -84,7 +85,9 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   } else if (variant) {
     def.mathvariant = variant;
   }
-  parser.Push(parser.create('token', 'mtext', def, numeric(n)));
+  let node = parser.create('token', 'mtext', def, numeric(n));
+  NodeUtil.setProperty(node, 'unicode', true);
+  parser.Push(node);
 };
 
 
