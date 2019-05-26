@@ -1,324 +1,20 @@
 import {ParserTest} from './parser-tests.js';
-import 'mathjax3/input/tex/cancel/CancelConfiguration.js';
+import 'mathjax3/input/tex/enclose/EncloseConfiguration.js';
 
 
-class ParserCancelTest extends ParserTest {
+class ParserEncloseTest extends ParserTest {
 
   constructor() {
     super();
-    this.packages = ['base', 'cancel'];
+    this.packages = ['base', 'enclose'];
   }
 
 }
 
-let parserTest = new ParserCancelTest();
+let parserTest = new ParserEncloseTest();
 
 parserTest.runTest(
-  'Cancel', '\\cancel{x}',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {"displaystyle": true,
-                    "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "menclose",
-         "texClass": 0,
-         "attributes": {"notation": "updiagonalstrike"},
-         "inherited": {"displaystyle": true,
-                       "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "mrow",
-            "texClass": 0,
-            "attributes": {},
-            "inherited": {"displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {"displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}]}],
-              "isInferred": true}]}],
-      "isInferred": true}]}
-);
-
-parserTest.runTest(
-  'BCancel', '\\bcancel{x}',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {"displaystyle": true,
-                    "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "menclose",
-         "texClass": 0,
-         "attributes": {"notation": "downdiagonalstrike"},
-         "inherited": {"displaystyle": true,
-                       "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "mrow",
-            "texClass": 0,
-            "attributes": {},
-            "inherited": {"displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {"displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}]}],
-              "isInferred": true}]}],
-      "isInferred": true}]}
-);
-
-parserTest.runTest(
-  'XCancel', '\\xcancel{x}',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {"displaystyle": true,
-                    "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "menclose",
-         "texClass": 0,
-         "attributes": {"notation": "updiagonalstrike downdiagonalstrike"},
-         "inherited": {"displaystyle": true,
-                       "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "mrow",
-            "texClass": 0,
-            "attributes": {},
-            "inherited": {"displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {"displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}]}],
-              "isInferred": true}]}],
-      "isInferred": true}]}
-);
-
-parserTest.runTest(
-  'CancelTo', '\\cancelto{x}{y}',
-  {"kind": "math",
-   "texClass": -1,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": -1,
-      "attributes": {},
-      "inherited": {"displaystyle": true,
-                    "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "msup",
-         "texClass": -1,
-         "attributes": {},
-         "inherited": {"displaystyle": true,
-                       "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "menclose",
-            "texClass": 0,
-            "attributes": {"notation": "updiagonalstrike updiagonalarrow"},
-            "inherited": {"displaystyle": true,
-                          "scriptlevel": 0},
-            "properties": {},
-            "childNodes": [
-              {"kind": "mrow",
-               "texClass": 0,
-               "attributes": {},
-               "inherited": {"displaystyle": true,
-                             "scriptlevel": 0},
-               "properties": {},
-               "childNodes": [
-                 {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {"displaystyle": true,
-                                "scriptlevel": 0,
-                                "mathvariant": "italic"},
-                  "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "y"}]}],
-                  "isInferred": true}]},
-            {"kind": "mpadded",
-              "texClass": 0,
-              "attributes": {"depth": "-.1em",
-                "height": "+.1em",
-                "voffset": ".1em"},
-              "inherited": {"displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {"displaystyle": false,
-                    "scriptlevel": 1},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "mi",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {"displaystyle": false,
-                        "scriptlevel": 1,
-                        "mathvariant": "italic"},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "x"}]}],
-                  "isInferred": true}]}]}],
-      "isInferred": true}]}
-);
-
-
-parserTest.runTest(
-  'Cancel Attr', '\\cancel[color=red]{x}',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {"displaystyle": true,
-                    "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "menclose",
-         "texClass": 0,
-         "attributes": {"color": "red",
-                        "notation": "updiagonalstrike"},
-         "inherited": {"displaystyle": true,
-                       "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "mrow",
-            "texClass": 0,
-            "attributes": {},
-            "inherited": {"displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {"displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}]}],
-              "isInferred": true}]}],
-      "isInferred": true}]}
-);
-
-
-parserTest.runTest(
-  'Cancel Attrs', '\\cancel[mathcolor=green,mathbackground=yellow]{x}',
-  {"kind": "math",
-   "texClass": 0,
-   "attributes": {"display": "block"},
-   "inherited": {"displaystyle": true,
-                 "scriptlevel": 0},
-   "properties": {},
-   "childNodes": [
-     {"kind": "mrow",
-      "texClass": 0,
-      "attributes": {},
-      "inherited": {"displaystyle": true,
-                    "scriptlevel": 0},
-      "properties": {},
-      "childNodes": [
-        {"kind": "menclose",
-         "texClass": 0,
-         "attributes": {"mathcolor": "green",
-                        "mathbackground": "yellow",
-                        "notation": "updiagonalstrike"},
-         "inherited": {"displaystyle": true,
-                       "scriptlevel": 0},
-         "properties": {},
-         "childNodes": [
-           {"kind": "mrow",
-            "texClass": 0,
-            "attributes": {},
-            "inherited": {"displaystyle": true,
-                          "scriptlevel": 0},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mi",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {"displaystyle": true,
-                    "scriptlevel": 0,
-                    "mathvariant": "italic"},
-                  "properties": {},
-                  "childNodes": [
-                    {"kind": "text",
-                      "text": "x"}]}],
-              "isInferred": true}]}],
-      "isInferred": true}]}
-);
-
-
-parserTest.runTest(
-  'Cancel Attr Not Allowed', '\\cancel[nothing=green]{x}',
+  'Enclose 1', '\\enclose{updiagonalstrike}{x}',
   {"kind": "math",
    "texClass": 0,
    "attributes": {"display": "block"},
@@ -363,81 +59,229 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  'CancelTo Attrs', '\\cancelto[data-padding=5,data-arrowhead=15]{x}{y}',
+  'Enclose 2', '\\enclose{circle}{x}',
   {"kind": "math",
-   "texClass": -1,
+   "texClass": 0,
    "attributes": {"display": "block"},
    "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
-      "texClass": -1,
+      "texClass": 0,
       "attributes": {},
       "inherited": {"displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
       "childNodes": [
-        {"kind": "msup",
-         "texClass": -1,
-         "attributes": {},
+        {"kind": "menclose",
+         "texClass": 0,
+         "attributes": {"notation": "circle"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
          "childNodes": [
-           {"kind": "menclose",
+           {"kind": "mrow",
             "texClass": 0,
-            "attributes": {"data-padding": "5",
-                           "data-arrowhead": "15",
-                           "notation": "updiagonalstrike updiagonalarrow"},
+            "attributes": {},
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
-            "properties": {},
-            "childNodes": [
-              {"kind": "mrow",
-               "texClass": 0,
-               "attributes": {},
-               "inherited": {"displaystyle": true,
-                             "scriptlevel": 0},
-               "properties": {},
-               "childNodes": [
-                 {"kind": "mi",
+              "properties": {},
+              "childNodes": [
+                {"kind": "mi",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {"displaystyle": true,
-                                "scriptlevel": 0,
-                                "mathvariant": "italic"},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "y"}]}],
-                  "isInferred": true}]},
-            {"kind": "mpadded",
-              "texClass": 0,
-              "attributes": {"depth": "-.1em",
-                "height": "+.1em",
-                "voffset": ".1em"},
-              "inherited": {"displaystyle": false,
-                "scriptlevel": 1},
-              "properties": {},
-              "childNodes": [
-                {"kind": "mrow",
-                  "texClass": 0,
-                  "attributes": {},
-                  "inherited": {"displaystyle": false,
-                    "scriptlevel": 1},
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
                   "properties": {},
                   "childNodes": [
-                    {"kind": "mi",
-                      "texClass": 0,
-                      "attributes": {},
-                      "inherited": {"displaystyle": false,
-                        "scriptlevel": 1,
-                        "mathvariant": "italic"},
-                      "properties": {},
-                      "childNodes": [
-                        {"kind": "text",
-                          "text": "x"}]}],
-                  "isInferred": true}]}]}],
+                    {"kind": "text",
+                      "text": "x"}]}],
+              "isInferred": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Enclose 3', '\\enclose{horizontalstrike}{x}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "menclose",
+         "texClass": 0,
+         "attributes": {"notation": "horizontalstrike"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+              "properties": {},
+              "childNodes": [
+                {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "x"}]}],
+              "isInferred": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Enclose Attr 2', '\\enclose{updiagonalarrow}[mathbackground=red]{x}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "menclose",
+         "texClass": 0,
+         "attributes": {"mathbackground": "red",
+                        "notation": "updiagonalarrow"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+              "properties": {},
+              "childNodes": [
+                {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "x"}]}],
+              "isInferred": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Enclose Attr 1', '\\enclose{horizontalstrike}[data-thickness=5]{x}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "menclose",
+         "texClass": 0,
+         "attributes": {"data-thickness": "5",
+                        "notation": "horizontalstrike"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+              "properties": {},
+              "childNodes": [
+                {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "x"}]}],
+              "isInferred": true}]}],
+      "isInferred": true}]}
+);
+
+
+parserTest.runTest(
+  'Enclose Attrs', '\\enclose{circle}[data-thickness=10,data-padding=5]{x}',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "menclose",
+         "texClass": 0,
+         "attributes": {"data-thickness": "10",
+                        "data-padding": "5",
+                        "notation": "circle"},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": 0,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                "scriptlevel": 0},
+              "properties": {},
+              "childNodes": [
+                {"kind": "mi",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0,
+                    "mathvariant": "italic"},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "x"}]}],
+              "isInferred": true}]}],
       "isInferred": true}]}
 );

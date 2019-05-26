@@ -50,6 +50,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-mhchem9-tests.js
 
     node load.js tests/parser-noerrors-tests.js
+    node load.js tests/parser-enclose-tests.js
     node load.js tests/parser-cancel-tests.js
 
     ## Physics package.
