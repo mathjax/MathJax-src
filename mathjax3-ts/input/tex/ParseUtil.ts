@@ -493,24 +493,104 @@ namespace ParseUtil {
    * Splits a package option list of the form [x=y,z=1] into an attribute list
    * of the form {x: y, z: 1}.
    * @param {string} attrib The attributes of the package.
-   * @param {{[key: string]: number}?} allowed A list of allowed options.
+   * @param {{[key: string]: number}?} allowed A list of allowed options. If
+   *     given only allowed arguments are returned.
+   * @param {boolean?} error If true, raises an exception if not allowed options
+   *     are found.
    * @return {EnvList} The attribute list.
    */
-  export function splitPackageOptions(attrib: string, allowed: {[key: string]: number} = {}): EnvList {
-    let def: EnvList = {};
-    if (attrib !== '') {
-      const attr = attrib.replace(/ /g, '').split(/,/);
-      for (let i = 0, m = attr.length; i < m; i++) {
-        const keyvalue = attr[i].split(/[:=]/);
-        if (allowed[keyvalue[0]]) {
-          let value = keyvalue[1];
-          def[keyvalue[0]] = (value === 'true') ? true :
-            (value === 'false') ? false : value;
+  export function splitPackageOptions(attrib: string,
+                                      allowed: {[key: string]: number} = null,
+                                      error: boolean = false): EnvList {
+    let def: EnvList = readKeyval(attrib);
+    if (allowed) {
+      for (let key of Object.keys(def)) {
+        if (!allowed[key]) {
+          if (error) {
+            throw new TexError('InvalidOption',
+                               'Invalid optional argument: ', key);
+          }
+          delete def[key];
         }
       }
     }
     return def;
   }
+
+
+  /**
+   * Implementation of the keyval function from https://www.ctan.org/pkg/keyval
+   * @param {string} text The optional parameter string for a package or
+   *     command.
+   * @return {EnvList} Set of options as key/value pairs.
+   */
+  function readKeyval(text: string): EnvList {
+    let options: EnvList = {};
+    let rest = text;
+    let end, key, val;
+    while (rest) {
+      [key, end, rest] = readValue(rest, ['=', ',']);
+      if (end === '=') {
+        [val, end, rest] = readValue(rest, [',']);
+        val = ((val === 'false' || val === 'true') ?
+               JSON.parse : removeBraces)(val);
+        options[key] = val;
+      } else if (key) {
+        options[key] = true;
+      }
+    }
+    return options;
+  }
+
+
+  /**
+   * Removes pairs of outer braces.
+   * @param {string} text The string to clean.
+   * @return {string} The cleaned string.
+   */
+  function removeBraces(text: string): string {
+    while (text.match(/^{.*}$/)) {
+      text = text.slice(1, text.length - 1);
+    }
+    return text;
+  }
+
+
+  /**
+   * Read a value from the given string until an end parameter is reached or
+   * string is exhausted.
+   * @param {string} text The string to process.
+   * @param {string[]} end List of possible end characters.
+   * @return {[string, string, string]} The collected value, the actual end
+   *     character, and the rest of the string still to parse.
+   */
+  function readValue(text: string, end: string[]): [string, string, string] {
+    let rest = text;
+    let braces = 0;
+    let value = '';
+    while (rest) {
+      let c = rest[0];
+      rest = rest.slice(1);
+      switch (c) {
+      case '{':
+        braces++;
+        break;
+      case '}':
+        if (braces) {
+          braces--;
+        }
+      }
+      if (!braces && end.indexOf(c) !== -1) {
+        return [value.trim(), c, rest];
+      }
+      value += c;
+    }
+    if (braces) {
+      throw new TexError('ExtraOpenMissingClose',
+                         'Extra open brace or missing close brace');
+    }
+    return [value.trim(), '', rest];
+  };
 
 }
 
