@@ -499,9 +499,9 @@ namespace ParseUtil {
    *     are found.
    * @return {EnvList} The attribute list.
    */
-  export function splitPackageOptions(attrib: string,
-                                      allowed: {[key: string]: number} = null,
-                                      error: boolean = false): EnvList {
+  export function keyvalOptions(attrib: string,
+                                allowed: {[key: string]: number} = null,
+                                error: boolean = false): EnvList {
     let def: EnvList = readKeyval(attrib);
     if (allowed) {
       for (let key of Object.keys(def)) {

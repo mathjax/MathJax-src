@@ -34,12 +34,14 @@ import ParseUtil from '../ParseUtil.js';
  * The attributes allowed in \enclose{notation}[attributes]{math}
  * @type {{[key: string]: number}}
  */
-const ALLOWED: {[key: string]: number} = {
-  arrow: 1,
-  color: 1, mathcolor: 1,
-  background: 1, mathbackground: 1,
-  padding: 1,
-  thickness: 1
+export const ENCLOSE_OPTIONS: {[key: string]: number} = {
+  'data-arrowhead': 1,
+  color: 1,
+  mathcolor: 1,
+  background: 1,
+  mathbackground: 1,
+  'data-padding': 1,
+  'data-thickness': 1
 };
 
 
@@ -57,7 +59,7 @@ EncloseMethods.Enclose = function(parser: TexParser, name: string) {
   let notation = parser.GetArgument(name).replace(/,/g, ' ');
   const attr = parser.GetBrackets(name, '');
   const math = parser.ParseArg(name);
-  const def = ParseUtil.splitPackageOptions(attr, ALLOWED);
+  const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
   def.notation = notation;
   if (def.arrow) {
     def.notation += ' updiagonalarrow';
@@ -67,7 +69,7 @@ EncloseMethods.Enclose = function(parser: TexParser, name: string) {
 };
 
 
-new CommandMap('enclose', {enclose:   'Enclose'}, EncloseMethods);
+new CommandMap('enclose', {enclose: 'Enclose'}, EncloseMethods);
 
 
 export const EncloseConfiguration = Configuration.create(

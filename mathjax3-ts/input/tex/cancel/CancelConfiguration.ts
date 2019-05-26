@@ -28,18 +28,7 @@ import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
-
-
-/**
- * The attributes allowed in \cancel{notation}[attributes]{math}
- * @type {{[key: string]: number}}
- */
-const ALLOWED: {[key: string]: number} = {
-  color: 1, mathcolor: 1,
-  background: 1, mathbackground: 1,
-  padding: 1,
-  thickness: 1
-};
+import {ENCLOSE_OPTIONS} from '../enclose/EncloseConfiguration.js';
 
 
 // Namespace
@@ -55,7 +44,7 @@ export let CancelMethods: Record<string, ParseMethod> = {};
 CancelMethods.Cancel = function(parser: TexParser, name: string, notation: string) {
   const attr = parser.GetBrackets(name, '');
   const math = parser.ParseArg(name);
-  const def = ParseUtil.splitPackageOptions(attr, ALLOWED);
+  const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
   def['notation'] = notation;
   parser.Push(parser.create('node', 'menclose', [math], def));
 };
@@ -72,7 +61,7 @@ CancelMethods.CancelTo = function(parser: TexParser, name: string) {
   const attr = parser.GetBrackets(name, '');
   let value = parser.ParseArg(name);
   const math = parser.ParseArg(name);
-  const def = ParseUtil.splitPackageOptions(attr, ALLOWED);
+  const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
   def ['notation'] = TexConstant.Notation.UPDIAGONALSTRIKE + ' ' +
     TexConstant.Notation.UPDIAGONALARROW;
   value = parser.create('node', 'mpadded', [value],
