@@ -24,7 +24,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor, CommonWrapperClass} from '../Wrapper.js';
+import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {BBox} from '../BBox.js';
@@ -149,7 +149,7 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
 
 }
 
-export interface CommonScriptbaseClass extends CommonWrapperClass<any, any, any> {
+export interface CommonScriptbaseClass extends AnyWrapperClass {
     /**
      * Set to true for munderover/munder/mover/msup (Appendix G 13)
      */
@@ -232,7 +232,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          *
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             const basebox = this.baseChild.getBBox();
             const scriptbox = this.script.getBBox();
             const [x, y] = this.getOffset(basebox, scriptbox);
@@ -240,6 +240,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
             bbox.combine(scriptbox, bbox.w + x, y);
             bbox.w += this.font.params.scriptspace;
             bbox.clean();
+            this.setChildPWidths(recompute);
         }
 
         /**

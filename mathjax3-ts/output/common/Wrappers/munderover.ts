@@ -73,9 +73,9 @@ export function CommonMunderMixin<W extends AnyWrapper,
         /**
          * @override
          */
-        public computeBBox(bbox: BBox) {
+        public computeBBox(bbox: BBox, recompute: boolean = false) {
             if (this.hasMovableLimits()) {
-                super.computeBBox(bbox);
+                super.computeBBox(bbox, recompute);
                 return;
             }
             bbox.empty();
@@ -89,6 +89,7 @@ export function CommonMunderMixin<W extends AnyWrapper,
             bbox.d += this.font.params.big_op_spacing5;
             bbox.ic = -this.baseCore.bbox.ic;
             bbox.clean();
+            this.setChildPWidths(recompute);
         }
 
     };

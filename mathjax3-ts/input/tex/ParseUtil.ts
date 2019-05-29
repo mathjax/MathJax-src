@@ -105,16 +105,23 @@ namespace ParseUtil {
    * @param {string} open The opening fence.
    * @param {MmlNode} mml The enclosed node.
    * @param {string} close The closing fence.
+   * @param {string=} big Bigg command.
    */
-  export function fenced(configuration: ParseOptions, open: string, mml: MmlNode, close: string) {
+  export function fenced(configuration: ParseOptions, open: string, mml: MmlNode,
+                         close: string, big: string = '') {
     // @test Fenced, Fenced3
     let nf = configuration.nodeFactory;
     let mrow = nf.create('node', 'mrow', [],
                          {open: open, close: close, texClass: TEXCLASS.INNER});
-    let openNode = nf.create('text', open);
-    let mo = nf.create('node', 'mo', [],
-                       {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
-                       openNode);
+    let mo;
+    if (big) {
+      mo = new TexParser('\\' + big + 'l' + open, configuration.parser.stack.env, configuration).mml();
+    } else {
+      let openNode = nf.create('text', open);
+      mo = nf.create('node', 'mo', [],
+                     {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
+                     openNode);
+    }
     NodeUtil.appendChildren(mrow, [mo]);
     if (NodeUtil.isType(mml, 'mrow') && NodeUtil.isInferred(mml)) {
       // @test Fenced, Middle
@@ -123,10 +130,14 @@ namespace ParseUtil {
       // @test Fenced3
       NodeUtil.appendChildren(mrow, [mml]);
     }
-    let closeNode = nf.create('text', close);
-    mo = nf.create('node', 'mo', [],
-                   {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
-                   closeNode);
+    if (big) {
+      mo = new TexParser('\\' + big + 'r' + close, configuration.parser.stack.env, configuration).mml();
+    } else {
+      let closeNode = nf.create('text', close);
+      mo = nf.create('node', 'mo', [],
+                     {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
+                     closeNode);
+    }
     NodeUtil.appendChildren(mrow, [mo]);
     return mrow;
   }

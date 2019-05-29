@@ -26,6 +26,7 @@ import {CommonWrapper} from '../common/Wrapper.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
 import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
 import {CHTMLWrappers} from './Wrappers.js';
+import {CHTMLCharOptions, CHTMLDelimiterData, CHTMLFontData} from './FontData.js';
 
 /*****************************************************************/
 /**
@@ -36,7 +37,14 @@ import {CHTMLWrappers} from './Wrappers.js';
  * @template D  The Document class
  */
 export class CHTMLWrapperFactory<N, T, D> extends
-CommonWrapperFactory<CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperClass<N, T, D>> {
+CommonWrapperFactory<
+    CHTML<N, T, D>,
+    CHTMLWrapper<N, T, D>,
+    CHTMLWrapperClass<N, T, D>,
+    CHTMLCharOptions,
+    CHTMLDelimiterData,
+    CHTMLFontData
+> {
 
     /**
      * The default list of wrapper nodes this factory can create

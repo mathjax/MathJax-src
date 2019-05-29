@@ -21,24 +21,24 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-declare var System: {import: Function};
-declare function require(name: string): Object;
-declare var __dirname: string;
+import {MathJax} from '../mathjax.js';
 
 /**
- * Load a file asynchronously, either using System.js, or node's require().
+ * Load a file asynchronously using the MathJax.asynchLoad method, if there is one
  *
  * @param {string} name  The name of the file to load
  * @return {Promise}     The promise that is satisfied when the file is loaded
  */
 export function asyncLoad(name: string) {
-    if (name.charAt(0) === '.') {
-        name = __dirname + name.replace(/^\.\.?/,'/..');
-    }
-    if (typeof(System) !== 'undefined') {
-        return System.import(name);
+    if (!MathJax.asyncLoad) {
+        return Promise.reject(`Can't load '${name}': No asyncLoad method specified`);
     }
     return new Promise((ok, fail) => {
-        ok(require(name));
+        const result = MathJax.asyncLoad(name);
+        if (result instanceof Promise) {
+            result.then((value: any) => ok(value)).catch((err: Error) => fail(err));
+        } else {
+            ok(result);
+        }
     });
 }
