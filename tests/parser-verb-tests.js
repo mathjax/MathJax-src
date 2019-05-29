@@ -280,3 +280,48 @@ parserTest.runTest(
               "isSpacelike": true}]}],
       "isInferred": true}]}
 );
+
+parserTest.runTest(
+  'Verb Missing Arg', '\\verb',
+  {"kind": "math",
+   "texClass": 0,
+   "attributes": {"display": "block"},
+   "inherited": {"displaystyle": true,
+                 "scriptlevel": 0},
+   "properties": {},
+   "childNodes": [
+     {"kind": "mrow",
+      "texClass": 0,
+      "attributes": {},
+      "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+      "properties": {},
+      "childNodes": [
+        {"kind": "merror",
+         "texClass": 0,
+         "attributes": {},
+         "inherited": {"displaystyle": true,
+                       "scriptlevel": 0},
+         "properties": {},
+         "childNodes": [
+           {"kind": "mrow",
+            "texClass": null,
+            "attributes": {},
+            "inherited": {"displaystyle": true,
+                          "scriptlevel": 0},
+            "properties": {},
+            "childNodes": [
+                {"kind": "mtext",
+                  "texClass": 0,
+                  "attributes": {},
+                  "inherited": {"displaystyle": true,
+                    "scriptlevel": 0},
+                  "properties": {},
+                  "childNodes": [
+                    {"kind": "text",
+                      "text": "Undefined control sequence \\verb"}],
+                  "isSpacelike": true}],
+              "isInferred": true,
+              "isSpacelike": true}]}],
+      "isInferred": true}]}  
+);
