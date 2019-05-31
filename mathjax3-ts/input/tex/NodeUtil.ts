@@ -121,6 +121,7 @@ namespace NodeUtil {
       let value = properties[name];
       if (name === 'texClass') {
         node.texClass = (value as number);
+        node.setProperty(name, value);
       } else if (name === 'movablelimits') {
         node.setProperty('movablelimits', value);
         if (node.isKind('mo') || node.isKind('mstyle')) {
