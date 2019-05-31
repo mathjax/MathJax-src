@@ -620,13 +620,16 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @override
      */
     public convert(math: string, options: OptionList = {}) {
-        const {format, display, end, ex, em, cwidth, lwidth, scale} = userOptions({
+        var {format, display, end, ex, em, containerWidth, lineWidth, scale} = userOptions({
             format: this.inputJax[0].name, display: true, end: STATE.LAST,
-            em: 16, ex: 8, cwidth: 1000000, lwidth: 1000000, scale: 1
+            em: 16, ex: 8, containerWidth: null, lineWidth: 1000000, scale: 1
         }, options);
+        if (containerWidth === null) {
+            containerWidth = 80 * ex;
+        }
         const jax = this.inputJax.reduce((jax, ijax) => (ijax.name === format ? ijax : jax), null);
         const mitem = new this.options.MathItem(math, jax, display);
-        mitem.setMetrics(em, ex, cwidth, lwidth, scale);
+        mitem.setMetrics(em, ex, containerWidth, lineWidth, scale);
         mitem.convert(this, end);
         return (mitem.typesetRoot || mitem.root);
     }
