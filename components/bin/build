@@ -112,7 +112,7 @@ function processDir(base, dir) {
  * @param {string} name    The path of the file relative to the base
  */
 function processFile(base, name) {
-    console.log('  ' + name);
+    console.info('  ' + name);
     const file = fs.readFileSync(path.resolve(base, name)).toString();
     const parts = file.split(EXPORTPATTERN);
     const objects = processParts(parts);
@@ -142,7 +142,7 @@ function processParts(parts) {
         } else if (EXPORT_PROCESS.indexOf(type) >= 0) {
             objects.push(name);
         } else if (EXPORT_IGNORE.indexOf(type) < 0) {
-            console.log("    Can't process '" + parts[i] + "'");
+            console.info("    Can't process '" + parts[i] + "'");
         }
     }
     return objects;
@@ -219,7 +219,7 @@ function makeFile(file, lines) {
  * Make the library file that adds all the exported objects into the MathJax global object
  */
 function processGlobal() {
-    console.log('  ' + COMPONENT + '.ts');
+    console.info('  ' + COMPONENT + '.ts');
     const lines = [
         `import {combineWithMathJax} from '${GLOBAL}';`,
         '',
@@ -322,6 +322,6 @@ function rmDir(dir) {
 // Create the file that loads all the target objects into the MathJax global object.
 //
 rmDir(LIB);
-console.log("Processing:");
+console.info("Processing:");
 processList(MATHJAX3 + '-ts', '', TARGETS);
 processGlobal();

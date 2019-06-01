@@ -53,29 +53,18 @@ const nodeDir = (dir => (fs.existsSync(dir) ? dir : path.resolve(parent, '..')))
  * @param {string} space    The indentation for output
  */
 function copyFile(from, to, name, space) {
-    !fs.existsSync(to) && makeDir(to);
+    !fs.existsSync(to) && fs.mkdirSync(to, {recursive: true});
     const copy = path.resolve(from, name);
     const dest = path.resolve(to, name);
     if (fs.lstatSync(copy).isDirectory()) {
-        console.log(space + name + '/');
+        console.info(space + name + '/');
         for (const file of fs.readdirSync(copy)) {
             copyFile(copy, dest, file, space + INDENT);
         }
     } else {
-        console.log(space + name);
+        console.info(space + name);
         fs.copyFileSync(copy, dest);
     }
-}
-
-/**
- * Recursively make any needed directories
- *
- * @param {string} dir   The directory relative to the library directory
- */
-function makeDir(dir) {
-    if (fs.existsSync(dir)) return;
-    makeDir(path.dirname(dir));
-    fs.mkdirSync(dir);
 }
 
 /**

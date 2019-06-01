@@ -98,14 +98,14 @@ function processSubdirs(dir, action) {
 function buildLib(dir) {
     const file = path.join(dir, 'build.json');
     if (!fs.existsSync(file)) return;
-    console.log('Building ' + dir.replace(compRE, ''));
+    console.info('Building ' + dir.replace(compRE, ''));
     const wd = process.cwd();
     try {
         process.chdir(dir);
         const result = execSync(build);
-        console.log('    ' + String(result).replace(/\n/g, '\n    '));
+        console.info('    ' + String(result).replace(/\n/g, '\n    '));
     } catch (err) {
-        console.log('    ' + err.message);
+        console.info('    ' + err.message);
     }
     process.chdir(wd);
 }
@@ -118,17 +118,17 @@ function buildLib(dir) {
 function webpackLib(dir) {
     const file = path.join(dir, 'webpack.config.js');
     if (!fs.existsSync(file)) return;
-    console.log('Webpacking ' + dir.replace(compRE, ''));
+    console.info('Webpacking ' + dir.replace(compRE, ''));
     const wd = process.cwd();
     try {
         process.chdir(dir);
         const result = execSync('npx webpack --display-modules');
-        console.log('    ' + String(result).replace(/\n/g, '\n    ')
+        console.info('    ' + String(result).replace(/\n/g, '\n    ')
                                            .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
                                            .replace(compRE, '[components]')
                                            .replace(rootRE, '[mathjax3]'));
     } catch (err) {
-        console.log('    ' + err.message);
+        console.info('    ' + err.message);
     }
     process.chdir(wd);
 }
@@ -141,13 +141,13 @@ function webpackLib(dir) {
 function copyLib(dir) {
     const file = path.join(dir, 'copy.json');
     if (!fs.existsSync(file)) return;
-    console.log('Copying ' + dir.replace(compRE, ''));
+    console.info('Copying ' + dir.replace(compRE, ''));
     try {
         process.chdir(dir);
         const result = execSync(copy);
-        console.log('    ' + String(result).replace(/\n/g, '\n    '));
+        console.info('    ' + String(result).replace(/\n/g, '\n    '));
     } catch (err) {
-        console.log('    ' + err.message);
+        console.info('    ' + err.message);
     }
 }
 
