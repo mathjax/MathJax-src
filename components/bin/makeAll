@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 
-
 /*************************************************************
  *
  *  Copyright (c) 2018 The MathJax Consortium
@@ -42,6 +41,7 @@ if (dirs.length === 0) {
  * The path to the bin/build executable
  */
 const build = path.join(__dirname, 'build');
+const copy = path.join(__dirname, 'copy');
 
 /**
  * Regular expressions for the components directory and the mathjax3 .js location
@@ -60,6 +60,7 @@ function processList(dirs) {
         const fulldir = path.resolve(dir);
         processDir(fulldir, buildLib);
         processDir(fulldir, webpackLib);
+        processDir(fulldir, copyLib);
     }
 }
 
@@ -103,7 +104,9 @@ function buildLib(dir) {
         process.chdir(dir);
         const result = execSync(build);
         console.log('    ' + String(result).replace(/\n/g, '\n    '));
-    } catch (err) {}
+    } catch (err) {
+        console.log('    ' + err.message);
+    }
     process.chdir(wd);
 }
 
@@ -124,10 +127,29 @@ function webpackLib(dir) {
                                            .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
                                            .replace(compRE, '[components]')
                                            .replace(rootRE, '[mathjax3]'));
-    } catch (err) {}
+    } catch (err) {
+        console.log('    ' + err.message);
+    }
     process.chdir(wd);
 }
 
+/**
+ * Copy the designated files if there is a configurtion file for it
+ *
+ * @param {string} dir   The directory to check
+ */
+function copyLib(dir) {
+    const file = path.join(dir, 'copy.json');
+    if (!fs.existsSync(file)) return;
+    console.log('Copying ' + dir.replace(compRE, ''));
+    try {
+        process.chdir(dir);
+        const result = execSync(copy);
+        console.log('    ' + String(result).replace(/\n/g, '\n    '));
+    } catch (err) {
+        console.log('    ' + err.message);
+    }
+}
 
 /**
  * Process all the specified directories

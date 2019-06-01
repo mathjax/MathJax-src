@@ -21,8 +21,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import '../../../../context-menu/scripts/js/context_menu.js';
-
 /*==========================================================================*/
 
 /**

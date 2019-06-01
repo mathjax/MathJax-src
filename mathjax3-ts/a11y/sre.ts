@@ -28,7 +28,7 @@ import {asyncLoad} from '../util/AsyncLoad.js';
  * The name of the modiule to load, if necessary
  */
 const SRELIB = (typeof window === 'undefined' ? './a11y/sre-node.js' :
-                '../../node_modules/speech-rule-engine/lib/sre_browser.js');
+                '../../../speech-rule-engine/lib/sre_browser.js');
 
 /**
  * The promise for loading the SRE library, if it is not already loaded
