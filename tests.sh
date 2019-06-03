@@ -35,6 +35,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-boldsymbol-tests.js
     node load.js tests/parser-newcommand-tests.js
     node load.js tests/parser-ncerrors-tests.js
+    node load.js tests/parser-verb-tests.js
 
     node load.js tests/parser-braket-tests.js
 
