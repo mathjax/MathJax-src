@@ -108,6 +108,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-bbox-tests.js
     node load.js tests/parser-action-tests.js
     node load.js tests/parser-html-tests.js
+    node load.js tests/parser-unicode-tests.js
     exit 0
 else
     repeat=$1

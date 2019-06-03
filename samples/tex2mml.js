@@ -14,11 +14,12 @@ import '../mathjax3/input/tex/action/ActionConfiguration.js';
 import '../mathjax3/input/tex/bbox/BboxConfiguration.js';
 import '../mathjax3/input/tex/braket/BraketConfiguration.js';
 import '../mathjax3/input/tex/physics/PhysicsConfiguration.js';
+import '../mathjax3/input/tex/unicode/UnicodeConfiguration.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'extpfeil', 'braket', 'physics', 'action', 'bbox']})
+  InputJax: new TeX({packages: ['base', 'ams', 'boldsymbol', 'newcommand', 'extpfeil', 'braket', 'physics', 'unicode', 'action', 'bbox']})
 });
 
 import {SerializedMmlVisitor as MmlVisitor} from '../mathjax3/core/MmlTree/SerializedMmlVisitor.js';
