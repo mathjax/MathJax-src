@@ -26,7 +26,6 @@ import {Configuration} from '../Configuration.js';
 import {EnvList} from '../StackItem.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
