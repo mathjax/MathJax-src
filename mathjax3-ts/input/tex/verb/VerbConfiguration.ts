@@ -39,7 +39,7 @@ export let VerbMethods: Record<string, ParseMethod> = {};
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-VerbMethods.Verb = function(parser: TexParser, name: string, notation: string) {
+VerbMethods.Verb = function(parser: TexParser, name: string) {
   const c = parser.GetNext();
   const start = ++parser.i;
   if (c === '' ) {
