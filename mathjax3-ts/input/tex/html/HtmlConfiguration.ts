@@ -24,7 +24,6 @@
 
 import {Configuration} from '../Configuration.js';
 import {CommandMap} from '../SymbolMap.js';
-import ParseMethods from '../ParseMethods.js';
 import HtmlMethods from './HtmlMethods.js';
 
 
@@ -37,4 +36,5 @@ new CommandMap('html_macros', {
 
 export const HtmlConfiguration = Configuration.create(
   'html',
-  {handler: { macro: ['html_macros']}});
+  {handler: { macro: ['html_macros']}}
+);
