@@ -1054,6 +1054,13 @@ export class EquationItem extends BaseItem {
   /**
    * @override
    */
+  get isOpen() {
+    return true;
+  }
+
+  /**
+   * @override
+   */
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('end')) {
       let mml = this.toMml();

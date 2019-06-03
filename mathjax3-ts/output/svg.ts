@@ -159,7 +159,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     /**
      * @override
      */
-    public documentPageElements(html: MathDocument<N, T, D>) {
+    public pageElements(html: MathDocument<N, T, D>) {
         if (this.options.fontCache === 'global' && !this.findCache(html)) {
             return this.svg('svg', {id: SVG.FONTCACHEID, style: {display: 'none'}}, [this.fontCache.getCache()]);
         }
