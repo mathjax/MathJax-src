@@ -136,8 +136,8 @@ CommonMactionMixin<SVGWrapper<N, T, D>, SVGConstructor<N, T, D>>(SVGWrapper) {
                 // Set up the event handlers to display and remove the tooltip
                 //
                 node.setEventHandler('mouseover', (event: Event) => {
-                    data.stopTimers(data);
-                    data.hoverTimer = setTimeout(() => {
+                    data.stopTimers(node, data);
+                    data.hoverTimer.set(node, setTimeout(() => {
                         adaptor.setStyle(tool, 'left', '0');
                         adaptor.setStyle(tool, 'top', '0');
                         adaptor.append(container, tool)
@@ -147,12 +147,13 @@ CommonMactionMixin<SVGWrapper<N, T, D>, SVGConstructor<N, T, D>>(SVGWrapper) {
                         const dy = (nbox.bottom - tbox.bottom) / node.metrics.em + node.dy;
                         adaptor.setStyle(tool, 'left', node.px(dx));
                         adaptor.setStyle(tool, 'top', node.px(dy));
-                    }, data.postDelay);
+                    }, data.postDelay));
                     event.stopPropagation();
                 });
                 node.setEventHandler('mouseout',  (event: Event) => {
-                    data.stopTimers(data);
-                    data.clearTimer = setTimeout(() => adaptor.append(hidden, tool), data.clearDelay);
+                    data.stopTimers(node, data);
+                    const timer = setTimeout(() => adaptor.append(hidden, tool), data.clearDelay);
+                    data.clearTimer.set(node, timer);
                     event.stopPropagation();
                 });
             }

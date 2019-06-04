@@ -51,20 +51,20 @@ export const TooltipData = {
     postDelay: 600,      // milliseconds before tooltip posts
     clearDelay: 100,     // milliseconds before tooltip is removed
 
-    hoverTimer: null as number,    // timer for posting tooltips
-    clearTimer: null as number,    // timer for removing tooltips
+    hoverTimer: new Map<any, number>(),    // timers for posting tooltips
+    clearTimer: new Map<any, number>(),    // timers for removing tooltips
 
     /*
      * clear the timers if any are active
      */
-    stopTimers: (data: ActionData) => {
-        if (data.clearTimer) {
-            clearTimeout(data.clearTimer);
-            data.clearTimer = null;
+    stopTimers: (node: any, data: ActionData) => {
+        if (data.clearTimer.has(node)) {
+            clearTimeout(data.clearTimer.get(node));
+            data.clearTimer.delete(node);
         }
-        if (data.hoverTimer) {
-            clearTimeout(data.hoverTimer);
-            data.hoverTimer = null;
+        if (data.hoverTimer.has(node)) {
+            clearTimeout(data.hoverTimer.get(node));
+            data.hoverTimer.delete(node);
         }
     }
 
