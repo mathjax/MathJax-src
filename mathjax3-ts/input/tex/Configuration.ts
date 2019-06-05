@@ -207,10 +207,14 @@ export class Configuration {
   register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
     this.append(config);
     config.init(this);
-    jax.parseOptions.handlers = new SubHandlers(this);
-    jax.parseOptions.nodeFactory.setCreators(config.nodes);
-    defaultOptions(jax.parseOptions.options, config.options);
-    userOptions(jax.parseOptions.options, options);
+    const parser = jax.parseOptions;
+    parser.handlers = new SubHandlers(this);
+    parser.nodeFactory.setCreators(config.nodes);
+    for (const kind of Object.keys(config.items)) {
+      parser.itemFactory.setNodeClass(kind, config.items[kind]);
+    }
+    defaultOptions(parser.options, config.options);
+    userOptions(parser.options, options);
     config.config(this, jax);
     for (const pre of config.preprocessors) {
       Array.isArray(pre) ? jax.preFilters.add(pre[0], pre[1]) : jax.preFilters.add(pre);
