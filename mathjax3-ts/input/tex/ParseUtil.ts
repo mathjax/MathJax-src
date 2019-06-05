@@ -532,8 +532,8 @@ namespace ParseUtil {
       [key, end, rest] = readValue(rest, ['=', ',']);
       if (end === '=') {
         [val, end, rest] = readValue(rest, [',']);
-        val = ((val === 'false' || val === 'true') ?
-               JSON.parse : removeBraces)(val);
+        val = (val === 'false' || val === 'true') ?
+            JSON.parse(val) : val;
         options[key] = val;
       } else if (key) {
         options[key] = true;
@@ -546,13 +546,15 @@ namespace ParseUtil {
   /**
    * Removes pairs of outer braces.
    * @param {string} text The string to clean.
+   * @param {number} count The number of outer braces to slice off.
    * @return {string} The cleaned string.
    */
-  function removeBraces(text: string): string {
-    while (text.match(/^{.*}$/)) {
-      text = text.slice(1, text.length - 1);
+  function removeBraces(text: string, count: number): string {
+    while (count) {
+      text = text.trim().slice(1, -1);
+      count--;
     }
-    return text;
+    return text.trim();
   }
 
 
@@ -569,19 +571,30 @@ namespace ParseUtil {
     let braces = 0;
     let value = '';
     let index = 0;
+    let start = 0;
+    let startCount = true;
     while (index < length) {
       let c = text[index++];
       switch (c) {
       case '{':
+        if (startCount) {
+          start++;
+        } else if (start > braces) {
+          start = braces;
+        }
         braces++;
+        break;
+      case ' ':
         break;
       case '}':
         if (braces) {
           braces--;
         }
+      default:
+        startCount = false;
       }
       if (!braces && end.indexOf(c) !== -1) {
-        return [value.trim(), c, text.slice(index)];
+        return [removeBraces(value, start), c, text.slice(index)];
       }
       value += c;
     }
@@ -589,7 +602,7 @@ namespace ParseUtil {
       throw new TexError('ExtraOpenMissingClose',
                          'Extra open brace or missing close brace');
     }
-    return [value.trim(), '', text.slice(index)];
+    return [removeBraces(value, start), '', text.slice(index)];
   };
 
 }

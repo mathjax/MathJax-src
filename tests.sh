@@ -2,6 +2,8 @@
 
 if [ $# -eq 0 ]; then 
 
+    node load.js tests/tex-keyval-tests.js
+
     node load.js tests/parser-base-tests.js
     node load.js tests/parser-digits-tests.js
     node load.js tests/parser-digits-european-tests.js
@@ -111,6 +113,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-action-tests.js
     node load.js tests/parser-html-tests.js
     node load.js tests/parser-unicode-tests.js
+    node load.js tests/parser-cancel-tests.js
     exit 0
 else
     repeat=$1
