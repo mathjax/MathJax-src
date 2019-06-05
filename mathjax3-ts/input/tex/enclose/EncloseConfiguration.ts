@@ -61,10 +61,6 @@ EncloseMethods.Enclose = function(parser: TexParser, name: string) {
   const math = parser.ParseArg(name);
   const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
   def.notation = notation;
-  if (def.arrow) {
-    def.notation += ' updiagonalarrow';
-    delete def.arrow;
-  }
   parser.Push(parser.create('node', 'menclose', [math], def));
 };
 

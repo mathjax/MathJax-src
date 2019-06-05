@@ -91,6 +91,7 @@ export namespace TexConstant {
   export const Notation = {
     LONGDIV: 'longdiv',
     ACTUARIAL: 'actuarial',
+    PHASORANGLE: 'phasorangle',
     RADICAL: 'radical',
     BOX: 'box',
     ROUNDEDBOX: 'roundedbox',
@@ -101,11 +102,11 @@ export namespace TexConstant {
     BOTTOM: 'bottom',
     UPDIAGONALSTRIKE: 'updiagonalstrike',
     DOWNDIAGONALSTRIKE: 'downdiagonalstrike',
-    UPDIAGONALARROW: 'updiagonalarrow',
     VERTICALSTRIKE: 'verticalstrike',
     HORIZONTALSTRIKE: 'horizontalstrike',
-    PHASORANGLE: 'phasorangle',
-    MADRUWB: 'madruwb'
+    NORTHEASTARROW: 'northeastarrow',
+    MADRUWB: 'madruwb',
+    UPDIAGONALARROW: 'updiagonalarrow'
   };
 
   export const Align = {
