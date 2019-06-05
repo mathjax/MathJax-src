@@ -143,7 +143,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     userOptions(parseOptions.options, rest);
     configuration.config(configuration, this);
     TeX.tags(parseOptions, configuration);
-    this.postFilters.add(FilterUtil.cleanSubSup, -4);
+    this.postFilters.add(FilterUtil.cleanSubSup, -5);
+    this.postFilters.add(FilterUtil.setInherited, -4);
     this.postFilters.add(FilterUtil.cleanStretchy, -3);
     this.postFilters.add(FilterUtil.cleanAttributes, -2);
     this.postFilters.add(FilterUtil.combineRelations, -1);
@@ -194,9 +195,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     }
     this.parseOptions.root = node;
     this.executeFilters(this.postFilters, math, this.parseOptions);
-    if (this.parseOptions.error) {
-      this.parseOptions.root.setInheritedAttributes({}, display, 0, false);
-    }
     this.mathNode = this.parseOptions.root;
     return this.mathNode;
   };

@@ -212,8 +212,8 @@ namespace FilterUtil {
   /**
    * Visitor that rewrites incomplete msubsup/munderover elements in the given
    * node into corresponding msub/sup/under/over nodes.
-   * @param {MmlNode} node The node to rewrite.
-   * @param {ParseOptions} options The parse options.
+   * @param {MmlNode} math The node to rewrite.
+   * @param {ParseOptions} data The parse options.
    */
   export let cleanSubSup = function(arg: {math: any, data: ParseOptions}) {
     let options = arg.data;
@@ -222,7 +222,16 @@ namespace FilterUtil {
     }
     _cleanSubSup(options, 'sub', 'sup');
     _cleanSubSup(options, 'under', 'over');
-    options.root.setInheritedAttributes({}, arg.math['display'], 0, false);
+  };
+
+
+  /**
+   * Recursively sets the inherited attributes on the math tree.
+   * @param {MmlNode} math The node to rewrite.
+   * @param {ParseOptions} data The parse options.
+   */
+  export let setInherited = function(arg: {math: any, data: ParseOptions}) {
+    arg.data.root.setInheritedAttributes({}, arg.math['display'], 0, false);
   };
 
 }
