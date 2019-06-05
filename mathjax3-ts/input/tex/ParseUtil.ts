@@ -573,25 +573,36 @@ namespace ParseUtil {
     let index = 0;
     let start = 0;
     let startCount = true;
+    let stopCount = false;
     while (index < length) {
       let c = text[index++];
       switch (c) {
+      case ' ':
+        break;
       case '{':
         if (startCount) {
           start++;
-        } else if (start > braces) {
-          start = braces;
+        } else {
+          stopCount = false;
+          if (start > braces) {
+            start = braces;
+          }
         }
         braces++;
-        break;
-      case ' ':
         break;
       case '}':
         if (braces) {
           braces--;
         }
+        if (startCount || stopCount) {
+          start--;
+          stopCount = true;
+        }
+        startCount = false;
+        break;
       default:
         startCount = false;
+        stopCount = false;
       }
       if (!braces && end.indexOf(c) !== -1) {
         return [removeBraces(value, start), c, text.slice(index)];

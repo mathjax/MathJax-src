@@ -119,6 +119,36 @@ keyvalTest.runTest(
 );
 
 keyvalTest.runTest(
+  'Keyval Braces Prefix', 'key1={{}a}',
+  {key1: '{}a'}
+);
+
+keyvalTest.runTest(
+  'Keyval Braces Prefix 2', 'key1={{{}}a}',
+  {key1: '{{}}a'}
+);
+
+keyvalTest.runTest(
+  'Keyval Braces Prefix 3', 'key1={{}{}a}',
+  {key1: '{}{}a'}
+);
+
+keyvalTest.runTest(
+  'Keyval Braces Prefix 4', 'key1={{{}{}a}}',
+  {key1: '{}{}a'}
+);
+
+keyvalTest.runTest(
+  'Keyval Braces Prefix 5', 'key1={{}{a}}',
+  {key1: '{}{a}'}
+);
+
+keyvalTest.runTest(
+  'Keyval Braces Prefix 6', 'key1={{{}}{a}}',
+  {key1: '{{}}{a}'}
+);
+
+keyvalTest.runTest(
   'Keyval Braces Mixed 1', 'key1={{a},{b}},key2=b',
   {key1: '{a},{b}', key2: 'b'}
 );
@@ -142,7 +172,6 @@ keyvalTest.runTest(
   'Keyval Braces Mixed 4 Spaces', 'key1 = { { { { { { a}},{{b},{c} } } } } }   ,key2=b',
   {key1: '{ { a}},{{b},{c} }', key2: 'b'}
 );
-
 
 keyvalTest.runTest(
   'Keyval Braces Equals Mixed 3', 'key1={{{a}}={{b},{c}}},key2=b',
