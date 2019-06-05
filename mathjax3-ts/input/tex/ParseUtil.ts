@@ -505,10 +505,10 @@ namespace ParseUtil {
     let def: EnvList = readKeyval(attrib);
     if (allowed) {
       for (let key of Object.keys(def)) {
-        if (!allowed[key]) {
+        if (!allowed.hasOwnProperty(key)) {
           if (error) {
             throw new TexError('InvalidOption',
-                               'Invalid optional argument: ', key);
+                               'Invalid optional argument: %1', key);
           }
           delete def[key];
         }
@@ -565,12 +565,12 @@ namespace ParseUtil {
    *     character, and the rest of the string still to parse.
    */
   function readValue(text: string, end: string[]): [string, string, string] {
-    let rest = text;
+    let length = text.length;
     let braces = 0;
     let value = '';
-    while (rest) {
-      let c = rest[0];
-      rest = rest.slice(1);
+    let index = 0;
+    while (index < length) {
+      let c = text[index++];
       switch (c) {
       case '{':
         braces++;
@@ -581,7 +581,7 @@ namespace ParseUtil {
         }
       }
       if (!braces && end.indexOf(c) !== -1) {
-        return [value.trim(), c, rest];
+        return [value.trim(), c, text.slice(index)];
       }
       value += c;
     }
@@ -589,7 +589,7 @@ namespace ParseUtil {
       throw new TexError('ExtraOpenMissingClose',
                          'Extra open brace or missing close brace');
     }
-    return [value.trim(), '', rest];
+    return [value.trim(), '', text.slice(index)];
   };
 
 }
