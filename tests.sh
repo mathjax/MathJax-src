@@ -2,6 +2,8 @@
 
 if [ $# -eq 0 ]; then 
 
+    node load.js tests/tex-keyval-tests.js
+
     node load.js tests/parser-base-tests.js
     node load.js tests/parser-digits-tests.js
     node load.js tests/parser-digits-european-tests.js
@@ -35,6 +37,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-boldsymbol-tests.js
     node load.js tests/parser-newcommand-tests.js
     node load.js tests/parser-ncerrors-tests.js
+    node load.js tests/parser-verb-tests.js
 
     node load.js tests/parser-braket-tests.js
 
@@ -50,7 +53,10 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-mhchem9-tests.js
 
     node load.js tests/parser-noerrors-tests.js
+    node load.js tests/parser-enclose-tests.js
+    node load.js tests/parser-cancel-tests.js
     node load.js tests/parser-extpfeil-tests.js
+    node load.js tests/parser-amscd-tests.js
 
     ## Physics package.
     node load.js tests/parser-physics-1-0-test.js
@@ -105,6 +111,9 @@ if [ $# -eq 0 ]; then
     # More Packages
     node load.js tests/parser-bbox-tests.js
     node load.js tests/parser-action-tests.js
+    node load.js tests/parser-html-tests.js
+    node load.js tests/parser-unicode-tests.js
+    node load.js tests/parser-cancel-tests.js
     exit 0
 else
     repeat=$1

@@ -1,8 +1,10 @@
+"use strict";
+Object.defineProperty(exports, '__esModule', {value: true});
 //
 // Core parser for mhchem syntax  (recursive)
 //
 /** @type {MhchemParser} */
-export var mhchemParser = {
+var mhchemParser = {
   //
   // Parses mchem \ce syntax
   //
@@ -1283,7 +1285,7 @@ mhchemParser.stateMachines = {
 // texify: Take MhchemParser output and convert it to TeX
 //
 /** @type {Texify} */
-export var texify = {
+var texify = {
   go: function (input, isInner) {  // (recursive, max 4 levels)
     if (!input) { return ""; }
     var res = "";
@@ -1606,7 +1608,11 @@ export var texify = {
 // Will show type error at calling position
 //
 /** @param {number} a */
-export function assertNever(a) {}
+function assertNever(a) {}
 /** @param {string} a */
-export function assertString(a) {}
+function assertString(a) {}
 
+exports.mhchemParser = mhchemParser;
+exports.texify = texify;
+exports.assertNever = assertNever;
+exports.assertString = assertString;

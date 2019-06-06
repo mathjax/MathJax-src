@@ -109,7 +109,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<N, T, D>>(SVGWr
      * @param {BBox} bbox           The full size of the stretched character
      */
     protected stretchHorizontal(stretch: number[], bbox: BBox) {
-        const {h, d, w} = bbox
+        const {h, d, w} = bbox;
         const L = this.addLeft(stretch[0]);
         const R = this.addRight(stretch[2], w);
         if (stretch.length === 4) {
@@ -241,10 +241,11 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<N, T, D>>(SVGWr
         const X = W - L - R;            // The width of the extender
         const Y = h + d + 2 * VFUZZ;    // The height (plus some fuzz) of the extender
         const s = 1.5 * (X / w);        // Scale the width so that left- and right-bearing won't hurt us
+        const D = -(d + VFUZZ);         // The bottom position of the glyph
         const svg = this.svg('svg', {
             width: this.fixed(X), height: this.fixed(Y),
-            x: this.fixed(x + L), y: this.fixed(-VFUZZ),
-            viewBox: [(s * w - X) / 2, -VFUZZ, X, Y].map(x => this.fixed(x)).join(' ')
+            x: this.fixed(x + L), y: this.fixed(D),
+            viewBox: [(s * w - X) / 2, D, X, Y].map(x => this.fixed(x)).join(' ')
         });
         this.addGlyph(n, 0, 0, svg);
         const glyph = this.adaptor.lastChild(svg);

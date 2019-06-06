@@ -145,11 +145,17 @@ export interface MathItem<N, T, D> {
     rerender(document: MathDocument<N, T, D>, start?: number): void;
 
     /**
+     * Converts the expression by calling the render actions until the state matches the end state
+     *
+     * @param {MathDocument} document  The MathDocument in which the math resides
+     * @param {number=} end            The state to end rerendering at (default = LAST)
+     */
+    convert(document: MathDocument<N, T, D>, end?: number): void;
+
+    /**
      * Converts the expression into the internal format by calling the input jax
      *
      * @param {MathDocument} document  The MathDocument in which the math resides
-     * @param {number=} start          The state to start rerendering at (default = TYPESET)
-     * @param {number=} end            The state to end rerendering at (default = LAST)
      */
     compile(document: MathDocument<N, T, D>): void;
 

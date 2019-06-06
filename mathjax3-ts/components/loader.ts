@@ -151,7 +151,7 @@ export namespace Loader {
         if (typeof document !== 'undefined') {
             const script = document.currentScript || document.getElementById('MathJax-script');
             if (script) {
-                root = script.getAttribute('src').replace(/\/[^\/]*$/, '');
+                root = (script as HTMLScriptElement).src.replace(/\/[^\/]*$/, '');
             }
         }
         return root;

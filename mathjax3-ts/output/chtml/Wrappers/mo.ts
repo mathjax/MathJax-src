@@ -60,8 +60,11 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
             overflow: 'hidden',
             width: '100%'
         },
-        'mjx-stretchy-h > mjx-ext > mjx-c': {
+        'mjx-stretchy-h > mjx-ext > mjx-c::before': {
             transform: 'scalex(500)'
+        },
+        'mjx-stretchy-h > mjx-ext > mjx-c': {
+            width: 0
         },
         'mjx-stretchy-h > mjx-beg > mjx-c': {
             'margin-right': '-.1em'
@@ -93,6 +96,9 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<N, T, D>>(C
             'box-sizing': 'border-box',
             border: '0px solid transparent',
             overflow: 'hidden'
+        },
+        'mjx-stretchy-v > mjx-ext > mjx-c::before': {
+            width: 'initial'
         },
         'mjx-stretchy-v > mjx-ext > mjx-c': {
             transform: 'scaleY(500) translateY(.1em)',

@@ -50,7 +50,8 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
             display: 'none',
             position: 'absolute',
             bottom: 0, right: 0,
-            Width: 0, height: 0
+            width: 0, height: 0,
+            'z-index': 500
         },
         'mjx-tool > mjx-tip': {
             display: 'inline-block',
@@ -133,13 +134,15 @@ CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrappe
                 // Set up the event handlers to display and remove the tooltip
                 //
                 node.setEventHandler('mouseover', (event: Event) => {
-                    data.stopTimers(data);
-                    data.hoverTimer = setTimeout(() => adaptor.setStyle(tool, 'display', 'block'), data.postDelay);
+                    data.stopTimers(node, data);
+                    const timeout = setTimeout(() => adaptor.setStyle(tool, 'display', 'block'), data.postDelay);
+                    data.hoverTimer.set(node, timeout);
                     event.stopPropagation();
                 });
                 node.setEventHandler('mouseout',  (event: Event) => {
-                    data.stopTimers(data);
-                    data.clearTimer = setTimeout(() => adaptor.setStyle(tool, 'display', ''), data.clearDelay);
+                    data.stopTimers(node, data);
+                    const timeout = setTimeout(() => adaptor.setStyle(tool, 'display', ''), data.clearDelay);
+                    data.clearTimer.set(node, timeout);
                     event.stopPropagation();
                 });
             }
