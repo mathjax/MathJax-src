@@ -578,7 +578,7 @@ namespace ParseUtil {
     while (index < length) {
       let c = text[index++];
       switch (c) {
-      case ' ':                // Ignore spaces. 
+      case ' ':                // Ignore spaces.
         break;
       case '{':
         if (startCount) {      // Count start left braces at start.
@@ -592,7 +592,7 @@ namespace ParseUtil {
         braces++;
         break;
       case '}':
-        if (braces) {          // Closing braces.  
+        if (braces) {          // Closing braces.
           braces--;
         }
         if (startCount || stopCount) {  // Closing braces at the start.
