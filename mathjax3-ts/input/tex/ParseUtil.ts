@@ -571,38 +571,40 @@ namespace ParseUtil {
     let braces = 0;
     let value = '';
     let index = 0;
-    let start = 0;
-    let startCount = true;
-    let stopCount = false;
+    let start = 0;             // Counter for the starting left braces.
+    let startCount = true;     // Flag for counting starting left braces.
+    let stopCount = false;     // If true right braces are found directly
+                               // after starting braces, but no other char yet.
     while (index < length) {
       let c = text[index++];
       switch (c) {
-      case ' ':
+      case ' ':                // Ignore spaces. 
         break;
       case '{':
-        if (startCount) {
+        if (startCount) {      // Count start left braces at start.
           start++;
         } else {
           stopCount = false;
-          if (start > braces) {
+          if (start > braces) {   // Some start left braces have been closed.
             start = braces;
           }
         }
         braces++;
         break;
       case '}':
-        if (braces) {
+        if (braces) {          // Closing braces.  
           braces--;
         }
-        if (startCount || stopCount) {
+        if (startCount || stopCount) {  // Closing braces at the start.
           start--;
-          stopCount = true;
+          stopCount = true;    // Continue to close braces.
         }
-        startCount = false;
+        startCount = false;    // Stop counting start left braces.
         break;
       default:
-        if (!braces && end.indexOf(c) !== -1) {
-          return [stopCount ? 'true' :
+        if (!braces && end.indexOf(c) !== -1) {   // End character reached.
+          return [stopCount ? 'true' :            // If Stop count is true we
+                                                  // have balanced braces, only.
                   removeBraces(value, start), c, text.slice(index)];
         }
         startCount = false;

@@ -216,11 +216,21 @@ keyvalTest.runTest(
 );
 
 keyvalTest.runTest(
+  'Keyval Error 3', 'key1=}, key2={',
+  'Extra open brace or missing close brace'
+);
+
+keyvalTest.runTest(
   'Keyval Unbalanced 1', 'key={a}}',
-  {key:'a}'}
+  {key: 'a}'}
 );
 
 keyvalTest.runTest(
   'Keyval Unbalanced 2', 'key1={a}}, key2=}b',
-  {key1:'a}', key2: '}b'}
+  {key1: 'a}', key2: '}b'}
+);
+
+keyvalTest.runTest(
+  'Keyval Unbalanced 3', 'key1=}, key2={}}',
+  {key1: true, key2: true}
 );
