@@ -10,8 +10,12 @@ class KeyvalTest extends Test {
     this.test(
       name,
       t => {
-        let keyval = ParseUtil.keyvalOptions(options);
-        t.deepEqual(keyval, expected, name);
+        try {
+          let keyval = ParseUtil.keyvalOptions(options);
+          t.deepEqual(keyval, expected, name);
+        } catch (e) {
+          t.deepEqual(e.message, expected, name);
+        }
       }
     );
   }
@@ -19,6 +23,28 @@ class KeyvalTest extends Test {
 }
 
 let keyvalTest = new KeyvalTest();
+
+keyvalTest.runTest(
+  'Keyval Trival', 'key={{}}',
+  {key: true}
+);
+
+keyvalTest.runTest(
+  'Keyval Trivial 2', 'key1={{}},key2={{{{}}}}',
+  {key1: true, key2: true}
+);
+
+
+keyvalTest.runTest(
+  'Keyval Trival3', 'key={{}{}}',
+  {key: '{}{}'}
+);
+
+keyvalTest.runTest(
+  'Keyval Trivial 4', 'key1= { { }   },key2= {{ { {  }} } }',
+  {key1: true, key2: true}
+);
+
 
 keyvalTest.runTest(
   'Keyval Single', 'key=a',
@@ -178,3 +204,23 @@ keyvalTest.runTest(
   {key1: '{{a}}={{b},{c}}', key2: 'b'}
 );
 
+
+keyvalTest.runTest(
+  'Keyval Error 1', 'key={{a}',
+  'Extra open brace or missing close brace'
+);
+
+keyvalTest.runTest(
+  'Keyval Error 2', 'key={{a}{}',
+  'Extra open brace or missing close brace'
+);
+
+keyvalTest.runTest(
+  'Keyval Unbalanced 1', 'key={a}}',
+  {key:'a}'}
+);
+
+keyvalTest.runTest(
+  'Keyval Unbalanced 2', 'key1={a}}, key2=}b',
+  {key1:'a}', key2: '}b'}
+);

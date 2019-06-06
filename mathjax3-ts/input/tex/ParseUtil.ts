@@ -550,7 +550,7 @@ namespace ParseUtil {
    * @return {string} The cleaned string.
    */
   function removeBraces(text: string, count: number): string {
-    while (count) {
+    while (count > 0) {
       text = text.trim().slice(1, -1);
       count--;
     }
@@ -601,11 +601,12 @@ namespace ParseUtil {
         startCount = false;
         break;
       default:
+        if (!braces && end.indexOf(c) !== -1) {
+          return [stopCount ? 'true' :
+                  removeBraces(value, start), c, text.slice(index)];
+        }
         startCount = false;
         stopCount = false;
-      }
-      if (!braces && end.indexOf(c) !== -1) {
-        return [removeBraces(value, start), c, text.slice(index)];
       }
       value += c;
     }
@@ -613,7 +614,7 @@ namespace ParseUtil {
       throw new TexError('ExtraOpenMissingClose',
                          'Extra open brace or missing close brace');
     }
-    return [removeBraces(value, start), '', text.slice(index)];
+    return [stopCount ? 'true' : removeBraces(value, start), '', text.slice(index)];
   };
 
 }
