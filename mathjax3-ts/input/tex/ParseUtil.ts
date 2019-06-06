@@ -488,6 +488,137 @@ namespace ParseUtil {
     return (font ? {mathvariant: font} : {});
   };
 
+
+  /**
+   * Splits a package option list of the form [x=y,z=1] into an attribute list
+   * of the form {x: y, z: 1}.
+   * @param {string} attrib The attributes of the package.
+   * @param {{[key: string]: number}?} allowed A list of allowed options. If
+   *     given only allowed arguments are returned.
+   * @param {boolean?} error If true, raises an exception if not allowed options
+   *     are found.
+   * @return {EnvList} The attribute list.
+   */
+  export function keyvalOptions(attrib: string,
+                                allowed: {[key: string]: number} = null,
+                                error: boolean = false): EnvList {
+    let def: EnvList = readKeyval(attrib);
+    if (allowed) {
+      for (let key of Object.keys(def)) {
+        if (!allowed.hasOwnProperty(key)) {
+          if (error) {
+            throw new TexError('InvalidOption',
+                               'Invalid optional argument: %1', key);
+          }
+          delete def[key];
+        }
+      }
+    }
+    return def;
+  }
+
+
+  /**
+   * Implementation of the keyval function from https://www.ctan.org/pkg/keyval
+   * @param {string} text The optional parameter string for a package or
+   *     command.
+   * @return {EnvList} Set of options as key/value pairs.
+   */
+  function readKeyval(text: string): EnvList {
+    let options: EnvList = {};
+    let rest = text;
+    let end, key, val;
+    while (rest) {
+      [key, end, rest] = readValue(rest, ['=', ',']);
+      if (end === '=') {
+        [val, end, rest] = readValue(rest, [',']);
+        val = (val === 'false' || val === 'true') ?
+            JSON.parse(val) : val;
+        options[key] = val;
+      } else if (key) {
+        options[key] = true;
+      }
+    }
+    return options;
+  }
+
+
+  /**
+   * Removes pairs of outer braces.
+   * @param {string} text The string to clean.
+   * @param {number} count The number of outer braces to slice off.
+   * @return {string} The cleaned string.
+   */
+  function removeBraces(text: string, count: number): string {
+    while (count > 0) {
+      text = text.trim().slice(1, -1);
+      count--;
+    }
+    return text.trim();
+  }
+
+
+  /**
+   * Read a value from the given string until an end parameter is reached or
+   * string is exhausted.
+   * @param {string} text The string to process.
+   * @param {string[]} end List of possible end characters.
+   * @return {[string, string, string]} The collected value, the actual end
+   *     character, and the rest of the string still to parse.
+   */
+  function readValue(text: string, end: string[]): [string, string, string] {
+    let length = text.length;
+    let braces = 0;
+    let value = '';
+    let index = 0;
+    let start = 0;             // Counter for the starting left braces.
+    let startCount = true;     // Flag for counting starting left braces.
+    let stopCount = false;     // If true right braces are found directly
+                               // after starting braces, but no other char yet.
+    while (index < length) {
+      let c = text[index++];
+      switch (c) {
+      case ' ':                // Ignore spaces.
+        break;
+      case '{':
+        if (startCount) {      // Count start left braces at start.
+          start++;
+        } else {
+          stopCount = false;
+          if (start > braces) {   // Some start left braces have been closed.
+            start = braces;
+          }
+        }
+        braces++;
+        break;
+      case '}':
+        if (braces) {          // Closing braces.
+          braces--;
+        }
+        if (startCount || stopCount) {  // Closing braces at the start.
+          start--;
+          stopCount = true;    // Continue to close braces.
+        }
+        startCount = false;    // Stop counting start left braces.
+        break;
+      default:
+        if (!braces && end.indexOf(c) !== -1) {   // End character reached.
+          return [stopCount ? 'true' :            // If Stop count is true we
+                                                  // have balanced braces, only.
+                  removeBraces(value, start), c, text.slice(index)];
+        }
+        startCount = false;
+        stopCount = false;
+      }
+      value += c;
+    }
+    if (braces) {
+      throw new TexError('ExtraOpenMissingClose',
+                         'Extra open brace or missing close brace');
+    }
+    return [stopCount ? 'true' : removeBraces(value, start), '', text.slice(index)];
+  };
+
 }
 
 export default ParseUtil;
