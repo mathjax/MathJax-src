@@ -3,8 +3,8 @@
     "from": "../../../../../../mathjax3-ts/output/chtml/fonts/tex-woff-v2",
     "copy": [
         "MathJax_AMS-Regular.woff",
-        "MathJax_Caligraphic-Bold.woff",
-        "MathJax_Caligraphic-Regular.woff",
+        "MathJax_Calligraphic-Bold.woff",
+        "MathJax_Calligraphic-Regular.woff",
         "MathJax_Fraktur-Bold.woff",
         "MathJax_Fraktur-Regular.woff",
         "MathJax_Main-Bold.woff",
