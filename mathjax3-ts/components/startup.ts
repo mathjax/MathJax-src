@@ -258,9 +258,15 @@ export namespace Startup {
     export function defaultReady() {
         getComponents();
         makeMethods();
-        if (CONFIG.typeset && MathJax.TypesetPromise) {
-            promise = pagePromise.then(() => MathJax.TypesetPromise());
+        if (CONFIG.pageReady) {
+            //
+            //  Add in the user's pageReady function, which runs when the page content is
+            //    ready, but before the initial typesetting call.
+            //
+            pagePromise = pagePromise.then(CONFIG.pageReady);
         }
+        promise = (CONFIG.typeset && MathJax.TypesetPromise ?
+                   pagePromise.then(MathJax.TypesetPromise) : pagePromise);
     };
 
     /**
