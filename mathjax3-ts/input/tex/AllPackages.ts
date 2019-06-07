@@ -39,7 +39,6 @@ import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
 import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
-import './require/RequireConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
@@ -62,7 +61,6 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
         '[tex]/noerrors',
         '[tex]/noundefined',
         '[tex]/physics',
-        '[tex]/require',
         '[tex]/unicode',
         '[tex]/verb',
         '[tex]/configMacros'
@@ -86,8 +84,6 @@ export const AllPackages: string[] = [
     'newcommand',
     'noerrors',
     'noundefined',
-    'physics',
-    'require',
     'unicode',
     'verb',
     'configMacros'
