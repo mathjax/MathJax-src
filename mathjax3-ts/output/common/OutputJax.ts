@@ -263,6 +263,18 @@ export abstract class CommonOutputJax<
     }
 
     /**
+     * @param {N} node            The container node whose metrics are to be measured
+     * @param {boolean} display   True if the metrics are for displayed math
+     * @return {Metrics}          Object containing em, ex, containerWidth, etc.
+     */
+    public getMetricsFor(node: N, display: boolean) {
+        const test = this.getTestElement(node, display);
+        const metrics = this.measureMetrics(test);
+        this.adaptor.remove(test);
+        return metrics;
+    }
+
+    /**
      * Get a MetricMap for the math list
      *
      * @param {MathDocument} html  The math document whose math list is to be processed.
