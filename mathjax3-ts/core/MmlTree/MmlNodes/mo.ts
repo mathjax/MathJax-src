@@ -262,7 +262,9 @@ export class MmlMo extends AbstractMmlTokenNode {
         let OPTABLE = (this.constructor as typeof MmlMo).OPTABLE;
         let def = OPTABLE[form1][mo] || OPTABLE[form2][mo] || OPTABLE[form3][mo];
         if (def) {
-            this.texClass = def[2];
+            if (this.getProperty('texClass') === undefined) {
+                this.texClass = def[2];
+            }
             for (const name of Object.keys(def[3] || {})) {
                 this.attributes.setInherited(name, def[3][name]);
             }
@@ -271,7 +273,9 @@ export class MmlMo extends AbstractMmlTokenNode {
         } else {
             let range = this.getRange(mo);
             if (range) {
-                this.texClass = range[2];
+                if (this.getProperty('texClass') === undefined) {
+                    this.texClass = range[2];
+                }
                 const spacing = (this.constructor as typeof MmlMo).MMLSPACING[range[2]];
                 this.lspace = (spacing[0] + 1) / 18;
                 this.rspace = (spacing[1] + 1) / 18;
