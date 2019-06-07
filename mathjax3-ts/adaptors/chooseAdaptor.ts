@@ -35,6 +35,6 @@ try {
 }
 
 /**
- * Function to selecting which adaptor to use (depending on whether we are in a browser of node.js)
+ * Function to select which adaptor to use (depending on whether we are in a browser or node.js)
  */
 export const chooseAdaptor = choose;

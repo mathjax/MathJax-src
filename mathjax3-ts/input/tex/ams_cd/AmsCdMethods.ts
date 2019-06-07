@@ -47,14 +47,15 @@ let AmsCdMethods: Record<string, ParseMethod> = {};
 AmsCdMethods.CD = function(parser: TexParser, begin: StackItem) {
   parser.Push(begin);
   let item = parser.itemFactory.create('array') as ArrayItem;
+  let options = parser.configuration.options.amsCd;
   item.setProperties({
-    minw: parser.stack.env.CD_minw || parser.configuration.options.harrowsize,
-    minh: parser.stack.env.CD_minh || parser.configuration.options.varrowsize
+    minw: parser.stack.env.CD_minw || options.harrowsize,
+    minh: parser.stack.env.CD_minh || options.varrowsize
   });
   item.arraydef = {
       columnalign: 'center',
-      columnspacing: parser.configuration.options.colspace,
-      rowspacing: parser.configuration.options.rowspace,
+      columnspacing: options.colspace,
+      rowspacing: options.rowspace,
       displaystyle: true
   };
   return item;
@@ -122,14 +123,14 @@ AmsCdMethods.arrow = function(parser: TexParser, name: string) {
         if (a) {
           let nodeA = new TexParser(a, parser.stack.env, parser.configuration).mml();
           let mpadded = parser.create('node', 'mpadded', [nodeA], pad);
-          NodeUtil.setAttribute(mpadded, 'voffset', '1em');
+          NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
           NodeUtil.setChild(mml, mml.over, mpadded);
         }
         if (b) {
           let nodeB = new TexParser(b, parser.stack.env, parser.configuration).mml();
           NodeUtil.setChild(mml, mml.under, parser.create('node', 'mpadded', [nodeB], pad));
         }
-          if (parser.configuration.options.hideHorizontalLabels) {
+          if (parser.configuration.options.amsCd.hideHorizontalLabels) {
             mml = parser.create('node', 'mpadded', mml, {depth: 0, height: '.67em'});
           }
         }
