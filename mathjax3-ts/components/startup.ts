@@ -33,6 +33,7 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {Handler} from '../core/Handler.js';
 import {InputJax, AbstractInputJax} from '../core/InputJax.js';
 import {OutputJax, AbstractOutputJax} from '../core/OutputJax.js';
+import {CommonOutputJax} from '../output/common/OutputJax.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {PrioritizedList} from '../util/PrioritizedList.js';
 import {OptionList} from '../util/Options.js';
@@ -67,6 +68,7 @@ export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
 export type OUTPUTJAX = OutputJax<any, any, any>;
+export type COMMONJAX = CommonOutputJax<any, any, any, any, any, any, any>;
 export type TEX = TeX<any, any, any>;
 
 /**
@@ -345,6 +347,7 @@ export namespace Startup {
      * The outputStylesheet() method returns the styleSheet object for the output.
      * Use MathJax.startup.adaptor.innerHTML(MathJax.outputStylesheet()) to get the serialized
      *   version of the stylesheet.
+     * The getMetricsFor(node, display) method returns the metric data for the given node
      *
      * @param {string} iname     The name of the input jax
      * @param {string} oname     The name of the output jax
@@ -363,6 +366,11 @@ export namespace Startup {
                 return mathjax.handleRetriesFor(() => document.convert(math, options));
             };
         MathJax[oname + 'Stylesheet'] = () => output.styleSheet(document);
+        if (output instanceof CommonOutputJax) {
+            MathJax.getMetricsFor = (node: any, display: boolean) => {
+                return (output as COMMONJAX).getMetricsFor(node, display);
+            }
+        }
     };
 
     /**

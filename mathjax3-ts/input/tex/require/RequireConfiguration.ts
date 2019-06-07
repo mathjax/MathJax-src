@@ -35,6 +35,11 @@ import {MathJax as mathjax} from '../../../mathjax.js';
 import {userOptions, OptionList, expandable} from '../../../util/Options.js';
 
 /**
+ * Access to global variable
+ */
+declare const global: any;
+
+/**
  * The MathJax configuration block (for looking up user-defined package options)
  */
 const MJCONFIG = (global.MathJax ? global.MathJax.config || {} : {});

@@ -1,4 +1,3 @@
-import './context-menu.js';
 import './lib/menu.js';
 
 import {MenuHandler} from '../../../../mathjax3/ui/menu/MenuHandler.js';

@@ -43,17 +43,42 @@ import './require/RequireConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
+declare const MathJax: any;
+if (typeof MathJax !== 'undefined' && MathJax.loader) {
+    MathJax.loader.preLoad(
+        '[tex]/action',
+        '[tex]/ams',
+        '[tex]/amsCd',
+        '[tex]/bbox',
+        '[tex]/boldsymbol',
+        '[tex]/braket',
+        '[tex]/cancel',
+        '[tex]/color',
+        '[tex]/enclose',
+        '[tex]/extpfeil',
+        '[tex]/html',
+        '[tex]/mhchem',
+        '[tex]/newcommand',
+        '[tex]/noerrors',
+        '[tex]/noundefined',
+        '[tex]/physics',
+        '[tex]/require',
+        '[tex]/unicode',
+        '[tex]/verb',
+        '[tex]/configMacros'
+    );
+}
+
 export const AllPackages: string[] = [
     'base',
     'action',
     'ams',
-    'amscd',
+    'amsCd',
     'bbox',
     'boldsymbol',
     'braket',
     'cancel',
     'color',
-    'configMacros',
     'enclose',
     'extpfeil',
     'html',
@@ -64,5 +89,6 @@ export const AllPackages: string[] = [
     'physics',
     'require',
     'unicode',
-    'verb'
+    'verb',
+    'configMacros'
 ];

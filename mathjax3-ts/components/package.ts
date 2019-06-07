@@ -73,6 +73,40 @@ export class Package {
     public static packages: PackageMap = new Map();
 
     /**
+     * Compute the path for a package.
+     *
+     * First, look for a configured source for the package.
+     * Then, if the path doesn't look like the start of a URI, or
+     *   an absolute file path, and doesn't have a [path] prefix,
+     *     prepend [mathjax]
+     * Add .js if there isn't already a file type
+     * While the path begins with a [path] prefix
+     *   Look for the prefix in the path configuration and
+     *     replace the [path] with the actual path
+     *     (this is done recursively, so paths can refer to other paths)
+     * return the result
+     *
+     * @param {string} name            The name of the package to resolve
+     * @param {boolean} addExtension   True if .js shoudl be added automatically
+     * @return {string}                The path (file or URL) for this package
+     */
+    public static resolvePath(name: string, addExtension: boolean = true) {
+        let file = CONFIG.source[name] || name;
+        if (!file.match(/^(?:[a-z]+:\/)?\/|\[/)) {
+            file = '[mathjax]/' + file.replace(/^\.\//, '');
+        }
+        if (addExtension && !file.match(/\.[^\/]+$/)) {
+            file += '.js';
+        }
+        let match;
+        while ((match = file.match(/^\[([^\]]*)\]/))) {
+            if (!CONFIG.paths.hasOwnProperty(match[1])) break;
+            file = CONFIG.paths[match[1]] + file.substr(match[0].length);
+        }
+        return file;
+    }
+
+    /**
      * The pacakge name
      */
     public name: string;
@@ -240,7 +274,7 @@ export class Package {
     public load() {
         if (!this.isLoaded && !this.isLoading && !this.noLoad) {
             this.isLoading = true;
-            const url = this.resolvePath();
+            const url = Package.resolvePath(this.name);
             if (CONFIG.require) {
                 this.loadCustom(url);
             } else {
@@ -361,38 +395,6 @@ export class Package {
             }
             this.provided.push(provided);
         }
-    }
-
-    /**
-     * Compute the path for this package.
-     *
-     * First, look for a configured source for the package.
-     * Then, if the path doesn't look like the start of a URI, or
-     *   an absolute file path, and doesn't have a [path] prefix,
-     *     prepend [mathjax]
-     * Add .js if there isn't already a file type
-     * While the path begins with a [path] prefix
-     *   Look for the prefix in the path configuration and
-     *     replace the [path] with the actual path
-     *     (this is done recursively, so paths can refer to other paths)
-     * return the result
-     *
-     * @return {string}   The path (file or URL) for this package
-     */
-    protected resolvePath() {
-        let file = CONFIG.source[this.name] || this.name;
-        if (!file.match(/^(?:[a-z]+:\/)?\/|\[/)) {
-            file = '[mathjax]/' + file.replace(/^\.\//, '');
-        }
-        if (!file.match(/\.[^\/]+$/)) {
-            file += '.js';
-        }
-        let match;
-        while ((match = file.match(/^\[([^\]]*)\]/))) {
-            if (!CONFIG.paths.hasOwnProperty(match[1])) break;
-            file = CONFIG.paths[match[1]] + file.substr(match[0].length);
-        }
-        return file;
     }
 
     /**
