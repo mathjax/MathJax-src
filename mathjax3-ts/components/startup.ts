@@ -259,6 +259,10 @@ export namespace Startup {
         getComponents();
         makeMethods();
         if (CONFIG.pageReady) {
+            //
+            //  Add in the user's pageReady function, which runs when the page content is
+            //    ready, but before the initial typesetting call.
+            //
             pagePromise = pagePromise.then(CONFIG.pageReady);
         }
         promise = (CONFIG.typeset && MathJax.TypesetPromise ?
