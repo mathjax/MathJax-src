@@ -148,8 +148,8 @@ export const arrowDef = {
  *   [c, pi, double, remove]
  */
 export const diagonalArrowDef = {
-    updiagonal:         [-1, 0,       false, 'updiagonalstrike'],
-    northeast:          [-1, 0,       false, 'updiagonalstrike'],
+    updiagonal:         [-1, 0,       false, 'updiagonalstrike northeastarrow'],
+    northeast:          [-1, 0,       false, 'updiagonalstrike updiagonalarrow'],
     southeast:          [ 1, 0,       false, 'downdiagonalstrike'],
     northwest:          [ 1, Math.PI, false, 'downdiagonalstrike'],
     southwest:          [-1, Math.PI, false, 'updiagonalstrike'],
