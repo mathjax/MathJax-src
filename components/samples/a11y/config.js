@@ -1,28 +1,17 @@
 MathJax = {
     loader: {
-        load: ["a11y/complexity", "tex-input"],
+        load: ["a11y/complexity", "input/tex"],
         paths: {
             mathjax: '../../dist'
-        },
-        dependencies: {
-            'a11y/semantic-enrich': ['core', 'sre', 'mml-input'],
-            'a11y/complexity': ['core', 'sre', 'mml-input']
         },
         source: {
             sre: '../../node_modules/speech-rule-engine/lib/sre_browser.js'
         }
     },
     startup: {
-        input: ['tex'],
         ready() {
             MathJax.startup.defaultReady();
-//            console.log(MathJax.chtmlStylesheet());
             console.log(MathJax.tex2mml('a+b+c+d+e'));
-//            console.log(MathJax.startup.adaptor.outerHTML(MathJax.tex2chtml('x+1')));
-//            MathJax.tex2mmlPromise('x+1').then((mml) => console.log(mml));
-//            MathJax.Typeset();
-//            const adaptor = MathJax.startup.adaptor;
-//            console.log(adaptor.outerHTML(adaptor.body(MathJax.startup.document.document)));
         }
     },
     chtml: {

@@ -121,6 +121,7 @@ function webpackLib(dir) {
         process.chdir(dir);
         const result = execSync('npx webpack --display-modules');
         console.log('    ' + String(result).replace(/\n/g, '\n    ')
+                                           .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
                                            .replace(compRE, '[components]')
                                            .replace(rootRE, '[mathjax3]'));
     } catch (err) {}

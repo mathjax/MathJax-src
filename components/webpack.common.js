@@ -24,6 +24,7 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
+const Uglify = require('uglifyjs-webpack-plugin');
 
 /**************************************************************/
 
@@ -112,7 +113,8 @@ const MODULE = function (dir) {
  */
 const PACKAGE = function (name, mathjax3, libs, dir, dist) {
     const distDir = dist ? path.resolve(dir, dist) :
-                           path.resolve(path.dirname(mathjax3), 'components', 'dist');
+                           path.resolve(path.dirname(mathjax3), 'components', 'dist', path.dirname(name));
+    name = path.basename(name);
     return {
         name: name,
         entry: path.join(dir, name + '.js'),
@@ -124,6 +126,15 @@ const PACKAGE = function (name, mathjax3, libs, dir, dist) {
         module: MODULE(dir),
         performance: {
             hints: false
+        },
+        optimization: {
+            minimizer: [new Uglify({
+                uglifyOptions: {
+                    output: {
+                        ascii_only: true
+                    },
+                },
+            })]
         },
         mode: 'production'
     };

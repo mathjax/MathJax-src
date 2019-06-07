@@ -1,9 +1,6 @@
 MathJax = {
     loader: {
-        load: ["tex-input", "chtml-output"],
-        paths: {
-//            mathjax: '../../dist'
-        }
+        load: ["input/tex", "output/chtml"]
     },
     startup: {
         ready() {
@@ -28,7 +25,7 @@ const useDist = false;
 
 if (typeof require !== 'undefined') {
     MathJax.loader.require = require;
-    MathJax.loader.load.push('liteDOM');
+    MathJax.loader.load.push('adaptors/liteDOM');
     if (useDist) {
         MathJax.loader.paths = {mathjax: '../../dist'};
         MathJax.loader.source = {sre: '../../mathjax3/a11y/sre-node.js'};
