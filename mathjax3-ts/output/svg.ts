@@ -50,6 +50,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     public static NAME: string = 'SVG';
     public static OPTIONS: OptionList = {
         ...CommonOutputJax.OPTIONS,
+        titleID: 0,                     // initial id number to use for aria-labeledby titles
         fontCache: 'local',             // or 'global' or 'none'
         localID: null,                  // ID to use for local font cache (for single equation processing)
     };
