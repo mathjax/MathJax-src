@@ -30,6 +30,7 @@ import './boldsymbol/BoldsymbolConfiguration.js';
 import './braket/BraketConfiguration.js';
 import './cancel/CancelConfiguration.js';
 import './color/ColorConfiguration.js';
+import './color_v2/ColorV2Configuration.js';
 import './config_macros/ConfigMacrosConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';

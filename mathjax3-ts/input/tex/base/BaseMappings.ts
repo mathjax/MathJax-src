@@ -642,12 +642,9 @@ new sm.CommandMap('macros', {
   begin:              'BeginEnd',
   end:                'BeginEnd',
 
-  label:             'HandleLabel',
-  ref:               'HandleRef',
-  nonumber:          'HandleNoTag',
-
-  // TODO: Should be removed once Color is converted.
-  color:              'Color',
+  label:              'HandleLabel',
+  ref:                'HandleRef',
+  nonumber:           'HandleNoTag',
 
   // Internal use:
   mathchoice:         'MathChoice',

@@ -4,12 +4,12 @@ import {TeX} from '../mathjax3/input/tex.js';
 import {RegisterHTMLHandler} from '../mathjax3/handlers/html.js';
 import {chooseAdaptor} from '../mathjax3/adaptors/chooseAdaptor.js';
 import {STATE} from '../mathjax3/core/MathItem.js';
-import '../mathjax3/input/tex/AllPackages.js';
+import {AllPackages} from '../mathjax3/input/tex/AllPackages.js';
 
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = MathJax.document('<html></html>', {
-  InputJax: new TeX({packages: AllPackages})
+    InputJax: new TeX({packages: AllPackages.filter(name => name !== 'color').concat(['color-v2'])})
 });
 
 import {SerializedMmlVisitor as MmlVisitor} from '../mathjax3/core/MmlTree/SerializedMmlVisitor.js';
