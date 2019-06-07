@@ -398,7 +398,7 @@ new sm.CommandMap('macros', {
   rm:                ['SetFont', TexConstant.Variant.NORMAL],
   mit:               ['SetFont', TexConstant.Variant.ITALIC],
   oldstyle:          ['SetFont', TexConstant.Variant.OLDSTYLE],
-  cal:               ['SetFont', TexConstant.Variant.CALIGRAPHIC],
+  cal:               ['SetFont', TexConstant.Variant.CALLIGRAPHIC],
   it:                ['SetFont', '-tex-mathit'], // needs special handling
   bf:                ['SetFont', TexConstant.Variant.BOLD],
   bbFont:            ['SetFont', TexConstant.Variant.DOUBLESTRUCK],

@@ -17,7 +17,7 @@
 
 import {CharMap, CharOptions} from '../../FontData.js';
 
-export const texCaligraphicBold: CharMap<CharOptions> = {
+export const texCalligraphicBold: CharMap<CharOptions> = {
     0x20: [0, 0, .25],
     0x2F: [.711, .21, .894],
     0x30: [.46, .017, .575],
