@@ -39,8 +39,8 @@ BOLDVARIANT[TexConstant.Variant.ITALIC]    = TexConstant.Variant.BOLDITALIC;
 BOLDVARIANT[TexConstant.Variant.FRAKTUR]   = TexConstant.Variant.BOLDFRAKTUR;
 BOLDVARIANT[TexConstant.Variant.SCRIPT]    = TexConstant.Variant.BOLDSCRIPT;
 BOLDVARIANT[TexConstant.Variant.SANSSERIF] = TexConstant.Variant.BOLDSANSSERIF;
-BOLDVARIANT['-tex-calligraphic']   = '-tex-calligraphic-bold';
-BOLDVARIANT['-tex-oldstyle']       = '-tex-oldstyle-bold';
+BOLDVARIANT['-tex-calligraphic']   = '-tex-bold-calligraphic';
+BOLDVARIANT['-tex-oldstyle']       = '-tex-bold-oldstyle';
 
 
 // Namespace
