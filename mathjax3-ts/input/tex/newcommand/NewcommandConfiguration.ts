@@ -24,6 +24,7 @@
 
 import {Configuration} from '../Configuration.js';
 import {BeginEnvItem} from './NewcommandItems.js';
+import {ExtensionMaps} from '../MapHandler.js';
 import './NewcommandMappings.js';
 
 
@@ -32,20 +33,23 @@ import './NewcommandMappings.js';
  * @param {Configuration} config The current configuration.
  */
 let init = function(config: Configuration) {
-  config.append(Configuration.extension());
+    if (config.handler['macro'].indexOf(ExtensionMaps.NEW_COMMAND) < 0) {
+        config.append(Configuration.extension());
+    }
 };
 
 
 export const NewcommandConfiguration = Configuration.create(
   'newcommand',
-  {handler: {
-    macro: ['Newcommand-macros']
-  },
-   items: {
-     [BeginEnvItem.prototype.kind]: BeginEnvItem,
-   },
-   options: {maxMacros: 1000},
-   init: init
+  {
+    handler: {
+      macro: ['Newcommand-macros']
+    },
+    items: {
+      [BeginEnvItem.prototype.kind]: BeginEnvItem,
+    },
+    options: {maxMacros: 1000},
+    init: init
   }
 );
 
