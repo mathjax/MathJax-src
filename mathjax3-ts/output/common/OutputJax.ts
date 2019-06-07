@@ -264,7 +264,7 @@ export abstract class CommonOutputJax<
 
     /**
      * @param {N} node            The container node whose metrics are to be measured
-     * @param {boolean} display   True for the metrics are for displayed math
+     * @param {boolean} display   True if the metrics are for displayed math
      * @return {Metrics}          Object containing em, ex, containerWidth, etc.
      */
     public getMetricsFor(node: N, display: boolean) {

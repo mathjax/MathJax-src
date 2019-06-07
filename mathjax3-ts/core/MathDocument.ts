@@ -620,7 +620,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      * @override
      */
     public convert(math: string, options: OptionList = {}) {
-        var {format, display, end, ex, em, containerWidth, lineWidth, scale} = userOptions({
+        let {format, display, end, ex, em, containerWidth, lineWidth, scale} = userOptions({
             format: this.inputJax[0].name, display: true, end: STATE.LAST,
             em: 16, ex: 8, containerWidth: null, lineWidth: 1000000, scale: 1
         }, options);
