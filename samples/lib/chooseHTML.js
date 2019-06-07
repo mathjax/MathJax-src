@@ -1,4 +1,4 @@
-import {MathJax} from '../../mathjax3/mathjax.js';
+import {mathjax} from '../../mathjax3/mathjax.js';
 
 import {RegisterHTMLHandler} from '../../mathjax3/handlers/html.js';
 import {chooseAdaptor} from '../../mathjax3/adaptors/chooseAdaptor.js';
@@ -13,7 +13,7 @@ export function htmlDocument(HTML, OPTIONS) {
         //
         //  Use browser document, if there is one
         //
-        html = MathJax.document(document, OPTIONS);
+        html = mathjax.document(document, OPTIONS);
         document.documentElement.setAttribute('xmlns:m', 'http://www.w3.org/1998/Math/MathML');
         document.body.insertBefore(document.createElement('hr'), document.body.firstChild);
         var div = document.createElement('div');
@@ -23,7 +23,7 @@ export function htmlDocument(HTML, OPTIONS) {
         //
         //  Otherwise, make a new document (measurements not supported here)
         //
-        html = MathJax.document(
+        html = mathjax.document(
             '<html xmlns:m="http://www.w3.org/1998/Math/MathML">'
                 + '<head><title>Test MathJax3</title></head><body>'
                 + HTML +

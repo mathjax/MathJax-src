@@ -129,7 +129,7 @@ export namespace Startup {
     const extensions = new PrioritizedList<HandlerExtension>();
 
     let visitor: any;  // the visitor for toMML();
-    let mathjax: any;  // variable for the MathJax variable from mathjax.js
+    let mathjax: any;  // variable for the mathjax variable from mathjax.js
 
     /**
      * The constructors (or other data) registered by the loaded packages
@@ -276,7 +276,7 @@ export namespace Startup {
      */
     export function getComponents() {
         visitor = new MathJax._.core.MmlTree.SerializedMmlVisitor.SerializedMmlVisitor();
-        mathjax = MathJax._.mathjax.MathJax;
+        mathjax = MathJax._.mathjax.mathjax;
         input = getInputJax();
         output = getOutputJax();
         adaptor = getAdaptor();

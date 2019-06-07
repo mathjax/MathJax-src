@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax} from '../../mathjax.js';
+import {mathjax} from '../../mathjax.js';
 
 import {MathItem, STATE, newState} from '../../core/MathItem.js';
 import {MathDocumentConstructor} from '../../core/MathDocument.js';
@@ -124,7 +124,7 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
          */
         public checkLoading(document: MenuMathDocument) {
             if (document.menu.isLoading) {
-                MathJax.retryAfter(document.menu.loadingPromise.catch((err) => console.log(err)));
+                mathjax.retryAfter(document.menu.loadingPromise.catch((err) => console.log(err)));
             }
         }
 
@@ -279,7 +279,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          */
         public checkLoading() {
             if (this.menu.isLoading) {
-                MathJax.retryAfter(this.menu.loadingPromise.catch((err) => console.log(err)));
+                mathjax.retryAfter(this.menu.loadingPromise.catch((err) => console.log(err)));
             }
             return this;
         }

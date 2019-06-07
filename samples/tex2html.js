@@ -1,4 +1,4 @@
-import {MathJax} from '../mathjax3/mathjax.js';
+import {mathjax} from '../mathjax3/mathjax.js';
 
 import {TeX} from '../mathjax3/input/tex.js';
 import {CHTML} from '../mathjax3/output/chtml.js';
@@ -9,12 +9,12 @@ import {STATE} from '../mathjax3/core/MathItem.js';
 const adaptor = chooseAdaptor();
 RegisterHTMLHandler(adaptor);
 
-let html = MathJax.document('<html></html>', {
+let html = mathjax.document('<html></html>', {
   InputJax: new TeX(),
   OutputJax: new CHTML()
 });
 
-MathJax.handleRetriesFor(() => {
+mathjax.handleRetriesFor(() => {
 
     let math = html.convert(process.argv[3] || '', {end: STATE.TYPESET});
     console.log(adaptor.outerHTML(math.typesetRoot));

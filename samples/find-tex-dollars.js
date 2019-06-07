@@ -1,4 +1,4 @@
-import {MathJax} from '../mathjax3/mathjax.js';
+import {mathjax} from '../mathjax3/mathjax.js';
 
 import {TeX} from '../mathjax3/input/tex.js';
 import {APPEND} from '../mathjax3/util/Options.js';
@@ -26,7 +26,7 @@ const HTML = `
 
 const html = htmlDocument(HTML, OPTIONS);
 
-MathJax.handleRetriesFor(() => {
+mathjax.handleRetriesFor(() => {
 
     html.findMath();
     printFound(html);

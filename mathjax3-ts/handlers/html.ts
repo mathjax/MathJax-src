@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax} from '../mathjax.js';
+import {mathjax} from '../mathjax.js';
 import {HTMLHandler} from './html/HTMLHandler.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 
@@ -37,6 +37,6 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  */
 export function RegisterHTMLHandler<N, T, D>(adaptor: DOMAdaptor<N, T, D>) {
     const handler = new HTMLHandler<N, T, D>(adaptor)
-    MathJax.handlers.register(handler);
+    mathjax.handlers.register(handler);
     return handler;
 }
