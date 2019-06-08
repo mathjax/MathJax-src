@@ -1528,15 +1528,14 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
     // @test Label Empty
     return;
   }
-  // TODO: refUpdate is currently not implemented.
-  if (!parser.options['refUpdate']) {
+  if (!parser.tags.refUpdate) {
     // @test Label, Ref, Ref Unknown
     if (parser.tags.label) {
       // @test Double Label Error
       throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
     }
     parser.tags.label = label;
-    if (parser.tags.allLabels[label] || parser.tags.labels[label]) {
+    if ((parser.tags.allLabels[label] || parser.tags.labels[label]) && !parser.options['ignoreDuplicateLabels']) {
       // @ Duplicate Label Error
       throw new TexError('MultipleLabel', 'Label \'%1\' multiply defined', label);
     }
@@ -1558,6 +1557,9 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
   let ref = parser.tags.allLabels[label] || parser.tags.labels[label];
   if (!ref) {
     // @test Ref Unknown
+    if (!parser.tags.refUpdate) {
+      parser.tags.redo = true;
+    }
     ref = new Label();
   }
   let tag = ref.tag;

@@ -172,15 +172,15 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   public compile(math: MathItem<N, T, D>): MmlNode {
     this.parseOptions.clear();
-    let node: MmlNode;
-    let parser: TexParser;
-    let display = math.display;
     this.executeFilters(this.preFilters, math, this.parseOptions);
+    let display = math.display;
     this.latex = math.math;
+    let node: MmlNode;
+    this.parseOptions.tags.startEquation(math);
     try {
-      parser = new TexParser(this.latex,
-                             {display: display, isInner: false},
-                             this.parseOptions);
+      let parser = new TexParser(this.latex,
+                                 {display: display, isInner: false},
+                                 this.parseOptions);
       node = parser.mml();
     } catch (err) {
       if (!(err instanceof TexError)) {
@@ -193,6 +193,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     if (display) {
       NodeUtil.setAttribute(node, 'display', 'block');
     }
+    this.parseOptions.tags.finishEquation(math);
     this.parseOptions.root = node;
     this.executeFilters(this.postFilters, math, this.parseOptions);
     this.mathNode = this.parseOptions.root;
