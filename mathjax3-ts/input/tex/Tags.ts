@@ -469,7 +469,7 @@ export class AbstractTags implements Tags {
    */
   public finishEquation(math: MathItem<any, any, any>) {
     if (this.redo) {
-      math.inputData.redo = {
+      math.inputData.recompile = {
         state: math.state(),
         counter: this.allCounter
       };

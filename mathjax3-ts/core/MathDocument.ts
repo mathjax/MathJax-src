@@ -653,7 +653,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             const recompile = [];
             for (const math of this.math) {
                 this.compileMath(math);
-                if (math.inputData.redo !== undefined) {
+                if (math.inputData.recompile !== undefined) {
                     recompile.push(math);
                 }
             }
@@ -662,9 +662,9 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             //    compile them again
             //
             for (const math of recompile) {
-                const redo = math.inputData.redo;
-                math.state(redo.state);
-                math.inputData.recompile = redo;
+                const data = math.inputData.recompile;
+                math.state(data.state);
+                math.inputData.recompile = data;
                 this.compileMath(math);
             }
             this.processed.set('compile');
