@@ -16,6 +16,9 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-error-tests.js
     node load.js tests/parser-complex-tests.js
     node load.js tests/parser-internal-math-tests.js
+    node load.js tests/parser-multline-shove-tests.js
+    node load.js tests/parser-matrix-tests.js
+
 
     # AMS package tests.
     node load.js tests/parser-ams-tests.js
@@ -28,19 +31,22 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-tag-ams-tests.js
     node load.js tests/parser-tag-all-tests.js
 
-    node load.js tests/parser-multline-shove-tests.js
-
-    node load.js tests/parser-matrix-tests.js
-
-    # Other packages
-    node load.js tests/parser-noundefined-tests.js
+    # Other standard packages
+    node load.js tests/parser-action-tests.js
+    node load.js tests/parser-bbox-tests.js
     node load.js tests/parser-boldsymbol-tests.js
-    node load.js tests/parser-newcommand-tests.js
+    node load.js tests/parser-cancel-tests.js
+    node load.js tests/parser-html-tests.js
     node load.js tests/parser-ncerrors-tests.js
+    node load.js tests/parser-newcommand-tests.js
+    node load.js tests/parser-noundefined-tests.js
+    node load.js tests/parser-unicode-tests.js
     node load.js tests/parser-verb-tests.js
 
+    # BraKet package.
     node load.js tests/parser-braket-tests.js
 
+    # mhchem package.
     node load.js tests/parser-mhchem0-tests.js
     node load.js tests/parser-mhchem1-tests.js
     node load.js tests/parser-mhchem2-tests.js
@@ -108,12 +114,6 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-physics-7-10-test.js
     node load.js tests/parser-physics-7-11-test.js 
 
-    # More Packages
-    node load.js tests/parser-bbox-tests.js
-    node load.js tests/parser-action-tests.js
-    node load.js tests/parser-html-tests.js
-    node load.js tests/parser-unicode-tests.js
-    node load.js tests/parser-cancel-tests.js
     exit 0
 else
     repeat=$1
