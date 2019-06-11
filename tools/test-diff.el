@@ -145,7 +145,7 @@
     )
   (do ()
       ((not (replace-expected-for-actual))))
-  
+
   )
 
 
@@ -179,7 +179,7 @@
 ;;; Special function for json element rewriting.
 
 (defun json-reformat:tree-to-string (root level)
-  (let ((first t)) 
+  (let ((first t))
     (concat "{"
           (let (key val str)
             (while root
@@ -216,7 +216,6 @@
   (let ((start (point))
         (dummy (forward-sexp))
         (end (point)))
-  (print "HERE")
     (setq json-reformat:indent-width 2)
     (json-reformat-region start end)
     (indent-region start end)
@@ -225,3 +224,28 @@
 
 (global-set-key [?\C-x ?\C-j] 'json-my-reformat)
 
+;;; Rewriting all json elements
+
+(defun json-reformat:complete-file ()
+  (beginning-of-buffer)
+  (loop
+   (let ((pos (condition-case nil
+                  (search-forward "\"math\",\"" nil t)
+                (error nil))))
+     (when (null pos)
+       (return nil))
+     (search-backward "{\"kind\"")
+     (beginning-of-line)
+     (indent-for-tab-command)
+     (json-my-reformat)
+     (forward-sexp)
+     )))
+
+(defun json-reformat:in-all-files (files &optional dir)
+  (dolist (file files)
+    (find-file (if dir
+                   (concat dir "/" file)
+                 file))
+    (json-reformat:complete-file)
+    )
+  )
