@@ -555,7 +555,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Fenced Nostretch 1", "(\\frac{a}{[bc]})",
+  'Fenced Nostretch 1', '(\\frac{a}{[bc]})',
   {"kind": "math",
  "texClass": 4,
  "attributes": {"display": "block"},
@@ -675,7 +675,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Fenced Noleft", "\\left. ab \\right)",
+  'Fenced Noleft', '\\left. ab \\right)',
   {"kind": "math",
  "texClass": 7,
  "attributes": {"display": "block"},
@@ -748,7 +748,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Fenced Noright", "\\left( ab \\right.",
+  'Fenced Noright', '\\left( ab \\right.',
   {"kind": "math",
  "texClass": 7,
  "attributes": {"display": "block"},
@@ -821,7 +821,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Fenced Arrows 5", "\\left\\{\\frac{a}{\\left\\uparrow bc\\right\\downarrow}\\right\\}",
+  'Fenced Arrows 5', '\\left\\{\\frac{a}{\\left\\uparrow bc\\right\\downarrow}\\right\\}',
   {"kind": "math",
  "texClass": 7,
  "attributes": {"display": "block"},
@@ -949,7 +949,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Fenced Arrows 1", "\\left\\uparrow \\frac{a}{b} \\right\\downarrow",
+  'Fenced Arrows 1', '\\left\\uparrow \\frac{a}{b} \\right\\downarrow',
   {"kind": "math",
  "texClass": 7,
  "attributes": {"display": "block"},
@@ -1030,7 +1030,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Fenced Arrows 2", "\\uparrow \\frac{a}{b} \\downarrow",
+  'Fenced Arrows 2', '\\uparrow \\frac{a}{b} \\downarrow',
   {"kind": "math",
  "texClass": 3,
  "attributes": {"display": "block"},
@@ -1101,7 +1101,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Fenced Arrows 3", "\\left\\uparrow \\frac{a}{b}\\middle\\downarrow c \\right\\uparrow",
+  'Fenced Arrows 3', '\\left\\uparrow \\frac{a}{b}\\middle\\downarrow c \\right\\uparrow',
   {"kind": "math",
  "texClass": 7,
  "attributes": {"display": "block"},

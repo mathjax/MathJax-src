@@ -501,7 +501,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overline 1", "\\overline{\\sum}",
+  'Overline 1', '\\overline{\\sum}',
   {"kind": "math",
  "texClass": 1,
  "attributes": {"display": "block"},
@@ -561,7 +561,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overline 2", "\\overline{\\mathop{a}}",
+  'Overline 2', '\\overline{\\mathop{a}}',
   {"kind": "math",
  "texClass": -1,
  "attributes": {"display": "block"},
@@ -629,7 +629,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overline 3", "\\overline{\\mathop{a}}^2",
+  'Overline 3', '\\overline{\\mathop{a}}^2',
   {"kind": "math",
  "texClass": -1,
  "attributes": {"display": "block"},
@@ -713,7 +713,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overline 4", "\\overline{\\sum^2_3}",
+  'Overline 4', '\\overline{\\sum^2_3}',
   {"kind": "math",
  "texClass": -1,
  "attributes": {"display": "block"},
@@ -813,7 +813,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overline 5", "\\overline{\\sum}^2_3",
+  'Overline 5', '\\overline{\\sum}^2_3',
   {"kind": "math",
  "texClass": 1,
  "attributes": {"display": "block"},
@@ -899,7 +899,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overline 6", "\\overline{\\underline{\\sum}}",
+  'Overline 6', '\\overline{\\underline{\\sum}}',
   {"kind": "math",
  "texClass": -1,
  "attributes": {"display": "block"},
@@ -996,7 +996,7 @@ parserTest.runTest(
 );
 
 parserTest.runTest(
-  "Overbrace 1", "\\overbrace{abc}",
+  'Overbrace 1', '\\overbrace{abc}',
   {"kind": "math",
  "texClass": 1,
  "attributes": {"display": "block"},
@@ -1090,7 +1090,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Underbrace", "\\underbrace{abc}",
+  'Underbrace', '\\underbrace{abc}',
   {"kind": "math",
  "texClass": 1,
  "attributes": {"display": "block"},
@@ -1184,7 +1184,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overbrace Op 1", "\\overbrace{\\mathop{a}}",
+  'Overbrace Op 1', '\\overbrace{\\mathop{a}}',
   {"kind": "math",
  "texClass": 1,
  "attributes": {"display": "block"},
@@ -1268,7 +1268,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overbrace Op 2", "\\overbrace{\\mathop{a}}^2",
+  'Overbrace Op 2', '\\overbrace{\\mathop{a}}^2',
   {"kind": "math",
  "texClass": -1,
  "attributes": {"display": "block"},
@@ -1369,7 +1369,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overbrace 2", "\\overbrace{\\sum}",
+  'Overbrace 2', '\\overbrace{\\sum}',
   {"kind": "math",
  "texClass": 1,
  "attributes": {"display": "block"},
@@ -1447,7 +1447,7 @@ parserTest.runTest(
 
 
 parserTest.runTest(
-  "Overbrace 3", "\\overbrace{\\sum}^2",
+  'Overbrace 3', '\\overbrace{\\sum}^2',
   {"kind": "math",
  "texClass": 1,
  "attributes": {"display": "block"},
