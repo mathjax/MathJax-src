@@ -1,35 +1,37 @@
 (require 'ediff)
 
 (defun find-fail ()
+  ;; Returns start end for actual and expected and position of fail o/w nil.
   (interactive)
-  (let ((pos (condition-case nil
-                 (search-forward "FAIL")
-               (error nil))))
-    (when (null pos)
-      (return nil))
-    (let ((actual (condition-case nil
-                      (search-forward "Actual:")
-                    (error nil)))
-          (expected (condition-case nil
-                      (search-forward "Expected:")
-                      (error nil))))
-      (when (or (null actual) (null expected))
-        (return nil))
-      (let* ((beg1 (progn
-                     (goto-char actual)
-                     (forward-line)
-                     (line-beginning-position)))
-            (end1 (line-end-position))
-            (fail1 (buffer-substring beg1 end1))
-            (beg2 (progn
-                    (goto-char expected)
-                    (forward-line)
-                    (line-beginning-position)))
-            (end2 (line-end-position))
-            (fail2 (buffer-substring beg2 end2)))
-        (cons fail1 fail2)
-        (list (cons beg1 end1) (cons beg2 end2) pos)
-        ))))
+  (block find-fail-block
+    (let ((pos (condition-case nil
+                   (search-forward "FAIL" nil t)
+                 (error nil))))
+      (when (null pos)
+        (return-from find-fail-block  nil))
+      (let ((actual (condition-case nil
+                        (search-forward "Actual:")
+                      (error nil)))
+            (expected (condition-case nil
+                          (search-forward "Expected:")
+                        (error nil))))
+        (when (or (null actual) (null expected))
+          (return-from find-fail-block  nil))
+        (let* ((beg1 (progn
+                       (goto-char actual)
+                       (forward-line)
+                       (line-beginning-position)))
+               (end1 (line-end-position))
+               (fail1 (buffer-substring beg1 end1))
+               (beg2 (progn
+                       (goto-char expected)
+                       (forward-line)
+                       (line-beginning-position)))
+               (end2 (line-end-position))
+               (fail2 (buffer-substring beg2 end2)))
+          (cons fail1 fail2)
+          (list (cons beg1 end1) (cons beg2 end2) pos)
+          )))))
 
 
 (defun diff-fail ()
@@ -49,46 +51,75 @@
 
 (defun replace-expected-for-actual ()
   (interactive)
-  (let ((actual (get-actual-for-fail)))
-    (forward-line)
-    (other-window 1)
-    (beginning-of-buffer)
-    (let ((pos (condition-case nil
-                   (search-forward (car actual))
-                 (error nil))))
-      (when (null pos)
-        (return nil))
-      (let ((old (condition-case nil
-                     (search-forward "{\"kind\":\"math\"")
+  (block expected-block
+    (let ((actual (get-actual-for-fail)))
+      (forward-line)
+      (other-window 1)
+      (beginning-of-buffer)
+      (let ((pos (condition-case nil
+                     (search-forward (car actual))
                    (error nil))))
-        (when (null old)
-          (return nil))
-        (backward-char 14)
-        (kill-sexp)
-        (insert (cadr actual))
-        (other-window 1)
-  ))))
+        (when (null pos)
+          (return-from expected-block nil))
+        (let ((old (condition-case nil
+                       (search-forward "{\"kind\":\"math\"")
+                     (error nil))))
+          (when (null old)
+            (return-from expected-block nil))
+          (backward-char 14)
+          (kill-sexp)
+          (insert (cadr actual))
+          (other-window 1)
+          )))))
 
 (defun get-actual-for-fail ()
-  (let ((fail (find-fail)))
-    (when (null fail) (return nil))
-    (let* ((point1 (progn
-                     (goto-char (third fail))
-                     (beginning-of-line)
-                     (condition-case nil
-                         (search-forward "test")
-                       (error nil))
-                     (forward-char 1)
-                     (point)))
-           (point2 (progn
-                     (condition-case nil
-                         (search-forward "\t")
-                       (error nil))
-                     (point)))
-           (name (buffer-substring point1 (1- point2))
-                 )
-           (actual (buffer-substring (caar fail) (cdar fail))))
-      (list name actual))))
+  (block fail-block
+    (let ((fail (find-fail)))
+      (when (null fail) (return-from fail-block nil))
+      (let* ((point1 (progn
+                       (goto-char (third fail))
+                       (beginning-of-line)
+                       (condition-case nil
+                           (search-forward "test")
+                         (error nil))
+                       (forward-char 1)
+                       (point)))
+             (point2 (progn
+                       (condition-case nil
+                           (search-forward "\t")
+                         (error nil))
+                       (point)))
+             (name (buffer-substring point1 (1- point2))
+                   )
+             (actual (buffer-substring (caar fail) (cdar fail))))
+        (list name actual)))))
+
+;; Finding all fails
+
+(defun get-file-name ()
+  (search-backward "Running tests from ")
+  (forward-char 19)
+  (let ((start (point))
+        (end (progn (forward-sexp)
+                    (point))))
+    (buffer-substring start end)))
+
+(defun find-all-fail ()
+  (beginning-of-buffer)
+  (do* ((fail (find-fail) (find-fail))
+        (fails ()))
+      ((null fail) (reverse fails))
+    (push (cons (get-file-name) fail) fails)
+    (goto-char (car (last fail))))
+  )
+
+(defun print-all-fail ()
+  (interactive)
+  (let ((all-fail (find-all-fail)))
+    (dolist (x all-fail)
+      (print x))
+    (print (remove-duplicates (mapcar #'car all-fail) :test #'string-equal))
+    ))
 
 
 ;;; Generate basic latex tests.
@@ -133,7 +164,6 @@
           "}")))
 
 (defun json-reformat:vector-to-string (val level)
-  (print "HERE2")
   (if (= (length val) 0) "[]"
     (concat "[\n"
             (mapconcat
