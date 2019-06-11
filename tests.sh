@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -eq 0 ]; then 
+if [ $# -eq 0 ]; then
 
     node load.js tests/tex-keyval-tests.js
 
@@ -112,7 +112,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-physics-7-8-tests.js
     node load.js tests/parser-physics-7-9-tests.js
     node load.js tests/parser-physics-7-10-tests.js
-    node load.js tests/parser-physics-7-11-tests.js 
+    node load.js tests/parser-physics-7-11-tests.js
 
     exit 0
 else
