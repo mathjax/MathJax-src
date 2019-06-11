@@ -37,7 +37,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-boldsymbol-tests.js
     node load.js tests/parser-cancel-tests.js
     node load.js tests/parser-html-tests.js
-    node load.js tests/parser-ncerrors-tests.js
+    node load.js tests/parser-ncerror-tests.js
     node load.js tests/parser-newcommand-tests.js
     node load.js tests/parser-noundefined-tests.js
     node load.js tests/parser-unicode-tests.js
@@ -58,7 +58,7 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-mhchem-8-tests.js
     node load.js tests/parser-mhchem-9-tests.js
 
-    node load.js tests/parser-noerrors-tests.js
+    node load.js tests/parser-noerror-tests.js
     node load.js tests/parser-enclose-tests.js
     node load.js tests/parser-cancel-tests.js
     node load.js tests/parser-extpfeil-tests.js
