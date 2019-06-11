@@ -70,6 +70,7 @@
           (kill-sexp)
           (insert (cadr actual))
           (other-window 1)
+          t
           )))))
 
 (defun get-actual-for-fail ()
@@ -120,6 +121,39 @@
       (print x))
     (print (remove-duplicates (mapcar #'car all-fail) :test #'string-equal))
     ))
+
+
+;;; Replacing an entire file
+
+(defun replace-all-in-file (file diff &optional dir)
+  (interactive)
+  (find-file (if dir
+                 (concat dir "/" file)
+               file))
+  (beginning-of-buffer)
+  ;; find correct positon in diff file
+  (search-forward "parserTest =" )
+  (search-forward "()")
+  (backward-sexp 2)
+  (let* ((start (point))
+         (end (progn (forward-sexp) (point)))
+         (name (buffer-substring start end)))
+    (print name)
+    (find-file-other-window diff)
+    (beginning-of-buffer)
+    (search-forward name)
+    )
+  (do ()
+      ((not (replace-expected-for-actual))))
+  
+  )
+
+
+(defun replace-in-all-files (files diff &optional dir)
+  (dolist (file files)
+    (replace-all-in-file file diff dir)
+    )
+  )
 
 
 ;;; Generate basic latex tests.
