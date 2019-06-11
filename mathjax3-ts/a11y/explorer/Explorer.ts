@@ -98,6 +98,7 @@ export class AbstractExplorer implements Explorer {
   public Attach() {
     this.oldIndex = this.node.tabIndex;
     this.node.tabIndex = 1;
+    this.node.setAttribute('role', 'application');
     this.AddEvents();
   }
 
@@ -108,6 +109,7 @@ export class AbstractExplorer implements Explorer {
   public Detach() {
     this.node.tabIndex = this.oldIndex;
     this.oldIndex = null;
+    this.node.removeAttribute('role');
     this.RemoveEvents();
   }
 
