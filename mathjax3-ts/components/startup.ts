@@ -129,7 +129,7 @@ export namespace Startup {
     const extensions = new PrioritizedList<HandlerExtension>();
 
     let visitor: any;  // the visitor for toMML();
-    let mathjax: any;  // variable for the mathjax variable from mathjax.js
+    let mathjax: any;  // the mathjax variable from mathjax.js
 
     /**
      * The constructors (or other data) registered by the loaded packages

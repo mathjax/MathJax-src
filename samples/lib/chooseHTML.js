@@ -16,7 +16,7 @@ export function htmlDocument(HTML, OPTIONS) {
         html = mathjax.document(document, OPTIONS);
         document.documentElement.setAttribute('xmlns:m', 'http://www.w3.org/1998/Math/MathML');
         document.body.insertBefore(document.createElement('hr'), document.body.firstChild);
-        var div = document.createElement('div');
+        const div = document.createElement('div');
         div.innerHTML = HTML; div.style.marginBottom = '1em';
         document.body.insertBefore(div, document.body.firstChild);
     } catch (err) {
