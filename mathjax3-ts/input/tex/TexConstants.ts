@@ -44,7 +44,7 @@ export namespace TexConstant {
     TAILED: 'tailed',
     LOOPED: 'looped',
     STRETCHED: 'stretched',
-    CALIGRAPHIC: '-tex-caligraphic',
+    CALLIGRAPHIC: '-tex-calligraphic',
     OLDSTYLE: '-tex-oldstyle'
   };
 

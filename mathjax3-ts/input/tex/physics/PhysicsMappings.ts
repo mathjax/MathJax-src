@@ -18,7 +18,7 @@
 
 /**
  * @fileoverview Mappings for TeX parsing of the physics package.
- *                                            
+ *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
@@ -45,7 +45,7 @@ new CommandMap('Physics-automatic-bracing-macros', {
   'evaluated':      'Eval',
   'eval':           'Eval',
   'order':          ['Quantity', '(', ')', true, 'O',
-                     TexConstant.Variant.CALIGRAPHIC],
+                     TexConstant.Variant.CALLIGRAPHIC],
   'commutator':     'Commutator',
   'comm':           'Commutator',
   'anticommutator': ['Commutator', '\\{', '\\}'],

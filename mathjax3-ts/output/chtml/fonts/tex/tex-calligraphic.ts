@@ -16,9 +16,9 @@
  */
 
 import {CHTMLCharMap, AddCSS} from '../../FontData.js';
-import {texCaligraphic as font} from '../../../common/fonts/tex/tex-caligraphic.js';
+import {texCalligraphic as font} from '../../../common/fonts/tex/tex-calligraphic.js';
 
-export const texCaligraphic: CHTMLCharMap = AddCSS(font, {
+export const texCalligraphic: CHTMLCharMap = AddCSS(font, {
     0x20: {c: ' '},
     0x30: {c: '0'},
     0x31: {c: '1'},

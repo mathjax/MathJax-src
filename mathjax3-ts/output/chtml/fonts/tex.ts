@@ -42,8 +42,8 @@ import {sansSerif} from './tex/sans-serif.js';
 import {scriptBold} from './tex/script-bold.js';
 import {script} from './tex/script.js';
 import {smallop} from './tex/smallop.js';
-import {texCaligraphicBold} from './tex/tex-caligraphic-bold.js';
-import {texCaligraphic} from './tex/tex-caligraphic.js';
+import {texCalligraphicBold} from './tex/tex-calligraphic-bold.js';
+import {texCalligraphic} from './tex/tex-calligraphic.js';
 import {texMathit} from './tex/tex-mathit.js';
 import {texOldstyleBold} from './tex/tex-oldstyle-bold.js';
 import {texOldstyle} from './tex/tex-oldstyle.js';
@@ -82,8 +82,8 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         '-largeop': 'mjx-lop',
         '-size3': 'mjx-s3',
         '-size4': 'mjx-s4',
-        '-tex-caligraphic': 'mjx-cal',
-        '-tex-bold-caligraphic': 'mjx-cal mjx-b',
+        '-tex-calligraphic': 'mjx-cal',
+        '-tex-bold-calligraphic': 'mjx-cal mjx-b',
         '-tex-mathit': 'mjx-mit',
         '-tex-oldstyle': 'mjx-os',
         '-tex-bold-oldstyle': 'mjx-os mjx-b',
@@ -117,8 +117,8 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         '-largeop': largeop,
         '-size3': texSize3,
         '-size4': texSize4,
-        '-tex-caligraphic': texCaligraphic,
-        '-tex-bold-caligraphic': texCaligraphicBold,
+        '-tex-calligraphic': texCalligraphic,
+        '-tex-bold-calligraphic': texCalligraphicBold,
         '-tex-mathit': texMathit,
         '-tex-oldstyle': texOldstyle,
         '-tex-bold-oldstyle': texOldstyleBold,
@@ -285,12 +285,12 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
 
         '@font-face /* 11 */': {
             'font-family': 'MJXTEX-C',
-            src: 'url("%%URL%%/MathJax_Caligraphic-Regular.woff") format("woff")'
+            src: 'url("%%URL%%/MathJax_Calligraphic-Regular.woff") format("woff")'
         },
 
         '@font-face /* 12 */': {
             'font-family': 'MJXTEX-C-B',
-            src: 'url("%%URL%%/MathJax_Caligraphic-Bold.woff") format("woff")'
+            src: 'url("%%URL%%/MathJax_Calligraphic-Bold.woff") format("woff")'
         },
 
         '@font-face /* 13 */': {
