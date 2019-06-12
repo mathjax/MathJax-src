@@ -225,7 +225,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     const jax = this.document.outputJax.name;
     this.highlighter = sre.HighlighterFactory.highlighter(
       this.background, this.foreground,
-      {renderer: jax === 'CHTML' ? 'CommonHTML' : jax}
+      {renderer: jax}
     );
     // Add speech
     this.speechGenerator = new sre.TreeSpeechGenerator();

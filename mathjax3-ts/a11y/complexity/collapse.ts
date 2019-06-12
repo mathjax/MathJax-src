@@ -382,6 +382,14 @@ export class Collapse {
         }
     }
 
+    private idCount = 0;
+    /**
+     * @return {string} A unique id string.
+     */
+    private makeId(): string {
+        return 'mjx-collapse-' + this.idCount++;
+    }
+
     public makeAction(node: MmlNode) {
         if (node.isKind('math')) {
             node = this.addMrow(node);
@@ -389,10 +397,11 @@ export class Collapse {
         const factory = this.complexity.factory;
         const marker = node.getProperty('collapse-marker') as string;
         const parent = node.parent;
-        var maction = factory.create('maction', {
+        let maction = factory.create('maction', {
             actiontype: 'toggle',
             selection: 2,
             'data-collapsible': true,
+            id: this.makeId(),
             'data-semantic-complexity': node.attributes.get('data-semantic-complexity')
         }, [
             factory.create('mtext', {mathcolor: 'blue'}, [
