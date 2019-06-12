@@ -9,7 +9,7 @@ import {AllPackages} from '../mathjax3/input/tex/AllPackages.js';
 RegisterHTMLHandler(chooseAdaptor());
 
 let html = mathjax.document('<html></html>', {
-    InputJax: new TeX({packages: AllPackages})
+  InputJax: new TeX({packages: AllPackages})
 });
 
 import {SerializedMmlVisitor as MmlVisitor} from '../mathjax3/core/MmlTree/SerializedMmlVisitor.js';
