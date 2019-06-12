@@ -3273,7 +3273,8 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "(",
-                        "close": ")"},
+                        "close": ")",
+                        "texClass": 7},
          "childNodes": [
            {"kind": "mo",
             "texClass": 4,
@@ -3284,7 +3285,7 @@ parserTest.runTest(
                           "fence": true,
                           "stretchy": true,
                           "symmetric": true},
-            "properties": {},
+            "properties": {"texClass": 4},
             "childNodes": [
               {"kind": "text",
                "text": "("}],
@@ -3292,8 +3293,8 @@ parserTest.runTest(
            {"kind": "mtable",
             "texClass": 0,
             "attributes": {"columnalign": "center center center",
-                           "rowspacing": "4pt",
-                           "columnspacing": "1em"},
+                           "columnspacing": "1em",
+                           "rowspacing": "4pt"},
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {"useHeight": 1},
@@ -3577,7 +3578,7 @@ parserTest.runTest(
                 "fence": true,
                 "stretchy": true,
                 "symmetric": true},
-              "properties": {},
+              "properties": {"texClass": 5},
               "childNodes": [
                 {"kind": "text",
                   "text": ")"}],

@@ -534,7 +534,7 @@ parserTest.runTest(
          "attributes": {},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
-         "properties": {},
+         "properties": {"texClass": 0},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
@@ -689,7 +689,7 @@ parserTest.runTest(
                      "attributes": {},
                      "inherited": {"displaystyle": true,
                                    "scriptlevel": 0},
-                     "properties": {},
+                     "properties": {"texClass": 0},
                      "childNodes": [
                        {"kind": "mrow",
                               "texClass": 0,
@@ -800,7 +800,7 @@ parserTest.runTest(
                      "attributes": {},
                      "inherited": {"displaystyle": true,
                                    "scriptlevel": 0},
-                     "properties": {},
+                     "properties": {"texClass": 0},
                      "childNodes": [
                        {"kind": "mrow",
                         "texClass": 0,
@@ -1009,7 +1009,7 @@ parserTest.runTest(
          "attributes": {},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
-         "properties": {},
+         "properties": {"texClass": 0},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
@@ -1084,7 +1084,7 @@ parserTest.runTest(
          "attributes": {},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
-         "properties": {},
+         "properties": {"texClass": 0},
          "childNodes": [
            {"kind": "mrow",
             "texClass": 0,
@@ -1334,21 +1334,21 @@ parserTest.runTest(
 parserTest.runTest(
   'Let Bar', '\\let\\b\\lvert\\let\\lvert\\langle\\vert\\b\\lvert',
   {"kind": "math",
-   "texClass": 4,
+   "texClass": 0,
    "attributes": {"display": "block"},
    "inherited": {"displaystyle": true,
                  "scriptlevel": 0},
    "properties": {},
    "childNodes": [
      {"kind": "mrow",
-      "texClass": 4,
+      "texClass": 0,
       "attributes": {},
       "inherited": {"displaystyle": true,
                     "scriptlevel": 0},
       "properties": {},
       "childNodes": [
         {"kind": "mo",
-         "texClass": 4,
+         "texClass": 0,
          "attributes": {"fence": false,
                         "stretchy": false},
          "inherited": {"displaystyle": true,
@@ -1357,13 +1357,13 @@ parserTest.runTest(
                        "fence": true,
                        "stretchy": true,
                        "symmetric": true},
-         "properties": {},
+         "properties": {"texClass": 0},
          "childNodes": [
            {"kind": "text",
             "text": "|"}],
          "isEmbellished": true},
         {"kind": "mo",
-         "texClass": 0,
+         "texClass": 4,
          "attributes": {"fence": false,
                         "stretchy": false},
          "inherited": {"displaystyle": true,
@@ -1372,7 +1372,7 @@ parserTest.runTest(
                        "fence": true,
                        "stretchy": true,
             "symmetric": true},
-          "properties": {},
+          "properties": {"texClass": 4},
           "childNodes": [
             {"kind": "text",
               "text": "|"}],
@@ -2039,7 +2039,8 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "|",
-                        "close": "⟨"},
+                        "close": "⟨",
+                        "texClass": 7},
          "childNodes": [
            {"kind": "mo",
             "texClass": 4,
@@ -2050,7 +2051,7 @@ parserTest.runTest(
                           "fence": true,
                           "stretchy": true,
                           "symmetric": true},
-            "properties": {},
+            "properties": {"texClass": 4},
             "childNodes": [
               {"kind": "text",
                "text": "|"}],
@@ -2066,7 +2067,7 @@ parserTest.runTest(
                 {"kind": "text",
                   "text": "q"}]},
             {"kind": "mo",
-              "texClass": 4,
+              "texClass": 5,
               "attributes": {},
               "inherited": {"displaystyle": true,
                 "scriptlevel": 0,
@@ -2074,7 +2075,7 @@ parserTest.runTest(
                 "fence": true,
                 "stretchy": true,
                 "symmetric": true},
-              "properties": {},
+              "properties": {"texClass": 5},
               "childNodes": [
                 {"kind": "text",
                   "text": "⟨"}],
@@ -2104,7 +2105,8 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "{",
-                        "close": "}"},
+                        "close": "}",
+                        "texClass": 7},
          "childNodes": [
            {"kind": "mo",
             "texClass": 4,
@@ -2115,7 +2117,7 @@ parserTest.runTest(
                           "fence": true,
                           "stretchy": true,
                           "symmetric": true},
-            "properties": {},
+            "properties": {"texClass": 4},
             "childNodes": [
               {"kind": "text",
                "text": "{"}],
@@ -2154,7 +2156,7 @@ parserTest.runTest(
                 "fence": true,
                 "stretchy": true,
                 "symmetric": true},
-              "properties": {},
+              "properties": {"texClass": 5},
               "childNodes": [
                 {"kind": "text",
                   "text": "}"}],
@@ -2184,7 +2186,8 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "(",
-                        "close": ")"},
+                        "close": ")",
+                        "texClass": 7},
          "childNodes": [
            {"kind": "mo",
             "texClass": 4,
@@ -2195,7 +2198,7 @@ parserTest.runTest(
                           "fence": true,
                           "stretchy": true,
                           "symmetric": true},
-            "properties": {},
+            "properties": {"texClass": 4},
             "childNodes": [
               {"kind": "text",
                "text": "("}],
@@ -2234,7 +2237,7 @@ parserTest.runTest(
                 "fence": true,
                 "stretchy": true,
                 "symmetric": true},
-              "properties": {},
+              "properties": {"texClass": 5},
               "childNodes": [
                 {"kind": "text",
                   "text": ")"}],
@@ -2263,7 +2266,8 @@ parserTest.runTest(
          "attributes": {},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
-         "properties": {"fnOP": true},
+         "properties": {"texClass": 1,
+                        "fnOP": true},
          "childNodes": [
            {"kind": "text",
             "text": "sin"}]},
@@ -2273,7 +2277,7 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
-         "properties": {},
+         "properties": {"texClass": -1},
          "childNodes": [
            {"kind": "text",
             "text": "⁡"}],
@@ -2289,7 +2293,7 @@ parserTest.runTest(
                        "symmetric": true},
          "properties": {},
          "childNodes": [
-           {"kind": "text",
+            {"kind": "text",
               "text": "("}],
           "isEmbellished": true},
         {"kind": "mi",
@@ -2340,7 +2344,8 @@ parserTest.runTest(
          "attributes": {},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
-         "properties": {"fnOP": true},
+         "properties": {"texClass": 1,
+                        "fnOP": true},
          "childNodes": [
            {"kind": "text",
             "text": "sin"}]},
@@ -2350,7 +2355,7 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
-         "properties": {},
+         "properties": {"texClass": -1},
          "childNodes": [
            {"kind": "text",
             "text": "⁡"}],
@@ -2398,7 +2403,8 @@ parserTest.runTest(
          "attributes": {},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
-         "properties": {"fnOP": true},
+         "properties": {"texClass": 1,
+                        "fnOP": true},
          "childNodes": [
            {"kind": "text",
             "text": "sin"}]},
@@ -2408,7 +2414,7 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
-         "properties": {},
+         "properties": {"texClass": -1},
          "childNodes": [
            {"kind": "text",
             "text": "⁡"}],
@@ -2456,7 +2462,8 @@ parserTest.runTest(
           "attributes": {},
           "inherited": {"displaystyle": true,
             "scriptlevel": 0},
-          "properties": {"fnOP": true},
+          "properties": {"texClass": 1,
+            "fnOP": true},
           "childNodes": [
             {"kind": "text",
               "text": "cos"}]},
@@ -2466,7 +2473,7 @@ parserTest.runTest(
           "inherited": {"displaystyle": true,
             "scriptlevel": 0,
             "form": "infix"},
-          "properties": {},
+          "properties": {"texClass": -1},
           "childNodes": [
             {"kind": "text",
               "text": "⁡"}],
@@ -2533,7 +2540,8 @@ parserTest.runTest(
          "attributes": {},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
-         "properties": {"fnOP": true},
+         "properties": {"texClass": 1,
+                        "fnOP": true},
          "childNodes": [
            {"kind": "text",
             "text": "cos"}]},
@@ -2543,7 +2551,7 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
-         "properties": {},
+         "properties": {"texClass": -1},
          "childNodes": [
            {"kind": "text",
             "text": "⁡"}],
@@ -2591,7 +2599,8 @@ parserTest.runTest(
          "attributes": {},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
-         "properties": {"fnOP": true},
+         "properties": {"texClass": 1,
+                        "fnOP": true},
          "childNodes": [
            {"kind": "text",
             "text": "tan"}]},
@@ -2601,7 +2610,7 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0,
                        "form": "infix"},
-         "properties": {},
+         "properties": {"texClass": -1},
          "childNodes": [
            {"kind": "text",
             "text": "⁡"}],
@@ -2649,7 +2658,8 @@ parserTest.runTest(
           "attributes": {},
           "inherited": {"displaystyle": true,
             "scriptlevel": 0},
-          "properties": {"fnOP": true},
+          "properties": {"texClass": 1,
+            "fnOP": true},
           "childNodes": [
             {"kind": "text",
               "text": "sin"}]},
@@ -2659,7 +2669,7 @@ parserTest.runTest(
           "inherited": {"displaystyle": true,
             "scriptlevel": 0,
             "form": "infix"},
-          "properties": {},
+          "properties": {"texClass": -1},
           "childNodes": [
             {"kind": "text",
               "text": "⁡"}],
@@ -2728,7 +2738,8 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "(",
-                        "close": ")"},
+                        "close": ")",
+                        "texClass": 7},
          "childNodes": [
            {"kind": "mo",
             "texClass": 4,
@@ -2739,7 +2750,7 @@ parserTest.runTest(
                           "fence": true,
                           "stretchy": true,
                           "symmetric": true},
-            "properties": {},
+            "properties": {"texClass": 4},
             "childNodes": [
               {"kind": "text",
                "text": "("}],
@@ -2776,7 +2787,7 @@ parserTest.runTest(
             "attributes": {},
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
-            "properties": {},
+            "properties": {"texClass": 5},
             "childNodes": [
               {"kind": "mrow",
                "texClass": null,
@@ -2806,7 +2817,7 @@ parserTest.runTest(
               "attributes": {},
               "inherited": {"displaystyle": true,
                 "scriptlevel": 0},
-              "properties": {},
+              "properties": {"texClass": 4},
               "childNodes": [
                 {"kind": "mrow",
                   "texClass": null,
@@ -2836,7 +2847,7 @@ parserTest.runTest(
                 "fence": true,
                 "stretchy": true,
                 "symmetric": true},
-              "properties": {},
+              "properties": {"texClass": 5},
               "childNodes": [
                 {"kind": "text",
                   "text": ")"}],
@@ -2866,7 +2877,8 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "⟨",
-                        "close": "⟩"},
+                        "close": "⟩",
+                        "texClass": 7},
          "childNodes": [
            {"kind": "mo",
             "texClass": 4,
@@ -2877,7 +2889,7 @@ parserTest.runTest(
                           "fence": true,
                           "stretchy": true,
                           "symmetric": true},
-            "properties": {},
+            "properties": {"texClass": 4},
             "childNodes": [
               {"kind": "text",
                "text": "⟨"}],
@@ -2914,7 +2926,7 @@ parserTest.runTest(
             "attributes": {},
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
-            "properties": {},
+            "properties": {"texClass": 5},
             "childNodes": [
               {"kind": "mrow",
                "texClass": null,
@@ -2944,7 +2956,7 @@ parserTest.runTest(
               "attributes": {},
               "inherited": {"displaystyle": true,
                 "scriptlevel": 0},
-              "properties": {},
+              "properties": {"texClass": 4},
               "childNodes": [
                 {"kind": "mrow",
                   "texClass": null,
@@ -2974,7 +2986,7 @@ parserTest.runTest(
                 "fence": true,
                 "stretchy": true,
                 "symmetric": true},
-              "properties": {},
+              "properties": {"texClass": 5},
               "childNodes": [
                 {"kind": "text",
                   "text": "⟩"}],
@@ -3084,14 +3096,15 @@ parserTest.runTest(
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {"open": "(",
-                        "close": ")"},
+                        "close": ")",
+                        "texClass": 0},
          "childNodes": [
            {"kind": "TeXAtom",
             "texClass": 4,
             "attributes": {},
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
-            "properties": {},
+            "properties": {"texClass": 4},
             "childNodes": [
               {"kind": "mrow",
                "texClass": 4,
@@ -3150,7 +3163,7 @@ parserTest.runTest(
               "attributes": {},
               "inherited": {"displaystyle": true,
                 "scriptlevel": 0},
-              "properties": {},
+              "properties": {"texClass": 5},
               "childNodes": [
                 {"kind": "mrow",
                   "texClass": 5,

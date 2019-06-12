@@ -1,15 +1,17 @@
 import {ParserTest} from './parser-tests.js';
+import 'mathjax3/input/tex/noerrors/NoErrorsConfiguration.js';
 
 
-class ParserErrorTest extends ParserTest {
+class ParserNoErrorTest extends ParserTest {
 
   constructor() {
     super();
+    this.packages = ['base', 'noerrors'];
   }
 
 }
 
-let parserTest = new ParserErrorTest();
+let parserTest = new ParserNoErrorTest();
 
 // Errors
 
@@ -32,7 +34,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Misplaced &"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -52,7 +54,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Misplaced &"}],
+                      "text": "&"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -78,7 +80,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing argument for \\frac"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -89,7 +91,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -98,7 +100,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing argument for \\frac"}],
+                      "text": "\\frac{b}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -124,7 +126,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Undefined control sequence \\nonsense"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -135,7 +137,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -144,7 +146,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Undefined control sequence \\nonsense"}],
+                      "text": "\\nonsense"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -170,7 +172,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Unknown environment 'nonsense'"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -190,7 +192,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Unknown environment 'nonsense'"}],
+                      "text": "\\begin{nonsense} a \\end{nonsense}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -215,7 +217,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Double exponent: use braces to clarify"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -226,7 +228,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -235,7 +237,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Double exponent: use braces to clarify"}],
+                      "text": "x^2^3"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -260,7 +262,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Double exponent: use braces to clarify"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -271,7 +273,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -280,7 +282,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Double exponent: use braces to clarify"}],
+                      "text": "\\sum^2^3"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -306,7 +308,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "\\limits is allowed only on operators"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -317,7 +319,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -326,7 +328,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "\\limits is allowed only on operators"}],
+                      "text": "+\\limits^2"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -352,7 +354,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Double subscripts: use braces to clarify"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -363,7 +365,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -372,7 +374,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Double subscripts: use braces to clarify"}],
+                      "text": "x_2_3"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -398,7 +400,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Double subscripts: use braces to clarify"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -409,7 +411,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -418,7 +420,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Double subscripts: use braces to clarify"}],
+                      "text": "\\sum_2_3"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -444,7 +446,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing open brace for superscript"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -455,7 +457,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -464,7 +466,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing open brace for superscript"}],
+                      "text": "x'^'"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -490,7 +492,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Prime causes double exponent: use braces to clarify"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -501,7 +503,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -510,7 +512,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Prime causes double exponent: use braces to clarify"}],
+                      "text": "x^\\prime'"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -535,7 +537,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "You can't use 'macro parameter character #' in math mode"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -546,8 +548,8 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
-              {"kind": "mtext",
+              "childNodes": [
+                {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {"displaystyle": true,
@@ -555,7 +557,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "You can't use 'macro parameter character #' in math mode"}],
+                      "text": "#"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -581,7 +583,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Extra \\left or missing \\right"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -592,7 +594,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -601,7 +603,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Extra \\left or missing \\right"}],
+                      "text": "\\left(\\middle|"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -627,7 +629,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "\\middle must be within \\left and \\right"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -638,7 +640,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -647,7 +649,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "\\middle must be within \\left and \\right"}],
+                      "text": "\\middle|"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -673,7 +675,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "\\middle must be within \\left and \\right"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -684,7 +686,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -693,7 +695,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "\\middle must be within \\left and \\right"}],
+                      "text": "\\middle|\\right)"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -719,7 +721,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "\\uproot can appear only within a root"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -739,7 +741,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "\\uproot can appear only within a root"}],
+                      "text": "\\uproot{2}\\sqrt[3]{a}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -765,7 +767,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Multiple use of \\uproot"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -785,7 +787,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Multiple use of \\uproot"}],
+                      "text": "\\sqrt[\\uproot{-2}\\uproot{2}\\beta]{k}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -811,7 +813,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "The argument to \\uproot must be an integer"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -831,7 +833,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "The argument to \\uproot must be an integer"}],
+                      "text": "\\sqrt[\\uproot-2.5\\beta]{k}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -856,7 +858,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Ambiguous use of \\over"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -867,7 +869,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -876,7 +878,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Ambiguous use of \\over"}],
+                      "text": "1 \\over 2 \\over 3"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -902,7 +904,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "mk is not a token element"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -913,7 +915,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -922,7 +924,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "mk is not a token element"}],
+                      "text": "\\mmlToken{mk}[]{}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -948,7 +950,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "mrow is not a token element"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -959,7 +961,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -968,7 +970,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "mrow is not a token element"}],
+                      "text": "\\mmlToken{mrow}[]{}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -994,7 +996,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Invalid MathML attribute: m1=true"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1014,7 +1016,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Invalid MathML attribute: m1=true"}],
+                      "text": "\\mmlToken{mi}[m1=true]{}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1040,7 +1042,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "nothing is not a recognized attribute for mo"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1060,7 +1062,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "nothing is not a recognized attribute for mo"}],
+                      "text": "\\mmlToken{mo}[nothing=\"something\"]{}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1086,7 +1088,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "movablelimit is not a recognized attribute for mi"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1106,7 +1108,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "movablelimit is not a recognized attribute for mi"}],
+                      "text": "\\mmlToken{mi}[movablelimit=true]{}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1131,7 +1133,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing \\begin{array} or extra \\end{array}"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1142,7 +1144,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1151,7 +1153,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing \\begin{array} or extra \\end{array}"}],
+                      "text": "\\end{array}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1176,7 +1178,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Extra close brace or missing open brace"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1187,7 +1189,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1196,7 +1198,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Extra close brace or missing open brace"}],
+                      "text": "x}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1221,7 +1223,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing \\left or extra \\right"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1232,7 +1234,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1241,7 +1243,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing \\left or extra \\right"}],
+                      "text": "x\\right\\}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1266,7 +1268,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Extra open brace or missing close brace"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1277,7 +1279,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1286,7 +1288,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Extra open brace or missing close brace"}],
+                      "text": "{x"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1311,7 +1313,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing superscript or subscript argument"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1322,7 +1324,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1331,7 +1333,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing superscript or subscript argument"}],
+                      "text": "x_"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1356,7 +1358,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing superscript or subscript argument"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1367,7 +1369,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1376,7 +1378,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing superscript or subscript argument"}],
+                      "text": "x^"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1401,7 +1403,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing open brace for superscript"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1412,7 +1414,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1421,7 +1423,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing open brace for superscript"}],
+                      "text": "x^^"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1446,7 +1448,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing open brace for subscript"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1457,7 +1459,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1466,7 +1468,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing open brace for subscript"}],
+                      "text": "x__"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1491,7 +1493,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Extra \\left or missing \\right"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1502,7 +1504,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1511,7 +1513,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Extra \\left or missing \\right"}],
+                      "text": "\\left\\{x"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1537,7 +1539,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Misplaced \\cr"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1557,7 +1559,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Misplaced \\cr"}],
+                      "text": "a\\cr b"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1583,7 +1585,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Bracket argument to \\\\ must be a dimension"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1594,7 +1596,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1603,7 +1605,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Bracket argument to \\\\ must be a dimension"}],
+                      "text": "a\\\\[abc] b"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1629,7 +1631,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing argument for \\sqrt"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1640,7 +1642,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1649,7 +1651,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing argument for \\sqrt"}],
+                      "text": "\\sqrt"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1674,7 +1676,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Extra close brace or missing open brace"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1685,7 +1687,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1694,7 +1696,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Extra close brace or missing open brace"}],
+                      "text": "\\sqrt}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1719,7 +1721,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing close brace"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1739,7 +1741,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing close brace"}],
+                      "text": "\\sqrt{"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1764,7 +1766,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Extra close brace while looking for ']'"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1775,7 +1777,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1784,7 +1786,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Extra close brace while looking for ']'"}],
+                      "text": "\\sqrt[3}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1809,7 +1811,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Could not find closing ']' for argument to \\sqrt"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1820,7 +1822,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1829,7 +1831,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Could not find closing ']' for argument to \\sqrt"}],
+                      "text": "\\sqrt[3{x}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1854,7 +1856,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing or unrecognized delimiter for \\left"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1865,7 +1867,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1874,7 +1876,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing or unrecognized delimiter for \\left"}],
+                      "text": "\\left\\alpha b"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1899,7 +1901,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing or unrecognized delimiter for \\right"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1910,7 +1912,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1919,7 +1921,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing or unrecognized delimiter for \\right"}],
+                      "text": "\\left( b\\right"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1944,7 +1946,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing dimension or its units for \\rule"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -1955,7 +1957,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -1964,7 +1966,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing dimension or its units for \\rule"}],
+                      "text": "\\rule{}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -1989,7 +1991,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Could not find \\of for \\root"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2000,7 +2002,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -2009,7 +2011,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Could not find \\of for \\root"}],
+                      "text": "\\root {3] \\of 5"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2034,7 +2036,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Extra close brace while looking for \\of"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2045,7 +2047,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -2054,7 +2056,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Extra close brace while looking for \\of"}],
+                      "text": "\\root [3} \\of 5 "}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2079,7 +2081,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Undefined control sequence \\genfrac"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2099,7 +2101,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing or unrecognized delimiter for \\genfrac"}],
+                      "text": "\\genfrac{(}{a}{}{2}{1}{2}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2125,7 +2127,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Erroneous nesting of equation structures"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2137,7 +2139,7 @@ parserTest.runTest(
                           "scriptlevel": 0},
             "properties": {},
             "childNodes": [
-                {"kind": "mtext",
+              {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
                   "inherited": {"displaystyle": true,
@@ -2145,7 +2147,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Erroneous nesting of equation structures"}],
+                      "text": "\\begin{equation}\\begin{eqnarray}\\end{eqnarray}\\end{equation}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2172,7 +2174,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Extra alignment tab in \\cases text"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2183,7 +2185,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -2192,7 +2194,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Extra alignment tab in \\cases text"}],
+                      "text": "\\cases{b & l & k}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2217,7 +2219,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Misplaced \\hline"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2237,7 +2239,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Misplaced \\hline"}],
+                      "text": "\\hline"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2262,7 +2264,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Unsupported use of \\hfill"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2273,7 +2275,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -2282,7 +2284,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Unsupported use of \\hfill"}],
+                      "text": "a\\hfill b"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2307,7 +2309,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Invalid environment name '\\ff'"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2327,7 +2329,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Invalid environment name '\\ff'"}],
+                      "text": "\\begin{\\ff}kk\\end{\\ff}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2354,7 +2356,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "\\begin{equation} ended with \\end{array}"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2374,7 +2376,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "\\begin{equation} ended with \\end{array}"}],
+                      "text": "\\begin{equation}a\\end{array}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2399,7 +2401,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing \\end{array}"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2419,7 +2421,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing \\end{array}"}],
+                      "text": "\\begin{array}a"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2444,7 +2446,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing box for \\raise"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2455,7 +2457,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -2464,7 +2466,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing box for \\raise"}],
+                      "text": "\\raise{2pt}"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2489,7 +2491,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing close brace"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2509,7 +2511,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing close brace"}],
+                      "text": "\\begin{array}{c"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
@@ -2534,7 +2536,7 @@ parserTest.runTest(
       "childNodes": [
         {"kind": "merror",
          "texClass": 0,
-         "attributes": {},
+         "attributes": {"data-mjx-error": "Missing \\end{equation}"},
          "inherited": {"displaystyle": true,
                        "scriptlevel": 0},
          "properties": {},
@@ -2545,7 +2547,7 @@ parserTest.runTest(
             "inherited": {"displaystyle": true,
                           "scriptlevel": 0},
             "properties": {},
-            "childNodes": [
+              "childNodes": [
                 {"kind": "mtext",
                   "texClass": 0,
                   "attributes": {},
@@ -2554,7 +2556,7 @@ parserTest.runTest(
                   "properties": {},
                   "childNodes": [
                     {"kind": "text",
-                      "text": "Missing \\end{equation}"}],
+                      "text": "\\begin{equation}a"}],
                   "isSpacelike": true}],
               "isInferred": true,
               "isSpacelike": true}]}],
