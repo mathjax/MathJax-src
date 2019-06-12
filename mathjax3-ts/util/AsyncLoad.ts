@@ -21,20 +21,20 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax} from '../mathjax.js';
+import {mathjax} from '../mathjax.js';
 
 /**
- * Load a file asynchronously using the MathJax.asynchLoad method, if there is one
+ * Load a file asynchronously using the mathjax.asynchLoad method, if there is one
  *
  * @param {string} name  The name of the file to load
  * @return {Promise}     The promise that is satisfied when the file is loaded
  */
 export function asyncLoad(name: string) {
-    if (!MathJax.asyncLoad) {
+    if (!mathjax.asyncLoad) {
         return Promise.reject(`Can't load '${name}': No asyncLoad method specified`);
     }
     return new Promise((ok, fail) => {
-        const result = MathJax.asyncLoad(name);
+        const result = mathjax.asyncLoad(name);
         if (result instanceof Promise) {
             result.then((value: any) => ok(value)).catch((err: Error) => fail(err));
         } else {

@@ -30,7 +30,7 @@ import {MathDocument} from './core/MathDocument.js';
 /**
  * The main MathJax global object
  */
-export const MathJax = {
+export const mathjax = {
     /**
      *  The MathJax version number
      */
@@ -49,7 +49,7 @@ export const MathJax = {
      * @return {MathDocument}       The MathDocument to handle the document
      */
     document: function (document: any, options: OptionList) {
-        return MathJax.handlers.document(document, options);
+        return mathjax.handlers.document(document, options);
     },
 
     /**

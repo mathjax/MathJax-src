@@ -1,4 +1,4 @@
-import {MathJax} from '../mathjax3/mathjax.js';
+import {mathjax} from '../mathjax3/mathjax.js';
 
 import {MathML} from '../mathjax3/input/mathml.js';
 import {CHTML} from '../mathjax3/output/chtml.js';
@@ -8,7 +8,7 @@ import {chooseAdaptor} from '../mathjax3/adaptors/chooseAdaptor.js';
 const adaptor = chooseAdaptor();
 RegisterHTMLHandler(adaptor);
 
-const html = MathJax.document('<html></html>', {
+const html = mathjax.document('<html></html>', {
     InputJax: new MathML(),
     OutputJax: new CHTML()
 });
@@ -21,7 +21,7 @@ function showBBox(node, space) {
     }
 }
 
-MathJax.handleRetriesFor(() => {
+mathjax.handleRetriesFor(() => {
 
     html.TestMath(process.argv[3] || '<math></math>').compile().typeset();
     let math = html.math.pop();

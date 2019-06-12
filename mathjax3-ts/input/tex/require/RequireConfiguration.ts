@@ -31,7 +31,7 @@ import {TeX} from '../../tex.js';
 
 import {Package} from '../../../components/package.js';
 import {Loader, CONFIG as LOADERCONFIG} from '../../../components/loader.js';
-import {MathJax as mathjax} from '../../../mathjax.js';
+import {mathjax} from '../../../mathjax.js';
 import {userOptions, OptionList, expandable} from '../../../util/Options.js';
 
 /**

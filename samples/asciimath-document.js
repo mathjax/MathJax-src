@@ -1,4 +1,4 @@
-import {MathJax} from '../mathjax3/mathjax.js';
+import {mathjax} from '../mathjax3/mathjax.js';
 
 import {AsciiMath} from '../mathjax3/input/asciimath.js';
 import {CHTML} from '../mathjax3/output/chtml.js';
@@ -26,7 +26,7 @@ const HTML = [
 
 const html = htmlDocument(HTML, OPTIONS);
 
-MathJax.handleRetriesFor(() => {
+mathjax.handleRetriesFor(() => {
 
     html.findMath()
         .compile()

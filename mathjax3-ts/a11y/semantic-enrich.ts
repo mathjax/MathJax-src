@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax} from '../mathjax.js';
+import {mathjax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
 import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
 import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
@@ -102,7 +102,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         public enrich(document: MathDocument<N, T, D>) {
             if (this.state() >= STATE.ENRICHED) return;
             if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
-                MathJax.retryAfter(sreReady);
+                mathjax.retryAfter(sreReady);
             }
             if (document.options.enrichSpeech !== currentSpeech) {
                 SRE.setupEngine({speech: document.options.enrichSpeech});

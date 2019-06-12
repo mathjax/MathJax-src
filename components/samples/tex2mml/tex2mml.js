@@ -1,4 +1,4 @@
-import {MathJax} from '../../../mathjax3/mathjax.js';
+import {mathjax} from '../../../mathjax3/mathjax.js';
 
 import {TeX} from '../../../mathjax3/input/tex.js';
 import {RegisterHTMLHandler} from '../../../mathjax3/handlers/html.js';
@@ -7,7 +7,7 @@ import {HTMLMathItem} from '../../../mathjax3/handlers/html/HTMLMathItem.js';
 
 RegisterHTMLHandler(browserAdaptor());
 
-let html = MathJax.document(document, {InputJax: new TeX()});
+let html = mathjax.document(document, {InputJax: new TeX()});
 
 import {SerializedMmlVisitor as MmlVisitor} from '../../../mathjax3/core/MmlTree/SerializedMmlVisitor.js';
 let visitor = new MmlVisitor();

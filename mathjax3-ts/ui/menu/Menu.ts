@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax as mathjax} from '../../mathjax.js';
+import {mathjax} from '../../mathjax.js';
 
 import {MathItem, STATE} from '../../core/MathItem.js';
 import {OutputJax} from '../../core/OutputJax.js';
