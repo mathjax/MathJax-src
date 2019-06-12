@@ -1,4 +1,4 @@
-import {MathJax} from 'mathjax3/mathjax.js';
+import {mathjax} from 'mathjax3/mathjax.js';
 
 import {TeX} from 'mathjax3/input/tex.js';
 import {RegisterHTMLHandler} from "mathjax3/handlers/html.js";
@@ -33,10 +33,10 @@ export class ParserTest extends Test {
     this.test(
       name,
       t => {
-        MathJax.handleRetriesFor(function() {
+        mathjax.handleRetriesFor(function() {
           let options = {packages: this.packages};
           Object.assign(options, this.settings);
-          let html = MathJax.document('<html></html>', {
+          let html = mathjax.document('<html></html>', {
             InputJax: new TeX(options)
           });
           let root = html.convert(tex, {end: STATE.CONVERT});
