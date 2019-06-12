@@ -33,12 +33,17 @@ if [ $# -eq 0 ]; then
 
     # Other standard packages
     node load.js tests/parser-action-tests.js
+    node load.js tests/parser-amscd-tests.js
     node load.js tests/parser-bbox-tests.js
     node load.js tests/parser-boldsymbol-tests.js
     node load.js tests/parser-cancel-tests.js
+    node load.js tests/parser-cancel-tests.js
+    node load.js tests/parser-enclose-tests.js
+    node load.js tests/parser-extpfeil-tests.js
     node load.js tests/parser-html-tests.js
     node load.js tests/parser-ncerror-tests.js
     node load.js tests/parser-newcommand-tests.js
+    node load.js tests/parser-noerror-tests.js
     node load.js tests/parser-noundefined-tests.js
     node load.js tests/parser-unicode-tests.js
     node load.js tests/parser-verb-tests.js
@@ -57,12 +62,6 @@ if [ $# -eq 0 ]; then
     node load.js tests/parser-mhchem-7-tests.js
     node load.js tests/parser-mhchem-8-tests.js
     node load.js tests/parser-mhchem-9-tests.js
-
-    node load.js tests/parser-noerror-tests.js
-    node load.js tests/parser-enclose-tests.js
-    node load.js tests/parser-cancel-tests.js
-    node load.js tests/parser-extpfeil-tests.js
-    node load.js tests/parser-amscd-tests.js
 
     ## Physics package.
     node load.js tests/parser-physics-1-0-tests.js
