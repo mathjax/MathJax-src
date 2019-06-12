@@ -62,8 +62,9 @@ CancelMethods.CancelTo = function(parser: TexParser, name: string) {
   let value = parser.ParseArg(name);
   const math = parser.ParseArg(name);
   const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
-  def ['notation'] = TexConstant.Notation.UPDIAGONALSTRIKE + ' ' +
-    TexConstant.Notation.UPDIAGONALARROW;
+  def ['notation'] = [TexConstant.Notation.UPDIAGONALSTRIKE,
+                      TexConstant.Notation.UPDIAGONALARROW,
+                      TexConstant.Notation.NORTHEASTARROW].join(' ');
   value = parser.create('node', 'mpadded', [value],
                         {depth: '-.1em', height: '+.1em', voffset: '.1em'});
   parser.Push(parser.create('node', 'msup',
