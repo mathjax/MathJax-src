@@ -15,7 +15,7 @@ exports.dependencies = {
     '[tex]/braket': ['input/tex-base'],
     '[tex]/cancel': ['input/tex-base', '[tex]/enclose'],
     '[tex]/color': ['input/tex-base'],
-    '[tex]/color-v2': ['input/tex-base'],
+    '[tex]/colorV2': ['input/tex-base'],
     '[tex]/configMacros': ['input/tex-base', '[tex]/newcommand'],
     '[tex]/enclose': ['input/tex-base'],
     '[tex]/extpfeil': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],

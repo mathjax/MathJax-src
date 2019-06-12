@@ -34,7 +34,7 @@ export const ColorV2Methods: Record<string, ParseMethod> = {
      * @param {TexParser} parser The calling parser.
      * @param {string} name The macro name.
      */
-    ColorV2(parser: TexParser, name: string) {
+    Color(parser: TexParser, name: string) {
         // @test Color Frac
         const color = parser.GetArgument(name);
         const old = parser.stack.env['color'];
@@ -54,11 +54,11 @@ export const ColorV2Methods: Record<string, ParseMethod> = {
 /**
  * The color macros
  */
-new CommandMap('color-v2', {color: 'ColorV2'}, ColorV2Methods);
+new CommandMap('colorV2', {color: 'Color'}, ColorV2Methods);
 
 /**
  * The configuration for the color macros
  */
 export const ColorConfiguration = Configuration.create(
-    'color-v2', {handler: {macro: ['color-v2']}}
+    'colorV2', {handler: {macro: ['colorV2']}}
 );

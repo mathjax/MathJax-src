@@ -1,7 +1,7 @@
 const PACKAGE = require('../../../../../webpack.common.js');
 
 module.exports = PACKAGE(
-    'input/tex/extensions/color-v2',    // the package to build
+    'input/tex/extensions/colorV2',     // the package to build
     '../../../../../../mathjax3',       // location of the mathjax3 library
     [                                   // packages to link to
         'components/src/input/tex-base/lib',
