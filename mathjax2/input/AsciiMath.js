@@ -1,4 +1,4 @@
-MathJax = require("../legacy/MathJax.js").MathJax;
+MathJax = Object.assign(global.MathJax || {}, require("../legacy/MathJax.js").MathJax);
 
 MathJax.Ajax.Preloading(
   "[MathJax]/jax/input/AsciiMath/config.js",

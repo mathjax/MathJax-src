@@ -31,6 +31,7 @@ exports.source = {
     '[tex]/unicode': `${src}/input/tex/extensions/unicode/unicode.js`,
     '[tex]/verb': `${src}/input/tex/extensions/verb/verb.js`,
     'input/mml': `${src}/input/mml/mml.js`,
+    'input/asciimath': `${src}/input/asciimath/asciimath.js`,
     'output/chtml': `${src}/output/chtml/chtml.js`,
     'output/chtml/fonts/tex': `${src}/output/chtml/fonts/tex/tex.js`,
     'output/svg': `${src}/output/svg/svg.js`,

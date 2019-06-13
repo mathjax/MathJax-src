@@ -1,0 +1,5 @@
+{
+    "component": "inpu/asciimath",
+    "targets": ["input/asciimath.ts", "input/asciimath"]
+}
+
