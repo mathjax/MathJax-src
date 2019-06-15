@@ -131,7 +131,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
           console.log('Rerendering');
             this.savedId = this.typesetRoot.getAttribute('explorer-id');
             this.refocus = (window.document.activeElement === this.typesetRoot);
-            if (this.explorer && (this.explorer as any).active) {
+            if (this.explorer && this.explorer.active) {
                 this.restart = true;
                 this.explorer.Stop();
             }

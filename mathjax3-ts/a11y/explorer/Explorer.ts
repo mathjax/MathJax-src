@@ -5,6 +5,11 @@ import {sreReady} from '../sre.js';
 export interface Explorer {
 
   /**
+   * @return {boolean} Flag indicating if the explorer is active.
+   */
+  active: boolean;
+
+  /**
    * Attaches navigator and its event handlers to a node.
    */
   Attach(): void;
@@ -37,8 +42,10 @@ export interface Explorer {
 
   /**
    * Update the explorer after state changes.
+   * @param {boolean=} force Forces the update in any case. (E.g., even if
+   *     explorer is inactive.)
    */
-  // Update(): void;
+  // Update(force?: boolean): void;
 
 }
 
@@ -57,7 +64,7 @@ export class AbstractExplorer implements Explorer {
 
   protected events: [string, (x: Event) => void][] = [];
 
-  protected active: boolean = false;
+  private _active: boolean = false;
   private oldIndex: number = null;
 
   protected static stopEvent(event: Event) {
@@ -97,6 +104,20 @@ export class AbstractExplorer implements Explorer {
     return explorer;
   }
 
+  /**
+   * @override
+   */
+  public get active(): boolean {
+    return this._active;
+  }
+
+  /**
+   * @override
+   */
+  public set active(flag: boolean) {
+    this._active = flag;
+  }
+  
   /**
    * @override
    */
