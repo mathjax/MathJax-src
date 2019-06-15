@@ -43,7 +43,7 @@ body {
   margin-top: 3px;
   margin-bottom: 1em;
 }
-#output {
+.output {
   border: 1px solid black;
   padding: 10px;
   width: 100%;
@@ -102,13 +102,14 @@ input[disabled] + label {
 <input id="keep" type="button" value="Keep" onclick="Lab.Keep()" disabled />
 <input id="typeset" type="button" value="Typeset" onclick="Lab.Typeset()" disabled />
 </div>
-<div id="output"></div>
+<div class="output" id="output"></div>
+<div class="output" id="output2"></div>
 <pre id="mathml"></pre>
 </div>
 
 <div id="controls">
 <div>
-<label for="foramt">Input:</label>
+<label for="format">Input:</label>
 <select id="format" onchange="Lab.setFormat(this.value)">
 <option value="TeX D">Display TeX</option>
 <option value="TeX I">Inline TeX</option>
@@ -124,6 +125,7 @@ input[disabled] + label {
 </div>
 <div>
 <input type="checkbox" id="showMML" onchange="Lab.setMathML(this.checked)" /><label for="showMML"> Show MathML</label><br/>
+<input type="checkbox" id="showSecondOutput" onchange="Lab.setSecondOutput(this.checked)" /><label for="showSecondOutput"> Show 2nd Output</label>
 </div>
 <hr/>
 <div>
