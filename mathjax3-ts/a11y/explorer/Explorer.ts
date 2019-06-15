@@ -35,6 +35,11 @@ export interface Explorer {
    */
   RemoveEvents(): void;
 
+  /**
+   * Update the explorer after state changes.
+   */
+  // Update(): void;
+
 }
 
 
@@ -125,6 +130,7 @@ export class AbstractExplorer implements Explorer {
    */
   public Stop() {
     if (this.active) {
+      console.log('Clearing and hiding');
       this.region.Clear();
       this.region.Hide();
       this.active = false;
@@ -229,7 +235,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     );
     // Add speech
     this.speechGenerator = new sre.TreeSpeechGenerator();
-    // We could have this in a separator explorer. Not sure if that makes sense.
+    // We could have this in a separate explorer. Not sure if that makes sense.
     let dummy = new sre.DummyWalker(
       this.node, this.speechGenerator, this.highlighter, this.mml);
     this.Speech(dummy);
@@ -239,24 +245,38 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   }
 
   public Start() {
+    console.log('Begin Start');
     super.Start();
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
+    this.highlighter.unhighlight();
     this.highlighter.highlight(this.walker.getFocus().getNodes());
     this.region.Update(this.walker.speech());
+    console.log('End of Start');
   }
 
   public Stop() {
+    console.log('Start Stop');
     if (this.active) {
+      console.log('Was active');
       this.highlighter.unhighlight();
+      this.walker.deactivate();
     }
     super.Stop();
+    console.log('End Stop');
   }
 
   public Speech(walker: any) {
+      console.log('Computing Speech Start');
     sreReady.then(() => {
+      console.log('Computing Speech Callback');
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
+      if (this.active) {
+        this.highlighter.unhighlight();
+        this.highlighter.highlight(this.walker.getFocus().getNodes());
+        this.region.Update(this.walker.speech());
+      }
     }).catch((error: Error) => console.log(error.message));
   }
 
@@ -280,9 +300,11 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 
   public Move(key: number) {
     this.walker.move(key);
-    this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus().getNodes());
-    this.region.Update(this.walker.speech());
+    if (this.active) {
+      this.highlighter.unhighlight();
+      this.highlighter.highlight(this.walker.getFocus().getNodes());
+      this.region.Update(this.walker.speech());
+    }
   }
 
 }

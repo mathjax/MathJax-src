@@ -29,6 +29,7 @@ declare namespace sre {
   
   interface Walker {
     activate(): void;
+    deactivate(): void;
     speech(): string;
     move(key: number): void;
     getFocus(): Focus;
@@ -37,6 +38,7 @@ declare namespace sre {
   class AbstractWalker implements Walker {
     constructor(node: Node, generator: SpeechGenerator, highlighter: Highlighter, mml: Node);
     activate(): void;
+    deactivate(): void;
     speech(): string;
     move(key: number): void;
     getFocus(): Focus;
