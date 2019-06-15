@@ -447,7 +447,7 @@ export class Menu {
                             ])),
                             this.rule(),
                             this.checkbox('Speech', 'Speech Output', 'speech'),
-                            this.checkbox('Subtitles', 'Subtities', 'subtitles'),
+                            this.checkbox('Subtitles', 'Subtitles', 'subtitles'),
                             this.rule(),
                             this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechrules', [
                                 ['mathspeak-default', 'Verbose'],
