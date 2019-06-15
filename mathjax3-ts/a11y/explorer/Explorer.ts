@@ -151,7 +151,6 @@ export class AbstractExplorer implements Explorer {
    */
   public Stop() {
     if (this.active) {
-      console.log('Clearing and hiding');
       this.region.Clear();
       this.region.Hide();
       this.active = false;
@@ -271,23 +270,18 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   }
 
   public Start() {
-    console.log('Begin Start');
     super.Start();
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
     this.Update();
-    console.log('End of Start');
   }
 
   public Stop() {
-    console.log('Start Stop');
     if (this.active) {
-      console.log('Was active');
       this.highlighter.unhighlight();
       this.walker.deactivate();
     }
     super.Stop();
-    console.log('End Stop');
   }
 
   public Update(force: boolean = false) {
@@ -298,9 +292,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   }
 
   public Speech(walker: any) {
-      console.log('Computing Speech Start');
     sreReady.then(() => {
-      console.log('Computing Speech Callback');
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
       this.Update();

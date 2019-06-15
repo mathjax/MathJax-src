@@ -108,7 +108,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
          * @param {HTMLDocument} docuemnt   The MathDocument for the MathItem
          */
         public explorable(document: ExplorerMathDocument) {
-          console.log('Start Explorable');
             if (this.state() >= STATE.EXPLORER) return;
             const node = this.typesetRoot;
             const mml = toMathML(this.root);
@@ -118,7 +117,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
             }
             this.explorer = SpeechExplorer.create(document, document.explorerObjects.region, node, mml);
             this.state(STATE.EXPLORER);
-          console.log('End Explorable');
         }
 
 
@@ -128,7 +126,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
          * @override
          */
         public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
-          console.log('Rerendering');
             this.savedId = this.typesetRoot.getAttribute('explorer-id');
             this.refocus = (window.document.activeElement === this.typesetRoot);
             if (this.explorer && this.explorer.active) {
@@ -136,19 +133,16 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 this.explorer.Stop();
             }
             super.rerender(document, start);
-          console.log('Done Rerendering');
         }
 
         /**
          * @override
          */
         public updateDocument(document: ExplorerMathDocument) {
-          console.log('Updating Document');
             super.updateDocument(document);
             this.refocus && this.typesetRoot.focus();
             this.restart && this.explorer.Start();
             this.refocus = this.restart = false;
-          console.log('Done Updating Document');
         }
 
     };
