@@ -45,7 +45,7 @@ export interface Explorer {
    * @param {boolean=} force Forces the update in any case. (E.g., even if
    *     explorer is inactive.)
    */
-  // Update(force?: boolean): void;
+  Update(force?: boolean): void;
 
 }
 
@@ -176,6 +176,11 @@ export class AbstractExplorer implements Explorer {
     }
   }
 
+  /**
+   * @override
+   */
+  public Update(force: boolean = false): void {}
+
 }
 
 
@@ -285,8 +290,8 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     console.log('End Stop');
   }
 
-  public Update() {
-    if (!this.active) return;
+  public Update(force: boolean = false) {
+    if (!this.active && !force) return;
     this.highlighter.unhighlight();
     this.highlighter.highlight(this.walker.getFocus().getNodes());
     this.region.Update(this.walker.speech());
