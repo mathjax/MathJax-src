@@ -249,9 +249,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     super.Start();
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
-    this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus().getNodes());
-    this.region.Update(this.walker.speech());
+    this.Update();
     console.log('End of Start');
   }
 
@@ -266,17 +264,20 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     console.log('End Stop');
   }
 
+  public Update() {
+    if (!this.active) return;
+    this.highlighter.unhighlight();
+    this.highlighter.highlight(this.walker.getFocus().getNodes());
+    this.region.Update(this.walker.speech());
+  }
+
   public Speech(walker: any) {
       console.log('Computing Speech Start');
     sreReady.then(() => {
       console.log('Computing Speech Callback');
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
-      if (this.active) {
-        this.highlighter.unhighlight();
-        this.highlighter.highlight(this.walker.getFocus().getNodes());
-        this.region.Update(this.walker.speech());
-      }
+      this.Update();
     }).catch((error: Error) => console.log(error.message));
   }
 
@@ -300,11 +301,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 
   public Move(key: number) {
     this.walker.move(key);
-    if (this.active) {
-      this.highlighter.unhighlight();
-      this.highlighter.highlight(this.walker.getFocus().getNodes());
-      this.region.Update(this.walker.speech());
-    }
+    this.Update();
   }
 
 }
