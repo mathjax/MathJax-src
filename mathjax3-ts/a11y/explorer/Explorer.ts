@@ -226,24 +226,33 @@ export abstract class AbstractKeyExplorer extends AbstractExplorer implements Ke
 // element, which the first generation would set in on the A11ydocument.
 export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 
-  private started: boolean = false;
 
+  /**
+   * The attached SRE walker.
+   * @type {sre.Walker}
+   */
   protected walker: sre.Walker;
+
+  /**
+   * The SRE highlighter associated with the walker.
+   * @type {sre.Highlighter}
+   */
   protected highlighter: sre.Highlighter;
-  private speechGenerator: sre.SpeechGenerator;
+
+
+  /**
+   * The SRE speech generator associated with the walker.
+   * @type {sre.SpeechGenerator}
+   */
+  protected speechGenerator: sre.SpeechGenerator;
+
   private foreground: sre.colorType = {color: 'red', alpha: 1};
   private background: sre.colorType = {color: 'blue', alpha: .2};
 
-  // /**
-  //  * @override
-  //  */
-  // protected events: [string, (x: Event) => void][] =
-  //   super.Events().concat(
-  //     [['mouseover', this.Hover.bind(this)],
-  //      ['mouseout', this.UnHover.bind(this)]]);
-
-  // Maybe the A11yDocument should have a get region?
-  // Maybe we need more than one region (Braille)?
+  /**
+   * @constructor
+   * @extends {AbstractKeyExplorer}
+   */
   constructor(public document: A11yDocument,
               protected region: Region,
               protected node: HTMLElement,
@@ -252,23 +261,10 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.initWalker();
   }
 
-  private initWalker() {
-    const jax = this.document.outputJax.name;
-    this.highlighter = sre.HighlighterFactory.highlighter(
-      this.background, this.foreground,
-      {renderer: jax}
-    );
-    // Add speech
-    this.speechGenerator = new sre.TreeSpeechGenerator();
-    // We could have this in a separate explorer. Not sure if that makes sense.
-    let dummy = new sre.DummyWalker(
-      this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.Speech(dummy);
-    this.speechGenerator = new sre.DirectSpeechGenerator();
-    this.walker = new sre.TableWalker(
-      this.node, this.speechGenerator, this.highlighter, this.mml);
-  }
 
+  /**
+   * @override
+   */
   public Start() {
     super.Start();
     this.region.Show(this.node, this.highlighter);
@@ -276,6 +272,10 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.Update();
   }
 
+
+  /**
+   * @override
+   */
   public Stop() {
     if (this.active) {
       this.highlighter.unhighlight();
@@ -284,6 +284,10 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     super.Stop();
   }
 
+
+  /**
+   * @override
+   */
   public Update(force: boolean = false) {
     if (!this.active && !force) return;
     this.highlighter.unhighlight();
@@ -291,7 +295,12 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.region.Update(this.walker.speech());
   }
 
-  public Speech(walker: any) {
+
+  /**
+   * Computes the speech for the current expression once SRE is ready.
+   * @param {sre.Walker} walker The sre walker.
+   */
+  public Speech(walker: sre.Walker) {
     sreReady.then(() => {
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
@@ -299,6 +308,10 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     }).catch((error: Error) => console.log(error.message));
   }
 
+
+  /**
+   * @override
+   */
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
     if (code === 27) {
@@ -317,9 +330,34 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     }
   }
 
+
+  /**
+   * @override
+   */
   public Move(key: number) {
     this.walker.move(key);
     this.Update();
+  }
+
+
+  /**
+   * Initialises the SRE walker.
+   */
+  private initWalker() {
+    const jax = this.document.outputJax.name;
+    this.highlighter = sre.HighlighterFactory.highlighter(
+      this.background, this.foreground,
+      {renderer: jax}
+    );
+    // Add speech
+    this.speechGenerator = new sre.TreeSpeechGenerator();
+    // We could have this in a separate explorer. Not sure if that makes sense.
+    let dummy = new sre.DummyWalker(
+      this.node, this.speechGenerator, this.highlighter, this.mml);
+    this.Speech(dummy);
+    this.speechGenerator = new sre.DirectSpeechGenerator();
+    this.walker = new sre.TableWalker(
+      this.node, this.speechGenerator, this.highlighter, this.mml);
   }
 
 }
