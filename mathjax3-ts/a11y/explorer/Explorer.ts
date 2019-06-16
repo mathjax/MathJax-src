@@ -372,7 +372,6 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 }
 
 
-// Reimplement without speech and proper setting of region.
 export class Magnifier extends AbstractKeyExplorer {
 
   /**
@@ -404,10 +403,7 @@ export class Magnifier extends AbstractKeyExplorer {
 
   private showFocus() {
     let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
-    let mjx = node.cloneNode(true) as HTMLElement;
-    const region = this.region as HoverRegion;
-    region.AddNode(mjx);
-    region.Show(node, this.highlighter);
+    this.region.Show(node, this.highlighter);
   }
 
   public Move(key: number) {

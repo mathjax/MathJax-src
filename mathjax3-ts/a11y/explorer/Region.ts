@@ -301,7 +301,7 @@ export class LiveRegion extends AbstractRegion {
 }
 
 
-// Regions that overlays the current element.
+// Region that overlays the current element.
 export class HoverRegion extends AbstractRegion {
 
   /**
@@ -370,15 +370,31 @@ export class HoverRegion extends AbstractRegion {
     this.div.style.left = left + 'px';
   }
 
+  /**
+   * @override
+   */
   protected highlight(highlighter: sre.Highlighter) {
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
   }
 
-  public AddNode(node: HTMLElement): void {
+  /**
+   * @override
+   */
+  public Show(node: HTMLElement, highlighter: sre.Highlighter) {
+    this.AddNode(node);
+    super.Show(node, highlighter);
+  }
+
+  /**
+   * Adds a clone of the given node to the hover region.
+   * @param {HTMLElement} node The current HTML node.
+   */
+  public AddNode(node: HTMLElement) {
     this.Clear();
-    this.inner.appendChild(node);
+    let mjx = node.cloneNode(true) as HTMLElement;
+    this.inner.appendChild(mjx);
   }
 
 }
