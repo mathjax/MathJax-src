@@ -334,7 +334,7 @@ export class HoverRegion extends AbstractRegion {
    */
   constructor(public document: A11yDocument) {
     super(document);
-    this.div.style.fontSize = '500%';
+    this.div.style.fontSize = document.options.a11y.magnify + '%';
     this.inner.classList.add('MJX-TEX');
   }
 
