@@ -267,7 +267,9 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
    */
   public Start() {
     super.Start();
-    this.region.Show(this.node, this.highlighter);
+    if (this.document.options.a11y.subtitles) {
+      this.region.Show(this.node, this.highlighter);
+    }
     this.walker.activate();
     this.Update();
   }

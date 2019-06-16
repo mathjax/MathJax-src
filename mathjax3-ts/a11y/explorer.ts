@@ -198,7 +198,10 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
             renderActions: expandable({
                 ...BaseDocument.OPTIONS.renderActions,
                 explorable: [STATE.EXPLORER]
-            })
+            }),
+          a11y: {
+            subtitles: false
+          }
         };
 
         /**

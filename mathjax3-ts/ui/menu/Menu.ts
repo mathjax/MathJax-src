@@ -387,7 +387,8 @@ export class Menu {
                     this.variable<string> ('background'),
                     this.variable<string> ('foreground'),
                     this.variable<boolean>('speech'),
-                    this.variable<boolean>('subtitles'),
+                    this.variable<boolean>('subtitles', (subtitles: boolean) =>
+                                           this.document.options.a11y.subtitles = subtitles),
                     this.variable<string> ('speechrules'),
                     this.variable<boolean>('autocollapse'),
                     this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
