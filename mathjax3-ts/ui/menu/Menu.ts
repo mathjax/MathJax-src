@@ -886,7 +886,7 @@ export class Menu {
         element.addEventListener('contextmenu', () => this.menu.mathItem = math, true);
         element.addEventListener('keydown', () => this.menu.mathItem = math, true);
         element.addEventListener('click', (event: MouseEvent) => this.zoom(event, 'Click', math), true);
-        element.addEventListener('dblclick', (event: MouseEvent) => this.zoom(event,'DoubleClick', math), true);
+        element.addEventListener('dblclick', (event: MouseEvent) => this.zoom(event, 'DoubleClick', math), true);
         this.menu.getStore().insert(element);
     }
 
@@ -900,7 +900,7 @@ export class Menu {
     /*======================================================================*/
 
     /**
-     * Create JSON for a variable constrolling a menu setting
+     * Create JSON for a variable controlling a menu setting
      *
      * @param {keyof MenuSettings} name   The setting for which to make a variable
      * @param {(T) => void} action        Optional function to perform after setting the value
