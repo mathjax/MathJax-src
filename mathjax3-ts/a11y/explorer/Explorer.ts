@@ -64,6 +64,12 @@ export class AbstractExplorer implements Explorer {
 
   protected events: [string, (x: Event) => void][] = [];
 
+  /**
+   * The SRE highlighter associated with the walker.
+   * @type {sre.Highlighter}
+   */
+  protected highlighter: sre.Highlighter = this.getHighlighter();
+
   private _active: boolean = false;
   private oldIndex: number = null;
 
@@ -142,6 +148,7 @@ export class AbstractExplorer implements Explorer {
    * @override
    */
   public Start() {
+    this.highlighter = this.getHighlighter();
     this.active = true;
   }
 
@@ -179,6 +186,21 @@ export class AbstractExplorer implements Explorer {
    * @override
    */
   public Update(force: boolean = false): void {}
+
+
+  /**
+   * @return {sre.Highlighter} A highlighter for the explorer.
+   */
+  protected getHighlighter(): sre.Highlighter {
+    let opts = this.document.options.a11y;
+    let foreground = {color: opts.foregroundColor.toLowerCase(),
+                      alpha: opts.foregroundOpacity};
+    let background = {color: opts.backgroundColor.toLowerCase(),
+                      alpha: opts.backgroundOpacity};
+    return sre.HighlighterFactory.highlighter(
+      background, foreground,
+      {renderer: this.document.outputJax.name});
+  }
 
 }
 
@@ -234,13 +256,6 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   protected walker: sre.Walker;
 
   /**
-   * The SRE highlighter associated with the walker.
-   * @type {sre.Highlighter}
-   */
-  protected highlighter: sre.Highlighter;
-
-
-  /**
    * The SRE speech generator associated with the walker.
    * @type {sre.SpeechGenerator}
    */
@@ -265,7 +280,6 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
    */
   public Start() {
     super.Start();
-    this.highlighter = this.getHighlighter();
     this.speechGenerator = new sre.DirectSpeechGenerator();
     this.walker = new sre.TableWalker(
       this.node, this.speechGenerator, this.highlighter, this.mml);
@@ -341,17 +355,6 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
   public Move(key: number) {
     this.walker.move(key);
     this.Update();
-  }
-
-  private getHighlighter(): sre.Highlighter {
-    let opts = this.document.options.a11y;
-    let foreground = {color: opts.foregroundColor.toLowerCase(),
-                      alpha: opts.foregroundOpacity};
-    let background = {color: opts.backgroundColor.toLowerCase(),
-                      alpha: opts.backgroundOpacity};
-    return sre.HighlighterFactory.highlighter(
-      background, foreground,
-      {renderer: this.document.outputJax.name});
   }
 
   /**
@@ -447,10 +450,6 @@ export abstract class AbstractMouseExplorer extends AbstractExplorer implements 
 
 export class HoverExplorer extends AbstractMouseExplorer {
 
-  private foreground: sre.colorType = {color: 'red', alpha: 1};
-  private background: sre.colorType = {color: 'blue', alpha: .2};
-  private highlighter: sre.Highlighter;
-
   protected nodeQuery = function(node: HTMLElement) {
     return true;
   };
@@ -463,10 +462,6 @@ export class HoverExplorer extends AbstractMouseExplorer {
               protected region: Region,
               protected node: HTMLElement) {
     super(document, region, node);
-    this.highlighter = sre.HighlighterFactory.highlighter(
-      this.background, this.foreground,
-      {renderer: this.document.outputJax.name}
-    );
   }
 
   /**
