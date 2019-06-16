@@ -313,20 +313,19 @@ export class HoverRegion extends AbstractRegion {
    * @override
    */
   protected static style: CssStyles =
-    new CssStyles({['.' + HoverRegion.className]: {
-      position: 'absolute', top: '0', height: '1px', width: '1px',
-      padding: '1px', overflow: 'hidden'
-    },
-                   ['.' + HoverRegion.className + '_Show']:
-                   {
-                     top: '0', position: 'absolute', width: 'max-content', height: 'auto',
-                     padding: '0px 0px', opacity: 1, 'z-index': '202',
-                     left: 0, right: 0, 'margin': '0 auto',
-                     'background-color': 'rgba(0, 0, 255, 0.2)',
-                     'box-shadow': '0px 10px 20px #888',
-                     border: '2px solid #CCCCCC'
-                   }
-                  });
+    new CssStyles({
+      ['.' + HoverRegion.className]: {
+        position: 'absolute', height: '1px', width: '1px',
+        padding: '1px', overflow: 'hidden'
+      },
+      ['.' + HoverRegion.className + '_Show']:
+      {
+        position: 'absolute', width: 'max-content', height: 'auto',
+        padding: '0px 0px', opacity: 1, 'z-index': '202', 'margin': '0 auto',
+        'background-color': 'rgba(0, 0, 255, 0.2)',
+        'box-shadow': '0px 10px 20px #888', border: '2px solid #CCCCCC'
+      }
+    });
 
 
   /**
@@ -335,31 +334,46 @@ export class HoverRegion extends AbstractRegion {
    */
   constructor(public document: A11yDocument) {
     super(document);
-    this.div.style.fontSize = '800%';
+    this.div.style.fontSize = '500%';
     this.inner.classList.add('MJX-TEX');
   }
 
   /**
-   * Shows the live region as a subtitle of a node.
-   * @override
+   * Sets the position of the region with respect to align parameter.  There are
+   * three options: top, bottom and center. Center is the default.
+   *
+   * @param {HTMLElement} node The node that is displayed.
    */
-  public Show(node: HTMLElement, highlighter: sre.Highlighter) {
-    super.Show(node, highlighter);
-  }
-
-
   protected position(node: HTMLElement) {
-    const rect = node.getBoundingClientRect();
-    const top = rect.top;
-    const left = rect.left;
+    const nodeRect = node.getBoundingClientRect();
+    const divRect = this.div.getBoundingClientRect();
+    const xCenter = nodeRect.left + (nodeRect.width / 2);
+    let left = xCenter - (divRect.width / 2);
+    left = (left < 0) ? 0 : left;
+    left = left + window.pageXOffset;
+    let top;
+    switch (this.document.options.a11y.align) {
+    case 'top':
+      top = nodeRect.top - divRect.height - 10 ;
+      break;
+    case 'bottom':
+      top = nodeRect.bottom + 10;
+      break;
+    case 'center':
+    default:
+      const yCenter = nodeRect.top + (nodeRect.height / 2);
+      top = yCenter - (divRect.height / 2);
+    }
+    top = top + window.pageYOffset;
+    top = (top < 0) ? 0 : top;
     this.div.style.top = top + 'px';
     this.div.style.left = left + 'px';
   }
 
   protected highlight(highlighter: sre.Highlighter) {
-    // const color = highlighter.colorString();
-    // this.inner.style.backgroundColor = color.background;
-    // this.inner.style.color = color.foreground;
+    const color = highlighter.colorString();
+    this.inner.style.backgroundColor = color.background;
+    this.inner.style.color = color.foreground;
   }
 
   public AddNode(node: HTMLElement): void {

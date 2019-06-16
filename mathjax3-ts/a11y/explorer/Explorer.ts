@@ -373,13 +373,32 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 
 
 // Reimplement without speech and proper setting of region.
-export class Magnifier extends SpeechExplorer {
+export class Magnifier extends AbstractKeyExplorer {
+
+  /**
+   * The walker for the magnifier.
+   * @type {sre.Walker}
+   */
+  private walker: sre.Walker;
+
+  /**
+   * @constructor
+   * @extends {AbstractKeyExplorer}
+   */
+  constructor(public document: A11yDocument,
+              protected region: Region,
+              protected node: HTMLElement,
+              private mml: HTMLElement) {
+    super(document, region, node);
+    this.walker = new sre.TableWalker(
+        this.node, new sre.DummySpeechGenerator(), null, this.mml);
+  }
+
 
   public Start() {
     super.Start();
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
-    this.highlighter.highlight(this.walker.getFocus().getNodes());
     this.showFocus();
   }
 
@@ -387,13 +406,31 @@ export class Magnifier extends SpeechExplorer {
     let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
     let mjx = node.cloneNode(true) as HTMLElement;
     const region = this.region as HoverRegion;
-    region.Show(node, this.highlighter);
     region.AddNode(mjx);
+    region.Show(node, this.highlighter);
   }
 
   public Move(key: number) {
     this.walker.move(key);
     this.showFocus();
+  }
+
+  public KeyDown(event: KeyboardEvent) {
+    const code = event.keyCode;
+    if (code === 27) {
+      this.Stop();
+      AbstractExplorer.stopEvent(event);
+      return;
+    }
+    if (this.active && code !== 13) {
+      this.Move(code);
+      AbstractExplorer.stopEvent(event);
+      return;
+    }
+    if (code === 32 && event.shiftKey) {
+      this.Start();
+      AbstractExplorer.stopEvent(event);
+    }
   }
 
 }

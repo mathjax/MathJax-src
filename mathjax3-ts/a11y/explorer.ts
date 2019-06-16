@@ -204,7 +204,8 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
             foregroundColor: 'Black',
             foregroundOpacity: 1,
             backgroundColor: 'Blue',
-            backgroundOpacity: .2
+            backgroundOpacity: .2,
+            align: 'center'
           }
         };
 
