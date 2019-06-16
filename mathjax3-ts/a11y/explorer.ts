@@ -31,7 +31,7 @@ import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {Explorer, SpeechExplorer, Magnifier} from './explorer/Explorer.js';
+import {TypeExplorer, Explorer, SpeechExplorer, Magnifier} from './explorer/Explorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -116,6 +116,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 this.savedId = null;
             }
             this.explorer = SpeechExplorer.create(document, document.explorerObjects.region, node, mml);
+          TypeExplorer.create(document, document.explorerObjects.tooltip, node);
             this.state(STATE.EXPLORER);
         }
 
@@ -200,7 +201,11 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 explorable: [STATE.EXPLORER]
             }),
           a11y: {
-            subtitles: false
+            subtitles: true,
+            foregroundColor: 'Black',
+            foregroundOpacity: 1,
+            backgroundColor: 'Blue',
+            backgroundOpacity: .2
           }
         };
 

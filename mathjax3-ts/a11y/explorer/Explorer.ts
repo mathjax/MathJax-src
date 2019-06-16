@@ -246,8 +246,6 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
    */
   protected speechGenerator: sre.SpeechGenerator;
 
-  private foreground: sre.colorType = {color: 'red', alpha: 1};
-  private background: sre.colorType = {color: 'blue', alpha: .2};
 
   /**
    * @constructor
@@ -267,6 +265,10 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
    */
   public Start() {
     super.Start();
+    this.highlighter = this.getHighlighter();
+    this.speechGenerator = new sre.DirectSpeechGenerator();
+    this.walker = new sre.TableWalker(
+      this.node, this.speechGenerator, this.highlighter, this.mml);
     if (this.document.options.a11y.subtitles) {
       this.region.Show(this.node, this.highlighter);
     }
@@ -341,25 +343,27 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.Update();
   }
 
+  private getHighlighter(): sre.Highlighter {
+    let opts = this.document.options.a11y;
+    let foreground = {color: opts.foregroundColor.toLowerCase(),
+                      alpha: opts.foregroundOpacity};
+    let background = {color: opts.backgroundColor.toLowerCase(),
+                      alpha: opts.backgroundOpacity};
+    return sre.HighlighterFactory.highlighter(
+      background, foreground,
+      {renderer: this.document.outputJax.name});
+  }
 
   /**
    * Initialises the SRE walker.
    */
   private initWalker() {
-    const jax = this.document.outputJax.name;
-    this.highlighter = sre.HighlighterFactory.highlighter(
-      this.background, this.foreground,
-      {renderer: jax}
-    );
     // Add speech
     this.speechGenerator = new sre.TreeSpeechGenerator();
     // We could have this in a separate explorer. Not sure if that makes sense.
     let dummy = new sre.DummyWalker(
       this.node, this.speechGenerator, this.highlighter, this.mml);
     this.Speech(dummy);
-    this.speechGenerator = new sre.DirectSpeechGenerator();
-    this.walker = new sre.TableWalker(
-      this.node, this.speechGenerator, this.highlighter, this.mml);
   }
 
 }

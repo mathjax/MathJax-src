@@ -384,8 +384,10 @@ export class Menu {
                     this.variable<string> ('scale', (scale: string) => this.setScale(scale)),
                     this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
                     this.variable<string> ('highlight'),
-                    this.variable<string> ('background'),
-                    this.variable<string> ('foreground'),
+                    this.variable<string> ('background', (background: string) =>
+                                           this.document.options.a11y.backgroundColor = background),
+                    this.variable<string> ('foreground', (foreground: string) =>
+                                           this.document.options.a11y.foregroundColor = foreground),
                     this.variable<boolean>('speech'),
                     this.variable<boolean>('subtitles', (subtitles: boolean) =>
                                            this.document.options.a11y.subtitles = subtitles),
