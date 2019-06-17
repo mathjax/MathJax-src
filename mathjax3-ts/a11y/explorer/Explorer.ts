@@ -5,9 +5,16 @@ import {sreReady} from '../sre.js';
 export interface Explorer {
 
   /**
-   * @return {boolean} Flag indicating if the explorer is active.
+   * Flag indicating if the explorer is active.
+   * @type {boolean}
    */
   active: boolean;
+
+  /**
+   * Flag indicating if event bubbling is stopped.
+   * @type {boolean}
+   */
+  stoppable: boolean;
 
   /**
    * Attaches navigator and its event handlers to a node.
@@ -62,6 +69,16 @@ export interface Explorer {
  */
 export class AbstractExplorer implements Explorer {
 
+
+  /**
+   * @override
+   */
+  public stoppable: boolean = true;
+
+  /**
+   * Named events and their functions.
+   * @type {[string, function(x: Event)][]}
+   */
   protected events: [string, (x: Event) => void][] = [];
 
   /**
@@ -73,6 +90,11 @@ export class AbstractExplorer implements Explorer {
   private _active: boolean = false;
   private oldIndex: number = null;
 
+
+  /**
+   * Stops event bubbling.
+   * @param {Event} event The event that is stopped.
+   */
   protected static stopEvent(event: Event) {
     if (event.preventDefault) {
       event.preventDefault();
@@ -202,6 +224,16 @@ export class AbstractExplorer implements Explorer {
       {renderer: this.document.outputJax.name});
   }
 
+  /**
+   * Stops the events of this explorer from bubbling.
+   * @param {Event} event The event to stop.
+   */
+  protected stopEvent(event: Event) {
+    if (this.stoppable) {
+      AbstractExplorer.stopEvent(event);
+    }
+  }
+
 }
 
 
@@ -261,6 +293,13 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
    */
   protected speechGenerator: sre.SpeechGenerator;
 
+  /**
+   * Flag in case the start method is triggered before the walker is fully
+   * initialised. I.e., we have to wait for SRE. Then region is re-shown if
+   * necessary, as otherwise it leads to incorrect stacking.
+   * @type {boolean}
+   */
+  private restarted: boolean = false;
 
   /**
    * @constructor
@@ -283,11 +322,12 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.speechGenerator = new sre.DirectSpeechGenerator();
     this.walker = new sre.TableWalker(
       this.node, this.speechGenerator, this.highlighter, this.mml);
+    this.walker.activate();
+    this.Update();
     if (this.document.options.a11y.subtitles) {
       this.region.Show(this.node, this.highlighter);
     }
-    this.walker.activate();
-    this.Update();
+    this.restarted = true;
   }
 
 
@@ -323,6 +363,9 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
       this.Update();
+      if (this.restarted && this.document.options.a11y.subtitles) {
+        this.region.Show(this.node, this.highlighter);
+      }
     }).catch((error: Error) => console.log(error.message));
   }
 
@@ -334,17 +377,17 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     const code = event.keyCode;
     if (code === 27) {
       this.Stop();
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
       return;
     }
     if (this.active) {
       this.Move(code);
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
       return;
     }
     if (code === 32 && event.shiftKey) {
       this.Start();
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
     }
   }
 
@@ -390,7 +433,7 @@ export class Magnifier extends AbstractKeyExplorer {
               private mml: HTMLElement) {
     super(document, region, node);
     this.walker = new sre.TableWalker(
-        this.node, new sre.DummySpeechGenerator(), null, this.mml);
+        this.node, new sre.DummySpeechGenerator(), this.highlighter, this.mml);
   }
 
 
@@ -407,25 +450,27 @@ export class Magnifier extends AbstractKeyExplorer {
   }
 
   public Move(key: number) {
-    this.walker.move(key);
-    this.showFocus();
+    let result = this.walker.move(key);
+    if (result) {
+      this.showFocus();
+    }
   }
 
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
     if (code === 27) {
       this.Stop();
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
       return;
     }
     if (this.active && code !== 13) {
       this.Move(code);
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
       return;
     }
     if (code === 32 && event.shiftKey) {
       this.Start();
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
     }
   }
 

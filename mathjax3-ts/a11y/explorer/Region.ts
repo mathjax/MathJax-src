@@ -157,9 +157,20 @@ export abstract class AbstractRegion implements Region {
     this.div.classList.add(this.CLASS.className + '_Show');
   }
 
+
+  /**
+   * Computes the position where to place the element wrt. to the given node.
+   * @param {HTMLElement} node The reference node.
+   */
   protected abstract position(node: HTMLElement): void;
 
+
+  /**
+   * Highlights the region.
+   * @param {sre.Highlighter} highlighter The SRE highlighter.
+   */
   protected abstract highlight(highlighter: sre.Highlighter): void;
+
 
   /**
    * @override
@@ -188,49 +199,68 @@ export abstract class AbstractRegion implements Region {
   }
 
 
-}
-
-export class ToolTip extends AbstractRegion {
-
-  protected static className = 'MJX_ToolTip';
-  protected static style: CssStyles =
-    new CssStyles({['.' + ToolTip.className]: {
-      position: 'absolute',
-      display: 'inline-block',
-      height: '1px', width: '1px'
-    },
-                   ['.' + ToolTip.className + '_Show']: {
-                     width: 'auto', height: 'auto',
-                     opacity: 1,
-                     'text-align': 'center',
-                     'border-radius': '6px',
-                     padding: '0px 0px',
-                     'border-bottom': '1px dotted black',
-                     position: 'absolute',
-                     'z-index': 202
-                   }
-                  }
-                 );
-
-  protected position(node: HTMLElement) {
+  /**
+   * Auxiliary position method that stacks shown regions of the same type.
+   * @param {HTMLElement} node The reference node.
+   */
+  protected stackRegions(node: HTMLElement) {
+    // TODO: This could be made more efficient by caching regions of a class.
     const rect = node.getBoundingClientRect();
     let baseBottom = 0;
     let baseLeft = Number.POSITIVE_INFINITY;
-    let tooltips = this.document.adaptor.document.getElementsByClassName(this.CLASS.className + '_Show');
-    for (let i = 0, tooltip; tooltip = tooltips[i]; i++) {
-      if (tooltip !== this.div) {
-        baseBottom = Math.max(tooltip.getBoundingClientRect().bottom, baseBottom);
-        baseLeft = Math.min(tooltip.getBoundingClientRect().left, baseLeft);
+    let regions = this.document.adaptor.document.getElementsByClassName(
+      this.CLASS.className + '_Show');
+    // Get all the shown regions (one is this element!) and append at bottom. 
+    for (let i = 0, region; region = regions[i]; i++) {
+      if (region !== this.div) {
+        baseBottom = Math.max(region.getBoundingClientRect().bottom, baseBottom);
+        baseLeft = Math.min(region.getBoundingClientRect().left, baseLeft);
       }
     }
-    // Get all the shown tooltips and then put at the bottom. One of which is
-    // the element itself!
     const bot = (baseBottom ? baseBottom : rect.bottom + 10) + window.pageYOffset;
     const left = (baseLeft < Number.POSITIVE_INFINITY ? baseLeft : rect.left) + window.pageXOffset;
     this.div.style.top = bot + 'px';
     this.div.style.left = left + 'px';
   }
 
+}
+
+export class ToolTip extends AbstractRegion {
+
+  /**
+   * @override
+   */
+  protected static className = 'MJX_ToolTip';
+
+  /**
+   * @override
+   */
+  protected static style: CssStyles =
+    new CssStyles({
+      ['.' + ToolTip.className]: {
+        position: 'absolute', display: 'inline-block',
+        height: '1px', width: '1px'
+      },
+      ['.' + ToolTip.className + '_Show']: {
+        width: 'auto', height: 'auto', opacity: 1, 'text-align': 'center',
+        'border-radius': '6px', padding: '0px 0px',
+        'border-bottom': '1px dotted black', position: 'absolute',
+        'z-index': 202
+      }
+    });
+
+
+  /**
+   * @override
+   */
+  protected position(node: HTMLElement) {
+    this.stackRegions(node);
+  }
+
+
+  /**
+   * @override
+   */
   protected highlight(highlighter: sre.Highlighter) {
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
@@ -251,19 +281,19 @@ export class LiveRegion extends AbstractRegion {
    * @override
    */
   protected static style: CssStyles =
-    new CssStyles({['.' + LiveRegion.className]: {
-      position: 'absolute', top: '0', height: '1px', width: '1px',
-      padding: '1px', overflow: 'hidden'
-    },
-                   ['.' + LiveRegion.className + '_Show']:
-                   {
-                     top: '0', position: 'absolute', width: 'auto', height: 'auto',
-                     padding: '0px 0px', opacity: 1, 'z-index': '202',
-                     left: 0, right: 0, 'margin': '0 auto',
-                     'background-color': 'rgba(0, 0, 255, 0.2)', 'box-shadow': '0px 10px 20px #888',
-                     border: '2px solid #CCCCCC'
-                   }
-                  });
+    new CssStyles({
+      ['.' + LiveRegion.className]: {
+        position: 'absolute', top: '0', height: '1px', width: '1px',
+        padding: '1px', overflow: 'hidden'
+      },
+      ['.' + LiveRegion.className + '_Show']: {
+        top: '0', position: 'absolute', width: 'auto', height: 'auto',
+        padding: '0px 0px', opacity: 1, 'z-index': '202',
+        left: 0, right: 0, 'margin': '0 auto',
+        'background-color': 'rgba(0, 0, 255, 0.2)', 'box-shadow': '0px 10px 20px #888',
+        border: '2px solid #CCCCCC'
+      }
+    });
 
 
   /**
@@ -283,15 +313,16 @@ export class LiveRegion extends AbstractRegion {
     super.Show(node, highlighter);
   }
 
-
+  /**
+   * @override
+   */
   protected position(node: HTMLElement) {
-    const rect = node.getBoundingClientRect();
-    const bot = rect.bottom + 10 + window.pageYOffset;
-    const left = rect.left + window.pageXOffset;
-    this.div.style.top = bot + 'px';
-    this.div.style.left = left + 'px';
+    this.stackRegions(node);
   }
 
+  /**
+   * @override
+   */
   protected highlight(highlighter: sre.Highlighter) {
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
@@ -318,8 +349,7 @@ export class HoverRegion extends AbstractRegion {
         position: 'absolute', height: '1px', width: '1px',
         padding: '1px', overflow: 'hidden'
       },
-      ['.' + HoverRegion.className + '_Show']:
-      {
+      ['.' + HoverRegion.className + '_Show']: {
         position: 'absolute', width: 'max-content', height: 'auto',
         padding: '0px 0px', opacity: 1, 'z-index': '202', 'margin': '0 auto',
         'background-color': 'rgba(0, 0, 255, 0.2)',
@@ -374,6 +404,10 @@ export class HoverRegion extends AbstractRegion {
    * @override
    */
   protected highlight(highlighter: sre.Highlighter) {
+    let child = this.inner.childNodes[0] as HTMLElement;
+    if (child && child.hasAttribute('sre-highlight')) {
+      return;
+    }
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
