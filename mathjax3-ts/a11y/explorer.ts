@@ -133,7 +133,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         private addExplorers(...explorers: Explorer[]) {
             this.explorers = explorers;
             if (explorers.length <= 1) return;
-            let lastKeyExplorer: AbstractKeyExplorer = null;
+            let lastKeyExplorer = null;
             for (let explorer of this.explorers) {
                 if (!(explorer instanceof AbstractKeyExplorer)) continue;
                 if (lastKeyExplorer) {

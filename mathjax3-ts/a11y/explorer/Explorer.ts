@@ -66,8 +66,9 @@ export interface Explorer {
  *
  * @constructor
  * @implements {Explorer}
+ * @template T
  */
-export class AbstractExplorer implements Explorer {
+export class AbstractExplorer<T> implements Explorer {
 
 
   /**
@@ -109,11 +110,29 @@ export class AbstractExplorer implements Explorer {
     event.cancelBubble = true;
   }
 
+  /**
+   * Creator pattern for explorers.
+   * @param {A11yDocument} document The current document. 
+   * @param {Region<T>} region A region to display results.
+   * @param {HTMLElement} node The node on which the explorer works.
+   * @param {any[]} ...rest Remaining information.
+   * @return {Explorer} An object of the particular explorer class.
+   *
+   * @template T
+   */
+  public static create<T>(document: A11yDocument,
+                region: Region<T>,
+                node: HTMLElement, ...rest: any[]): Explorer {
+    let explorer = new this(document, region, node, ...rest);
+    explorer.Attach();
+    return explorer;
+  }
+
   // Maybe the A11yDocument should have a get region?
   // Maybe we need more than one region (Braille)?
   // Maybe some should be read only?
   protected constructor(public document: A11yDocument,
-                        protected region: Region,
+                        protected region: Region<T>,
                         protected node: HTMLElement, ...rest: any[]) {
   }
 
@@ -122,15 +141,6 @@ export class AbstractExplorer implements Explorer {
     return this.events;
   }
 
-
-  // The creator pattern!
-  static create(document: A11yDocument,
-                region: Region,
-                node: HTMLElement, ...rest: any[]): Explorer {
-    let explorer = new this(document, region, node, ...rest);
-    explorer.Attach();
-    return explorer;
-  }
 
   /**
    * @override
@@ -145,7 +155,7 @@ export class AbstractExplorer implements Explorer {
   public set active(flag: boolean) {
     this._active = flag;
   }
-  
+
   /**
    * @override
    */
@@ -154,7 +164,6 @@ export class AbstractExplorer implements Explorer {
     this.node.tabIndex = 1;
     this.AddEvents();
   }
-
 
   /**
    * @override
@@ -165,7 +174,6 @@ export class AbstractExplorer implements Explorer {
     this.RemoveEvents();
   }
 
-
   /**
    * @override
    */
@@ -173,7 +181,6 @@ export class AbstractExplorer implements Explorer {
     this.highlighter = this.getHighlighter();
     this.active = true;
   }
-
 
   /**
    * @override
@@ -245,7 +252,7 @@ export interface KeyExplorer extends Explorer {
 
 }
 
-export abstract class AbstractKeyExplorer extends AbstractExplorer implements KeyExplorer {
+export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
 
 
   protected events: [string, (x: Event) => void][] =
@@ -278,7 +285,7 @@ export abstract class AbstractKeyExplorer extends AbstractExplorer implements Ke
 
 // We could have the speech/braille, etc explorer have a region as static
 // element, which the first generation would set in on the A11ydocument.
-export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
+export class SpeechExplorer extends AbstractKeyExplorer<string> implements KeyExplorer {
 
 
   /**
@@ -306,7 +313,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
    * @extends {AbstractKeyExplorer}
    */
   constructor(public document: A11yDocument,
-              protected region: Region,
+              protected region: Region<string>,
               protected node: HTMLElement,
               private mml: HTMLElement) {
     super(document, region, node);
@@ -415,7 +422,7 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 }
 
 
-export class Magnifier extends AbstractKeyExplorer {
+export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
 
   /**
    * The walker for the magnifier.
@@ -428,7 +435,7 @@ export class Magnifier extends AbstractKeyExplorer {
    * @extends {AbstractKeyExplorer}
    */
   constructor(public document: A11yDocument,
-              protected region: Region,
+              protected region: Region<HTMLElement>,
               protected node: HTMLElement,
               private mml: HTMLElement) {
     super(document, region, node);
@@ -486,7 +493,7 @@ export interface MouseExplorer extends Explorer {
 
 }
 
-export abstract class AbstractMouseExplorer extends AbstractExplorer implements MouseExplorer {
+export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> implements MouseExplorer {
 
   protected events: [string, (x: Event) => void][] =
     super.Events().concat(
@@ -526,21 +533,11 @@ export abstract class AbstractMouseExplorer extends AbstractExplorer implements 
 }
 
 
-export class HoverExplorer extends AbstractMouseExplorer {
+export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
 
-  protected nodeQuery = function(node: HTMLElement) {
-    return true;
-  };
-  protected nodeAccess = function(node: HTMLElement) {
-    return '';
-  };
+  protected nodeQuery: (node: HTMLElement) => boolean;
+  protected nodeAccess: (node: HTMLElement) => T;
 
-
-  constructor(public document: A11yDocument,
-              protected region: Region,
-              protected node: HTMLElement) {
-    super(document, region, node);
-  }
 
   /**
    * @override
@@ -572,7 +569,7 @@ export class HoverExplorer extends AbstractMouseExplorer {
     this.region.Update(kind);
   }
 
-  public getNode(node: HTMLElement): [HTMLElement, string] {
+  public getNode(node: HTMLElement): [HTMLElement, T] {
     let original = node;
     while (node && node !== this.node) {
       if (this.nodeQuery(node)) {
@@ -587,13 +584,13 @@ export class HoverExplorer extends AbstractMouseExplorer {
       }
       node = node.childNodes[0] as HTMLElement;
     }
-    return [null, ''];
+    return [null, null];
   }
 
 }
 
 
-export class TypeExplorer extends HoverExplorer {
+export class TypeExplorer extends Hoverer<string> {
 
   protected nodeQuery = (node: HTMLElement) => {
     return node.hasAttribute('data-semantic-type');
@@ -605,7 +602,7 @@ export class TypeExplorer extends HoverExplorer {
 }
 
 
-export class RoleExplorer extends HoverExplorer {
+export class RoleExplorer extends Hoverer<string> {
 
   protected nodeQuery = (node: HTMLElement) => {
     return node.hasAttribute('data-semantic-role');
@@ -617,7 +614,7 @@ export class RoleExplorer extends HoverExplorer {
 }
 
 
-export class TagExplorer extends HoverExplorer {
+export class TagExplorer extends Hoverer<string> {
 
   protected nodeQuery = (node: HTMLElement) => {return !!node.tagName; };
   protected nodeAccess = (node: HTMLElement) => {return node.tagName; };
