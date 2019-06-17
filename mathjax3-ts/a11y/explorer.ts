@@ -141,7 +141,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 }
                 lastKeyExplorer = explorer;
             }
-            explorers[explorers.length - 1].stoppable = true;
         }
 
 
