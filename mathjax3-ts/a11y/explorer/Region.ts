@@ -219,6 +219,25 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
 }
 
+export class DummyRegion extends AbstractRegion<void> {
+
+  public Clear() {}
+
+  public Update() {}
+
+  public Hide() {}
+
+  public Show() {}
+
+  public AddClasses() {}
+
+  public AddStyles() {}
+
+  public position() {}
+
+  public highlight(highlighter: sre.Highlighter) {}
+}
+
 
 export class StringRegion extends AbstractRegion<string> {
 

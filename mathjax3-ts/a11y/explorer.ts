@@ -31,7 +31,7 @@ import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {ValueHoverer, AbstractKeyExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
+import {EffectHoverer, ValueHoverer, AbstractKeyExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -126,7 +126,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                                 (node: HTMLElement) => node.hasAttribute('data-semantic-role'),
                                 (node: HTMLElement) => node.getAttribute('data-semantic-role')),
                 ValueHoverer.create(document, document.explorerObjects.tooltip3, node,
-                                    (x: HTMLElement) => !!x.tagName, (x: HTMLElement) => x.tagName)
+                                    (x: HTMLElement) => !!x.tagName, (x: HTMLElement) => x.tagName),
+                EffectHoverer.create(document, null, node,
+                                     (node: HTMLElement) => node.tagName === 'MJX-MACTION')
             );
             this.state(STATE.EXPLORER);
         }

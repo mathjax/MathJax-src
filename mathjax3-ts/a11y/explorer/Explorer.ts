@@ -1,4 +1,4 @@
-import {A11yDocument, HoverRegion, Region, ToolTip} from './Region.js';
+import {A11yDocument, DummyRegion, HoverRegion, Region, ToolTip} from './Region.js';
 import {sreReady} from '../sre.js';
 
 
@@ -616,9 +616,10 @@ export class EffectHoverer extends Hoverer<void> {
    */
   protected constructor(
     public document: A11yDocument,
+    ignore: any,
     protected node: HTMLElement,
     protected nodeQuery: (node: HTMLElement) => boolean) {
-    super(document, null, node, nodeQuery, x => {});
+    super(document, new DummyRegion(document), node, nodeQuery, x => {});
   }
 
 }
