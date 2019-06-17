@@ -31,7 +31,7 @@ import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {AbstractKeyExplorer, TypeExplorer, RoleExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
+import {ValueHoverer, AbstractKeyExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -119,8 +119,14 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 SpeechExplorer.create(document, document.explorerObjects.region, node, mml),
                 SpeechExplorer.create(document, document.explorerObjects.region2, node, mml),
                 Magnifier.create(document, document.explorerObjects.magnifier, node, mml),
-                TypeExplorer.create(document, document.explorerObjects.tooltip, node),
-                RoleExplorer.create(document, document.explorerObjects.tooltip2, node)
+                ValueHoverer.create(document, document.explorerObjects.tooltip, node,
+                                    (node: HTMLElement) => node.hasAttribute('data-semantic-type'),
+                                    (node: HTMLElement) => node.getAttribute('data-semantic-type')),
+                ValueHoverer.create(document, document.explorerObjects.tooltip2, node,
+                                (node: HTMLElement) => node.hasAttribute('data-semantic-role'),
+                                (node: HTMLElement) => node.getAttribute('data-semantic-role')),
+                ValueHoverer.create(document, document.explorerObjects.tooltip3, node,
+                                    (x: HTMLElement) => !!x.tagName, (x: HTMLElement) => x.tagName)
             );
             this.state(STATE.EXPLORER);
         }

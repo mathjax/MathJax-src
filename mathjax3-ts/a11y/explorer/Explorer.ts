@@ -112,7 +112,7 @@ export class AbstractExplorer<T> implements Explorer {
 
   /**
    * Creator pattern for explorers.
-   * @param {A11yDocument} document The current document. 
+   * @param {A11yDocument} document The current document.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
    * @param {any[]} ...rest Remaining information.
@@ -535,15 +535,32 @@ export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> imple
 
 export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
 
-  protected nodeQuery: (node: HTMLElement) => boolean;
-  protected nodeAccess: (node: HTMLElement) => T;
-
+  /**
+   * @constructor
+   * @extends {AbstractMouseExplorer<T>}
+   *
+   * @param {A11yDocument} document The current document.
+   * @param {Region<T>} region A region to display results.
+   * @param {HTMLElement} node The node on which the explorer works.
+   * @param {(node: HTMLElement) => boolean} nodeQuery Predicate on nodes that
+   *    will fire the hoverer.
+   * @param {(node: HTMLElement) => T} nodeAccess Accessor to extract node value
+   *    that is passed to the region.
+   *
+   * @template T
+   */
+  protected constructor(public document: A11yDocument,
+              protected region: Region<T>,
+              protected node: HTMLElement,
+              protected nodeQuery: (node: HTMLElement) => boolean,
+              protected nodeAccess: (node: HTMLElement) => T) {
+    super(document, region, node);
+  }
 
   /**
    * @override
    */
   public MouseDown(event: MouseEvent) {};
-
 
   /**
    * @override
@@ -590,33 +607,18 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
 }
 
 
-export class TypeExplorer extends Hoverer<string> {
+export class ValueHoverer extends Hoverer<string> { }
 
-  protected nodeQuery = (node: HTMLElement) => {
-    return node.hasAttribute('data-semantic-type');
-  };
-  protected nodeAccess = (node: HTMLElement) => {
-    return node.getAttribute('data-semantic-type');
-  };
+export class EffectHoverer extends Hoverer<void> {
 
-}
-
-
-export class RoleExplorer extends Hoverer<string> {
-
-  protected nodeQuery = (node: HTMLElement) => {
-    return node.hasAttribute('data-semantic-role');
-  };
-  protected nodeAccess = (node: HTMLElement) => {
-    return node.getAttribute('data-semantic-role');
-  };
-
-}
-
-
-export class TagExplorer extends Hoverer<string> {
-
-  protected nodeQuery = (node: HTMLElement) => {return !!node.tagName; };
-  protected nodeAccess = (node: HTMLElement) => {return node.tagName; };
+  /**
+   * @override
+   */
+  protected constructor(
+    public document: A11yDocument,
+    protected node: HTMLElement,
+    protected nodeQuery: (node: HTMLElement) => boolean) {
+    super(document, null, node, nodeQuery, x => {});
+  }
 
 }
