@@ -229,7 +229,7 @@ export class DummyRegion extends AbstractRegion<void> {
 
   public Show() {}
 
-  public AddClasses() {}
+  public AddElement() {}
 
   public AddStyles() {}
 

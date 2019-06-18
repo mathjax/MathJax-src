@@ -31,7 +31,7 @@ import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {EffectHoverer, ValueHoverer, AbstractKeyExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
+import {ContentHoverer, EffectHoverer, ValueHoverer, AbstractKeyExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -119,14 +119,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 SpeechExplorer.create(document, document.explorerObjects.region, node, mml),
                 SpeechExplorer.create(document, document.explorerObjects.region2, node, mml),
                 Magnifier.create(document, document.explorerObjects.magnifier, node, mml),
-                ValueHoverer.create(document, document.explorerObjects.tooltip, node,
-                                    (node: HTMLElement) => node.hasAttribute('data-semantic-type'),
-                                    (node: HTMLElement) => node.getAttribute('data-semantic-type')),
-                ValueHoverer.create(document, document.explorerObjects.tooltip2, node,
-                                (node: HTMLElement) => node.hasAttribute('data-semantic-role'),
-                                (node: HTMLElement) => node.getAttribute('data-semantic-role')),
-                ValueHoverer.create(document, document.explorerObjects.tooltip3, node,
-                                    (x: HTMLElement) => !!x.tagName, (x: HTMLElement) => x.tagName),
                 EffectHoverer.create(document, null, node)
             );
             this.state(STATE.EXPLORER);
@@ -157,15 +149,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
             this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
             this.refocus = (window.document.activeElement === this.typesetRoot);
-            let savedExplorers = [];
             for (let explorer of this.explorers) {
                 if (explorer.active) {
                     this.restart = true;
                     explorer.Stop();
-                    savedExplorers.push(explorer);
                 }
             }
-            this.explorers = savedExplorers;
             super.rerender(document, start);
         }
 
