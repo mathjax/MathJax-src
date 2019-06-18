@@ -416,6 +416,11 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   protected highlight(highlighter: sre.Highlighter) {
+    // TODO Do this with styles to avoid the interaction of SVG/CHTML.
+    if (this.inner.firstChild &&
+        !(this.inner.firstChild as HTMLElement).hasAttribute('sre-highlight')) {
+      return;
+    }
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
@@ -466,8 +471,9 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
           const {x, y, width, height} = (node as any).getBBox();
           mjx.setAttribute('viewBox', [x, -(y + height), width, height].join(' '));
           mjx.removeAttribute('style');
-          mjx.setAttribute('width', (w/W * width) + 'ex');
-          mjx.setAttribute('height', (w/W * height) + 'ex');
+          mjx.setAttribute('width', (w / W * width) + 'ex');
+          mjx.setAttribute('height', (w / W * height) + 'ex');
+          container.setAttribute('sre-highlight', 'false');
         }
       }
       mjx = container.cloneNode(false).appendChild(mjx).parentNode as HTMLElement;
