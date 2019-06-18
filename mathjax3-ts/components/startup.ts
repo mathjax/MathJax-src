@@ -267,8 +267,8 @@ export namespace Startup {
             //
             pagePromise = pagePromise.then(CONFIG.pageReady);
         }
-        promise = (CONFIG.typeset && MathJax.TypesetPromise ?
-                   pagePromise.then(MathJax.TypesetPromise) : pagePromise);
+        promise = (CONFIG.typeset && MathJax.typesetPromise ?
+                   pagePromise.then(MathJax.typesetPromise) : pagePromise);
     };
 
     /**
