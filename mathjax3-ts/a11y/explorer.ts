@@ -31,7 +31,7 @@ import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {Explorer, SpeechExplorer} from './explorer/Explorer.js';
+import {AbstractKeyExplorer, TypeExplorer, RoleExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -83,9 +83,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     return class extends BaseMathItem {
 
         /**
-         * The Explorer object for this math item
+         * The Explorer objects for this math item
          */
-        protected explorer: Explorer = null;
+        protected explorers: Explorer[] = [];
 
         /**
          * True when a rerendered element should restart the explorer
@@ -112,26 +112,53 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
             const node = this.typesetRoot;
             const mml = toMathML(this.root);
             if (this.savedId) {
-                this.typesetRoot.setAttribute('explorer-id', this.savedId);
+                this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
                 this.savedId = null;
             }
-            this.explorer = SpeechExplorer.create(document, document.explorerObjects.region, node, mml);
+            this.addExplorers(
+                SpeechExplorer.create(document, document.explorerObjects.region, node, mml),
+                SpeechExplorer.create(document, document.explorerObjects.region2, node, mml),
+                Magnifier.create(document, document.explorerObjects.magnifier, node, mml),
+                TypeExplorer.create(document, document.explorerObjects.tooltip, node),
+                RoleExplorer.create(document, document.explorerObjects.tooltip2, node)
+            );
             this.state(STATE.EXPLORER);
         }
 
 
-        // Multiple explorer facilities:
-        // For any that is active: restart.
+        /**
+         * Adds a list of explorers and makes sure the right one stops propagating.
+         * @param {Explorer[]} ...explorers
+         */
+        private addExplorers(...explorers: Explorer[]) {
+            this.explorers = explorers;
+            if (explorers.length <= 1) return;
+            let lastKeyExplorer: AbstractKeyExplorer = null;
+            for (let explorer of this.explorers) {
+                if (!(explorer instanceof AbstractKeyExplorer)) continue;
+                if (lastKeyExplorer) {
+                    lastKeyExplorer.stoppable = false;
+                }
+                lastKeyExplorer = explorer;
+            }
+        }
+
+
         /**
          * @override
          */
         public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
-            this.savedId = this.typesetRoot.getAttribute('explorer-id');
+            this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
             this.refocus = (window.document.activeElement === this.typesetRoot);
-            if (this.explorer && this.explorer.active) {
-                this.restart = true;
-                this.explorer.Stop();
+            let savedExplorers = [];
+            for (let explorer of this.explorers) {
+                if (explorer.active) {
+                    this.restart = true;
+                    explorer.Stop();
+                    savedExplorers.push(explorer);
+                }
             }
+            this.explorers = savedExplorers;
             super.rerender(document, start);
         }
 
@@ -141,7 +168,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         public updateDocument(document: ExplorerMathDocument) {
             super.updateDocument(document);
             this.refocus && this.typesetRoot.focus();
-            this.restart && this.explorer.Start();
+            this.restart && this.explorers.forEach(x => x.Start());
             this.refocus = this.restart = false;
         }
 
@@ -156,6 +183,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
  */
 export type ExplorerObjects = {
     region?: LiveRegion,
+    region2?: LiveRegion,
     tooltip?: ToolTip,
     tooltip2?: ToolTip,
     tooltip3?: ToolTip,
@@ -204,7 +232,9 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
             foregroundColor: 'Black',
             foregroundOpacity: 1,
             backgroundColor: 'Blue',
-            backgroundOpacity: .2
+            backgroundOpacity: .2,
+            align: 'top',
+            magnify: 500
           }
         };
 
@@ -231,6 +261,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
             this.options.MathItem = ExplorerMathItemMixin(this.options.MathItem, toMathML);
             this.explorerObjects = {
                 region: new LiveRegion(this),
+                region2: new LiveRegion(this),
                 tooltip: new ToolTip(this),
                 tooltip2: new ToolTip(this),
                 tooltip3: new ToolTip(this),
