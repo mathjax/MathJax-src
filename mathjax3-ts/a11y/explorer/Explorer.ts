@@ -228,7 +228,7 @@ export class AbstractExplorer<T> implements Explorer {
                       alpha: opts.backgroundOpacity};
     return sre.HighlighterFactory.highlighter(
       background, foreground,
-      {renderer: this.document.outputJax.name});
+      {renderer: this.document.outputJax.name, browser: 'v3'});
   }
 
   /**
@@ -599,7 +599,9 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
       if (this.nodeQuery(node)) {
         return [node, this.nodeAccess(node)];
       }
-      node = node.childNodes[0] as HTMLElement;
+      let child = node.childNodes[0] as HTMLElement;
+      node = (child && child.tagName === 'defs') ? // This is for SVG.
+        node.childNodes[1] as HTMLElement : child;
     }
     return [null, null];
   }
@@ -617,9 +619,10 @@ export class EffectHoverer extends Hoverer<void> {
   protected constructor(
     public document: A11yDocument,
     ignore: any,
-    protected node: HTMLElement,
-    protected nodeQuery: (node: HTMLElement) => boolean) {
-    super(document, new DummyRegion(document), node, nodeQuery, x => {});
+    protected node: HTMLElement) {
+    super(document, new DummyRegion(document), node,
+          x => this.highlighter.isMactionNode(x),
+          x => {});
   }
 
 }

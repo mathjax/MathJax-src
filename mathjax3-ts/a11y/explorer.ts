@@ -127,8 +127,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                                 (node: HTMLElement) => node.getAttribute('data-semantic-role')),
                 ValueHoverer.create(document, document.explorerObjects.tooltip3, node,
                                     (x: HTMLElement) => !!x.tagName, (x: HTMLElement) => x.tagName),
-                EffectHoverer.create(document, null, node,
-                                     (node: HTMLElement) => node.tagName === 'MJX-MACTION')
+                EffectHoverer.create(document, null, node)
             );
             this.state(STATE.EXPLORER);
         }

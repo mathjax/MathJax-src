@@ -23,6 +23,7 @@ declare namespace sre {
     highlight(nodes: Node[]): void;
     unhighlight(): void;
     colorString(): colorString;
+    isMactionNode(node: Node): boolean;
   }
 
   interface Focus {
@@ -69,7 +70,7 @@ declare namespace sre.HighlighterFactory {
                               back: sre.colorType,
                               info: {renderer: string, browser?: string}
                              ): Highlighter;
-  
+
 }
 
 // export interface SpeechGenerator {
