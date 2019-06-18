@@ -31,7 +31,7 @@ import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {ContentHoverer, EffectHoverer, ValueHoverer, AbstractKeyExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
+import {EffectHoverer, AbstractKeyExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
