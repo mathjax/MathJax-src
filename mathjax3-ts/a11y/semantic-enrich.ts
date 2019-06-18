@@ -107,7 +107,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     return class extends BaseMathItem {
 
         /**
-         * @param {MathDocument} docuemnt   The MathDocument for the MathItem
+         * @param {MathDocument} document   The MathDocument for the MathItem
          */
         public enrich(document: MathDocument<N, T, D>) {
             if (this.state() >= STATE.ENRICHED) return;
@@ -129,7 +129,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         }
 
         /**
-         * @param {MathDocument} docuemnt   The MathDocument for the MathItem
+         * @param {MathDocument} document   The MathDocument for the MathItem
          */
         attachSpeech(document: MathDocument<N, T, D>) {
             if (this.state() >= STATE.ATTACHSPEECH) return;
