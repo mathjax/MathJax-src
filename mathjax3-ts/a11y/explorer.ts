@@ -98,6 +98,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         protected refocus: boolean = false;
 
         /**
+         * Save explorer id during rerendering.
+         */
+        protected savedId: string = null;
+
+        /**
          * Add the explorer to the output for this math item
          *
          * @param {HTMLDocument} docuemnt   The MathDocument for the MathItem
@@ -106,16 +111,24 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
             if (this.state() >= STATE.EXPLORER) return;
             const node = this.typesetRoot;
             const mml = toMathML(this.root);
+            if (this.savedId) {
+                this.typesetRoot.setAttribute('explorer-id', this.savedId);
+                this.savedId = null;
+            }
             this.explorer = SpeechExplorer.create(document, document.explorerObjects.region, node, mml);
             this.state(STATE.EXPLORER);
         }
 
+
+        // Multiple explorer facilities:
+        // For any that is active: restart.
         /**
          * @override
          */
         public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
+            this.savedId = this.typesetRoot.getAttribute('explorer-id');
             this.refocus = (window.document.activeElement === this.typesetRoot);
-            if (this.explorer && (this.explorer as any).active) {
+            if (this.explorer && this.explorer.active) {
                 this.restart = true;
                 this.explorer.Stop();
             }
