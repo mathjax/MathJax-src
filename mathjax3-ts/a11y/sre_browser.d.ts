@@ -16,6 +16,8 @@ declare namespace sre {
   
   class DirectSpeechGenerator extends AbstractSpeechGenerator { }
   
+  class DummySpeechGenerator extends AbstractSpeechGenerator { }
+
 
   interface Highlighter {
     highlight(nodes: Node[]): void;
