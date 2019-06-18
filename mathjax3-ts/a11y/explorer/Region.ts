@@ -416,19 +416,6 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   protected highlight(highlighter: sre.Highlighter) {
-    let child = this.inner;
-    while (child) {
-      if (child.hasAttribute('sre-highlight')) {
-        return;
-      }
-      // This is SVG specific.
-      if (child.nodeName === 'svg') {
-        (child.firstChild as HTMLElement).
-          setAttribute('transform', 'matrix(1 0 0 -1 0 0)');
-        break;
-      };
-      child = child.childNodes[0] as HTMLElement;
-    }
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
@@ -459,13 +446,29 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     let mjx = node.cloneNode(true) as HTMLElement;
     if (mjx.nodeName !== 'MJX-CONTAINER') {
       // remove element spacing (could be done in CSS)
-      mjx.style.marginLeft = mjx.style.marginRight = '0';
+      if (mjx.nodeName !== 'g') {
+        mjx.style.marginLeft = mjx.style.marginRight = '0';
+      }
       let container = node;
       while (container && container.nodeName !== 'MJX-CONTAINER') {
         container = container.parentNode as HTMLElement;
       }
-      if (mjx.nodeName !== 'MJX-MATH') {
-        mjx = container.firstChild.cloneNode(false).appendChild(mjx).parentNode as HTMLElement;
+      if (mjx.nodeName !== 'MJX-MATH' && mjx.nodeName !== 'svg') {
+        const child = container.firstChild;
+        mjx = child.cloneNode(false).appendChild(mjx).parentNode as HTMLElement;
+        //
+        // SVG specific
+        //
+        if (mjx.nodeName === 'svg') {
+          (mjx.firstChild as HTMLElement).setAttribute('transform', 'matrix(1 0 0 -1 0 0)');
+          const W = parseFloat(mjx.getAttribute('viewBox').split(/ /)[2]);
+          const w = parseFloat(mjx.getAttribute('width'));
+          const {x, y, width, height} = (node as any).getBBox();
+          mjx.setAttribute('viewBox', [x, -(y + height), width, height].join(' '));
+          mjx.removeAttribute('style');
+          mjx.setAttribute('width', (w/W * width) + 'ex');
+          mjx.setAttribute('height', (w/W * height) + 'ex');
+        }
       }
       mjx = container.cloneNode(false).appendChild(mjx).parentNode as HTMLElement;
       //  remove displayed math margins (could be done in CSS)
