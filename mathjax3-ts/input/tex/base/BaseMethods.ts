@@ -318,27 +318,6 @@ BaseMethods.SetSize = function(parser: TexParser, name: string, size: string) {
     parser.itemFactory.create('style').setProperty('styles', {mathsize: size + 'em'}));
 };
 
-// TODO: Will be replaced by the color extension!
-/**
- * Dummy color command.
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
-BaseMethods.Color = function(parser: TexParser, name: string) {
-  // @test Color Frac
-  const color = parser.GetArgument(name);
-  const old = parser.stack.env['color'];
-  parser.stack.env['color'] = color;
-  const math = parser.ParseArg(name);
-  if (old) {
-    parser.stack.env['color'] = old;
-  } else {
-    delete parser.stack.env['color'];
-  }
-  const node = parser.create('node', 'mstyle', [math], {mathcolor: color});
-  parser.Push(node);
-};
-
 /**
  * Setting explicit spaces, e.g., via commata or colons.
  * @param {TexParser} parser The calling parser.

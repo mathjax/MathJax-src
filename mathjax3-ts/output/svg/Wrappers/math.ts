@@ -69,15 +69,18 @@ export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<N, T, D>>(S
         if (display && shift) {
             this.jax.shift = shift;
         }
-        const attributes = this.node.attributes;
-        const speech = attributes.get('data-semantic-speech') as string;
-        if (speech && !attributes.get('aria-label')) {
-            const id = this.getTitleID();
-            const label = this.svg('title', {id}, [this.text(speech)]);
-            adaptor.insert(label, adaptor.firstChild(this.element));
-            adaptor.setAttribute(this.element, 'aria-labeledby', id);
-            for (const child of this.childNodes[0].childNodes) {
-                adaptor.setAttribute(child.element, 'aria-hidden', 'true');
+        if (this.jax.document.options.internalSpeechTitles) {
+            const attributes = this.node.attributes;
+            const speech = (attributes.get('aria-label') || attributes.get('data-semantic-speech')) as string;
+            if (speech) {
+                const id = this.getTitleID();
+                const label = this.svg('title', {id}, [this.text(speech)]);
+                adaptor.insert(label, adaptor.firstChild(this.element));
+                adaptor.setAttribute(this.element, 'aria-labeledby', id);
+                adaptor.removeAttribute(this.element, 'aria-label');
+                for (const child of this.childNodes[0].childNodes) {
+                    adaptor.setAttribute(child.element, 'aria-hidden', 'true');
+                }
             }
         }
     }
