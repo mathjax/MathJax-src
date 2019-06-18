@@ -366,6 +366,7 @@ export class HoverRegion extends AbstractRegion {
     super(document);
     this.div.style.fontSize = document.options.a11y.magnify + '%';
     this.inner.classList.add('MJX-TEX');
+    this.inner.style.lineHeight = '0';
   }
 
   /**
@@ -404,9 +405,18 @@ export class HoverRegion extends AbstractRegion {
    * @override
    */
   protected highlight(highlighter: sre.Highlighter) {
-    let child = this.inner.childNodes[0] as HTMLElement;
-    if (child && child.hasAttribute('sre-highlight')) {
-      return;
+    let child = this.inner;
+    while (child) {
+      if (child.hasAttribute('sre-highlight')) {
+        return;
+      }
+      // This is SVG specific.
+      if (child.nodeName === 'svg') {
+        (child.firstChild as HTMLElement).
+          setAttribute('transform', 'matrix(1 0 0 -1 0 0)');
+        break;
+      };
+      child = child.childNodes[0] as HTMLElement;
     }
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
@@ -428,6 +438,20 @@ export class HoverRegion extends AbstractRegion {
   public AddNode(node: HTMLElement) {
     this.Clear();
     let mjx = node.cloneNode(true) as HTMLElement;
+    if (mjx.nodeName !== 'MJX-CONTAINER') {
+      // remove element spacing (could be done in CSS)
+      mjx.style.marginLeft = mjx.style.marginRight = '0';
+      let container = node;
+      while (container && container.nodeName !== 'MJX-CONTAINER') {
+        container = container.parentNode as HTMLElement;
+      }
+      if (mjx.nodeName !== 'MJX-MATH') {
+        mjx = container.firstChild.cloneNode(false).appendChild(mjx).parentNode as HTMLElement;
+      }
+      mjx = container.cloneNode(false).appendChild(mjx).parentNode as HTMLElement;
+      //  remove displayed math margins (could be done in CSS)
+      mjx.style.margin = '0';
+    }
     this.inner.appendChild(mjx);
   }
 
