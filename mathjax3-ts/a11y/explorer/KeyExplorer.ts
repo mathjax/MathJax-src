@@ -160,7 +160,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public Start() {
     super.Start();
     this.speechGenerator = new sre.DirectSpeechGenerator();
-    this.walker = new sre.TableWalker(
+    this.walker = sre.WalkerFactory.walker('table',
       this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
@@ -231,7 +231,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   private initWalker() {
     this.speechGenerator = new sre.TreeSpeechGenerator();
-    let dummy = new sre.DummyWalker(
+    let dummy = sre.WalkerFactory.walker('dummy',
       this.node, this.speechGenerator, this.highlighter, this.mml);
     this.Speech(dummy);
   }
@@ -255,7 +255,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
               protected node: HTMLElement,
               private mml: HTMLElement) {
     super(document, region, node);
-    this.walker = new sre.TableWalker(
+    this.walker = sre.WalkerFactory.walker('table',
         this.node, new sre.DummySpeechGenerator(), this.highlighter, this.mml);
   }
 

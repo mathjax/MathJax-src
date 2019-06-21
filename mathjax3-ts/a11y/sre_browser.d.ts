@@ -38,26 +38,15 @@ declare namespace sre {
     getFocus(update?: boolean): Focus;
   }
 
-  class AbstractWalker implements Walker {
-    constructor(node: Node, generator: SpeechGenerator, highlighter: Highlighter, mml: Node);
-    activate(): void;
-    deactivate(): void;
-    speech(): string;
-    move(key: number): void;
-    getFocus(): Focus;
-  }
+}
 
-  class DummyWalker extends AbstractWalker { }
+declare namespace sre.WalkerFactory {
+  export function walker(kind: string,
+                         node: Node,
+                         generator: SpeechGenerator,
+                         highlighter: Highlighter,
+                         mml: Node): Walker;
   
-  class TableWalker extends AbstractWalker { }
-  
-  // class AbstractHighlighter implements Highlighter {
-  //   highlight(nodes: Node[]): void;
-  //   unhighlight(): void;
-  // }
-
-  // class 
-
 }
 
 declare namespace sre.Engine {
@@ -66,13 +55,9 @@ declare namespace sre.Engine {
 
 declare namespace sre.HighlighterFactory {
 
-  export function highlighter(fore: sre.colorType,
-                              back: sre.colorType,
+  export function highlighter(fore: colorType,
+                              back: colorType,
                               info: {renderer: string, browser?: string}
                              ): Highlighter;
 
 }
-
-// export interface SpeechGenerator {
-//   speech(): string;
-// }
