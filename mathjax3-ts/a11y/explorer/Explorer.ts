@@ -445,11 +445,23 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
         this.node, new sre.DummySpeechGenerator(), this.highlighter, this.mml);
   }
 
+  /**
+   * @override
+   */
+  public Update(force: boolean = false) {
+    console.log('highlighting here');
+    if (!this.active && !force) return;
+    this.highlighter.unhighlight();
+    this.highlighter.highlight(this.walker.getFocus().getNodes());
+  }
+
+
 
   public Start() {
     super.Start();
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
+    this.Update();
     this.showFocus();
   }
 
@@ -461,6 +473,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
   public Move(key: number) {
     let result = this.walker.move(key);
     if (result) {
+      this.Update();
       this.showFocus();
     }
   }
@@ -483,6 +496,16 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
     }
   }
 
+  /**
+   * @override
+   */
+  public Stop() {
+    if (this.active) {
+      this.highlighter.unhighlight();
+      this.walker.deactivate();
+    }
+    super.Stop();
+  }
 }
 
 
