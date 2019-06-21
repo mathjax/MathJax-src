@@ -256,7 +256,15 @@ export interface KeyExplorer extends Explorer {
 
 export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
 
+  /**
+   * The attached SRE walker.
+   * @type {sre.Walker}
+   */
+  protected walker: sre.Walker;
 
+  /**
+   * @override
+   */
   protected events: [string, (x: Event) => void][] =
     super.Events().concat(
       [['keydown', this.KeyDown.bind(this)],
@@ -282,19 +290,30 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     this.Stop();
   }
 
+  /**
+   * @override
+   */
+  public Update(force: boolean = false) {
+    if (!this.active && !force) return;
+    this.highlighter.unhighlight();
+    this.highlighter.highlight(this.walker.getFocus(true).getNodes());
+  }
+
+  /**
+   * @override
+   */
+  public Stop() {
+    if (this.active) {
+      this.highlighter.unhighlight();
+      this.walker.deactivate();
+    }
+    super.Stop();
+  }
+
 }
 
 
-// We could have the speech/braille, etc explorer have a region as static
-// element, which the first generation would set in on the A11ydocument.
-export class SpeechExplorer extends AbstractKeyExplorer<string> implements KeyExplorer {
-
-
-  /**
-   * The attached SRE walker.
-   * @type {sre.Walker}
-   */
-  protected walker: sre.Walker;
+export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
   /**
    * The SRE speech generator associated with the walker.
@@ -343,22 +362,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> implements KeyEx
   /**
    * @override
    */
-  public Stop() {
-    if (this.active) {
-      this.highlighter.unhighlight();
-      this.walker.deactivate();
-    }
-    super.Stop();
-  }
-
-
-  /**
-   * @override
-   */
   public Update(force: boolean = false) {
-    if (!this.active && !force) return;
-    this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus(true).getNodes());
+    super.Update(force);
     this.region.Update(this.walker.speech());
   }
 
@@ -413,9 +418,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> implements KeyEx
    * Initialises the SRE walker.
    */
   private initWalker() {
-    // Add speech
     this.speechGenerator = new sre.TreeSpeechGenerator();
-    // We could have this in a separate explorer. Not sure if that makes sense.
     let dummy = new sre.DummyWalker(
       this.node, this.speechGenerator, this.highlighter, this.mml);
     this.Speech(dummy);
@@ -425,12 +428,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> implements KeyEx
 
 
 export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
-
-  /**
-   * The walker for the magnifier.
-   * @type {sre.Walker}
-   */
-  private walker: sre.Walker;
 
   /**
    * @constructor
@@ -449,11 +446,9 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
    * @override
    */
   public Update(force: boolean = false) {
-    if (!this.active && !force) return;
-    this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus().getNodes());
+    super.Update(force);
+    this.showFocus();
   }
-
 
 
   public Start() {
@@ -461,7 +456,6 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
     this.Update();
-    this.showFocus();
   }
 
   private showFocus() {
@@ -473,7 +467,6 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
     let result = this.walker.move(key);
     if (result) {
       this.Update();
-      this.showFocus();
     }
   }
 
@@ -495,16 +488,6 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
     }
   }
 
-  /**
-   * @override
-   */
-  public Stop() {
-    if (this.active) {
-      this.highlighter.unhighlight();
-      this.walker.deactivate();
-    }
-    super.Stop();
-  }
 }
 
 

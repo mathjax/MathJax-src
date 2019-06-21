@@ -35,7 +35,7 @@ declare namespace sre {
     deactivate(): void;
     speech(): string;
     move(key: number): void;
-    getFocus(): Focus;
+    getFocus(update?: boolean): Focus;
   }
 
   class AbstractWalker implements Walker {
