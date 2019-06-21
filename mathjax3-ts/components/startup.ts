@@ -267,8 +267,8 @@ export namespace Startup {
             //
             pagePromise = pagePromise.then(CONFIG.pageReady);
         }
-        promise = (CONFIG.typeset && MathJax.TypesetPromise ?
-                   pagePromise.then(MathJax.TypesetPromise) : pagePromise);
+        promise = (CONFIG.typeset && MathJax.typesetPromise ?
+                   pagePromise.then(MathJax.typesetPromise) : pagePromise);
     };
 
     /**
@@ -321,17 +321,17 @@ export namespace Startup {
      * TypeseClear() clears all the MathItems from the document.
      */
     export function makeTypesetMethods() {
-        MathJax.Typeset = (elements: any = null) => {
+        MathJax.typeset = (elements: any = null) => {
             document.options.elements = elements;
             document.render();
         };
-        MathJax.TypesetPromise = (elements: any = null) => {
+        MathJax.typesetPromise = (elements: any = null) => {
             document.options.elements = elements;
             return mathjax.handleRetriesFor(() => {
                 document.render();
             })
         };
-        MathJax.TypesetClear = () => document.clear();
+        MathJax.typesetClear = () => document.clear();
     };
 
     /**

@@ -5,6 +5,18 @@ import {sreReady} from '../sre.js';
 export interface Explorer {
 
   /**
+   * Flag indicating if the explorer is active.
+   * @type {boolean}
+   */
+  active: boolean;
+
+  /**
+   * Flag indicating if event bubbling is stopped.
+   * @type {boolean}
+   */
+  stoppable: boolean;
+
+  /**
    * Attaches navigator and its event handlers to a node.
    */
   Attach(): void;
@@ -35,6 +47,13 @@ export interface Explorer {
    */
   RemoveEvents(): void;
 
+  /**
+   * Update the explorer after state changes.
+   * @param {boolean=} force Forces the update in any case. (E.g., even if
+   *     explorer is inactive.)
+   */
+  Update(force?: boolean): void;
+
 }
 
 
@@ -50,11 +69,32 @@ export interface Explorer {
  */
 export class AbstractExplorer implements Explorer {
 
+
+  /**
+   * @override
+   */
+  public stoppable: boolean = true;
+
+  /**
+   * Named events and their functions.
+   * @type {[string, function(x: Event)][]}
+   */
   protected events: [string, (x: Event) => void][] = [];
 
-  protected active: boolean = false;
+  /**
+   * The SRE highlighter associated with the walker.
+   * @type {sre.Highlighter}
+   */
+  protected highlighter: sre.Highlighter = this.getHighlighter();
+
+  private _active: boolean = false;
   private oldIndex: number = null;
 
+
+  /**
+   * Stops event bubbling.
+   * @param {Event} event The event that is stopped.
+   */
   protected static stopEvent(event: Event) {
     if (event.preventDefault) {
       event.preventDefault();
@@ -95,9 +135,24 @@ export class AbstractExplorer implements Explorer {
   /**
    * @override
    */
+  public get active(): boolean {
+    return this._active;
+  }
+
+  /**
+   * @override
+   */
+  public set active(flag: boolean) {
+    this._active = flag;
+  }
+  
+  /**
+   * @override
+   */
   public Attach() {
     this.oldIndex = this.node.tabIndex;
     this.node.tabIndex = 1;
+    this.node.setAttribute('role', 'application');
     this.AddEvents();
   }
 
@@ -108,6 +163,7 @@ export class AbstractExplorer implements Explorer {
   public Detach() {
     this.node.tabIndex = this.oldIndex;
     this.oldIndex = null;
+    this.node.removeAttribute('role');
     this.RemoveEvents();
   }
 
@@ -116,6 +172,7 @@ export class AbstractExplorer implements Explorer {
    * @override
    */
   public Start() {
+    this.highlighter = this.getHighlighter();
     this.active = true;
   }
 
@@ -146,6 +203,36 @@ export class AbstractExplorer implements Explorer {
   public RemoveEvents() {
     for (let [eventkind, eventfunc]  of this.events) {
       this.node.removeEventListener(eventkind, eventfunc);
+    }
+  }
+
+  /**
+   * @override
+   */
+  public Update(force: boolean = false): void {}
+
+
+  /**
+   * @return {sre.Highlighter} A highlighter for the explorer.
+   */
+  protected getHighlighter(): sre.Highlighter {
+    let opts = this.document.options.a11y;
+    let foreground = {color: opts.foregroundColor.toLowerCase(),
+                      alpha: opts.foregroundOpacity};
+    let background = {color: opts.backgroundColor.toLowerCase(),
+                      alpha: opts.backgroundOpacity};
+    return sre.HighlighterFactory.highlighter(
+      background, foreground,
+      {renderer: this.document.outputJax.name});
+  }
+
+  /**
+   * Stops the events of this explorer from bubbling.
+   * @param {Event} event The event to stop.
+   */
+  protected stopEvent(event: Event) {
+    if (this.stoppable) {
+      AbstractExplorer.stopEvent(event);
     }
   }
 
@@ -195,24 +282,31 @@ export abstract class AbstractKeyExplorer extends AbstractExplorer implements Ke
 // element, which the first generation would set in on the A11ydocument.
 export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
 
-  private started: boolean = false;
 
+  /**
+   * The attached SRE walker.
+   * @type {sre.Walker}
+   */
   protected walker: sre.Walker;
-  protected highlighter: sre.Highlighter;
-  private speechGenerator: sre.SpeechGenerator;
-  private foreground: sre.colorType = {color: 'red', alpha: 1};
-  private background: sre.colorType = {color: 'blue', alpha: .2};
 
-  // /**
-  //  * @override
-  //  */
-  // protected events: [string, (x: Event) => void][] =
-  //   super.Events().concat(
-  //     [['mouseover', this.Hover.bind(this)],
-  //      ['mouseout', this.UnHover.bind(this)]]);
+  /**
+   * The SRE speech generator associated with the walker.
+   * @type {sre.SpeechGenerator}
+   */
+  protected speechGenerator: sre.SpeechGenerator;
 
-  // Maybe the A11yDocument should have a get region?
-  // Maybe we need more than one region (Braille)?
+  /**
+   * Flag in case the start method is triggered before the walker is fully
+   * initialised. I.e., we have to wait for SRE. Then region is re-shown if
+   * necessary, as otherwise it leads to incorrect stacking.
+   * @type {boolean}
+   */
+  private restarted: boolean = false;
+
+  /**
+   * @constructor
+   * @extends {AbstractKeyExplorer}
+   */
   constructor(public document: A11yDocument,
               protected region: Region,
               protected node: HTMLElement,
@@ -221,95 +315,165 @@ export class SpeechExplorer extends AbstractKeyExplorer implements KeyExplorer {
     this.initWalker();
   }
 
-  private initWalker() {
-    const jax = this.document.outputJax.name;
-    this.highlighter = sre.HighlighterFactory.highlighter(
-      this.background, this.foreground,
-      {renderer: jax}
-    );
-    // Add speech
-    this.speechGenerator = new sre.TreeSpeechGenerator();
-    // We could have this in a separator explorer. Not sure if that makes sense.
-    let dummy = new sre.DummyWalker(
-      this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.Speech(dummy);
+
+  /**
+   * @override
+   */
+  public Start() {
+    super.Start();
     this.speechGenerator = new sre.DirectSpeechGenerator();
     this.walker = new sre.TableWalker(
       this.node, this.speechGenerator, this.highlighter, this.mml);
+    this.walker.activate();
+    this.Update();
+    if (this.document.options.a11y.subtitles) {
+      this.region.Show(this.node, this.highlighter);
+    }
+    this.restarted = true;
   }
+
+
+  /**
+   * @override
+   */
+  public Stop() {
+    if (this.active) {
+      this.highlighter.unhighlight();
+      this.walker.deactivate();
+    }
+    super.Stop();
+  }
+
+
+  /**
+   * @override
+   */
+  public Update(force: boolean = false) {
+    if (!this.active && !force) return;
+    this.highlighter.unhighlight();
+    this.highlighter.highlight(this.walker.getFocus().getNodes());
+    this.region.Update(this.walker.speech());
+  }
+
+
+  /**
+   * Computes the speech for the current expression once SRE is ready.
+   * @param {sre.Walker} walker The sre walker.
+   */
+  public Speech(walker: sre.Walker) {
+    sreReady.then(() => {
+      let speech = walker.speech();
+      this.node.setAttribute('hasspeech', 'true');
+      this.Update();
+      if (this.restarted && this.document.options.a11y.subtitles) {
+        this.region.Show(this.node, this.highlighter);
+      }
+    }).catch((error: Error) => console.log(error.message));
+  }
+
+
+  /**
+   * @override
+   */
+  public KeyDown(event: KeyboardEvent) {
+    const code = event.keyCode;
+    if (code === 27) {
+      this.Stop();
+      this.stopEvent(event);
+      return;
+    }
+    if (this.active) {
+      this.Move(code);
+      this.stopEvent(event);
+      return;
+    }
+    if (code === 32 && event.shiftKey) {
+      this.Start();
+      this.stopEvent(event);
+    }
+  }
+
+
+  /**
+   * @override
+   */
+  public Move(key: number) {
+    this.walker.move(key);
+    this.Update();
+  }
+
+  /**
+   * Initialises the SRE walker.
+   */
+  private initWalker() {
+    // Add speech
+    this.speechGenerator = new sre.TreeSpeechGenerator();
+    // We could have this in a separate explorer. Not sure if that makes sense.
+    let dummy = new sre.DummyWalker(
+      this.node, this.speechGenerator, this.highlighter, this.mml);
+    this.Speech(dummy);
+  }
+
+}
+
+
+export class Magnifier extends AbstractKeyExplorer {
+
+  /**
+   * The walker for the magnifier.
+   * @type {sre.Walker}
+   */
+  private walker: sre.Walker;
+
+  /**
+   * @constructor
+   * @extends {AbstractKeyExplorer}
+   */
+  constructor(public document: A11yDocument,
+              protected region: Region,
+              protected node: HTMLElement,
+              private mml: HTMLElement) {
+    super(document, region, node);
+    this.walker = new sre.TableWalker(
+        this.node, new sre.DummySpeechGenerator(), this.highlighter, this.mml);
+  }
+
 
   public Start() {
     super.Start();
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
-    this.highlighter.highlight(this.walker.getFocus().getNodes());
-    this.region.Update(this.walker.speech());
+    this.showFocus();
   }
 
-  public Stop() {
-    if (this.active) {
-      this.highlighter.unhighlight();
+  private showFocus() {
+    let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
+    this.region.Show(node, this.highlighter);
+  }
+
+  public Move(key: number) {
+    let result = this.walker.move(key);
+    if (result) {
+      this.showFocus();
     }
-    super.Stop();
-  }
-
-  public Speech(walker: any) {
-    sreReady.then(() => {
-      let speech = walker.speech();
-      this.node.setAttribute('hasspeech', 'true');
-    }).catch((error: Error) => console.log(error.message));
   }
 
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
     if (code === 27) {
       this.Stop();
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
       return;
     }
-    if (this.active) {
+    if (this.active && code !== 13) {
       this.Move(code);
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
       return;
     }
     if (code === 32 && event.shiftKey) {
       this.Start();
-      AbstractExplorer.stopEvent(event);
+      this.stopEvent(event);
     }
-  }
-
-  public Move(key: number) {
-    this.walker.move(key);
-    this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus().getNodes());
-    this.region.Update(this.walker.speech());
-  }
-
-}
-
-
-// Reimplement without speech and proper setting of region.
-export class Magnifier extends SpeechExplorer {
-
-  public Start() {
-    super.Start();
-    this.region.Show(this.node, this.highlighter);
-    this.walker.activate();
-    this.highlighter.highlight(this.walker.getFocus().getNodes());
-    this.showFocus();
-  }
-
-  private showFocus() {
-    let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
-    let mjx = node.cloneNode(true) as HTMLElement;
-    const region = this.region as HoverRegion;
-    region.Show(node, this.highlighter);
-    region.AddNode(mjx);
-  }
-
-  public Move(key: number) {
-    this.walker.move(key);
-    this.showFocus();
   }
 
 }
@@ -366,10 +530,6 @@ export abstract class AbstractMouseExplorer extends AbstractExplorer implements 
 
 export class HoverExplorer extends AbstractMouseExplorer {
 
-  private foreground: sre.colorType = {color: 'red', alpha: 1};
-  private background: sre.colorType = {color: 'blue', alpha: .2};
-  private highlighter: sre.Highlighter;
-
   protected nodeQuery = function(node: HTMLElement) {
     return true;
   };
@@ -382,10 +542,6 @@ export class HoverExplorer extends AbstractMouseExplorer {
               protected region: Region,
               protected node: HTMLElement) {
     super(document, region, node);
-    this.highlighter = sre.HighlighterFactory.highlighter(
-      this.background, this.foreground,
-      {renderer: this.document.outputJax.name}
-    );
   }
 
   /**

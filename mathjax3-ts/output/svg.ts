@@ -50,6 +50,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     public static NAME: string = 'SVG';
     public static OPTIONS: OptionList = {
         ...CommonOutputJax.OPTIONS,
+        internalSpeechTitles: true,     // insert <title> tags with speech content
         titleID: 0,                     // initial id number to use for aria-labeledby titles
         fontCache: 'local',             // or 'global' or 'none'
         localID: null,                  // ID to use for local font cache (for single equation processing)
@@ -228,6 +229,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         const svg = adaptor.append(this.container, this.svg('svg', {
             xmlns: SVGNS,
             width: this.ex(W), height: this.ex(h + d),
+            role: 'img', focusable: false,
             style: {'vertical-align': this.ex(-d)},
             viewBox: [0, this.fixed(-h * 1000, 1), this.fixed(W * 1000, 1), this.fixed((h + d) * 1000, 1)].join(' ')
         }, [g])) as N;

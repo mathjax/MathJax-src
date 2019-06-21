@@ -16,6 +16,8 @@ declare namespace sre {
   
   class DirectSpeechGenerator extends AbstractSpeechGenerator { }
   
+  class DummySpeechGenerator extends AbstractSpeechGenerator { }
+
 
   interface Highlighter {
     highlight(nodes: Node[]): void;
@@ -29,6 +31,7 @@ declare namespace sre {
   
   interface Walker {
     activate(): void;
+    deactivate(): void;
     speech(): string;
     move(key: number): void;
     getFocus(): Focus;
@@ -37,6 +40,7 @@ declare namespace sre {
   class AbstractWalker implements Walker {
     constructor(node: Node, generator: SpeechGenerator, highlighter: Highlighter, mml: Node);
     activate(): void;
+    deactivate(): void;
     speech(): string;
     move(key: number): void;
     getFocus(): Focus;
