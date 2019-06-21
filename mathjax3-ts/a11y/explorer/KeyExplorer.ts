@@ -60,7 +60,7 @@ export interface KeyExplorer extends Explorer {
  * @constructor
  * @extends {AbstractExplorer}
  *
- * @template T  The type of the Region for this explorer.
+ * @template T  The type that is consumed by the Region of this explorer.
  */
 export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
 
