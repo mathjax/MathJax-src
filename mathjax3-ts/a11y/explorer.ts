@@ -116,9 +116,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 this.savedId = null;
             }
             this.addExplorers(
-                // SpeechExplorer.create(document, document.explorerObjects.region, node, mml),
+                SpeechExplorer.create(document, document.explorerObjects.region, node, mml),
                 SpeechExplorer.create(document, document.explorerObjects.region2, node, mml),
-                // Magnifier.create(document, document.explorerObjects.magnifier, node, mml),
+                Magnifier.create(document, document.explorerObjects.magnifier, node, mml),
                 EffectHoverer.create(document, null, node)
             );
             this.state(STATE.EXPLORER);

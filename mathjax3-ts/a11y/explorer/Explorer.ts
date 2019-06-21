@@ -358,7 +358,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> implements KeyEx
   public Update(force: boolean = false) {
     if (!this.active && !force) return;
     this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus().getNodes());
+    this.highlighter.highlight(this.walker.getFocus(true).getNodes());
     this.region.Update(this.walker.speech());
   }
 
@@ -449,7 +449,6 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
    * @override
    */
   public Update(force: boolean = false) {
-    console.log('highlighting here');
     if (!this.active && !force) return;
     this.highlighter.unhighlight();
     this.highlighter.highlight(this.walker.getFocus().getNodes());
