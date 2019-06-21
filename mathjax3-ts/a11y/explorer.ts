@@ -105,7 +105,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         /**
          * Add the explorer to the output for this math item
          *
-         * @param {HTMLDocument} docuemnt   The MathDocument for the MathItem
+         * @param {HTMLDocument} document   The MathDocument for the MathItem
          */
         public explorable(document: ExplorerMathDocument) {
             if (this.state() >= STATE.EXPLORER) return;
