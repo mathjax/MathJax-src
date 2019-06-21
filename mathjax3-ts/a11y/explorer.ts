@@ -31,7 +31,9 @@ import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {EffectHoverer, AbstractKeyExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
+import {Explorer} from './explorer/Explorer.js';
+import {AbstractKeyExplorer, Magnifier, SpeechExplorer} from './explorer/KeyExplorer.js';
+import {FlameHoverer} from './explorer/MouseExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -119,7 +121,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 SpeechExplorer.create(document, document.explorerObjects.region, node, mml),
                 SpeechExplorer.create(document, document.explorerObjects.region2, node, mml),
                 Magnifier.create(document, document.explorerObjects.magnifier, node, mml),
-                EffectHoverer.create(document, null, node)
+                FlameHoverer.create(document, null, node)
             );
             this.state(STATE.EXPLORER);
         }

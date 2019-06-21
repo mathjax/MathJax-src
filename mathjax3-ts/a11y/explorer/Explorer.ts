@@ -1,7 +1,36 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2009-2019 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+/**
+ * @fileoverview Explorers for A11Y purposes.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
+
 import {A11yDocument, DummyRegion, HoverRegion, Region, ToolTip} from './Region.js';
 import {sreReady} from '../sre.js';
 
 
+/**
+ * A11y explorers.
+ * @interface
+ */
 export interface Explorer {
 
   /**
@@ -66,10 +95,10 @@ export interface Explorer {
  *
  * @constructor
  * @implements {Explorer}
- * @template T
+ *
+ * @template T  The type of the Region for this explorer.
  */
 export class AbstractExplorer<T> implements Explorer {
-
 
   /**
    * @override
@@ -88,9 +117,17 @@ export class AbstractExplorer<T> implements Explorer {
    */
   protected highlighter: sre.Highlighter = this.getHighlighter();
 
+  /**
+   * Flag if explorer is active.
+   * @type {boolean}
+   */
   private _active: boolean = false;
-  private oldIndex: number = null;
 
+  /**
+   * The original tabindex value before explorer was attached.
+   * @type {boolean}
+   */
+  private oldIndex: number = null;
 
   /**
    * Stops event bubbling.
@@ -128,15 +165,23 @@ export class AbstractExplorer<T> implements Explorer {
     return explorer;
   }
 
-  // Maybe the A11yDocument should have a get region?
-  // Maybe we need more than one region (Braille)?
-  // Maybe some should be read only?
+  /**
+   * @constructor
+   * @param {A11yDocument} document The current document.
+   * @param {Region<T>} region A region to display results.
+   * @param {HTMLElement} node The node on which the explorer works.
+   * @param {any[]} ...rest Remaining information.
+   */
   protected constructor(public document: A11yDocument,
                         protected region: Region<T>,
                         protected node: HTMLElement, ...rest: any[]) {
   }
 
 
+  /**
+   * @return {[string, (x: Event) => void][]} The events associated with this
+   *     explorer.
+   */
   protected Events(): [string, (x: Event) => void][] {
     return this.events;
   }
@@ -241,408 +286,6 @@ export class AbstractExplorer<T> implements Explorer {
     if (this.stoppable) {
       AbstractExplorer.stopEvent(event);
     }
-  }
-
-}
-
-
-export interface KeyExplorer extends Explorer {
-
-  KeyDown(event: KeyboardEvent): void;
-  FocusIn(event: FocusEvent): void;
-  FocusOut(event: FocusEvent): void;
-
-}
-
-export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
-
-  /**
-   * The attached SRE walker.
-   * @type {sre.Walker}
-   */
-  protected walker: sre.Walker;
-
-  /**
-   * @override
-   */
-  protected events: [string, (x: Event) => void][] =
-    super.Events().concat(
-      [['keydown', this.KeyDown.bind(this)],
-       ['focusin', this.FocusIn.bind(this)],
-       ['focusout', this.FocusOut.bind(this)]]);
-
-  /**
-   * @override
-   */
-  public abstract KeyDown(event: KeyboardEvent): void;
-
-  /**
-   * @override
-   */
-  public FocusIn(event: FocusEvent) {
-  }
-
-
-  /**
-   * @override
-   */
-  public FocusOut(event: FocusEvent) {
-    this.Stop();
-  }
-
-  /**
-   * @override
-   */
-  public Update(force: boolean = false) {
-    if (!this.active && !force) return;
-    this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus(true).getNodes());
-  }
-
-  /**
-   * @override
-   */
-  public Stop() {
-    if (this.active) {
-      this.highlighter.unhighlight();
-      this.walker.deactivate();
-    }
-    super.Stop();
-  }
-
-}
-
-
-export class SpeechExplorer extends AbstractKeyExplorer<string> {
-
-  /**
-   * The SRE speech generator associated with the walker.
-   * @type {sre.SpeechGenerator}
-   */
-  protected speechGenerator: sre.SpeechGenerator;
-
-  /**
-   * Flag in case the start method is triggered before the walker is fully
-   * initialised. I.e., we have to wait for SRE. Then region is re-shown if
-   * necessary, as otherwise it leads to incorrect stacking.
-   * @type {boolean}
-   */
-  private restarted: boolean = false;
-
-  /**
-   * @constructor
-   * @extends {AbstractKeyExplorer}
-   */
-  constructor(public document: A11yDocument,
-              protected region: Region<string>,
-              protected node: HTMLElement,
-              private mml: HTMLElement) {
-    super(document, region, node);
-    this.initWalker();
-  }
-
-
-  /**
-   * @override
-   */
-  public Start() {
-    super.Start();
-    this.speechGenerator = new sre.DirectSpeechGenerator();
-    this.walker = new sre.TableWalker(
-      this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.walker.activate();
-    this.Update();
-    if (this.document.options.a11y.subtitles) {
-      this.region.Show(this.node, this.highlighter);
-    }
-    this.restarted = true;
-  }
-
-
-  /**
-   * @override
-   */
-  public Update(force: boolean = false) {
-    super.Update(force);
-    this.region.Update(this.walker.speech());
-  }
-
-
-  /**
-   * Computes the speech for the current expression once SRE is ready.
-   * @param {sre.Walker} walker The sre walker.
-   */
-  public Speech(walker: sre.Walker) {
-    sreReady.then(() => {
-      let speech = walker.speech();
-      this.node.setAttribute('hasspeech', 'true');
-      this.Update();
-      if (this.restarted && this.document.options.a11y.subtitles) {
-        this.region.Show(this.node, this.highlighter);
-      }
-    }).catch((error: Error) => console.log(error.message));
-  }
-
-
-  /**
-   * @override
-   */
-  public KeyDown(event: KeyboardEvent) {
-    const code = event.keyCode;
-    if (code === 27) {
-      this.Stop();
-      this.stopEvent(event);
-      return;
-    }
-    if (this.active) {
-      this.Move(code);
-      this.stopEvent(event);
-      return;
-    }
-    if (code === 32 && event.shiftKey) {
-      this.Start();
-      this.stopEvent(event);
-    }
-  }
-
-
-  /**
-   * @override
-   */
-  public Move(key: number) {
-    this.walker.move(key);
-    this.Update();
-  }
-
-  /**
-   * Initialises the SRE walker.
-   */
-  private initWalker() {
-    this.speechGenerator = new sre.TreeSpeechGenerator();
-    let dummy = new sre.DummyWalker(
-      this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.Speech(dummy);
-  }
-
-}
-
-
-export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
-
-  /**
-   * @constructor
-   * @extends {AbstractKeyExplorer}
-   */
-  constructor(public document: A11yDocument,
-              protected region: Region<HTMLElement>,
-              protected node: HTMLElement,
-              private mml: HTMLElement) {
-    super(document, region, node);
-    this.walker = new sre.TableWalker(
-        this.node, new sre.DummySpeechGenerator(), this.highlighter, this.mml);
-  }
-
-  /**
-   * @override
-   */
-  public Update(force: boolean = false) {
-    super.Update(force);
-    this.showFocus();
-  }
-
-
-  public Start() {
-    super.Start();
-    this.region.Show(this.node, this.highlighter);
-    this.walker.activate();
-    this.Update();
-  }
-
-  private showFocus() {
-    let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
-    this.region.Show(node, this.highlighter);
-  }
-
-  public Move(key: number) {
-    let result = this.walker.move(key);
-    if (result) {
-      this.Update();
-    }
-  }
-
-  public KeyDown(event: KeyboardEvent) {
-    const code = event.keyCode;
-    if (code === 27) {
-      this.Stop();
-      this.stopEvent(event);
-      return;
-    }
-    if (this.active && code !== 13) {
-      this.Move(code);
-      this.stopEvent(event);
-      return;
-    }
-    if (code === 32 && event.shiftKey) {
-      this.Start();
-      this.stopEvent(event);
-    }
-  }
-
-}
-
-
-export interface MouseExplorer extends Explorer {
-
-  MouseOver(event: MouseEvent): void;
-  MouseOut(event: MouseEvent): void;
-  MouseDown(event: MouseEvent): void;
-  MouseUp(event: MouseEvent): void;
-
-}
-
-export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> implements MouseExplorer {
-
-  protected events: [string, (x: Event) => void][] =
-    super.Events().concat(
-      [['mouseover', this.MouseOver.bind(this)],
-       ['mouseout', this.MouseOut.bind(this)]
-       // Should we have those?
-       // ['mousedown', this.MouseDown.bind(this)],
-       // ['mouseup', this.MouseUp.bind(this)],
-      ]);
-
-  /**
-   * @override
-   */
-  public MouseOver(event: MouseEvent) {
-    this.Start();
-  }
-
-
-  /**
-   * @override
-   */
-  public MouseOut(event: MouseEvent) {
-    this.Stop();
-  }
-
-  /**
-   * @override
-   */
-  public abstract MouseDown(event: MouseEvent): void;
-
-
-  /**
-   * @override
-   */
-  public abstract MouseUp(event: MouseEvent): void;
-
-}
-
-
-export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
-
-  /**
-   * Remember the last position to avoid flickering.
-   * @type {[number, number]}
-   */
-  protected coord: [number, number];
-
-  /**
-   * @constructor
-   * @extends {AbstractMouseExplorer<T>}
-   *
-   * @param {A11yDocument} document The current document.
-   * @param {Region<T>} region A region to display results.
-   * @param {HTMLElement} node The node on which the explorer works.
-   * @param {(node: HTMLElement) => boolean} nodeQuery Predicate on nodes that
-   *    will fire the hoverer.
-   * @param {(node: HTMLElement) => T} nodeAccess Accessor to extract node value
-   *    that is passed to the region.
-   *
-   * @template T
-   */
-  protected constructor(public document: A11yDocument,
-              protected region: Region<T>,
-              protected node: HTMLElement,
-              protected nodeQuery: (node: HTMLElement) => boolean,
-              protected nodeAccess: (node: HTMLElement) => T) {
-    super(document, region, node);
-  }
-
-  /**
-   * @override
-   */
-  public MouseDown(event: MouseEvent) {};
-
-  /**
-   * @override
-   */
-  public MouseUp(event: MouseEvent) {};
-
-  public MouseOut(event: MouseEvent) {
-    if (event.clientX === this.coord[0] &&
-        event.clientY === this.coord[1]) {
-      return;
-    }
-    this.highlighter.unhighlight();
-    this.region.Hide();
-    super.MouseOut(event);
-  }
-
-  public MouseOver(event: MouseEvent) {
-    super.MouseOver(event);
-    let target = event.target as HTMLElement;
-    this.coord = [event.clientX, event.clientY];
-    let [node, kind] = this.getNode(target);
-    if (!node) {
-      return;
-    }
-    this.highlighter.unhighlight();
-    this.highlighter.highlight([node]);
-    this.region.Update(kind);
-    this.region.Show(node, this.highlighter);
-  }
-
-  public getNode(node: HTMLElement): [HTMLElement, T] {
-    let original = node;
-    while (node && node !== this.node) {
-      if (this.nodeQuery(node)) {
-        return [node, this.nodeAccess(node)];
-      }
-      node = node.parentNode as HTMLElement;
-    }
-    node = original;
-    while (node) {
-      if (this.nodeQuery(node)) {
-        return [node, this.nodeAccess(node)];
-      }
-      let child = node.childNodes[0] as HTMLElement;
-      node = (child && child.tagName === 'defs') ? // This is for SVG.
-        node.childNodes[1] as HTMLElement : child;
-    }
-    return [null, null];
-  }
-
-}
-
-
-export class ValueHoverer extends Hoverer<string> { }
-
-export class ContentHoverer extends Hoverer<HTMLElement> { }
-
-export class EffectHoverer extends Hoverer<void> {
-
-  /**
-   * @override
-   */
-  protected constructor(
-    public document: A11yDocument,
-    ignore: any,
-    protected node: HTMLElement) {
-    super(document, new DummyRegion(document), node,
-          x => this.highlighter.isMactionNode(x),
-          x => {});
   }
 
 }
