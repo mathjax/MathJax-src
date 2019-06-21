@@ -448,6 +448,16 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    */
   public Update(node: HTMLElement) {
     this.Clear();
+    let mjx = this.cloneNode(node);
+    this.inner.appendChild(mjx);
+  }
+
+  /**
+   * Clones the node to put into the hover region.
+   * @param {HTMLElement} node The original node.
+   * @return {HTMLElement} The cloned node.
+   */
+  private cloneNode(node: HTMLElement): HTMLElement {
     let mjx = node.cloneNode(true) as HTMLElement;
     if (mjx.nodeName !== 'MJX-CONTAINER') {
       // remove element spacing (could be done in CSS)
@@ -480,7 +490,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       //  remove displayed math margins (could be done in CSS)
       mjx.style.margin = '0';
     }
-    this.inner.appendChild(mjx);
+    return mjx;
   }
 
 }
