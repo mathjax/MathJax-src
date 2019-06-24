@@ -72,6 +72,8 @@ export interface MenuSettings {
     foreground: string;
     speech: boolean;
     subtitles: boolean;
+    braille: boolean;
+    viewbraille: boolean;
     speechrules: string;
     autocollapse: boolean;
     collapsible: boolean;
@@ -108,12 +110,15 @@ export class Menu {
             ctrl: false,
             shift: false,
             scale: 1,
+	    // A11y options
             explorer: false,
             highlight: 'None',
             background: 'Blue',
             foreground: 'Black',
             speech: true,
             subtitles: false,
+            braille: true,
+            viewbraille: false,
             speechrules: 'mathspeak-default',
             autocollapse: false,
             collapsible: false,
@@ -360,6 +365,10 @@ export class Menu {
         const jax = this.document.outputJax;
         this.jax[jax.name] = jax;
         this.settings.renderer = jax.name;
+        if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
+	    window.MathJax._.a11y.explorer_ts.optionSettings(
+		this.document.options.a11y, this.settings);
+        }
         this.settings.scale = jax.options.scale;
         this.defaultSettings = Object.assign({}, this.settings);
     }
@@ -385,13 +394,19 @@ export class Menu {
                     this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
                     this.variable<string> ('highlight'),
                     this.variable<string> ('background', (background: string) =>
-                                           this.document.options.a11y.backgroundColor = background),
+					   this.setA11y('background', background)),
                     this.variable<string> ('foreground', (foreground: string) =>
-                                           this.document.options.a11y.foregroundColor = foreground),
-                    this.variable<boolean>('speech'),
+                                           this.setA11y('foreground', foreground)),
+                    this.variable<boolean>('speech', (speech: boolean) =>
+                                           this.setA11y('speech', speech)),
                     this.variable<boolean>('subtitles', (subtitles: boolean) =>
-                                           this.document.options.a11y.subtitles = subtitles),
-                    this.variable<string> ('speechrules'),
+                                           this.setA11y('subtitles', subtitles)),
+                    this.variable<boolean>('braille', (braille: boolean) =>
+                                           this.setA11y('braille', braille)),
+                    this.variable<boolean>('viewbraille', (viewbraille: boolean) =>
+                                           this.setA11y('viewbraille', viewbraille)),
+                    this.variable<string> ('speechrules', (speechrules: boolean) =>
+                                           this.setA11y('speechrules', speechrules)),
                     this.variable<boolean>('autocollapse'),
                     this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
                     this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab))
@@ -451,6 +466,8 @@ export class Menu {
                             this.rule(),
                             this.checkbox('Speech', 'Speech Output', 'speech'),
                             this.checkbox('Subtitles', 'Subtities', 'subtitles'),
+                            this.checkbox('Braille', 'Braille', 'braille'),
+                            this.checkbox('View Braille', 'View Braille', 'viewbraille'),
                             this.rule(),
                             this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechrules', [
                                 ['mathspeak-default', 'Verbose'],
@@ -545,6 +562,10 @@ export class Menu {
             const settings = localStorage.getItem(Menu.MENU_STORAGE);
             if (!settings) return;
             Object.assign(this.settings, JSON.parse(settings));
+            if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
+		window.MathJax._.a11y.explorer_ts.menuSettings(
+		    this.settings, this.document.options.a11y);
+            }
         } catch (err) {
             console.log('MathJax localStorage error: ' + err.message);
         }
@@ -760,6 +781,11 @@ export class Menu {
         });
     }
 
+    protected setA11y(option: string, value: string|boolean) {
+        if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
+	    window.MathJax._.a11y.explorer_ts.setA11yOption(this.document, option, value);
+    }
+
     /**
      * @param {MenuMathDocument} document  The original document whose list is to be transferred
      */
@@ -903,7 +929,7 @@ export class Menu {
     /*======================================================================*/
 
     /**
-     * Create JSON for a variable constrolling a menu setting
+     * Create JSON for a variable controlling a menu setting
      *
      * @param {keyof MenuSettings} name   The setting for which to make a variable
      * @param {(T) => void} action        Optional function to perform after setting the value

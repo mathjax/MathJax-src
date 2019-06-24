@@ -313,3 +313,80 @@ export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null) {
     handler.documentClass = ExplorerMathDocumentMixin(handler.documentClass as any);
     return handler;
 }
+
+
+/**
+ * Map for names of menu variables to option variables.
+ * @type {Map<string, string>}
+ */
+const menuMap: Map<string, string> = new Map<string, string>([
+  ['explorer', 'explorer'],
+  ['highlight', 'highlight'],
+  ['background', 'backgroundColor'],
+  ['foreground', 'foregroundColor'],
+  ['speech', 'speech'],
+  ['subtitles', 'subtitles'],
+  ['braille', 'braille'],
+  ['viewbraille', 'viewbraille'],
+  ['speechrules', 'speechrules'],
+  ['autocollapse', 'autocollapse'],
+  ['collapsible', 'collapsible'],
+  ['inTabOrder', 'inTabOrder']
+]);
+
+const optionsMap: Map<string, string> = new Map<string, string>(
+  [...menuMap].map(([x, y]) => [y, x]) as [string, string][]
+);
+
+
+/**
+ * Copies options from the explorer option names into menu variable names.
+ * @param {[key: string]: string} src Source structure.
+ * @param {[key: string]: string} dst Destination structure.
+ */
+export function optionSettings(src: {[key: string]: string}, dst: {[key: string]: string}) {
+  copySettings(optionsMap, src, dst);
+};
+
+
+/**
+ * Copies options from the menu variable names into explorer option names.
+ * @param {[key: string]: string} src Source structure.
+ * @param {[key: string]: string} dst Destination structure.
+ */
+export function menuSettings(src: {[key: string]: string}, dst: {[key: string]: string}) {
+  copySettings(menuMap, src, dst);
+};
+
+
+/**
+ * Sets a single a11y option for a menu name.
+ * @param {HTMLDOCUMENT} document The current document.
+ * @param {string} option The option name in the menu.
+ * @param {string|boolean} value The new value.
+ */
+export function setA11yOption(document: HTMLDOCUMENT, option: string, value: string|boolean) {
+  let key = menuMap.get(option);
+  if (key) {
+    document.options.a11y[key] = value;
+  }
+}
+
+
+/**
+ * Copies options from one name set into another.
+ * @param {Map<string, string>} map The name map.
+ * @param {[key: string]: string} src Source structure.
+ * @param {[key: string]: string} dst Destination structure.
+ * @private
+ */
+function copySettings(map: Map<string, string>,
+                      src: {[key: string]: string},
+                      dst: {[key: string]: string}) {
+  for (let key of map.keys()) {
+    let option = src[key];
+    if (src[key] !== undefined) {
+      dst[map.get(key)] = option;
+    }
+  }
+};
