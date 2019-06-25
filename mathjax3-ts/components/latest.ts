@@ -379,7 +379,6 @@ function loadLatestCdnVersion() {
  */
 export function loadLatest() {
     script = getScript();
-console.log(script);
     if (script && script.cdn) {
         var version = getSavedVersion();
         version ?
