@@ -124,12 +124,6 @@ export class AbstractExplorer<T> implements Explorer {
   private _active: boolean = false;
 
   /**
-   * The original tabindex value before explorer was attached.
-   * @type {boolean}
-   */
-  private oldIndex: number = null;
-
-  /**
    * Stops event bubbling.
    * @param {Event} event The event that is stopped.
    */
@@ -205,9 +199,6 @@ export class AbstractExplorer<T> implements Explorer {
    * @override
    */
   public Attach() {
-    this.oldIndex = this.node.tabIndex;
-    this.node.tabIndex = 1;
-    this.node.setAttribute('role', 'application');
     this.AddEvents();
   }
 
@@ -215,9 +206,6 @@ export class AbstractExplorer<T> implements Explorer {
    * @override
    */
   public Detach() {
-    this.node.tabIndex = this.oldIndex;
-    this.oldIndex = null;
-    this.node.removeAttribute('role');
     this.RemoveEvents();
   }
 

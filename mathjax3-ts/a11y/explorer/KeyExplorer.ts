@@ -80,6 +80,12 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
        ['focusout', this.FocusOut.bind(this)]]);
 
   /**
+   * The original tabindex value before explorer was attached.
+   * @type {boolean}
+   */
+  private oldIndex: number = null;
+
+  /**
    * @override
    */
   public abstract KeyDown(event: KeyboardEvent): void;
@@ -104,6 +110,26 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     if (!this.active && !force) return;
     this.highlighter.unhighlight();
     this.highlighter.highlight(this.walker.getFocus(true).getNodes());
+  }
+
+  /**
+   * @override
+   */
+  public Attach() {
+    super.Attach();
+    this.oldIndex = this.node.tabIndex;
+    this.node.tabIndex = 1;
+    this.node.setAttribute('role', 'application');
+  }
+
+  /**
+   * @override
+   */
+  public Detach() {
+    this.node.tabIndex = this.oldIndex;
+    this.oldIndex = null;
+    this.node.removeAttribute('role');
+    super.Detach();
   }
 
   /**
