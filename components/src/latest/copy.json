@@ -1,7 +1,0 @@
-{
-    "to": "../../dist",
-    "from": ".",
-    "copy": [
-        "latest.js"
-    ]
-}
