@@ -107,9 +107,11 @@
       file = 'startup.js';
       src = src.replace(/\?$/, '') + '?' + file;
     }
+    var version = (src.match(/(\d+\.\d+\.\d+)\/latest.js\?/) || ['', ''])[1];
     return {
       tag: script,
       src: src,
+      version: version,
       file: file,
       cdn: cdn
     };
@@ -134,7 +136,9 @@
    * Get the script tag that loaded latest.js
    */
   function getScript() {
-    if (document.currentScript) return scriptData(document.currentScript, null);
+    if (document.currentScript) {
+      return scriptData(document.currentScript, null);
+    }
     var script = document.getElementById('MathJax-script');
     if (script) {
       return checkScript(script);
@@ -203,8 +207,13 @@
 
   /*
    * Load the given version using the base URL and file to load
+   * (if the versions differ, run latest.js from the new version
+   *  in case there are important changes there)
    */
   function loadVersion(script, version) {
+    if (script.version !== version) {
+      script.file = 'latest.js?' + script.file;
+    }
     loadMathJax(script.cdn.mathjax + version + '/' + script.file);
   }
 
