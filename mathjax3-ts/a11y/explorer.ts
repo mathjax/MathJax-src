@@ -32,8 +32,8 @@ import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
 import {Explorer} from './explorer/Explorer.js';
-import {AbstractKeyExplorer, Magnifier, SpeechExplorer} from './explorer/KeyExplorer.js';
-import {FlameHoverer} from './explorer/MouseExplorer.js';
+import * as ke from './explorer/KeyExplorer.js';
+import * as me from './explorer/MouseExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -118,30 +118,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 this.savedId = null;
             }
             this.addExplorers(
-                SpeechExplorer.create(document, document.explorerObjects.region, node, mml),
-                SpeechExplorer.create(document, document.explorerObjects.region2, node, mml),
-                Magnifier.create(document, document.explorerObjects.magnifier, node, mml),
-                FlameHoverer.create(document, null, node)
+                initExplorers(document, node, mml)
             );
             this.state(STATE.EXPLORER);
-        }
-
-
-        /**
-         * Adds a list of explorers and makes sure the right one stops propagating.
-         * @param {Explorer[]} ...explorers
-         */
-        private addExplorers(...explorers: Explorer[]) {
-            this.explorers = explorers;
-            if (explorers.length <= 1) return;
-            let lastKeyExplorer = null;
-            for (let explorer of this.explorers) {
-                if (!(explorer instanceof AbstractKeyExplorer)) continue;
-                if (lastKeyExplorer) {
-                    lastKeyExplorer.stoppable = false;
-                }
-                lastKeyExplorer = explorer;
-            }
         }
 
 
@@ -170,22 +149,27 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
             this.refocus = this.restart = false;
         }
 
+
+        /**
+         * Adds a list of explorers and makes sure the right one stops propagating.
+         * @param {Explorer[]} explorers The active explorers to be added.
+         */
+        private addExplorers(explorers: Explorer[]) {
+            // this.explorers = initExplorers(document, node, mml);
+            this.explorers = explorers;
+            if (explorers.length <= 1) return;
+            let lastKeyExplorer = null;
+            for (let explorer of this.explorers) {
+                if (!(explorer instanceof ke.AbstractKeyExplorer)) continue;
+                if (lastKeyExplorer) {
+                    lastKeyExplorer.stoppable = false;
+                }
+                lastKeyExplorer = explorer;
+            }
+        }
+
     };
 
-}
-
-/*==========================================================================*/
-
-/**
- * The objects needed for the explorer
- */
-export type ExplorerObjects = {
-    region?: LiveRegion,
-    region2?: LiveRegion,
-    tooltip?: ToolTip,
-    tooltip2?: ToolTip,
-    tooltip3?: ToolTip,
-    magnifier?: HoverRegion
 }
 
 /**
@@ -196,7 +180,7 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
     /**
      * The objects needed for the explorer
      */
-    explorerObjects: ExplorerObjects;
+    explorerRegions: ExplorerRegions;
 
     /**
      * Add the Explorer to the MathItems in the MathDocument
@@ -225,21 +209,33 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 ...BaseDocument.OPTIONS.renderActions,
                 explorable: [STATE.EXPLORER]
             }),
-          a11y: {
-            subtitles: true,
-            foregroundColor: 'Black',
-            foregroundOpacity: 1,
-            backgroundColor: 'Blue',
-            backgroundOpacity: .2,
-            align: 'top',
-            magnify: 500
+            a11y: {
+                speech: true,
+                subtitles: true,
+                braille: true,
+                viewbraille: false,
+                foregroundColor: 'Black',
+                foregroundOpacity: 1,
+                backgroundColor: 'Blue',
+                backgroundOpacity: .2,
+                align: 'top',
+                magnify: 500,
+                magnification: 'None',
+                keymagnifier: false,
+                mousemagnifier: false,
+                highlight: 'None',
+                flame: false,
+                hover: false,
+                typetip: false,
+                roletip: false,
+                prefixtip: false
           }
         };
 
         /**
          * The objects needed for the explorer
          */
-        public explorerObjects: ExplorerObjects;
+        public explorerRegions: ExplorerRegions;
 
         /**
          * Extend the MathItem class used for this MathDocument
@@ -257,14 +253,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
             const visitor = new SerializedMmlVisitor(this.mmlFactory);
             const toMathML = ((node: MmlNode) => visitor.visitTree(node));
             this.options.MathItem = ExplorerMathItemMixin(this.options.MathItem, toMathML);
-            this.explorerObjects = {
-                region: new LiveRegion(this),
-                region2: new LiveRegion(this),
-                tooltip: new ToolTip(this),
-                tooltip2: new ToolTip(this),
-                tooltip3: new ToolTip(this),
-                magnifier: new HoverRegion(this)
-            };
+            this.explorerRegions = initExplorerRegions(this);
         }
 
         /**
@@ -315,49 +304,100 @@ export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null) {
 }
 
 
-/**
- * Map for names of menu variables to option variables.
- * @type {Map<string, string>}
- */
-const menuMap: Map<string, string> = new Map<string, string>([
-  ['explorer', 'explorer'],
-  ['highlight', 'highlight'],
-  ['background', 'backgroundColor'],
-  ['foreground', 'foregroundColor'],
-  ['speech', 'speech'],
-  ['subtitles', 'subtitles'],
-  ['braille', 'braille'],
-  ['viewbraille', 'viewbraille'],
-  ['speechrules', 'speechrules'],
-  ['autocollapse', 'autocollapse'],
-  ['collapsible', 'collapsible'],
-  ['inTabOrder', 'inTabOrder']
-]);
-
-const optionsMap: Map<string, string> = new Map<string, string>(
-  [...menuMap].map(([x, y]) => [y, x]) as [string, string][]
-);
-
+/*==========================================================================*/
 
 /**
- * Copies options from the explorer option names into menu variable names.
- * @param {[key: string]: string} src Source structure.
- * @param {[key: string]: string} dst Destination structure.
+ * The objects needed for the explorer
  */
-export function optionSettings(src: {[key: string]: string}, dst: {[key: string]: string}) {
-  copySettings(optionsMap, src, dst);
+export type ExplorerRegions = {
+    speechRegion?: LiveRegion,
+    brailleRegion?: LiveRegion,
+    magnifier?: HoverRegion,
+    tooltip1?: ToolTip,
+    tooltip2?: ToolTip,
+    tooltip3?: ToolTip
+}
+
+
+function initExplorerRegions(document: ExplorerMathDocument) {
+    return {
+        speechRegion: new LiveRegion(document),
+        brailleRegion: new LiveRegion(document),
+        magnifier: new HoverRegion(document),
+        tooltip1: new ToolTip(document),
+        tooltip2: new ToolTip(document),
+        tooltip3: new ToolTip(document)
+    };
+}
+
+
+// Each explorer has a name, an option and a region associated.
+
+
+/**
+ *  Generation methods for all MathJax explorers available via option settings.
+ */
+let allExplorers: {[options: string]: (doc: ExplorerMathDocument,
+                                       node: HTMLElement, ...rest: any[]) => Explorer} = {
+    speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
+        let explorer = ke.SpeechExplorer.create(
+            doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
+        explorer.speechGenerator.setOptions({locale: 'en', domain: 'mathspeak',
+                                             style: 'default', modality: 'speech'});
+        explorer.showRegion = 'subtitles';
+        return explorer;
+    },
+    braille: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
+        let explorer = ke.SpeechExplorer.create(
+            doc, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
+        explorer.speechGenerator.setOptions({locale: 'nemeth', domain: 'default',
+                                             style: 'default', modality: 'braille'});
+        explorer.showRegion = 'viewbraille';
+        return explorer;
+    },
+    keymagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+        ke.Magnifier.create(doc, doc.explorerRegions.magnifier, node, ...rest),
+    mousemagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+        me.ContentHoverer.create(doc, doc.explorerRegions.magnifier, node,
+                                 (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
+                                 (x: HTMLElement) => x),
+    // Missing: FlameHighlighter, TreeHighlighter
+    hover: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+        me.FlameHoverer.create(doc, null, node),
+    typetip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+        me.ValueHoverer.create(doc, doc.explorerRegions.tooltip1, node,
+                               (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
+                               (x: HTMLElement) => x.getAttribute('data-semantic-type')),
+    roletip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+        me.ValueHoverer.create(doc, doc.explorerRegions.tooltip2, node,
+                                          (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
+                                          (x: HTMLElement) => x.getAttribute('data-semantic-role')),
+    prefixtip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+        me.ValueHoverer.create(doc, doc.explorerRegions.tooltip3, node,
+                                          (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
+                                          (x: HTMLElement) => x.getAttribute('data-semantic-prefix'))
 };
 
 
 /**
- * Copies options from the menu variable names into explorer option names.
- * @param {[key: string]: string} src Source structure.
- * @param {[key: string]: string} dst Destination structure.
+ * Initialises explorers for a document.
+ * @param {ExplorerMathDocument} document The target document.
+ * @param {HTMLElement} node The node explorers will be attached to.
+ * @param {string} mml The corresponding Mathml node as a string.
+ * @return {Explorer[]} A list of initialised explorers.
  */
-export function menuSettings(src: {[key: string]: string}, dst: {[key: string]: string}) {
-  copySettings(menuMap, src, dst);
-};
+function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: string): Explorer[] {
+    let explorers = [];
+    for (let key of Object.keys(allExplorers)) {
+        if (document.options.a11y[key]) {
+            explorers.push(allExplorers[key](document, node, mml));
+        }
+    }
+    return explorers;
+}
 
+
+/* Context Menu Interactions */
 
 /**
  * Sets a single a11y option for a menu name.
@@ -366,27 +406,47 @@ export function menuSettings(src: {[key: string]: string}, dst: {[key: string]: 
  * @param {string|boolean} value The new value.
  */
 export function setA11yOption(document: HTMLDOCUMENT, option: string, value: string|boolean) {
-  let key = menuMap.get(option);
-  if (key) {
-    document.options.a11y[key] = value;
-  }
-}
-
-
-/**
- * Copies options from one name set into another.
- * @param {Map<string, string>} map The name map.
- * @param {[key: string]: string} src Source structure.
- * @param {[key: string]: string} dst Destination structure.
- * @private
- */
-function copySettings(map: Map<string, string>,
-                      src: {[key: string]: string},
-                      dst: {[key: string]: string}) {
-  for (let key of map.keys()) {
-    let option = src[key];
-    if (src[key] !== undefined) {
-      dst[map.get(key)] = option;
+    switch (option) {
+    case 'magnification':
+        switch (value) {
+        case 'None':
+            document.options.a11y.magnifier = value;
+            document.options.a11y.keymagnifier = false;
+            document.options.a11y.mousemagnifier = false;
+            break;
+        case 'Keyboard':
+            document.options.a11y.magnifier = value;
+            document.options.a11y.keymagnifier = true;
+            document.options.a11y.mousemagnifier = false;
+            break;
+        case 'Mouse':
+            document.options.a11y.magnifier = value;
+            document.options.a11y.keymagnifier = false;
+            document.options.a11y.mousemagnifier = true;
+            break;
+        }
+        break;
+    case 'highlight':
+        switch (value) {
+        case 'None':
+            document.options.a11y.highlight = value;
+            document.options.a11y.hover = false;
+            document.options.a11y.flame = false;
+            break;
+        case 'Hover':
+            document.options.a11y.highlight = value;
+            document.options.a11y.hover = true;
+            document.options.a11y.flame = false;
+            break;
+        case 'Flame':
+            document.options.a11y.highlight = value;
+            document.options.a11y.hover = false;
+            document.options.a11y.flame = true;
+            break;
+        }
+        break;
+        // TODO: magnify, similar to zscale.
+    default:
+        document.options.a11y[option] = value;
     }
-  }
-};
+}

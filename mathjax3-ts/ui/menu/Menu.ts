@@ -68,13 +68,16 @@ export interface MenuSettings {
     scale: string;
     explorer: boolean;
     highlight: string;
-    background: string;
-    foreground: string;
+    backgroundColor: string;
+    foregroundColor: string;
     speech: boolean;
     subtitles: boolean;
     braille: boolean;
     viewbraille: boolean;
     speechrules: string;
+    magnify: string;
+    magnification: string;
+    treehighlight: boolean;
     autocollapse: boolean;
     collapsible: boolean;
     inTabOrder: boolean;
@@ -110,16 +113,19 @@ export class Menu {
             ctrl: false,
             shift: false,
             scale: 1,
-	    // A11y options
+            // A11y options
             explorer: false,
             highlight: 'None',
-            background: 'Blue',
-            foreground: 'Black',
+            backgroundColor: 'Blue',
+            foregroundColor: 'Black',
             speech: true,
             subtitles: false,
             braille: true,
             viewbraille: false,
             speechrules: 'mathspeak-default',
+            magnification: 'None',
+            magnify: false,
+            treehighlight: false,
             autocollapse: false,
             collapsible: false,
             inTabOrder: true,
@@ -366,8 +372,7 @@ export class Menu {
         this.jax[jax.name] = jax;
         this.settings.renderer = jax.name;
         if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
-	    window.MathJax._.a11y.explorer_ts.optionSettings(
-		this.document.options.a11y, this.settings);
+            Object.assign(this.settings, this.document.options.a11y);
         }
         this.settings.scale = jax.options.scale;
         this.defaultSettings = Object.assign({}, this.settings);
@@ -393,10 +398,10 @@ export class Menu {
                     this.variable<string> ('scale', (scale: string) => this.setScale(scale)),
                     this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
                     this.variable<string> ('highlight'),
-                    this.variable<string> ('background', (background: string) =>
-					   this.setA11y('background', background)),
-                    this.variable<string> ('foreground', (foreground: string) =>
-                                           this.setA11y('foreground', foreground)),
+                    this.variable<string> ('backgroundColor', (background: string) =>
+                                           this.setA11y('backgroundColor', background)),
+                    this.variable<string> ('foregroundColor', (foreground: string) =>
+                                           this.setA11y('foregroundColor', foreground)),
                     this.variable<boolean>('speech', (speech: boolean) =>
                                            this.setA11y('speech', speech)),
                     this.variable<boolean>('subtitles', (subtitles: boolean) =>
@@ -405,8 +410,14 @@ export class Menu {
                                            this.setA11y('braille', braille)),
                     this.variable<boolean>('viewbraille', (viewbraille: boolean) =>
                                            this.setA11y('viewbraille', viewbraille)),
-                    this.variable<string> ('speechrules', (speechrules: boolean) =>
+                    this.variable<string> ('speechrules', (speechrules: string) =>
                                            this.setA11y('speechrules', speechrules)),
+                    this.variable<string> ('magnification', (magnification: string) =>
+                                           this.setA11y('magnification', magnification)),
+                    this.variable<string> ('magnify', (magnify: string) =>
+                                           this.setA11y('magnify', magnify)),
+                    this.variable<boolean>('treehighlight', (treehighlight: boolean) =>
+                                           this.setA11y('treehighlight', treehighlight)),
                     this.variable<boolean>('autocollapse'),
                     this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
                     this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab))
@@ -454,31 +465,54 @@ export class Menu {
                         this.submenu('Explorer', 'Explorer', [
                             this.checkbox('Active', 'Active', 'explorer'),
                             this.rule(),
-                            this.submenu('Highlight', 'Highlight', this.radioGroup('highlight', [
-                                ['None'], ['Hover'], ['Flame']
-                            ]), true),
-                            this.submenu('Background', 'Background', this.radioGroup('background', [
-                                ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
-                            ])),
-                            this.submenu('Foreground', 'Foreground', this.radioGroup('foreground', [
-                                ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
-                            ])),
-                            this.rule(),
-                            this.checkbox('Speech', 'Speech Output', 'speech'),
-                            this.checkbox('Subtitles', 'Subtities', 'subtitles'),
-                            this.checkbox('Braille', 'Braille', 'braille'),
-                            this.checkbox('View Braille', 'View Braille', 'viewbraille'),
-                            this.rule(),
-                            this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechrules', [
-                                ['mathspeak-default', 'Verbose'],
-                                ['mathspeak-brief', 'Brief'],
-                                ['mathspeak-sbrief', 'Superbrief']
-                            ])),
-                            this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechrules', [
-                                ['chromvox-default', 'Verbose'],
-                                ['chromevox-short', 'Short'],
-                                ['chromevox-alternative', 'Alternative']
-                            ]))
+                            this.submenu('Speech', 'Speech', [
+                                this.checkbox('Speech', 'Speech Output', 'speech'),
+                                this.checkbox('Subtitles', 'Subtities', 'subtitles'),
+                                this.checkbox('Braille', 'Braille', 'braille'),
+                                this.checkbox('View Braille', 'View Braille', 'viewbraille'),
+                                this.rule(),
+                                this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechrules', [
+                                    ['mathspeak-default', 'Verbose'],
+                                    ['mathspeak-brief', 'Brief'],
+                                    ['mathspeak-sbrief', 'Superbrief']
+                                ])),
+                                this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechrules', [
+                                    ['clearspeak-default', 'Standard']
+                                ])),
+                                this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechrules', [
+                                    ['chromvox-default', 'Verbose'],
+                                    ['chromevox-short', 'Short'],
+                                    ['chromevox-alternative', 'Alternative']
+                                ]))
+                            ]),
+                            this.submenu('Highlight', 'Highlight', [
+                                this.submenu('Background', 'Background', this.radioGroup('backgroundColor', [
+                                    ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
+                                ])),
+                                this.submenu('Foreground', 'Foreground', this.radioGroup('foregroundColor', [
+                                    ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
+                                ])),
+                                this.rule(),
+                                this.radioGroup('highlight', [
+                                    ['None'], ['Hover'], ['Flame']
+                                ]),
+                                this.rule(),
+                                this.checkbox('TreeHihighlighter', 'Tree Highlighting', 'treehighlight')
+                            ]),
+                            this.submenu('Magnification', 'Magnification', [
+                                this.radioGroup('magnification', [
+                                    ['None'], ['Keyboard'], ['Mouse']
+                                ]),
+                                this.rule(),
+                                this.radioGroup('magnify', [
+                                    ['200%'], ['300%'], ['400%'], ['500%']
+                                ])
+                            ]),
+                            this.submenu('Semantic Info', 'Semantic Info', [
+                                // this.checkbox('Type', 'Type', 'type'),
+                                // this.checkbox('Role', 'Role', 'role'),
+                                // this.checkbox('Prefix', 'Prefix', 'prefix'),
+                            ], true),
                         ]),
                         this.rule(),
                         this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
@@ -562,10 +596,7 @@ export class Menu {
             const settings = localStorage.getItem(Menu.MENU_STORAGE);
             if (!settings) return;
             Object.assign(this.settings, JSON.parse(settings));
-            if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
-		window.MathJax._.a11y.explorer_ts.menuSettings(
-		    this.settings, this.document.options.a11y);
-            }
+            this.mergeA11ySettings();
         } catch (err) {
             console.log('MathJax localStorage error: ' + err.message);
         }
@@ -589,6 +620,29 @@ export class Menu {
             }
         } catch (err) {
             console.log('MathJax localStorage error: ' + err.message);
+        }
+    }
+
+
+    /**
+     * Merge the menu settings into the a11y document options.
+     */
+    protected mergeA11ySettings() {
+        if (!window.MathJax._.a11y || !window.MathJax._.a11y.explorer) return;
+        ['explorer', 'highlight', 'backgroundColor', 'foregroundColor',
+         'speech', 'subtitles', 'braille', 'viewbraille', 'speechrules',
+         'magnification'].forEach(x => this.setA11y(x, this.settings[x]));
+    }
+
+
+    /**
+     * Sets a single a11y document option.
+     * @param {string} option The option.
+     * @param {string|boolean} value Its new value.
+     */
+    protected setA11y(option: string, value: string|boolean) {
+        if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
+            window.MathJax._.a11y.explorer_ts.setA11yOption(this.document, option, value);
         }
     }
 
@@ -781,10 +835,6 @@ export class Menu {
         });
     }
 
-    protected setA11y(option: string, value: string|boolean) {
-        if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
-	    window.MathJax._.a11y.explorer_ts.setA11yOption(this.document, option, value);
-    }
 
     /**
      * @param {MenuMathDocument} document  The original document whose list is to be transferred
@@ -1001,7 +1051,7 @@ export class Menu {
      *
      * @param {string} variable     The (pool) variable to attach to each radio button
      * @param {string[][]} radios   An array of [string] or [string, string], giving the id and content
-     *                                for each radio button (if only one string is given it is ued for both)
+     *                                for each radio button (if only one string is given it is used for both)
      * @returns {Object[]}          An array of JSON objects for radion buttons
      */
     public radioGroup(variable: string, radios: string[][]) {
@@ -1044,4 +1094,3 @@ export class Menu {
     /*======================================================================*/
 
 }
-

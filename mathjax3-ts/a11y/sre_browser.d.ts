@@ -6,10 +6,14 @@ declare namespace sre {
 
   interface SpeechGenerator {
     speech(): string;
+    setOptions(options: Object): void;
+    getOptions(): Object;
   }
 
   class AbstractSpeechGenerator implements SpeechGenerator {
     speech(): string;
+    setOptions(options: Object): void;
+    getOptions(): Object;
   }
 
   class TreeSpeechGenerator extends AbstractSpeechGenerator { }

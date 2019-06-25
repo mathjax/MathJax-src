@@ -131,7 +131,9 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * The SRE speech generator associated with the walker.
    * @type {sre.SpeechGenerator}
    */
-  protected speechGenerator: sre.SpeechGenerator;
+  public speechGenerator: sre.SpeechGenerator;
+
+  public showRegion: string = 'subtitles';
 
   /**
    * Flag in case the start method is triggered before the walker is fully
@@ -159,12 +161,14 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     super.Start();
+    let options = this.speechGenerator.getOptions();
     this.speechGenerator = new sre.DirectSpeechGenerator();
+    this.speechGenerator.setOptions(options);
     this.walker = sre.WalkerFactory.walker('table',
       this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
-    if (this.document.options.a11y.subtitles) {
+    if (this.document.options.a11y[this.showRegion]) {
       this.region.Show(this.node, this.highlighter);
     }
     this.restarted = true;
@@ -189,7 +193,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
       this.Update();
-      if (this.restarted && this.document.options.a11y.subtitles) {
+      if (this.restarted && this.document.options.a11y[this.showRegion]) {
         this.region.Show(this.node, this.highlighter);
       }
     }).catch((error: Error) => console.log(error.message));
