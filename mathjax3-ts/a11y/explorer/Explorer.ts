@@ -23,7 +23,7 @@
  */
 
 
-import {A11yDocument, DummyRegion, HoverRegion, Region, ToolTip} from './Region.js';
+import {A11yDocument, Region} from './Region.js';
 import {sreReady} from '../sre.js';
 
 
