@@ -99,6 +99,22 @@
     if (console && console.error) console.error('MathJax(latest.js): ' + message);
   }
 
+  function scriptData(script, cdn) {
+    script.parentNode.removeChild(script);
+    var src = script.src;
+    var file = src.replace(/.*?\/latest\.js(\?|$)/, '');
+    if (file === '') {
+      file = 'startup.js';
+      src = src.replace(/\?$/, '') + '?' + file;
+    }
+    return {
+      tag: script,
+      src: src,
+      file: file,
+      cdn: cdn
+    };
+  }
+
   /*
    * Check if a script refers to MathJax on one of the CDNs
    */
@@ -106,8 +122,9 @@
     for (var cdn in CDN) {
       if (CDN.hasOwnProperty(cdn)) {
         var url = CDN[cdn].mathjax;
-        if (script.src && script.src.substr(0, url.length) === url) {
-          return script;
+        var src = script.src;
+        if (src && src.substr(0, url.length) === url) {
+          return scriptData(script, CDN[cdn]);
         }
       }
     }
@@ -117,7 +134,7 @@
    * Get the script tag that loaded latest.js
    */
   function getScript() {
-//    if (document.currentScript) return document.currentScript;
+    if (document.currentScript) return scriptData(document.currentScript, null);
     var script = document.getElementById('MathJax-script');
     if (script) {
       return checkScript(script);
@@ -129,15 +146,6 @@
         return script;
       }
     }
-  }
-
-  /*
-   * Get the server name of the CDN that loaded latest.js
-   */
-  function getCDN(script) {
-    if (!script) return;
-    var cdn = script.src.replace(/https?:\/\//, '').replace(/[\/\?].*/, '');
-    return CDN[cdn];
   }
 
   /*
@@ -173,6 +181,7 @@
     script.type = 'text/javascript';
     script.async = true;
     script.src = url;
+    script.id = 'MathJax-script';
     var head = document.head || document.getElementsByTagName('head')[0] || document.body;
     if (head) {
       head.appendChild(script);
@@ -185,7 +194,6 @@
    * When we can't find the current version, use the original URL but remove the "latest.js"
    */
   function loadDefaultMathJax() {
-    var script = getScript();
     if (script) {
       loadMathJax(script.src.replace(/\/latest\.js\?/, '/'));
     } else {
@@ -196,19 +204,19 @@
   /*
    * Load the given version using the base URL and file to load
    */
-  function loadVersion(base, version, file) {
-    loadMathJax(base + version + '/' + file);
+  function loadVersion(script, version) {
+    loadMathJax(script.cdn.mathjax + version + '/' + script.file);
   }
 
   /*
    * Check if the given version acceptable and load it if it is.
    * Return true if loaded, undefined if not
    */
-  function checkVersion(base, version, file) {
+  function checkVersion(script, version) {
     var major = parseInt(version.split(/\./)[0]);
     if (major === MJX_VERSION && !version.match(/-(beta|rc)/)) {
       saveVersion(version);
-      loadVersion(base, version, file);
+      loadVersion(script, version);
       return true;
     }
   }
@@ -254,11 +262,11 @@
    * has the MJX_VERSION as its major version number, and load that.  If none
    * is found, run the version from which latest.js was loaded.
    */
-  function loadLatestGitVersion(cdn, file) {
+  function loadLatestGitVersion(script) {
     requestXML(GITHUB, function (json) {
       if (!json instanceof Array) return;
       for (var i = 0, m = json.length; i < m; i++) {
-        if (checkVersion(cdn.mathjax, json[i][GITHUB.version], file)) {
+        if (checkVersion(script, json[i][GITHUB.version])) {
           return true;
         }
       }
@@ -272,13 +280,14 @@
    * the given major version and use that.  If one can't be found,
    * use the version where latest.js was loaded.
    */
-  function loadLatestCdnVersion(cdn, file) {
+  function loadLatestCdnVersion(script) {
+    var cdn = script.cdn, key = cdn.version;
     requestXML(cdn, function (json) {
      if (json instanceof Array) {
         json = json[0];
       }
-      if (!checkVersion(cdn.mathjax, json[cdn.version], file)) {
-        loadLatestGitVersion(cdn, file);
+      if (!checkVersion(script, json[key])) {
+        loadLatestGitVersion(script);
       }
       return true;
     }, loadDefaultMathJax);
@@ -295,19 +304,13 @@
    * Otherwise, use the version where latest.js was loaded.
    */
   var script = getScript();
-  if (script && !script.src.match(/\/latest\.js\?./)) {
-    Error('Missing filename after "latest.js?" in script URL');
+  if (script.cdn) {
+    var version = getSavedVersion();
+    version ? 
+      loadVersion(script, version) :
+      loadLatestCdnVersion(script);
   } else {
-    var cdn = getCDN(script);
-    if (cdn) {
-      var file = script.src.replace(/.*?\/latest\.js(\?|$)/, '');
-      var version = getSavedVersion();
-      version ? 
-        loadVersion(cdn.mathjax, version, file) :
-        loadLatestCdnVersion(cdn, file);
-    } else {
-      loadDefaultMathJax();
-    }
+    loadDefaultMathJax();
   }
 
 })();
