@@ -34,7 +34,8 @@ type CdnList = Map<string, CdnData>;
  */
 type ScriptData = {
     tag: HTMLScriptElement,   // the script DOM element
-    src: string,              // the scripts (possibly modified) source attribute
+    src: string,              // the script's (possibly modified) source attribute
+    id: string,               // the script's (possibly empty) id string
     version: string,          // the MathJax version where latest.js was loaded
     file: string,             // the file to be loaded by latest.js
     cdn: CdnData              // the CDN where latest.js was loaded
@@ -145,11 +146,12 @@ function scriptData(script: HTMLScriptElement, cdn: CdnData = null) {
     }
     const version = (src.match(/(\d+\.\d+\.\d+)\/latest.js\?/) || ['', ''])[1];
     return {
-      tag: script,
-      src: src,
-      version: version,
-      file: file,
-      cdn: cdn
+        tag: script,
+        src: src,
+        id: script.id,
+        version: version,
+        file: file,
+        cdn: cdn
     } as ScriptData;
 }
 
@@ -228,13 +230,16 @@ function getSavedVersion() {
  * Create a script tag that loads the given URL
  *
  * @param {string} url  The URL of the javascript file to be loaded
+ * @param {string} id   The id to use for the script tag
  */
-function loadMathJax(url: string) {
+function loadMathJax(url: string, id: string) {
     const script = document.createElement('script');
     script.type = 'text/javascript';
     script.async = true;
     script.src = url;
-    script.id = 'MathJax-script';
+    if (id) {
+        script.id = id;
+    }
     const head = document.head || document.getElementsByTagName('head')[0] || document.body;
     if (head) {
         head.appendChild(script);
@@ -248,7 +253,7 @@ function loadMathJax(url: string) {
  */
 function loadDefaultMathJax() {
     if (script) {
-        loadMathJax(script.src.replace(/\/latest\.js\?/, '/'));
+        loadMathJax(script.src.replace(/\/latest\.js\?/, '/'), script.id);
     } else {
         Error('Can\'t determine the URL for loading MathJax');
     }
@@ -265,7 +270,7 @@ function loadVersion(version: string) {
     if (script.version !== version) {
         script.file = 'latest.js?' + script.file;
     }
-    loadMathJax(script.cdn.base + version + '/' + script.file);
+    loadMathJax(script.cdn.base + version + '/' + script.file, script.id);
 }
 
 /**
