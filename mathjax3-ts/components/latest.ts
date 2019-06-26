@@ -41,6 +41,9 @@ type ScriptData = {
     cdn: CdnData              // the CDN where latest.js was loaded
 } | null;
 
+/**
+ * Add XMLHttpRequest and ActiveXObject (for IE)
+ */
 declare const window: {
     XMLHttpRequest: XMLHttpRequest;
     ActiveXObject: any;
@@ -267,7 +270,7 @@ function loadDefaultMathJax() {
  * @param {string} version   The version of MathJax to load from
  */
 function loadVersion(version: string) {
-    if (script.version !== version) {
+    if (script.version && script.version !== version) {
         script.file = 'latest.js?' + script.file;
     }
     loadMathJax(script.cdn.base + version + '/' + script.file, script.id);
