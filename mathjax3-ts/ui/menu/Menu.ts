@@ -77,7 +77,7 @@ export interface MenuSettings {
     speechrules: string;
     magnify: string;
     magnification: string;
-    treehighlight: boolean;
+    treecoloring: boolean;
     autocollapse: boolean;
     collapsible: boolean;
     inTabOrder: boolean;
@@ -125,7 +125,7 @@ export class Menu {
             speechrules: 'mathspeak-default',
             magnification: 'None',
             magnify: false,
-            treehighlight: false,
+            treecoloring: false,
             autocollapse: false,
             collapsible: false,
             inTabOrder: true,
@@ -416,8 +416,8 @@ export class Menu {
                                            this.setA11y('magnification', magnification)),
                     this.variable<string> ('magnify', (magnify: string) =>
                                            this.setA11y('magnify', magnify)),
-                    this.variable<boolean>('treehighlight', (treehighlight: boolean) =>
-                                           this.setA11y('treehighlight', treehighlight)),
+                    this.variable<boolean>('treecoloring', (treecoloring: boolean) =>
+                                           this.setA11y('treecoloring', treecoloring)),
                     this.variable<boolean>('autocollapse'),
                     this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
                     this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab))
@@ -497,7 +497,7 @@ export class Menu {
                                     ['None'], ['Hover'], ['Flame']
                                 ]),
                                 this.rule(),
-                                this.checkbox('TreeHihighlighter', 'Tree Highlighting', 'treehighlight')
+                                this.checkbox('TreeColoring', 'Tree Coloring', 'treecoloring')
                             ]),
                             this.submenu('Magnification', 'Magnification', [
                                 this.radioGroup('magnification', [
@@ -631,7 +631,8 @@ export class Menu {
         if (!window.MathJax._.a11y || !window.MathJax._.a11y.explorer) return;
         ['explorer', 'highlight', 'backgroundColor', 'foregroundColor',
          'speech', 'subtitles', 'braille', 'viewbraille', 'speechrules',
-         'magnification'].forEach(x => this.setA11y(x, this.settings[x]));
+         'magnification'].forEach(
+           x => this.setA11y(x, (this.settings as {[key: string]: any})[x]));
     }
 
 

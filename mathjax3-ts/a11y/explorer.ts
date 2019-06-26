@@ -34,6 +34,7 @@ import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {Explorer} from './explorer/Explorer.js';
 import * as ke from './explorer/KeyExplorer.js';
 import * as me from './explorer/MouseExplorer.js';
+import {FlameColorer} from './explorer/TreeExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -224,8 +225,9 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 keymagnifier: false,
                 mousemagnifier: false,
                 highlight: 'None',
-                flame: false,
+                flame: true,
                 hover: false,
+                treecoloring: true,
                 typetip: false,
                 roletip: false,
                 prefixtip: false
@@ -334,11 +336,13 @@ function initExplorerRegions(document: ExplorerMathDocument) {
 // Each explorer has a name, an option and a region associated.
 
 
+type ExplorerInit = (doc: ExplorerMathDocument,
+                     node: HTMLElement, ...rest: any[]) => Explorer;
+
 /**
  *  Generation methods for all MathJax explorers available via option settings.
  */
-let allExplorers: {[options: string]: (doc: ExplorerMathDocument,
-                                       node: HTMLElement, ...rest: any[]) => Explorer} = {
+let allExplorers: {[options: string]: ExplorerInit} = {
     speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
         let explorer = ke.SpeechExplorer.create(
             doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
@@ -361,7 +365,6 @@ let allExplorers: {[options: string]: (doc: ExplorerMathDocument,
         me.ContentHoverer.create(doc, doc.explorerRegions.magnifier, node,
                                  (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
                                  (x: HTMLElement) => x),
-    // Missing: FlameHighlighter, TreeHighlighter
     hover: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         me.FlameHoverer.create(doc, null, node),
     typetip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
@@ -370,12 +373,17 @@ let allExplorers: {[options: string]: (doc: ExplorerMathDocument,
                                (x: HTMLElement) => x.getAttribute('data-semantic-type')),
     roletip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip2, node,
-                                          (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
-                                          (x: HTMLElement) => x.getAttribute('data-semantic-role')),
+                               (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
+                               (x: HTMLElement) => x.getAttribute('data-semantic-role')),
     prefixtip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip3, node,
-                                          (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
-                                          (x: HTMLElement) => x.getAttribute('data-semantic-prefix'))
+                               (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
+                               (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),
+    // Missing: FlameHighlighter, TreeHighlighter
+    flame: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+        FlameColorer.create(doc, null, node)
+    // treecoloring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    //     TreeColorer.create(doc, null, node, ...rest)
 };
 
 

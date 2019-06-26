@@ -26,6 +26,8 @@ declare namespace sre {
   interface Highlighter {
     highlight(nodes: Node[]): void;
     unhighlight(): void;
+    highlightAll(node: Node): void;
+    unhighlightAll(node: Node): void;
     colorString(): colorString;
     isMactionNode(node: Node): boolean;
   }
