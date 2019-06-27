@@ -643,7 +643,7 @@ export class Menu {
      */
     protected setA11y(option: string, value: string|boolean) {
         if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
-            window.MathJax._.a11y.explorer_ts.setA11yOption(this.document, option, value);
+          window.MathJax._.a11y.explorer_ts.setA11yOption(this.document, option, value);
         }
     }
 

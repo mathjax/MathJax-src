@@ -188,7 +188,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public Start() {
     super.Start();
     let options = this.speechGenerator.getOptions();
-    this.speechGenerator = new sre.DirectSpeechGenerator();
+    this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
     this.walker = sre.WalkerFactory.walker('table',
       this.node, this.speechGenerator, this.highlighter, this.mml);
@@ -260,9 +260,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * Initialises the SRE walker.
    */
   private initWalker() {
-    this.speechGenerator = new sre.TreeSpeechGenerator();
-    let dummy = sre.WalkerFactory.walker('dummy',
-      this.node, this.speechGenerator, this.highlighter, this.mml);
+    this.speechGenerator = sre.SpeechGeneratorFactory.generator('Tree');
+    let dummy = sre.WalkerFactory.walker(
+      'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
+    this.walker = dummy;
     this.Speech(dummy);
   }
 
@@ -285,8 +286,9 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
               protected node: HTMLElement,
               private mml: HTMLElement) {
     super(document, region, node);
-    this.walker = sre.WalkerFactory.walker('table',
-        this.node, new sre.DummySpeechGenerator(), this.highlighter, this.mml);
+    this.walker = sre.WalkerFactory.walker(
+      'table', this.node, sre.SpeechGeneratorFactory.generator('Dummy'),
+      this.highlighter, this.mml);
   }
 
   /**
