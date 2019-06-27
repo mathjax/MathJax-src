@@ -34,7 +34,7 @@ import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {Explorer} from './explorer/Explorer.js';
 import * as ke from './explorer/KeyExplorer.js';
 import * as me from './explorer/MouseExplorer.js';
-import {FlameColorer} from './explorer/TreeExplorer.js';
+import {TreeColorer, FlameColorer} from './explorer/TreeExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -381,9 +381,9 @@ let allExplorers: {[options: string]: ExplorerInit} = {
                                (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),
     // Missing: FlameHighlighter, TreeHighlighter
     flame: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
-        FlameColorer.create(doc, null, node)
-    // treecoloring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
-    //     TreeColorer.create(doc, null, node, ...rest)
+        FlameColorer.create(doc, null, node),
+    treecoloring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+        TreeColorer.create(doc, null, node, ...rest)
 };
 
 

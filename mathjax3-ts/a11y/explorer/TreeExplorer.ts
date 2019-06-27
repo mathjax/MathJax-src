@@ -76,3 +76,27 @@ export class FlameColorer extends AbstractTreeExplorer {
   }
   
 }
+
+
+export class TreeColorer extends AbstractTreeExplorer {
+
+  /**
+   * @override
+   */
+  public Start() {
+    let generator = sre.SpeechGeneratorFactory.generator('Color');
+    if (!this.node.hasAttribute('hasforegroundcolor')) {
+      generator.generateSpeech(this.node, this.mml);
+      this.node.setAttribute('hasforegroundcolor', 'true');
+    }
+    this.highlighter.colorizeAll(this.node);
+  }
+
+  /**
+   * @override
+   */
+  public Stop() {
+    this.highlighter.uncolorizeAll(this.node);
+  }
+
+}
