@@ -88,7 +88,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         /**
          * The Explorer objects for this math item
          */
-        protected explorers: Explorer[] = [];
+        protected explorers: {[key: string]: Explorer} = {};
+
+        /**
+         * The currently attached explorers
+         */
+        protected attached: Explorer[] = [];
 
         /**
          * True when a rerendered element should restart the explorer
@@ -118,9 +123,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
                 this.savedId = null;
             }
-            this.addExplorers(
-                initExplorers(document, node, mml)
-            );
+            // Init explorers:
+            this.explorers = initExplorers(document, node, mml);
+            this.attached = attachExplorers(document, this.explorers);
+            this.addExplorers(this.attached);
+            // Attach explorers, returns the ones that need to be reactivated.
             this.state(STATE.EXPLORER);
         }
 
@@ -131,7 +138,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
             this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
             this.refocus = (window.document.activeElement === this.typesetRoot);
-            for (let explorer of this.explorers) {
+            for (let explorer of this.attached) {
                 if (explorer.active) {
                     this.restart = true;
                     explorer.Stop();
@@ -146,7 +153,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         public updateDocument(document: ExplorerMathDocument) {
             super.updateDocument(document);
             this.refocus && this.typesetRoot.focus();
-            this.restart && this.explorers.forEach(x => x.Start());
+            this.restart && this.attached.forEach(x => x.Start());
             this.refocus = this.restart = false;
         }
 
@@ -156,11 +163,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
          * @param {Explorer[]} explorers The active explorers to be added.
          */
         private addExplorers(explorers: Explorer[]) {
-            // this.explorers = initExplorers(document, node, mml);
-            this.explorers = explorers;
             if (explorers.length <= 1) return;
             let lastKeyExplorer = null;
-            for (let explorer of this.explorers) {
+            for (let explorer of this.attached) {
                 if (!(explorer instanceof ke.AbstractKeyExplorer)) continue;
                 if (lastKeyExplorer) {
                     lastKeyExplorer.stoppable = false;
@@ -394,18 +399,32 @@ let allExplorers: {[options: string]: ExplorerInit} = {
  * @param {string} mml The corresponding Mathml node as a string.
  * @return {Explorer[]} A list of initialised explorers.
  */
-function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: string): Explorer[] {
-    let explorers = [];
+function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: string): {[key: string]: Explorer} {
+    let explorers: {[key: string]: Explorer} = {};
     for (let key of Object.keys(allExplorers)) {
-        if (document.options.a11y[key]) {
-            explorers.push(allExplorers[key](document, node, mml));
-        }
+        explorers[key] = allExplorers[key](document, node, mml);
     }
     return explorers;
 }
 
 
+function attachExplorers(document: ExplorerMathDocument, explorers: {[key: string]: Explorer}): Explorer[] {
+    let attached: Explorer[] = [];
+    for (let key of Object.keys(explorers)) {
+        let explorer = explorers[key];
+        if (document.options.a11y[key]) {
+            explorer.Attach();
+            attached.push(explorer);
+        } else {
+            explorer.Detach();
+        }
+    }
+    return attached;
+}
+
+
 /* Context Menu Interactions */
+
 
 /**
  * Sets a single a11y option for a menu name.
