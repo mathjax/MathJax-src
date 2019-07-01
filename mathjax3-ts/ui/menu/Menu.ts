@@ -462,58 +462,55 @@ export class Menu {
                         this.command('Reset', 'Reset to defaults', () => this.resetDefaults())
                     ]),
                     this.submenu('Accessibility', 'Accessibility', [
-                        this.submenu('Explorer', 'Explorer', [
-                            this.checkbox('Active', 'Active', 'explorer'),
+                        this.checkbox('Activate', 'Activate', 'explorer'),
+                        this.submenu('Speech', 'Speech', [
+                            this.checkbox('Speech', 'Speech Output', 'speech'),
+                            this.checkbox('Subtitles', 'Subtities', 'subtitles'),
+                            this.checkbox('Braille', 'Braille', 'braille'),
+                            this.checkbox('View Braille', 'View Braille', 'viewbraille'),
                             this.rule(),
-                            this.submenu('Speech', 'Speech', [
-                                this.checkbox('Speech', 'Speech Output', 'speech'),
-                                this.checkbox('Subtitles', 'Subtities', 'subtitles'),
-                                this.checkbox('Braille', 'Braille', 'braille'),
-                                this.checkbox('View Braille', 'View Braille', 'viewbraille'),
-                                this.rule(),
-                                this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechrules', [
-                                    ['mathspeak-default', 'Verbose'],
-                                    ['mathspeak-brief', 'Brief'],
-                                    ['mathspeak-sbrief', 'Superbrief']
-                                ])),
-                                this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechrules', [
-                                    ['clearspeak-default', 'Standard']
-                                ])),
-                                this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechrules', [
-                                    ['chromvox-default', 'Verbose'],
-                                    ['chromevox-short', 'Short'],
-                                    ['chromevox-alternative', 'Alternative']
-                                ]))
-                            ]),
-                            this.submenu('Highlight', 'Highlight', [
-                                this.submenu('Background', 'Background', this.radioGroup('backgroundColor', [
-                                    ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
-                                ])),
-                                this.submenu('Foreground', 'Foreground', this.radioGroup('foregroundColor', [
-                                    ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
-                                ])),
-                                this.rule(),
-                                this.radioGroup('highlight', [
-                                    ['None'], ['Hover'], ['Flame']
-                                ]),
-                                this.rule(),
-                                this.checkbox('TreeColoring', 'Tree Coloring', 'treecoloring')
-                            ]),
-                            this.submenu('Magnification', 'Magnification', [
-                                this.radioGroup('magnification', [
-                                    ['None'], ['Keyboard'], ['Mouse']
-                                ]),
-                                this.rule(),
-                                this.radioGroup('magnify', [
-                                    ['200%'], ['300%'], ['400%'], ['500%']
-                                ])
-                            ]),
-                            this.submenu('Semantic Info', 'Semantic Info', [
-                                // this.checkbox('Type', 'Type', 'type'),
-                                // this.checkbox('Role', 'Role', 'role'),
-                                // this.checkbox('Prefix', 'Prefix', 'prefix'),
-                            ], true),
+                            this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechrules', [
+                                ['mathspeak-default', 'Verbose'],
+                                ['mathspeak-brief', 'Brief'],
+                                ['mathspeak-sbrief', 'Superbrief']
+                            ])),
+                            this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechrules', [
+                                ['clearspeak-default', 'Standard']
+                            ])),
+                            this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechrules', [
+                                ['chromvox-default', 'Verbose'],
+                                ['chromevox-short', 'Short'],
+                                ['chromevox-alternative', 'Alternative']
+                            ]))
                         ]),
+                        this.submenu('Highlight', 'Highlight', [
+                            this.submenu('Background', 'Background', this.radioGroup('backgroundColor', [
+                                ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
+                            ])),
+                            this.submenu('Foreground', 'Foreground', this.radioGroup('foregroundColor', [
+                                ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
+                            ])),
+                            this.rule(),
+                            this.radioGroup('highlight', [
+                                ['None'], ['Hover'], ['Flame']
+                            ]),
+                            this.rule(),
+                            this.checkbox('TreeColoring', 'Tree Coloring', 'treecoloring')
+                        ]),
+                        this.submenu('Magnification', 'Magnification', [
+                            this.radioGroup('magnification', [
+                                ['None'], ['Keyboard'], ['Mouse']
+                            ]),
+                            this.rule(),
+                            this.radioGroup('magnify', [
+                                ['200%'], ['300%'], ['400%'], ['500%']
+                            ])
+                        ]),
+                        this.submenu('Semantic Info', 'Semantic Info', [
+                            // this.checkbox('Type', 'Type', 'type'),
+                            // this.checkbox('Role', 'Role', 'role'),
+                            // this.checkbox('Prefix', 'Prefix', 'prefix'),
+                        ], true),
                         this.rule(),
                         this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
                         this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {disabled: true}),
@@ -577,11 +574,10 @@ export class Menu {
      * @param {boolean} enable  True to enable, false to disable
      */
     protected enableExplorerItems(enable: boolean) {
-        const menu = (this.menu.findID('Accessibility', 'Explorer') as ContextMenu.Submenu).getSubmenu();
-        for (const item of menu.getItems().slice(3)) {
-            if (!(item instanceof ContextMenu.Rule)) {
-                enable ? item.enable() : item.disable();
-            }
+        const menu = (this.menu.findID('Accessibility', 'Activate') as ContextMenu.Submenu).getMenu();
+        for (const item of menu.getItems().slice(1)) {
+            if (item instanceof ContextMenu.Rule) break;
+            enable ? item.enable() : item.disable();
         }
 
     }
