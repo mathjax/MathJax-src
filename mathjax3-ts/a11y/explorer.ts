@@ -67,6 +67,7 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
      */
     explorable(document: HTMLDOCUMENT): void;
 
+    attachExplorers(document: HTMLDOCUMENT): void;
 }
 
 /**
@@ -124,11 +125,26 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 this.savedId = null;
             }
             // Init explorers:
+            // Make these part of the explorer.
             this.explorers = initExplorers(document, node, mml);
-            this.attached = attachExplorers(document, this.explorers);
-            this.addExplorers(this.attached);
+            this.attachExplorers(document);
             // Attach explorers, returns the ones that need to be reactivated.
             this.state(STATE.EXPLORER);
+        }
+
+
+        public attachExplorers(document: ExplorerMathDocument) {
+            this.attached = [];
+            for (let key of Object.keys(this.explorers)) {
+                let explorer = this.explorers[key];
+                if (document.options.a11y[key]) {
+                    explorer.Attach();
+                    this.attached.push(explorer);
+                } else {
+                    explorer.Detach();
+                }
+            }
+            this.addExplorers(this.attached);
         }
 
 
@@ -171,6 +187,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                     lastKeyExplorer.stoppable = false;
                 }
                 lastKeyExplorer = explorer;
+                lastKeyExplorer.stoppable = true;
             }
         }
 
@@ -408,22 +425,20 @@ function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: s
 }
 
 
-function attachExplorers(document: ExplorerMathDocument, explorers: {[key: string]: Explorer}): Explorer[] {
-    let attached: Explorer[] = [];
-    for (let key of Object.keys(explorers)) {
-        let explorer = explorers[key];
-        if (document.options.a11y[key]) {
-            explorer.Attach();
-            attached.push(explorer);
-        } else {
-            explorer.Detach();
+/* Context Menu Interactions */
+
+
+export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: any}) {
+    for (let key in options) {
+        if (document.options.a11y[key] !== undefined) {
+            setA11yOption(document, key, options[key]);
         }
     }
-    return attached;
+    // Reinit explorers
+    for (let item of document.math ) {
+        (item as ExplorerMathItem).attachExplorers(document as ExplorerMathDocument);
+    }
 }
-
-
-/* Context Menu Interactions */
 
 
 /**

@@ -399,25 +399,25 @@ export class Menu {
                     this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
                     this.variable<string> ('highlight'),
                     this.variable<string> ('backgroundColor', (background: string) =>
-                                           this.setA11y('backgroundColor', background)),
+                                           this.setA11y({'backgroundColor': background})),
                     this.variable<string> ('foregroundColor', (foreground: string) =>
-                                           this.setA11y('foregroundColor', foreground)),
+                                           this.setA11y({'foregroundColor': foreground})),
                     this.variable<boolean>('speech', (speech: boolean) =>
-                                           this.setA11y('speech', speech)),
+                                           this.setA11y({'speech': speech})),
                     this.variable<boolean>('subtitles', (subtitles: boolean) =>
-                                           this.setA11y('subtitles', subtitles)),
+                                           this.setA11y({'subtitles': subtitles})),
                     this.variable<boolean>('braille', (braille: boolean) =>
-                                           this.setA11y('braille', braille)),
+                                           this.setA11y({'braille': braille})),
                     this.variable<boolean>('viewbraille', (viewbraille: boolean) =>
-                                           this.setA11y('viewbraille', viewbraille)),
+                                           this.setA11y({'viewbraille': viewbraille})),
                     this.variable<string> ('speechrules', (speechrules: string) =>
-                                           this.setA11y('speechrules', speechrules)),
+                                           this.setA11y({'speechrules': speechrules})),
                     this.variable<string> ('magnification', (magnification: string) =>
-                                           this.setA11y('magnification', magnification)),
+                                           this.setA11y({'magnification': magnification})),
                     this.variable<string> ('magnify', (magnify: string) =>
-                                           this.setA11y('magnify', magnify)),
+                                           this.setA11y({'magnify': magnify})),
                     this.variable<boolean>('treecoloring', (treecoloring: boolean) =>
-                                           this.setA11y('treecoloring', treecoloring)),
+                                           this.setA11y({'treecoloring': treecoloring})),
                     this.variable<boolean>('autocollapse'),
                     this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
                     this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab))
@@ -596,7 +596,7 @@ export class Menu {
             const settings = localStorage.getItem(Menu.MENU_STORAGE);
             if (!settings) return;
             Object.assign(this.settings, JSON.parse(settings));
-            this.mergeA11ySettings();
+            this.setA11y(this.settings);
         } catch (err) {
             console.log('MathJax localStorage error: ' + err.message);
         }
@@ -623,27 +623,13 @@ export class Menu {
         }
     }
 
-
     /**
-     * Merge the menu settings into the a11y document options.
+     * Merge menu settings into the a11y document options.
+     * @param {[key: string]: any} options The options.
      */
-    protected mergeA11ySettings() {
-        if (!window.MathJax._.a11y || !window.MathJax._.a11y.explorer) return;
-        ['explorer', 'highlight', 'backgroundColor', 'foregroundColor',
-         'speech', 'subtitles', 'braille', 'viewbraille', 'speechrules',
-         'magnification'].forEach(
-           x => this.setA11y(x, (this.settings as {[key: string]: any})[x]));
-    }
-
-
-    /**
-     * Sets a single a11y document option.
-     * @param {string} option The option.
-     * @param {string|boolean} value Its new value.
-     */
-    protected setA11y(option: string, value: string|boolean) {
+    protected setA11y(options: {[key: string]: any}) {
         if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
-          window.MathJax._.a11y.explorer_ts.setA11yOption(this.document, option, value);
+          window.MathJax._.a11y.explorer_ts.setA11yOptions(this.document, options);
         }
     }
 

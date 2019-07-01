@@ -241,7 +241,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       this.stopEvent(event);
       return;
     }
-    if (code === 32 && event.shiftKey) {
+    if (code === 32 && event.shiftKey || code === 13) {
       this.Start();
       this.stopEvent(event);
     }
@@ -346,7 +346,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
       this.stopEvent(event);
       return;
     }
-    if (code === 32 && event.shiftKey) {
+    if (code === 32 && event.shiftKey || code === 13) {
       this.Start();
       this.stopEvent(event);
     }
