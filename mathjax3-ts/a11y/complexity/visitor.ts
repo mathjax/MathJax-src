@@ -42,7 +42,7 @@ export class ComplexityVisitor extends MmlVisitor {
      * The options for handling collapsing
      */
     public static OPTIONS: OptionList = {
-        identifyCollapsible: true,    // mark elements that shoudl be collapsed
+        identifyCollapsible: true,    // mark elements that should be collapsed
         makeCollapsible: true,        // insert maction to allow collapsing
         Collapse: Collapse            // the Collapse class to use
     };

@@ -947,7 +947,7 @@ export class Menu {
         element.addEventListener('contextmenu', () => this.menu.mathItem = math, true);
         element.addEventListener('keydown', () => this.menu.mathItem = math, true);
         element.addEventListener('click', (event: MouseEvent) => this.zoom(event, 'Click', math), true);
-        element.addEventListener('dblclick', (event: MouseEvent) => this.zoom(event,'DoubleClick', math), true);
+        element.addEventListener('dblclick', (event: MouseEvent) => this.zoom(event, 'DoubleClick', math), true);
         this.menu.getStore().insert(element);
     }
 
