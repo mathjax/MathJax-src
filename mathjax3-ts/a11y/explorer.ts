@@ -31,7 +31,9 @@ import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {AbstractKeyExplorer, TypeExplorer, RoleExplorer, Magnifier, Explorer, SpeechExplorer} from './explorer/Explorer.js';
+import {Explorer} from './explorer/Explorer.js';
+import {AbstractKeyExplorer, Magnifier, SpeechExplorer} from './explorer/KeyExplorer.js';
+import {FlameHoverer} from './explorer/MouseExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 /**
@@ -119,8 +121,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 SpeechExplorer.create(document, document.explorerObjects.region, node, mml),
                 SpeechExplorer.create(document, document.explorerObjects.region2, node, mml),
                 Magnifier.create(document, document.explorerObjects.magnifier, node, mml),
-                TypeExplorer.create(document, document.explorerObjects.tooltip, node),
-                RoleExplorer.create(document, document.explorerObjects.tooltip2, node)
+                FlameHoverer.create(document, null, node)
             );
             this.state(STATE.EXPLORER);
         }
@@ -133,7 +134,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         private addExplorers(...explorers: Explorer[]) {
             this.explorers = explorers;
             if (explorers.length <= 1) return;
-            let lastKeyExplorer: AbstractKeyExplorer = null;
+            let lastKeyExplorer = null;
             for (let explorer of this.explorers) {
                 if (!(explorer instanceof AbstractKeyExplorer)) continue;
                 if (lastKeyExplorer) {
@@ -150,15 +151,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
             this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
             this.refocus = (window.document.activeElement === this.typesetRoot);
-            let savedExplorers = [];
             for (let explorer of this.explorers) {
                 if (explorer.active) {
                     this.restart = true;
                     explorer.Stop();
-                    savedExplorers.push(explorer);
                 }
             }
-            this.explorers = savedExplorers;
             super.rerender(document, start);
         }
 

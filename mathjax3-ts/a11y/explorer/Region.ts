@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2018 The MathJax Consortium
+ *  Copyright (c) 2009-2019 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import '../sre.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
-export interface Region {
+export interface Region<T> {
 
   /**
    * Adds a style sheet for the live region to the document.
@@ -61,12 +61,13 @@ export interface Region {
 
   /**
    * Updates the content of the region.
+   * @template T
    */
-  Update(content: string): void;
+  Update(content: T): void;
 
 }
 
-export abstract class AbstractRegion implements Region {
+export abstract class AbstractRegion<T> implements Region<T> {
 
   /**
    * CSS Classname of the element.
@@ -183,20 +184,13 @@ export abstract class AbstractRegion implements Region {
   /**
    * @override
    */
-  public Clear() {
-    this.Update('');
-    this.inner.style.top = '';
-    this.inner.style.backgroundColor = '';
-  }
+  public abstract Clear(): void;
 
 
   /**
    * @override
    */
-  public Update(speech: string) {
-    this.inner.textContent = '';
-    this.inner.textContent = speech;
-  }
+  public abstract Update(content: T): void;
 
 
   /**
@@ -225,7 +219,67 @@ export abstract class AbstractRegion implements Region {
 
 }
 
-export class ToolTip extends AbstractRegion {
+export class DummyRegion extends AbstractRegion<void> {
+
+  public Clear() {}
+
+  public Update() {}
+
+  public Hide() {}
+
+  public Show() {}
+
+  public AddElement() {}
+
+  public AddStyles() {}
+
+  public position() {}
+
+  public highlight(highlighter: sre.Highlighter) {}
+}
+
+
+export class StringRegion extends AbstractRegion<string> {
+
+  /**
+   * @override
+   */
+  public  Clear(): void {
+    this.Update('');
+    this.inner.style.top = '';
+    this.inner.style.backgroundColor = '';
+  }
+
+
+  /**
+   * @override
+   */
+  public Update(speech: string) {
+    this.inner.textContent = '';
+    this.inner.textContent = speech;
+  }
+
+  /**
+   * @override
+   */
+  protected position(node: HTMLElement) {
+    this.stackRegions(node);
+  }
+
+
+  /**
+   * @override
+   */
+  protected highlight(highlighter: sre.Highlighter) {
+    const color = highlighter.colorString();
+    this.inner.style.backgroundColor = color.background;
+    this.inner.style.color = color.foreground;
+  }
+
+}
+
+
+export class ToolTip extends StringRegion {
 
   /**
    * @override
@@ -249,28 +303,10 @@ export class ToolTip extends AbstractRegion {
       }
     });
 
-
-  /**
-   * @override
-   */
-  protected position(node: HTMLElement) {
-    this.stackRegions(node);
-  }
-
-
-  /**
-   * @override
-   */
-  protected highlight(highlighter: sre.Highlighter) {
-    const color = highlighter.colorString();
-    this.inner.style.backgroundColor = color.background;
-    this.inner.style.color = color.foreground;
-  }
-
 }
 
 
-export class LiveRegion extends AbstractRegion {
+export class LiveRegion extends StringRegion {
 
   /**
    * @override
@@ -305,35 +341,11 @@ export class LiveRegion extends AbstractRegion {
     this.div.setAttribute('aria-live', 'assertive');
   }
 
-  /**
-   * Shows the live region as a subtitle of a node.
-   * @override
-   */
-  public Show(node: HTMLElement, highlighter: sre.Highlighter) {
-    super.Show(node, highlighter);
-  }
-
-  /**
-   * @override
-   */
-  protected position(node: HTMLElement) {
-    this.stackRegions(node);
-  }
-
-  /**
-   * @override
-   */
-  protected highlight(highlighter: sre.Highlighter) {
-    const color = highlighter.colorString();
-    this.inner.style.backgroundColor = color.background;
-    this.inner.style.color = color.foreground;
-  }
-
 }
 
 
 // Region that overlays the current element.
-export class HoverRegion extends AbstractRegion {
+export class HoverRegion extends AbstractRegion<HTMLElement> {
 
   /**
    * @override
@@ -418,16 +430,34 @@ export class HoverRegion extends AbstractRegion {
    * @override
    */
   public Show(node: HTMLElement, highlighter: sre.Highlighter) {
-    this.AddNode(node);
+    this.Update(node);
     super.Show(node, highlighter);
   }
 
   /**
-   * Adds a clone of the given node to the hover region.
-   * @param {HTMLElement} node The current HTML node.
+   * @override
    */
-  public AddNode(node: HTMLElement) {
+  public Clear() {
+    this.inner.textContent = '';
+    this.inner.style.top = '';
+    this.inner.style.backgroundColor = '';
+  }
+
+  /**
+   * @override
+   */
+  public Update(node: HTMLElement) {
     this.Clear();
+    let mjx = this.cloneNode(node);
+    this.inner.appendChild(mjx);
+  }
+
+  /**
+   * Clones the node to put into the hover region.
+   * @param {HTMLElement} node The original node.
+   * @return {HTMLElement} The cloned node.
+   */
+  private cloneNode(node: HTMLElement): HTMLElement {
     let mjx = node.cloneNode(true) as HTMLElement;
     if (mjx.nodeName !== 'MJX-CONTAINER') {
       // remove element spacing (could be done in CSS)
@@ -460,7 +490,7 @@ export class HoverRegion extends AbstractRegion {
       //  remove displayed math margins (could be done in CSS)
       mjx.style.margin = '0';
     }
-    this.inner.appendChild(mjx);
+    return mjx;
   }
 
 }
