@@ -233,26 +233,26 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 explorable: [STATE.EXPLORER]
             }),
             a11y: {
-                speech: true,
-                subtitles: true,
-                braille: true,
-                viewbraille: false,
-                foregroundColor: 'Black',
-                foregroundOpacity: 1,
+                align: 'top',
                 backgroundColor: 'Blue',
                 backgroundOpacity: .2,
-                align: 'top',
-                magnify: 500,
-                magnification: 'None',
-                keymagnifier: false,
-                mousemagnifier: false,
-                highlight: 'None',
+                braille: true,
                 flame: true,
+                foregroundColor: 'Black',
+                foregroundOpacity: 1,
+                highlight: 'None',
                 hover: false,
+                infoPrefix: false,
+                infoRole: false,
+                infoType: false,
+                keymagnifier: false,
+                magnification: 'None',
+                magnify: 500,
+                mousemagnifier: false,
+                speech: true,
+                subtitles: true,
                 treecoloring: true,
-                typetip: false,
-                roletip: false,
-                prefixtip: false
+                viewbraille: false
           }
         };
 
@@ -389,15 +389,15 @@ let allExplorers: {[options: string]: ExplorerInit} = {
                                  (x: HTMLElement) => x),
     hover: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         me.FlameHoverer.create(doc, null, node),
-    typetip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    infoType: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip1, node,
                                (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
                                (x: HTMLElement) => x.getAttribute('data-semantic-type')),
-    roletip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    infoRole: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip2, node,
                                (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
                                (x: HTMLElement) => x.getAttribute('data-semantic-role')),
-    prefixtip: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    infoPrefix: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip3, node,
                                (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
                                (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),

@@ -66,21 +66,25 @@ export interface MenuSettings {
     ctrl: boolean;
     shift: boolean;
     scale: string;
-    explorer: boolean;
-    highlight: string;
-    backgroundColor: string;
-    foregroundColor: string;
-    speech: boolean;
-    subtitles: boolean;
-    braille: boolean;
-    viewbraille: boolean;
-    speechrules: string;
-    magnify: string;
-    magnification: string;
-    treecoloring: boolean;
     autocollapse: boolean;
     collapsible: boolean;
     inTabOrder: boolean;
+    // A11y settings
+    backgroundColor: string;
+    braille: boolean;
+    explorer: boolean;
+    foregroundColor: string;
+    highlight: string;
+    infoPrefix: boolean;
+    infoRole: boolean;
+    infoType: boolean;
+    magnification: string;
+    magnify: string;
+    speech: boolean;
+    speechrules: string;
+    subtitles: boolean;
+    treecoloring: boolean;
+    viewbraille: boolean;
 }
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
@@ -113,22 +117,10 @@ export class Menu {
             ctrl: false,
             shift: false,
             scale: 1,
-            // A11y options
-            explorer: false,
-            highlight: 'None',
-            backgroundColor: 'Blue',
-            foregroundColor: 'Black',
-            speech: true,
-            subtitles: false,
-            braille: true,
-            viewbraille: false,
-            speechrules: 'mathspeak-default',
-            magnification: 'None',
-            magnify: false,
-            treecoloring: false,
             autocollapse: false,
             collapsible: false,
-            inTabOrder: true,
+            inTabOrder: true
+            explorer: false,
         },
         jax: {
             CHTML: null,
@@ -418,6 +410,12 @@ export class Menu {
                                            this.setA11y({'magnify': magnify})),
                     this.variable<boolean>('treecoloring', (treecoloring: boolean) =>
                                            this.setA11y({'treecoloring': treecoloring})),
+                    this.variable<boolean>('infoType', (infoType: boolean) =>
+                                           this.setA11y({'infoType': infoType})),
+                    this.variable<boolean>('infoRole', (infoRole: boolean) =>
+                                           this.setA11y({'infoRole': infoRole})),
+                    this.variable<boolean>('infoPrefix', (infoPrefix: boolean) =>
+                                           this.setA11y({'infoPrefix': infoPrefix})),
                     this.variable<boolean>('autocollapse'),
                     this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
                     this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab))
@@ -507,9 +505,9 @@ export class Menu {
                             ])
                         ]),
                         this.submenu('Semantic Info', 'Semantic Info', [
-                            // this.checkbox('Type', 'Type', 'type'),
-                            // this.checkbox('Role', 'Role', 'role'),
-                            // this.checkbox('Prefix', 'Prefix', 'prefix'),
+                            this.checkbox('Type', 'Type', 'infoType'),
+                            this.checkbox('Role', 'Role', 'infoRole'),
+                            this.checkbox('Prefix', 'Prefix', 'infoPrefix')
                         ], true),
                         this.rule(),
                         this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
@@ -602,7 +600,9 @@ export class Menu {
      * Save any non-default menu settings in localStorage
      */
     protected saveUserSettings() {
+        console.log('Saving user settings');
         const settings = {} as {[key: string]: any};
+        console.log(this.defaultSettings);
         for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
             if (this.settings[name] !== this.defaultSettings[name]) {
                 settings[name] = this.settings[name];
