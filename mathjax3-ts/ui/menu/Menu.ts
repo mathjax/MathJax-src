@@ -389,7 +389,8 @@ export class Menu {
                     this.variable<boolean>('shift'),
                     this.variable<string> ('scale', (scale: string) => this.setScale(scale)),
                     this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
-                    this.variable<string> ('highlight'),
+                    this.variable<string> ('highlight', (highlight: string) =>
+                                           this.setA11y({'highlight': highlight})),
                     this.variable<string> ('backgroundColor', (background: string) =>
                                            this.setA11y({'backgroundColor': background})),
                     this.variable<string> ('foregroundColor', (foreground: string) =>
@@ -600,9 +601,7 @@ export class Menu {
      * Save any non-default menu settings in localStorage
      */
     protected saveUserSettings() {
-        console.log('Saving user settings');
         const settings = {} as {[key: string]: any};
-        console.log(this.defaultSettings);
         for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
             if (this.settings[name] !== this.defaultSettings[name]) {
                 settings[name] = this.settings[name];

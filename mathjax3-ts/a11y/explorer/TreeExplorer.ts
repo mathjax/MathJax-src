@@ -44,7 +44,6 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
                         protected node: HTMLElement,
                         protected mml: HTMLElement) {
     super(document, null, node);
-    this.Start();
   }
 
   /**
@@ -52,15 +51,22 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
    */
   readonly stoppable = false;
 
-  /**
-   * @override
-   */
-  public AddEvents() { }
 
   /**
    * @override
    */
-  public RemoveEvents() { }
+  public Attach() {
+    super.Attach();
+    this.Start();
+  }
+
+  /**
+   * @override
+   */
+  public Detach() {
+    this.Stop();
+    super.Detach();
+  }
   
 }
 
@@ -68,11 +74,16 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
 export class FlameColorer extends AbstractTreeExplorer {
 
   public Start() {
+    if (this.active) return;
+    this.active = true;
     this.highlighter.highlightAll(this.node);
   }
 
   public Stop() {
-    this.highlighter.unhighlightAll(this.node);
+    if (this.active) {
+      this.highlighter.unhighlightAll(this.node);
+    }
+    this.active = false;
   }
   
 }
@@ -84,6 +95,8 @@ export class TreeColorer extends AbstractTreeExplorer {
    * @override
    */
   public Start() {
+    if (this.active) return;
+    this.active = true;
     let generator = sre.SpeechGeneratorFactory.generator('Color');
     if (!this.node.hasAttribute('hasforegroundcolor')) {
       generator.generateSpeech(this.node, this.mml);
@@ -96,7 +109,10 @@ export class TreeColorer extends AbstractTreeExplorer {
    * @override
    */
   public Stop() {
-    this.highlighter.uncolorizeAll(this.node);
+    if (this.active) {
+      this.highlighter.uncolorizeAll(this.node);
+    }
+    this.active = false;
   }
 
 }
