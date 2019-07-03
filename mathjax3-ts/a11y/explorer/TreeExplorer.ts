@@ -30,12 +30,12 @@ import {sreReady} from '../sre.js';
 
 
 export interface TreeExplorer extends Explorer {
-  
+
 }
 
 
 export class AbstractTreeExplorer extends AbstractExplorer<void> {
-  
+
   /**
    * @override
    */
@@ -67,25 +67,31 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
     this.Stop();
     super.Detach();
   }
-  
+
 }
 
 
 export class FlameColorer extends AbstractTreeExplorer {
 
+  /**
+   * @override
+   */
   public Start() {
     if (this.active) return;
     this.active = true;
     this.highlighter.highlightAll(this.node);
   }
 
+  /**
+   * @override
+   */
   public Stop() {
     if (this.active) {
       this.highlighter.unhighlightAll(this.node);
     }
     this.active = false;
   }
-  
+
 }
 
 

@@ -125,14 +125,16 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
                 this.savedId = null;
             }
             // Init explorers:
-            // Make these part of the explorer.
             this.explorers = initExplorers(document, node, mml);
             this.attachExplorers(document);
-            // Attach explorers, returns the ones that need to be reactivated.
             this.state(STATE.EXPLORER);
         }
 
-
+        /**
+         * Attaches the explorers that are currently meant to be active given
+         * the document options. Detaches all others.
+         * @param {ExplorerMathDocument} document The current document.
+         */
         public attachExplorers(document: ExplorerMathDocument) {
             this.attached = [];
             for (let key of Object.keys(this.explorers)) {
@@ -146,7 +148,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
             }
             this.addExplorers(this.attached);
         }
-
 
         /**
          * @override
@@ -172,7 +173,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
             this.restart && this.attached.forEach(x => x.Start());
             this.refocus = this.restart = false;
         }
-
 
         /**
          * Adds a list of explorers and makes sure the right one stops propagating.
@@ -331,7 +331,7 @@ export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null) {
 /*==========================================================================*/
 
 /**
- * The objects needed for the explorer
+ * The regions objects needed for the explorers.
  */
 export type ExplorerRegions = {
     speechRegion?: LiveRegion,
@@ -343,6 +343,10 @@ export type ExplorerRegions = {
 }
 
 
+/**
+ * Initializes the regions needed for a document.
+ * @param {ExplorerMathDocument} document The current document.
+ */
 function initExplorerRegions(document: ExplorerMathDocument) {
     return {
         speechRegion: new LiveRegion(document),
@@ -355,9 +359,11 @@ function initExplorerRegions(document: ExplorerMathDocument) {
 }
 
 
-// Each explorer has a name, an option and a region associated.
 
-
+/**
+ * Type of explorer initialization methods.
+ * @type {(ExplorerMathDocument, HTMLElement, any[]): Explorer}
+*/
 type ExplorerInit = (doc: ExplorerMathDocument,
                      node: HTMLElement, ...rest: any[]) => Explorer;
 
@@ -401,7 +407,6 @@ let allExplorers: {[options: string]: ExplorerInit} = {
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip3, node,
                                (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
                                (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),
-    // Missing: FlameHighlighter, TreeHighlighter
     flame: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         FlameColorer.create(doc, null, node),
     treecoloring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
@@ -427,7 +432,11 @@ function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: s
 
 /* Context Menu Interactions */
 
-
+/**
+ * Sets a list of a11y options for a given document.
+ * @param {HTMLDOCUMENT} document The current document.
+ * @param {{[key: string]: any}} options Association list for a11y option value pairs.
+ */
 export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: any}) {
     for (let key in options) {
         if (document.options.a11y[key] !== undefined) {
