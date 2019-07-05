@@ -17,6 +17,7 @@ exports.source = {
     '[tex]/braket': `${src}/input/tex/extensions/braket/braket.js`,
     '[tex]/cancel': `${src}/input/tex/extensions/cancel/cancel.js`,
     '[tex]/color': `${src}/input/tex/extensions/color/color.js`,
+    '[tex]/colorV2': `${src}/input/tex/extensions/color_v2/colorV2.js`,
     '[tex]/configMacros': `${src}/input/tex/extensions/config_macros/configMacros.js`,
     '[tex]/enclose': `${src}/input/tex/extensions/enclose/enclose.js`,
     '[tex]/extpfeil': `${src}/input/tex/extensions/extpfeil/extpfeil.js`,
