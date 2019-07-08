@@ -33,7 +33,7 @@ import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmpadded<N, T, D> extends CommonMpaddedMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmpadded<N, T, D> extends CommonMpaddedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMpadded.prototype.kind;
 

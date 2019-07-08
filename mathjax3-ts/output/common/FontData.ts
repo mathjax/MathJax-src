@@ -360,9 +360,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     public static charOptions(font: CharMap<CharOptions>, n: number) {
         const char = font[n];
         if (char.length === 3) {
-            char[3] = {} as CharOptions;
+            (char as any)[3] = {};
         }
-        return char[3] as CharOptions;
+        return char[3];
     }
 
     /**

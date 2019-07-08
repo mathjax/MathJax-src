@@ -4,19 +4,19 @@
   "description": "MathJax version 3 testbed",
   "main": "load.js",
   "devDependencies": {
-    "typescript": "2.3.*",
-    "tape": "^4.8.0",
-    "diff": "^3.5.0",
-    "tslint": "^3.15.0",
-    "tslint-jsdoc-rules": "*",
-    "tslint-unix-formatter": "*",
-    "typescript-tools": "^0.3.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
+    "diff": "^3.5.0",
+    "tape": "^4.8.0",
+    "tslint": "^3.15.0",
+    "tslint-jsdoc-rules": "*",
+    "tslint-unix-formatter": "*",
+    "typescript": "^3.5.2",
+    "typescript-tools": "^0.3.1",
+    "uglifyjs-webpack-plugin": "^2.1.2",
     "webpack": "4.19.0",
-    "webpack-cli": "^3.2.3",
-    "uglifyjs-webpack-plugin": "^2.1.2"
+    "webpack-cli": "^3.2.3"
   },
   "repository": {
     "type": "git",

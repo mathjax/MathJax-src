@@ -318,7 +318,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
    * @override
    */
   public Move(key: number) {
-    let result = this.walker.move(key);
+    let result = this.walker.move(key) as any;
     if (result) {
       this.Update();
     }

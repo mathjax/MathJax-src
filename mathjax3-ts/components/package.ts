@@ -48,7 +48,7 @@ export class PackageError extends Error {
 /**
  * Types for ready() and failed() functions and for promises
  */
-export type PackageReady = (name: string) => string;
+export type PackageReady = (name: string) => string | void;
 export type PackageFailed = (message: PackageError) => void;
 export type PackagePromise = (resolve: PackageReady, reject: PackageFailed) => void;
 
@@ -58,7 +58,7 @@ export type PackagePromise = (resolve: PackageReady, reject: PackageFailed) => v
 export interface PackageConfig {
     ready?: PackageReady,                // Function to call when package is loaded successfully
     failed?: PackageFailed,              // Function to call when package fails to load
-    checkReady?: () => Promise<void>;    // Function called to see if package is fully loaded
+    checkReady?: () => Promise<void>     // Function called to see if package is fully loaded
                                          //   (may cause additional packages to load, for example)
 };
 
@@ -244,7 +244,7 @@ export class Package {
         //
         const config = (CONFIG[this.name] || {}) as PackageConfig;
         if (config.ready) {
-            promise = promise.then((name: string) => config.ready(this.name));
+            promise = promise.then((name: string) => config.ready(this.name)) as Promise<string>;
         }
         //
         //  If there are promises for dependencies,
@@ -359,7 +359,7 @@ export class Package {
      */
     protected checkLoad() {
         const config = (CONFIG[this.name] || {}) as PackageConfig;
-        const checkReady = config.checkReady || (() => Promise.resolve());
+        const checkReady = (config.checkReady || (() => Promise.resolve()));
         checkReady().then(() => this.loaded())
                     .catch((message) => this.failed(message));
     }

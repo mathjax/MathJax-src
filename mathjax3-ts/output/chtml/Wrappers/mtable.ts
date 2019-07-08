@@ -42,7 +42,7 @@ import {BBox} from '../BBox.js';
  * @template D  The Document class
  */
 export class CHTMLmtable<N, T, D> extends
-CommonMtableMixin<CHTMLmtd<N, T, D>, CHTMLmtr<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = MmlMtable.prototype.kind;
 

@@ -36,7 +36,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     public static kind = MmlMath.prototype.kind;
 
     public static styles: StyleList = {

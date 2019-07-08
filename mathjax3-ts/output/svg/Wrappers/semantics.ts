@@ -36,7 +36,7 @@ import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGsemantics<N, T, D> extends CommonSemanticsMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGsemantics<N, T, D> extends CommonSemanticsMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlSemantics.prototype.kind;
 

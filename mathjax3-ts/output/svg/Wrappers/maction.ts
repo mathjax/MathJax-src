@@ -38,7 +38,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class SVGmaction<N, T, D> extends
-CommonMactionMixin<SVGWrapper<N, T, D>, SVGConstructor<N, T, D>>(SVGWrapper) {
+CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMaction.prototype.kind;
 

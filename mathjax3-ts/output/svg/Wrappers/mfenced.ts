@@ -34,7 +34,7 @@ import {SVGinferredMrow} from './mrow.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmfenced<N, T, D> extends CommonMfencedMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmfenced<N, T, D> extends CommonMfencedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMfenced.prototype.kind;
 

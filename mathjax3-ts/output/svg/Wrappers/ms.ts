@@ -33,7 +33,7 @@ import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGms<N, T, D> extends CommonMsMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGms<N, T, D> extends CommonMsMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMs.prototype.kind;
 

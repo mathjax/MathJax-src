@@ -35,7 +35,7 @@ import {OptionList} from '../../../util/Options.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = TextNode.prototype.kind;
 

@@ -38,7 +38,7 @@ import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubs
  * @template D  The Document class
  */
 export class SVGmsub<N, T, D> extends
-CommonMsubMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGscriptbase)  {
+CommonMsubMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, any>>>(SVGscriptbase)  {
 
     public static kind = MmlMsub.prototype.kind;
 
@@ -55,7 +55,7 @@ CommonMsubMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGscr
  * @template D  The Document class
  */
 export class SVGmsup<N, T, D> extends
-CommonMsupMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGscriptbase)  {
+CommonMsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, any>>>(SVGscriptbase)  {
 
     public static kind = MmlMsup.prototype.kind;
 
@@ -72,7 +72,7 @@ CommonMsupMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGscr
  * @template D  The Document class
  */
 export class SVGmsubsup<N, T, D> extends
-CommonMsubsupMixin<SVGWrapper<N, T, D>, Constructor<SVGscriptbase<N, T, D>>>(SVGscriptbase)  {
+CommonMsubsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, any>>>(SVGscriptbase)  {
 
     public static kind = MmlMsubsup.prototype.kind;
 

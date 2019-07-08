@@ -35,7 +35,7 @@ import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmroot<N, T, D> extends CommonMrootMixin<Constructor<SVGmsqrt<N, T, D>>>(SVGmsqrt) {
+export class SVGmroot<N, T, D> extends CommonMrootMixin<Constructor<SVGmsqrt<any, any, any>>>(SVGmsqrt) {
 
     public static kind = MmlMroot.prototype.kind;
 

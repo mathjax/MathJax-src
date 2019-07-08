@@ -105,7 +105,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @constructor
      */
     constructor(options: OptionList = null) {
-        super(options, SVGWrapperFactory, TeXFont);
+        super(options, SVGWrapperFactory as any, TeXFont);
         this.fontCache = new FontCache(this);
     }
 
@@ -149,13 +149,6 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         const sheet = super.styleSheet(html);
         this.adaptor.setAttribute(sheet, 'id', SVG.STYLESHEETID);
         return sheet;
-    }
-
-    /**
-     * @override
-     */
-    protected addClassStyles(CLASS: typeof SVGWrapper) {
-        super.addClassStyles(CLASS);
     }
 
     /**
