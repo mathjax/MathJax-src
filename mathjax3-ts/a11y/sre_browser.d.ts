@@ -34,7 +34,7 @@ declare namespace sre {
     activate(): void;
     deactivate(): void;
     speech(): string;
-    move(key: number): void;
+    move(key: number): boolean;
     getFocus(update?: boolean): Focus;
   }
 
