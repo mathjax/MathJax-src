@@ -359,7 +359,7 @@ export class Package {
      */
     protected checkLoad() {
         const config = (CONFIG[this.name] || {}) as PackageConfig;
-        const checkReady = (config.checkReady || (() => Promise.resolve()));
+        const checkReady = config.checkReady || (() => Promise.resolve());
         checkReady().then(() => this.loaded())
                     .catch((message) => this.failed(message));
     }

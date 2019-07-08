@@ -757,7 +757,7 @@ export class CommonWrapper<
      * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
      */
     protected getVariantChar(variant: string, n: number) {
-        let char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true} as CC];
+        const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true} as CC];
         if (char.length === 3) {
             (char as any)[3] = {};
         }
