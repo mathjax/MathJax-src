@@ -280,6 +280,9 @@ export namespace Startup {
         input = getInputJax();
         output = getOutputJax();
         adaptor = getAdaptor();
+        if (handler) {
+            mathjax.handlers.unregister(handler);
+        }
         handler = getHandler();
         if (handler) {
             mathjax.handlers.register(handler);
