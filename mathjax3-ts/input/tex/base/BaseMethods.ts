@@ -125,16 +125,19 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
   const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
   let position = NodeUtil.isType(base, 'msubsup') ? (base as MmlMsubsup).sup :
     (base as MmlMunderover).over;
-  if ((NodeUtil.isType(base, 'msubsup') && NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
-      (NodeUtil.isType(base, 'munderover') && NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
+  if ((NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
+       NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
+      (NodeUtil.isType(base, 'munderover') && !NodeUtil.isType(base, 'mover') &&
+       NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
        !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double-super-error, Double-over-error
     throw new TexError('DoubleExponent', 'Double exponent: use braces to clarify');
   }
-  if (!NodeUtil.isType(base, 'msubsup')) {
+  if (!NodeUtil.isType(base, 'msubsup') || NodeUtil.isType(base, 'msup')) {
     if (movesupsub) {
       // @test Move Superscript, Large Operator
-      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.getChildAt(base, (base as MmlMunderover).over)) {
+      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.isType(base, 'mover') ||
+          NodeUtil.getChildAt(base, (base as MmlMunderover).over)) {
         if (NodeUtil.getProperty(base, 'movablelimits') && NodeUtil.isType(base, 'mi')) {
           // @test Mathop Super
           base = ParseUtil.mi2mo(parser, base);
@@ -184,16 +187,19 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
   const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
   let position = NodeUtil.isType(base, 'msubsup') ?
     (base as MmlMsubsup).sub : (base as MmlMunderover).under;
-  if ((NodeUtil.isType(base, 'msubsup') && NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
-      (NodeUtil.isType(base, 'munderover') && NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
+  if ((NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
+       NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
+      (NodeUtil.isType(base, 'munderover') && !NodeUtil.isType(base, 'mover') &&
+       NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
        !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double-sub-error, Double-under-error
     throw new TexError('DoubleSubscripts', 'Double subscripts: use braces to clarify');
   }
-  if (!NodeUtil.isType(base, 'msubsup')) {
+  if (!NodeUtil.isType(base, 'msubsup') || NodeUtil.isType(base, 'msup')) {
     if (movesupsub) {
       // @test Large Operator, Move Superscript
-      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
+      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.isType(base, 'mover') ||
+          NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
         if (NodeUtil.getProperty(base, 'movablelimits') && NodeUtil.isType(base, 'mi')) {
           // @test Mathop Sub
           base = ParseUtil.mi2mo(parser, base);
@@ -227,7 +233,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
     // @test PrimeSup, PrePrime, Prime on Sup
     base = parser.create('node', 'mi');
   }
-  if (NodeUtil.isType(base, 'msubsup') &&
+  if (NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
       NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) {
     // @test Double Prime Error
     throw new TexError('DoubleExponentPrime',
