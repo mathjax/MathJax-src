@@ -76,7 +76,11 @@ export abstract class CommonOutputJax<
 
     public static OPTIONS: OptionList = {
         ...AbstractOutputJax.OPTIONS,
-        scale: 1,                      // Global scaling factor for all expressions
+        scale: 1,                      // global scaling factor for all expressions
+        minScale: .5,                  // smallest scaling factor to use
+        matchFontHeight: true,         // true to match ex-height of surrounding font
+        mtextInheritFont: false,       // true to make mtext elements use surrounding font
+        merrorInheritFont: true,       // true to make merror text use surrounding font
         mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
         skipAttributes: {},            // RFDa and other attributes NOT to copy to the output
         exFactor: .5,                  // default size of ex in em units
@@ -379,7 +383,8 @@ export abstract class CommonOutputJax<
                                 adaptor.nodeSize(adaptor.lastChild(node) as N)[0] - 1 :
                                 adaptor.nodeBBox(adaptor.lastChild(node) as N).left -
                                 adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);
-        const scale = ex / this.font.params.x_height / em;
+        const scale = Math.max(this.options.minScale,
+                               this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1);
         const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
         return {em, ex, containerWidth, lineWidth, scale} as Metrics;
     }

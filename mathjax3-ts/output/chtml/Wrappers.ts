@@ -28,6 +28,7 @@ import {CHTMLmi} from './Wrappers/mi.js';
 import {CHTMLmo} from './Wrappers/mo.js';
 import {CHTMLmn} from './Wrappers/mn.js';
 import {CHTMLms} from './Wrappers/ms.js';
+import {CHTMLmtext} from './Wrappers/mtext.js';
 import {CHTMLmspace} from './Wrappers/mspace.js';
 import {CHTMLmpadded} from './Wrappers/mpadded.js';
 import {CHTMLmenclose} from './Wrappers/menclose.js';
@@ -56,6 +57,7 @@ export const CHTMLWrappers: {[kind: string]: WrapperConstructor}  = {
     [CHTMLmo.kind]: CHTMLmo,
     [CHTMLmn.kind]: CHTMLmn,
     [CHTMLms.kind]: CHTMLms,
+    [CHTMLmtext.kind]: CHTMLmtext,
     [CHTMLmspace.kind]: CHTMLmspace,
     [CHTMLmpadded.kind]: CHTMLmpadded,
     [CHTMLmenclose.kind]: CHTMLmenclose,
