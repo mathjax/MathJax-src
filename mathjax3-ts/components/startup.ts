@@ -28,7 +28,7 @@ import {MathJax as MJGlobal, MathJaxObject as MJObject,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {MathDocument} from '../core/MathDocument.js';
-import {MathItem, STATE} from '../core/MathItem.js';
+import {STATE} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {Handler} from '../core/Handler.js';
 import {InputJax, AbstractInputJax} from '../core/InputJax.js';
@@ -63,7 +63,6 @@ export interface MathJaxConfig extends MJConfig {
  * Generic types for the standard MathJax objects
  */
 export type MATHDOCUMENT = MathDocument<any, any, any>;
-export type MATHITEM = MathItem<any, any, any>;
 export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
@@ -366,7 +365,7 @@ export namespace Startup {
                 return mathjax.handleRetriesFor(() => document.convert(math, options));
             };
         MathJax[oname + 'Stylesheet'] = () => output.styleSheet(document);
-        if (output instanceof CommonOutputJax) {
+        if ('getMetricsFor' in output) {
             MathJax.getMetricsFor = (node: any, display: boolean) => {
                 return (output as COMMONJAX).getMetricsFor(node, display);
             }
