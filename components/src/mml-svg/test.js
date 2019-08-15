@@ -2,13 +2,13 @@ MathJax = {
     loader: {
         load: ['adaptors/liteDom.js'],
         paths: {
-            mathjax: '../../dist'
+            mathjax: '../../../es5'
         },
         require: require,
         ready: () => {}
     }
 }
-require('../../dist/mml-svg.js');
+require('../../../es5/mml-svg.js');
 MathJax.loader.defaultReady();
 
 console.log(MathJax.startup.adaptor.outerHTML(MathJax.mathml2svg('<math><mi>x</mi></math>')));

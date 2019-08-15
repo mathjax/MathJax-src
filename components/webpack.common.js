@@ -108,7 +108,7 @@ const MODULE = function (dir) {
         // NOTE: for babel transpilation
         rules: [{
             test: new RegExp(dirRE + '\\/.*\\.js$'),
-            exclude: new RegExp(quoteRE(__dirname) + '\\/dist\\/'),
+            exclude: new RegExp(quoteRE(path.dirname(__dirname)) + '\\/es5\\/'),
             use: {
                 loader: 'babel-loader',
                 options: {
@@ -127,11 +127,11 @@ const MODULE = function (dir) {
  * @param {string[]} libs     Array of paths to component lib directories to link against
  * @param {string} dir        The directory of the component buing built
  * @param {string} dist       The path to the directory where the component .js file will be placed
- *                              (defaults to components/dist)
+ *                              (defaults to mathjax3/es5)
  */
 const PACKAGE = function (name, mathjax3, libs, dir, dist) {
     const distDir = dist ? path.resolve(dir, dist) :
-                           path.resolve(path.dirname(mathjax3), 'components', 'dist', path.dirname(name));
+                           path.resolve(path.dirname(mathjax3), 'es5', path.dirname(name));
     name = path.basename(name);
     return {
         name: name,
