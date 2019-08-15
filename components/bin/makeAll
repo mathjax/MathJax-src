@@ -40,8 +40,8 @@ if (dirs.length === 0) {
 /**
  * The path to the bin/build executable
  */
-const build = path.join(__dirname, 'build');
-const copy = path.join(__dirname, 'copy');
+const build = 'node ' + path.join(__dirname, 'build');
+const copy = 'node ' + path.join(__dirname, 'copy');
 
 /**
  * Regular expressions for the components directory and the mathjax3 .js location
