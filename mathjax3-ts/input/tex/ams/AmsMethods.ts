@@ -122,9 +122,9 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
     displaystyle: true,
     rowspacing: '.5em',
     columnwidth: '100%',
-    width: parser.options['MultLineWidth'],
-    side: parser.options['TagSide'],
-    minlabelspacing: parser.options['TagIndent']
+    width: parser.options['multlineWidth'],
+    side: parser.options['tagSide'],
+    minlabelspacing: parser.options['tagIndent']
   };
   return item;
 };

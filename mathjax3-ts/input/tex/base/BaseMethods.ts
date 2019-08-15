@@ -1477,8 +1477,8 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
     columnalign: align,
     columnspacing: (spacing || '1em'),
     rowspacing: '3pt',
-    side: parser.options['TagSide'],
-    minlabelspacing: parser.options['TagIndent']
+    side: parser.options['tagSide'],
+    minlabelspacing: parser.options['tagIndent']
   };
   return newItem;
 };
