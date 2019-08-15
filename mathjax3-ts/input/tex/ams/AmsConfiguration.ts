@@ -56,7 +56,7 @@ export const AmsConfiguration = Configuration.create(
     environment: ['AMSmath-environment']
   },
    items: {[MultlineItem.prototype.kind]: MultlineItem},
-   tags: {'AMS': AmsTags},
+   tags: {'ams': AmsTags},
    init: init
   }
 );
