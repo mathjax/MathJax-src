@@ -189,7 +189,7 @@ export interface Tags {
 
   /**
    * Move equation-specific labels and ids to global ones,
-   * save the counter, and marth the MathItem for redos
+   * save the counter, and mark the MathItem for redos
    */
     finishEquation(math: MathItem<any, any, any>): void;
 
@@ -610,7 +610,7 @@ export namespace TagsFactory {
     // This specifies the side on which \tag{} macros will place the tags.
     // Set to 'left' to place on the left-hand side.
     TagSide: 'right',
-    // This is the amound of indentation (from right or left) for the tags.
+    // This is the amount of indentation (from right or left) for the tags.
     TagIndent: '0.8em',
     // This is the width to use for the multline environment
     MultLineWidth: '85%',
