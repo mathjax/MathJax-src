@@ -24,6 +24,7 @@
 
 import TexParser from './TexParser.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MathItem} from '../../core/MathItem.js';
 import {EnvList} from './StackItem.js';
 import ParseOptions from './ParseOptions.js';
 import {OptionList} from '../../util/Options.js';
@@ -107,18 +108,22 @@ export interface Tags {
   allLabels: {[key: string]: Label};
 
   /**
-   * Nodes with unresolved references.
-   * @type {MmlNode[]}
-   */
-  // TODO: Not sure how to handle this at the moment.
-  //       array of nodes with unresolved references
-  refs: MmlNode[];
-
-  /**
    * The label to use for the next tag.
    * @type {string}
    */
   label: string;
+
+  /**
+   * True if the equation contains an undefined label and must be reprocessed later.
+   * @type {boolean}
+   */
+  redo: boolean;
+
+  /**
+   * True when recompiling to update undefined references
+   * @type {boolean}
+   */
+  refUpdate: boolean;
 
   /**
    * The environment that is currently tagged.
@@ -175,8 +180,22 @@ export interface Tags {
   reset(offset?: number): void;
 
   /**
+   * Initialise tagging for a MathItem
+   * (clear equation-specific labels and ids, set counter
+   * and check for recompile)
+   * @param {MathItem} math   The MathItem for the current equation
+   */
+    startEquation(math: MathItem<any, any, any>): void;
+
+  /**
+   * Move equation-specific labels and ids to global ones,
+   * save the counter, and mark the MathItem for redos
+   */
+    finishEquation(math: MathItem<any, any, any>): void;
+
+  /**
    * Finalizes tag creation.
-   * @param {MmlNode} node 
+   * @param {MmlNode} node
    * @param {EnvList} env List of environment properties.
    * @return {MmlNode} The newly created tag.
    */
@@ -226,10 +245,10 @@ export class AbstractTags implements Tags {
   protected counter: number = 0;
 
   /**
-   * Current starting equation number (for when equation is restarted).
+   * Equation number as equation begins.
    * @type {number}
    */
-  protected offset: number = 0;
+  protected allCounter: number = 0;
 
   /**
    * @override
@@ -247,22 +266,24 @@ export class AbstractTags implements Tags {
   public allIds: {[key: string]: boolean} = {};
 
   /**
-   * Labels in the current equation.
-   * @type {Object.<boolean>}
+   * @override
    */
   public labels: {[key: string]: Label} = {};
 
   /**
-   * Labels in previous equations.
-   * @type {Object.<boolean>}
+   * @override
    */
   public allLabels: {[key: string]: Label} = {};
 
   /**
-   * Nodes with unresolved references.
-   * @type {MmlNode[]}
+   * @override
    */
-  public refs: MmlNode[] = new Array();
+  public redo: boolean = false;
+
+  /**
+   * @override
+   */
+  public refUpdate: boolean = false;
 
   /**
    * @override
@@ -413,6 +434,8 @@ export class AbstractTags implements Tags {
    */
   public resetTag() {
     this.history = [];
+    this.redo = false;
+    this.refUpdate = false;
     this.clearTag();
   }
 
@@ -421,9 +444,41 @@ export class AbstractTags implements Tags {
    */
   public reset(offset: number = 0) {
     this.resetTag();
-    this.offset = offset;
+    this.counter = this.allCounter = offset;
+    this.allLabels = {};
+    this.allIds = {};
+  }
+
+  /**
+   * @override
+   */
+  public startEquation(math: MathItem<any, any, any>) {
     this.labels = {};
     this.ids = {};
+    this.counter = this.allCounter;
+    this.redo = false;
+    const recompile = math.inputData.recompile;
+    if (recompile) {
+      this.refUpdate = true;
+      this.counter = recompile.counter;
+    }
+  }
+
+  /**
+   * @override
+   */
+  public finishEquation(math: MathItem<any, any, any>) {
+    if (this.redo) {
+      math.inputData.recompile = {
+        state: math.state(),
+        counter: this.allCounter
+      };
+    }
+    if (!this.refUpdate) {
+      this.allCounter = this.counter;
+    }
+    Object.assign(this.allIds, this.ids);
+    Object.assign(this.allLabels, this.labels);
   }
 
   /**
@@ -552,19 +607,20 @@ export namespace TagsFactory {
   export let OPTIONS: OptionList = {
     // Tagging style, used to be autonumber in v2.
     tags: defaultTags,
-    //  This specifies the side on which \tag{} macros will place the tags.
-    //  Set to 'left' to place on the left-hand side.
+    // This specifies the side on which \tag{} macros will place the tags.
+    // Set to 'left' to place on the left-hand side.
     TagSide: 'right',
-    //  This is the amound of indentation (from right or left) for the tags.
+    // This is the amount of indentation (from right or left) for the tags.
     TagIndent: '0.8em',
-    //  This is the width to use for the multline environment
+    // This is the width to use for the multline environment
     MultLineWidth: '85%',
     // make element ID's use \label name rather than equation number
     // MJ puts in an equation prefix: mjx-eqn
     // When true it uses the label name XXX as mjx-eqn-XXX
     // If false it uses the actual number N that is displayed: mjx-eqn-N
     useLabelIds: true,
-    refUpdate: false
+    // Set to true in order to prevent error messages for duplicate label ids
+    ignoreDuplicateLabels: false
   };
 
 
