@@ -117,7 +117,7 @@ const MJX_LATEST = 'mjx-latest-version';
 const SAVE_TIME = 1000 * 60 * 60 * 24 * 7;   // one week
 
 /**
- *  data for the script that loaded latest.js
+ * Data for the script that loaded latest.js
  */
 let script: ScriptData = null;
 
@@ -129,7 +129,9 @@ let script: ScriptData = null;
  * @param {string} message   The error message to display
  */
 function Error(message: string) {
-    if (console && console.error) console.error('MathJax(latest.js): ' + message);
+    if (console && console.error) {
+        console.error('MathJax(latest.js): ' + message);
+    }
 }
 
 /**
@@ -184,7 +186,7 @@ function getScript() {
         return scriptData(document.currentScript as HTMLScriptElement);
     }
     const script = document.getElementById('MathJax-script') as HTMLScriptElement;
-    if (script) {
+    if (script && script.nodeName.toLowerCase() === 'script') {
         return checkScript(script);
     }
     const scripts = document.getElementsByTagName('script');
@@ -215,7 +217,7 @@ function saveVersion(version: string) {
 /**
  * Get the version from localStorage, and make sure it is fresh enough to use
  *
- * return {string|null}   The version string (if one has been saved) or null (if not)
+ * @return {string|null}   The version string (if one has been saved) or null (if not)
  */
 function getSavedVersion() {
     try {
@@ -277,7 +279,7 @@ function loadVersion(version: string) {
 }
 
 /**
- * Check if the given version acceptable and load it if it is.
+ * Check if the given version is acceptable and load it if it is.
  *
  * @param {string} version   The version to check if it is the latest (valid) one
  * @return {boolean}         True if it is the latest version, false if not
@@ -300,7 +302,9 @@ function checkVersion(version: string) {
  * @return {XMLHttpRequest}   The XMLHttpRequest instance
  */
 function getXMLHttpRequest() {
-    if (window.XMLHttpRequest) return new XMLHttpRequest();
+    if (window.XMLHttpRequest) {
+        return new XMLHttpRequest();
+    }
     if (window.ActiveXObject) {
         try {return new window.ActiveXObject('Msxml2.XMLHTTP')} catch (err) {}
         try {return new window.ActiveXObject('Microsoft.XMLHTTP')} catch (err) {}
@@ -312,12 +316,12 @@ function getXMLHttpRequest() {
  * on the data.  If not, or if the action returns false, run the failure() function.
  *
  * @param {CdnData} cdn        The CDN whose API will be used
- * @param {Function} action    The function to perfrom when the data are received
- * @param {Function} failure   The function to perform is that data can't be obtained,
+ * @param {Function} action    The function to perform when the data are received
+ * @param {Function} failure   The function to perform if data can't be obtained,
  *                               or if action() returns false
  */
 function requestXML(cdn: CdnData, action: (json: JSON | JSON[]) => boolean, failure: () => void) {
-    var request = getXMLHttpRequest();
+    const request = getXMLHttpRequest();
     if (request) {
         request.onreadystatechange = function () {
             if (request.readyState === 4) {
@@ -388,7 +392,7 @@ function loadLatestCdnVersion() {
 export function loadLatest() {
     script = getScript();
     if (script && script.cdn) {
-        var version = getSavedVersion();
+        const version = getSavedVersion();
         version ?
             loadVersion(version) :
             loadLatestCdnVersion();
