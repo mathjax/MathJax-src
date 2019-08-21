@@ -2,13 +2,13 @@ MathJax = {
     loader: {
         load: ['adaptors/liteDom.js'],
         paths: {
-            mathjax: '../../dist'
+            mathjax: '../../../es5'
         },
         require: require,
         ready: () => {}
     }
 }
-require('../../dist/tex-mml-chtml.js');
+require('../../../es5/tex-mml-chtml.js');
 MathJax.loader.defaultReady();
 
 console.log(MathJax.tex2mml('x+1'));
