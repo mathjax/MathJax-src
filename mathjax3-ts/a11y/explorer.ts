@@ -183,11 +183,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
             let lastKeyExplorer = null;
             for (let explorer of this.attached) {
                 if (!(explorer instanceof ke.AbstractKeyExplorer)) continue;
-                if (lastKeyExplorer) {
-                    lastKeyExplorer.stoppable = false;
-                }
+                explorer.stoppable = false;
                 lastKeyExplorer = explorer;
-                lastKeyExplorer.stoppable = true;
+            }
+            if (lastKeyExplorer) {
+              lastKeyExplorer.stoppable = true;
             }
         }
 
@@ -245,14 +245,14 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 infoPrefix: false,
                 infoRole: false,
                 infoType: false,
-                keymagnifier: false,
+                keyMagnifier: false,
                 magnification: 'None',
                 magnify: 500,
-                mousemagnifier: false,
+                mouseMagnifier: false,
                 speech: true,
                 subtitles: true,
-                treecoloring: true,
-                viewbraille: false
+                treeColoring: true,
+                viewBraille: false
           }
         };
 
@@ -384,12 +384,12 @@ let allExplorers: {[options: string]: ExplorerInit} = {
             doc, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
         explorer.speechGenerator.setOptions({locale: 'nemeth', domain: 'default',
                                              style: 'default', modality: 'braille'});
-        explorer.showRegion = 'viewbraille';
+        explorer.showRegion = 'viewBraille';
         return explorer;
     },
-    keymagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    keyMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         ke.Magnifier.create(doc, doc.explorerRegions.magnifier, node, ...rest),
-    mousemagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    mouseMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         me.ContentHoverer.create(doc, doc.explorerRegions.magnifier, node,
                                  (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
                                  (x: HTMLElement) => x),
@@ -409,7 +409,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
                                (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),
     flame: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         FlameColorer.create(doc, null, node),
-    treecoloring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    treeColoring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         TreeColorer.create(doc, null, node, ...rest)
 };
 
@@ -444,7 +444,7 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
         }
     }
     // Reinit explorers
-    for (let item of document.math ) {
+    for (let item of document.math) {
         (item as ExplorerMathItem).attachExplorers(document as ExplorerMathDocument);
     }
 }
@@ -462,18 +462,18 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
         switch (value) {
         case 'None':
             document.options.a11y.magnifier = value;
-            document.options.a11y.keymagnifier = false;
-            document.options.a11y.mousemagnifier = false;
+            document.options.a11y.keyMagnifier = false;
+            document.options.a11y.mouseMagnifier = false;
             break;
         case 'Keyboard':
             document.options.a11y.magnifier = value;
-            document.options.a11y.keymagnifier = true;
-            document.options.a11y.mousemagnifier = false;
+            document.options.a11y.keyMagnifier = true;
+            document.options.a11y.mouseMagnifier = false;
             break;
         case 'Mouse':
             document.options.a11y.magnifier = value;
-            document.options.a11y.keymagnifier = false;
-            document.options.a11y.mousemagnifier = true;
+            document.options.a11y.keyMagnifier = false;
+            document.options.a11y.mouseMagnifier = true;
             break;
         }
         break;

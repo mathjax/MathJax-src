@@ -81,10 +81,10 @@ export interface MenuSettings {
     magnification: string;
     magnify: string;
     speech: boolean;
-    speechrules: string;
+    speechRules: string;
     subtitles: boolean;
-    treecoloring: boolean;
-    viewbraille: boolean;
+    treeColoring: boolean;
+    viewBraille: boolean;
 }
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
@@ -119,8 +119,8 @@ export class Menu {
             scale: 1,
             autocollapse: false,
             collapsible: false,
-            inTabOrder: true
-            explorer: false,
+            inTabOrder: true,
+            explorer: false
         },
         jax: {
             CHTML: null,
@@ -401,16 +401,16 @@ export class Menu {
                                            this.setA11y({'subtitles': subtitles})),
                     this.variable<boolean>('braille', (braille: boolean) =>
                                            this.setA11y({'braille': braille})),
-                    this.variable<boolean>('viewbraille', (viewbraille: boolean) =>
-                                           this.setA11y({'viewbraille': viewbraille})),
-                    this.variable<string> ('speechrules', (speechrules: string) =>
-                                           this.setA11y({'speechrules': speechrules})),
+                    this.variable<boolean>('viewBraille', (viewBraille: boolean) =>
+                                           this.setA11y({'viewBraille': viewBraille})),
+                    this.variable<string> ('speechRules', (speechRules: string) =>
+                                           this.setA11y({'speechRules': speechRules})),
                     this.variable<string> ('magnification', (magnification: string) =>
                                            this.setA11y({'magnification': magnification})),
                     this.variable<string> ('magnify', (magnify: string) =>
                                            this.setA11y({'magnify': magnify})),
-                    this.variable<boolean>('treecoloring', (treecoloring: boolean) =>
-                                           this.setA11y({'treecoloring': treecoloring})),
+                    this.variable<boolean>('treeColoring', (treeColoring: boolean) =>
+                                           this.setA11y({'treeColoring': treeColoring})),
                     this.variable<boolean>('infoType', (infoType: boolean) =>
                                            this.setA11y({'infoType': infoType})),
                     this.variable<boolean>('infoRole', (infoRole: boolean) =>
@@ -464,19 +464,19 @@ export class Menu {
                         this.checkbox('Activate', 'Activate', 'explorer'),
                         this.submenu('Speech', 'Speech', [
                             this.checkbox('Speech', 'Speech Output', 'speech'),
-                            this.checkbox('Subtitles', 'Subtities', 'subtitles'),
-                            this.checkbox('Braille', 'Braille', 'braille'),
-                            this.checkbox('View Braille', 'View Braille', 'viewbraille'),
+                            this.checkbox('Subtitles', 'Speech Subtities', 'subtitles'),
+                            this.checkbox('Braille', 'Braille Output', 'braille'),
+                            this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
                             this.rule(),
-                            this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechrules', [
+                            this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechRules', [
                                 ['mathspeak-default', 'Verbose'],
                                 ['mathspeak-brief', 'Brief'],
                                 ['mathspeak-sbrief', 'Superbrief']
                             ])),
-                            this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechrules', [
+                            this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechRules', [
                                 ['clearspeak-default', 'Standard']
                             ])),
-                            this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechrules', [
+                            this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
                                 ['chromvox-default', 'Verbose'],
                                 ['chromevox-short', 'Short'],
                                 ['chromevox-alternative', 'Alternative']
@@ -494,7 +494,7 @@ export class Menu {
                                 ['None'], ['Hover'], ['Flame']
                             ]),
                             this.rule(),
-                            this.checkbox('TreeColoring', 'Tree Coloring', 'treecoloring')
+                            this.checkbox('TreeColoring', 'Tree Coloring', 'treeColoring')
                         ]),
                         this.submenu('Magnification', 'Magnification', [
                             this.radioGroup('magnification', [
