@@ -420,10 +420,10 @@ export class AbstractTags implements Tags {
     if (ct.taggable && !ct.noTag) {
       if (ct.defaultTags) {
         this.autoTag();
-      } else {
-        return null;
       }
-      return this.makeTag();
+      if (ct.tag) {
+        return this.makeTag();
+      }
     }
     return null;
   }
