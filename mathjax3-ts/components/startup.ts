@@ -480,7 +480,7 @@ export namespace Startup {
     /**
      * Create the document with the given input and output jax
      *
-     * @param {any=} root        The Document to use as the root document (or null to use the cofigured document)
+     * @param {any=} root        The Document to use as the root document (or null to use the configured document)
      * @returns {MathDocument}   The MathDocument with the configured input and output jax
      */
     export function getDocument(root: any = null) {
