@@ -83,7 +83,7 @@ export interface MenuSettings {
     speech: boolean;
     speechrules: string;
     subtitles: boolean;
-    treecoloring: boolean;
+    treeColoring: boolean;
     viewbraille: boolean;
 }
 
@@ -119,8 +119,8 @@ export class Menu {
             scale: 1,
             autocollapse: false,
             collapsible: false,
-            inTabOrder: true
-            explorer: false,
+            inTabOrder: true,
+            explorer: false
         },
         jax: {
             CHTML: null,
@@ -409,8 +409,8 @@ export class Menu {
                                            this.setA11y({'magnification': magnification})),
                     this.variable<string> ('magnify', (magnify: string) =>
                                            this.setA11y({'magnify': magnify})),
-                    this.variable<boolean>('treecoloring', (treecoloring: boolean) =>
-                                           this.setA11y({'treecoloring': treecoloring})),
+                    this.variable<boolean>('treeColoring', (treeColoring: boolean) =>
+                                           this.setA11y({'treeColoring': treeColoring})),
                     this.variable<boolean>('infoType', (infoType: boolean) =>
                                            this.setA11y({'infoType': infoType})),
                     this.variable<boolean>('infoRole', (infoRole: boolean) =>
@@ -494,7 +494,7 @@ export class Menu {
                                 ['None'], ['Hover'], ['Flame']
                             ]),
                             this.rule(),
-                            this.checkbox('TreeColoring', 'Tree Coloring', 'treecoloring')
+                            this.checkbox('TreeColoring', 'Tree Coloring', 'treeColoring')
                         ]),
                         this.submenu('Magnification', 'Magnification', [
                             this.radioGroup('magnification', [
