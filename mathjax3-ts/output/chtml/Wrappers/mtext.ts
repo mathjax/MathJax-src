@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMtext, CommonMtextMixin} from '../../common/Wrappers/mtext.js';
+import {CommonMtextMixin} from '../../common/Wrappers/mtext.js';
 import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
 
 /*****************************************************************/
