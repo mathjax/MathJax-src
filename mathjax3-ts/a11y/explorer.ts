@@ -252,7 +252,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 speech: true,
                 subtitles: true,
                 treeColoring: true,
-                viewbraille: false
+                viewBraille: false
           }
         };
 
@@ -384,7 +384,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
             doc, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
         explorer.speechGenerator.setOptions({locale: 'nemeth', domain: 'default',
                                              style: 'default', modality: 'braille'});
-        explorer.showRegion = 'viewbraille';
+        explorer.showRegion = 'viewBraille';
         return explorer;
     },
     keyMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
@@ -444,7 +444,7 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
         }
     }
     // Reinit explorers
-    for (let item of document.math ) {
+    for (let item of document.math) {
         (item as ExplorerMathItem).attachExplorers(document as ExplorerMathDocument);
     }
 }
