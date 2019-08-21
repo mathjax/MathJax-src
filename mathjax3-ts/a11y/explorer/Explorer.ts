@@ -155,7 +155,6 @@ export class AbstractExplorer<T> implements Explorer {
                 region: Region<T>,
                 node: HTMLElement, ...rest: any[]): Explorer {
     let explorer = new this(document, region, node, ...rest);
-    explorer.Attach();
     return explorer;
   }
 
