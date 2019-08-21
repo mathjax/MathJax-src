@@ -34,7 +34,7 @@ import {CHTMLinferredMrow} from './mrow.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmfenced<N, T, D> extends CommonMfencedMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmfenced<N, T, D> extends CommonMfencedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = MmlMfenced.prototype.kind;
 

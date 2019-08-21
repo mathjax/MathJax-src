@@ -38,7 +38,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmaction<N, T, D> extends
-CommonMactionMixin<CHTMLWrapper<N, T, D>, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+CommonMactionMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = MmlMaction.prototype.kind;
 

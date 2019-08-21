@@ -34,7 +34,7 @@ import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLTeXAtom<N, T, D> extends CommonTeXAtomMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLTeXAtom<N, T, D> extends CommonTeXAtomMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = TeXAtom.prototype.kind;
 

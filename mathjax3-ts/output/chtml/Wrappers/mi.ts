@@ -33,7 +33,7 @@ import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmi<N, T, D> extends CommonMiMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmi<N, T, D> extends CommonMiMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = MmlMi.prototype.kind;
 

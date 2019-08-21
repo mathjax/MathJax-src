@@ -34,7 +34,7 @@ import {OptionList} from '../../../util/Options.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmglyph<N, T, D> extends CommonMglyphMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmglyph<N, T, D> extends CommonMglyphMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMglyph.prototype.kind;
 

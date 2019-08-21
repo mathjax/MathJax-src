@@ -38,7 +38,7 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
  * @template FD The FontData type
  */
 export class CommonWrapperFactory<
-    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, any, any>,
+    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, FD, any>,
     W extends CommonWrapper<J, W, C, CC, DD, FD>,
     C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
     CC extends CharOptions,

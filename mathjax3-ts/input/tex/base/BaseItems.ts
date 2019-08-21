@@ -192,7 +192,7 @@ export class PrimeItem extends BaseItem {
    */
   public checkItem(item: StackItem): CheckType {
     let [top0, top1] = this.Peek(2);
-    if (!NodeUtil.isType(top0, 'msubsup')) {
+    if (!NodeUtil.isType(top0, 'msubsup') || NodeUtil.isType(top0, 'msup')) {
       // @test Prime, Double Prime
       const node = this.create('node', 'msup', [top0, top1]);
       return [[node, item], true];

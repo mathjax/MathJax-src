@@ -36,7 +36,7 @@ import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLsemantics<N, T, D> extends CommonSemanticsMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLsemantics<N, T, D> extends CommonSemanticsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = MmlSemantics.prototype.kind;
 

@@ -136,7 +136,7 @@ export function copy(def: OptionList): OptionList {
             prop.value = copy(value);
         }
         if (prop.enumerable) {
-            props[key] = prop;
+            props[key as string] = prop;
         }
     }
     return Object.defineProperties({}, props);
@@ -153,13 +153,13 @@ export function copy(def: OptionList): OptionList {
  * @return {OptionList}     The modified destination option list (dst)
  */
 export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
-    for (let key of keys(src)) {
+    for (let key of keys(src) as string[]) {
         //
         // Check if the key is valid (i.e., is in the defaults or in an expandable block)
         //
         if (warn && dst[key] === undefined && !(dst instanceof Expandable)) {
             if (typeof key === 'symbol') {
-                key = key.toString();
+                key = (key as symbol).toString();
             }
             throw new Error('Invalid option "' + key + '" (no default value).');
         }

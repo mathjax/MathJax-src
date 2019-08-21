@@ -81,6 +81,7 @@ export class MmlMrow extends AbstractMmlNode {
                     return false;
                 }
             }
+            i++;
         }
         return embellished;
     }

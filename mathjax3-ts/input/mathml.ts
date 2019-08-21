@@ -47,12 +47,11 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
         FindMathML: null,        // The FindMathML instance to override the default one
         MathMLCompile: null,     // The MathMLCompile instance to override the default one
-        DOMParser: null,         // The DOMParser class to override the default one
         /*
          * The function to use to handle a parsing error (throw an error by default)
          */
         parseError: function (node: Node) {
-            this.error(node.textContent.replace(/\n.*/g, ''));
+            this.error(this.adaptor.textContent(node).replace(/\n.*/g, ''));
         }
     }, AbstractInputJax.OPTIONS);
 

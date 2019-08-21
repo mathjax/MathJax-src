@@ -115,7 +115,7 @@ export class CommonWrapper<
     /**
      * Styles that should not be passed on from style attribute
      */
-    public static removeStyles: [string] = [
+    public static removeStyles: string[] = [
         'fontSize', 'fontFamily', 'fontWeight',
         'fontStyle', 'fontVariant', 'font'
     ];
@@ -757,9 +757,9 @@ export class CommonWrapper<
      * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
      */
     protected getVariantChar(variant: string, n: number) {
-        const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true}];
+        const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true} as CC];
         if (char.length === 3) {
-            char[3] = {} as CC;
+            (char as any)[3] = {};
         }
         return char as [number, number, number, CC];
     }

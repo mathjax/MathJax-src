@@ -37,7 +37,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmmultiscripts<N, T, D> extends
-CommonMmultiscriptsMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLmsubsup<N, T, D>>>(CHTMLmsubsup) {
+CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any, any, any>>>(CHTMLmsubsup) {
 
     public static kind = MmlMmultiscripts.prototype.kind;
 

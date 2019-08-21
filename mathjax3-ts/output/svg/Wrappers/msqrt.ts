@@ -36,7 +36,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMsqrt.prototype.kind;
 

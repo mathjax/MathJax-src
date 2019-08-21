@@ -22,6 +22,7 @@
  */
 
 import {CommonOutputJax} from './common/OutputJax.js';
+import {CommonWrapper} from './common/Wrapper.js';
 import {StyleList, Styles} from '../util/Styles.js';
 import {StyleList as CssStyleList} from './common/CssStyles.js';
 import {OptionList} from '../util/Options.js';
@@ -118,7 +119,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
      * @constructor
      */
     constructor(options: OptionList = null) {
-        super(options, CHTMLWrapperFactory, TeXFont);
+        super(options, CHTMLWrapperFactory as any, TeXFont);
         this.font.adaptiveCSS(this.options.adaptiveCSS);
     }
 
@@ -142,9 +143,9 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
     /**
      * @override
      */
-    protected addClassStyles(CLASS: typeof CHTMLWrapper) {
-        if (!this.options.adaptiveCSS || CLASS.used) {
-            if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
+    protected addClassStyles(CLASS: typeof CommonWrapper) {
+        if (!this.options.adaptiveCSS || (CLASS as typeof CHTMLWrapper).used) {
+            if ((CLASS as typeof CHTMLWrapper).autoStyle && CLASS.kind !== 'unknown') {
                 this.cssStyles.addStyles({
                     ['mjx-' + CLASS.kind]: {
                         display: 'inline-block',

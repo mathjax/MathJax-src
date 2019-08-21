@@ -51,7 +51,7 @@ const ANGLE = Angle(Notation.ARROWDX, Notation.ARROWY);
  * @template D  The Document class
  */
 export class CHTMLmenclose<N, T, D> extends
-CommonMencloseMixin<CHTMLWrapper<N, T, D>, CHTMLmsqrt<N, T, D>, N, CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+CommonMencloseMixin<CHTMLWrapper<any, any, any>, CHTMLmsqrt<any, any, any>, any, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = MmlMenclose.prototype.kind;
 

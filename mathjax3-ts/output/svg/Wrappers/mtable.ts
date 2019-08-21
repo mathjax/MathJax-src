@@ -46,7 +46,7 @@ const CLASSPREFIX = 'mjx-';
  * @template D  The Document class
  */
 export class SVGmtable<N, T, D> extends
-CommonMtableMixin<SVGmtd<N, T, D>, SVGmtr<N, T, D>, SVGConstructor<N, T, D>>(SVGWrapper) {
+CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMtable.prototype.kind;
 
