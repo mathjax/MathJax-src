@@ -175,8 +175,11 @@ export class MmlMo extends AbstractMmlTokenNode {
      * @override
      */
     public setTeXclass(prev: MmlNode): MmlNode {
-        let {form, lspace, rspace, fence} = this.attributes.getList('form', 'lspace', 'rspace', 'fence') as
-                                             {form: string, lspace: string, rspace: string, fence: string};
+        let {form, fence} = this.attributes.getList('form', 'fence') as {form: string, fence: string};
+        if (this.attributes.isSet('lspace') || this.attributes.isSet('rspace')) {
+            this.texClass = TEXCLASS.NONE;
+            return null;
+        }
         if (fence && this.texClass === TEXCLASS.REL) {
             if (form === 'prefix') {
                 this.texClass = TEXCLASS.OPEN;
@@ -249,7 +252,6 @@ export class MmlMo extends AbstractMmlTokenNode {
     /**
      * Do the normal inheritance, then look up the attributes from the operator dictionary.
      * If there is no dictionary entry, get the TeX class from the Unicode range list.
-     *  (FIXME: if using MathML spacing, fake lspace and rspace as well)
      *
      * @override
      */

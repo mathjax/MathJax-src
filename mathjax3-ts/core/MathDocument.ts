@@ -647,20 +647,44 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      */
     public compile() {
         if (!this.processed.isSet('compile')) {
+            //
+            //  Compile all the math in the list
+            //
+            const recompile = [];
             for (const math of this.math) {
-                try {
-                    math.compile(this);
-                } catch (err) {
-                    if (err.retry || err.restart) {
-                        throw err;
-                    }
-                    this.options['compileError'](this, math, err);
-                    math.inputData['error'] = err;
+                this.compileMath(math);
+                if (math.inputData.recompile !== undefined) {
+                    recompile.push(math);
                 }
+            }
+            //
+            //  If any were added to the recompile list,
+            //    compile them again
+            //
+            for (const math of recompile) {
+                const data = math.inputData.recompile;
+                math.state(data.state);
+                math.inputData.recompile = data;
+                this.compileMath(math);
             }
             this.processed.set('compile');
         }
         return this;
+    }
+
+    /**
+     * @param {MathItem} math   The item to compile
+     */
+    protected compileMath(math: MathItem<N, T, D>) {
+        try {
+            math.compile(this);
+        } catch (err) {
+            if (err.retry || err.restart) {
+                throw err;
+            }
+            this.options['compileError'](this, math, err);
+            math.inputData['error'] = err;
+        }
     }
 
     /**

@@ -773,7 +773,11 @@ exports.MathJax = MathJax;
 	//  when loading the initial localization file (before loading messsage is available)
 	//
 	this.loading[file].message = BASE.Message.File(name);
-        System.import(file).catch(timeout);
+        if (window.System) {
+          window.System.import(file).catch(timeout);
+        } else {
+          timeout();  // indicate a load failure
+        }
       },
       //
       //  Create a LINK tag to load the style sheet

@@ -28,7 +28,7 @@ import {MathJax as MJGlobal, MathJaxObject as MJObject,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {MathDocument} from '../core/MathDocument.js';
-import {MathItem, STATE} from '../core/MathItem.js';
+import {STATE} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {Handler} from '../core/Handler.js';
 import {InputJax, AbstractInputJax} from '../core/InputJax.js';
@@ -63,7 +63,6 @@ export interface MathJaxConfig extends MJConfig {
  * Generic types for the standard MathJax objects
  */
 export type MATHDOCUMENT = MathDocument<any, any, any>;
-export type MATHITEM = MathItem<any, any, any>;
 export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
@@ -90,7 +89,6 @@ export interface MathJaxObject extends MJObject {
         elements: any[];
         document: MATHDOCUMENT;
         promise: Promise<void>;
-        pagePromise: Promise<void>;
         registerConstructor(name: string, constructor: any): void;
         useHander(name: string, force?: boolean): void;
         useAdaptor(name: string, force?: boolean): void;
@@ -167,14 +165,11 @@ export namespace Startup {
     export let document: MATHDOCUMENT = null;
 
     /**
-     * The promise for the default typesetting, if one is performed
+     * The promise for the startup process (the initial typesetting).
+     * Initially, it is resolved when the page is loaded and ready to be processed,
+     *   but it is replaced by the pageReady() action in the ready() function.
      */
-    export let promise: Promise<void> = null;
-
-    /**
-     * A promise that is resolved when the page is loaded and ready to be processed
-     */
-    export let pagePromise: Promise<void> = new Promise<void>((resolve, reject) => {
+    export let promise: Promise<void> = new Promise<void>((resolve, reject) => {
         const doc = global.document;
         if (!doc || !doc.readyState || doc.readyState === 'complete' || doc.readyState === 'interactive') {
             resolve();
@@ -251,24 +246,30 @@ export namespace Startup {
     };
 
     /**
-     * The default ready() function called when all the packages have been loaded
-     *   (setting MathJax.startup.ready in the configuration will override this,
-     *    but you can call MathJax.startup.defaultReady() within your own ready function
-     *    if needed, or can use the individual methods below to perform portions
-     *    of the default startup actions.)
+     * The default ready() function called when all the packages have been loaded,
+     * which creates the various objects needed by MathJax, creates the methods
+     * based on the loaded components, and does the initial typesetting.
+     *
+     * Setting MathJax.startup.ready in the configuration will
+     * override this, but you can call MathJax.startup.defaultReady()
+     * within your own ready function if needed, or can use the
+     * individual methods below to perform portions of the default
+     * startup actions.
      */
     export function defaultReady() {
         getComponents();
         makeMethods();
-        if (CONFIG.pageReady) {
-            //
-            //  Add in the user's pageReady function, which runs when the page content is
-            //    ready, but before the initial typesetting call.
-            //
-            pagePromise = pagePromise.then(CONFIG.pageReady);
-        }
-        promise = (CONFIG.typeset && MathJax.typesetPromise ?
-                   pagePromise.then(MathJax.typesetPromise) : pagePromise);
+        promise = promise.then(() => CONFIG.pageReady());  // usually the initial typesetting call
+    };
+
+    /**
+     * The default pageReady() function called when the page is ready to be processed,
+     * which returns the function that performs the initial typesetting, if needed.
+     *
+     * Setting Mathjax.startup.pageReady in the configuration will override this.
+     */
+    export function defaultPageReady() {
+        return (CONFIG.typeset && MathJax.typesetPromise ? MathJax.typesetPromise() : null);
     };
 
     /**
@@ -280,7 +281,14 @@ export namespace Startup {
         input = getInputJax();
         output = getOutputJax();
         adaptor = getAdaptor();
+        if (handler) {
+            mathjax.handlers.unregister(handler);
+        }
         handler = getHandler();
+        if (handler) {
+            mathjax.handlers.register(handler);
+            document = getDocument();
+        }
     };
 
     /**
@@ -295,9 +303,6 @@ export namespace Startup {
      *     Make input2output() and input2outputPromise conversion methods and outputStylesheet() method
      */
     export function makeMethods() {
-        if (!handler) return;
-        mathjax.handlers.register(handler);
-        getDocument();
         if (input && output) {
             makeTypesetMethods();
         }
@@ -366,7 +371,7 @@ export namespace Startup {
                 return mathjax.handleRetriesFor(() => document.convert(math, options));
             };
         MathJax[oname + 'Stylesheet'] = () => output.styleSheet(document);
-        if (output instanceof CommonOutputJax) {
+        if ('getMetricsFor' in output) {
             MathJax.getMetricsFor = (node: any, display: boolean) => {
                 return (output as COMMONJAX).getMetricsFor(node, display);
             }
@@ -409,7 +414,7 @@ export namespace Startup {
      */
     export function makeResetMethod(name: string, input: INPUTJAX) {
         if (name === 'tex') {
-            MathJax.texReset = () => (input as TEX).parseOptions.tags.reset();
+            MathJax.texReset = (start: number = 0) => (input as TEX).parseOptions.tags.reset(start);
         }
     };
 
@@ -476,11 +481,15 @@ export namespace Startup {
     /**
      * Create the document with the given input and output jax
      *
+     * @param {any=} root        The Document to use as the root document (or null to use the configured document)
      * @returns {MathDocument}   The MathDocument with the configured input and output jax
      */
-    export function getDocument() {
-        document = mathjax.document(CONFIG.document, {...MathJax.config.options, InputJax: input, OutputJax: output});
-        return document;
+    export function getDocument(root: any = null) {
+        return mathjax.document(root || CONFIG.document, {
+            ...MathJax.config.options,
+            InputJax: input,
+            OutputJax: output
+        });
     }
 };
 
@@ -504,7 +513,8 @@ if (typeof MathJax._.startup === 'undefined') {
         document: (typeof document === 'undefined' ? '' : document),
         elements: null,
         typeset: true,
-        ready: Startup.defaultReady.bind(Startup)
+        ready: Startup.defaultReady.bind(Startup),
+        pageReady: Startup.defaultPageReady.bind(Startup)
     });
     combineWithMathJax({
         startup: Startup,

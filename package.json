@@ -9,6 +9,7 @@
     "babel-preset-env": "^1.6.1",
     "diff": "^3.5.0",
     "tape": "^4.8.0",
+    "lodash": "^4.17.14",
     "tslint": "^3.15.0",
     "tslint-jsdoc-rules": "*",
     "tslint-unix-formatter": "*",
