@@ -38,7 +38,7 @@ import {OptionList} from '../../../util/Options.js';
  * @template D  The Document class
  */
 export class SVGmenclose<N, T, D> extends
-CommonMencloseMixin<SVGWrapper<N, T, D>, SVGmsqrt<N, T, D>, N, SVGConstructor<N, T, D>>(SVGWrapper) {
+CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMenclose.prototype.kind;
 

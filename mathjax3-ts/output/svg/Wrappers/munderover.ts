@@ -39,7 +39,7 @@ import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes
  * @template D  The Document class
  */
 export class SVGmunder<N, T, D> extends
-CommonMunderMixin<SVGWrapper<N, T, D>, Constructor<SVGmsub<N, T, D>>>(SVGmsub)  {
+CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>>(SVGmsub)  {
 
     public static kind = MmlMunder.prototype.kind;
 
@@ -80,7 +80,7 @@ CommonMunderMixin<SVGWrapper<N, T, D>, Constructor<SVGmsub<N, T, D>>>(SVGmsub)  
  * @template D  The Document class
  */
 export class SVGmover<N, T, D> extends
-CommonMoverMixin<SVGWrapper<N, T, D>, Constructor<SVGmsup<N, T, D>>>(SVGmsup)  {
+CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>(SVGmsup)  {
 
     public static kind = MmlMover.prototype.kind;
 
@@ -120,7 +120,7 @@ CommonMoverMixin<SVGWrapper<N, T, D>, Constructor<SVGmsup<N, T, D>>>(SVGmsup)  {
  * @template D  The Document class
  */
 export class SVGmunderover<N, T, D> extends
-CommonMunderoverMixin<SVGWrapper<N, T, D>, Constructor<SVGmsubsup<N, T, D>>>(SVGmsubsup)  {
+CommonMunderoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any, any>>>(SVGmsubsup)  {
 
     public static kind = MmlMunderover.prototype.kind;
 

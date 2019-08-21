@@ -41,7 +41,7 @@ const HFUZZ = 0.1;       // overlap for horizontal stretchy glyphs
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMo.prototype.kind;
 

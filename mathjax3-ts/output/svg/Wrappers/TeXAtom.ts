@@ -34,7 +34,7 @@ import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGTeXAtom<N, T, D> extends CommonTeXAtomMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGTeXAtom<N, T, D> extends CommonTeXAtomMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = TeXAtom.prototype.kind;
 

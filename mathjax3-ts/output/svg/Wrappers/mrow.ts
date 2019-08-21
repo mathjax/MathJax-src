@@ -34,7 +34,7 @@ import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmrow<N, T, D> extends CommonMrowMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmrow<N, T, D> extends CommonMrowMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMrow.prototype.kind;
 
@@ -57,7 +57,7 @@ export class SVGmrow<N, T, D> extends CommonMrowMixin<SVGConstructor<N, T, D>>(S
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGinferredMrow<N, T, D> extends CommonInferredMrowMixin<Constructor<SVGmrow<N, T, D>>>(SVGmrow) {
+export class SVGinferredMrow<N, T, D> extends CommonInferredMrowMixin<Constructor<SVGmrow<any, any, any>>>(SVGmrow) {
 
     public static kind = MmlInferredMrow.prototype.kind;
 

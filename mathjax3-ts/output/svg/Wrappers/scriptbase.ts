@@ -37,7 +37,7 @@ import {CommonScriptbase, CommonScriptbaseMixin} from '../../common/Wrappers/scr
  * @template D  The Document class
  */
 export class SVGscriptbase<N, T, D> extends
-CommonScriptbaseMixin<SVGWrapper<N, T, D>, SVGConstructor<N, T, D>>(SVGWrapper) {
+CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = 'scriptbase';
 

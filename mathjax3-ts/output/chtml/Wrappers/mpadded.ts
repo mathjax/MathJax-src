@@ -34,7 +34,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmpadded<N, T, D> extends CommonMpaddedMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmpadded<N, T, D> extends CommonMpaddedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = MmlMpadded.prototype.kind;
 

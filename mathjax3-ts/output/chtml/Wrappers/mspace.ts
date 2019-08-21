@@ -33,7 +33,7 @@ import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmspace<N, T, D> extends CommonMspaceMixin<CHTMLConstructor<N, T, D>>(CHTMLWrapper) {
+export class CHTMLmspace<N, T, D> extends CommonMspaceMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
     public static kind = MmlMspace.prototype.kind;
 

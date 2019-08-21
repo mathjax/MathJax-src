@@ -33,7 +33,7 @@ import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmspace<N, T, D> extends CommonMspaceMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmspace<N, T, D> extends CommonMspaceMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMspace.prototype.kind;
 

@@ -34,7 +34,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGTextNode<N, T, D> extends CommonTextNodeMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGTextNode<N, T, D> extends CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = TextNode.prototype.kind;
 

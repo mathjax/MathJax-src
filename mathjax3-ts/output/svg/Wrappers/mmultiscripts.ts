@@ -36,7 +36,7 @@ import {BBox} from '../BBox.js';
  * @template D  The Document class
  */
 export class SVGmmultiscripts<N, T, D> extends
-CommonMmultiscriptsMixin<SVGWrapper<N, T, D>, Constructor<SVGmsubsup<N, T, D>>>(SVGmsubsup) {
+CommonMmultiscriptsMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any, any>>>(SVGmsubsup) {
 
     public static kind = MmlMmultiscripts.prototype.kind;
 

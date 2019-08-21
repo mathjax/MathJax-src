@@ -39,7 +39,7 @@ export interface MinDocument<N, T> {
     createElement(kind: string): N;
     createElementNS(ns: string, kind: string): N;
     createTextNode(text: string): T;
-    querySelectorAll(selector: string): N[];
+    querySelectorAll(selector: string): ArrayLike<N>;
 }
 
 /*****************************************************************/

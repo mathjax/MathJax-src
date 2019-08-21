@@ -39,7 +39,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template D  The Document class
  */
 export class CHTMLmsub<N, T, D> extends
-CommonMsubMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsubMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, any, any>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsub.prototype.kind;
 
@@ -56,7 +56,7 @@ CommonMsubMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CH
  * @template D  The Document class
  */
 export class CHTMLmsup<N, T, D> extends
-CommonMsupMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, any, any>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsup.prototype.kind;
 
@@ -73,7 +73,7 @@ CommonMsupMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CH
  * @template D  The Document class
  */
 export class CHTMLmsubsup<N, T, D> extends
-CommonMsubsupMixin<CHTMLWrapper<N, T, D>, Constructor<CHTMLscriptbase<N, T, D>>>(CHTMLscriptbase)  {
+CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, any, any>>>(CHTMLscriptbase)  {
 
     public static kind = MmlMsubsup.prototype.kind;
 

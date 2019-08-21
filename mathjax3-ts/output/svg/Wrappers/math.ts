@@ -34,7 +34,7 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMath.prototype.kind;
 

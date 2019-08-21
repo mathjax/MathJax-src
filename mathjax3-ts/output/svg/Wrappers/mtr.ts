@@ -51,7 +51,7 @@ export type SizeData = {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<N, T, D>, SVGConstructor<N, T, D>>(SVGWrapper) {
+export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
     public static kind = MmlMtr.prototype.kind;
 
@@ -138,7 +138,7 @@ export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<N, T, D>, SVGConstruc
  * @template D  The Document class
  */
 export class SVGmlabeledtr<N, T, D> extends
-CommonMlabeledtrMixin<SVGmtd<N, T, D>, Constructor<SVGmtr<N, T, D>>>(SVGmtr) {
+CommonMlabeledtrMixin<SVGmtd<any, any, any>, Constructor<SVGmtr<any, any, any>>>(SVGmtr) {
 
     public static kind = MmlMlabeledtr.prototype.kind;
 

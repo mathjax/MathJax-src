@@ -737,7 +737,7 @@ export class Menu {
                     item.executeCallbacks_();
                 }
             } else {
-                this.settings[name] = settings[name];
+                (this.settings as any)[name] = settings[name];
             }
         }
         Menu.loading--;
@@ -974,7 +974,7 @@ export class Menu {
             name: name,
             getter: () => this.settings[name],
             setter: (value: T) => {
-                this.settings[name] = value;
+                (this.settings as any)[name] = value;
                 action && action(value);
                 this.saveUserSettings();
             }
