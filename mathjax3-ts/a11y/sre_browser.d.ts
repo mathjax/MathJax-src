@@ -1,30 +1,35 @@
+
 declare namespace sre {
 
   export type colorType = {color: string, alpha: number};
   export type colorString = {foreground: string, background: string};
 
   interface SpeechGenerator {
-    generateSpeech(node: HTMLElement, xml: HTMLElement): string;
     speech(): string;
-    setOptions(options: Object): void;
-    getOptions(): Object;
   }
+
+  class AbstractSpeechGenerator implements SpeechGenerator {
+    speech(): string;
+  }
+
+  class TreeSpeechGenerator extends AbstractSpeechGenerator { }
+  
+  class DirectSpeechGenerator extends AbstractSpeechGenerator { }
+  
+  class DummySpeechGenerator extends AbstractSpeechGenerator { }
+
 
   interface Highlighter {
     highlight(nodes: Node[]): void;
     unhighlight(): void;
-    highlightAll(node: Node): void;
-    unhighlightAll(node: Node): void;
     colorString(): colorString;
     isMactionNode(node: Node): boolean;
-    colorizeAll(node: Node): void;
-    uncolorizeAll(node: Node): void;
   }
 
   interface Focus {
     getNodes(): Node[];
   }
-
+  
   interface Walker {
     activate(): void;
     deactivate(): void;
@@ -41,10 +46,7 @@ declare namespace sre.WalkerFactory {
                          generator: SpeechGenerator,
                          highlighter: Highlighter,
                          mml: Node): Walker;
-}
-
-declare namespace sre.SpeechGeneratorFactory {
-  export function generator(kind: string): sre.SpeechGenerator;
+  
 }
 
 declare namespace sre.Engine {

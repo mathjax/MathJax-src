@@ -157,9 +157,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * The SRE speech generator associated with the walker.
    * @type {sre.SpeechGenerator}
    */
-  public speechGenerator: sre.SpeechGenerator;
-
-  public showRegion: string = 'subtitles';
+  protected speechGenerator: sre.SpeechGenerator;
 
   /**
    * Flag in case the start method is triggered before the walker is fully
@@ -187,14 +185,12 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     super.Start();
-    let options = this.speechGenerator.getOptions();
-    this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
-    this.speechGenerator.setOptions(options);
+    this.speechGenerator = new sre.DirectSpeechGenerator();
     this.walker = sre.WalkerFactory.walker('table',
       this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
-    if (this.document.options.a11y[this.showRegion]) {
+    if (this.document.options.a11y.subtitles) {
       this.region.Show(this.node, this.highlighter);
     }
     this.restarted = true;
@@ -219,7 +215,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       let speech = walker.speech();
       this.node.setAttribute('hasspeech', 'true');
       this.Update();
-      if (this.restarted && this.document.options.a11y[this.showRegion]) {
+      if (this.restarted && this.document.options.a11y.subtitles) {
         this.region.Show(this.node, this.highlighter);
       }
     }).catch((error: Error) => console.log(error.message));
@@ -241,7 +237,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       this.stopEvent(event);
       return;
     }
-    if (code === 32 && event.shiftKey || code === 13) {
+    if (code === 32 && event.shiftKey) {
       this.Start();
       this.stopEvent(event);
     }
@@ -260,10 +256,9 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * Initialises the SRE walker.
    */
   private initWalker() {
-    this.speechGenerator = sre.SpeechGeneratorFactory.generator('Tree');
-    let dummy = sre.WalkerFactory.walker(
-      'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.walker = dummy;
+    this.speechGenerator = new sre.TreeSpeechGenerator();
+    let dummy = sre.WalkerFactory.walker('dummy',
+      this.node, this.speechGenerator, this.highlighter, this.mml);
     this.Speech(dummy);
   }
 
@@ -286,9 +281,8 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
               protected node: HTMLElement,
               private mml: HTMLElement) {
     super(document, region, node);
-    this.walker = sre.WalkerFactory.walker(
-      'table', this.node, sre.SpeechGeneratorFactory.generator('Dummy'),
-      this.highlighter, this.mml);
+    this.walker = sre.WalkerFactory.walker('table',
+        this.node, new sre.DummySpeechGenerator(), this.highlighter, this.mml);
   }
 
   /**
@@ -346,7 +340,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
       this.stopEvent(event);
       return;
     }
-    if (code === 32 && event.shiftKey || code === 13) {
+    if (code === 32 && event.shiftKey) {
       this.Start();
       this.stopEvent(event);
     }

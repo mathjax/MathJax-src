@@ -376,6 +376,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    */
   constructor(public document: A11yDocument) {
     super(document);
+    this.div.style.fontSize = document.options.a11y.magnify + '%';
     this.inner.style.lineHeight = '0';
   }
 
@@ -429,7 +430,6 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   public Show(node: HTMLElement, highlighter: sre.Highlighter) {
-    this.div.style.fontSize = this.document.options.a11y.magnify + '%';
     this.Update(node);
     super.Show(node, highlighter);
   }
