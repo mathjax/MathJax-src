@@ -38,7 +38,9 @@ if (dirs.length === 0) {
 }
 
 /**
- * The path to the bin/build executable
+ * The commads to runb the bin/build scripts
+ *  (on Unix, could be done without the 'node ' prefix, but
+ *   for Windows, these are needed.)
  */
 const build = 'node ' + path.join(__dirname, 'build');
 const copy = 'node ' + path.join(__dirname, 'copy');
