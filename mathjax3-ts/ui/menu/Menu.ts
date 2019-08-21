@@ -808,7 +808,7 @@ export class Menu {
             //   updated document (from the new handler)
             //
             const document = this.document;
-            this.document = startup.getDocument();
+            this.document = startup.document = startup.getDocument();
             this.document.menu = this;
             this.transferMathList(document);
             if (!Menu._loadingPromise) {

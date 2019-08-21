@@ -280,7 +280,14 @@ export namespace Startup {
         input = getInputJax();
         output = getOutputJax();
         adaptor = getAdaptor();
+        if (handler) {
+            mathjax.handlers.unregister(handler);
+        }
         handler = getHandler();
+        if (handler) {
+            mathjax.handlers.register(handler);
+            document = getDocument();
+        }
     };
 
     /**
@@ -295,9 +302,6 @@ export namespace Startup {
      *     Make input2output() and input2outputPromise conversion methods and outputStylesheet() method
      */
     export function makeMethods() {
-        if (!handler) return;
-        mathjax.handlers.register(handler);
-        getDocument();
         if (input && output) {
             makeTypesetMethods();
         }
@@ -476,11 +480,15 @@ export namespace Startup {
     /**
      * Create the document with the given input and output jax
      *
+     * @param {any=} root        The Document to use as the root document (or null to use the configured document)
      * @returns {MathDocument}   The MathDocument with the configured input and output jax
      */
-    export function getDocument() {
-        document = mathjax.document(CONFIG.document, {...MathJax.config.options, InputJax: input, OutputJax: output});
-        return document;
+    export function getDocument(root: any = null) {
+        return mathjax.document(root || CONFIG.document, {
+            ...MathJax.config.options,
+            InputJax: input,
+            OutputJax: output
+        });
     }
 };
 
