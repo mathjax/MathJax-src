@@ -45,23 +45,23 @@ export type HTMLNodeList<N, T> = [N | T, number][];
 export class HTMLDomStrings<N, T, D> {
 
     public static OPTIONS: OptionList = {
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'annotation', 'annotation-xml'],
-                                          // The names of the tags whose contents will not be
-                                          // scanned for math delimiters
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'annotation', 'annotation-xml'],
+                                            // The names of the tags whose contents will not be
+                                            // scanned for math delimiters
 
-        includeTags: {br: '\n', wbr: '', '#comment': ''},
-                                          //  tags to be included in the text (and what
-                                          //  text to replace them with)
+        includeHtmlTags: {br: '\n', wbr: '', '#comment': ''},
+                                            //  tags to be included in the text (and what
+                                            //  text to replace them with)
 
-        ignoreClass: 'tex2jax_ignore',    // the class name of elements whose contents should
-                                          // NOT be processed by tex2jax.  Note that this
-                                          // is a regular expression, so be sure to quote any
-                                          // regexp special characters
+        ignoreHtmlClass: 'mathjax_ignore',  // the class name of elements whose contents should
+                                            // NOT be processed by tex2jax.  Note that this
+                                            // is a regular expression, so be sure to quote any
+                                            // regexp special characters
 
-        processClass: 'tex2jax_process'   // the class name of elements whose contents SHOULD
-                                          // be processed when they appear inside ones that
-                                          // are ignored.  Note that this is a regular expression,
-                                          // so be sure to quote any regexp special characters
+        processHtmlClass: 'mathjax_process' // the class name of elements whose contents SHOULD
+                                            // be processed when they appear inside ones that
+                                            // are ignored.  Note that this is a regular expression,
+                                            // so be sure to quote any regexp special characters
     };
 
     /**
@@ -99,9 +99,9 @@ export class HTMLDomStrings<N, T, D> {
      * Regular expressions for the tags to be skipped, and which classes should start/stop
      *  processing of math
      */
-    protected skipTags: RegExp;
-    protected ignoreClass: RegExp;
-    protected processClass: RegExp;
+    protected skipHtmlTags: RegExp;
+    protected ignoreHtmlClass: RegExp;
+    protected processHtmlClass: RegExp;
 
     /**
      * The DOM Adaptor to managing HTML elements
@@ -131,15 +131,15 @@ export class HTMLDomStrings<N, T, D> {
     }
 
     /**
-     * Create the search patterns for skipTags, ignoreClass, and processClass
+     * Create the search patterns for skipHtmlTags, ignoreHtmlClass, and processHtmlClass
      */
     protected getPatterns() {
-        let skip = makeArray(this.options['skipTags']);
-        let ignore = makeArray(this.options['ignoreClass']);
-        let process = makeArray(this.options['processClass']);
-        this.skipTags = new RegExp('^(?:' + skip.join('|') + ')$', 'i');
-        this.ignoreClass = new RegExp('(?:^| )(?:' + ignore.join('|') + ')(?: |$)');
-        this.processClass = new RegExp('(?:^| )(?:' + process + ')(?: |$)');
+        let skip = makeArray(this.options['skipHtmlTags']);
+        let ignore = makeArray(this.options['ignoreHtmlClass']);
+        let process = makeArray(this.options['processHtmlClass']);
+        this.skipHtmlTags = new RegExp('^(?:' + skip.join('|') + ')$', 'i');
+        this.ignoreHtmlClass = new RegExp('(?:^| )(?:' + ignore.join('|') + ')(?: |$)');
+        this.processHtmlClass = new RegExp('(?:^| )(?:' + process + ')(?: |$)');
     }
 
     /**
@@ -183,7 +183,7 @@ export class HTMLDomStrings<N, T, D> {
     }
 
     /**
-     * Handle a BR, WBR, or #comment element (or others in the includeTag object).
+     * Handle a BR, WBR, or #comment element (or others in the includeHtmlTags object).
      *
      * @param {N} node          The node to process
      * @param {boolean} ignore  Whether we are currently ignoring content
@@ -191,7 +191,7 @@ export class HTMLDomStrings<N, T, D> {
      */
     protected handleTag(node: N, ignore: boolean) {
         if (!ignore) {
-            let text = this.options['includeTags'][this.adaptor.kind(node)];
+            let text = this.options['includeHtmlTags'][this.adaptor.kind(node)];
             this.extendString(node, text);
         }
         return this.adaptor.next(node);
@@ -199,7 +199,7 @@ export class HTMLDomStrings<N, T, D> {
 
     /**
      * Handle an arbitrary DOM node:
-     *   Check the class to see if it matches the processClass regex
+     *   Check the class to see if it matches the processHtmlClass regex
      *   If the node has a child and is not marked as created by MathJax (data-MJX)
      *       and either it is marked as restarting processing or is not a tag to be skipped, then
      *     Save the next node (if there is one) and whether we are currently ignoring content
@@ -217,15 +217,15 @@ export class HTMLDomStrings<N, T, D> {
         this.pushString();
         const cname = this.adaptor.getAttribute(node, 'class') || '';
         const tname = this.adaptor.kind(node) || '';
-        const process = this.processClass.exec(cname);
+        const process = this.processHtmlClass.exec(cname);
         let next: N | T = node;
         if (this.adaptor.firstChild(node) && !this.adaptor.getAttribute(node, 'data-MJX') &&
-            (process || !this.skipTags.exec(tname))) {
+            (process || !this.skipHtmlTags.exec(tname))) {
             if (this.adaptor.next(node)) {
                 this.stack.push([this.adaptor.next(node), ignore]);
             }
             next = this.adaptor.firstChild(node);
-            ignore = (ignore || this.ignoreClass.exec(cname)) && !process;
+            ignore = (ignore || this.ignoreHtmlClass.exec(cname)) && !process;
         } else {
             next = this.adaptor.next(node);
         }
@@ -238,7 +238,7 @@ export class HTMLDomStrings<N, T, D> {
      *   Get the element where we stop processing
      *   While we still have a node, and it is not the one where we are to stop:
      *     If it is a text node, handle it and get the next node
-     *     Otherwise, if it is in the includeTags list, handle it and get the next node
+     *     Otherwise, if it is in the includeHtmlTags list, handle it and get the next node
      *     Otherwise, handle it as a container and get the next node and ignore status
      *     If there is no next node, and there are more nodes on the stack:
      *       Save the current string, and pop the node and ignore status from the stack
@@ -254,7 +254,7 @@ export class HTMLDomStrings<N, T, D> {
         this.init();
         let stop = this.adaptor.next(node);
         let ignore = false;
-        let include = this.options['includeTags'];
+        let include = this.options['includeHtmlTags'];
 
         while (node && node !== stop) {
             if (this.adaptor.kind(node) === '#text') {
