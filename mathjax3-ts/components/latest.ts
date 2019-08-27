@@ -37,6 +37,7 @@ type ScriptData = {
     src: string,              // the script's (possibly modified) source attribute
     id: string,               // the script's (possibly empty) id string
     version: string,          // the MathJax version where latest.js was loaded
+    dir: string,              // the subdirectory where latest.js was loaded from (e.g., /es5)
     file: string,             // the file to be loaded by latest.js
     cdn: CdnData              // the CDN where latest.js was loaded
 } | null;
@@ -149,12 +150,14 @@ function scriptData(script: HTMLScriptElement, cdn: CdnData = null) {
       file = 'startup.js';
       src = src.replace(/\?$/, '') + '?' + file;
     }
-    const version = (src.match(/(\d+\.\d+\.\d+)\/latest.js\?/) || ['', ''])[1];
+    const version = (src.match(/(\d+\.\d+\.\d+)(\/es\d+)?\/latest.js\?/) || ['', ''])[1];
+    const dir = (src.match(/(\/es\d+)\/latest.js\?/) || ['', ''])[1] || '';
     return {
         tag: script,
         src: src,
         id: script.id,
         version: version,
+        dir: dir,
         file: file,
         cdn: cdn
     } as ScriptData;
@@ -275,7 +278,7 @@ function loadVersion(version: string) {
     if (script.version && script.version !== version) {
         script.file = 'latest.js?' + script.file;
     }
-    loadMathJax(script.cdn.base + version + '/' + script.file, script.id);
+    loadMathJax(script.cdn.base + version + script.dir + '/' + script.file, script.id);
 }
 
 /**
