@@ -18,16 +18,20 @@
     "AsciiMath"
   ],
   "scripts": {
-    "clean:js": "rimraf js",
-    "clean:es5": "rimraf es5",
+    "clean:js": "npx rimraf js",
+    "clean:es5": "npx rimraf es5",
     "clean": "npm run --silent clean:js && npm run --silent clean:es5",
-    "compile": "npm run --silent clean:js && npx tsc",
-    "make-components": "npm run --silent clean:es5 && cd components && node bin/makeAll src"
+    "precompile": "npm run --silent clean:js",
+    "compile": "npx tsc",
+    "postcompile": "npx copyfiles -u 1 'ts/input/tex/mhchem/mhchem_parser*' js",
+    "premake-components": "npm run --silent clean:es5",
+    "make-components": "cd components && node bin/makeAll src"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
+    "copyfiles": "^2.1.1",
     "diff": "^3.5.0",
     "lodash": "^4.17.14",
     "rimraf": "^3.0.0",
