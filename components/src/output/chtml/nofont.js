@@ -1,4 +1,4 @@
-import {FontData} from '../../../../mathjax3/output/chtml/FontData.js';
+import {FontData} from '../../../../js/output/chtml/FontData.js';
 
 export class TeXFont extends FontData {};
 

@@ -46,10 +46,10 @@ const build = 'node ' + path.join(__dirname, 'build');
 const copy = 'node ' + path.join(__dirname, 'copy');
 
 /**
- * Regular expressions for the components directory and the mathjax3 .js location
+ * Regular expressions for the components directory and the MathJax .js location
  */
 const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
-const rootRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'mathjax3')
+const rootRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'js')
                           .replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
 
 /**
@@ -128,7 +128,7 @@ function webpackLib(dir) {
         console.info('    ' + String(result).replace(/\n/g, '\n    ')
                                            .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
                                            .replace(compRE, '[components]')
-                                           .replace(rootRE, '[mathjax3]'));
+                                           .replace(rootRE, '[js]'));
     } catch (err) {
         console.info('    ' + err.message);
     }

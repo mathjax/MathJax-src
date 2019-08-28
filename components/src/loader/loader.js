@@ -1,7 +1,7 @@
 import './lib/loader.js';
 
-import {Loader, CONFIG} from '../../../mathjax3/components/loader.js';
-import {combineDefaults} from '../../../mathjax3/components/global.js';
+import {Loader, CONFIG} from '../../../js/components/loader.js';
+import {combineDefaults} from '../../../js/components/global.js';
 import {dependencies, paths, provides} from '../dependencies.js';
 
 combineDefaults(MathJax.config.loader, 'dependencies', dependencies);

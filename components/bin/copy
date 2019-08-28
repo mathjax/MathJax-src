@@ -38,8 +38,8 @@ const INDENT = '  ';
 const config = JSON.parse(fs.readFileSync(process.argv[2] || 'copy.json'));
 
 /**
- * Get the directory for node modules (either the parent of the MathJax3 directory,
- * or the MathJax3 node_modules directory, if it exists).
+ * Get the directory for node modules (either the parent of the MathJax directory,
+ * or the MathJax node_modules directory, if it exists).
  */
 const parent = path.resolve(__dirname, '..', '..');
 const nodeDir = (dir => (fs.existsSync(dir) ? dir : path.resolve(parent, '..')))(path.join(parent, 'node_modules'));

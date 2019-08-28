@@ -1,2 +1,2 @@
-import '../../../../../mathjax3/util/entities/all.js';
+import '../../../../../js/util/entities/all.js';
 

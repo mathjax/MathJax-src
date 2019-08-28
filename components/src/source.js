@@ -40,7 +40,7 @@ exports.source = {
     'a11y/semantic-enrich': `${src}/a11y/semantic-enrich/semantic-enrich.js`,
     'a11y/complexity': `${src}/a11y/complexity/complexity.js`,
     'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
-    'sre': `../../mathjax3/a11y/sre-node.js`,
+    'sre': `../../js/a11y/sre-node.js`,
     'ui/menu': `${src}/ui/menu/menu.js`,
     'mml-chtml': `${src}/mml-chtml/mml-chtml.js`,
     'mml-svg': `${src}/mml-svg/mml-svg.js`,

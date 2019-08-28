@@ -1,7 +1,7 @@
 import './lib/tex.js';
 
 import {registerTeX} from './register.js';
-import {Loader} from '../../../../mathjax3/components/loader.js';
+import {Loader} from '../../../../js/components/loader.js';
 
 Loader.preLoad(
     'input/tex-base',
