@@ -22,7 +22,7 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {LegacyAsciiMath} from '../../mathjax2/input/AsciiMath.js';
+import {LegacyAsciiMath} from './asciimath/mathjax2/input/AsciiMath.js';
 import {separateOptions, OptionList} from '../util/Options.js';
 import {MathItem} from '../core/MathItem.js';
 

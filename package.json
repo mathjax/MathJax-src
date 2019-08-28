@@ -21,9 +21,11 @@
     "clean:js": "npx rimraf js",
     "clean:es5": "npx rimraf es5",
     "clean": "npm run --silent clean:js && npm run --silent clean:es5",
+    "copy:mhchem": "npx copyfiles -u 1 'ts/input/tex/mhchem/mhchem_parser*' js",
+    "copy:mj2": "npx copyfiles -u 1 'ts/input/asciimath/mathjax2/**/*' js",
     "precompile": "npm run --silent clean:js",
     "compile": "npx tsc",
-    "postcompile": "npx copyfiles -u 1 'ts/input/tex/mhchem/mhchem_parser*' js",
+    "postcompile": "npm run --silent copy:mhchem && npm run --silent copy:mj2",
     "premake-components": "npm run --silent clean:es5",
     "make-components": "cd components && node bin/makeAll src"
   },
