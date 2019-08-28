@@ -6,7 +6,7 @@ module.exports = PACKAGE(
     [                                   // packages to link to
         'components/src/input/tex/extensions/ams/lib',
         'components/src/input/tex/extensions/newcommand/lib',
-        'components/src/input/tex-lib/lib',
+        'components/src/input/tex-base/lib',
         'components/src/core/lib'
     ],
     __dirname                           // our directory
