@@ -37,7 +37,7 @@
     "compile": "npx tsc",
     "postcompile": "npm run --silent copy:mhchem && npm run --silent copy:mj2",
     "premake-components": "npm run --silent clean:es5 && npm run --silent clean:lib",
-    "make-components": "cd components && node bin/makeAll src"
+    "make-components": "cd components && node bin/makeAll src | grep 'Building\\|Webpacking\\|Copying\\|npx'"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
