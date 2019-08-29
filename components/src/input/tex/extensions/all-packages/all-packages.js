@@ -1,9 +1,9 @@
 import './lib/all-packages.js';
 
-import {AllPackages} from '../../../../../../mathjax3/input/tex/AllPackages.js';
-import '../../../../../../mathjax3/input/tex/autoload/AutoloadConfiguration.js';
-import '../../../../../../mathjax3/input/tex/require/RequireConfiguration.js';
-import {insert} from '../../../../../../mathjax3/util/Options.js';
+import {AllPackages} from '../../../../../../js/input/tex/AllPackages.js';
+import '../../../../../../js/input/tex/autoload/AutoloadConfiguration.js';
+import '../../../../../../js/input/tex/require/RequireConfiguration.js';
+import {insert} from '../../../../../../js/util/Options.js';
 
 if (MathJax.loader) {
     MathJax.loader.preLoad('[tex]/autoload', '[tex]/require');

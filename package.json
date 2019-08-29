@@ -1,27 +1,18 @@
 {
-  "name": "mathjax3",
-  "version": "0.1.0",
-  "description": "MathJax version 3 testbed",
-  "scripts": {
-    "make-components": "cd components && node bin/makeAll src"
-  },
-  "main": "load.js",
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.6.1",
-    "diff": "^3.5.0",
-    "tape": "^4.8.0",
-    "lodash": "^4.17.14",
-    "tslint": "^3.15.0",
-    "tslint-jsdoc-rules": "*",
-    "tslint-unix-formatter": "*",
-    "typescript": "^3.5.2",
-    "typescript-tools": "^0.3.1",
-    "uglifyjs-webpack-plugin": "^2.1.2",
-    "webpack": "4.19.0",
-    "webpack-cli": "^3.2.3"
-  },
+  "name": "mathjax-full",
+  "version": "3.0.0",
+  "description": "Beautiful math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers. This package includes the source code as well as the packaged components.",
+  "license": "Apache-2.0",
+  "main": "es5/node-main.js",
+  "files": [
+    "/es5",
+    "/js",
+    "/ts",
+    "/components",
+    "LICENSE",
+    "README.md",
+    "CONTRIBUTING.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/mathjax/mathjax-v3/"
@@ -35,7 +26,37 @@
     "TeX",
     "AsciiMath"
   ],
-  "license": "Apache-2.0",
+  "scripts": {
+    "clean:js": "npx rimraf js",
+    "clean:es5": "npx rimraf es5",
+    "clean:lib": "npx rimraf 'components/src/**/lib'",
+    "clean": "npm run --silent clean:js && npm run --silent clean:es5 && npm run --silent clean:lib",
+    "copy:mhchem": "npx copyfiles -u 1 'ts/input/tex/mhchem/mhchem_parser*' js",
+    "copy:mj2": "npx copyfiles -u 1 'ts/input/asciimath/mathjax2/**/*' js",
+    "precompile": "npm run --silent clean:js",
+    "compile": "npx tsc",
+    "postcompile": "npm run --silent copy:mhchem && npm run --silent copy:mj2",
+    "premake-components": "npm run --silent clean:es5 && npm run --silent clean:lib",
+    "make-components": "cd components && node bin/makeAll src"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "copyfiles": "^2.1.1",
+    "diff": "^3.5.0",
+    "lodash": "^4.17.14",
+    "rimraf": "^3.0.0",
+    "tape": "^4.8.0",
+    "tslint": "^3.15.0",
+    "tslint-jsdoc-rules": "*",
+    "tslint-unix-formatter": "*",
+    "typescript": "^3.5.2",
+    "typescript-tools": "^0.3.1",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "4.19.0",
+    "webpack-cli": "^3.2.3"
+  },
   "dependencies": {
     "esm": "^3.2.25",
     "mj-context-menu": "^0.2.0",

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Creates configurations for webpacking of MathJax3 components
+ * @fileoverview  Creates configurations for webpacking of MathJax components
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -37,17 +37,17 @@ function quoteRE(string) {
 }
 
 /**
- * Creates the plugin needed for converting mathjax3 references to component/lib references
+ * Creates the plugin needed for converting mathjax references to component/lib references
  *
- * @param {string} mathjax3    The location of the mathjax3 js files
+ * @param {string} mathjax     The location of the MathJax js files
  * @param {string[]} lib       The component library directories to be linked against
  * @param {string} dir         The directory of the component being built
  * @return {any[]}             The plugin array (empty or with the conversion plugin)
  */
-const PLUGINS = function (mathjax3, libs, dir) {
-    const mj3dir = path.resolve(dir, mathjax3);
-    const mj3RE = new RegExp('^' + quoteRE(mj3dir + '/'));
-    const root = path.dirname(mj3dir);
+const PLUGINS = function (mathjax, libs, dir) {
+    const mjdir = path.resolve(dir, mathjax);
+    const mjRE = new RegExp('^' + quoteRE(mjdir + '/'));
+    const root = path.dirname(mjdir);
     const rootRE = new RegExp('^' + quoteRE(root + '/'));
     const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + '/'));
 
@@ -55,15 +55,15 @@ const PLUGINS = function (mathjax3, libs, dir) {
     if (libs.length) {
         plugins.push(
             //
-            // Move mathjax3 references to component libraries
+            // Move mathjax references to component libraries
             //
             new webpack.NormalModuleReplacementPlugin(
                 /^[^\/].*\.js$/,
                 function (resource) {
                     const request = path.resolve(resource.context, resource.request);
-                    if (!request.match(mj3RE)) return;
+                    if (!request.match(mjRE)) return;
                     for (const lib of libs) {
-                        const file = request.replace(mj3RE, path.join(root, lib) + '/');
+                        const file = request.replace(mjRE, path.join(root, lib) + '/');
                         if (fs.existsSync(file)) {
                             resource.request = file;
                             break;
@@ -123,15 +123,15 @@ const MODULE = function (dir) {
  * Create a webpack configuration for a distribution file
  *
  * @param {string} name       The name of the component to create
- * @param {string} mathjax3   The path to the mathjax3 .js files
+ * @param {string} mathjax    The path to the MathJax .js files
  * @param {string[]} libs     Array of paths to component lib directories to link against
  * @param {string} dir        The directory of the component buing built
  * @param {string} dist       The path to the directory where the component .js file will be placed
- *                              (defaults to mathjax3/es5)
+ *                              (defaults to mathjax/es5)
  */
-const PACKAGE = function (name, mathjax3, libs, dir, dist) {
+const PACKAGE = function (name, mathjax, libs, dir, dist) {
     const distDir = dist ? path.resolve(dir, dist) :
-                           path.resolve(path.dirname(mathjax3), 'es5', path.dirname(name));
+                           path.resolve(path.dirname(mathjax), 'es5', path.dirname(name));
     name = path.basename(name);
     return {
         name: name,
@@ -140,7 +140,7 @@ const PACKAGE = function (name, mathjax3, libs, dir, dist) {
             path: distDir,
             filename: name + (dist === '.' ? '.min.js' : '.js')
         },
-        plugins: PLUGINS(mathjax3, libs, dir),
+        plugins: PLUGINS(mathjax, libs, dir),
         module: MODULE(dir),
         performance: {
             hints: false

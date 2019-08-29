@@ -1,6 +1,6 @@
 import './lib/asciimath.js';
 
-import {AsciiMath} from '../../../../mathjax3/input/asciimath.js';
+import {AsciiMath} from '../../../../js/input/asciimath.js';
 
 if (MathJax.startup) {
     MathJax.Hub.Config({AsciiMath: MathJax.config.asciimath || {}});

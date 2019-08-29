@@ -10,8 +10,8 @@
     "lib": ["es6", "dom"],
     "noLib": false,
     "sourceMap": true,
-    "outDir": "mathjax3"
+    "outDir": "js"
   },
-  "include": ["mathjax3-ts/**/*"],
-  "exclude": ["mathjax3"]
+  "include": ["ts/**/*"],
+  "exclude": ["js", "es5", "components"]
 }

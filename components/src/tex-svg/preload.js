@@ -1,4 +1,4 @@
-import {Loader} from '../../../mathjax3/components/loader.js';
+import {Loader} from '../../../js/components/loader.js';
 
 Loader.preLoad(
     'loader', 'startup',

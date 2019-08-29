@@ -2,7 +2,7 @@ const PACKAGE = require('../../webpack.common.js');
 
 module.exports = PACKAGE(
     'mml-chtml',                        // the package to build
-    '../../../mathjax3',                // location of the mathjax3 library
+    '../../../js',                      // location of the MathJax js library
     [],                                 // packages to link to
     __dirname                           // our directory
 );

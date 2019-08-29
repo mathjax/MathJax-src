@@ -1,7 +1,7 @@
 import './lib/chtml.js';
 
-import {combineDefaults} from '../../../../mathjax3/components/global.js';
-import {CHTML} from '../../../../mathjax3/output/chtml.js';
+import {combineDefaults} from '../../../../js/components/global.js';
+import {CHTML} from '../../../../js/output/chtml.js';
 
 if (MathJax.loader) {
     combineDefaults(MathJax.config.loader, 'output/chtml', {
