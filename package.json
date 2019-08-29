@@ -11,7 +11,9 @@
     "/components",
     "LICENSE",
     "README.md",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "tsconfig.json",
+    "tslint.json"
   ],
   "repository": {
     "type": "git",
