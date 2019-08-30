@@ -1,7 +1,7 @@
 import './lib/complexity.js';
 
-import {combineDefaults} from '../../../../mathjax3/components/global.js';
-import {ComplexityHandler} from '../../../../mathjax3/a11y/complexity.js';
+import {combineDefaults} from '../../../../js/components/global.js';
+import {ComplexityHandler} from '../../../../js/a11y/complexity.js';
 
 if (MathJax.startup) {
     MathJax.startup.extendHandler(handler => ComplexityHandler(handler));

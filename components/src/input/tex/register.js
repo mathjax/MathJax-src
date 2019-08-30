@@ -1,5 +1,5 @@
-import {TeX} from '../../../../mathjax3/input/tex.js';
-import {insert} from '../../../../mathjax3/util/Options.js';
+import {TeX} from '../../../../js/input/tex.js';
+import {insert} from '../../../../js/util/Options.js';
 
 export function registerTeX(packageList) {
     if (MathJax.startup) {

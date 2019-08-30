@@ -1,7 +1,7 @@
 import './lib/svg.js';
 
-import {combineDefaults} from '../../../../mathjax3/components/global.js';
-import {SVG} from '../../../../mathjax3/output/svg.js';
+import {combineDefaults} from '../../../../js/components/global.js';
+import {SVG} from '../../../../js/output/svg.js';
 
 if (MathJax.loader) {
     combineDefaults(MathJax.config.loader, 'svg', {

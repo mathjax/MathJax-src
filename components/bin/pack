@@ -30,10 +30,12 @@ const path = require('path');
 const {execSync} = require('child_process');
 
 /**
- * Regular expressions for the components directory and the mathjax3 .js location
+ * Regular expressions for the components directory and the MathJax .js location
  */
 const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
-const rootRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'mathjax3')
+const rootRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'js')
+                          .replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
+const nodeRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'node_modules')
                           .replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
 
 /**
@@ -48,7 +50,8 @@ function webpackLib(dir) {
         console.info(String(result).replace(/\n/g, '\n    ')
                                   .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
                                   .replace(compRE, '[components]')
-                                  .replace(rootRE, '[mathjax3]'));
+                                  .replace(rootRE, '[js]')
+                                  .replace(nodeRE, '[node]'));
     } catch (err) {
         console.error(err.message);
     }

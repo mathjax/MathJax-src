@@ -1,9 +1,9 @@
 import './lib/tex.js';
 
-import {combineDefaults} from '../../../../../../mathjax3/components/global.js';
-import {Package} from '../../../../../../mathjax3/components/package.js';
-import {selectOptionsFromKeys} from '../../../../../../mathjax3/util/Options.js';
-import {TeXFont} from '../../../../../../mathjax3/output/chtml/fonts/tex.js';
+import {combineDefaults} from '../../../../../../js/components/global.js';
+import {Package} from '../../../../../../js/components/package.js';
+import {selectOptionsFromKeys} from '../../../../../../js/util/Options.js';
+import {TeXFont} from '../../../../../../js/output/chtml/fonts/tex.js';
 
 if (MathJax.startup) {
     combineDefaults(MathJax.config, 'chtml', {
