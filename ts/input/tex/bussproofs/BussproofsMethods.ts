@@ -38,6 +38,12 @@ import * as BussproofsUtil from './BussproofsUtil.js';
 // Namespace
 let BussproofsMethods: Record<string, ParseMethod> = {};
 
+/**
+ * Implements the proof tree environment.
+ * @param {TexParser} parser The current parser.
+ * @param {StackItem} begin The opening element of the environment.
+ * @return {StackItem} The proof tree stackitem.
+ */
 // TODO: Error handling if we have leftover elements or elements are not in the
 // required order.
 BussproofsMethods.Prooftree = function(parser: TexParser, begin: StackItem) {
@@ -50,6 +56,12 @@ BussproofsMethods.Prooftree = function(parser: TexParser, begin: StackItem) {
   return newItem;
 };
 
+
+/**
+ * Implements the Axiom command.
+ * @param {TexParser} parser The current parser.
+ * @param {string} name The name of the command.
+ */
 BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
   let top = parser.stack.Top();
   // TODO: Label error
@@ -63,6 +75,12 @@ BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Pads content of an inference rule.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} content The content to be padded.
+ * @return {MmlNode} The mrow element with padded content.
+ */
 const paddedContent = function(parser: TexParser, content: string): MmlNode {
   // Add padding on either site.
   let nodes = ParseUtil.internalMath(parser, ParseUtil.trimSpaces(content), 0);
@@ -75,6 +93,12 @@ const paddedContent = function(parser: TexParser, content: string): MmlNode {
 };
 
 
+/**
+ * Implements the Inference rule commands.
+ * @param {TexParser} parser The current parser.
+ * @param {string} name The name of the command.
+ * @param {number} n Number of premises for this inference rule.
+ */
 BussproofsMethods.Inference = function(parser: TexParser, name: string, n: number) {
   let top = parser.stack.Top();
   if (top.kind !== 'proofTree') {
@@ -99,7 +123,6 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
   let row = parser.create('node', 'mtr', children, {});
   let table = parser.create('node', 'mtable', [row], {framespacing: '0 0'});
   let conclusion = paddedContent(parser, parser.GetArgument(name));
-  console.log(conclusion);
   let style = top.getProperty('currentLine') as string;
   if (style !== top.getProperty('line')) {
     top.setProperty('currentLine', top.getProperty('line'));
@@ -115,6 +138,16 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
 };
 
 
+/**
+ * Creates a ND style inference rule.
+ * @param {TexParser} parser The calling parser.
+ * @param {MmlNode} premise The premise (a single table).
+ * @param {MmlNode[]} conclusions Elements that are combined into the conclusion.
+ * @param {MmlNode|null} left The left label if it exists.
+ * @param {MmlNode|null} right The right label if it exists.
+ * @param {string} style Style of inference rule line.
+ * @param {boolean} rootAtTop Direction of inference rule: true for root at top.
+ */
 function createRule(parser: TexParser, premise: MmlNode,
                     conclusions: MmlNode[], left: MmlNode|null,
                     right: MmlNode|null, style: string,
@@ -158,6 +191,12 @@ function createRule(parser: TexParser, premise: MmlNode,
 };
 
 
+/**
+ * Implements the label command.
+ * @param {TexParser} parser The current parser.
+ * @param {string} name The name of the command.
+ * @param {string} side The side of the label.
+ */
 BussproofsMethods.Label = function(parser: TexParser, name: string, side: string) {
   let top = parser.stack.Top();
   // Label error
@@ -193,6 +232,12 @@ BussproofsMethods.SetLine = function(parser: TexParser, name: string, style: str
 };
 
 
+/**
+ * Implements commands indicating where the root of the proof tree is.
+ * @param {TexParser} parser The current parser.
+ * @param {string} name The name of the command.
+ * @param {string} where If true root is at top, otherwise at bottom.
+ */
 BussproofsMethods.RootAtTop = function(parser: TexParser, name: string, where: boolean) {
   let top = parser.stack.Top();
   if (top.kind !== 'proofTree') {
@@ -203,6 +248,11 @@ BussproofsMethods.RootAtTop = function(parser: TexParser, name: string, where: b
 };
 
 
+/**
+ * Implements Axiom command for sequents.
+ * @param {TexParser} parser The current parser.
+ * @param {string} name The name of the command.
+ */
 BussproofsMethods.AxiomF = function(parser: TexParser, name: string) {
   let top = parser.stack.Top();
   if (top.kind !== 'proofTree') {
@@ -215,6 +265,12 @@ BussproofsMethods.AxiomF = function(parser: TexParser, name: string) {
 };
 
 
+/**
+ * Parses a line with a sequent (i.e., one containing \\fcenter).
+ * @param {TexParser} parser The current parser.
+ * @param {string} name The name of the calling command.
+ * @return {MmlNode} The parsed line.
+ */
 function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   let dollar = parser.GetNext();
   if (dollar !== '$') {
@@ -243,8 +299,20 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
 };
 
 
+/**
+ * Placeholder for Fcenter macro that can be overwritten with renewcommand.
+ * @param {TexParser} parser The current parser.
+ * @param {string} name The name of the command.
+ */
 BussproofsMethods.FCenter = function(parser: TexParser, name: string) { };
 
+
+/**
+ * Implements inference rules for sequents.
+ * @param {TexParser} parser The current parser.
+ * @param {string} name The name of the command.
+ * @param {number} n Number of premises for this inference rule.
+ */
 BussproofsMethods.InferenceF = function(parser: TexParser, name: string, n: number) {
   let top = parser.stack.Top();
   if (top.kind !== 'proofTree') {
@@ -277,7 +345,6 @@ BussproofsMethods.InferenceF = function(parser: TexParser, name: string, n: numb
   let rule = createRule(
     parser, table, [conclusion], top.getProperty('left') as MmlNode,
     top.getProperty('right') as MmlNode, style, rootAtTop);
-  //NodeUtil.setAttribute(rule, 'columnalign', 'center 2');
   top.setProperty('left', null);
   top.setProperty('right', null);
   BussproofsUtil.setProperty(rule, 'inference', childCount);

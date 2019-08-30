@@ -38,19 +38,6 @@ import {chooseAdaptor} from '../../../adaptors/chooseAdaptor.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
 
 
-// Trying to create a dummy output jax.
-// 
-// export class Dummy<N, T, D> extends CHTMLOutputJax<N, T, D, CHTMLWrapper<any, any, any>, CHTMLWrapperFactory<any, any, any>> {
-//   public static OPTIONS = {};
-
-//   public escaped(item: any, document?: any): N {
-//     return null;
-//   }
-
-//   public processMath() {}
-// }
-
-
 /**
  *  Global constants local to the module. They instantiate an output jax for
  *  bounding box computation.
@@ -99,6 +86,10 @@ let getRule = function(node: MmlNode): MmlNode {
   return node;
 };
 
+
+/*******************************
+ * Convenience methods for retrieving bits of the proof tree.
+ */
 
 /**
  * 
