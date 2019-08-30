@@ -30,6 +30,7 @@ import {MathDocumentConstructor} from '../core/MathDocument.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
+import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
 
 import {Explorer} from './explorer/Explorer.js';
 import * as ke from './explorer/KeyExplorer.js';
@@ -247,9 +248,10 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 infoType: false,
                 keyMagnifier: false,
                 magnification: 'None',
-                magnify: 500,
+                magnify: '400%',
                 mouseMagnifier: false,
                 speech: true,
+                speechRules: 'mathspeak-default',
                 subtitles: true,
                 treeColoring: true,
                 viewBraille: false
@@ -374,8 +376,9 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
         let explorer = ke.SpeechExplorer.create(
             doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
-        explorer.speechGenerator.setOptions({locale: 'en', domain: 'mathspeak',
-                                             style: 'default', modality: 'speech'});
+        let [domain, style] = doc.options.a11y.speechRules.split('-');
+        explorer.speechGenerator.setOptions({locale: 'en', domain: domain,
+                                             style: style, modality: 'speech'});
         explorer.showRegion = 'subtitles';
         return explorer;
     },
@@ -461,17 +464,17 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
     case 'magnification':
         switch (value) {
         case 'None':
-            document.options.a11y.magnifier = value;
+            document.options.a11y.magnification = value;
             document.options.a11y.keyMagnifier = false;
             document.options.a11y.mouseMagnifier = false;
             break;
         case 'Keyboard':
-            document.options.a11y.magnifier = value;
+            document.options.a11y.magnification = value;
             document.options.a11y.keyMagnifier = true;
             document.options.a11y.mouseMagnifier = false;
             break;
         case 'Mouse':
-            document.options.a11y.magnifier = value;
+            document.options.a11y.magnification = value;
             document.options.a11y.keyMagnifier = false;
             document.options.a11y.mouseMagnifier = true;
             break;
@@ -496,10 +499,19 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
             break;
         }
         break;
-    case 'magnify':
-        document.options.a11y.magnify = parseFloat(value as string);
-        break;
     default:
         document.options.a11y[option] = value;
     }
 }
+
+
+let csMenu = function(menu: MJContextMenu, sub: ContextMenu.Submenu) {
+    // TODO: Replace with real locale!
+    const items = sre.ClearspeakPreferences.smartPreferences('en');
+    return ContextMenu.SubMenu.parse({
+        items: items,
+        id: 'Clearspeak'
+    }, sub);
+};
+
+MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);

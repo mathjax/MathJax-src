@@ -429,7 +429,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   public Show(node: HTMLElement, highlighter: sre.Highlighter) {
-    this.div.style.fontSize = this.document.options.a11y.magnify + '%';
+    this.div.style.fontSize = this.document.options.a11y.magnify;
     this.Update(node);
     super.Show(node, highlighter);
   }

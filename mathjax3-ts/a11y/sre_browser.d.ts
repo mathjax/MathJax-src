@@ -4,10 +4,9 @@ declare namespace sre {
   export type colorString = {foreground: string, background: string};
 
   interface SpeechGenerator {
-    generateSpeech(node: HTMLElement, xml: HTMLElement): string;
-    speech(): string;
+    generateSpeech(node: HTMLElement, xml: HTMLElement): void;
     setOptions(options: Object): void;
-    getOptions(): Object;
+    getOptions(): {[key: string]: string};
   }
 
   interface Highlighter {
@@ -31,6 +30,7 @@ declare namespace sre {
     speech(): string;
     move(key: number): boolean;
     getFocus(update?: boolean): Focus;
+    update(options: {[key: string]: string}): void;
   }
 
 }
@@ -57,5 +57,11 @@ declare namespace sre.HighlighterFactory {
                               back: colorType,
                               info: {renderer: string, browser?: string}
                              ): Highlighter;
+
+}
+
+declare namespace sre.ClearspeakPreferences {
+
+  export function smartPreferences(locale: string): string[];
 
 }
