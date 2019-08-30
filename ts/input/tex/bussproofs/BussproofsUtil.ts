@@ -158,14 +158,32 @@ let getColumn = function(inf: MmlNode): MmlNode {
   return inf;
 };
 
+
+/**
+ * Gets the next sibling of an inference rule.
+ * @param {MmlNode} inf The inference rule.
+ * @return {MmlNode} The next sibling.
+ */
 let nextSibling = function(inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) + 1] as MmlNode;
 };
 
+
+/**
+ * Gets the previous sibling of an inference rule.
+ * @param {MmlNode} inf The inference rule.
+ * @return {MmlNode} The previous sibling.
+ */
 let previousSibling = function(inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1] as MmlNode;
 };
 
+
+/**
+ * Get the parent inference rule.
+ * @param {MmlNode} inf The inference rule.
+ * @return {MmlNode} Its parent.
+ */
 let getParentInf = function(inf: MmlNode): MmlNode {
   while (inf && getProperty(inf, 'inference') == null) {
     inf = inf.parent as MmlNode;
@@ -202,6 +220,7 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
   }
   return result;
 };
+
 
 // - Get rule T from Wrapper W.
 // - Get conclusion C in T.
@@ -483,7 +502,8 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
 
 
 /**
- * Facilities for semantically relevant properties. These are used by SRE.
+ * Facilities for semantically relevant properties. These are used by SRE and
+ * are always prefixed with bspr_.
  */
 let property_prefix = 'bspr_';
 let blacklistedProperties = {
@@ -492,26 +512,43 @@ let blacklistedProperties = {
 
 
 /**
- * 
- * @param {MmlNode} node 
- * @param {string} property 
- * @param {Property} value 
+ * Sets a bussproofs property used for postprocessing and to convey
+ * semantics. Uses the bspr prefix.
+ * @param {MmlNode} node The node.
+ * @param {string} property The property to set.
+ * @param {Property} value Its value.
  */
 export let setProperty = function(node: MmlNode, property: string, value: Property){
   NodeUtil.setProperty(node, property_prefix + property, value);
 };
 
 
+/**
+ * Gets a bussproofs property.
+ * @param {MmlNode} node The node.
+ * @param {string} property The property to retrieve.
+ * @return {Property} The property object.
+ */
 export let getProperty = function(node: MmlNode, property: string): Property {
   return NodeUtil.getProperty(node, property_prefix + property);
 };
 
 
+/**
+ * Removes a bussproofs property.
+ * @param {MmlNode} node 
+ * @param {string} property 
+ */
 export let removeProperty = function(node: MmlNode, property: string) {
   node.removeProperty(property_prefix + property);
 };
 
 
+/**
+ * Postprocessor that adds properties as attributes to the nodes, unless they
+ * are blacklisted.
+ * @param {{data: ParseOptions, math: any}} arg The object to post-process.
+ */
 export let makeBsprAttributes = function(arg: {data: ParseOptions, math: any}) {
   arg.data.root.walkTree((mml: MmlNode, data?: any) => {
     let attr: string[] = [];
