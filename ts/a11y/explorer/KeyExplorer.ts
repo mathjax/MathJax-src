@@ -207,6 +207,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public Update(force: boolean = false) {
     super.Update(force);
     this.region.Update(this.walker.speech());
+    // This is a necessary in case speech options have changed via keypress
+    // during walking.
     let options = this.speechGenerator.getOptions();
     if (options.modality === 'speech') {
       this.document.options.a11y.speechRules = options.domain + '-' + options.style;

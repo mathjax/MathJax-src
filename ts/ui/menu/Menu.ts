@@ -978,7 +978,6 @@ export class Menu {
      * Create JSON for an a11y specific variable.
      *
      * @param {keyof MenuSettings} name   The setting for which to make a variable
-     * @param {(T) => void} action        Optional function to perform after setting the value
      * @returns {Object}                  The JSON for the variable
      *
      * @tempate T    The type of variable being defined

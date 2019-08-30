@@ -507,7 +507,7 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
 
 let csMenu = function(menu: MJContextMenu, sub: ContextMenu.Submenu) {
     // TODO: Replace with real locale!
-    const items = sre.ClearspeakPreferences.smartPreferences('en');
+    const items = sre.ClearspeakPreferences.smartPreferences(menu.mathItem, 'en');
     return ContextMenu.SubMenu.parse({
         items: items,
         id: 'Clearspeak'
