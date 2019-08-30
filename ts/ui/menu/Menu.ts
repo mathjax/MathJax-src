@@ -389,34 +389,20 @@ export class Menu {
                     this.variable<boolean>('shift'),
                     this.variable<string> ('scale', (scale: string) => this.setScale(scale)),
                     this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
-                    this.variable<string> ('highlight', (highlight: string) =>
-                                           this.setA11y({'highlight': highlight})),
-                    this.variable<string> ('backgroundColor', (background: string) =>
-                                           this.setA11y({'backgroundColor': background})),
-                    this.variable<string> ('foregroundColor', (foreground: string) =>
-                                           this.setA11y({'foregroundColor': foreground})),
-                    this.variable<boolean>('speech', (speech: boolean) =>
-                                           this.setA11y({'speech': speech})),
-                    this.variable<boolean>('subtitles', (subtitles: boolean) =>
-                                           this.setA11y({'subtitles': subtitles})),
-                    this.variable<boolean>('braille', (braille: boolean) =>
-                                           this.setA11y({'braille': braille})),
-                    this.variable<boolean>('viewBraille', (viewBraille: boolean) =>
-                                           this.setA11y({'viewBraille': viewBraille})),
-                    this.variable<string> ('speechRules', (speechRules: string) =>
-                                           this.setA11y({'speechRules': speechRules})),
-                    this.variable<string> ('magnification', (magnification: string) =>
-                                           this.setA11y({'magnification': magnification})),
-                    this.variable<string> ('magnify', (magnify: string) =>
-                                           this.setA11y({'magnify': magnify})),
-                    this.variable<boolean>('treeColoring', (treeColoring: boolean) =>
-                                           this.setA11y({'treeColoring': treeColoring})),
-                    this.variable<boolean>('infoType', (infoType: boolean) =>
-                                           this.setA11y({'infoType': infoType})),
-                    this.variable<boolean>('infoRole', (infoRole: boolean) =>
-                                           this.setA11y({'infoRole': infoRole})),
-                    this.variable<boolean>('infoPrefix', (infoPrefix: boolean) =>
-                                           this.setA11y({'infoPrefix': infoPrefix})),
+                    this.a11yVar<string> ('highlight'),
+                    this.a11yVar<string> ('backgroundColor'),
+                    this.a11yVar<string> ('foregroundColor'),
+                    this.a11yVar<boolean>('speech'),
+                    this.a11yVar<boolean>('subtitles'),
+                    this.a11yVar<boolean>('braille'),
+                    this.a11yVar<boolean>('viewBraille'),
+                    this.a11yVar<string> ('speechRules'),
+                    this.a11yVar<string> ('magnification'),
+                    this.a11yVar<string> ('magnify'),
+                    this.a11yVar<boolean>('treeColoring'),
+                    this.a11yVar<boolean>('infoType'),
+                    this.a11yVar<boolean>('infoRole'),
+                    this.a11yVar<boolean>('infoPrefix'),
                     this.variable<boolean>('autocollapse'),
                     this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
                     this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab))
@@ -474,12 +460,12 @@ export class Menu {
                                 ['mathspeak-sbrief', 'Superbrief']
                             ])),
                             this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechRules', [
-                                ['clearspeak-default', 'Standard']
+                                ['clearspeak-default', 'Auto']
                             ])),
                             this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
-                                ['chromvox-default', 'Verbose'],
-                                ['chromevox-short', 'Short'],
-                                ['chromevox-alternative', 'Alternative']
+                                ['default-default', 'Verbose'],
+                                ['default-short', 'Short'],
+                                ['default-alternative', 'Alternative']
                             ]))
                         ]),
                         this.submenu('Highlight', 'Highlight', [
@@ -627,6 +613,13 @@ export class Menu {
           window.MathJax._.a11y.explorer_ts.setA11yOptions(this.document, options);
         }
     }
+
+    protected getA11y(options: string): any {
+        if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
+            return this.document.options.a11y[options];
+        }
+    }
+
 
     /*======================================================================*/
 
@@ -976,6 +969,28 @@ export class Menu {
             setter: (value: T) => {
                 (this.settings as any)[name] = value;
                 action && action(value);
+                this.saveUserSettings();
+            }
+        };
+    }
+
+    /**
+     * Create JSON for an a11y specific variable.
+     *
+     * @param {keyof MenuSettings} name   The setting for which to make a variable
+     * @returns {Object}                  The JSON for the variable
+     *
+     * @tempate T    The type of variable being defined
+     */
+    public a11yVar<T extends (string | boolean)>(name: keyof MenuSettings) {
+        return {
+            name: name,
+            getter: () => this.getA11y(name),
+            setter: (value: T) => {
+                (this.settings as any)[name] = value;
+                let options: {[key: string]: any} = {};
+                options[name] = value;
+                this.setA11y(options);
                 this.saveUserSettings();
             }
         };

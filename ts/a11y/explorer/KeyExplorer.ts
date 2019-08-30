@@ -187,7 +187,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     super.Start();
-    let options = this.speechGenerator.getOptions();
+    let options = this.getOptions();
     this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
     this.walker = sre.WalkerFactory.walker('table',
@@ -207,6 +207,12 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public Update(force: boolean = false) {
     super.Update(force);
     this.region.Update(this.walker.speech());
+    // This is a necessary in case speech options have changed via keypress
+    // during walking.
+    let options = this.speechGenerator.getOptions();
+    if (options.modality === 'speech') {
+      this.document.options.a11y.speechRules = options.domain + '-' + options.style;
+    }
   }
 
 
@@ -265,6 +271,24 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker = dummy;
     this.Speech(dummy);
+  }
+
+
+  /**
+   * Retrieves the speech options to sync with document options.
+   * @return{{[key: string]: string}} The options settings for the speech
+   *     generator.
+   */
+  private getOptions() {
+    let options = this.speechGenerator.getOptions();
+    let [domain, style] = this.document.options.a11y.speechRules.split('-');
+    if (options.modality === 'speech' &&
+        (options.domain !== domain || options.style !== style)) {
+      options.domain = domain;
+      options.style = style;
+      this.walker.update(options);
+    }
+    return options;
   }
 
 }
