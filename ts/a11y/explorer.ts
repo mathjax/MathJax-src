@@ -238,7 +238,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 backgroundColor: 'Blue',
                 backgroundOpacity: .2,
                 braille: true,
-                flame: true,
+                flame: false,
                 foregroundColor: 'Black',
                 foregroundOpacity: 1,
                 highlight: 'None',
@@ -253,7 +253,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 speech: true,
                 speechRules: 'mathspeak-default',
                 subtitles: true,
-                treeColoring: true,
+                treeColoring: false,
                 viewBraille: false
           }
         };
