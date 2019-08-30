@@ -1,0 +1,6 @@
+{
+    "component": "output/svg",
+    "targets": ["output/svg.ts", "output/svg"],
+    "exclude": ["output/svg/fonts"]
+}
+

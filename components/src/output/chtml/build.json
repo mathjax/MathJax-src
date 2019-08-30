@@ -1,0 +1,6 @@
+{
+    "component": "output/chtml",
+    "targets": ["output/chtml.ts", "output/chtml"],
+    "exclude": ["output/chtml/fonts"]
+}
+

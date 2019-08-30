@@ -1,3 +1,5 @@
 *~
 node_modules
-mathjax3
+components/src/**/lib
+js
+es5
