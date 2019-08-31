@@ -28,13 +28,9 @@ import NodeUtil from '../NodeUtil.js';
 import ParseUtil from '../ParseUtil.js';
 
 import {CHTML} from '../../../output/chtml.js';
-import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
 import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
-import {browserAdaptor} from '../../../adaptors/browserAdaptor.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {mathjax} from '../../../mathjax.js';
-import {RegisterHTMLHandler} from '../../../handlers/html.js';
-import {chooseAdaptor} from '../../../adaptors/chooseAdaptor.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
 
 
