@@ -34,6 +34,14 @@ import {SelectableInfo} from './SelectableInfo.js';
 export class MJContextMenu extends ContextMenu.ContextMenu {
 
     /**
+     * Static map to hold methods for re-computing dynamic submenus.
+     * @type {Map<string, (menu: MJContextMenu, sub: ContextMenu.Submenu)}
+     */
+    public static DynamicSubmenus: Map<string,
+    (menu: MJContextMenu, sub: ContextMenu.Submenu) =>
+        ContextMenu.SubMenu> = new Map();
+
+    /**
      * The MathItem that has posted the menu
      */
     public mathItem: MathItem<HTMLElement, Text, Document> = null;
@@ -78,6 +86,7 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
                 const semantics = this.findID('Settings', 'semantics');
                 input === 'MathML' ? semantics.disable() : semantics.enable();
                 this.getAnnotationMenu();
+                this.dynamicSubmenus();
             }
             super.post(x, y);
         }
@@ -206,5 +215,21 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
 
     /*======================================================================*/
 
-}
+    /**
+     * Renews the dynamic submenus.
+     */
+    public dynamicSubmenus() {
+        for (const [id, method] of MJContextMenu.DynamicSubmenus) {
+            const menu = this.find(id) as ContextMenu.Submenu;
+            if (!menu) continue;
+            const sub = method(this, menu);
+            menu.setSubmenu(sub);
+            if (sub.getItems().length) {
+                menu.enable();
+            } else {
+                menu.disable();
+            }
+        }
+    }
 
+}
