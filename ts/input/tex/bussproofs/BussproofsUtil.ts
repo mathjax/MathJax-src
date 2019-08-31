@@ -43,11 +43,18 @@ import {Property, PropertyList} from '../../../core/Tree/Node.js';
  *  bounding box computation.
  */
 const adaptor: any = chooseAdaptor();
-RegisterHTMLHandler(adaptor);
-const jax = new CHTML();
-const doc = mathjax.document('<html></html>', {
-  OutputJax: jax
-});
+// RegisterHTMLHandler(adaptor);
+
+let jax: any = null;
+let doc = null;
+export let init = function() {
+  jax = new CHTML();
+  doc = mathjax.document('<html></html>', {
+    OutputJax: jax
+  });
+};
+
+// console.log(doc);
 let item: any = null;
 
 
@@ -57,8 +64,9 @@ let item: any = null;
  */
 let getBBox = function(node: MmlNode) {
   item.root = node;
-  let {w: width} = jax.getBBox(item, doc);
-  return width;
+  return 100;
+  // let {w: width} = jax.getBBox(item, doc);
+  // return width;
 };
 
 

@@ -24,7 +24,7 @@
 
 import {Configuration} from '../Configuration.js';
 import {ProofTreeItem} from './BussproofsItems.js';
-import {balanceRules, makeBsprAttributes} from './BussproofsUtil.js';
+import {balanceRules, makeBsprAttributes, init} from './BussproofsUtil.js';
 import './BussproofsMappings.js';
 
 
@@ -40,6 +40,7 @@ export const BussproofsConfiguration = Configuration.create(
    postprocessors: [
      [makeBsprAttributes, 2],
      [balanceRules, 1]
-   ]
+   ],
+  init: init
   }
 );
