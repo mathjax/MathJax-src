@@ -42,20 +42,21 @@ import {Property, PropertyList} from '../../../core/Tree/Node.js';
  *  Global constants local to the module. They instantiate an output jax for
  *  bounding box computation.
  */
-const adaptor: any = chooseAdaptor();
-// RegisterHTMLHandler(adaptor);
-
 let jax: any = null;
-let doc = null;
-export let init = function() {
+let doc: any = null;
+let item: any = null;
+
+
+/**
+ * Initialisation method for setting the jax and document needed to compute the
+ * bounding box information.
+ */
+export let initUtil = function() {
   jax = new CHTML();
   doc = mathjax.document('<html></html>', {
     OutputJax: jax
   });
 };
-
-// console.log(doc);
-let item: any = null;
 
 
 /**
@@ -64,9 +65,8 @@ let item: any = null;
  */
 let getBBox = function(node: MmlNode) {
   item.root = node;
-  return 100;
-  // let {w: width} = jax.getBBox(item, doc);
-  // return width;
+  let {w: width} = jax.getBBox(item, doc);
+  return width;
 };
 
 
@@ -201,10 +201,18 @@ let getParentInf = function(inf: MmlNode): MmlNode {
 
 
 // Computes bbox spaces
-// In the case of
-// right: right space + right label
-// left: left space + left label
 // 
+// 
+
+/**
+ * Computes spacing left or right of an inference rule. In the case of
+ * right: right space + right label
+ * left: left space + left label
+ * @param {MmlNode} inf The overall proof tree.
+ * @param {MmlNode} rule The particular inference rule.
+ * @param {boolean = false} right True for right, o/w left.
+ * @return {number} The spacing next to the rule.
+ */
 let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): number {
   let result = 0;
   if (inf === rule) {
@@ -233,7 +241,13 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
 // - Get rule T from Wrapper W.
 // - Get conclusion C in T.
 // - w: Preceding/following space/label.
-// - |x - y|/2: Distance from left boundary to middle of conclusion. 
+// - (x - y)/2: Distance from left boundary to middle of C. 
+/**
+ * Computes an space adjustment value to move the inference rule.
+ * @param {MmlNode} inf The inference rule.
+ * @param {boolean = false} right True if adjustments are on the right.
+ * @return {number} The adjustment value.
+ */
 let adjustValue = function(inf: MmlNode, right: boolean = false): number {
   let rule = getRule(inf);
   let conc = getConclusion(rule, getProperty(rule, 'inferenceRule') as string);
@@ -245,6 +259,13 @@ let adjustValue = function(inf: MmlNode, right: boolean = false): number {
 };
 
 
+/**
+ * Adds (positive or negative) space in the column containing the inference rule.
+ * @param {ParseOptions} config The parser configuration.
+ * @param {MmlNode} inf The inference rule to place.
+ * @param {number} space The space to be added.
+ * @param {boolean = false} right True if adjustment is on the right.
+ */
 let addSpace = function(config: ParseOptions, inf: MmlNode,
                         space: number, right: boolean = false) {
   if (getProperty(inf, 'inferenceRule') ||
@@ -276,8 +297,13 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
 };
 
 
+/**
+ * Propagates properties up the tree.
+ * @param {MmlNode} src The source node.
+ * @param {MmlNode} dest The destination node.
+ */
 let moveProperties = function(src: MmlNode, dest: MmlNode) {
-  let props = ['inference', 'proof', 'maxAdjust', 'labelledRule']; // 
+  let props = ['inference', 'proof', 'maxAdjust', 'labelledRule'];
   props.forEach(x => {
     let value = getProperty(src, x);
     if (value != null) {
@@ -288,9 +314,18 @@ let moveProperties = function(src: MmlNode, dest: MmlNode) {
 };
 
 
+
+/********************************
+ * The following methods deal with sequents. There are still issues with the
+ * spatial layout, though.
+ */
 // Sequents look like this: table row 3 cells
 // The table has the 'sequent' property.
 // The row is the node that is actually saved in the config object.
+/**
+ * Method to adjust sequent positioning after the tree is computed.
+ * @param {ParseOptions} config Parser configuration options.
+ */
 let adjustSequents = function(config: ParseOptions) {
   let sequents = config.nodeLists['sequent'];
   if (!sequents) {
@@ -323,30 +358,19 @@ let adjustSequents = function(config: ParseOptions) {
       }
       inf = premise;
     }
-    // addSequentMax(config, collect, 0, 'left');
-    // addSequentMax(config, collect, 2, 'right');
     adjustSequentPairwise(config, collect);
   }
 };
 
-const getSequentMax = function(sequents: MmlNode[], position: number): number {
-  let max = 0;
-  for (let sequent of sequents) {
-    max = Math.max(max, getBBox(sequent.childNodes[position] as MmlNode));
-  }
-  return max;
-};
 
-const addSequentMax = function(config: ParseOptions, sequents: MmlNode[],
-                               position: number, direction: string) {
-  let max = getSequentMax(sequents, position);
-  for (let sequent of sequents) {
-    let width = getBBox(sequent.childNodes[position] as MmlNode);
-    addSequentSpace(config, sequent, position, direction, max - width);
-    setProperty(sequent.parent, 'sequentAdjust_' + direction, width);
-  }
-};
-
+/**
+ * Add spaces to the sequents where necessary.
+ * @param {ParseOptions} config Parser configuration options.
+ * @param {MmlNode} sequent The sequent inference rule.
+ * @param {number} position Position of formula to adjust (0 or 2).
+ * @param {string} direction Left or right of the turnstyle. 
+ * @param {number} width The space to add to the formulas.
+ */
 const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
                                  position: number, direction: string, width: number) {
   let mspace = config.nodeFactory.create('node', 'mspace', [],
@@ -362,6 +386,22 @@ const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
 };
 
 
+/**
+ * Adjusts the sequent positioning for a list of inference rules by pairwise
+ * adjusting the width of formulas in sequents. I.e.,
+ *    A,B |- C
+ * ------------
+ *    A |- B,C
+ *
+ * will be adjusted to
+ * 
+ *    A, B |- C
+ * ----------------
+ *       A |- B,C
+ * 
+ * @param {ParseOptions} config Parser configuration options.
+ * @param {MmlNode[]} sequents The list of sequents.
+ */
 const adjustSequentPairwise = function(config: ParseOptions, sequents: MmlNode[]) {
   let top = sequents.pop();
   while (sequents.length) {
@@ -376,6 +416,16 @@ const adjustSequentPairwise = function(config: ParseOptions, sequents: MmlNode[]
 };
 
 
+/**
+ * Compares the top and bottom sequent of a inference rule
+ * Top:     A |- B
+ *        ----------
+ * Bottom:  C |- D
+ * 
+ * @param {MmlNode} top Top sequent.
+ * @param {MmlNode} bottom Bottom sequent.
+ * @return {[number, number]} The delta for left and right side of the sequents.
+ */
 const compareSequents = function(top: MmlNode, bottom: MmlNode) {
   const tr = getBBox(top.childNodes[2] as MmlNode);
   const br = getBBox(bottom.childNodes[2] as MmlNode);
