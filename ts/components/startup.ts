@@ -28,7 +28,6 @@ import {MathJax as MJGlobal, MathJaxObject as MJObject,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 
 import {MathDocument} from '../core/MathDocument.js';
-import {STATE} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {Handler} from '../core/Handler.js';
 import {InputJax, AbstractInputJax} from '../core/InputJax.js';
@@ -390,6 +389,7 @@ export namespace Startup {
      * @param {input} INPUTJAX  The input jax itself
      */
     export function makeMmlMethods(name: string, input: INPUTJAX) {
+        const STATE = MathJax._.core.MathItem.STATE;
         MathJax[name + '2mml'] =
             (math: string, options: OptionList = {}) => {
                 options.end = STATE.CONVERT;
