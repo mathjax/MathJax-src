@@ -27,7 +27,6 @@ import ParseOptions from '../ParseOptions.js';
 import NodeUtil from '../NodeUtil.js';
 import ParseUtil from '../ParseUtil.js';
 
-import {CHTML} from '../../../output/chtml.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {mathjax} from '../../../mathjax.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';

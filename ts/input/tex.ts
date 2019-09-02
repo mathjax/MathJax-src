@@ -137,7 +137,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   constructor(options: OptionList = {}) {
     const [rest, tex, find] = separateOptions(options, TeX.OPTIONS, FindTeX.OPTIONS);
     super(tex);
-    this.document = null;
     this.findTeX = this.options['FindTeX'] || new FindTeX(find);
     const packages = this.options.packages;
     const configuration = this.configuration = TeX.configure(packages);
