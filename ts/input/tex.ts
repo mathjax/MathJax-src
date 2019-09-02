@@ -74,11 +74,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   };
 
   /**
-   * The MathDocument for which this is the InputJax
-   */
-  public document: MathDocument<N, T, D>;
-
-  /**
    * The FindTeX instance used for locating TeX in strings
    */
   protected findTeX: FindTeX<N, T, D>;
