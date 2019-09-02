@@ -21,6 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {MathDocument} from './MathDocument.js';
 import {MathItem, ProtoItem} from './MathItem.js';
 import {MmlNode} from './MmlTree/MmlNode.js';
 import {MmlFactory} from './MmlTree/MmlFactory.js';
@@ -100,7 +101,7 @@ export interface InputJax<N, T, D> {
      * @param {MathItem} math  The MathItem whose math content is to processed
      * @return {MmlNode}       The resulting internal node tree for the math
      */
-    compile(math: MathItem<N, T, D>): MmlNode;
+    compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode;
 }
 
 /*****************************************************************/
@@ -178,19 +179,21 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     /**
      * @override
      */
-    public abstract compile(math: MathItem<N, T, D>): MmlNode;
+    public abstract compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode;
 
     /**
      * Execute a set of filters, passing them the MathItem and any needed data,
      *  and return the (possibly modified) data
      *
-     * @param {FunctionList} filters  The list of functions to be performed
-     * @param {MathItem} math         The math item that is being processed
-     * @param {any} data              Whatever other data is needed
-     * @return {any}                  The (possibly modified) data
+     * @param {FunctionList} filters   The list of functions to be performed
+     * @param {MathItem} math          The math item that is being processed
+     * @param {MathDocument} document  The math document contaiing the math item
+     * @param {any} data               Whatever other data is needed
+     * @return {any}                   The (possibly modified) data
      */
-    protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>, data: any) {
-        let args = {math: math, data: data};
+    protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>,
+                             document: MathDocument<N, T, D>, data: any) {
+        let args = {math: math, document: document, data: data};
         filters.execute(args);
         return args.data;
     }

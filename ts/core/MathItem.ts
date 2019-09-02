@@ -324,7 +324,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
      */
     public compile(document: MathDocument<N, T, D>) {
         if (this.state() < STATE.COMPILED) {
-            this.root = this.inputJax.compile(this);
+            this.root = this.inputJax.compile(this, document);
             this.state(STATE.COMPILED);
         }
     }
