@@ -24,6 +24,7 @@
 import {AbstractInputJax} from '../core/InputJax.js';
 import {defaultOptions, separateOptions, OptionList} from '../util/Options.js';
 import {FunctionList} from '../util/FunctionList.js';
+import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
@@ -125,10 +126,10 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
      *
      * @override
      */
-    public compile(math: MathItem<N, T, D>) {
+    public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
         let mml = math.start.node;
         if (!mml || this.options['forceReparse']) {
-            let mathml = this.executeFilters(this.preFilters, math, math.math || '<math></math>');
+            let mathml = this.executeFilters(this.preFilters, math, document, math.math || '<math></math>');
             let doc = this.checkForErrors(this.adaptor.parse(mathml, 'text/' + this.options['parseAs']));
             let body = this.adaptor.body(doc);
             if (this.adaptor.childNodes(body).length !== 1) {
@@ -140,8 +141,8 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
                            this.adaptor.kind(mml) + '>');
             }
         }
-        mml = this.executeFilters(this.mmlFilters, math, mml);
-        return this.executeFilters(this.postFilters, math, this.mathml.compile(mml as N));
+        mml = this.executeFilters(this.mmlFilters, math, document, mml);
+        return this.executeFilters(this.postFilters, math, document, this.mathml.compile(mml as N));
     }
 
     /**

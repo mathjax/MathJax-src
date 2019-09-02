@@ -28,6 +28,7 @@ import './ams_cd/AmsCdConfiguration.js';
 import './bbox/BboxConfiguration.js';
 import './boldsymbol/BoldsymbolConfiguration.js';
 import './braket/BraketConfiguration.js';
+import './bussproofs/BussproofsConfiguration.js';
 import './cancel/CancelConfiguration.js';
 import './color/ColorConfiguration.js';
 import './color_v2/ColorV2Configuration.js';
@@ -52,6 +53,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
         '[tex]/bbox',
         '[tex]/boldsymbol',
         '[tex]/braket',
+        '[tex]/bussproofs',
         '[tex]/cancel',
         '[tex]/color',
         '[tex]/enclose',

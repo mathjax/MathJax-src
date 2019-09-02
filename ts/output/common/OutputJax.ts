@@ -223,7 +223,7 @@ export abstract class CommonOutputJax<
         this.container = node;
         this.processMath(math.root, node);
         this.nodeMap = null;
-        this.executeFilters(this.postFilters, math, node);
+        this.executeFilters(this.postFilters, math, html, node);
     }
 
     /**

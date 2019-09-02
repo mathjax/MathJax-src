@@ -15,6 +15,7 @@ exports.source = {
     '[tex]/bbox': `${src}/input/tex/extensions/bbox/bbox.js`,
     '[tex]/boldsymbol': `${src}/input/tex/extensions/boldsymbol/boldsymbol.js`,
     '[tex]/braket': `${src}/input/tex/extensions/braket/braket.js`,
+    '[tex]/bussproofs': `${src}/input/tex/extensions/bussproofs/bussproofs.js`,
     '[tex]/cancel': `${src}/input/tex/extensions/cancel/cancel.js`,
     '[tex]/color': `${src}/input/tex/extensions/color/color.js`,
     '[tex]/colorV2': `${src}/input/tex/extensions/color_v2/colorV2.js`,
