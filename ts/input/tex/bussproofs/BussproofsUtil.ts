@@ -28,31 +28,24 @@ import NodeUtil from '../NodeUtil.js';
 import ParseUtil from '../ParseUtil.js';
 
 import {CHTML} from '../../../output/chtml.js';
-import {HTMLMathItem} from '../../../handlers/html/HTMLMathItem.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {mathjax} from '../../../mathjax.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
+import {MathItem} from '../../../core/MathItem.js';
+import {MathDocument} from '../../../core/MathDocument.js';
 
+
+type MATHITEM = MathItem<any, any, any>;
+type MATHDOCUMENT = MathDocument<any, any, any>;
+
+type FilterData = {math: MATHITEM, document: MATHDOCUMENT, data: ParseOptions};
 
 /**
  *  Global constants local to the module. They instantiate an output jax for
  *  bounding box computation.
  */
-let jax: any = null;
-let doc: any = null;
-let item: any = null;
-
-
-/**
- * Initialisation method for setting the jax and document needed to compute the
- * bounding box information.
- */
-export let initUtil = function() {
-  jax = new CHTML();
-  doc = mathjax.document('<html></html>', {
-    OutputJax: jax
-  });
-};
+let doc: MATHDOCUMENT = null;
+let item: MATHITEM = null;
 
 
 /**
@@ -61,7 +54,7 @@ export let initUtil = function() {
  */
 let getBBox = function(node: MmlNode) {
   item.root = node;
-  let {w: width} = jax.getBBox(item, doc);
+    let {w: width} = (doc.outputJax as any).getBBox(item, doc);
   return width;
 };
 
@@ -69,7 +62,7 @@ let getBBox = function(node: MmlNode) {
 /**
  * Get the actual table that represents the inference rule, i.e., the rule
  * without the label. We ignore preceding elements or spaces.
- * 
+ *
  * @param {MmlNode} node The out node representing the inference.
  * @return {MmlNode} The actual table representing the inference rule.
  */
@@ -197,8 +190,8 @@ let getParentInf = function(inf: MmlNode): MmlNode {
 
 
 // Computes bbox spaces
-// 
-// 
+//
+//
 
 /**
  * Computes spacing left or right of an inference rule. In the case of
@@ -237,7 +230,7 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
 // - Get rule T from Wrapper W.
 // - Get conclusion C in T.
 // - w: Preceding/following space/label.
-// - (x - y)/2: Distance from left boundary to middle of C. 
+// - (x - y)/2: Distance from left boundary to middle of C.
 /**
  * Computes an space adjustment value to move the inference rule.
  * @param {MmlNode} inf The inference rule.
@@ -364,7 +357,7 @@ let adjustSequents = function(config: ParseOptions) {
  * @param {ParseOptions} config Parser configuration options.
  * @param {MmlNode} sequent The sequent inference rule.
  * @param {number} position Position of formula to adjust (0 or 2).
- * @param {string} direction Left or right of the turnstyle. 
+ * @param {string} direction Left or right of the turnstyle.
  * @param {number} width The space to add to the formulas.
  */
 const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
@@ -390,11 +383,11 @@ const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
  *    A |- B,C
  *
  * will be adjusted to
- * 
+ *
  *    A, B |- C
  * ----------------
  *       A |- B,C
- * 
+ *
  * @param {ParseOptions} config Parser configuration options.
  * @param {MmlNode[]} sequents The list of sequents.
  */
@@ -417,7 +410,7 @@ const adjustSequentPairwise = function(config: ParseOptions, sequents: MmlNode[]
  * Top:     A |- B
  *        ----------
  * Bottom:  C |- D
- * 
+ *
  * @param {MmlNode} top Top sequent.
  * @param {MmlNode} bottom Bottom sequent.
  * @return {[number, number]} The delta for left and right side of the sequents.
@@ -435,20 +428,20 @@ const compareSequents = function(top: MmlNode, bottom: MmlNode) {
 
 // For every inference rule we adjust the width of ruler by subtracting and
 // adding suitable spaces around the rule. The algorithm in detail.
-// 
+//
 // Notions that we need:
 //
 //
 // * Inference: The inference consisting either of an inference rule or a
 //              structure containing the rule plus 0 - 2 labels and spacing
 //              elements.  s l{0,1} t r{0,1} s', m,n \in IN_0
-// 
+//
 //              Technically this is realised as nested rows, if the spaces
 //              and/or labels exist:
 //              mr s mr l t r /mr s' /mr
-// 
+//
 // * InferenceRule: The rule without the labels and spacing.
-// 
+//
 // * Conclusion: The element forming the conclusion of the rule. In
 //               downwards inferences this is the final row of the table.
 //
@@ -458,19 +451,19 @@ const compareSequents = function(top: MmlNode, bottom: MmlNode) {
 //             inbetween.
 //
 // * |x|: Width of bounding box of element x.
-// 
+//
 // Left adjustment:
-// 
+//
 // * For the given inference I:
 //    + compute rule R of I
 //    + compute premises P of I
 //    + compute premise P_f, P_l as first and last premise of I
-// 
+//
 // * If P_f is an inference rule:
 //    + compute adjust value a_f for wrapper W_f of P_f
 //    + add -a_f space to wrapper W_f
 //    + add  a_f space to wrapper W
-// 
+//
 // * If P_l is an inference rule:
 //   + compute adjust value a_l for wrapper W_l of P_l
 //   + if I has (right) label L: a_l = a_l + |L|
@@ -483,14 +476,13 @@ const compareSequents = function(top: MmlNode, bottom: MmlNode) {
 //   + Otherwise: Propagate a_l by
 //                ++ find direct parent infererence rule I'
 //                ++ Set A_{I'} = a_l.
-// 
+//
 /**
  * Implements the above algorithm.
- * @param {{data: ParseOptions, math: any}} arg The parser configuration and
- *     mathitem to filter.
+ * @param {FilterData} arg The parser configuration and mathitem to filter.
  */
-export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
-  item = new HTMLMathItem('', null, arg.math.display);
+export let balanceRules = function(arg: FilterData) {
+  item = new arg.document.options.MathItem('', null, arg.math.display);
   let config = arg.data;
   adjustSequents(config);
   let inferences = config.nodeLists['inference'] || [];
@@ -505,7 +497,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
     if (getProperty(premiseF, 'inference')) {
       let adjust = adjustValue(premiseF);
       if (adjust) {
-        addSpace(config, premiseF, -1 * adjust);
+        addSpace(config, premiseF, -adjust);
         let w = getSpaces(inf, rule, false);
         addSpace(config, inf, adjust - w);
       }
@@ -516,7 +508,7 @@ export let balanceRules = function(arg: {data: ParseOptions, math: any}) {
       continue;
     }
     let adjust = adjustValue(premiseL, true);
-    addSpace(config, premiseL, -1 * adjust, true);
+    addSpace(config, premiseL, -adjust, true);
     let w = getSpaces(inf, rule, true);
     let maxAdjust = getProperty(inf, 'maxAdjust') as number;
     if (maxAdjust != null) {
@@ -590,8 +582,8 @@ export let getProperty = function(node: MmlNode, property: string): Property {
 
 /**
  * Removes a bussproofs property.
- * @param {MmlNode} node 
- * @param {string} property 
+ * @param {MmlNode} node
+ * @param {string} property
  */
 export let removeProperty = function(node: MmlNode, property: string) {
   node.removeProperty(property_prefix + property);
@@ -601,9 +593,9 @@ export let removeProperty = function(node: MmlNode, property: string) {
 /**
  * Postprocessor that adds properties as attributes to the nodes, unless they
  * are blacklisted.
- * @param {{data: ParseOptions, math: any}} arg The object to post-process.
+ * @param {FilterData} arg The object to post-process.
  */
-export let makeBsprAttributes = function(arg: {data: ParseOptions, math: any}) {
+export let makeBsprAttributes = function(arg: FilterData) {
   arg.data.root.walkTree((mml: MmlNode, data?: any) => {
     let attr: string[] = [];
     mml.getPropertyNames().forEach(x => {
@@ -616,3 +608,22 @@ export let makeBsprAttributes = function(arg: {data: ParseOptions, math: any}) {
     }
   });
 };
+
+/**
+ * Preprocessor that sets the document and jax for bounding box computations
+ * @param {FilterData} arg The object to pre-process.
+ */
+export let saveDocument = function (arg: FilterData) {
+  doc = arg.document;
+  if (!('getBBox' in doc.outputJax)) {
+    throw Error('The bussproofs extension requires an output jax with a getBBox() method');
+  }
+}
+
+/**
+ * Clear the document when we are done
+ * @param {FilterData} arg The object to pre-process.
+ */
+export let clearDocument = function (arg: FilterData) {
+  doc = null;
+}

@@ -23,6 +23,7 @@
 
 import {AbstractInputJax} from '../core/InputJax.js';
 import {defaultOptions, userOptions, separateOptions, selectOptions, OptionList} from '../util/Options.js';
+import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
@@ -71,6 +72,11 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     // Maximum size of TeX string to process.
     maxBuffer: 5 * 1024
   };
+
+  /**
+   * The MathDocument for which this is the InputJax
+   */
+  public document: MathDocument<N, T, D>;
 
   /**
    * The FindTeX instance used for locating TeX in strings
@@ -136,6 +142,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   constructor(options: OptionList = {}) {
     const [rest, tex, find] = separateOptions(options, TeX.OPTIONS, FindTeX.OPTIONS);
     super(tex);
+    this.document = null;
     this.findTeX = this.options['FindTeX'] || new FindTeX(find);
     const packages = this.options.packages;
     const configuration = this.configuration = TeX.configure(packages);
@@ -170,9 +177,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * @override
    */
-  public compile(math: MathItem<N, T, D>): MmlNode {
+  public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode {
     this.parseOptions.clear();
-    this.executeFilters(this.preFilters, math, this.parseOptions);
+    this.executeFilters(this.preFilters, math, document, this.parseOptions);
     let display = math.display;
     this.latex = math.math;
     let node: MmlNode;
@@ -195,7 +202,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     }
     this.parseOptions.tags.finishEquation(math);
     this.parseOptions.root = node;
-    this.executeFilters(this.postFilters, math, this.parseOptions);
+    this.executeFilters(this.postFilters, math, document, this.parseOptions);
     this.mathNode = this.parseOptions.root;
     return this.mathNode;
   };
