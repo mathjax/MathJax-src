@@ -1,1 +1,1 @@
-import './lib/amsCd.js';
+import './lib/amscd.js';
