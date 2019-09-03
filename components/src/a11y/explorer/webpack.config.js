@@ -6,7 +6,7 @@ module.exports = PACKAGE(
     [                                   // packages to link to
         'components/src/ui/menu/lib',
         'components/src/a11y/semantic-enrich/lib',
-        'components/src/mml-input/lib',
+        'components/src/input/mml/lib',
         'components/src/core/lib'
     ],
     __dirname                           // our directory

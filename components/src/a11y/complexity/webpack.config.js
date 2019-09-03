@@ -5,7 +5,7 @@ module.exports = PACKAGE(
     '../../../../js',                   // location of the MathJax js library
     [                                   // packages to link to
         'components/src/a11y/semantic-enrich/lib',
-        'components/src/mml-input/lib',
+        'components/src/input/mml/lib',
         'components/src/core/lib'
     ],
     __dirname                           // our directory

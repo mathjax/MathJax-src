@@ -5,7 +5,7 @@ module.exports = PACKAGE(
     '../../../../../../js',             // location of the MathJax js library
     [                                   // packages to link to
         'components/src/core/lib',
-        'components/src/svg-output'
+        'components/src/output/svg/lib'
     ],
     __dirname                           // our directory
 );
