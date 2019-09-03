@@ -4,6 +4,7 @@ module.exports = PACKAGE(
     'a11y/explorer',                    // the package to build
     '../../../../js',                   // location of the MathJax js library
     [                                   // packages to link to
+        'components/src/ui/menu/lib',
         'components/src/a11y/semantic-enrich/lib',
         'components/src/mml-input/lib',
         'components/src/core/lib'
