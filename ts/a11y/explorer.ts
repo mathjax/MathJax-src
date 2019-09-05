@@ -234,7 +234,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 explorable: [STATE.EXPLORER]
             }),
             a11y: {
-                align: 'top',                      // placement of magnified expression expressions
+                align: 'top',                      // placement of magnified expression
                 backgroundColor: 'Blue',           // color for background of selected sub-expression
                 backgroundOpacity: .2,             // opacity for background of selected sub-expression
                 braille: true,                     // switch on Braille output
