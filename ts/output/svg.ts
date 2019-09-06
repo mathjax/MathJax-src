@@ -220,7 +220,6 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         //
         const adaptor = this.adaptor;
         const svg = adaptor.append(this.container, this.svg('svg', {
-            xmlns: SVGNS,
             width: this.ex(W), height: this.ex(h + d),
             role: 'img', focusable: false,
             style: {'vertical-align': this.ex(-d)},
