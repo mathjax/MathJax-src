@@ -46,11 +46,21 @@ files directly.
 
 ### Using MathJax in web browsers
 
-To use MathJax in web pages, see the [MathJax
+If you are loading MathJax from a CDN into a web page, there is no
+need to install anything.  Simply use a `script` tag that loads
+MathJax from the CDN.  E.g.,
+
+    <script id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+    
+See the [MathJax
 documentation](https://docs.mathjax.org/en/latest/index.html#browser-components),
 the [MathJax Web Demos](https://github.com/mathjax/MathJax-demos-web),
 and the [MathJax Component
-Repository](https://github.com/mathjax/MathJax).
+Repository](https://github.com/mathjax/MathJax-demos-web) for more information.
+
+
 
 
 ### Using MathJax Components in node applications
@@ -77,7 +87,8 @@ where the first `{ ... }` is a MathJax configuration, and the second
     
 See the
 [documentation](https//docs.mathjax.org/en/latest/index.html#server-nodejs)
-for more details.
+and the [MathJax Node
+Repository](https://github.com/mathjax/MathJax-demos-node)for more details.
 
 ### Using MathJax modules directly in node applications
 
