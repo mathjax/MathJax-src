@@ -261,8 +261,11 @@ export abstract class CommonOutputJax<
         const maps = this.getMetricMaps(html);
         for (const math of html.math) {
             const map = maps[math.display ? 1 : 0];
-            const {em, ex, containerWidth, lineWidth, scale} = map.get(adaptor.parent(math.start.node));
-            math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+            const parent = adaptor.parent(math.start.node);
+            if (parent) {
+                const {em, ex, containerWidth, lineWidth, scale} = map.get(parent);
+                math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+            }
         }
     }
 
@@ -297,7 +300,7 @@ export abstract class CommonOutputJax<
         for (const math of html.math) {
             const node = adaptor.parent(math.start.node);
             const map = domMaps[math.display? 1 : 0];
-            if (!map.has(node)) {
+            if (!map.has(node) && node) {
                 map.set(node, this.getTestElement(node, math.display));
             }
         }
