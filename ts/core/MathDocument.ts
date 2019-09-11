@@ -206,7 +206,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
      */
     public renderConvert(math: MathItem<N, T, D>, document: MathDocument<N, T, D>, end = STATE.LAST) {
         for (const item of this.items) {
-            if (item.priority >= end) return;
+            if (item.priority > end) return;
             if (item.item.convert) {
                 if (item.item.renderMath(math, document)) return;
             }
