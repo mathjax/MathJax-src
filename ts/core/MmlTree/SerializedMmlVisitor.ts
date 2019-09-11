@@ -86,16 +86,15 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @return {string}       The serialized contents of the mrow, properly indented.
      */
     public visitTeXAtomNode(node: MmlNode, space: string) {
-      let texclass = node.texClass < 0 ? 'NONE' : TEXCLASSNAMES[node.texClass];
-      let mml = space + '<mrow class="MJX-TeXAtom-' + texclass + '"' +
-          this.getAttributes(node) + '>\n';
-      const endspace = space;
-      space += '  ';
-      for (const child of node.childNodes) {
-        mml += this.visitNode(child, space);
-      }
-      mml += '\n' + endspace + '</mrow>';
-      return mml;
+        let texclass = node.texClass < 0 ? 'NONE' : TEXCLASSNAMES[node.texClass];
+        let children = this.childNodeMml(node, space + '  ', '\n');
+        let attributes = node.attributes;
+        let names = attributes.getExplicit('class');
+        attributes.set('class', 'MJX-TeXAtom-' + texclass + (names ? ' ' + names : ''));
+        let mml = space + '<mrow' + this.getAttributes(node) + '>' +
+            (children.match(/\S/) ? '\n' + children + space : '') + '</mrow>';
+        attributes.set('class', names);
+        return mml;
     }
 
     /**
@@ -111,7 +110,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
 
     /**
      * The generic visiting function:
-     *   Make the string versino of the open tag, properly indented, with it attributes
+     *   Make the string version of the open tag, properly indented, with it attributes
      *   Increate the indentation level
      *   Add the childnodes
      *   Add the end tag with proper spacing (empty tags have the close tag following directly)
