@@ -78,7 +78,11 @@ where the first `{ ... }` is a MathJax configuration, and the second
 `{ ... }` is the code to run after MathJax has been loaded.  E.g.
 
     require('mathjax').init({
-      loader: {load: ['input/tex', 'output/svg']}
+      loader: {
+        require: require,
+        paths: {mathjax: 'mathjax/es5'},
+        load: ['input/tex', 'output/svg']
+      }
     }).then((MathJax) => {
       const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
       console.log(MathJax.startup.adaptor.outerHTML(svg));
