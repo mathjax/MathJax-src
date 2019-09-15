@@ -41,6 +41,15 @@ let tagID = 0;
 export function tagFormatConfig(config: Configuration, jax: TeX<any, any, any>) {
 
     /**
+     * If the tag format is being added by one of the other extensions,
+     *   as is done for the 'ams' tags, make sure it is defined so we can create it.
+     */
+    const tags = jax.parseOptions.options.tags;
+    if (tags !== 'base' && config.tags.hasOwnProperty(tags)) {
+        TagsFactory.add(tags, config.tags[tags]);
+    }
+
+    /**
      * The original tag class to be extended (none, ams, or all)
      */
     const TagClass = TagsFactory.create(jax.parseOptions.options.tags).constructor as typeof AbstractTags;
@@ -103,6 +112,7 @@ export function tagFormatConfig(config: Configuration, jax: TeX<any, any, any>) 
 export const TagformatConfiguration = Configuration.create(
     'tagFormat', {
         config: tagFormatConfig,
+        configPriority: 10,
         options: {
             tagFormat: {
                 number: (n: number) => n.toString(),
