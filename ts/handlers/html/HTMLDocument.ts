@@ -94,10 +94,11 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @return {Location}            The Location object for the position of the delimiter in the document
      */
     protected findPosition(N: number, index: number, delim: string, nodes: HTMLNodeArray<N, T>): Location<N, T> {
+        const adaptor = this.adaptor;
         for (const list of nodes[N]) {
             let [node, n] = list;
-            if (index <= n) {
-                return {node: node, n: index, delim: delim};
+            if (index <= n && adaptor.kind(node) === '#text') {
+                return {node: node, n: Math.max(index, 0), delim: delim};
             }
             index -= n;
         }
