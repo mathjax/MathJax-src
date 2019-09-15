@@ -866,7 +866,7 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
      */
     public setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        this.texClass = TEXCLASS.NONE;
+        this.texClass = TEXCLASS.ORD;
         let base = this.childNodes[0];
         if (base) {
             if (this.isEmbellished || base.isKind('mi')) {
