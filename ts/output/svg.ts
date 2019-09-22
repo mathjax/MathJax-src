@@ -60,8 +60,11 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      *  The default styles for SVG
      */
     public static commonStyles: CssStyleList = {
+        'mjx-container[jax="SVG"]': {
+            direction: 'ltr'
+        },
         'mjx-container[jax="SVG"] > svg': {
-            'overflow': 'visible'
+            overflow: 'visible'
         },
         'mjx-container[jax="SVG"] > svg a': {
             fill: 'blue', stroke: 'blue'
