@@ -23,7 +23,7 @@
 
 import {AbstractOutputJax} from '../../core/OutputJax.js';
 import {MathDocument} from '../../core/MathDocument.js';
-import {MathItem, Metrics} from '../../core/MathItem.js';
+import {MathItem, Metrics, STATE} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {FontData, FontDataClass, CharOptions, DelimiterData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
@@ -260,11 +260,12 @@ export abstract class CommonOutputJax<
         const adaptor = this.adaptor;
         const maps = this.getMetricMaps(html);
         for (const math of html.math) {
-            const map = maps[math.display ? 1 : 0];
             const parent = adaptor.parent(math.start.node);
-            if (parent) {
+            if (math.state() < STATE.METRICS && parent) {
+                const map = maps[math.display ? 1 : 0];
                 const {em, ex, containerWidth, lineWidth, scale} = map.get(parent);
                 math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+                math.state(STATE.METRICS);
             }
         }
     }
@@ -299,9 +300,11 @@ export abstract class CommonOutputJax<
         //
         for (const math of html.math) {
             const node = adaptor.parent(math.start.node);
-            const map = domMaps[math.display? 1 : 0];
-            if (!map.has(node) && node) {
-                map.set(node, this.getTestElement(node, math.display));
+            if (node && math.state() < STATE.METRICS) {
+                const map = domMaps[math.display? 1 : 0];
+                if (!map.has(node)) {
+                    map.set(node, this.getTestElement(node, math.display));
+                }
             }
         }
         //
