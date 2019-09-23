@@ -24,7 +24,7 @@
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonTeXAtom, CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
 import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
-import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -43,6 +43,7 @@ export class SVGTeXAtom<N, T, D> extends CommonTeXAtomMixin<SVGConstructor<any, 
      */
     public toSVG(parent: N) {
         super.toSVG(parent);
+        this.adaptor.setAttribute(this.element, 'data-mjx-texclass', TEXCLASSNAMES[this.node.texClass]);
         //
         // Center VCENTER atoms vertically
         //
