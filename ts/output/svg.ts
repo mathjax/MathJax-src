@@ -236,6 +236,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
             //
             // Use width 100% with no viewbox, and instead scale and translate to achieve the same result
             //
+            adaptor.setStyle(svg, 'min-width', this.ex(W));
             adaptor.setAttribute(svg, 'width', pwidth);
             adaptor.removeAttribute(svg, 'viewBox');
             const scale = wrapper.metrics.ex / (this.font.params.x_height * 1000);
