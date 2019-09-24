@@ -133,8 +133,9 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
          */
         attachSpeech(document: MathDocument<N, T, D>) {
             if (this.state() >= STATE.ATTACHSPEECH) return;
-            const attributes =this.root.attributes;
-            const speech = (attributes.get('aria-label') || attributes.get('data-semantic-speech')) as string;
+            const attributes = this.root.attributes;
+            const speech = (attributes.get('aria-label') ||
+                            this.getSpeech(this.root)) as string;
             if (speech) {
                 const adaptor = document.adaptor;
                 const node = this.typesetRoot;
@@ -144,6 +145,21 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
                 }
             }
             this.state(STATE.ATTACHSPEECH);
+        }
+
+        private getSpeech(node: MmlNode): string {
+            const attributes = node.attributes;
+            if (!attributes) return;
+            const speech = attributes.getExplicit('data-semantic-speech') as string;
+            if (!attributes.getExplicit('data-semantic-parent') && speech) {
+                return speech;
+            }
+            for (let child of node.childNodes) {
+                let value = this.getSpeech(child as MmlNode);
+                if (value != null) {
+                    return value;
+                }
+            }
         }
 
     };
