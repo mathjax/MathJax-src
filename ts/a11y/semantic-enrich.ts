@@ -131,7 +131,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         /**
          * @param {MathDocument} document   The MathDocument for the MathItem
          */
-        attachSpeech(document: MathDocument<N, T, D>) {
+        public attachSpeech(document: MathDocument<N, T, D>) {
             if (this.state() >= STATE.ATTACHSPEECH) return;
             const attributes = this.root.attributes;
             const speech = (attributes.get('aria-label') ||
@@ -147,6 +147,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             this.state(STATE.ATTACHSPEECH);
         }
 
+        /**
+         * Retrieves the actual speech element that should be used as aria label.
+         * @param {MmlNode} node The root node to search from.
+         * @return {string} The speech content.
+         */
         private getSpeech(node: MmlNode): string {
             const attributes = node.attributes;
             if (!attributes) return;
