@@ -131,10 +131,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         /**
          * @param {MathDocument} document   The MathDocument for the MathItem
          */
-        attachSpeech(document: MathDocument<N, T, D>) {
+        public attachSpeech(document: MathDocument<N, T, D>) {
             if (this.state() >= STATE.ATTACHSPEECH) return;
-            const attributes =this.root.attributes;
-            const speech = (attributes.get('aria-label') || attributes.get('data-semantic-speech')) as string;
+            const attributes = this.root.attributes;
+            const speech = (attributes.get('aria-label') ||
+                            this.getSpeech(this.root)) as string;
             if (speech) {
                 const adaptor = document.adaptor;
                 const node = this.typesetRoot;
@@ -144,6 +145,26 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
                 }
             }
             this.state(STATE.ATTACHSPEECH);
+        }
+
+        /**
+         * Retrieves the actual speech element that should be used as aria label.
+         * @param {MmlNode} node The root node to search from.
+         * @return {string} The speech content.
+         */
+        private getSpeech(node: MmlNode): string {
+            const attributes = node.attributes;
+            if (!attributes) return;
+            const speech = attributes.getExplicit('data-semantic-speech') as string;
+            if (!attributes.getExplicit('data-semantic-parent') && speech) {
+                return speech;
+            }
+            for (let child of node.childNodes) {
+                let value = this.getSpeech(child as MmlNode);
+                if (value != null) {
+                    return value;
+                }
+            }
         }
 
     };
