@@ -229,6 +229,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
 
         public static OPTIONS: OptionList = {
             ...BaseDocument.OPTIONS,
+            enrichSpeech: 'shallow',                   // overrides option in EnrichedMathDocument
             renderActions: expandable({
                 ...BaseDocument.OPTIONS.renderActions,
                 explorable: [STATE.EXPLORER]
