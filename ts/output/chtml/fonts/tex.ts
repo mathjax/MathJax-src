@@ -60,6 +60,8 @@ import {delimiters} from '../../common/fonts/tex/delimiters.js';
 export class TeXFont extends
 CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass>(CHTMLFontData) {
 
+    protected static defaultCssFamilyPrefix = 'MJXZERO, ';
+
     /**
      * The classes to use for each variant
      */
