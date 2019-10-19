@@ -303,7 +303,7 @@ CommonWrapper<
             }
         }
         if (attributes.get('class')) {
-            const names = (attributes.get('class') as string).split(/ /);
+            const names = (attributes.get('class') as string).trim().split(/ +/);
             for (const name of names) {
                 this.adaptor.addClass(this.chtml, name);
             }
