@@ -334,7 +334,7 @@ export interface MathDocument<N, T, D> {
      * Convert a math string to the document's output format
      *
      * @param {string} math           The math string to convert
-     * @params {OptionList} optoins   The options for the conversion (e.g., format, ex, em, etc.)
+     * @params {OptionList} options   The options for the conversion (e.g., format, ex, em, etc.)
      * @return {MmlNode|N}            The MmlNode or N node for the converted content
      */
     convert(math: string, options?: OptionList): MmlNode | N;
