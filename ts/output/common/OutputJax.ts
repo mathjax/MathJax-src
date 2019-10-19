@@ -301,7 +301,7 @@ export abstract class CommonOutputJax<
         for (const math of html.math) {
             const node = adaptor.parent(math.start.node);
             if (node && math.state() < STATE.METRICS) {
-                const map = domMaps[math.display? 1 : 0];
+                const map = domMaps[math.display ? 1 : 0];
                 if (!map.has(node)) {
                     map.set(node, this.getTestElement(node, math.display));
                 }
