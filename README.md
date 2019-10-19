@@ -3,7 +3,7 @@
 ## Beautiful math in all browsers
 
 MathJax is an open-source JavaScript display engine for LaTeX, MathML,
-andAsciiMath notation that works in all modern browsers.  It was
+and AsciiMath notation that works in all modern browsers.  It was
 designed with the goal of consolidating the recent advances in web
 technologies into a single, definitive, math-on-the-web platform
 supporting the major browsers and operating systems.  It requires no
@@ -33,13 +33,13 @@ and <https://docs.mathjax.org> for the MathJax documentation.
 ## What's in this Repository
 
 This repository contains the source files for MathJax, which are
-written in Typescript.  These are compiled into javascript files and
+written in TypeScript.  These are compiled into JavaScript files and
 then combined into component files for use on the web.  The component
 files are available from several [CDN services that host
 MathJax](https://docs.mathjax.org/en/latest/web/start.html#using-mathjax-from-a-content-delivery-network-cdn),
 and also from the [MathJax Component
 Repository](https://github.com/mathjax/MathJax).  Node applications
-can use either the component files, or call the MathJax javascript
+can use either the component files, or call the MathJax JavaScript
 files directly.
 
 ## Installation and Use
@@ -96,7 +96,7 @@ Repository](https://github.com/mathjax/MathJax-demos-node)for more details.
 
 ### Using MathJax modules directly in node applications
 
-You can use the MathJax javascript files (as opposed to MathJax
+You can use the MathJax JavaScript files (as opposed to MathJax
 components) directly in node applications.  This gives you the
 greatest flexibility, but requires more coding.  To use this approach,
 install the `mathjax-full` package:
@@ -107,12 +107,12 @@ This will provide the following directories:
 
     node_modules/
       mathjax-full/
-        ts/                  the MathJax source Typescript files
-        js/                  the compiled javascript files
+        ts/                  the MathJax source TypeScript files
+        js/                  the compiled JavaScript files
         components/          the component build tools and control files
         es5/                 the packages component files
 
-You can use the components and javascript files directly in your node
+You can use the components and JavaScript files directly in your node
 applications (see the [MathJax node
 demos](https://github.com/mathjax/MathJax-demos-node) for examples).
 
@@ -123,8 +123,8 @@ If you want to work from the GitHub repository directly, then do the following:
     npm run compile
     npm run make-components
 
-in order to compile the javascript files from the Typescript source,
-and build the component files from the javascript files.
+in order to compile the JavaScript files from the TypeScript source,
+and build the component files from the JavaScript files.
 
 ## Code Contributions
 
