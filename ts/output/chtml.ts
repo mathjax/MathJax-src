@@ -32,7 +32,10 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {CHTMLFontData} from './chtml/FontData.js';
+import {CssFontData} from './common/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
+import * as LENGTHS from '../util/lengths.js';
+
 
 /*****************************************************************/
 /**
@@ -187,6 +190,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
         const scale = 100 / this.math.metrics.scale;
         if (scale !== 100) {
             styles['font-size'] = this.fixed(scale, 1) + '%';
+            styles.padding = LENGTHS.em(75 / scale) + ' 0 ' + LENGTHS.em(20 / scale) + ' 0';
         }
         if (variant !== '-explicitFont') {
             this.cssFontStyles(this.font.getCssFont(variant), styles);
@@ -204,13 +208,14 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
     public measureTextNode(text: N) {
         const adaptor = this.adaptor;
         text = adaptor.clone(text);
-        const node = this.html('mjx-measure-text', {}, [text]);
+        const style = {position: 'absolute', 'white-space': 'nowrap'};
+        const node = this.html('mjx-measure-text', {style}, [ text]);
         adaptor.append(adaptor.parent(this.math.start.node), this.container);
         adaptor.append(this.container, node);
         let w = adaptor.nodeSize(text, this.math.metrics.em)[0] / this.math.metrics.scale;
         adaptor.remove(this.container);
         adaptor.remove(node);
-        return {w: w, h: .75, d: .25};
+        return {w: w, h: .75, d: .2};
     }
 
     /**
@@ -221,5 +226,11 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
         font[0] = 'MJXZERO, ' + font[0];
         return font;
     }
+
+    public cssFontStyles(font: CssFontData, styles: StyleList = {}) {
+        font[0] = 'MJXZERO, ' + font[0];
+        return super.cssFontStyles(font, styles);
+    }
+
 
 }

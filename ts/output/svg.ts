@@ -361,7 +361,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         adaptor.append(adaptor.body(adaptor.document), svg);
         let w = adaptor.nodeSize(text, 1000, true)[0];
         adaptor.remove(svg);
-        return {w: w, h: .75, d: .25};
+        return {w: w, h: .75, d: .2};
     }
 
 }
