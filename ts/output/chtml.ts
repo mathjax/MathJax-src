@@ -227,6 +227,9 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
         return font;
     }
 
+    /**
+     * @override
+     */
     public cssFontStyles(font: CssFontData, styles: StyleList = {}) {
         font[0] = 'MJXZERO, ' + font[0];
         return super.cssFontStyles(font, styles);
