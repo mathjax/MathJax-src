@@ -69,6 +69,9 @@ namespace FilterUtil {
     let node = arg.data.root as MmlNode;
     node.walkTree((mml: MmlNode, d: any) => {
       let attribs = mml.attributes as any;
+      if (!attribs) {
+        return;
+      }
       for (const key of attribs.getExplicitNames()) {
         if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
           delete attribs.attributes[key];
