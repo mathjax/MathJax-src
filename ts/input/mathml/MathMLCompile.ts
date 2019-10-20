@@ -174,18 +174,19 @@ export class MathMLCompile<N, T, D> {
         if (mml.arity === 0) {
             return;
         }
-        for (const child of this.adaptor.childNodes((node)) as N[]) {
-            const name = this.adaptor.kind(child);
+        const adaptor = this.adaptor;
+        for (const child of adaptor.childNodes((node)) as N[]) {
+            const name = adaptor.kind(child);
             if (name === '#comment') {
                 continue;
             }
             if (name === '#text') {
                 this.addText(mml, child);
             } else if (mml.isKind('annotation-xml')) {
-                mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child));
+                mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child, adaptor));
             } else {
                 let childMml = mml.appendChild(this.makeNode(child)) as MmlNode;
-                if (childMml.arity === 0 && this.adaptor.childNodes(child).length) {
+                if (childMml.arity === 0 && adaptor.childNodes(child).length) {
                     if (this.options['fixMisplacedChildren']) {
                         this.addChildren(mml, child);
                     } else {
