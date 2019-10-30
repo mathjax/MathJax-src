@@ -419,8 +419,12 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /**
      * @override
      */
-    public addClass(node: N, name: string) {
-        node.classList.add(name);
+    public addClass(node: N, name: string|Array<string>) {
+        if (typeof(name) !== 'string') {
+            node.classList.add(...name);
+        } else {
+            node.classList.add(name);
+        }
     }
 
     /**
