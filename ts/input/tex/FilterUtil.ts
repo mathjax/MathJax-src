@@ -75,9 +75,9 @@ namespace FilterUtil {
         if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
           delete attribs.attributes[key];
         }
-        if (attribs.attributes[key]) {
-          let value = attribs.attributes[key];
-          let unit = ParseUtil.matchDimen(value);
+        let value = attribs.attributes[key];
+        if (value) {
+          let unit = ParseUtil.matchDimen(value.toString());
           if (unit[1] === 'mu') {
             attribs.attributes[key] = em(length2em(value));
           }
