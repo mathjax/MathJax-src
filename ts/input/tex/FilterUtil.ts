@@ -28,7 +28,6 @@ import ParseOptions from './ParseOptions.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Attributes} from '../../core/MmlTree/Attributes.js';
 import ParseUtil from './ParseUtil.js';
-import {length2em, em} from '../../util/lengths.js';
 
 
 namespace FilterUtil {
@@ -79,7 +78,7 @@ namespace FilterUtil {
         if (value) {
           let unit = ParseUtil.matchDimen(value.toString());
           if (unit[1] === 'mu') {
-            attribs.attributes[key] = em(length2em(value));
+            attribs.attributes[key] = ParseUtil.Em(ParseUtil.dimen2em(value));
           }
         }
       }
