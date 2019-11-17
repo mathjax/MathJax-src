@@ -233,7 +233,10 @@ CommonWrapper<
             }
         }
         if (attributes.get('class')) {
-            this.adaptor.addClass(this.element, attributes.get('class') as string);
+            const names = (attributes.get('class') as string).trim().split(/ +/);
+            for (const name of names) {
+                this.adaptor.addClass(this.element, name);
+            }
         }
     }
 
