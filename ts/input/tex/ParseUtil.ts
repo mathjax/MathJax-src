@@ -84,7 +84,7 @@ namespace ParseUtil {
       return [value, unit, length];
     }
     let em = Em(UNIT_CASES[unit](parseFloat(value || '1')));
-    return [em.slice(0, -2), 'em', em.length];
+    return [em.slice(0, -2), 'em', length];
   };
 
 
