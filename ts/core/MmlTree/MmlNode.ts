@@ -24,7 +24,7 @@
 import {Attributes, INHERIT} from './Attributes.js';
 import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass} from '../Tree/Node.js';
 import {MmlFactory} from './MmlFactory.js';
-import {DOMAdaptor} from '../DOMadaptor.js';
+import {DOMAdaptor} from '../DOMAdaptor.js';
 
 /**
  *  Used in setInheritedAttributes() to pass originating node kind as well as property value
