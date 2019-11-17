@@ -917,7 +917,7 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
 BaseMethods.Hskip = function(parser: TexParser, name: string) {
   // @test Modulo
   const node = parser.create('node', 'mspace', [],
-                                                       {width: parser.GetDimen(name)});
+                             {width: parser.GetDimen(name)});
   parser.Push(node);
 };
 
