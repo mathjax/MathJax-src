@@ -175,7 +175,7 @@ export class MathMLCompile<N, T, D> {
             return;
         }
         const adaptor = this.adaptor;
-        for (const child of adaptor.childNodes((node)) as N[]) {
+        for (const child of adaptor.childNodes(node) as N[]) {
             const name = adaptor.kind(child);
             if (name === '#comment') {
                 continue;
