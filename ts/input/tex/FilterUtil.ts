@@ -229,6 +229,47 @@ namespace FilterUtil {
 
 
   /**
+   * Looks through the list of munderover elements for ones that have
+   * movablelimits and bases that are not mo's, and creates new msubsup
+   * elements to replace them if they aren't in displaystyle.
+   *
+   * @param {MmlNode} ath The node to rewrite.
+   * @param {ParseOptions} data The parse options.
+   */
+  let _moveLimits = function (options: ParseOptions, underover: string, subsup: string) {
+    for (const mml of options.getList(underover)) {
+      if (mml.attributes.get('displaystyle')) {
+        continue;
+      }
+      const base = mml.childNodes[(mml as any).base] as MmlNode;
+      const mo = base.coreMO();
+      if (base.getProperty('movablelimits') && !mo.attributes.getExplicit('movablelimits')) {
+        let node = options.nodeFactory.create('node', subsup, mml.childNodes);
+        NodeUtil.copyAttributes(mml, node);
+        if (mml.parent) {
+          mml.parent.replaceChild(node, mml);
+        } else {
+          options.root = node;
+        }
+      }
+    }
+  };
+
+  /**
+   * Visitor that rewrites in-line munderover elements with movablelimits but bases
+   * that are not mo's into explicit msubsup elements.
+   *
+   * @param {{data:ParseOptions}} arg   The parse options to use
+   */
+  export let moveLimits = function (arg: {data: ParseOptions}) {
+    const options = arg.data;
+    _moveLimits(options, 'munderover', 'msubsup');
+    _moveLimits(options, 'munder', 'msub');
+    _moveLimits(options, 'mover', 'msup');
+  };
+
+
+  /**
    * Recursively sets the inherited attributes on the math tree.
    * @param {MmlNode} math The node to rewrite.
    * @param {ParseOptions} data The parse options.
