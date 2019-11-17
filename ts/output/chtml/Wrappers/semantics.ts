@@ -27,6 +27,7 @@ import {CommonSemantics, CommonSemanticsMixin} from '../../common/Wrappers/seman
 import {BBox} from '../BBox.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
 import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -92,6 +93,14 @@ export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
  */
 export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
     public static kind = MmlAnnotationXML.prototype.kind;
+
+    public static styles: StyleList = {
+        'mjx-annotation-xml': {
+            'font-family': 'initial',
+            'line-height': 'normal'
+        }
+    };
+
 }
 
 /*****************************************************************/
@@ -111,15 +120,17 @@ export class CHTMLxml<N, T, D> extends CHTMLWrapper<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-        this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N));
+        this.chtml = this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N));
     }
 
     /**
      * @override
      */
-    public computeBBox() {
-        // FIXME:  compute using the DOM, if possible
-        return this.bbox;
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+        const {w, h, d} = this.jax.measureXMLnode((this.node as XMLNode).getXML() as N);
+        bbox.w = w;
+        bbox.h = h;
+        bbox.d = d;
     }
 
     /**
