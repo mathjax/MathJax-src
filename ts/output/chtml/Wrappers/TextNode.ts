@@ -47,15 +47,7 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
         },
         'mjx-utext': {
             display: 'inline-block',
-            padding: '.75em 0 .25em 0'
-        },
-        'mjx-measure-text': {
-            position: 'absolute',
-            'font-family': 'MJXZERO',
-            'white-space': 'nowrap',
-            height: '1px',
-            width: '1px',
-            overflow: 'hidden'
+            padding: '.75em 0 .2em 0'
         }
     };
 
