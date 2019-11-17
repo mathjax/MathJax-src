@@ -55,10 +55,10 @@ export class SerializedMmlVisitor extends MmlVisitor {
     /**
      * @param {XMLNode} node  The XML node to visit
      * @param {string} space  The amount of indenting for this node
-     * @return {string}       The serialization of the XML node (not implemented yet).
+     * @return {string}       The serialization of the XML node
      */
     public visitXMLNode(node: XMLNode, space: string) {
-        return '[XML Node not implemented]';
+        return space + node.getSerializedXML();
     }
 
     /**
