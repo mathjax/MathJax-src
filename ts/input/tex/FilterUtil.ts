@@ -235,18 +235,18 @@ namespace FilterUtil {
    */
   let _moveLimits = function (options: ParseOptions, underover: string, subsup: string) {
     for (const mml of options.getList(underover)) {
-      const display = mml.attributes.get('displaystyle');
-      if (!display) {
-        const base = mml.childNodes[(mml as any).base] as MmlNode;
-        const mo = base.coreMO();
-        if (base.getProperty('movablelimits') && !mo.attributes.getExplicit('movablelimits')) {
-          let node = options.nodeFactory.create('node', subsup, mml.childNodes);
-          NodeUtil.copyAttributes(mml, node);
-          if (mml.parent) {
-            mml.parent.replaceChild(node, mml);
-          } else {
-            options.root = node;
-          }
+      if (mml.attributes.get('displaystyle')) {
+        continue;
+      }
+      const base = mml.childNodes[(mml as any).base] as MmlNode;
+      const mo = base.coreMO();
+      if (base.getProperty('movablelimits') && !mo.attributes.getExplicit('movablelimits')) {
+        let node = options.nodeFactory.create('node', subsup, mml.childNodes);
+        NodeUtil.copyAttributes(mml, node);
+        if (mml.parent) {
+          mml.parent.replaceChild(node, mml);
+        } else {
+          options.root = node;
         }
       }
     }
