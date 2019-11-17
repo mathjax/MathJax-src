@@ -67,10 +67,25 @@ namespace ParseUtil {
    */
   export function matchDimen(
     dim: string, rest: boolean = false): [string, string, number] {
-    let match = dim.match(rest ? dimenRest : dimenEnd);
-    return match ? [match[1].replace(/,/, '.'), match[4], match[0].length] :
-      [null, null, 0];
+      let match = dim.match(rest ? dimenRest : dimenEnd);
+      return match ?
+        muReplace([match[1].replace(/,/, '.'), match[4], match[0].length]) :
+        [null, null, 0];
   }
+
+
+  /**
+   * Transforms mu dimension to em if necessary.
+   * @param {[string, string, number]} [value, unit, length] The dimension triple.
+   * @return {[string, string, number]} [value, unit, length] The transformed triple.
+   */
+  function muReplace([value, unit, length]: [string, string, number]): [string, string, number] {
+    if (unit !== 'mu') {
+      return [value, unit, length];
+    }
+    let em = Em(UNIT_CASES[unit](parseFloat(value || '1')));
+    return [em.slice(0, -2), 'em', em.length];
+  };
 
 
   /**

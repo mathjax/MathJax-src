@@ -27,7 +27,6 @@ import NodeUtil from './NodeUtil.js';
 import ParseOptions from './ParseOptions.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Attributes} from '../../core/MmlTree/Attributes.js';
-import ParseUtil from './ParseUtil.js';
 
 
 namespace FilterUtil {
@@ -73,13 +72,6 @@ namespace FilterUtil {
       for (const key of attribs.getExplicitNames()) {
         if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
           delete attribs.attributes[key];
-        }
-        let value = attribs.attributes[key];
-        if (value) {
-          let unit = ParseUtil.matchDimen(value.toString());
-          if (unit[1] === 'mu') {
-            attribs.attributes[key] = ParseUtil.Em(ParseUtil.dimen2em(value));
-          }
         }
       }
     }, {});
