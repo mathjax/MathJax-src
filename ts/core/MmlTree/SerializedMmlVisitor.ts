@@ -34,6 +34,18 @@ import {MmlNode, TextNode, XMLNode, TEXCLASSNAMES} from './MmlNode.js';
 export class SerializedMmlVisitor extends MmlVisitor {
 
     /**
+     * Translations for the internal mathvariants
+     */
+    public static variants: {[variant: string]: string} = {
+      "-tex-calligraphic":      'script',
+      "-tex-calligraphic-bold": 'bold-script',
+      "-tex-oldstyle":          'normal',
+      "-tex-oldstyle-bold":     'bold',
+      "-tex-mathit":            'italic'
+    };
+
+
+    /**
      * Convert the tree rooted at a particular node into a serialized MathML string
      *
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
@@ -88,12 +100,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
     public visitTeXAtomNode(node: MmlNode, space: string) {
         let texclass = node.texClass < 0 ? 'NONE' : TEXCLASSNAMES[node.texClass];
         let children = this.childNodeMml(node, space + '  ', '\n');
-        let attributes = node.attributes;
-        let names = attributes.getExplicit('class');
-        attributes.set('class', 'MJX-TeXAtom-' + texclass + (names ? ' ' + names : ''));
-        let mml = space + '<mrow' + this.getAttributes(node) + '>' +
+        let mml = space + '<mrow' + this.getAttributes(node) + ' data-mjx-texclass="' + texclass + '">' +
             (children.match(/\S/) ? '\n' + children + space : '') + '</mrow>';
-        attributes.set('class', names);
         return mml;
     }
 
@@ -147,13 +155,33 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @return {string}       The attribute list as a string
      */
     protected getAttributes(node: MmlNode) {
-        let ATTR = '';
+        let attr = '';
         let attributes = node.attributes.getAllAttributes();
+        let variants = (this.constructor as typeof SerializedMmlVisitor).variants;
         for (const name of Object.keys(attributes)) {
-            if (attributes[name] === undefined) continue;
-            ATTR += ' ' + name + '="' + this.quoteHTML(attributes[name].toString()) + '"';
+            let value = attributes[name] as string;
+            if (value === undefined) continue;
+            if (name === 'mathvariant' && variants.hasOwnProperty(value)) {
+                value = variants[value];
+            }
+            attr += ' ' + name + '="' + this.quoteHTML(value) + '"';
         }
-        return ATTR;
+        return attr + this.getDataAttributes(node);
+    }
+
+    /**
+     * Create the list of data-mjx-* attributes
+     *
+     * @param {MmlNode} node        The node whose data list is to be generated
+     * @return {string}             The final class attribute (or empty string)
+     */
+    protected getDataAttributes(node: MmlNode) {
+        const data = [];
+        const variant = node.attributes.getExplicit('mathvariant') as string;
+        const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
+        variant && variants.hasOwnProperty(variant) && data.push(' data-mjx-variant="' + variant + '"');
+        node.getProperty('variantForm') && data.push(' data-mjx-alternate="1"');
+        return data.join('');
     }
 
     /**

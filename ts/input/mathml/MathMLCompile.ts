@@ -109,9 +109,11 @@ export class MathMLCompile<N, T, D> {
      * @return {MmlNode}           The converted MmlNode
      */
     public makeNode(node: N) {
-        let limits = false, texClass = '';
-        let type = this.adaptor.kind(node).replace(/^.*:/, '');
-        for (const name of this.adaptor.allClasses(node)) {
+        const adaptor = this.adaptor;
+        let limits = false;
+        let texClass = adaptor.getAttribute(node, 'data-mjx-texclass') || '';
+        let type = texClass ? 'TeXAtom' : adaptor.kind(node).replace(/^.*:/, '');
+        for (const name of adaptor.allClasses(node)) {
             if (name.match(/^MJX-TeXAtom-/)) {
                 texClass = name.substr(12);
                 type = 'TeXAtom';
@@ -137,15 +139,23 @@ export class MathMLCompile<N, T, D> {
      * @param {N} node  The MathML node whose attributes to copy
      */
     protected addAttributes(mml: MmlNode, node: N) {
+        let ignoreVariant = false;
         for (const attr of this.adaptor.allAttributes(node)) {
             let name = attr.name;
-            if (name !== 'class') {
+            if (name.substr(0, 9) === 'data-mjx-') {
+                if (name === 'data-mjx-alternate') {
+                    mml.setProperty('variantForm', true);
+                } else if (name === 'data-mjx-variant') {
+                    mml.attributes.set('mathvariant', this.filterAttribute('mathvariant', attr.value));
+                    ignoreVariant = true;
+                }
+            } else if (name !== 'class') {
                 let value = this.filterAttribute(name, attr.value);
                 if (value !== null) {
                     let val = value.toLowerCase();
                     if (val === 'true' || val === 'false') {
                         mml.attributes.set(name, val === 'true');
-                    } else {
+                    } else if (!ignoreVariant || name !== 'mathvariant') {
                         mml.attributes.set(name, value);
                     }
                 }
@@ -230,7 +240,7 @@ export class MathMLCompile<N, T, D> {
                 if (name === 'MJX-variant') {
                     mml.setProperty('variantForm', true);
                 } else if (name.substr(0, 11) !== 'MJX-TeXAtom') {
-                    mml.attributes.set('mathvariant', name.substr(3));
+                    mml.attributes.set('mathvariant', name.substr(3).replace(/caligraphic/, 'calligraphic'));
                 }
             } else {
                 classList.push(name);
