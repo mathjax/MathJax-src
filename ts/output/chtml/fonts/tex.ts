@@ -87,7 +87,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         '-tex-mathit': 'mjx-mit',
         '-tex-oldstyle': 'mjx-os',
         '-tex-bold-oldstyle': 'mjx-os mjx-b',
-        '-tex-variant': 'mjx-v'
+        '-tex-variant': 'mjx-var'
     };
 
     /**
