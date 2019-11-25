@@ -194,8 +194,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
             if (n.kind !== '#text' && n.kind !== '#comment') {
                 n = n as LiteElement;
                 const classes = (n.attributes['class'] || '').split(/ /);
-                if (classes.find(name)) {
-                    let tags = [] as LiteElement[];
+                if (!!classes.find(c => c === name)) {
+                    tags.push(n);
                 }
                 if (n.children.length) {
                     stack = n.children.concat(stack);
