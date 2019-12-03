@@ -111,8 +111,9 @@ export class MathMLCompile<N, T, D> {
     public makeNode(node: N) {
         const adaptor = this.adaptor;
         let limits = false;
+        let kind = adaptor.kind(node).replace(/^.*:/, '');
         let texClass = adaptor.getAttribute(node, 'data-mjx-texclass') || '';
-        let type = texClass ? 'TeXAtom' : adaptor.kind(node).replace(/^.*:/, '');
+        let type = texClass && kind === 'mrow' ? 'TeXAtom' : kind;
         for (const name of adaptor.allClasses(node)) {
             if (name.match(/^MJX-TeXAtom-/)) {
                 texClass = name.substr(12);
@@ -123,8 +124,11 @@ export class MathMLCompile<N, T, D> {
         }
         this.factory.getNodeClass(type) || this.error('Unknown node type "' + type + '"');
         let mml = this.factory.create(type);
-        if (texClass) {
+        if (type === 'TeXAtom') {
             this.texAtom(mml, texClass, limits);
+        } else if (texClass) {
+            mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
+            mml.setProperty('texClass', mml.texClass);
         }
         this.addAttributes(mml, node);
         this.checkClass(mml, node);
@@ -260,6 +264,7 @@ export class MathMLCompile<N, T, D> {
      */
     protected texAtom(mml: MmlNode, texClass: string, limits: boolean) {
         mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
+        mml.setProperty('texClass', mml.texClass);
         if (texClass === 'OP' && !limits) {
             mml.setProperty('movesupsub', true);
             mml.attributes.setInherited('movablelimits', true);

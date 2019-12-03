@@ -98,9 +98,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @return {string}       The serialized contents of the mrow, properly indented.
      */
     public visitTeXAtomNode(node: MmlNode, space: string) {
-        let texclass = node.texClass < 0 ? 'NONE' : TEXCLASSNAMES[node.texClass];
         let children = this.childNodeMml(node, space + '  ', '\n');
-        let mml = space + '<mrow' + this.getAttributes(node) + ' data-mjx-texclass="' + texclass + '">' +
+        let mml = space + '<mrow' + this.getAttributes(node) + '>' +
             (children.match(/\S/) ? '\n' + children + space : '') + '</mrow>';
         return mml;
     }
@@ -181,6 +180,9 @@ export class SerializedMmlVisitor extends MmlVisitor {
         const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
         variant && variants.hasOwnProperty(variant) && data.push(' data-mjx-variant="' + variant + '"');
         node.getProperty('variantForm') && data.push(' data-mjx-alternate="1"');
+        const texclass = node.getProperty('texClass') as number;
+        texclass !== undefined &&
+            data.push(' data-mjx-texclass="' + (texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass] + '"');
         return data.join('');
     }
 
