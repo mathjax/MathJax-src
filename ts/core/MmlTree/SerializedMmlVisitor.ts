@@ -24,7 +24,8 @@
 
 import {MmlVisitor} from './MmlVisitor.js';
 import {MmlFactory} from './MmlFactory.js';
-import {MmlNode, TextNode, XMLNode, TEXCLASSNAMES} from './MmlNode.js';
+import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
+import {MmlMi} from './MmlNodes/mi.js';
 
 /*****************************************************************/
 /**
@@ -158,7 +159,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
         let attributes = node.attributes.getAllAttributes();
         let variants = (this.constructor as typeof SerializedMmlVisitor).variants;
         for (const name of Object.keys(attributes)) {
-            let value = attributes[name] as string;
+            let value = String(attributes[name]);
             if (value === undefined) continue;
             if (name === 'mathvariant' && variants.hasOwnProperty(value)) {
                 value = variants[value];
@@ -181,8 +182,14 @@ export class SerializedMmlVisitor extends MmlVisitor {
         variant && variants.hasOwnProperty(variant) && data.push(' data-mjx-variant="' + variant + '"');
         node.getProperty('variantForm') && data.push(' data-mjx-alternate="1"');
         const texclass = node.getProperty('texClass') as number;
-        texclass !== undefined &&
-            data.push(' data-mjx-texclass="' + (texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass] + '"');
+        if (texclass !== undefined) {
+            let setclass = true;
+            if (texclass === TEXCLASS.OP && node.isKind('mi')) {
+                const name = (node as MmlMi).getText();
+                setclass = !(name.length > 1 && name.match(MmlMi.operatorName));
+            }
+            setclass && data.push(' data-mjx-texclass="' + (texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass] + '"'));
+        }
         return data.join('');
     }
 
