@@ -38,6 +38,13 @@ import {Macro} from '../Symbol.js';
 let PhysicsMethods: Record<string, ParseMethod> = {};
 
 
+// Move to Utilities, with Braket.
+let parseWithSemantics = function(macro: string, parser: TexParser, sem: string) {
+  let mml = new TexParser(macro, parser.stack.env, parser.configuration).mml();
+  NodeUtil.setAttribute(mml, 'phy', sem);
+  return mml;
+};
+
 /***********************
  * Physics package section 2.1
  * Automatic bracing
@@ -568,8 +575,7 @@ PhysicsMethods.Bra = function(parser: TexParser, name: string) {
     macro = (starBra || starKet) ?
     `\\langle{${bra}}\\vert` : `\\left\\langle{${bra}}\\right\\vert{${ket}}`;
   }
-  parser.Push(new TexParser(macro, parser.stack.env,
-                            parser.configuration).mml());
+  parser.Push(parseWithSemantics(macro, parser, 'bra'));
 };
 
 
@@ -583,8 +589,7 @@ PhysicsMethods.Ket = function(parser: TexParser, name: string) {
   let ket = parser.GetArgument(name);
   let macro = star ? `\\vert{${ket}}\\rangle` :
     `\\left\\vert{${ket}}\\right\\rangle`;
-  parser.Push(new TexParser(macro, parser.stack.env,
-                            parser.configuration).mml());
+  parser.Push(parseWithSemantics(macro, parser, 'ket'));
 };
 
 
@@ -610,8 +615,7 @@ PhysicsMethods.BraKet = function(parser: TexParser, name: string) {
       `\\langle{${bra}}\\vert{${ket}}\\rangle` :
       `\\left\\langle{${bra}}\\middle\\vert{${ket}}\\right\\rangle`;
   }
-  parser.Push(new TexParser(macro, parser.stack.env,
-                            parser.configuration).mml());
+  parser.Push(parseWithSemantics(macro, parser, 'braket'));
 };
 
 
@@ -637,8 +641,7 @@ PhysicsMethods.KetBra = function(parser: TexParser, name: string) {
       `\\vert{${ket}}\\rangle\\!\\langle{${bra}}\\vert` :
       `\\left\\vert{${ket}}\\middle\\rangle\\!\\middle\\langle{${bra}}\\right\\vert`;
   }
-  parser.Push(new TexParser(macro, parser.stack.env,
-                            parser.configuration).mml());
+  parser.Push(parseWithSemantics(macro, parser, 'ketbra'));
 };
 
 
