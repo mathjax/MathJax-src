@@ -244,7 +244,7 @@ export class MathMLCompile<N, T, D> {
                 if (name === 'MJX-variant') {
                     mml.setProperty('variantForm', true);
                 } else if (name.substr(0, 11) !== 'MJX-TeXAtom') {
-                    mml.attributes.set('mathvariant', name.substr(3).replace(/caligraphic/, 'calligraphic'));
+                    mml.attributes.set('mathvariant', this.fixCalligraphic(name.substr(3)));
                 }
             } else {
                 classList.push(name);
@@ -253,6 +253,16 @@ export class MathMLCompile<N, T, D> {
         if (classList.length) {
             mml.attributes.set('class', classList.join(' '));
         }
+    }
+
+    /**
+     * Fix the old incorrect spelling of calligraphic.
+     *
+     * @param {string} variant  The mathvariant name
+     * @return {string}         The corrected variant
+     */
+    protected fixCalligraphic(variant: string) {
+        return variant.replace(/caligraphic/, 'calligraphic');
     }
 
     /**

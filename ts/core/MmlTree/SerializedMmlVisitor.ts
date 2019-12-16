@@ -27,6 +27,12 @@ import {MmlFactory} from './MmlFactory.js';
 import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
 import {MmlMi} from './MmlNodes/mi.js';
 
+
+export const DATAMJX = 'data-mjx-';
+
+type PropertyList = {[name: string]: string};
+
+
 /*****************************************************************/
 /**
  *  Implements the SerializedMmlVisitor (subclass of MmlVisitor)
@@ -37,7 +43,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
     /**
      * Translations for the internal mathvariants
      */
-    public static variants: {[variant: string]: string} = {
+    public static variants: PropertyList = {
       "-tex-calligraphic":      'script',
       "-tex-calligraphic-bold": 'bold-script',
       "-tex-oldstyle":          'normal',
@@ -45,6 +51,14 @@ export class SerializedMmlVisitor extends MmlVisitor {
       "-tex-mathit":            'italic'
     };
 
+    /**
+     * Attributes to include on every element of a given kind
+     */
+    public static defaultAttributes: {[kind: string]: PropertyList} = {
+        math: {
+            xmlns: 'http://www.w3.org/1998/Math/MathML'
+        }
+    }
 
     /**
      * Convert the tree rooted at a particular node into a serialized MathML string
@@ -155,18 +169,23 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @return {string}       The attribute list as a string
      */
     protected getAttributes(node: MmlNode) {
-        let attr = '';
-        let attributes = node.attributes.getAllAttributes();
-        let variants = (this.constructor as typeof SerializedMmlVisitor).variants;
-        for (const name of Object.keys(attributes)) {
-            let value = String(attributes[name]);
-            if (value === undefined) continue;
-            if (name === 'mathvariant' && variants.hasOwnProperty(value)) {
-                value = variants[value];
-            }
-            attr += ' ' + name + '="' + this.quoteHTML(value) + '"';
+        const attr = [];
+        const defaults = (this.constructor as typeof SerializedMmlVisitor).defaultAttributes[node.kind] || {};
+        const attributes = Object.assign({},
+                                         defaults,
+                                         this.getDataAttributes(node),
+                                         node.attributes.getAllAttributes()
+                                        );
+        const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
+        if (attributes.hasOwnProperty('mathvariant') && variants.hasOwnProperty(attributes.mathvariant)) {
+            attributes.mathvariant = variants[attributes.mathvariant];
         }
-        return attr + this.getDataAttributes(node);
+        for (const name of Object.keys(attributes)) {
+            const value = String(attributes[name]);
+            if (value === undefined) continue;
+            attr.push(name + '="' + this.quoteHTML(value) + '"');
+        }
+        return attr.length ? ' ' + attr.join(' ') : '';
     }
 
     /**
@@ -176,11 +195,11 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @return {string}             The final class attribute (or empty string)
      */
     protected getDataAttributes(node: MmlNode) {
-        const data = [];
+        const data = {};
         const variant = node.attributes.getExplicit('mathvariant') as string;
         const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
-        variant && variants.hasOwnProperty(variant) && data.push(' data-mjx-variant="' + variant + '"');
-        node.getProperty('variantForm') && data.push(' data-mjx-alternate="1"');
+        variant && variants.hasOwnProperty(variant) && this.setDataAttribute(data, 'variant', variant);
+        node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
         const texclass = node.getProperty('texClass') as number;
         if (texclass !== undefined) {
             let setclass = true;
@@ -188,9 +207,17 @@ export class SerializedMmlVisitor extends MmlVisitor {
                 const name = (node as MmlMi).getText();
                 setclass = !(name.length > 1 && name.match(MmlMi.operatorName));
             }
-            setclass && data.push(' data-mjx-texclass="' + (texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass] + '"'));
+            setclass && this.setDataAttribute(data, 'texclass', texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]);
         }
-        return data.join('');
+        return data;
+    }
+
+    /**
+     * @param {string} name    The name for the data-mjx-name attribute
+     * @return {string}        The data-mjx-name="value" string
+     */
+    protected setDataAttribute(data: PropertyList, name: string, value: string) {
+        data[DATAMJX + name] = value;
     }
 
     /**
