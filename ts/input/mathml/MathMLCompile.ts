@@ -283,7 +283,8 @@ export class MathMLCompile<N, T, D> {
      */
     protected trimSpace(text: string) {
         return text.replace(/[\t\n\r]/g, ' ')    // whitespace to spaces
-                   .trim()                       // initial and trailing whitespace
+                   .replace(/^ +/,'')            // initial whitespace
+                   .replace(/ +$/,'')            // trailing whitespace
                    .replace(/  +/g, ' ');        // internal multiple whitespace
     }
 
