@@ -76,6 +76,15 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
             //  Register the extension with the jax's configuration
             //
             (jax as any).configuration.register(handler, jax, options);
+            //
+            // If there are preprocessors, restart so that they run
+            // (we don't have access to the document or MathItem needed to call
+            //  the preprocessors from here)
+            //
+            if (handler.preprocessors.length && !handler.options.configured) {
+                handler.options.configured = true;
+                mathjax.retryAfter(Promise.resolve());
+            }
         }
     }
 }
@@ -103,7 +112,7 @@ function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []) {
  */
 export function RequireLoad(parser: TexParser, name: string) {
     const options = parser.options.require;
-    const allow = options.allow
+    const allow = options.allow;
     const extension = (name.substr(0,1) === '[' ? '' : options.prefix) + name;
     const allowed = (allow.hasOwnProperty(extension) ? allow[extension] :
                      allow.hasOwnProperty(name) ? allow[name] : options.defaultAllow);
