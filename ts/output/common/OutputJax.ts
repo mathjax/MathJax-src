@@ -403,10 +403,18 @@ export abstract class CommonOutputJax<
     public styleSheet(html: MathDocument<N, T, D>) {
         this.setDocument(html);
         //
-        //  Start with the common styles
+        // Start with the common styles
         //
         this.cssStyles.clear();
         this.cssStyles.addStyles((this.constructor as typeof CommonOutputJax).commonStyles);
+        //
+        // Add document-specific styles
+        //
+        if ('getStyles' in html) {
+            for (const styles of ((html as any).getStyles() as CssStyleList[])) {
+                this.cssStyles.addStyles(styles);
+            }
+        }
         //
         // Gather the CSS from the classes
         //

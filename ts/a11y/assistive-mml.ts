@@ -27,6 +27,7 @@ import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
+import {StyleList} from '../output/common/CssStyles.js';
 
 /**
  * Generic constructor for Mixins
@@ -148,7 +149,7 @@ export function AssistiveMmlMathDocumentMixin<N, T, D,
     BaseDocument: B
 ): MathDocumentConstructor<AssistiveMmlMathDocument<N, T, D>> & B {
 
-    return class extends BaseDocument {
+    return class BaseClass extends BaseDocument {
 
         public static OPTIONS: OptionList = {
             ...BaseDocument.OPTIONS,
@@ -156,6 +157,34 @@ export function AssistiveMmlMathDocumentMixin<N, T, D,
                 ...BaseDocument.OPTIONS.renderActions,
                 assistiveMml: [STATE.ASSISTIVEMML]
             })
+        };
+
+        /**
+         * styles needed for the hidden MathML
+         */
+        public static assistiveStyles: StyleList = {
+            'mjx-assistive-mml': {
+                position: 'absolute !important',
+                top: '0px', left: '0px',
+                clip: 'rect(1px, 1px, 1px, 1px)',
+                padding: '1px 0px 0px 0px !important',
+                border: '0px !important',
+                display: 'block !important',
+                width: 'auto !important',
+                overflow: 'hidden !important',
+                /*
+                 *  Don't allow the assistive MathML to become part of the selection
+                 */
+                '-webkit-touch-callout': 'none',
+                '-webkit-user-select': 'none',
+                '-khtml-user-select': 'none',
+                '-moz-user-select': 'none',
+                '-ms-user-select': 'none',
+                'user-select': 'none'
+            },
+            'mjx-assistive-mml[display="block"]': {
+                width: '100% !important'
+            }
         };
 
         /**
@@ -171,7 +200,8 @@ export function AssistiveMmlMathDocumentMixin<N, T, D,
          */
         constructor(...args: any[]) {
             super(...args);
-            const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
+            const CLASS = (this.constructor as typeof BaseClass);
+            const ProcessBits = CLASS.ProcessBits;
             if (!ProcessBits.has('assistive-mml')) {
                 ProcessBits.allocate('assistive-mml');
             }
@@ -180,6 +210,9 @@ export function AssistiveMmlMathDocumentMixin<N, T, D,
                 AssistiveMmlMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(
                     this.options.MathItem
                 );
+            if ('addStyles' in this) {
+                (this as any).addStyles(CLASS.assistiveStyles);
+            }
         }
 
         /**
