@@ -29,6 +29,7 @@ import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {Handler} from '../../core/Handler.js';
 import {ComplexityMathDocument, ComplexityMathItem} from '../../a11y/complexity.js';
 import {ExplorerMathDocument, ExplorerMathItem} from '../../a11y/explorer.js';
+import {AssistiveMmlMathDocument, AssistiveMmlMathItem} from '../../a11y/assistive-mml.js';
 import {OptionList, expandable} from '../../util/Options.js';
 
 import {Menu} from './Menu.js';
@@ -44,14 +45,16 @@ export type Constructor<T> = new(...args: any[]) => T;
  * Constructor for base MathItem for MenuMathItem
  */
 export type A11yMathItemConstructor = {
-    new(...args: any[]): ComplexityMathItem<HTMLElement, Text, Document> & ExplorerMathItem;
+    new(...args: any[]): ComplexityMathItem<HTMLElement, Text, Document> &
+        ExplorerMathItem & AssistiveMmlMathItem<HTMLElement, Text, Document>;
 }
 
 /**
  * Constructor for base document for MenuMathDocument
  */
 export type A11yDocumentConstructor =
-    MathDocumentConstructor<ComplexityMathDocument<HTMLElement, Text, Document> & ExplorerMathDocument>;
+    MathDocumentConstructor<ComplexityMathDocument<HTMLElement, Text, Document> &
+    ExplorerMathDocument & AssistiveMmlMathDocument<HTMLElement, Text, Document>>;
 
 /*==========================================================================*/
 
@@ -69,6 +72,11 @@ export interface MenuMathItem extends ComplexityMathItem<HTMLElement, Text, Docu
      * @param {MenuMathDocument} document   The document where the menu is being added
      */
     addMenu(document: MenuMathDocument): void;
+
+    /**
+     * @param {MenuMathDocument} document   The document where the menu is being added
+     */
+    assistiveMml(document: MenuMathDocument): void;
 
     /**
      * @param {MenuMathDocument} document   The document where the menu is being added
@@ -157,6 +165,16 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
             if (document.menu.settings.explorer || force) {
                 document.menu.checkComponent('a11y/explorer');
                 super.explorable(document);
+            }
+        }
+
+        /**
+         * @override
+         */
+        public assistiveMml(document: MenuMathDocument, force: boolean = false) {
+            if (document.menu.settings.assistiveMml || force) {
+                document.menu.checkComponent('a11y/assistive-mml');
+                super.assistiveMml(document);
             }
         }
 
