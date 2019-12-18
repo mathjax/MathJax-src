@@ -38,6 +38,7 @@ exports.source = {
     'output/chtml/fonts/tex': `${src}/output/chtml/fonts/tex/tex.js`,
     'output/svg': `${src}/output/svg/svg.js`,
     'output/svg/fonts/tex': `${src}/output/svg/fonts/tex/tex.js`,
+    'a11y/assistive-mml': `${src}/a11y/assistive-mml/assistive-mml.js`,
     'a11y/semantic-enrich': `${src}/a11y/semantic-enrich/semantic-enrich.js`,
     'a11y/complexity': `${src}/a11y/complexity/complexity.js`,
     'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
