@@ -154,7 +154,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
      * @return {RegExp}     The regular expression for the end delimiter
      */
     protected endPattern(end: string) {
-        return new RegExp(quotePattern(end) + '|\\\\(?:[a-zA-Z]|.)|[{}]', 'g');
+        return new RegExp(quotePattern(end) + '|\\\\(?:[a-zA-Z]|.)|[{}%]', 'g');
     }
 
     /**
@@ -180,9 +180,22 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
                 braces++;
             } else if (match[0] === '}' && braces) {
                 braces--;
+            } else if (match[0] === '%') {
+                pattern.lastIndex += this.skipComment(text.substr(pattern.lastIndex));
             }
         }
         return null;
+    }
+
+    /**
+     * Skip a comment (without matching braces or other special characters)
+     *
+     * @param {string} text   The string containing the comment to skip
+     * @return {number}       The position of the string after the comment
+     */
+    protected skipComment(text: string) {
+        const match = text.match(/.*?[\n\r]/);
+        return match ? match[0].length : text.length;
     }
 
     /**
