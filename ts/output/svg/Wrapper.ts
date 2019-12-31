@@ -319,7 +319,7 @@ CommonWrapper<
     protected useNode(variant: string, C: string, path: string) {
         const use = this.svg('use');
         const id = '#' + this.jax.fontCache.cachePath(variant, C, path);
-        this.adaptor.setAttribute(use, 'xlink:href', id, XLINKNS);
+        this.adaptor.setAttribute(use, 'href', id, XLINKNS);
         return use;
     }
 
