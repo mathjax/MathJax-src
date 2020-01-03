@@ -814,6 +814,12 @@ export class ArrayItem extends BaseItem {
     return true;
   }
 
+  /**
+   * @override
+   */
+  get copyEnv() {
+    return false;
+  }
 
   /**
    * @override

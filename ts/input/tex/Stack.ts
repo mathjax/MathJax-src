@@ -101,7 +101,9 @@ export default class Stack {
       }
       this.stack.push(item);
       if (item.env) {
-        Object.assign(item.env, this.env);
+        if (item.copyEnv) {
+          Object.assign(item.env, this.env);
+        }
         this.env = item.env;
       } else {
         item.env = this.env;
