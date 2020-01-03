@@ -254,7 +254,7 @@ export interface StackItem extends NodeStack {
 
   /**
    * Copy local properties when pushed to stack?
-   * @type {boolena}
+   * @type {boolean}
    */
    copyEnv: boolean;
 
