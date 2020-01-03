@@ -92,7 +92,7 @@ export class Package {
      */
     public static resolvePath(name: string, addExtension: boolean = true) {
         let file = CONFIG.source[name] || name;
-        if (!file.match(/^(?:[a-z]+:\/)?\/|\[/)) {
+        if (!file.match(/^(?:[a-z]+:\/)?\/|\[|[a-z]:\\/i)) {
             file = '[mathjax]/' + file.replace(/^\.\//, '');
         }
         if (addExtension && !file.match(/\.[^\/]+$/)) {
