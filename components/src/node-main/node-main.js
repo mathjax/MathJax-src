@@ -12,12 +12,14 @@ const {dependencies, paths, provides} = require('../dependencies.js');
  * Set up the initial configuration
  */
 combineDefaults(MathJax.config, 'loader', {
-  require: global.require,       // use node's require() to load files
+  require: eval('require'),      // use node's require() to load files
   failed: (err) => {throw err}   // pass on error message to init()'s catch function
 });
 combineDefaults(MathJax.config.loader, 'dependencies', dependencies);
 combineDefaults(MathJax.config.loader, 'paths', paths);
 combineDefaults(MathJax.config.loader, 'provides', provides);
+MathJax.config.loader.paths.mathjax =
+  path.resolve(MathJax.config.loader.require.resolve('mathjax/package.json'), '..', 'es5');
 
 /*
  * Preload core and liteDOM adaptor (needed for node)
