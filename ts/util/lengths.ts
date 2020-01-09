@@ -43,7 +43,7 @@ export const RELUNITS: {[unit: string]: number} = {
     em: 1,
     ex: .431,        // this.TEX.x_height;
     pt: 1 / 10,      // 10 pt to an em
-    pc: 1 / 12,      // 12 pc to an inch
+    pc: 12 / 10,     // 12 pc to a pt
     mu: 1 / 18       // 18mu to an em for the scriptlevel
 };
 
