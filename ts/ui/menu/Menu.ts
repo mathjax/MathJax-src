@@ -677,7 +677,7 @@ export class Menu {
     protected setExplorer(explore: boolean) {
         this.enableExplorerItems(explore);
         if (!explore || (window.MathJax._.a11y && window.MathJax._.a11y.explorer)) {
-            this.rerender(this.settings.collapsible ? STATE.RERENDER : STATE.COMPILED);
+            this.rerender(this.settings.collapsible ? STATE.RERENDER : STATE.COMPILED + 1);
         } else {
             this.loadA11y('explorer');
         }
@@ -688,7 +688,7 @@ export class Menu {
      */
     protected setCollapsible(collapse: boolean) {
         if (!collapse || (window.MathJax._.a11y && window.MathJax._.a11y.complexity)) {
-            this.rerender(STATE.COMPILED);
+            this.rerender(STATE.COMPILED + 1);
         } else {
             this.loadA11y('complexity');
         }
@@ -734,7 +734,7 @@ export class Menu {
             }
         }
         Menu.loading--;
-        this.rerender(STATE.COMPILED);
+        this.rerender(STATE.COMPILED + 1);
     }
 
     /*======================================================================*/
@@ -804,8 +804,9 @@ export class Menu {
             this.document = startup.document = startup.getDocument();
             this.document.menu = this;
             this.transferMathList(document);
+            this.document.processed = document.processed;
             if (!Menu._loadingPromise) {
-                this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
+                this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED + 1 : STATE.TYPESET);
             }
         });
     }
