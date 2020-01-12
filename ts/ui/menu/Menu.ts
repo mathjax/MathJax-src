@@ -806,7 +806,7 @@ export class Menu {
             this.transferMathList(document);
             this.document.processed = document.processed;
             if (!Menu._loadingPromise) {
-                this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED + 1 : STATE.TYPESET);
+                this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
             }
         });
     }
