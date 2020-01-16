@@ -315,7 +315,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
          * @override
          */
         public remapChars(chars: number[]) {
-            if (chars.length == 1) {
+            if (chars.length === 1) {
                 const parent = this.node.parent;
                 const isAccent = this.isAccent &&
                     (parent === (this.node as MmlMo).coreParent() || parent.isEmbellished);

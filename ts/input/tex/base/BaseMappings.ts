@@ -274,7 +274,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   leftarrow:          '\u2190',
   gets:               '\u2190',
   rightarrow:         '\u2192',
-  to:                 '\u2192',
+  to:                ['\u2192', {accent: false}],
   mapsto:             '\u21A6',
   leftharpoonup:      '\u21BC',
   leftharpoondown:    '\u21BD',
