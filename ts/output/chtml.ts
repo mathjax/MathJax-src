@@ -58,6 +58,8 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
      *  The default styles for CommonHTML
      */
     public static commonStyles: CssStyleList = {
+        'mjx-container[jax="CHTML"]': {'line-height': 0},
+
         'mjx-container [space="1"]': {'margin-left': '.111em'},
         'mjx-container [space="2"]': {'margin-left': '.167em'},
         'mjx-container [space="3"]': {'margin-left': '.222em'},
