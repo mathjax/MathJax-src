@@ -1,7 +1,6 @@
-"use strict";
-Object.defineProperty(exports, '__esModule', {value: true});
 const src = __dirname;
-exports.source = {
+
+export const source = {
     'core': `${src}/core/core.js`,
     'adaptors/liteDOM': `${src}/adaptors/liteDOM/liteDOM.js`,
     'input/tex': `${src}/input/tex/tex.js`,
