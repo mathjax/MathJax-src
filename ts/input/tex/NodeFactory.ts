@@ -187,7 +187,9 @@ export class NodeFactory {
   public create(kind: string, ...rest: any[]): MmlNode {
     const func = this.factory[kind] || this.factory['node'];
     const node = func(this, rest[0], ...rest.slice(1));
-    this.configuration.addNode(rest[0], node);
+    if (kind === 'node') {
+      this.configuration.addNode(rest[0], node);
+    }
     return node;
   }
 
