@@ -424,7 +424,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
             value = String(value);
         }
         if (ns) {
-            name = ns.replace(/.*\//, '') + ':' + name;
+            name = ns.replace(/.*\//, '') + ':' + name.replace(/^.*:/, '');
         }
         node.attributes[name] = value;
         if (name === 'style') {
