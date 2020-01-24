@@ -178,6 +178,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
                                                  //   (glyphs with rounded or anti-aliased ends don't stretch well,
                                                  //    so this makes for sharper ends)
         const y = (s * (h - d) - Y) / 2;         // The bottom point to clip the extender
+        if (Y <= 0) return;
         const svg = this.svg('svg', {
             width: this.fixed(w), height: this.fixed(Y),
             y: this.fixed(B - D), x: this.fixed((W - w) / 2),
@@ -242,6 +243,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
         const Y = h + d + 2 * VFUZZ;    // The height (plus some fuzz) of the extender
         const s = 1.5 * (X / w);        // Scale the width so that left- and right-bearing won't hurt us
         const D = -(d + VFUZZ);         // The bottom position of the glyph
+        if (X <= 0) return;
         const svg = this.svg('svg', {
             width: this.fixed(X), height: this.fixed(Y),
             x: this.fixed(x + L), y: this.fixed(D),
