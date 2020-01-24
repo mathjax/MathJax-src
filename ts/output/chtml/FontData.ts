@@ -357,8 +357,8 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         const selector = 'mjx-c' + this.charSelector(n);
         const root = this.cssRoot;
         css.padding = this.padding(data, 0, options.ic || 0);
-        const content = (options.c ? '"' + options.c + '"' : this.charContent(n));
-        if (charUsed.get(n) !== content) {
+        const content = (options.c != null ? '"' + options.c + '"' : this.charContent(n));
+        if (charUsed.get(n) !== content && content !== '""') {
             if (!charUsed.has(n) && !options.c) {
                 styles[root + selector + '::before'] = {content};
                 charUsed.set(n, content);
