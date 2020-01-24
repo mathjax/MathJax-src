@@ -157,6 +157,7 @@ export const normal: CHTMLCharMap = AddCSS(font, {
     0x2061: {c: ''},
     0x2062: {c: ''},
     0x2063: {c: ''},
+    0x2064: {c: ''},
     0x20D7: {c: '\\2192', f: 'V'},
     0x2102: {c: 'C', f: 'A'},
     0x210B: {c: 'H', f: 'SC'},
