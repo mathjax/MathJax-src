@@ -110,7 +110,7 @@ export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<Abstrac
 /*==========================================================================*/
 
 /**
- * The funtions added to MathDocument for assisitve MathML
+ * The funtions added to MathDocument for assistive MathML
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -121,7 +121,7 @@ export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
     /**
      * Add assistive MathML to the MathItems in the MathDocument
      *
-     * @return {AssisitiveMmlMathDocument}   The MathDocument (so calls can be chained)
+     * @return {AssisiitveMmlMathDocument}   The MathDocument (so calls can be chained)
      */
     assistiveMml(): AssistiveMmlMathDocument<N, T, D>;
 
@@ -134,10 +134,10 @@ export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
 }
 
 /**
- * The mixin for adding assisitve MathML to MathDocuments
+ * The mixin for adding assistive MathML to MathDocuments
  *
  * @param {B} BaseMathDocument         The MathDocument class to be extended
- * @return {AssisitveMMlMathDocument}  The Assistive MathML MathDocument class
+ * @return {AssistiveMMlMathDocument}  The Assistive MathML MathDocument class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
