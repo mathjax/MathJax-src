@@ -5,5 +5,5 @@ Loader.preLoad(
     'core',
     'input/tex',
     'output/chtml', 'output/chtml/fonts/tex.js',
-    'ui/menu'
+    'ui/menu', 'a11y/assistive-mml'
 );
