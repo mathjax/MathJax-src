@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode, AttributeList} from '../MmlNode.js';
+import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 
 /*****************************************************************/
@@ -30,9 +30,9 @@ import {INHERIT} from '../Attributes.js';
  *  Implements the MmlMaligngroup node class (subclass of AbstractMmlNode)
  */
 
-export class MmlMaligngroup extends AbstractMmlNode {
+export class MmlMaligngroup extends AbstractMmlLayoutNode {
     public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults,
+        ...AbstractMmlLayoutNode.defaults,
         groupalign: INHERIT
     };
 
