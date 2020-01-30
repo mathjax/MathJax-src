@@ -238,7 +238,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 align: 'top',
                 backgroundColor: 'Blue',
                 backgroundOpacity: .2,
-                braille: true,
+                braille: false,
                 flame: false,
                 foregroundColor: 'Black',
                 foregroundOpacity: 1,
