@@ -822,6 +822,7 @@ export class Menu {
             this.document = startup.document = startup.getDocument();
             this.document.menu = this;
             this.transferMathList(document);
+            this.document.processed = document.processed;
             if (!Menu._loadingPromise) {
                 this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
             }

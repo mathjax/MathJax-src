@@ -327,10 +327,12 @@ export namespace Startup {
     export function makeTypesetMethods() {
         MathJax.typeset = (elements: any = null) => {
             document.options.elements = elements;
+            document.reset();
             document.render();
         };
         MathJax.typesetPromise = (elements: any = null) => {
             document.options.elements = elements;
+            document.reset();
             return mathjax.handleRetriesFor(() => {
                 document.render();
             })

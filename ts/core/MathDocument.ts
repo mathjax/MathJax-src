@@ -516,8 +516,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             compile: [STATE.COMPILED],
             metrics: [STATE.METRICS, 'getMetrics', '', false],
             typeset: [STATE.TYPESET],
-            update:  [STATE.INSERTED, 'updateDocument', false],
-            reset:   [STATE.RESET, 'reset', '', false]
+            update:  [STATE.INSERTED, 'updateDocument', false]
         }) as RenderActions<any, any, any>
     };
 
