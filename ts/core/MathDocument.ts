@@ -628,6 +628,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         }
         const jax = this.inputJax.reduce((jax, ijax) => (ijax.name === format ? ijax : jax), null);
         const mitem = new this.options.MathItem(math, jax, display);
+        mitem.start.node = this.adaptor.body(this.document);
         mitem.setMetrics(em, ex, containerWidth, lineWidth, scale);
         mitem.convert(this, end);
         return (mitem.typesetRoot || mitem.root);
