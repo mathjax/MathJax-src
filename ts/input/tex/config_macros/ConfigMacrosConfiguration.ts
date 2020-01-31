@@ -30,33 +30,44 @@ import NewcommandMethods from '../newcommand/NewcommandMethods.js';
 import {TeX} from '../../tex.js';
 
 /**
+ * The name to use for the macros map
+ */
+const MACROSMAP = 'configMacrosMap';
+
+/**
+ * Create the command map for the macros
+ *
+ * @param {Configuration} config   The configuration object for the input jax
+ */
+function configMacrosInit(config: Configuration) {
+    const macrosMap = new CommandMap(MACROSMAP, {}, {});
+    config.append(Configuration.create('configMacroDefinitions', {handler: {macro: [MACROSMAP]}}));
+}
+
+/**
  * Create the user-defined macros from the macros option
  *
  * @param {Configuration} config   The configuration object for the input jax
  * @param {TeX} jax                The TeX input jax
  */
 function configMacrosConfig(config: Configuration, jax: TeX<any, any, any>) {
-    const macros = config.options.macros;
+    const macrosMap = jax.parseOptions.handlers.retrieve(MACROSMAP) as CommandMap;
+    const macros = jax.parseOptions.options.macros;
     for (const cs of Object.keys(macros)) {
         const def = (typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs]);
         const macro = Array.isArray(def[2]) ?
-            new Macro(cs, NewcommandMethods.MacroWithTemplate, def.slice(0,2).concat(def[2])) :
+            new Macro(cs, NewcommandMethods.MacroWithTemplate, def.slice(0, 2).concat(def[2])) :
             new Macro(cs, NewcommandMethods.Macro, def);
-        ConfigMacrosMap.add(cs, macro);
+        macrosMap.add(cs, macro);
     }
 }
-
-/**
- * The command map for the autoloaded macros
- */
-const ConfigMacrosMap = new CommandMap('configMacros', {}, {});
 
 /**
  * The configuration object for configMacros
  */
 export const ConfigMacrosConfiguration = Configuration.create(
     'configMacros', {
-        handler: {macro: ['configMacros']},
+        init: configMacrosInit,
         config: configMacrosConfig,
         options: {macros: expandable({})}
     }

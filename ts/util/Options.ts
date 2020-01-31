@@ -29,7 +29,8 @@
 
 const OBJECT = {}.constructor;
 function isObject(obj: any) {
-    return typeof obj === 'object' && obj !== null && obj.constructor === OBJECT;
+    return typeof obj === 'object' && obj !== null &&
+        (obj.constructor === OBJECT || obj.constructor === Expandable);
 }
 
 /*****************************************************************/
@@ -139,7 +140,7 @@ export function copy(def: OptionList): OptionList {
             props[key as string] = prop;
         }
     }
-    return Object.defineProperties({}, props);
+    return Object.defineProperties(def.constructor === Expandable ? expandable({}) : {}, props);
 }
 
 /*****************************************************************/
@@ -157,7 +158,7 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
         //
         // Check if the key is valid (i.e., is in the defaults or in an expandable block)
         //
-        if (warn && dst[key] === undefined && !(dst instanceof Expandable)) {
+        if (warn && dst[key] === undefined && dst.constructor !== Expandable) {
             if (typeof key === 'symbol') {
                 key = (key as symbol).toString();
             }
