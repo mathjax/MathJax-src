@@ -1,4 +1,6 @@
 # MathJax (Source Repository)
+<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src?sort=semver">
+<img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2">
 
 ## Beautiful math in all browsers
 
