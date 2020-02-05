@@ -235,27 +235,27 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 explorable: [STATE.EXPLORER]
             }),
             a11y: {
-                align: 'top',
-                backgroundColor: 'Blue',
-                backgroundOpacity: .2,
-                braille: false,
-                flame: false,
-                foregroundColor: 'Black',
-                foregroundOpacity: 1,
-                highlight: 'None',
-                hover: false,
-                infoPrefix: false,
-                infoRole: false,
-                infoType: false,
-                keyMagnifier: false,
-                magnification: 'None',
-                magnify: '400%',
-                mouseMagnifier: false,
-                speech: true,
-                speechRules: 'mathspeak-default',
-                subtitles: true,
-                treeColoring: false,
-                viewBraille: false
+                align: 'top',                      // placement of magnified expression
+                backgroundColor: 'Blue',           // color for background of selected sub-expression
+                backgroundOpacity: .2,             // opacity for background of selected sub-expression
+                braille: false,                    // switch on Braille output
+                flame: false,                      // color collapsible sub-expressions
+                foregroundColor: 'Black',          // color to use for text of selected sub-expression
+                foregroundOpacity: 1,              // opacity for text of selected sub-expression
+                highlight: 'None',                 // type of highlighting for collapsible sub-expressions
+                hover: false,                      // show collapsible sub-expression on mouse hovering
+                infoPrefix: false,                 // show speech prefixes on mouse hovering
+                infoRole: false,                   // show semantic role on mouse hovering
+                infoType: false,                   // show semantic type on mouse hovering
+                keyMagnifier: false,               // switch on magnification via key exploration
+                magnification: 'None',             // type of magnification
+                magnify: '400%',                   // percentage of magnification of zoomed expressions
+                mouseMagnifier: false,             // switch on magnification via mouse hovering
+                speech: true,                      // switch on speech output
+                speechRules: 'mathspeak-default',  // speech rules as domain-style pair
+                subtitles: true,                   // show speech as a subtitle
+                treeColoring: false,               // tree color expression
+                viewBraille: false                 // display Braille output as subtitles
           }
         };
 
