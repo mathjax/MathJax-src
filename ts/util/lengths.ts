@@ -31,8 +31,6 @@ export const BIGDIMEN = 1000000;
  */
 export const UNITS: {[unit: string]: number} = {
     px: 1,
-    pt: 96 / 72,         // 72 pt to an inch
-    pc: 96 / 12,         // 12 pc to an inch
     'in': 96,            // 96 px to an inch
     cm: 96 / 2.54,       // 2.54 cm to an inch
     mm: 96 / 25.4        // 10 mm to a cm
@@ -44,6 +42,8 @@ export const UNITS: {[unit: string]: number} = {
 export const RELUNITS: {[unit: string]: number} = {
     em: 1,
     ex: .431,        // this.TEX.x_height;
+    pt: 1 / 10,      // 10 pt to an em
+    pc: 12 / 10,     // 12 pc to a pt
     mu: 1 / 18       // 18mu to an em for the scriptlevel
 };
 

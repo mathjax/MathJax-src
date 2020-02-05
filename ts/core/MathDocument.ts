@@ -206,7 +206,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
      */
     public renderConvert(math: MathItem<N, T, D>, document: MathDocument<N, T, D>, end = STATE.LAST) {
         for (const item of this.items) {
-            if (item.priority >= end) return;
+            if (item.priority > end) return;
             if (item.item.convert) {
                 if (item.item.renderMath(math, document)) return;
             }
@@ -334,7 +334,7 @@ export interface MathDocument<N, T, D> {
      * Convert a math string to the document's output format
      *
      * @param {string} math           The math string to convert
-     * @params {OptionList} optoins   The options for the conversion (e.g., format, ex, em, etc.)
+     * @params {OptionList} options   The options for the conversion (e.g., format, ex, em, etc.)
      * @return {MmlNode|N}            The MmlNode or N node for the converted content
      */
     convert(math: string, options?: OptionList): MmlNode | N;
@@ -516,8 +516,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             compile: [STATE.COMPILED],
             metrics: [STATE.METRICS, 'getMetrics', '', false],
             typeset: [STATE.TYPESET],
-            update:  [STATE.INSERTED, 'updateDocument', false],
-            reset:   [STATE.RESET, 'reset', '', false]
+            update:  [STATE.INSERTED, 'updateDocument', false]
         }) as RenderActions<any, any, any>
     };
 
@@ -629,6 +628,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         }
         const jax = this.inputJax.reduce((jax, ijax) => (ijax.name === format ? ijax : jax), null);
         const mitem = new this.options.MathItem(math, jax, display);
+        mitem.start.node = this.adaptor.body(this.document);
         mitem.setMetrics(em, ex, containerWidth, lineWidth, scale);
         mitem.convert(this, end);
         return (mitem.typesetRoot || mitem.root);

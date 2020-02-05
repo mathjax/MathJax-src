@@ -31,7 +31,7 @@ import {Tags} from './Tags.js';
 import TexError from './TexError.js';
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 import ParseOptions from './ParseOptions.js';
 import {StackItem, EnvList} from './StackItem.js';
@@ -194,11 +194,16 @@ export default class TexParser {
 
 
   /**
-   * Pushes a new item onto the stack. The item can also be a Mml node.
+   * Pushes a new item onto the stack. The item can also be a Mml node,
+   *   but if the mml item is an inferred row, push its children instead.
    * @param {StackItem|MmlNode} arg The new item.
    */
   public Push(arg: StackItem|MmlNode) {
-    this.stack.Push(arg);
+    if (arg instanceof AbstractMmlNode && arg.isInferred) {
+      this.PushAll(arg.childNodes);
+    } else {
+      this.stack.Push(arg);
+    }
   }
 
 

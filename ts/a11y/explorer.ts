@@ -229,6 +229,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
 
         public static OPTIONS: OptionList = {
             ...BaseDocument.OPTIONS,
+            enrichSpeech: 'shallow',                   // overrides option in EnrichedMathDocument
             renderActions: expandable({
                 ...BaseDocument.OPTIONS.renderActions,
                 explorable: [STATE.EXPLORER]
@@ -237,7 +238,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 align: 'top',                      // placement of magnified expression
                 backgroundColor: 'Blue',           // color for background of selected sub-expression
                 backgroundOpacity: .2,             // opacity for background of selected sub-expression
-                braille: true,                     // switch on Braille output
+                braille: false,                    // switch on Braille output
                 flame: false,                      // color collapsible sub-expressions
                 foregroundColor: 'Black',          // color to use for text of selected sub-expression
                 foregroundOpacity: 1,              // opacity for text of selected sub-expression

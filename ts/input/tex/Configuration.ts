@@ -198,8 +198,7 @@ export class Configuration {
   }
 
   /**
-   * Appends configurations to this configuration. Note that fallbacks are
-   * overwritten, while order of configurations is preserved.
+   * Registers a configuration after the input jax is created.  (Used by \require.)
    *
    * @param {Configuration} config   The configuration to be registered in this one
    * @param {TeX} jax                The TeX jax where it is being registered
@@ -216,12 +215,6 @@ export class Configuration {
     defaultOptions(parser.options, config.options);
     userOptions(parser.options, options);
     config.config(this, jax);
-    for (const pre of config.preprocessors) {
-      Array.isArray(pre) ? jax.preFilters.add(pre[0], pre[1]) : jax.preFilters.add(pre);
-    }
-    for (const post of config.postprocessors) {
-      Array.isArray(post) ? jax.postFilters.add(post[0], post[1]) : jax.postFilters.add(post);
-    }
   }
 
   /**

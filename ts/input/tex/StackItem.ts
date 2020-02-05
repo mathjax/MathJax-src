@@ -253,6 +253,12 @@ export interface StackItem extends NodeStack {
    env: EnvList;
 
   /**
+   * Copy local properties when pushed to stack?
+   * @type {boolean}
+   */
+   copyEnv: boolean;
+
+  /**
    * Tests if item is of the given type.
    * @param {string} kind The type.
    * @return {boolean} True if item is of that type.
@@ -379,12 +385,27 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     return 'base';
   }
 
-  get env() {
+  /**
+   * Get the private environment
+   * @return {EnvList}
+   */
+  public get env() {
     return this._env;
   }
 
-  set env(value: EnvList) {
+  /**
+   * Set the private environment
+   * @param {EnvList} value
+   */
+  public set env(value: EnvList) {
     this._env = value;
+  }
+
+  /**
+   * Default is to copy local environment when pushed on stack
+   */
+  public get copyEnv() {
+    return true;
   }
 
   /**

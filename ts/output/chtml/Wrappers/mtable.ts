@@ -60,6 +60,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
         },
         'mjx-table': {
             'display': 'inline-block',
+            'vertical-align': '-.5ex'
         },
         'mjx-table > mjx-itable': {
             'vertical-align': 'middle',
@@ -96,12 +97,6 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
         },
         'mjx-mtable[align="bottom"] > mjx-table': {
             'vertical-align': 'bottom'
-        },
-        'mjx-mtable[align="center"] > mjx-table': {
-            'vertical-align': 'middle'
-        },
-        'mjx-mtable[align="baseline"] > mjx-table': {
-            'vertical-align': 'middle'
         }
     };
 

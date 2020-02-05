@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, '__esModule', {value: true});
-
-exports.dependencies = {
+export const dependencies = {
     'a11y/semantic-enrich': ['input/mml', '[sre]', 'input/mml'],
     'a11y/complexity': ['a11y/semantic-enrich'],
     'a11y/explorer': ['a11y/semantic-enrich', 'ui/menu'],
@@ -32,10 +29,10 @@ exports.dependencies = {
     '[tex]/verb': ['input/tex-base']
 };
 
-exports.paths = {
+export const paths = {
     tex: '[mathjax]/input/tex/extensions',
     sre: '[mathjax]/sre/sre_browser'
-}
+};
 
 const allPackages = [
     '[tex]/action',
@@ -61,7 +58,7 @@ const allPackages = [
     '[tex]/verb'
 ];
 
-exports.provides = {
+export const provides = {
     'startup': ['loader'],
     'input/tex': [
         'input/tex-base',
@@ -78,4 +75,4 @@ exports.provides = {
         ...allPackages
     ],
     '[tex]/all-packages': allPackages
-}
+};

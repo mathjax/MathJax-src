@@ -138,10 +138,6 @@ BaseMethods.Superscript = function(parser: TexParser, c: string) {
       // @test Move Superscript, Large Operator
       if (!NodeUtil.isType(base, 'munderover') || NodeUtil.isType(base, 'mover') ||
           NodeUtil.getChildAt(base, (base as MmlMunderover).over)) {
-        if (NodeUtil.getProperty(base, 'movablelimits') && NodeUtil.isType(base, 'mi')) {
-          // @test Mathop Super
-          base = ParseUtil.mi2mo(parser, base);
-        }
         // @test Large Operator
         base = parser.create('node', 'munderover', [base], {movesupsub: true});
       }
@@ -200,10 +196,6 @@ BaseMethods.Subscript = function(parser: TexParser, c: string) {
       // @test Large Operator, Move Superscript
       if (!NodeUtil.isType(base, 'munderover') || NodeUtil.isType(base, 'mover') ||
           NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
-        if (NodeUtil.getProperty(base, 'movablelimits') && NodeUtil.isType(base, 'mi')) {
-          // @test Mathop Sub
-          base = ParseUtil.mi2mo(parser, base);
-        }
         // @test Move Superscript
         base = parser.create('node', 'munderover', [base], {movesupsub: true});
       }
@@ -917,7 +909,7 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
 BaseMethods.Hskip = function(parser: TexParser, name: string) {
   // @test Modulo
   const node = parser.create('node', 'mspace', [],
-                                                       {width: parser.GetDimen(name)});
+                             {width: parser.GetDimen(name)});
   parser.Push(node);
 };
 

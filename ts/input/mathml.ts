@@ -128,7 +128,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
      */
     public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
         let mml = math.start.node;
-        if (!mml || this.options['forceReparse']) {
+        if (!mml || this.options['forceReparse'] || this.adaptor.kind(mml) === '#text') {
             let mathml = this.executeFilters(this.preFilters, math, document, math.math || '<math></math>');
             let doc = this.checkForErrors(this.adaptor.parse(mathml, 'text/' + this.options['parseAs']));
             let body = this.adaptor.body(doc);

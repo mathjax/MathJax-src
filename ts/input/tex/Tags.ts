@@ -651,7 +651,10 @@ export namespace TagsFactory {
    * @return {Tags} The newly created object.
    */
   export let create = function(name: string): Tags {
-    let constr = tagsMapping.get(name) || this.defaultTags;
+    let constr = tagsMapping.get(name) || tagsMapping.get(defaultTags);
+    if (!constr) {
+        throw Error('Unknown tags class');
+    }
     return new constr();
   };
 

@@ -189,7 +189,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
         //
         // Get the child to be added to the node
         //
-        const kind = tag.match(/<(.*?)[\s\n>]/)[1].toLowerCase();
+        const kind = tag.match(/<(.*?)[\s\n>/]/)[1].toLowerCase();
         const child = adaptor.node(kind) as LiteElement;
         //
         // Split out the tag attributes as an array of space, name, value1, value3, value3,
@@ -211,7 +211,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
             //   Otherwise, the child tag becames the parent node to which
             //     new tags are added
             //
-            if (!SELF_CLOSING[kind]) {
+            if (!SELF_CLOSING[kind] && !tag.match(/\/>$/)) {
                 if (PCDATA[kind]) {
                     this.handlePCDATA(adaptor, child, kind, parts);
                 } else {

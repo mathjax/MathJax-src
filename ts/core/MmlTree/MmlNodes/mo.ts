@@ -71,9 +71,32 @@ export class MmlMo extends AbstractMmlTokenNode {
     public static OPTABLE: {[form: string]: OperatorList} = OPTABLE;
 
     /**
-     * The TeX class of the node is set to REL for MathML, but TeX sets it explicitly in setTeXclass()
+     * The internal TeX class of the node (for use with getter/setter below)
      */
-    public texClass = TEXCLASS.REL;
+    public _texClass: number = null;
+
+    /**
+     * Use a getter to look up the TeX class from the operator table if it hasn't
+     * been set yet (but don't save it in case the form changes when it is in its
+     * location).
+     */
+    public get texClass() {
+        if (this._texClass === null) {
+            let mo = this.getText();
+            let [form1, form2, form3] = this.handleExplicitForm(this.getForms());
+            let OPTABLE = (this.constructor as typeof MmlMo).OPTABLE;
+            let def = OPTABLE[form1][mo] || OPTABLE[form2][mo] || OPTABLE[form3][mo];
+            return def ? def[2] : TEXCLASS.REL;
+        }
+        return this._texClass;
+    }
+
+    /**
+     * Use a setter to store the actual value in _texClass;
+     */
+    public set texClass(value: number) {
+        this._texClass = value;
+    }
 
     /**
      * The default MathML spacing on the left and right
@@ -176,7 +199,8 @@ export class MmlMo extends AbstractMmlTokenNode {
      */
     public setTeXclass(prev: MmlNode): MmlNode {
         let {form, fence} = this.attributes.getList('form', 'fence') as {form: string, fence: string};
-        if (this.attributes.isSet('lspace') || this.attributes.isSet('rspace')) {
+        if (this.getProperty('texClass') === undefined &&
+            (this.attributes.isSet('lspace') || this.attributes.isSet('rspace'))) {
             this.texClass = TEXCLASS.NONE;
             return null;
         }

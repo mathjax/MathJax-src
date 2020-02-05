@@ -326,9 +326,8 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          */
         public hasMovableLimits() {
             const display = this.node.attributes.get('displaystyle');
-            return (!display && (this.node.getProperty('movablelimits') ||
-                                 this.node.attributes.get('movablelimits') ||
-                                 this.baseChild.coreMO().node.attributes.get('movablelimits')));
+            const mo = this.baseChild.coreMO().node;
+            return (!display && mo.attributes.get('movablelimits'));
         }
 
         /**

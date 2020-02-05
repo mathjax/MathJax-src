@@ -24,7 +24,14 @@
 
 import {MmlVisitor} from './MmlVisitor.js';
 import {MmlFactory} from './MmlFactory.js';
-import {MmlNode, TextNode, XMLNode, TEXCLASSNAMES} from './MmlNode.js';
+import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
+import {MmlMi} from './MmlNodes/mi.js';
+
+
+export const DATAMJX = 'data-mjx-';
+
+type PropertyList = {[name: string]: string};
+
 
 /*****************************************************************/
 /**
@@ -32,6 +39,26 @@ import {MmlNode, TextNode, XMLNode, TEXCLASSNAMES} from './MmlNode.js';
  */
 
 export class SerializedMmlVisitor extends MmlVisitor {
+
+    /**
+     * Translations for the internal mathvariants
+     */
+    public static variants: PropertyList = {
+      "-tex-calligraphic":      'script',
+      "-tex-calligraphic-bold": 'bold-script',
+      "-tex-oldstyle":          'normal',
+      "-tex-oldstyle-bold":     'bold',
+      "-tex-mathit":            'italic'
+    };
+
+    /**
+     * Attributes to include on every element of a given kind
+     */
+    public static defaultAttributes: {[kind: string]: PropertyList} = {
+        math: {
+            xmlns: 'http://www.w3.org/1998/Math/MathML'
+        }
+    }
 
     /**
      * Convert the tree rooted at a particular node into a serialized MathML string
@@ -55,10 +82,10 @@ export class SerializedMmlVisitor extends MmlVisitor {
     /**
      * @param {XMLNode} node  The XML node to visit
      * @param {string} space  The amount of indenting for this node
-     * @return {string}       The serialization of the XML node (not implemented yet).
+     * @return {string}       The serialization of the XML node
      */
     public visitXMLNode(node: XMLNode, space: string) {
-        return '[XML Node not implemented]';
+        return space + node.getSerializedXML();
     }
 
     /**
@@ -86,16 +113,10 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @return {string}       The serialized contents of the mrow, properly indented.
      */
     public visitTeXAtomNode(node: MmlNode, space: string) {
-      let texclass = node.texClass < 0 ? 'NONE' : TEXCLASSNAMES[node.texClass];
-      let mml = space + '<mrow class="MJX-TeXAtom-' + texclass + '"' +
-          this.getAttributes(node) + '>\n';
-      const endspace = space;
-      space += '  ';
-      for (const child of node.childNodes) {
-        mml += this.visitNode(child, space);
-      }
-      mml += '\n' + endspace + '</mrow>';
-      return mml;
+        let children = this.childNodeMml(node, space + '  ', '\n');
+        let mml = space + '<mrow' + this.getAttributes(node) + '>' +
+            (children.match(/\S/) ? '\n' + children + space : '') + '</mrow>';
+        return mml;
     }
 
     /**
@@ -111,7 +132,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
 
     /**
      * The generic visiting function:
-     *   Make the string versino of the open tag, properly indented, with it attributes
+     *   Make the string version of the open tag, properly indented, with it attributes
      *   Increate the indentation level
      *   Add the childnodes
      *   Add the end tag with proper spacing (empty tags have the close tag following directly)
@@ -148,13 +169,55 @@ export class SerializedMmlVisitor extends MmlVisitor {
      * @return {string}       The attribute list as a string
      */
     protected getAttributes(node: MmlNode) {
-        let ATTR = '';
-        let attributes = node.attributes.getAllAttributes();
-        for (const name of Object.keys(attributes)) {
-            if (attributes[name] === undefined) continue;
-            ATTR += ' ' + name + '="' + this.quoteHTML(attributes[name].toString()) + '"';
+        const attr = [];
+        const defaults = (this.constructor as typeof SerializedMmlVisitor).defaultAttributes[node.kind] || {};
+        const attributes = Object.assign({},
+                                         defaults,
+                                         this.getDataAttributes(node),
+                                         node.attributes.getAllAttributes()
+                                        );
+        const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
+        if (attributes.hasOwnProperty('mathvariant') && variants.hasOwnProperty(attributes.mathvariant)) {
+            attributes.mathvariant = variants[attributes.mathvariant];
         }
-        return ATTR;
+        for (const name of Object.keys(attributes)) {
+            const value = String(attributes[name]);
+            if (value === undefined) continue;
+            attr.push(name + '="' + this.quoteHTML(value) + '"');
+        }
+        return attr.length ? ' ' + attr.join(' ') : '';
+    }
+
+    /**
+     * Create the list of data-mjx-* attributes
+     *
+     * @param {MmlNode} node        The node whose data list is to be generated
+     * @return {string}             The final class attribute (or empty string)
+     */
+    protected getDataAttributes(node: MmlNode) {
+        const data = {};
+        const variant = node.attributes.getExplicit('mathvariant') as string;
+        const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
+        variant && variants.hasOwnProperty(variant) && this.setDataAttribute(data, 'variant', variant);
+        node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
+        const texclass = node.getProperty('texClass') as number;
+        if (texclass !== undefined) {
+            let setclass = true;
+            if (texclass === TEXCLASS.OP && node.isKind('mi')) {
+                const name = (node as MmlMi).getText();
+                setclass = !(name.length > 1 && name.match(MmlMi.operatorName));
+            }
+            setclass && this.setDataAttribute(data, 'texclass', texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]);
+        }
+        return data;
+    }
+
+    /**
+     * @param {string} name    The name for the data-mjx-name attribute
+     * @return {string}        The data-mjx-name="value" string
+     */
+    protected setDataAttribute(data: PropertyList, name: string, value: string) {
+        data[DATAMJX + name] = value;
     }
 
     /**
