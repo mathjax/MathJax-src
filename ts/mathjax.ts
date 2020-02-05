@@ -34,7 +34,7 @@ export const mathjax = {
     /**
      *  The MathJax version number
      */
-    version: '3.0.0',
+    version: '3.0.1',
 
     /**
      *  The list of registers document handlers
