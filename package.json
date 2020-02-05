@@ -63,6 +63,6 @@
   "dependencies": {
     "esm": "^3.2.25",
     "mj-context-menu": "^0.2.0",
-    "speech-rule-engine": "^3.0.0-beta.6"
+    "speech-rule-engine": "^3.0.0-beta.8"
   }
 }
