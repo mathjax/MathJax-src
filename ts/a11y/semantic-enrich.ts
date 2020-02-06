@@ -107,6 +107,28 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     return class extends BaseMathItem {
 
         /**
+         * @param {any} node  The node to be serialized
+         * @return {string}   The serialized version of node
+         */
+        protected serializeMml(node: any) {
+            if ('outerHTML' in node) {
+                return node.outerHTML;
+            }
+            //
+            //  For IE11
+            //
+            if (typeof Element !== 'undefined' && typeof window !== 'undefined' && node instanceof Element) {
+                const div = window.document.createElement('div');
+                div.appendChild(node);
+                return div.innerHTML;
+            }
+            //
+            //  For NodeJS version of SRE
+            //
+            return node.toString();
+        }
+
+        /**
          * @param {MathDocument} document   The MathDocument for the MathItem
          */
         public enrich(document: MathDocument<N, T, D>) {
@@ -119,8 +141,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
                 currentSpeech = document.options.enrichSpeech;
             }
             const math = new document.options.MathItem('', MmlJax);
-            const enriched = SRE.toEnriched(toMathML(this.root));
-            math.math = ('outerHTML' in enriched ? enriched.outerHTML : (enriched as any).toString());
+            math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
             math.display = this.display;
             math.compile(document);
             this.root = math.root;
