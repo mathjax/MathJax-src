@@ -66,12 +66,13 @@ Repository](https://github.com/mathjax/MathJax-demos-web) for more information.
 
 ### Using MathJax Components in node applications
 
-To use MathJax components in a node application, install the `mathjax`
-package:
+To use MathJax components in a node application, install the `mathjax` package:
 
-    npm install mathjax
+    npm install mathjax@3
 
-and require `mathjax` within your application:
+(we are still making updates to version 2, so you should include `@3` since the latest chronological version may not be version 3).
+
+Then require `mathjax` within your application:
 
     require('mathjax').init({ ... }).then((MathJax) => { ... });
     
@@ -121,8 +122,8 @@ If you want to work from the GitHub repository directly, then do the following:
 
     git clone https://github.com/mathjax/MathJax-src.git mathjax-src
     cd mathjax-src
-    npm run compile
-    npm run make-components
+    npm run --silent compile
+    npm run --silent make-components
 
 in order to compile the JavaScript files from the TypeScript source,
 and build the component files from the JavaScript files.
