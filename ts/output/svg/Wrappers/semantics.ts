@@ -27,6 +27,7 @@ import {CommonSemantics, CommonSemanticsMixin} from '../../common/Wrappers/seman
 import {BBox} from '../BBox.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
 import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
+import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -92,6 +93,15 @@ export class SVGannotation<N, T, D> extends SVGWrapper<N, T, D> {
  */
 export class SVGannotationXML<N, T, D> extends SVGWrapper<N, T, D> {
     public static kind = MmlAnnotationXML.prototype.kind;
+
+    public static styles: StyleList = {
+        'foreignObject[data-mjx-xml]': {
+            'font-family': 'initial',
+            'line-height': 'normal',
+            overflow: 'visible'
+        }
+    };
+
 }
 
 /*****************************************************************/
@@ -112,15 +122,26 @@ export class SVGxml<N, T, D> extends SVGWrapper<N, T, D> {
      */
     public toSVG(parent: N) {
         const xml = this.adaptor.clone((this.node as XMLNode).getXML() as N);
-        this.adaptor.append(parent, this.svg('foreignObject', {}, [xml]));
+        const em = this.jax.math.metrics.em * this.jax.math.metrics.scale;
+        const scale = this.fixed(1 / em);
+        const {w, h, d} = this.getBBox();
+        this.element = this.adaptor.append(parent, this.svg('foreignObject', {
+            'data-mjx-xml': true,
+            y: this.jax.fixed(-h * em) + 'px',
+            width: this.jax.fixed(w * em) + 'px',
+            height: this.jax.fixed((h + d) * em) + 'px',
+            transform: `scale(${scale}) matrix(1 0 0 -1 0 0)`
+        }, [xml]));
     }
 
     /**
      * @override
      */
-    public computeBBox() {
-        // FIXME:  compute using the DOM, if possible
-        return this.bbox;
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+        const {w, h, d} = this.jax.measureXMLnode((this.node as XMLNode).getXML() as N);
+        bbox.w = w;
+        bbox.h = h;
+        bbox.d = d;
     }
 
     /**

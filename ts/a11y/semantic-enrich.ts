@@ -107,6 +107,28 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     return class extends BaseMathItem {
 
         /**
+         * @param {any} node  The node to be serialized
+         * @return {string}   The serialized version of node
+         */
+        protected serializeMml(node: any) {
+            if ('outerHTML' in node) {
+                return node.outerHTML;
+            }
+            //
+            //  For IE11
+            //
+            if (typeof Element !== 'undefined' && typeof window !== 'undefined' && node instanceof Element) {
+                const div = window.document.createElement('div');
+                div.appendChild(node);
+                return div.innerHTML;
+            }
+            //
+            //  For NodeJS version of SRE
+            //
+            return node.toString();
+        }
+
+        /**
          * @param {MathDocument} document   The MathDocument for the MathItem
          */
         public enrich(document: MathDocument<N, T, D>) {
@@ -119,8 +141,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
                 currentSpeech = document.options.enrichSpeech;
             }
             const math = new document.options.MathItem('', MmlJax);
-            const enriched = SRE.toEnriched(toMathML(this.root));
-            math.math = ('outerHTML' in enriched ? enriched.outerHTML : (enriched as any).toString());
+            math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
             math.display = this.display;
             math.compile(document);
             this.root = math.root;
@@ -131,10 +152,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         /**
          * @param {MathDocument} document   The MathDocument for the MathItem
          */
-        attachSpeech(document: MathDocument<N, T, D>) {
+        public attachSpeech(document: MathDocument<N, T, D>) {
             if (this.state() >= STATE.ATTACHSPEECH) return;
-            const attributes =this.root.attributes;
-            const speech = (attributes.get('aria-label') || attributes.get('data-semantic-speech')) as string;
+            const attributes = this.root.attributes;
+            const speech = (attributes.get('aria-label') ||
+                            this.getSpeech(this.root)) as string;
             if (speech) {
                 const adaptor = document.adaptor;
                 const node = this.typesetRoot;
@@ -144,6 +166,26 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
                 }
             }
             this.state(STATE.ATTACHSPEECH);
+        }
+
+        /**
+         * Retrieves the actual speech element that should be used as aria label.
+         * @param {MmlNode} node The root node to search from.
+         * @return {string} The speech content.
+         */
+        private getSpeech(node: MmlNode): string {
+            const attributes = node.attributes;
+            if (!attributes) return;
+            const speech = attributes.getExplicit('data-semantic-speech') as string;
+            if (!attributes.getExplicit('data-semantic-parent') && speech) {
+                return speech;
+            }
+            for (let child of node.childNodes) {
+                let value = this.getSpeech(child as MmlNode);
+                if (value != null) {
+                    return value;
+                }
+            }
         }
 
     };

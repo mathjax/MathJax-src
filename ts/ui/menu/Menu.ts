@@ -69,6 +69,7 @@ export interface MenuSettings {
     autocollapse: boolean;
     collapsible: boolean;
     inTabOrder: boolean;
+    assistiveMml: boolean;
     // A11y settings
     backgroundColor: string;
     braille: boolean;
@@ -120,6 +121,7 @@ export class Menu {
             autocollapse: false,
             collapsible: false,
             inTabOrder: true,
+            assistiveMml: true,
             explorer: false
         },
         jax: {
@@ -405,7 +407,8 @@ export class Menu {
                     this.a11yVar<boolean>('infoPrefix'),
                     this.variable<boolean>('autocollapse'),
                     this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
-                    this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab))
+                    this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab)),
+                    this.variable<boolean>('assistiveMml', (mml: boolean) => this.setAssistiveMml(mml))
                 ],
                 items: [
                     this.submenu('Show', 'Show Math As', [
@@ -500,7 +503,8 @@ export class Menu {
                         this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
                         this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {disabled: true}),
                         this.rule(),
-                        this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder')
+                        this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder'),
+                        this.checkbox('AssistiveMml', 'Include Hidden MathML', 'assistiveMml')
                     ]),
                     this.submenu('Language', 'Language'),
                     this.rule(),
@@ -539,6 +543,9 @@ export class Menu {
             }
             if (this.settings.explorer && (!MathJax._.a11y || !MathJax._.a11y.explorer)) {
                 this.loadA11y('explorer');
+            }
+            if (this.settings.assistiveMml && (!MathJax._.a11y || !MathJax._.a11y['assistive-mml'])) {
+                this.loadA11y('assistive-mml');
             }
         } else {
             const menu = this.menu;
@@ -669,6 +676,17 @@ export class Menu {
      */
     protected setTabOrder(tab: boolean) {
         this.menu.getStore().inTaborder(tab);
+    }
+
+    /**
+     * @param {boolean} mml   True to output hidden Mathml, false to not
+     */
+    protected setAssistiveMml(mml: boolean) {
+        if (!mml || (window.MathJax._.a11y && window.MathJax._.a11y['assistive-mml'])) {
+            this.rerender();
+        } else {
+            this.loadA11y('assistive-mml');
+        }
     }
 
     /**
@@ -804,6 +822,7 @@ export class Menu {
             this.document = startup.document = startup.getDocument();
             this.document.menu = this;
             this.transferMathList(document);
+            this.document.processed = document.processed;
             if (!Menu._loadingPromise) {
                 this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
             }

@@ -60,8 +60,11 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      *  The default styles for SVG
      */
     public static commonStyles: CssStyleList = {
+        'mjx-container[jax="SVG"]': {
+            direction: 'ltr'
+        },
         'mjx-container[jax="SVG"] > svg': {
-            'overflow': 'visible'
+            overflow: 'visible'
         },
         'mjx-container[jax="SVG"] > svg a': {
             fill: 'blue', stroke: 'blue'
@@ -236,6 +239,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
             //
             // Use width 100% with no viewbox, and instead scale and translate to achieve the same result
             //
+            adaptor.setStyle(svg, 'min-width', this.ex(W));
             adaptor.setAttribute(svg, 'width', pwidth);
             adaptor.removeAttribute(svg, 'viewBox');
             const scale = wrapper.metrics.ex / (this.font.params.x_height * 1000);
@@ -357,7 +361,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         adaptor.append(adaptor.body(adaptor.document), svg);
         let w = adaptor.nodeSize(text, 1000, true)[0];
         adaptor.remove(svg);
-        return {w: w, h: .75, d: .25};
+        return {w: w, h: .75, d: .2};
     }
 
 }

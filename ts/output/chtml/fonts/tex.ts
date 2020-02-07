@@ -87,7 +87,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         '-tex-mathit': 'mjx-mit',
         '-tex-oldstyle': 'mjx-os',
         '-tex-bold-oldstyle': 'mjx-os mjx-b',
-        '-tex-variant': 'mjx-v'
+        '-tex-variant': 'mjx-var'
     };
 
     /**
@@ -136,7 +136,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
             'font-family': 'MJXZERO, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
         },
         '.mjx-i mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-I, MJXTEX-MI, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
         '.mjx-b mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
@@ -244,12 +244,12 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         },
 
         '@font-face /* 3 */': {
-            'font-family': 'MJXTEX-MI',
+            'font-family': 'MJXTEX-I',
             src: 'url("%%URL%%/MathJax_Main-Italic.woff") format("woff")'
         },
 
         '@font-face /* 4 */': {
-            'font-family': 'MJXTEX-I',
+            'font-family': 'MJXTEX-MI',
             src: 'url("%%URL%%/MathJax_Math-Italic.woff") format("woff")'
         },
 

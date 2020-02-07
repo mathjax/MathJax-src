@@ -172,7 +172,7 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
         public getPQ(sbox: BBox) {
             const t = this.font.params.rule_thickness;
             const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
-            const q = (sbox.h + sbox.d > this.surdH ? ((sbox.h + sbox.d) - (this.surdH - t)) / 2 : t + p / 4);
+            const q = (sbox.h + sbox.d > this.surdH ? ((sbox.h + sbox.d) - (this.surdH - 2 * t - p / 2)) / 2 : t + p / 4);
             return [p, q];
         }
 

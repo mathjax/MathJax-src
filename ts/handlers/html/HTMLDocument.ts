@@ -29,6 +29,7 @@ import {HTMLDomStrings} from './HTMLDomStrings.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {InputJax} from '../../core/InputJax.js';
 import {MathItem, STATE, ProtoItem, Location} from '../../core/MathItem.js';
+import {StyleList} from '../../output/common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -65,6 +66,8 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         DomStrings: null                  // Use the default DomString parser
     };
 
+    protected styles: StyleList[];
+
     /**
      * The DomString parser for locating the text in DOM trees
      */
@@ -80,6 +83,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         super(document, adaptor, html);
         this.domStrings = this.options['DomStrings'] || new HTMLDomStrings<N, T, D>(dom);
         this.domStrings.adaptor = adaptor;
+        this.styles = [];
     }
 
     /**
@@ -94,10 +98,11 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @return {Location}            The Location object for the position of the delimiter in the document
      */
     protected findPosition(N: number, index: number, delim: string, nodes: HTMLNodeArray<N, T>): Location<N, T> {
+        const adaptor = this.adaptor;
         for (const list of nodes[N]) {
             let [node, n] = list;
-            if (index <= n) {
-                return {node: node, n: index, delim: delim};
+            if (index <= n && adaptor.kind(node) === '#text') {
+                return {node: node, n: Math.max(index, 0), delim: delim};
             }
             index -= n;
         }
@@ -250,6 +255,22 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      */
     public documentPageElements() {
         return this.outputJax.pageElements(this);
+    }
+
+    /**
+     * Add styles to be included in the document's stylesheet
+     *
+     * @param {StyleList} styles   The styles to include
+     */
+    public addStyles(styles: StyleList) {
+        this.styles.push(styles);
+    }
+
+    /**
+     * Get the array of document-specific styles
+     */
+    public getStyles() {
+        return this.styles;
     }
 
 }

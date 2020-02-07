@@ -193,9 +193,9 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
         while (n) {
             if (n.kind !== '#text' && n.kind !== '#comment') {
                 n = n as LiteElement;
-                const classes = (n.attributes['class'] || '').split(/ /);
-                if (classes.find(name)) {
-                    let tags = [] as LiteElement[];
+                const classes = (n.attributes['class'] || '').trim().split(/ +/);
+                if (classes.includes(name)) {
+                    tags.push(n);
                 }
                 if (n.children.length) {
                     stack = n.children.concat(stack);
@@ -211,7 +211,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
      */
     public getElements(nodes: (string | LiteElement | LiteElement[])[], document: LiteDocument) {
         let containers = [] as LiteElement[];
-        const body = this.body(this.document);
+        const body = this.body(document);
         for (const node of nodes) {
             if (typeof(node) === 'string') {
                 if (node.charAt(0) === '#') {
@@ -424,7 +424,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
             value = String(value);
         }
         if (ns) {
-            name = ns.replace(/.*\//, '') + ':' + name;
+            name = ns.replace(/.*\//, '') + ':' + name.replace(/^.*:/, '');
         }
         node.attributes[name] = value;
         if (name === 'style') {

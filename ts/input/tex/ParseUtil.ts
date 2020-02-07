@@ -67,10 +67,25 @@ namespace ParseUtil {
    */
   export function matchDimen(
     dim: string, rest: boolean = false): [string, string, number] {
-    let match = dim.match(rest ? dimenRest : dimenEnd);
-    return match ? [match[1].replace(/,/, '.'), match[4], match[0].length] :
-      [null, null, 0];
+      let match = dim.match(rest ? dimenRest : dimenEnd);
+      return match ?
+        muReplace([match[1].replace(/,/, '.'), match[4], match[0].length]) :
+        [null, null, 0];
   }
+
+
+  /**
+   * Transforms mu dimension to em if necessary.
+   * @param {[string, string, number]} [value, unit, length] The dimension triple.
+   * @return {[string, string, number]} [value, unit, length] The transformed triple.
+   */
+  function muReplace([value, unit, length]: [string, string, number]): [string, string, number] {
+    if (unit !== 'mu') {
+      return [value, unit, length];
+    }
+    let em = Em(UNIT_CASES[unit](parseFloat(value || '1')));
+    return [em.slice(0, -2), 'em', length];
+  };
 
 
   /**
@@ -192,10 +207,12 @@ namespace ParseUtil {
 
 
   /**
-   *  If the initial child, skipping any initial space or
-   *  empty braces (TeXAtom with child being an empty inferred row),
-   *  is an <mo>, preceed it by an empty <mi> to force the <mo> to
-   *  be infix.
+   * If the initial child, skipping any initial space or
+   * empty braces (TeXAtom with child being an empty inferred row),
+   * is an <mo>, precede it by an empty <mi> to force the <mo> to
+   * be infix.
+   * @param {ParseOptions} configuration The current parse options.
+   * @param {MmlNodep[]} nodes The row of nodes to scan for an initial <mo>
    */
   export function fixInitialMO(configuration: ParseOptions, nodes: MmlNode[]) {
     for (let i = 0, m = nodes.length; i < m; i++) {
@@ -215,24 +232,7 @@ namespace ParseUtil {
 
 
   /**
-   * Rewrites an mi node into an mo node.
-   * @param {TexParser} parser The current TexParser.
-   * @param {MmlNode} mi The mi node.
-   * @return {MmlNode} The corresponding mo node.
-   */
-  export function mi2mo(parser: TexParser, mi: MmlNode): MmlNode {
-    // @test Mathop Sub, Mathop Super
-    const mo = parser.create('node', 'mo');
-    NodeUtil.copyChildren(mi, mo);
-    NodeUtil.copyAttributes(mi, mo);
-    NodeUtil.setProperties(mo, {lspace: '0', rspace: '0'});
-    NodeUtil.removeProperties(mo, 'movesupsub');
-    return mo;
-  }
-
-
-  /**
-   *  Break up a string into text and math blocks.
+   * Break up a string into text and math blocks.
    * @param {TexParser} parser The calling parser.
    * @param {string} text The text in the math expression to parse.
    * @param {number|string=} level The scriptlevel.

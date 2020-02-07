@@ -381,7 +381,11 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
      * @override
      */
     public setAttribute(node: N, name: string, value: string, ns: string = null) {
-        return (ns ? node.setAttributeNS(ns, name, value) : node.setAttribute(name, value));
+        if (!ns) {
+            return node.setAttribute(name, value);
+        }
+        name = ns.replace(/.*\//, '') + ':' + name.replace(/^.*:/, '');
+        return node.setAttributeNS(ns, name, value);
     }
 
     /**

@@ -404,7 +404,6 @@ export const STATE: {[state: string]: number} = {
     RERENDER: 125,
     TYPESET: 150,
     INSERTED: 200,
-    RESET: 500,
     LAST: 10000
 };
 

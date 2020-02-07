@@ -119,18 +119,21 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
      */
     public removeFromDocument(restore: boolean = false) {
         if (this.state() >= STATE.TYPESET) {
+            const adaptor = this.adaptor;
             let node = this.start.node;
-            let math: N | T = this.adaptor.text('');
+            let math: N | T = adaptor.text('');
             if (restore) {
                 let text = this.start.delim + this.math + this.end.delim;
                 if (this.inputJax.processStrings) {
-                    math = this.adaptor.text(text);
+                    math = adaptor.text(text);
                 } else {
-                    const doc = this.adaptor.parse(text, 'text/html');
-                    math = this.adaptor.firstChild(this.adaptor.body(doc));
+                    const doc = adaptor.parse(text, 'text/html');
+                    math = adaptor.firstChild(adaptor.body(doc));
                 }
             }
-            this.adaptor.replace(math, node);
+            if (adaptor.parent(node)) {
+                adaptor.replace(math, node);
+            }
             this.start.node = this.end.node = math;
             this.start.n = this.end.n = 0;
         }

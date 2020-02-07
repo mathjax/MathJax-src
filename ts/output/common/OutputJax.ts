@@ -23,7 +23,7 @@
 
 import {AbstractOutputJax} from '../../core/OutputJax.js';
 import {MathDocument} from '../../core/MathDocument.js';
-import {MathItem, Metrics} from '../../core/MathItem.js';
+import {MathItem, Metrics, STATE} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {FontData, FontDataClass, CharOptions, DelimiterData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
@@ -260,9 +260,13 @@ export abstract class CommonOutputJax<
         const adaptor = this.adaptor;
         const maps = this.getMetricMaps(html);
         for (const math of html.math) {
-            const map = maps[math.display ? 1 : 0];
-            const {em, ex, containerWidth, lineWidth, scale} = map.get(adaptor.parent(math.start.node));
-            math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+            const parent = adaptor.parent(math.start.node);
+            if (math.state() < STATE.METRICS && parent) {
+                const map = maps[math.display ? 1 : 0];
+                const {em, ex, containerWidth, lineWidth, scale} = map.get(parent);
+                math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+                math.state(STATE.METRICS);
+            }
         }
     }
 
@@ -296,9 +300,11 @@ export abstract class CommonOutputJax<
         //
         for (const math of html.math) {
             const node = adaptor.parent(math.start.node);
-            const map = domMaps[math.display? 1 : 0];
-            if (!map.has(node)) {
-                map.set(node, this.getTestElement(node, math.display));
+            if (node && math.state() < STATE.METRICS) {
+                const map = domMaps[math.display ? 1 : 0];
+                if (!map.has(node)) {
+                    map.set(node, this.getTestElement(node, math.display));
+                }
             }
         }
         //
@@ -397,10 +403,18 @@ export abstract class CommonOutputJax<
     public styleSheet(html: MathDocument<N, T, D>) {
         this.setDocument(html);
         //
-        //  Start with the common styles
+        // Start with the common styles
         //
         this.cssStyles.clear();
         this.cssStyles.addStyles((this.constructor as typeof CommonOutputJax).commonStyles);
+        //
+        // Add document-specific styles
+        //
+        if ('getStyles' in html) {
+            for (const styles of ((html as any).getStyles() as CssStyleList[])) {
+                this.cssStyles.addStyles(styles);
+            }
+        }
         //
         // Gather the CSS from the classes
         //
@@ -533,6 +547,35 @@ export abstract class CommonOutputJax<
      * @return {Object}           The width, height and depth for the text (in ems)
      */
     public abstract measureTextNode(text: N): UnknownBBox;
+
+    /**
+     * Measure the width, height and depth of an annotation-xml node's content
+     *
+     * @param{N} xml   The xml content node to be measured
+     * @return {Object}  The width, height, and depth of the content
+     */
+    public measureXMLnode(xml: N) {
+        const adaptor = this.adaptor;
+        const content =  this.html('mjx-xml-block', {style:{display:'inline-block'}}, [adaptor.clone(xml)]);
+        const base = this.html('mjx-baseline', {style: {display: 'inline-block', width: 0, height: 0}});
+        const style = {
+            position: 'absolute',
+            display: 'inline-block',
+            'font-family': 'initial',
+            'line-height': 'normal'
+        };
+        const node = this.html('mjx-measure-xml', {style}, [base, content]);
+        adaptor.append(adaptor.parent(this.math.start.node), this.container);
+        adaptor.append(this.container, node);
+        const em = this.math.metrics.em * this.math.metrics.scale;
+        const {left, right, bottom, top} = adaptor.nodeBBox(content);
+        const w = (right - left) / em;
+        const h = (adaptor.nodeBBox(base).top - top) / em;
+        const d = (bottom - top) / em - h;
+        adaptor.remove(this.container);
+        adaptor.remove(node);
+        return {w, h, d};
+    }
 
     /**
      * @param {CssFontData} font   The family, style, and weight for the given font

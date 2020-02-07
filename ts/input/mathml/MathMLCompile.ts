@@ -109,9 +109,12 @@ export class MathMLCompile<N, T, D> {
      * @return {MmlNode}           The converted MmlNode
      */
     public makeNode(node: N) {
-        let limits = false, texClass = '';
-        let type = this.adaptor.kind(node).replace(/^.*:/, '');
-        for (const name of this.adaptor.allClasses(node)) {
+        const adaptor = this.adaptor;
+        let limits = false;
+        let kind = adaptor.kind(node).replace(/^.*:/, '');
+        let texClass = adaptor.getAttribute(node, 'data-mjx-texclass') || '';
+        let type = texClass && kind === 'mrow' ? 'TeXAtom' : kind;
+        for (const name of adaptor.allClasses(node)) {
             if (name.match(/^MJX-TeXAtom-/)) {
                 texClass = name.substr(12);
                 type = 'TeXAtom';
@@ -121,8 +124,11 @@ export class MathMLCompile<N, T, D> {
         }
         this.factory.getNodeClass(type) || this.error('Unknown node type "' + type + '"');
         let mml = this.factory.create(type);
-        if (texClass) {
+        if (type === 'TeXAtom') {
             this.texAtom(mml, texClass, limits);
+        } else if (texClass) {
+            mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
+            mml.setProperty('texClass', mml.texClass);
         }
         this.addAttributes(mml, node);
         this.checkClass(mml, node);
@@ -137,15 +143,23 @@ export class MathMLCompile<N, T, D> {
      * @param {N} node  The MathML node whose attributes to copy
      */
     protected addAttributes(mml: MmlNode, node: N) {
+        let ignoreVariant = false;
         for (const attr of this.adaptor.allAttributes(node)) {
             let name = attr.name;
-            if (name !== 'class') {
+            if (name.substr(0, 9) === 'data-mjx-') {
+                if (name === 'data-mjx-alternate') {
+                    mml.setProperty('variantForm', true);
+                } else if (name === 'data-mjx-variant') {
+                    mml.attributes.set('mathvariant', this.filterAttribute('mathvariant', attr.value));
+                    ignoreVariant = true;
+                }
+            } else if (name !== 'class') {
                 let value = this.filterAttribute(name, attr.value);
                 if (value !== null) {
                     let val = value.toLowerCase();
                     if (val === 'true' || val === 'false') {
                         mml.attributes.set(name, val === 'true');
-                    } else {
+                    } else if (!ignoreVariant || name !== 'mathvariant') {
                         mml.attributes.set(name, value);
                     }
                 }
@@ -174,18 +188,19 @@ export class MathMLCompile<N, T, D> {
         if (mml.arity === 0) {
             return;
         }
-        for (const child of this.adaptor.childNodes((node)) as N[]) {
-            const name = this.adaptor.kind(child);
+        const adaptor = this.adaptor;
+        for (const child of adaptor.childNodes(node) as N[]) {
+            const name = adaptor.kind(child);
             if (name === '#comment') {
                 continue;
             }
             if (name === '#text') {
                 this.addText(mml, child);
             } else if (mml.isKind('annotation-xml')) {
-                mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child));
+                mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child, adaptor));
             } else {
                 let childMml = mml.appendChild(this.makeNode(child)) as MmlNode;
-                if (childMml.arity === 0 && this.adaptor.childNodes(child).length) {
+                if (childMml.arity === 0 && adaptor.childNodes(child).length) {
                     if (this.options['fixMisplacedChildren']) {
                         this.addChildren(mml, child);
                     } else {
@@ -229,7 +244,7 @@ export class MathMLCompile<N, T, D> {
                 if (name === 'MJX-variant') {
                     mml.setProperty('variantForm', true);
                 } else if (name.substr(0, 11) !== 'MJX-TeXAtom') {
-                    mml.attributes.set('mathvariant', name.substr(3));
+                    mml.attributes.set('mathvariant', this.fixCalligraphic(name.substr(3)));
                 }
             } else {
                 classList.push(name);
@@ -241,6 +256,16 @@ export class MathMLCompile<N, T, D> {
     }
 
     /**
+     * Fix the old incorrect spelling of calligraphic.
+     *
+     * @param {string} variant  The mathvariant name
+     * @return {string}         The corrected variant
+     */
+    protected fixCalligraphic(variant: string) {
+        return variant.replace(/caligraphic/, 'calligraphic');
+    }
+
+    /**
      * Handle the properties of a TeXAtom
      *
      * @param {MmlNode} mml      The node to be updated
@@ -249,6 +274,7 @@ export class MathMLCompile<N, T, D> {
      */
     protected texAtom(mml: MmlNode, texClass: string, limits: boolean) {
         mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
+        mml.setProperty('texClass', mml.texClass);
         if (texClass === 'OP' && !limits) {
             mml.setProperty('movesupsub', true);
             mml.attributes.setInherited('movablelimits', true);
@@ -282,7 +308,8 @@ export class MathMLCompile<N, T, D> {
      */
     protected trimSpace(text: string) {
         return text.replace(/[\t\n\r]/g, ' ')    // whitespace to spaces
-                   .trim()                       // initial and trailing whitespace
+                   .replace(/^ +/,'')            // initial whitespace
+                   .replace(/ +$/,'')            // trailing whitespace
                    .replace(/  +/g, ' ');        // internal multiple whitespace
     }
 

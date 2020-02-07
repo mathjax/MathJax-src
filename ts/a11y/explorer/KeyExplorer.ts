@@ -161,6 +161,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
   public showRegion: string = 'subtitles';
 
+  private init: boolean = false;
+
   /**
    * Flag in case the start method is triggered before the walker is fully
    * initialised. I.e., we have to wait for SRE. Then region is re-shown if
@@ -186,6 +188,14 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
+    if (!this.init) {
+      this.init = true;
+      sreReady.then(() => {
+        this.Speech(this.walker);
+        this.Start();
+      }).catch((error: Error) => console.log(error.message));
+      return;
+    }
     super.Start();
     let options = this.getOptions();
     this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
@@ -221,14 +231,12 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @param {sre.Walker} walker The sre walker.
    */
   public Speech(walker: sre.Walker) {
-    sreReady.then(() => {
-      let speech = walker.speech();
-      this.node.setAttribute('hasspeech', 'true');
-      this.Update();
-      if (this.restarted && this.document.options.a11y[this.showRegion]) {
-        this.region.Show(this.node, this.highlighter);
-      }
-    }).catch((error: Error) => console.log(error.message));
+    let speech = walker.speech();
+    this.node.setAttribute('hasspeech', 'true');
+    this.Update();
+    if (this.restarted && this.document.options.a11y[this.showRegion]) {
+      this.region.Show(this.node, this.highlighter);
+    }
   }
 
 
@@ -270,9 +278,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     let dummy = sre.WalkerFactory.walker(
       'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker = dummy;
-    this.Speech(dummy);
   }
-
 
   /**
    * Retrieves the speech options to sync with document options.

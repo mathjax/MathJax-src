@@ -124,6 +124,7 @@ CommonMlabeledtrMixin<CHTMLmtd<any, any, any>, Constructor<CHTMLmtr<any, any, an
             const align = this.node.attributes.get('rowalign') as string;
             const attr = (align !== 'baseline' && align !== 'axis' ? {rowalign: align} : {});
             const row = this.html('mjx-mtr', attr, [child]);
+            (CHTMLmtr as any).used = true;
             this.adaptor.append((this.parent as CHTMLmtable<N, T, D>).labels, row);
         }
     }

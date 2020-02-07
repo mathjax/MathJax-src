@@ -24,6 +24,7 @@
 import {Attributes, INHERIT} from './Attributes.js';
 import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass} from '../Tree/Node.js';
 import {MmlFactory} from './MmlFactory.js';
+import {DOMAdaptor} from '../DOMAdaptor.js';
 
 /**
  *  Used in setInheritedAttributes() to pass originating node kind as well as property value
@@ -498,7 +499,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
             texClass = TEXCLASS.ORD;
         }
         let space = TEXSPACE[prevClass][texClass];
-        if (this.prevLevel > 0 && this.attributes.get('scriptlevel') > 0 && space >= 0) {
+        if ((this.prevLevel > 0 || this.attributes.get('scriptlevel') > 0) && space >= 0) {
             return '';
         }
         return TEXSPACELENGTH[Math.abs(space)];
@@ -866,7 +867,7 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
      */
     public setTeXclass(prev: MmlNode) {
         this.getPrevClass(prev);
-        this.texClass = TEXCLASS.NONE;
+        this.texClass = TEXCLASS.ORD;
         let base = this.childNodes[0];
         if (base) {
             if (this.isEmbellished || base.isKind('mi')) {
@@ -1129,6 +1130,11 @@ export class XMLNode extends AbstractMmlEmptyNode {
     protected xml: Object = null;
 
     /**
+     * DOM adaptor for the content
+     */
+    protected adaptor: DOMAdaptor<any, any, any> = null;
+
+    /**
      * @override
      */
     public get kind() {
@@ -1146,9 +1152,17 @@ export class XMLNode extends AbstractMmlEmptyNode {
      * @param {object} xml  The XML content to be saved
      * @return {XMLNode}  The XML node (for chaining of method calls)
      */
-    public setXML(xml: Object) {
+    public setXML(xml: Object, adaptor: DOMAdaptor<any, any, any> = null) {
         this.xml = xml;
+        this.adaptor = adaptor;
         return this;
+    }
+
+    /**
+     * @return {string}  The serialized XML content
+     */
+    public getSerializedXML() {
+        return this.adaptor.outerHTML(this.xml);
     }
 
     /**
