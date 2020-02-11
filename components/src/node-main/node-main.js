@@ -18,8 +18,31 @@ combineDefaults(MathJax.config, 'loader', {
 combineDefaults(MathJax.config.loader, 'dependencies', dependencies);
 combineDefaults(MathJax.config.loader, 'paths', paths);
 combineDefaults(MathJax.config.loader, 'provides', provides);
-MathJax.config.loader.paths.mathjax =
-  path.resolve(MathJax.config.loader.require.resolve('mathjax/package.json'), '..', 'es5');
+
+MathJax.config.loader.paths.mathjax = (function () {
+  //
+  // Try to locate the mathjax-full or mathjax package
+  // If neither is found, try to use the directory where this file is located
+  //
+  try {
+    return path.resolve(MathJax.config.loader.require.resolve('mathjax-full/package.json'), '../es5');
+  } catch (err) {}
+  try {
+     return path.resolve(MathJax.config.loader.require.resolve('mathjax/package.json'), '../es5');
+  } catch (err) {
+    let dir = path.dirname(err.requireStack[0]); // err.requireStack[0] is the full path to this module
+    if (path.basename(dir) == 'node-main') {
+      //
+      // This is components/src/node-main/node-main.js, so use
+      // components/src as the mathjax directory, and load the source array
+      //
+      dir = path.dirname(dir);
+      combineDefaults(MathJax.config.loader, 'source', require('../source.js').source);
+    }
+    return dir;
+  }
+})();
+
 
 /*
  * Preload core and liteDOM adaptor (needed for node)
