@@ -96,6 +96,11 @@ export interface MathItem<N, T, D> {
     display: boolean;
 
     /**
+     * Whether this item is an escaped character or not
+     */
+    isEscaped: boolean;
+
+    /**
      * The start and ending locations in the document of
      *   this expression
      */
@@ -271,6 +276,10 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     public inputData: OptionList = {};
     public outputData: OptionList = {};
 
+    public get isEscaped() {
+        return this.display === null;
+    }
+
     /**
      * @param {string} math      The math expression for this item
      * @param {Inputjax} jax     The input jax to use for this item
@@ -315,7 +324,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     /**
      * @override
      */
-    convert(document: MathDocument<N, T, D>, end: number = STATE.LAST) {
+    public convert(document: MathDocument<N, T, D>, end: number = STATE.LAST) {
         document.renderActions.renderConvert(this, document, end);
     }
 
@@ -334,7 +343,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
      */
     public typeset(document: MathDocument<N, T, D>) {
         if (this.state() < STATE.TYPESET) {
-            this.typesetRoot = document.outputJax[this.display === null ? 'escaped' : 'typeset'](this, document);
+            this.typesetRoot = document.outputJax[this.isEscaped ? 'escaped' : 'typeset'](this, document);
             this.state(STATE.TYPESET);
         }
     }
