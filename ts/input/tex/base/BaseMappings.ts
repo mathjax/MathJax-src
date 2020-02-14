@@ -214,7 +214,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   pm:           '\u00B1',
   circ:         '\u2218',
   bigcirc:      '\u25EF',
-  setminus:     ['\u2216', {variantForm: true}],
+  setminus:     '\u2216',
   cdot:         '\u22C5',
   ast:          '\u2217',
   times:        '\u00D7',

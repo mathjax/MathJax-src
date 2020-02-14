@@ -50,7 +50,6 @@ export const texVariant: CHTMLCharMap = AddCSS(font, {
     0x3DC: {c: '\\E008'},
     0x3F0: {c: '\\E009'},
     0x210F: {f: ''},
-    0x2216: {f: ''},
     0x2224: {c: '\\E006'},
     0x2226: {c: '\\E007'},
     0x2268: {c: '\\E00C'},
