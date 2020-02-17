@@ -221,7 +221,8 @@ namespace ParseUtil {
                     (!NodeUtil.isType(child, 'TeXAtom') ||
                      (NodeUtil.getChildren(child)[0] &&
                       NodeUtil.getChildren(NodeUtil.getChildren(child)[0]).length)))) {
-        if (NodeUtil.isEmbellished(child)) {
+        if (NodeUtil.isEmbellished(child) ||
+            (NodeUtil.isType(child, 'TeXAtom') && NodeUtil.getTexClass(child) === TEXCLASS.REL)) {
           let mi = configuration.nodeFactory.create('node', 'mi');
           nodes.unshift(mi);
         }
