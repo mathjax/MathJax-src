@@ -25,6 +25,7 @@ import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonMath, CommonMathMixin} from '../../common/Wrappers/math.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
 import {StyleList} from '../../common/CssStyles.js';
+import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -44,6 +45,9 @@ export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<any, any, a
             'text-align': 'center',
             margin: '1em 0'
         },
+        'mjx-container[jax="SVG"][display="true"][width="full"]': {
+            display: 'flex'
+        },
         'mjx-container[jax="SVG"][justify="left"]': {
             'text-align': 'left'
         },
@@ -59,14 +63,18 @@ export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<any, any, a
         super.toSVG(parent);
         const adaptor = this.adaptor;
         const display = (this.node.attributes.get('display') === 'block');
+        const fullWidth = (this.bbox.pwidth === BBox.fullWidth);
         if (display) {
             adaptor.setAttribute(this.jax.container, 'display', 'true');
+            if (fullWidth) {
+                adaptor.setAttribute(this.jax.container, 'width', 'full');
+            }
         }
         const [align, shift] = this.getAlignShift();
         if (align !== 'center') {
             adaptor.setAttribute(this.jax.container, 'justify', align);
         }
-        if (display && shift) {
+        if (display && shift && !fullWidth) {
             this.jax.shift = shift;
         }
         if (this.jax.document.options.internalSpeechTitles) {

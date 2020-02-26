@@ -60,6 +60,9 @@ export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<any, an
             'text-align': 'center',
             margin: '1em 0'
         },
+        'mjx-container[jax="CHTML"][display="true"][width="full"]': {
+            display: 'flex'
+        },
         'mjx-container[jax="CHTML"][display="true"] mjx-math': {
             padding: 0
         },
@@ -83,6 +86,9 @@ export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<any, an
         if (display) {
             adaptor.setAttribute(chtml, 'display', 'true');
             adaptor.setAttribute(parent, 'display', 'true');
+            if (adaptor.getAttribute(this.chtml, 'width') === 'full') {
+                adaptor.setAttribute(parent, 'width', 'full');
+            }
         } else {
             //
             // Transfer right margin to container (for things like $x\hskip -2em y$)
