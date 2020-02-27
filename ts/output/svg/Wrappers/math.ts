@@ -63,32 +63,57 @@ export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<any, any, a
         super.toSVG(parent);
         const adaptor = this.adaptor;
         const display = (this.node.attributes.get('display') === 'block');
-        const fullWidth = (this.bbox.pwidth === BBox.fullWidth);
         if (display) {
             adaptor.setAttribute(this.jax.container, 'display', 'true');
-            if (fullWidth) {
-                adaptor.setAttribute(this.jax.container, 'width', 'full');
-            }
-        }
-        const [align, shift] = this.getAlignShift();
-        if (align !== 'center') {
-            adaptor.setAttribute(this.jax.container, 'justify', align);
-        }
-        if (display && shift && !fullWidth) {
-            this.jax.shift = shift;
+            this.handleDisplay();
         }
         if (this.jax.document.options.internalSpeechTitles) {
-            const attributes = this.node.attributes;
-            const speech = (attributes.get('aria-label') || attributes.get('data-semantic-speech')) as string;
-            if (speech) {
-                const id = this.getTitleID();
-                const label = this.svg('title', {id}, [this.text(speech)]);
-                adaptor.insert(label, adaptor.firstChild(this.element));
-                adaptor.setAttribute(this.element, 'aria-labeledby', id);
-                adaptor.removeAttribute(this.element, 'aria-label');
-                for (const child of this.childNodes[0].childNodes) {
-                    adaptor.setAttribute(child.element, 'aria-hidden', 'true');
+            this.handleSpeech();
+        }
+    }
+
+    /**
+     * Set the justification, and get the minwidth and shift needed
+     * for the displayed equation.
+     */
+    protected handleDisplay() {
+        const [align, shift] = this.getAlignShift();
+        if (align !== 'center') {
+            this.adaptor.setAttribute(this.jax.container, 'justify', align);
+        }
+        if (this.bbox.pwidth === BBox.fullWidth) {
+            this.adaptor.setAttribute(this.jax.container, 'width', 'full');
+            if (this.jax.table) {
+                let {L, w, R} = this.jax.table.getBBox();
+                if (align === 'right') {
+                    R = Math.max(R || -shift, -shift);
+                } else if (align === 'left') {
+                    L = Math.max(L || shift, shift);
+                } else if (align === 'center') {
+                    w += 2 * Math.abs(shift);
                 }
+                this.jax.minwidth = Math.max(0, L + w + R);
+            }
+        } else {
+            this.jax.shift = shift;
+        }
+    }
+
+    /**
+     * Handle adding speech to the top-level node, if any.
+     */
+    protected handleSpeech() {
+        const adaptor = this.adaptor;
+        const attributes = this.node.attributes;
+        const speech = (attributes.get('aria-label') || attributes.get('data-semantic-speech')) as string;
+        if (speech) {
+            const id = this.getTitleID();
+            const label = this.svg('title', {id}, [this.text(speech)]);
+            adaptor.insert(label, adaptor.firstChild(this.element));
+            adaptor.setAttribute(this.element, 'aria-labeledby', id);
+            adaptor.removeAttribute(this.element, 'aria-label');
+            for (const child of this.childNodes[0].childNodes) {
+                adaptor.setAttribute(child.element, 'aria-hidden', 'true');
             }
         }
     }

@@ -33,7 +33,7 @@ import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from './common/CssStyles.js';
 import {FontCache} from './svg/FontCache.js';
 
-export const SVGNS = "http://www.w3.org/2000/svg";
+export const SVGNS = 'http://www.w3.org/2000/svg';
 export const XLINKNS = 'http://www.w3.org/1999/xlink';
 
 /*****************************************************************/
@@ -276,6 +276,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         this.fontCache.clearLocalID();
         if (this.minwidth) {
             adaptor.setStyle(svg, 'minWidth', this.ex(this.minwidth));
+            adaptor.setStyle(this.container, 'minWidth', this.ex(this.minwidth));
         } else if (this.shift) {
             const align = adaptor.getAttribute(this.container, 'justify') || 'center';
             this.setIndent(svg, align, this.shift);
@@ -300,7 +301,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @param {number} m  A number to be shown in ex
      * @return {string}   The number with units of ex
      */
-    ex(m: number) {
+    public ex(m: number) {
         m /= this.font.params.x_height;
         return (Math.abs(m) < .001 ? '0' : m.toFixed(3).replace(/\.?0+$/, '') + 'ex');
     }
@@ -311,7 +312,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @param {(N|T)[]} children            The child nodes for this node
      * @return {N}                      The newly created node in the SVG namespace
      */
-    svg(kind: string, properties: OptionList = {}, children: (N|T)[] = []) {
+    public svg(kind: string, properties: OptionList = {}, children: (N|T)[] = []) {
         return this.html(kind, properties, children, SVGNS);
     }
 
