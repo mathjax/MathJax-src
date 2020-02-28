@@ -375,25 +375,21 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
         const W = L + (this.pWidth || w) + R;
         const LW = this.getTableData().L;
         const [pad, align, shift] = this.getPadAlignShift(side);
-        const dx = shift + (align === 'right' ? -W : align === 'center' ? -W / 2 : 0);
+        const dx = shift + (align === 'right' ? -W : align === 'center' ? -W / 2 : 0) + L;
         const matrix = 'matrix(1 0 0 -1 0 0)';
-        const translate = (dx ? ` translate(${this.fixed(dx)} 0)` : '');
         const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
         const transform = `translate(0 ${this.fixed(h)}) ${matrix} ${scale}`;
         let table = this.svg('svg', {
             'data-table': true,
             preserveAspectRatio: (align === 'left' ? 'xMinYMid' : align === 'right' ? 'xMaxYMid' : 'xMidYMid'),
-            viewBox: [this.fixed(-L), this.fixed(-h), 1, this.fixed(h + d)].join(' ')
+            viewBox: [this.fixed(-dx), this.fixed(-h), 1, this.fixed(h + d)].join(' ')
         }, [
-            this.svg('g', {transform: matrix + translate}, adaptor.childNodes(svg))
+            this.svg('g', {transform: matrix}, adaptor.childNodes(svg))
         ]);
-        if (side === 'right') {
-            adaptor.setAttribute(labels, 'transform', `translate(-${this.fixed(LW)} 0) ${matrix}`);
-        }
         labels = this.svg('svg', {
             'data-labels': true,
             preserveAspectRatio: (side === 'left' ? 'xMinYMid' : 'xMaxYMid'),
-            viewBox: [0, this.fixed(-h), 1, this.fixed(h + d)].join(' ')
+            viewBox: [side === 'left' ? 0 : this.fixed(LW), this.fixed(-h), 1, this.fixed(h + d)].join(' ')
         }, [labels]);
         adaptor.append(svg, this.svg('g', {transform: transform}, [table, labels]));
         this.place(-L, 0, svg);  // remove spacing for L, which is added by the parent during appending
