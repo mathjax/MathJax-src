@@ -33,14 +33,14 @@ import {StyleList, StyleData} from '../../common/CssStyles.js';
  */
 export interface CommonMglyph extends AnyWrapper {
     /**
-     * The image's width, height, and voffset values converted to em's
+     * The image's width, height, and valign values converted to em's
      */
     width: number;
     height: number;
-    voffset: number;
+    valign: number;
 
     /**
-     * Obtain the width, height, and voffset.
+     * Obtain the width, height, and valign.
      */
     getParameters(): void;
 }
@@ -60,11 +60,11 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
     return class extends Base {
 
         /**
-         * The image's width, height, and voffset values converted to em's
+         * The image's width, height, and valign values converted to em's
          */
         public width: number;
         public height: number;
-        public voffset: number;
+        public valign: number;
 
         /**
          * @override
@@ -76,17 +76,17 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
         }
 
         /**
-         * Obtain the width, height, and voffset.
+         * Obtain the width, height, and valign.
          * Note:  Currently, the width and height must be specified explicitly, or they default to 1em
          *   Since loading the image may be asynchronous, it would require a restart.
          *   A future extension could implement this either by subclassing this object, or
          *   perhaps as a post-filter on the MathML input jax that adds the needed dimensions
          */
         public getParameters() {
-            const {width, height, voffset} = this.node.attributes.getList('width', 'height', 'voffset');
+            const {width, height, valign} = this.node.attributes.getList('width', 'height', 'valign');
             this.width = (width === 'auto' ? 1 : this.length2em(width));
             this.height = (height === 'auto' ? 1 : this.length2em(height));
-            this.voffset = this.length2em(voffset || '0');
+            this.valign = this.length2em(valign || '0');
         }
 
         /**
@@ -94,8 +94,8 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
          */
         public computeBBox(bbox: BBox, recompute: boolean = false) {
             bbox.w = this.width;
-            bbox.h = this.height - this.voffset;
-            bbox.d = this.voffset;
+            bbox.h = this.height + this.valign;
+            bbox.d = -this.valign;
         }
 
     };
