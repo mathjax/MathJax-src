@@ -236,7 +236,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         ['sans-serif', 'normal'],
         ['bold-sans-serif', 'bold', 'sans-serif'],
         ['sans-serif-italic', 'italic', 'sans-serif'],
-        ['bold-sans-serif-italic', 'bold-italic', 'sans-serif'],
+        ['sans-serif-bold-italic', 'bold-italic', 'bold-sans-serif'],
         ['monospace', 'normal']
     ];
 
@@ -256,7 +256,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         'sans-serif': ['sans-serif', false, false],
         'bold-sans-serif': ['sans-serif', false, true],
         'sans-serif-italic': ['sans-serif', true, false],
-        'bold-sans-serif-italic': ['sans-serif', true, true],
+        'sans-serif-bold-italic': ['sans-serif', true, true],
         monospace: ['monospace', false, false]
     };
 
