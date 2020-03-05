@@ -50,7 +50,8 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<any, any, a
             width: 0
         },
         'mjx-stretchy-h > * > mjx-c': {
-            display: 'inline-block'
+            display: 'inline-block',
+            transform: 'scalex(1.0000001)'        // improves blink positioning
         },
         'mjx-stretchy-h > * > mjx-c::before': {
             padding: '.001em 0',                  // for blink
@@ -86,7 +87,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<any, any, a
             display: 'block'
         },
         'mjx-stretchy-v > * > mjx-c': {
-            transform: 'scale(1)',                // improves Firefox positioning
+            transform: 'scaley(1.0000001)',       // improves Firefox and blink positioning
             'transform-origin': 'left center',
             overflow: 'hidden'
         },
