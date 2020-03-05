@@ -56,7 +56,8 @@ declare const global: {MathJax: MathJaxObject | MathJaxConfig};
 export function combineConfig(dst: any, src: any) {
     for (const id of Object.keys(src)) {
         if (id === '__esModule') continue;
-        if (typeof dst[id] === 'object' && typeof src[id] === 'object') {
+        if (typeof dst[id] === 'object' && typeof src[id] === 'object' &&
+            !(src[id] instanceof Promise) /* needed for IE polyfill */) {
             combineConfig(dst[id], src[id]);
         } else if (src[id] !== null && src[id] !== undefined) {
             dst[id] = src[id];
