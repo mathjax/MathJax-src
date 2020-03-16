@@ -32,6 +32,7 @@ import {SVGFontData} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from './common/CssStyles.js';
 import {FontCache} from './svg/FontCache.js';
+import {unicodeChars} from '../util/string.js';
 
 export const SVGNS = "http://www.w3.org/2000/svg";
 export const XLINKNS = 'http://www.w3.org/1999/xlink';
@@ -329,13 +330,16 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         }, [this.text(text)]);
         const adaptor = this.adaptor;
         if (variant !== '-explicitFont') {
-            const [family, italic, bold] = this.font.getCssFont(variant);
-            adaptor.setAttribute(svg, 'font-family', family);
-            if (italic) {
-                adaptor.setAttribute(svg, 'font-style', 'italic');
-            }
-            if (bold) {
-                adaptor.setAttribute(svg, 'font-weight', 'bold');
+            const c = unicodeChars(text);
+            if (c.length !== 1 || c[0] < 0x1D400 || c[0] > 0x1D7FF) {
+                const [family, italic, bold] = this.font.getCssFont(variant);
+                adaptor.setAttribute(svg, 'font-family', family);
+                if (italic) {
+                    adaptor.setAttribute(svg, 'font-style', 'italic');
+                }
+                if (bold) {
+                    adaptor.setAttribute(svg, 'font-weight', 'bold');
+                }
             }
         }
         return svg;

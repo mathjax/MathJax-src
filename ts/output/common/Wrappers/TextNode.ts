@@ -76,7 +76,7 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
                        //
                        // Measure unknown characters using the DOM (if possible)
                        //
-                       const cbox = this.jax.measureText(String.fromCharCode(char), variant);
+                       const cbox = this.jax.measureText(String.fromCodePoint(char), variant);
                        w = cbox.w;
                        h = cbox.h;
                        d = cbox.d;
