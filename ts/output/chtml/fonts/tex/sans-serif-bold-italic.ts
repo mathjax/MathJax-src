@@ -14,9 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {sansSerifBoldItalic as font} from '../../../common/fonts/tex/sans-serif-bold-italic.js';
 
 export const sansSerifBoldItalic: CHTMLCharMap = AddCSS(font, {
+    0x131: {f: 'SS-B'},
+    0x237: {f: 'SS-B'},
 });

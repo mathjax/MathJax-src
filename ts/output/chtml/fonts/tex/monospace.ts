@@ -14,7 +14,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {monospace as font} from '../../../common/fonts/tex/monospace.js';
 
@@ -31,11 +30,8 @@ export const monospace: CHTMLCharMap = AddCSS(font, {
     0x39D: {c: 'N'},
     0x39F: {c: 'O'},
     0x3A1: {c: 'P'},
-    0x3A2: {c: '\\398'},
     0x3A4: {c: 'T'},
     0x3A7: {c: 'X'},
-    0x3D2: {c: '\\3A5'},
-    0x3DC: {c: 'F'},
     0x2017: {c: '_'},
     0x2033: {c: '\\2032\\2032'},
     0x2034: {c: '\\2032\\2032\\2032'},

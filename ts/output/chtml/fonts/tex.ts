@@ -68,7 +68,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         'bold': 'mjx-b',
         'italic': 'mjx-i',
         'bold-italic': 'mjx-b mjx-i',
-        'double-struck': 'mjx-ds',
+        'double-struck': 'mjx-ds mjx-b',
         'fraktur': 'mjx-fr',
         'bold-fraktur': 'mjx-fr mjx-b',
         'script': 'mjx-sc',
@@ -82,9 +82,9 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         '-largeop': 'mjx-lop',
         '-size3': 'mjx-s3',
         '-size4': 'mjx-s4',
-        '-tex-calligraphic': 'mjx-cal',
+        '-tex-calligraphic': 'mjx-cal mjx-i',
         '-tex-bold-calligraphic': 'mjx-cal mjx-b',
-        '-tex-mathit': 'mjx-mit',
+        '-tex-mathit': 'mjx-mit mjx-i',
         '-tex-oldstyle': 'mjx-os',
         '-tex-bold-oldstyle': 'mjx-os mjx-b',
         '-tex-variant': 'mjx-var'
@@ -146,7 +146,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         },
 
         '.mjx-cal mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-C, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
+            'font-family': 'MJXZERO, MJXTEX-C, MJXTEX-I, MJXTEX-MI, MJXTEX, MJXTEX-S1, MJXTEX-A'
         },
         '.mjx-cal.mjx-b mjx-c': {
             'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-S1, MJXTEX-A'

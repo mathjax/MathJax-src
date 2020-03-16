@@ -18,4 +18,6 @@
 import {CharMap, CharOptions} from '../../FontData.js';
 
 export const sansSerifBoldItalic: CharMap<CharOptions> = {
+    0x131: [.458, 0, .256],
+    0x237: [.458, .205, .286],
 };

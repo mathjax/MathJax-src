@@ -18,7 +18,6 @@
 import {CharMap, CharOptions} from '../../FontData.js';
 
 export const largeop: CharMap<CharOptions> = {
-    0x20: [0, 0, .25],
     0x28: [1.15, .649, .597],
     0x29: [1.15, .649, .597],
     0x2F: [1.15, .649, .811],
@@ -27,7 +26,6 @@ export const largeop: CharMap<CharOptions> = {
     0x5D: [1.15, .649, .472],
     0x7B: [1.15, .649, .667],
     0x7D: [1.15, .649, .667],
-    0xA0: [0, 0, .25],
     0x2C6: [.772, -0.565, 1],
     0x2DC: [.75, -0.611, 1],
     0x302: [.772, -0.565, 0],
