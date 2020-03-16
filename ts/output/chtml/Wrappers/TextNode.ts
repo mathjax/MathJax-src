@@ -64,7 +64,7 @@ export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor
             adaptor.append(parent, this.jax.unknownText(text, variant, font));
         } else {
             const c = this.parent.stretch.c;
-            const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text));
+            const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
             for (const n of chars) {
                 const data = this.getVariantChar(variant, n)[3];
                 const node = (data.unknown ?

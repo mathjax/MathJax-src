@@ -56,14 +56,14 @@ export type UsedMap = Map<number, string>;
  */
 export interface CHTMLVariantData extends VariantData<CHTMLCharOptions> {
     classes?: string;             // the classes to use for this variant
-};
+}
 
 /**
  * The extra data needed for a Delimiter in CHTML output
  */
 export interface CHTMLDelimiterData extends DelimiterData {
     used?: boolean;               // true when this delimiter has been used on the page
-};
+}
 
 /****************************************************************************/
 
@@ -112,6 +112,13 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      * The root class for this font (e.g., '.MJX-TEX ') including the following space
      */
     protected cssRoot: string = '';
+
+    /**
+     * @override
+     */
+    public static charOptions(font: CHTMLCharMap, n: number) {
+        return super.charOptions(font, n) as CHTMLCharOptions;
+    }
 
     /***********************************************************************/
 
@@ -199,13 +206,19 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      */
     protected addVariantChars(styles: StyleList) {
         const charUsed: UsedMap = new Map();
+        const allCSS = !this.options.adaptiveCSS;
         for (const name of Object.keys(this.variant)) {
             const variant = this.variant[name];
             const vclass = (name === 'normal' ? '' : '.' + variant.classes.replace(/ /g, '.'));
             for (const n of Object.keys(variant.chars)) {
                 const N = parseInt(n);
-                if (variant.chars[N].length === 4) {
-                    this.addCharStyles(styles, vclass, N, variant.chars[N], charUsed);
+                const char = variant.chars[N];
+                if ((char[3] || {}).smp) continue;
+                if (allCSS && char.length < 4) {
+                    (char as CHTMLCharData)[3] = {};
+                }
+                if (char.length === 4 || allCSS) {
+                    this.addCharStyles(styles, vclass, N, char, charUsed);
                 }
             }
         }
@@ -266,8 +279,8 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
             const Hm = this.addDelimiterVPart(styles, c, W, 'mid', mid);
             css.height = '50%';
             styles[root + 'mjx-stretchy-v' + c + ' > mjx-mid'] = {
-                'margin-top': this.em(-Hm/2),
-                'margin-bottom': this.em(-Hm/2)
+                'margin-top': this.em(-Hm / 2),
+                'margin-bottom': this.em(-Hm / 2)
             };
         }
         if (Hb) {
@@ -293,7 +306,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     protected addDelimiterVPart(styles: StyleList, c: string, W: number, part: string, n: number) {
         if (!n) return 0;
         const data = this.getDelimiterData(n);
-        const dw = (W - data[2]) / 2
+        const dw = (W - data[2]) / 2;
         const css: StyleData = {content: this.charContent(n)};
         if (part !== 'ext') {
             css.padding = this.padding(data, dw);
@@ -367,12 +380,12 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
             }
         }
         if (options.f !== undefined) {
-            css['font-family'] = 'MJXZERO, MJXTEX' + (options.f ? '-' + options.f : '');
+            css['font-family'] = 'MJXZERO, MJXTEX' + (options.f ? '-' + options.f : '') + '!important';
         }
-        const char = (vclass ? vclass + ' ': '') + selector;
+        const char = (vclass ? vclass + ' ' : '') + selector;
         styles[root + char] = css;
         if (options.ic) {
-            const [MJX, noIC] = [root + 'mjx-', '[noIC]' + char + ':last-child'];
+            const [MJX, noIC] = [root + 'mjx-', '[noIC] ' + char + ':last-child'];
             styles[MJX + 'mi' + noIC] =
             styles[MJX + 'mo' + noIC] = {
                 'padding-right': this.em(w)
@@ -388,13 +401,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      */
     protected getDelimiterData(n: number) {
         return this.getChar('-smallop', n);
-    }
-
-    /**
-     * @override
-     */
-    public static charOptions(font: CHTMLCharMap, n: number) {
-        return super.charOptions(font, n) as CHTMLCharOptions;
     }
 
     /**
