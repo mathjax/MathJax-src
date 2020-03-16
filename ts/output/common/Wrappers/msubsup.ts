@@ -115,7 +115,7 @@ export function CommonMsupMixin<W extends AnyWrapper,
          */
         public getOffset(bbox: BBox, sbox: BBox) {
             const x = (this.baseCore.bbox.ic ? .05 * this.baseCore.bbox.ic + .05 : 0);
-            return [x * bbox.rscale, this.getU(bbox, sbox)];
+            return [x * this.coreScale(), this.getU(bbox, sbox)];
         }
 
     };
@@ -206,8 +206,9 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
             bbox.append(basebox);
             const w = bbox.w;
             const [u, v, q] = this.getUVQ(basebox, subbox, supbox);
+            const x = (this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0);
             bbox.combine(subbox, w, v);
-            bbox.combine(supbox, w + this.coreIC() * basebox.rscale, u);
+            bbox.combine(supbox, w + x, u);
             bbox.w += this.font.params.scriptspace;
             bbox.clean();
             this.setChildPWidths(recompute);

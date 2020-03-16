@@ -74,6 +74,11 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
     coreIC(): number;
 
     /**
+     * @return {number}   The relative scaling of the base
+     */
+    coreScale(): number;
+
+    /**
      * Get the shift for the script (implemented in subclasses)
      *
      * @param {BBox} bbox   The bounding box of the base element
@@ -252,12 +257,25 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
         }
 
         /**
+         * @return {number}   The relative scaling of the base
+         */
+        public coreScale() {
+            let scale = this.baseChild.getBBox().rscale;
+            let base = this.baseChild;
+            while ((base.node.isKind('mstyle') || base.node.isKind('mrow') || base.node.isKind('TeXAtom'))
+                   && base.childNodes.length === 1) {
+                base = base.childNodes[0];
+                scale *= base.getBBox().rscale;
+            }
+            return scale;
+        }
+
+        /**
          * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
          */
         public isCharBase() {
             let base = this.baseChild;
-            while ((base.node.isKind('mstyle') || base.node.isKind('mrow')) &&
-                   base.bbox.rscale === 1 && base.childNodes.length === 1) {
+            while ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
                 base = base.childNodes[0];
             }
             return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
@@ -398,7 +416,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
         public getDelta(noskew: boolean = false) {
             const accent = this.node.attributes.get('accent');
             const ddelta = (accent && !noskew ? this.baseChild.coreMO().bbox.sk : 0);
-            return (DELTA * this.baseCore.bbox.ic / 2 + ddelta) * this.baseChild.bbox.rscale;
+            return (DELTA * this.baseCore.bbox.ic / 2 + ddelta) * this.coreScale();
         }
 
         /**
