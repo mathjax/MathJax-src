@@ -245,12 +245,12 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
 
         '@font-face /* 3 */': {
             'font-family': 'MJXTEX-I',
-            src: 'url("%%URL%%/MathJax_Main-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/MathJax_Math-Italic.woff") format("woff")'
         },
 
         '@font-face /* 4 */': {
             'font-family': 'MJXTEX-MI',
-            src: 'url("%%URL%%/MathJax_Math-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/MathJax_Main-Italic.woff") format("woff")'
         },
 
         '@font-face /* 5 */': {

@@ -19,7 +19,7 @@ import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {normal as font} from '../../../common/fonts/tex/normal.js';
 
 export const normal: CHTMLCharMap = AddCSS(font, {
-    0xA3: {f: 'MI'},
+    0xA3: {f: 'I'},
     0xB7: {c: '\\22C5'},
     0x2B9: {c: '\\2032'},
     0x391: {c: 'A'},
