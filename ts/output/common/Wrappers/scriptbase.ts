@@ -248,7 +248,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          */
         public coreIC() {
             const corebox = this.baseCore.getBBox();
-            return (corebox.ic ? 1.2 * corebox.ic + .05 : 0);
+            return (corebox.ic ? 1.05 * corebox.ic + .05 : 0);
         }
 
         /**
@@ -256,7 +256,8 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          */
         public isCharBase() {
             let base = this.baseChild;
-            if ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
+            while ((base.node.isKind('mstyle') || base.node.isKind('mrow')) &&
+                   base.bbox.rscale === 1 && base.childNodes.length === 1) {
                 base = base.childNodes[0];
             }
             return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
@@ -291,7 +292,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
             const tex = this.font.params;
             const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
             return Math.max(
-                this.isCharBase() ? 0 : bbox.d + tex.sub_drop * sbox.rscale,
+                this.isCharBase() ? 0 : bbox.d * bbox.rscale + tex.sub_drop * sbox.rscale,
                 subscriptshift,
                 sbox.h * sbox.rscale - (4/5) * tex.x_height
             );
@@ -310,7 +311,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
             const p = (attr.displaystyle ? tex.sup1 : attr.texprimestyle ? tex.sup3 : tex.sup2);
             const superscriptshift = this.length2em(attr.superscriptshift, p);
             return Math.max(
-                this.isCharBase() ? 0 : bbox.h - tex.sup_drop * sbox.rscale,
+                this.isCharBase() ? 0 : bbox.h * bbox.rscale - tex.sup_drop * sbox.rscale,
                 superscriptshift,
                 sbox.d * sbox.rscale + (1/4) * tex.x_height
             );
@@ -397,7 +398,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
         public getDelta(noskew: boolean = false) {
             const accent = this.node.attributes.get('accent');
             const ddelta = (accent && !noskew ? this.baseChild.coreMO().bbox.sk : 0);
-            return DELTA * this.baseCore.bbox.ic / 2 + ddelta;
+            return (DELTA * this.baseCore.bbox.ic / 2 + ddelta) * this.baseChild.bbox.rscale;
         }
 
         /**

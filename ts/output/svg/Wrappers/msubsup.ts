@@ -92,8 +92,8 @@ CommonMsubsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any
         sup.toSVG(svg);
         sub.toSVG(svg);
 
-        sub.place(bbox.w, v);
-        sup.place(bbox.w + this.coreIC(), u);
+        sub.place(bbox.w * bbox.rscale, v);
+        sup.place((bbox.w + this.coreIC()) * bbox.rscale, u);
     }
 
 }

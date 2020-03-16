@@ -114,7 +114,7 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
         sub.toCHTML(stack);
         const corebox = this.baseCore.bbox;
         if (corebox.ic) {
-            this.adaptor.setStyle(sup.chtml, 'marginLeft', this.em(this.coreIC() / sup.bbox.rscale));
+            this.adaptor.setStyle(sup.chtml, 'marginLeft', this.em(this.coreIC() * base.bbox.rscale / sup.bbox.rscale));
         }
     }
 
