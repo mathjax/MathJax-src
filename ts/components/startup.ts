@@ -268,7 +268,7 @@ export namespace Startup {
      * Setting Mathjax.startup.pageReady in the configuration will override this.
      */
     export function defaultPageReady() {
-        return (CONFIG.typeset && MathJax.typesetPromise ? MathJax.typesetPromise() : null);
+        return (CONFIG.typeset && MathJax.typesetPromise ? MathJax.typesetPromise(CONFIG.elements) : null);
     };
 
     /**
@@ -335,7 +335,7 @@ export namespace Startup {
             document.reset();
             return mathjax.handleRetriesFor(() => {
                 document.render();
-            })
+            });
         };
         MathJax.typesetClear = () => document.clear();
     };
