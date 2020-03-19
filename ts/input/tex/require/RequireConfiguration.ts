@@ -29,20 +29,16 @@ import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import {TeX} from '../../tex.js';
 
+import {MathJax} from '../../../components/global.js';
 import {Package} from '../../../components/package.js';
 import {Loader, CONFIG as LOADERCONFIG} from '../../../components/loader.js';
 import {mathjax} from '../../../mathjax.js';
 import {userOptions, OptionList, expandable} from '../../../util/Options.js';
 
 /**
- * Access to global variable
- */
-declare const global: any;
-
-/**
  * The MathJax configuration block (for looking up user-defined package options)
  */
-const MJCONFIG = (global.MathJax ? global.MathJax.config || {} : {});
+const MJCONFIG = MathJax.config;
 
 /**
  * Add an extension to the configuration, and configure its user options
@@ -113,7 +109,7 @@ function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []) {
 export function RequireLoad(parser: TexParser, name: string) {
     const options = parser.options.require;
     const allow = options.allow;
-    const extension = (name.substr(0,1) === '[' ? '' : options.prefix) + name;
+    const extension = (name.substr(0, 1) === '[' ? '' : options.prefix) + name;
     const allowed = (allow.hasOwnProperty(extension) ? allow[extension] :
                      allow.hasOwnProperty(name) ? allow[name] : options.defaultAllow);
     if (!allowed) {
@@ -189,7 +185,7 @@ export const options = {
         //
         prefix: 'tex'
     }
- }
+};
 
 /**
  * The command map for the \require macro
