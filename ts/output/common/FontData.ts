@@ -584,6 +584,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         }
     }
 
+    /**
+     * @param {number} n      Math Alphanumerics position for this remapping
+     * @return {CharData<C>}  The character data for the remapping
+     */
     protected smpChar(n: number) {
         return [ , , , {smp: n}] as CharData<C>;
     }
