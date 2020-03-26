@@ -30,17 +30,9 @@ import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 
-import {sreReady} from './sre.js';
+import {SRE, sreReady} from './sre.js';
 
 /*==========================================================================*/
-
-/**
- * The only function we need from SRE
- */
-declare const SRE: {
-    toEnriched(mml: string): Element;
-    setupEngine(options: OptionList): void;
-};
 
 /**
  *  The current speech setting for SRE

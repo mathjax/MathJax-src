@@ -23,6 +23,7 @@
  */
 
 import {asyncLoad} from '../util/AsyncLoad.js';
+import {OptionList} from '../util/Options.js';
 
 /**
  * The name of the modiule to load, if necessary
@@ -65,3 +66,12 @@ export const sreReady = function() {
   });
 };
 
+
+/**
+ * The functions we need from SRE.
+ */
+export type SRE = {
+  toEnriched(mml: string): Element;
+  setupEngine(options: OptionList): void;
+  engineSetup(): OptionList;
+};

@@ -25,7 +25,7 @@
 
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
-import {sreReady} from '../sre.js';
+import {sreReady, SRE} from '../sre.js';
 
 
 /**
@@ -189,7 +189,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     let options = this.getOptions();
-    // TODO: Needs to be without explicit reference to SRE methods.
     if (SRE.engineSetup().locale !== options.locale) {
       SRE.setupEngine({locale: options.locale});
     }
