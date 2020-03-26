@@ -248,6 +248,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
                 infoRole: false,                   // show semantic role on mouse hovering
                 infoType: false,                   // show semantic type on mouse hovering
                 keyMagnifier: false,               // switch on magnification via key exploration
+                locale: 'en',                      // switch the locale
                 magnification: 'None',             // type of magnification
                 magnify: '400%',                   // percentage of magnification of zoomed expressions
                 mouseMagnifier: false,             // switch on magnification via mouse hovering
@@ -378,8 +379,9 @@ let allExplorers: {[options: string]: ExplorerInit} = {
         let explorer = ke.SpeechExplorer.create(
             doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
         let [domain, style] = doc.options.a11y.speechRules.split('-');
-        explorer.speechGenerator.setOptions({locale: 'en', domain: domain,
-                                             style: style, modality: 'speech'});
+        explorer.speechGenerator.setOptions({
+            locale: doc.options.a11y.locale, domain: domain,
+            style: style, modality: 'speech'});
         explorer.showRegion = 'subtitles';
         return explorer;
     },

@@ -188,16 +188,20 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
+    let options = this.getOptions();
+    // TODO: Needs to be without explicit reference to SRE methods.
+    if (SRE.engineSetup().locale !== options.locale) {
+      SRE.setupEngine({locale: options.locale});
+    }
     if (!this.init) {
       this.init = true;
-      sreReady.then(() => {
+      sreReady().then(() => {
         this.Speech(this.walker);
         this.Start();
       }).catch((error: Error) => console.log(error.message));
       return;
     }
     super.Start();
-    let options = this.getOptions();
     this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
     this.walker = sre.WalkerFactory.walker('table',
