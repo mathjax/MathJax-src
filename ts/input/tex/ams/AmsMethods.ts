@@ -46,7 +46,7 @@ let AmsMethods: Record<string, ParseMethod> = {};
 
 
 /**
- * Handle AMS array environments. 
+ * Handle AMS array environments.
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The opening stackitem.
  * @param {boolean} numbered Environment numbered.
@@ -142,7 +142,9 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
     cs = cs.substr(1);
   }
   let op = parser.GetArgument(name);
-  op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
+  if (!op.match(/\\text/)) {
+    op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
+  }
   (parser.configuration.handlers.retrieve(ExtensionMaps.NEW_COMMAND) as CommandMap).
     add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
 };
@@ -157,7 +159,9 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   // @test Operatorname
   const limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
   let op = ParseUtil.trimSpaces(parser.GetArgument(name));
-  op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
+  if (!op.match(/\\text/)) {
+    op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
+  }
   parser.string = '\\mathop{\\rm ' + op + '}' + limits + ' ' +
     parser.string.slice(parser.i);
   parser.i = 0;
