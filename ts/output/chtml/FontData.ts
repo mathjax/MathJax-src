@@ -47,15 +47,11 @@ export type CHTMLCharMap = CharMap<CHTMLCharOptions>;
 export type CHTMLCharData = CharData<CHTMLCharOptions>;
 
 /**
- * temporary record of which characters are used
- */
-export type UsedMap = Map<number, string>;
-
-/**
  * The extra data needed for a Variant in CHTML output
  */
 export interface CHTMLVariantData extends VariantData<CHTMLCharOptions> {
     classes?: string;             // the classes to use for this variant
+    letter: string;               // the font letter(s) for the default font for this variant
 }
 
 /**
@@ -84,6 +80,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     protected static defaultVariantClasses: StringMap = {};
 
     /**
+     * The default font letter to use for each variant
+     */
+    protected static defaultVariantLetters: StringMap = {};
+
+    /**
      * The CSS styles needed for this font.
      */
     protected static defaultStyles = {
@@ -109,11 +110,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     protected options: OptionList;
 
     /**
-     * The root class for this font (e.g., '.MJX-TEX ') including the following space
-     */
-    protected cssRoot: string = '';
-
-    /**
      * @override
      */
     public static charOptions(font: CHTMLCharMap, n: number) {
@@ -132,9 +128,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         super();
         let CLASS = (this.constructor as CHTMLFontDataClass);
         this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-        for (const name of Object.keys(CLASS.defaultVariantClasses)) {
-            this.variant[name].classes = CLASS.defaultVariantClasses[name];
-        }
     }
 
     /**
@@ -165,6 +158,30 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
                 if (options) {
                     options.used = false;
                 }
+            }
+        }
+    }
+
+    /**
+     * @override
+     */
+    public createVariant(name: string, inherit: string = null, link: string = null) {
+        super.createVariant(name, inherit, link);
+        let CLASS = (this.constructor as CHTMLFontDataClass);
+        this.variant[name].classes = CLASS.defaultVariantClasses[name];
+        this.variant[name].letter = CLASS.defaultVariantLetters[name];
+    }
+
+    /**
+     * @override
+     */
+    public defineChars(name: string, chars: CHTMLCharMap) {
+        super.defineChars(name, chars);
+        const letter = this.variant[name].letter;
+        for (const n of Object.keys(chars)) {
+            const options = CHTMLFontData.charOptions(chars, parseInt(n));
+            if (options.f === undefined) {
+                options.f = letter;
             }
         }
     }
@@ -205,11 +222,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      * @param {StyleList} styles  The style list to add characters to
      */
     protected addVariantChars(styles: StyleList) {
-        const charUsed: UsedMap = new Map();
         const allCSS = !this.options.adaptiveCSS;
         for (const name of Object.keys(this.variant)) {
             const variant = this.variant[name];
             const vclass = (name === 'normal' ? '' : '.' + variant.classes.replace(/ /g, '.'));
+            const vletter = variant.letter;
             for (const n of Object.keys(variant.chars)) {
                 const N = parseInt(n);
                 const char = variant.chars[N];
@@ -218,7 +235,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
                     (char as CHTMLCharData)[3] = {};
                 }
                 if (char.length === 4 || allCSS) {
-                    this.addCharStyles(styles, vclass, N, char, charUsed);
+                    this.addCharStyles(styles, vclass, vletter, N, char);
                 }
             }
         }
@@ -248,7 +265,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         if (this.options.adaptiveCSS && !data.used) return;
         const c = this.charSelector(n);
         if (data.c && data.c !== n) {
-            styles[this.cssRoot + '.mjx-stretched mjx-c' + c + '::before'] = {
+            styles['.mjx-stretched mjx-c' + c + '::before'] = {
                 content: this.charContent(data.c)
             };
         }
@@ -274,11 +291,10 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         this.addDelimiterVPart(styles, c, W, 'ext', ext);
         const He = this.addDelimiterVPart(styles, c, W, 'end', end);
         const css: StyleData = {};
-        const root = this.cssRoot;
         if (mid) {
             const Hm = this.addDelimiterVPart(styles, c, W, 'mid', mid);
             css.height = '50%';
-            styles[root + 'mjx-stretchy-v' + c + ' > mjx-mid'] = {
+            styles['mjx-stretchy-v' + c + ' > mjx-mid'] = {
                 'margin-top': this.em(-Hm / 2),
                 'margin-bottom': this.em(-Hm / 2)
             };
@@ -288,10 +304,10 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         }
         if (He) {
             css['border-bottom-width'] = this.em0(He - .03);
-            styles[root + 'mjx-stretchy-v' + c + ' > mjx-end'] = {'margin-top': this.em(-He)};
+            styles['mjx-stretchy-v' + c + ' > mjx-end'] = {'margin-top': this.em(-He)};
         }
         if (Object.keys(css).length) {
-            styles[root + 'mjx-stretchy-v' + c + ' > mjx-ext'] = css;
+            styles['mjx-stretchy-v' + c + ' > mjx-ext'] = css;
         }
     }
 
@@ -313,7 +329,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         } else if (dw) {
             css['padding-left'] = this.em0(dw);
         }
-        styles[this.cssRoot + 'mjx-stretchy-v' + c + ' mjx-' + part + ' mjx-c::before'] = css;
+        styles['mjx-stretchy-v' + c + ' mjx-' + part + ' mjx-c::before'] = css;
         return data[0] + data[1];
     }
 
@@ -331,7 +347,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         this.addDelimiterHPart(styles, c, 'end', end);
         if (mid) {
             this.addDelimiterHPart(styles, c, 'mid', mid);
-            styles[this.cssRoot + 'mjx-stretchy-h' + c + ' > mjx-ext'] = {width: '50%'};
+            styles['mjx-stretchy-h' + c + ' > mjx-ext'] = {width: '50%'};
         }
     }
 
@@ -351,7 +367,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         if (part !== 'ext' || force) {
             css.padding = this.padding(data, 0, -data[2]);
         }
-        styles[this.cssRoot + 'mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c::before'] = css;
+        styles['mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c::before'] = css;
     }
 
     /*******************************************************/
@@ -359,35 +375,21 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     /**
      * @param {StyleList} styles  The style object to add styles to
      * @param {string} vclass     The variant class string (e.g., .mjx-b) where this character is being defined
+     * @param {string} vletter    The letter for the default font for this variant
      * @param {number} n          The unicode character being defined
      * @param {CharData} data     The bounding box data and options for the character
-     * @param {UsedMap} charUsed  The map of characters whose content has been included in the styles
      */
-    protected addCharStyles(styles: StyleList, vclass: string, n: number, data: CHTMLCharData, charUsed: UsedMap) {
+    protected addCharStyles(styles: StyleList, vclass: string, vletter: string, n: number, data: CHTMLCharData) {
         const [h, d, w, options] = data as [number, number, number, CHTMLCharOptions];
         if (this.options.adaptiveCSS && !options.used) return;
-        const css: StyleData = {};
-        const selector = 'mjx-c' + this.charSelector(n);
-        const root = this.cssRoot;
-        css.padding = this.padding(data, 0, options.ic || 0);
-        const content = (options.c != null ? '"' + options.c + '"' : this.charContent(n));
-        if (charUsed.get(n) !== content && content !== '""') {
-            if (!charUsed.has(n) && !options.c) {
-                styles[root + selector + '::before'] = {content};
-                charUsed.set(n, content);
-            } else {
-                styles[root + vclass + ' ' + selector + '::before'] = {content};
-            }
-        }
-        if (options.f !== undefined) {
-            css['font-family'] = 'MJXZERO, MJXTEX' + (options.f ? '-' + options.f : '') + '!important';
-        }
-        const char = (vclass ? vclass + ' ' : '') + selector;
-        styles[root + char] = css;
+        const letter = (options.f !== undefined ? options.f : vletter);
+        const selector = 'mjx-c' + this.charSelector(n) + (letter ? '.TEX-' + letter : '');
+        styles[selector + '::before'] = {
+            padding: this.padding(data, 0, options.ic || 0),
+            content: (options.c != null ? '"' + options.c + '"' : this.charContent(n))
+        };
         if (options.ic) {
-            const [MJX, noIC] = [root + 'mjx-', '[noIC] ' + char + ':last-child'];
-            styles[MJX + 'mi' + noIC] =
-            styles[MJX + 'mo' + noIC] = {
+            styles['[noIC] ' + selector + ':last-child::before'] = {
                 'padding-right': this.em(w)
             };
         }

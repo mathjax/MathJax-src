@@ -19,9 +19,9 @@ import {fraktur as font} from '../../../common/fonts/tex/fraktur.js';
 
 export const fraktur: CHTMLCharMap = AddCSS(font, {
     0x2044: {c: '/'},
-    0x210C: {c: 'H', f: 'FR'},
-    0x2111: {c: 'I', f: 'FR'},
-    0x211C: {c: 'R', f: 'FR'},
-    0x2128: {c: 'Z', f: 'FR'},
-    0x212D: {c: 'C', f: 'FR'},
+    0x210C: {c: 'H'},
+    0x2111: {c: 'I'},
+    0x211C: {c: 'R'},
+    0x2128: {c: 'Z'},
+    0x212D: {c: 'C'},
 });

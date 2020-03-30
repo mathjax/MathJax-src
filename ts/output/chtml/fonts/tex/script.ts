@@ -14,16 +14,4 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {CHTMLCharMap, AddCSS} from '../../FontData.js';
-import {script as font} from '../../../common/fonts/tex/script.js';
-
-export const script: CHTMLCharMap = AddCSS(font, {
-    0x210B: {c: 'H', f: 'SC'},
-    0x2110: {c: 'J', f: 'SC'},
-    0x2112: {c: 'L', f: 'SC'},
-    0x211B: {c: 'R', f: 'SC'},
-    0x212C: {c: 'B', f: 'SC'},
-    0x2130: {c: 'E', f: 'SC'},
-    0x2131: {c: 'F', f: 'SC'},
-    0x2133: {c: 'M', f: 'SC'},
-});
+export {script} from '../../../common/fonts/tex/script.js';

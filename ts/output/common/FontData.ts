@@ -84,9 +84,6 @@ export interface VariantData<C extends CharOptions> {
      * The character data for this variant
      */
     chars: CharMap<C>;
-    /**
-     * characters to remap to Math Alphanumeric unicode block
-     */
 }
 
 /**

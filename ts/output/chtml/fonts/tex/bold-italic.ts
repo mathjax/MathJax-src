@@ -22,5 +22,5 @@ export const boldItalic: CHTMLCharMap = AddCSS(font, {
     0x237: {f: 'B'},
     0x2044: {c: '/'},
     0x2206: {c: '\\394'},
-    0x29F8: {c: '/', f: 'BI'},
+    0x29F8: {c: '/'},
 });
