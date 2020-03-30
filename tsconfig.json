@@ -10,7 +10,8 @@
     "lib": ["es6", "dom"],
     "noLib": false,
     "sourceMap": true,
-    "outDir": "js"
+    "outDir": "js",
+    "typeRoots": ["./typings"]
   },
   "include": ["ts/**/*"],
   "exclude": ["js", "es5", "components"]
