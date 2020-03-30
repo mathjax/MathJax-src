@@ -74,7 +74,6 @@ export const italic: CHTMLCharMap = AddCSS(font, {
     0x201C: {f: 'MI'},
     0x201D: {f: 'MI'},
     0x2044: {c: '/'},
-    0x210E: {c: 'h'},
     0x210F: {f: 'MI'},
     0x2206: {c: '\\394'},
     0x29F8: {c: '/'},

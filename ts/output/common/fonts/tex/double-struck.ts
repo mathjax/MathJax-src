@@ -18,11 +18,4 @@
 import {CharMap, CharOptions} from '../../FontData.js';
 
 export const doubleStruck: CharMap<CharOptions> = {
-    0x2102: [.702, .019, .722],
-    0x210D: [.683, 0, .778],
-    0x2115: [.683, .02, .722],
-    0x2119: [.683, 0, .611],
-    0x211A: [.701, .181, .778],
-    0x211D: [.683, 0, .722],
-    0x2124: [.683, 0, .667],
 };
