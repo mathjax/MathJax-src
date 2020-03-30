@@ -225,7 +225,7 @@ new sm.CharacterMap('AMSsymbols-mathchar0m0', ParseMethods.mathchar0mo, {
   // Binary operators
   dotplus:                '\u2214',
   ltimes:                 '\u22C9',
-  smallsetminus:          '\u2216',
+  smallsetminus:          ['\u2216', {variantForm: true}],
   rtimes:                 '\u22CA',
   Cap:                    '\u22D2',
   doublecap:              '\u22D2',
