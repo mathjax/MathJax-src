@@ -223,7 +223,7 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
  */
 AmsMethods.xArrow = function(parser: TexParser, name: string,
                              chr: number, l: number, r: number) {
-  let def = {width: '+' + (l + r) + 'mu', lspace: l + 'mu'};
+  let def = {width: '+' + ParseUtil.Em((l + r) / 18), lspace: ParseUtil.Em(l / 18)};
   let bot = parser.GetBrackets(name);
   let first = parser.ParseArg(name);
   let arrow = parser.create('token',
