@@ -96,7 +96,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
     protected static defaultVariantLetters: StringMap = {
         'normal': '',
         'bold': 'B',
-        'italic': 'I',
+        'italic': 'MI',
         'bold-italic': 'BI',
         'double-struck': 'A',
         'fraktur': 'FR',
