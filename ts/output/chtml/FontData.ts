@@ -89,7 +89,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
      */
     protected static defaultStyles = {
         'mjx-c::before': {
-            display: 'inline-block',
+            display: 'block',
             width: 0
         }
     };
