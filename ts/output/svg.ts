@@ -32,6 +32,7 @@ import {SVGFontData} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from './common/CssStyles.js';
 import {FontCache} from './svg/FontCache.js';
+import {percent} from '../util/lengths.js';
 
 export const SVGNS = "http://www.w3.org/2000/svg";
 export const XLINKNS = 'http://www.w3.org/1999/xlink';
@@ -129,12 +130,12 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     }
 
     /**
-     * Don't set the scaling factor for the container (that is handled by the
-     *   viewBox and height and width settings)
-     *
      * @override
      */
     protected setScale(node: N) {
+        if (this.options.scale !== 1) {
+            this.adaptor.setStyle(node, 'fontSize', percent(this.options.scale));
+        }
     }
 
     /**
