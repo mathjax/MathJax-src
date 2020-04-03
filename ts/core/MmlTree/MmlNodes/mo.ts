@@ -130,12 +130,14 @@ export class MmlMo extends AbstractMmlTokenNode {
      *                    with this node as its core
      */
     public coreParent() {
-        let parent: MmlNode = this;
+        let embellished = this as MmlNode;
+        let parent = this as MmlNode;
         let math = this.factory.getNodeClass('math');
         while (parent && parent.isEmbellished && parent.coreMO() === this && !(parent instanceof math)) {
+            embellished = parent;
             parent = (parent as MmlNode).Parent;
         }
-        return parent;
+        return embellished;
     }
 
     /**
@@ -170,7 +172,7 @@ export class MmlMo extends AbstractMmlTokenNode {
      */
     get isAccent() {
         let accent = false;
-        const node = this.coreParent();
+        const node = this.coreParent().parent;
         if (node) {
             const key = (node.isKind('mover') ?
                             ((node.childNodes[(node as MmlMover).over] as MmlNode).coreMO() ?
