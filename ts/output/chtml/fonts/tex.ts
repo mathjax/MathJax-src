@@ -61,6 +61,11 @@ export class TeXFont extends
 CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass>(CHTMLFontData) {
 
     /**
+     * Fonts to prefix any explicit ones
+     */
+    protected static defaultCssFamilyPrefix = 'MJXZERO';
+
+    /**
      * The classes to use for each variant
      */
     protected static defaultVariantClasses: StringMap = {
