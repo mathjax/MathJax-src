@@ -120,9 +120,6 @@ export abstract class CommonOutputJax<
      */
     public font: FD;
 
-    /**
-     * The wrapper factory for the MathML nodes
-     */
     public factory: F;
 
     /**
@@ -587,7 +584,7 @@ export abstract class CommonOutputJax<
      */
     public cssFontStyles(font: CssFontData, styles: StyleList = {}) {
         const [family, italic, bold] = font;
-        styles['font-family'] = this.font.cssFamilyPrefix + ', ' + family;
+        styles['font-family'] = family;
         if (italic) styles['font-style'] = 'italic';
         if (bold) styles['font-weight'] = 'bold';
         return styles;
