@@ -106,7 +106,7 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
         const chtml = this.standardCHTMLnode(parent);
         const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
         const [u, v, q] = this.getUVQ(base.getBBox(), sub.getBBox(), sup.getBBox());
-        const x = (this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0);
+        const x = this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0;
         const style = {'vertical-align': this.em(v)};
         base.toCHTML(chtml);
         const stack = this.adaptor.append(chtml, this.html('mjx-script', {style})) as N;
