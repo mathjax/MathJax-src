@@ -326,7 +326,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
         const adaptor = this.adaptor;
         if (variant !== '-explicitFont') {
             const [family, italic, bold] = this.font.getCssFont(variant);
-            adaptor.setAttribute(svg, 'font-family', this.font.cssFamilyPrefix + family);
+            adaptor.setAttribute(svg, 'font-family', this.font.cssFamilyPrefix + ', ' + family);
             if (italic) {
                 adaptor.setAttribute(svg, 'font-style', 'italic');
             }
