@@ -53,9 +53,9 @@ export function CommonMnMixin<T extends WrapperConstructor>(Base: T): MnConstruc
             //  Convert a leading hyphen to a minus
             //
             if (chars.length) {
-                const string = this.font.getRemappedChar('mn', chars[0]);
-                if (string) {
-                    const c = this.unicodeChars(string);
+                const text = this.font.getRemappedChar('mn', chars[0]);
+                if (text) {
+                    const c = this.unicodeChars(text, this.variant);
                     if (c.length === 1) {
                         chars[0] = c[0];
                     } else {

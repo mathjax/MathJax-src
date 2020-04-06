@@ -44,7 +44,6 @@ import {StyleList} from '../common/CssStyles.js';
  */
 export type StringMap = {[key: string]: string};
 
-
 /**
  * MathML spacing rules
  */
@@ -700,11 +699,27 @@ export class CommonWrapper<
     }
 
     /**
-     * @param {string} text  The text to turn into unicode locations
+     * @param {string} text     The text to turn into unicode locations
+     * @param {string} variant  The name of the variant for the characters
      * @return {number[]}  Array of numbers represeting the string's unicode character positions
      */
-    protected unicodeChars(text: string) {
-        return unicodeChars(text);
+    protected unicodeChars(text: string, variant: string = '') {
+        let chars = unicodeChars(text);
+        //
+        //  Remap to Math Alphanumerics block
+        //
+        const map = this.font.getVariant(variant).chars;
+        if (map) {
+            //
+            //  Is map[n] doesn't exist, (map[n] || []) still gives an CharData array.
+            //  If the array doesn't have a CharOptions element use {} instead.
+            //  Then check if the options has an smp property, which gives
+            //    the Math Alphabet mapping for this characger.
+            //  Otherwise use the original code point, n.
+            //
+            chars = chars.map((n) => ((map[n] || [])[3] || {}).smp || n);
+        }
+        return chars;
     }
 
     /**

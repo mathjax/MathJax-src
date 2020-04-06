@@ -59,7 +59,7 @@ export function CommonMtextMixin<T extends WrapperConstructor>(Base: T): MtextCo
             'sans-serif': ['sans-serif', '', ''],
             'bold-sans-serif': ['sans-serif', 'bold', ''],
             'sans-serif-italic': ['sans-serif', '', 'italic'],
-            'bold-sans-serif-italic': ['sans-serif', 'bold', 'italic'],
+            'sans-serif-bold-italic': ['sans-serif', 'bold', 'italic'],
             monospace: ['monospace', '', '']
         };
 

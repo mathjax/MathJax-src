@@ -321,7 +321,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
                 const map = (isAccent ? 'accent' : 'mo');
                 const text = this.font.getRemappedChar(map, chars[0]);
                 if (text) {
-                    chars = this.unicodeChars(text);
+                    chars = this.unicodeChars(text, this.variant);
                 }
             }
             return chars;
