@@ -325,8 +325,9 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          */
         public getU(bbox: BBox, sbox: BBox) {
             const tex = this.font.params;
-            const attr = this.node.attributes.getList('displaystyle', 'texprimestyle', 'superscriptshift');
-            const p = (attr.displaystyle ? tex.sup1 : attr.texprimestyle ? tex.sup3 : tex.sup2);
+            const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
+            const prime = this.node.getProperty('texprimestyle');
+            const p = prime ? tex.sup3 : (attr.displaystyle ? tex.sup1 : tex.sup2);
             const superscriptshift = this.length2em(attr.superscriptshift, p);
             return Math.max(
                 this.isCharBase() ? 0 : bbox.h * bbox.rscale - tex.sup_drop * sbox.rscale,
