@@ -151,7 +151,7 @@ export abstract class CommonOutputJax<
      * Get the cssStyle and font objects
      *
      * @param {OptionList} options         The configuration options
-     * @param(FontDataClass} defaultFont  The default FontData constructor
+     * @param {FontDataClass} defaultFont  The default FontData constructor
      * @constructor
      */
     constructor(options: OptionList = null,

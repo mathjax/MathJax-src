@@ -509,10 +509,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
             doc.typesetError(math, err);
         },
         renderActions: expandable({
-            find:    [STATE.FINDMATH, (document: MathDocument<any, any, any>) => {
-                const elements = document.options.elements;
-                document.findMath(elements ? {elements} : {});
-            }, () => {}, false],
+            find:    [STATE.FINDMATH, 'findMath', '', false],
             compile: [STATE.COMPILED],
             metrics: [STATE.METRICS, 'getMetrics', '', false],
             typeset: [STATE.TYPESET],
@@ -827,4 +824,4 @@ export interface MathDocumentConstructor<D extends MathDocument<any, any, any>> 
     OPTIONS: OptionList;
     ProcessBits: typeof BitField;
     new (...args: any[]): D;
-};
+}
