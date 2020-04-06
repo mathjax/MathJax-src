@@ -558,7 +558,7 @@ export class Menu {
                     menu.findID('Settings', 'Renderer', name).disable();
                 }
             }
-            menu.findID('Accessibility', 'Explorer').disable();
+            menu.findID('Accessibility', 'Activate').disable();
             menu.findID('Accessibility', 'AutoCollapse').disable();
             menu.findID('Accessibility', 'Collapsible').disable();
         }
