@@ -66,10 +66,10 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
             'stroke-linecap': 'round',
             'stroke-dasharray': '0,140'
         },
-        'g[data-mml-node="mtable"] > svg': {
+        'g[data-mml-node="mtable"] > g > svg': {
             overflow: 'visible'
         }
-    }
+    };
 
     /**
      * The column for labels
@@ -220,7 +220,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
         const W = L + this.pWidth + R;
         const [align, shift] = this.getAlignShift();
         const CW = Math.max(this.isTop ? W : 0, this.container.getWrapWidth(this.containerI)) - L - R;
-        const dw = w - (this.pWidth > CW ? CW: this.pWidth);
+        const dw = w - (this.pWidth > CW ? CW : this.pWidth);
         const dx = (align === 'left' ? 0 : align === 'right' ? dw : dw / 2);
         if (dx) {
             const table = this.svg('g', {}, this.adaptor.childNodes(svg));
@@ -301,7 +301,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
                 properties['stroke-dasharray'] = (style === 'dotted' ? '0,' : '') + this.fixed(2 * t);
             }
         }
-        return properties
+        return properties;
     }
 
     /******************************************************************/
@@ -375,20 +375,21 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
         const W = L + (this.pWidth || w) + R;
         const LW = this.getTableData().L;
         const [pad, align, shift] = this.getPadAlignShift(side);
-        const translate = (shift ? ` translate(${this.fixed(shift)} 0)` : '');
+        const dx = shift + (align === 'right' ? -W : align === 'center' ? -W / 2 : 0) + L;
+        const matrix = 'matrix(1 0 0 -1 0 0)';
         const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
-        const transform = `translate(0, ${this.fixed(h)}) matrix(1 0 0 -1 0 0) ${scale}`;
+        const transform = `translate(0 ${this.fixed(h)}) ${matrix} ${scale}`;
         let table = this.svg('svg', {
             'data-table': true,
             preserveAspectRatio: (align === 'left' ? 'xMinYMid' : align === 'right' ? 'xMaxYMid' : 'xMidYMid'),
-            viewBox: [this.fixed(-L), this.fixed(-h), this.fixed(W), this.fixed(h + d)].join(' ')
+            viewBox: [this.fixed(-dx), this.fixed(-h), 1, this.fixed(h + d)].join(' ')
         }, [
-            this.svg('g', {transform: 'matrix(1 0 0 -1 0 0)' + translate}, adaptor.childNodes(svg))
+            this.svg('g', {transform: matrix}, adaptor.childNodes(svg))
         ]);
         labels = this.svg('svg', {
             'data-labels': true,
             preserveAspectRatio: (side === 'left' ? 'xMinYMid' : 'xMaxYMid'),
-            viewBox: [0, this.fixed(-h), this.fixed(LW), this.fixed(h + d)].join(' ')
+            viewBox: [side === 'left' ? 0 : this.fixed(LW), this.fixed(-h), 1, this.fixed(h + d)].join(' ')
         }, [labels]);
         adaptor.append(svg, this.svg('g', {transform: transform}, [table, labels]));
         this.place(-L, 0, svg);  // remove spacing for L, which is added by the parent during appending

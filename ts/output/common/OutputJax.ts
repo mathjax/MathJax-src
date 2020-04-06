@@ -109,6 +109,7 @@ export abstract class CommonOutputJax<
     public document: MathDocument<N, T, D>;
     public math: MathItem<N, T, D>;
     public container: N;
+    public table: AnyWrapper;
 
     /**
      * The pixels per em for the math item being processed

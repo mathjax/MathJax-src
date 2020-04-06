@@ -411,6 +411,9 @@ export function CommonMtableMixin<C extends AnyWrapper,
             this.hasLabels = this.childNodes.reduce((value, row) => value || row.node.isKind('mlabeledtr'), false);
             this.findContainer();
             this.isTop = !this.container || (this.container.node.isKind('math') && !this.container.parent);
+            if (this.isTop) {
+                this.jax.table = this;
+            }
             this.getPercentageWidth();
             //
             // Get the frame, row, and column parameters
