@@ -498,7 +498,6 @@ export class CommonWrapper<
     protected getMathMLSpacing() {
         const node = this.node.coreMO() as MmlMo;
         const attributes = node.attributes;
-        const parent = this.jax.nodeMap.get(node.coreParent());
         const isScript = (attributes.get('scriptlevel') > 0);
         this.bbox.L = (attributes.isSet('lspace') ?
                        Math.max(0, this.length2em(attributes.get('lspace'))) :
