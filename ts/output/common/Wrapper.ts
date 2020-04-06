@@ -711,7 +711,14 @@ export class CommonWrapper<
         //
         const map = this.font.getVariant(variant).chars;
         if (map) {
-            chars = chars.map((n) => ((map[n] || {})[3] || {}).smp || n);
+            //
+            //  Is map[n] doesn't exist, (map[n] || []) still gives an CharData array.
+            //  If the array doesn't have a CharOptions element use {} instead.
+            //  Then check if the options has an smp property, which gives
+            //    the Math Alphabet mapping for this characger.
+            //  Otherwise use the original code point, n.
+            //
+            chars = chars.map((n) => ((map[n] || [])[3] || {}).smp || n);
         }
         return chars;
     }
