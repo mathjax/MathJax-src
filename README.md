@@ -94,7 +94,7 @@ where the first `{ ... }` is a MathJax configuration, and the second
 See the
 [documentation](https//docs.mathjax.org/en/latest/index.html#server-nodejs)
 and the [MathJax Node
-Repository](https://github.com/mathjax/MathJax-demos-node)for more details.
+Repository](https://github.com/mathjax/MathJax-demos-node) for more details.
 
 ### Using MathJax modules directly in node applications
 
