@@ -55,7 +55,9 @@ export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any,
         const rbox = this.getBBox();
         const sbox = surd.getBBox();
         const bbox = base.getBBox();
+        const [p, q] = this.getPQ(sbox);
         const t = this.font.params.rule_thickness * this.bbox.scale;
+        const H = bbox.h + q + t;
         //
         //  Create the SVG structure for the root
         //
@@ -64,7 +66,7 @@ export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any,
         //
         //  Place the children
         //
-        this.addRoot(SVG, root, sbox);
+        this.addRoot(SVG, root, sbox, H);
         surd.toSVG(SVG);
         surd.place(this.dx, rbox.h - sbox.h - t);
         base.toSVG(BASE);
@@ -81,8 +83,9 @@ export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any,
      * @param {N} ROOT           The container for the root
      * @param {SVGWrapper} root  The wrapped MML root content
      * @param {BBox} sbox        The bounding box of the surd
+     * @param {number} H         The height of the root as a whole
      */
-    protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox) {
+    protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox, H: number) {
     }
 
 }

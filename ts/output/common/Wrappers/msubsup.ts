@@ -114,8 +114,8 @@ export function CommonMsupMixin<W extends AnyWrapper,
          * @override
          */
         public getOffset(bbox: BBox, sbox: BBox) {
-            const x = (this.baseCore.bbox.ic ? .2 * this.baseCore.bbox.ic + .05 : 0);
-            return [x, this.getU(bbox, sbox)];
+            const x = (this.baseCore.bbox.ic ? .05 * this.baseCore.bbox.ic + .05 : 0);
+            return [x * this.coreScale(), this.getU(bbox, sbox)];
         }
 
     };
@@ -206,8 +206,9 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
             bbox.append(basebox);
             const w = bbox.w;
             const [u, v, q] = this.getUVQ(basebox, subbox, supbox);
+            const x = (this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0);
             bbox.combine(subbox, w, v);
-            bbox.combine(supbox, w + this.coreIC(), u);
+            bbox.combine(supbox, w + x, u);
             bbox.w += this.font.params.scriptspace;
             bbox.clean();
             this.setChildPWidths(recompute);
@@ -226,7 +227,7 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
             const tex = this.font.params;
             const t = 3 * tex.rule_thickness;
             const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
-            const drop = (this.isCharBase() ? 0 : basebox.d + tex.sub_drop * subbox.rscale);
+            const drop = (this.isCharBase() ? 0 : basebox.d * basebox.rscale + tex.sub_drop * subbox.rscale);
             //
             // u and v are the veritcal shifts of the scripts, initially set to minimum values and then adjusted
             //

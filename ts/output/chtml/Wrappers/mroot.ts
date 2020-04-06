@@ -42,9 +42,9 @@ export class CHTMLmroot<N, T, D> extends CommonMrootMixin<MrootConstructor>(CHTM
     /**
      * @override
      */
-    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox) {
+    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox, H: number) {
         root.toCHTML(ROOT);
-        const [x, h, dx] = this.getRootDimens(sbox);
+        const [x, h, dx] = this.getRootDimens(sbox, H);
         const bbox = root.getBBox();
         this.adaptor.setStyle(ROOT, 'verticalAlign', this.em(h));
         this.adaptor.setStyle(ROOT, 'width', this.em(x));

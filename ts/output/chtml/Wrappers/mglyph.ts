@@ -56,8 +56,8 @@ export class CHTMLmglyph<N, T, D> extends CommonMglyphMixin<CHTMLConstructor<any
             width: this.em(this.width),
             height: this.em(this.height)
         };
-        if (this.voffset) {
-            styles.verticalAlign = this.em(-this.voffset);
+        if (this.valign) {
+            styles.verticalAlign = this.em(this.valign);
         }
         const img = this.html('img', {src: src, style: styles, alt: alt, title: alt});
         this.adaptor.append(chtml, img);

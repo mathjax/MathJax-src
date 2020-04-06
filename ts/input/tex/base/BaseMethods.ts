@@ -1217,9 +1217,9 @@ BaseMethods.Cr = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.CrLaTeX = function(parser: TexParser, name: string) {
+BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: boolean = false) {
   let n: string;
-  if (parser.string.charAt(parser.i) === '[') {
+  if (!nobrackets && parser.string.charAt(parser.i) === '[') {
     let dim = parser.GetBrackets(name, '');
     let [value, unit, _] = ParseUtil.matchDimen(dim);
     // @test Custom Linebreak

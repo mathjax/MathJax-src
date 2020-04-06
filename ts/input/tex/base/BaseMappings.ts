@@ -585,7 +585,7 @@ new sm.CommandMap('macros', {
   displaylines:      ['Matrix', null, null, 'center', null, '.5em', 'D'],
   cr:                 'Cr',
   '\\':               'CrLaTeX',
-  newline:            'Cr',
+  newline:           ['CrLaTeX', true],
   hline:             ['HLine', 'solid'],
   hdashline:         ['HLine', 'dashed'],
   //      noalign:            'HandleNoAlign',

@@ -109,6 +109,7 @@ export abstract class CommonOutputJax<
     public document: MathDocument<N, T, D>;
     public math: MathItem<N, T, D>;
     public container: N;
+    public table: AnyWrapper;
 
     /**
      * The pixels per em for the math item being processed
@@ -120,6 +121,9 @@ export abstract class CommonOutputJax<
      */
     public font: FD;
 
+    /**
+     * The wrapper factory for the MathML nodes
+     */
     public factory: F;
 
     /**
@@ -147,7 +151,7 @@ export abstract class CommonOutputJax<
      * Get the cssStyle and font objects
      *
      * @param {OptionList} options         The configuration options
-     * @param(FontDataClass} defaultFont  The default FontData constructor
+     * @param {FontDataClass} defaultFont  The default FontData constructor
      * @constructor
      */
     constructor(options: OptionList = null,
@@ -584,7 +588,7 @@ export abstract class CommonOutputJax<
      */
     public cssFontStyles(font: CssFontData, styles: StyleList = {}) {
         const [family, italic, bold] = font;
-        styles['font-family'] = family;
+        styles['font-family'] = this.font.cssFamilyPrefix + ', ' + family;
         if (italic) styles['font-style'] = 'italic';
         if (bold) styles['font-weight'] = 'bold';
         return styles;

@@ -276,6 +276,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     };
 
     /**
+     * The default prefix for explicit font-family settings
+     */
+    protected static defaultCssFamilyPrefix = '';
+
+    /**
      * Variant locations in the Math Alphabnumerics block:
      *  [upper-alpha, lower-alpha, upper-Greek, lower-Greek, numbers]
      */
@@ -459,6 +464,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     protected cssFontMap: CssFontMap = {};
 
     /**
+     * A prefix to use for explicit font-family CSS settings
+     */
+    public cssFamilyPrefix: string;
+
+    /**
      * The character maps
      */
     protected remapChars: RemapMapMap = {};
@@ -496,6 +506,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         this.params = {...CLASS.defaultParams};
         this.sizeVariants = [...CLASS.defaultSizeVariants];
         this.cssFontMap = {...CLASS.defaultCssFonts};
+        this.cssFamilyPrefix = CLASS.defaultCssFamilyPrefix;
         this.createVariants(CLASS.defaultVariants);
         this.defineDelimiters(CLASS.defaultDelimiters);
         for (const name of Object.keys(CLASS.defaultChars)) {

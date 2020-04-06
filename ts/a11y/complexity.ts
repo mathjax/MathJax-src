@@ -85,7 +85,7 @@ export function ComplexityMathItemMixin<N, T, D, B extends Constructor<EnrichedM
          * @param {ComplexityMathDocument} docuemnt   The MathDocument for the MathItem
          */
         public complexity(document: ComplexityMathDocument<N, T, D>) {
-            if (this.state() < STATE.COMPLEXITY) {
+            if (this.state() < STATE.COMPLEXITY && !this.isEscaped) {
                 this.enrich(document);
                 computeComplexity(this.root);
                 this.state(STATE.COMPLEXITY);

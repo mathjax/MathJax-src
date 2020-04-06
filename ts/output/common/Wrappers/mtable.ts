@@ -358,8 +358,8 @@ export function CommonMtableMixin<C extends AnyWrapper,
          * The parent node of this table (skipping non-parents and mrows)
          *   and the position of the table as a child node
          */
-        container: AnyWrapper;
-        containerI: number;
+        public container: AnyWrapper;
+        public containerI: number;
 
         /**
          * The spacing and line data
@@ -411,6 +411,9 @@ export function CommonMtableMixin<C extends AnyWrapper,
             this.hasLabels = this.childNodes.reduce((value, row) => value || row.node.isKind('mlabeledtr'), false);
             this.findContainer();
             this.isTop = !this.container || (this.container.node.isKind('math') && !this.container.parent);
+            if (this.isTop) {
+                this.jax.table = this;
+            }
             this.getPercentageWidth();
             //
             // Get the frame, row, and column parameters
@@ -721,7 +724,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
         /**
          * Get bbox left and right amounts to cover labels
          */
-        getBBoxLR() {
+        public getBBoxLR() {
             if (this.hasLabels) {
                 const side = this.node.attributes.get('side') as string;
                 const [pad, align, shift] = this.getPadAlignShift(side);
@@ -945,7 +948,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
             //
             //  For equal rows, get updated height and depth
             //
-            const [h, d] = (equal ? [(HD + H[i] - D[i]) / 2, (HD - H[i] + D[i])/2] : [H[i], D[i]]);
+            const [h, d] = (equal ? [(HD + H[i] - D[i]) / 2, (HD - H[i] + D[i]) / 2] : [H[i], D[i]]);
             //
             //  Add the offset into the specified row
             //
@@ -1009,7 +1012,7 @@ export function CommonMtableMixin<C extends AnyWrapper,
             const [align, row] = split(this.node.attributes.get('align') as string);
             if (row == null) return [align, null];
             let i = parseInt(row);
-            if (i < 0) i += this.numRows;
+            if (i < 0) i += this.numRows + 1;
             return [align, i < 1 || i > this.numRows ? null : i - 1];
         }
 

@@ -140,7 +140,7 @@ export class CHTMLmfrac<N, T, D> extends CommonMfracMixin<CHTMLConstructor<any, 
         if (bevelled) {
             this.makeBevelled(display);
         } else {
-            const thickness = this.length2em(String(linethickness));
+            const thickness = this.length2em(String(linethickness), .06);
             if (thickness === 0) {
                 this.makeAtop(display);
             } else {

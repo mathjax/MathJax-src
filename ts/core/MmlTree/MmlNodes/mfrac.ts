@@ -60,7 +60,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
     }
 
     /**
-     * Update the children separately, and if embellished, update from the core
+     * Update the children separately
      *
      * @override
      */
@@ -68,9 +68,6 @@ export class MmlMfrac extends AbstractMmlBaseNode {
         this.getPrevClass(prev);
         for (const child of this.childNodes) {
             child.setTeXclass(null);
-        }
-        if (this.isEmbellished) {
-            this.updateTeXclass(this.core());
         }
         return this;
     }

@@ -74,6 +74,8 @@ export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, 
         const sbox = surd.getBBox();
         const bbox = base.getBBox();
         const [p, q] = this.getPQ(sbox);
+        const t = this.font.params.rule_thickness;
+        const H = bbox.h + q + t;
         //
         //  Create the HTML structure for the root
         //
@@ -90,7 +92,7 @@ export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, 
         //
         //  Add the child content
         //
-        this.addRoot(ROOT, root, sbox);
+        this.addRoot(ROOT, root, sbox, H);
         surd.toCHTML(SURD);
         base.toCHTML(BASE);
         if (surd.size < 0) {
@@ -106,11 +108,12 @@ export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, 
     /**
      * Add root HTML (overridden in mroot)
      *
-     * @param {N} ROOT   The container for the root
+     * @param {N} ROOT             The container for the root
      * @param {CHTMLWrapper} root  The wrapped MML root content
      * @param {BBox} sbox          The bounding box of the surd
+     * @param {number} H           The height of the root as a whole
      */
-    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox) {
+    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox, H: number) {
     }
 
 }

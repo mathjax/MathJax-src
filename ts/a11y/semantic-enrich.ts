@@ -132,7 +132,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
          * @param {MathDocument} document   The MathDocument for the MathItem
          */
         public enrich(document: MathDocument<N, T, D>) {
-            if (this.state() >= STATE.ENRICHED) return;
+            if (this.state() >= STATE.ENRICHED || this.isEscaped) return;
             if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
                 mathjax.retryAfter(sreReady);
             }
