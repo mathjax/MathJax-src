@@ -52,7 +52,7 @@ export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<any, any,
         if (bevelled) {
             this.makeBevelled(display);
         } else {
-            const thickness = this.length2em(String(linethickness));
+            const thickness = this.length2em(String(linethickness), .06);
             if (thickness === 0) {
                 this.makeAtop(display);
             } else {

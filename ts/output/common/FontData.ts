@@ -34,7 +34,8 @@ export interface CharOptions {
     ic?: number;                  // italic correction value
     sk?: number;                  // skew value
     unknown?: boolean;            // true if not found in the given variant
-};
+    smp?: number;                 // Math Alphanumeric codepoint this char is mapped to
+}
 
 /****************************************************************************/
 
@@ -83,7 +84,7 @@ export interface VariantData<C extends CharOptions> {
      * The character data for this variant
      */
     chars: CharMap<C>;
-};
+}
 
 /**
  * An object making variants names to variant data
@@ -109,7 +110,7 @@ export type CssFontData = [string, boolean, boolean];
  */
 export type CssFontMap = {
     [name: string]: CssFontData;
-}
+};
 
 /****************************************************************************/
 
@@ -159,10 +160,24 @@ export const NOSTRETCH: DelimiterData = {dir: DIRECTION.None};
 export type RemapData = string;
 export type RemapMap = {
     [key: number]: RemapData;
-}
+};
 export type RemapMapMap = {
     [key: string]: RemapMap;
-}
+};
+
+/**
+ * Character remapping data for Math Alphanumerics
+ */
+export type SmpMap = {
+    [c: number]: number;
+};
+
+/**
+ * Data for Math Alphanumeric conversion:  starting positions for
+ *  [Alpha, alpha, Greek, greek, Numbers]
+ */
+export type SmpData = [number, number, number?, number?, number?];
+
 
 /****************************************************************************/
 
@@ -231,12 +246,12 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         ['double-struck', 'bold'],
         ['fraktur', 'normal'],
         ['bold-fraktur', 'bold', 'fraktur'],
-        ['script', 'normal'],
-        ['bold-script', 'bold', 'script'],
+        ['script', 'italic'],
+        ['bold-script', 'bold-italic', 'script'],
         ['sans-serif', 'normal'],
         ['bold-sans-serif', 'bold', 'sans-serif'],
         ['sans-serif-italic', 'italic', 'sans-serif'],
-        ['bold-sans-serif-italic', 'bold-italic', 'sans-serif'],
+        ['sans-serif-bold-italic', 'bold-italic', 'bold-sans-serif'],
         ['monospace', 'normal']
     ];
 
@@ -256,8 +271,96 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         'sans-serif': ['sans-serif', false, false],
         'bold-sans-serif': ['sans-serif', false, true],
         'sans-serif-italic': ['sans-serif', true, false],
-        'bold-sans-serif-italic': ['sans-serif', true, true],
+        'sans-serif-bold-italic': ['sans-serif', true, true],
         monospace: ['monospace', false, false]
+    };
+
+    /**
+     * The default prefix for explicit font-family settings
+     */
+    protected static defaultCssFamilyPrefix = '';
+
+    /**
+     * Variant locations in the Math Alphabnumerics block:
+     *  [upper-alpha, lower-alpha, upper-Greek, lower-Greek, numbers]
+     */
+    public static VariantSmp: {[name: string]: SmpData} = {
+        bold: [0x1D400, 0x1D41A, 0x1D6A8, 0x1D6C2, 0x1D7CE],
+        italic: [0x1D434, 0x1D44E, 0x1D6E2, 0x1D6FC],
+        'bold-italic': [0x1D468, 0x1D482, 0x1D71C, 0x1D736],
+        script: [0x1D49C, 0x1D4B6],
+        'bold-script': [0x1D4D0, 0x1D4EA],
+        fraktur: [0x1D504, 0x1D51E],
+        'double-struck': [0x1D538, 0x1D552, , , 0x1D7D8],
+        'bold-fraktur': [0x1D56C, 0x1D586],
+        'sans-serif': [0x1D5A0, 0x1D5BA, , , 0x1D7E2],
+        'bold-sans-serif': [0x1D5D4, 0x1D5EE, 0x1D756, 0x1D770, 0x1D7EC],
+        'sans-serif-italic': [0x1D608, 0x1D622],
+        'sans-serif-bold-italic': [0x1D63C, 0x1D656, 0x1D790, 0x1D7AA],
+        'monospace': [0x1D670, 0x1D68A, , , 0x1D7F6]
+    };
+
+    /**
+     * Character ranges to remap into Math Alphanumerics
+     */
+    public static SmpRanges = [
+        [0, 0x41, 0x5A],   // Upper-case alpha
+        [1, 0x61, 0x7A],   // Lower-case alpha
+        [2, 0x391, 0x3A9], // Upper-case Greek
+        [3, 0x3B1, 0x3C9], // Lower-case Greek
+        [4, 0x30, 0x39]    // Numbers
+    ];
+
+    /**
+     * Characters to map back top other Unicode positions
+     * (holes in the Math Alphanumeric ranges)
+     */
+    public static SmpRemap: SmpMap = {
+        0x1D455: 0x210E,   // PLANCK CONSTANT
+        0x1D49D: 0x212C,   // SCRIPT CAPITAL B
+        0x1D4A0: 0x2130,   // SCRIPT CAPITAL E
+        0x1D4A1: 0x2131,   // SCRIPT CAPITAL F
+        0x1D4A3: 0x210B,   // SCRIPT CAPITAL H
+        0x1D4A4: 0x2110,   // SCRIPT CAPITAL I
+        0x1D4A7: 0x2112,   // SCRIPT CAPITAL L
+        0x1D4A8: 0x2133,   // SCRIPT CAPITAL M
+        0x1D4AD: 0x211B,   // SCRIPT CAPITAL R
+        0x1D4BA: 0x212F,   // SCRIPT SMALL E
+        0x1D4BC: 0x210A,   // SCRIPT SMALL G
+        0x1D4C4: 0x2134,   // SCRIPT SMALL O
+        0x1D506: 0x212D,   // BLACK-LETTER CAPITAL C
+        0x1D50B: 0x210C,   // BLACK-LETTER CAPITAL H
+        0x1D50C: 0x2111,   // BLACK-LETTER CAPITAL I
+        0x1D515: 0x211C,   // BLACK-LETTER CAPITAL R
+        0x1D51D: 0x2128,   // BLACK-LETTER CAPITAL Z
+        0x1D53A: 0x2102,   // DOUBLE-STRUCK CAPITAL C
+        0x1D53F: 0x210D,   // DOUBLE-STRUCK CAPITAL H
+        0x1D545: 0x2115,   // DOUBLE-STRUCK CAPITAL N
+        0x1D547: 0x2119,   // DOUBLE-STRUCK CAPITAL P
+        0x1D548: 0x211A,   // DOUBLE-STRUCK CAPITAL Q
+        0x1D549: 0x211D,   // DOUBLE-STRUCK CAPITAL R
+        0x1D551: 0x2124,   // DOUBLE-STRUCK CAPITAL Z
+    };
+
+    /**
+     * Greek upper-case variants
+     */
+    public static SmpRemapGreekU: SmpMap = {
+        0x2207: 0x19,  // nabla
+        0x03F4: 0x11   // theta symbol
+    };
+
+    /**
+     * Greek lower-case variants
+     */
+    public static SmpRemapGreekL: SmpMap = {
+        0x3D1: 0x1B,  // theta symbol
+        0x3D5: 0x1D,  // phi symbol
+        0x3D6: 0x1F,  // omega symbol
+        0x3F0: 0x1C,  // kappa symbol
+        0x3F1: 0x1E,  // rho symbol
+        0x3F5: 0x1A,  // lunate epsilon symbol
+        0x2202: 0x19  // partial differential
     };
 
     /**
@@ -301,7 +404,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
     protected static defaultMnMap = {
         0x002D: '\u2212' // hyphen
-    }
+    };
 
     /**
      *  The default font parameters for the font
@@ -353,25 +456,17 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     protected static defaultSizeVariants: string[] = [];
 
     /**
-     * @param {CharMap} font   The font to check
-     * @param {number} n       The character to get options for
-     * @return {CharOptions}   The options for the character
-     */
-    public static charOptions(font: CharMap<CharOptions>, n: number) {
-        const char = font[n];
-        if (char.length === 3) {
-            (char as any)[3] = {};
-        }
-        return char[3];
-    }
-
-    /**
      * The actual variant, delimiter, and size information for this font
      */
     protected variant: VariantMap<C, V> = {};
     protected delimiters: DelimiterMap<D> = {};
     protected sizeVariants: string[];
     protected cssFontMap: CssFontMap = {};
+
+    /**
+     * A prefix to use for explicit font-family CSS settings
+     */
+    public cssFamilyPrefix: string;
 
     /**
      * The character maps
@@ -389,6 +484,19 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     public styles: StyleList;
 
     /**
+     * @param {CharMap} font   The font to check
+     * @param {number} n       The character to get options for
+     * @return {CharOptions}   The options for the character
+     */
+    public static charOptions(font: CharMap<CharOptions>, n: number) {
+        const char = font[n];
+        if (char.length === 3) {
+            (char as any)[3] = {};
+        }
+        return char[3];
+    }
+
+    /**
      * Copies the data from the defaults to the instance
      *
      * @constructor
@@ -398,6 +506,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         this.params = {...CLASS.defaultParams};
         this.sizeVariants = [...CLASS.defaultSizeVariants];
         this.cssFontMap = {...CLASS.defaultCssFonts};
+        this.cssFamilyPrefix = CLASS.defaultCssFamilyPrefix;
         this.createVariants(CLASS.defaultVariants);
         this.defineDelimiters(CLASS.defaultDelimiters);
         for (const name of Object.keys(CLASS.defaultChars)) {
@@ -449,7 +558,46 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
             this.variant[link].linked.push(variant.chars);
             variant.chars = Object.create(variant.chars);
         }
+        this.remapSmpChars(variant.chars, name);
         this.variant[name] = variant;
+    }
+
+    /**
+     * Create the mapping from Basic Latin and Greek blocks to
+     * the Math Alphanumeric block for a given variant.
+     */
+    protected remapSmpChars(chars: CharMap<C>, name: string) {
+        const CLASS = (this.constructor as typeof FontData);
+        if (CLASS.VariantSmp[name]) {
+            const SmpRemap = CLASS.SmpRemap;
+            const SmpGreek = [null, null, CLASS.SmpRemapGreekU, CLASS.SmpRemapGreekL];
+            for (const [i, lo, hi] of CLASS.SmpRanges) {
+                const base = CLASS.VariantSmp[name][i];
+                if (!base) continue;
+                for (let n = lo; n <= hi; n++) {
+                    if (n === 0x3A2) continue;
+                    const smp = base + n - lo;
+                    chars[n] = this.smpChar(SmpRemap[smp] || smp);
+                }
+                if (SmpGreek[i]) {
+                    for (const n of Object.keys(SmpGreek[i]).map((x) => parseInt(x))) {
+                        chars[n] = this.smpChar(base + SmpGreek[i][n]);
+                    }
+                }
+            }
+        }
+        if (name === 'bold') {
+            chars[0x3DC] = this.smpChar(0x1D7CA);
+            chars[0x3DD] = this.smpChar(0x1D7CB);
+        }
+    }
+
+    /**
+     * @param {number} n      Math Alphanumerics position for this remapping
+     * @return {CharData<C>}  The character data for the remapping
+     */
+    protected smpChar(n: number) {
+        return [ , , , {smp: n}] as CharData<C>;
     }
 
     /**
@@ -572,6 +720,6 @@ export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, 
     defaultCssFonts: CssFontMap;
     defaultVariants: string[][];
     defaultParams: FontParameters;
-    charOptions(font: CharMap<C>, n: number): C
+    charOptions(font: CharMap<C>, n: number): C;
     new(...args: any[]): FontData<C, V, D>;
-};
+}

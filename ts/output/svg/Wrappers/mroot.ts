@@ -42,9 +42,9 @@ export class SVGmroot<N, T, D> extends CommonMrootMixin<Constructor<SVGmsqrt<any
     /**
      * @override
      */
-    protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox) {
+    protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox, H: number) {
         root.toSVG(ROOT);
-        const [x, h, dx] = this.getRootDimens(sbox);
+        const [x, h, dx] = this.getRootDimens(sbox, H);
         const bbox = root.getBBox();
         root.place(dx * bbox.rscale, h);
         this.dx = x;

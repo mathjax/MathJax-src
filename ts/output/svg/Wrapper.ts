@@ -282,7 +282,7 @@ CommonWrapper<
                 x += this.placeChar(n, x, y, g, variant);
             }
         } else if (data.unknown) {
-            const char = String.fromCharCode(n);
+            const char = String.fromCodePoint(n);
             const text = this.adaptor.append(parent, this.jax.unknownText(char, variant));
             this.place(x, y, text);
             return this.jax.measureTextNodeWithCache(text, char, variant).w;

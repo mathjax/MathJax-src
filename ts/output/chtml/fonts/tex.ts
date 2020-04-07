@@ -61,6 +61,11 @@ export class TeXFont extends
 CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass>(CHTMLFontData) {
 
     /**
+     * Fonts to prefix any explicit ones
+     */
+    protected static defaultCssFamilyPrefix = 'MJXZERO';
+
+    /**
      * The classes to use for each variant
      */
     protected static defaultVariantClasses: StringMap = {
@@ -68,26 +73,56 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         'bold': 'mjx-b',
         'italic': 'mjx-i',
         'bold-italic': 'mjx-b mjx-i',
-        'double-struck': 'mjx-ds',
+        'double-struck': 'mjx-ds mjx-b',
         'fraktur': 'mjx-fr',
         'bold-fraktur': 'mjx-fr mjx-b',
-        'script': 'mjx-sc',
-        'bold-script': 'mjx-sc mjx-b',
+        'script': 'mjx-sc mjx-i',
+        'bold-script': 'mjx-sc mjx-b mjx-i',
         'sans-serif': 'mjx-ss',
         'bold-sans-serif': 'mjx-ss mjx-b',
         'sans-serif-italic': 'mjx-ss mjx-i',
-        'bold-sans-serif-italic': 'mjx-ss mjx-b mjx-i',
+        'sans-serif-bold-italic': 'mjx-ss mjx-b mjx-i',
         'monospace': 'mjx-ty',
         '-smallop': 'mjx-sop',
         '-largeop': 'mjx-lop',
         '-size3': 'mjx-s3',
         '-size4': 'mjx-s4',
-        '-tex-calligraphic': 'mjx-cal',
+        '-tex-calligraphic': 'mjx-cal mjx-i',
         '-tex-bold-calligraphic': 'mjx-cal mjx-b',
-        '-tex-mathit': 'mjx-mit',
+        '-tex-mathit': 'mjx-mit mjx-i',
         '-tex-oldstyle': 'mjx-os',
         '-tex-bold-oldstyle': 'mjx-os mjx-b',
         '-tex-variant': 'mjx-var'
+    };
+
+    /**
+     * The letters that identify the default font for each varaint
+     */
+    protected static defaultVariantLetters: StringMap = {
+        'normal': '',
+        'bold': 'B',
+        'italic': 'MI',
+        'bold-italic': 'BI',
+        'double-struck': 'A',
+        'fraktur': 'FR',
+        'bold-fraktur': 'FRB',
+        'script': 'SC',
+        'bold-script': 'SCB',
+        'sans-serif': 'SS',
+        'bold-sans-serif': 'SSB',
+        'sans-serif-italic': 'SSI',
+        'sans-serif-bold-italic': 'SSBI',
+        'monospace': 'T',
+        '-smallop': 'S1',
+        '-largeop': 'S2',
+        '-size3': 'S3',
+        '-size4': 'S4',
+        '-tex-calligraphic': 'C',
+        '-tex-bold-calligraphic': 'CB',
+        '-tex-mathit': 'MI',
+        '-tex-oldstyle': 'C',
+        '-tex-bold-oldstyle': 'CB',
+        '-tex-variant': 'A'
     };
 
     /**
@@ -111,7 +146,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         'sans-serif': sansSerif,
         'bold-sans-serif': sansSerifBold,
         'sans-serif-italic': sansSerifItalic,
-        'bold-sans-serif-italic': sansSerifBoldItalic,
+        'sans-serif-bold-italic': sansSerifBoldItalic,
         'monospace': monospace,
         '-smallop': smallop,
         '-largeop': largeop,
@@ -132,94 +167,88 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
     protected static defaultStyles = {
         ...CHTMLFontData.defaultStyles,
 
-        '.mjx-n mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-i mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-I, MJXTEX-MI, MJXTEX, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-b.mjx-i mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-BI, MJXTEX-B, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-cal mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-C, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-cal.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-ds mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-A, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1'
-        },
-
-        '.mjx-fr mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-FR, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-fr.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-FR-B, MJXTEX-FR, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-sc mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SC, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-sc.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SC-B, MJXTEX-SC, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-ss mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SS, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-ss.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SS-B, MJXTEX-SS, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-ss.mjx-i mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SS-I, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-ss.mjx-b.mjx-i mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-SS-B, MJXTEX-SS-I, MJXTEX-BI, MJXTEX-B, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-ty mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-T, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-var mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-A, MJXTEX, MJXTEX-I, MJXTEX-S1'
-        },
-
-        '.mjx-os mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-C, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-        '.mjx-os.mjx-b mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-C-B, MJXTEX-C, MJXTEX-B, MJXTEX-BI, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-mit mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-MI, MJXTEX-I, MJXTEX, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-lop mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-S2, MJXTEX-S1, MJXTEX, MJXTEX-I, MJXTEX-A'
-        },
-
-        '.mjx-sop mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-S1, MJXTEX, MJXTEX-I, MJXTEX-A'
-        },
-
-        '.mjx-s3 mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-S3, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-
-        '.mjx-s4 mjx-c': {
-            'font-family': 'MJXZERO, MJXTEX-S4, MJXTEX, MJXTEX-I, MJXTEX-S1, MJXTEX-A'
-        },
-
         '.MJX-TEX': {
-            'font-family': 'MJXZERO'
+            'font-family': 'MJXZERO, MJXTEX'
+        },
+
+        '.TEX-B': {
+            'font-family': 'MJXZERO, MJXTEX-B'
+        },
+
+        '.TEX-I': {
+            'font-family': 'MJXZERO, MJXTEX-I'
+        },
+
+        '.TEX-MI': {
+            'font-family': 'MJXZERO, MJXTEX-MI'
+        },
+
+        '.TEX-BI': {
+            'font-family': 'MJXZERO, MJXTEX-BI'
+        },
+
+        '.TEX-S1': {
+            'font-family': 'MJXZERO, MJXTEX-S1'
+        },
+
+        '.TEX-S2': {
+            'font-family': 'MJXZERO, MJXTEX-S2'
+        },
+
+        '.TEX-S3': {
+            'font-family': 'MJXZERO, MJXTEX-S3'
+        },
+
+        '.TEX-S4': {
+            'font-family': 'MJXZERO, MJXTEX-S4'
+        },
+
+        '.TEX-A': {
+            'font-family': 'MJXZERO, MJXTEX-A'
+        },
+
+        '.TEX-C': {
+            'font-family': 'MJXZERO, MJXTEX-C'
+        },
+
+        '.TEX-CB': {
+            'font-family': 'MJXZERO, MJXTEX-CB'
+        },
+
+        '.TEX-FR': {
+            'font-family': 'MJXZERO, MJXTEX-FR'
+        },
+
+        '.TEX-FRB': {
+            'font-family': 'MJXZERO, MJXTEX-FRB'
+        },
+
+        '.TEX-SS': {
+            'font-family': 'MJXZERO, MJXTEX-SS'
+        },
+
+        '.TEX-SSB': {
+            'font-family': 'MJXZERO, MJXTEX-SSB'
+        },
+
+        '.TEX-SSI': {
+            'font-family': 'MJXZERO, MJXTEX-SSI'
+        },
+
+        '.TEX-SC': {
+            'font-family': 'MJXZERO, MJXTEX-SC'
+        },
+
+        '.TEX-T': {
+            'font-family': 'MJXZERO, MJXTEX-T'
+        },
+
+        '.TEX-V': {
+            'font-family': 'MJXZERO, MJXTEX-V'
+        },
+
+        '.TEX-VB': {
+            'font-family': 'MJXZERO, MJXTEX-VB'
         },
 
         'mjx-stretchy-v mjx-c, mjx-stretchy-h mjx-c': {
@@ -245,12 +274,12 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
 
         '@font-face /* 3 */': {
             'font-family': 'MJXTEX-I',
-            src: 'url("%%URL%%/MathJax_Main-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/MathJax_Math-Italic.woff") format("woff")'
         },
 
         '@font-face /* 4 */': {
             'font-family': 'MJXTEX-MI',
-            src: 'url("%%URL%%/MathJax_Math-Italic.woff") format("woff")'
+            src: 'url("%%URL%%/MathJax_Main-Italic.woff") format("woff")'
         },
 
         '@font-face /* 5 */': {
@@ -289,7 +318,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         },
 
         '@font-face /* 12 */': {
-            'font-family': 'MJXTEX-C-B',
+            'font-family': 'MJXTEX-CB',
             src: 'url("%%URL%%/MathJax_Calligraphic-Bold.woff") format("woff")'
         },
 
@@ -299,7 +328,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         },
 
         '@font-face /* 14 */': {
-            'font-family': 'MJXTEX-FR-B',
+            'font-family': 'MJXTEX-FRB',
             src: 'url("%%URL%%/MathJax_Fraktur-Bold.woff") format("woff")'
         },
 
@@ -309,12 +338,12 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
         },
 
         '@font-face /* 16 */': {
-            'font-family': 'MJXTEX-SS-B',
+            'font-family': 'MJXTEX-SSB',
             src: 'url("%%URL%%/MathJax_SansSerif-Bold.woff") format("woff")'
         },
 
         '@font-face /* 17 */': {
-            'font-family': 'MJXTEX-SS-I',
+            'font-family': 'MJXTEX-SSI',
             src: 'url("%%URL%%/MathJax_SansSerif-Italic.woff") format("woff")'
         },
 

@@ -35,6 +35,7 @@ import {CHTMLFontData} from './chtml/FontData.js';
 import {CssFontData} from './common/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import * as LENGTHS from '../util/lengths.js';
+import {unicodeChars} from '../util/string.js';
 
 
 /*****************************************************************/
@@ -195,7 +196,10 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
             styles.padding = LENGTHS.em(75 / scale) + ' 0 ' + LENGTHS.em(20 / scale) + ' 0';
         }
         if (variant !== '-explicitFont') {
-            this.cssFontStyles(this.font.getCssFont(variant), styles);
+            const c = unicodeChars(text);
+            if (c.length !== 1 || c[0] < 0x1D400 || c[0] > 0x1D7FF) {
+                this.cssFontStyles(this.font.getCssFont(variant), styles);
+            }
         }
         return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);
     }

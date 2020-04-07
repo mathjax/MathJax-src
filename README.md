@@ -1,6 +1,5 @@
 # MathJax (Source Repository)
-<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src?sort=semver"> <img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2?label=release-v2">
-<a class="reference external image-reference" href="http://www.numfocus.org"><img alt="powered-by NumFocus" src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;amp;colorA=E1523D&amp;amp;colorB=007D8A"></a>
+<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver"> <img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2.svg?label=release-v2"> <a class="reference external image-reference" href="http://www.numfocus.org"><img alt="powered-by NumFocus" src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;amp;colorA=E1523D&amp;amp;colorB=007D8A"></a>
 
 ## Beautiful math in all browsers
 
@@ -95,7 +94,7 @@ where the first `{ ... }` is a MathJax configuration, and the second
 See the
 [documentation](https//docs.mathjax.org/en/latest/index.html#server-nodejs)
 and the [MathJax Node
-Repository](https://github.com/mathjax/MathJax-demos-node)for more details.
+Repository](https://github.com/mathjax/MathJax-demos-node) for more details.
 
 ### Using MathJax modules directly in node applications
 

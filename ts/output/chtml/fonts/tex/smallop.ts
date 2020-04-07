@@ -14,19 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 import {CHTMLCharMap, AddCSS} from '../../FontData.js';
 import {smallop as font} from '../../../common/fonts/tex/smallop.js';
 
 export const smallop: CHTMLCharMap = AddCSS(font, {
-    0x20: {c: ' '},
-    0x28: {c: '('},
-    0x29: {c: ')'},
-    0x2F: {c: '/'},
-    0x5B: {c: '['},
-    0x5D: {c: ']'},
-    0x7B: {c: '{'},
-    0x7D: {c: '}'},
     0x2044: {c: '/'},
     0x2329: {c: '\\27E8'},
     0x232A: {c: '\\27E9'},

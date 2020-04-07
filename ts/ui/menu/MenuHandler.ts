@@ -121,7 +121,7 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
          * @param {MenuMathDocument} document   The document where the menu is being added
          */
         public addMenu(document: MenuMathDocument) {
-            if (this.state() < STATE.CONTEXT_MENU) {
+            if (this.state() < STATE.CONTEXT_MENU && !this.isEscaped) {
                 document.menu.addMenu(this);
                 this.state(STATE.CONTEXT_MENU);
             }

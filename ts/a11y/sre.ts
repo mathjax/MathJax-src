@@ -40,7 +40,7 @@ const srePromise = (typeof sre === 'undefined' ? asyncLoad(SRELIB) : Promise.res
  * Values to control the polling for when SRE is ready
  */
 const SRE_DELAY = 100;        // in milliseconds
-const SRE_TIMEOUT = 10 * 1000; // 10 seconds
+const SRE_TIMEOUT = 20 * 1000; // 10 seconds
 
 /**
  * A promise that resolves when SRE is loaded and ready, and rejects if
