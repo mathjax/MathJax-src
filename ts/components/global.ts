@@ -46,6 +46,14 @@ export interface MathJaxObject {
 declare const global: {MathJax: MathJaxObject | MathJaxConfig};
 
 /**
+ * @param {any} x     An item to test if it is an object
+ * @return {boolean}  True if the item is a non-null object
+ */
+export function isObject(x: any) {
+    return typeof x === 'object' && x !== null;
+}
+
+/**
  * Combine user-produced configuration with existing defaults.  Values
  * from src will replace those in dst.
  *
@@ -56,7 +64,8 @@ declare const global: {MathJax: MathJaxObject | MathJaxConfig};
 export function combineConfig(dst: any, src: any) {
     for (const id of Object.keys(src)) {
         if (id === '__esModule') continue;
-        if (typeof dst[id] === 'object' && typeof src[id] === 'object') {
+        if (isObject(dst[id]) && isObject(src[id]) &&
+            !(src[id] instanceof Promise) /* needed for IE polyfill */) {
             combineConfig(dst[id], src[id]);
         } else if (src[id] !== null && src[id] !== undefined) {
             dst[id] = src[id];
@@ -81,7 +90,7 @@ export function combineDefaults(dst: any, name: string, src: any) {
     }
     dst = dst[name];
     for (const id of Object.keys(src)) {
-        if (typeof dst[id] === 'object' && typeof src[id] === 'object') {
+        if (isObject(dst[id]) && isObject(src[id])) {
             combineDefaults(dst, id, src[id]);
         } else if (dst[id] == null && src[id] != null) {
             dst[id] = src[id];
@@ -114,7 +123,7 @@ if (typeof global.MathJax === 'undefined') {
  */
 if (!(global.MathJax as MathJaxObject).version) {
     global.MathJax = {
-        version: '3.0.1',
+        version: '3.0.2',
         _: {},
         config: global.MathJax
     };

@@ -41,6 +41,7 @@ import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
 import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
+import './tag_format/TagFormatConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
@@ -56,6 +57,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
         '[tex]/bussproofs',
         '[tex]/cancel',
         '[tex]/color',
+        '[tex]/color_v2',
         '[tex]/enclose',
         '[tex]/extpfeil',
         '[tex]/html',
@@ -66,7 +68,8 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
         '[tex]/physics',
         '[tex]/unicode',
         '[tex]/verb',
-        '[tex]/configMacros'
+        '[tex]/configMacros',
+        '[tex]/tagFormat'
     );
 }
 
@@ -78,6 +81,7 @@ export const AllPackages: string[] = [
     'bbox',
     'boldsymbol',
     'braket',
+    'bussproofs',
     'cancel',
     'color',
     'enclose',
@@ -89,5 +93,6 @@ export const AllPackages: string[] = [
     'noundefined',
     'unicode',
     'verb',
-    'configMacros'
+    'configMacros',
+    'tagFormat'
 ];

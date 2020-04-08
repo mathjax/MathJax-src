@@ -25,6 +25,7 @@ import {mathjax} from '../../mathjax.js';
 
 import {MathItem, STATE} from '../../core/MathItem.js';
 import {OutputJax} from '../../core/OutputJax.js';
+import {MathJax as MJX} from '../../components/global.js';
 import {MathJaxObject as StartupObject} from '../../components/startup.js';
 import {MathJaxObject as LoaderObject} from '../../components/loader.js';
 import {OptionList, userOptions, defaultOptions, expandable} from '../../util/Options.js';
@@ -40,15 +41,19 @@ import {MenuMathDocument} from './MenuHandler.js';
  * Declare the MathJax global and the navigator object (to check platform for MacOS)
  */
 declare namespace window {
-    const MathJax: StartupObject & LoaderObject;
-    const navigator: {platform: string}
+    const navigator: {platform: string};
 }
+
+/**
+ * The global MathJax object
+ */
+const MathJax = MJX as StartupObject & LoaderObject;
 
 /**
  * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
  */
 const isMac = (typeof window !== 'undefined' &&
-               window.navigator && window.navigator.platform.substr(0,3) === 'Mac');
+               window.navigator && window.navigator.platform.substr(0, 3) === 'Mac');
 
 /*==========================================================================*/
 
@@ -365,7 +370,7 @@ export class Menu {
         const jax = this.document.outputJax;
         this.jax[jax.name] = jax;
         this.settings.renderer = jax.name;
-        if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
+        if (MathJax._.a11y && MathJax._.a11y.explorer) {
             Object.assign(this.settings, this.document.options.a11y);
         }
         this.settings.scale = jax.options.scale;
@@ -422,7 +427,7 @@ export class Menu {
                         this.submenu('Annotation', 'Annotation')
                     ]),
                     this.rule(),
-                    this.submenu('Settings', 'Math Settings',[
+                    this.submenu('Settings', 'Math Settings', [
                         this.submenu('Renderer', 'Math Renderer', this.radioGroup('renderer', [['CHTML'], ['SVG']])),
                         this.rule(),
                         this.submenu('ZoomTrigger', 'Zoom Trigger', [
@@ -466,8 +471,7 @@ export class Menu {
                                 ['clearspeak-default', 'Auto']
                             ])),
                             this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
-                                ['default-default', 'Verbose'],
-                                ['default-short', 'Short'],
+                                ['default-default', 'Standard'],
                                 ['default-alternative', 'Alternative']
                             ]))
                         ]),
@@ -536,7 +540,6 @@ export class Menu {
      * Otherwise, check if any need to be loaded
      */
     protected checkLoadableItems() {
-        const MathJax = window.MathJax;
         if (MathJax && MathJax._ && MathJax.loader && MathJax.startup) {
             if (this.settings.collapsible && (!MathJax._.a11y || !MathJax._.a11y.complexity)) {
                 this.loadA11y('complexity');
@@ -554,7 +557,7 @@ export class Menu {
                     menu.findID('Settings', 'Renderer', name).disable();
                 }
             }
-            menu.findID('Accessibility', 'Explorer').disable();
+            menu.findID('Accessibility', 'Activate').disable();
             menu.findID('Accessibility', 'AutoCollapse').disable();
             menu.findID('Accessibility', 'Collapsible').disable();
         }
@@ -616,13 +619,13 @@ export class Menu {
      * @param {[key: string]: any} options The options.
      */
     protected setA11y(options: {[key: string]: any}) {
-        if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
-          window.MathJax._.a11y.explorer_ts.setA11yOptions(this.document, options);
+        if (MathJax._.a11y && MathJax._.a11y.explorer) {
+          MathJax._.a11y.explorer_ts.setA11yOptions(this.document, options);
         }
     }
 
     protected getA11y(options: string): any {
-        if (window.MathJax._.a11y && window.MathJax._.a11y.explorer) {
+        if (MathJax._.a11y && MathJax._.a11y.explorer) {
             return this.document.options.a11y[options];
         }
     }
@@ -649,7 +652,7 @@ export class Menu {
         } else {
             const name = jax.toLowerCase();
             this.loadComponent('output/' + name, () => {
-                const startup = window.MathJax.startup;
+                const startup = MathJax.startup;
                 if (name in startup.constructors) {
                     startup.useOutput(name, true);
                     startup.output = startup.getOutputJax();
@@ -682,7 +685,7 @@ export class Menu {
      * @param {boolean} mml   True to output hidden Mathml, false to not
      */
     protected setAssistiveMml(mml: boolean) {
-        if (!mml || (window.MathJax._.a11y && window.MathJax._.a11y['assistive-mml'])) {
+        if (!mml || (MathJax._.a11y && MathJax._.a11y['assistive-mml'])) {
             this.rerender();
         } else {
             this.loadA11y('assistive-mml');
@@ -694,7 +697,7 @@ export class Menu {
      */
     protected setExplorer(explore: boolean) {
         this.enableExplorerItems(explore);
-        if (!explore || (window.MathJax._.a11y && window.MathJax._.a11y.explorer)) {
+        if (!explore || (MathJax._.a11y && MathJax._.a11y.explorer)) {
             this.rerender(this.settings.collapsible ? STATE.RERENDER : STATE.COMPILED);
         } else {
             this.loadA11y('explorer');
@@ -705,7 +708,7 @@ export class Menu {
      * @param {boolean} collapse   True to enable collapsible math, false to not
      */
     protected setCollapsible(collapse: boolean) {
-        if (!collapse || (window.MathJax._.a11y && window.MathJax._.a11y.complexity)) {
+        if (!collapse || (MathJax._.a11y && MathJax._.a11y.complexity)) {
             this.rerender(STATE.COMPILED);
         } else {
             this.loadA11y('complexity');
@@ -774,7 +777,7 @@ export class Menu {
      */
     protected loadComponent(name: string, callback: () => void) {
         if (Menu.loadingPromises.has(name)) return;
-        const loader = window.MathJax.loader;
+        const loader = MathJax.loader;
         if (!loader) return;
         Menu.loading++;
         const promise = loader.load(name).then(() => {
@@ -804,7 +807,7 @@ export class Menu {
     public loadA11y(component: string) {
         const noEnrich = !STATE.ENRICHED;
         this.loadComponent('a11y/' + component, () => {
-            const startup = window.MathJax.startup;
+            const startup = MathJax.startup;
             //
             // Unregister the handler and get a new one (since the component
             // will have added a handler extension), then register the new one

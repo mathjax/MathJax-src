@@ -133,7 +133,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
             if (bevelled) {
                 this.getBevelledBBox(bbox, display);
             } else {
-                const thickness = this.length2em(String(linethickness));
+                const thickness = this.length2em(String(linethickness), .06);
                 w = -2 * this.pad;
                 if (thickness === 0) {
                     this.getAtopBBox(bbox, display);

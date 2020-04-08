@@ -18,7 +18,6 @@
 import {CharMap, CharOptions} from '../../FontData.js';
 
 export const texSize4: CharMap<CharOptions> = {
-    0x20: [0, 0, .25],
     0x28: [1.75, 1.249, .792],
     0x29: [1.75, 1.249, .792],
     0x2F: [1.75, 1.249, 1.278],
@@ -27,7 +26,6 @@ export const texSize4: CharMap<CharOptions> = {
     0x5D: [1.75, 1.249, .583],
     0x7B: [1.75, 1.249, .806],
     0x7D: [1.75, 1.249, .806],
-    0xA0: [0, 0, .25],
     0x2C6: [.845, -0.561, 1.889, {ic: .013}],
     0x2DC: [.823, -0.583, 1.889],
     0x302: [.845, -0.561, 0, {ic: .013}],

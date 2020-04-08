@@ -109,6 +109,7 @@ export abstract class CommonOutputJax<
     public document: MathDocument<N, T, D>;
     public math: MathItem<N, T, D>;
     public container: N;
+    public table: AnyWrapper;
 
     /**
      * The pixels per em for the math item being processed
@@ -147,7 +148,7 @@ export abstract class CommonOutputJax<
      * Get the cssStyle and font objects
      *
      * @param {OptionList} options         The configuration options
-     * @param(FontDataClass} defaultFont  The default FontData constructor
+     * @param {FontDataClass} defaultFont  The default FontData constructor
      * @constructor
      */
     constructor(options: OptionList = null,

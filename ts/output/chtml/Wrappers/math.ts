@@ -27,6 +27,7 @@ import {CommonMath, CommonMathMixin} from '../../common/Wrappers/math.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../common/CssStyles.js';
+import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -60,6 +61,9 @@ export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<any, an
             'text-align': 'center',
             margin: '1em 0'
         },
+        'mjx-container[jax="CHTML"][display="true"][width="full"]': {
+            display: 'flex'
+        },
         'mjx-container[jax="CHTML"][display="true"] mjx-math': {
             padding: 0
         },
@@ -78,29 +82,59 @@ export class CHTMLmath<N, T, D> extends CommonMathMixin<CHTMLConstructor<any, an
         super.toCHTML(parent);
         const chtml = this.chtml;
         const adaptor = this.adaptor;
-        const attributes = this.node.attributes;
-        const display = (attributes.get('display') === 'block');
+        const display = (this.node.attributes.get('display') === 'block');
         if (display) {
             adaptor.setAttribute(chtml, 'display', 'true');
             adaptor.setAttribute(parent, 'display', 'true');
+            this.handleDisplay(parent);
         } else {
-            //
-            // Transfer right margin to container (for things like $x\hskip -2em y$)
-            //
-            const margin = adaptor.getStyle(chtml, 'margin-right');
-            if (margin) {
-                adaptor.setStyle(chtml, 'margin-right', '');
-                adaptor.setStyle(parent, 'margin-right', margin);
-                adaptor.setStyle(parent, 'width', '0');
-            }
+            this.handleInline(parent);
         }
         adaptor.addClass(chtml, 'MJX-TEX');
+    }
+
+    /**
+     *  Handle displayed equations (set min-width, and so on).
+     */
+    protected handleDisplay(parent: N) {
+        const adaptor = this.adaptor;
         const [align, shift] = this.getAlignShift();
         if (align !== 'center') {
             adaptor.setAttribute(parent, 'justify', align);
         }
-        if (display && shift && !adaptor.hasAttribute(chtml, 'width')) {
-            this.setIndent(chtml, align, shift);
+        if (this.bbox.pwidth === BBox.fullWidth) {
+            adaptor.setAttribute(parent, 'width', 'full');
+            if (this.jax.table) {
+                let {L, w, R} = this.jax.table.getBBox();
+                if (align === 'right') {
+                    R = Math.max(R || -shift, -shift);
+                } else if (align === 'left') {
+                    L = Math.max(L || shift, shift);
+                } else if (align === 'center') {
+                    w += 2 * Math.abs(shift);
+                }
+                const W = this.em(Math.max(0, L + w + R));
+                adaptor.setStyle(parent, 'min-width', W);
+                adaptor.setStyle(this.jax.table.chtml, 'min-width', W);
+            }
+        } else {
+            this.setIndent(this.chtml, align, shift);
+        }
+    }
+
+    /**
+     * Handle in-line expressions
+     */
+    protected handleInline(parent: N) {
+        //
+        // Transfer right margin to container (for things like $x\hskip -2em y$)
+        //
+        const adaptor = this.adaptor;
+        const margin = adaptor.getStyle(this.chtml, 'margin-right');
+        if (margin) {
+            adaptor.setStyle(this.chtml, 'margin-right', '');
+            adaptor.setStyle(parent, 'margin-right', margin);
+            adaptor.setStyle(parent, 'width', '0');
         }
     }
 

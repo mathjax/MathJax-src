@@ -76,7 +76,7 @@ export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<Abstrac
          * @param {MathDocument} document   The MathDocument for the MathItem
          */
         public assistiveMml(document: AssistiveMmlMathDocument<N, T, D>) {
-            if (this.state() >= STATE.ASSISTIVEMML) return;
+            if (this.state() >= STATE.ASSISTIVEMML || this.isEscaped) return;
             this.state(STATE.ASSISTIVEMML);
             const adaptor = document.adaptor;
             //

@@ -61,7 +61,7 @@ export function tagFormatConfig(config: Configuration, jax: TeX<any, any, any>) 
      * methods don't have access to the input jax, and hence to its options.
      * If they did, we would use a common configTags class instead.
      */
-    class Tagformat extends TagClass {
+    class TagFormat extends TagClass {
 
         /**
          * @override
@@ -102,14 +102,14 @@ export function tagFormatConfig(config: Configuration, jax: TeX<any, any, any>) 
     //
     // Register the tag class
     //
-    TagsFactory.add(tagName, Tagformat);
+    TagsFactory.add(tagName, TagFormat);
     jax.parseOptions.options.tags = tagName;
 }
 
 /**
  * The configuration object for configTags
  */
-export const TagformatConfiguration = Configuration.create(
+export const TagFormatConfiguration = Configuration.create(
     'tagFormat', {
         config: tagFormatConfig,
         configPriority: 10,

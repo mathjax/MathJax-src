@@ -39,13 +39,14 @@ const srePromise = (typeof sre === 'undefined' ? asyncLoad(SRELIB) : Promise.res
  * Values to control the polling for when SRE is ready
  */
 const SRE_DELAY = 100;        // in milliseconds
-const SRE_TIMEOUT = 10 * 1000; // 10 seconds
+const SRE_TIMEOUT = 20 * 1000; // 10 seconds
 
 /**
  * A promise that resolves when SRE is loaded and ready, and rejects if
  * SRE can't be loaded, or does not become ready within the timout period.
  */
-export const sreReady = new Promise<void>((resolve, reject) => {
+export const sreReady = function() {
+  return new Promise<void>((resolve, reject) => {
     srePromise.then(() => {
         const start = new Date().getTime();
         function checkSRE() {
@@ -61,5 +62,5 @@ export const sreReady = new Promise<void>((resolve, reject) => {
         }
         checkSRE();
     }).catch((error: Error) => reject(error.message || error));
-});
-
+  });
+};

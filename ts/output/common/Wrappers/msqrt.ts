@@ -56,8 +56,9 @@ export interface CommonMsqrt extends AnyWrapper {
      *
      * @param {BBox} bbox  The bounding box so far
      * @param {BBox} sbox  The bounding box of the surd
+     * @param {number} H   The height of the root as a whole
      */
-    combineRootBBox(bbox: BBox, sbox: BBox): void;
+    combineRootBBox(bbox: BBox, sbox: BBox, H: number): void;
 
     /**
      * @param {BBox} sbox  The bounding box for the surd character
@@ -67,9 +68,10 @@ export interface CommonMsqrt extends AnyWrapper {
 
     /**
      * @param {BBox} sbox  The bounding box of the surd
+     * @param {number} H   The height of the root as a whole
      * @return {number[]}  The x offset of the surd, and the height, x offset, and scale of the root
      */
-    getRootDimens(sbox: BBox): number[];
+    getRootDimens(sbox: BBox, H: Number): number[];
 
 }
 
@@ -145,11 +147,11 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
             const surdbox = this.childNodes[this.surd].getBBox();
             const basebox = new BBox(this.childNodes[this.base].getBBox());
             const [p, q] = this.getPQ(surdbox);
-            const [x] = this.getRootDimens(surdbox);
             const t = this.font.params.rule_thickness;
             const H = basebox.h + q + t;
+            const [x] = this.getRootDimens(surdbox, H);
             bbox.h = H + t;
-            this.combineRootBBox(bbox, surdbox);
+            this.combineRootBBox(bbox, surdbox, H);
             bbox.combine(surdbox, x, H - surdbox.h);
             bbox.combine(basebox, x + surdbox.w, 0);
             bbox.clean();
@@ -161,8 +163,9 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
          *
          * @param {BBox} bbox  The bounding box so far
          * @param {BBox} sbox  The bounding box of the surd
+         * @param {number} H   The height of the root as a whole
          */
-        public combineRootBBox(bbox: BBox, sbox: BBox) {
+        public combineRootBBox(bbox: BBox, sbox: BBox, H: number) {
         }
 
         /**
@@ -172,15 +175,18 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
         public getPQ(sbox: BBox) {
             const t = this.font.params.rule_thickness;
             const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
-            const q = (sbox.h + sbox.d > this.surdH ? ((sbox.h + sbox.d) - (this.surdH - 2 * t - p / 2)) / 2 : t + p / 4);
+            const q = (sbox.h + sbox.d > this.surdH ?
+                       ((sbox.h + sbox.d) - (this.surdH - 2 * t - p / 2)) / 2 :
+                       t + p / 4);
             return [p, q];
         }
 
         /**
          * @param {BBox} sbox  The bounding box of the surd
+         * @param {number} H   The height of the root as a whole
          * @return {number[]}  The x offset of the surd, and the height, x offset, and scale of the root
          */
-        public getRootDimens(sbox: BBox) {
+        public getRootDimens(sbox: BBox, H: number) {
             return [0, 0, 0, 0];
         }
 

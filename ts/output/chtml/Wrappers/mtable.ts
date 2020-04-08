@@ -97,6 +97,9 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
         },
         'mjx-mtable[align="bottom"] > mjx-table': {
             'vertical-align': 'bottom'
+        },
+        'mjx-mtable[side="right"] mjx-labels': {
+           'min-width': '100%'
         }
     };
 
@@ -493,8 +496,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
             const W = this.node.attributes.get('width') as string;
             const {w, L, R} = this.getBBox();
             styles.style = {
-                width: (isPercent(W) ? 'calc(' + W + ' + ' + this.em(L + R) + ')' : this.em(L + w + R)),
-                minWidth: '100%'
+                width: (isPercent(W) ? 'calc(' + W + ' + ' + this.em(L + R) + ')' : this.em(L + w + R))
             };
         }
         this.adaptor.append(this.chtml, this.html('mjx-labels', styles, [this.labels]));

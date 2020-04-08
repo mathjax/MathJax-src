@@ -46,16 +46,14 @@ export class SVGmglyph<N, T, D> extends CommonMglyphMixin<SVGConstructor<any, an
         const {src, alt} = this.node.attributes.getList('src', 'alt');
         const h = this.fixed(this.height);
         const w = this.fixed(this.width);
+        const y = this.fixed(this.height + (this.valign || 0));
         const properties: OptionList = {
             width: w, height: h,
-            transform: 'translate(0 ' +h + ') matrix(1 0 0 -1 0 0)',
+            transform: 'translate(0 ' + y + ') matrix(1 0 0 -1 0 0)',
             preserveAspectRatio: 'none',
             alt: alt, title: alt,
             href: src
         };
-        if (this.voffset) {
-            properties.verticalAlign = this.fixed(-this.voffset);
-        }
         const img = this.svg('image', properties);
         this.adaptor.append(svg, img);
     }

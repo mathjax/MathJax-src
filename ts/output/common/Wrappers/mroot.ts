@@ -66,23 +66,23 @@ export function CommonMrootMixin<T extends MsqrtConstructor>(Base: T): MrootCons
         /**
          * @override
          */
-        public combineRootBBox(BBOX: BBox, sbox: BBox) {
+        public combineRootBBox(BBOX: BBox, sbox: BBox, H: number) {
             const bbox = this.childNodes[this.root].getBBox();
-            const [x, h] = this.getRootDimens(sbox);
+            const [x, h] = this.getRootDimens(sbox, H);
             BBOX.combine(bbox, 0, h);
         }
 
         /**
          * @override
          */
-        public getRootDimens(sbox: BBox) {
+        public getRootDimens(sbox: BBox, H: number) {
             const surd = this.childNodes[this.surd] as CommonMo;
             const bbox = this.childNodes[this.root].getBBox();
             const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
             const {w, rscale} = bbox;
             const W = Math.max(w, offset / rscale);
             const dx = Math.max(0, W - w);
-            const h = this.rootHeight(bbox, sbox, surd.size);
+            const h = this.rootHeight(bbox, sbox, surd.size, H);
             const x = W * rscale - offset;
             return [x, h, dx];
         }
@@ -91,11 +91,12 @@ export function CommonMrootMixin<T extends MsqrtConstructor>(Base: T): MrootCons
          * @param {BBox} rbox      The bbox of the root
          * @param {BBox} sbox      The bbox of the surd
          * @param {number} size    The size of the surd
+         * @param {number} H       The height of the root as a whole
          * @return {number}        The height of the root within the surd
          */
-        public rootHeight(rbox: BBox, sbox: BBox, size: number) {
-            const H = sbox.h + sbox.d;
-            const b = (size < 0 ? 2 + .3 * (H - 4) : .55 * H) - sbox.d;
+        public rootHeight(rbox: BBox, sbox: BBox, size: number, H: number) {
+            const h = sbox.h + sbox.d;
+            const b = (size < 0 ? 1.9 : .55 * h) - (h - H);
             return b + Math.max(0, rbox.d * rbox.rscale);
         }
 
