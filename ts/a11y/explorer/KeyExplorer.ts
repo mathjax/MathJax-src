@@ -189,6 +189,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     let options = this.getOptions();
+    // TODO: Check and set locale not only on init, but on every start.
     if (!this.init) {
       this.init = true;
       sreReady().then(() => {
@@ -198,8 +199,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
         sreReady().then(() => {
           this.Speech(this.walker);
           this.Start();
-        }).catch((error: Error) => console.log(error.message));
-      });
+        });
+      }).catch((error: Error) => console.log(error.message));
       return;
     }
     super.Start();
