@@ -189,15 +189,17 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     let options = this.getOptions();
-    if (SRE.engineSetup().locale !== options.locale) {
-      SRE.setupEngine({locale: options.locale});
-    }
     if (!this.init) {
       this.init = true;
       sreReady().then(() => {
-        this.Speech(this.walker);
-        this.Start();
-      }).catch((error: Error) => console.log(error.message));
+        if (SRE.engineSetup().locale !== options.locale) {
+          SRE.setupEngine({locale: options.locale});
+        };
+        sreReady().then(() => {
+          this.Speech(this.walker);
+          this.Start();
+        }).catch((error: Error) => console.log(error.message));
+      });
       return;
     }
     super.Start();
