@@ -35,14 +35,6 @@ import {sreReady} from './sre.js';
 /*==========================================================================*/
 
 /**
- * The only function we need from SRE
- */
-declare const SRE: {
-    toEnriched(mml: string): Element;
-    setupEngine(options: OptionList): void;
-};
-
-/**
  *  The current speech setting for SRE
  */
 let currentSpeech = 'none';
@@ -134,7 +126,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         public enrich(document: MathDocument<N, T, D>) {
             if (this.state() >= STATE.ENRICHED || this.isEscaped) return;
             if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
-                mathjax.retryAfter(sreReady);
+                mathjax.retryAfter(sreReady());
             }
             if (document.options.enrichSpeech !== currentSpeech) {
                 SRE.setupEngine({speech: document.options.enrichSpeech});

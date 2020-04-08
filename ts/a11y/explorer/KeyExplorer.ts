@@ -188,16 +188,22 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
+    let options = this.getOptions();
+    // TODO: Check and set locale not only on init, but on every start.
     if (!this.init) {
       this.init = true;
-      sreReady.then(() => {
-        this.Speech(this.walker);
-        this.Start();
+      sreReady().then(() => {
+        if (SRE.engineSetup().locale !== options.locale) {
+          SRE.setupEngine({locale: options.locale});
+        };
+        sreReady().then(() => {
+          this.Speech(this.walker);
+          this.Start();
+        });
       }).catch((error: Error) => console.log(error.message));
       return;
     }
     super.Start();
-    let options = this.getOptions();
     this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
     this.walker = sre.WalkerFactory.walker('table',
