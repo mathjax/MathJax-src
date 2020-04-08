@@ -24,13 +24,13 @@
 
 declare const require: (name: string) => any;
 
-const SRE = require('speech-rule-engine');
+const Sre = require('speech-rule-engine');
 
 declare const global: any;
 
 /**
  * The global sre with sre.Engine.isReady() and sre.toEnriched()
  */
-global.SRE = SRE;
-global.sre = Object.create(SRE);
-global.sre.Engine = {isReady() {return SRE.engineReady()}};
+global.SRE = Sre;
+global.sre = Object.create(Sre);
+global.sre.Engine = {isReady() {return Sre.engineReady()}};

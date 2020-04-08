@@ -65,3 +65,9 @@ declare namespace sre.ClearspeakPreferences {
   export function smartPreferences(item: Object, locale: string): string[];
 
 }
+
+declare namespace SRE {
+  export function toEnriched(mml: string): void;
+  export function setupEngine(obj: any): void;
+  export function engineSetup(): any;
+}

@@ -65,13 +65,3 @@ export const sreReady = function() {
     }).catch((error: Error) => reject(error.message || error));
   });
 };
-
-
-/**
- * The functions we need from SRE.
- */
-export type SRE = {
-  toEnriched(mml: string): Element;
-  setupEngine(options: OptionList): void;
-  engineSetup(): OptionList;
-};

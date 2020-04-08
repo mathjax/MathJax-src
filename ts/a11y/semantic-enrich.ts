@@ -30,7 +30,7 @@ import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 
-import {SRE, sreReady} from './sre.js';
+import {sreReady} from './sre.js';
 
 /*==========================================================================*/
 
