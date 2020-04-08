@@ -23,7 +23,6 @@
  */
 
 import {asyncLoad} from '../util/AsyncLoad.js';
-import {OptionList} from '../util/Options.js';
 
 /**
  * The name of the modiule to load, if necessary
