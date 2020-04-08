@@ -471,8 +471,7 @@ export class Menu {
                                 ['clearspeak-default', 'Auto']
                             ])),
                             this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
-                                ['default-default', 'Verbose'],
-                                ['default-short', 'Short'],
+                                ['default-default', 'Standard'],
                                 ['default-alternative', 'Alternative']
                             ]))
                         ]),
