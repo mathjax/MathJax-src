@@ -42,28 +42,25 @@
     "make-components": "cd components && node bin/makeAll src | grep 'Building\\|Webpacking\\|Copying\\|npx'"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.6.1",
-    "copyfiles": "^2.1.1",
-    "diff": "^3.5.0",
-    "lodash": "^4.17.14",
-    "minimist": ">=1.2.2",
-    "rimraf": "^3.0.0",
-    "serialize-javascript": "^2.1.2",
-    "tape": "^4.8.0",
-    "tslint": "^3.15.0",
-    "tslint-jsdoc-rules": "*",
-    "tslint-unix-formatter": "*",
-    "typescript": "~3.5.2",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "babel-loader": "^8.1.0",
+    "copyfiles": "^2.2.0",
+    "diff": "^4.0.2",
+    "rimraf": "^3.0.2",
+    "tape": "^4.13.2",
+    "tslint": "^6.1.1",
+    "tslint-jsdoc-rules": "^0.2.0",
+    "tslint-unix-formatter": "^0.2.0",
+    "typescript": "~3.8.3",
     "typescript-tools": "^0.3.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {
     "esm": "^3.2.25",
     "mj-context-menu": "^0.2.2",
-    "speech-rule-engine": "^3.0.0-beta.8"
+    "speech-rule-engine": "^3.0.0-beta.10"
   }
 }

@@ -112,7 +112,7 @@ const MODULE = function (dir) {
             use: {
                 loader: 'babel-loader',
                 options: {
-                    presets: ['env']
+                    presets: ['@babel/env']
                 }
             }
         }]
