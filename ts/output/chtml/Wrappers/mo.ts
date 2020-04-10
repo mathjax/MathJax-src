@@ -54,6 +54,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<any, any, a
             transform: 'scalex(1.0000001)'        // improves blink positioning
         },
         'mjx-stretchy-h > * > mjx-c::before': {
+            display: 'inline-block',
             padding: '.001em 0',                  // for blink
             width: 'initial'
         },
