@@ -1,7 +1,10 @@
 {
-  "exclude": [
-    "*.d.ts"
-  ],
+  "linterOptions": {
+    "exclude": [
+      "**/*.d.ts",
+      "**/fonts/tex/*.ts"
+    ]
+  },
   "rulesDirectory": [
     "node_modules/tslint-jsdoc-rules/lib"
   ],
@@ -34,9 +37,7 @@
     "member-access": true,
     "member-ordering": [
       true,
-      "public-before-private",
-      "static-before-instance",
-      "variables-before-functions"
+      {"order": "fields-first"}
     ],
     "no-duplicate-variable": true,
     "no-eval": true,
