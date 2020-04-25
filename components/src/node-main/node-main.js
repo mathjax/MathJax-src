@@ -19,6 +19,7 @@ combineDefaults(MathJax.config.loader, 'dependencies', dependencies);
 combineDefaults(MathJax.config.loader, 'paths', paths);
 combineDefaults(MathJax.config.loader, 'provides', provides);
 
+MathJax.config.loader.source['[sre]'] = '[mathjax]/../js/a11y/sre-node';
 MathJax.config.loader.paths.mathjax = (function () {
   //
   // Try to locate the mathjax-full or mathjax package
@@ -38,6 +39,7 @@ MathJax.config.loader.paths.mathjax = (function () {
       //
       dir = path.dirname(dir);
       combineDefaults(MathJax.config.loader, 'source', require('../source.js').source);
+      MathJax.config.loader.source['[sre]'] = MathJax.config.loader.source.sre;
     }
     return dir;
   }
@@ -50,6 +52,11 @@ MathJax.config.loader.paths.mathjax = (function () {
 Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
 require('../core/core.js');
 require('../adaptors/liteDOM/liteDOM.js');
+const REQUIRE = MathJax.config.loader.require;
+MathJax._.mathjax.mathjax.asyncLoad = function (name) {
+  return REQUIRE(name.charAt(0) === '.' ? path.resolve(root, name) : name);
+}
+
 
 /*
  * The initialization function.  Use as:
