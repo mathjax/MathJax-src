@@ -24,7 +24,6 @@
 import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {BBox} from '../BBox.js';
-import {Property} from '../../../core/Tree/Node.js';
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/
@@ -127,12 +126,21 @@ export function CommonMactionMixin<W extends AnyWrapper,
     return class extends Base {
 
         /**
-         * The handler and data for the specified actiontype
+         * The handler for the specified actiontype
          */
         public action: ActionHandler<W>;
+        /**
+         * The data for the specified actiontype
+         */
         public data: ActionData;
 
+        /**
+         * The x-offset for tooltips
+         */
         public dx: number;
+        /**
+         * The y-offset for tooltips
+         */
         public dy: number;
 
         /**
@@ -153,7 +161,7 @@ export function CommonMactionMixin<W extends AnyWrapper,
             super(...args);
             const actions = (this.constructor as CommonMactionClass<W>).actions;
             const action = this.node.attributes.get('actiontype') as string;
-            const [handler, data] = actions.get(action) || [((node, data) => {}) as ActionHandler<W>, {}];
+            const [handler, data] = actions.get(action) || [((_node, _data) => {}) as ActionHandler<W>, {}];
             this.action = handler;
             this.data = data;
             this.getParameters();

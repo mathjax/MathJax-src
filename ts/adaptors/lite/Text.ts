@@ -49,7 +49,7 @@ export class LiteText {
      * @param {string} text  The text for the node
      * @constructor
      */
-    constructor(text: string = "") {
+    constructor(text: string = '') {
         this.value = text;
     }
 }

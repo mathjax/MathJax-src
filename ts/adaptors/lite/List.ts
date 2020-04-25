@@ -56,10 +56,13 @@ export class LiteList<N> {
     public [Symbol.iterator](): Iterator<LiteNode> {
         let i = 0;
         return {
-            next() {
+            /**
+             * @return {IteratorResult<LiteNode>}
+             */
+            next(): IteratorResult<LiteNode> {
                 return (i === this.nodes.length ?
                         {value: null, done: true} :
-                        {value: this.nodes[i++], done: false}) as IteratorResult<LiteNode>;
+                        {value: this.nodes[i++], done: false});
             }
         };
     }

@@ -37,9 +37,21 @@ export const INHERIT = '_inherit_';
  */
 
 export class Attributes {
+    /**
+     * The attributes explicitly set on a node
+     */
     protected attributes: PropertyList;
+    /**
+     * The attributes inherited from parent nodes
+     */
     protected inherited: PropertyList;
+    /**
+     * The default attribuites for the node type
+     */
     protected defaults: PropertyList;
+    /**
+     * Global attributes from the math node itself
+     */
     protected global: PropertyList;
 
     /**
@@ -75,7 +87,7 @@ export class Attributes {
      * @param {string} name  The name of the attribute whose value is to be returned
      * @return {Property}    The value of the named attribute (including inheritance and defaults)
      */
-    public get(name: string) {
+    public get(name: string): Property {
         let value = this.attributes[name];
         if (value === INHERIT) {
             value = this.global[name];
@@ -88,7 +100,7 @@ export class Attributes {
      * @return {Property}    The attribute whose name was given if it is explicit on the
      *                       node (not inherited or defaulted), null otherwise
      */
-    public getExplicit(name: string) {
+    public getExplicit(name: string): Property {
         if (!this.attributes.hasOwnProperty(name)) {
             return undefined;
         }
@@ -99,7 +111,7 @@ export class Attributes {
      * @param {string[]} names  The names of attributes whose values are to be returned
      * @return {PropertyList}   An object containing the attributes and their values
      */
-    public getList(...names: string[]) {
+    public getList(...names: string[]): PropertyList {
         let values: PropertyList = {};
         for (const name of names) {
             values[name] = this.get(name);
@@ -119,7 +131,7 @@ export class Attributes {
      * @param {string} name  The name of an inherited attribute whose value is to be returned
      * @return {Property}    The value of the named attribute if it is inherited, null otherwise
      */
-    public getInherited(name: string) {
+    public getInherited(name: string): Property {
         return this.inherited[name];
     }
 
@@ -127,16 +139,16 @@ export class Attributes {
      * @param {string} name  The name of a default attribute whose value is to be returned
      * @return {Property}    The value of the named attribute if a default exists for it, null otherwise
      */
-    public getDefault(name: string) {
+    public getDefault(name: string): Property {
         return this.defaults[name];
     }
 
     /**
      * @param {string} name  The name of a attribute to check
-     * @return {boolena}     True if attribute is set explicitly or inherited
+     * @return {boolean}     True if attribute is set explicitly or inherited
      *                         from an explicit mstyle or math attribute
      */
-    public isSet(name: string) {
+    public isSet(name: string): boolean {
         return this.attributes.hasOwnProperty(name) || this.inherited.hasOwnProperty(name);
     }
 
@@ -144,63 +156,63 @@ export class Attributes {
      * @param {string} name  The name of an attribute to test for the existance of a default
      * @return {boolean}     True of there is a default for the named attribute, false otherwise
      */
-    public hasDefault(name: string) {
+    public hasDefault(name: string): boolean {
         return (name in this.defaults);
     }
 
     /**
      * @return {string[]}  The names of all the attributes explicitly set on the node
      */
-    public getExplicitNames() {
+    public getExplicitNames(): string[] {
         return Object.keys(this.attributes);
     }
 
     /**
      * @return {string[]}  The names of all the inherited attributes for the node
      */
-    public getInheritedNames() {
+    public getInheritedNames(): string[] {
         return Object.keys(this.inherited);
     }
 
     /**
      * @return {string[]}  The names of all the default attributes for the node
      */
-    public getDefaultNames() {
+    public getDefaultNames(): string[] {
         return Object.keys(this.defaults);
     }
 
     /**
      * @return {string[]}  The names of all the global attributes
      */
-    public getGlobalNames() {
+    public getGlobalNames(): string[] {
         return Object.keys(this.global);
     }
 
     /**
      * @return {PropertyList}  The attribute object
      */
-    public getAllAttributes() {
+    public getAllAttributes(): PropertyList {
         return this.attributes;
     }
 
     /**
      * @return {PropertyList}  The inherited object
      */
-    public getAllInherited() {
+    public getAllInherited(): PropertyList {
         return this.inherited;
     }
 
     /**
      * @return {PropertyList}  The defaults object
      */
-    public getAllDefaults() {
+    public getAllDefaults(): PropertyList {
         return this.defaults;
     }
 
     /**
      * @return {PropertyList}  The global object
      */
-    public getAllGlobals() {
+    public getAllGlobals(): PropertyList {
         return this.global;
     }
 

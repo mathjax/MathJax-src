@@ -21,27 +21,15 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../util/Options.js';
-import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, AnyWrapperClass, Constructor} from '../common/Wrapper.js';
 import {SVG, XLINKNS} from '../svg.js';
 import {SVGWrapperFactory} from './WrapperFactory.js';
 import {SVGFontData, SVGDelimiterData, SVGCharOptions} from './FontData.js';
-import {SVGmo} from './Wrappers/mo.js';
-import {BBox} from './BBox.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
 /*****************************************************************/
-
-/**
- * Needed to access node.style[id] using variable id
- */
-interface CSSStyle extends CSSStyleDeclaration {
-    [id: string]: string | Function | number | CSSRule;
-}
 
 /**
  * Shorthand for makeing a SVGWrapper constructor
@@ -53,7 +41,7 @@ export type SVGConstructor<N, T, D> = Constructor<SVGWrapper<N, T, D>>;
 /**
  *  The type of the SVGWrapper class (used when creating the wrapper factory for this class)
  */
-export interface SVGWrapperClass<N, T, D> extends AnyWrapperClass {
+export interface SVGWrapperClass extends AnyWrapperClass {
 
     kind: string;
 
@@ -71,12 +59,15 @@ export class SVGWrapper<N, T, D> extends
 CommonWrapper<
     SVG<N, T, D>,
     SVGWrapper<N, T, D>,
-    SVGWrapperClass<N, T, D>,
+    SVGWrapperClass,
     SVGCharOptions,
     SVGDelimiterData,
     SVGFontData
 > {
 
+    /**
+     * The kind of wrapper
+     */
     public static kind: string = 'unknown';
 
     /**
@@ -85,9 +76,12 @@ CommonWrapper<
     protected factory: SVGWrapperFactory<N, T, D>;
 
     /**
-     * The parent and children of this node
+     * @override
      */
     public parent: SVGWrapper<N, T, D>;
+    /**
+     * @override
+     */
     public childNodes: SVGWrapper<N, T, D>[];
 
     /**
@@ -133,7 +127,7 @@ CommonWrapper<
      * @param {N} parent  The HTML element in which the node is to be created
      * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
-    protected standardSVGnode(parent: N) {
+    protected standardSVGnode(parent: N): N {
         const svg = this.createSVGnode(parent);
         this.handleStyles();
         this.handleScale();
@@ -146,7 +140,7 @@ CommonWrapper<
      * @param {N} parent  The HTML element in which the node is to be created
      * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
-    protected createSVGnode(parent: N) {
+    protected createSVGnode(parent: N): N {
         const href = this.node.attributes.get('href');
         if (href) {
             parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
@@ -176,7 +170,7 @@ CommonWrapper<
      */
     protected handleScale() {
         if (this.bbox.rscale !== 1) {
-            var scale = 'scale(' + this.fixed(this.bbox.rscale/1000, 3) + ')';
+            const scale = 'scale(' + this.fixed(this.bbox.rscale / 1000, 3) + ')';
             this.adaptor.setAttribute(this.element, 'transform', scale);
         }
     }
@@ -265,12 +259,12 @@ CommonWrapper<
      * @param {string} variant  The variant to use for the character
      * @return {number}         The width of the character
      */
-    public placeChar(n: number, x: number, y: number, parent: N, variant: string = null) {
+    public placeChar(n: number, x: number, y: number, parent: N, variant: string = null): number {
         if (variant === null) {
             variant = this.variant;
         }
         const C = n.toString(16).toUpperCase();
-        const [h, d, w, data] = this.getVariantChar(variant, n);
+        const [ , , w, data] = this.getVariantChar(variant, n);
         if ('p' in data) {
             const path = (data.p ? 'M' + data.p + 'Z' : '');
             this.place(x, y, this.adaptor.append(parent, this.charNode(variant, C, path)));
@@ -296,7 +290,7 @@ CommonWrapper<
      * @param {string} path       The data from the character
      * @return {N}                The <path> or <use> node for the glyph
      */
-    protected charNode(variant: string, C: string, path: string) {
+    protected charNode(variant: string, C: string, path: string): N {
         const cache = this.jax.options.fontCache;
         return (cache !== 'none' ? this.useNode(variant, C, path) : this.pathNode(C, path));
     }
@@ -306,7 +300,7 @@ CommonWrapper<
      * @param {string} path       The data from the character
      * @return {N}                The <path> for the glyph
      */
-    protected pathNode(C: string, path: string) {
+    protected pathNode(C: string, path: string): N {
         return this.svg('path', {'data-c': C, d: path});
     }
 
@@ -316,7 +310,7 @@ CommonWrapper<
      * @param {string} path       The data from the character
      * @return {N}                The <use> node for the glyph
      */
-    protected useNode(variant: string, C: string, path: string) {
+    protected useNode(variant: string, C: string, path: string): N {
         const use = this.svg('use');
         const id = '#' + this.jax.fontCache.cachePath(variant, C, path);
         this.adaptor.setAttribute(use, 'href', id, XLINKNS);
@@ -360,7 +354,7 @@ CommonWrapper<
      * @param {(N|T)[]} content  The child nodes for the created HTML node
      * @return {N}               The generated HTML tree
      */
-    public html(type: string, def: OptionList = {}, content: (N|T)[] = []) {
+    public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
         return this.jax.html(type, def, content);
     }
 
@@ -370,7 +364,7 @@ CommonWrapper<
      * @param {(N|T)[]} content  The child nodes for the created SVG node
      * @return {N}               The generated SVG tree
      */
-    public svg(type: string, def: OptionList = {}, content: (N| T)[] = []) {
+    public svg(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
         return this.jax.svg(type, def, content);
     }
 
@@ -378,22 +372,8 @@ CommonWrapper<
      * @param {string} text  The text from which to create an HTML text node
      * @return {T}  The generated text node with the given text
      */
-    public text(text: string) {
+    public text(text: string): T {
         return this.jax.text(text);
-    }
-
-    /**
-     * @override
-     */
-    protected createMo(text: string): SVGmo<N, T, D> {
-        return super.createMo(text) as any as SVGmo<N, T, D>;
-    }
-
-    /**
-     * @override
-     */
-    public coreMO(): SVGmo<N, T, D> {
-        return super.coreMO() as any as SVGmo<N, T, D>;
     }
 
     /**
@@ -401,7 +381,7 @@ CommonWrapper<
      * @param {number=} n  The number of digits to display
      * @return {string}    The dimension with the given number of digits (minus trailing zeros)
      */
-    public fixed(x: number, n: number = 1) {
+    public fixed(x: number, n: number = 1): string {
         return this.jax.fixed(x * 1000, n);
     }
 

@@ -28,7 +28,6 @@ import {STATE, newState} from '../core/MathItem.js';
 import {EnrichedMathItem, EnrichedMathDocument, EnrichHandler} from './semantic-enrich.js';
 import {MathDocumentConstructor} from '../core/MathDocument.js';
 import {OptionList, expandable} from '../util/Options.js';
-import {BitField} from '../util/BitField.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
 
@@ -68,6 +67,9 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
      */
     explorable(document: HTMLDOCUMENT): void;
 
+    /**
+     * @param {HTMLDocument} document  The document where the Explorer is being added
+     */
     attachExplorers(document: HTMLDOCUMENT): void;
 }
 
@@ -227,6 +229,9 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
 
     return class extends BaseDocument {
 
+        /**
+         * @override
+         */
         public static OPTIONS: OptionList = {
             ...BaseDocument.OPTIONS,
             enrichSpeech: 'shallow',                   // overrides option in EnrichedMathDocument
@@ -289,7 +294,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
          *
          * @return {ExplorerMathDocument}   The MathDocument (so calls can be chained)
          */
-        public explorable() {
+        public explorable(): ExplorerMathDocument {
             if (!this.processed.isSet('explorer')) {
                 for (const math of this.math) {
                     (math as ExplorerMathItem).explorable(this);
@@ -323,7 +328,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
  * @param {MathML} MmlJax     A MathML input jax to be used for the semantic enrichment
  * @returns {Handler}         The handler that was modified (for purposes of chainging extensions)
  */
-export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null) {
+export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null): HANDLER {
     if (!handler.documentClass.prototype.enrich && MmlJax) {
         handler = EnrichHandler(handler, MmlJax);
     }
@@ -344,7 +349,7 @@ export type ExplorerRegions = {
     tooltip1?: ToolTip,
     tooltip2?: ToolTip,
     tooltip3?: ToolTip
-}
+};
 
 
 /**
@@ -367,7 +372,7 @@ function initExplorerRegions(document: ExplorerMathDocument) {
 /**
  * Type of explorer initialization methods.
  * @type {(ExplorerMathDocument, HTMLElement, any[]): Explorer}
-*/
+ */
 type ExplorerInit = (doc: ExplorerMathDocument,
                      node: HTMLElement, ...rest: any[]) => Explorer;
 
@@ -395,25 +400,25 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     },
     keyMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         ke.Magnifier.create(doc, doc.explorerRegions.magnifier, node, ...rest),
-    mouseMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    mouseMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
         me.ContentHoverer.create(doc, doc.explorerRegions.magnifier, node,
                                  (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
                                  (x: HTMLElement) => x),
-    hover: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    hover: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
         me.FlameHoverer.create(doc, null, node),
-    infoType: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    infoType: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip1, node,
                                (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
                                (x: HTMLElement) => x.getAttribute('data-semantic-type')),
-    infoRole: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    infoRole: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip2, node,
                                (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
                                (x: HTMLElement) => x.getAttribute('data-semantic-role')),
-    infoPrefix: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    infoPrefix: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
         me.ValueHoverer.create(doc, doc.explorerRegions.tooltip3, node,
                                (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
                                (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),
-    flame: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
+    flame: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
         FlameColorer.create(doc, null, node),
     treeColoring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
         TreeColorer.create(doc, null, node, ...rest)
@@ -462,7 +467,7 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
  * @param {string} option The option name in the menu.
  * @param {string|boolean} value The new value.
  */
-export function setA11yOption(document: HTMLDOCUMENT, option: string, value: string|boolean) {
+export function setA11yOption(document: HTMLDOCUMENT, option: string, value: string | boolean) {
     switch (option) {
     case 'magnification':
         switch (value) {

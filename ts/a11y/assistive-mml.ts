@@ -119,17 +119,17 @@ export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<Abstrac
 export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
     /**
+     * @param {MmlNode} node   The node to be serializes
+     * @return {string}        The serialization of the node
+     */
+    toMML: (node: MmlNode) => string;
+
+    /**
      * Add assistive MathML to the MathItems in the MathDocument
      *
      * @return {AssisiitveMmlMathDocument}   The MathDocument (so calls can be chained)
      */
     assistiveMml(): AssistiveMmlMathDocument<N, T, D>;
-
-    /**
-     * @param {MmlNode} node   The node to be serializes
-     * @return {string}        The serialization of the node
-     */
-    toMML: (node: MmlNode) => string;
 
 }
 
@@ -151,6 +151,9 @@ export function AssistiveMmlMathDocumentMixin<N, T, D,
 
     return class BaseClass extends BaseDocument {
 
+        /**
+         * @override
+         */
         public static OPTIONS: OptionList = {
             ...BaseDocument.OPTIONS,
             renderActions: expandable({
@@ -219,7 +222,7 @@ export function AssistiveMmlMathDocumentMixin<N, T, D,
          * @param {MmlNode} node   The node to be serializes
          * @return {string}        The serialization of the node
          */
-        public toMML(node: MmlNode) {
+        public toMML(node: MmlNode): string {
             return this.visitor.visitTree(node);
         }
 
@@ -263,7 +266,7 @@ export function AssistiveMmlMathDocumentMixin<N, T, D,
  * @template T  The Text node class
  * @template D  The Document class
  */
-export function AssistiveMmlHandler<N, T, D>(handler: Handler<N, T, D>) {
+export function AssistiveMmlHandler<N, T, D>(handler: Handler<N, T, D>): Handler<N, T, D> {
     handler.documentClass =
         AssistiveMmlMathDocumentMixin<N, T, D, MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
             handler.documentClass

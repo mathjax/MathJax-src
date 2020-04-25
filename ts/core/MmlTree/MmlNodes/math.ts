@@ -30,6 +30,7 @@ import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMath extends AbstractMmlLayoutNode {
+
     /**
      *  These are used as the defaults for any attributes marked INHERIT in other classes
      */
@@ -66,14 +67,15 @@ export class MmlMath extends AbstractMmlLayoutNode {
     };
 
     /**
-     * @return {string}  The math kind
+     * @override
      */
     public get kind() {
         return 'math';
     }
 
     /**
-     * @return {boolean} Linebreaking can occur in math nodes
+     * Linebreaking can occur in math nodes
+     * @override
      */
     public get linebreakContainer() {
         return true;
@@ -98,4 +100,5 @@ export class MmlMath extends AbstractMmlLayoutNode {
                  (this.constructor as typeof MmlMath).defaults['scriptlevel']) as number;
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
+
 }

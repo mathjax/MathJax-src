@@ -58,7 +58,7 @@ export class SelectableInfo extends ContextMenu.Info {
         this.selectAll();
         try {
             document.execCommand('copy');
-        } catch(err) {
+        } catch (err) {
             alert('Can\'t copy to clipboard: ' + err.message);
         }
         document.getSelection().removeAllRanges();
@@ -73,7 +73,7 @@ export class SelectableInfo extends ContextMenu.Info {
         const button = footer.appendChild(document.createElement('input'));
         button.type = 'button';
         button.value = 'Copy to Clipboard';
-        button.addEventListener('click', (event: MouseEvent) => this.copyToClipboard());
+        button.addEventListener('click', (_event: MouseEvent) => this.copyToClipboard());
     }
 
 }

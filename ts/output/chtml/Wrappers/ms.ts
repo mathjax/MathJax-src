@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMs, CommonMsMixin} from '../../common/Wrappers/ms.js';
+import {CommonMsMixin} from '../../common/Wrappers/ms.js';
 import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
 
 /*****************************************************************/
@@ -33,8 +33,13 @@ import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLms<N, T, D> extends CommonMsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLms<N, T, D> extends
+CommonMsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The ms wrapper
+     */
     public static kind = MmlMs.prototype.kind;
 
 }

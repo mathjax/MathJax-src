@@ -67,7 +67,7 @@ export interface RetryError extends Error {
  *                         generates an error (that is not a retry).
  */
 
-export function handleRetriesFor(code: Function) {
+export function handleRetriesFor(code: Function): Promise<any> {
     return new Promise(function run(ok: Function, fail: Function) {
         try {
             ok(code());

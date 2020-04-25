@@ -24,7 +24,6 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMtable} from '../../common/Wrappers/mtable.js';
 import {CommonMtr} from '../../common/Wrappers/mtr.js';
-import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -64,7 +63,7 @@ export function CommonMtdMixin<T extends WrapperConstructor>(Base: T): MtdConstr
         /**
          * @override
          */
-        public getWrapWidth(j: number) {
+        public getWrapWidth(_j: number) {
             const table = this.parent.parent as any as CommonMtable<AnyWrapper, CommonMtr<AnyWrapper>>;
             const row = this.parent as CommonMtr<AnyWrapper>;
             const i = this.node.childPosition() - (row.labeled ? 1 : 0);
@@ -74,7 +73,7 @@ export function CommonMtdMixin<T extends WrapperConstructor>(Base: T): MtdConstr
         /**
          * @override
          */
-        public getChildAlign(i: number) {
+        public getChildAlign(_i: number) {
             return this.node.attributes.get('columnalign') as string;
         }
 

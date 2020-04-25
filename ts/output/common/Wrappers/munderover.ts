@@ -81,7 +81,7 @@ export function CommonMunderMixin<W extends AnyWrapper,
             bbox.empty();
             const basebox = this.baseChild.getBBox();
             const underbox = this.script.getBBox();
-            const [k, v] = this.getUnderKV(basebox, underbox);
+            const v = this.getUnderKV(basebox, underbox)[1];
             const delta = this.getDelta(true);
             const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
             bbox.combine(basebox, bw, 0);
@@ -139,7 +139,7 @@ export function CommonMoverMixin<W extends AnyWrapper,
             this.stretchChildren();
         }
 
-        /*
+        /**
          * @override
          */
         public computeBBox(bbox: BBox) {
@@ -150,7 +150,7 @@ export function CommonMoverMixin<W extends AnyWrapper,
             bbox.empty();
             const basebox = this.baseChild.getBBox();
             const overbox = this.script.getBBox();
-            const [k, u] = this.getOverKU(basebox, overbox);
+            const u = this.getOverKU(basebox, overbox)[1];
             const delta = this.getDelta();
             const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
             bbox.combine(basebox, bw, 0);
@@ -234,7 +234,7 @@ export function CommonMunderoverMixin<W extends AnyWrapper,
             return this.overChild;
         }
 
-        /*
+        /**
          * @override
          * @constructor
          */
@@ -243,7 +243,7 @@ export function CommonMunderoverMixin<W extends AnyWrapper,
             this.stretchChildren();
         }
 
-        /*
+        /**
          * @override
          */
         public computeBBox(bbox: BBox) {
@@ -255,8 +255,8 @@ export function CommonMunderoverMixin<W extends AnyWrapper,
             const overbox = this.overChild.getBBox();
             const basebox = this.baseChild.getBBox();
             const underbox = this.underChild.getBBox();
-            const [ok, u] = this.getOverKU(basebox, overbox);
-            const [uk, v] = this.getUnderKV(basebox, underbox);
+            const u = this.getOverKU(basebox, overbox)[1];
+            const v = this.getUnderKV(basebox, underbox)[1];
             const delta = this.getDelta();
             const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]);
             bbox.combine(basebox, bw, 0);

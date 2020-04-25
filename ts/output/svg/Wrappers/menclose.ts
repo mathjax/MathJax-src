@@ -21,12 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor, StringMap} from '../Wrapper.js';
-import {CommonMenclose, CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
+import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
+import {CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
 import {SVGmsqrt} from './msqrt.js';
 import * as Notation from '../Notation.js';
 import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
-import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../../util/Options.js';
 
 /*****************************************************************/
@@ -37,9 +36,13 @@ import {OptionList} from '../../../util/Options.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmenclose<N, T, D> extends
 CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The menclose wrapper
+     */
     public static kind = MmlMenclose.prototype.kind;
 
     /**
@@ -69,7 +72,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
         }],
 
         ['box', {
-            renderer: (node, child) => {
+            renderer: (node, _child) => {
                 const {w, h, d} = node.getBBox();
                 node.adaptor.append(node.element, node.box(w, h, d));
             },
@@ -79,7 +82,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
         }],
 
         ['roundedbox', {
-            renderer: (node, child) => {
+            renderer: (node, _child) => {
                 const {w, h, d} = node.getBBox();
                 const r = node.thickness + node.padding;
                 node.adaptor.append(node.element, node.box(w, h, d, r));
@@ -88,7 +91,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
         }],
 
         ['circle', {
-            renderer: (node, child) => {
+            renderer: (node, _child) => {
                 const {w, h, d} = node.getBBox();
                 node.adaptor.append(node.element, node.ellipse(w, h, d));
             },
@@ -99,9 +102,9 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
             //
             // Use a bottom border and an upward strike properly angled
             //
-            renderer: (node, child) => {
+            renderer: (node, _child) => {
                 const {w, h, d} = node.getBBox();
-                const [a, W] = node.getArgMod(1.75 * node.padding, h + d);
+                const a = node.getArgMod(1.75 * node.padding, h + d)[0];
                 const t = node.thickness / 2;
                 const HD = h + d;
                 const cos = Math.cos(a);
@@ -139,7 +142,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
             //
             // Use a line along the top followed by a half ellipse at the left
             //
-            renderer: (node, child) => {
+            renderer: (node, _child) => {
                 const {w, h, d} = node.getBBox();
                 const t = node.thickness / 2;
                 const p = node.padding;
@@ -224,7 +227,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
      * @param {boolean} double  True if this is a double-headed arrow
      * @return {N}               The newly created arrow
      */
-    public arrow(W: number, a: number, double: boolean = false) {
+    public arrow(W: number, a: number, double: boolean = false): N {
         const {w, h, d} = this.getBBox();
         const dw = (W - w) / 2;
         const m = (h - d) / 2;
@@ -265,7 +268,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
      * @param {number[]} pq   The coordinates of the endpoints, [x1, y1, x2, y2]
      * @return {N}            The newly created line element
      */
-    public line(pq: [number, number, number, number]) {
+    public line(pq: [number, number, number, number]): N {
         const [x1, y1, x2, y2] = pq;
         return this.svg('line', {
             x1: this.fixed(x1), y1: this.fixed(y1),
@@ -283,7 +286,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
      * @param {number=} r   The corner radius for a rounded rectangle
      * @return {N}          The newly created line element
      */
-    public box(w: number, h: number, d: number, r: number = 0) {
+    public box(w: number, h: number, d: number, r: number = 0): N {
         const t = this.thickness;
         const def: OptionList = {
             x: this.fixed(t / 2), y: this.fixed(t / 2 - d),
@@ -304,7 +307,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
      * @param {number} d  The depth of the ellipse
      * @return {N}        The newly created ellipse node
      */
-    public ellipse(w: number, h: number, d: number) {
+    public ellipse(w: number, h: number, d: number): N {
         const t = this.thickness;
         return this.svg('ellipse', {
             rx: this.fixed((w - t) / 2), ry: this.fixed((h + d - t) / 2),
@@ -320,7 +323,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
      * @param {(string|number)[]} P   The list of commands and coordinates for the path
      * @return {N}                    The newly created path
      */
-    public path(join: string, ...P: (string | number)[]) {
+    public path(join: string, ...P: (string | number)[]): N {
         return this.svg('path', {
             d: P.map(x => (typeof x === 'string' ? x : this.fixed(x))).join(' '),
             style: {'stroke-width': this.fixed(this.thickness)},
@@ -336,7 +339,7 @@ CommonMencloseMixin<SVGWrapper<any, any, any>, SVGmsqrt<any, any, any>, any, SVG
      * @param {(string|number)[]} P   The list of commands and coordinates for the path
      * @return {N}                    The newly created path
      */
-    public fill(...P: (string | number)[]) {
+    public fill(...P: (string | number)[]): N {
         return this.svg('path', {
             d: P.map(x => (typeof x === 'string' ? x : this.fixed(x))).join(' ')
         });

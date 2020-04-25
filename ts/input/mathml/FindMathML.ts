@@ -42,8 +42,14 @@ const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
  */
 export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
 
+    /**
+     * @override
+     */
     public static OPTIONS: OptionList = {};
 
+    /**
+     * The DOMAdaptor for the document being processed
+     */
     public adaptor: DOMAdaptor<N, T, D>;
 
     /**

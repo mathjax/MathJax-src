@@ -30,6 +30,10 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMglyph extends AbstractMmlTokenNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlTokenNode.defaults,
         alt: '',
@@ -38,12 +42,17 @@ export class MmlMglyph extends AbstractMmlTokenNode {
         height: 'auto',
         valign: '0em'
     };
+
+    /**
+     * TeX class is ORD
+     */
     public texClass = TEXCLASS.ORD;
 
     /**
-     * @return {string}  The mglyph kind
+     * @override
      */
     public get kind() {
         return 'mglyph';
     }
+
 }

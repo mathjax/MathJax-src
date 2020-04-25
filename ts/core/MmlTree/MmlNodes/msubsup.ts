@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,6 +30,10 @@ import {AbstractMmlBaseNode, AttributeList, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMsubsup extends AbstractMmlBaseNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlBaseNode.defaults,
         subscriptshift: '',
@@ -37,14 +41,15 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
     };
 
     /**
-     * @return {string}  The msubsup kind
+     * @override
      */
     public get kind() {
         return 'msubsup';
     }
 
     /**
-     * @return {number}  <msubsup> requires three children
+     * <msubsup> requires three children
+     * @override
      */
     public get arity() {
         return 3;
@@ -53,21 +58,21 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
     /**
      * @return {number}  The position of the base element
      */
-    public get base() {
+    public get base(): number {
         return 0;
     }
 
     /**
      * @return {number}  The position of the subscript (overriden in msup below)
      */
-    public get sub() {
+    public get sub(): number {
         return 1;
     }
 
     /**
      * @return {number}  The position of the superscript (overriden in msup below)
      */
-    public get sup() {
+    public get sup(): number {
         return 2;
     }
 
@@ -85,6 +90,7 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
         }
         nodes[2].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 2);
     }
+
 }
 
 /*****************************************************************/
@@ -93,23 +99,29 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
  */
 
 export class MmlMsub extends MmlMsubsup {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...MmlMsubsup.defaults
     };
 
     /**
-     * @return {string}  The msub kind
+     * @override
      */
     public get kind() {
         return 'msub';
     }
 
     /**
-     * @return {number}  <msub> only gets two children
+     * <msub> only gets two children
+     * @override
      */
     public get arity() {
         return 2;
     }
+
 }
 
 /*****************************************************************/
@@ -118,33 +130,40 @@ export class MmlMsub extends MmlMsubsup {
  */
 
 export class MmlMsup extends MmlMsubsup {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...MmlMsubsup.defaults
     };
 
     /**
-     * @return {string}  The msup kind
+     * @override
      */
     public get kind() {
         return 'msup';
     }
 
     /**
-     * @return {number}  <msup> only gets two children
+     * <msup> only gets two children
+     * @override
      */
     get arity() {
         return 2;
     }
 
     /**
-     * @return {number}  child 1 is superscript
+     * child 1 is superscript
+     * @override
      */
     get sup() {
         return 1;
     }
 
     /**
-     * @return {number}  child 2 is null (no subscript)
+     * child 2 is null (no subscript)
+     * @override
      */
     get sub() {
         return 2;

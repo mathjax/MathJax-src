@@ -25,7 +25,7 @@
 
 import {A11yDocument, DummyRegion, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
-import {sreReady} from '../sre.js';
+import '../sre.js';
 
 
 /**
@@ -70,7 +70,7 @@ export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> imple
   /**
    * @override
    */
-  public MouseOver(event: MouseEvent) {
+  public MouseOver(_event: MouseEvent) {
     this.Start();
   }
 
@@ -78,7 +78,7 @@ export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> imple
   /**
    * @override
    */
-  public MouseOut(event: MouseEvent) {
+  public MouseOut(_event: MouseEvent) {
     this.Stop();
   }
 
@@ -214,11 +214,11 @@ export class FlameHoverer extends Hoverer<void> {
    */
   protected constructor(
     public document: A11yDocument,
-    ignore: any,
+    _ignore: any,
     protected node: HTMLElement) {
     super(document, new DummyRegion(document), node,
           x => this.highlighter.isMactionNode(x),
-          x => {});
+          () => {});
   }
 
 }

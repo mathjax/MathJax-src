@@ -184,14 +184,14 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
         /**
          * @return {W}  The wrapper for the subscript
          */
-        public get subChild() {
+        public get subChild(): W {
             return this.childNodes[(this.node as MmlMsubsup).sub];
         }
 
         /**
          * @return {W}  The wrapper for the superscript
          */
-        public get supChild() {
+        public get supChild(): W {
             return this.childNodes[(this.node as MmlMsubsup).sup];
         }
 
@@ -205,7 +205,7 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
             bbox.empty();
             bbox.append(basebox);
             const w = bbox.w;
-            const [u, v, q] = this.getUVQ(basebox, subbox, supbox);
+            const [u, v] = this.getUVQ(basebox, subbox, supbox);
             const x = (this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0);
             bbox.combine(subbox, w, v);
             bbox.combine(supbox, w + x, u);
@@ -222,7 +222,7 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
          * @param {BBox} supbox     The bounding box of the subscript
          * @return {number[]}       The vertical offsets for super and subscripts, and the space between them
          */
-        public getUVQ(basebox: BBox, subbox: BBox, supbox: BBox) {
+        public getUVQ(basebox: BBox, subbox: BBox, supbox: BBox): number[] {
             if (this.UVQ) return this.UVQ;
             const tex = this.font.params;
             const t = 3 * tex.rule_thickness;
@@ -244,7 +244,7 @@ export function CommonMsubsupMixin<W extends AnyWrapper,
             let q = (u - supbox.d * supbox.rscale) - (subbox.h * subbox.rscale - v);
             if (q < t) {
                 v += t - q;
-                const p = (4/5) * tex.x_height - (u - supbox.d * supbox.rscale);
+                const p = (4 / 5) * tex.x_height - (u - supbox.d * supbox.rscale);
                 if (p > 0) {
                     u += p;
                     v -= p;

@@ -47,7 +47,7 @@ new CommandMap('color', {
  * @param {Configuration} config The current configuration.
  * @param {TeX} jax              The TeX jax having that configuration
  */
-const config = function(config: Configuration, jax: TeX<any, any, any>) {
+const config = function(_config: Configuration, jax: TeX<any, any, any>) {
     jax.parseOptions.options.color.model = new ColorModel();
 };
 

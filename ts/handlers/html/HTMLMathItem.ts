@@ -23,7 +23,6 @@
 
 import {AbstractMathItem, Location, STATE} from '../../core/MathItem.js';
 import {InputJax} from '../../core/InputJax.js';
-import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {HTMLDocument} from './HTMLDocument.js';
 
 /*****************************************************************/
@@ -66,7 +65,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
      *
      * @override
      */
-    public updateDocument(html: HTMLDocument<N, T, D>) {
+    public updateDocument(_html: HTMLDocument<N, T, D>) {
         if (this.state() < STATE.INSERTED) {
             if (this.inputJax.processStrings) {
                 let node = this.start.node as T;

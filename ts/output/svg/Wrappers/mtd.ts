@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMtd, CommonMtdMixin} from '../../common/Wrappers/mtd.js';
+import {CommonMtdMixin} from '../../common/Wrappers/mtd.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 
 /*****************************************************************/
@@ -33,8 +33,13 @@ import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmtd<N, T, D> extends CommonMtdMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmtd<N, T, D> extends
+CommonMtdMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The mtd wrapper
+     */
     public static kind = MmlMtd.prototype.kind;
 
     /**
@@ -43,9 +48,9 @@ export class SVGmtd<N, T, D> extends CommonMtdMixin<SVGConstructor<any, any, any
      * @param {number} W    The width of the cell
      * @param {number} H    The height of the cell
      * @param {number} D    The depth of the cell
-     * @return {number}     The x-offset used
+     * @return {number[]}   The x and y offsets used
      */
-    public placeCell(x: number, y: number, W: number, H: number, D: number) {
+    public placeCell(x: number, y: number, W: number, H: number, D: number): [number, number] {
         const bbox = this.getBBox();
         const h = Math.max(bbox.h, .75);
         const d = Math.max(bbox.d, .25);

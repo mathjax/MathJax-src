@@ -82,7 +82,7 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
      * @param {string} space    The number of spaces to use for indentation
      * @returns {string}        The serialized math element
      */
-    public visitMathNode(node: MmlNode, space: string) {
+    public visitMathNode(node: MmlNode, space: string): string {
         if (!this.options.semantics || this.mathItem.inputJax.name !== 'TeX') {
             return super.visitDefault(node, space);
         }

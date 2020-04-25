@@ -25,7 +25,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonScriptbase, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
+import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
 
 /*****************************************************************/
 /**
@@ -36,9 +36,13 @@ import {CommonScriptbase, CommonScriptbaseMixin} from '../../common/Wrappers/scr
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGscriptbase<N, T, D> extends
 CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The scriptbase wrapper
+     */
     public static kind = 'scriptbase';
 
     /**

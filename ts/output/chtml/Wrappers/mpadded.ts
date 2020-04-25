@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
-import {CommonMpadded, CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
+import {CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
 import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -34,10 +34,18 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmpadded<N, T, D> extends CommonMpaddedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmpadded<N, T, D> extends
+CommonMpaddedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mpadded wrapper
+     */
     public static kind = MmlMpadded.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-mpadded': {
             display: 'inline-block'
@@ -55,7 +63,7 @@ export class CHTMLmpadded<N, T, D> extends CommonMpaddedMixin<CHTMLConstructor<a
         let chtml = this.standardCHTMLnode(parent);
         const content: N[] = [];
         const style: StringMap = {};
-        const [H, D, W, dh, dd, dw, x, y, dx] = this.getDimens();
+        const [ , , W, dh, dd, dw, x, y, dx] = this.getDimens();
         //
         // If the width changed, set the width explicitly
         //

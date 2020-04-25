@@ -22,7 +22,6 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -48,7 +47,7 @@ export function CommonMathMixin<T extends WrapperConstructor>(Base: T): MathCons
         /**
          * @override
          */
-        public getWrapWidth(i: number) {
+        public getWrapWidth(_i: number) {
             return (this.parent ? this.getBBox().w : this.metrics.containerWidth / this.jax.pxPerEm);
         }
 

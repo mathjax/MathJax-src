@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLmsqrt} from './msqrt.js';
-import {CommonMroot, CommonMrootMixin, MrootConstructor} from '../../common/Wrappers/mroot.js';
+import {CommonMrootMixin, MrootConstructor} from '../../common/Wrappers/mroot.js';
 import {BBox} from '../BBox.js';
 import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
 
@@ -37,6 +37,9 @@ import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
  */
 export class CHTMLmroot<N, T, D> extends CommonMrootMixin<MrootConstructor>(CHTMLmsqrt) {
 
+    /**
+     * The mroot wrapper
+     */
     public static kind = MmlMroot.prototype.kind;
 
     /**
@@ -45,7 +48,6 @@ export class CHTMLmroot<N, T, D> extends CommonMrootMixin<MrootConstructor>(CHTM
     protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox, H: number) {
         root.toCHTML(ROOT);
         const [x, h, dx] = this.getRootDimens(sbox, H);
-        const bbox = root.getBBox();
         this.adaptor.setStyle(ROOT, 'verticalAlign', this.em(h));
         this.adaptor.setStyle(ROOT, 'width', this.em(x));
         if (dx) {

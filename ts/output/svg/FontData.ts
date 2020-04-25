@@ -45,13 +45,13 @@ export type SVGCharData = CharData<SVGCharOptions>;
  */
 export interface SVGVariantData extends VariantData<SVGCharOptions> {
     cacheID: string;
-};
+}
 
 /**
  * the extra data neede for a Delimiter in SVG output
  */
 export interface SVGDelimiterData extends DelimiterData {
-};
+}
 
 
 /****************************************************************************/
@@ -80,7 +80,7 @@ export type SVGFontDataClass = typeof SVGFontData;
  * @param {StringMap} content   The string to use for remapped characters
  * @return {CharMap}            The augmented font
  */
-export function AddPaths(font: SVGCharMap, paths: CharStringMap, content: CharStringMap) {
+export function AddPaths(font: SVGCharMap, paths: CharStringMap, content: CharStringMap): SVGCharMap {
     for (const c of Object.keys(paths)) {
         const n = parseInt(c);
         SVGFontData.charOptions(font, n).p = paths[n];

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
+import {SVGWrapper} from '../Wrapper.js';
 import {MmlMphantom} from '../../../core/MmlTree/MmlNodes/mphantom.js';
 
 /*****************************************************************/
@@ -34,6 +34,9 @@ import {MmlMphantom} from '../../../core/MmlTree/MmlNodes/mphantom.js';
  */
 export class SVGmphantom<N, T, D> extends SVGWrapper<N, T, D> {
 
+    /**
+     * The mphantom wrapper
+     */
     public static kind = MmlMphantom.prototype.kind;
 
     /**

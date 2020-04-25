@@ -44,7 +44,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
      * @return {any}  The old-style internal format equivalent of the tree
      */
-    public visitTree(node: MmlNode) {
+    public visitTree(node: MmlNode): any {
         let root = MML.mrow();
         this.visitNode(node, root);
         root = root.data[0];

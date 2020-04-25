@@ -47,7 +47,7 @@ function padding(colorPadding: string): PropertyList {
         depth: pad,
         lspace: colorPadding,
     };
-};
+}
 
 
 export const ColorMethods: Record<string, ParseMethod> = {};

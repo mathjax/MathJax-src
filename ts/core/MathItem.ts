@@ -263,20 +263,69 @@ export function protoItem<N, T>(open: string, math: string, close: string, n: nu
  */
 export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
+    /**
+     * The source text for the math (e.g., TeX string)
+     */
     public math: string;
+
+    /**
+     * The input jax associated with this item
+     */
+
     public inputJax: InputJax<N, T, D>;
+
+    /**
+     * True when this math is in display mode
+     */
     public display: boolean;
+
+    /**
+     * Reference to the beginning of the math in the document
+     */
     public start: Location<N, T>;
+    /**
+     * Reference to the end of the math in the document
+     */
     public end: Location<N, T>;
+
+    /**
+     * The compiled internal MathML (result of InputJax)
+     */
     public root: MmlNode = null;
+    /**
+     * The typeset result (result of OutputJax)
+     */
     public typesetRoot: N = null;
-    protected _state: number = STATE.UNPROCESSED;
+
+    /**
+     * The metric information about the surrounding environment
+     */
     public metrics: Metrics = {} as Metrics;
+
+    /**
+     * The bounding box of the typeset math
+     */
     public bbox: BBox = {};
+
+    /**
+     * Data private to the input jax
+     */
     public inputData: OptionList = {};
+
+    /**
+     * Data private to the output jax
+     */
     public outputData: OptionList = {};
 
-    public get isEscaped() {
+    /**
+     * The current state of the item (how far in the render actions it has been processed)
+     */
+    protected _state: number = STATE.UNPROCESSED;
+
+    /**
+     * @return {boolean}   True when this item is an escaped delimiter
+     */
+    public get isEscaped(): boolean {
         return this.display === null;
     }
 
@@ -351,12 +400,12 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     /**
      * @override
      */
-    public updateDocument(document: MathDocument<N, T, D>) {}
+    public updateDocument(_document: MathDocument<N, T, D>) {}
 
     /**
      * @override
      */
-    public removeFromDocument(restore: boolean = false) {}
+    public removeFromDocument(_restore: boolean = false) {}
 
     /**
      * @override
@@ -394,7 +443,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
      * @override
      */
     public reset(restore: boolean = false) {
-        this.state(STATE.UNPROCESSED);
+        this.state(STATE.UNPROCESSED, restore);
     }
 
 }

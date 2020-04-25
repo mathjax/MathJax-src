@@ -93,13 +93,13 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   /**
    * @override
    */
-  public FocusIn(event: FocusEvent) {
+  public FocusIn(_event: FocusEvent) {
   }
 
   /**
    * @override
    */
-  public FocusOut(event: FocusEvent) {
+  public FocusOut(_event: FocusEvent) {
     this.Stop();
   }
 
@@ -159,6 +159,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public speechGenerator: sre.SpeechGenerator;
 
+  /**
+   * The name of the option used to control when this is being shown
+   * @type {string}
+   */
   public showRegion: string = 'subtitles';
 
   private init: boolean = false;
@@ -195,7 +199,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       sreReady().then(() => {
         if (SRE.engineSetup().locale !== options.locale) {
           SRE.setupEngine({locale: options.locale});
-        };
+        }
         sreReady().then(() => {
           this.Speech(this.walker);
           this.Start();
@@ -237,7 +241,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @param {sre.Walker} walker The sre walker.
    */
   public Speech(walker: sre.Walker) {
-    let speech = walker.speech();
+    walker.speech();
     this.node.setAttribute('hasspeech', 'true');
     this.Update();
     if (this.restarted && this.document.options.a11y[this.showRegion]) {
@@ -288,7 +292,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
   /**
    * Retrieves the speech options to sync with document options.
-   * @return{{[key: string]: string}} The options settings for the speech
+   * @return {{[key: string]: string}} The options settings for the speech
    *     generator.
    */
   private getOptions() {

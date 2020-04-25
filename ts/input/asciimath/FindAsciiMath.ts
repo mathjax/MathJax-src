@@ -23,8 +23,8 @@
 
 import {AbstractFindMath} from '../../core/FindMath.js';
 import {OptionList} from '../../util/Options.js';
-import {sortLength, quotePattern} from '../../util/string.js';
-import {MathItem, ProtoItem, protoItem, Location} from '../../core/MathItem.js';
+import {quotePattern} from '../../util/string.js';
+import {ProtoItem, protoItem} from '../../core/MathItem.js';
 
 /**
  * Shorthand types for data about end delimiters and delimiter pairs
@@ -44,6 +44,9 @@ export type Delims = [string, string];
  */
 export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
 
+    /**
+     * @override
+     */
     public static OPTIONS: OptionList = {
         delimiters: [['`', '`']],   // The start/end delimiter pairs for asciimath code
     };
@@ -106,8 +109,8 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
      * @param {EndItem} end            The end-delimiter data corresponding to the start delimiter
      * @return {ProtoItem}             The proto math item for the math, if found
      */
-    protected findEnd(text: string, n: number, start: RegExpExecArray, end: EndItem) {
-        let [close, display, pattern] = end;
+    protected findEnd(text: string, n: number, start: RegExpExecArray, end: EndItem): ProtoItem<N, T> {
+        let [ , display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match = pattern.exec(text);
         return (!match ? null : protoItem<N, T>(start[0], text.substr(i, match.index - i), match[0],

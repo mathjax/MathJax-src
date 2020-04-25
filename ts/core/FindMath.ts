@@ -30,14 +30,22 @@ import {ProtoItem} from './MathItem.js';
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
- * @template D  The Document class
+ * @template _D  The Document class
  */
-export interface FindMath<N, T, D> {
+export interface FindMath<N, T, _D> {
     /**
      * One of two possibilities:  Look through a DOM element,
      *   or look through an array of strings for delimited math.
+     *
+     * @param {N} node   The node to search for math
+     * @return {ProtoItem<N, T>[]}
      */
     findMath(node: N): ProtoItem<N, T>[];
+    /**
+     *
+     * @param {string[]} strings    The strings to search for math
+     * @return {ProtoItem<N, T>[]}
+     */
     findMath(strings: string[]): ProtoItem<N, T>[];
 }
 

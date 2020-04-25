@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMfenced, CommonMfencedMixin} from '../../common/Wrappers/mfenced.js';
+import {CommonMfencedMixin} from '../../common/Wrappers/mfenced.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
 import {CHTMLinferredMrow} from './mrow.js';
 
@@ -36,6 +36,9 @@ import {CHTMLinferredMrow} from './mrow.js';
  */
 export class CHTMLmfenced<N, T, D> extends CommonMfencedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mfenced wrapper
+     */
     public static kind = MmlMfenced.prototype.kind;
 
     /**

@@ -23,11 +23,12 @@
 
 
 /*****************************************************************/
+/* tslint:disable-next-line:jsdoc-require */
+const OBJECT = {}.constructor;
+
 /**
  *  Check if an object is an object literal (as opposed to an instance of a class)
  */
-
-const OBJECT = {}.constructor;
 function isObject(obj: any) {
     return typeof obj === 'object' && obj !== null &&
         (obj.constructor === OBJECT || obj.constructor === Expandable);
@@ -70,7 +71,7 @@ export const REMOVE = '[-]';
 /**
  * A Class to use for options that should not produce warnings if an undefined key is used
  */
-export class Expandable {};
+export class Expandable {}
 
 /**
  * Produces an instance of Expandable with the given values (to be used in defining options
@@ -112,7 +113,7 @@ export function makeArray(x: any): any[] {
  * @param {Optionlist} def        The object whose keys are to be returned
  * @return {(string | symbol)[]}  The list of keys for the object
  */
-export function keys(def: OptionList) {
+export function keys(def: OptionList): (string | symbol)[] {
     if (!def) {
         return [];
     }
@@ -153,7 +154,7 @@ export function copy(def: OptionList): OptionList {
  * @param {boolean} warn    True if a warning should be issued for a src option that isn't already in dst
  * @return {OptionList}     The modified destination option list (dst)
  */
-export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
+export function insert(dst: OptionList, src: OptionList, warn: boolean = true): OptionList {
     for (let key of keys(src) as string[]) {
         //
         // Check if the key is valid (i.e., is in the defaults or in an expandable block)
@@ -245,7 +246,7 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true) {
  * @param {OptionList[]} defs   The option lists to merge into the first one
  * @return {OptionList}         The modified options list
  */
-export function defaultOptions(options: OptionList, ...defs: OptionList[]) {
+export function defaultOptions(options: OptionList, ...defs: OptionList[]): OptionList {
     defs.forEach(def => insert(options, def, false));
     return options;
 }
@@ -259,7 +260,7 @@ export function defaultOptions(options: OptionList, ...defs: OptionList[]) {
  * @param {OptionList[]} defs   The option lists to merge into the first one
  * @return {OptionList}         The modified options list
  */
-export function userOptions(options: OptionList, ...defs: OptionList[]) {
+export function userOptions(options: OptionList, ...defs: OptionList[]): OptionList {
     defs.forEach(def => insert(options, def, true));
     return options;
 }
@@ -272,7 +273,7 @@ export function userOptions(options: OptionList, ...defs: OptionList[]) {
  * @param {string[]} keys       The names of the options to extract
  * @return {OptionList}         The option list consisting of only the ones whose keys were given
  */
-export function selectOptions(options: OptionList, ...keys: string[]) {
+export function selectOptions(options: OptionList, ...keys: string[]): OptionList {
     let subset: OptionList = {};
     for (const key of keys) {
         if (options.hasOwnProperty(key)) {
@@ -291,7 +292,7 @@ export function selectOptions(options: OptionList, ...keys: string[]) {
  * @return {OptionList}         The option list consisting of the option values from the first
  *                               list whose keys are those from the second list.
  */
-export function selectOptionsFromKeys(options: OptionList, object: OptionList) {
+export function selectOptionsFromKeys(options: OptionList, object: OptionList): OptionList {
     return selectOptions(options, ...Object.keys(object));
 }
 
@@ -310,7 +311,7 @@ export function selectOptionsFromKeys(options: OptionList, object: OptionList) {
  *                                 consists of the values not appearing in any of the others
  *                                 (i.e., whose keys were not in any of the others).
  */
-export function separateOptions(options: OptionList, ...objects: OptionList[]) {
+export function separateOptions(options: OptionList, ...objects: OptionList[]): OptionList[] {
     let results: OptionList[] = [];
     for (const object of objects) {
         let exists: OptionList = {}, missing: OptionList = {};

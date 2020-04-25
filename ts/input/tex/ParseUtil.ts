@@ -23,7 +23,6 @@
  */
 
 import {TEXCLASS, MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {EnvList} from './StackItem.js';
 import {ArrayItem} from './base/BaseItems.js';
 import ParseOptions from './ParseOptions.js';
@@ -85,7 +84,7 @@ namespace ParseUtil {
     }
     let em = Em(UNIT_CASES[unit](parseFloat(value || '1')));
     return [em.slice(0, -2), 'em', length];
-  };
+  }
 
 
   /**
@@ -94,7 +93,7 @@ namespace ParseUtil {
    * @return {number} The numerical value.
    */
   export function dimen2em(dim: string): number {
-    let [value, unit, _] = matchDimen(dim);
+    let [value, unit] = matchDimen(dim);
     let m = parseFloat(value || '1');
     let func = UNIT_CASES[unit];
     return func ? func(m) : 0;
@@ -106,7 +105,7 @@ namespace ParseUtil {
    * @param {number} m The number.
    * @return {string} The em dimension string.
    */
-  export function Em(m: number) {
+    export function Em(m: number): string {
     if (Math.abs(m) < .0006) {
       return '0em';
     }
@@ -240,7 +239,7 @@ namespace ParseUtil {
    * @return {MmlNode[]} The nodes corresponding to the internal math expression.
    */
   export function internalMath(parser: TexParser, text: string,
-                               level?: number|string): MmlNode[] {
+                               level?: number | string): MmlNode[] {
     let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
     if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
@@ -463,7 +462,7 @@ namespace ParseUtil {
       throw new TexError('ErroneousNestingEq', 'Erroneous nesting of equation structures');
     }
     parser.stack.global.eqnenv = true;
-  };
+  }
 
 
   /**
@@ -473,10 +472,10 @@ namespace ParseUtil {
    * @param {string} value The attribute value to filter.
    * @return {string} The filtered value.
    */
-  export function MmlFilterAttribute(parser: TexParser, name: string, value: string): string {
+  export function MmlFilterAttribute(_parser: TexParser, _name: string, value: string): string {
     // TODO: Implement in security package.
     return value;
-  };
+  }
 
 
   /**
@@ -487,7 +486,7 @@ namespace ParseUtil {
   export function getFontDef(parser: TexParser): EnvList {
     const font = parser.stack.env['font'];
     return (font ? {mathvariant: font} : {});
-  };
+  }
 
 
   /**
@@ -618,7 +617,7 @@ namespace ParseUtil {
                          'Extra open brace or missing close brace');
     }
     return [stopCount ? 'true' : removeBraces(value, start), '', text.slice(index)];
-  };
+  }
 
 }
 

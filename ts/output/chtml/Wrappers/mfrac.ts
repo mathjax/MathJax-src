@@ -22,12 +22,11 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMfrac, CommonMfracMixin} from '../../common/Wrappers/mfrac.js';
+import {CommonMfracMixin} from '../../common/Wrappers/mfrac.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {CHTMLmo} from './mo.js';
 import {StyleList} from '../../common/CssStyles.js';
 import {OptionList} from '../../../util/Options.js';
-import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -39,8 +38,14 @@ import {DIRECTION} from '../FontData.js';
  */
 export class CHTMLmfrac<N, T, D> extends CommonMfracMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mfrac wrapper
+     */
     public static kind = MmlMfrac.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-frac': {
             display: 'inline-block',
@@ -126,6 +131,9 @@ export class CHTMLmfrac<N, T, D> extends CommonMfracMixin<CHTMLConstructor<any, 
 
     };
 
+    /**
+     * An mop element to use for bevelled fractions
+     */
     public bevel: CHTMLmo<N, T, D>;
 
     /************************************************/

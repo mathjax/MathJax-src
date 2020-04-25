@@ -23,8 +23,8 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
+import {CommonMo} from './mo.js';
 import {BBox} from '../BBox.js';
-import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -51,6 +51,11 @@ export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
     readonly tableCells: C[];
 
     /**
+     * @override;
+     */
+    childNodes: C[];
+
+    /**
      * @param {nunber} i   The index of the child to get (skipping labels)
      * @return {C}         The ith child node wrapper
      */
@@ -71,10 +76,6 @@ export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
      */
     stretchChildren(HD?: number[]): void;
 
-    /**
-     * @override;
-     */
-    childNodes: C[];
 }
 
 /**
@@ -105,36 +106,36 @@ export function CommonMtrMixin<C extends AnyWrapper,
         /**
          * @return {number}   The number of mtd's in the mtr
          */
-        get numCells() {
+        get numCells(): number {
             return this.childNodes.length;
         }
 
         /**
          * @return {boolean}   True if this is a labeled row
          */
-        get labeled() {
+        get labeled(): boolean {
             return false;
         }
 
         /**
          * @return {C[]}  The child nodes that are part of the table (no label node)
          */
-        get tableCells() {
-            return this.childNodes as C[];
+        get tableCells(): C[] {
+            return this.childNodes;
         }
 
         /**
          * @param {number} i   The index of the child to get (skipping labels)
          * @return {C}         The ith child node wrapper
          */
-        public getChild(i: number) {
-            return this.childNodes[i] as C;
+        public getChild(i: number): C {
+            return this.childNodes[i];
         }
 
         /**
          * @return {BBox[]}  An array of the bounding boxes for the mtd's in the row
          */
-        public getChildBBoxes() {
+        public getChildBBoxes(): BBox[] {
             return this.childNodes.map(cell => cell.getBBox());
         }
 
@@ -188,7 +189,7 @@ export function CommonMtrMixin<C extends AnyWrapper,
                 //  Stretch the stretchable children
                 //
                 for (const child of stretchy) {
-                    child.coreMO().getStretchedVariant(HD);
+                    (child.coreMO() as CommonMo).getStretchedVariant(HD);
                 }
             }
         }

@@ -58,9 +58,9 @@ export class CommonWrapperFactory<
     public jax: J = null;
 
     /**
-     * @return {object}  The list of node-creation functions
+     * @return {Object}  The list of node-creation functions
      */
-    get Wrappers() {
+    get Wrappers(): Object {
         return this.node;
     }
 

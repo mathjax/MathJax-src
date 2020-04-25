@@ -55,13 +55,13 @@ export class MmlVisitor extends AbstractVisitor {
      * @param {any[]} args  Any arguments needed by the visitor
      * @return {any}  Any return value needed for the visitor
      */
-    public visitTextNode(node: TextNode, ...args: any[]): any {}
+    public visitTextNode(_node: TextNode, ..._args: any[]): any {}
 
     /**
      * @param {XMLNode} node  The XMLNode to visit
      * @param {any[]} args  Any arguments needed by the visitor
      * @return {any}  Any return value needed for the visitor
      */
-    public visitXMLNode(node: XMLNode, ...args: any[]): any {}
+    public visitXMLNode(_node: XMLNode, ..._args: any[]): any {}
 
 }

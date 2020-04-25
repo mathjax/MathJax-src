@@ -52,7 +52,7 @@ export class Symbol {
     return this._attributes;
   }
 
-};
+}
 
 
 export class Macro {
@@ -79,4 +79,4 @@ export class Macro {
     return this._args;
   }
 
-};
+}

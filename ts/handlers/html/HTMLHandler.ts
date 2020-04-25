@@ -36,6 +36,9 @@ import {OptionList} from '../../util/Options.js';
  */
 export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
 
+    /**
+     * The DOMAdaptor for the document being handled
+     */
     public adaptor: MinHTMLAdaptor<N, T, D>;  // declare a more specific adaptor type
 
     /**

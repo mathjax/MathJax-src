@@ -25,8 +25,6 @@ import {Constructor} from '../../common/Wrapper.js';
 import {CommonMsqrt, MsqrtConstructor} from './msqrt.js';
 import {CommonMo} from './mo.js';
 import {BBox} from '../BBox.js';
-import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -68,7 +66,7 @@ export function CommonMrootMixin<T extends MsqrtConstructor>(Base: T): MrootCons
          */
         public combineRootBBox(BBOX: BBox, sbox: BBox, H: number) {
             const bbox = this.childNodes[this.root].getBBox();
-            const [x, h] = this.getRootDimens(sbox, H);
+            const h = this.getRootDimens(sbox, H)[1];
             BBOX.combine(bbox, 0, h);
         }
 
@@ -94,7 +92,7 @@ export function CommonMrootMixin<T extends MsqrtConstructor>(Base: T): MrootCons
          * @param {number} H       The height of the root as a whole
          * @return {number}        The height of the root within the surd
          */
-        public rootHeight(rbox: BBox, sbox: BBox, size: number, H: number) {
+        public rootHeight(rbox: BBox, sbox: BBox, size: number, H: number): number {
             const h = sbox.h + sbox.d;
             const b = (size < 0 ? 1.9 : .55 * h) - (h - H);
             return b + Math.max(0, rbox.d * rbox.rscale);

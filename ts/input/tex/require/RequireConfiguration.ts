@@ -33,7 +33,7 @@ import {MathJax} from '../../../components/global.js';
 import {Package} from '../../../components/package.js';
 import {Loader, CONFIG as LOADERCONFIG} from '../../../components/loader.js';
 import {mathjax} from '../../../mathjax.js';
-import {userOptions, OptionList, expandable} from '../../../util/Options.js';
+import {expandable} from '../../../util/Options.js';
 
 /**
  * The MathJax configuration block (for looking up user-defined package options)
@@ -125,7 +125,7 @@ export function RequireLoad(parser: TexParser, name: string) {
 /**
  * Save the jax so that it can be used when \require{} is processed.
  */
-function config(config: Configuration, jax: TeX<any, any, any>) {
+function config(_config: Configuration, jax: TeX<any, any, any>) {
     const options = jax.parseOptions.options.require;
     options.jax = jax;                             // \require needs access to this
     options.required = [...jax.options.packages];  // stores the names of the packages that have been added

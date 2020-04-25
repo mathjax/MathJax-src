@@ -25,10 +25,9 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonScriptbase, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
-import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
 import {BBox} from '../BBox.js';
-import {StyleData, StyleList} from '../../common/CssStyles.js';
+import {StyleData} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -39,9 +38,13 @@ import {StyleData, StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLscriptbase<N, T, D> extends
 CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The scriptbase wrapper
+     */
     public static kind = 'scriptbase';
 
     /**
@@ -94,7 +97,6 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
     protected adjustUnderDepth(under: N, underbox: BBox) {
         if (underbox.d >= 0) return;
         const adaptor = this.adaptor;
-        const child = adaptor.firstChild(adaptor.firstChild(under) as N) as N;
         const v = this.em(underbox.d);
         const box = this.html('mjx-box', {style: {'margin-bottom': v, 'vertical-align': v}});
         for (const child of adaptor.childNodes(adaptor.firstChild(under) as N) as N[]) {

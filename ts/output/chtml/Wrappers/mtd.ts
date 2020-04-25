@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMtd, CommonMtdMixin} from '../../common/Wrappers/mtd.js';
+import {CommonMtdMixin} from '../../common/Wrappers/mtd.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -34,10 +34,18 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmtd<N, T, D> extends CommonMtdMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmtd<N, T, D> extends
+CommonMtdMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mtd wrapper
+     */
     public static kind = MmlMtd.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-mtd': {
             display: 'table-cell',

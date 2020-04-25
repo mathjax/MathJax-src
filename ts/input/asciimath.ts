@@ -39,7 +39,14 @@ import {FindAsciiMath} from './asciimath/FindAsciiMath.js';
  */
 export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
 
+    /**
+     * The name of the input jax
+     */
     public static NAME: string = 'AsciiMath';
+
+    /**
+     * @override
+     */
     public static OPTIONS: OptionList = {
         ...AbstractInputJax.OPTIONS,
         FindAsciiMath: null
@@ -64,7 +71,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
      *
      * @override
      */
-    public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
+    public compile(math: MathItem<N, T, D>, _document: MathDocument<N, T, D>) {
         return LegacyAsciiMath.Compile(math.math, math.display);
     }
 

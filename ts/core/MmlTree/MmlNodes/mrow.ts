@@ -30,6 +30,10 @@ import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMrow extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults
     };
@@ -40,7 +44,7 @@ export class MmlMrow extends AbstractMmlNode {
     protected _core: number = null;
 
     /**
-     * @return {string}  The mrow kind
+     * @override
      */
     public get kind() {
         return 'mrow';
@@ -109,7 +113,7 @@ export class MmlMrow extends AbstractMmlNode {
     /**
      * @return {number}  The number of non-spacelike child nodes
      */
-    public nonSpaceLength() {
+    public nonSpaceLength(): number {
         let n = 0;
         for (const child of this.childNodes) {
             if (child && !child.isSpacelike) {
@@ -120,9 +124,9 @@ export class MmlMrow extends AbstractMmlNode {
     }
 
     /**
-     * @return {MmlNode}  The first non-space-like child node
+     * @return {MmlNode|null}  The first non-space-like child node
      */
-    public firstNonSpace() {
+    public firstNonSpace(): MmlNode | null {
         for (const child of this.childNodes) {
             if (child && !child.isSpacelike) {
                 return child;
@@ -132,9 +136,9 @@ export class MmlMrow extends AbstractMmlNode {
     }
 
     /**
-     * @return {MmlNode}  The last non-space-like child node
+     * @return {MmlNode|null}  The last non-space-like child node
      */
-    public lastNonSpace() {
+    public lastNonSpace(): MmlNode | null {
         let i = this.childNodes.length;
         while (--i >= 0) {
             let child = this.childNodes[i];
@@ -179,6 +183,7 @@ export class MmlMrow extends AbstractMmlNode {
         }
         return prev;
     }
+
 }
 
 
@@ -188,19 +193,23 @@ export class MmlMrow extends AbstractMmlNode {
  */
 
 export class MmlInferredMrow extends MmlMrow {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = MmlMrow.defaults;
 
     /**
      * @return {string}  The inferred-mrow kind
      */
-    public get kind() {
+    public get kind(): string {
         return 'inferredMrow';
     }
 
     /**
      * @return {boolean}  This is inferred
      */
-    public get isInferred() {
+    public get isInferred(): boolean {
         return true;
     }
 
@@ -217,4 +226,5 @@ export class MmlInferredMrow extends MmlMrow {
     public toString() {
         return '[' + this.childNodes.join(',') + ']';
     }
+
 }

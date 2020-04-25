@@ -42,7 +42,14 @@ import {MathMLCompile} from './mathml/MathMLCompile.js';
  */
 export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
 
+    /**
+     * The name of this input jax
+     */
     public static NAME: string = 'MathML';
+
+    /**
+     * @override
+     */
     public static OPTIONS: OptionList = defaultOptions({
         parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
         forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
@@ -148,10 +155,10 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
     /**
      * Check a parsed MathML string for errors.
      *
-     * @param {Document} doc  The document returns from the DOMParser
-     * @return {Document}     The document
+     * @param {D} doc  The document returns from the DOMParser
+     * @return {D}     The document
      */
-    protected checkForErrors(doc: D) {
+    protected checkForErrors(doc: D): D {
         let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
         if (err) {
             if (this.adaptor.textContent(err) === '') {

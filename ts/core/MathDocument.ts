@@ -31,7 +31,7 @@ import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {BitField, BitFieldClass} from '../util/BitField.js';
 
-import {PrioritizedList, PrioritizedListItem} from '../util/PrioritizedList.js';
+import {PrioritizedList} from '../util/PrioritizedList.js';
 
 /*****************************************************************/
 
@@ -112,7 +112,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
      * @param {RenderActions}   The list of actions to take during render(), rerender(), and convert() calls
      * @returns {RenderList}    The newly created prioritied list
      */
-    public static create<N, T, D>(actions: RenderActions<N, T, D>) {
+    public static create<N, T, D>(actions: RenderActions<N, T, D>): RenderList<N, T, D> {
         const list = new this<N, T, D>();
         for (const id of Object.keys(actions)) {
             const [action, priority] = this.action<N, T, D>(id, actions[id]);
@@ -127,11 +127,11 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
      * Parses a RenderAction to produce the correspinding RenderData item
      *  (e.g., turn method names into actual functions that call the method)
      *
-     * @param {string} id             The id of the action
-     * @param {RenderAction} action   The RenderAction defining the action
-     * @returns {RenderData}          The corresponding RenderData definition for the action
+     * @param {string} id               The id of the action
+     * @param {RenderAction} action     The RenderAction defining the action
+     * @returns {[RenderData,number]}   The corresponding RenderData definition for the action and its priority
      */
-    public static action<N, T, D>(id: string, action: RenderAction<N, T, D>) {
+    public static action<N, T, D>(id: string, action: RenderAction<N, T, D>): [RenderData<N, T, D>, number] {
         let renderDoc, renderMath;
         let convert = true;
         let priority = action[0];
@@ -151,7 +151,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
             action.length === 4 && (convert = action[3] as boolean);
             [renderDoc, renderMath] = action.slice(1) as [RenderDoc<N, T, D>, RenderMath<N, T, D>];
         }
-        return [{id, renderDoc, renderMath, convert}, priority] as [RenderData<N, T, D>, number];
+        return [{id, renderDoc, renderMath, convert} as RenderData<N, T, D>, priority];
     }
 
     /**
@@ -163,8 +163,8 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
      */
     protected static methodActions(method1: string, method2: string = method1) {
         return [
-            (document: any) => {method1 && document[method1](); return false},
-            (math: any, document: any) => {method2 && math[method2](document); return false}
+            (document: any) => {method1 && document[method1](); return false; },
+            (math: any, document: any) => {method2 && math[method2](document); return false; }
         ];
     }
 
@@ -204,7 +204,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
      * @param {MathDocument} document   The MathDocument to pass to the MathItem methods
      * @param {number=} end             The state at which to end rendering (default is LAST)
      */
-    public renderConvert(math: MathItem<N, T, D>, document: MathDocument<N, T, D>, end = STATE.LAST) {
+    public renderConvert(math: MathItem<N, T, D>, document: MathDocument<N, T, D>, end: number = STATE.LAST) {
         for (const item of this.items) {
             if (item.priority > end) return;
             if (item.item.convert) {
@@ -219,7 +219,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
      * @param {string} id            The id to search for
      * @returns {RenderData|null}   The data for the given id, if found, or null
      */
-    public findID(id: string) {
+    public findID(id: string): RenderData<N, T, D> | null {
         for (const item of this.items) {
             if (item.item.id === id) {
                 return item.item;
@@ -442,7 +442,7 @@ class DefaultInputJax<N, T, D> extends AbstractInputJax<N, T, D> {
     /**
      * @override
      */
-    public compile(math: MathItem<N, T, D>) {
+    public compile(_math: MathItem<N, T, D>) {
         return null as MmlNode;
     }
 }
@@ -458,10 +458,13 @@ class DefaultOutputJax<N, T, D> extends AbstractOutputJax<N, T, D> {
     /**
      * @override
      */
-    public typeset(math: MathItem<N, T, D>, document: MathDocument<N, T, D> = null) {
+    public typeset(_math: MathItem<N, T, D>, _document: MathDocument<N, T, D> = null) {
         return null as N;
     }
-    public escaped(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>) {
+    /**
+     * @override
+     */
+    public escaped(_math: MathItem<N, T, D>, _document?: MathDocument<N, T, D>) {
         return null as N;
     }
 }
@@ -494,8 +497,14 @@ class DefaultMathItem<N, T, D> extends AbstractMathItem<N, T, D> {}
  */
 export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T, D> {
 
+    /**
+     * The type of MathDocument
+     */
     public static KIND: string = 'MathDocument';
 
+    /**
+     * The default options for the document
+     */
     public static OPTIONS: OptionList = {
         OutputJax: null,           // instance of an OutputJax for the document
         InputJax: null,            // instance of an InputJax or an array of them
@@ -522,14 +531,48 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
      */
     public static ProcessBits = BitFieldClass('findMath', 'compile', 'getMetrics', 'typeset', 'updateDocument');
 
+    /**
+     * The document managed by this MathDocument
+     */
     public document: D;
+    /**
+     * The actual options for this document (with user-supplied ones merged in)
+     */
     public options: OptionList;
+
+    /**
+     * The list of MathItems for this document
+     */
     public math: MathList<N, T, D>;
+
+    /**
+     * The list of render actions
+     */
     public renderActions: RenderList<N, T, D>;
+
+    /**
+     * The bit-field used to tell what steps have been taken on the document (for retries)
+     */
     public processed: BitField;
+
+    /**
+     * The list of input jax for the document
+     */
     public inputJax: InputJax<N, T, D>[];
+
+    /**
+     * The output jax for the document
+     */
     public outputJax: OutputJax<N, T, D>;
+
+    /**
+     * The DOM adaptor for the document
+     */
     public adaptor: DOMAdaptor<N, T, D>;
+
+    /**
+     * The MathML node factory for the internal MathML representation
+     */
     public mmlFactory: MmlFactory;
 
 
@@ -573,7 +616,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     /**
      * @return {string}  The kind of document
      */
-    public get kind() {
+    public get kind(): string {
         return (this.constructor as typeof AbstractMathDocument).KIND;
     }
 
@@ -634,7 +677,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     /**
      * @override
      */
-    public findMath(options: OptionList = null) {
+    public findMath(_options: OptionList = null) {
         this.processed.set('findMath');
         return this;
     }
@@ -734,6 +777,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
         math.typesetRoot = this.adaptor.node('span',
                                              {'data-mjx-error': err.message},
                                              [this.adaptor.text('Math output error')]);
+        math.isEscaped = true;
     }
 
     /**
@@ -763,7 +807,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     /**
      * @override
      */
-    public removeFromDocument(restore: boolean = false) {
+    public removeFromDocument(_restore: boolean = false) {
         return this;
     }
 

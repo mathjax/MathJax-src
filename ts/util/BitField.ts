@@ -23,6 +23,9 @@
 
 export class BitField {
 
+    /**
+     * The largest bit available
+     */
     protected static MAXBIT = 1 << 31;
 
     /**
@@ -46,7 +49,7 @@ export class BitField {
     public static allocate(...names: string[]) {
         for (const name of names) {
             if (this.has(name)) {
-                throw new Error('Bit already allocated for '+name);
+                throw new Error('Bit already allocated for ' + name);
             }
             if (this.next === BitField.MAXBIT) {
                 throw new Error('Maximum number of bits already allocated');
@@ -60,7 +63,7 @@ export class BitField {
      * @param {string} name   The name of the bit to check for being defined
      * @return {boolean}      True if the named bit is already allocated
      */
-    public static has(name: string) {
+    public static has(name: string): boolean {
         return this.names.has(name);
     }
 
@@ -82,7 +85,7 @@ export class BitField {
      * @param {string} name   The name of the bit to check if set
      * @return {boolean}      True if the named bit is set
      */
-    public isSet(name: string) {
+    public isSet(name: string): boolean {
         return !!(this.bits & this.getBit(name));
     }
 
@@ -97,7 +100,7 @@ export class BitField {
      * @param {string} name   The name whose bit position is needed (error if not defined)
      * @return {number}       The position of the named bit
      */
-    protected getBit(name: string) {
+    protected getBit(name: string): number {
         const bit = (this.constructor as typeof BitField).names.get(name);
         if (!bit) {
             throw new Error('Unknown bit-field name: ' + name);

@@ -22,8 +22,8 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
-import {CommonMrow, CommonMrowMixin} from '../../common/Wrappers/mrow.js';
-import {CommonInferredMrow, CommonInferredMrowMixin} from '../../common/Wrappers/mrow.js';
+import {CommonMrowMixin} from '../../common/Wrappers/mrow.js';
+import {CommonInferredMrowMixin} from '../../common/Wrappers/mrow.js';
 import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
 
 /*****************************************************************/
@@ -34,8 +34,13 @@ import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmrow<N, T, D> extends CommonMrowMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmrow<N, T, D> extends
+CommonMrowMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mrow wrapper
+     */
     public static kind = MmlMrow.prototype.kind;
 
     /**
@@ -72,8 +77,13 @@ export class CHTMLmrow<N, T, D> extends CommonMrowMixin<CHTMLConstructor<any, an
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLinferredMrow<N, T, D> extends CommonInferredMrowMixin<Constructor<CHTMLmrow<any, any, any>>>(CHTMLmrow) {
+// @ts-ignore
+export class CHTMLinferredMrow<N, T, D> extends
+CommonInferredMrowMixin<Constructor<CHTMLmrow<any, any, any>>>(CHTMLmrow) {
 
+    /**
+     * The inferred-mrow wrapper
+     */
     public static kind = MmlInferredMrow.prototype.kind;
 
 }

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, NodeClass, PropertyList} from './Node.js';
+import {Node, PropertyList} from './Node.js';
 import {Factory, FactoryNodeClass, AbstractFactory} from './Factory.js';
 
 /*****************************************************************/

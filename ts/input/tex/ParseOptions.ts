@@ -24,7 +24,7 @@
 
 import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
-import {HandlerType, SubHandlers} from './MapHandler.js';
+import {SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';

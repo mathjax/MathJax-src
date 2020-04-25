@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {FactoryNodeClass} from '../../core/Tree/Factory.js';
 import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
@@ -381,7 +381,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   /**
    * @return {string} The type of the stack item.
    */
-  public get kind() {
+    public get kind(): string {
     return 'base';
   }
 
@@ -389,7 +389,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * Get the private environment
    * @return {EnvList}
    */
-  public get env() {
+  public get env(): EnvList {
     return this._env;
   }
 
@@ -428,7 +428,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @return {boolean} True if item is an opening entity, i.e., it expects a
    *     closing counterpart on the stack later.
    */
-  get isOpen() {
+  get isOpen(): boolean {
     return false;
   }
 
@@ -436,7 +436,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @return {boolean} True if item is an closing entity, i.e., it needs an
    *     opening counterpart already on the stack.
    */
-  get isClose() {
+  get isClose(): boolean {
     return false;
   }
 
@@ -445,7 +445,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @return {boolean} True if item is final, i.e., it contains one or multiple
    *      finished parsed nodes.
    */
-  get isFinal() {
+  get isFinal(): boolean {
     return false;
   }
 

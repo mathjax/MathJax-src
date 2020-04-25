@@ -60,7 +60,7 @@ import {MmlMglyph}      from './MmlNodes/mglyph.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from './MmlNodes/semantics.js';
 
 import {TeXAtom} from './MmlNodes/TeXAtom.js';
-import {mathchoice} from './MmlNodes/mathchoice.js';
+import {MathChoice} from './MmlNodes/mathchoice.js';
 
 /************************************************************************/
 /**
@@ -118,7 +118,7 @@ export let MML: {[kind: string]: MmlNodeClass} = {
     [MmlAnnotationXML.prototype.kind]: MmlAnnotationXML,
 
     [TeXAtom.prototype.kind]: TeXAtom,
-    [mathchoice.prototype.kind]: mathchoice,
+    [MathChoice.prototype.kind]: MathChoice,
 
     [TextNode.prototype.kind]: TextNode,
     [XMLNode.prototype.kind]: XMLNode

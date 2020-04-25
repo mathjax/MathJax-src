@@ -76,6 +76,10 @@ export const indentAttributes = [
     'indentshift', 'indentshiftfirst'
 ];
 
+/**
+ * The nodes that can be in the internam MathML tree
+ */
+export type MMLNODE = MmlNode | TextNode | XMLNode;
 
 /*****************************************************************/
 /**
@@ -261,22 +265,40 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         fixMtables: true
     };
 
-    /**
+    /*
      * These default to being unset (the node doesn't participate in spacing calculations).
      * The correct values are produced when the setTeXclass() method is called on the tree.
      */
+
+    /**
+     * The TeX class for this node
+     */
     public texClass: number = null;
+    /**
+     * The TeX class for the preceding node
+     */
     public prevClass: number = null;
+    /**
+     * The scriptlevel of the preceding node
+     */
     public prevLevel: number = null;
 
+    /**
+     * This node's attributes
+     */
     public attributes: Attributes;
 
     /**
      *  Child nodes are MmlNodes (special case of Nodes).
-     *  The parent is an MmlNode.
      */
     public childNodes: MmlNode[];
+    /**
+     * The parent is an MmlNode
+     */
     public parent: MmlNode;
+    /**
+     * The node factory is an MmlFactory
+     */
     public factory: MmlFactory;
 
     /**
@@ -304,35 +326,35 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     /**
      * @return {boolean}  true if this is a token node
      */
-    public get isToken() {
+    public get isToken(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  true if this is an embellished operator
      */
-    public get isEmbellished() {
+    public get isEmbellished(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  true if this is a space-like node
      */
-    public get isSpacelike() {
+    public get isSpacelike(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  true if this is a node that supports linebreaks in its children
      */
-    public get linebreakContainer() {
+    public get linebreakContainer(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  true if this node contains a line break
      */
-    public get hasNewLine() {
+    public get hasNewLine(): boolean {
         return false;
     }
 
@@ -342,14 +364,14 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
      *                   Special case is 1, meaning at least one (other numbers
      *                   mean exactly that many).
      */
-    public get arity() {
+    public get arity(): number {
         return Infinity;
     }
 
     /**
      * @return {boolean}  true if this is an inferred mrow
      */
-    public get isInferred() {
+    public get isInferred(): boolean {
         return false;
     }
 
@@ -357,7 +379,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
      * @return {MmlNode}  The logial parent of this node (skipping over inferred rows
      *                      some other node types)
      */
-    public get Parent() {
+    public get Parent(): MmlNode {
         let parent = this.parent;
         while (parent && parent.notParent) {
             parent = parent.Parent;
@@ -368,7 +390,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     /**
      * @return {boolean}  true if this is a node that doesn't count as a parent node in Parent()
      */
-    public get notParent() {
+    public get notParent(): boolean {
         return false;
     }
 
@@ -486,7 +508,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     /**
      * @return {string}  returns the spacing to use before this node
      */
-    public texSpacing() {
+    public texSpacing(): string {
         let prevClass = (this.prevClass != null ? this.prevClass : TEXCLASS.NONE);
         let texClass = this.texClass || TEXCLASS.ORD;
         if (prevClass === TEXCLASS.NONE || texClass === TEXCLASS.NONE) {
@@ -508,7 +530,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     /**
      * @return {boolean}  The core mo element has an explicit 'form' attribute
      */
-    public hasSpacingAttributes() {
+    public hasSpacingAttributes(): boolean {
         return this.isEmbellished && this.coreMO().hasSpacingAttributes();
     }
 
@@ -611,7 +633,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         const defaults: AttributeList = (!attributes.isSet('mathsize') ? {} : {
             mathsize: ['math', attributes.get('mathsize')]
         });
-        const prime = node.getProperty('texprimestyle') as boolean || false
+        const prime = node.getProperty('texprimestyle') as boolean || false;
         this.setInheritedAttributes(defaults, display, scriptlevel, prime);
     }
 
@@ -679,7 +701,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
      */
     public mError(message: string, options: PropertyList, short: boolean = false) {
         if (this.parent && this.parent.isKind('merror')) {
-            return;
+            return null;
         }
         let merror = this.factory.create('merror');
         if (options['fullErrors'] || short) {
@@ -901,93 +923,98 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
 export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements MmlNode {
 
     /**
+     *  Parent is an MmlNode
+     */
+    public parent: MmlNode;
+
+    /**
      * @return {boolean}  Not a token element
      */
-    public get isToken() {
+    public get isToken(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  Not embellished
      */
-    public get isEmbellished() {
+    public get isEmbellished(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  Not space-like
      */
-    public get isSpacelike() {
+    public get isSpacelike(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  Not a container of any kind
      */
-    public get linebreakContainer() {
+    public get linebreakContainer(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  Does not contain new lines
      */
-    public get hasNewLine() {
+    public get hasNewLine(): boolean {
         return false;
     }
 
     /**
      * @return {number}  No children
      */
-    public get arity() {
+    public get arity(): number {
         return 0;
     }
 
     /**
      * @return {boolean}  Is not an inferred row
      */
-    public get isInferred() {
+    public get isInferred(): boolean {
         return false;
     }
 
     /**
      * @return {boolean}  Is not a container element
      */
-    public get notParent() {
+    public get notParent(): boolean {
         return false;
     }
 
     /**
      * @return {MmlNode}  Parent is the actual parent
      */
-    public get Parent() {
+    public get Parent(): MmlNode {
         return this.parent;
     }
 
     /**
      * @return {number}  No TeX class
      */
-    public get texClass() {
+    public get texClass(): number {
         return TEXCLASS.NONE;
     }
 
     /**
      * @return {number}  No previous element
      */
-    public get prevClass() {
+    public get prevClass(): number {
         return TEXCLASS.NONE;
     }
 
     /**
      * @return {number}  No previous element
      */
-    public get prevLevel() {
+    public get prevLevel(): number {
         return 0;
     }
 
     /**
      * @return {boolean}  The core mo element has an explicit 'form' attribute
      */
-    public hasSpacingAttributes() {
+    public hasSpacingAttributes(): boolean {
         return false;
     }
 
@@ -997,12 +1024,6 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
     public get attributes(): Attributes {
         return null;
     }
-
-    /**
-     *  Parent is an MmlNode
-     */
-    public parent: MmlNode;
-
 
     /**
      * @override
@@ -1050,14 +1071,14 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
      *
      * @override
      */
-    public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {}
+    public setInheritedAttributes(_attributes: AttributeList, _display: boolean, _level: number, _prime: boolean) {}
 
     /**
      * No children or attributes, so ignore this call.
      *
      * @override
      */
-    public inheritAttributesFrom(node: MmlNode) {}
+    public inheritAttributesFrom(_node: MmlNode) {}
 
     /**
      * No children or attributes, so ignore this call.
@@ -1065,12 +1086,12 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
      * @param {MmlNode} node          The node tree to be checked
      * @param {PropertyList} options  The opritons for the check
      */
-    public verifyTree(options: PropertyList) {}
+    public verifyTree(_options: PropertyList) {}
 
     /**
      *  @override
      */
-    public mError(message: string, options: PropertyList, short: boolean = false) {}
+    public mError(_message: string, _options: PropertyList, _short: boolean = false) {}
 
 }
 
@@ -1103,7 +1124,7 @@ export class TextNode extends AbstractMmlEmptyNode {
      * @param {string} text  The text to use for the node
      * @return {TextNode}  The text node (for chaining of method calls)
      */
-    public setText(text: string) {
+    public setText(text: string): TextNode {
         this.text = text;
         return this;
     }
@@ -1152,7 +1173,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
      * @param {object} xml  The XML content to be saved
      * @return {XMLNode}  The XML node (for chaining of method calls)
      */
-    public setXML(xml: Object, adaptor: DOMAdaptor<any, any, any> = null) {
+    public setXML(xml: Object, adaptor: DOMAdaptor<any, any, any> = null): XMLNode {
         this.xml = xml;
         this.adaptor = adaptor;
         return this;
@@ -1161,7 +1182,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
     /**
      * @return {string}  The serialized XML content
      */
-    public getSerializedXML() {
+    public getSerializedXML(): string {
         return this.adaptor.outerHTML(this.xml);
     }
 

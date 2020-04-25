@@ -191,16 +191,16 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
         public baseCore: W;
 
         /**
-         * @return {AnyWrapper}  The base element's wrapper
+         * @return {W}  The base element's wrapper
          */
-        public get baseChild() {
+        public get baseChild(): W {
             return this.childNodes[(this.node as MmlMsubsup).base];
         }
 
         /**
-         * @return {AnyWrapper}  The script element's wrapper (overridden in subclasses)
+         * @return {W}  The script element's wrapper (overridden in subclasses)
          */
-        public get script() {
+        public get script(): W {
             return this.childNodes[1];
         }
 
@@ -251,7 +251,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
         /**
          * @return {number}  The ic for the core element
          */
-        public coreIC() {
+        public coreIC(): number {
             const corebox = this.baseCore.getBBox();
             return (corebox.ic ? 1.05 * corebox.ic + .05 : 0);
         }
@@ -259,7 +259,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
         /**
          * @return {number}   The relative scaling of the base
          */
-        public coreScale() {
+        public coreScale(): number {
             let scale = this.baseChild.getBBox().rscale;
             let base = this.baseChild;
             while ((base.node.isKind('mstyle') || base.node.isKind('mrow') || base.node.isKind('TeXAtom'))
@@ -273,7 +273,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
         /**
          * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
          */
-        public isCharBase() {
+        public isCharBase(): boolean {
             let base = this.baseChild;
             while ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
                 base = base.childNodes[0];
@@ -295,7 +295,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          * @param {BBox} sbox   The bounding box of the script element
          * @return {number[]}   The horizontal and vertical offsets for the script
          */
-        public getOffset(bbox: BBox, sbox: BBox) {
+        public getOffset(_bbox: BBox, _sbox: BBox): [number, number] {
             return [0, 0];
         }
 
@@ -306,13 +306,13 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          * @param {BBox} sbox   The bounding box of the superscript element
          * @return {number}     The vertical offset for the script
          */
-        public getV(bbox: BBox, sbox: BBox) {
+        public getV(bbox: BBox, sbox: BBox): number {
             const tex = this.font.params;
             const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
             return Math.max(
                 this.isCharBase() ? 0 : bbox.d * bbox.rscale + tex.sub_drop * sbox.rscale,
                 subscriptshift,
-                sbox.h * sbox.rscale - (4/5) * tex.x_height
+                sbox.h * sbox.rscale - (4 / 5) * tex.x_height
             );
         }
 
@@ -323,7 +323,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          * @param {BBox} sbox   The bounding box of the superscript element
          * @return {number}     The vertical offset for the script
          */
-        public getU(bbox: BBox, sbox: BBox) {
+        public getU(bbox: BBox, sbox: BBox): number {
             const tex = this.font.params;
             const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
             const prime = this.node.getProperty('texprimestyle');
@@ -332,7 +332,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
             return Math.max(
                 this.isCharBase() ? 0 : bbox.h * bbox.rscale - tex.sup_drop * sbox.rscale,
                 superscriptshift,
-                sbox.d * sbox.rscale + (1/4) * tex.x_height
+                sbox.d * sbox.rscale + (1 / 4) * tex.x_height
             );
         }
 
@@ -344,10 +344,10 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
         /**
          * @return {boolean}  True if the base has movablelimits (needed by munderover)
          */
-        public hasMovableLimits() {
+        public hasMovableLimits(): boolean {
             const display = this.node.attributes.get('displaystyle');
             const mo = this.baseChild.coreMO().node;
-            return (!display && mo.attributes.get('movablelimits'));
+            return (!display && !!mo.attributes.get('movablelimits'));
         }
 
         /**
@@ -357,7 +357,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          * @param {BBox} overbox  The bounding box of the overscript
          * @return {number[]}     The separation between their boxes, and the offset of the overscript
          */
-        public getOverKU(basebox: BBox, overbox: BBox) {
+        public getOverKU(basebox: BBox, overbox: BBox): [number, number] {
             const accent = this.node.attributes.get('accent') as boolean;
             const tex = this.font.params;
             const d = overbox.d * overbox.rscale;
@@ -374,7 +374,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          * @param {BBox} underbox  The bounding box of the underscript
          * @return {number[]}      The separation between their boxes, and the offset of the underscript
          */
-        public getUnderKV(basebox: BBox, underbox: BBox) {
+        public getUnderKV(basebox: BBox, underbox: BBox): [number, number] {
             const accent = this.node.attributes.get('accentunder') as boolean;
             const tex = this.font.params;
             const h = underbox.h * underbox.rscale;
@@ -389,7 +389,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          * @param {number[]=} delta  The initial x offsets of the boxes
          * @return {number[]}        The actual offsets needed to center the boxes in the stack
          */
-        public getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]) {
+        public getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]): number[] {
             const align = this.node.attributes.get('align');
             const widths = boxes.map(box => box.w * box.rscale);
             const w = Math.max(...widths);
@@ -414,7 +414,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
          * @param {boolean=} noskew   Whether to ignore the skew amount
          * @return {number}           The offset for under and over
          */
-        public getDelta(noskew: boolean = false) {
+        public getDelta(noskew: boolean = false): number {
             const accent = this.node.attributes.get('accent');
             const ddelta = (accent && !noskew ? this.baseChild.coreMO().bbox.sk : 0);
             return (DELTA * this.baseCore.bbox.ic / 2 + ddelta) * this.coreScale();
@@ -454,7 +454,7 @@ export function CommonScriptbaseMixin<W extends AnyWrapper,
                 //  Stretch the stretchable children
                 //
                 for (const child of stretchy) {
-                    child.coreMO().getStretchedVariant([W / child.bbox.rscale]);
+                    (child.coreMO() as CommonMo).getStretchedVariant([W / child.bbox.rscale]);
                 }
             }
         }

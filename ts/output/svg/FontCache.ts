@@ -65,7 +65,7 @@ export class FontCache<N, T, D> {
      * @param {string} path      The SVG path data for the character
      * @return {string}          The id for the cached <path> element
      */
-    public cachePath(variant: string, C: string, path: string) {
+    public cachePath(variant: string, C: string, path: string): string {
         const id = 'MJX-' + this.localID + (this.jax.font.getVariant(variant).cacheID || '') + '-' + C;
         if (!this.cache.has(id)) {
             this.cache.set(id, path);

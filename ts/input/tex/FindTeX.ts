@@ -24,7 +24,7 @@
 import {AbstractFindMath} from '../../core/FindMath.js';
 import {OptionList} from '../../util/Options.js';
 import {sortLength, quotePattern} from '../../util/string.js';
-import {MathItem, ProtoItem, protoItem, Location} from '../../core/MathItem.js';
+import {ProtoItem, protoItem} from '../../core/MathItem.js';
 
 /**
  * Shorthand types for data about end delimiters and delimiter pairs
@@ -153,7 +153,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
      * @param {string} end  The end delimiter text
      * @return {RegExp}     The regular expression for the end delimiter
      */
-    protected endPattern(end: string) {
+    protected endPattern(end: string): RegExp {
         return new RegExp(quotePattern(end) + '|\\\\(?:[a-zA-Z]|.)|[{}]', 'g');
     }
 
@@ -166,9 +166,9 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
      * @param {number} n               The index of the string being searched
      * @param {RegExpExecArray} start  The result array from the start-delimiter search
      * @param {EndItem} end            The end-delimiter data corresponding to the start delimiter
-     * @return {ProtoItem}             The proto math item for the math, if found
+     * @return {ProtoItem<N,T>}        The proto math item for the math, if found
      */
-    protected findEnd(text: string, n: number, start: RegExpExecArray, end: EndItem) {
+    protected findEnd(text: string, n: number, start: RegExpExecArray, end: EndItem): ProtoItem<N, T> {
         let [close, display, pattern] = end;
         let i = pattern.lastIndex = start.index + start[0].length;
         let match: RegExpExecArray, braces: number = 0;

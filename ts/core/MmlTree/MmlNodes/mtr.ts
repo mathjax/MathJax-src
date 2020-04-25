@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList, Node} from '../../Tree/Node.js';
+import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 import {split} from '../../../util/string.js';
@@ -32,6 +32,10 @@ import {split} from '../../../util/string.js';
  */
 
 export class MmlMtr extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults,
         rowalign: INHERIT,
@@ -40,14 +44,15 @@ export class MmlMtr extends AbstractMmlNode {
     };
 
     /**
-     * @return {string}  The mtr kind
+     * @override
      */
     public get kind() {
         return 'mtr';
     }
 
     /**
-     * @return {boolean}  <mtr> can contain linebreaks
+     * <mtr> can contain linebreaks
+     * @override
      */
     public get linebreakContainer() {
         return true;
@@ -110,6 +115,7 @@ export class MmlMtr extends AbstractMmlNode {
         }
         return this;
     }
+
 }
 
 /*****************************************************************/
@@ -120,16 +126,18 @@ export class MmlMtr extends AbstractMmlNode {
 export class MmlMlabeledtr extends MmlMtr {
 
     /**
-     * @return {string}  The mtr kind
+     * @override
      */
     public get kind() {
         return 'mlabeledtr';
     }
 
     /**
-     * @return {number}  <mlabeledtr> requires at least one child (the label)
+     * <mlabeledtr> requires at least one child (the label)
+     * @override
      */
     get arity() {
         return 1;
     }
+
 }

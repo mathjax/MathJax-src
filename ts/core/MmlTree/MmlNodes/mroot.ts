@@ -30,20 +30,29 @@ import {AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMroot extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults
     };
+
+    /**
+     * TeX class is ORD
+     */
     public texClass = TEXCLASS.ORD;
 
     /**
-     * @return {string}  The mroot kind
+     * @override
      */
     public get kind() {
         return 'mroot';
     }
 
     /**
-     * @return {number}  <mroot> requires two children
+     * <mroot> requires two children
+     * @override
      */
     public get arity() {
         return 2;
@@ -58,4 +67,5 @@ export class MmlMroot extends AbstractMmlNode {
         this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
         this.childNodes[1].setInheritedAttributes(attributes, false, level + 2, prime);
     }
+
 }

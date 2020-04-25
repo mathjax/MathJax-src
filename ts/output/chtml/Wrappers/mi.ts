@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMi, CommonMiMixin} from '../../common/Wrappers/mi.js';
+import {CommonMiMixin} from '../../common/Wrappers/mi.js';
 import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
 
 /*****************************************************************/
@@ -33,8 +33,13 @@ import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmi<N, T, D> extends CommonMiMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmi<N, T, D> extends
+CommonMiMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mi wrapper
+     */
     public static kind = MmlMi.prototype.kind;
 
     /**

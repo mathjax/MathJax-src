@@ -33,6 +33,10 @@ import {OperatorList, OPTABLE, RangeDef, RANGES, MMLSPACING} from '../OperatorDi
  */
 
 export class MmlMo extends AbstractMmlTokenNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlTokenNode.defaults,
         form: 'infix',
@@ -60,13 +64,17 @@ export class MmlMo extends AbstractMmlTokenNode {
     };
 
     /**
-     * Unicode ranges and their default TeX classes and MathML spacing
+     * Unicode ranges and their default TeX classes
      */
     public static RANGES = RANGES;
+
+    /**
+     * The MathML spacing values for the TeX classes
+     */
     public static MMLSPACING = MMLSPACING;
 
     /**
-     * The Operator Dictionary.
+     * The Operator Dictionary
      */
     public static OPTABLE: {[form: string]: OperatorList} = OPTABLE;
 
@@ -99,20 +107,27 @@ export class MmlMo extends AbstractMmlTokenNode {
     }
 
     /**
-     * The default MathML spacing on the left and right
+     * The default MathML spacing on the left
      */
+    /* tslint:disable-next-line:whitespace */
     public lspace = 5/18;
+
+    /**
+     * The default MathML spacing on the right
+     */
+    /* tslint:disable-next-line:whitespace */
     public rspace = 5/18;
 
     /**
-     * @return {string}  The mo kind
+     * @override
      */
     public get kind() {
         return 'mo';
     }
 
     /**
-     * @return {boolean}  All <mo> are considered embellished
+     * All <mo> are considered embellished
+     * @override
      */
     public get isEmbellished() {
         return true;
@@ -121,7 +136,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     /**
      * @return {boolean}  Is <mo> marked as an explicit linebreak?
      */
-    public get hasNewLine() {
+    public get hasNewLine(): boolean {
         return this.attributes.get('linebreak') === 'newline';
     }
 
@@ -129,7 +144,7 @@ export class MmlMo extends AbstractMmlTokenNode {
      * @return {MmlNode}  The node that is the outermost embellished operator
      *                    with this node as its core
      */
-    public coreParent() {
+    public coreParent(): MmlNode {
         let embellished = this as MmlNode;
         let parent = this as MmlNode;
         let math = this.factory.getNodeClass('math');
@@ -144,7 +159,7 @@ export class MmlMo extends AbstractMmlTokenNode {
      * @param {MmlNode} parent  The node whose core text is to be obtained
      * @return {string}         The text of the core MO of the given parent element
      */
-    public coreText(parent: MmlNode) {
+    public coreText(parent: MmlNode): string {
         if (!parent) {
             return '';
         }
@@ -170,7 +185,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     /**
      * @return {boolean}  True is this mo is an accent in an munderover construction
      */
-    get isAccent() {
+    get isAccent(): boolean {
         let accent = false;
         const node = this.coreParent().parent;
         if (node) {
@@ -316,7 +331,7 @@ export class MmlMo extends AbstractMmlTokenNode {
      *                                     order they should be tested, based on the
      *                                     position of the element in its parent.
      */
-    public getForms() {
+    public getForms(): [string, string, string] {
         let core: MmlNode = this;
         let parent = this.parent;
         let Parent = this.Parent;
@@ -340,7 +355,7 @@ export class MmlMo extends AbstractMmlTokenNode {
      * @param {string[]} forms     The three forms in the default order they are to be tested
      * @return {string[]}          The forms in the new order, if there is an explicit form attribute
      */
-    protected handleExplicitForm(forms: string[]) {
+    protected handleExplicitForm(forms: string[]): string[] {
         if (this.attributes.isSet('form')) {
             const form = this.attributes.get('form') as string;
             forms = [form].concat(forms.filter(name => (name !== form)));
@@ -371,4 +386,5 @@ export class MmlMo extends AbstractMmlTokenNode {
         }
         return null;
     }
+
 }

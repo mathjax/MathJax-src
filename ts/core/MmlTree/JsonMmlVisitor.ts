@@ -23,10 +23,9 @@
 
 import {PropertyList} from '../Tree/Node.js';
 import {MmlVisitor} from './MmlVisitor.js';
-import {MmlFactory} from './MmlFactory.js';
 import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
 
-export type MmlJSON = {
+export type MmlNodeJSON = {
     kind: string,
     texClass: number
     isEmbellished?: boolean,
@@ -37,6 +36,18 @@ export type MmlJSON = {
     inherited: PropertyList,
     properties: PropertyList
 };
+
+export type MmlTextJSON = {
+    kind: string,
+    text: string
+};
+
+export type MmlXmlJSON = {
+    kind: string,
+    xml: any
+};
+
+export type MmlJSON = MmlNodeJSON | MmlTextJSON | MmlXmlJSON;
 
 /*****************************************************************/
 /**
@@ -50,7 +61,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
      * @return {MmlJSON}      The JSON object representing the internal tree
      */
-    public visitTree(node: MmlNode) {
+    public visitTree(node: MmlNode): MmlJSON {
         return this.visitNode(node);
     }
 
@@ -58,7 +69,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @param {TextNode} node   The text node to visit
      * @return {MmlJSON}        The JSON for the text element
      */
-    public visitTextNode(node: TextNode) {
+    public visitTextNode(node: TextNode): MmlTextJSON {
         return {kind: node.kind, text: node.getText()};
     }
 
@@ -66,7 +77,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @param {XMLNode} node  The XML node to visit
      * @return {MmlJSON}      The JSON for the XML node
      */
-    public visitXMLNode(node: XMLNode) {
+    public visitXMLNode(node: XMLNode): MmlXmlJSON {
         return {kind: node.kind, xml: node.getXML()};
     }
 
@@ -80,7 +91,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @param {MmlNode} node  The node to visit
      * @return {MmlJSON}      The JSON object representing it
      */
-    public visitDefault(node: MmlNode) {
+    public visitDefault(node: MmlNode): MmlJSON {
         let json: MmlJSON = {
             kind: node.kind.replace(/inferredM/, 'm'),
             texClass: node.texClass,
@@ -105,7 +116,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @param {MmlNode} node    The node whose children are to be copied
      * @return {MmlJSON[]}      The array of child JSON objects
      */
-    public getChildren(node: MmlNode) {
+    public getChildren(node: MmlNode): MmlJSON[] {
         let children = [];
         for (const child of node.childNodes) {
             children.push(this.visitNode(child));
@@ -117,7 +128,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @param {MmlNode} node    The node whose attributes are to be copied
      * @return {PropertyList}   The object containing the attributes;
      */
-    public getAttributes(node: MmlNode) {
+    public getAttributes(node: MmlNode): PropertyList {
         return Object.assign({}, node.attributes.getAllAttributes());
     }
 
@@ -125,7 +136,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @param {MmlNode} node    The node whose inherited attributes are to be copied
      * @return {PropertyList}   The object containing the inherited attributes;
      */
-    public getInherited(node: MmlNode) {
+    public getInherited(node: MmlNode): PropertyList {
         return Object.assign({}, node.attributes.getAllInherited());
     }
 
@@ -133,7 +144,7 @@ export class JsonMmlVisitor extends MmlVisitor {
      * @param {MmlNode} node    The node whose properties are to be copied
      * @return {PropertyList}   The object containing the properties;
      */
-    public getProperties(node: MmlNode) {
+    public getProperties(node: MmlNode): PropertyList {
         return Object.assign({}, node.getAllProperties());
     }
 

@@ -90,7 +90,6 @@ export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements
     /**
      * @param {WrapperFactory} factory  The WrapperFactory to use to wrap child nodes when needed
      * @param {Node} node               The node to wrap
-     * @return {Wrapper}                The newly created wrapped node
      *
      * @constructor
      * @implements {Wrapper}

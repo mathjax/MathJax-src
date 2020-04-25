@@ -22,11 +22,11 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
-import {CommonMo, CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
+import {CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../BBox.js';
 import {StyleList} from '../../common/CssStyles.js';
-import {DIRECTION, NOSTRETCH} from '../FontData.js';
+import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -36,10 +36,18 @@ import {DIRECTION, NOSTRETCH} from '../FontData.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmo<N, T, D> extends
+CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mo wrapper
+     */
     public static kind = MmlMo.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-stretchy-h': {
             display: 'inline-table',
@@ -128,7 +136,7 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<any, any, a
             this.adaptor.setAttribute(chtml, 'noIC', 'true');
         }
         if (stretchy && this.size < 0) {
-            this.stretchHTML(chtml, symmetric);
+            this.stretchHTML(chtml);
         } else {
             if (symmetric || attributes.get('largeop')) {
                 const bbox = BBox.empty();
@@ -148,9 +156,8 @@ export class CHTMLmo<N, T, D> extends CommonMoMixin<CHTMLConstructor<any, any, a
      * Create the HTML for a multi-character stretchy delimiter
      *
      * @param {N} chtml  The parent element in which to put the delimiter
-     * @param {boolean} symmetric  Whether delimiter should be symmetric about the math axis
      */
-    protected stretchHTML(chtml: N, symmetric: boolean) {
+    protected stretchHTML(chtml: N) {
         const c = this.getText().charCodeAt(0);
         const delim = this.stretch;
         delim.used = true;

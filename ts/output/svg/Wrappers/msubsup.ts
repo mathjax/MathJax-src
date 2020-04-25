@@ -22,11 +22,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor, Constructor} from '../Wrapper.js';
+import {SVGWrapper, Constructor} from '../Wrapper.js';
 import {SVGscriptbase} from './scriptbase.js';
-import {CommonMsub, CommonMsubMixin} from '../../common/Wrappers/msubsup.js';
-import {CommonMsup, CommonMsupMixin} from '../../common/Wrappers/msubsup.js';
-import {CommonMsubsup, CommonMsubsupMixin} from '../../common/Wrappers/msubsup.js';
+import {CommonMsubMixin} from '../../common/Wrappers/msubsup.js';
+import {CommonMsupMixin} from '../../common/Wrappers/msubsup.js';
+import {CommonMsubsupMixin} from '../../common/Wrappers/msubsup.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 
 /*****************************************************************/
@@ -37,11 +37,18 @@ import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubs
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmsub<N, T, D> extends
 CommonMsubMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, any>>>(SVGscriptbase)  {
 
+    /**
+     * The msub wrapper
+     */
     public static kind = MmlMsub.prototype.kind;
 
+    /**
+     * Don't include italic correction
+     */
     public static useIC = false;
 
 }
@@ -54,11 +61,18 @@ CommonMsubMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, a
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmsup<N, T, D> extends
 CommonMsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, any>>>(SVGscriptbase)  {
 
+    /**
+     * The msup wrapper
+     */
     public static kind = MmlMsup.prototype.kind;
 
+    /**
+     * Do include italic correction
+     */
     public static useIC = true;
 
 }
@@ -71,11 +85,18 @@ CommonMsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, a
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmsubsup<N, T, D> extends
 CommonMsubsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, any>>>(SVGscriptbase)  {
 
+    /**
+     * The msubsup wrapper
+     */
     public static kind = MmlMsubsup.prototype.kind;
 
+    /**
+     * Don't use italic correction
+     */
     public static useIC = false;
 
     /**

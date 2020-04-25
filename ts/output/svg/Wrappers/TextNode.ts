@@ -23,7 +23,7 @@
 
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonTextNode, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
+import {CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
 import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
@@ -34,10 +34,18 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGTextNode<N, T, D> extends CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGTextNode<N, T, D> extends
+CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The TextNode wrapper
+     */
     public static kind = TextNode.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         '.MathJax path': {
             'stroke-width': 3

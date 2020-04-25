@@ -24,8 +24,6 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {BBox} from '../BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {BIGDIMEN} from '../../../util/lengths.js';
-import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -51,7 +49,7 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
        /**
         * @override
         */
-       public computeBBox(bbox: BBox, recompute: boolean = false) {
+       public computeBBox(bbox: BBox, _recompute: boolean = false) {
            const variant = this.parent.variant;
            const text = (this.node as TextNode).getText();
            if (variant === '-explicitFont') {

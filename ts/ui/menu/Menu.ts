@@ -158,9 +158,12 @@ export class Menu {
     protected static _loadingPromise: Promise<void> = null;
 
     /**
-     * Functions used to resolve or reject the _loadingPromise
+     * Function used to resolve the _loadingPromise
      */
     protected static _loadingOK: Function = null;
+    /**
+     * Function used to reject the _loadingPromise
+     */
     protected static _loadingFailed: Function = null;
 
     /**
@@ -209,14 +212,14 @@ export class Menu {
     /**
      * @returns {boolean}   true when the menu is loading some component
      */
-    public get isLoading() {
+    public get isLoading(): boolean {
         return Menu.loading > 0;
     }
 
     /**
      * @returns {Promise}   A promise that is resolved when all pending loads are complete
      */
-    public get loadingPromise() {
+    public get loadingPromise(): Promise<void> {
         if (!this.isLoading) {
             return Promise.resolve();
         }
@@ -624,9 +627,14 @@ export class Menu {
         }
     }
 
-    protected getA11y(options: string): any {
+    /**
+     * Get the the value of an a11y option
+     * @param {string} option   The name of the ptions to get
+     * @return {any}            The value of the option
+     */
+    protected getA11y(option: string): any {
         if (MathJax._.a11y && MathJax._.a11y.explorer) {
-            return this.document.options.a11y[options];
+            return this.document.options.a11y[option];
         }
     }
 
@@ -849,7 +857,7 @@ export class Menu {
      * @param {string} text   The text to be displayed in an Info box
      * @returns {string}      The text with HTML specials being escaped
      */
-    protected formatSource(text: string) {
+    protected formatSource(text: string): string {
         return text.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
@@ -857,7 +865,7 @@ export class Menu {
      * @param {MathItem} math   The MathItem to serialize as MathML
      * @returns {string}        The serialized version of the internal MathML
      */
-    protected toMML(math: HTMLMATHITEM) {
+    protected toMML(math: HTMLMATHITEM): string {
         return this.MmlVisitor.visitTree(math.root, math, {
             texHints: this.settings.texHints,
             semantics: (this.settings.semantics && math.inputJax.name !== 'MathML')
@@ -891,7 +899,7 @@ export class Menu {
      * @param {string} zoom        The type of event (click, dblclick) that occurred
      * @returns {boolean}          True if the event is the right type and has the needed modifiers
      */
-    protected isZoomEvent(event: MouseEvent, zoom: string) {
+    protected isZoomEvent(event: MouseEvent, zoom: string): boolean {
         return (this.settings.zoom === zoom &&
                 (!this.settings.alt   || event.altKey) &&
                 (!this.settings.ctrl  || event.ctrlKey) &&
@@ -984,7 +992,7 @@ export class Menu {
      *
      * @tempate T    The type of variable being defined
      */
-    public variable<T extends (string | boolean)>(name: keyof MenuSettings, action?: (value: T) => void) {
+    public variable<T extends (string | boolean)>(name: keyof MenuSettings, action?: (value: T) => void): Object {
         return {
             name: name,
             getter: () => this.settings[name],
@@ -1004,7 +1012,7 @@ export class Menu {
      *
      * @tempate T    The type of variable being defined
      */
-    public a11yVar<T extends (string | boolean)>(name: keyof MenuSettings) {
+    public a11yVar<T extends (string | boolean)>(name: keyof MenuSettings): Object {
         return {
             name: name,
             getter: () => this.getA11y(name),
@@ -1027,7 +1035,7 @@ export class Menu {
      * @param {boolean=} disabled   True if this item is diabled initially
      * @returns {Object}            The JSON for the submenu item
      */
-    public submenu(id: string, content: string, entries: any[] = [], disabled: boolean = false) {
+    public submenu(id: string, content: string, entries: any[] = [], disabled: boolean = false): Object {
         let items = [] as Array<Object>;
         for (const entry of entries) {
             if (Array.isArray(entry)) {
@@ -1048,7 +1056,7 @@ export class Menu {
      * @param {Object} other        Other values to include in the generated JSON object
      * @returns {Object}            The JSON for the command item
      */
-    public command(id: string, content: string, action: () => void, other: Object = {}) {
+    public command(id: string, content: string, action: () => void, other: Object = {}): Object {
         return Object.assign({type: 'command', id, content, action}, other);
     }
 
@@ -1061,7 +1069,7 @@ export class Menu {
      * @param {Object} other        Other values to include in the generated JSON object
      * @returns {Object}            The JSON for the checkbox item
      */
-    public checkbox(id: string, content: string, variable: string, other: Object = {}) {
+    public checkbox(id: string, content: string, variable: string, other: Object = {}): Object {
         return Object.assign({type: 'checkbox', id, content, variable}, other);
     }
 
@@ -1073,7 +1081,7 @@ export class Menu {
      *                                for each radio button (if only one string is given it is used for both)
      * @returns {Object[]}          An array of JSON objects for radion buttons
      */
-    public radioGroup(variable: string, radios: string[][]) {
+    public radioGroup(variable: string, radios: string[][]): Object[] {
         return radios.map(def => this.radio(def[0], def[1] || def[0], variable));
     }
 
@@ -1086,7 +1094,7 @@ export class Menu {
      * @param {Object} other        Other values to include in the generated JSON object
      * @returns {Object}            The JSON for the radio button item
      */
-    public radio(id: string, content: string, variable: string, other: Object = {}) {
+    public radio(id: string, content: string, variable: string, other: Object = {}): Object {
         return Object.assign({type: 'radio', id, content, variable}, other);
     }
 
@@ -1097,7 +1105,7 @@ export class Menu {
      * @param {string} content      The content for the item
      * @returns {Object}            The JSON for the label item
      */
-    public label(id: string, content: string) {
+    public label(id: string, content: string): Object {
         return {type: 'label', id, content};
     }
 
@@ -1106,7 +1114,7 @@ export class Menu {
      *
      * @returns {Object}            The JSON for the rule item
      */
-    public rule() {
+    public rule(): Object {
         return {type: 'rule'};
     }
 

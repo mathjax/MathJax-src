@@ -22,7 +22,6 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**

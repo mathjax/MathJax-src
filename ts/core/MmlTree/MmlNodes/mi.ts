@@ -30,19 +30,30 @@ import {AbstractMmlTokenNode, AbstractMmlNode, AttributeList, TEXCLASS} from '..
  */
 
 export class MmlMi extends AbstractMmlTokenNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlTokenNode.defaults
     };
+
     /**
-     * Patterns for operator names and single-character texts
+     * Pattern for operator names
      */
     public static operatorName: RegExp = /^[a-z][a-z0-9]*$/i;
+    /**
+     * Pattern for single-character texts
+     */
     public static singleCharacter: RegExp = /^[\uD800-\uDBFF]?.$/;
 
+    /**
+     * TeX class is ORD
+     */
     public texClass = TEXCLASS.ORD;
 
     /**
-     * @return {string}  The mi kind
+     * @override
      */
     public get kind() {
         return 'mi';
@@ -77,4 +88,5 @@ export class MmlMi extends AbstractMmlTokenNode {
         }
         return this;
     }
+
 }

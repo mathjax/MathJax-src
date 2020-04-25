@@ -27,20 +27,18 @@ import ParseMethods from './ParseMethods.js';
 import {ExtensionMaps, HandlerType} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
-import ParseOptions from './ParseOptions.js';
 import *  as sm from './SymbolMap.js';
 import {SubHandlers} from './MapHandler.js';
 import {FunctionList} from '../../util/FunctionList.js';
 import {TeX} from '../tex.js';
 
 
-export type HandlerConfig = {[P in HandlerType]?: string[]}
-export type FallbackConfig = {[P in HandlerType]?: ParseMethod}
-export type StackItemConfig = {[kind: string]: StackItemClass}
-export type TagsConfig = {[kind: string]: TagsClass}
-export type ProcessorList = (Function | [Function, number])[]
+export type HandlerConfig = {[P in HandlerType]?: string[]};
+export type FallbackConfig = {[P in HandlerType]?: ParseMethod};
+export type StackItemConfig = {[kind: string]: StackItemClass};
+export type TagsConfig = {[kind: string]: TagsClass};
+export type ProcessorList = (Function | [Function, number])[];
 
 
 export class Configuration {
@@ -90,7 +88,7 @@ export class Configuration {
                                 priority?: number,
                                 config?: Function,
                                 configPriority?: number
-                               } = {}) {
+                               } = {}): Configuration {
     return new Configuration(name,
                              config.handler || {},
                              config.fallback || {},
@@ -111,7 +109,7 @@ export class Configuration {
    */
   public static empty(): Configuration {
     return Configuration.create('empty');
-  };
+  }
 
 
   /**
@@ -133,7 +131,7 @@ export class Configuration {
                          ExtensionMaps.NEW_MACRO],
                  environment: [ExtensionMaps.NEW_ENVIRONMENT]
                 }});
-  };
+  }
 
 
   /**
@@ -185,16 +183,16 @@ export class Configuration {
     Object.assign(this.nodes, config.nodes);
     for (let pre of config.preprocessors) {
       this.preprocessors.push(pre);
-    };
+    }
     for (let post of config.postprocessors) {
       this.postprocessors.push(post);
-    };
+    }
     for (let init of config.initMethod) {
       this.initMethod.add(init.item, init.priority);
-    };
+    }
     for (let init of config.configMethod) {
       this.configMethod.add(init.item, init.priority);
-    };
+    }
   }
 
   /**
@@ -203,7 +201,7 @@ export class Configuration {
    * @param {Configuration} config   The configuration to be registered in this one
    * @param {TeX} jax                The TeX jax where it is being registered
    */
-  register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
+  public register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
     this.append(config);
     config.init(this);
     const parser = jax.parseOptions;
@@ -243,7 +241,7 @@ export class Configuration {
     ConfigurationHandler.set(name, this);
   }
 
-};
+}
 
 
 export namespace ConfigurationHandler {

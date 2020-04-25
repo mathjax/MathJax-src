@@ -49,7 +49,14 @@ import {unicodeChars} from '../util/string.js';
 export class CHTML<N, T, D> extends
 CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLFontData, typeof CHTMLFontData> {
 
+    /**
+     * The name of this output jax
+     */
     public static NAME: string = 'CHTML';
+
+    /**
+     * @override
+     */
     public static OPTIONS: OptionList = {
         ...CommonOutputJax.OPTIONS,
         adaptiveCSS: true,            // true means only produce CSS that is used in the processed equations

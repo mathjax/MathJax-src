@@ -58,7 +58,7 @@ extends AbstractFactory<W, C> implements WrapperFactory<N, W, C> {
      * @param {any[]} args  Any additional arguments needed when wrapping the node
      * @return {W}  The newly wrapped node
      */
-    public wrap(node: N, ...args: any[]) {
+    public wrap(node: N, ...args: any[]): W {
         return this.create(node.kind, node, ...args);
     }
 }

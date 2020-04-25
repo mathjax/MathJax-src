@@ -22,12 +22,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
-import {CHTMLscriptbase} from './scriptbase.js';
+import {CHTMLWrapper, Constructor} from '../Wrapper.js';
 import {CHTMLmsubsup, CHTMLmsub, CHTMLmsup} from './msubsup.js';
-import {CommonMunder, CommonMunderMixin} from '../../common/Wrappers/munderover.js';
-import {CommonMover, CommonMoverMixin} from '../../common/Wrappers/munderover.js';
-import {CommonMunderover, CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMunderMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMoverMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -39,13 +38,23 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmunder<N, T, D> extends
 CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, any>>>(CHTMLmsub)  {
 
+    /**
+     * The munder wrapper
+     */
     public static kind = MmlMunder.prototype.kind;
 
+    /**
+     * Include italic correction
+     */
     public static useIC: boolean = true;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-over': {
             'text-align': 'left'
@@ -83,7 +92,7 @@ CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, a
         this.script.toCHTML(under);
         const basebox = this.baseChild.getBBox();
         const underbox = this.script.getBBox();
-        const [k, v] = this.getUnderKV(basebox, underbox);
+        const k = this.getUnderKV(basebox, underbox)[0];
         const delta = this.getDelta(true);
         this.adaptor.setStyle(under, 'paddingTop', this.em(k));
         this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -delta]));
@@ -100,13 +109,23 @@ CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, a
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmover<N, T, D> extends
 CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, any>>>(CHTMLmsup)  {
 
+    /**
+     * The mover wrapper
+     */
     public static kind = MmlMover.prototype.kind;
 
+    /**
+     * Include italic correction
+     */
     public static useIC: boolean = true;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-mover:not([limits="false"])': {
             'padding-top': '.1em'        // big_op_spacing5
@@ -117,7 +136,7 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
         }
     };
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -133,7 +152,7 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
         this.baseChild.toCHTML(base);
         const overbox = this.script.getBBox();
         const basebox = this.baseChild.getBBox();
-        const [k, u] = this.getOverKU(basebox, overbox);
+        const k = this.getOverKU(basebox, overbox)[0];
         const delta = this.getDelta();
         this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
         this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
@@ -150,13 +169,23 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmunderover<N, T, D> extends
 CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any, any, any>>>(CHTMLmsubsup)  {
 
+    /**
+     * The munderover wrapper
+     */
     public static kind = MmlMunderover.prototype.kind;
 
+    /**
+     * Include italic correction
+     */
     public static useIC: boolean = true;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-munderover:not([limits="false"])': {
             'padding-top': '.1em'        // big_op_spacing5
@@ -166,7 +195,7 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
         },
     };
 
-    /*
+    /**
      * @override
      */
     public toCHTML(parent: N) {
@@ -195,8 +224,8 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
         const overbox = this.overChild.getBBox();
         const basebox = this.baseChild.getBBox();
         const underbox = this.underChild.getBBox();
-        const [ok, u] = this.getOverKU(basebox, overbox);
-        const [uk, v] = this.getUnderKV(basebox, underbox);
+        const ok = this.getOverKU(basebox, overbox)[0];
+        const uk = this.getUnderKV(basebox, underbox)[0];
         const delta = this.getDelta();
         this.adaptor.setStyle(over, 'paddingBottom', this.em(ok));
         this.adaptor.setStyle(under, 'paddingTop', this.em(uk));

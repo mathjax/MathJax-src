@@ -142,7 +142,7 @@ function Error(message: string) {
  * @param {CdnData} cdn                The CDN data already obtained for the script (or null)
  * @return {ScriptData}                The data for the given script
  */
-function scriptData(script: HTMLScriptElement, cdn: CdnData = null) {
+function scriptData(script: HTMLScriptElement, cdn: CdnData = null): ScriptData {
     script.parentNode.removeChild(script);
     let src = script.src;
     let file = src.replace(/.*?\/latest\.js(\?|$)/, '');
@@ -160,16 +160,16 @@ function scriptData(script: HTMLScriptElement, cdn: CdnData = null) {
         dir: dir,
         file: file,
         cdn: cdn
-    } as ScriptData;
+    };
 }
 
 /**
  * Check if a script refers to MathJax on one of the CDNs
  *
  * @param {HTMLScriptElement} script   The script tag to check
- * @return {boolean}                   True if the script is from a MathJax CDN
+ * @return {ScriptData | null}         Non-null if the script is from a MathJax CDN
  */
-function checkScript(script: HTMLScriptElement) {
+function checkScript(script: HTMLScriptElement): ScriptData | null {
     for (const server of CDN.keys()) {
         const cdn = CDN.get(server);
         const url = cdn.base;
@@ -184,7 +184,7 @@ function checkScript(script: HTMLScriptElement) {
 /**
  * @return {ScriptData}   The data for the script tag that loaded latest.js
  */
-function getScript() {
+function getScript(): ScriptData {
     if (document.currentScript) {
         return scriptData(document.currentScript as HTMLScriptElement);
     }
@@ -222,7 +222,7 @@ function saveVersion(version: string) {
  *
  * @return {string|null}   The version string (if one has been saved) or null (if not)
  */
-function getSavedVersion() {
+function getSavedVersion(): string | null {
     try {
         const [version, date] = localStorage.getItem(MJX_LATEST).split(/ /);
         if (date && Date.now() - parseInt(date) < SAVE_TIME) {
@@ -287,7 +287,7 @@ function loadVersion(version: string) {
  * @param {string} version   The version to check if it is the latest (valid) one
  * @return {boolean}         True if it is the latest version, false if not
  */
-function checkVersion(version: string) {
+function checkVersion(version: string): boolean {
     const major = parseInt(version.split(/\./)[0]);
     if (major === MJX_VERSION && !version.match(/-(beta|rc)/)) {
         saveVersion(version);
@@ -304,14 +304,15 @@ function checkVersion(version: string) {
  *
  * @return {XMLHttpRequest}   The XMLHttpRequest instance
  */
-function getXMLHttpRequest() {
+function getXMLHttpRequest(): XMLHttpRequest {
     if (window.XMLHttpRequest) {
         return new XMLHttpRequest();
     }
     if (window.ActiveXObject) {
-        try {return new window.ActiveXObject('Msxml2.XMLHTTP')} catch (err) {}
-        try {return new window.ActiveXObject('Microsoft.XMLHTTP')} catch (err) {}
+        try { return new window.ActiveXObject('Msxml2.XMLHTTP'); } catch (err) {}
+        try { return new window.ActiveXObject('Microsoft.XMLHTTP'); } catch (err) {}
     }
+    return null;
 }
 
 /**
@@ -326,6 +327,7 @@ function getXMLHttpRequest() {
 function requestXML(cdn: CdnData, action: (json: JSON | JSON[]) => boolean, failure: () => void) {
     const request = getXMLHttpRequest();
     if (request) {
+        // tslint:disable-next-line:jsdoc-require
         request.onreadystatechange = function () {
             if (request.readyState === 4) {
                 if (request.status === 200) {
@@ -351,7 +353,7 @@ function requestXML(cdn: CdnData, action: (json: JSON | JSON[]) => boolean, fail
  */
 function loadLatestGitVersion() {
     requestXML(GITHUB, (json: JSON[]) => {
-        if (!(json instanceof Array)) return;
+        if (!(json instanceof Array)) return false;
         for (const data of json) {
             if (checkVersion((data as any)[GITHUB.key])) {
                 return true;
@@ -383,7 +385,7 @@ function loadLatestCdnVersion() {
 /*=====================================================================*/
 
 
-/*
+/**
  * Find the script that loaded latest.js
  * If the script is from a known CDN:
  *   Retrieve the cached version (if any)

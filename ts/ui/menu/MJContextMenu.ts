@@ -74,7 +74,7 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
      *
      * @override
      */
-    public post(x?:any, y?: number) {
+    public post(x?: any, y?: number) {
         if (this.mathItem) {
             if (y !== undefined) {
                 // FIXME:  handle error output jax
@@ -108,9 +108,9 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
      * Find an item in the menu (recursively descending into submenus, if needed)
      *
      * @param {string[]} names   The menu IDs to look for
-     * @returns {string}         The menu item (or null if not found)
+     * @returns {Item}         The menu item (or null if not found)
      */
-    public findID(...names: string[]) {
+    public findID(...names: string[]): ContextMenu.Item {
         let menu = this as ContextMenu.Menu;
         let item = null as ContextMenu.Item;
         for (const name of names) {
@@ -138,12 +138,12 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
     /**
      * Find the top-most semantics element that encloses the contents of the expression (if any)
      *
-     * @returns {MmlNode}   The semantics node that was found
+     * @returns {MmlNode | null}   The semantics node that was found (or null)
      */
-    protected getSemanticNode() {
+    protected getSemanticNode(): MmlNode | null {
         let node: MmlNode = this.mathItem.root;
         while (node && !node.isKind('semantics'))  {
-            if (node.isToken || node.childNodes.length !== 1) return;
+            if (node.isToken || node.childNodes.length !== 1) return null;
             node = node.childNodes[0] as MmlNode;
         }
         return node;
@@ -154,7 +154,7 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
      * @returns {[string, string][]}   Array of [type, text] where the type is the annotation type
      *                                   and text is the content of the annotation of that type
      */
-    protected getAnnotations(node: MmlNode) {
+    protected getAnnotations(node: MmlNode): [string, string][] {
         const annotations = [] as [string, string][];
         if (!node) return annotations;
         for (const child of node.childNodes as MmlNode[]) {
@@ -171,9 +171,9 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
 
     /**
      * @param {MmlNode} child    The annotation node to check if its encoding is one of the displayable ones
-     * @returns {string}         The annotation type if it does, or null if it doesn't
+     * @returns {string | null}         The annotation type if it does, or null if it doesn't
      */
-    protected annotationMatch(child: MmlNode) {
+    protected annotationMatch(child: MmlNode): string | null {
         const encoding = child.attributes.get('encoding') as string;
         for (const type of Object.keys(this.annotationTypes)) {
             if (this.annotationTypes[type].indexOf(encoding) >= 0) {

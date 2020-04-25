@@ -24,9 +24,7 @@
 
 
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
 import {ParseMethod} from '../Types.js';
-import BaseMethods from '../base/BaseMethods.js';
 import {StackItem, EnvList} from '../StackItem.js';
 import {ArrayItem} from '../base/BaseItems.js';
 import {Other} from '../base/BaseConfiguration.js';
@@ -173,7 +171,7 @@ AmsCdMethods.cell = function(parser: TexParser, name: string) {
     //
     // Add a strut to the first cell in even rows to get
     // better spacing of arrow rows.
-    // 
+    //
     parser.Push(parser.create('node', 'mpadded', [], {height: '8.5pt', depth: '2pt'}));
   }
   parser.Push(parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}));

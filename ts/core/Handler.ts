@@ -128,14 +128,14 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     /**
      * @return {string}  The name of this handler class
      */
-    public get name() {
+    public get name(): string {
         return (this.constructor as typeof AbstractHandler).NAME;
     }
 
     /**
      * @override
      */
-    public handlesDocument(document: any) {
+    public handlesDocument(_document: any) {
         return false;
     }
 

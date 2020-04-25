@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor, Constructor} from '../Wrapper.js';
+import {SVGWrapper, Constructor} from '../Wrapper.js';
 import {SVGmsqrt} from './msqrt.js';
-import {CommonMroot, CommonMrootMixin} from '../../common/Wrappers/mroot.js';
+import {CommonMrootMixin} from '../../common/Wrappers/mroot.js';
 import {BBox} from '../BBox.js';
 import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
 
@@ -37,6 +37,9 @@ import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
  */
 export class SVGmroot<N, T, D> extends CommonMrootMixin<Constructor<SVGmsqrt<any, any, any>>>(SVGmsqrt) {
 
+    /**
+     * The mroot wrapper
+     */
     public static kind = MmlMroot.prototype.kind;
 
     /**

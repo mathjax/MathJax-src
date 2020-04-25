@@ -37,7 +37,12 @@
     "member-access": true,
     "member-ordering": [
       true,
-      {"order": "fields-first"}
+      {"order": [
+        "static-field",
+        "instance-field",
+        "static-method",
+        "instance-method"
+      ]}
     ],
     "no-duplicate-variable": true,
     "no-eval": true,
@@ -76,7 +81,6 @@
         "variable-declaration": "nospace"
       }
     ],
-//    "use-strict": true,
     "variable-name": [
       true,
       "ban-keywords"
@@ -87,7 +91,9 @@
       "check-decl",
       "check-operator",
       "check-separator",
-      "check-type"
+      "check-type",
+      "check-rest-spread",
+      "check-type-operator"
     ]
   }
 }

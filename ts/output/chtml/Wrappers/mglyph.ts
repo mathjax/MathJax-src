@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMglyph, CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
+import {CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
 import {StyleList, StyleData} from '../../common/CssStyles.js';
 
@@ -34,10 +34,18 @@ import {StyleList, StyleData} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmglyph<N, T, D> extends CommonMglyphMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmglyph<N, T, D> extends
+CommonMglyphMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mglyph wrapper
+     */
     public static kind = MmlMglyph.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-mglyph > img': {
             display: 'inline-block',

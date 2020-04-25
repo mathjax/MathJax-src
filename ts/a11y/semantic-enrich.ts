@@ -102,7 +102,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
          * @param {any} node  The node to be serialized
          * @return {string}   The serialized version of node
          */
-        protected serializeMml(node: any) {
+        protected serializeMml(node: any): string {
             if ('outerHTML' in node) {
                 return node.outerHTML;
             }
@@ -167,7 +167,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
          */
         private getSpeech(node: MmlNode): string {
             const attributes = node.attributes;
-            if (!attributes) return;
+            if (!attributes) return '';
             const speech = attributes.getExplicit('data-semantic-speech') as string;
             if (!attributes.getExplicit('data-semantic-parent') && speech) {
                 return speech;
@@ -178,6 +178,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
                     return value;
                 }
             }
+            return '';
         }
 
     };
@@ -229,6 +230,9 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
 
     return class extends BaseDocument {
 
+        /**
+         * @override
+         */
         public static OPTIONS: OptionList = {
             ...BaseDocument.OPTIONS,
             enrichSpeech: 'none',                   // or 'shallow', or 'deep'
@@ -316,7 +320,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
  * @template T  The Text node class
  * @template D  The Document class
  */
-export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>) {
+export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>): Handler<N, T, D> {
     MmlJax.setAdaptor(handler.adaptor);
     handler.documentClass =
         EnrichedMathDocumentMixin<N, T, D, MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(

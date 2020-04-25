@@ -42,7 +42,7 @@ declare global {
  *
  * @return {HTMLAdaptor}  The newly created adaptor
  */
-export function browserAdaptor() {
+export function browserAdaptor(): HTMLAdaptor<HTMLElement, Text, Document> {
     return new HTMLAdaptor<HTMLElement, Text, Document>(window);
 }
 

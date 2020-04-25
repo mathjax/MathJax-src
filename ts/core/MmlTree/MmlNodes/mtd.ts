@@ -31,6 +31,10 @@ import {INHERIT} from '../Attributes.js';
  */
 
 export class MmlMtd extends AbstractMmlBaseNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlBaseNode.defaults,
         rowspan: 1,
@@ -41,21 +45,23 @@ export class MmlMtd extends AbstractMmlBaseNode {
     };
 
     /**
-     * @return {string}  The mtd kind
+     * @override
      */
     public get kind() {
         return 'mtd';
     }
 
     /**
-     * @return {number}  <mtd> has an inferred mrow
+     * <mtd> has an inferred mrow
+     * @overrride
      */
     public get arity() {
         return -1;
     }
 
     /**
-     * @return {boolean}  <mtd> can contain line breaks
+     * <mtd> can contain line breaks
+     * @override
      */
     public get linebreakContainer() {
         return true;
@@ -82,4 +88,5 @@ export class MmlMtd extends AbstractMmlBaseNode {
         this.childNodes[0].setTeXclass(null);
         return this;
     }
+
 }

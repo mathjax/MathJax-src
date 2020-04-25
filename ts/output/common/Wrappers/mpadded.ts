@@ -73,7 +73,7 @@ export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): Mpadd
          * @return {number[]}  The original height, depth, width, the changes in height, depth,
          *                    and width, and the horizontal and vertical offsets of the content
          */
-        public getDimens() {
+        public getDimens(): number[] {
             const values = this.node.attributes.getList('width', 'height', 'depth', 'lspace', 'voffset');
             const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
             let {w, h, d} = bbox;
@@ -100,7 +100,7 @@ export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): Mpadd
          * @param {number} m          The minimum value allowed for the dimension
          * @return {number}           The final dimension in ems
          */
-        public dimen(length: Property, bbox: BBox, d: string = '', m: number = null) {
+        public dimen(length: Property, bbox: BBox, d: string = '', m: number = null): number {
             length = String(length);
             const match = length.match(/width|height|depth/);
             const size = (match ? bbox[match[0].charAt(0) as (keyof BBox)] :
@@ -119,7 +119,7 @@ export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): Mpadd
          * @override
          */
         public computeBBox(bbox: BBox, recompute: boolean = false) {
-            const [H, D, W, dh, dd, dw, x, y] = this.getDimens();
+            const [H, D, W, dh, dd, dw] = this.getDimens();
             bbox.w = W + dw;
             bbox.h = H + dh;
             bbox.d = D + dd;
@@ -129,15 +129,16 @@ export function CommonMpaddedMixin<T extends WrapperConstructor>(Base: T): Mpadd
         /**
          * @override
          */
-        public getWrapWidth(i: number) {
+        public getWrapWidth(_i: number) {
             return this.getBBox().w;
         }
 
         /**
          * @override
          */
-        public getChildAlign(i: number) {
+        public getChildAlign(_i: number) {
             return this.node.attributes.get('data-align') as string || 'left';
         }
     };
+
 }

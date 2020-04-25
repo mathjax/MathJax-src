@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLFontData, CHTMLCharOptions, CHTMLCharData, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass,
-        CssFontMap, DelimiterData, DelimiterMap, CharMapMap, FontDataClass} from '../FontData.js';
+import {CHTMLFontData, CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass,
+        DelimiterMap, CharMapMap} from '../FontData.js';
 import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
 import {StringMap} from '../Wrapper.js';
 

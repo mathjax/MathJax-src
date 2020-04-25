@@ -30,28 +30,39 @@ import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMenclose extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults,
         notation: 'longdiv'
     };
+
+    /**
+     * TeX class is ORD
+     */
     public texClass = TEXCLASS.ORD;
 
     /**
-     * @return {string}  The menclose kind
+     * The menclose kind
+     * @override
      */
     public get kind() {
         return 'menclose';
     }
 
     /**
-     * @return {number}  <menclose> has an inferred mrow
+     * <menclose> has an inferred mrow
+     * @override
      */
     public get arity() {
         return -1;
     }
 
     /**
-     * @return {boolean}  <menclose> is a linebreak container
+     * <menclose> is a linebreak container
+     * @override
      */
     public get linebreakContininer() {
         return true;
@@ -65,4 +76,5 @@ export class MmlMenclose extends AbstractMmlNode {
         this.updateTeXclass(this.childNodes[0]);
         return prev;
     }
+
 }

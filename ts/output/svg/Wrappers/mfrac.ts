@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMfrac, CommonMfracMixin} from '../../common/Wrappers/mfrac.js';
+import {CommonMfracMixin} from '../../common/Wrappers/mfrac.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {SVGmo} from './mo.js';
 
@@ -36,8 +36,14 @@ import {SVGmo} from './mo.js';
  */
 export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The mfrac wrapper
+     */
     public static kind = MmlMfrac.prototype.kind;
 
+    /**
+     * An mo element used to render bevelled fractions
+     */
     public bevel: SVGmo<N, T, D>;
 
     /************************************************/

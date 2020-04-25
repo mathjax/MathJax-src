@@ -114,13 +114,38 @@ export interface InputJax<N, T, D> {
  */
 export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
 
+    /**
+     * The name of the input jax
+     */
     public static NAME: string = 'generic';
+
+    /**
+     * The default options for the input jax
+     */
     public static OPTIONS: OptionList = {};
 
+    /**
+     * The actual options supplied to the input jax
+     */
     public options: OptionList;
+
+    /**
+     * Filters to run on the TeX string before it is processed
+     */
     public preFilters: FunctionList;
+
+    /**
+     * Filters to run on the generated MathML after the TeX string is processed
+     */
     public postFilters: FunctionList;
+
+    /**
+     * The DOMAdaptor for the MathDocument for this input jax
+     */
     public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
+    /**
+     * The MathML node factory
+     */
     public mmlFactory: MmlFactory = null;        // set by the handler
 
     /**
@@ -138,7 +163,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     /**
      * @return {string}  The name of this input jax class
      */
-    public get name() {
+    public get name(): string {
         return (this.constructor as typeof AbstractInputJax).NAME;
     }
 
@@ -165,14 +190,14 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     /**
      * @return {boolean}  True means find math in string array, false means in DOM element
      */
-    public get processStrings() {
+    public get processStrings(): boolean {
         return true;
     }
 
     /**
      * @override
      */
-    public findMath(node: N | string[], options?: OptionList) {
+    public findMath(_node: N | string[], _options?: OptionList) {
         return [] as ProtoItem<N, T>[];
     }
 
@@ -192,7 +217,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
      * @return {any}                   The (possibly modified) data
      */
     protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>,
-                             document: MathDocument<N, T, D>, data: any) {
+                             document: MathDocument<N, T, D>, data: any): any {
         let args = {math: math, document: document, data: data};
         filters.execute(args);
         return args.data;

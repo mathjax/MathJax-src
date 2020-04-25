@@ -30,6 +30,10 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMspace extends AbstractMmlTokenNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlTokenNode.defaults,
         width:  '0em',
@@ -37,17 +41,22 @@ export class MmlMspace extends AbstractMmlTokenNode {
         depth:  '0ex',
         linebreak: 'auto'
     };
+
+    /**
+     * TeX class is ORD
+     */
     public texClass = TEXCLASS.ORD;
 
     /**
-     * @return {string}  the mspace kind
+     * @override
      */
     public get kind() {
         return 'mspace';
     }
 
     /**
-     * @return {number}  mspace can't have children
+     * mspace can't have children
+     * @override
      */
     public get arity() {
         return 0;
@@ -70,4 +79,5 @@ export class MmlMspace extends AbstractMmlTokenNode {
         return (attributes.getExplicit('width') == null && attributes.getExplicit('height') == null &&
                 attributes.getExplicit('depth') == null && attributes.get('linebreak') === 'newline');
     }
+
 }

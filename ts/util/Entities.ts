@@ -23,7 +23,7 @@
 
 import {retryAfter} from './Retries.js';
 import {asyncLoad} from './AsyncLoad.js';
-import {userOptions, defaultOptions, OptionList} from './Options.js';
+import {OptionList} from './Options.js';
 
 /**
  * The type for lists of entities
@@ -477,7 +477,7 @@ export function remove(entity: string) {
  * @param {string} text  The text whose entities are to be replaced
  * @return {string}      The text with entries replaced
  */
-export function translate(text: string) {
+export function translate(text: string): string {
     return text.replace(/&([a-z][a-z0-9]*|#(?:[0-9]+|x[0-9a-f]+));/ig, replace);
 }
 
@@ -490,7 +490,7 @@ export function translate(text: string) {
  * @param {string} entity  The name of the entity to be replaced
  * @return {string}        The unicode character for the entity, or the entity name (if none found)
  */
-function replace(match: string, entity: string) {
+function replace(match: string, entity: string): string {
     if (entity.charAt(0) === '#') {
         return numeric(entity.slice(1));
     }
@@ -509,9 +509,9 @@ function replace(match: string, entity: string) {
 
 /**
  * @param {string} entity  The character code point as a string
- * @return {srting}        The character(s) with the given code point
+ * @return {string}        The character(s) with the given code point
  */
-export function numeric(entity: string) {
+export function numeric(entity: string): string {
     let n = (entity.charAt(0) === 'x' ?
              parseInt(entity.slice(1), 16) :
              parseInt(entity));

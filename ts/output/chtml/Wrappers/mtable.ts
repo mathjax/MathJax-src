@@ -23,7 +23,7 @@
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CommonMtable, CommonMtableMixin} from '../../common/Wrappers/mtable.js';
+import {CommonMtableMixin} from '../../common/Wrappers/mtable.js';
 import {CHTMLmtr} from './mtr.js';
 import {CHTMLmtd} from './mtd.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
@@ -31,7 +31,6 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../common/CssStyles.js';
 import {isPercent} from '../../../util/string.js';
 import {OptionList} from '../../../util/Options.js';
-import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -44,8 +43,14 @@ import {BBox} from '../BBox.js';
 export class CHTMLmtable<N, T, D> extends
 CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mtable wrapper
+     */
     public static kind = MmlMtable.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-mtable': {
             'vertical-align': '.25em',
@@ -328,7 +333,6 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
         const space = this.getRowHalfSpacing();
         const {H, D, NH, ND} = this.getTableData();
         const HD = this.getEqualRowHeight();
-        const HDem = this.em(HD);
         //
         // Loop through the rows and set their heights
         //
@@ -370,7 +374,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
      * @param {number] D           The new depth for the row
      * @return {boolean}           True if no other cells in this row need to be processed
      */
-    protected setCellBaseline(cell: CHTMLWrapper<N, T, D>, ralign: string, HD: number, D: number) {
+    protected setCellBaseline(cell: CHTMLWrapper<N, T, D>, ralign: string, HD: number, D: number): boolean {
         const calign = cell.node.attributes.get('rowalign');
         if (calign === 'baseline' || calign === 'axis') {
             const adaptor = this.adaptor;
@@ -444,7 +448,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
      * Mark the alignment of the table
      */
     protected handleJustify() {
-        const [align, shift] = this.getAlignShift();
+        const align = this.getAlignShift()[0];
         if (align !== 'center') {
             this.adaptor.setAttribute(this.chtml, 'justify', align);
         }
@@ -489,8 +493,8 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
      * @param {string} side         The side for the labels
      * @return {[string, number]}   The alignment and shift values
      */
-    protected addLabelPadding(side: string) {
-        const [pad, align, shift] = this.getPadAlignShift(side);
+    protected addLabelPadding(side: string): [string, number] {
+        const [ , align, shift] = this.getPadAlignShift(side);
         const styles: OptionList = {};
         if (side === 'right') {
             const W = this.node.attributes.get('width') as string;

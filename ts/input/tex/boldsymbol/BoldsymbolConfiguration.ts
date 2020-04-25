@@ -31,7 +31,6 @@ import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 import {NodeFactory} from '../NodeFactory.js';
 import ParseOptions from '../ParseOptions.js';
-import {MathItem} from '../../../core/MathItem.js';
 
 let BOLDVARIANT: {[key: string]: string} = {};
 BOLDVARIANT[TexConstant.Variant.NORMAL] = TexConstant.Variant.BOLD;
@@ -102,13 +101,13 @@ export function rewriteBoldTokens(arg: {data: ParseOptions}) {
       NodeUtil.removeProperties(node, 'fixBold');
     }
   }
-};
+}
 
 
 export const BoldsymbolConfiguration = Configuration.create(
-  'boldsymbol', {handler: {macro: ['boldsymbol']},
-                 nodes: {'token': createBoldToken},
-                 postprocessors: [rewriteBoldTokens]}
+    'boldsymbol', {
+        handler: {macro: ['boldsymbol']},
+        nodes: {'token': createBoldToken},
+        postprocessors: [rewriteBoldTokens]
+    }
 );
-
-

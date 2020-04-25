@@ -58,13 +58,18 @@ export class MathMLCompile<N, T, D> {
         ...AbstractMmlNode.verifyDefaults
     };
 
+    /**
+     * The DOMAdaptor for the document being processed
+     */
     public adaptor: DOMAdaptor<N, T, D>;
 
     /**
      *  The instance of the MmlFactory object and
-     *  the options (the defaults with the user options merged in)
      */
     protected factory: MmlFactory;
+    /**
+     *  The options (the defaults with the user options merged in)
+     */
     protected options: OptionList;
 
     /**
@@ -81,6 +86,9 @@ export class MathMLCompile<N, T, D> {
         }
     }
 
+    /**
+     * @param{MmlFactory} mmlFactory   The MathML factory to use for new nodes
+     */
     public setMmlFactory(mmlFactory: MmlFactory) {
         this.factory = mmlFactory;
     }
@@ -88,10 +96,10 @@ export class MathMLCompile<N, T, D> {
     /**
      * Convert a MathML DOM tree to internal MmlNodes
      *
-     * @param {N} node  The <math> node to convert to MmlNodes
-     * @return {MmlNode}          The MmlNode at the root of the converted tree
+     * @param {N} node     The <math> node to convert to MmlNodes
+     * @return {MmlNode}   The MmlNode at the root of the converted tree
      */
-    public compile(node: N) {
+    public compile(node: N): MmlNode {
         let mml = this.makeNode(node);
         mml.verifyTree(this.options['verify']);
         mml.setInheritedAttributes({}, false, 0, false);
@@ -105,10 +113,10 @@ export class MathMLCompile<N, T, D> {
      *
      *  FIXME: we should use data-* attributes rather than classes for these
      *
-     * @param {N} node   The node to convert to an MmlNode
-     * @return {MmlNode}           The converted MmlNode
+     * @param {N} node     The node to convert to an MmlNode
+     * @return {MmlNode}   The converted MmlNode
      */
-    public makeNode(node: N) {
+    public makeNode(node: N): MmlNode {
         const adaptor = this.adaptor;
         let limits = false;
         let kind = adaptor.kind(node).replace(/^.*:/, '');
@@ -174,15 +182,15 @@ export class MathMLCompile<N, T, D> {
      * @param {string} name   The name of an attribute to filter
      * @param {string} value  The value to filter
      */
-    protected filterAttribute(name: string, value: string) {
+    protected filterAttribute(_name: string, value: string) {
         return value;
     }
 
     /**
      * Convert the children of the MathML node and add them to the MmlNode
      *
-     * @param {MmlNode} mml       The MmlNode to which children will be added
-     * @param {N} node  The MathML node whose children are to be copied
+     * @param {MmlNode} mml  The MmlNode to which children will be added
+     * @param {N} node       The MathML node whose children are to be copied
      */
     protected addChildren(mml: MmlNode, node: N) {
         if (mml.arity === 0) {
@@ -261,7 +269,7 @@ export class MathMLCompile<N, T, D> {
      * @param {string} variant  The mathvariant name
      * @return {string}         The corrected variant
      */
-    protected fixCalligraphic(variant: string) {
+    protected fixCalligraphic(variant: string): string {
         return variant.replace(/caligraphic/, 'calligraphic');
     }
 
@@ -306,10 +314,10 @@ export class MathMLCompile<N, T, D> {
      * @param {string} text  The text to have leading/trailing spaced removed
      * @return {string}      The trimmed text
      */
-    protected trimSpace(text: string) {
+    protected trimSpace(text: string): string {
         return text.replace(/[\t\n\r]/g, ' ')    // whitespace to spaces
-                   .replace(/^ +/,'')            // initial whitespace
-                   .replace(/ +$/,'')            // trailing whitespace
+                   .replace(/^ +/, '')           // initial whitespace
+                   .replace(/ +$/, '')           // trailing whitespace
                    .replace(/  +/g, ' ');        // internal multiple whitespace
     }
 

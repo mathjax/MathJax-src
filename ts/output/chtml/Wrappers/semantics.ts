@@ -23,10 +23,10 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonSemantics, CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
+import {CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
 import {BBox} from '../BBox.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
-import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
+import {XMLNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
@@ -37,8 +37,13 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLsemantics<N, T, D> extends CommonSemanticsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLsemantics<N, T, D> extends
+CommonSemanticsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The semantics wrapper
+     */
     public static kind = MmlSemantics.prototype.kind;
 
     /**
@@ -63,6 +68,10 @@ export class CHTMLsemantics<N, T, D> extends CommonSemanticsMixin<CHTMLConstruct
  * @template D  The Document class
  */
 export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
+
+    /**
+     * The annotation wrapper
+     */
     public static kind = MmlAnnotation.prototype.kind;
 
     /**
@@ -92,8 +101,15 @@ export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
  * @template D  The Document class
  */
 export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
+
+    /**
+     * The annotation-xml wrapper
+     */
     public static kind = MmlAnnotationXML.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-annotation-xml': {
             'font-family': 'initial',
@@ -112,8 +128,15 @@ export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
  * @template D  The Document class
  */
 export class CHTMLxml<N, T, D> extends CHTMLWrapper<N, T, D> {
+
+    /**
+     * The xml wrapper
+     */
     public static kind = XMLNode.prototype.kind;
 
+    /**
+     * Don't set up inline-block styles for this
+     */
     public static autoStyle = false;
 
     /**
@@ -126,7 +149,7 @@ export class CHTMLxml<N, T, D> extends CHTMLWrapper<N, T, D> {
     /**
      * @override
      */
-    public computeBBox(bbox: BBox, recompute: boolean = false) {
+    public computeBBox(bbox: BBox, _recompute: boolean = false) {
         const {w, h, d} = this.jax.measureXMLnode((this.node as XMLNode).getXML() as N);
         bbox.w = w;
         bbox.h = h;

@@ -21,11 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor, StringMap} from '../Wrapper.js';
-import {CommonMo, CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
+import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
+import {CommonMoMixin} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../BBox.js';
-import {DIRECTION, NOSTRETCH, SVGCharOptions, DelimiterData} from '../FontData.js';
+import {DIRECTION, SVGCharData, SVGCharOptions} from '../FontData.js';
 
 
 /*****************************************************************/
@@ -41,8 +41,13 @@ const HFUZZ = 0.1;       // overlap for horizontal stretchy glyphs
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmo<N, T, D> extends
+CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The mo wrapper
+     */
     public static kind = MmlMo.prototype.kind;
 
     /**
@@ -57,14 +62,14 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
         }
         let svg = this.standardSVGnode(parent);
         if (stretchy && this.size < 0) {
-            this.stretchSVG(svg, symmetric);
+            this.stretchSVG();
         } else {
             if (symmetric || attributes.get('largeop')) {
                 const bbox = BBox.empty();
                 super.computeBBox(bbox);
                 const u = this.fixed((bbox.d - bbox.h) / 2 + this.font.params.axis_height);
                 if (u !== '0') {
-                    this.adaptor.setAttribute(svg, 'transform', 'translate(0 '+ u + ')');
+                    this.adaptor.setAttribute(svg, 'transform', 'translate(0 ' + u + ')');
                 }
             }
             this.addChildren(svg);
@@ -73,11 +78,8 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
 
     /**
      * Create the SVG for a multi-character stretchy delimiter
-     *
-     * @param {N} svg  The parent element in which to put the delimiter
-     * @param {boolean} symmetric  Whether delimiter should be symmetric about the math axis
      */
-    protected stretchSVG(svg: N, symmetric: boolean) {
+    protected stretchSVG() {
         const stretch = this.stretch.stretch;
         const bbox = this.getBBox();
         if (this.stretch.dir === DIRECTION.Vertical) {
@@ -109,7 +111,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
      * @param {BBox} bbox           The full size of the stretched character
      */
     protected stretchHorizontal(stretch: number[], bbox: BBox) {
-        const {h, d, w} = bbox;
+        const w = bbox.w;
         const L = this.addLeft(stretch[0]);
         const R = this.addRight(stretch[2], w);
         if (stretch.length === 4) {
@@ -126,9 +128,9 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
 
     /**
      * @param {number} n         The number of the character to look up
-     * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
+     * @return {SVGCharData}     The full CharData object, with CharOptions guaranteed to be defined
      */
-    protected getChar(n: number) {
+    protected getChar(n: number): SVGCharData {
         const char = this.font.getChar('-size4', n) || [0, 0, 0, null];
         return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, SVGCharOptions];
     }
@@ -138,9 +140,9 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
      * @param {number} x   The x position of the glyph
      * @param {number} y   The y position of the glyph
      * @param {N} parent   The container for the glyph
-     * @return {N}         The SVG path for the glyph
+     * @return {number}    The width of the character placed
      */
-    protected addGlyph(n: number, x: number, y: number, parent: N = null) {
+    protected addGlyph(n: number, x: number, y: number, parent: N = null): number {
         return this.placeChar(n, x, y, parent || this.element, '-size4');
     }
 
@@ -152,7 +154,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
      * @param {number} W    The width of the stretched delimiter
      * @return {number}     The total height of the top glyph
      */
-    protected addTop(n: number, H: number, W: number) {
+    protected addTop(n: number, H: number, W: number): number {
         if (!n)  return 0;
         const [h, d, w] = this.getChar(n);
         this.addGlyph(n, (W - w) / 2, H - h);
@@ -196,7 +198,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
      * @param {number} W    The width of the stretched delimiter
      * @return {number}     The total height of the bottom glyph
      */
-    protected addBot(n: number, D: number, W: number) {
+    protected addBot(n: number, D: number, W: number): number {
         if (!n) return 0;
         const [h, d, w] = this.getChar(n);
         this.addGlyph(n, (W - w) / 2, d - D);
@@ -208,7 +210,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
      * @param {number} W    The width of the stretched delimiter
      * @return {number[]}   The top and bottom positions of the middle glyph
      */
-    protected addMidV(n: number, W: number) {
+    protected addMidV(n: number, W: number): [number, number] {
         if (!n) return [0, 0];
         const [h, d, w] = this.getChar(n);
         const y = (d - h) / 2 + this.font.params.axis_height;
@@ -222,7 +224,7 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
      * @param {number} n   The character number for the left glyph of the stretchy character
      * @return {number}    The width of the left glyph
      */
-    protected addLeft(n: number) {
+    protected addLeft(n: number): number {
         return (n ? this.addGlyph(n, 0, 0) : 0);
     }
 
@@ -237,7 +239,6 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
         if (!n) return;
         R = Math.max(0, R - HFUZZ);     // A little less than the width of the right glyph
         L = Math.max(0, L - HFUZZ);     // A little less than the width of the left glyph
-        const adaptor = this.adaptor;
         const [h, d, w] = this.getChar(n);
         const X = W - L - R;            // The width of the extender
         const Y = h + d + 2 * VFUZZ;    // The height (plus some fuzz) of the extender
@@ -260,9 +261,9 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
      * @param {number} W   The width of the stretched character
      * @return {number}    The width of the right glyph
      */
-    protected addRight(n: number, W: number) {
+    protected addRight(n: number, W: number): number {
         if (!n) return 0;
-        const [h, d, w] = this.getChar(n);
+        const w = this.getChar(n)[2];
         return this.addGlyph(n, W - w, 0);
     }
 
@@ -271,9 +272,9 @@ export class SVGmo<N, T, D> extends CommonMoMixin<SVGConstructor<any, any, any>>
      * @param {number} W   The width of the stretched character
      * @return {number[]}  The positions of the left and right edges of the middle glyph
      */
-    protected addMidH(n: number, W: number) {
+    protected addMidH(n: number, W: number): [number, number] {
         if (!n) return [0, 0];
-        const [h, d, w] = this.getChar(n);
+        const w = this.getChar(n)[2];
         this.addGlyph(n, (W - w) / 2, 0);
         return [(W - w) / 2, (W + w) / 2];
     }

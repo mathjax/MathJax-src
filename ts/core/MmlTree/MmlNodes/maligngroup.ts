@@ -31,20 +31,25 @@ import {INHERIT} from '../Attributes.js';
  */
 
 export class MmlMaligngroup extends AbstractMmlLayoutNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlLayoutNode.defaults,
         groupalign: INHERIT
     };
 
     /**
-     * @return {string}  The maligngroup kind
+     * @override
      */
     public get kind() {
         return 'maligngroup';
     }
 
     /**
-     * @return {boolean}  <maligngroup> is space-like
+     * <maligngroup> is space-like
+     * @override
      */
     public get isSpacelike() {
         return true;
@@ -52,11 +57,11 @@ export class MmlMaligngroup extends AbstractMmlLayoutNode {
 
     /**
      * Children can inherit from <maligngroup>
-     *
      * @override
      */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         super.setChildInheritedAttributes(attributes, display, level, prime);
     }
+
 }

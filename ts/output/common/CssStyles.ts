@@ -49,7 +49,7 @@ export class CssStyles {
     /**
      * @return {string}  The styles as a CSS string
      */
-    get cssText() {
+    get cssText(): string {
         return this.getStyleString();
     }
 
@@ -86,14 +86,14 @@ export class CssStyles {
     /**
      * Clear all the styles
      */
-    clear() {
+    public clear() {
         this.styles = {};
     }
 
     /**
      * @return {string} The CSS string for the style list
      */
-    public getStyleString() {
+    public getStyleString(): string {
         const selectors = Object.keys(this.styles);
         const defs: string[] = new Array(selectors.length);
         let i = 0;
@@ -107,7 +107,7 @@ export class CssStyles {
      * @param {StyleData} styles  The style data to be stringified
      * @return {string}           The CSS string for the given data
      */
-    public getStyleDefString(styles: StyleData) {
+    public getStyleDefString(styles: StyleData): string {
         const properties = Object.keys(styles);
         const values: string[] = new Array(properties.length);
         let i = 0;

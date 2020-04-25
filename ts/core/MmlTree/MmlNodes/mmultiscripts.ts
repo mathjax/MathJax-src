@@ -31,19 +31,24 @@ import {MmlMsubsup} from './msubsup.js';
  */
 
 export class MmlMmultiscripts extends MmlMsubsup {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...MmlMsubsup.defaults
     };
 
     /**
-     * @return {string}  The mmultiscripts kind
+     * @override
      */
     public get kind() {
         return 'mmultiscripts';
     }
 
     /**
-     * @return {number}  <mmultiscripts> requires at least one child (the base)
+     * <mmultiscripts> requires at least one child (the base)
+     * @override
      */
     public get arity() {
         return 1;
@@ -110,6 +115,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
         }
         super.verifyChildren(options);
     }
+
 }
 
 /*****************************************************************/
@@ -118,6 +124,10 @@ export class MmlMmultiscripts extends MmlMsubsup {
  */
 
 export class MmlMprescripts extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults
     };
@@ -125,14 +135,14 @@ export class MmlMprescripts extends AbstractMmlNode {
     /**
      * @return {string}  The mprescripts kind
      */
-    public get kind() {
+    public get kind(): string {
         return 'mprescripts';
     }
 
     /**
      * @return {number}  <mprescripts> can have no children
      */
-    public get arity() {
+    public get arity(): number {
         return 0;
     }
 
@@ -147,6 +157,7 @@ export class MmlMprescripts extends AbstractMmlNode {
             this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
         }
     }
+
 }
 
 /*****************************************************************/
@@ -155,6 +166,10 @@ export class MmlMprescripts extends AbstractMmlNode {
  */
 
 export class MmlNone extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults
     };
@@ -162,14 +177,14 @@ export class MmlNone extends AbstractMmlNode {
     /**
      * @return {string}  The none kind
      */
-    public get kind() {
+    public get kind(): string {
         return 'none';
     }
 
     /**
      * @return {number}  <none> can have no children
      */
-    public get arity() {
+    public get arity(): number {
         return 0;
     }
 
@@ -184,4 +199,5 @@ export class MmlNone extends AbstractMmlNode {
             this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
         }
     }
+
 }

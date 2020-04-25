@@ -23,8 +23,8 @@
  */
 
 import {SVGWrapper, SVGConstructor, Constructor} from '../Wrapper.js';
-import {CommonMtr, CommonMtrMixin} from '../../common/Wrappers/mtr.js';
-import {CommonMlabeledtr, CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
+import {CommonMtrMixin} from '../../common/Wrappers/mtr.js';
+import {CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
 import {SVGmtable} from './mtable.js';
 import {SVGmtd} from './mtd.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
@@ -51,18 +51,43 @@ export type SizeData = {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
+export class SVGmtr<N, T, D> extends
+CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The mtr wrapper
+     */
     public static kind = MmlMtr.prototype.kind;
 
+    /**
+     * The mtable in which this mtr appears
+     */
     public parent: SVGmtable<N, T, D>;
 
-    public H: number;       // height of row
-    public D: number;       // depth of row
-    public tSpace: number;  // space above row
-    public bSpace: number;  // space below row
-    public tLine: number;   // line space above
-    public bLine: number;   // line space below
+    /**
+     * The height of the row
+     */
+    public H: number;
+    /**
+     * The depth of the row
+     */
+    public D: number;
+    /**
+     * The space above the row
+     */
+    public tSpace: number;
+    /**
+     * The space below the row
+     */
+    public bSpace: number;
+    /**
+     * The line space above the row
+     */
+    public tLine: number;
+    /**
+     * The line space below the row
+     */
+    public bLine: number;
 
     /**
      * @override
@@ -70,7 +95,7 @@ export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<any, any, any>, SVGCo
     public toSVG(parent: N) {
         const svg = this.standardSVGnode(parent);
         this.placeCells(svg);
-        this.placeColor(svg);
+        this.placeColor();
     }
 
     /**
@@ -82,7 +107,6 @@ export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<any, any, any>, SVGCo
         const cSpace = this.parent.getColumnHalfSpacing();
         const cLines = [this.parent.fLine, ...this.parent.cLines, this.parent.fLine];
         const cWidth = this.parent.getComputedWidths();
-        const [T, B] = [this.tLine / 2, this.bLine / 2];
         let x = cLines[0];
         for (let i = 0; i < this.numCells; i++) {
             const child = this.getChild(i);
@@ -99,7 +123,7 @@ export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<any, any, any>, SVGCo
      * @param {SizeData} sizes   The positioning information
      * @return {number}          The new x position
      */
-    public placeCell(cell: SVGmtd<N, T, D>, sizes: SizeData) {
+    public placeCell(cell: SVGmtd<N, T, D>, sizes: SizeData): number {
         const {x, y, lSpace, w, rSpace, lLine, rLine} = sizes;
         const [dx, dy] = cell.placeCell(x + lSpace, y, w, this.H, this.D);
         const W = lSpace + w + rSpace;
@@ -111,10 +135,8 @@ export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<any, any, any>, SVGCo
 
     /**
      * Expand the backgound color to fill the entire row
-     *
-     * @param {N} svg   The container for the table
      */
-    protected placeColor(svg: N) {
+    protected placeColor() {
         const adaptor = this.adaptor;
         const child = adaptor.firstChild(this.element);
         if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-bgcolor')) {
@@ -137,9 +159,13 @@ export class SVGmtr<N, T, D> extends CommonMtrMixin<SVGmtd<any, any, any>, SVGCo
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmlabeledtr<N, T, D> extends
 CommonMlabeledtrMixin<SVGmtd<any, any, any>, Constructor<SVGmtr<any, any, any>>>(SVGmtr) {
 
+    /**
+     * The mlabeledtr wrapper
+     */
     public static kind = MmlMlabeledtr.prototype.kind;
 
     /**
@@ -152,4 +178,5 @@ CommonMlabeledtrMixin<SVGmtd<any, any, any>, Constructor<SVGmtr<any, any, any>>>
             child.toSVG(this.parent.labels);
         }
     }
+
 }

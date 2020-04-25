@@ -22,7 +22,6 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**

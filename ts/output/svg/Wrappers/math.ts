@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMath, CommonMathMixin} from '../../common/Wrappers/math.js';
+import {CommonMathMixin} from '../../common/Wrappers/math.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
 import {StyleList} from '../../common/CssStyles.js';
 import {BBox} from '../BBox.js';
@@ -35,10 +35,18 @@ import {BBox} from '../BBox.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmath<N, T, D> extends
+CommonMathMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The math wrapper
+     */
     public static kind = MmlMath.prototype.kind;
 
+    /**
+     * @overreide
+     */
     public static styles: StyleList = {
         'mjx-container[jax="SVG"][display="true"]': {
             display: 'block',
@@ -121,14 +129,14 @@ export class SVGmath<N, T, D> extends CommonMathMixin<SVGConstructor<any, any, a
     /**
      * @return {string}  A unique ID to use for aria-labeledby title elements
      */
-    protected getTitleID() {
+    protected getTitleID(): string {
         return 'mjx-svg-title-' + String(this.jax.options.titleID++);
     }
 
     /**
      * @override
      */
-    public setChildPWidths(recompute: boolean, w: number = null, clear: boolean = true) {
+    public setChildPWidths(recompute: boolean, w: number = null, _clear: boolean = true) {
         return super.setChildPWidths(recompute,
                                      this.parent ? w : this.metrics.containerWidth / this.jax.pxPerEm,
                                      false);

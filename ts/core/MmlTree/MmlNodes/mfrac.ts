@@ -30,6 +30,10 @@ import {MmlNode, AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMfrac extends AbstractMmlBaseNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlBaseNode.defaults,
         linethickness: 'medium',
@@ -39,21 +43,23 @@ export class MmlMfrac extends AbstractMmlBaseNode {
     };
 
     /**
-     * @return {string}  The mfrac kind
+     * @override
      */
     public get kind() {
         return 'mfrac';
     }
 
     /**
-     * @return {number}  <mfrac> requires two children
+     * <mfrac> requires two children
+     * @override
      */
     public get arity() {
         return 2;
     }
 
     /**
-     * @return {boolean}  The children of <mfrac> can include line breaks
+     * The children of <mfrac> can include line breaks
+     * @override
      */
     public get linebreakContainer() {
         return true;
@@ -61,7 +67,6 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
     /**
      * Update the children separately
-     *
      * @override
      */
     public setTeXclass(prev: MmlNode) {
@@ -74,7 +79,6 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
     /**
      * Adjust the display level, and use prime style in denominator
-     *
      * @override
      */
     protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
@@ -84,4 +88,5 @@ export class MmlMfrac extends AbstractMmlBaseNode {
         this.childNodes[0].setInheritedAttributes(attributes, false, level, prime);
         this.childNodes[1].setInheritedAttributes(attributes, false, level, true);
     }
+
 }

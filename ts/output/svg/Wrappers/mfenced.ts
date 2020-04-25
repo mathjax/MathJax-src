@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMfenced, CommonMfencedMixin} from '../../common/Wrappers/mfenced.js';
+import {CommonMfencedMixin} from '../../common/Wrappers/mfenced.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
 import {SVGinferredMrow} from './mrow.js';
 
@@ -36,8 +36,14 @@ import {SVGinferredMrow} from './mrow.js';
  */
 export class SVGmfenced<N, T, D> extends CommonMfencedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The mfenced wrapper
+     */
     public static kind = MmlMfenced.prototype.kind;
 
+    /**
+     * An mrow used to render the result
+     */
     public mrow: SVGinferredMrow<N, T, D>;
 
     /**
@@ -53,7 +59,7 @@ export class SVGmfenced<N, T, D> extends CommonMfencedMixin<SVGConstructor<any, 
     /**
      * @param {SVGWrapper} parent   The parent to use for the fenced children
      */
-    setChildrenParent(parent: SVGWrapper<N, T, D>) {
+    protected setChildrenParent(parent: SVGWrapper<N, T, D>) {
         for (const child of this.childNodes) {
             child.parent = parent;
         }

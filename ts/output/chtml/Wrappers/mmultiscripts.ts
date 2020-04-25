@@ -23,7 +23,7 @@
 
 import {CHTMLWrapper, Constructor} from '../Wrapper.js';
 import {CHTMLmsubsup} from './msubsup.js';
-import {CommonMmultiscripts, CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
+import {CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
 import {BBox} from '../BBox.js';
 import {StyleList} from '../../common/CssStyles.js';
@@ -36,11 +36,18 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmmultiscripts<N, T, D> extends
 CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any, any, any>>>(CHTMLmsubsup) {
 
+    /**
+     * The mmultiscripts wrapper
+     */
     public static kind = MmlMmultiscripts.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-prescripts': {
             display: 'inline-table',
@@ -69,7 +76,7 @@ CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<a
         //
         const sub = this.combinePrePost(data.sub, data.psub);
         const sup = this.combinePrePost(data.sup, data.psup);
-        const [u, v, q] = this.getUVQ(data.base, sub, sup);
+        const [u, v] = this.getUVQ(data.base, sub, sup);
         //
         //  Place the pre-scripts, then the base, then the post-scripts
         //

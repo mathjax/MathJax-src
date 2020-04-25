@@ -23,9 +23,6 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {BBox} from '../BBox.js';
-import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
-import {Property} from '../../../core/Tree/Node.js';
-import {StyleList, StyleData} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -60,10 +57,16 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
     return class extends Base {
 
         /**
-         * The image's width, height, and valign values converted to em's
+         * The image's width converted to em's
          */
         public width: number;
+        /**
+         * The image's height converted to em's
+         */
         public height: number;
+        /**
+         * The image's valign values converted to em's
+         */
         public valign: number;
 
         /**
@@ -92,7 +95,7 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
         /**
          * @override
          */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
+        public computeBBox(bbox: BBox, _recompute: boolean = false) {
             bbox.w = this.width;
             bbox.h = this.height + this.valign;
             bbox.d = -this.valign;

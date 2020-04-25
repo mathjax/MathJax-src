@@ -23,7 +23,7 @@
 
 import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
 import {MathDocument} from './MathDocument.js';
-import {MathItem, Metrics} from './MathItem.js';
+import {MathItem} from './MathItem.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {FunctionList} from '../util/FunctionList.js';
 
@@ -117,11 +117,29 @@ export interface OutputJax<N, T, D> {
  */
 export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
 
+    /**
+     * The name for the output jax
+     */
     public static NAME: string = 'generic';
+
+    /**
+     * The default options for the output jax
+     */
     public static OPTIONS: OptionList = {};
 
+    /**
+     * The actual options supplied to the output jax
+     */
     public options: OptionList;
+
+    /**
+     * Filters to run after the output is processed
+     */
     public postFilters: FunctionList;
+
+    /**
+     * The MathDocument's DOMAdaptor
+     */
     public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
 
     /**
@@ -136,7 +154,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     /**
      * @return {string}  The name for this output jax class
      */
-    public get name() {
+    public get name(): string {
         return (this.constructor as typeof AbstractOutputJax).NAME;
     }
 
@@ -166,20 +184,20 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     /**
      * @override
      */
-    public getMetrics(document: MathDocument<N, T, D>) {
+    public getMetrics(_document: MathDocument<N, T, D>) {
     }
 
     /**
      * @override
      */
-    public styleSheet(document: MathDocument<N, T, D>) {
+    public styleSheet(_document: MathDocument<N, T, D>) {
         return null as N;
     }
 
     /**
      * @override
      */
-    public pageElements(document: MathDocument<N, T, D>) {
+    public pageElements(_document: MathDocument<N, T, D>) {
         return null as N;
     }
 
@@ -194,7 +212,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
      * @return {any}                   The (possibly modified) data
      */
     protected executeFilters(filters: FunctionList, math: MathItem<N, T, D>,
-                             document: MathDocument<N, T, D>, data: any) {
+                             document: MathDocument<N, T, D>, data: any): any {
         let args = {math, document, data};
         filters.execute(args);
         return args.data;

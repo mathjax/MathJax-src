@@ -23,8 +23,8 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
-import {CommonMtr, CommonMtrMixin} from '../../common/Wrappers/mtr.js';
-import {CommonMlabeledtr, CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
+import {CommonMtrMixin} from '../../common/Wrappers/mtr.js';
+import {CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
 import {CHTMLmtable} from './mtable.js';
 import {CHTMLmtd} from './mtd.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
@@ -38,10 +38,18 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmtr<N, T, D> extends CommonMtrMixin<CHTMLmtd<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmtr<N, T, D> extends
+CommonMtrMixin<CHTMLmtd<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mtr wrapper
+     */
     public static kind = MmlMtr.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-mtr': {
             display: 'table-row',
@@ -87,8 +95,14 @@ export class CHTMLmtr<N, T, D> extends CommonMtrMixin<CHTMLmtd<any, any, any>, C
 export class CHTMLmlabeledtr<N, T, D> extends
 CommonMlabeledtrMixin<CHTMLmtd<any, any, any>, Constructor<CHTMLmtr<any, any, any>>>(CHTMLmtr) {
 
+    /**
+     * The mlabeledtr wrapper
+     */
     public static kind = MmlMlabeledtr.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-mlabeledtr': {
             display: 'table-row'

@@ -23,9 +23,8 @@
 
 import {SVGWrapper, Constructor} from '../Wrapper.js';
 import {SVGmsubsup} from './msubsup.js';
-import {CommonMmultiscripts, CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
+import {CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
-import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -35,9 +34,13 @@ import {BBox} from '../BBox.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmmultiscripts<N, T, D> extends
 CommonMmultiscriptsMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any, any>>>(SVGmsubsup) {
 
+    /**
+     * The mmultiscripts wrapper
+     */
     public static kind = MmlMmultiscripts.prototype.kind;
 
     /**
@@ -52,7 +55,7 @@ CommonMmultiscriptsMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, 
         //
         const sub = this.combinePrePost(data.sub, data.psub);
         const sup = this.combinePrePost(data.sup, data.psup);
-        const [u, v, q] = this.getUVQ(data.base, sub, sup);
+        const [u, v] = this.getUVQ(data.base, sub, sup);
         //
         //  Place the pre-scripts, then the base, then the post-scripts
         //
@@ -80,13 +83,13 @@ CommonMmultiscriptsMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, 
      * @param {number} n       The number of sub/super-scripts
      * @return {number}        The right-hand offset of the scripts
      */
-    protected addScripts(x: number, u: number, v: number, isPre: boolean, i: number, n: number) {
+    protected addScripts(x: number, u: number, v: number, isPre: boolean, i: number, n: number): number {
         const adaptor = this.adaptor;
         const supRow = adaptor.append(this.element, this.svg('g'));
         const subRow = adaptor.append(this.element, this.svg('g'));
         this.place(x, u, supRow);
         this.place(x, v, subRow);
-        let m = i + 2 * n, child;
+        let m = i + 2 * n;
         let dx = 0;
         while (i < m) {
             const [sub, sup] = [this.childNodes[i++], this.childNodes[i++]];
@@ -95,8 +98,8 @@ CommonMmultiscriptsMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, 
             const w = Math.max(subbox.w * subr, supbox.w * supr);
             sub.toSVG(subRow);
             sup.toSVG(supRow);
-            sub.place(dx + (isPre ? w - subbox.w * subr: 0), 0);
-            sup.place(dx + (isPre ? w - supbox.w * supr: 0), 0);
+            sub.place(dx + (isPre ? w - subbox.w * subr : 0), 0);
+            sup.place(dx + (isPre ? w - supbox.w * supr : 0), 0);
             dx += w;
         }
         return x + dx;

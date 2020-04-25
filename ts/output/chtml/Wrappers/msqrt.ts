@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMsqrt, CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
+import {CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
 import {CHTMLmo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
@@ -38,8 +38,14 @@ import {StyleList} from '../../common/CssStyles.js';
  */
 export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The msqrt wrapper
+     */
     public static kind = MmlMsqrt.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-root': {
             display: 'inline-block',
@@ -73,7 +79,7 @@ export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, 
         //
         const sbox = surd.getBBox();
         const bbox = base.getBBox();
-        const [p, q] = this.getPQ(sbox);
+        const [ , q] = this.getPQ(sbox);
         const t = this.font.params.rule_thickness;
         const H = bbox.h + q + t;
         //
@@ -113,7 +119,7 @@ export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, 
      * @param {BBox} sbox          The bounding box of the surd
      * @param {number} H           The height of the root as a whole
      */
-    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox, H: number) {
+    protected addRoot(_ROOT: N, _root: CHTMLWrapper<N, T, D>, _sbox: BBox, _H: number) {
     }
 
 }

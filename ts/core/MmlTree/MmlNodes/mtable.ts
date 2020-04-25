@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList, Node} from '../../Tree/Node.js';
+import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS, indentAttributes} from '../MmlNode.js';
 import {split} from '../../../util/string.js';
 
@@ -31,6 +31,10 @@ import {split} from '../../../util/string.js';
  */
 
 export class MmlMtable extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults,
         align: 'axis',
@@ -52,20 +56,29 @@ export class MmlMtable extends AbstractMmlNode {
         side: 'right',
         minlabelspacing: '0.8em'
     };
+
+    /**
+     * Extra properties for this node
+     */
     public properties = {
         useHeight: 1
     };
+
+    /**
+     * TeX class is ORD
+     */
     public texClass = TEXCLASS.ORD;
 
     /**
-     * @return {string}  The mtable kind
+     * @override
      */
     public get kind() {
         return 'mtable';
     }
 
     /**
-     * @return {boolean}  Linebreaks are allowed in tables
+     * Linebreaks are allowed in tables
+     * @override
      */
     public get linebreakContainer() {
         return true;
@@ -74,7 +87,7 @@ export class MmlMtable extends AbstractMmlNode {
     /**
      * @override
      */
-    setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
         //
         // Force inheritance of shift and align values (since they are needed to output tables with labels)
         //   but make sure they are not given explicitly on the <mtable> tag.
@@ -88,7 +101,7 @@ export class MmlMtable extends AbstractMmlNode {
             }
         }
         super.setInheritedAttributes(attributes, display, level, prime);
-    };
+    }
 
     /**
      * Make sure all children are mtr or mlabeledtr nodes
@@ -141,4 +154,5 @@ export class MmlMtable extends AbstractMmlNode {
         }
         return this;
     }
+
 }

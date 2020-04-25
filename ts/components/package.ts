@@ -38,12 +38,14 @@ export type PackageMap = Map<string, Package>;
  * An error class that includes the package name
  */
 export class PackageError extends Error {
+    /* tslint:disable:jsdoc-require */
     public package: string;
     constructor(message: string, name: string) {
         super(message);
         this.package = name;
     }
-};
+    /* tslint:enable */
+}
 
 /**
  * Types for ready() and failed() functions and for promises
@@ -56,11 +58,11 @@ export type PackagePromise = (resolve: PackageReady, reject: PackageFailed) => v
  * The configuration data for a package
  */
 export interface PackageConfig {
-    ready?: PackageReady,                // Function to call when package is loaded successfully
-    failed?: PackageFailed,              // Function to call when package fails to load
-    checkReady?: () => Promise<void>     // Function called to see if package is fully loaded
+    ready?: PackageReady;                // Function to call when package is loaded successfully
+    failed?: PackageFailed;              // Function to call when package fails to load
+    checkReady?: () => Promise<void>;    // Function called to see if package is fully loaded
                                          //   (may cause additional packages to load, for example)
-};
+}
 
 
 /**
@@ -71,40 +73,6 @@ export class Package {
      * The set of packages being used
      */
     public static packages: PackageMap = new Map();
-
-    /**
-     * Compute the path for a package.
-     *
-     * First, look for a configured source for the package.
-     * Then, if the path doesn't look like the start of a URI, or
-     *   an absolute file path, and doesn't have a [path] prefix,
-     *     prepend [mathjax]
-     * Add .js if there isn't already a file type
-     * While the path begins with a [path] prefix
-     *   Look for the prefix in the path configuration and
-     *     replace the [path] with the actual path
-     *     (this is done recursively, so paths can refer to other paths)
-     * return the result
-     *
-     * @param {string} name            The name of the package to resolve
-     * @param {boolean} addExtension   True if .js shoudl be added automatically
-     * @return {string}                The path (file or URL) for this package
-     */
-    public static resolvePath(name: string, addExtension: boolean = true) {
-        let file = CONFIG.source[name] || name;
-        if (!file.match(/^(?:[a-z]+:\/)?\/|\[|[a-z]:\\/i)) {
-            file = '[mathjax]/' + file.replace(/^\.\//, '');
-        }
-        if (addExtension && !file.match(/\.[^\/]+$/)) {
-            file += '.js';
-        }
-        let match;
-        while ((match = file.match(/^\[([^\]]*)\]/))) {
-            if (!CONFIG.paths.hasOwnProperty(match[1])) break;
-            file = CONFIG.paths[match[1]] + file.substr(match[0].length);
-        }
-        return file;
-    }
 
     /**
      * The pacakge name
@@ -172,8 +140,56 @@ export class Package {
      *                    it is allowed to be loaded, isn't already loading, and hasn't failed to load
      *                    in the past)
      */
-    get canLoad() {
+    get canLoad(): boolean {
         return this.dependencyCount === 0 && !this.noLoad && !this.isLoading && !this.hasFailed;
+    }
+
+    /**
+     * Compute the path for a package.
+     *
+     * First, look for a configured source for the package.
+     * Then, if the path doesn't look like the start of a URI, or
+     *   an absolute file path, and doesn't have a [path] prefix,
+     *     prepend [mathjax]
+     * Add .js if there isn't already a file type
+     * While the path begins with a [path] prefix
+     *   Look for the prefix in the path configuration and
+     *     replace the [path] with the actual path
+     *     (this is done recursively, so paths can refer to other paths)
+     * return the result
+     *
+     * @param {string} name            The name of the package to resolve
+     * @param {boolean} addExtension   True if .js shoudl be added automatically
+     * @return {string}                The path (file or URL) for this package
+     */
+    public static resolvePath(name: string, addExtension: boolean = true): string {
+        let file = CONFIG.source[name] || name;
+        if (!file.match(/^(?:[a-z]+:\/)?\/|\[|[a-z]:\\/i)) {
+            file = '[mathjax]/' + file.replace(/^\.\//, '');
+        }
+        if (addExtension && !file.match(/\.[^\/]+$/)) {
+            file += '.js';
+        }
+        let match;
+        while ((match = file.match(/^\[([^\]]*)\]/))) {
+            if (!CONFIG.paths.hasOwnProperty(match[1])) break;
+            file = CONFIG.paths[match[1]] + file.substr(match[0].length);
+        }
+        return file;
+    }
+
+    /**
+     * Attempt to load all packages that are ready to be loaded
+     * (i.e., that have no unloaded dependencies, and that haven't
+     *  already been loaded, and that aren't in process of being
+     *  loaded, and that aren't marked as noLoad).
+     */
+    public static loadAll() {
+        for (const extension of this.packages.values()) {
+            if (extension.canLoad) {
+                extension.load();
+            }
+        }
     }
 
     /**
@@ -191,7 +207,7 @@ export class Package {
      * @return {Promise<string>[]}   The array of promises that must be resolved before this package
      *                                 can be loaded
      */
-    protected makeDependencies() {
+    protected makeDependencies(): Promise<string>[] {
         const promises = [] as Promise<string>[];
         const map = Package.packages;
         const noLoad = this.noLoad;
@@ -244,7 +260,7 @@ export class Package {
         //
         const config = (CONFIG[this.name] || {}) as PackageConfig;
         if (config.ready) {
-            promise = promise.then((name: string) => config.ready(this.name)) as Promise<string>;
+            promise = promise.then((_name: string) => config.ready(this.name)) as Promise<string>;
         }
         //
         //  If there are promises for dependencies,
@@ -291,7 +307,7 @@ export class Package {
             const result = CONFIG.require(url);
             if (result instanceof Promise) {
                 result.then(() => this.checkLoad())
-                      .catch(() => this.failed('Can\'t load "' + url + '"'));
+                      .catch((err) => this.failed('Can\'t load "' + url + '"\n' + err.message.trim()));
             } else {
                 this.checkLoad();
             }
@@ -307,8 +323,8 @@ export class Package {
         const script = document.createElement('script');
         script.src = url;
         script.charset = 'UTF-8';
-        script.onload = (event) => this.checkLoad();
-        script.onerror = (event) => this.failed('Can\'t load "' + url + '"');
+        script.onload = (_event) => this.checkLoad();
+        script.onerror = (_event) => this.failed('Can\'t load "' + url + '"');
         // FIXME: Should there be a timeout failure as well?
         document.head.appendChild(script);
     }
@@ -425,20 +441,6 @@ export class Package {
             this.noLoad = false;
             for (const dependency of this.dependencies) {
                 dependency.checkNoLoad();
-            }
-        }
-    }
-
-    /**
-     * Attempt to load all packages that are ready to be loaded
-     * (i.e., that have no unloaded dependencies, and that haven't
-     *  already been loaded, and that aren't in process of being
-     *  loaded, and that aren't marked as noLoad).
-     */
-    public static loadAll() {
-        for (const extension of this.packages.values()) {
-            if (extension.canLoad) {
-                extension.load();
             }
         }
     }

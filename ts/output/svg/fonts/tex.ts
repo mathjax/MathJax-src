@@ -22,13 +22,8 @@
  */
 
 import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, SVGDelimiterData,
-        CharData, CharOptions, DelimiterMap, CharMapMap, CssFontMap, FontDataClass} from '../FontData.js';
+        DelimiterMap, CharMapMap} from '../FontData.js';
 import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
-import {StyleList, StyleData} from '../../common/CssStyles.js';
-import {em} from '../../../util/lengths.js';
-import {OptionList, defaultOptions, userOptions} from '../../../util/Options.js';
-import {StringMap} from '../Wrapper.js';
-import {DIRECTION} from '../FontData.js';
 
 import {boldItalic} from './tex/bold-italic.js';
 import {bold} from './tex/bold.js';

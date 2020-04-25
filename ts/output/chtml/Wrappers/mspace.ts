@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMspace, CommonMspaceMixin} from '../../common/Wrappers/mspace.js';
+import {CommonMspaceMixin} from '../../common/Wrappers/mspace.js';
 import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
 
 /*****************************************************************/
@@ -33,8 +33,13 @@ import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmspace<N, T, D> extends CommonMspaceMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmspace<N, T, D> extends
+CommonMspaceMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The mspace wrapper
+     */
     public static kind = MmlMspace.prototype.kind;
 
     /**

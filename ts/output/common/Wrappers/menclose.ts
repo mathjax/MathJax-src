@@ -25,10 +25,7 @@ import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../W
 import * as Notation from '../Notation.js';
 import {CommonMsqrt} from './msqrt.js';
 import {BBox} from '../BBox.js';
-import {AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
-import {OptionList} from '../../../util/Options.js';
-import {StyleData} from '../../common/CssStyles.js';
+import {AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/
@@ -173,9 +170,13 @@ export function CommonMencloseMixin<W extends AnyWrapper,
     return class extends Base {
 
         /**
-         *  The notations active on this menclose, and the one to use for the child, if any
+         *  The notations active on this menclose, if any
          */
         public notations: Notation.List<W, N> = {};
+
+        /**
+         *  The notation to use for the child, if any
+         */
         public renderChild: Notation.Renderer<W, N> = null;
 
         /**
@@ -184,11 +185,16 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         public msqrt: S = null;
 
         /**
-         * The padding, thickness, and shape of the arrow head
-         *   (may be overriden using data-padding, data-thickness, and data-arrowhead attibutes)
+         * The padding of the arrow head (may be overriden using data-padding attibute)
          */
         public padding: number = Notation.PADDING;
+        /**
+         * The thickness of the arrow head (may be overriden using data-thickness attibute)
+         */
         public thickness: number = Notation.THICKNESS;
+        /**
+         * The shape of the arrow head (may be overriden using data-arrowhead attibutes)
+         */
         public arrowhead = {x: Notation.ARROWX, y: Notation.ARROWY, dx: Notation.ARROWDX};
 
         /**
@@ -289,7 +295,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         /**
          * @return {number[]}  Array of the maximum extra space from the notations along each side
          */
-        public getBBoxExtenders() {
+        public getBBoxExtenders(): number[] {
             let TRBL = [0, 0, 0, 0];
             for (const name of Object.keys(this.notations)) {
                 this.maximizeEntries(TRBL, this.notations[name].bbox(this as any));
@@ -300,7 +306,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
         /**
          * @return {number[]}  Array of padding (i.e., BBox minus border) along each side
          */
-        public getPadding() {
+        public getPadding(): number[] {
             let TRBL = [0, 0, 0, 0];
             let BTRBL = [0, 0, 0, 0];
             for (const name of Object.keys(this.notations)) {
@@ -334,7 +340,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
          * @param {number} h    The height of the box whose diagonal is needed
          * @return {number[]}   The angle and width of the diagonal of the box
          */
-        public getArgMod(w: number, h: number) {
+        public getArgMod(w: number, h: number): [number, number] {
             return [Math.atan2(h, w), Math.sqrt(w * w + h * h)];
         }
 
@@ -346,7 +352,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
          * @param {boolean} double  True if this is a double-headed arrow
          * @return {N}              The newly created arrow
          */
-        public arrow(w: number, a: number, double: boolean = false) {
+        public arrow(_w: number, _a: number, _double: boolean = false): N {
             return null as N;
         }
 
@@ -356,7 +362,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
          *
          * @return {Object}  The angle, width, and x and y extentions
          */
-        public arrowData() {
+        public arrowData(): {a: number, W: number, x: number, y: number} {
             const [p, t] = [this.padding, this.thickness];
             const r = t * (this.arrowhead.x + Math.max(1, this.arrowhead.dx));
             const {h, d, w} = this.childNodes[0].getBBox();
@@ -379,7 +385,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
          * @param {W} child   The inferred mrow that is the child of this menclose
          * @return {S}        The newly created (but detached) msqrt wrapper
          */
-        public createMsqrt(child: W) {
+        public createMsqrt(child: W): S {
             const mmlFactory = (this.node as AbstractMmlNode).factory;
             const mml = mmlFactory.create('msqrt');
             mml.inheritAttributesFrom(this.node);
@@ -394,7 +400,7 @@ export function CommonMencloseMixin<W extends AnyWrapper,
          *                     and its child bounding box (i.e., the extra space
          *                     created by the radical symbol).
          */
-        public sqrtTRBL() {
+        public sqrtTRBL(): [number, number, number, number] {
             const bbox = this.msqrt.getBBox();
             const cbox = this.msqrt.childNodes[0].getBBox();
             return [bbox.h - cbox.h, 0, bbox.d - cbox.d, bbox.w - cbox.w];

@@ -22,11 +22,9 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMsqrt, CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
-import {SVGmo} from './mo.js';
+import {CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
-import {StyleList} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -38,9 +36,15 @@ import {StyleList} from '../../common/CssStyles.js';
  */
 export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The msqrt wrapper
+     */
     public static kind = MmlMsqrt.prototype.kind;
 
-    public dx: number = 0;  // indent due to root
+    /**
+     * Indent due to root
+     */
+    public dx: number = 0;
 
     /**
      * @override
@@ -55,7 +59,7 @@ export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any,
         const rbox = this.getBBox();
         const sbox = surd.getBBox();
         const bbox = base.getBBox();
-        const [p, q] = this.getPQ(sbox);
+        const q = this.getPQ(sbox)[1];
         const t = this.font.params.rule_thickness * this.bbox.scale;
         const H = bbox.h + q + t;
         //
@@ -71,7 +75,7 @@ export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any,
         surd.place(this.dx, rbox.h - sbox.h - t);
         base.toSVG(BASE);
         base.place(this.dx + sbox.w, 0);
-        const RULE = this.adaptor.append(SVG, this.svg('rect', {
+        this.adaptor.append(SVG, this.svg('rect', {
             width: this.fixed(bbox.w), height: this.fixed(t),
             x: this.fixed(this.dx + sbox.w), y: this.fixed(rbox.h - 2 * t)
         }));
@@ -85,7 +89,7 @@ export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any,
      * @param {BBox} sbox        The bounding box of the surd
      * @param {number} H         The height of the root as a whole
      */
-    protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox, H: number) {
+    protected addRoot(_ROOT: N, _root: SVGWrapper<N, T, D>, _sbox: BBox, _H: number) {
     }
 
 }

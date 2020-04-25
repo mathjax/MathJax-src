@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMaction, CommonMactionMixin} from '../../common/Wrappers/maction.js';
+import {CommonMactionMixin} from '../../common/Wrappers/maction.js';
 import {ActionDef} from '../../common/Wrappers/maction.js';
 import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
@@ -37,11 +37,18 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmaction<N, T, D> extends
 CommonMactionMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The maction wrapper
+     */
     public static kind = MmlMaction.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'mjx-maction': {
             position: 'relative'
@@ -83,7 +90,7 @@ CommonMactionMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, any>>
      * The valid action types and their handlers
      */
     public static actions = new Map([
-        ['toggle', [(node, data) => {
+        ['toggle', [(node, _data) => {
             //
             // Mark which child is selected
             //

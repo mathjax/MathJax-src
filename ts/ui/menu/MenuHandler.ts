@@ -23,14 +23,13 @@
 
 import {mathjax} from '../../mathjax.js';
 
-import {MathItem, STATE, newState} from '../../core/MathItem.js';
+import {STATE, newState} from '../../core/MathItem.js';
 import {MathDocumentConstructor} from '../../core/MathDocument.js';
-import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {Handler} from '../../core/Handler.js';
 import {ComplexityMathDocument, ComplexityMathItem} from '../../a11y/complexity.js';
 import {ExplorerMathDocument, ExplorerMathItem} from '../../a11y/explorer.js';
 import {AssistiveMmlMathDocument, AssistiveMmlMathItem} from '../../a11y/assistive-mml.js';
-import {OptionList, expandable} from '../../util/Options.js';
+import {expandable} from '../../util/Options.js';
 
 import {Menu} from './Menu.js';
 
@@ -47,7 +46,7 @@ export type Constructor<T> = new(...args: any[]) => T;
 export type A11yMathItemConstructor = {
     new(...args: any[]): ComplexityMathItem<HTMLElement, Text, Document> &
         ExplorerMathItem & AssistiveMmlMathItem<HTMLElement, Text, Document>;
-}
+};
 
 /**
  * Constructor for base document for MenuMathDocument
@@ -178,7 +177,8 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
             }
         }
 
-    }
+    };
+
 }
 
 /*==========================================================================*/
@@ -253,7 +253,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
                 addMenu: [STATE.CONTEXT_MENU],
                 checkLoading: [STATE.UNPROCESSED + 1]
             })
-        }
+        };
 
         /**
          * The menu associated with this document
@@ -281,7 +281,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          *
          * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
          */
-        public addMenu() {
+        public addMenu(): MenuMathDocument {
             if (!this.processed.isSet('context-menu')) {
                 for (const math of this.math) {
                     (math as MenuMathItem).addMenu(this);
@@ -296,7 +296,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          *
          * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
          */
-        public checkLoading() {
+        public checkLoading(): MenuMathDocument {
             if (this.menu.isLoading) {
                 mathjax.retryAfter(this.menu.loadingPromise.catch((err) => console.log(err)));
             }
@@ -327,7 +327,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          * @param {boolean=} force       True if enrichment should not depend on menu settings
          * @returns {MenuMathDocument}   The MathDocument (for chaining of calls)
          */
-        public enrich(force: boolean = false) {
+        public enrich(force: boolean = false): MenuMathDocument {
             const settings = this.menu.settings;
             if (!this.processed.isSet('enriched') && (settings.collapsible || settings.explorer || force)) {
                 settings.collapsible && this.menu.checkComponent('a11y/complexity');
@@ -344,7 +344,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          * @param {boolean=} force       True if complexity computations should not depend on menu settings
          * @returns {MenuMathDocument}   The MathDocument (for chaining of calls)
          */
-        public complexity(force: boolean = false) {
+        public complexity(force: boolean = false): MenuMathDocument {
             if (!this.processed.isSet('complexity') && (this.menu.settings.collapsible || force)) {
                 this.menu.checkComponent('a11y/complexity');
                 for (const math of this.math) {
@@ -359,7 +359,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          * @param {boolean=} force       True if exploration should not depend on menu settings
          * @returns {MenuMathDocument}   The MathDocument (for chaining of calls)
          */
-        public explorable(force: boolean = false) {
+        public explorable(force: boolean = false): MenuMathDocument {
             if (!this.processed.isSet('explorer') && (this.menu.settings.explorer || force)) {
                 this.menu.checkComponent('a11y/explorer');
                 for (const math of this.math) {
@@ -382,7 +382,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
  * @param {Handler} handler   The Handler instance to enhance
  * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
-export function MenuHandler(handler: Handler<HTMLElement, Text, Document>) {
+export function MenuHandler(handler: Handler<HTMLElement, Text, Document>): Handler<HTMLElement, Text, Document> {
     handler.documentClass = MenuMathDocumentMixin<A11yDocumentConstructor>(handler.documentClass as any);
     return handler;
 }

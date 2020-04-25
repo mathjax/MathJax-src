@@ -46,7 +46,7 @@ export class FunctionList extends PrioritizedList<Function> {
      * @return {boolean}    False if any function stopped the list by
      *                       returning false, true otherwise
      */
-    public execute(...data: any[]) {
+    public execute(...data: any[]): boolean {
         for (const item of this) {
             let result = item.item(...data);
             if (result === false) {
@@ -73,7 +73,7 @@ export class FunctionList extends PrioritizedList<Function> {
      *                       depending on whether some function returned
      *                       false or not).
      */
-    public asyncExecute(...data: any[]) {
+    public asyncExecute(...data: any[]): Promise<void> {
         let i = -1;
         let items = this.items;
         return new Promise((ok: Function, fail: Function) => {

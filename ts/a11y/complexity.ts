@@ -23,9 +23,9 @@
 
 import {Handler} from '../core/Handler.js';
 import {MathDocumentConstructor} from '../core/MathDocument.js';
-import {MathItem, STATE, newState} from '../core/MathItem.js';
+import {STATE, newState} from '../core/MathItem.js';
 import {MathML} from '../input/mathml.js';
-import {MmlNode, AbstractMmlTokenNode} from '../core/MmlTree/MmlNode.js';
+import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {EnrichHandler, EnrichedMathItem, EnrichedMathDocument} from './semantic-enrich.js';
 import {ComplexityVisitor} from './complexity/visitor.js';
 import {OptionList, selectOptionsFromKeys, expandable} from '../util/Options.js';
@@ -212,7 +212,8 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EnrichedDocumentC
  * @template T  The Text node class
  * @template D  The Document class
  */
-export function ComplexityHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D> = null) {
+export function ComplexityHandler<N, T, D>(handler: Handler<N, T, D>,
+                                           MmlJax: MathML<N, T, D> = null): Handler<N, T, D> {
     if (!handler.documentClass.prototype.enrich && MmlJax) {
         handler = EnrichHandler(handler, MmlJax);
     }

@@ -57,7 +57,7 @@ export function CommonMiMixin<T extends WrapperConstructor>(Base: T): MiConstruc
         /**
          * @override
          */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
+        public computeBBox(bbox: BBox, _recompute: boolean = false) {
             super.computeBBox(bbox);
             this.copySkewIC(bbox);
             if (this.noIC) {

@@ -135,7 +135,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
         '{': MO.OPEN,            // left curly bracket
         '|': MO.OPEN,            // vertical line
         '||': [0, 0, TEXCLASS.BIN, {fence: true, stretchy: true, symmetric: true}], // multiple character operator: ||
-        '|||': [0, 0, TEXCLASS.ORD,{fence: true, stretchy: true, symmetric: true}], // multiple character operator: |||
+        '|||': [0, 0, TEXCLASS.ORD, {fence: true, stretchy: true, symmetric: true}], // multiple character operator: |||
         '\u00AC': MO.ORD21,      // not sign
         '\u00B1': MO.BIN01,      // plus-minus sign
         '\u2016': [0, 0, TEXCLASS.ORD, {fence: true, stretchy: true}], // double vertical line

@@ -24,7 +24,7 @@
 
 
 import {A11yDocument, Region} from './Region.js';
-import {sreReady} from '../sre.js';
+import '../sre.js';
 
 
 /**
@@ -167,7 +167,7 @@ export class AbstractExplorer<T> implements Explorer {
    */
   protected constructor(public document: A11yDocument,
                         protected region: Region<T>,
-                        protected node: HTMLElement, ...rest: any[]) {
+                        protected node: HTMLElement, ..._rest: any[]) {
   }
 
 
@@ -248,6 +248,7 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * @override
    */
+  // @ts-ignore: unused variable
   public Update(force: boolean = false): void {}
 
 

@@ -23,17 +23,13 @@
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {CommonMtable, CommonMtableMixin} from '../../common/Wrappers/mtable.js';
+import {CommonMtableMixin} from '../../common/Wrappers/mtable.js';
 import {SVGmtr} from './mtr.js';
 import {SVGmtd} from './mtd.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {isPercent} from '../../../util/string.js';
 import {OptionList} from '../../../util/Options.js';
 import {StyleList} from '../../common/CssStyles.js';
-import {BBox} from '../BBox.js';
-
-const WFUZZ = .25;  // a little padding for min-width
 
 const CLASSPREFIX = 'mjx-';
 
@@ -48,8 +44,14 @@ const CLASSPREFIX = 'mjx-';
 export class SVGmtable<N, T, D> extends
 CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The mtable wrapper
+     */
     public static kind = MmlMtable.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'g[data-mml-node="mtable"] > line[data-line]': {
             'stroke-width': '70px',
@@ -131,7 +133,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
      * @param {number} D        The natural depth of the row
      * @returns {number[]}      The (possibly scaled) height and depth to use
      */
-    protected getRowHD(equal: boolean, HD: number, H: number, D: number) {
+    protected getRowHD(equal: boolean, HD: number, H: number, D: number): [number, number] {
         return (equal ? [(HD + H - D) / 2, (HD - H + D) / 2] : [H, D]);
     }
 
@@ -212,13 +214,13 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
     /**
      * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
      */
-    protected handlePWidth(svg: N) {
+    protected handlePWidth(svg: N): number {
         if (!this.pWidth) {
             return 0;
         }
         const {w, L, R} = this.getBBox();
         const W = L + this.pWidth + R;
-        const [align, shift] = this.getAlignShift();
+        const align = this.getAlignShift()[0];
         const CW = Math.max(this.isTop ? W : 0, this.container.getWrapWidth(this.containerI)) - L - R;
         const dw = w - (this.pWidth > CW ? CW : this.pWidth);
         const dx = (align === 'left' ? 0 : align === 'right' ? dw : dw / 2);
@@ -236,7 +238,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
      * @param {string} style   The line style whose class is to be obtained
      * @returns {string}       The class name for the style
      */
-    protected lineClass(style: string) {
+    protected lineClass(style: string): string {
         return CLASSPREFIX + style;
     }
 
@@ -247,7 +249,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
      * @param {string} style   The border style for the frame
      * @returns {N}            The SVG element for the frame
      */
-    protected makeFrame(w: number, h: number, d: number, style: string) {
+    protected makeFrame(w: number, h: number, d: number, style: string): N {
         const t = this.fLine;
         return this.svg('rect', this.setLineThickness(t, style, {
             'data-frame': true, 'class': this.lineClass(style),
@@ -262,7 +264,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
      * @param {number} t       The line thickness
      * @returns {N}            The SVG element for the line
      */
-    protected makeVLine(x: number, style: string, t: number) {
+    protected makeVLine(x: number, style: string, t: number): N {
         const {h, d} = this.getBBox();
         const dt = (style === 'dotted' ? t / 2 : 0);
         const X = this.fixed(x + t / 2);
@@ -278,7 +280,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
      * @param {number} t       The line thickness
      * @returns {N}            The SVG element for the line
      */
-    protected makeHLine(y: number, style: string, t: number) {
+    protected makeHLine(y: number, style: string, t: number): N {
         const w = this.getBBox().w;
         const dt = (style === 'dotted' ? t / 2 : 0);
         const Y = this.fixed(y - t / 2);
@@ -313,11 +315,10 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
      * @param {N} parent    The parent containing the the table
      * @param {number} dx   The adjustement for percentage width tables
      */
-    protected handleLabels(svg: N, parent: N, dx: number) {
+    protected handleLabels(svg: N, _parent: N, dx: number) {
         if (!this.hasLabels) return;
         const labels = this.labels;
         const attributes = this.node.attributes;
-        const adaptor = this.adaptor;
         //
         //  Set the side for the labels
         //
@@ -338,8 +339,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
      */
     protected spaceLabels() {
         const adaptor = this.adaptor;
-        const equal = this.node.attributes.get('equalrows') as boolean;
-        const {h, d} = this.getBBox();
+        const h = this.getBBox().h;
         const L = this.getTableData().L;
         const space = this.getRowHalfSpacing();
         //
@@ -374,7 +374,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
         const {h, d, w, L, R} = this.getBBox();
         const W = L + (this.pWidth || w) + R;
         const LW = this.getTableData().L;
-        const [pad, align, shift] = this.getPadAlignShift(side);
+        const [ , align, shift] = this.getPadAlignShift(side);
         const dx = shift + (align === 'right' ? -W : align === 'center' ? -W / 2 : 0) + L;
         const matrix = 'matrix(1 0 0 -1 0 0)';
         const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
@@ -406,7 +406,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
         const {w, L, R} = this.getBBox();
         const W = L + (this.pWidth || w) + R;
         const labelW = this.getTableData().L;
-        const [align, shift] = this.getAlignShift();
+        const align = this.getAlignShift()[0];
         const CW = Math.max(W, this.container.getWrapWidth(this.containerI));
         this.place(side === 'left' ?
                    (align === 'left' ? 0 : align === 'right' ? W - CW + dx : (W - CW) / 2 + dx) - L :

@@ -51,7 +51,7 @@ export interface MathJaxConfig extends MJConfig {
         require?: (url: string) => any;            // A function for loading URLs
         [name: string]: any;                       // Other configuration blocks
     };
-};
+}
 
 /**
  * Update the MathJax object to inclide the loader information
@@ -80,7 +80,7 @@ export namespace Loader {
      * @param {string[]} names  The packages to wait for
      * @returns {Promise}       A promise that resolves when all the named packages are ready
      */
-    export function ready(...names: string[]) {
+    export function ready(...names: string[]): Promise<string[]> {
         if (names.length === 0) {
             names = Array.from(Package.packages.keys());
         }
@@ -90,7 +90,7 @@ export namespace Loader {
             promises.push(extension.promise);
         }
         return Promise.all(promises);
-    };
+    }
 
     /**
      * Load the named packages and return a promise that is resolved when they are all loaded
@@ -98,7 +98,7 @@ export namespace Loader {
      * @param {string[]} names  The packages to load
      * @returns {Promise}       A promise that resolves when all the named packages are ready
      */
-    export function load(...names: string[]) {
+    export function load(...names: string[]): Promise<void | string[]> {
         if (names.length === 0) {
             return Promise.resolve();
         }
@@ -114,7 +114,7 @@ export namespace Loader {
         }
         Package.loadAll();
         return Promise.all(promises);
-    };
+    }
 
     /**
      * Indicate that the named packages are being loaded by hand (e.g., as part of a larger package).
@@ -130,7 +130,7 @@ export namespace Loader {
             }
             extension.loaded();
         }
-    };
+    }
 
     /**
      * The default function to perform when all the packages are loaded
@@ -139,14 +139,14 @@ export namespace Loader {
         if (typeof MathJax.startup !== 'undefined') {
             MathJax.config.startup.ready();
         }
-    };
+    }
 
     /**
      * Get the root location for where the MathJax package files are found
      *
      * @returns {string}   The root location (directory for node.js, URL for browser)
      */
-    export function getRoot() {
+    export function getRoot(): string {
         let root = __dirname + '/../../es5';
         if (typeof document !== 'undefined') {
             const script = document.currentScript || document.getElementById('MathJax-script');
@@ -157,7 +157,7 @@ export namespace Loader {
         return root;
     }
 
-};
+}
 
 /**
  * Export the global MathJax object for convenience

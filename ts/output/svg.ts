@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonOutputJax} from './common/OutputJax.js';
+import {CommonOutputJax, UnknownBBox} from './common/OutputJax.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
@@ -49,7 +49,14 @@ export const XLINKNS = 'http://www.w3.org/1999/xlink';
 export class SVG<N, T, D> extends
 CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFontData, typeof SVGFontData> {
 
+    /**
+     * The name of the output jax
+     */
     public static NAME: string = 'SVG';
+
+    /**
+     * @override
+     */
     public static OPTIONS: OptionList = {
         ...CommonOutputJax.OPTIONS,
         internalSpeechTitles: true,     // insert <title> tags with speech content
@@ -95,9 +102,11 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
 
     /**
      * Minimum width for tables with labels,
-     * and shift and align for main equation
      */
     public minwidth: number = 0;
+    /**
+     * The shift for the main equation
+     */
     public shift: number = 0;
 
     /**
@@ -172,7 +181,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @param {MathDocument} html   The document to search
      * @return {boolean}            True if a font cache already exists in the page
      */
-    protected findCache(html: MathDocument<N, T, D>) {
+    protected findCache(html: MathDocument<N, T, D>): boolean {
         const adaptor = this.adaptor;
         const svgs = adaptor.tags(adaptor.body(html.document), 'svg');
         for (let i = svgs.length - 1; i >= 0; i--) {
@@ -210,7 +219,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @param {SVGWrapper} wrapper   The wrapped math to process
      * @return {[N, N]}              The svg and g nodes for the math
      */
-    protected createRoot(wrapper: SVGWrapper<N, T, D>) {
+    protected createRoot(wrapper: SVGWrapper<N, T, D>): [N, N] {
         const {w, h, d, pwidth} = wrapper.getBBox();
         const W = Math.max(w, .001); // make sure we are at least one unit wide (needed for e.g. \llap)
         //
@@ -303,7 +312,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @param {number} m  A number to be shown in ex
      * @return {string}   The number with units of ex
      */
-    public ex(m: number) {
+    public ex(m: number): string {
         m /= this.font.params.x_height;
         return (Math.abs(m) < .001 ? '0' : m.toFixed(3).replace(/\.?0+$/, '') + 'ex');
     }
@@ -314,7 +323,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @param {(N|T)[]} children            The child nodes for this node
      * @return {N}                      The newly created node in the SVG namespace
      */
-    public svg(kind: string, properties: OptionList = {}, children: (N|T)[] = []) {
+    public svg(kind: string, properties: OptionList = {}, children: (N | T)[] = []): N {
         return this.html(kind, properties, children, SVGNS);
     }
 
@@ -323,7 +332,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @param {string} variant   The name of the variant for the text
      * @return {N}               The text element containing the text
      */
-    public unknownText(text: string, variant: string) {
+    public unknownText(text: string, variant: string): N {
         const metrics = this.math.metrics;
         const scale = this.font.params.x_height / metrics.ex * metrics.em * 1000;
         const svg = this.svg('text', {
@@ -354,7 +363,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
      * @param {N} text         The text element to measure
      * @return {Object}        The width, height and depth for the text
      */
-    public measureTextNode(text: N) {
+    public measureTextNode(text: N): UnknownBBox {
         const adaptor = this.adaptor;
         text = adaptor.clone(text);
         adaptor.removeAttribute(text, 'transform');

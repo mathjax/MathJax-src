@@ -31,27 +31,37 @@ import {MmlMo} from './mo.js';
  */
 
 export class TeXAtom extends AbstractMmlBaseNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlBaseNode.defaults
     };
+
+    /**
+     * TeX class is ORD
+     */
     public texClass = TEXCLASS.ORD;
 
     /**
-     *  @return {string}  The TeXAtom kind
+     * @override
      */
     public get kind() {
         return 'TeXAtom';
     }
 
     /**
-     *  @return {number}  Inferred mrow with any number of children
+     * Inferred mrow with any number of children
+     * @override
      */
     public get arity() {
         return -1;
     }
 
     /**
-     *  @return {boolean}  This element is not considered a MathML container
+     * This element is not considered a MathML container
+     * @override
      */
     public get notParent() {
         return true;
@@ -73,6 +83,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
     public adjustTeXclass(prev: MmlNode) {
         return prev;
     }
+
 }
 /**
  *  Use the method from the MmlMo class

@@ -22,9 +22,8 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration, ConfigurationHandler} from '../Configuration.js';
+import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {ParseMethod} from '../Types.js';
 import {CommandMap} from '../SymbolMap.js';
 import {Macro} from '../Symbol.js';
 import {TeX} from '../../tex.js';
@@ -37,6 +36,9 @@ import {expandable, defaultOptions} from '../../../util/Options.js';
  * A CommandMap class that allows removal of macros
  */
 export class AutoloadCommandMap extends CommandMap {
+    /**
+     * @param{string} name   The command to be removed
+     */
     public remove(name: string) {
         (this as any).map.delete(name);
     }

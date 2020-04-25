@@ -22,7 +22,7 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
+import {CommonMo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -110,7 +110,7 @@ export function CommonMrowMixin<T extends WrapperConstructor>(Base: T): MrowCons
                 //  Stretch the stretchable children
                 //
                 for (const child of stretchy) {
-                    child.coreMO().getStretchedVariant([H, D]);
+                    (child.coreMO() as CommonMo).getStretchedVariant([H, D]);
                 }
             }
         }

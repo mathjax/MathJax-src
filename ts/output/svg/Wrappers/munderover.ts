@@ -22,12 +22,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor, Constructor} from '../Wrapper.js';
-import {SVGscriptbase} from './scriptbase.js';
+import {SVGWrapper, Constructor} from '../Wrapper.js';
 import {SVGmsubsup, SVGmsub, SVGmsup} from './msubsup.js';
-import {CommonMunder, CommonMunderMixin} from '../../common/Wrappers/munderover.js';
-import {CommonMover, CommonMoverMixin} from '../../common/Wrappers/munderover.js';
-import {CommonMunderover, CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMunderMixin} from '../../common/Wrappers/munderover.js';
+import { CommonMoverMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 
 /*****************************************************************/
@@ -38,11 +37,18 @@ import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmunder<N, T, D> extends
 CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>>(SVGmsub)  {
 
+    /**
+     * The munder wrapper
+     */
     public static kind = MmlMunder.prototype.kind;
 
+    /**
+     * Do include italic correction
+     */
     public static useIC: boolean = true;
 
     /**
@@ -62,7 +68,7 @@ CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>
         script.toSVG(svg);
 
         const delta = this.getDelta(true);
-        const [k, v] = this.getUnderKV(bbox, sbox);
+        const v = this.getUnderKV(bbox, sbox)[1];
         const [bx, sx] = this.getDeltaW([bbox, sbox], [0, -delta]);
 
         base.place(bx, 0);
@@ -79,14 +85,21 @@ CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmover<N, T, D> extends
 CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>(SVGmsup)  {
 
+    /**
+     * The mover wrapper
+     */
     public static kind = MmlMover.prototype.kind;
 
+    /**
+     * Do include italic correction
+     */
     public static useIC: boolean = true;
 
-    /*
+    /**
      * @override
      */
     public toSVG(parent: N) {
@@ -102,7 +115,7 @@ CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>
         script.toSVG(svg);
 
         const delta = this.getDelta();
-        const [k, u] = this.getOverKU(bbox, sbox);
+        const u = this.getOverKU(bbox, sbox)[1];
         const [bx, sx] = this.getDeltaW([bbox, sbox], [0, delta]);
 
         base.place(bx, 0);
@@ -119,14 +132,21 @@ CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmunderover<N, T, D> extends
 CommonMunderoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any, any>>>(SVGmsubsup)  {
 
+    /**
+     * The munderover wrapper
+     */
     public static kind = MmlMunderover.prototype.kind;
 
+    /**
+     * Do include italic correction
+     */
     public static useIC: boolean = true;
 
-    /*
+    /**
      * @override
      */
     public toSVG(parent: N) {
@@ -143,8 +163,8 @@ CommonMunderoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any
         over.toSVG(svg);
 
         const delta = this.getDelta();
-        const [ok, u] = this.getOverKU(bbox, obox);
-        const [uk, v] = this.getUnderKV(bbox, ubox);
+        const u = this.getOverKU(bbox, obox)[1];
+        const v = this.getUnderKV(bbox, ubox)[1];
         const [bx, ux, ox] = this.getDeltaW([bbox, ubox, obox], [0, -delta, delta]);
 
         base.place(bx, 0);

@@ -22,7 +22,7 @@
  */
 
 import {LinkedList} from '../util/LinkedList.js';
-import {MathItem, AbstractMathItem} from './MathItem.js';
+import {MathItem} from './MathItem.js';
 
 /*****************************************************************/
 /**

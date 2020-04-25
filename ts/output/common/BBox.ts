@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {BIGDIMEN, length2em} from '../../util/lengths.js';
+import {BIGDIMEN} from '../../util/lengths.js';
 
 /**
  *  CSS styles that affect BBoxes
@@ -60,6 +60,7 @@ export class BBox {
     /**
      *  These are the data stored for a bounding box
      */
+    /* tslint:disable:jsdoc-require */
     public w: number;
     public h: number;
     public d: number;
@@ -70,25 +71,24 @@ export class BBox {
     public pwidth: string; // percentage width (for tables)
     public ic: number;     // italic correction
     public sk: number;     // skew
+    /* tslint:enable */
 
     /**
      * @return {BBox}  A BBox initialized to zeros
      */
-    public static zero() {
+    public static zero(): BBox {
         return new BBox({h: 0, d: 0, w: 0});
     }
 
     /**
      * @return {BBox}  A BBox with height and depth not set
      */
-    public static empty() {
+    public static empty(): BBox {
         return new BBox();
     }
 
     /**
      * @param {BBoxData} def  The data with which to initialize the BBox
-     *
-     * @return {BBox}  The newly created BBox
      *
      * @constructor
      */
@@ -103,9 +103,9 @@ export class BBox {
 
     /**
      * Set up a bbox for append() and combine() operations
-     * @return {BBOX}  the boox itself (for chaining calls)
+     * @return {BBox}  the boox itself (for chaining calls)
      */
-    public empty() {
+    public empty(): BBox {
         this.w = 0;
         this.h = this.d = -BIGDIMEN;
         return this;

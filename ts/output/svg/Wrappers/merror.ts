@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
+import {SVGWrapper} from '../Wrapper.js';
 import {MmlMerror} from '../../../core/MmlTree/MmlNodes/merror.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -35,8 +35,14 @@ import {StyleList} from '../../common/CssStyles.js';
  */
 export class SVGmerror<N, T, D> extends SVGWrapper<N, T, D> {
 
+    /**
+     * The merror wrapper
+     */
     public static kind = MmlMerror.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         'g[data-mml-node="merror"] > g': {
             fill: 'red',
@@ -48,7 +54,10 @@ export class SVGmerror<N, T, D> extends SVGWrapper<N, T, D> {
         }
     };
 
-    toSVG(parent: N) {
+    /**
+     * @override
+     */
+    public toSVG(parent: N) {
         const svg = this.standardSVGnode(parent);
         const {h, d, w} = this.getBBox();
         this.adaptor.append(this.element, this.svg('rect', {

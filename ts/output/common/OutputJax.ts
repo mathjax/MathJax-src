@@ -28,7 +28,6 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {FontData, FontDataClass, CharOptions, DelimiterData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
 import {CssStyles} from './CssStyles.js';
-import {WrapperClass} from '../../core/Tree/Wrapper.js';
 import {CommonWrapper, AnyWrapper, AnyWrapperClass} from './Wrapper.js';
 import {CommonWrapperFactory, AnyWrapperFactory} from './WrapperFactory.js';
 import {percent} from '../../util/lengths.js';
@@ -72,8 +71,14 @@ export abstract class CommonOutputJax<
     FC extends FontDataClass<any, any, any>
 > extends AbstractOutputJax<N, T, D> {
 
+    /**
+     * The name of this output jax
+     */
     public static NAME: string = 'Common';
 
+    /**
+     * @override
+     */
     public static OPTIONS: OptionList = {
         ...AbstractOutputJax.OPTIONS,
         scale: 1,                      // global scaling factor for all expressions
@@ -102,13 +107,23 @@ export abstract class CommonOutputJax<
     public cssStyles: CssStyles;
 
     /**
-     * The MathDocument for the math we find,
-     * the MathItem currently being processed,
-     * and the container element for the math
+     * The MathDocument for the math we find
      */
     public document: MathDocument<N, T, D>;
+
+    /**
+     * the MathItem currently being processed
+     */
     public math: MathItem<N, T, D>;
+
+    /**
+     * The container element for the math
+     */
     public container: N;
+
+    /**
+     * The top-level table, if any
+     */
     public table: AnyWrapper;
 
     /**
@@ -134,9 +149,13 @@ export abstract class CommonOutputJax<
     public nodeMap: Map<MmlNode, W>;
 
     /**
-     * Nodes used to test for metric data
+     * Node used to test for in-line metric data
      */
     public testInline: N;
+
+    /**
+     * Node used to test for display metric data
+     */
     public testDisplay: N;
 
     /**
@@ -188,7 +207,7 @@ export abstract class CommonOutputJax<
     /**
      * @return {N}  The container DOM node for the typeset math
      */
-    protected createNode() {
+    protected createNode(): N {
         const jax = (this.constructor as typeof CommonOutputJax).NAME;
         return this.html('mjx-container', {'class': 'MathJax', jax: jax});
     }
@@ -279,7 +298,7 @@ export abstract class CommonOutputJax<
      * @param {boolean} display   True if the metrics are for displayed math
      * @return {Metrics}          Object containing em, ex, containerWidth, etc.
      */
-    public getMetricsFor(node: N, display: boolean) {
+    public getMetricsFor(node: N, display: boolean): Metrics {
         const test = this.getTestElement(node, display);
         const metrics = this.measureMetrics(test);
         this.adaptor.remove(test);
@@ -292,7 +311,7 @@ export abstract class CommonOutputJax<
      * @param {MathDocument} html  The math document whose math list is to be processed.
      * @return {MetricMap[]}       The node-to-metrics maps for all the containers that have math
      */
-    protected getMetricMaps(html: MathDocument<N, T, D>) {
+    protected getMetricMaps(html: MathDocument<N, T, D>): MetricMap<N>[] {
         const adaptor = this.adaptor;
         const domMaps = [new Map() as MetricDomMap<N>, new Map() as MetricDomMap<N>];
         //
@@ -335,23 +354,23 @@ export abstract class CommonOutputJax<
      * @param {N} node    The math element to be measured
      * @return {N}        The test elements that were added
      */
-    protected getTestElement(node: N, display: boolean) {
+    protected getTestElement(node: N, display: boolean): N {
         const adaptor = this.adaptor;
         if (!this.testInline) {
             this.testInline = this.html('mjx-test', {style: {
-                display:           'inline-block',
-                width:             '100%',
-                'font-style':      'normal',
-                'font-weight':     'normal',
-                'font-size':       '100%',
-                'font-size-adjust':'none',
-                'text-indent':     0,
-                'text-transform':  'none',
-                'letter-spacing':  'normal',
-                'word-spacing':    'normal',
-                overflow:          'hidden',
-                height:            '1px',
-                'margin-right':    '-1px'
+                display:            'inline-block',
+                width:              '100%',
+                'font-style':       'normal',
+                'font-weight':      'normal',
+                'font-size':        '100%',
+                'font-size-adjust': 'none',
+                'text-indent':      0,
+                'text-transform':   'none',
+                'letter-spacing':   'normal',
+                'word-spacing':     'normal',
+                overflow:           'hidden',
+                height:             '1px',
+                'margin-right':     '-1px'
             }}, [
                 this.html('mjx-left-box', {style: {
                     display: 'inline-block',
@@ -378,14 +397,14 @@ export abstract class CommonOutputJax<
             adaptor.setStyle(right, 'width', '10000em');
             adaptor.setStyle(right, 'float', '');
         }
-        return adaptor.append(node, adaptor.clone(display? this.testDisplay : this.testInline) as N) as N;
+        return adaptor.append(node, adaptor.clone(display ? this.testDisplay : this.testInline) as N) as N;
     }
 
     /**
      * @param {N} node    The test node to measure
      * @return {Metrics}  The metric data for the given node
      */
-    protected measureMetrics(node: N) {
+    protected measureMetrics(node: N): Metrics {
         const adaptor = this.adaptor;
         const em = adaptor.fontSize(node);
         const ex = (adaptor.nodeSize(adaptor.childNode(node, 1) as N)[1] / 60) || (em * this.options.exFactor);
@@ -396,7 +415,7 @@ export abstract class CommonOutputJax<
         const scale = Math.max(this.options.minScale,
                                this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1);
         const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
-        return {em, ex, containerWidth, lineWidth, scale} as Metrics;
+        return {em, ex, containerWidth, lineWidth, scale};
     }
 
     /*****************************************************************/
@@ -462,7 +481,7 @@ export abstract class CommonOutputJax<
      * @param {string}           The namespace for the element
      * @return {N}               The newly created DOM tree
      */
-    public html(type: string, def: OptionList = {}, content: (N | T)[] = [], ns?: string) {
+    public html(type: string, def: OptionList = {}, content: (N | T)[] = [], ns?: string): N {
         return this.adaptor.node(type, def, content, ns);
     }
 
@@ -471,7 +490,7 @@ export abstract class CommonOutputJax<
      *
      * @return {HTMLElement}  A text node with the given text
      */
-    public text(text: string) {
+    public text(text: string): T {
         return this.adaptor.text(text);
     }
 
@@ -480,7 +499,7 @@ export abstract class CommonOutputJax<
      * @param {number=} n   The number of digits to use
      * @return {string}     The formatted number
      */
-    public fixed(m: number, n: number = 3) {
+    public fixed(m: number, n: number = 3): string {
         if (Math.abs(m) < .0006) {
           return '0';
         }
@@ -509,9 +528,9 @@ export abstract class CommonOutputJax<
      * @param {string} text        The text to measure
      * @param {string} variant     The variant for the text
      * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
-     * @return {Object}            The width, height, and depth of the text (in ems)
+     * @return {UnknownBBox}       The width, height, and depth of the text (in ems)
      */
-    public measureText(text: string, variant: string, font: CssFontData = ['', false, false]) {
+    public measureText(text: string, variant: string, font: CssFontData = ['', false, false]): UnknownBBox {
         const node = this.unknownText(text, variant);
         if (variant === '-explicitFont') {
             const styles = this.cssFontStyles(font);
@@ -526,9 +545,10 @@ export abstract class CommonOutputJax<
      *
      * @param {N} text         The text element to measure
      * @param {string} chars   The string contained in the text node
-     * @return {Object}        The width, height and depth for the text
+     * @return {UnknownBBox}   The width, height and depth for the text
      */
-    public measureTextNodeWithCache(text: N, chars: string, variant: string, font: CssFontData = ['', false, false]) {
+    public measureTextNodeWithCache(text: N, chars: string, variant: string,
+                                    font: CssFontData = ['', false, false]): UnknownBBox {
         if (variant === '-explicitFont') {
             variant = [font[0], font[1] ? 'T' : 'F', font[2] ? 'T' : 'F', ''].join('-');
         }
@@ -548,19 +568,19 @@ export abstract class CommonOutputJax<
      *  and looking up its size (fake the height and depth, since we can't measure that)
      *
      * @param {N} text            The text element to measure
-     * @return {Object}           The width, height and depth for the text (in ems)
+     * @return {UnknownBBox}      The width, height and depth for the text (in ems)
      */
     public abstract measureTextNode(text: N): UnknownBBox;
 
     /**
      * Measure the width, height and depth of an annotation-xml node's content
      *
-     * @param{N} xml   The xml content node to be measured
-     * @return {Object}  The width, height, and depth of the content
+     * @param{N} xml          The xml content node to be measured
+     * @return {UnknownBBox}  The width, height, and depth of the content
      */
-    public measureXMLnode(xml: N) {
+    public measureXMLnode(xml: N): UnknownBBox {
         const adaptor = this.adaptor;
-        const content =  this.html('mjx-xml-block', {style:{display:'inline-block'}}, [adaptor.clone(xml)]);
+        const content =  this.html('mjx-xml-block', {style: {display: 'inline-block'}}, [adaptor.clone(xml)]);
         const base = this.html('mjx-baseline', {style: {display: 'inline-block', width: 0, height: 0}});
         const style = {
             position: 'absolute',
@@ -583,10 +603,10 @@ export abstract class CommonOutputJax<
 
     /**
      * @param {CssFontData} font   The family, style, and weight for the given font
-     * @param {Styles} styles      The style object to add the font data to
-     * @return {Styles}            The modified (or initialized) style object
+     * @param {StyleList} styles   The style object to add the font data to
+     * @return {StyleList}         The modified (or initialized) style object
      */
-    public cssFontStyles(font: CssFontData, styles: StyleList = {}) {
+    public cssFontStyles(font: CssFontData, styles: StyleList = {}): StyleList {
         const [family, italic, bold] = font;
         styles['font-family'] = this.font.cssFamilyPrefix + ', ' + family;
         if (italic) styles['font-style'] = 'italic';
@@ -598,7 +618,7 @@ export abstract class CommonOutputJax<
      * @param {Styles} styles   The style object to query
      * @return {CssFontData}    The family, italic, and boolean values
      */
-    public getFontData(styles: Styles) {
+    public getFontData(styles: Styles): CssFontData {
         if (!styles) {
             styles = new Styles();
         }

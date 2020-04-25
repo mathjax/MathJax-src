@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMaction, CommonMactionMixin} from '../../common/Wrappers/maction.js';
+import {CommonMactionMixin} from '../../common/Wrappers/maction.js';
 import {ActionDef} from '../../common/Wrappers/maction.js';
 import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
@@ -37,11 +37,18 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmaction<N, T, D> extends
 CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The maction wrapper
+     */
     public static kind = MmlMaction.prototype.kind;
 
+    /**
+     * @override
+     */
     public static styles: StyleList = {
         '[jax="SVG"] mjx-tool': {
             display: 'inline-block',
@@ -82,7 +89,7 @@ CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVG
      * The valid action types and their handlers
      */
     public static actions = new Map([
-        ['toggle', [(node, data) => {
+        ['toggle', [(node, _data) => {
             //
             // Mark which child is selected
             //
@@ -127,7 +134,7 @@ CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVG
                 //
                 const adaptor = node.adaptor;
                 const container = node.jax.container;
-                const math = (node.node as AbstractMmlNode).factory.create('math', {}, [node.childNodes[1].node])
+                const math = (node.node as AbstractMmlNode).factory.create('math', {}, [node.childNodes[1].node]);
                 const tool = node.html('mjx-tool', {}, [node.html('mjx-tip')]);
                 const hidden = adaptor.append(rect, node.svg('foreignObject', {style: {display: 'none'}}, [tool]));
                 node.jax.processMath(math, adaptor.firstChild(tool));
@@ -140,7 +147,7 @@ CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVG
                     data.hoverTimer.set(node, setTimeout(() => {
                         adaptor.setStyle(tool, 'left', '0');
                         adaptor.setStyle(tool, 'top', '0');
-                        adaptor.append(container, tool)
+                        adaptor.append(container, tool);
                         const tbox = adaptor.nodeBBox(tool);
                         const nbox = adaptor.nodeBBox(node.element);
                         const dx = (nbox.right - tbox.left) / node.metrics.em + node.dx;

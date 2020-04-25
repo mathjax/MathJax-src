@@ -29,10 +29,16 @@ import {LiteElement} from './Element.js';
  */
 export class LiteDocument {
     /**
-     * The <html>, <head>, and <body> elements
+     * The document's <html> element
      */
     public root: LiteElement;
+    /**
+     * The document's <head> element
+     */
     public head: LiteElement;
+    /**
+     * The document's <body> element
+     */
     public body: LiteElement;
 
     /**

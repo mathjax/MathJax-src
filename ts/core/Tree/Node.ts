@@ -157,7 +157,6 @@ export abstract class AbstractNode implements Node {
      * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
      * @param {PropertyList} properties  Any properties to be added to the node, if any
      * @param {Node[]} children  The initial child nodes, if any
-     * @return {Node}  The newly created node
      *
      * @constructor
      * @implements {Node}
@@ -323,7 +322,7 @@ export abstract class AbstractEmptyNode extends AbstractNode {
     /**
      * @override
      */
-    public setChildren(children: Node[]) {
+    public setChildren(_children: Node[]) {
     }
 
     /**
@@ -336,14 +335,14 @@ export abstract class AbstractEmptyNode extends AbstractNode {
     /**
      * @override
      */
-    public replaceChild(newChild: Node, oldChild: Node) {
+    public replaceChild(_newChild: Node, oldChild: Node) {
         return oldChild;
     }
 
     /**
      * @override
      */
-    public childIndex(node: Node) {
+    public childIndex(_node: Node) {
         return null as number;
     }
 

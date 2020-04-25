@@ -30,23 +30,37 @@ import {MmlNode, TextNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../Mm
  */
 
 export class MmlMfenced extends AbstractMmlNode {
+
+    /**
+     * @overeride
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults,
         open: '(',
         close: ')',
         separators: ','
     };
+
+    /**
+     * TeX class is INNER
+     */
     public texClass = TEXCLASS.INNER;
 
     /**
-     *  Storage for "fake" nodes for the delimiters and separators
+     * Storage for "fake" nodes for the separators
      */
     public separators: MmlNode[] = [];
+    /**
+     * Storage for "fake" open node
+     */
     public open: MmlNode = null;
+    /**
+     * Storage for "fake" close node
+     */
     public close: MmlNode = null;
 
     /**
-     * @return {string}  The mfenced kind
+     * @override
      */
     public get kind() {
         return 'mfenced';

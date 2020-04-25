@@ -25,7 +25,7 @@
  */
 
 import {SerializedMmlVisitor} from './SerializedMmlVisitor.js';
-import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
+import {MmlNode} from './MmlNode.js';
 import {PropertyList} from '../Tree/Node.js';
 
 /*****************************************************************/
@@ -69,7 +69,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
      * @param {MmlNode} node  The node whose attributes are to be produced
      * @return {string}  The attribute list as a string
      */
-    protected getAttributes(node: MmlNode) {
+    protected getAttributes(node: MmlNode): string {
         return this.attributeString(node.attributes.getAllAttributes(), '', '');
     }
 
@@ -77,7 +77,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
      * @param {MmlNode} node  The node whose inherited attributes are to be produced
      * @return {string}  The inhertited attribute list as a string (with each in [...])
      */
-    protected getInherited(node: MmlNode) {
+    protected getInherited(node: MmlNode): string {
         return this.attributeString(node.attributes.getAllInherited(), '[', ']');
     }
 
@@ -85,7 +85,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
      * @param {MmlNode} node  The node whose properties are to be produced
      * @return {string}  The property list as a string (with each in [[...]])
      */
-    protected getProperties(node: MmlNode) {
+    protected getProperties(node: MmlNode): string {
         return this.attributeString(node.getAllProperties(), '[[', ']]');
     }
 
@@ -95,7 +95,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
      * @param {string} close  The closing delimiter to add after each attribute
      * @return {string}  The attribute list as a string
      */
-    protected attributeString(attributes: PropertyList, open: string, close: string) {
+    protected attributeString(attributes: PropertyList, open: string, close: string): string {
         let ATTR = '';
         for (const name of Object.keys(attributes)) {
             ATTR += ' ' + open + name + '="' + this.quoteHTML(String(attributes[name])) + '"' + close;

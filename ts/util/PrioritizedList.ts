@@ -76,6 +76,7 @@ export class PrioritizedList<DataClass> {
         let i = 0;
         let items = this.items;
         return {
+            /* tslint:disable-next-line:jsdoc-require */
             next(): IteratorResult<PrioritizedListItem<DataClass>> {
                 return {value: items[i++], done: (i > items.length)};
             }
@@ -89,7 +90,7 @@ export class PrioritizedList<DataClass> {
      * @param {number} priority  The priority for the item
      * @return {DataClass}       The data itself
      */
-    public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY) {
+    public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY): DataClass {
         let i = this.items.length;
         do {
             i--;
@@ -122,7 +123,7 @@ export class PrioritizedList<DataClass> {
      *
      * @return {PrioritizedListItem<DataClass>[]}  The list converted to an array
      */
-    public toArray() {
+    public toArray(): PrioritizedListItem<DataClass>[] {
         return Array.from(this);
     }
 

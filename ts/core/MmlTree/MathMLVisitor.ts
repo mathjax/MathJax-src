@@ -22,7 +22,6 @@
  */
 
 import {MmlVisitor} from './MmlVisitor.js';
-import {MmlFactory} from './MmlFactory.js';
 import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
 
 /*****************************************************************/
@@ -41,9 +40,9 @@ export class MathMLVisitor extends MmlVisitor {
      *
      * @param {MmlNode} node  The node to use as the root of the tree to traverse
      * @param {Document} document  The document in which the nodes are created
-     * @return {Element}  The MathML DOM nodes representing the internal tree
+     * @return {Node}  The MathML DOM nodes representing the internal tree
      */
-    public visitTree(node: MmlNode, document: Document) {
+    public visitTree(node: MmlNode, document: Document): Node {
         this.document = document;
         let root = document.createElement('top');
         this.visitNode(node, root);

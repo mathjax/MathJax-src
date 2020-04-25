@@ -48,7 +48,7 @@ export const mathjax = {
      * @param {OptionLis} options   The options to use for the document (e.g., input and output jax)
      * @return {MathDocument}       The MathDocument to handle the document
      */
-    document: function (document: any, options: OptionList) {
+    document: function (document: any, options: OptionList): MathDocument<any, any, any> {
         return mathjax.handlers.document(document, options);
     },
 

@@ -21,7 +21,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, PropertyList} from '../Tree/Node.js';
 import {AbstractNodeFactory} from '../Tree/NodeFactory.js';
 import {MmlNode, MmlNodeClass} from './MmlNode.js';
 import {MML} from './MML.js';
@@ -32,13 +31,17 @@ import {MML} from './MML.js';
  */
 
 export class MmlFactory extends AbstractNodeFactory<MmlNode, MmlNodeClass> {
+
+    /**
+     * The default node-creation functions
+     */
     public static defaultNodes = MML;
 
     /**
-     * @return {object}  The list of node-creation functions (similar to the
+     * @return {Object}  The list of node-creation functions (similar to the
      *                   MML object from MathJax v2).
      */
-    get MML() {
+    get MML(): Object {
         return this.node;
     }
 

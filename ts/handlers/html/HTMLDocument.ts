@@ -21,14 +21,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument, AbstractMathDocument} from '../../core/MathDocument.js';
+import {AbstractMathDocument} from '../../core/MathDocument.js';
 import {userOptions, separateOptions, OptionList, expandable} from '../../util/Options.js';
 import {HTMLMathItem} from './HTMLMathItem.js';
 import {HTMLMathList} from './HTMLMathList.js';
 import {HTMLDomStrings} from './HTMLDomStrings.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {InputJax} from '../../core/InputJax.js';
-import {MathItem, STATE, ProtoItem, Location} from '../../core/MathItem.js';
+import {STATE, ProtoItem, Location} from '../../core/MathItem.js';
 import {StyleList} from '../../output/common/CssStyles.js';
 
 /*****************************************************************/
@@ -54,7 +54,14 @@ export type HTMLNodeArray<N, T> = [N | T, number][][];
  */
 export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
+    /**
+     * The kind of document
+     */
     public static KIND: string = 'HTML';
+
+    /**
+     * The default options for HTMLDocument
+     */
     public static OPTIONS: OptionList = {
         ...AbstractMathDocument.OPTIONS,
         renderActions: expandable({
@@ -66,6 +73,9 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         DomStrings: null                  // Use the default DomString parser
     };
 
+    /**
+     * Extra styles to be included in the document's stylesheet (added by extensions)
+     */
     protected styles: StyleList[];
 
     /**
@@ -118,7 +128,8 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
      * @param {HTMLNodeArray} nodes  The array of node lists that produced the string array
      * @return {HTMLMathItem}        The MathItem for the given proto item
      */
-    protected mathItem(item: ProtoItem<N, T>, jax: InputJax<N, T, D>, nodes: HTMLNodeArray<N, T>) {
+    protected mathItem(item: ProtoItem<N, T>, jax: InputJax<N, T, D>,
+                       nodes: HTMLNodeArray<N, T>): HTMLMathItem<N, T, D> {
         let math = item.math;
         let start = this.findPosition(item.n, item.start.n, item.open, nodes);
         let end = this.findPosition(item.n, item.end.n, item.close, nodes);

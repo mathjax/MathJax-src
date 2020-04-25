@@ -30,6 +30,10 @@ import {MmlNode, AbstractMmlNode} from '../MmlNode.js';
  */
 
 export class MmlMaction extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults,
         actiontype: 'toggle',
@@ -37,14 +41,15 @@ export class MmlMaction extends AbstractMmlNode {
     };
 
     /**
-     *  @return {string}  The maction kind
+     * @override
      */
     public get kind() {
         return 'maction';
     }
 
     /**
-     * @return {number}  At least one child
+     * At least one child
+     * @override
      */
     public get arity() {
         return 1;

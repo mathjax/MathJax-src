@@ -34,7 +34,7 @@ export interface CommonMs extends AnyWrapper {
      * @param {string} text  The text for the wrapped element
      * @return {CommonWrapper}   The wrapped text node
      */
-    createText(text: string): AnyWrapper
+    createText(text: string): AnyWrapper;
 }
 
 /**
@@ -74,7 +74,7 @@ export function CommonMsMixin<T extends WrapperConstructor>(Base: T): MsConstruc
          * @param {string} text   The text for the wrapped element
          * @return {AnyWrapper}   The wrapped text node
          */
-        public createText(text: string) {
+        public createText(text: string): AnyWrapper {
             const node = this.wrap(this.mmlText(text));
             node.parent = this;
             return node;

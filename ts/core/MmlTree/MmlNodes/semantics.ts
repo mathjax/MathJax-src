@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
+import {AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,6 +30,10 @@ import {MmlNode, AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
  */
 
 export class MmlSemantics extends AbstractMmlBaseNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlBaseNode.defaults,
         definitionUrl: null,
@@ -37,21 +41,23 @@ export class MmlSemantics extends AbstractMmlBaseNode {
     };
 
     /**
-     * @return {string}  The semantics kind
+     * @override
      */
     public get kind() {
         return 'semantics';
     }
 
     /**
-     * @return {number}  <semantics> requires at least one node
+     * <semantics> requires at least one node
+     * @override
      */
     public get arity() {
         return 1;
     }
 
     /**
-     * @return {boolean}  Ignore <semantics> when looking for partent node
+     * Ignore <semantics> when looking for partent node
+     * @override
      */
     public get notParent() {
         return true;
@@ -65,6 +71,10 @@ export class MmlSemantics extends AbstractMmlBaseNode {
  */
 
 export class MmlAnnotationXML extends AbstractMmlNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlNode.defaults,
         definitionUrl: null,
@@ -75,7 +85,7 @@ export class MmlAnnotationXML extends AbstractMmlNode {
     };
 
     /**
-     * @return {string}  The annotation-xml kind
+     * @override
      */
     public get kind() {
         return 'annotation-xml';
@@ -83,10 +93,10 @@ export class MmlAnnotationXML extends AbstractMmlNode {
 
     /**
      * Children are XMLNodes, so don't bother inheritting to them
-     *
      * @override
      */
     protected setChildInheritedAttributes() {}
+
 }
 
 /*****************************************************************/
@@ -95,17 +105,26 @@ export class MmlAnnotationXML extends AbstractMmlNode {
  */
 
 export class MmlAnnotation extends MmlAnnotationXML {
+
+    /**
+     * @override
+     */
     public static defaults = {
         ...MmlAnnotationXML.defaults
     };
+
+    /**
+     * Extra properties for this node
+     */
     public properties = {
         isChars: true
     };
 
     /**
-     * @return {string}  The annotation-xml kind
+     * @override
      */
     public get kind() {
         return 'annotation';
     }
+
 }

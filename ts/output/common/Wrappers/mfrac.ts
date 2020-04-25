@@ -23,7 +23,6 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
-import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {BBox} from '../BBox.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -73,7 +72,7 @@ export interface CommonMfrac extends AnyWrapper {
      *                             vertical offsets (u and v) of the parts, and
      *                             bounding boxes of the parts.
      */
-    getBevelData(display: boolean): {H: number, delta: number, u: number, v:number, nbox: BBox, dbox: BBox};
+    getBevelData(display: boolean): {H: number, delta: number, u: number, v: number, nbox: BBox, dbox: BBox};
 
     /**
      * @return {boolean}   True if in display mode, false otherwise
@@ -95,6 +94,9 @@ export type MfracConstructor = Constructor<CommonMfrac>;
 export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracConstructor & T {
     return class extends Base {
 
+        /**
+         * Wrapper for <mo> to use for bevelled fraction
+         */
         public bevel: CommonMo = null;
 
         /**
@@ -116,7 +118,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
             //
             if (this.node.attributes.get('bevelled')) {
                 const {H} = this.getBevelData(this.isDisplay());
-                const bevel = this.bevel = this.createMo('/');
+                const bevel = this.bevel = this.createMo('/') as CommonMo;
                 bevel.canStretch(DIRECTION.Vertical);
                 bevel.getStretchedVariant([H], true);
             }
@@ -171,7 +173,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
          * @return {Object}          The expanded rule thickness (T), and baseline offsets
          *                             for numerator and denomunator (u and v)
          */
-        public getTUV(display: boolean, t: number) {
+        public getTUV(display: boolean, t: number): {T: number, u: number, v: number} {
             const tex = this.font.params;
             const a = tex.axis_height;
             const T = (display ? 3.5 : 1.5) * t;
@@ -187,7 +189,6 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
          * @param {boolean} display  True for display-mode fractions
          */
         public getAtopBBox(bbox: BBox, display: boolean) {
-            const tex = this.font.params;
             const {u, v, nbox, dbox} = this.getUVQ(display);
             bbox.combine(nbox, 0, u);
             bbox.combine(dbox, 0, -v);
@@ -200,7 +201,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
          *    The vertical offsets of the numerator (u), the denominator (v),
          *    the separation between the two, and the bboxes themselves.
          */
-        public getUVQ(display: boolean) {
+        public getUVQ(display: boolean): {u: number, v: number, q: number, nbox: BBox, dbox: BBox} {
             const nbox = this.childNodes[0].getBBox() as BBox;
             const dbox = this.childNodes[1].getBBox() as BBox;
             const tex = this.font.params;
@@ -216,8 +217,8 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
             //  If actual separation is less than minimum, move them farther apart
             //
             if (q < p) {
-                u += (p - q)/2;
-                v += (p - q)/2;
+                u += (p - q) / 2;
+                v += (p - q) / 2;
                 q = p;
             }
             return {u, v, q, nbox, dbox};
@@ -243,7 +244,8 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
          *                             vertical offsets (u and v) of the parts, and
          *                             bounding boxes of the parts.
          */
-        public getBevelData(display: boolean) {
+        public getBevelData(display: boolean): {H: number, delta: number, u: number,
+                                                v: number, nbox: BBox, dbox: BBox} {
             const nbox = this.childNodes[0].getBBox() as BBox;
             const dbox = this.childNodes[1].getBBox() as BBox;
             const delta = (display ? .4 : .15);
@@ -259,14 +261,14 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
         /**
          * @override
          */
-        public canStretch(direction: DIRECTION) {
+        public canStretch(_direction: DIRECTION) {
             return false;
         }
 
         /**
          * @return {boolean}   True if in display mode, false otherwise
          */
-        public isDisplay() {
+        public isDisplay(): boolean {
             const {displaystyle, scriptlevel} = this.node.attributes.getList('displaystyle', 'scriptlevel');
             return displaystyle && scriptlevel === 0;
         }

@@ -135,7 +135,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         /**
          * @override
          */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
+        public computeBBox(bbox: BBox, _recompute: boolean = false) {
             const stretchy = (this.stretch.dir !== DIRECTION.None);
             if (stretchy && this.size === null) {
                 this.getStretchedVariant([0]);
@@ -235,7 +235,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
          * @param {number} value  The default value to use
          * @return {number}       The size in em's of the attribute (or the default value)
          */
-        public getSize(name: string, value: number) {
+        public getSize(name: string, value: number): number {
             let attributes = this.node.attributes;
             if (attributes.isSet(name)) {
                 value = this.length2em(attributes.get(name), 1, 1); // FIXME: should use height of actual character
@@ -247,7 +247,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
          * @param {number[]} WH  Either [W] for width, [H, D] for height and depth, or [] for min/max size
          * @return {number}      Either the width or the total height of the character
          */
-        public getWH(WH: number[]) {
+        public getWH(WH: number[]): number {
             if (WH.length === 0) return 0;
             if (WH.length === 1) return WH[0];
             let [H, D] = WH;
@@ -281,7 +281,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
          * @param {DelimiterData} C  The delimiter data for the stretchy character
          * @return {number[]}        The height and depth for the vertically stretched delimiter
          */
-        public getBaseline(WHD: number[], HD: number, C: DelimiterData) {
+        public getBaseline(WHD: number[], HD: number, C: DelimiterData): [number, number] {
             const hasWHD = (WHD.length === 2 && WHD[0] + WHD[1] === HD);
             const symmetric = this.node.attributes.get('symmetric');
             const [H, D] = (hasWHD ? WHD : [HD, 0]);

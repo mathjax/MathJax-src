@@ -38,7 +38,7 @@ export type ScriptData = {
     psup: BBox;  // combined bbox for all presuperscripts
     numPrescripts: number;
     numScripts: number;
-}
+};
 export type ScriptDataName = keyof ScriptData;
 
 /**
@@ -162,7 +162,7 @@ export function CommonMmultiscriptsMixin<W extends AnyWrapper,
          * @param {BBox} post  The postcript bounding box
          * @return {BBox}      The combined bounding box
          */
-        public combinePrePost(pre: BBox, post: BBox) {
+        public combinePrePost(pre: BBox, post: BBox): BBox {
             const bbox = new BBox(pre);
             bbox.combine(post, 0, 0);
             return bbox;
@@ -205,7 +205,7 @@ export function CommonMmultiscriptsMixin<W extends AnyWrapper,
         /**
          * @return {ScriptData}   The bounding box information about all the scripts
          */
-        public getScriptData() {
+        public getScriptData(): ScriptData {
             //
             //  Return cached data, if any
             //
@@ -218,7 +218,7 @@ export function CommonMmultiscriptsMixin<W extends AnyWrapper,
             const data: ScriptData = this.scriptData = {
                 base: null, sub: BBox.empty(), sup: BBox.empty(), psub: BBox.empty(), psup: BBox.empty(),
                 numPrescripts: 0, numScripts: 0
-            }
+            };
             //
             //  Get the bboxes for all the scripts and combine them into the scriptData
             //
@@ -237,10 +237,10 @@ export function CommonMmultiscriptsMixin<W extends AnyWrapper,
         /**
          * @return {ScriptLists}  The bounding boxes for all the scripts divided into lists by position
          */
-        public getScriptBBoxLists() {
+        public getScriptBBoxLists(): ScriptLists {
             const lists: ScriptLists = {
                 base: [], subList: [], supList: [], psubList: [], psupList: []
-            }
+            };
             //
             // The first entry is the base, and then they altername sub- and superscripts.
             // Once we find the <mprescripts/> element, switch to presub- and presuperscript lists.
@@ -313,7 +313,7 @@ export function CommonMmultiscriptsMixin<W extends AnyWrapper,
          */
         public getUVQ(basebox: BBox, subbox: BBox, supbox: BBox) {
             if (!this.UVQ) {
-                let [u, v, q] = [0, 0 ,0];
+                let [u, v, q] = [0, 0, 0];
                 if (subbox.h === 0 && subbox.d === 0) {
                     //
                     //  Use placement for superscript only

@@ -38,8 +38,8 @@ const srePromise = (typeof sre === 'undefined' ? asyncLoad(SRELIB) : Promise.res
 /**
  * Values to control the polling for when SRE is ready
  */
-const SRE_DELAY = 100;        // in milliseconds
-const SRE_TIMEOUT = 20 * 1000; // 10 seconds
+const SRE_DELAY = 100;         // in milliseconds
+const SRE_TIMEOUT = 20 * 1000; // 20 seconds
 
 /**
  * A promise that resolves when SRE is loaded and ready, and rejects if
@@ -49,7 +49,7 @@ export const sreReady = function() {
   return new Promise<void>((resolve, reject) => {
     srePromise.then(() => {
         const start = new Date().getTime();
-        function checkSRE() {
+        const checkSRE = function () {
             if (sre.Engine.isReady()) {
                 resolve();
             } else {
@@ -59,7 +59,7 @@ export const sreReady = function() {
                     reject('Timed out waiting for Speech-Rule-Engine');
                 }
             }
-        }
+        };
         checkSRE();
     }).catch((error: Error) => reject(error.message || error));
   });

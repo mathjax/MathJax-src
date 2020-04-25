@@ -391,7 +391,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
     public setAttributes(node: N, def: OptionList) {
         if (def.style && typeof(def.style) !== 'string') {
             for (let key of Object.keys(def.style)) {
-                this.setStyle(node, key.replace(/-([a-z])/g, (m, c) => c.toUpperCase()), def.style[key]);
+                this.setStyle(node, key.replace(/-([a-z])/g, (_m, c) => c.toUpperCase()), def.style[key]);
             }
         }
         if (def.properties) {

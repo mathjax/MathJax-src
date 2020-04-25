@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMglyph, CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
+import {CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
 import {OptionList} from '../../../util/Options.js';
 
@@ -34,8 +34,13 @@ import {OptionList} from '../../../util/Options.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmglyph<N, T, D> extends CommonMglyphMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmglyph<N, T, D> extends
+CommonMglyphMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The mglyph wrapper
+     */
     public static kind = MmlMglyph.prototype.kind;
 
     /**

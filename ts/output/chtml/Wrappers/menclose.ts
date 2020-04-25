@@ -21,14 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
-import {CommonMenclose, CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
+import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
+import {CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
 import {CHTMLmsqrt} from './msqrt.js';
 import * as Notation from '../Notation.js';
 import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
-import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../../util/Options.js';
-import {StyleList, StyleData} from '../../common/CssStyles.js';
+import {StyleList} from '../../common/CssStyles.js';
 import {em} from '../../../util/lengths.js';
 
 /*****************************************************************/
@@ -50,9 +49,13 @@ const ANGLE = Angle(Notation.ARROWDX, Notation.ARROWY);
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmenclose<N, T, D> extends
 CommonMencloseMixin<CHTMLWrapper<any, any, any>, CHTMLmsqrt<any, any, any>, any, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
+    /**
+     * The menclose wrapper
+     */
     public static kind = MmlMenclose.prototype.kind;
 
     /**
@@ -212,7 +215,7 @@ CommonMencloseMixin<CHTMLWrapper<any, any, any>, CHTMLmsqrt<any, any, any>, any,
             // Use a bottom border and an upward strike properly angled
             //
             renderer: (node, child) => {
-                const {w, h, d} = node.getBBox();
+                const {h, d} = node.getBBox();
                 const [a, W] = node.getArgMod(1.75 * node.padding, h + d);
                 const t = node.thickness * Math.sin(a) * .9;
                 node.adaptor.setStyle(child, 'border-bottom', node.em(node.thickness) + ' solid');
@@ -347,7 +350,7 @@ CommonMencloseMixin<CHTMLWrapper<any, any, any>, CHTMLmsqrt<any, any, any>, any,
      * @param {boolean} double  True if this is a double-headed arrow
      * @return {N}               The newly created arrow
      */
-    public arrow(w: number, a: number, double: boolean = false) {
+    public arrow(w: number, a: number, double: boolean = false): N {
         const W = this.getBBox().w;
         const style = {width: this.em(w)} as OptionList;
         if (W !== w) {
@@ -377,7 +380,7 @@ CommonMencloseMixin<CHTMLWrapper<any, any, any>, CHTMLmsqrt<any, any, any>, any,
         const head = this.arrowhead;
         if (head.x === Notation.ARROWX && head.y === Notation.ARROWY &&
             head.dx === Notation.ARROWDX && t === Notation.THICKNESS) return;
-        const [x, y, dx] = [t * head.x, t * head.y, t * head.dx].map(x => this.em(x));
+        const [x, y] = [t * head.x, t * head.y].map(x => this.em(x));
         const a = Angle(head.dx, head.y);
         const [line, rthead, rbhead, lthead, lbhead] = this.adaptor.childNodes(arrow);
         this.adjustHead(rthead, [y, '0', '1px', x], a);
@@ -421,7 +424,7 @@ CommonMencloseMixin<CHTMLWrapper<any, any, any>, CHTMLmsqrt<any, any, any>, any,
      *                   adjusted if the thickness isn't the default
      * @return {N}       The adjusted element
      */
-    public adjustBorder(node: N) {
+    public adjustBorder(node: N): N {
         if (this.thickness !== Notation.THICKNESS) {
             this.adaptor.setStyle(node, 'borderWidth', this.em(this.thickness));
         }
@@ -433,7 +436,7 @@ CommonMencloseMixin<CHTMLWrapper<any, any, any>, CHTMLmsqrt<any, any, any>, any,
      *                    adjusted if the thickness isn't the default
      * @return {N}        The adjusted element
      */
-    public adjustThickness(shape: N) {
+    public adjustThickness(shape: N): N {
         if (this.thickness !== Notation.THICKNESS) {
             this.adaptor.setStyle(shape, 'strokeWidth', this.fixed(this.thickness));
         }
@@ -447,7 +450,7 @@ CommonMencloseMixin<CHTMLWrapper<any, any, any>, CHTMLmsqrt<any, any, any>, any,
      * @param {number=} n   The number of digits to use
      * @return {string}     The formatted number
      */
-    fixed(m: number, n: number = 3) {
+    public fixed(m: number, n: number = 3): string {
         if (Math.abs(m) < .0006) {
             return '0';
         }

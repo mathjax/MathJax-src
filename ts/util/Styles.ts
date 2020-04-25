@@ -54,7 +54,7 @@ const WSC = ['width', 'style', 'color'];
  * @param {string} text  The combined styles to be split at spaces
  * @return {string[]}    Array of parts of the style (separated by spaces)
  */
-function splitSpaces(text: string) {
+function splitSpaces(text: string): string[] {
     const parts = text.split(/((?:'[^']*'|"[^"]*"|,[\s\n]|[^\s\n])*)/g);
     const split = [] as string[];
     while (parts.length > 1) {
@@ -303,7 +303,7 @@ function saveFontParts(name: string, value: {[name: string]: string | string[]})
 /**
  * Combine font parts into one (we don't actually do that)
  */
-function combineFont(name: string) {}
+function combineFont(_name: string) {}
 
 /*********************************************************/
 /**
@@ -393,7 +393,7 @@ export class Styles {
     /**
      * @return {string}  The CSS string for the styles currently defined
      */
-    public get cssText() {
+    public get cssText(): string {
         const styles = [] as string[];
         for (const name of Object.keys(this.styles)) {
             const parent = this.parentName(name);
@@ -435,7 +435,7 @@ export class Styles {
      * @param {string} name  The name of the style to get
      * @return {string}      The value of the style (or empty string if not defined)
      */
-    public get(name: string) {
+    public get(name: string): string {
         name = this.normalizeName(name);
         return (this.styles.hasOwnProperty(name) ? this.styles[name] : '');
     }
@@ -469,7 +469,7 @@ export class Styles {
      * @param {string} name   The name of the style whose parent style is to be found
      * @return {string}       The name of the parent, or '' if none
      */
-    protected parentName(name: string) {
+    protected parentName(name: string): string {
         const parent = name.replace(/-[^-]*$/, '');
         return (name === parent ? '' : parent);
     }
@@ -491,7 +491,7 @@ export class Styles {
         //   the child name before the find word, e.g., border-top-width
         //
         if (Styles.connect[name] && !Styles.connect[name].combine) {
-            child += name.replace(/.*-/,'-');
+            child += name.replace(/.*-/, '-');
             name = this.parentName(name);
         }
         return name + '-' + child;
@@ -501,7 +501,7 @@ export class Styles {
      * @param {string} name  The name of a style to normalize
      * @return {string}      The name converted from CamelCase to lowercase with dashes
      */
-    protected normalizeName(name: string) {
+    protected normalizeName(name: string): string {
         return name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
     }
 
@@ -515,7 +515,7 @@ export class Styles {
         this.styles = {};
         const parts = cssText.replace(PATTERN.comment, '').split(PATTERN.style);
         while (parts.length > 1) {
-            let [space, name, value] = parts.splice(0,3);
+            let [space, name, value] = parts.splice(0, 3);
             if (space.match(/[^\s\n]/)) return;
             this.set(name, value);
         }

@@ -31,6 +31,10 @@ import {INHERIT} from '../Attributes.js';
  */
 
 export class MmlMstyle extends AbstractMmlLayoutNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlLayoutNode.defaults,
         scriptlevel: INHERIT,
@@ -44,7 +48,7 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
     };
 
     /**
-     * @return {string}  The mstyle kind
+     * @override
      */
     public get kind() {
         return 'mstyle';
@@ -79,4 +83,5 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
         attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
         this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
     }
+
 }

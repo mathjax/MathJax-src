@@ -30,6 +30,10 @@ import {AbstractMmlLayoutNode} from '../MmlNode.js';
  */
 
 export class MmlMpadded extends AbstractMmlLayoutNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlLayoutNode.defaults,
         width: '',
@@ -40,9 +44,10 @@ export class MmlMpadded extends AbstractMmlLayoutNode {
     };
 
     /**
-     * @return {string}  The mpadded kind
+     * @override
      */
     public get kind() {
         return 'mpadded';
     }
+
 }

@@ -103,8 +103,8 @@ export abstract class AbstractVisitor implements Visitor {
      *  @param {string} kind  The node kind whose method name is needed
      *  @return {string}  The name of the visitor method for the given node kind
      */
-    protected static methodName(kind: string) {
-        return 'visit' + (kind.charAt(0).toUpperCase() + kind.substr(1)).replace(/[^a-z0-9_]/ig,'_') + 'Node';
+    protected static methodName(kind: string): string {
+        return 'visit' + (kind.charAt(0).toUpperCase() + kind.substr(1)).replace(/[^a-z0-9_]/ig, '_') + 'Node';
     }
 
     /**

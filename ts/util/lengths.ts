@@ -51,6 +51,7 @@ export const RELUNITS: {[unit: string]: number} = {
  *  The various named spaces
  */
 export const MATHSPACE: {[name: string]: number} = {
+    /* tslint:disable:whitespace */
     veryverythinmathspace:           1/18,
     verythinmathspace:               2/18,
     thinmathspace:                   3/18,
@@ -65,6 +66,7 @@ export const MATHSPACE: {[name: string]: number} = {
     negativethickmathspace:         -5/18,
     negativeverythickmathspace:     -6/18,
     negativeveryverythickmathspace: -7/18,
+    /* tslint:enable */
 
     thin:   .04,
     medium: .06,
@@ -85,7 +87,7 @@ export const MATHSPACE: {[name: string]: number} = {
  * @param {number} ex             The size of an ex in pixels
  * @return {number}               The dimension converted to ems
  */
-export function length2em(length: string | number, size: number = 0, scale: number = 1, em: number = 16) {
+export function length2em(length: string | number, size: number = 0, scale: number = 1, em: number = 16): number {
     if (typeof length !== 'string') {
         length = String(length);
     }
@@ -116,7 +118,7 @@ export function length2em(length: string | number, size: number = 0, scale: numb
  * @param {number} m  A number to be shown as a percent
  * @return {string}   The number m as a percent
  */
-export function percent(m: number) {
+export function percent(m: number): string {
     return (100 * m).toFixed(1).replace(/\.?0+$/, '') + '%';
 }
 
@@ -124,7 +126,7 @@ export function percent(m: number) {
  * @param {number} m  A number to be shown in ems
  * @return {string}   The number with units of ems
  */
-export function em(m: number) {
+export function em(m: number): string {
     if (Math.abs(m) < .001) return '0';
     return (m.toFixed(3).replace(/\.?0+$/, '')) + 'em';
 }
@@ -134,7 +136,7 @@ export function em(m: number) {
  * @param {number} em  The number of pixels in an em
  * @return {string}    The number with units of em
  */
-export function emRounded(m: number, em: number = 16) {
+export function emRounded(m: number, em: number = 16): string {
     m = (Math.round(m * em) + .05) / em;
     if (Math.abs(m) < .001) return '0em';
     return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
@@ -147,7 +149,7 @@ export function emRounded(m: number, em: number = 16) {
  * @param {number} em  The number of pixels in an em
  * @return {string}    The number with units of px
  */
-export function px(m: number, M: number = -BIGDIMEN, em: number = 16) {
+export function px(m: number, M: number = -BIGDIMEN, em: number = 16): string {
     m *= em;
     if (M && m < M) m = M;
     if (Math.abs(m) < .1) return '0';

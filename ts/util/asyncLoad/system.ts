@@ -34,6 +34,9 @@ if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
     };
 }
 
+/**
+ * @param {string} URL   the base URL to use for loading relative paths
+ */
 export function setBaseURL(URL: string) {
     root = URL;
     if (!root.match(/\/$/)) {

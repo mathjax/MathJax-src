@@ -21,14 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode, AbstractMmlNode, AttributeList, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
-import {CHTMLmo} from './Wrappers/mo.js';
 import {BBox} from './BBox.js';
 import {CHTMLFontData, CHTMLCharOptions, CHTMLDelimiterData} from './FontData.js';
 
@@ -53,19 +50,15 @@ export const FONTSIZE: StringMap = {
 };
 
 export const SPACE: StringMap = {
+    /* tslint:disable:whitespace */
     [LENGTHS.em(2/18)]: '1',
     [LENGTHS.em(3/18)]: '2',
     [LENGTHS.em(4/18)]: '3',
     [LENGTHS.em(5/18)]: '4',
     [LENGTHS.em(6/18)]: '5'
+    /* tslint:enable */
 };
 
-/**
- * Needed to access node.style[id] using variable id
- */
-interface CSSStyle extends CSSStyleDeclaration {
-    [id: string]: string | Function | number | CSSRule;
-}
 
 /**
  * Shorthand for making a CHTMLWrapper constructor
@@ -77,7 +70,7 @@ export type CHTMLConstructor<N, T, D> = Constructor<CHTMLWrapper<N, T, D>>;
 /**
  *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
  */
-export interface CHTMLWrapperClass<N, T, D> extends AnyWrapperClass {
+export interface CHTMLWrapperClass extends AnyWrapperClass {
 
     kind: string;
 
@@ -107,12 +100,15 @@ export class CHTMLWrapper<N, T, D> extends
 CommonWrapper<
     CHTML<N, T, D>,
     CHTMLWrapper<N, T, D>,
-    CHTMLWrapperClass<N, T, D>,
+    CHTMLWrapperClass,
     CHTMLCharOptions,
     CHTMLDelimiterData,
     CHTMLFontData
 > {
 
+    /**
+     * The wrapper type
+     */
     public static kind: string = 'unknown';
 
     /**
@@ -128,14 +124,17 @@ CommonWrapper<
     public static used: boolean = false;
 
     /**
-     * The factory used to create more CHTMLWrappers
+     * @override
      */
     protected factory: CHTMLWrapperFactory<N, T, D>;
 
     /**
-     * The parent and children of this node
+     * @override
      */
     public parent: CHTMLWrapper<N, T, D>;
+    /**
+     * @override
+     */
     public childNodes: CHTMLWrapper<N, T, D>[];
 
     /**
@@ -165,7 +164,7 @@ CommonWrapper<
      * @param {N} parent  The HTML element in which the node is to be created
      * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
-    protected standardCHTMLnode(parent: N) {
+    protected standardCHTMLnode(parent: N): N {
         this.markUsed();
         const chtml = this.createCHTMLnode(parent);
         this.handleStyles();
@@ -182,14 +181,14 @@ CommonWrapper<
      * Mark this class as having been typeset (so its styles will be output)
      */
     public markUsed() {
-        (this.constructor as CHTMLWrapperClass<N, T, D>).used = true;
+        (this.constructor as CHTMLWrapperClass).used = true;
     }
 
     /**
      * @param {N} parent  The HTML element in which the node is to be created
      * @returns {N}  The root of the HTML tree for the wrapped node's output
      */
-    protected createCHTMLnode(parent: N) {
+    protected createCHTMLnode(parent: N): N {
         const href = this.node.attributes.get('href');
         if (href) {
             parent = this.adaptor.append(parent, this.html('a', {href: href})) as N;
@@ -235,7 +234,7 @@ CommonWrapper<
      * @param {number} rscale      The relatie scale to apply
      * @return {N}       The HTML node (for chaining)
      */
-    protected setScale(chtml: N, rscale: number) {
+    protected setScale(chtml: N, rscale: number): N {
         const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
         if (chtml && scale !== 1) {
             const size = this.percent(scale);
@@ -389,37 +388,23 @@ CommonWrapper<
      * @param {(N|T)[]} content  The child nodes for the created HTML node
      * @return {N}               The generated HTML tree
      */
-    public html(type: string, def: OptionList = {}, content: (N | T)[] = []) {
+    public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
         return this.jax.html(type, def, content);
     }
 
     /**
      * @param {string} text  The text from which to create an HTML text node
-     * @return {T}  The generated text node with the given text
+     * @return {T}           The generated text node with the given text
      */
-    public text(text: string) {
+    public text(text: string): T {
         return this.jax.text(text);
     }
 
     /**
-     * @override
-     */
-    protected createMo(text: string): CHTMLmo<N, T, D> {
-        return super.createMo(text) as CHTMLmo<N, T, D>;
-    }
-
-    /**
-     * @override
-     */
-    public coreMO(): CHTMLmo<N, T, D> {
-        return super.coreMO() as CHTMLmo<N, T, D>;
-    }
-
-    /**
      * @param {number} n  A unicode code point to be converted to a character className reference.
-     * @return {string}  The className for the character
+     * @return {string}   The className for the character
      */
-    protected char(n: number) {
+    protected char(n: number): string {
         return this.font.charSelector(n).substr(1);
     }
 

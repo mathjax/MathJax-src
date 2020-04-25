@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMpadded, CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
+import {CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
 import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
 
 /*****************************************************************/
@@ -33,8 +33,13 @@ import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmpadded<N, T, D> extends CommonMpaddedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmpadded<N, T, D> extends
+CommonMpaddedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The mpadded wrapper
+     */
     public static kind = MmlMpadded.prototype.kind;
 
     /**
@@ -42,7 +47,7 @@ export class SVGmpadded<N, T, D> extends CommonMpaddedMixin<SVGConstructor<any, 
      */
     public toSVG(parent: N) {
         let svg = this.standardSVGnode(parent);
-        const [H, D, W, dh, dd, dw, x, y, dx] = this.getDimens();
+        const [ , , , , , dw, x, y, dx] = this.getDimens();
         const align = (this.node.attributes.get('data-align') as string) || 'left';
         const X = x + dx - (dw < 0 && align !== 'left' ? align === 'center' ? dw / 2 : dw : 0);
         //

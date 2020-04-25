@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap} from '../FontData.js';
+import {FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap} from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -80,7 +80,7 @@ export function CommonTeXFontMixin<C extends CharOptions, V extends VariantData<
             return this.getChar('-smallop', n) || this.getChar('-size4', n);
         }
 
-    }
+    };
 
 }
 

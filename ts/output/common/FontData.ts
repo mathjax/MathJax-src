@@ -398,10 +398,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         0x20EF: '\u2192'  // combining low right arrows
     };
 
+    /**
+     * Default map for characters inside <mo>
+     */
     protected static defaultMoMap = {
         0x002D: '\u2212' // hyphen
     };
 
+    /**
+     * Default map for characters inside <mn>
+     */
     protected static defaultMnMap = {
         0x002D: '\u2212' // hyphen
     };
@@ -445,9 +451,12 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     };
 
     /**
-     * The default delimiter and character data
+     * The default delimiter data
      */
     protected static defaultDelimiters: DelimiterMap<any> = {};
+    /**
+     * The default character data
+     */
     protected static defaultChars: CharMapMap<any> = {};
 
     /**
@@ -456,11 +465,20 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     protected static defaultSizeVariants: string[] = [];
 
     /**
-     * The actual variant, delimiter, and size information for this font
+     * The actual variant information for this font
      */
     protected variant: VariantMap<C, V> = {};
+    /**
+     * The actual delimiter information for this font
+     */
     protected delimiters: DelimiterMap<D> = {};
+    /**
+     * The actual size information for this font
+     */
     protected sizeVariants: string[];
+    /**
+     * The data to use to make variants to default fonts and css for unknown characters
+     */
     protected cssFontMap: CssFontMap = {};
 
     /**
@@ -488,7 +506,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
      * @param {number} n       The character to get options for
      * @return {CharOptions}   The options for the character
      */
-    public static charOptions(font: CharMap<CharOptions>, n: number) {
+    public static charOptions(font: CharMap<CharOptions>, n: number): CharOptions {
         const char = font[n];
         if (char.length === 3) {
             (char as any)[3] = {};
@@ -596,8 +614,8 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
      * @param {number} n      Math Alphanumerics position for this remapping
      * @return {CharData<C>}  The character data for the remapping
      */
-    protected smpChar(n: number) {
-        return [ , , , {smp: n}] as CharData<C>;
+    protected smpChar(n: number): CharData<C> {
+        return [ , , , {smp: n} as C];
     }
 
     /**
@@ -655,7 +673,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
      * @param {number} n  The delimiter character number whose data is desired
      * @return {DelimiterData}  The data for that delimiter (or undefined)
      */
-    public getDelimiter(n: number) {
+    public getDelimiter(n: number): DelimiterData {
         return this.delimiters[n];
     }
 
@@ -664,7 +682,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
      * @param {number} i  The index in the size array of the size whose variant is needed
      * @return {string}   The variant of the i-th size for delimiter n
      */
-    public getSizeVariant(n: number, i: number) {
+    public getSizeVariant(n: number, i: number): string {
         if (this.delimiters[n].variants) {
             i = this.delimiters[n].variants[i];
         }
@@ -676,15 +694,15 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
      * @param {number} n     The unicode number for the character to be found
      * @return {CharData}    The data for the given character (or undefined)
      */
-    public getChar(name: string, n: number) {
+    public getChar(name: string, n: number): CharData<C> {
         return this.variant[name].chars[n];
     }
 
     /**
      * @param {string} name   The name of the variant whose data is to be obtained
-     * @return {VariantData}  The data for the requested variant (or undefined)
+     * @return {V}            The data for the requested variant (or undefined)
      */
-    public getVariant(name: string) {
+    public getVariant(name: string): V {
         return this.variant[name];
     }
 
@@ -692,16 +710,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
      * @param {string} variant   The name of the variant whose data is to be obtained
      * @return {CssFontData}     The CSS data for the requested variant
      */
-    public getCssFont(variant: string) {
+    public getCssFont(variant: string): CssFontData {
         return this.cssFontMap[variant] || ['serif', false, false];
     }
 
     /**
      * @param {string} name   The name of the map to query
      * @param {number} c      The character to remap
-     * @return {number}       The remapped character (or the original)
+     * @return {string}       The remapped character (or the original)
      */
-    public getRemappedChar(name: string, c: number) {
+    public getRemappedChar(name: string, c: number): string {
         const map = this.remapChars[name] || {} as RemapMap;
         return map[c];
     }
@@ -720,6 +738,7 @@ export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, 
     defaultCssFonts: CssFontMap;
     defaultVariants: string[][];
     defaultParams: FontParameters;
+    /* tslint:disable-next-line:jsdoc-require */
     charOptions(font: CharMap<C>, n: number): C;
     new(...args: any[]): FontData<C, V, D>;
 }

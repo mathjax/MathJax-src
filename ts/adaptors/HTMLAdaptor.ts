@@ -36,10 +36,12 @@ export interface MinDocument<N, T> {
     head: N;
     body: N;
     title: string;
+    /* tslint:disable:jsdoc-require */
     createElement(kind: string): N;
     createElementNS(ns: string, kind: string): N;
     createTextNode(text: string): T;
     querySelectorAll(selector: string): ArrayLike<N>;
+    /* tslint:enable */
 }
 
 /*****************************************************************/
@@ -68,6 +70,7 @@ export interface MinHTMLElement<N, T> {
     childNodes: (N | T)[] | NodeList;
     firstChild: N | T | Node;
     lastChild: N | T | Node;
+    /* tslint:disable:jsdoc-require */
     getElementsByTagName(name: string): N[] | HTMLCollectionOf<Element>;
     getElementsByTagNameNS(ns: string, name: string): N[] | HTMLCollectionOf<Element>;
     appendChild(child: N | T): N | T | Node;
@@ -82,6 +85,7 @@ export interface MinHTMLElement<N, T> {
     hasAttribute(name: string): boolean;
     getBoundingClientRect(): Object;
     getBBox?(): {x: number, y: number, width: number, height: number};
+    /* tslint:endable */
 }
 
 /*****************************************************************/
@@ -140,7 +144,7 @@ export interface MinWindow<N, D> {
  * @template D  The Document class
  */
 export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
-    window: MinWindow<N, D>
+    window: MinWindow<N, D>;
 }
 
 /*****************************************************************/
@@ -163,12 +167,12 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /**
      * The window object for this adaptor
      */
-    window: MinWindow<N, D>;
+    public window: MinWindow<N, D>;
 
     /**
      * The DOMParser used to parse a string into a DOM tree
      */
-    parser: MinDOMParser<D>;
+    public parser: MinDOMParser<D>;
 
     /**
      * @override
@@ -235,7 +239,7 @@ extends AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     /**
      * @override
      */
-    public getElements(nodes: (string | N | N[])[], document: D) {
+    public getElements(nodes: (string | N | N[])[], _document: D) {
         let containers: N[] = [];
         for (const node of nodes) {
             if (typeof(node) === 'string') {

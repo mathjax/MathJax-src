@@ -30,26 +30,32 @@ import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMunderover extends AbstractMmlBaseNode {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...AbstractMmlBaseNode.defaults,
         accent: false,
         accentunder: false,
         align: 'center'
     };
+
     /**
      * The names of attributes controling accents for each child node (reversed for mover below)
      */
     protected static ACCENTS = ['', 'accentunder', 'accent'];
 
     /**
-     * @return {string}  The munderover kind
+     * @override
      */
     public get kind() {
         return 'munderover';
     }
 
     /**
-     * @return {number}  <munderover> requires three children
+     * <munderover> requires three children
+     * @override
      */
     public get arity() {
         return 3;
@@ -58,26 +64,27 @@ export class MmlMunderover extends AbstractMmlBaseNode {
     /**
      * @return {number}  The base is child 0
      */
-    public get base() {
+    public get base(): number {
         return 0;
     }
 
     /**
      * @return {number}  Child 1 goes under (overriden by mover below)
      */
-    public get under() {
+    public get under(): number {
         return 1;
     }
 
     /**
      * @return {number}  Child 2 goes over (overriden by mover below)
      */
-    public get over() {
+    public get over(): number {
         return 2;
     }
 
     /**
-     * @return {boolean}  <munderover> can contain line breaks
+     * <munderover> can contain line breaks
+     * @override
      */
     public get linebreakContainer() {
         return true;
@@ -115,7 +122,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
      * @param {number} level   The current scriptlevel
      * @return {number}        The new script level based on the accent attribute
      */
-    protected getScriptlevel(accent: string, force: boolean, level: number) {
+    protected getScriptlevel(accent: string, force: boolean, level: number): number {
         if (force || !this.attributes.get(accent)) {
             level++;
         }
@@ -145,6 +152,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
             }
         }
     }
+
 }
 
 /*****************************************************************/
@@ -153,23 +161,29 @@ export class MmlMunderover extends AbstractMmlBaseNode {
  */
 
 export class MmlMunder extends MmlMunderover {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...MmlMunderover.defaults
     };
 
     /**
-     * @return {string}  The munder kind
+     * @override
      */
     public get kind() {
         return 'munder';
     }
 
     /**
-     * @return {number}  <munder> has only two children
+     * <munder> has only two children
+     * @override
      */
     public get arity() {
         return 2;
     }
+
 }
 
 /*****************************************************************/
@@ -178,6 +192,10 @@ export class MmlMunder extends MmlMunderover {
  */
 
 export class MmlMover extends MmlMunderover {
+
+    /**
+     * @override
+     */
     public static defaults: PropertyList = {
         ...MmlMunderover.defaults
     };
@@ -187,30 +205,34 @@ export class MmlMover extends MmlMunderover {
     protected static ACCENTS = ['', 'accent', 'accentunder'];
 
     /**
-     * @return {string}  The mover kind
+     * @override
      */
     public get kind() {
         return 'mover';
     }
 
     /**
-     * @return {number}  <mover> has only two children
+     * <mover> has only two children
+     * @override
      */
     get arity() {
         return 2;
     }
 
     /**
-     * @return {number}  Child 1 is the over node
+     * Child 1 is the over node
+     * @override
      */
     public get over() {
         return 1;
     }
 
     /**
-     * @return {number}  Child 2 is the null (the under node)
+     * Child 2 is the null (the under node)
+     * @override
      */
     public get under() {
         return 2;
     }
+
 }

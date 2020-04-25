@@ -29,13 +29,12 @@ import Stack from './Stack.js';
 import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
 import TexError from './TexError.js';
-import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
-import {ParseInput, ParseResult, ParseMethod} from './Types.js';
+import {ParseInput, ParseResult} from './Types.js';
 import ParseOptions from './ParseOptions.js';
 import {StackItem, EnvList} from './StackItem.js';
 import {Symbol} from './Symbol.js';
+import {OptionList} from '../../util/Options.js';
 
 
 /**
@@ -62,7 +61,7 @@ export default class TexParser {
   public i: number = 0;
 
   /**
-   * The last command sequence 
+   * The last command sequence
    * @type {string}
    */
   public currentCS: string = '';
@@ -95,21 +94,21 @@ export default class TexParser {
   /**
    * @return {OptionList} The configuration options.
    */
-  get options() {
+  get options(): OptionList {
     return this.configuration.options;
   }
 
   /**
    * @return {StackItemFactory} The factory for stack items.
    */
-  get itemFactory() {
+  get itemFactory(): StackItemFactory {
     return this.configuration.itemFactory;
   }
 
   /**
    * @return {Tags} The tags style of this configuration.
    */
-  get tags() {
+  get tags(): Tags {
     return this.configuration.tags;
   }
 
@@ -124,7 +123,7 @@ export default class TexParser {
   /**
    * @return {string} The string that is currently parsed.
    */
-  get string() {
+  get string(): string {
     return this._string;
   }
 
@@ -144,9 +143,9 @@ export default class TexParser {
    * Maps a symbol to its "parse value" if it exists.
    * @param {HandlerType} kind Configuration name.
    * @param {string} symbol The symbol to parse.
-   * @return {T} A boolean, Character, or Macro.
+   * @return {any} A boolean, Character, or Macro.
    */
-  public lookup(kind: HandlerType, symbol: string) {
+  public lookup(kind: HandlerType, symbol: string): any {
     return this.configuration.handlers.get(kind).lookup(symbol);
   }
 
@@ -198,7 +197,7 @@ export default class TexParser {
    *   but if the mml item is an inferred row, push its children instead.
    * @param {StackItem|MmlNode} arg The new item.
    */
-  public Push(arg: StackItem|MmlNode) {
+  public Push(arg: StackItem | MmlNode) {
     if (arg instanceof AbstractMmlNode && arg.isInferred) {
       this.PushAll(arg.childNodes);
     } else {
@@ -211,7 +210,7 @@ export default class TexParser {
    * Pushes a list of new items onto the stack.
    * @param {StackItem|MmlNode[]} args The new items.
    */
-  public PushAll(args: (StackItem|MmlNode)[]) {
+  public PushAll(args: (StackItem | MmlNode)[]) {
     for (const arg of args) {
       this.stack.Push(arg);
     }
@@ -248,8 +247,8 @@ export default class TexParser {
   /**
    * @return {boolean} True if the next character to parse is a space.
    */
-  public nextIsSpace() {
-    return this.string.charAt(this.i).match(/\s/);
+  public nextIsSpace(): boolean {
+    return !!this.string.charAt(this.i).match(/\s/);
   }
 
   /**
@@ -283,7 +282,7 @@ export default class TexParser {
    * @param {boolean} noneOK? True if no argument is OK.
    * @return {string} The next argument.
    */
-  public GetArgument(name: string, noneOK?: boolean): string {
+  public GetArgument(_name: string, noneOK?: boolean): string {
     switch (this.GetNext()) {
     case '':
       if (!noneOK) {
@@ -327,7 +326,7 @@ export default class TexParser {
    * @param {string} def? The default value for the optional argument.
    * @return {string} The optional argument.
    */
-  public GetBrackets(name: string, def?: string): string {
+  public GetBrackets(_name: string, def?: string): string {
     if (this.GetNext() !== '[') {
       return def;
     }
@@ -393,7 +392,7 @@ export default class TexParser {
     }
     if (this.string.charAt(this.i) === '{') {
       let dimen = this.GetArgument(name);
-      let [value, unit, _] = ParseUtil.matchDimen(dimen);
+      let [value, unit] = ParseUtil.matchDimen(dimen);
       if (value) {
         // @test Raise In Line, Lower 2, (Raise|Lower) Negative
         return value + unit;
@@ -418,7 +417,7 @@ export default class TexParser {
    * @param {string} token The element until where to parse.
    * @return {string} The text between the current position and the given token.
    */
-  public GetUpTo(name: string, token: string): string {
+  public GetUpTo(_name: string, token: string): string {
     while (this.nextIsSpace()) {
       this.i++;
     }

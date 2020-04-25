@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMs, CommonMsMixin} from '../../common/Wrappers/ms.js';
+import {CommonMsMixin} from '../../common/Wrappers/ms.js';
 import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
 
 /*****************************************************************/
@@ -33,8 +33,13 @@ import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGms<N, T, D> extends CommonMsMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGms<N, T, D> extends
+CommonMsMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
+    /**
+     * The ms wrapper
+     */
     public static kind = MmlMs.prototype.kind;
 
 }
