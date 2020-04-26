@@ -11,6 +11,7 @@ const {dependencies, paths, provides} = require('../dependencies.js');
 /*
  * Set up the initial configuration
  */
+paths.sre = '[mathjax]/sre/sre-node';
 combineDefaults(MathJax.config, 'loader', {
   require: eval('require'),      // use node's require() to load files
   failed: (err) => {throw err}   // pass on error message to init()'s catch function
@@ -19,7 +20,6 @@ combineDefaults(MathJax.config.loader, 'dependencies', dependencies);
 combineDefaults(MathJax.config.loader, 'paths', paths);
 combineDefaults(MathJax.config.loader, 'provides', provides);
 
-MathJax.config.loader.source['[sre]'] = '[mathjax]/../js/a11y/sre-node';
 MathJax.config.loader.paths.mathjax = (function () {
   //
   // Try to locate the mathjax-full or mathjax package
@@ -39,7 +39,6 @@ MathJax.config.loader.paths.mathjax = (function () {
       //
       dir = path.dirname(dir);
       combineDefaults(MathJax.config.loader, 'source', require('../source.js').source);
-      MathJax.config.loader.source['[sre]'] = MathJax.config.loader.source.sre;
     }
     return dir;
   }
