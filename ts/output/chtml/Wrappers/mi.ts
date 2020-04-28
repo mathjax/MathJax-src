@@ -37,19 +37,19 @@ import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
 export class CHTMLmi<N, T, D> extends
 CommonMiMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    /**
-     * The mi wrapper
-     */
-    public static kind = MmlMi.prototype.kind;
+  /**
+   * The mi wrapper
+   */
+  public static kind = MmlMi.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        super.toCHTML(parent);
-        if (this.noIC) {
-            this.adaptor.setAttribute(this.chtml, 'noIC', 'true');
-        }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    super.toCHTML(parent);
+    if (this.noIC) {
+      this.adaptor.setAttribute(this.chtml, 'noIC', 'true');
     }
+  }
 
 }

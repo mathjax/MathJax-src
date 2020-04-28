@@ -31,37 +31,37 @@ import {AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
 
 export class MmlSemantics extends AbstractMmlBaseNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlBaseNode.defaults,
-        definitionUrl: null,
-        encoding: null
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlBaseNode.defaults,
+    definitionUrl: null,
+    encoding: null
+  };
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'semantics';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'semantics';
+  }
 
-    /**
-     * <semantics> requires at least one node
-     * @override
-     */
-    public get arity() {
-        return 1;
-    }
+  /**
+   * <semantics> requires at least one node
+   * @override
+   */
+  public get arity() {
+    return 1;
+  }
 
-    /**
-     * Ignore <semantics> when looking for partent node
-     * @override
-     */
-    public get notParent() {
-        return true;
-    }
+  /**
+   * Ignore <semantics> when looking for partent node
+   * @override
+   */
+  public get notParent() {
+    return true;
+  }
 
 }
 
@@ -72,30 +72,30 @@ export class MmlSemantics extends AbstractMmlBaseNode {
 
 export class MmlAnnotationXML extends AbstractMmlNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults,
-        definitionUrl: null,
-        encoding: null,
-        cd: 'mathmlkeys',
-        name: '',
-        src: null
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults,
+    definitionUrl: null,
+    encoding: null,
+    cd: 'mathmlkeys',
+    name: '',
+    src: null
+  };
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'annotation-xml';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'annotation-xml';
+  }
 
-    /**
-     * Children are XMLNodes, so don't bother inheritting to them
-     * @override
-     */
-    protected setChildInheritedAttributes() {}
+  /**
+   * Children are XMLNodes, so don't bother inheritting to them
+   * @override
+   */
+  protected setChildInheritedAttributes() {}
 
 }
 
@@ -106,25 +106,25 @@ export class MmlAnnotationXML extends AbstractMmlNode {
 
 export class MmlAnnotation extends MmlAnnotationXML {
 
-    /**
-     * @override
-     */
-    public static defaults = {
-        ...MmlAnnotationXML.defaults
-    };
+  /**
+   * @override
+   */
+  public static defaults = {
+    ...MmlAnnotationXML.defaults
+  };
 
-    /**
-     * Extra properties for this node
-     */
-    public properties = {
-        isChars: true
-    };
+  /**
+   * Extra properties for this node
+   */
+  public properties = {
+    isChars: true
+  };
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'annotation';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'annotation';
+  }
 
 }

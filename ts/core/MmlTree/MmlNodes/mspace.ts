@@ -31,53 +31,53 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 export class MmlMspace extends AbstractMmlTokenNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlTokenNode.defaults,
-        width:  '0em',
-        height: '0ex',
-        depth:  '0ex',
-        linebreak: 'auto'
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlTokenNode.defaults,
+    width:  '0em',
+    height: '0ex',
+    depth:  '0ex',
+    linebreak: 'auto'
+  };
 
-    /**
-     * TeX class is ORD
-     */
-    public texClass = TEXCLASS.ORD;
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'mspace';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mspace';
+  }
 
-    /**
-     * mspace can't have children
-     * @override
-     */
-    public get arity() {
-        return 0;
-    }
+  /**
+   * mspace can't have children
+   * @override
+   */
+  public get arity() {
+    return 0;
+  }
 
-    /**
-     * @override
-     */
-    public get isSpacelike() {
-        return true;
-    }
+  /**
+   * @override
+   */
+  public get isSpacelike() {
+    return true;
+  }
 
-    /**
-     * Only process linebreak if the space has no explicit dimensions (according to spec)
-     *
-     * @override
-     */
-    public get hasNewline() {
-        let attributes = this.attributes;
-        return (attributes.getExplicit('width') == null && attributes.getExplicit('height') == null &&
-                attributes.getExplicit('depth') == null && attributes.get('linebreak') === 'newline');
-    }
+  /**
+   * Only process linebreak if the space has no explicit dimensions (according to spec)
+   *
+   * @override
+   */
+  public get hasNewline() {
+    let attributes = this.attributes;
+    return (attributes.getExplicit('width') == null && attributes.getExplicit('height') == null &&
+            attributes.getExplicit('depth') == null && attributes.get('linebreak') === 'newline');
+  }
 
 }

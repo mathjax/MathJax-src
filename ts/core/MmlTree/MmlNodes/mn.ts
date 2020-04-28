@@ -31,23 +31,23 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 export class MmlMn extends AbstractMmlTokenNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlTokenNode.defaults
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlTokenNode.defaults
+  };
 
-    /**
-     * TeX class is ORD
-     */
-    public texClass = TEXCLASS.ORD;
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'mn';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mn';
+  }
 
 }

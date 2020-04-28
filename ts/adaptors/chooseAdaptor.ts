@@ -27,10 +27,10 @@ import {browserAdaptor} from './browserAdaptor.js';
 let choose;
 
 try {
-    document;  // errors if not in browser
-    choose = browserAdaptor;
+  document;  // errors if not in browser
+  choose = browserAdaptor;
 } catch (e) {
-    choose = liteAdaptor;
+  choose = liteAdaptor;
 }
 
 /**

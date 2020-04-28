@@ -34,47 +34,47 @@ import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
 
 export class MathChoice extends AbstractMmlBaseNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlBaseNode.defaults
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlBaseNode.defaults
+  };
 
-    /**
-     *  @override
-     */
-    public get kind() {
-        return 'MathChoice';
-    }
+  /**
+   *  @override
+   */
+  public get kind() {
+    return 'MathChoice';
+  }
 
-    /**
-     * 4 children (display, text, script, and scriptscript styles)
-     * @override
-     */
-    public get arity() {
-        return 4;
-    }
+  /**
+   * 4 children (display, text, script, and scriptscript styles)
+   * @override
+   */
+  public get arity() {
+    return 4;
+  }
 
-    /**
-     * This element is not considered a MathML container
-     * @override
-     */
-    public get notParent() {
-        return true;
-    }
+  /**
+   * This element is not considered a MathML container
+   * @override
+   */
+  public get notParent() {
+    return true;
+  }
 
-    /**
-     * Replace the MathChoice node with the selected on based on the displaystyle and scriptlevel settings
-     * (so the MathChoice never ends up in a finished MmlNode tree)
-     *
-     * @override
-     */
-    public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        const selection = (display ? 0 : Math.max(0, Math.min(level, 2)) + 1);
-        const child = this.childNodes[selection] || this.factory.create('mrow');
-        this.parent.replaceChild(child, this);
-        child.setInheritedAttributes(attributes, display, level, prime);
-    }
+  /**
+   * Replace the MathChoice node with the selected on based on the displaystyle and scriptlevel settings
+   * (so the MathChoice never ends up in a finished MmlNode tree)
+   *
+   * @override
+   */
+  public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    const selection = (display ? 0 : Math.max(0, Math.min(level, 2)) + 1);
+    const child = this.childNodes[selection] || this.factory.create('mrow');
+    this.parent.replaceChild(child, this);
+    child.setInheritedAttributes(attributes, display, level, prime);
+  }
 
 }

@@ -31,39 +31,39 @@ import {AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
 
 export class MmlMerror extends AbstractMmlNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults
+  };
 
-    /**
-     * TeX class is ORD
-     */
-    public texClass = TEXCLASS.ORD;
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'merror';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'merror';
+  }
 
-    /**
-     * <merror> gets an inferred mrow
-     * @override
-     */
-    public get arity() {
-        return -1;
-    }
+  /**
+   * <merror> gets an inferred mrow
+   * @override
+   */
+  public get arity() {
+    return -1;
+  }
 
-    /**
-     * <merror> can contain line breaks
-     * @override
-     */
-    public get linebreakContainer() {
-        return true;
-    }
+  /**
+   * <merror> can contain line breaks
+   * @override
+   */
+  public get linebreakContainer() {
+    return true;
+  }
 
 }

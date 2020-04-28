@@ -37,22 +37,22 @@ import {SVGCharOptions, SVGDelimiterData, SVGFontData} from './FontData.js';
  */
 export class SVGWrapperFactory<N, T, D> extends
 CommonWrapperFactory<
-    SVG<N, T, D>,
-    SVGWrapper<N, T, D>,
-    SVGWrapperClass,
-    SVGCharOptions,
-    SVGDelimiterData,
-    SVGFontData
+  SVG<N, T, D>,
+  SVGWrapper<N, T, D>,
+  SVGWrapperClass,
+  SVGCharOptions,
+  SVGDelimiterData,
+  SVGFontData
 > {
 
-    /**
-     * The default list of wrapper nodes this factory can create
-     */
-    public static defaultNodes = SVGWrappers;
+  /**
+   * The default list of wrapper nodes this factory can create
+   */
+  public static defaultNodes = SVGWrappers;
 
-    /**
-     * The CHTML output jax associated with this factory
-     */
-    public jax: SVG<N, T, D> = null;
+  /**
+   * The CHTML output jax associated with this factory
+   */
+  public jax: SVG<N, T, D> = null;
 
 }

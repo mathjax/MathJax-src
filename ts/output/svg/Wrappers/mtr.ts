@@ -34,13 +34,13 @@ import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
  * The data needed for placeCell()
  */
 export type SizeData = {
-    x: number,
-    y: number,
-    w: number,
-    lSpace: number,
-    rSpace: number,
-    lLine: number,
-    rLine: number
+  x: number,
+  y: number,
+  w: number,
+  lSpace: number,
+  rSpace: number,
+  lLine: number,
+  rLine: number
 };
 
 /*****************************************************************/
@@ -54,100 +54,100 @@ export type SizeData = {
 export class SVGmtr<N, T, D> extends
 CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The mtr wrapper
-     */
-    public static kind = MmlMtr.prototype.kind;
+  /**
+   * The mtr wrapper
+   */
+  public static kind = MmlMtr.prototype.kind;
 
-    /**
-     * The mtable in which this mtr appears
-     */
-    public parent: SVGmtable<N, T, D>;
+  /**
+   * The mtable in which this mtr appears
+   */
+  public parent: SVGmtable<N, T, D>;
 
-    /**
-     * The height of the row
-     */
-    public H: number;
-    /**
-     * The depth of the row
-     */
-    public D: number;
-    /**
-     * The space above the row
-     */
-    public tSpace: number;
-    /**
-     * The space below the row
-     */
-    public bSpace: number;
-    /**
-     * The line space above the row
-     */
-    public tLine: number;
-    /**
-     * The line space below the row
-     */
-    public bLine: number;
+  /**
+   * The height of the row
+   */
+  public H: number;
+  /**
+   * The depth of the row
+   */
+  public D: number;
+  /**
+   * The space above the row
+   */
+  public tSpace: number;
+  /**
+   * The space below the row
+   */
+  public bSpace: number;
+  /**
+   * The line space above the row
+   */
+  public tLine: number;
+  /**
+   * The line space below the row
+   */
+  public bLine: number;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        const svg = this.standardSVGnode(parent);
-        this.placeCells(svg);
-        this.placeColor();
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    const svg = this.standardSVGnode(parent);
+    this.placeCells(svg);
+    this.placeColor();
+  }
+
+  /**
+   * Set the location of the cell contents in the row and expand the cell background colors
+   *
+   * @param {N} svg   The container for the table
+   */
+  protected placeCells(svg: N) {
+    const cSpace = this.parent.getColumnHalfSpacing();
+    const cLines = [this.parent.fLine, ...this.parent.cLines, this.parent.fLine];
+    const cWidth = this.parent.getComputedWidths();
+    let x = cLines[0];
+    for (let i = 0; i < this.numCells; i++) {
+      const child = this.getChild(i);
+      child.toSVG(svg);
+      x += this.placeCell(child, {
+        x: x, y: 0, lSpace: cSpace[i], rSpace: cSpace[i + 1], w: cWidth[i],
+        lLine: cLines[i], rLine: cLines[i + 1]
+      });
     }
+  }
 
-    /**
-     * Set the location of the cell contents in the row and expand the cell background colors
-     *
-     * @param {N} svg   The container for the table
-     */
-    protected placeCells(svg: N) {
-        const cSpace = this.parent.getColumnHalfSpacing();
-        const cLines = [this.parent.fLine, ...this.parent.cLines, this.parent.fLine];
-        const cWidth = this.parent.getComputedWidths();
-        let x = cLines[0];
-        for (let i = 0; i < this.numCells; i++) {
-            const child = this.getChild(i);
-            child.toSVG(svg);
-            x += this.placeCell(child, {
-                x: x, y: 0, lSpace: cSpace[i], rSpace: cSpace[i + 1], w: cWidth[i],
-                lLine: cLines[i], rLine: cLines[i + 1]
-            });
-        }
-    }
+  /**
+   * @param {SVGmtd} cell      The cell to place
+   * @param {SizeData} sizes   The positioning information
+   * @return {number}          The new x position
+   */
+  public placeCell(cell: SVGmtd<N, T, D>, sizes: SizeData): number {
+    const {x, y, lSpace, w, rSpace, lLine, rLine} = sizes;
+    const [dx, dy] = cell.placeCell(x + lSpace, y, w, this.H, this.D);
+    const W = lSpace + w + rSpace;
+    const [H, D] = [this.H + this.tSpace, this.D + this.bSpace];
+    cell.placeColor(-(dx + lSpace + lLine / 2), -(D + this.bLine / 2 + dy),
+                    W + (lLine + rLine) / 2, H + D + (this.tLine + this.bLine) / 2);
+    return W + rLine;
+  }
 
-    /**
-     * @param {SVGmtd} cell      The cell to place
-     * @param {SizeData} sizes   The positioning information
-     * @return {number}          The new x position
-     */
-    public placeCell(cell: SVGmtd<N, T, D>, sizes: SizeData): number {
-        const {x, y, lSpace, w, rSpace, lLine, rLine} = sizes;
-        const [dx, dy] = cell.placeCell(x + lSpace, y, w, this.H, this.D);
-        const W = lSpace + w + rSpace;
-        const [H, D] = [this.H + this.tSpace, this.D + this.bSpace];
-        cell.placeColor(-(dx + lSpace + lLine / 2), -(D + this.bLine / 2 + dy),
-                        W + (lLine + rLine) / 2, H + D + (this.tLine + this.bLine) / 2);
-        return W + rLine;
+  /**
+   * Expand the backgound color to fill the entire row
+   */
+  protected placeColor() {
+    const adaptor = this.adaptor;
+    const child = adaptor.firstChild(this.element);
+    if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-bgcolor')) {
+      const [TL, BL] = [this.tLine / 2, this.bLine / 2];
+      const [TS, BS] = [this.tSpace, this.bSpace];
+      const [H, D] = [this.H, this.D];
+      adaptor.setAttribute(child, 'y', this.fixed(-(D + BS + BL)));
+      adaptor.setAttribute(child, 'width', this.fixed(this.parent.getWidth()));
+      adaptor.setAttribute(child, 'height', this.fixed(TL + TS + H + D + BS + BL));
     }
-
-    /**
-     * Expand the backgound color to fill the entire row
-     */
-    protected placeColor() {
-        const adaptor = this.adaptor;
-        const child = adaptor.firstChild(this.element);
-        if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-bgcolor')) {
-            const [TL, BL] = [this.tLine / 2, this.bLine / 2];
-            const [TS, BS] = [this.tSpace, this.bSpace];
-            const [H, D] = [this.H, this.D];
-            adaptor.setAttribute(child, 'y', this.fixed(-(D + BS + BL)));
-            adaptor.setAttribute(child, 'width', this.fixed(this.parent.getWidth()));
-            adaptor.setAttribute(child, 'height', this.fixed(TL + TS + H + D + BS + BL));
-        }
-    }
+  }
 
 }
 
@@ -163,20 +163,20 @@ CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper)
 export class SVGmlabeledtr<N, T, D> extends
 CommonMlabeledtrMixin<SVGmtd<any, any, any>, Constructor<SVGmtr<any, any, any>>>(SVGmtr) {
 
-    /**
-     * The mlabeledtr wrapper
-     */
-    public static kind = MmlMlabeledtr.prototype.kind;
+  /**
+   * The mlabeledtr wrapper
+   */
+  public static kind = MmlMlabeledtr.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        super.toSVG(parent);
-        const child = this.childNodes[0];
-        if (child) {
-            child.toSVG(this.parent.labels);
-        }
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    super.toSVG(parent);
+    const child = this.childNodes[0];
+    if (child) {
+      child.toSVG(this.parent.labels);
     }
+  }
 
 }

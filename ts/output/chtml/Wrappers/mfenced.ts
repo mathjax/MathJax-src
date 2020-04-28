@@ -36,17 +36,17 @@ import {CHTMLinferredMrow} from './mrow.js';
  */
 export class CHTMLmfenced<N, T, D> extends CommonMfencedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    /**
-     * The mfenced wrapper
-     */
-    public static kind = MmlMfenced.prototype.kind;
+  /**
+   * The mfenced wrapper
+   */
+  public static kind = MmlMfenced.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        const chtml = this.standardCHTMLnode(parent);
-        (this.mrow as CHTMLinferredMrow<N, T, D>).toCHTML(chtml);
-    }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    const chtml = this.standardCHTMLnode(parent);
+    (this.mrow as CHTMLinferredMrow<N, T, D>).toCHTML(chtml);
+  }
 
 }

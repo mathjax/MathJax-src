@@ -28,13 +28,13 @@ import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
  * The CommonMs interface
  */
 export interface CommonMs extends AnyWrapper {
-    /**
-     * Create a text wrapper with the given text;
-     *
-     * @param {string} text  The text for the wrapped element
-     * @return {CommonWrapper}   The wrapped text node
-     */
-    createText(text: string): AnyWrapper;
+  /**
+   * Create a text wrapper with the given text;
+   *
+   * @param {string} text  The text for the wrapped element
+   * @return {CommonWrapper}   The wrapped text node
+   */
+  createText(text: string): AnyWrapper;
 }
 
 /**
@@ -49,36 +49,37 @@ export type MsConstructor = Constructor<CommonMs>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMsMixin<T extends WrapperConstructor>(Base: T): MsConstructor & T {
-    return class extends Base {
 
-        /**
-         * Add the quote characters to the wrapper children so they will be output
-         *
-         * @override
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            const attributes = this.node.attributes;
-            let quotes = attributes.getList('lquote', 'rquote');
-            if (this.variant !== 'monospace') {
-                if (!attributes.isSet('lquote') && quotes.lquote === '"') quotes.lquote = '\u201C';
-                if (!attributes.isSet('rquote') && quotes.rquote === '"') quotes.rquote = '\u201D';
-            }
-            this.childNodes.unshift(this.createText(quotes.lquote as string));
-            this.childNodes.push(this.createText(quotes.rquote as string));
-        }
+  return class extends Base {
 
-        /**
-         * Create a text wrapper with the given text;
-         *
-         * @param {string} text   The text for the wrapped element
-         * @return {AnyWrapper}   The wrapped text node
-         */
-        public createText(text: string): AnyWrapper {
-            const node = this.wrap(this.mmlText(text));
-            node.parent = this;
-            return node;
-        }
-    };
+    /**
+     * Add the quote characters to the wrapper children so they will be output
+     *
+     * @override
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      const attributes = this.node.attributes;
+      let quotes = attributes.getList('lquote', 'rquote');
+      if (this.variant !== 'monospace') {
+        if (!attributes.isSet('lquote') && quotes.lquote === '"') quotes.lquote = '\u201C';
+        if (!attributes.isSet('rquote') && quotes.rquote === '"') quotes.rquote = '\u201D';
+      }
+      this.childNodes.unshift(this.createText(quotes.lquote as string));
+      this.childNodes.push(this.createText(quotes.rquote as string));
+    }
+
+    /**
+     * Create a text wrapper with the given text;
+     *
+     * @param {string} text   The text for the wrapped element
+     * @return {AnyWrapper}   The wrapped text node
+     */
+    public createText(text: string): AnyWrapper {
+      const node = this.wrap(this.mmlText(text));
+      node.parent = this;
+      return node;
+    }
+  };
 
 }

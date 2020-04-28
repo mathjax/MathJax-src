@@ -38,28 +38,28 @@ import {TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
 export class SVGTeXAtom<N, T, D> extends
 CommonTeXAtomMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The TeXAtom wrapper
-     */
-    public static kind = TeXAtom.prototype.kind;
+  /**
+   * The TeXAtom wrapper
+   */
+  public static kind = TeXAtom.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        super.toSVG(parent);
-        this.adaptor.setAttribute(this.element, 'data-mjx-texclass', TEXCLASSNAMES[this.node.texClass]);
-        //
-        // Center VCENTER atoms vertically
-        //
-        if (this.node.texClass === TEXCLASS.VCENTER) {
-            const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
-            const {h, d} = bbox;
-            const a = this.font.params.axis_height;
-            const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-            const translate = 'translate(0 ' + this.fixed(dh) + ')';
-            this.adaptor.setAttribute(this.element, 'transform', translate);
-        }
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    super.toSVG(parent);
+    this.adaptor.setAttribute(this.element, 'data-mjx-texclass', TEXCLASSNAMES[this.node.texClass]);
+    //
+    // Center VCENTER atoms vertically
+    //
+    if (this.node.texClass === TEXCLASS.VCENTER) {
+      const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
+      const {h, d} = bbox;
+      const a = this.font.params.axis_height;
+      const dh = ((h + d) / 2 + a) - h;  // new height minus old height
+      const translate = 'translate(0 ' + this.fixed(dh) + ')';
+      this.adaptor.setAttribute(this.element, 'transform', translate);
     }
+  }
 
 }

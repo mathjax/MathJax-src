@@ -33,20 +33,20 @@ import {ProtoItem} from './MathItem.js';
  * @template _D  The Document class
  */
 export interface FindMath<N, T, _D> {
-    /**
-     * One of two possibilities:  Look through a DOM element,
-     *   or look through an array of strings for delimited math.
-     *
-     * @param {N} node   The node to search for math
-     * @return {ProtoItem<N, T>[]}
-     */
-    findMath(node: N): ProtoItem<N, T>[];
-    /**
-     *
-     * @param {string[]} strings    The strings to search for math
-     * @return {ProtoItem<N, T>[]}
-     */
-    findMath(strings: string[]): ProtoItem<N, T>[];
+  /**
+   * One of two possibilities:  Look through a DOM element,
+   *   or look through an array of strings for delimited math.
+   *
+   * @param {N} node   The node to search for math
+   * @return {ProtoItem<N, T>[]}
+   */
+  findMath(node: N): ProtoItem<N, T>[];
+  /**
+   *
+   * @param {string[]} strings    The strings to search for math
+   * @return {ProtoItem<N, T>[]}
+   */
+  findMath(strings: string[]): ProtoItem<N, T>[];
 }
 
 /*****************************************************************/
@@ -61,30 +61,30 @@ export interface FindMath<N, T, _D> {
  */
 export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
 
-    /**
-     * The default options for FindMath
-     */
-    public static OPTIONS: OptionList = {};
+  /**
+   * The default options for FindMath
+   */
+  public static OPTIONS: OptionList = {};
 
-    /**
-     * The actual options for this instance
-     */
-    protected options: OptionList;
+  /**
+   * The actual options for this instance
+   */
+  protected options: OptionList;
 
-    /**
-     * @param {OptionList} options  The user options for this instance
-     */
-    constructor(options: OptionList) {
-        let CLASS = this.constructor as typeof AbstractFindMath;
-        this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-    }
+  /**
+   * @param {OptionList} options  The user options for this instance
+   */
+  constructor(options: OptionList) {
+    let CLASS = this.constructor as typeof AbstractFindMath;
+    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
+  }
 
-    /**
-     * Locate math in an Element or a string array;
-     *
-     * @param {Element | string[]} where  The node or string array to search for math
-     * @return {ProtoItem[]}              The array of proto math items found
-     */
-    public abstract findMath(where: N | string[]): ProtoItem<N, T>[];
+  /**
+   * Locate math in an Element or a string array;
+   *
+   * @param {Element | string[]} where  The node or string array to search for math
+   * @return {ProtoItem[]}              The array of proto math items found
+   */
+  public abstract findMath(where: N | string[]): ProtoItem<N, T>[];
 
 }

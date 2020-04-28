@@ -36,115 +36,115 @@ import {SVGmo} from './mo.js';
  */
 export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The mfrac wrapper
-     */
-    public static kind = MmlMfrac.prototype.kind;
+  /**
+   * The mfrac wrapper
+   */
+  public static kind = MmlMfrac.prototype.kind;
 
-    /**
-     * An mo element used to render bevelled fractions
-     */
-    public bevel: SVGmo<N, T, D>;
+  /**
+   * An mo element used to render bevelled fractions
+   */
+  public bevel: SVGmo<N, T, D>;
 
-    /************************************************/
+  /************************************************/
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        this.standardSVGnode(parent);
-        const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
-        const display = this.isDisplay();
-        if (bevelled) {
-            this.makeBevelled(display);
-        } else {
-            const thickness = this.length2em(String(linethickness), .06);
-            if (thickness === 0) {
-                this.makeAtop(display);
-            } else {
-                this.makeFraction(display, thickness);
-            }
-        }
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    this.standardSVGnode(parent);
+    const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
+    const display = this.isDisplay();
+    if (bevelled) {
+      this.makeBevelled(display);
+    } else {
+      const thickness = this.length2em(String(linethickness), .06);
+      if (thickness === 0) {
+        this.makeAtop(display);
+      } else {
+        this.makeFraction(display, thickness);
+      }
     }
+  }
 
-    /************************************************/
+  /************************************************/
 
-    /**
-     * @param {boolean} display  True when fraction is in display mode
-     * @param {number} t         The rule line thickness
-     */
-    protected makeFraction(display: boolean, t: number) {
-        const svg = this.element;
-        const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
-        const [num, den] = this.childNodes;
-        const nbox = num.getBBox();
-        const dbox = den.getBBox();
+  /**
+   * @param {boolean} display  True when fraction is in display mode
+   * @param {number} t         The rule line thickness
+   */
+  protected makeFraction(display: boolean, t: number) {
+    const svg = this.element;
+    const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
+    const [num, den] = this.childNodes;
+    const nbox = num.getBBox();
+    const dbox = den.getBBox();
 
-        const tex = this.font.params;
-        const a = tex.axis_height;
-        const d = .1; // line's extra left- and right-padding
-        const pad = (this.node.getProperty('withDelims') ? 0 : tex.nulldelimiterspace);
-        const W = Math.max((nbox.L + nbox.w + nbox.R) * nbox.rscale,
-                           (dbox.L + dbox.w + dbox.R) * dbox.rscale);
-        const nx = this.getAlignX(W, nbox, numalign as string) + d + pad;
-        const dx = this.getAlignX(W, dbox, denomalign as string) + d + pad;
-        const {T, u, v} = this.getTUV(display, t);
+    const tex = this.font.params;
+    const a = tex.axis_height;
+    const d = .1; // line's extra left- and right-padding
+    const pad = (this.node.getProperty('withDelims') ? 0 : tex.nulldelimiterspace);
+    const W = Math.max((nbox.L + nbox.w + nbox.R) * nbox.rscale,
+                       (dbox.L + dbox.w + dbox.R) * dbox.rscale);
+    const nx = this.getAlignX(W, nbox, numalign as string) + d + pad;
+    const dx = this.getAlignX(W, dbox, denomalign as string) + d + pad;
+    const {T, u, v} = this.getTUV(display, t);
 
-        num.toSVG(svg);
-        num.place(nx, a + T + Math.max(nbox.d * nbox.rscale, u));
-        den.toSVG(svg);
-        den.place(dx, a - T - Math.max(dbox.h * dbox.rscale, v));
+    num.toSVG(svg);
+    num.place(nx, a + T + Math.max(nbox.d * nbox.rscale, u));
+    den.toSVG(svg);
+    den.place(dx, a - T - Math.max(dbox.h * dbox.rscale, v));
 
-        this.adaptor.append(svg, this.svg('rect', {
-            width: this.fixed(W + 2 * d), height: this.fixed(t),
-            x: this.fixed(pad), y: this.fixed(a - t / 2)
-        }));
-    }
+    this.adaptor.append(svg, this.svg('rect', {
+      width: this.fixed(W + 2 * d), height: this.fixed(t),
+      x: this.fixed(pad), y: this.fixed(a - t / 2)
+    }));
+  }
 
-    /************************************************/
+  /************************************************/
 
-    /**
-     * @param {boolean} display  True when fraction is in display mode
-     */
-    protected makeAtop(display: boolean) {
-        const svg = this.element;
-        const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
-        const [num, den] = this.childNodes;
-        const nbox = num.getBBox();
-        const dbox = den.getBBox();
+  /**
+   * @param {boolean} display  True when fraction is in display mode
+   */
+  protected makeAtop(display: boolean) {
+    const svg = this.element;
+    const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
+    const [num, den] = this.childNodes;
+    const nbox = num.getBBox();
+    const dbox = den.getBBox();
 
-        const tex = this.font.params;
-        const pad = (this.node.getProperty('withDelims') ? 0 : tex.nulldelimiterspace);
-        const W = Math.max((nbox.L + nbox.w + nbox.R) * nbox.rscale,
-                           (dbox.L + dbox.w + dbox.R) * dbox.rscale);
-        const nx = this.getAlignX(W, nbox, numalign as string) + pad;
-        const dx = this.getAlignX(W, dbox, denomalign as string) + pad;
-        const {u, v} = this.getUVQ(display);
+    const tex = this.font.params;
+    const pad = (this.node.getProperty('withDelims') ? 0 : tex.nulldelimiterspace);
+    const W = Math.max((nbox.L + nbox.w + nbox.R) * nbox.rscale,
+                       (dbox.L + dbox.w + dbox.R) * dbox.rscale);
+    const nx = this.getAlignX(W, nbox, numalign as string) + pad;
+    const dx = this.getAlignX(W, dbox, denomalign as string) + pad;
+    const {u, v} = this.getUVQ(display);
 
-        num.toSVG(svg);
-        num.place(nx, u);
-        den.toSVG(svg);
-        den.place(dx, -v);
-    }
+    num.toSVG(svg);
+    num.place(nx, u);
+    den.toSVG(svg);
+    den.place(dx, -v);
+  }
 
-    /************************************************/
+  /************************************************/
 
-    /**
-     * @param {boolean} display  True when fraction is in display mode
-     */
-    protected makeBevelled(display: boolean) {
-        const svg = this.element;
-        const [num, den] = this.childNodes;
-        const {u, v, delta, nbox, dbox} = this.getBevelData(display);
-        const w = (nbox.L + nbox.w + nbox.R) * nbox.rscale;
+  /**
+   * @param {boolean} display  True when fraction is in display mode
+   */
+  protected makeBevelled(display: boolean) {
+    const svg = this.element;
+    const [num, den] = this.childNodes;
+    const {u, v, delta, nbox, dbox} = this.getBevelData(display);
+    const w = (nbox.L + nbox.w + nbox.R) * nbox.rscale;
 
-        num.toSVG(svg);
-        this.bevel.toSVG(svg);
-        den.toSVG(svg);
+    num.toSVG(svg);
+    this.bevel.toSVG(svg);
+    den.toSVG(svg);
 
-        num.place(nbox.L * nbox.rscale, u);
-        this.bevel.place(w - delta / 2, 0);
-        den.place(w + this.bevel.getBBox().w + dbox.L * dbox.rscale - delta, v);
-    }
+    num.place(nbox.L * nbox.rscale, u);
+    this.bevel.place(w - delta / 2, 0);
+    den.place(w + this.bevel.getBBox().w + dbox.L * dbox.rscale - delta, v);
+  }
 
 }

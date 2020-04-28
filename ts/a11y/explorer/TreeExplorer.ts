@@ -40,7 +40,7 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
    * @override
    */
   protected constructor(public document: A11yDocument,
-              protected region: Region<void>,
+                        protected region: Region<void>,
                         protected node: HTMLElement,
                         protected mml: HTMLElement) {
     super(document, null, node);

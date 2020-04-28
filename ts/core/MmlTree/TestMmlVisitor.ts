@@ -35,72 +35,72 @@ import {PropertyList} from '../Tree/Node.js';
 
 export class TestMmlVisitor extends SerializedMmlVisitor {
 
-    /**
-     * The generic visiting function:
-     *   Make the string versino of the open tag with it attributes (explicit and
-     *     inherited) and properties
-     *   Increate the indentation level
-     *   Add the childnodes
-     *   Add the end tag with proper spacing (empty tags have the close tag following directly)
-     *
-     * @param {MmlNode} node  The node to visit
-     * @param {Element} parent  The DOM parent to which this node should be added
-     */
-    public visitDefault(node: MmlNode, space: string) {
-        let kind = node.kind;
-        let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space]);
-        let mml = space + '<' + kind + this.getAttributes(node) +
-            this.getInherited(node) + this.getProperties(node) + '\n' + space + '   ' +
-            this.attributeString({
-                isEmbellished: node.isEmbellished,
-                isSpacelike: node.isSpacelike,
-                texClass: node.texClass
-            }, '{', '}') +
-            '>' + nl;
-        space += '  ';
-        for (const child of node.childNodes) {
-            mml += this.visitNode(child, space) + nl;
-        }
-        mml += endspace + '</' + kind + '>';
-        return mml;
+  /**
+   * The generic visiting function:
+   *   Make the string versino of the open tag with it attributes (explicit and
+   *     inherited) and properties
+   *   Increate the indentation level
+   *   Add the childnodes
+   *   Add the end tag with proper spacing (empty tags have the close tag following directly)
+   *
+   * @param {MmlNode} node  The node to visit
+   * @param {Element} parent  The DOM parent to which this node should be added
+   */
+  public visitDefault(node: MmlNode, space: string) {
+    let kind = node.kind;
+    let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space]);
+    let mml = space + '<' + kind + this.getAttributes(node) +
+      this.getInherited(node) + this.getProperties(node) + '\n' + space + '   ' +
+      this.attributeString({
+        isEmbellished: node.isEmbellished,
+        isSpacelike: node.isSpacelike,
+        texClass: node.texClass
+      }, '{', '}') +
+      '>' + nl;
+    space += '  ';
+    for (const child of node.childNodes) {
+      mml += this.visitNode(child, space) + nl;
     }
+    mml += endspace + '</' + kind + '>';
+    return mml;
+  }
 
-    /**
-     * @param {MmlNode} node  The node whose attributes are to be produced
-     * @return {string}  The attribute list as a string
-     */
-    protected getAttributes(node: MmlNode): string {
-        return this.attributeString(node.attributes.getAllAttributes(), '', '');
-    }
+  /**
+   * @param {MmlNode} node  The node whose attributes are to be produced
+   * @return {string}  The attribute list as a string
+   */
+  protected getAttributes(node: MmlNode): string {
+    return this.attributeString(node.attributes.getAllAttributes(), '', '');
+  }
 
-    /**
-     * @param {MmlNode} node  The node whose inherited attributes are to be produced
-     * @return {string}  The inhertited attribute list as a string (with each in [...])
-     */
-    protected getInherited(node: MmlNode): string {
-        return this.attributeString(node.attributes.getAllInherited(), '[', ']');
-    }
+  /**
+   * @param {MmlNode} node  The node whose inherited attributes are to be produced
+   * @return {string}  The inhertited attribute list as a string (with each in [...])
+   */
+  protected getInherited(node: MmlNode): string {
+    return this.attributeString(node.attributes.getAllInherited(), '[', ']');
+  }
 
-    /**
-     * @param {MmlNode} node  The node whose properties are to be produced
-     * @return {string}  The property list as a string (with each in [[...]])
-     */
-    protected getProperties(node: MmlNode): string {
-        return this.attributeString(node.getAllProperties(), '[[', ']]');
-    }
+  /**
+   * @param {MmlNode} node  The node whose properties are to be produced
+   * @return {string}  The property list as a string (with each in [[...]])
+   */
+  protected getProperties(node: MmlNode): string {
+    return this.attributeString(node.getAllProperties(), '[[', ']]');
+  }
 
-    /**
-     * @param {PropertyList} attributes  The attributes to be made into a list
-     * @param {string} open  The opening delimiter to add before each attribute
-     * @param {string} close  The closing delimiter to add after each attribute
-     * @return {string}  The attribute list as a string
-     */
-    protected attributeString(attributes: PropertyList, open: string, close: string): string {
-        let ATTR = '';
-        for (const name of Object.keys(attributes)) {
-            ATTR += ' ' + open + name + '="' + this.quoteHTML(String(attributes[name])) + '"' + close;
-        }
-        return ATTR;
+  /**
+   * @param {PropertyList} attributes  The attributes to be made into a list
+   * @param {string} open  The opening delimiter to add before each attribute
+   * @param {string} close  The closing delimiter to add after each attribute
+   * @return {string}  The attribute list as a string
+   */
+  protected attributeString(attributes: PropertyList, open: string, close: string): string {
+    let ATTR = '';
+    for (const name of Object.keys(attributes)) {
+      ATTR += ' ' + open + name + '="' + this.quoteHTML(String(attributes[name])) + '"' + close;
     }
+    return ATTR;
+  }
 
 }

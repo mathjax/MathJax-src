@@ -113,10 +113,10 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @template T
    */
   protected constructor(public document: A11yDocument,
-              protected region: Region<T>,
-              protected node: HTMLElement,
-              protected nodeQuery: (node: HTMLElement) => boolean,
-              protected nodeAccess: (node: HTMLElement) => T) {
+                        protected region: Region<T>,
+                        protected node: HTMLElement,
+                        protected nodeQuery: (node: HTMLElement) => boolean,
+                        protected nodeAccess: (node: HTMLElement) => T) {
     super(document, region, node);
   }
 
@@ -178,7 +178,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
       }
       let child = node.childNodes[0] as HTMLElement;
       node = (child && child.tagName === 'defs') ? // This is for SVG.
-        node.childNodes[1] as HTMLElement : child;
+      node.childNodes[1] as HTMLElement : child;
     }
     return [null, null];
   }

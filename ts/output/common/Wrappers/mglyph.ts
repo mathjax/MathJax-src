@@ -29,17 +29,17 @@ import {BBox} from '../BBox.js';
  * The CommonMglyph interface
  */
 export interface CommonMglyph extends AnyWrapper {
-    /**
-     * The image's width, height, and valign values converted to em's
-     */
-    width: number;
-    height: number;
-    valign: number;
+  /**
+   * The image's width, height, and valign values converted to em's
+   */
+  width: number;
+  height: number;
+  valign: number;
 
-    /**
-     * Obtain the width, height, and valign.
-     */
-    getParameters(): void;
+  /**
+   * Obtain the width, height, and valign.
+   */
+  getParameters(): void;
 }
 
 /**
@@ -54,53 +54,54 @@ export type MglyphConstructor = Constructor<CommonMglyph>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): MglyphConstructor & T {
-    return class extends Base {
 
-        /**
-         * The image's width converted to em's
-         */
-        public width: number;
-        /**
-         * The image's height converted to em's
-         */
-        public height: number;
-        /**
-         * The image's valign values converted to em's
-         */
-        public valign: number;
+  return class extends Base {
 
-        /**
-         * @override
-         * @constructor
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            this.getParameters();
-        }
+    /**
+     * The image's width converted to em's
+     */
+    public width: number;
+    /**
+     * The image's height converted to em's
+     */
+    public height: number;
+    /**
+     * The image's valign values converted to em's
+     */
+    public valign: number;
 
-        /**
-         * Obtain the width, height, and valign.
-         * Note:  Currently, the width and height must be specified explicitly, or they default to 1em
-         *   Since loading the image may be asynchronous, it would require a restart.
-         *   A future extension could implement this either by subclassing this object, or
-         *   perhaps as a post-filter on the MathML input jax that adds the needed dimensions
-         */
-        public getParameters() {
-            const {width, height, valign} = this.node.attributes.getList('width', 'height', 'valign');
-            this.width = (width === 'auto' ? 1 : this.length2em(width));
-            this.height = (height === 'auto' ? 1 : this.length2em(height));
-            this.valign = this.length2em(valign || '0');
-        }
+    /**
+     * @override
+     * @constructor
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      this.getParameters();
+    }
 
-        /**
-         * @override
-         */
-        public computeBBox(bbox: BBox, _recompute: boolean = false) {
-            bbox.w = this.width;
-            bbox.h = this.height + this.valign;
-            bbox.d = -this.valign;
-        }
+    /**
+     * Obtain the width, height, and valign.
+     * Note:  Currently, the width and height must be specified explicitly, or they default to 1em
+     *   Since loading the image may be asynchronous, it would require a restart.
+     *   A future extension could implement this either by subclassing this object, or
+     *   perhaps as a post-filter on the MathML input jax that adds the needed dimensions
+     */
+    public getParameters() {
+      const {width, height, valign} = this.node.attributes.getList('width', 'height', 'valign');
+      this.width = (width === 'auto' ? 1 : this.length2em(width));
+      this.height = (height === 'auto' ? 1 : this.length2em(height));
+      this.valign = this.length2em(valign || '0');
+    }
 
-    };
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      bbox.w = this.width;
+      bbox.h = this.height + this.valign;
+      bbox.d = -this.valign;
+    }
+
+  };
 
 }

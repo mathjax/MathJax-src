@@ -30,15 +30,15 @@
 
 export interface PrioritizedListItem<DataClass> {
 
-    /**
-     * The priority of this item
-     */
-    priority: number;
+  /**
+   * The priority of this item
+   */
+  priority: number;
 
-    /**
-     * The data for the list item
-     */
-    item: DataClass;
+  /**
+   * The data for the list item
+   */
+  item: DataClass;
 }
 
 /*****************************************************************/
@@ -50,81 +50,81 @@ export interface PrioritizedListItem<DataClass> {
 
 export class PrioritizedList<DataClass> {
 
-    /**
-     * The default priority for items added to the list
-     */
-    public static DEFAULTPRIORITY: number = 5;
+  /**
+   * The default priority for items added to the list
+   */
+  public static DEFAULTPRIORITY: number = 5;
 
-    /**
-     * The list of items, sorted by priority (smallest number first)
-     */
-    protected items: PrioritizedListItem<DataClass>[] = [];
+  /**
+   * The list of items, sorted by priority (smallest number first)
+   */
+  protected items: PrioritizedListItem<DataClass>[] = [];
 
-    /**
-     * @constructor
-     */
-    constructor() {
-        this.items = [];
+  /**
+   * @constructor
+   */
+  constructor() {
+    this.items = [];
+  }
+
+  /**
+   * Make the list iterable, and return the data for the items in the list
+   *
+   * @return {{next: Function}}  The object containing the iterator's next() function
+   */
+  public [Symbol.iterator](): Iterator<PrioritizedListItem<DataClass>> {
+    let i = 0;
+    let items = this.items;
+    return {
+      /* tslint:disable-next-line:jsdoc-require */
+      next(): IteratorResult<PrioritizedListItem<DataClass>> {
+        return {value: items[i++], done: (i > items.length)};
+      }
+    };
+  }
+
+  /**
+   * Add an item to the list
+   *
+   * @param {DataClass} item   The data for the item to be added
+   * @param {number} priority  The priority for the item
+   * @return {DataClass}       The data itself
+   */
+  public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY): DataClass {
+    let i = this.items.length;
+    do {
+      i--;
+    } while (i >= 0 && priority < this.items[i].priority);
+    this.items.splice(i + 1, 0, {item: item, priority: priority});
+    return item;
+  }
+
+  /**
+   * Remove an item from the list
+   *
+   * @param {DataClass} item   The data for the item to be removed
+   */
+  public remove(item: DataClass) {
+    let i = this.items.length;
+    do {
+      i--;
+    } while (i >= 0 && this.items[i].item !== item);
+    if (i >= 0) {
+      this.items.splice(i, 1);
     }
+  }
 
-    /**
-     * Make the list iterable, and return the data for the items in the list
-     *
-     * @return {{next: Function}}  The object containing the iterator's next() function
-     */
-    public [Symbol.iterator](): Iterator<PrioritizedListItem<DataClass>> {
-        let i = 0;
-        let items = this.items;
-        return {
-            /* tslint:disable-next-line:jsdoc-require */
-            next(): IteratorResult<PrioritizedListItem<DataClass>> {
-                return {value: items[i++], done: (i > items.length)};
-            }
-        };
-    }
-
-    /**
-     * Add an item to the list
-     *
-     * @param {DataClass} item   The data for the item to be added
-     * @param {number} priority  The priority for the item
-     * @return {DataClass}       The data itself
-     */
-    public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY): DataClass {
-        let i = this.items.length;
-        do {
-            i--;
-        } while (i >= 0 && priority < this.items[i].priority);
-        this.items.splice(i + 1, 0, {item: item, priority: priority});
-        return item;
-    }
-
-    /**
-     * Remove an item from the list
-     *
-     * @param {DataClass} item   The data for the item to be removed
-     */
-    public remove(item: DataClass) {
-        let i = this.items.length;
-        do {
-            i--;
-        } while (i >= 0 && this.items[i].item !== item);
-        if (i >= 0) {
-            this.items.splice(i, 1);
-        }
-    }
-
-    /**
-     * Typescript < 2.3 targeted at ES5 doesn't handle
-     *
-     *     for (const x of this) {...}
-     *
-     * so use toArray() to convert to array, when needed
-     *
-     * @return {PrioritizedListItem<DataClass>[]}  The list converted to an array
-     */
-    public toArray(): PrioritizedListItem<DataClass>[] {
-        return Array.from(this);
-    }
+  /**
+   * Typescript < 2.3 targeted at ES5 doesn't handle
+   *
+   *     for (const x of this) {...}
+   *
+   * so use toArray() to convert to array, when needed
+   *
+   * @return {PrioritizedListItem<DataClass>[]}  The list converted to an array
+   */
+  public toArray(): PrioritizedListItem<DataClass>[] {
+    return Array.from(this);
+  }
 
 }

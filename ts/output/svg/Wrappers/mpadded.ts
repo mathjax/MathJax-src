@@ -37,28 +37,28 @@ import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
 export class SVGmpadded<N, T, D> extends
 CommonMpaddedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The mpadded wrapper
-     */
-    public static kind = MmlMpadded.prototype.kind;
+  /**
+   * The mpadded wrapper
+   */
+  public static kind = MmlMpadded.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        let svg = this.standardSVGnode(parent);
-        const [ , , , , , dw, x, y, dx] = this.getDimens();
-        const align = (this.node.attributes.get('data-align') as string) || 'left';
-        const X = x + dx - (dw < 0 && align !== 'left' ? align === 'center' ? dw / 2 : dw : 0);
-        //
-        // If there is a horizontal or vertical shift,
-        //   use relative positioning to move the contents
-        //
-        if (X || y) {
-            svg = this.adaptor.append(svg, this.svg('g'));
-            this.place(X, y, svg);
-        }
-        this.addChildren(svg);
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    let svg = this.standardSVGnode(parent);
+    const [ , , , , , dw, x, y, dx] = this.getDimens();
+    const align = (this.node.attributes.get('data-align') as string) || 'left';
+    const X = x + dx - (dw < 0 && align !== 'left' ? align === 'center' ? dw / 2 : dw : 0);
+    //
+    // If there is a horizontal or vertical shift,
+    //   use relative positioning to move the contents
+    //
+    if (X || y) {
+      svg = this.adaptor.append(svg, this.svg('g'));
+      this.place(X, y, svg);
     }
+    this.addChildren(svg);
+  }
 
 }

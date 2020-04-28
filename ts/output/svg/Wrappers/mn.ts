@@ -37,9 +37,9 @@ import {MmlMn} from '../../../core/MmlTree/MmlNodes/mn.js';
 export class SVGmn<N, T, D> extends
 CommonMnMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The mn wrapper
-     */
-    public static kind = MmlMn.prototype.kind;
+  /**
+   * The mn wrapper
+   */
+  public static kind = MmlMn.prototype.kind;
 
 }

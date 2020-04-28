@@ -37,9 +37,9 @@ import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
 export class SVGmspace<N, T, D> extends
 CommonMspaceMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The mspace wrapper
-     */
-    public static kind = MmlMspace.prototype.kind;
+  /**
+   * The mspace wrapper
+   */
+  public static kind = MmlMspace.prototype.kind;
 
 }

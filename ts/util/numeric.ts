@@ -26,7 +26,7 @@
  * @return {number}     The summ of the elements in A
  */
 export function sum(A: number[]): number {
-    return A.reduce((a, b) => a + b, 0);
+  return A.reduce((a, b) => a + b, 0);
 }
 
 /**
@@ -34,7 +34,5 @@ export function sum(A: number[]): number {
  * @return {number}     The largest entry in the array
  */
 export function max(A: number[]): number {
-    return A.reduce((a, b) => Math.max(a, b), 0);
+  return A.reduce((a, b) => Math.max(a, b), 0);
 }
-
-

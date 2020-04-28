@@ -42,89 +42,89 @@ const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
  */
 export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
 
-    /**
-     * @override
-     */
-    public static OPTIONS: OptionList = {};
+  /**
+   * @override
+   */
+  public static OPTIONS: OptionList = {};
 
-    /**
-     * The DOMAdaptor for the document being processed
-     */
-    public adaptor: DOMAdaptor<N, T, D>;
+  /**
+   * The DOMAdaptor for the document being processed
+   */
+  public adaptor: DOMAdaptor<N, T, D>;
 
-    /**
-     * Locates math nodes, possibly with namespace prefixes.
-     *  Store them in a set so that if found more than once, they will only
-     *  appear in the list once.
-     *
-     * @override
-     */
-    public findMath(node: N) {
-        let set = new Set<N>();
-        this.findMathNodes(node, set);
-        this.findMathPrefixed(node, set);
-        const html = this.adaptor.root(this.adaptor.document);
-        if (this.adaptor.kind(html) === 'html' &&  set.size === 0) {
-            this.findMathNS(node, set);
-        }
-        return this.processMath(set);
+  /**
+   * Locates math nodes, possibly with namespace prefixes.
+   *  Store them in a set so that if found more than once, they will only
+   *  appear in the list once.
+   *
+   * @override
+   */
+  public findMath(node: N) {
+    let set = new Set<N>();
+    this.findMathNodes(node, set);
+    this.findMathPrefixed(node, set);
+    const html = this.adaptor.root(this.adaptor.document);
+    if (this.adaptor.kind(html) === 'html' &&  set.size === 0) {
+      this.findMathNS(node, set);
     }
+    return this.processMath(set);
+  }
 
-    /**
-     * Find plain <math> tags
-     *
-     * @param {N} node       The container to seaerch for math
-     * @param {Set<N>} set   The set in which to store the math nodes
-     */
-    protected findMathNodes(node: N, set: Set<N>) {
-        for (const math of this.adaptor.tags(node, 'math')) {
-            set.add(math);
-        }
+  /**
+   * Find plain <math> tags
+   *
+   * @param {N} node       The container to seaerch for math
+   * @param {Set<N>} set   The set in which to store the math nodes
+   */
+  protected findMathNodes(node: N, set: Set<N>) {
+    for (const math of this.adaptor.tags(node, 'math')) {
+      set.add(math);
     }
+  }
 
-    /**
-     * Find <m:math> tags (or whatever prefixes there are)
-     *
-     * @param {N} node  The container to seaerch for math
-     * @param {NodeSet} set   The set in which to store the math nodes
-     */
-    protected findMathPrefixed(node: N, set: Set<N>) {
-        let html = this.adaptor.root(this.adaptor.document);
-        for (const attr of this.adaptor.allAttributes(html)) {
-            if (attr.name.substr(0, 6) === 'xmlns:' && attr.value === NAMESPACE) {
-                let prefix = attr.name.substr(6);
-                for (const math of this.adaptor.tags(node, prefix + ':math')) {
-                    set.add(math);
-                }
-            }
+  /**
+   * Find <m:math> tags (or whatever prefixes there are)
+   *
+   * @param {N} node  The container to seaerch for math
+   * @param {NodeSet} set   The set in which to store the math nodes
+   */
+  protected findMathPrefixed(node: N, set: Set<N>) {
+    let html = this.adaptor.root(this.adaptor.document);
+    for (const attr of this.adaptor.allAttributes(html)) {
+      if (attr.name.substr(0, 6) === 'xmlns:' && attr.value === NAMESPACE) {
+        let prefix = attr.name.substr(6);
+        for (const math of this.adaptor.tags(node, prefix + ':math')) {
+          set.add(math);
         }
+      }
     }
+  }
 
-    /**
-     * Find namespaced math in XHTML documents (is this really needed?)
-     *
-     * @param {N} node  The container to seaerch for math
-     * @param {NodeSet} set   The set in which to store the math nodes
-     */
-    protected findMathNS(node: N, set: Set<N>) {
-        for (const math of this.adaptor.tags(node, 'math', NAMESPACE)) {
-            set.add(math);
-        }
+  /**
+   * Find namespaced math in XHTML documents (is this really needed?)
+   *
+   * @param {N} node  The container to seaerch for math
+   * @param {NodeSet} set   The set in which to store the math nodes
+   */
+  protected findMathNS(node: N, set: Set<N>) {
+    for (const math of this.adaptor.tags(node, 'math', NAMESPACE)) {
+      set.add(math);
     }
+  }
 
-    /**
-     *  Produce the array of proto math items from the node set
-     */
-    protected processMath(set: Set<N>) {
-        let math: ProtoItem<N, T>[] = [];
-        for (const mml of Array.from(set)) {
-            let display = (this.adaptor.getAttribute(mml, 'display') === 'block' ||
-                           this.adaptor.getAttribute(mml, 'mode') === 'display');
-            let start = {node: mml, n: 0, delim: ''};
-            let end   = {node: mml, n: 0, delim: ''};
-            math.push({math: this.adaptor.outerHTML(mml), start, end, display});
-        }
-        return math;
+  /**
+   *  Produce the array of proto math items from the node set
+   */
+  protected processMath(set: Set<N>) {
+    let math: ProtoItem<N, T>[] = [];
+    for (const mml of Array.from(set)) {
+      let display = (this.adaptor.getAttribute(mml, 'display') === 'block' ||
+                     this.adaptor.getAttribute(mml, 'mode') === 'display');
+      let start = {node: mml, n: 0, delim: ''};
+      let end   = {node: mml, n: 0, delim: ''};
+      math.push({math: this.adaptor.outerHTML(mml), start, end, display});
     }
+    return math;
+  }
 
 }

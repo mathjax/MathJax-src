@@ -29,7 +29,7 @@
  * @return {number}  -1 id a < b, 0 of a === b, 1 if a > b
  */
 export function sortLength(a: string, b: string): number {
-    return a.length !== b.length ? b.length - a.length : a === b ? 0 : a < b ? -1 : 1;
+  return a.length !== b.length ? b.length - a.length : a === b ? 0 : a < b ? -1 : 1;
 }
 
 /**
@@ -39,7 +39,7 @@ export function sortLength(a: string, b: string): number {
  * @return {string}  The quoted string
  */
 export function quotePattern(text: string): string {
-    return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
+  return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
 }
 
 /**
@@ -49,15 +49,15 @@ export function quotePattern(text: string): string {
  * @return {number[]}  Array of numbers representing the string's unicode character positions
  */
 export function unicodeChars(text: string): number[] {
-    let unicode: number[] = [];
-    for (let i = 0, m = text.length; i < m; i++) {
-        let n = text.charCodeAt(i);
-        if (n >= 0xD800 && n < 0xDBFF) {
-            n = (((n - 0xD800) << 10) + (text.charCodeAt(++i) - 0xDC00)) + 0x10000;
-        }
-        unicode.push(n);
+  let unicode: number[] = [];
+  for (let i = 0, m = text.length; i < m; i++) {
+    let n = text.charCodeAt(i);
+    if (n >= 0xD800 && n < 0xDBFF) {
+      n = (((n - 0xD800) << 10) + (text.charCodeAt(++i) - 0xDC00)) + 0x10000;
     }
-    return unicode;
+    unicode.push(n);
+  }
+  return unicode;
 }
 
 /**
@@ -67,7 +67,7 @@ export function unicodeChars(text: string): number[] {
  * @return {boolean}   True if the string ends with a percent sign
  */
 export function isPercent(x: string): boolean {
-    return !!x.match(/%\s*$/);
+  return !!x.match(/%\s*$/);
 }
 
 /**
@@ -77,6 +77,5 @@ export function isPercent(x: string): boolean {
  * @return {string[]}  The list of white-space-separated "words" in the string
  */
 export function split(x: string): string[] {
-    return x.trim().split(/\s+/);
+  return x.trim().split(/\s+/);
 }
-

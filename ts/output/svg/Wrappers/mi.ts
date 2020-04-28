@@ -37,9 +37,9 @@ import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
 export class SVGmi<N, T, D> extends
 CommonMiMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The mi wrapper
-     */
-    public static kind = MmlMi.prototype.kind;
+  /**
+   * The mi wrapper
+   */
+  public static kind = MmlMi.prototype.kind;
 
 }

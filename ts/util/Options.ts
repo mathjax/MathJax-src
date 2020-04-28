@@ -30,8 +30,8 @@ const OBJECT = {}.constructor;
  *  Check if an object is an object literal (as opposed to an instance of a class)
  */
 function isObject(obj: any) {
-    return typeof obj === 'object' && obj !== null &&
-        (obj.constructor === OBJECT || obj.constructor === Expandable);
+  return typeof obj === 'object' && obj !== null &&
+    (obj.constructor === OBJECT || obj.constructor === Expandable);
 }
 
 /*****************************************************************/
@@ -95,7 +95,7 @@ export class Expandable {}
  *  without reporting an error.
  */
 export function expandable(def: OptionList) {
-    return Object.assign(Object.create(Expandable.prototype), def);
+  return Object.assign(Object.create(Expandable.prototype), def);
 }
 
 /*****************************************************************/
@@ -103,7 +103,7 @@ export function expandable(def: OptionList) {
  *  Make sure an option is an Array
  */
 export function makeArray(x: any): any[] {
-    return Array.isArray(x) ? x : [x];
+  return Array.isArray(x) ? x : [x];
 }
 
 /*****************************************************************/
@@ -114,10 +114,10 @@ export function makeArray(x: any): any[] {
  * @return {(string | symbol)[]}  The list of keys for the object
  */
 export function keys(def: OptionList): (string | symbol)[] {
-    if (!def) {
-        return [];
-    }
-    return (Object.keys(def) as (string | symbol)[]).concat(Object.getOwnPropertySymbols(def));
+  if (!def) {
+    return [];
+  }
+  return (Object.keys(def) as (string | symbol)[]).concat(Object.getOwnPropertySymbols(def));
 }
 
 /*****************************************************************/
@@ -128,20 +128,20 @@ export function keys(def: OptionList): (string | symbol)[] {
  * @return {OptionList}     The copy of the object
  */
 export function copy(def: OptionList): OptionList {
-    let props: OptionList = {};
-    for (const key of keys(def)) {
-        let prop = Object.getOwnPropertyDescriptor(def, key);
-        let value = prop.value;
-        if (Array.isArray(value)) {
-            prop.value = insert([], value, false);
-        } else if (isObject(value)) {
-            prop.value = copy(value);
-        }
-        if (prop.enumerable) {
-            props[key as string] = prop;
-        }
+  let props: OptionList = {};
+  for (const key of keys(def)) {
+    let prop = Object.getOwnPropertyDescriptor(def, key);
+    let value = prop.value;
+    if (Array.isArray(value)) {
+      prop.value = insert([], value, false);
+    } else if (isObject(value)) {
+      prop.value = copy(value);
     }
-    return Object.defineProperties(def.constructor === Expandable ? expandable({}) : {}, props);
+    if (prop.enumerable) {
+      props[key as string] = prop;
+    }
+  }
+  return Object.defineProperties(def.constructor === Expandable ? expandable({}) : {}, props);
 }
 
 /*****************************************************************/
@@ -155,86 +155,86 @@ export function copy(def: OptionList): OptionList {
  * @return {OptionList}     The modified destination option list (dst)
  */
 export function insert(dst: OptionList, src: OptionList, warn: boolean = true): OptionList {
-    for (let key of keys(src) as string[]) {
-        //
-        // Check if the key is valid (i.e., is in the defaults or in an expandable block)
-        //
-        if (warn && dst[key] === undefined && dst.constructor !== Expandable) {
-            if (typeof key === 'symbol') {
-                key = (key as symbol).toString();
-            }
-            throw new Error('Invalid option "' + key + '" (no default value).');
-        }
-        //
-        // Shorthands for the source and destination values
-        //
-        let sval = src[key], dval = dst[key];
-        //
-        // If the source is an object literal and the destination exists and is either an
-        //   object or a function (so can have properties added to it)...
-        //
-        if (isObject(sval) && dval !== null &&
-            (typeof dval === 'object' || typeof dval === 'function')) {
-            const ids = keys(sval);
-            //
-            // Check for APPEND or REMOVE objects:
-            //
-            if (
-                //
-                // If the destination value is an array...
-                //
-                Array.isArray(dval) &&
-                (
-                    //
-                    // If there is only one key and it is APPEND or REMOVE and the keys value is an array...
-                    //
-                    (ids.length === 1 && (ids[0] === APPEND || ids[0] === REMOVE) && Array.isArray(sval[ids[0]])) ||
-                    //
-                    // Or if there are two keys and they are APPEND and REMOVE and both keys' values
-                    //   are arrays...
-                    //
-                    (ids.length === 2 && ids.sort().join(',') === APPEND + ',' + REMOVE &&
-                     Array.isArray(sval[APPEND]) && Array.isArray(sval[REMOVE]))
-                )
-             ) {
-                //
-                // Then remove any values to be removed
-                //
-                if (sval[REMOVE]) {
-                    dval = dst[key] = dval.filter(x => sval[REMOVE].indexOf(x) < 0);
-                }
-                //
-                // And append any values to be added (make a copy so as not to modify the original)
-                //
-                if (sval[APPEND]) {
-                    dst[key] = [...dval, ...sval[APPEND]];
-                }
-            } else {
-                //
-                // Otherwise insert the values of the source object into the destination object
-                //
-                insert(dval, sval, warn);
-            }
-        } else if (Array.isArray(sval)) {
-            //
-            // If the source is an array, replace the destination with an empty array
-            //   and copy the source values into it.
-            //
-            dst[key] = [];
-            insert(dst[key], sval, false);
-        } else if (isObject(sval)) {
-            //
-            // If the source is an object literal, set the destination to a copy of it
-            //
-            dst[key] = copy(sval);
-        } else {
-            //
-            // Otherwise set the destination to the source value
-            //
-            dst[key] = sval;
-        }
+  for (let key of keys(src) as string[]) {
+    //
+    // Check if the key is valid (i.e., is in the defaults or in an expandable block)
+    //
+    if (warn && dst[key] === undefined && dst.constructor !== Expandable) {
+      if (typeof key === 'symbol') {
+        key = (key as symbol).toString();
+      }
+      throw new Error('Invalid option "' + key + '" (no default value).');
     }
-    return dst;
+    //
+    // Shorthands for the source and destination values
+    //
+    let sval = src[key], dval = dst[key];
+    //
+    // If the source is an object literal and the destination exists and is either an
+    //   object or a function (so can have properties added to it)...
+    //
+    if (isObject(sval) && dval !== null &&
+        (typeof dval === 'object' || typeof dval === 'function')) {
+      const ids = keys(sval);
+      //
+      // Check for APPEND or REMOVE objects:
+      //
+      if (
+        //
+        // If the destination value is an array...
+        //
+        Array.isArray(dval) &&
+          (
+            //
+            // If there is only one key and it is APPEND or REMOVE and the keys value is an array...
+            //
+            (ids.length === 1 && (ids[0] === APPEND || ids[0] === REMOVE) && Array.isArray(sval[ids[0]])) ||
+              //
+              // Or if there are two keys and they are APPEND and REMOVE and both keys' values
+              //   are arrays...
+              //
+              (ids.length === 2 && ids.sort().join(',') === APPEND + ',' + REMOVE &&
+               Array.isArray(sval[APPEND]) && Array.isArray(sval[REMOVE]))
+          )
+      ) {
+        //
+        // Then remove any values to be removed
+        //
+        if (sval[REMOVE]) {
+          dval = dst[key] = dval.filter(x => sval[REMOVE].indexOf(x) < 0);
+        }
+        //
+        // And append any values to be added (make a copy so as not to modify the original)
+        //
+        if (sval[APPEND]) {
+          dst[key] = [...dval, ...sval[APPEND]];
+        }
+      } else {
+        //
+        // Otherwise insert the values of the source object into the destination object
+        //
+        insert(dval, sval, warn);
+      }
+    } else if (Array.isArray(sval)) {
+      //
+      // If the source is an array, replace the destination with an empty array
+      //   and copy the source values into it.
+      //
+      dst[key] = [];
+      insert(dst[key], sval, false);
+    } else if (isObject(sval)) {
+      //
+      // If the source is an object literal, set the destination to a copy of it
+      //
+      dst[key] = copy(sval);
+    } else {
+      //
+      // Otherwise set the destination to the source value
+      //
+      dst[key] = sval;
+    }
+  }
+  return dst;
 }
 
 /*****************************************************************/
@@ -247,8 +247,8 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true): 
  * @return {OptionList}         The modified options list
  */
 export function defaultOptions(options: OptionList, ...defs: OptionList[]): OptionList {
-    defs.forEach(def => insert(options, def, false));
-    return options;
+  defs.forEach(def => insert(options, def, false));
+  return options;
 }
 
 /*****************************************************************/
@@ -261,8 +261,8 @@ export function defaultOptions(options: OptionList, ...defs: OptionList[]): Opti
  * @return {OptionList}         The modified options list
  */
 export function userOptions(options: OptionList, ...defs: OptionList[]): OptionList {
-    defs.forEach(def => insert(options, def, true));
-    return options;
+  defs.forEach(def => insert(options, def, true));
+  return options;
 }
 
 /*****************************************************************/
@@ -274,13 +274,13 @@ export function userOptions(options: OptionList, ...defs: OptionList[]): OptionL
  * @return {OptionList}         The option list consisting of only the ones whose keys were given
  */
 export function selectOptions(options: OptionList, ...keys: string[]): OptionList {
-    let subset: OptionList = {};
-    for (const key of keys) {
-        if (options.hasOwnProperty(key)) {
-            subset[key] = options[key];
-        }
+  let subset: OptionList = {};
+  for (const key of keys) {
+    if (options.hasOwnProperty(key)) {
+      subset[key] = options[key];
     }
-    return subset;
+  }
+  return subset;
 }
 
 /*****************************************************************/
@@ -293,7 +293,7 @@ export function selectOptions(options: OptionList, ...keys: string[]): OptionLis
  *                               list whose keys are those from the second list.
  */
 export function selectOptionsFromKeys(options: OptionList, object: OptionList): OptionList {
-    return selectOptions(options, ...Object.keys(object));
+  return selectOptions(options, ...Object.keys(object));
 }
 
 /*****************************************************************/
@@ -312,15 +312,15 @@ export function selectOptionsFromKeys(options: OptionList, object: OptionList): 
  *                                 (i.e., whose keys were not in any of the others).
  */
 export function separateOptions(options: OptionList, ...objects: OptionList[]): OptionList[] {
-    let results: OptionList[] = [];
-    for (const object of objects) {
-        let exists: OptionList = {}, missing: OptionList = {};
-        for (const key of Object.keys(options || {})) {
-            (object[key] === undefined ? missing : exists)[key] = options[key];
-        }
-        results.push(exists);
-        options = missing;
+  let results: OptionList[] = [];
+  for (const object of objects) {
+    let exists: OptionList = {}, missing: OptionList = {};
+    for (const key of Object.keys(options || {})) {
+      (object[key] === undefined ? missing : exists)[key] = options[key];
     }
-    results.unshift(options);
-    return results;
+    results.push(exists);
+    options = missing;
+  }
+  results.unshift(options);
+  return results;
 }

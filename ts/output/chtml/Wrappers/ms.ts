@@ -37,9 +37,9 @@ import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
 export class CHTMLms<N, T, D> extends
 CommonMsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    /**
-     * The ms wrapper
-     */
-    public static kind = MmlMs.prototype.kind;
+  /**
+   * The ms wrapper
+   */
+  public static kind = MmlMs.prototype.kind;
 
 }

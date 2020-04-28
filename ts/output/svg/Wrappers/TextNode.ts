@@ -38,37 +38,37 @@ import {StyleList} from '../../common/CssStyles.js';
 export class SVGTextNode<N, T, D> extends
 CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The TextNode wrapper
-     */
-    public static kind = TextNode.prototype.kind;
+  /**
+   * The TextNode wrapper
+   */
+  public static kind = TextNode.prototype.kind;
 
-    /**
-     * @override
-     */
-    public static styles: StyleList = {
-        '.MathJax path': {
-            'stroke-width': 3
-        }
-    };
-
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        const text = (this.node as TextNode).getText();
-        const variant = this.parent.variant;
-        if (variant === '-explicitFont') {
-            this.adaptor.append(parent, this.jax.unknownText(text, variant));
-        } else {
-            const c = this.parent.stretch.c;
-            const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
-            let x = 0;
-            for (const n of chars) {
-                x += this.placeChar(n, x, 0, parent, variant);
-            }
-        }
-        this.element = this.adaptor.lastChild(parent);
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    '.MathJax path': {
+      'stroke-width': 3
     }
+  };
+
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    const text = (this.node as TextNode).getText();
+    const variant = this.parent.variant;
+    if (variant === '-explicitFont') {
+      this.adaptor.append(parent, this.jax.unknownText(text, variant));
+    } else {
+      const c = this.parent.stretch.c;
+      const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
+      let x = 0;
+      for (const n of chars) {
+        x += this.placeChar(n, x, 0, parent, variant);
+      }
+    }
+    this.element = this.adaptor.lastChild(parent);
+  }
 
 }

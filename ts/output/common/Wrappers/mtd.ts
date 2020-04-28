@@ -44,39 +44,40 @@ export type MtdConstructor = Constructor<CommonMtd>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMtdMixin<T extends WrapperConstructor>(Base: T): MtdConstructor & T {
-    return class extends Base {
 
-        /**
-         * @override
-         */
-        get fixesPWidth() {
-            return false;
-        }
+  return class extends Base {
 
-        /**
-         * @override
-         */
-        public invalidateBBox() {
-            this.bboxComputed = false;
-        }
+    /**
+     * @override
+     */
+    get fixesPWidth() {
+      return false;
+    }
 
-        /**
-         * @override
-         */
-        public getWrapWidth(_j: number) {
-            const table = this.parent.parent as any as CommonMtable<AnyWrapper, CommonMtr<AnyWrapper>>;
-            const row = this.parent as CommonMtr<AnyWrapper>;
-            const i = this.node.childPosition() - (row.labeled ? 1 : 0);
-            return (typeof(table.cWidths[i]) === 'number' ? table.cWidths[i] : table.getTableData().W[i]) as number;
-        }
+    /**
+     * @override
+     */
+    public invalidateBBox() {
+      this.bboxComputed = false;
+    }
 
-        /**
-         * @override
-         */
-        public getChildAlign(_i: number) {
-            return this.node.attributes.get('columnalign') as string;
-        }
+    /**
+     * @override
+     */
+    public getWrapWidth(_j: number) {
+      const table = this.parent.parent as any as CommonMtable<AnyWrapper, CommonMtr<AnyWrapper>>;
+      const row = this.parent as CommonMtr<AnyWrapper>;
+      const i = this.node.childPosition() - (row.labeled ? 1 : 0);
+      return (typeof(table.cWidths[i]) === 'number' ? table.cWidths[i] : table.getTableData().W[i]) as number;
+    }
 
-    };
+    /**
+     * @override
+     */
+    public getChildAlign(_i: number) {
+      return this.node.attributes.get('columnalign') as string;
+    }
+
+  };
 
 }

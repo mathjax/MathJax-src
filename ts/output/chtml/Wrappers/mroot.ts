@@ -37,22 +37,22 @@ import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
  */
 export class CHTMLmroot<N, T, D> extends CommonMrootMixin<MrootConstructor>(CHTMLmsqrt) {
 
-    /**
-     * The mroot wrapper
-     */
-    public static kind = MmlMroot.prototype.kind;
+  /**
+   * The mroot wrapper
+   */
+  public static kind = MmlMroot.prototype.kind;
 
-    /**
-     * @override
-     */
-    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox, H: number) {
-        root.toCHTML(ROOT);
-        const [x, h, dx] = this.getRootDimens(sbox, H);
-        this.adaptor.setStyle(ROOT, 'verticalAlign', this.em(h));
-        this.adaptor.setStyle(ROOT, 'width', this.em(x));
-        if (dx) {
-            this.adaptor.setStyle(this.adaptor.firstChild(ROOT) as N, 'paddingLeft', this.em(dx));
-        }
+  /**
+   * @override
+   */
+  protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox, H: number) {
+    root.toCHTML(ROOT);
+    const [x, h, dx] = this.getRootDimens(sbox, H);
+    this.adaptor.setStyle(ROOT, 'verticalAlign', this.em(h));
+    this.adaptor.setStyle(ROOT, 'width', this.em(x));
+    if (dx) {
+      this.adaptor.setStyle(this.adaptor.firstChild(ROOT) as N, 'paddingLeft', this.em(dx));
     }
+  }
 
 }

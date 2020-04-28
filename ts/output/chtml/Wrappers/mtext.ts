@@ -37,9 +37,9 @@ import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
 export class CHTMLmtext<N, T, D> extends
 CommonMtextMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    /**
-     * The mtext wrapper
-     */
-    public static kind = MmlMtext.prototype.kind;
+  /**
+   * The mtext wrapper
+   */
+  public static kind = MmlMtext.prototype.kind;
 
 }

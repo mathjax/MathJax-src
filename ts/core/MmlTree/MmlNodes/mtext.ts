@@ -31,31 +31,31 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 export class MmlMtext extends AbstractMmlTokenNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlTokenNode.defaults
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlTokenNode.defaults
+  };
 
-    /**
-     * TeX class is ORD
-     */
-    public texClass = TEXCLASS.ORD;
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'mtext';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mtext';
+  }
 
-    /**
-     * <mtext> is always space-like according to the spec
-     * @override
-     */
-    public get isSpacelike() {
-        return true;
-    }
+  /**
+   * <mtext> is always space-like according to the spec
+   * @override
+   */
+  public get isSpacelike() {
+    return true;
+  }
 
 }

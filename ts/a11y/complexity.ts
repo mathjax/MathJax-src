@@ -36,9 +36,12 @@ import {OptionList, selectOptionsFromKeys, expandable} from '../util/Options.js'
 export type Constructor<T> = new(...args: any[]) => T;
 
 /**
- * Constructor for base document for ComplexityMathDocument
+ * Shorthands for constructors
  */
-export type EnrichedDocumentConstructor<N, T, D> =  MathDocumentConstructor<EnrichedMathDocument<N, T, D>>;
+export type EMItemC<N, T, D> = Constructor<EnrichedMathItem<N, T, D>>;
+export type CMItemC<N, T, D> = Constructor<ComplexityMathItem<N, T, D>>;
+export type EMDocC<N, T, D> =  MathDocumentConstructor<EnrichedMathDocument<N, T, D>>;
+export type CMDocC<N, T, D> = Constructor<ComplexityMathDocument<N, T, D>>;
 
 /*==========================================================================*/
 
@@ -56,10 +59,10 @@ newState('COMPLEXITY', 40);
  */
 export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
 
-    /**
-     * @param {ComplexityMathDocument} docuemnt   The MathDocument for the MathItem
-     */
-    complexity(document: ComplexityMathDocument<N, T, D>): void;
+  /**
+   * @param {ComplexityMathDocument} docuemnt   The MathDocument for the MathItem
+   */
+  complexity(document: ComplexityMathDocument<N, T, D>): void;
 
 }
 
@@ -74,25 +77,23 @@ export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
  * @template D  The Document class
  * @template B  The MathItem class to extend
  */
-export function ComplexityMathItemMixin<N, T, D, B extends Constructor<EnrichedMathItem<N, T, D>>>(
-    BaseMathItem: B,
-    computeComplexity: (node: MmlNode) => void
-): Constructor<ComplexityMathItem<N, T, D>> & B {
+export function ComplexityMathItemMixin<N, T, D, B extends
+EMItemC<N, T, D>>(BaseMathItem: B, computeComplexity: (node: MmlNode) => void): CMItemC<N, T, D> & B {
 
-    return class extends BaseMathItem {
+  return class extends BaseMathItem {
 
-        /**
-         * @param {ComplexityMathDocument} docuemnt   The MathDocument for the MathItem
-         */
-        public complexity(document: ComplexityMathDocument<N, T, D>) {
-            if (this.state() < STATE.COMPLEXITY && !this.isEscaped) {
-                this.enrich(document);
-                computeComplexity(this.root);
-                this.state(STATE.COMPLEXITY);
-            }
-        }
+    /**
+     * @param {ComplexityMathDocument} docuemnt   The MathDocument for the MathItem
+     */
+    public complexity(document: ComplexityMathDocument<N, T, D>) {
+      if (this.state() < STATE.COMPLEXITY && !this.isEscaped) {
+        this.enrich(document);
+        computeComplexity(this.root);
+        this.state(STATE.COMPLEXITY);
+      }
+    }
 
-    };
+  };
 
 }
 
@@ -106,12 +107,12 @@ export function ComplexityMathItemMixin<N, T, D, B extends Constructor<EnrichedM
  * @template D  The Document class
  */
 export interface ComplexityMathDocument<N, T, D> extends EnrichedMathDocument<N, T, D> {
-    /**
-     * Perform complexity computations on the MathItems in the MathDocument
-     *
-     * @return {ComplexityMathDocument}   The MathDocument (so calls can be chained)
-     */
-    complexity(): ComplexityMathDocument<N, T, D>;
+  /**
+   * Perform complexity computations on the MathItems in the MathDocument
+   *
+   * @return {ComplexityMathDocument}   The MathDocument (so calls can be chained)
+   */
+  complexity(): ComplexityMathDocument<N, T, D>;
 }
 
 /**
@@ -126,76 +127,75 @@ export interface ComplexityMathDocument<N, T, D> extends EnrichedMathDocument<N,
  * @template D  The Document class
  * @template B  The MathDocument class to extend
  */
-export function ComplexityMathDocumentMixin<N, T, D, B extends EnrichedDocumentConstructor<N, T, D>>(
-    BaseDocument: B
-): Constructor<ComplexityMathDocument<N, T, D>> & B {
+export function ComplexityMathDocumentMixin<N, T, D, B extends
+EMDocC<N, T, D>>(BaseDocument: B): CMDocC<N, T, D> & B {
 
-    return class extends BaseDocument {
+  return class extends BaseDocument {
 
-        /**
-         * The options for this type of document
-         */
-        public static OPTIONS: OptionList = {
-            ...BaseDocument.OPTIONS,
-            ...ComplexityVisitor.OPTIONS,
-            ComplexityVisitor: ComplexityVisitor,
-            renderActions: expandable({
-                ...BaseDocument.OPTIONS.renderActions,
-                complexity: [STATE.COMPLEXITY]
-            })
-        };
-
-        /**
-         * The visitor that computes complexities
-         */
-        protected complexityVisitor: ComplexityVisitor;
-
-        /**
-         * Extend the MathItem class used for this MathDocument
-         *
-         * @override
-         * @constructor
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
-            if (!ProcessBits.has('complexity')) {
-                ProcessBits.allocate('complexity');
-            }
-            const visitorOptions = selectOptionsFromKeys(this.options, this.options.ComplexityVisitor.OPTIONS);
-            this.complexityVisitor = new this.options.ComplexityVisitor(this.mmlFactory, visitorOptions);
-            const computeComplexity = ((node: MmlNode) => this.complexityVisitor.visitTree(node));
-            this.options.MathItem =
-                ComplexityMathItemMixin<N, T, D, Constructor<EnrichedMathItem<N, T, D>>>(
-                    this.options.MathItem, computeComplexity
-                );
-        }
-
-        /**
-         * Compute the complexity the MathItems in this MathDocument
-         */
-        public complexity() {
-            if (!this.processed.isSet('complexity')) {
-                for (const math of this.math) {
-                    (math as ComplexityMathItem<N, T, D>).complexity(this);
-                }
-                this.processed.set('complexity');
-            }
-            return this;
-        }
-
-        /**
-         * @override
-         */
-        public state(state: number, restore: boolean = false) {
-            super.state(state, restore);
-            if (state < STATE.COMPLEXITY) {
-                this.processed.clear('complexity');
-            }
-            return this;
-        }
-
+    /**
+     * The options for this type of document
+     */
+    public static OPTIONS: OptionList = {
+      ...BaseDocument.OPTIONS,
+      ...ComplexityVisitor.OPTIONS,
+      ComplexityVisitor: ComplexityVisitor,
+      renderActions: expandable({
+        ...BaseDocument.OPTIONS.renderActions,
+        complexity: [STATE.COMPLEXITY]
+      })
     };
+
+    /**
+     * The visitor that computes complexities
+     */
+    protected complexityVisitor: ComplexityVisitor;
+
+    /**
+     * Extend the MathItem class used for this MathDocument
+     *
+     * @override
+     * @constructor
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
+      if (!ProcessBits.has('complexity')) {
+        ProcessBits.allocate('complexity');
+      }
+      const visitorOptions = selectOptionsFromKeys(this.options, this.options.ComplexityVisitor.OPTIONS);
+      this.complexityVisitor = new this.options.ComplexityVisitor(this.mmlFactory, visitorOptions);
+      const computeComplexity = ((node: MmlNode) => this.complexityVisitor.visitTree(node));
+      this.options.MathItem =
+        ComplexityMathItemMixin<N, T, D, EMItemC<N, T, D>>(
+          this.options.MathItem, computeComplexity
+        );
+    }
+
+    /**
+     * Compute the complexity the MathItems in this MathDocument
+     */
+    public complexity() {
+      if (!this.processed.isSet('complexity')) {
+        for (const math of this.math) {
+          (math as ComplexityMathItem<N, T, D>).complexity(this);
+        }
+        this.processed.set('complexity');
+      }
+      return this;
+    }
+
+    /**
+     * @override
+     */
+    public state(state: number, restore: boolean = false) {
+      super.state(state, restore);
+      if (state < STATE.COMPLEXITY) {
+        this.processed.clear('complexity');
+      }
+      return this;
+    }
+
+  };
 
 }
 
@@ -212,12 +212,13 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EnrichedDocumentC
  * @template T  The Text node class
  * @template D  The Document class
  */
-export function ComplexityHandler<N, T, D>(handler: Handler<N, T, D>,
-                                           MmlJax: MathML<N, T, D> = null): Handler<N, T, D> {
-    if (!handler.documentClass.prototype.enrich && MmlJax) {
-        handler = EnrichHandler(handler, MmlJax);
-    }
-    handler.documentClass =
-        ComplexityMathDocumentMixin<N, T, D, EnrichedDocumentConstructor<N, T, D>>(handler.documentClass as any);
-    return handler;
+export function ComplexityHandler<N, T, D>(
+  handler: Handler<N, T, D>,
+  MmlJax: MathML<N, T, D> = null
+): Handler<N, T, D> {
+  if (!handler.documentClass.prototype.enrich && MmlJax) {
+    handler = EnrichHandler(handler, MmlJax);
+  }
+  handler.documentClass = ComplexityMathDocumentMixin<N, T, D, EMDocC<N, T, D>>(handler.documentClass as any);
+  return handler;
 }

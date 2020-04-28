@@ -31,28 +31,28 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 export class MmlMglyph extends AbstractMmlTokenNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlTokenNode.defaults,
-        alt: '',
-        src: '',
-        width: 'auto',
-        height: 'auto',
-        valign: '0em'
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlTokenNode.defaults,
+    alt: '',
+    src: '',
+    width: 'auto',
+    height: 'auto',
+    valign: '0em'
+  };
 
-    /**
-     * TeX class is ORD
-     */
-    public texClass = TEXCLASS.ORD;
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'mglyph';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mglyph';
+  }
 
 }

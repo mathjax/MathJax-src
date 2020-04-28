@@ -41,20 +41,20 @@ import {StyleList} from '../../common/CssStyles.js';
 export class CHTMLsemantics<N, T, D> extends
 CommonSemanticsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    /**
-     * The semantics wrapper
-     */
-    public static kind = MmlSemantics.prototype.kind;
+  /**
+   * The semantics wrapper
+   */
+  public static kind = MmlSemantics.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        const chtml = this.standardCHTMLnode(parent);
-        if (this.childNodes.length) {
-            this.childNodes[0].toCHTML(chtml);
-        }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    const chtml = this.standardCHTMLnode(parent);
+    if (this.childNodes.length) {
+      this.childNodes[0].toCHTML(chtml);
     }
+  }
 
 }
 
@@ -69,26 +69,26 @@ CommonSemanticsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
  */
 export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
 
-    /**
-     * The annotation wrapper
-     */
-    public static kind = MmlAnnotation.prototype.kind;
+  /**
+   * The annotation wrapper
+   */
+  public static kind = MmlAnnotation.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        // FIXME:  output as plain text
-        super.toCHTML(parent);
-    }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    // FIXME:  output as plain text
+    super.toCHTML(parent);
+  }
 
-    /**
-     * @override
-     */
-    public computeBBox() {
-        // FIXME:  compute using the DOM, if possible
-        return this.bbox;
-    }
+  /**
+   * @override
+   */
+  public computeBBox() {
+    // FIXME:  compute using the DOM, if possible
+    return this.bbox;
+  }
 
 }
 
@@ -102,20 +102,20 @@ export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
  */
 export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
 
-    /**
-     * The annotation-xml wrapper
-     */
-    public static kind = MmlAnnotationXML.prototype.kind;
+  /**
+   * The annotation-xml wrapper
+   */
+  public static kind = MmlAnnotationXML.prototype.kind;
 
-    /**
-     * @override
-     */
-    public static styles: StyleList = {
-        'mjx-annotation-xml': {
-            'font-family': 'initial',
-            'line-height': 'normal'
-        }
-    };
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'mjx-annotation-xml': {
+      'font-family': 'initial',
+      'line-height': 'normal'
+    }
+  };
 
 }
 
@@ -129,45 +129,46 @@ export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
  */
 export class CHTMLxml<N, T, D> extends CHTMLWrapper<N, T, D> {
 
-    /**
-     * The xml wrapper
-     */
-    public static kind = XMLNode.prototype.kind;
+  /**
+   * The xml wrapper
+   */
+  public static kind = XMLNode.prototype.kind;
 
-    /**
-     * Don't set up inline-block styles for this
-     */
-    public static autoStyle = false;
+  /**
+   * Don't set up inline-block styles for this
+   */
+  public static autoStyle = false;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        this.chtml = this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N));
-    }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    this.chtml = this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N));
+  }
 
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox, _recompute: boolean = false) {
-        const {w, h, d} = this.jax.measureXMLnode((this.node as XMLNode).getXML() as N);
-        bbox.w = w;
-        bbox.h = h;
-        bbox.d = d;
-    }
+  /**
+   * @override
+   */
+  public computeBBox(bbox: BBox, _recompute: boolean = false) {
+    const {w, h, d} = this.jax.measureXMLnode((this.node as XMLNode).getXML() as N);
+    bbox.w = w;
+    bbox.h = h;
+    bbox.d = d;
+  }
 
-    /**
-     * @override
-     */
-    protected getStyles() {}
+  /**
+   * @override
+   */
+  protected getStyles() {}
 
-    /**
-     * @override
-     */
-    protected getScale() {}
+  /**
+   * @override
+   */
+  protected getScale() {}
 
-    /**
-     * @override
-     */
-    protected getVariant() {}
+  /**
+   * @override
+   */
+  protected getVariant() {}
+
 }

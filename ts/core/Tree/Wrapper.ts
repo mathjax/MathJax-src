@@ -34,15 +34,15 @@ import {WrapperFactory} from './WrapperFactory.js';
  * @template W  The Wrapper type being produced
  */
 export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
-    node: N;
-    readonly kind: string;
+  node: N;
+  readonly kind: string;
 
-    /**
-     * @param {Node} node  A node to be wrapped
-     * @param {any[]} args  Any additional arguments needed when creating the wrapper
-     * @return {Wrapper}   The wrapped node
-     */
-    wrap(node: N, ...args: any[]): W;
+  /**
+   * @param {Node} node  A node to be wrapped
+   * @param {any[]} args  Any additional arguments needed when creating the wrapper
+   * @return {Wrapper}   The wrapped node
+   */
+  wrap(node: N, ...args: any[]): W;
 }
 
 /*********************************************************/
@@ -53,13 +53,13 @@ export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
  * @template W  The Wrapper type being produced
  */
 export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
-    /**
-     * @param {WrapperFactory} factory  The factory used to create more wrappers
-     * @param {N} node  The node to be wrapped
-     * @param {any[]} args  Any additional arguments needed when creating the wrapper
-     * @return {W}  The wrapped node
-     */
-    new(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N, ...args: any[]): W;
+  /**
+   * @param {WrapperFactory} factory  The factory used to create more wrappers
+   * @param {N} node  The node to be wrapped
+   * @param {any[]} args  Any additional arguments needed when creating the wrapper
+   * @return {W}  The wrapped node
+   */
+  new(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N, ...args: any[]): W;
 }
 
 /*********************************************************/
@@ -70,40 +70,40 @@ export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
  * @template W  The Wrapper type being produced
  */
 export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements Wrapper<N, W> {
-    /**
-     * The Node object associated with this instance
-     */
-    public node: N;
+  /**
+   * The Node object associated with this instance
+   */
+  public node: N;
 
-    /**
-     * The WrapperFactory to use to wrap child nodes, as needed
-     */
-    protected factory: WrapperFactory<N, W, WrapperClass<N, W>>;
+  /**
+   * The WrapperFactory to use to wrap child nodes, as needed
+   */
+  protected factory: WrapperFactory<N, W, WrapperClass<N, W>>;
 
-    /**
-     * The kind of this wrapper
-     */
-    get kind() {
-        return this.node.kind;
-    }
+  /**
+   * The kind of this wrapper
+   */
+  get kind() {
+    return this.node.kind;
+  }
 
-    /**
-     * @param {WrapperFactory} factory  The WrapperFactory to use to wrap child nodes when needed
-     * @param {Node} node               The node to wrap
-     *
-     * @constructor
-     * @implements {Wrapper}
-     */
-    constructor(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N) {
-        this.factory = factory;
-        this.node = node;
-    }
+  /**
+   * @param {WrapperFactory} factory  The WrapperFactory to use to wrap child nodes when needed
+   * @param {Node} node               The node to wrap
+   *
+   * @constructor
+   * @implements {Wrapper}
+   */
+  constructor(factory: WrapperFactory<N, W, WrapperClass<N, W>>, node: N) {
+    this.factory = factory;
+    this.node = node;
+  }
 
-    /**
-     * @override
-     */
-    public wrap(node: N) {
-        return this.factory.wrap(node);
-    }
+  /**
+   * @override
+   */
+  public wrap(node: N) {
+    return this.factory.wrap(node);
+  }
 
 }

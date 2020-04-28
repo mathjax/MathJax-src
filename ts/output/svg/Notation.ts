@@ -48,14 +48,14 @@ export type LineName = Notation.Side | ('vertical' | 'horizontal' | 'up' | 'down
  * Functions for computing the line data for each type of line
  */
 export const computeLineData = {
-    top: (h, _d, w, t) => [0, h - t, w, h - t],
-    right: (h, d, w, t) => [w - t, -d, w - t, h],
-    bottom: (_h, d, w, t) => [0, t - d, w, t - d],
-    left: (h, d, _w, t) => [t, -d, t, h],
-    vertical: (h, d, w, t) => [w / 2 - t, h, w / 2 - t, -d],
-    horizontal: (h, d, w, t) => [0, (h - d) / 2 - t, w, (h - d) / 2 - t],
-    up: (h, d, w, t) => [t, t - d, w - t, h - t],
-    down: (h, d, w, t) => [t, h - t, w - t, t - d]
+  top: (h, _d, w, t) => [0, h - t, w, h - t],
+  right: (h, d, w, t) => [w - t, -d, w - t, h],
+  bottom: (_h, d, w, t) => [0, t - d, w, t - d],
+  left: (h, d, _w, t) => [t, -d, t, h],
+  vertical: (h, d, w, t) => [w / 2 - t, h, w / 2 - t, -d],
+  horizontal: (h, d, w, t) => [0, (h - d) / 2 - t, w, (h - d) / 2 - t],
+  up: (h, d, w, t) => [t, t - d, w - t, h - t],
+  down: (h, d, w, t) => [t, h - t, w - t, t - d]
 } as {[kind: string]: (h: number, d: number, w: number, t: number) => [number, number, number, number]};
 
 /**
@@ -67,9 +67,9 @@ export const computeLineData = {
  */
 
 export const lineData = function(node: Menclose, kind: LineName): [number, number, number, number] {
-    const {h, d, w} = node.getBBox();
-    const t = node.thickness / 2;
-    return computeLineData[kind](h, d, w, t);
+  const {h, d, w} = node.getBBox();
+  const t = node.thickness / 2;
+  return computeLineData[kind](h, d, w, t);
 };
 
 
@@ -80,9 +80,9 @@ export const lineData = function(node: Menclose, kind: LineName): [number, numbe
  * @return {Renderer}      The renderer function for the given line
  */
 export const RenderLine = function<N, T, D>(line: LineName): RENDERER<N, T, D> {
-    return ((node, _child) => {
-        node.adaptor.append(node.element, node.line(lineData(node, line)));
-    });
+  return ((node, _child) => {
+    node.adaptor.append(node.element, node.line(lineData(node, line)));
+  });
 };
 
 /*******************************************************************/
@@ -92,9 +92,9 @@ export const RenderLine = function<N, T, D>(line: LineName): RENDERER<N, T, D> {
  * @return {DefPair}      The notation definition for the notation having a line on the given side
  */
 export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
-    return Notation.CommonBorder<SVGmenclose<N, T, D>, N>((node, _child) => {
-        node.adaptor.append(node.element, node.line(lineData(node, side)));
-    })(side);
+  return Notation.CommonBorder<SVGmenclose<N, T, D>, N>((node, _child) => {
+    node.adaptor.append(node.element, node.line(lineData(node, side)));
+  })(side);
 };
 
 
@@ -105,10 +105,10 @@ export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
  * @return {DefPair}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, side2: Notation.Side): DEFPAIR<N, T, D> {
-    return Notation.CommonBorder2<SVGmenclose<N, T, D>, N>((node, _child) => {
-        node.adaptor.append(node.element, node.line(lineData(node, side1)));
-        node.adaptor.append(node.element, node.line(lineData(node, side2)));
-    })(name, side1, side2);
+  return Notation.CommonBorder2<SVGmenclose<N, T, D>, N>((node, _child) => {
+    node.adaptor.append(node.element, node.line(lineData(node, side1)));
+    node.adaptor.append(node.element, node.line(lineData(node, side2)));
+  })(name, side1, side2);
 };
 
 /*******************************************************************/
@@ -118,9 +118,9 @@ export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, sid
  * @return {DefPair}       The notation definition for the diagonal strike
  */
 export const DiagonalStrike = function<N, T, D>(name: LineName): DEFPAIR<N, T, D> {
-    return Notation.CommonDiagonalStrike<SVGmenclose<N, T, D>, N>((_cname: string) => (node, _child) => {
-        node.adaptor.append(node.element, node.line(lineData(node, name)));
-    })(name);
+  return Notation.CommonDiagonalStrike<SVGmenclose<N, T, D>, N>((_cname: string) => (node, _child) => {
+    node.adaptor.append(node.element, node.line(lineData(node, name)));
+  })(name);
 };
 
 /*******************************************************************/
@@ -130,9 +130,9 @@ export const DiagonalStrike = function<N, T, D>(name: LineName): DEFPAIR<N, T, D
  * @return {DefPair}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
-    return Notation.CommonDiagonalArrow<SVGmenclose<N, T, D>, N>((node, arrow) => {
-        node.adaptor.append(node.element, arrow);
-    })(name);
+  return Notation.CommonDiagonalArrow<SVGmenclose<N, T, D>, N>((node, arrow) => {
+    node.adaptor.append(node.element, arrow);
+  })(name);
 };
 
 /**
@@ -140,9 +140,9 @@ export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
  * @return {DefPair}      The notation definition for the arrow
  */
 export const Arrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
-    return Notation.CommonArrow<SVGmenclose<N, T, D>, N>((node, arrow) => {
-        node.adaptor.append(node.element, arrow);
-    })(name);
+  return Notation.CommonArrow<SVGmenclose<N, T, D>, N>((node, arrow) => {
+    node.adaptor.append(node.element, arrow);
+  })(name);
 };
 
 /*******************************************************************/

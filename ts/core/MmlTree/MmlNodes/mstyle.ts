@@ -32,56 +32,56 @@ import {INHERIT} from '../Attributes.js';
 
 export class MmlMstyle extends AbstractMmlLayoutNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlLayoutNode.defaults,
-        scriptlevel: INHERIT,
-        displaystyle: INHERIT,
-        scriptsizemultiplier: 1 / Math.sqrt(2),
-        scriptminsize: '8px',  // should be 8pt, but that is too large
-        mathbackground: INHERIT,
-        mathcolor: INHERIT,
-        dir: INHERIT,
-        infixlinebreakstyle: 'before'
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlLayoutNode.defaults,
+    scriptlevel: INHERIT,
+    displaystyle: INHERIT,
+    scriptsizemultiplier: 1 / Math.sqrt(2),
+    scriptminsize: '8px',  // should be 8pt, but that is too large
+    mathbackground: INHERIT,
+    mathcolor: INHERIT,
+    dir: INHERIT,
+    infixlinebreakstyle: 'before'
+  };
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'mstyle';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mstyle';
+  }
 
-    /**
-     * @override
-     */
-    public get notParent() {
-        return true;
-    }
+  /**
+   * @override
+   */
+  public get notParent() {
+    return true;
+  }
 
-    /**
-     * Handle scriptlevel changes, and add mstyle attributes to the ones being inherited.
-     *
-     * @override
-     */
-    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        let scriptlevel = this.attributes.getExplicit('scriptlevel');
-        if (scriptlevel != null) {
-            scriptlevel = scriptlevel.toString();
-            if (scriptlevel.match(/^\s*[-+]/)) {
-                level += parseInt(scriptlevel);
-            } else {
-                level = parseInt(scriptlevel);
-            }
-        }
-        let displaystyle = this.attributes.getExplicit('displaystyle') as boolean;
-        if (displaystyle != null) {
-            display = (displaystyle === true);
-        }
-        attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
-        this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
+  /**
+   * Handle scriptlevel changes, and add mstyle attributes to the ones being inherited.
+   *
+   * @override
+   */
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    let scriptlevel = this.attributes.getExplicit('scriptlevel');
+    if (scriptlevel != null) {
+      scriptlevel = scriptlevel.toString();
+      if (scriptlevel.match(/^\s*[-+]/)) {
+        level += parseInt(scriptlevel);
+      } else {
+        level = parseInt(scriptlevel);
+      }
     }
+    let displaystyle = this.attributes.getExplicit('displaystyle') as boolean;
+    if (displaystyle != null) {
+      display = (displaystyle === true);
+    }
+    attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
+    this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
+  }
 
 }

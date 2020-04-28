@@ -48,19 +48,19 @@ const SRE_TIMEOUT = 20 * 1000; // 20 seconds
 export const sreReady = function() {
   return new Promise<void>((resolve, reject) => {
     srePromise.then(() => {
-        const start = new Date().getTime();
-        const checkSRE = function () {
-            if (sre.Engine.isReady()) {
-                resolve();
-            } else {
-                if (new Date().getTime() - start < SRE_TIMEOUT) {
-                    setTimeout(checkSRE, SRE_DELAY);
-                } else {
-                    reject('Timed out waiting for Speech-Rule-Engine');
-                }
-            }
-        };
-        checkSRE();
+      const start = new Date().getTime();
+      const checkSRE = function () {
+        if (sre.Engine.isReady()) {
+          resolve();
+        } else {
+          if (new Date().getTime() - start < SRE_TIMEOUT) {
+            setTimeout(checkSRE, SRE_DELAY);
+          } else {
+            reject('Timed out waiting for Speech-Rule-Engine');
+          }
+        }
+      };
+      checkSRE();
     }).catch((error: Error) => reject(error.message || error));
   });
 };

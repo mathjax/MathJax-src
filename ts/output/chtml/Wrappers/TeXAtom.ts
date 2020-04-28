@@ -38,27 +38,27 @@ import {TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
 export class CHTMLTeXAtom<N, T, D> extends
 CommonTeXAtomMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    /**
-     * The TeXAtom wrapper
-     */
-    public static kind = TeXAtom.prototype.kind;
+  /**
+   * The TeXAtom wrapper
+   */
+  public static kind = TeXAtom.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        super.toCHTML(parent);
-        this.adaptor.setAttribute(this.chtml, 'texclass', TEXCLASSNAMES[this.node.texClass]);
-        //
-        // Center VCENTER atoms vertically
-        //
-        if (this.node.texClass === TEXCLASS.VCENTER) {
-            const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
-            const {h, d} = bbox;
-            const a = this.font.params.axis_height;
-            const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-            this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(dh));
-        }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    super.toCHTML(parent);
+    this.adaptor.setAttribute(this.chtml, 'texclass', TEXCLASSNAMES[this.node.texClass]);
+    //
+    // Center VCENTER atoms vertically
+    //
+    if (this.node.texClass === TEXCLASS.VCENTER) {
+      const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
+      const {h, d} = bbox;
+      const a = this.font.params.axis_height;
+      const dh = ((h + d) / 2 + a) - h;  // new height minus old height
+      this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(dh));
     }
+  }
 
 }

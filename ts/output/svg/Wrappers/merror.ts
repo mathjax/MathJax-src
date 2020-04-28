@@ -35,36 +35,36 @@ import {StyleList} from '../../common/CssStyles.js';
  */
 export class SVGmerror<N, T, D> extends SVGWrapper<N, T, D> {
 
-    /**
-     * The merror wrapper
-     */
-    public static kind = MmlMerror.prototype.kind;
+  /**
+   * The merror wrapper
+   */
+  public static kind = MmlMerror.prototype.kind;
 
-    /**
-     * @override
-     */
-    public static styles: StyleList = {
-        'g[data-mml-node="merror"] > g': {
-            fill: 'red',
-            stroke: 'red'
-        },
-        'g[data-mml-node="merror"] > rect[data-background]': {
-            fill: 'yellow',
-            stroke: 'none'
-        }
-    };
-
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        const svg = this.standardSVGnode(parent);
-        const {h, d, w} = this.getBBox();
-        this.adaptor.append(this.element, this.svg('rect', {
-            'data-background': true,
-            width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
-        }));
-        this.addChildren(svg);
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'g[data-mml-node="merror"] > g': {
+      fill: 'red',
+      stroke: 'red'
+    },
+    'g[data-mml-node="merror"] > rect[data-background]': {
+      fill: 'yellow',
+      stroke: 'none'
     }
+  };
+
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    const svg = this.standardSVGnode(parent);
+    const {h, d, w} = this.getBBox();
+    this.adaptor.append(this.element, this.svg('rect', {
+      'data-background': true,
+      width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
+    }));
+    this.addChildren(svg);
+  }
 
 }

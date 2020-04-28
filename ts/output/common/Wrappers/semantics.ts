@@ -43,19 +43,20 @@ export type SemanticsConstructor = Constructor<CommonSemantics>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonSemanticsMixin<T extends WrapperConstructor>(Base: T): SemanticsConstructor & T {
-    return class extends Base {
 
-        /**
-         * @override
-         */
-        public computeBBox(bbox: BBox, _recompute: boolean = false) {
-            if (this.childNodes.length) {
-                const {w, h, d} = this.childNodes[0].getBBox();
-                bbox.w = w;
-                bbox.h = h;
-                bbox.d = d;
-            }
-        }
-    };
+  return class extends Base {
+
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      if (this.childNodes.length) {
+        const {w, h, d} = this.childNodes[0].getBBox();
+        bbox.w = w;
+        bbox.h = h;
+        bbox.d = d;
+      }
+    }
+  };
 
 }

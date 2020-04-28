@@ -37,20 +37,20 @@ import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
  */
 export class SVGmroot<N, T, D> extends CommonMrootMixin<Constructor<SVGmsqrt<any, any, any>>>(SVGmsqrt) {
 
-    /**
-     * The mroot wrapper
-     */
-    public static kind = MmlMroot.prototype.kind;
+  /**
+   * The mroot wrapper
+   */
+  public static kind = MmlMroot.prototype.kind;
 
-    /**
-     * @override
-     */
-    protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox, H: number) {
-        root.toSVG(ROOT);
-        const [x, h, dx] = this.getRootDimens(sbox, H);
-        const bbox = root.getBBox();
-        root.place(dx * bbox.rscale, h);
-        this.dx = x;
-    }
+  /**
+   * @override
+   */
+  protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox, H: number) {
+    root.toSVG(ROOT);
+    const [x, h, dx] = this.getRootDimens(sbox, H);
+    const bbox = root.getBBox();
+    root.place(dx * bbox.rscale, h);
+    this.dx = x;
+  }
 
 }

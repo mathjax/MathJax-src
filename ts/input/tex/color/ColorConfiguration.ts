@@ -34,11 +34,11 @@ import { TeX } from '../../tex.js';
  * The color macros
  */
 new CommandMap('color', {
-    color: 'Color',
-    textcolor: 'TextColor',
-    definecolor: 'DefineColor',
-    colorbox: 'ColorBox',
-    fcolorbox: 'FColorBox'
+  color: 'Color',
+  textcolor: 'TextColor',
+  definecolor: 'DefineColor',
+  colorbox: 'ColorBox',
+  fcolorbox: 'FColorBox'
 }, ColorMethods);
 
 /**
@@ -48,23 +48,23 @@ new CommandMap('color', {
  * @param {TeX} jax              The TeX jax having that configuration
  */
 const config = function(_config: Configuration, jax: TeX<any, any, any>) {
-    jax.parseOptions.options.color.model = new ColorModel();
+  jax.parseOptions.options.color.model = new ColorModel();
 };
 
 /**
  * The configuration for the color macros
  */
 export const ColorConfiguration = Configuration.create(
-    'color', {
-        handler: {
-            macro: ['color'],
-        },
-        options: {
-            color: {
-                padding: '5px',
-                borderWidth: '2px'
-            }
-        },
-        config: config
-    }
+  'color', {
+    handler: {
+      macro: ['color'],
+    },
+    options: {
+      color: {
+        padding: '5px',
+        borderWidth: '2px'
+      }
+    },
+    config: config
+  }
 );

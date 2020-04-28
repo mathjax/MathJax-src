@@ -38,15 +38,15 @@ import { ColorModel } from './ColorUtil.js';
  * @return {PropertyList} The padding properties.
  */
 function padding(colorPadding: string): PropertyList {
-    const pad = `+${colorPadding}`;
-    const unit = colorPadding.replace(/^.*?([a-z]*)$/, '$1');
-    const pad2 = 2 * parseFloat(pad);
-    return {
-        width: `+${pad2}${unit}`,
-        height: pad,
-        depth: pad,
-        lspace: colorPadding,
-    };
+  const pad = `+${colorPadding}`;
+  const unit = colorPadding.replace(/^.*?([a-z]*)$/, '$1');
+  const pad2 = 2 * parseFloat(pad);
+  return {
+    width: `+${pad2}${unit}`,
+    height: pad,
+    depth: pad,
+    lspace: colorPadding,
+  };
 }
 
 
@@ -60,16 +60,16 @@ export const ColorMethods: Record<string, ParseMethod> = {};
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.Color = function (parser: TexParser, name: string) {
-    const model = parser.GetBrackets(name, '');
-    const colorDef = parser.GetArgument(name);
-    const colorModel: ColorModel = parser.options.color.model;
-    const color = colorModel.getColor(model, colorDef);
+  const model = parser.GetBrackets(name, '');
+  const colorDef = parser.GetArgument(name);
+  const colorModel: ColorModel = parser.options.color.model;
+  const color = colorModel.getColor(model, colorDef);
 
-    const style = parser.itemFactory.create('style')
-                        .setProperties({styles: { mathcolor: color }});
-    parser.stack.env['color'] = color;
+  const style = parser.itemFactory.create('style')
+    .setProperties({styles: { mathcolor: color }});
+  parser.stack.env['color'] = color;
 
-    parser.Push(style);
+  parser.Push(style);
 };
 
 
@@ -80,23 +80,23 @@ ColorMethods.Color = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.TextColor = function (parser: TexParser, name: string) {
-    const model = parser.GetBrackets(name, '');
-    const colorDef = parser.GetArgument(name);
-    const colorModel: ColorModel = parser.options.color.model;
-    const color = colorModel.getColor(model, colorDef);
-    const old = parser.stack.env['color'];
+  const model = parser.GetBrackets(name, '');
+  const colorDef = parser.GetArgument(name);
+  const colorModel: ColorModel = parser.options.color.model;
+  const color = colorModel.getColor(model, colorDef);
+  const old = parser.stack.env['color'];
 
-    parser.stack.env['color'] = color;
-    const math = parser.ParseArg(name);
+  parser.stack.env['color'] = color;
+  const math = parser.ParseArg(name);
 
-    if (old) {
-        parser.stack.env['color'] = old;
-    } else {
-        delete parser.stack.env['color'];
-    }
+  if (old) {
+    parser.stack.env['color'] = old;
+  } else {
+    delete parser.stack.env['color'];
+  }
 
-    const node = parser.create('node', 'mstyle', [math], { mathcolor: color });
-    parser.Push(node);
+  const node = parser.create('node', 'mstyle', [math], { mathcolor: color });
+  parser.Push(node);
 };
 
 /**
@@ -106,12 +106,12 @@ ColorMethods.TextColor = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.DefineColor = function (parser: TexParser, name: string) {
-    const cname = parser.GetArgument(name);
-    const model = parser.GetArgument(name);
-    const def = parser.GetArgument(name);
+  const cname = parser.GetArgument(name);
+  const model = parser.GetArgument(name);
+  const def = parser.GetArgument(name);
 
-    const colorModel: ColorModel = parser.options.color.model;
-    colorModel.defineColor(model, cname, def);
+  const colorModel: ColorModel = parser.options.color.model;
+  colorModel.defineColor(model, cname, def);
 };
 
 /**
@@ -121,17 +121,17 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.ColorBox = function (parser: TexParser, name: string) {
-    const cname = parser.GetArgument(name);
-    const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
-    const options = parser.options.color;
-    const colorModel: ColorModel = options.model;
+  const cname = parser.GetArgument(name);
+  const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
+  const options = parser.options.color;
+  const colorModel: ColorModel = options.model;
 
-    const node = parser.create('node', 'mpadded', math, {
-        mathbackground: colorModel.getColor('named', cname)
-    });
+  const node = parser.create('node', 'mpadded', math, {
+    mathbackground: colorModel.getColor('named', cname)
+  });
 
-    NodeUtil.setProperties(node, padding(options.padding));
-    parser.Push(node);
+  NodeUtil.setProperties(node, padding(options.padding));
+  parser.Push(node);
 };
 
 /**
@@ -141,17 +141,17 @@ ColorMethods.ColorBox = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.FColorBox = function (parser: TexParser, name: string) {
-    const fname = parser.GetArgument(name);
-    const cname = parser.GetArgument(name);
-    const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
-    const options = parser.options.color;
-    const colorModel: ColorModel = options.model;
+  const fname = parser.GetArgument(name);
+  const cname = parser.GetArgument(name);
+  const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
+  const options = parser.options.color;
+  const colorModel: ColorModel = options.model;
 
-    const node = parser.create('node', 'mpadded', math, {
-        mathbackground: colorModel.getColor('named', cname),
-        style: `border: ${options.borderWidth} solid ${colorModel.getColor('named', fname)}`
-    });
+  const node = parser.create('node', 'mpadded', math, {
+    mathbackground: colorModel.getColor('named', cname),
+    style: `border: ${options.borderWidth} solid ${colorModel.getColor('named', fname)}`
+  });
 
-    NodeUtil.setProperties(node, padding(options.padding));
-    parser.Push(node);
+  NodeUtil.setProperties(node, padding(options.padding));
+  parser.Push(node);
 };

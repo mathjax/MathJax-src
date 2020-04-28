@@ -30,6 +30,5 @@ import {HTMLAdaptor} from './HTMLAdaptor.js';
  * @return {HTMLAdaptor}   The newly created adaptor
  */
 export function jsdomAdaptor(JSDOM: any): HTMLAdaptor<HTMLElement, Text, Document> {
-    return new HTMLAdaptor<HTMLElement, Text, Document>(new JSDOM().window);
+  return new HTMLAdaptor<HTMLElement, Text, Document>(new JSDOM().window);
 }
-

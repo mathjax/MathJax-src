@@ -28,30 +28,30 @@ import {LiteElement} from './Element.js';
  * Implements a lightweight Text node replacement
  */
 export class LiteText {
-    /**
-     * The text stored in the node
-     */
-    public value: string;
+  /**
+   * The text stored in the node
+   */
+  public value: string;
 
-    /**
-     * The parent holding this text
-     */
-    public parent: LiteElement;
+  /**
+   * The parent holding this text
+   */
+  public parent: LiteElement;
 
-    /**
-     * The kind of node is #text
-     */
-    public get kind() {
-        return '#text';
-    }
+  /**
+   * The kind of node is #text
+   */
+  public get kind() {
+    return '#text';
+  }
 
-    /**
-     * @param {string} text  The text for the node
-     * @constructor
-     */
-    constructor(text: string = '') {
-        this.value = text;
-    }
+  /**
+   * @param {string} text  The text for the node
+   * @constructor
+   */
+  constructor(text: string = '') {
+    this.value = text;
+  }
 }
 
 /************************************************************/
@@ -59,7 +59,7 @@ export class LiteText {
  * Implements a lightweight Comment node replacement
  */
 export class LiteComment extends LiteText {
-    public get kind() {
-        return '#comment';
-    }
+  public get kind() {
+    return '#comment';
+  }
 }

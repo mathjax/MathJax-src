@@ -32,61 +32,61 @@ import {INHERIT} from '../Attributes.js';
 
 export class MmlMtd extends AbstractMmlBaseNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlBaseNode.defaults,
-        rowspan: 1,
-        columnspan: 1,
-        rowalign: INHERIT,
-        columnalign: INHERIT,
-        groupalign: INHERIT
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlBaseNode.defaults,
+    rowspan: 1,
+    columnspan: 1,
+    rowalign: INHERIT,
+    columnalign: INHERIT,
+    groupalign: INHERIT
+  };
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'mtd';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mtd';
+  }
 
-    /**
-     * <mtd> has an inferred mrow
-     * @overrride
-     */
-    public get arity() {
-        return -1;
-    }
+  /**
+   * <mtd> has an inferred mrow
+   * @overrride
+   */
+  public get arity() {
+    return -1;
+  }
 
-    /**
-     * <mtd> can contain line breaks
-     * @override
-     */
-    public get linebreakContainer() {
-        return true;
-    }
+  /**
+   * <mtd> can contain line breaks
+   * @override
+   */
+  public get linebreakContainer() {
+    return true;
+  }
 
-    /**
-     * Check that parent is mtr
-     *
-     * @override
-     */
-    protected verifyChildren(options: PropertyList) {
-        if (this.parent && !this.parent.isKind('mtr')) {
-            this.mError(this.kind + ' can only be a child of an mtr or mlabeledtr', options, true);
-            return;
-        }
-        super.verifyChildren(options);
+  /**
+   * Check that parent is mtr
+   *
+   * @override
+   */
+  protected verifyChildren(options: PropertyList) {
+    if (this.parent && !this.parent.isKind('mtr')) {
+      this.mError(this.kind + ' can only be a child of an mtr or mlabeledtr', options, true);
+      return;
     }
+    super.verifyChildren(options);
+  }
 
-    /**
-     * @override
-     */
-    public setTeXclass(prev: MmlNode) {
-        this.getPrevClass(prev);
-        this.childNodes[0].setTeXclass(null);
-        return this;
-    }
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    this.getPrevClass(prev);
+    this.childNodes[0].setTeXclass(null);
+    return this;
+  }
 
 }

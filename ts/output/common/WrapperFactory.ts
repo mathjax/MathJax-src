@@ -38,31 +38,31 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
  * @template FD The FontData type
  */
 export class CommonWrapperFactory<
-    J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, FD, any>,
-    W extends CommonWrapper<J, W, C, CC, DD, FD>,
-    C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
-    CC extends CharOptions,
-    DD extends DelimiterData,
-    FD extends FontData<CC, any, DD>
+  J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, FD, any>,
+  W extends CommonWrapper<J, W, C, CC, DD, FD>,
+  C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
+  CC extends CharOptions,
+  DD extends DelimiterData,
+  FD extends FontData<CC, any, DD>
 > extends AbstractWrapperFactory<MmlNode, W, C> {
 
-    /**
-     * The default list of wrapper nodes this factory can create
-     *   (filled in by subclasses)
-     */
-    public static defaultNodes: {[kind: string]: CommonWrapperClass<any, any, any, any, any, any>} = {};
+  /**
+   * The default list of wrapper nodes this factory can create
+   *   (filled in by subclasses)
+   */
+  public static defaultNodes: {[kind: string]: CommonWrapperClass<any, any, any, any, any, any>} = {};
 
-    /**
-     * The output jax associated with this factory
-     */
-    public jax: J = null;
+  /**
+   * The output jax associated with this factory
+   */
+  public jax: J = null;
 
-    /**
-     * @return {Object}  The list of node-creation functions
-     */
-    get Wrappers(): Object {
-        return this.node;
-    }
+  /**
+   * @return {Object}  The list of node-creation functions
+   */
+  get Wrappers(): Object {
+    return this.node;
+  }
 
 }
 

@@ -45,59 +45,60 @@ export type MrootConstructor = Constructor<CommonMroot>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMrootMixin<T extends MsqrtConstructor>(Base: T): MrootConstructor & T {
-    return class extends Base {
 
-        /**
-         * @override
-         */
-        get surd() {
-            return 2;
-        }
+  return class extends Base {
 
-        /**
-         * @override
-         */
-        get root(): number {
-            return 1;
-        }
+    /**
+     * @override
+     */
+    get surd() {
+      return 2;
+    }
 
-        /**
-         * @override
-         */
-        public combineRootBBox(BBOX: BBox, sbox: BBox, H: number) {
-            const bbox = this.childNodes[this.root].getBBox();
-            const h = this.getRootDimens(sbox, H)[1];
-            BBOX.combine(bbox, 0, h);
-        }
+    /**
+     * @override
+     */
+    get root(): number {
+      return 1;
+    }
 
-        /**
-         * @override
-         */
-        public getRootDimens(sbox: BBox, H: number) {
-            const surd = this.childNodes[this.surd] as CommonMo;
-            const bbox = this.childNodes[this.root].getBBox();
-            const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
-            const {w, rscale} = bbox;
-            const W = Math.max(w, offset / rscale);
-            const dx = Math.max(0, W - w);
-            const h = this.rootHeight(bbox, sbox, surd.size, H);
-            const x = W * rscale - offset;
-            return [x, h, dx];
-        }
+    /**
+     * @override
+     */
+    public combineRootBBox(BBOX: BBox, sbox: BBox, H: number) {
+      const bbox = this.childNodes[this.root].getBBox();
+      const h = this.getRootDimens(sbox, H)[1];
+      BBOX.combine(bbox, 0, h);
+    }
 
-        /**
-         * @param {BBox} rbox      The bbox of the root
-         * @param {BBox} sbox      The bbox of the surd
-         * @param {number} size    The size of the surd
-         * @param {number} H       The height of the root as a whole
-         * @return {number}        The height of the root within the surd
-         */
-        public rootHeight(rbox: BBox, sbox: BBox, size: number, H: number): number {
-            const h = sbox.h + sbox.d;
-            const b = (size < 0 ? 1.9 : .55 * h) - (h - H);
-            return b + Math.max(0, rbox.d * rbox.rscale);
-        }
+    /**
+     * @override
+     */
+    public getRootDimens(sbox: BBox, H: number) {
+      const surd = this.childNodes[this.surd] as CommonMo;
+      const bbox = this.childNodes[this.root].getBBox();
+      const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
+      const {w, rscale} = bbox;
+      const W = Math.max(w, offset / rscale);
+      const dx = Math.max(0, W - w);
+      const h = this.rootHeight(bbox, sbox, surd.size, H);
+      const x = W * rscale - offset;
+      return [x, h, dx];
+    }
 
-    };
+    /**
+     * @param {BBox} rbox      The bbox of the root
+     * @param {BBox} sbox      The bbox of the surd
+     * @param {number} size    The size of the surd
+     * @param {number} H       The height of the root as a whole
+     * @return {number}        The height of the root within the surd
+     */
+    public rootHeight(rbox: BBox, sbox: BBox, size: number, H: number): number {
+      const h = sbox.h + sbox.d;
+      const b = (size < 0 ? 1.9 : .55 * h) - (h - H);
+      return b + Math.max(0, rbox.d * rbox.rscale);
+    }
+
+  };
 
 }

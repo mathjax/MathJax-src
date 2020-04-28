@@ -42,45 +42,45 @@ import {StyleList} from '../../common/CssStyles.js';
 export class CHTMLmtr<N, T, D> extends
 CommonMtrMixin<CHTMLmtd<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    /**
-     * The mtr wrapper
-     */
-    public static kind = MmlMtr.prototype.kind;
+  /**
+   * The mtr wrapper
+   */
+  public static kind = MmlMtr.prototype.kind;
 
-    /**
-     * @override
-     */
-    public static styles: StyleList = {
-        'mjx-mtr': {
-            display: 'table-row',
-        },
-        'mjx-mtr[rowalign="top"] > mjx-mtd': {
-            'vertical-align': 'top'
-        },
-        'mjx-mtr[rowalign="center"] > mjx-mtd': {
-            'vertical-align': 'middle'
-        },
-        'mjx-mtr[rowalign="bottom"] > mjx-mtd': {
-            'vertical-align': 'bottom'
-        },
-        'mjx-mtr[rowalign="baseline"] > mjx-mtd': {
-            'vertical-align': 'baseline'
-        },
-        'mjx-mtr[rowalign="axis"] > mjx-mtd': {
-            'vertical-align': '.25em'
-        }
-    };
-
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        super.toCHTML(parent);
-        const align = this.node.attributes.get('rowalign') as string;
-        if (align !== 'baseline') {
-            this.adaptor.setAttribute(this.chtml, 'rowalign', align);
-        }
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'mjx-mtr': {
+      display: 'table-row',
+    },
+    'mjx-mtr[rowalign="top"] > mjx-mtd': {
+      'vertical-align': 'top'
+    },
+    'mjx-mtr[rowalign="center"] > mjx-mtd': {
+      'vertical-align': 'middle'
+    },
+    'mjx-mtr[rowalign="bottom"] > mjx-mtd': {
+      'vertical-align': 'bottom'
+    },
+    'mjx-mtr[rowalign="baseline"] > mjx-mtd': {
+      'vertical-align': 'baseline'
+    },
+    'mjx-mtr[rowalign="axis"] > mjx-mtd': {
+      'vertical-align': '.25em'
     }
+  };
+
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    super.toCHTML(parent);
+    const align = this.node.attributes.get('rowalign') as string;
+    if (align !== 'baseline') {
+      this.adaptor.setAttribute(this.chtml, 'rowalign', align);
+    }
+  }
 
 }
 
@@ -95,52 +95,52 @@ CommonMtrMixin<CHTMLmtd<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWr
 export class CHTMLmlabeledtr<N, T, D> extends
 CommonMlabeledtrMixin<CHTMLmtd<any, any, any>, Constructor<CHTMLmtr<any, any, any>>>(CHTMLmtr) {
 
-    /**
-     * The mlabeledtr wrapper
-     */
-    public static kind = MmlMlabeledtr.prototype.kind;
+  /**
+   * The mlabeledtr wrapper
+   */
+  public static kind = MmlMlabeledtr.prototype.kind;
 
-    /**
-     * @override
-     */
-    public static styles: StyleList = {
-        'mjx-mlabeledtr': {
-            display: 'table-row'
-        },
-        'mjx-mlabeledtr[rowalign="top"] > mjx-mtd': {
-            'vertical-align': 'top'
-        },
-        'mjx-mlabeledtr[rowalign="center"] > mjx-mtd': {
-            'vertical-align': 'middle'
-        },
-        'mjx-mlabeledtr[rowalign="bottom"] > mjx-mtd': {
-            'vertical-align': 'bottom'
-        },
-        'mjx-mlabeledtr[rowalign="baseline"] > mjx-mtd': {
-            'vertical-align': 'baseline'
-        },
-        'mjx-mlabeledtr[rowalign="axis"] > mjx-mtd': {
-            'vertical-align': '.25em'
-        }
-    };
-
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        super.toCHTML(parent);
-        const child = this.adaptor.firstChild(this.chtml) as N;
-        if (child) {
-            //
-            // Remove label and put it into the labels box inside a row
-            //
-            this.adaptor.remove(child);
-            const align = this.node.attributes.get('rowalign') as string;
-            const attr = (align !== 'baseline' && align !== 'axis' ? {rowalign: align} : {});
-            const row = this.html('mjx-mtr', attr, [child]);
-            (CHTMLmtr as any).used = true;
-            this.adaptor.append((this.parent as CHTMLmtable<N, T, D>).labels, row);
-        }
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'mjx-mlabeledtr': {
+      display: 'table-row'
+    },
+    'mjx-mlabeledtr[rowalign="top"] > mjx-mtd': {
+      'vertical-align': 'top'
+    },
+    'mjx-mlabeledtr[rowalign="center"] > mjx-mtd': {
+      'vertical-align': 'middle'
+    },
+    'mjx-mlabeledtr[rowalign="bottom"] > mjx-mtd': {
+      'vertical-align': 'bottom'
+    },
+    'mjx-mlabeledtr[rowalign="baseline"] > mjx-mtd': {
+      'vertical-align': 'baseline'
+    },
+    'mjx-mlabeledtr[rowalign="axis"] > mjx-mtd': {
+      'vertical-align': '.25em'
     }
+  };
+
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    super.toCHTML(parent);
+    const child = this.adaptor.firstChild(this.chtml) as N;
+    if (child) {
+      //
+      // Remove label and put it into the labels box inside a row
+      //
+      this.adaptor.remove(child);
+      const align = this.node.attributes.get('rowalign') as string;
+      const attr = (align !== 'baseline' && align !== 'axis' ? {rowalign: align} : {});
+      const row = this.html('mjx-mtr', attr, [child]);
+      (CHTMLmtr as any).used = true;
+      this.adaptor.append((this.parent as CHTMLmtable<N, T, D>).labels, row);
+    }
+  }
 
 }

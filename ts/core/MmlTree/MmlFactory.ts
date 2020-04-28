@@ -32,17 +32,17 @@ import {MML} from './MML.js';
 
 export class MmlFactory extends AbstractNodeFactory<MmlNode, MmlNodeClass> {
 
-    /**
-     * The default node-creation functions
-     */
-    public static defaultNodes = MML;
+  /**
+   * The default node-creation functions
+   */
+  public static defaultNodes = MML;
 
-    /**
-     * @return {Object}  The list of node-creation functions (similar to the
-     *                   MML object from MathJax v2).
-     */
-    get MML(): Object {
-        return this.node;
-    }
+  /**
+   * @return {Object}  The list of node-creation functions (similar to the
+   *                   MML object from MathJax v2).
+   */
+  get MML(): Object {
+    return this.node;
+  }
 
 }

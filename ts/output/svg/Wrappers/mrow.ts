@@ -38,19 +38,19 @@ import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
 export class SVGmrow<N, T, D> extends
 CommonMrowMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The mrow wrapper
-     */
-    public static kind = MmlMrow.prototype.kind;
+  /**
+   * The mrow wrapper
+   */
+  public static kind = MmlMrow.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        const svg = (this.node.isInferred ? (this.element = parent) : this.standardSVGnode(parent));
-        this.addChildren(svg);
-        // FIXME:  handle line breaks
-    }
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    const svg = (this.node.isInferred ? (this.element = parent) : this.standardSVGnode(parent));
+    this.addChildren(svg);
+    // FIXME:  handle line breaks
+  }
 
 }
 
@@ -66,9 +66,9 @@ CommonMrowMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 export class SVGinferredMrow<N, T, D> extends
 CommonInferredMrowMixin<Constructor<SVGmrow<any, any, any>>>(SVGmrow) {
 
-    /**
-     * The inferred-mrow wrapper
-     */
-    public static kind = MmlInferredMrow.prototype.kind;
+  /**
+   * The inferred-mrow wrapper
+   */
+  public static kind = MmlInferredMrow.prototype.kind;
 
 }

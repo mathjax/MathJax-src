@@ -29,10 +29,10 @@ import {BBox} from '../BBox.js';
  * The CommonMi interface
  */
 export interface CommonMi extends AnyWrapper {
-    /**
-     * True if no italic correction should be used
-     */
-    noIC: boolean;
+  /**
+   * True if no italic correction should be used
+   */
+  noIC: boolean;
 }
 
 /**
@@ -47,23 +47,24 @@ export type MiConstructor = Constructor<CommonMi>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMiMixin<T extends WrapperConstructor>(Base: T): MiConstructor & T {
-    return class extends Base {
 
-        /**
-         * True if no italic correction should be used
-         */
-        public noIC: boolean = false;
+  return class extends Base {
 
-        /**
-         * @override
-         */
-        public computeBBox(bbox: BBox, _recompute: boolean = false) {
-            super.computeBBox(bbox);
-            this.copySkewIC(bbox);
-            if (this.noIC) {
-                bbox.w -= bbox.ic;
-            }
-        }
-    };
+    /**
+     * True if no italic correction should be used
+     */
+    public noIC: boolean = false;
+
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      super.computeBBox(bbox);
+      this.copySkewIC(bbox);
+      if (this.noIC) {
+        bbox.w -= bbox.ic;
+      }
+    }
+  };
 
 }

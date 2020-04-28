@@ -39,47 +39,47 @@ import {FindAsciiMath} from './asciimath/FindAsciiMath.js';
  */
 export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
 
-    /**
-     * The name of the input jax
-     */
-    public static NAME: string = 'AsciiMath';
+  /**
+   * The name of the input jax
+   */
+  public static NAME: string = 'AsciiMath';
 
-    /**
-     * @override
-     */
-    public static OPTIONS: OptionList = {
-        ...AbstractInputJax.OPTIONS,
-        FindAsciiMath: null
-    };
+  /**
+   * @override
+   */
+  public static OPTIONS: OptionList = {
+    ...AbstractInputJax.OPTIONS,
+    FindAsciiMath: null
+  };
 
-    /**
-     * The FindMath object used to search for AsciiMath in the document
-     */
-    protected findAsciiMath: FindAsciiMath<N, T, D>;
+  /**
+   * The FindMath object used to search for AsciiMath in the document
+   */
+  protected findAsciiMath: FindAsciiMath<N, T, D>;
 
-    /**
-     * @override
-     */
-    constructor(options: OptionList) {
-        let [am, find] = separateOptions(options, FindAsciiMath.OPTIONS);
-        super(am);
-        this.findAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
-    }
+  /**
+   * @override
+   */
+  constructor(options: OptionList) {
+    let [am, find] = separateOptions(options, FindAsciiMath.OPTIONS);
+    super(am);
+    this.findAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
+  }
 
-    /**
-     * Use legacy AsciiMath input jax for now
-     *
-     * @override
-     */
-    public compile(math: MathItem<N, T, D>, _document: MathDocument<N, T, D>) {
-        return LegacyAsciiMath.Compile(math.math, math.display);
-    }
+  /**
+   * Use legacy AsciiMath input jax for now
+   *
+   * @override
+   */
+  public compile(math: MathItem<N, T, D>, _document: MathDocument<N, T, D>) {
+    return LegacyAsciiMath.Compile(math.math, math.display);
+  }
 
-    /**
-     * @override
-     */
-    public findMath(strings: string[]) {
-        return this.findAsciiMath.findMath(strings);
-    }
+  /**
+   * @override
+   */
+  public findMath(strings: string[]) {
+    return this.findAsciiMath.findMath(strings);
+  }
 
 }

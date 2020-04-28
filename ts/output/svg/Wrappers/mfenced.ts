@@ -36,33 +36,33 @@ import {SVGinferredMrow} from './mrow.js';
  */
 export class SVGmfenced<N, T, D> extends CommonMfencedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    /**
-     * The mfenced wrapper
-     */
-    public static kind = MmlMfenced.prototype.kind;
+  /**
+   * The mfenced wrapper
+   */
+  public static kind = MmlMfenced.prototype.kind;
 
-    /**
-     * An mrow used to render the result
-     */
-    public mrow: SVGinferredMrow<N, T, D>;
+  /**
+   * An mrow used to render the result
+   */
+  public mrow: SVGinferredMrow<N, T, D>;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        const svg = this.standardSVGnode(parent);
-        this.setChildrenParent(this.mrow);  // temporarily change parents to the mrow
-        this.mrow.toSVG(svg);
-        this.setChildrenParent(this);       // put back the correct parents
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    const svg = this.standardSVGnode(parent);
+    this.setChildrenParent(this.mrow);  // temporarily change parents to the mrow
+    this.mrow.toSVG(svg);
+    this.setChildrenParent(this);       // put back the correct parents
+  }
+
+  /**
+   * @param {SVGWrapper} parent   The parent to use for the fenced children
+   */
+  protected setChildrenParent(parent: SVGWrapper<N, T, D>) {
+    for (const child of this.childNodes) {
+      child.parent = parent;
     }
-
-    /**
-     * @param {SVGWrapper} parent   The parent to use for the fenced children
-     */
-    protected setChildrenParent(parent: SVGWrapper<N, T, D>) {
-        for (const child of this.childNodes) {
-            child.parent = parent;
-        }
-    }
+  }
 
 }

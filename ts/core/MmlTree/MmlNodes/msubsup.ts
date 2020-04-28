@@ -31,65 +31,65 @@ import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
 
 export class MmlMsubsup extends AbstractMmlBaseNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlBaseNode.defaults,
-        subscriptshift: '',
-        superscriptshift: ''
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlBaseNode.defaults,
+    subscriptshift: '',
+    superscriptshift: ''
+  };
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'msubsup';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'msubsup';
+  }
 
-    /**
-     * <msubsup> requires three children
-     * @override
-     */
-    public get arity() {
-        return 3;
-    }
+  /**
+   * <msubsup> requires three children
+   * @override
+   */
+  public get arity() {
+    return 3;
+  }
 
-    /**
-     * @return {number}  The position of the base element
-     */
-    public get base(): number {
-        return 0;
-    }
+  /**
+   * @return {number}  The position of the base element
+   */
+  public get base(): number {
+    return 0;
+  }
 
-    /**
-     * @return {number}  The position of the subscript (overriden in msup below)
-     */
-    public get sub(): number {
-        return 1;
-    }
+  /**
+   * @return {number}  The position of the subscript (overriden in msup below)
+   */
+  public get sub(): number {
+    return 1;
+  }
 
-    /**
-     * @return {number}  The position of the superscript (overriden in msup below)
-     */
-    public get sup(): number {
-        return 2;
-    }
+  /**
+   * @return {number}  The position of the superscript (overriden in msup below)
+   */
+  public get sup(): number {
+    return 2;
+  }
 
-    /**
-     * Super- and subscripts are not in displaymode, have scriptlevel increased, and prime style in subscripts.
-     *
-     * @override
-     */
-    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        let nodes = this.childNodes;
-        nodes[0].setInheritedAttributes(attributes, display, level, prime);
-        nodes[1].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 1);
-        if (!nodes[2]) {
-            return;
-        }
-        nodes[2].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 2);
+  /**
+   * Super- and subscripts are not in displaymode, have scriptlevel increased, and prime style in subscripts.
+   *
+   * @override
+   */
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    let nodes = this.childNodes;
+    nodes[0].setInheritedAttributes(attributes, display, level, prime);
+    nodes[1].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 1);
+    if (!nodes[2]) {
+      return;
     }
+    nodes[2].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 2);
+  }
 
 }
 
@@ -100,27 +100,27 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
 
 export class MmlMsub extends MmlMsubsup {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...MmlMsubsup.defaults
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...MmlMsubsup.defaults
+  };
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'msub';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'msub';
+  }
 
-    /**
-     * <msub> only gets two children
-     * @override
-     */
-    public get arity() {
-        return 2;
-    }
+  /**
+   * <msub> only gets two children
+   * @override
+   */
+  public get arity() {
+    return 2;
+  }
 
 }
 
@@ -131,42 +131,43 @@ export class MmlMsub extends MmlMsubsup {
 
 export class MmlMsup extends MmlMsubsup {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...MmlMsubsup.defaults
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...MmlMsubsup.defaults
+  };
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'msup';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'msup';
+  }
 
-    /**
-     * <msup> only gets two children
-     * @override
-     */
-    get arity() {
-        return 2;
-    }
+  /**
+   * <msup> only gets two children
+   * @override
+   */
+  get arity() {
+    return 2;
+  }
 
-    /**
-     * child 1 is superscript
-     * @override
-     */
-    get sup() {
-        return 1;
-    }
+  /**
+   * child 1 is superscript
+   * @override
+   */
+  get sup() {
+    return 1;
+  }
 
-    /**
-     * child 2 is null (no subscript)
-     * @override
-     */
-    get sub() {
-        return 2;
-    }
+  /**
+   * child 2 is null (no subscript)
+   * @override
+   */
+  get sub() {
+    return 2;
+  }
+
 }
 

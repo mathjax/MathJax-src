@@ -32,57 +32,57 @@ import {MmlMo} from './mo.js';
 
 export class TeXAtom extends AbstractMmlBaseNode {
 
-    /**
-     * @override
-     */
-    public static defaults: PropertyList = {
-        ...AbstractMmlBaseNode.defaults
-    };
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlBaseNode.defaults
+  };
 
-    /**
-     * TeX class is ORD
-     */
-    public texClass = TEXCLASS.ORD;
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @override
-     */
-    public get kind() {
-        return 'TeXAtom';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'TeXAtom';
+  }
 
-    /**
-     * Inferred mrow with any number of children
-     * @override
-     */
-    public get arity() {
-        return -1;
-    }
+  /**
+   * Inferred mrow with any number of children
+   * @override
+   */
+  public get arity() {
+    return -1;
+  }
 
-    /**
-     * This element is not considered a MathML container
-     * @override
-     */
-    public get notParent() {
-        return true;
-    }
+  /**
+   * This element is not considered a MathML container
+   * @override
+   */
+  public get notParent() {
+    return true;
+  }
 
-    /**
-     * @override
-     */
-    public setTeXclass(prev: MmlNode) {
-        this.childNodes[0].setTeXclass(null);
-        return this.adjustTeXclass(prev);
-    }
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    this.childNodes[0].setTeXclass(null);
+    return this.adjustTeXclass(prev);
+  }
 
-    /**
-     * (Replaced below by the version from the MmlMo node)
-     *
-     * @override
-     */
-    public adjustTeXclass(prev: MmlNode) {
-        return prev;
-    }
+  /**
+   * (Replaced below by the version from the MmlMo node)
+   *
+   * @override
+   */
+  public adjustTeXclass(prev: MmlNode) {
+    return prev;
+  }
 
 }
 /**

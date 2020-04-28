@@ -211,7 +211,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
     this.walker = sre.WalkerFactory.walker('table',
-      this.node, this.speechGenerator, this.highlighter, this.mml);
+                                           this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
     if (this.document.options.a11y[this.showRegion]) {
@@ -295,7 +295,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @return {{[key: string]: string}} The options settings for the speech
    *     generator.
    */
-  private getOptions() {
+  private getOptions(): {[key: string]: string} {
     let options = this.speechGenerator.getOptions();
     let [domain, style] = this.document.options.a11y.speechRules.split('-');
     if (options.modality === 'speech' &&
