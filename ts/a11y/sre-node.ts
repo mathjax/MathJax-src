@@ -32,13 +32,12 @@ declare const global: any;
 global.SRE = SRE;
 global.sre = Object.create(SRE);
 global.sre.Engine = {
-    /**
-     * @return {boolean}   True when SRE is ready
-     */
-    isReady(): boolean {
-        return SRE.engineReady();
-    }
+  /**
+   * @return {boolean}   True when SRE is ready
+   */
+  isReady(): boolean {
+    return SRE.engineReady();
+  }
 };
 
 export {};
-

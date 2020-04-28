@@ -30,8 +30,7 @@ declare var __dirname: string;
 const root = path.dirname(path.dirname(__dirname));
 
 if (!mathjax.asyncLoad && typeof require !== 'undefined') {
-    mathjax.asyncLoad = (name: string) => {
-        return require(name.charAt(0) === '.' ? path.resolve(root, name) : name);
-    };
+  mathjax.asyncLoad = (name: string) => {
+    return require(name.charAt(0) === '.' ? path.resolve(root, name) : name);
+  };
 }
-
