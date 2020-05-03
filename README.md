@@ -51,9 +51,9 @@ If you are loading MathJax from a CDN into a web page, there is no
 need to install anything.  Simply use a `script` tag that loads
 MathJax from the CDN.  E.g.,
 
-    <script id="MathJax-script" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+```html
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+```
     
 See the [MathJax
 documentation](https://docs.mathjax.org/en/latest/index.html#browser-components),
@@ -74,21 +74,25 @@ To use MathJax components in a node application, install the `mathjax` package:
 
 Then require `mathjax` within your application:
 
-    require('mathjax').init({ ... }).then((MathJax) => { ... });
+```js
+require('mathjax').init({ ... }).then((MathJax) => { ... });
+```
     
 where the first `{ ... }` is a MathJax configuration, and the second
 `{ ... }` is the code to run after MathJax has been loaded.  E.g.
 
-    require('mathjax').init({
-      loader: {
-        require: require,
-        paths: {mathjax: 'mathjax/es5'},
-        load: ['input/tex', 'output/svg']
-      }
-    }).then((MathJax) => {
-      const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
-      console.log(MathJax.startup.adaptor.outerHTML(svg));
-    }).catch((err) => console.log(err.message));
+```js
+require('mathjax').init({
+  loader: {
+    require: require,
+    paths: {mathjax: 'mathjax/es5'},
+    load: ['input/tex', 'output/svg']
+  }
+}).then((MathJax) => {
+  const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
+  console.log(MathJax.startup.adaptor.outerHTML(svg));
+}).catch((err) => console.log(err.message));
+```
 
     
 See the
@@ -120,10 +124,12 @@ demos](https://github.com/mathjax/MathJax-demos-node) for examples).
 
 If you want to work from the GitHub repository directly, then do the following:
 
-    git clone https://github.com/mathjax/MathJax-src.git mathjax-src
-    cd mathjax-src
-    npm run --silent compile
-    npm run --silent make-components
+```bash
+git clone https://github.com/mathjax/MathJax-src.git mathjax-src
+cd mathjax-src
+npm run --silent compile
+npm run --silent make-components
+```
 
 in order to compile the JavaScript files from the TypeScript source,
 and build the component files from the JavaScript files.
