@@ -154,7 +154,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
      * @return {RegExp}     The regular expression for the end delimiter
      */
     protected endPattern(end: string) {
-        return new RegExp(quotePattern(end) + '|\\\\(?:[a-zA-Z]|.)|[{}]', 'g');
+        return new RegExp(quotePattern(end) + '|\\\\(?:[a-zA-Z]|.)|[{}]|%.*(?:[\n\r]|$)', 'g');
     }
 
     /**
@@ -180,6 +180,8 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
                 braces++;
             } else if (match[0] === '}' && braces) {
                 braces--;
+            } else if (match[0].substr(0) === '%') {
+                pattern.lastIndex += match[0].length;
             }
         }
         return null;
