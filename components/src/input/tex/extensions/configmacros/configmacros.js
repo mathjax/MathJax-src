@@ -1,1 +1,1 @@
-import './lib/configMacros.js';
+import './lib/configmacros.js';

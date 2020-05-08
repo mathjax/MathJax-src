@@ -1,1 +1,1 @@
-import './lib/tagFormat.js';
+import './lib/tagformat.js';

@@ -1,1 +1,1 @@
-import './lib/colorV2.js';
+import './lib/colorv2.js';

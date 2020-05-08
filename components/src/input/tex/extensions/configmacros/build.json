@@ -1,4 +1,4 @@
 {
-  "component": "input/tex/extensions/configMacros",
-  "targets": ["input/tex/config_macros"]
+  "component": "input/tex/extensions/configmacros",
+  "targets": ["input/tex/configmacros"]
 }

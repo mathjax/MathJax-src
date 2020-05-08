@@ -1,7 +1,7 @@
 const PACKAGE = require('../../../../../webpack.common.js');
 
 module.exports = PACKAGE(
-  'input/tex/extensions/configMacros',// the package to build
+  'input/tex/extensions/configmacros',// the package to build
   '../../../../../../js',             // location of the MathJax js library
   [                                   // packages to link to
     'components/src/input/tex/extensions/newcommand/lib',
