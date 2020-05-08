@@ -133,7 +133,7 @@ const AutoloadEnvironments = new AutoloadCommandMap('autoload-environments', {},
 
 
 /**
- * The configuration object for configMacros
+ * The configuration object for configmacros
  */
 export const AutoloadConfiguration = Configuration.create(
   'autoload', {

@@ -32,7 +32,7 @@ import './bussproofs/BussproofsConfiguration.js';
 import './cancel/CancelConfiguration.js';
 import './color/ColorConfiguration.js';
 import './colorv2/ColorV2Configuration.js';
-import './config_macros/ConfigMacrosConfiguration.js';
+import './configmacros/ConfigMacrosConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
 import './html/HtmlConfiguration.js';
