@@ -70,7 +70,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     // Digit pattern to match numbers.
     digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
     // Maximum size of TeX string to process.
-    maxBuffer: 5 * 1024
+    maxBuffer: 5 * 1024,
+    formatError: (jax: TeX<any, any, any>, err: TexError) => jax.defaultFormatError(err)
   };
 
   /**
@@ -217,6 +218,15 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @return {Node} The merror node.
    */
   protected formatError(err: TexError): MmlNode {
+    return this.options.formatError(this, err);
+  }
+
+  /**
+   * Default formatter for error messages
+   * @param {TeXError} err The TexError.
+   * @return {Node} The merror node.
+   */
+  public defaultFormatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
     return this.parseOptions.nodeFactory.create(
       'error', message, err.id, this.latex);
