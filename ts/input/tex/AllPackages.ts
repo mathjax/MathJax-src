@@ -50,14 +50,14 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
   MathJax.loader.preLoad(
     '[tex]/action',
     '[tex]/ams',
-    '[tex]/amsCd',
+    '[tex]/amscd',
     '[tex]/bbox',
     '[tex]/boldsymbol',
     '[tex]/braket',
     '[tex]/bussproofs',
     '[tex]/cancel',
     '[tex]/color',
-    '[tex]/color_v2',
+    '[tex]/colorv2',
     '[tex]/enclose',
     '[tex]/extpfeil',
     '[tex]/html',
@@ -68,8 +68,8 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/physics',
     '[tex]/unicode',
     '[tex]/verb',
-    '[tex]/configMacros',
-    '[tex]/tagFormat'
+    '[tex]/configmacros',
+    '[tex]/tagformat'
   );
 }
 
@@ -77,7 +77,7 @@ export const AllPackages: string[] = [
   'base',
   'action',
   'ams',
-  'amsCd',
+  'amscd',
   'bbox',
   'boldsymbol',
   'braket',
@@ -93,6 +93,6 @@ export const AllPackages: string[] = [
   'noundefined',
   'unicode',
   'verb',
-  'configMacros',
-  'tagFormat'
+  'configmacros',
+  'tagformat'
 ];
