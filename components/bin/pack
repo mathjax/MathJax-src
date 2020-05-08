@@ -44,17 +44,17 @@ const nodeRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'node
  * @param {string} dir   The directory to pack
  */
 function webpackLib(dir) {
-    try {
-        process.chdir(dir);
-        const result = execSync('npx webpack --display-modules');
-        console.info(String(result).replace(/\n/g, '\n    ')
-                                  .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
-                                  .replace(compRE, '[components]')
-                                  .replace(rootRE, '[js]')
-                                  .replace(nodeRE, '[node]'));
-    } catch (err) {
-        console.error(err.message);
-    }
+  try {
+    process.chdir(dir);
+    const result = execSync('npx webpack --display-modules');
+    console.info(String(result).replace(/\n/g, '\n    ')
+                 .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
+                 .replace(compRE, '[components]')
+                 .replace(rootRE, '[js]')
+                 .replace(nodeRE, '[node]'));
+  } catch (err) {
+    console.error(err.message);
+  }
 }
 
 webpackLib(process.argv[2] || '.');

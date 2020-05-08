@@ -7,8 +7,8 @@ import '../../../../../mj-context-menu/dist/context_menu.js';
 //  menus are only useful in the browser).
 //
 if (typeof ContextMenu === 'undefined') {
-    global.ContextMenu = {
-        ContextMenu: class {},
-        Info: class {}
-    };
+  global.ContextMenu = {
+    ContextMenu: class {},
+    Info: class {}
+  };
 }
