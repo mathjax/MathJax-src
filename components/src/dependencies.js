@@ -77,3 +77,13 @@ export const provides = {
   ],
   '[tex]/all-packages': allPackages
 };
+
+//
+//  Compatibility with v3.0 names for TeX extensions
+//
+export const compatibility = {
+  '[tex]/amsCd': '[tex]/amscd',
+  '[tex]/colorV2': '[tex]/colorv2',
+  '[tex]/configMacros': '[tex]/configmacros',
+  '[tex]/tagFormat': '[tex]/tagformat'
+};
