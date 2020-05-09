@@ -1,3 +1,5 @@
+import {combineConfig} from '../../../../../js/components/global.js';
+
 //
 // Look for a package name in the package list and change it to a new name
 //   rhen rename tex options for it, if there are any.
@@ -9,7 +11,7 @@ export function rename(oname, nname, options) {
     const n = packages.indexOf(oname);
     if (n >= 0) packages[n] = nname;
     if (options && tex[oname]) {
-      tex[nname] = tex[oname];
+      combineConfig(tex, {[nname]: tex[oname]});
       delete tex[oname];
     }
   }
