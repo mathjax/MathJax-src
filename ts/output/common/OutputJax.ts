@@ -608,7 +608,7 @@ export abstract class CommonOutputJax<
    */
   public cssFontStyles(font: CssFontData, styles: StyleList = {}): StyleList {
     const [family, italic, bold] = font;
-    styles['font-family'] = this.font.cssFamilyPrefix + ', ' + family;
+    styles['font-family'] = this.font.getFamily(family);
     if (italic) styles['font-style'] = 'italic';
     if (bold) styles['font-weight'] = 'bold';
     return styles;
@@ -622,7 +622,7 @@ export abstract class CommonOutputJax<
     if (!styles) {
       styles = new Styles();
     }
-    return [styles.get('font-family'),
+    return [this.font.getFamily(styles.get('font-family')),
             styles.get('font-style') === 'italic',
             styles.get('font-weight') === 'bold'] as CssFontData;
   }
