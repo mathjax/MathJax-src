@@ -475,6 +475,14 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   /**
    * @override
    */
+  public fontFamily(node: N) {
+    const style = this.window.getComputedStyle(node);
+    return style.fontFamily || '';
+  }
+
+  /**
+   * @override
+   */
   public nodeSize(node: N, em: number = 1, local: boolean = false) {
     if (local && node.getBBox) {
       let {width, height} = node.getBBox();

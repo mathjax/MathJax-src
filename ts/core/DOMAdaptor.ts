@@ -317,6 +317,12 @@ export interface DOMAdaptor<N, T, D> {
   fontSize(node: N): number;
 
   /**
+   * @param {N} node        The HTML node whose font family is to be determined
+   * @return {string}       The font family
+   */
+  fontFamily(node: N): string;
+
+  /**
    * @param {N} node            The HTML node whose dimensions are to be determined
    * @param {number} em         The number of pixels in an em
    * @param {boolean} local     True if local coordinates are to be used in SVG elements
@@ -596,6 +602,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract fontSize(node: N): number;
+
+  /**
+   * @override
+   */
+  public abstract fontFamily(node: N): string;
 
   /**
    * @override
