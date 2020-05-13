@@ -27,12 +27,11 @@ import {MathItem, Metrics, STATE} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {FontData, FontDataClass, CharOptions, DelimiterData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
-import {CssStyles} from './CssStyles.js';
 import {CommonWrapper, AnyWrapper, AnyWrapperClass} from './Wrapper.js';
 import {CommonWrapperFactory, AnyWrapperFactory} from './WrapperFactory.js';
 import {percent} from '../../util/lengths.js';
 import {StyleList, Styles} from '../../util/Styles.js';
-import {StyleList as CssStyleList} from './CssStyles.js';
+import {StyleList as CssStyleList, CssStyles} from '../../util/StyleList.js';
 
 /*****************************************************************/
 

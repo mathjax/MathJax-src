@@ -28,7 +28,7 @@ import {CommonMsubMixin} from '../../common/Wrappers/msubsup.js';
 import {CommonMsupMixin} from '../../common/Wrappers/msubsup.js';
 import {CommonMsubsupMixin} from '../../common/Wrappers/msubsup.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

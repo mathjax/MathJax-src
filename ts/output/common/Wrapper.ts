@@ -29,11 +29,11 @@ import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {Styles} from '../../util/Styles.js';
+import {StyleList} from '../../util/StyleList.js';
 import {CommonOutputJax} from './OutputJax.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {BBox} from './BBox.js';
 import {FontData, DelimiterData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
-import {StyleList} from '../common/CssStyles.js';
 
 /*****************************************************************/
 

@@ -23,7 +23,7 @@
  */
 
 import {OptionList} from '../../util/Options.js';
-import {StyleList} from './CssStyles.js';
+import {StyleList} from '../../util/StyleList.js';
 
 /****************************************************************************/
 

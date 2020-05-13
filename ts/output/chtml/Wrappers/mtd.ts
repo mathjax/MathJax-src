@@ -24,7 +24,7 @@
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonMtdMixin} from '../../common/Wrappers/mtd.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

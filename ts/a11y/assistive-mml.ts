@@ -27,7 +27,7 @@ import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
-import {StyleList} from '../output/common/CssStyles.js';
+import {StyleList} from '../util/StyleList.js';
 
 /**
  * Generic constructor for Mixins

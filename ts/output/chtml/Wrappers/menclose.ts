@@ -27,7 +27,7 @@ import {CHTMLmsqrt} from './msqrt.js';
 import * as Notation from '../Notation.js';
 import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
 import {OptionList} from '../../../util/Options.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 import {em} from '../../../util/lengths.js';
 
 /*****************************************************************/
