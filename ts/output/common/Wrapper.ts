@@ -31,7 +31,7 @@ import * as LENGTHS from '../../util/lengths.js';
 import {Styles} from '../../util/Styles.js';
 import {CommonOutputJax} from './OutputJax.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
-import {BBox} from './BBox.js';
+import {BBox} from '../../util/BBox.js';
 import {FontData, DelimiterData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
 import {StyleList} from '../common/CssStyles.js';
 

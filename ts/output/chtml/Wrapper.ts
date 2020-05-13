@@ -26,7 +26,7 @@ import * as LENGTHS from '../../util/lengths.js';
 import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
-import {BBox} from './BBox.js';
+import {BBox} from '../../util/BBox.js';
 import {CHTMLFontData, CHTMLCharOptions, CHTMLDelimiterData} from './FontData.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';

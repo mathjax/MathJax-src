@@ -24,7 +24,7 @@
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
 import {CHTMLmo} from './mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
 import {StyleList} from '../../common/CssStyles.js';
 
