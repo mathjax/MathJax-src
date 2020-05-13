@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {BIGDIMEN} from '../../util/lengths.js';
+import {BIGDIMEN} from './lengths.js';
 
 /**
  *  CSS styles that affect BBoxes

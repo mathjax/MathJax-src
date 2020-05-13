@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SVG bounding box object
+ * @fileoverview  Implements the common bounding box object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
