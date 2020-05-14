@@ -66,7 +66,7 @@ export interface DOMAdaptor<N, T, D> {
   /**
    * @param {string} kind      The tag name of the HTML node to be created
    * @param {OptionList} def   The properties to set for the created node
-   * @param {(N|T)[]} content  The child nodes for the created HTML node
+   * @param {(N|T)[]} children The child nodes for the created HTML node
    * @param {string} ns        The namespace in which to create the node
    * @return {N}               The generated HTML tree
    */
@@ -293,7 +293,7 @@ export interface DOMAdaptor<N, T, D> {
   /**
    * @param {N} node        The HTML node whose style is to be changed
    * @param {string} name   The style to be set
-   * @param {string} name   The new value of the style
+   * @param {string} value  The new value of the style
    */
   setStyle(node: N, name: string, value: string): void;
 

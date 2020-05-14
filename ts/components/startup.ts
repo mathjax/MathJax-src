@@ -390,7 +390,7 @@ export namespace Startup {
    *   returns the resulting promise.
    *
    * @param {string} name     The name of the input jax
-   * @param {input} INPUTJAX  The input jax itself
+   * @param {INPUTJAX} input  The input jax itself
    */
   export function makeMmlMethods(name: string, input: INPUTJAX) {
     const STATE = MathJax._.core.MathItem.STATE;
@@ -414,7 +414,7 @@ export namespace Startup {
    * The texReset() method clears the equation numbers and labels
    *
    * @param {string} name     The name of the input jax
-   * @param {input} INPUTJAX  The input jax itself
+   * @param {INPUTJAX} input  The input jax itself
    */
   export function makeResetMethod(name: string, input: INPUTJAX) {
     if (name === 'tex') {

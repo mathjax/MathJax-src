@@ -70,6 +70,7 @@ export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
  * The mixin for adding complexity to MathItems
  *
  * @param {B} BaseMathItem       The MathItem class to be extended
+ * @param {function(MmlNode): void} computeComplexity Method of complexity computation.
  * @return {ComplexityMathItem}  The complexity MathItem class
  *
  * @template N  The HTMLElement node class
@@ -118,8 +119,7 @@ export interface ComplexityMathDocument<N, T, D> extends EnrichedMathDocument<N,
 /**
  * The mixin for adding complexity to MathDocuments
  *
- * @param {B} BaseMathDocument     The MathDocument class to be extended
- * @param {MathML} MmlJax          The MathML input jax used to convert the enriched MathML
+ * @param {B} BaseDocument     The MathDocument class to be extended
  * @return {EnrichedMathDocument}  The enriched MathDocument class
  *
  * @template N  The HTMLElement node class

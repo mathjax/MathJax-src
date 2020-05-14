@@ -44,7 +44,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
    *   Add the end tag with proper spacing (empty tags have the close tag following directly)
    *
    * @param {MmlNode} node  The node to visit
-   * @param {Element} parent  The DOM parent to which this node should be added
+   * @param {string} space    The number of spaces to use for indentation
    */
   public visitDefault(node: MmlNode, space: string) {
     let kind = node.kind;

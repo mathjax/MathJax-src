@@ -270,7 +270,7 @@ export class ComplexityVisitor extends MmlVisitor {
     /**
      * For enclose, use sum of child complexities plus some for the enclose
      *
-     * @Param {MmlNode} node   The node whose complixity is being computed
+     * @param {MmlNode} node   The node whose complixity is being computed
      * @param {boolean} save   True if the complexity is to be saved or just returned
      */
     protected visitMencloseNode(node: MmlNode, save: boolean) {

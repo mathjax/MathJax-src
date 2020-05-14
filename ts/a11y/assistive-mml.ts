@@ -136,7 +136,7 @@ export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
 /**
  * The mixin for adding assistive MathML to MathDocuments
  *
- * @param {B} BaseMathDocument         The MathDocument class to be extended
+ * @param {B} BaseDocument         The MathDocument class to be extended
  * @return {AssistiveMMlMathDocument}  The Assistive MathML MathDocument class
  *
  * @template N  The HTMLElement node class
