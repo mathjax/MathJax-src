@@ -165,7 +165,7 @@ export interface MmlNode extends Node {
    *                                    from which they came)
    * @param {boolean} display           The displaystyle to inherit
    * @param {number} level              The scriptlevel to inherit
-   * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
+   * @param {boolean} prime             The TeX prime style to inherit (T vs. T', etc).
    */
   setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
 
@@ -596,7 +596,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    *                                    from which they came)
    * @param {boolean} display           The displaystyle to inherit
    * @param {number} level              The scriptlevel to inherit
-   * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
+   * @param {boolean} prime             The TeX prime style to inherit (T vs. T', etc).
    */
   protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
     for (const child of this.childNodes) {
