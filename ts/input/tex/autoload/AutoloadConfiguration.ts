@@ -22,9 +22,8 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration, ConfigurationHandler} from '../Configuration.js';
+import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {ParseMethod} from '../Types.js';
 import {CommandMap} from '../SymbolMap.js';
 import {Macro} from '../Symbol.js';
 import {TeX} from '../../tex.js';
@@ -37,9 +36,12 @@ import {expandable, defaultOptions} from '../../../util/Options.js';
  * A CommandMap class that allows removal of macros
  */
 export class AutoloadCommandMap extends CommandMap {
-    public remove(name: string) {
-        (this as any).map.delete(name);
-    }
+  /**
+   * @param{string} name   The command to be removed
+   */
+  public remove(name: string) {
+    (this as any).map.delete(name);
+  }
 }
 
 /**
@@ -55,18 +57,18 @@ export class AutoloadCommandMap extends CommandMap {
  * @param {boolean} isMacro    True if this is a macro, false if an environment
  */
 function Autoload(parser: TexParser, name: string, extension: string, isMacro: boolean) {
-    if (Package.packages.has(parser.options.require.prefix + extension)) {
-        const def = parser.options.autoload[extension];
-        const [macros, envs] = (def.length === 2 && Array.isArray(def[0]) ? def : [def, []]);
-        for (const macro of macros) {
-            AutoloadMacros.remove(macro);
-        }
-        for (const env of envs) {
-            AutoloadEnvironments.remove(env);
-        }
-        parser.i -= name.length + (isMacro ? 0 : 7);  // back up and read the macro or \begin again
+  if (Package.packages.has(parser.options.require.prefix + extension)) {
+    const def = parser.options.autoload[extension];
+    const [macros, envs] = (def.length === 2 && Array.isArray(def[0]) ? def : [def, []]);
+    for (const macro of macros) {
+      AutoloadMacros.remove(macro);
     }
-    RequireLoad(parser, extension);
+    for (const env of envs) {
+      AutoloadEnvironments.remove(env);
+    }
+    parser.i -= name.length + (isMacro ? 0 : 7);  // back up and read the macro or \begin again
+  }
+  RequireLoad(parser, extension);
 }
 
 /**
@@ -77,9 +79,9 @@ function Autoload(parser: TexParser, name: string, extension: string, isMacro: b
  *  will run after require when both are used.)
  */
 function initAutoload(config: Configuration) {
-    if (!config.options.require) {
-        defaultOptions(config.options, RequireConfiguration.options);
-    }
+  if (!config.options.require) {
+    defaultOptions(config.options, RequireConfiguration.options);
+  }
 }
 
 /**
@@ -88,39 +90,39 @@ function initAutoload(config: Configuration) {
  *   (except for \color, which is overridden if present)
  */
 function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
-    const parser = jax.parseOptions;
-    const macros = parser.handlers.get('macro');
-    const environments = parser.handlers.get('environment');
-    const autoload = parser.options.autoload;
+  const parser = jax.parseOptions;
+  const macros = parser.handlers.get('macro');
+  const environments = parser.handlers.get('environment');
+  const autoload = parser.options.autoload;
+  //
+  // Loop through the autoload definitions
+  //
+  for (const extension of Object.keys(autoload)) {
+    const def = autoload[extension];
+    const [macs, envs] = (def.length === 2 && Array.isArray(def[0]) ? def : [def, []]);
     //
-    // Loop through the autoload definitions
+    // Create the macros
     //
-    for (const extension of Object.keys(autoload)) {
-        const def = autoload[extension];
-        const [macs, envs] = (def.length === 2 && Array.isArray(def[0]) ? def : [def, []]);
-        //
-        // Create the macros
-        //
-        for (const name of macs) {
-            if (!macros.lookup(name) || name === 'color') {
-                AutoloadMacros.add(name, new Macro(name, Autoload, [extension, true]));
-            }
-        }
-        //
-        // Create the environments
-        //
-        for (const name of envs) {
-            if (!environments.lookup(name)) {
-                AutoloadEnvironments.add(name, new Macro(name, Autoload, [extension, false]));
-            }
-        }
+    for (const name of macs) {
+      if (!macros.lookup(name) || name === 'color') {
+        AutoloadMacros.add(name, new Macro(name, Autoload, [extension, true]));
+      }
     }
     //
-    //  Check if the require extension needs to be configured
+    // Create the environments
     //
-    if (!parser.options.require.jax) {
-        RequireConfiguration.config(config, jax);
+    for (const name of envs) {
+      if (!environments.lookup(name)) {
+        AutoloadEnvironments.add(name, new Macro(name, Autoload, [extension, false]));
+      }
     }
+  }
+  //
+  //  Check if the require extension needs to be configured
+  //
+  if (!parser.options.require.jax) {
+    RequireConfiguration.config(config, jax);
+  }
 }
 
 /**
@@ -134,38 +136,37 @@ const AutoloadEnvironments = new AutoloadCommandMap('autoload-environments', {},
  * The configuration object for configMacros
  */
 export const AutoloadConfiguration = Configuration.create(
-    'autoload', {
-        handler: {
-            macro: ['autoload-macros'],
-            environment: ['autoload-environments']
-        },
-        options: {
-            //
-            //  These are the extension names and the macros and environments they contain.
-            //    The format is [macros...] or [[macros...], [environments...]]
-            //  You can prevent one from being autoloaded by setting
-            //    it to [] in the options when the TeX input jax is created.
-            //  You can include the prefix if it is not the default one from require
-            //
-            autoload: expandable({
-                action: ['toggle', 'mathtip', 'texttip'],
-                amsCd: [[], ['CD']],
-                bbox: ['bbox'],
-                boldsymbol: ['boldsymbol'],
-                braket: ['bra', 'ket', 'braket', 'set', 'Bra', 'Ket', 'Braket', 'Set', 'ketbra', 'Ketbra'],
-                cancel: ['cancel', 'bcancel', 'xcancel', 'cancelto'],
-                color: ['color', 'definecolor', 'textcolor', 'colorbox', 'fcolorbox'],
-                enclose: ['enclose'],
-                extpfeil: ['xtwoheadrightarrow', 'xtwoheadleftarrow', 'xmapsto',
-                           'xlongequal', 'xtofrom', 'Newextarrow'],
-                html: ['href', 'class', 'style', 'cssId'],
-                mhchem: ['ce', 'pu'],
-                newcommand: ['newcommand', 'renewcommand', 'newenvironment', 'renewenvironment', 'def', 'let'],
-                unicode: ['unicode'],
-                verb: ['verb']
-            })
-        },
-        config: configAutoload, configPriority: 10,
-        init: initAutoload, priority: 10
-    }
+  'autoload', {
+    handler: {
+      macro: ['autoload-macros'],
+      environment: ['autoload-environments']
+    },
+    options: {
+      //
+      //  These are the extension names and the macros and environments they contain.
+      //    The format is [macros...] or [[macros...], [environments...]]
+      //  You can prevent one from being autoloaded by setting
+      //    it to [] in the options when the TeX input jax is created.
+      //  You can include the prefix if it is not the default one from require
+      //
+      autoload: expandable({
+        action: ['toggle', 'mathtip', 'texttip'],
+        amsCd: [[], ['CD']],
+        bbox: ['bbox'],
+        boldsymbol: ['boldsymbol'],
+        braket: ['bra', 'ket', 'braket', 'set', 'Bra', 'Ket', 'Braket', 'Set', 'ketbra', 'Ketbra'],
+        cancel: ['cancel', 'bcancel', 'xcancel', 'cancelto'],
+        color: ['color', 'definecolor', 'textcolor', 'colorbox', 'fcolorbox'],
+        enclose: ['enclose'],
+        extpfeil: ['xtwoheadrightarrow', 'xtwoheadleftarrow', 'xmapsto', 'xlongequal', 'xtofrom', 'Newextarrow'],
+        html: ['href', 'class', 'style', 'cssId'],
+        mhchem: ['ce', 'pu'],
+        newcommand: ['newcommand', 'renewcommand', 'newenvironment', 'renewenvironment', 'def', 'let'],
+        unicode: ['unicode'],
+        verb: ['verb']
+      })
+    },
+    config: configAutoload, configPriority: 10,
+    init: initAutoload, priority: 10
+  }
 );

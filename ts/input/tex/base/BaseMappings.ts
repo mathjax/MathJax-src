@@ -655,7 +655,7 @@ new sm.CommandMap('macros', {
 /**
  * Macros for LaTeX environments.
  */
-const envs = new sm.EnvironmentMap('environment', ParseMethods.environment, {
+new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:         ['AlignedArray'],
   equation:      ['Equation', null, true],
   'equation*':   ['Equation', null, false],

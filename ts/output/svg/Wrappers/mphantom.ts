@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
+import {SVGWrapper} from '../Wrapper.js';
 import {MmlMphantom} from '../../../core/MmlTree/MmlNodes/mphantom.js';
 
 /*****************************************************************/
@@ -34,13 +34,16 @@ import {MmlMphantom} from '../../../core/MmlTree/MmlNodes/mphantom.js';
  */
 export class SVGmphantom<N, T, D> extends SVGWrapper<N, T, D> {
 
-    public static kind = MmlMphantom.prototype.kind;
+  /**
+   * The mphantom wrapper
+   */
+  public static kind = MmlMphantom.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        this.standardSVGnode(parent);
-    }
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    this.standardSVGnode(parent);
+  }
 
 }

@@ -18,17 +18,14 @@
 
 /**
  * @fileoverview Items for TeX parsing of bussproofs.
- *                                            
+ *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 
 import TexError from '../TexError.js';
-import {EndItem, BeginItem} from '../base/BaseItems.js';
 import {BaseItem, CheckType, StackItem} from '../StackItem.js';
-import StackItemFactory from '../StackItemFactory.js';
-import ParseUtil from '../ParseUtil.js';
-import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import Stack from '../Stack.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 

@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMsqrt, CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
+import {CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
 import {CHTMLmo} from './mo.js';
 import {BBox} from '../BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
@@ -38,82 +38,88 @@ import {StyleList} from '../../common/CssStyles.js';
  */
 export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    public static kind = MmlMsqrt.prototype.kind;
+  /**
+   * The msqrt wrapper
+   */
+  public static kind = MmlMsqrt.prototype.kind;
 
-    public static styles: StyleList = {
-        'mjx-root': {
-            display: 'inline-block',
-            'white-space': 'nowrap'
-        },
-        'mjx-surd': {
-            display: 'inline-block',
-            'vertical-align': 'top'
-        },
-        'mjx-sqrt': {
-            display: 'inline-block',
-            'padding-top': '.07em'
-        },
-        'mjx-sqrt > mjx-box': {
-            'border-top': '.07em solid'
-        },
-        'mjx-sqrt.mjx-tall > mjx-box': {
-            'padding-left': '.3em',
-            'margin-left': '-.3em'
-        }
-    };
-
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        const surd = this.childNodes[this.surd] as CHTMLmo<N, T, D>;
-        const base = this.childNodes[this.base];
-        //
-        //  Get the parameters for the spacing of the parts
-        //
-        const sbox = surd.getBBox();
-        const bbox = base.getBBox();
-        const [p, q] = this.getPQ(sbox);
-        const t = this.font.params.rule_thickness;
-        const H = bbox.h + q + t;
-        //
-        //  Create the HTML structure for the root
-        //
-        const CHTML = this.standardCHTMLnode(parent);
-        let SURD, BASE, ROOT, root;
-        if (this.root != null) {
-            ROOT = this.adaptor.append(CHTML, this.html('mjx-root')) as N;
-            root = this.childNodes[this.root];
-        }
-        const SQRT = this.adaptor.append(CHTML, this.html('mjx-sqrt', {}, [
-            SURD = this.html('mjx-surd'),
-            BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
-        ])) as N;
-        //
-        //  Add the child content
-        //
-        this.addRoot(ROOT, root, sbox, H);
-        surd.toCHTML(SURD);
-        base.toCHTML(BASE);
-        if (surd.size < 0) {
-            //
-            // size < 0 means surd is multi-character.  The angle glyph at the
-            // top is hard to align with the horizontal line, so overlap them
-            // using CSS.
-            //
-            this.adaptor.addClass(SQRT, 'mjx-tall');
-        }
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'mjx-root': {
+      display: 'inline-block',
+      'white-space': 'nowrap'
+    },
+    'mjx-surd': {
+      display: 'inline-block',
+      'vertical-align': 'top'
+    },
+    'mjx-sqrt': {
+      display: 'inline-block',
+      'padding-top': '.07em'
+    },
+    'mjx-sqrt > mjx-box': {
+      'border-top': '.07em solid'
+    },
+    'mjx-sqrt.mjx-tall > mjx-box': {
+      'padding-left': '.3em',
+      'margin-left': '-.3em'
     }
+  };
 
-    /**
-     * Add root HTML (overridden in mroot)
-     *
-     * @param {N} ROOT             The container for the root
-     * @param {CHTMLWrapper} root  The wrapped MML root content
-     * @param {BBox} sbox          The bounding box of the surd
-     * @param {number} H           The height of the root as a whole
-     */
-    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox, H: number) {
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    const surd = this.childNodes[this.surd] as CHTMLmo<N, T, D>;
+    const base = this.childNodes[this.base];
+    //
+    //  Get the parameters for the spacing of the parts
+    //
+    const sbox = surd.getBBox();
+    const bbox = base.getBBox();
+    const [ , q] = this.getPQ(sbox);
+    const t = this.font.params.rule_thickness;
+    const H = bbox.h + q + t;
+    //
+    //  Create the HTML structure for the root
+    //
+    const CHTML = this.standardCHTMLnode(parent);
+    let SURD, BASE, ROOT, root;
+    if (this.root != null) {
+      ROOT = this.adaptor.append(CHTML, this.html('mjx-root')) as N;
+      root = this.childNodes[this.root];
     }
+    const SQRT = this.adaptor.append(CHTML, this.html('mjx-sqrt', {}, [
+      SURD = this.html('mjx-surd'),
+      BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
+    ])) as N;
+    //
+    //  Add the child content
+    //
+    this.addRoot(ROOT, root, sbox, H);
+    surd.toCHTML(SURD);
+    base.toCHTML(BASE);
+    if (surd.size < 0) {
+      //
+      // size < 0 means surd is multi-character.  The angle glyph at the
+      // top is hard to align with the horizontal line, so overlap them
+      // using CSS.
+      //
+      this.adaptor.addClass(SQRT, 'mjx-tall');
+    }
+  }
+
+  /**
+   * Add root HTML (overridden in mroot)
+   *
+   * @param {N} ROOT             The container for the root
+   * @param {CHTMLWrapper} root  The wrapped MML root content
+   * @param {BBox} sbox          The bounding box of the surd
+   * @param {number} H           The height of the root as a whole
+   */
+  protected addRoot(_ROOT: N, _root: CHTMLWrapper<N, T, D>, _sbox: BBox, _H: number) {
+  }
 
 }

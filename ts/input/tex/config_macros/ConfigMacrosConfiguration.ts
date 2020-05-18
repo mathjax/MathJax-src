@@ -40,8 +40,8 @@ const MACROSMAP = 'configMacrosMap';
  * @param {Configuration} config   The configuration object for the input jax
  */
 function configMacrosInit(config: Configuration) {
-    const macrosMap = new CommandMap(MACROSMAP, {}, {});
-    config.append(Configuration.create('configMacroDefinitions', {handler: {macro: [MACROSMAP]}}));
+  new CommandMap(MACROSMAP, {}, {});
+  config.append(Configuration.create('configMacroDefinitions', {handler: {macro: [MACROSMAP]}}));
 }
 
 /**
@@ -50,25 +50,25 @@ function configMacrosInit(config: Configuration) {
  * @param {Configuration} config   The configuration object for the input jax
  * @param {TeX} jax                The TeX input jax
  */
-function configMacrosConfig(config: Configuration, jax: TeX<any, any, any>) {
-    const macrosMap = jax.parseOptions.handlers.retrieve(MACROSMAP) as CommandMap;
-    const macros = jax.parseOptions.options.macros;
-    for (const cs of Object.keys(macros)) {
-        const def = (typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs]);
-        const macro = Array.isArray(def[2]) ?
-            new Macro(cs, NewcommandMethods.MacroWithTemplate, def.slice(0, 2).concat(def[2])) :
-            new Macro(cs, NewcommandMethods.Macro, def);
-        macrosMap.add(cs, macro);
-    }
+function configMacrosConfig(_config: Configuration, jax: TeX<any, any, any>) {
+  const macrosMap = jax.parseOptions.handlers.retrieve(MACROSMAP) as CommandMap;
+  const macros = jax.parseOptions.options.macros;
+  for (const cs of Object.keys(macros)) {
+    const def = (typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs]);
+    const macro = Array.isArray(def[2]) ?
+      new Macro(cs, NewcommandMethods.MacroWithTemplate, def.slice(0, 2).concat(def[2])) :
+      new Macro(cs, NewcommandMethods.Macro, def);
+    macrosMap.add(cs, macro);
+  }
 }
 
 /**
  * The configuration object for configMacros
  */
 export const ConfigMacrosConfiguration = Configuration.create(
-    'configMacros', {
-        init: configMacrosInit,
-        config: configMacrosConfig,
-        options: {macros: expandable({})}
-    }
+  'configMacros', {
+    init: configMacrosInit,
+    config: configMacrosConfig,
+    options: {macros: expandable({})}
+  }
 );

@@ -29,21 +29,21 @@ import './BussproofsMappings.js';
 
 
 export const BussproofsConfiguration = Configuration.create(
-  'bussproofs',
-  {handler: {
-    macro: ['Bussproofs-macros'],
-    environment: ['Bussproofs-environments']
-  },
-   items: {
-     [ProofTreeItem.prototype.kind]: ProofTreeItem,
-   },
-   preprocessors: [
-     [saveDocument, 1]
-   ],
-   postprocessors: [
-     [clearDocument, 3],
-     [makeBsprAttributes, 2],
-     [balanceRules, 1]
-   ]
+  'bussproofs', {
+    handler: {
+      macro: ['Bussproofs-macros'],
+      environment: ['Bussproofs-environments']
+    },
+    items: {
+      [ProofTreeItem.prototype.kind]: ProofTreeItem,
+    },
+    preprocessors: [
+      [saveDocument, 1]
+    ],
+    postprocessors: [
+      [clearDocument, 3],
+      [makeBsprAttributes, 2],
+      [balanceRules, 1]
+    ]
   }
 );

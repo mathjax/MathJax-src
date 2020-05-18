@@ -18,7 +18,7 @@
 
 /**
  * @fileoverview Mappings for TeX parsing for Bussproofs package commands.
- *                                            
+ *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 

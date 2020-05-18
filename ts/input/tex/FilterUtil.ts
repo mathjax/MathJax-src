@@ -22,7 +22,7 @@
  */
 
 
-import {TEXCLASS, MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
+import {TEXCLASS, MMLNODE, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import NodeUtil from './NodeUtil.js';
 import ParseOptions from './ParseOptions.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
@@ -67,7 +67,7 @@ namespace FilterUtil {
    */
   export let cleanAttributes = function(arg: {data: ParseOptions}) {
     let node = arg.data.root as MmlNode;
-    node.walkTree((mml: MmlNode, d: any) => {
+    node.walkTree((mml: MmlNode, _d: any) => {
       let attribs = mml.attributes as any;
       if (!attribs) {
         return;
@@ -97,7 +97,7 @@ namespace FilterUtil {
       }
       let mml = mo.parent;
       let m2: MmlNode;
-      let children = mml.childNodes as (MmlNode|TextNode)[];
+      let children = mml.childNodes as MMLNODE[];
       let next = children.indexOf(mo) + 1;
       let variantForm = NodeUtil.getProperty(mo, 'variantForm');
       while (next < children.length && (m2 = children[next]) &&

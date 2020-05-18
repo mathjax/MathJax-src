@@ -18,7 +18,7 @@
 
 /**
  * @fileoverview Mappings for TeX parsing of the braket package.
- *                                            
+ *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 

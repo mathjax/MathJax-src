@@ -24,10 +24,8 @@
 
 import {ParseMethod} from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
-import {MapHandler} from '../MapHandler.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {TexConstant} from '../TexConstants.js';
 import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
@@ -59,7 +57,7 @@ const pairs: {[fence: string]: string} = {
  * Regular expression for matching big fence arguments.
  * @type {RegExp}
  */
-const biggs = /^(b|B)i(g{1,2})$/;
+const biggs: RegExp = /^(b|B)i(g{1,2})$/;
 
 
 /**
@@ -216,7 +214,7 @@ let digits: [number, number] = [0x30, 0x39];
  */
 function inRange(value: number, range: [number, number]) {
   return (value >= range[0] && value <= range[1]);
-};
+}
 
 
 /**
@@ -655,7 +653,7 @@ function outputBraket([arg1, arg2, arg3]: [string, string, string],
     `\\left\\langle{${arg1}}\\middle\\vert{${arg2}}\\middle\\vert{${arg3}}\\right\\rangle` :
     (star1 ? `\\langle{${arg1}}\\vert{${arg2}}\\vert{${arg3}}\\rangle` :
      `\\left\\langle{${arg1}}\\right\\vert{${arg2}}\\left\\vert{${arg3}}\\right\\rangle`);
-};
+}
 
 
 /**
@@ -666,7 +664,6 @@ function outputBraket([arg1, arg2, arg3]: [string, string, string],
 PhysicsMethods.Expectation = function(parser: TexParser, name: string) {
   let star1 = parser.GetStar();
   let star2 = star1 && parser.GetStar();
-  let braket = parser.GetNext() === '{';
   let arg1 = parser.GetArgument(name);
   let arg2 = null;
   if (parser.GetNext() === '{') {
@@ -690,7 +687,6 @@ PhysicsMethods.Expectation = function(parser: TexParser, name: string) {
 PhysicsMethods.MatrixElement = function(parser: TexParser, name: string) {
   const star1 = parser.GetStar();
   const star2 = star1 && parser.GetStar();
-  const braket = parser.GetNext() === '{';
   const arg1 = parser.GetArgument(name);
   const arg2 = parser.GetArgument(name);
   const arg3 = parser.GetArgument(name);
@@ -883,9 +879,9 @@ PhysicsMethods.DiagonalMatrix = function(parser: TexParser, name: string,
                                          anti?: boolean) {
   if (parser.GetNext() !== '{') {
     return;
-  };
+  }
   let startI = parser.i;
-  let arg = parser.GetArgument(name);
+  /* let arg =*/ parser.GetArgument(name);
   let endI = parser.i;
   parser.i = startI + 1;
   let elements = [];
@@ -932,7 +928,7 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
  * @param {TexParser} parser The calling parser.
  * @param {string} fence The fence.
  */
-PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, texclass: number) {
+PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, _texclass: number) {
   const mo = parser.create('token', 'mo', {stretchy: false}, fence);
   const item = parser.itemFactory.create('mml', mo).
     setProperties({autoclose: fence});

@@ -32,36 +32,36 @@ import {AbstractVisitor} from '../Tree/Visitor.js';
  */
 
 export class MmlVisitor extends AbstractVisitor {
-    /**
-     * @param {MmlFactory} factory  The MmlNode factory (defaults to MmlFactory if not given)
-     *
-     * @constructor
-     * @extends {AbstractVisitor}
-     */
-    constructor(factory: MmlFactory = null) {
-        if (!factory) {
-            factory = new MmlFactory();
-        }
-        super(factory);
+  /**
+   * @param {MmlFactory} factory  The MmlNode factory (defaults to MmlFactory if not given)
+   *
+   * @constructor
+   * @extends {AbstractVisitor}
+   */
+  constructor(factory: MmlFactory = null) {
+    if (!factory) {
+      factory = new MmlFactory();
     }
+    super(factory);
+  }
 
-    /***********************************************/
-    /**
-     * Stubs for overriding in subclasses
-     */
+  /***********************************************/
+  /**
+   * Stubs for overriding in subclasses
+   */
 
-    /**
-     * @param {TextNode} node  The TextNode to visit
-     * @param {any[]} args  Any arguments needed by the visitor
-     * @return {any}  Any return value needed for the visitor
-     */
-    public visitTextNode(node: TextNode, ...args: any[]): any {}
+  /**
+   * @param {TextNode} node  The TextNode to visit
+   * @param {any[]} args  Any arguments needed by the visitor
+   * @return {any}  Any return value needed for the visitor
+   */
+  public visitTextNode(_node: TextNode, ..._args: any[]): any {}
 
-    /**
-     * @param {XMLNode} node  The XMLNode to visit
-     * @param {any[]} args  Any arguments needed by the visitor
-     * @return {any}  Any return value needed for the visitor
-     */
-    public visitXMLNode(node: XMLNode, ...args: any[]): any {}
+  /**
+   * @param {XMLNode} node  The XMLNode to visit
+   * @param {any[]} args  Any arguments needed by the visitor
+   * @return {any}  Any return value needed for the visitor
+   */
+  public visitXMLNode(_node: XMLNode, ..._args: any[]): any {}
 
 }

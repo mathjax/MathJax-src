@@ -18,12 +18,12 @@
 
 /**
  * @fileoverview Mappings for TeX parsing for definitorial commands.
- *                                            
+ *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 
-import {Args, Attributes, ParseMethod} from '../Types.js';
+import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../SymbolMap.js';
@@ -161,7 +161,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     }
     macro = (map as sm.CharacterMap).lookup(name) as Symbol;
     const newArgs = NewcommandUtil.disassembleSymbol(cs, macro);
-    const method = (p: TexParser, cs: string, ...rest: any[]) => {
+    const method = (p: TexParser, _cs: string, ...rest: any[]) => {
       // @test Let Relet, Let Let, Let Circular Macro
       const symb = NewcommandUtil.assembleSymbol(rest);
       return map.parser(p, symb);
@@ -227,7 +227,7 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The begin stackitem.
  * @param {string} bdef The begin definition in the newenvironment macro.
- * @param {string} edef The end definition in the newenvironment macro. 
+ * @param {string} edef The end definition in the newenvironment macro.
  * @param {number} n The number of parameters.
  * @param {string} def Default for an optional parameter.
  */

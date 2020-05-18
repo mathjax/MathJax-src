@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMi, CommonMiMixin} from '../../common/Wrappers/mi.js';
+import {CommonMiMixin} from '../../common/Wrappers/mi.js';
 import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
 
 /*****************************************************************/
@@ -33,8 +33,13 @@ import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmi<N, T, D> extends CommonMiMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmi<N, T, D> extends
+CommonMiMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    public static kind = MmlMi.prototype.kind;
+  /**
+   * The mi wrapper
+   */
+  public static kind = MmlMi.prototype.kind;
 
 }

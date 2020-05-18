@@ -25,8 +25,7 @@
 
 import NodeUtil from './NodeUtil.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {StartItem, MmlItem} from './base/BaseItems.js';
-import {StackItem, EnvList, BaseItem} from './StackItem.js';
+import {StackItem, EnvList} from './StackItem.js';
 import StackItemFactory from './StackItemFactory.js';
 
 
@@ -81,7 +80,7 @@ export default class Stack {
    * Pushes items or nodes onto stack.
    * @param {...StackItem|MmlNode} args A list of items to push.
    */
-  public Push(...args: (StackItem|MmlNode)[]) {
+  public Push(...args: (StackItem | MmlNode)[]) {
     for (const node of args) {
       if (!node) {
         continue;
@@ -116,7 +115,7 @@ export default class Stack {
    * Pop the topmost elements off the stack.
    * @return {StackItem} A stack item.
    */
-  public Pop() {
+  public Pop(): StackItem {
     const item = this.stack.pop();
     if (!item.isOpen) {
       delete item.env;

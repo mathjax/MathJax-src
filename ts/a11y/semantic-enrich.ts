@@ -66,15 +66,15 @@ newState('ATTACHSPEECH', 155);
  */
 export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
 
-    /**
-     * @param {MathDocument} document  The document where enrichment is occurring
-     */
-    enrich(document: MathDocument<N, T, D>): void;
+  /**
+   * @param {MathDocument} document  The document where enrichment is occurring
+   */
+  enrich(document: MathDocument<N, T, D>): void;
 
-    /**
-     * @param {MathDocument} document  The document where enrichment is occurring
-     */
-    attachSpeech(document: MathDocument<N, T, D>): void;
+  /**
+   * @param {MathDocument} document  The document where enrichment is occurring
+   */
+  attachSpeech(document: MathDocument<N, T, D>): void;
 }
 
 /**
@@ -91,96 +91,97 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
  * @template B  The MathItem class to extend
  */
 export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMathItem<N, T, D>>>(
-    BaseMathItem: B,
-    MmlJax: MathML<N, T, D>,
-    toMathML: (node: MmlNode) => string
+  BaseMathItem: B,
+  MmlJax: MathML<N, T, D>,
+  toMathML: (node: MmlNode) => string
 ): Constructor<EnrichedMathItem<N, T, D>> & B {
 
-    return class extends BaseMathItem {
+  return class extends BaseMathItem {
 
-        /**
-         * @param {any} node  The node to be serialized
-         * @return {string}   The serialized version of node
-         */
-        protected serializeMml(node: any) {
-            if ('outerHTML' in node) {
-                return node.outerHTML;
-            }
-            //
-            //  For IE11
-            //
-            if (typeof Element !== 'undefined' && typeof window !== 'undefined' && node instanceof Element) {
-                const div = window.document.createElement('div');
-                div.appendChild(node);
-                return div.innerHTML;
-            }
-            //
-            //  For NodeJS version of SRE
-            //
-            return node.toString();
+    /**
+     * @param {any} node  The node to be serialized
+     * @return {string}   The serialized version of node
+     */
+    protected serializeMml(node: any): string {
+      if ('outerHTML' in node) {
+        return node.outerHTML;
+      }
+      //
+      //  For IE11
+      //
+      if (typeof Element !== 'undefined' && typeof window !== 'undefined' && node instanceof Element) {
+        const div = window.document.createElement('div');
+        div.appendChild(node);
+        return div.innerHTML;
+      }
+      //
+      //  For NodeJS version of SRE
+      //
+      return node.toString();
+    }
+
+    /**
+     * @param {MathDocument} document   The MathDocument for the MathItem
+     */
+    public enrich(document: MathDocument<N, T, D>) {
+      if (this.state() >= STATE.ENRICHED || this.isEscaped) return;
+      if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
+        mathjax.retryAfter(sreReady());
+      }
+      if (document.options.enrichSpeech !== currentSpeech) {
+        SRE.setupEngine({speech: document.options.enrichSpeech});
+        currentSpeech = document.options.enrichSpeech;
+      }
+      const math = new document.options.MathItem('', MmlJax);
+      math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
+      math.display = this.display;
+      math.compile(document);
+      this.root = math.root;
+      this.inputData.originalMml = math.math;
+      this.state(STATE.ENRICHED);
+    }
+
+    /**
+     * @param {MathDocument} document   The MathDocument for the MathItem
+     */
+    public attachSpeech(document: MathDocument<N, T, D>) {
+      if (this.state() >= STATE.ATTACHSPEECH) return;
+      const attributes = this.root.attributes;
+      const speech = (attributes.get('aria-label') ||
+                      this.getSpeech(this.root)) as string;
+      if (speech) {
+        const adaptor = document.adaptor;
+        const node = this.typesetRoot;
+        adaptor.setAttribute(node, 'aria-label', speech);
+        for (const child of adaptor.childNodes(node) as N[]) {
+          adaptor.setAttribute(child, 'aria-hidden', 'true');
         }
+      }
+      this.state(STATE.ATTACHSPEECH);
+    }
 
-        /**
-         * @param {MathDocument} document   The MathDocument for the MathItem
-         */
-        public enrich(document: MathDocument<N, T, D>) {
-            if (this.state() >= STATE.ENRICHED || this.isEscaped) return;
-            if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
-                mathjax.retryAfter(sreReady());
-            }
-            if (document.options.enrichSpeech !== currentSpeech) {
-                SRE.setupEngine({speech: document.options.enrichSpeech});
-                currentSpeech = document.options.enrichSpeech;
-            }
-            const math = new document.options.MathItem('', MmlJax);
-            math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
-            math.display = this.display;
-            math.compile(document);
-            this.root = math.root;
-            this.inputData.originalMml = math.math;
-            this.state(STATE.ENRICHED);
+    /**
+     * Retrieves the actual speech element that should be used as aria label.
+     * @param {MmlNode} node The root node to search from.
+     * @return {string} The speech content.
+     */
+    private getSpeech(node: MmlNode): string {
+      const attributes = node.attributes;
+      if (!attributes) return '';
+      const speech = attributes.getExplicit('data-semantic-speech') as string;
+      if (!attributes.getExplicit('data-semantic-parent') && speech) {
+        return speech;
+      }
+      for (let child of node.childNodes) {
+        let value = this.getSpeech(child as MmlNode);
+        if (value != null) {
+          return value;
         }
+      }
+      return '';
+    }
 
-        /**
-         * @param {MathDocument} document   The MathDocument for the MathItem
-         */
-        public attachSpeech(document: MathDocument<N, T, D>) {
-            if (this.state() >= STATE.ATTACHSPEECH) return;
-            const attributes = this.root.attributes;
-            const speech = (attributes.get('aria-label') ||
-                            this.getSpeech(this.root)) as string;
-            if (speech) {
-                const adaptor = document.adaptor;
-                const node = this.typesetRoot;
-                adaptor.setAttribute(node, 'aria-label', speech);
-                for (const child of adaptor.childNodes(node) as N[]) {
-                    adaptor.setAttribute(child, 'aria-hidden', 'true');
-                }
-            }
-            this.state(STATE.ATTACHSPEECH);
-        }
-
-        /**
-         * Retrieves the actual speech element that should be used as aria label.
-         * @param {MmlNode} node The root node to search from.
-         * @return {string} The speech content.
-         */
-        private getSpeech(node: MmlNode): string {
-            const attributes = node.attributes;
-            if (!attributes) return;
-            const speech = attributes.getExplicit('data-semantic-speech') as string;
-            if (!attributes.getExplicit('data-semantic-parent') && speech) {
-                return speech;
-            }
-            for (let child of node.childNodes) {
-                let value = this.getSpeech(child as MmlNode);
-                if (value != null) {
-                    return value;
-                }
-            }
-        }
-
-    };
+  };
 
 }
 
@@ -195,19 +196,19 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
  */
 export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
-    /**
-     * Perform enrichment on the MathItems in the MathDocument
-     *
-     * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
-     */
-    enrich(): EnrichedMathDocument<N, T, D>;
+  /**
+   * Perform enrichment on the MathItems in the MathDocument
+   *
+   * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
+   */
+  enrich(): EnrichedMathDocument<N, T, D>;
 
-    /**
-     * Attach speech to the MathItems in the MathDocument
-     *
-     * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
-     */
-    attachSpeech(): EnrichedMathDocument<N, T, D>;
+  /**
+   * Attach speech to the MathItems in the MathDocument
+   *
+   * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
+   */
+  attachSpeech(): EnrichedMathDocument<N, T, D>;
 }
 
 /**
@@ -223,83 +224,86 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
  * @template B  The MathDocument class to extend
  */
 export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
-    BaseDocument: B,
-    MmlJax: MathML<N, T, D>,
+  BaseDocument: B,
+  MmlJax: MathML<N, T, D>,
 ): MathDocumentConstructor<EnrichedMathDocument<N, T, D>> & B {
 
-    return class extends BaseDocument {
+  return class extends BaseDocument {
 
-        public static OPTIONS: OptionList = {
-            ...BaseDocument.OPTIONS,
-            enrichSpeech: 'none',                   // or 'shallow', or 'deep'
-            renderActions: expandable({
-                ...BaseDocument.OPTIONS.renderActions,
-                enrich:       [STATE.ENRICHED],
-                attachSpeech: [STATE.ATTACHSPEECH]
-            })
-        };
-
-        /**
-         * Enrich the MathItem class used for this MathDocument, and create the
-         *   temporary MathItem used for enrchment
-         *
-         * @override
-         * @constructor
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            MmlJax.setMmlFactory(this.mmlFactory);
-            const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
-            if (!ProcessBits.has('enriched')) {
-                ProcessBits.allocate('enriched');
-                ProcessBits.allocate('attach-speech');
-            }
-            const visitor = new SerializedMmlVisitor(this.mmlFactory);
-            const toMathML = ((node: MmlNode) => visitor.visitTree(node));
-            this.options.MathItem =
-                EnrichedMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(
-                    this.options.MathItem, MmlJax, toMathML
-                );
-        }
-
-        /**
-         * Attach speech from a MathItem to a node
-         */
-        public attachSpeech() {
-            if (!this.processed.isSet('attach-speech')) {
-                for (const math of this.math) {
-                    (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
-                }
-                this.processed.set('attach-speech');
-            }
-            return this;
-        }
-
-        /**
-         * Enrich the MathItems in this MathDocument
-         */
-        public enrich() {
-            if (!this.processed.isSet('enriched')) {
-                for (const math of this.math) {
-                    (math as EnrichedMathItem<N, T, D>).enrich(this);
-                }
-                this.processed.set('enriched');
-            }
-            return this;
-        }
-
-        /**
-         * @override
-         */
-        public state(state: number, restore: boolean = false) {
-            super.state(state, restore);
-            if (state < STATE.ENRICHED) {
-                this.processed.clear('enriched');
-            }
-            return this;
-        }
-
+    /**
+     * @override
+     */
+    public static OPTIONS: OptionList = {
+      ...BaseDocument.OPTIONS,
+      enrichSpeech: 'none',                   // or 'shallow', or 'deep'
+      renderActions: expandable({
+        ...BaseDocument.OPTIONS.renderActions,
+        enrich:       [STATE.ENRICHED],
+        attachSpeech: [STATE.ATTACHSPEECH]
+      })
     };
+
+    /**
+     * Enrich the MathItem class used for this MathDocument, and create the
+     *   temporary MathItem used for enrchment
+     *
+     * @override
+     * @constructor
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      MmlJax.setMmlFactory(this.mmlFactory);
+      const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
+      if (!ProcessBits.has('enriched')) {
+        ProcessBits.allocate('enriched');
+        ProcessBits.allocate('attach-speech');
+      }
+      const visitor = new SerializedMmlVisitor(this.mmlFactory);
+      const toMathML = ((node: MmlNode) => visitor.visitTree(node));
+      this.options.MathItem =
+        EnrichedMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(
+          this.options.MathItem, MmlJax, toMathML
+        );
+    }
+
+    /**
+     * Attach speech from a MathItem to a node
+     */
+    public attachSpeech() {
+      if (!this.processed.isSet('attach-speech')) {
+        for (const math of this.math) {
+          (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
+        }
+        this.processed.set('attach-speech');
+      }
+      return this;
+    }
+
+    /**
+     * Enrich the MathItems in this MathDocument
+     */
+    public enrich() {
+      if (!this.processed.isSet('enriched')) {
+        for (const math of this.math) {
+          (math as EnrichedMathItem<N, T, D>).enrich(this);
+        }
+        this.processed.set('enriched');
+      }
+      return this;
+    }
+
+    /**
+     * @override
+     */
+    public state(state: number, restore: boolean = false) {
+      super.state(state, restore);
+      if (state < STATE.ENRICHED) {
+        this.processed.clear('enriched');
+      }
+      return this;
+    }
+
+  };
 
 }
 
@@ -316,11 +320,11 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
  * @template T  The Text node class
  * @template D  The Document class
  */
-export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>) {
-    MmlJax.setAdaptor(handler.adaptor);
-    handler.documentClass =
-        EnrichedMathDocumentMixin<N, T, D, MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
-            handler.documentClass, MmlJax
-        );
-    return handler;
+export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML<N, T, D>): Handler<N, T, D> {
+  MmlJax.setAdaptor(handler.adaptor);
+  handler.documentClass =
+    EnrichedMathDocumentMixin<N, T, D, MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
+      handler.documentClass, MmlJax
+    );
+  return handler;
 }

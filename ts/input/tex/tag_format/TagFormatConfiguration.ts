@@ -40,86 +40,86 @@ let tagID = 0;
  */
 export function tagFormatConfig(config: Configuration, jax: TeX<any, any, any>) {
 
+  /**
+   * If the tag format is being added by one of the other extensions,
+   *   as is done for the 'ams' tags, make sure it is defined so we can create it.
+   */
+  const tags = jax.parseOptions.options.tags;
+  if (tags !== 'base' && config.tags.hasOwnProperty(tags)) {
+    TagsFactory.add(tags, config.tags[tags]);
+  }
+
+  /**
+   * The original tag class to be extended (none, ams, or all)
+   */
+  const TagClass = TagsFactory.create(jax.parseOptions.options.tags).constructor as typeof AbstractTags;
+
+  /**
+   * A Tags object that uses the input jax options to perform the formatting
+   *
+   * Note:  We have to make a new class for each input jax since the format
+   * methods don't have access to the input jax, and hence to its options.
+   * If they did, we would use a common configTags class instead.
+   */
+  class TagFormat extends TagClass {
+
     /**
-     * If the tag format is being added by one of the other extensions,
-     *   as is done for the 'ams' tags, make sure it is defined so we can create it.
+     * @override
      */
-    const tags = jax.parseOptions.options.tags;
-    if (tags !== 'base' && config.tags.hasOwnProperty(tags)) {
-        TagsFactory.add(tags, config.tags[tags]);
+    public formatNumber(n: number) {
+      return jax.parseOptions.options.tagFormat.number(n);
     }
 
     /**
-     * The original tag class to be extended (none, ams, or all)
+     * @override
      */
-    const TagClass = TagsFactory.create(jax.parseOptions.options.tags).constructor as typeof AbstractTags;
-
-    /**
-     * A Tags object that uses the input jax options to perform the formatting
-     *
-     * Note:  We have to make a new class for each input jax since the format
-     * methods don't have access to the input jax, and hence to its options.
-     * If they did, we would use a common configTags class instead.
-     */
-    class TagFormat extends TagClass {
-
-        /**
-         * @override
-         */
-        public formatNumber(n: number) {
-            return jax.parseOptions.options.tagFormat.number(n);
-        }
-
-        /**
-         * @override
-         */
-        public formatTag(tag: string) {
-            return jax.parseOptions.options.tagFormat.tag(tag);
-        }
-
-        /**
-         * @override
-         */
-        public formatId(id: string) {
-            return jax.parseOptions.options.tagFormat.id(id);
-        }
-
-        /**
-         * @override
-         */
-        public formatUrl(id: string, base: string) {
-            return jax.parseOptions.options.tagFormat.url(id, base);
-        }
+    public formatTag(tag: string) {
+      return jax.parseOptions.options.tagFormat.tag(tag);
     }
 
-    //
-    //  Get a unique name for the tag class (since it is tied to the input jax)
-    //  Note:  These never get freed, so they will accumulate if you create many
-    //  TeX input jax instances with this extension.
-    //
-    tagID++;
-    const tagName = 'configTags-' + tagID;
-    //
-    // Register the tag class
-    //
-    TagsFactory.add(tagName, TagFormat);
-    jax.parseOptions.options.tags = tagName;
+    /**
+     * @override
+     */
+    public formatId(id: string) {
+      return jax.parseOptions.options.tagFormat.id(id);
+    }
+
+    /**
+     * @override
+     */
+    public formatUrl(id: string, base: string) {
+      return jax.parseOptions.options.tagFormat.url(id, base);
+    }
+  }
+
+  //
+  //  Get a unique name for the tag class (since it is tied to the input jax)
+  //  Note:  These never get freed, so they will accumulate if you create many
+  //  TeX input jax instances with this extension.
+  //
+  tagID++;
+  const tagName = 'configTags-' + tagID;
+  //
+  // Register the tag class
+  //
+  TagsFactory.add(tagName, TagFormat);
+  jax.parseOptions.options.tags = tagName;
 }
 
 /**
  * The configuration object for configTags
  */
 export const TagFormatConfiguration = Configuration.create(
-    'tagFormat', {
-        config: tagFormatConfig,
-        configPriority: 10,
-        options: {
-            tagFormat: {
-                number: (n: number) => n.toString(),
-                tag:    (tag: string) => '(' + tag + ')',
-                id:     (id: string) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
-                url:    (id: string, base: string) => base + '#' + encodeURIComponent(id),
-            }
-        }
+  'tagFormat', {
+    config: tagFormatConfig,
+    configPriority: 10,
+    options: {
+      tagFormat: {
+        number: (n: number) => n.toString(),
+        tag:    (tag: string) => '(' + tag + ')',
+        id:     (id: string) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
+        url:    (id: string, base: string) => base + '#' + encodeURIComponent(id),
+      }
     }
+  }
 );

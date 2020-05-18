@@ -85,7 +85,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
    */
   constructor(private _name: string, private _parser: ParseMethod) {
     MapHandler.register(this);
-  };
+  }
 
 
   /**
@@ -154,7 +154,7 @@ export class RegExpMap extends AbstractSymbolMap<string> {
    */
   constructor(name: string, parser: ParseMethod, private _regExp: RegExp) {
     super(name, parser);
-  };
+  }
 
 
   /**
@@ -226,7 +226,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
    * @param {JSON} json The JSON representation of the character mapping.
    */
   constructor(name: string, parser: ParseMethod,
-              json: {[index: string]: string|[string, Attributes]}) {
+              json: {[index: string]: string | [string, Attributes]}) {
     super(name, parser);
     for (const key of Object.keys(json)) {
       let value = json[key];
@@ -234,7 +234,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
       let character = new Symbol(key, char, attrs);
       this.add(key, character);
     }
-  };
+  }
 
 }
 
@@ -273,7 +273,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
    *     functions for the single macros.
    */
   constructor(name: string,
-              json: {[index: string]: string|Args[]},
+              json: {[index: string]: string | Args[]},
               functionMap: Record<string, ParseMethod>) {
     super(name, null);
     for (const key of Object.keys(json)) {
@@ -282,7 +282,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
       let character = new Macro(key, functionMap[func as string], attrs);
       this.add(key, character);
     }
-  };
+  }
 
 
   /**
@@ -326,7 +326,6 @@ export class CommandMap extends MacroMap {
     if (!macro || !parser) {
       return null;
     }
-    let args = ['\\' + macro.symbol].concat(macro.args as string[]);
     if (!parser) {
       return null;
     }
@@ -360,11 +359,11 @@ export class EnvironmentMap extends MacroMap {
    */
   constructor(name: string,
               parser: ParseMethod,
-              json: {[index: string]: string|Args[]},
+              json: {[index: string]: string | Args[]},
               functionMap: Record<string, ParseMethod>) {
     super(name, json, functionMap);
     this.parser = parser;
-  };
+  }
 
 
   /**

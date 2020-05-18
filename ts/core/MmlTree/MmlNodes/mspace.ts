@@ -30,44 +30,54 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMspace extends AbstractMmlTokenNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlTokenNode.defaults,
-        width:  '0em',
-        height: '0ex',
-        depth:  '0ex',
-        linebreak: 'auto'
-    };
-    public texClass = TEXCLASS.ORD;
 
-    /**
-     * @return {string}  the mspace kind
-     */
-    public get kind() {
-        return 'mspace';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlTokenNode.defaults,
+    width:  '0em',
+    height: '0ex',
+    depth:  '0ex',
+    linebreak: 'auto'
+  };
 
-    /**
-     * @return {number}  mspace can't have children
-     */
-    public get arity() {
-        return 0;
-    }
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @override
-     */
-    public get isSpacelike() {
-        return true;
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mspace';
+  }
 
-    /**
-     * Only process linebreak if the space has no explicit dimensions (according to spec)
-     *
-     * @override
-     */
-    public get hasNewline() {
-        let attributes = this.attributes;
-        return (attributes.getExplicit('width') == null && attributes.getExplicit('height') == null &&
-                attributes.getExplicit('depth') == null && attributes.get('linebreak') === 'newline');
-    }
+  /**
+   * mspace can't have children
+   * @override
+   */
+  public get arity() {
+    return 0;
+  }
+
+  /**
+   * @override
+   */
+  public get isSpacelike() {
+    return true;
+  }
+
+  /**
+   * Only process linebreak if the space has no explicit dimensions (according to spec)
+   *
+   * @override
+   */
+  public get hasNewline() {
+    let attributes = this.attributes;
+    return (attributes.getExplicit('width') == null && attributes.getExplicit('height') == null &&
+            attributes.getExplicit('depth') == null && attributes.get('linebreak') === 'newline');
+  }
+
 }

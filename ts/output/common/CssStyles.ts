@@ -25,14 +25,14 @@
  * The data for a selector
  */
 export type StyleData = {
-    [property: string]: string | number;
+  [property: string]: string | number;
 };
 
 /**
  * A list of selectors and their data (basically a stylesheet)
  */
 export type StyleList = {
-    [selector: string]: StyleData;
+  [selector: string]: StyleData;
 };
 
 /******************************************************************************/
@@ -41,80 +41,80 @@ export type StyleList = {
  */
 
 export class CssStyles {
-    /**
-     * The styles as they currently stand
-     */
-    protected styles: StyleList = {};
+  /**
+   * The styles as they currently stand
+   */
+  protected styles: StyleList = {};
 
-    /**
-     * @return {string}  The styles as a CSS string
-     */
-    get cssText() {
-        return this.getStyleString();
-    }
+  /**
+   * @return {string}  The styles as a CSS string
+   */
+  get cssText(): string {
+    return this.getStyleString();
+  }
 
-    /**
-     * @param {StyleList} styles  The initial styles to use, if any
-     * @constructor
-     */
-    constructor(styles: StyleList = null) {
-        this.addStyles(styles);
-    }
+  /**
+   * @param {StyleList} styles  The initial styles to use, if any
+   * @constructor
+   */
+  constructor(styles: StyleList = null) {
+    this.addStyles(styles);
+  }
 
-    /**
-     * @param {StyleList} styles  The styles to combine with the existing ones
-     */
-    public addStyles(styles: StyleList) {
-        if (!styles) return;
-        for (const style of Object.keys(styles)) {
-            if (!this.styles[style]) {
-                this.styles[style] = {};
-            }
-            Object.assign(this.styles[style], styles[style]);
-        }
+  /**
+   * @param {StyleList} styles  The styles to combine with the existing ones
+   */
+  public addStyles(styles: StyleList) {
+    if (!styles) return;
+    for (const style of Object.keys(styles)) {
+      if (!this.styles[style]) {
+        this.styles[style] = {};
+      }
+      Object.assign(this.styles[style], styles[style]);
     }
+  }
 
-    /**
-     * @param {string[]} selectors  The selectors for the styles to remove
-     */
-    public removeStyles(...selectors: string[]) {
-        for (const selector of selectors) {
-            delete this.styles[selector];
-        }
+  /**
+   * @param {string[]} selectors  The selectors for the styles to remove
+   */
+  public removeStyles(...selectors: string[]) {
+    for (const selector of selectors) {
+      delete this.styles[selector];
     }
+  }
 
-    /**
-     * Clear all the styles
-     */
-    clear() {
-        this.styles = {};
-    }
+  /**
+   * Clear all the styles
+   */
+  public clear() {
+    this.styles = {};
+  }
 
-    /**
-     * @return {string} The CSS string for the style list
-     */
-    public getStyleString() {
-        const selectors = Object.keys(this.styles);
-        const defs: string[] = new Array(selectors.length);
-        let i = 0;
-        for (const selector of selectors) {
-            defs[i++] = selector + ' {\n' + this.getStyleDefString(this.styles[selector]) + '\n}';
-        }
-        return defs.join('\n\n');
+  /**
+   * @return {string} The CSS string for the style list
+   */
+  public getStyleString(): string {
+    const selectors = Object.keys(this.styles);
+    const defs: string[] = new Array(selectors.length);
+    let i = 0;
+    for (const selector of selectors) {
+      defs[i++] = selector + ' {\n' + this.getStyleDefString(this.styles[selector]) + '\n}';
     }
+    return defs.join('\n\n');
+  }
 
-    /**
-     * @param {StyleData} styles  The style data to be stringified
-     * @return {string}           The CSS string for the given data
-     */
-    public getStyleDefString(styles: StyleData) {
-        const properties = Object.keys(styles);
-        const values: string[] = new Array(properties.length);
-        let i = 0;
-        for (const property of properties) {
-            values[i++] = '  ' + property + ': ' + styles[property] + ';';
-        }
-        return values.join('\n');
+  /**
+   * @param {StyleData} styles  The style data to be stringified
+   * @return {string}           The CSS string for the given data
+   */
+  public getStyleDefString(styles: StyleData): string {
+    const properties = Object.keys(styles);
+    const values: string[] = new Array(properties.length);
+    let i = 0;
+    for (const property of properties) {
+      values[i++] = '  ' + property + ': ' + styles[property] + ';';
     }
+    return values.join('\n');
+  }
 
 }
