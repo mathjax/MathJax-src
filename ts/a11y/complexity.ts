@@ -60,7 +60,7 @@ newState('COMPLEXITY', 40);
 export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
 
   /**
-   * @param {ComplexityMathDocument} docuemnt   The MathDocument for the MathItem
+   * @param {ComplexityMathDocument} document   The MathDocument for the MathItem
    */
   complexity(document: ComplexityMathDocument<N, T, D>): void;
 
@@ -84,7 +84,7 @@ EMItemC<N, T, D>>(BaseMathItem: B, computeComplexity: (node: MmlNode) => void): 
   return class extends BaseMathItem {
 
     /**
-     * @param {ComplexityMathDocument} docuemnt   The MathDocument for the MathItem
+     * @param {ComplexityMathDocument} document   The MathDocument for the MathItem
      */
     public complexity(document: ComplexityMathDocument<N, T, D>) {
       if (this.state() < STATE.COMPLEXITY && !this.isEscaped) {

@@ -272,7 +272,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
    * full documents and still get a valid document.
    *
    * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
-   * @param {LiteDocuemnt} root    The document being checked
+   * @param {LiteDocument} root    The document being checked
    */
   protected checkDocument(adaptor: LiteAdaptor, root: LiteDocument) {
     let node = this.getOnlyChild(adaptor, adaptor.body(root));
