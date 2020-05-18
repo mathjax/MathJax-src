@@ -57,7 +57,7 @@ export interface SymbolMap {
 
   /**
    * @param {string} symbol A symbol to parse.
-   * @return {function(string): ParseResult} A parse method for the symbol.
+   * @return {ParseMethod} A parse method for the symbol.
    */
   parserFor(symbol: string): ParseMethod;
 
@@ -200,9 +200,9 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   }
 
   /**
-   *
-   * @param {string} symbol
-   * @param {T} object
+   * Sets mapping for a symbol.
+   * @param {string} symbol The symbol to map.
+   * @param {T} object The symbols value in the mapping's codomain.
    */
   public add(symbol: string, object: K) {
     this.map.set(symbol, object);

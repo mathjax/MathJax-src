@@ -33,7 +33,7 @@ export class Symbol {
   /**
    * @constructor
    * @param {string} _symbol The symbol parsed.
-   * @param {string} char The corresponding translation.
+   * @param {string} _char The corresponding translation.
    * @param {Attributes} _attributes The attributes for the translation.
    */
   constructor(private _symbol: string, private _char: string,

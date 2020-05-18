@@ -219,7 +219,7 @@ export interface Tags {
    * @param {string} tag The tag content.
    * @param {boolean} noFormat True if tag should not be formatted.
    */
-  tag(tag: string, format: boolean): void;
+  tag(tag: string, noFormat: boolean): void;
 
   /**
    * Call an explicit no tag.

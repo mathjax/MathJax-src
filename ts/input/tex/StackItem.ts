@@ -386,8 +386,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
   /**
-   * Get the private environment
-   * @return {EnvList}
+   * @return {EnvList} Get the private environment
    */
   public get env(): EnvList {
     return this._env;
@@ -395,7 +394,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
   /**
    * Set the private environment
-   * @param {EnvList} value
+   * @param {EnvList} value New private environemt.
    */
   public set env(value: EnvList) {
     this._env = value;
