@@ -272,7 +272,7 @@ CommonWrapper<
       const g = this.adaptor.append(parent, this.svg('g', {'data-c': C}));
       this.place(x, y, g);
       x = 0;
-      for (const n of this.unicodeChars(data.c)) {
+      for (const n of this.unicodeChars(data.c, variant)) {
         x += this.placeChar(n, x, y, g, variant);
       }
     } else if (data.unknown) {
