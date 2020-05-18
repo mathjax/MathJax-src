@@ -268,7 +268,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
 
   /**
    * Check the contents of the parsed document and move html, head, and body
-   * tags into the document structure.  That way, you can parse fragements or
+   * tags into the document structure.  That way, you can parse fragments or
    * full documents and still get a valid document.
    *
    * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
