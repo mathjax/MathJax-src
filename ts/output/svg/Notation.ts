@@ -62,7 +62,7 @@ export const computeLineData = {
  * The data for a given line as two endpoints: [x1, y1, x2, y1]
  *
  * @param {Menclose} node   The node whose line is to be drawn
- * @param {LineName} line   The type of line to draw for the node
+ * @param {LineName} kind   The type of line to draw for the node
  * @return {[number, number, number, number]}   The coordinates of the two nedpoints
  */
 
@@ -76,8 +76,8 @@ export const lineData = function(node: Menclose, kind: LineName): [number, numbe
 /*******************************************************************/
 
 /**
- * @param {string} name    The name of the line to create
- * @return {Renderer}      The renderer function for the given line
+ * @param {LineName} line  The name of the line to create
+ * @return {RENDERER}      The renderer function for the given line
  */
 export const RenderLine = function<N, T, D>(line: LineName): RENDERER<N, T, D> {
   return ((node, _child) => {
@@ -88,8 +88,8 @@ export const RenderLine = function<N, T, D>(line: LineName): RENDERER<N, T, D> {
 /*******************************************************************/
 
 /**
- * @param {string} kind   The kind of line (side, diagonal, etc.)
- * @return {DefPair}      The notation definition for the notation having a line on the given side
+ * @param {Notation.Side} side   The kind of line (side, diagonal, etc.)
+ * @return {DEFPAIR}      The notation definition for the notation having a line on the given side
  */
 export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
   return Notation.CommonBorder<SVGmenclose<N, T, D>, N>((node, _child) => {
@@ -100,9 +100,9 @@ export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
 
 /**
  * @param {string} name    The name of the notation to define
- * @param {string} side1   The first side to get a border
- * @param {string} side2   The second side to get a border
- * @return {DefPair}       The notation definition for the notation having lines on two sides
+ * @param {Notation.Side} side1   The first side to get a border
+ * @param {Notation.Side} side2   The second side to get a border
+ * @return {DEFPAIR}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, side2: Notation.Side): DEFPAIR<N, T, D> {
   return Notation.CommonBorder2<SVGmenclose<N, T, D>, N>((node, _child) => {
@@ -115,7 +115,7 @@ export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, sid
 
 /**
  * @param {LineName} name  The name of the diagonal strike to define
- * @return {DefPair}       The notation definition for the diagonal strike
+ * @return {DEFPAIR}       The notation definition for the diagonal strike
  */
 export const DiagonalStrike = function<N, T, D>(name: LineName): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalStrike<SVGmenclose<N, T, D>, N>((_cname: string) => (node, _child) => {
@@ -127,7 +127,7 @@ export const DiagonalStrike = function<N, T, D>(name: LineName): DEFPAIR<N, T, D
 
 /**
  * @param {string} name   The name of the diagonal arrow to define
- * @return {DefPair}      The notation definition for the diagonal arrow
+ * @return {DEFPAIR}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalArrow<SVGmenclose<N, T, D>, N>((node, arrow) => {
@@ -137,7 +137,7 @@ export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
 
 /**
  * @param {string} name   The name of the horizontal or vertical arrow to define
- * @return {DefPair}      The notation definition for the arrow
+ * @return {DEFPAIR}      The notation definition for the arrow
  */
 export const Arrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonArrow<SVGmenclose<N, T, D>, N>((node, arrow) => {
