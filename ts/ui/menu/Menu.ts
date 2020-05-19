@@ -693,6 +693,7 @@ export class Menu {
    * @param {boolean} mml   True to output hidden Mathml, false to not
    */
   protected setAssistiveMml(mml: boolean) {
+    this.document.options.enableAssistiveMml = mml;
     if (!mml || (MathJax._.a11y && MathJax._.a11y['assistive-mml'])) {
       this.rerender();
     } else {
@@ -705,6 +706,7 @@ export class Menu {
    */
   protected setExplorer(explore: boolean) {
     this.enableExplorerItems(explore);
+    this.document.options.enableExplorer = explore;
     if (!explore || (MathJax._.a11y && MathJax._.a11y.explorer)) {
       this.rerender(this.settings.collapsible ? STATE.RERENDER : STATE.COMPILED);
     } else {
@@ -716,6 +718,7 @@ export class Menu {
    * @param {boolean} collapse   True to enable collapsible math, false to not
    */
   protected setCollapsible(collapse: boolean) {
+    this.document.options.enableComplexity = collapse;
     if (!collapse || (MathJax._.a11y && MathJax._.a11y.complexity)) {
       this.rerender(STATE.COMPILED);
     } else {

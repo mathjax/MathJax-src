@@ -64,8 +64,9 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
 
   /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
+   * @param {boolean} force          True to force the explorer even if enableExplorer is false
    */
-  explorable(document: HTMLDOCUMENT): void;
+  explorable(document: HTMLDOCUMENT, force?: boolean): void;
 
   /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
@@ -118,18 +119,21 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * Add the explorer to the output for this math item
      *
      * @param {HTMLDocument} document   The MathDocument for the MathItem
+     * @param {boolean} force           True to force the explorer even if enableExplorer is false
      */
-    public explorable(document: ExplorerMathDocument) {
-      if (this.state() >= STATE.EXPLORER || this.isEscaped) return;
-      const node = this.typesetRoot;
-      const mml = toMathML(this.root);
-      if (this.savedId) {
-        this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
-        this.savedId = null;
+    public explorable(document: ExplorerMathDocument, force: boolean = false) {
+      if (this.state() >= STATE.EXPLORER) return;
+      if (!this.isEscaped && (document.options.enableExplorer || force)) {
+        const node = this.typesetRoot;
+        const mml = toMathML(this.root);
+        if (this.savedId) {
+          this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
+          this.savedId = null;
+        }
+        // Init explorers:
+        this.explorers = initExplorers(document, node, mml);
+        this.attachExplorers(document);
       }
-      // Init explorers:
-      this.explorers = initExplorers(document, node, mml);
-      this.attachExplorers(document);
       this.state(STATE.EXPLORER);
     }
 
@@ -235,6 +239,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enrichSpeech: 'shallow',                   // overrides option in EnrichedMathDocument
+      enableExplorer: true,
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
@@ -296,8 +301,10 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      */
     public explorable(): ExplorerMathDocument {
       if (!this.processed.isSet('explorer')) {
-        for (const math of this.math) {
-          (math as ExplorerMathItem).explorable(this);
+        if (this.options.enableExplorer) {
+          for (const math of this.math) {
+            (math as ExplorerMathItem).explorable(this);
+          }
         }
         this.processed.set('explorer');
       }
