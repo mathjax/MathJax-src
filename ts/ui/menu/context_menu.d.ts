@@ -256,7 +256,7 @@ declare namespace ContextMenu {
         private store_;
         private anchor;
         private widgets;
-        static parse({menu: menu}: {
+        static Parse({menu: menu}: {
             menu: {
                 pool: Array<Object>;
                 items: Array<Object>;

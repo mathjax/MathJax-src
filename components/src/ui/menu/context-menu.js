@@ -1,4 +1,4 @@
-import '../../../../../mj-context-menu/dist/context_menu.js';
+import '../../../../../mj-context-menu/dist/ContextMenu.js';
 
 //
 //  Check if the global ContextMenu is not defined (in node it won't be

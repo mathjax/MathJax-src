@@ -381,7 +381,7 @@ export class Menu {
      * Create the menu object, attach the info boxes to it, and output any CSS needed for it
      */
     protected initMenu() {
-        this.menu = MJContextMenu.parse({
+        this.menu = MJContextMenu.Parse({
             menu: {
                 id: 'MathJax_Menu',
                 pool: [
