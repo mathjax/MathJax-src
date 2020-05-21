@@ -35,6 +35,12 @@ import {MmlVisitor} from './MmlVisitor.js';
 import {SelectableInfo} from './SelectableInfo.js';
 import {MenuMathDocument} from './MenuHandler.js';
 
+import {Info} from 'mj-context-menu/info';
+import {Parse} from 'mj-context-menu/parse';
+import {Rule} from 'mj-context-menu/item_rule';
+import {CssStyles} from 'mj-context-menu/css_util';
+import {Submenu} from 'mj-context-menu/item_submenu';
+
 /*==========================================================================*/
 
 /**
@@ -234,7 +240,7 @@ export class Menu {
     /**
      * The "About MathJax" info box
      */
-    protected about = new ContextMenu.Info(
+    protected about = new Info(
         '<b style="font-size:120%;">MathJax</b> v' + mathjax.version,
         () => {
             const lines = [] as string[];
@@ -249,7 +255,7 @@ export class Menu {
     /**
      * The "MathJax Help" info box
      */
-    protected help = new ContextMenu.Info(
+    protected help = new Info(
         '<b>MathJax Help</b>',
         () => {
             return [
@@ -331,7 +337,7 @@ export class Menu {
     /**
      * The info box for zoomed expressions
      */
-    protected zoomBox = new ContextMenu.Info(
+    protected zoomBox = new Info(
         'MathJax Zoomed Expression',
         () => {
             if (!this.menu.mathItem) return '';
@@ -381,7 +387,7 @@ export class Menu {
      * Create the menu object, attach the info boxes to it, and output any CSS needed for it
      */
     protected initMenu() {
-        this.menu = MJContextMenu.Parse({
+        this.menu = Parse.contextMenu({
             menu: {
                 id: 'MathJax_Menu',
                 pool: [
@@ -529,8 +535,8 @@ export class Menu {
         menu.showAnnotation = this.annotationText;
         menu.copyAnnotation = this.copyAnnotation.bind(this);
         menu.annotationTypes = this.options.annotationTypes;
-        ContextMenu.CssStyles.addInfoStyles(this.document.document as any);
-        ContextMenu.CssStyles.addMenuStyles(this.document.document as any);
+        CssStyles.addInfoStyles(this.document.document as any);
+        CssStyles.addMenuStyles(this.document.document as any);
     }
 
     /**
@@ -569,9 +575,9 @@ export class Menu {
      * @param {boolean} enable  True to enable, false to disable
      */
     protected enableExplorerItems(enable: boolean) {
-        const menu = (this.menu.findID('Accessibility', 'Activate') as ContextMenu.Submenu).getMenu();
-        for (const item of menu.getItems().slice(1)) {
-            if (item instanceof ContextMenu.Rule) break;
+        const menu = (this.menu.findID('Accessibility', 'Activate') as Submenu).menu;
+        for (const item of menu.items.slice(1)) {
+            if (item instanceof Rule) break;
             enable ? item.enable() : item.disable();
         }
 
@@ -678,7 +684,7 @@ export class Menu {
      * @param {boolean} tab   True for including math in the tab order, false for not
      */
     protected setTabOrder(tab: boolean) {
-        this.menu.getStore().inTaborder(tab);
+        this.menu.store.inTaborder(tab);
     }
 
     /**
@@ -740,7 +746,7 @@ export class Menu {
      */
     protected resetDefaults() {
         Menu.loading++;    // pretend we're loading, to suppress rerendering for each variable change
-        const pool = this.menu.getPool();
+        const pool = this.menu.pool;
         const settings = this.defaultSettings;
         for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
             const variable = pool.lookup(name);
@@ -963,14 +969,14 @@ export class Menu {
         element.addEventListener('keydown', () => this.menu.mathItem = math, true);
         element.addEventListener('click', (event: MouseEvent) => this.zoom(event, 'Click', math), true);
         element.addEventListener('dblclick', (event: MouseEvent) => this.zoom(event, 'DoubleClick', math), true);
-        this.menu.getStore().insert(element);
+        this.menu.store.insert(element);
     }
 
     /**
      * Clear the information about stored context menus
      */
     public clear() {
-        this.menu.getStore().clear();
+        this.menu.store.clear();
     }
 
     /*======================================================================*/

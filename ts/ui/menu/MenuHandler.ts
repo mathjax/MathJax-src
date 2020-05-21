@@ -319,7 +319,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
          */
         public updateDocument() {
             super.updateDocument();
-            (this.menu.menu.getStore() as any).sort();
+            (this.menu.menu.store as any).sort();
             return this;
         }
 

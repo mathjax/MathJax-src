@@ -21,12 +21,15 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {Info} from 'mj-context-menu/info';
+import {HtmlClasses} from 'mj-context-menu/html_classes';
+
 /*==========================================================================*/
 
 /**
  * The SelectableInfo class definition
  */
-export class SelectableInfo extends ContextMenu.Info {
+export class SelectableInfo extends Info {
 
     /**
      * Add a keypress event to handle "select all" so that only
@@ -48,7 +51,7 @@ export class SelectableInfo extends ContextMenu.Info {
      */
     public selectAll() {
         const selection = document.getSelection();
-        selection.selectAllChildren(this.getHtml().querySelector('pre'));
+        selection.selectAllChildren(this.html.querySelector('pre'));
     }
 
     /**
@@ -69,7 +72,7 @@ export class SelectableInfo extends ContextMenu.Info {
      */
     public generateHtml() {
         super.generateHtml();
-        const footer = this.getHtml().querySelector('span.' + ContextMenu.HtmlClasses['INFOSIGNATURE']);
+        const footer = this.html.querySelector('span.' + HtmlClasses['INFOSIGNATURE']);
         const button = footer.appendChild(document.createElement('input'));
         button.type = 'button';
         button.value = 'Copy to Clipboard';
