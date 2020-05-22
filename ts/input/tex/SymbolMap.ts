@@ -80,8 +80,8 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   /**
    * @constructor
    * @implements {SymbolMap}
-   * @param {string} _name Name of the mapping.
-   * @param {ParseMethod} _parser The parser for the mappiong.
+   * @param {string} name Name of the mapping.
+   * @param {ParseMethod} parser The parser for the mappiong.
    */
   constructor(private _name: string, private _parser: ParseMethod) {
     MapHandler.register(this);
@@ -150,7 +150,7 @@ export class RegExpMap extends AbstractSymbolMap<string> {
    * @extends {AbstractSymbolMap}
    * @param {string} name Name of the mapping.
    * @param {ParseMethod} parser The parser for the mappiong.
-   * @param {RegExp} _regexp The regular expression.
+   * @param {RegExp} regexp The regular expression.
    */
   constructor(name: string, parser: ParseMethod, private _regExp: RegExp) {
     super(name, parser);

@@ -100,7 +100,7 @@ export abstract class MmlStack implements NodeStack {
   /**
    * @constructor
    * @extends {NodeStack}
-   * @param {MmlNode[]} _nodes An initial list of nodes to put on the stack.
+   * @param {MmlNode[]} nodes An initial list of nodes to put on the stack.
    */
   constructor(private _nodes: MmlNode[]) { }
 
