@@ -81,7 +81,7 @@ export type BBox = {
  */
 export interface MathItem<N, T, D> {
   /**
-   * The string represeting the expression to be processed
+   * The string representing the expression to be processed
    */
   math: string;
 
@@ -108,7 +108,7 @@ export interface MathItem<N, T, D> {
   end: Location<N, T>;
 
   /**
-   * The internal format for this expression (onece compiled)
+   * The internal format for this expression (once compiled)
    */
   root: MmlNode;
 

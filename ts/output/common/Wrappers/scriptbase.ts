@@ -235,7 +235,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * This gives the common bbox for msub and msup.  It is overriden
+     * This gives the common bbox for msub and msup.  It is overridden
      * for all the others (msubsup, munder, mover, munderover).
      *
      * @override

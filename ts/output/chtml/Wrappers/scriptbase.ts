@@ -53,7 +53,7 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
   public static useIC: boolean = false;
 
   /**
-   * This gives the common output for msub and msup.  It is overriden
+   * This gives the common output for msub and msup.  It is overridden
    * for all the others (msubsup, munder, mover, munderover).
    *
    * @override

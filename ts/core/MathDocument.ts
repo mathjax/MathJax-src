@@ -275,7 +275,7 @@ export interface MathDocument<N, T, D> {
   math: MathList<N, T, D>;
 
   /**
-   * The list of actions to take durring a render() or convert() call
+   * The list of actions to take during a render() or convert() call
    */
   renderActions: RenderList<N, T, D>;
 
@@ -297,7 +297,7 @@ export interface MathDocument<N, T, D> {
   outputJax: OutputJax<N, T, D>;
 
   /**
-   * The DOM adaotor to use for input and output
+   * The DOM adaptor to use for input and output
    */
   adaptor: DOMAdaptor<N, T, D>;
 
@@ -528,7 +528,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
   };
 
   /**
-   * A bit-field for the actions that heve been processed
+   * A bit-field for the actions that have been processed
    */
   public static ProcessBits = BitFieldClass('findMath', 'compile', 'getMetrics', 'typeset', 'updateDocument');
 

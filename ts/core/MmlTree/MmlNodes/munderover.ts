@@ -69,14 +69,14 @@ export class MmlMunderover extends AbstractMmlBaseNode {
   }
 
   /**
-   * @return {number}  Child 1 goes under (overriden by mover below)
+   * @return {number}  Child 1 goes under (overridden by mover below)
    */
   public get under(): number {
     return 1;
   }
 
   /**
-   * @return {number}  Child 2 goes over (overriden by mover below)
+   * @return {number}  Child 2 goes over (overridden by mover below)
    */
   public get over(): number {
     return 2;
@@ -93,7 +93,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
   /**
    * Base is in prime style if there is an over node
    * Force scriptlevel change if converted to sub-sup by movablelimits on the base in non-display mode
-   * Adjust displaystyle, scriptlevel, and primestyle for the uncer/over nodes and check if accent
+   * Adjust displaystyle, scriptlevel, and primestyle for the under/over nodes and check if accent
    *   values have changed due to the inheritance (e.g., settings in operator dictionary)
    *
    * @override
