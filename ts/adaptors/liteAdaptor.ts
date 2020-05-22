@@ -159,7 +159,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   }
 
   /**
-   * @param {LiteELement} node   The node to be searched
+   * @param {LiteElement} node   The node to be searched
    * @param {string} id          The id of the node to look for
    * @return {LiteElement}       The child node having the given id
    */
@@ -182,7 +182,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   }
 
   /**
-   * @param {LiteELement} node   The node to be searched
+   * @param {LiteElement} node   The node to be searched
    * @param {string} name        The name of the class to find
    * @return {LiteElement[]}     The nodes with the given class
    */

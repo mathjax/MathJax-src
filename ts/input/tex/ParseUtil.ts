@@ -211,7 +211,7 @@ namespace ParseUtil {
    * is an <mo>, precede it by an empty <mi> to force the <mo> to
    * be infix.
    * @param {ParseOptions} configuration The current parse options.
-   * @param {MmlNodep[]} nodes The row of nodes to scan for an initial <mo>
+   * @param {MmlNode[]} nodes The row of nodes to scan for an initial <mo>
    */
   export function fixInitialMO(configuration: ParseOptions, nodes: MmlNode[]) {
     for (let i = 0, m = nodes.length; i < m; i++) {

@@ -182,7 +182,7 @@ export interface MathItem<N, T, D> {
    * Removes the typeset version from the document, optionally replacing the original
    * form of the expression and its delimiters.
    *
-   * @param {boolena} restore  True if the original version is to be restored
+   * @param {boolean} restore  True if the original version is to be restored
    */
   removeFromDocument(restore: boolean): void;
 

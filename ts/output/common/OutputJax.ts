@@ -170,7 +170,8 @@ export abstract class CommonOutputJax<
    * Get the cssStyle and font objects
    *
    * @param {OptionList} options         The configuration options
-   * @param {FontDataClass} defaultFont  The default FontData constructor
+   * @param {CommonWrapperFactory} defaultFactory  The default wrapper factory class
+   * @param {FC} defaultFont  The default FontData constructor
    * @constructor
    */
   constructor(options: OptionList = null,
@@ -478,7 +479,7 @@ export abstract class CommonOutputJax<
    * @param {string} type      The type of HTML node to create
    * @param {OptionList} def   The properties to set on the HTML node
    * @param {(N|T)[]} content  Array of child nodes to set for the HTML node
-   * @param {string}           The namespace for the element
+   * @param {string} ns        The namespace for the element
    * @return {N}               The newly created DOM tree
    */
   public html(type: string, def: OptionList = {}, content: (N | T)[] = [], ns?: string): N {
@@ -488,7 +489,7 @@ export abstract class CommonOutputJax<
   /**
    * @param {string} text  The text string for which to make a text node
    *
-   * @return {HTMLElement}  A text node with the given text
+   * @return {T}  A text node with the given text
    */
   public text(text: string): T {
     return this.adaptor.text(text);
@@ -517,7 +518,6 @@ export abstract class CommonOutputJax<
    *
    * @param {string} text        The text to be displayed
    * @param {string} variant     The name of the variant for the text
-   * @param {CssFontData} font   The style cssText string containing the font information
    * @return {N}                 The text element containing the text
    */
   public abstract unknownText(text: string, variant: string): N;
@@ -545,6 +545,8 @@ export abstract class CommonOutputJax<
    *
    * @param {N} text         The text element to measure
    * @param {string} chars   The string contained in the text node
+   * @param {string} variant     The variant for the text
+   * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
    * @return {UnknownBBox}   The width, height and depth for the text
    */
   public measureTextNodeWithCache(text: N, chars: string, variant: string,

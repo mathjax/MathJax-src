@@ -25,7 +25,8 @@
 /**
  * Sort strings by length
  *
- * @param {string} a, b  The strings to be compared
+ * @param {string} a  First string to be compared
+ * @param {string} b  Second string to be compared
  * @return {number}  -1 id a < b, 0 of a === b, 1 if a > b
  */
 export function sortLength(a: string, b: string): number {

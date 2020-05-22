@@ -862,7 +862,7 @@ export class Menu {
   }
 
   /**
-   * @param {MathItem} math   The MathItem to serialize as MathML
+   * @param {HTMLMATHITEM} math   The MathItem to serialize as MathML
    * @returns {string}        The serialized version of the internal MathML
    */
   protected toMML(math: HTMLMATHITEM): string {
@@ -877,7 +877,7 @@ export class Menu {
   /**
    * @param {MouseEvent|null} event   The event triggering the zoom (or null for from a menu pick)
    * @param {string} type             The type of event occurring (click, dblclick)
-   * @param {MathItem} math           The MathItem triggering the event
+   * @param {HTMLMATHITEM} math       The MathItem triggering the event
    */
   protected zoom(event: MouseEvent, type: string, math: HTMLMATHITEM) {
     if (!event || this.isZoomEvent(event, type)) {
@@ -963,7 +963,7 @@ export class Menu {
   /*======================================================================*/
 
   /**
-   * @param {MathItem} math   The math to attach the context menu and zoom triggers to
+   * @param {HTMLMATHITEM} math   The math to attach the context menu and zoom triggers to
    */
   public addMenu(math: HTMLMATHITEM) {
     const element = math.typesetRoot;

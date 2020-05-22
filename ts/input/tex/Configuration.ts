@@ -200,6 +200,7 @@ export class Configuration {
    *
    * @param {Configuration} config   The configuration to be registered in this one
    * @param {TeX} jax                The TeX jax where it is being registered
+   * @param {OptionList=} options    The options for the configuration.
    */
   public register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
     this.append(config);
@@ -251,7 +252,8 @@ export namespace ConfigurationHandler {
   /**
    * Adds a new configuration to the handler overwriting old ones.
    *
-   * @param {SymbolConfiguration} map Registers a new symbol map.
+   * @param {string} name The name of the configuration.
+   * @param {Configuration} map The configuration mapping.
    */
   export let set = function(name: string, map: Configuration): void {
     maps.set(name, map);
@@ -262,7 +264,7 @@ export namespace ConfigurationHandler {
    * Looks up a configuration.
    *
    * @param {string} name The name of the configuration.
-   * @return {SymbolConfiguration} The configuration with the given name or null.
+   * @return {Configuration} The configuration with the given name or null.
    */
   export let get = function(name: string): Configuration {
     return maps.get(name);

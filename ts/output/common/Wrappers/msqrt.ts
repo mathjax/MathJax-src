@@ -171,7 +171,7 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
 
     /**
      * @param {BBox} sbox  The bounding box for the surd character
-     * @return {number[]}  The p, q, and x values for the TeX layout computations
+     * @return {[number, number]}  The p, q, and x values for the TeX layout computations
      */
     public getPQ(sbox: BBox): [number, number] {
       const t = this.font.params.rule_thickness;
@@ -185,7 +185,8 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
     /**
      * @param {BBox} sbox  The bounding box of the surd
      * @param {number} H   The height of the root as a whole
-     * @return {number[]}  The x offset of the surd, and the height, x offset, and scale of the root
+     * @return {[number, number, number, number]} The x offset of the surd, and
+     *     the height, x offset, and scale of the root
      */
     public getRootDimens(_sbox: BBox, _H: number): [number, number, number, number] {
       return [0, 0, 0, 0];

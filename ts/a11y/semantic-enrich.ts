@@ -214,7 +214,7 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
 /**
  * The mixin for adding enrichment to MathDocuments
  *
- * @param {B} BaseMathDocument     The MathDocument class to be extended
+ * @param {B} BaseDocument     The MathDocument class to be extended
  * @param {MathML} MmlJax          The MathML input jax used to convert the enriched MathML
  * @return {EnrichedMathDocument}  The enriched MathDocument class
  *

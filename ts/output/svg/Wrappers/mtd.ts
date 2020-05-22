@@ -48,7 +48,7 @@ CommonMtdMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
    * @param {number} W    The width of the cell
    * @param {number} H    The height of the cell
    * @param {number} D    The depth of the cell
-   * @return {number[]}   The x and y offsets used
+   * @return {[number, number]}   The x and y offsets used
    */
   public placeCell(x: number, y: number, W: number, H: number, D: number): [number, number] {
     const bbox = this.getBBox();

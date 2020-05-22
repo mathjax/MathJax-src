@@ -354,6 +354,8 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {StyleList} styles  The style object to add styles to
    * @param {string} c          The vertical character whose part is being added
    * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
+   * @param {number} n          The unicode character to use for the part
+   * @param {boolean} force     True if padding is always enforced
    */
   protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, force: boolean = false) {
     if (!n) return;
@@ -370,9 +372,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
 
   /**
    * @param {StyleList} styles  The style object to add styles to
-   * @param {string} vclass     The variant class string (e.g., .mjx-b) where this character is being defined
+   * @param {string} vletter    The variant class letter (e.g., `B`, `SS`) where this character is being defined
    * @param {number} n          The unicode character being defined
-   * @param {CharData} data     The bounding box data and options for the character
+   * @param {CHTMLCharData} data     The bounding box data and options for the character
    */
   protected addCharStyles(styles: StyleList, vletter: string, n: number, data: CHTMLCharData) {
     const [ , , w, options] = data as [number, number, number, CHTMLCharOptions];

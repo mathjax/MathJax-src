@@ -137,7 +137,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
    *   Add the end tag with proper spacing (empty tags have the close tag following directly)
    *
    * @param {MmlNode} node    The node to visit
-   * @param {Element} parent  The DOM parent to which this node should be added
+   * @param {string} space    The number of spaces to use for indentation
    * @return {string}         The serialization of the given node
    */
   public visitDefault(node: MmlNode, space: string): string {
@@ -212,7 +212,9 @@ export class SerializedMmlVisitor extends MmlVisitor {
   }
 
   /**
+   * @param {PropertyList} data  The class attribute list
    * @param {string} name    The name for the data-mjx-name attribute
+   * @param {string} value   The value of the attribute
    */
   protected setDataAttribute(data: PropertyList, name: string, value: string) {
     data[DATAMJX + name] = value;
