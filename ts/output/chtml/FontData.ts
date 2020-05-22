@@ -372,7 +372,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
 
   /**
    * @param {StyleList} styles  The style object to add styles to
-   * @param {string} vletter    The variant class string (e.g., .mjx-b) where this character is being defined
+   * @param {string} vletter    The variant class letter (e.g., `B`, `SS`) where this character is being defined
    * @param {number} n          The unicode character being defined
    * @param {CHTMLCharData} data     The bounding box data and options for the character
    */

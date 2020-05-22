@@ -170,7 +170,7 @@ export abstract class CommonOutputJax<
    * Get the cssStyle and font objects
    *
    * @param {OptionList} options         The configuration options
-   * @param {CommonWrapperFactory} defaultFactory  The default wrapper factory
+   * @param {CommonWrapperFactory} defaultFactory  The default wrapper factory class
    * @param {FC} defaultFont  The default FontData constructor
    * @constructor
    */
@@ -546,7 +546,7 @@ export abstract class CommonOutputJax<
    * @param {N} text         The text element to measure
    * @param {string} chars   The string contained in the text node
    * @param {string} variant     The variant for the text
-   * @param {CssFontData} font   The style cssText string containing the font information
+   * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
    * @return {UnknownBBox}   The width, height and depth for the text
    */
   public measureTextNodeWithCache(text: N, chars: string, variant: string,

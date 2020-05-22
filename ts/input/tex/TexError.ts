@@ -37,7 +37,7 @@ export default class TexError {
   /**
    * The old MathJax processing function.
    * @param {string} str The basic error message.
-   * @param {Array[]} args The arguments to be replaced in the error message.
+   * @param {string[]} args The arguments to be replaced in the error message.
    * @return {string} The processed error string.
    */
   private static processString(str: string, args: string[]): string {
