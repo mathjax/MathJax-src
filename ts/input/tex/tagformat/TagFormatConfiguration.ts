@@ -38,7 +38,7 @@ let tagID = 0;
  * @param {Configuration} config   The configuration for the input jax
  * @param {TeX} jax                The TeX input jax
  */
-export function tagFormatConfig(config: Configuration, jax: TeX<any, any, any>) {
+export function tagformatConfig(config: Configuration, jax: TeX<any, any, any>) {
 
   /**
    * If the tag format is being added by one of the other extensions,
@@ -67,28 +67,28 @@ export function tagFormatConfig(config: Configuration, jax: TeX<any, any, any>) 
      * @override
      */
     public formatNumber(n: number) {
-      return jax.parseOptions.options.tagFormat.number(n);
+      return jax.parseOptions.options.tagformat.number(n);
     }
 
     /**
      * @override
      */
     public formatTag(tag: string) {
-      return jax.parseOptions.options.tagFormat.tag(tag);
+      return jax.parseOptions.options.tagformat.tag(tag);
     }
 
     /**
      * @override
      */
     public formatId(id: string) {
-      return jax.parseOptions.options.tagFormat.id(id);
+      return jax.parseOptions.options.tagformat.id(id);
     }
 
     /**
      * @override
      */
     public formatUrl(id: string, base: string) {
-      return jax.parseOptions.options.tagFormat.url(id, base);
+      return jax.parseOptions.options.tagformat.url(id, base);
     }
   }
 
@@ -110,11 +110,11 @@ export function tagFormatConfig(config: Configuration, jax: TeX<any, any, any>) 
  * The configuration object for configTags
  */
 export const TagFormatConfiguration = Configuration.create(
-  'tagFormat', {
-    config: tagFormatConfig,
+  'tagformat', {
+    config: tagformatConfig,
     configPriority: 10,
     options: {
-      tagFormat: {
+      tagformat: {
         number: (n: number) => n.toString(),
         tag:    (tag: string) => '(' + tag + ')',
         id:     (id: string) => 'mjx-eqn-' + id.replace(/\s/g, '_'),

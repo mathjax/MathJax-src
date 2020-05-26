@@ -17,30 +17,22 @@
 
 
 /**
- * @fileoverview Configuration file for the AMScd package.
+ * @fileoverview Symbol mappings for the AMScd package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import './AmsCdMappings.js';
+import * as sm from '../SymbolMap.js';
+import ParseMethods from '../ParseMethods.js';
+import AmsCdMethods from './AmsCdMethods.js';
 
 
-export const AmsCdConfiguration = Configuration.create(
-  'amsCd', {
-    handler: {
-      character: ['amsCd_special'],
-      macro: ['amsCd_macros'],
-      environment: ['amsCd_environment']
-    },
-    options: {
-      amsCd: {
-        colspace: '5pt',
-        rowspace: '5pt',
-        harrowsize: '2.75em',
-        varrowsize: '1.75em',
-        hideHorizontalLabels: false
-      }
-    }
-  }
-);
+new sm.EnvironmentMap('amscd_environment', ParseMethods.environment,
+                      {CD: 'CD'}, AmsCdMethods);
+
+new sm.CommandMap('amscd_macros', {
+  minCDarrowwidth: 'minCDarrowwidth',
+  minCDarrowheight: 'minCDarrowheight',
+}, AmsCdMethods);
+
+new sm.MacroMap('amscd_special', {'@': 'arrow'}, AmsCdMethods);

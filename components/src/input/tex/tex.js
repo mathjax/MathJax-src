@@ -10,7 +10,7 @@ Loader.preLoad(
   '[tex]/noundefined',
   '[tex]/require',
   '[tex]/autoload',
-  '[tex]/configMacros'
+  '[tex]/configmacros'
 );
 
 registerTeX([
@@ -20,5 +20,5 @@ registerTeX([
   'noundefined',
   'require',
   'autoload',
-  'configMacros'
+  'configmacros'
 ]);

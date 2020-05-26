@@ -54,11 +54,11 @@ export const ColorV2Methods: Record<string, ParseMethod> = {
 /**
  * The color macros
  */
-new CommandMap('colorV2', {color: 'Color'}, ColorV2Methods);
+new CommandMap('colorv2', {color: 'Color'}, ColorV2Methods);
 
 /**
  * The configuration for the color macros
  */
 export const ColorConfiguration = Configuration.create(
-  'colorV2', {handler: {macro: ['colorV2']}}
+  'colorv2', {handler: {macro: ['colorv2']}}
 );
