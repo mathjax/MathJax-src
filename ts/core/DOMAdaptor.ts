@@ -282,7 +282,7 @@ export interface DOMAdaptor<N, T, D> {
    * @param {string} name   The class to test
    * @return {boolean}      True if the node has the given class
    */
-  hasClass(node: N, name: string): void;
+  hasClass(node: N, name: string): boolean;
 
   /**
    * @param {N} node        The HTML node whose class list is needed
