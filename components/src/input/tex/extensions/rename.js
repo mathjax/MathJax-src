@@ -2,7 +2,7 @@ import {combineConfig} from '../../../../../js/components/global.js';
 
 //
 // Look for a package name in the package list and change it to a new name
-//   rhen rename tex options for it, if there are any.
+//   and rename tex options for it, if there are any.
 //
 export function rename(oname, nname, options) {
   const tex = MathJax.config.tex;
