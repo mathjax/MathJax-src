@@ -718,17 +718,18 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {string} text     The text to turn into unicode locations
-   * @param {string} variant  The name of the variant for the characters
-   * @return {number[]}  Array of numbers represeting the string's unicode character positions
+   * @param {string} text   The text to turn into unicode locations
+   * @param {string} name   The name of the variant for the characters
+   * @return {number[]}     Array of numbers represeting the string's unicode character positions
    */
-  protected unicodeChars(text: string, variant: string = ''): number[] {
+  protected unicodeChars(text: string, name: string = this.variant): number[] {
     let chars = unicodeChars(text);
     //
     //  Remap to Math Alphanumerics block
     //
-    const map = this.font.getVariant(variant).chars;
-    if (map) {
+    const variant = this.font.getVariant(name);
+    if (variant && variant.chars) {
+      const map = variant.chars;
       //
       //  Is map[n] doesn't exist, (map[n] || []) still gives an CharData array.
       //  If the array doesn't have a CharOptions element use {} instead.

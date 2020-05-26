@@ -11,5 +11,5 @@ combineDefaults(MathJax.config.loader, 'provides', provides);
 Loader.preLoad('loader');
 
 Loader.load(...CONFIG.load)
-    .then(() => CONFIG.ready())
-    .catch(error => CONFIG.failed(error));
+      .then(() => CONFIG.ready())
+      .catch(error => CONFIG.failed(error));
