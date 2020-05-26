@@ -71,7 +71,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
     // Maximum size of TeX string to process.
     maxBuffer: 5 * 1024,
-    formatError: (jax: TeX<any, any, any>, err: TexError) => jax.defaultFormatError(err)
+    formatError: (jax: TeX<any, any, any>, err: TexError) => jax.formatError(err)
   };
 
   /**
@@ -190,7 +190,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         throw err;
       }
       this.parseOptions.error = true;
-      node = this.formatError(err);
+      node = this.options.formatError(this, err);
     }
     node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
     if (display) {
@@ -211,22 +211,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     return this.findTeX.findMath(strings);
   }
 
-
   /**
-   * Wraps an error into a node for output.
+   * Default formatter for error messages:
+   *   wrap an error into a node for output.
    * @param {TeXError} err The TexError.
    * @return {Node} The merror node.
    */
-  protected formatError(err: TexError): MmlNode {
-    return this.options.formatError(this, err);
-  }
-
-  /**
-   * Default formatter for error messages
-   * @param {TeXError} err The TexError.
-   * @return {Node} The merror node.
-   */
-  public defaultFormatError(err: TexError): MmlNode {
+  public formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
     return this.parseOptions.nodeFactory.create(
       'error', message, err.id, this.latex);
