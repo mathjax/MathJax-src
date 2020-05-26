@@ -75,7 +75,7 @@ export class Package {
   public static packages: PackageMap = new Map();
 
   /**
-   * The pacakge name
+   * The package name
    */
   public name: string;
 
@@ -136,7 +136,7 @@ export class Package {
   protected provided: Package[] = [];
 
   /**
-   * @return {boolean}  True when the package can be loaded (i.e., its depedencies are all loaded,
+   * @return {boolean}  True when the package can be loaded (i.e., its dependencies are all loaded,
    *                    it is allowed to be loaded, isn't already loading, and hasn't failed to load
    *                    in the past)
    */
@@ -159,7 +159,7 @@ export class Package {
    * return the result
    *
    * @param {string} name            The name of the package to resolve
-   * @param {boolean} addExtension   True if .js shoudl be added automatically
+   * @param {boolean} addExtension   True if .js should be added automatically
    * @return {string}                The path (file or URL) for this package
    */
   public static resolvePath(name: string, addExtension: boolean = true): string {

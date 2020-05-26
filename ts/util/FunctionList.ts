@@ -57,7 +57,7 @@ export class FunctionList extends PrioritizedList<Function> {
   }
 
   /**
-   * Executes the functions in the list (in prioritied order) asynchronously,
+   * Executes the functions in the list (in prioritized order) asynchronously,
    *   passing the given data to the functions, and doing the next function
    *   only when the previous one completes.  If the function returns a
    *   Promise, then use that to control the flow.  Otherwise, if the

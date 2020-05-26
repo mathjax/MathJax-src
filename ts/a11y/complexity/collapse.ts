@@ -27,7 +27,7 @@ import {ComplexityVisitor} from './visitor.js';
 /*==========================================================================*/
 
 /**
- * Function for checking if a node should be collapsable
+ * Function for checking if a node should be collapsible
  */
 export type CollapseFunction = (node: MmlNode, complexity: number) => number;
 
@@ -349,7 +349,7 @@ export class Collapse {
     }
 
     /**
-     * @param {MmlNode} node    The node to check if its child is collapsable
+     * @param {MmlNode} node    The node to check if its child is collapsible
      * @param {number} n        The position of the child node to check
      * @param {number=} m       The number of children node must have
      * @return {MmlNode|null}   The child node that was collapsed (or null)
@@ -447,7 +447,7 @@ export class Collapse {
     }
 
     /**
-     * @param {MmlNode[]} nodes   The lsit of nodes to replace by maction nodes
+     * @param {MmlNode[]} nodes   The list of nodes to replace by maction nodes
      */
     public makeActions(nodes: MmlNode[]) {
         for (const node of nodes) {

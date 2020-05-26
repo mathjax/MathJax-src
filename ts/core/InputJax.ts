@@ -149,7 +149,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   public mmlFactory: MmlFactory = null;        // set by the handler
 
   /**
-   * @param {OptionList} options  The options to applyt to this input jax
+   * @param {OptionList} options  The options to apply to this input jax
    *
    * @constructor
    */
@@ -212,7 +212,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
    *
    * @param {FunctionList} filters   The list of functions to be performed
    * @param {MathItem} math          The math item that is being processed
-   * @param {MathDocument} document  The math document contaiing the math item
+   * @param {MathDocument} document  The math document containg the math item
    * @param {any} data               Whatever other data is needed
    * @return {any}                   The (possibly modified) data
    */

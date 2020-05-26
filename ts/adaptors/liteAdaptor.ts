@@ -244,7 +244,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
 
   /**
    * @param {LiteNode} node  The node whose index is needed
-   * @return {number}        THe index of the node it its parent's children array
+   * @return {number}        The index of the node it its parent's children array
    */
   public childIndex(node: LiteNode): number {
     return (node.parent ? node.parent.children.findIndex(n => n === node) : -1);

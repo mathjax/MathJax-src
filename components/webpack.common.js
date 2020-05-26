@@ -131,7 +131,7 @@ const MODULE = function (dir) {
  */
 const PACKAGE = function (name, mathjax, libs, dir, dist) {
   const distDir = dist ? path.resolve(dir, dist) :
-        path.resolve(path.dirname(mathjax), 'es5', path.dirname(name));
+                         path.resolve(path.dirname(mathjax), 'es5', path.dirname(name));
   name = path.basename(name);
   return {
     name: name,
