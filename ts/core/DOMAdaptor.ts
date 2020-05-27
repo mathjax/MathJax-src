@@ -115,6 +115,15 @@ export interface DOMAdaptor<N, T, D> {
   getElements(nodes: (string | N | N[])[], document: D): N[];
 
   /**
+   * Determine if a container node contains a given node in somewhere in its DOM tree
+   *
+   * @param {N} container  The container to search
+   * @param {N|T} node     The node to look for
+   * @return {boolean}     True if the node is in the container's DOM tree
+   */
+  contains(container: N, node: N | T): boolean;
+
+  /**
    * @param {N|T} node  The HTML node whose parent is to be obtained
    * @return {N}        The parent node of the given one
    */
@@ -430,6 +439,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract getElements(nodes: (string | N | N[])[], document: D): N[];
+
+  /**
+   * @override
+   */
+  public abstract contains(container: N, node: N | T): boolean;
 
   /**
    * @override

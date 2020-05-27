@@ -238,6 +238,16 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   /**
    * @override
    */
+  public contains(container: LiteNode, node: LiteNode | LiteText) {
+    while (node && node !== container) {
+      node = this.parent(node);
+    }
+    return !!node;
+  }
+
+  /**
+   * @override
+   */
   public parent(node: LiteNode) {
     return node.parent;
   }
@@ -295,6 +305,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     const i = this.childIndex(onode);
     if (i >= 0) {
       onode.parent.children[i] = nnode;
+      nnode.parent = onode.parent;
+      onode.parent = null;
     }
     return onode;
   }

@@ -857,6 +857,35 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     return this;
   }
 
+  /**
+   * Clear the typeset MathItems that are within the given container
+   *   from the document's MathList.  (E.g., when the content of the
+   *   container has been updated and you want to remove the
+   *   associated MathItems)
+   *
+   * @param {N} container   The container DOM element whose math items are to be removed
+   */
+  public clearMathItemsWithin(container: N) {
+    this.math.remove(...this.getMathItemsWithin(container));
+  }
+
+  /**
+   * Get the typeset MathItems that are within a given container.
+   *
+   * @param {N} container          The container DOM element whose math items are to be found
+   * @return {MathItem<N,T,D>[]}   The list of MathItems within that container
+   */
+  public getMathItemsWithin(container: N): MathItem<N, T, D>[] {
+    const adaptor = this.adaptor;
+    const items = [] as MathItem<N, T, D>[];
+    for (const item of this.math) {
+      if (item.start.node && adaptor.contains(container, item.start.node)) {
+        items.push(item);
+      }
+    }
+    return items;
+  }
+
 }
 
 /**
