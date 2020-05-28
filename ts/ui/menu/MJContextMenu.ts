@@ -25,12 +25,12 @@ import {MathItem} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {SelectableInfo} from './SelectableInfo.js';
 
-import {ContextMenu} from 'mj-context-menu/context_menu';
-import {SubMenu} from 'mj-context-menu/sub_menu';
-import {Submenu} from 'mj-context-menu/item_submenu';
-import {Menu} from 'mj-context-menu/menu';
-import {Item} from 'mj-context-menu/item';
-import {Parse} from 'mj-context-menu/parse';
+import {ContextMenu} from 'mj-context-menu/js/context_menu.js';
+import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
+import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+import {Menu} from 'mj-context-menu/js/menu.js';
+import {Item} from 'mj-context-menu/js/item.js';
+import {Parse} from 'mj-context-menu/js/parse.js';
 
 /*==========================================================================*/
 

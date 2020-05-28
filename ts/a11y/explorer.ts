@@ -38,8 +38,8 @@ import * as me from './explorer/MouseExplorer.js';
 import {TreeColorer, FlameColorer} from './explorer/TreeExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
-import {Parse} from 'mj-context-menu/parse';
-import {Submenu} from 'mj-context-menu/item_submenu';
+import {Parse} from 'mj-context-menu/js/parse.js';
+import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
 /**
  * Generic constructor for Mixins

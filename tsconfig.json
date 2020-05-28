@@ -9,8 +9,7 @@
     "removeComments": true,
     "baseUrl": ".",
     "paths": {
-      "mj-context-menu": ["node_modules/mj-context-menu/dist"],
-      "mj-context-menu/*": ["node_modules/mj-context-menu/dist/*"]
+      "mj-context-menu": ["node_modules/mj-context-menu"]
     },
     "lib": ["es6", "dom"],
     "noLib": false,

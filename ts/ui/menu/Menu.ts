@@ -35,11 +35,11 @@ import {MmlVisitor} from './MmlVisitor.js';
 import {SelectableInfo} from './SelectableInfo.js';
 import {MenuMathDocument} from './MenuHandler.js';
 
-import {Info} from 'mj-context-menu/info';
-import {Parse} from 'mj-context-menu/parse';
-import {Rule} from 'mj-context-menu/item_rule';
-import {CssStyles} from 'mj-context-menu/css_util';
-import {Submenu} from 'mj-context-menu/item_submenu';
+import {Info} from 'mj-context-menu/js/info.js';
+import {Parse} from 'mj-context-menu/js/parse.js';
+import {Rule} from 'mj-context-menu/js/item_rule.js';
+import {CssStyles} from 'mj-context-menu/js/css_util.js';
+import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
 /*==========================================================================*/
 

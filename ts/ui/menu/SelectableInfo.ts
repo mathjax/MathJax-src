@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Info} from 'mj-context-menu/info';
-import {HtmlClasses} from 'mj-context-menu/html_classes';
+import {Info} from 'mj-context-menu/js/info.js';
+import {HtmlClasses} from 'mj-context-menu/js/html_classes.js';
 
 /*==========================================================================*/
 
