@@ -183,11 +183,9 @@ export default class TexParser {
     let c: string;
     let n: number;
     while (this.i < this.string.length) {
-      c = this.string.charAt(this.i++);
-      n = c.charCodeAt(0);
-      if (n >= 0xD800 && n < 0xDC00) {
-        c += this.string.charAt(this.i++);
-      }
+      n = this.string.codePointAt(this.i);
+      c = String.fromCodePoint(n);
+      this.i += c.length;
       this.parse('character', [this, c]);
     }
   }
@@ -259,14 +257,14 @@ export default class TexParser {
     while (this.nextIsSpace()) {
       this.i++;
     }
-    return this.string.charAt(this.i);
+    return String.fromCodePoint(this.string.codePointAt(this.i));
   }
 
   /**
    * @return {string} Get and return a control-sequence name
    */
   public GetCS(): string {
-    let CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
+    let CS = this.string.slice(this.i).match(/^([a-z]+|[\uD800-\uDBFF].|.) ?/i);
     if (CS) {
       this.i += CS[1].length;
       return CS[1];
@@ -317,7 +315,9 @@ export default class TexParser {
       // @test MissingCloseBrace
       throw new TexError('MissingCloseBrace', 'Missing close brace');
     }
-    return this.string.charAt(this.i++);
+    const c = String.fromCodePoint(this.string.codePointAt(this.i));
+    this.i += c.length;
+    return c;
   }
 
 
@@ -362,10 +362,7 @@ export default class TexParser {
    * @return {string} The delimiter name.
    */
   public GetDelimiter(name: string, braceOK?: boolean): string {
-    while (this.nextIsSpace()) {
-      this.i++;
-    }
-    let c = this.string.charAt(this.i); this.i++;
+    let c = this.GetNext(); this.i += c.length;
     if (this.i <= this.string.length) {
       if (c === '\\') {
         c += this.GetCS();
@@ -388,10 +385,7 @@ export default class TexParser {
    * @return {string} The dimension string.
    */
   public GetDimen(name: string): string {
-    if (this.nextIsSpace()) {
-      this.i++;
-    }
-    if (this.string.charAt(this.i) === '{') {
+    if (this.GetNext() === '{') {
       let dimen = this.GetArgument(name);
       let [value, unit] = ParseUtil.matchDimen(dimen);
       if (value) {
@@ -426,7 +420,7 @@ export default class TexParser {
     let parens = 0;
     while (this.i < this.string.length) {
       let k = this.i;
-      let c = this.string.charAt(this.i++);
+      let c = this.GetNext(); this.i += c.length;
       switch (c) {
       case '\\':  c += this.GetCS(); break;
       case '{':   parens++; break;

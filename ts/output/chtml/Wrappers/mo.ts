@@ -158,7 +158,7 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
    * @param {N} chtml  The parent element in which to put the delimiter
    */
   protected stretchHTML(chtml: N) {
-    const c = this.getText().charCodeAt(0);
+    const c = this.getText().codePointAt(0);
     const delim = this.stretch;
     delim.used = true;
     const stretch = delim.stretch;
