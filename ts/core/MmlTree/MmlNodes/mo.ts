@@ -255,8 +255,8 @@ export class MmlMo extends AbstractMmlTokenNode {
       return prev;
     }
     if (prev) {
-      if (prev.getProperty('autoOp') && (texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL)) {
-        texClass = this.texClass = TEXCLASS.ORD;
+      if (prev.getProperty('autoOP') && (texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL)) {
+        prevClass = prev.texClass = TEXCLASS.ORD;
       }
       prevClass = this.prevClass = (prev.texClass || TEXCLASS.ORD);
       this.prevLevel = this.attributes.getInherited('scriptlevel') as number;
