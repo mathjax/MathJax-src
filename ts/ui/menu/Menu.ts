@@ -36,7 +36,7 @@ import {SelectableInfo} from './SelectableInfo.js';
 import {MenuMathDocument} from './MenuHandler.js';
 
 import {Info} from 'mj-context-menu/js/info.js';
-import {Parse} from 'mj-context-menu/js/parse.js';
+import {Parser} from 'mj-context-menu/js/parse.js';
 import {Rule} from 'mj-context-menu/js/item_rule.js';
 import {CssStyles} from 'mj-context-menu/js/css_util.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
@@ -387,7 +387,12 @@ export class Menu {
      * Create the menu object, attach the info boxes to it, and output any CSS needed for it
      */
     protected initMenu() {
-        this.menu = Parse.contextMenu({
+      let parser = new Parser([['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)]]);
+      let test = parser.contextMenu({menu: {id: 'mine', pool: [], items: []}});
+      MathJax.PP = parser;
+      console.log(parser);
+      console.log(test);
+        this.menu = parser.contextMenu({
             menu: {
                 id: 'MathJax_Menu',
                 pool: [

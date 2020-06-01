@@ -38,8 +38,8 @@ import * as me from './explorer/MouseExplorer.js';
 import {TreeColorer, FlameColorer} from './explorer/TreeExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
-import {Parse} from 'mj-context-menu/js/parse.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+import {ParserFactory} from 'mj-context-menu/js/parser_factory.js';
 
 /**
  * Generic constructor for Mixins
@@ -514,7 +514,7 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
 let csMenu = function(menu: MJContextMenu, sub: Submenu) {
     // TODO: Replace with real locale!
     const items = sre.ClearspeakPreferences.smartPreferences(menu.mathItem, 'en');
-    return Parse.subMenu({
+    return menu.factory.get('subMenu')(menu.factory, {
         items: items,
         id: 'Clearspeak'
     }, sub);

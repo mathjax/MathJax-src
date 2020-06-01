@@ -30,7 +30,7 @@ import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 import {Menu} from 'mj-context-menu/js/menu.js';
 import {Item} from 'mj-context-menu/js/item.js';
-import {Parse} from 'mj-context-menu/js/parse.js';
+import {ParserFactory} from 'mj-context-menu/js/parser_factory.js';
 
 /*==========================================================================*/
 
@@ -162,9 +162,12 @@ export class MJContextMenu extends ContextMenu {
      *                                   and text is the content of the annotation of that type
      */
     protected getAnnotations(node: MmlNode) {
+      console.log(node);
         const annotations = [] as [string, string][];
         if (!node) return annotations;
         for (const child of node.childNodes as MmlNode[]) {
+          console.log(child);
+          console.log(child.isKind('annotation'));
             if (child.isKind('annotation')) {
                 const match = this.annotationMatch(child);
                 if (match) {
@@ -199,7 +202,7 @@ export class MJContextMenu extends ContextMenu {
      */
     protected createAnnotationMenu(id: string, annotations: [string, string][], action: () => void) {
         const menu = this.findID(id, 'Annotation') as Submenu;
-        menu.submenu =  Parse.subMenu({
+        menu.submenu = this.factory.get('subMenu')(this.factory, {
             items: annotations.map(([type, value]) => {
                 return {
                     type: 'command',
