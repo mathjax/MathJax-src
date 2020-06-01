@@ -437,6 +437,24 @@ export interface MathDocument<N, T, D> {
    */
   concat(list: MathList<N, T, D>): MathDocument<N, T, D>;
 
+  /**
+   * Clear the typeset MathItems that are within the given container
+   *   from the document's MathList.  (E.g., when the content of the
+   *   container has been updated and you want to remove the
+   *   associated MathItems)
+   *
+   * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be removed
+   */
+  clearMathItemsWithin(containers: ContainerList<N>): void;
+
+  /**
+   * Get the typeset MathItems that are within a given container.
+   *
+   * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be found
+   * @return {MathItem<N,T,D>[]}          The list of MathItems within that container
+   */
+  getMathItemsWithin(elements: ContainerList<N>): MathItem<N, T, D>[];
+
 }
 
 /*****************************************************************/
@@ -867,24 +885,16 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
   }
 
   /**
-   * Clear the typeset MathItems that are within the given container
-   *   from the document's MathList.  (E.g., when the content of the
-   *   container has been updated and you want to remove the
-   *   associated MathItems)
-   *
-   * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be removed
+   * @override
    */
   public clearMathItemsWithin(containers: ContainerList<N>) {
     this.math.remove(...this.getMathItemsWithin(containers));
   }
 
   /**
-   * Get the typeset MathItems that are within a given container.
-   *
-   * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be found
-   * @return {MathItem<N,T,D>[]}          The list of MathItems within that container
+   * @override
    */
-  public getMathItemsWithin(elements: ContainerList<N>): MathItem<N, T, D>[] {
+  public getMathItemsWithin(elements: ContainerList<N>) {
     if (!Array.isArray(elements)) {
       elements = [elements];
     }
