@@ -580,7 +580,7 @@ export class Menu {
    */
   protected enableExplorerItems(enable: boolean) {
     const menu = (this.menu.findID('Accessibility', 'Activate') as Submenu).menu;
-    for (const item of menu.getItems().slice(1)) {
+    for (const item of menu.items.slice(1)) {
       if (item instanceof Rule) break;
       enable ? item.enable() : item.disable();
     }
@@ -693,7 +693,7 @@ export class Menu {
    * @param {boolean} tab   True for including math in the tab order, false for not
    */
   protected setTabOrder(tab: boolean) {
-    this.menu.getStore().inTaborder(tab);
+    this.menu.store.inTaborder(tab);
   }
 
   /**
@@ -755,7 +755,7 @@ export class Menu {
    */
   protected resetDefaults() {
     Menu.loading++;    // pretend we're loading, to suppress rerendering for each variable change
-    const pool = this.menu.getPool();
+    const pool = this.menu.pool;
     const settings = this.defaultSettings;
     for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
       const variable = pool.lookup(name);

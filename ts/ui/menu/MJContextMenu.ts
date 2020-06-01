@@ -30,7 +30,6 @@ import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 import {Menu} from 'mj-context-menu/js/menu.js';
 import {Item} from 'mj-context-menu/js/item.js';
-import {ParserFactory} from 'mj-context-menu/js/parser_factory.js';
 
 /*==========================================================================*/
 

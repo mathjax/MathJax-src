@@ -38,7 +38,6 @@ import {TreeColorer, FlameColorer} from './explorer/TreeExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
-import {ParserFactory} from 'mj-context-menu/js/parser_factory.js';
 
 /**
  * Generic constructor for Mixins
