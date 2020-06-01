@@ -30,14 +30,12 @@ import NodeUtil from '../NodeUtil.js';
 import {TexConstant} from '../TexConstants.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {Label} from '../Tags.js';
 import {Macro} from '../Symbol.js';
 import {CommandMap} from '../SymbolMap.js';
-import {MapHandler, ExtensionMaps} from '../MapHandler.js';
+import {ExtensionMaps} from '../MapHandler.js';
 import {ArrayItem} from '../base/BaseItems.js';
 import BaseMethods from '../base/BaseMethods.js';
-import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
+import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 
 
@@ -173,7 +171,7 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-AmsMethods.SkipLimits = function(parser: TexParser, name: string) {
+AmsMethods.SkipLimits = function(parser: TexParser, _name: string) {
   // @test Operatorname
   const c = parser.GetNext(), i = parser.i;
   if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
@@ -252,7 +250,7 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
  * @param {string} name The macro name.
  * @param {string} shove The shove value.
  */
-AmsMethods.HandleShove = function(parser: TexParser, name: string,
+AmsMethods.HandleShove = function(parser: TexParser, _name: string,
                                   shove: string) {
   let top = parser.stack.Top();
   // @test Shove (Left|Right) (Top|Middle|Bottom)

@@ -80,6 +80,7 @@ export class SubHandler {
    * @constructor
    * @param {Array.<string>} maps Names of the maps included in this
    *     configuration.
+   * @param {ParseMethod} fallback A fallback method if no map is found.
    */
   constructor(maps: string[], private _fallback: ParseMethod) {
     for (const name of maps) {
@@ -195,7 +196,7 @@ export class SubHandlers {
 
   /**
    * Sets a new configuration for the map handler.
-   * @param {Configuration} configuration A setting for the map handler.
+   * @param {Configuration} config A setting for the map handler.
    */
   constructor(config: Configuration) {
     for (const key of Object.keys(config.handler)) {

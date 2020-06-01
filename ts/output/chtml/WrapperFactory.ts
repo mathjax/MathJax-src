@@ -22,7 +22,6 @@
  */
 
 import {CHTML} from '../chtml.js';
-import {CommonWrapper} from '../common/Wrapper.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
 import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
 import {CHTMLWrappers} from './Wrappers.js';
@@ -38,22 +37,22 @@ import {CHTMLCharOptions, CHTMLDelimiterData, CHTMLFontData} from './FontData.js
  */
 export class CHTMLWrapperFactory<N, T, D> extends
 CommonWrapperFactory<
-    CHTML<N, T, D>,
-    CHTMLWrapper<N, T, D>,
-    CHTMLWrapperClass<N, T, D>,
-    CHTMLCharOptions,
-    CHTMLDelimiterData,
-    CHTMLFontData
+  CHTML<N, T, D>,
+  CHTMLWrapper<N, T, D>,
+  CHTMLWrapperClass,
+  CHTMLCharOptions,
+  CHTMLDelimiterData,
+  CHTMLFontData
 > {
 
-    /**
-     * The default list of wrapper nodes this factory can create
-     */
-    public static defaultNodes = CHTMLWrappers;
+  /**
+   * The default list of wrapper nodes this factory can create
+   */
+  public static defaultNodes = CHTMLWrappers;
 
-    /**
-     * The CHTML output jax associated with this factory
-     */
-    public jax: CHTML<N, T, D>;
+  /**
+   * The CHTML output jax associated with this factory
+   */
+  public jax: CHTML<N, T, D>;
 
 }

@@ -96,5 +96,3 @@ new CommandMap('unicode', {unicode: 'Unicode'}, UnicodeMethods);
 export const UnicodeConfiguration = Configuration.create(
   'unicode', {handler: {macro: ['unicode']}}
 );
-
-

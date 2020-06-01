@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap} from '../FontData.js';
+import {FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap} from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -31,56 +31,61 @@ import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFon
  * @template V  The VariantData class for this font
  * @template B  The FontData class to extend
  */
-export function CommonTeXFontMixin<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData,
-                                   B extends FontDataClass<C, V, D>>(Base: B): FontDataClass<C, V, D> & B {
-    return class extends Base {
+export function CommonTeXFontMixin<
+  C extends CharOptions,
+  V extends VariantData<C>,
+  D extends DelimiterData,
+  B extends FontDataClass<C, V, D>
+>(Base: B): FontDataClass<C, V, D> & B {
 
-        /**
-         *  Add the extra variants for the TeX fonts
-         */
-        protected static defaultVariants = [
-            ...Base.defaultVariants,
-            ['-smallop', 'normal'],
-            ['-largeop', 'normal'],
-            ['-size3', 'normal'],
-            ['-size4', 'normal'],
-            ['-tex-calligraphic', 'italic'],
-            ['-tex-bold-calligraphic', 'bold-italic'],
-            ['-tex-oldstyle', 'normal'],
-            ['-tex-bold-oldstyle', 'bold'],
-            ['-tex-mathit', 'italic'],
-            ['-tex-variant', 'normal']
-        ];
+  return class extends Base {
 
-        /**
-         * The data used for CSS for undefined characters for each variant
-         */
-        protected static defaultCssFonts: CssFontMap = {
-            ...Base.defaultCssFonts,
-            '-smallop': ['serif', false, false],
-            '-largeop': ['serif', false, false],
-            '-size3': ['serif', false, false],
-            '-size4': ['serif', false, false],
-            '-tex-calligraphic': ['cursive', true, false],
-            '-tex-bold-calligraphic': ['cursive', true, true],
-            '-tex-oldstyle': ['serif', false, false],
-            '-tex-bold-oldstyle': ['serif', false, true],
-            '-tex-mathit': ['serif', true, false]
-        };
+    /**
+     *  Add the extra variants for the TeX fonts
+     */
+    protected static defaultVariants = [
+      ...Base.defaultVariants,
+      ['-smallop', 'normal'],
+      ['-largeop', 'normal'],
+      ['-size3', 'normal'],
+      ['-size4', 'normal'],
+      ['-tex-calligraphic', 'italic'],
+      ['-tex-bold-calligraphic', 'bold-italic'],
+      ['-tex-oldstyle', 'normal'],
+      ['-tex-bold-oldstyle', 'bold'],
+      ['-tex-mathit', 'italic'],
+      ['-tex-variant', 'normal']
+    ];
 
-        /**
-         *  The default variants for the standard stretchy sizes
-         */
-        protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
+    /**
+     * The data used for CSS for undefined characters for each variant
+     */
+    protected static defaultCssFonts: CssFontMap = {
+      ...Base.defaultCssFonts,
+      '-smallop': ['serif', false, false],
+      '-largeop': ['serif', false, false],
+      '-size3': ['serif', false, false],
+      '-size4': ['serif', false, false],
+      '-tex-calligraphic': ['cursive', true, false],
+      '-tex-bold-calligraphic': ['cursive', true, true],
+      '-tex-oldstyle': ['serif', false, false],
+      '-tex-bold-oldstyle': ['serif', false, true],
+      '-tex-mathit': ['serif', true, false]
+    };
 
-        /**
-         * @override
-         */
-        protected getDelimiterData(n: number) {
-            return this.getChar('-smallop', n) || this.getChar('-size4', n);
-        }
+    /**
+     *  The default variants for the standard stretchy sizes
+     */
+    protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
 
+    /**
+     * @override
+     */
+    protected getDelimiterData(n: number) {
+      return this.getChar('-smallop', n) || this.getChar('-size4', n);
     }
+
+  };
 
 }
 

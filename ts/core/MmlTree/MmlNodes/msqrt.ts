@@ -30,47 +30,58 @@ import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMsqrt extends AbstractMmlNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults
-    };
-    public texClass = TEXCLASS.ORD;
 
-    /**
-     * @return {string}  The msqrt kind
-     */
-    public get kind() {
-        return 'msqrt';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults
+  };
 
-    /**
-     * @return {number}  <msqrt> has an inferred mrow
-     */
-    public get arity() {
-        return -1;
-    }
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @return {boolean}  <msqrt> can contain line breaks
-     */
-    public get linebreakContainer() {
-        return true;
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'msqrt';
+  }
 
-    /**
-     * @override
-     */
-    public setTeXclass(prev: MmlNode) {
-        this.getPrevClass(prev);
-        this.childNodes[0].setTeXclass(null);
-        return this;
-    }
+  /**
+   * <msqrt> has an inferred mrow
+   * @override
+   */
+  public get arity() {
+    return -1;
+  }
 
-    /**
-     * The contents of sqrt are in TeX prime style.
-     *
-     * @override
-     */
-    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
-    }
+  /**
+   * <msqrt> can contain line breaks
+   * @override
+   */
+  public get linebreakContainer() {
+    return true;
+  }
+
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    this.getPrevClass(prev);
+    this.childNodes[0].setTeXclass(null);
+    return this;
+  }
+
+  /**
+   * The contents of sqrt are in TeX prime style.
+   *
+   * @override
+   */
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, _prime: boolean) {
+    this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
+  }
+
 }

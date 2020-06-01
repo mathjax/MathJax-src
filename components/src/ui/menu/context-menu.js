@@ -8,8 +8,8 @@ import '../../../../node_modules/mj-context-menu/js/info.js';
 //  menus are only useful in the browser).
 //
 if (typeof ContextMenu === 'undefined') {
-    global.ContextMenu = {
-        ContextMenu: class {},
-        Info: class {}
-    };
+  global.ContextMenu = {
+    ContextMenu: class {},
+    Info: class {}
+  };
 }

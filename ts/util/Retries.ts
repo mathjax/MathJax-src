@@ -36,7 +36,7 @@ declare var MathJax: {Callback: {After: Function}};
  */
 
 export interface RetryError extends Error {
-    retry: Promise<any>;
+  retry: Promise<any>;
 }
 
 /*****************************************************************/
@@ -67,22 +67,22 @@ export interface RetryError extends Error {
  *                         generates an error (that is not a retry).
  */
 
-export function handleRetriesFor(code: Function) {
-    return new Promise(function run(ok: Function, fail: Function) {
-        try {
-            ok(code());
-        } catch (err) {
-            if (err.retry && err.retry instanceof Promise) {
-                err.retry.then(() => run(ok, fail))
-                         .catch((perr: Error) => fail(perr));
-            } else if (err.restart && err.restart.isCallback) {
-                // FIXME: Remove this branch when all legacy code is gone
-                MathJax.Callback.After(() => run(ok, fail), err.restart);
-            } else {
-                fail(err);
-            }
-        }
-    });
+export function handleRetriesFor(code: Function): Promise<any> {
+  return new Promise(function run(ok: Function, fail: Function) {
+    try {
+      ok(code());
+    } catch (err) {
+      if (err.retry && err.retry instanceof Promise) {
+        err.retry.then(() => run(ok, fail))
+                 .catch((perr: Error) => fail(perr));
+      } else if (err.restart && err.restart.isCallback) {
+        // FIXME: Remove this branch when all legacy code is gone
+        MathJax.Callback.After(() => run(ok, fail), err.restart);
+      } else {
+        fail(err);
+      }
+    }
+  });
 }
 
 /*****************************************************************/
@@ -96,7 +96,7 @@ export function handleRetriesFor(code: Function) {
  */
 
 export function retryAfter(promise: Promise<any>) {
-    let err = new Error('MathJax retry') as RetryError;
-    err.retry = promise;
-    throw err;
+  let err = new Error('MathJax retry') as RetryError;
+  err.retry = promise;
+  throw err;
 }

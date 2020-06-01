@@ -85,6 +85,8 @@ let init = function(config: Configuration) {
 };
 
 export const ExtpfeilConfiguration = Configuration.create(
-  'extpfeil', {handler: {macro: ['extpfeil']},
-               init: init}
+  'extpfeil', {
+    handler: {macro: ['extpfeil']},
+    init: init
+  }
 );

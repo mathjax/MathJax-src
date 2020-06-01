@@ -22,8 +22,8 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
-import {CommonMrow, CommonMrowMixin} from '../../common/Wrappers/mrow.js';
-import {CommonInferredMrow, CommonInferredMrowMixin} from '../../common/Wrappers/mrow.js';
+import {CommonMrowMixin} from '../../common/Wrappers/mrow.js';
+import {CommonInferredMrowMixin} from '../../common/Wrappers/mrow.js';
 import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
 
 /*****************************************************************/
@@ -34,33 +34,38 @@ import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmrow<N, T, D> extends CommonMrowMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmrow<N, T, D> extends
+CommonMrowMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    public static kind = MmlMrow.prototype.kind;
+  /**
+   * The mrow wrapper
+   */
+  public static kind = MmlMrow.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        const chtml = (this.node.isInferred ? (this.chtml = parent) : this.standardCHTMLnode(parent));
-        let hasNegative = false;
-        for (const child of this.childNodes) {
-            child.toCHTML(chtml);
-            if (child.bbox.w < 0) {
-                hasNegative = true;
-            }
-        }
-        // FIXME:  handle line breaks
-        if (hasNegative) {
-            const {w} = this.getBBox();
-            if (w) {
-                this.adaptor.setStyle(chtml, 'width', this.em(Math.max(0, w)));
-                if (w < 0) {
-                    this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
-                }
-            }
-        }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    const chtml = (this.node.isInferred ? (this.chtml = parent) : this.standardCHTMLnode(parent));
+    let hasNegative = false;
+    for (const child of this.childNodes) {
+      child.toCHTML(chtml);
+      if (child.bbox.w < 0) {
+        hasNegative = true;
+      }
     }
+    // FIXME:  handle line breaks
+    if (hasNegative) {
+      const {w} = this.getBBox();
+      if (w) {
+        this.adaptor.setStyle(chtml, 'width', this.em(Math.max(0, w)));
+        if (w < 0) {
+          this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
+        }
+      }
+    }
+  }
 
 }
 
@@ -72,8 +77,13 @@ export class CHTMLmrow<N, T, D> extends CommonMrowMixin<CHTMLConstructor<any, an
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLinferredMrow<N, T, D> extends CommonInferredMrowMixin<Constructor<CHTMLmrow<any, any, any>>>(CHTMLmrow) {
+// @ts-ignore
+export class CHTMLinferredMrow<N, T, D> extends
+CommonInferredMrowMixin<Constructor<CHTMLmrow<any, any, any>>>(CHTMLmrow) {
 
-    public static kind = MmlInferredMrow.prototype.kind;
+  /**
+   * The inferred-mrow wrapper
+   */
+  public static kind = MmlInferredMrow.prototype.kind;
 
 }

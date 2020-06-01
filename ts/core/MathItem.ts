@@ -37,10 +37,10 @@ import {MmlNode} from './MmlTree/MmlNode.js';
  * @template T  The Text node class
  */
 export type Location<N, T> = {
-    i?: number;
-    n?: number;
-    delim?: string;
-    node?: N | T;
+  i?: number;
+  n?: number;
+  delim?: string;
+  node?: N | T;
 };
 
 /*****************************************************************/
@@ -49,11 +49,11 @@ export type Location<N, T> = {
  *  a MathItem.
  */
 export type Metrics = {
-    em: number;
-    ex: number;
-    containerWidth: number;
-    lineWidth: number;
-    scale: number;
+  em: number;
+  ex: number;
+  containerWidth: number;
+  lineWidth: number;
+  scale: number;
 };
 
 /*****************************************************************/
@@ -62,7 +62,7 @@ export type Metrics = {
  *  for the typeset element.
  */
 export type BBox = {
-    // will be defined later
+  // will be defined later
 };
 
 /*****************************************************************/
@@ -80,142 +80,142 @@ export type BBox = {
  * @template D  The Document class
  */
 export interface MathItem<N, T, D> {
-    /**
-     * The string represeting the expression to be processed
-     */
-    math: string;
+  /**
+   * The string representing the expression to be processed
+   */
+  math: string;
 
-    /**
-     * The input jax used to process the math
-     */
-    inputJax: InputJax<N, T, D>;
+  /**
+   * The input jax used to process the math
+   */
+  inputJax: InputJax<N, T, D>;
 
-    /**
-     * Whether the math is in display mode or inline mode
-     */
-    display: boolean;
+  /**
+   * Whether the math is in display mode or inline mode
+   */
+  display: boolean;
 
-    /**
-     * Whether this item is an escaped character or not
-     */
-    isEscaped: boolean;
+  /**
+   * Whether this item is an escaped character or not
+   */
+  isEscaped: boolean;
 
-    /**
-     * The start and ending locations in the document of
-     *   this expression
-     */
-    start: Location<N, T>;
-    end: Location<N, T>;
+  /**
+   * The start and ending locations in the document of
+   *   this expression
+   */
+  start: Location<N, T>;
+  end: Location<N, T>;
 
-    /**
-     * The internal format for this expression (onece compiled)
-     */
-    root: MmlNode;
+  /**
+   * The internal format for this expression (once compiled)
+   */
+  root: MmlNode;
 
-    /**
-     * The typeset version of the expression (once typeset)
-     */
-    typesetRoot: N;
+  /**
+   * The typeset version of the expression (once typeset)
+   */
+  typesetRoot: N;
 
-    /**
-     * The metric information at the location of the math
-     * (the em-size, scaling factor, etc.)
-     */
-    metrics: Metrics;
+  /**
+   * The metric information at the location of the math
+   * (the em-size, scaling factor, etc.)
+   */
+  metrics: Metrics;
 
-    /**
-     * The bounding box for the typeset math (once typeset)
-     */
-    bbox: BBox;
+  /**
+   * The bounding box for the typeset math (once typeset)
+   */
+  bbox: BBox;
 
-    /**
-     * Extra data needed by the input or output jax, as needed
-     */
-    inputData: OptionList;
-    outputData: OptionList;
+  /**
+   * Extra data needed by the input or output jax, as needed
+   */
+  inputData: OptionList;
+  outputData: OptionList;
 
-    /**
-     * Perform the renderActions on the document
-     *
-     * @param {MathDocument} document  The MathDocument in which the math resides
-     */
-    render(document: MathDocument<N, T, D>): void;
+  /**
+   * Perform the renderActions on the document
+   *
+   * @param {MathDocument} document  The MathDocument in which the math resides
+   */
+  render(document: MathDocument<N, T, D>): void;
 
-    /**
-     * Rerenders an already rendered item and inserts it into the document
-     *
-     * @param {MathDocument} document  The MathDocument in which the math resides
-     * @param {number=} start          The state to start rerendering at (default = RERENDER)
-     */
-    rerender(document: MathDocument<N, T, D>, start?: number): void;
+  /**
+   * Rerenders an already rendered item and inserts it into the document
+   *
+   * @param {MathDocument} document  The MathDocument in which the math resides
+   * @param {number=} start          The state to start rerendering at (default = RERENDER)
+   */
+  rerender(document: MathDocument<N, T, D>, start?: number): void;
 
-    /**
-     * Converts the expression by calling the render actions until the state matches the end state
-     *
-     * @param {MathDocument} document  The MathDocument in which the math resides
-     * @param {number=} end            The state to end rerendering at (default = LAST)
-     */
-    convert(document: MathDocument<N, T, D>, end?: number): void;
+  /**
+   * Converts the expression by calling the render actions until the state matches the end state
+   *
+   * @param {MathDocument} document  The MathDocument in which the math resides
+   * @param {number=} end            The state to end rerendering at (default = LAST)
+   */
+  convert(document: MathDocument<N, T, D>, end?: number): void;
 
-    /**
-     * Converts the expression into the internal format by calling the input jax
-     *
-     * @param {MathDocument} document  The MathDocument in which the math resides
-     */
-    compile(document: MathDocument<N, T, D>): void;
+  /**
+   * Converts the expression into the internal format by calling the input jax
+   *
+   * @param {MathDocument} document  The MathDocument in which the math resides
+   */
+  compile(document: MathDocument<N, T, D>): void;
 
-    /**
-     * Converts the internal format to the typeset version by calling the output jax
-     *
-     * @param {MathDocument} document  The MathDocument in which the math resides
-     */
-    typeset(document: MathDocument<N, T, D>): void;
+  /**
+   * Converts the internal format to the typeset version by calling the output jax
+   *
+   * @param {MathDocument} document  The MathDocument in which the math resides
+   */
+  typeset(document: MathDocument<N, T, D>): void;
 
-    /**
-     * Inserts the typeset version in place of the original form in the document
-     *
-     * @param {MathDocument} document  The MathDocument in which the math resides
-     */
-    updateDocument(document: MathDocument<N, T, D>): void;
+  /**
+   * Inserts the typeset version in place of the original form in the document
+   *
+   * @param {MathDocument} document  The MathDocument in which the math resides
+   */
+  updateDocument(document: MathDocument<N, T, D>): void;
 
-    /**
-     * Removes the typeset version from the document, optionally replacing the original
-     * form of the expression and its delimiters.
-     *
-     * @param {boolena} restore  True if the original version is to be restored
-     */
-    removeFromDocument(restore: boolean): void;
+  /**
+   * Removes the typeset version from the document, optionally replacing the original
+   * form of the expression and its delimiters.
+   *
+   * @param {boolean} restore  True if the original version is to be restored
+   */
+  removeFromDocument(restore: boolean): void;
 
-    /**
-     * Sets the metric information for this expression
-     *
-     * @param {number} em      The size of 1 em in pixels
-     * @param {number} ex      The size of 1 ex in pixels
-     * @param {number} cwidth  The container width in pixels
-     * @param {number} lwidth  The line breaking width in pixels
-     * @param {number} scale   The scaling factor (unitless)
-     */
-    setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number): void;
+  /**
+   * Sets the metric information for this expression
+   *
+   * @param {number} em      The size of 1 em in pixels
+   * @param {number} ex      The size of 1 ex in pixels
+   * @param {number} cwidth  The container width in pixels
+   * @param {number} lwidth  The line breaking width in pixels
+   * @param {number} scale   The scaling factor (unitless)
+   */
+  setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number): void;
 
-    /**
-     * Set or return the current processing state of this expression,
-     * optionally restoring the document if rolling back an expression
-     * that has been added to the document.
-     *
-     * @param {number} state    The state to set for the expression
-     * @param {number} restore  True if the original form should be restored
-     *                           to the document when rolling back a typeset version
-     * @returns {number}        The current state
-     */
-    state(state?: number, restore?: boolean): number;
+  /**
+   * Set or return the current processing state of this expression,
+   * optionally restoring the document if rolling back an expression
+   * that has been added to the document.
+   *
+   * @param {number} state    The state to set for the expression
+   * @param {number} restore  True if the original form should be restored
+   *                           to the document when rolling back a typeset version
+   * @returns {number}        The current state
+   */
+  state(state?: number, restore?: boolean): number;
 
-    /**
-     * Reset the item to its unprocessed state
-     *
-     * @param {number} restore  True if the original form should be restored
-     *                           to the document when rolling back a typeset version
-     */
-    reset(restore?: boolean): void;
+  /**
+   * Reset the item to its unprocessed state
+   *
+   * @param {number} restore  True if the original form should be restored
+   *                           to the document when rolling back a typeset version
+   */
+  reset(restore?: boolean): void;
 }
 
 /*****************************************************************/
@@ -231,13 +231,13 @@ export interface MathItem<N, T, D> {
  * @template T  The Text node class
  */
 export type ProtoItem<N, T> = {
-    math: string;            // The math expression itself
-    start: Location<N, T>;   // The starting location of the math
-    end: Location<N, T>;     // The ending location of the math
-    open?: string;           // The opening delimiter
-    close?: string;          // The closing delimiter
-    n?: number;              // The index of the string in which this math is found
-    display: boolean;        // True means display mode, false is inline mode
+  math: string;            // The math expression itself
+  start: Location<N, T>;   // The starting location of the math
+  end: Location<N, T>;     // The ending location of the math
+  open?: string;           // The opening delimiter
+  close?: string;          // The closing delimiter
+  n?: number;              // The index of the string in which this math is found
+  display: boolean;        // True means display mode, false is inline mode
 };
 
 /**
@@ -248,9 +248,9 @@ export type ProtoItem<N, T> = {
  */
 export function protoItem<N, T>(open: string, math: string, close: string, n: number,
                                 start: number, end: number, display: boolean = null) {
-    let item: ProtoItem<N, T> = {open: open, math: math, close: close,
-                                 n: n, start: {n: start}, end: {n: end}, display: display};
-    return item;
+  let item: ProtoItem<N, T> = {open: open, math: math, close: close,
+                               n: n, start: {n: start}, end: {n: end}, display: display};
+  return item;
 }
 
 /*****************************************************************/
@@ -263,139 +263,188 @@ export function protoItem<N, T>(open: string, math: string, close: string, n: nu
  */
 export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
-    public math: string;
-    public inputJax: InputJax<N, T, D>;
-    public display: boolean;
-    public start: Location<N, T>;
-    public end: Location<N, T>;
-    public root: MmlNode = null;
-    public typesetRoot: N = null;
-    protected _state: number = STATE.UNPROCESSED;
-    public metrics: Metrics = {} as Metrics;
-    public bbox: BBox = {};
-    public inputData: OptionList = {};
-    public outputData: OptionList = {};
+  /**
+   * The source text for the math (e.g., TeX string)
+   */
+  public math: string;
 
-    public get isEscaped() {
-        return this.display === null;
+  /**
+   * The input jax associated with this item
+   */
+
+  public inputJax: InputJax<N, T, D>;
+
+  /**
+   * True when this math is in display mode
+   */
+  public display: boolean;
+
+  /**
+   * Reference to the beginning of the math in the document
+   */
+  public start: Location<N, T>;
+  /**
+   * Reference to the end of the math in the document
+   */
+  public end: Location<N, T>;
+
+  /**
+   * The compiled internal MathML (result of InputJax)
+   */
+  public root: MmlNode = null;
+  /**
+   * The typeset result (result of OutputJax)
+   */
+  public typesetRoot: N = null;
+
+  /**
+   * The metric information about the surrounding environment
+   */
+  public metrics: Metrics = {} as Metrics;
+
+  /**
+   * The bounding box of the typeset math
+   */
+  public bbox: BBox = {};
+
+  /**
+   * Data private to the input jax
+   */
+  public inputData: OptionList = {};
+
+  /**
+   * Data private to the output jax
+   */
+  public outputData: OptionList = {};
+
+  /**
+   * The current state of the item (how far in the render actions it has been processed)
+   */
+  protected _state: number = STATE.UNPROCESSED;
+
+  /**
+   * @return {boolean}   True when this item is an escaped delimiter
+   */
+  public get isEscaped(): boolean {
+    return this.display === null;
+  }
+
+  /**
+   * @param {string} math      The math expression for this item
+   * @param {Inputjax} jax     The input jax to use for this item
+   * @param {boolean} display  True if display mode, false if inline
+   * @param {Location} start   The starting position of the math in the document
+   * @param {Location} end     The ending position of the math in the document
+   * @constructor
+   */
+  constructor (math: string, jax: InputJax<N, T, D>, display: boolean = true,
+               start: Location<N, T> = {i: 0, n: 0, delim: ''},
+               end: Location<N, T> = {i: 0, n: 0, delim: ''}) {
+    this.math = math;
+    this.inputJax = jax;
+    this.display = display;
+    this.start = start;
+    this.end = end;
+    this.root = null;
+    this.typesetRoot = null;
+    this.metrics = {} as Metrics;
+    this.bbox = {};
+    this.inputData = {};
+    this.outputData = {};
+  }
+
+  /**
+   * @override
+   */
+  public render(document: MathDocument<N, T, D>) {
+    document.renderActions.renderMath(this, document);
+  }
+
+  /**
+   * @override
+   */
+  public rerender(document: MathDocument<N, T, D>, start: number = STATE.RERENDER) {
+    if (this.state() >= start) {
+      this.state(start - 1);
     }
+    document.renderActions.renderMath(this, document, start);
+  }
 
-    /**
-     * @param {string} math      The math expression for this item
-     * @param {Inputjax} jax     The input jax to use for this item
-     * @param {boolean} display  True if display mode, false if inline
-     * @param {Location} start   The starting position of the math in the document
-     * @param {Location} end     The ending position of the math in the document
-     * @constructor
-     */
-    constructor (math: string, jax: InputJax<N, T, D>, display: boolean = true,
-                 start: Location<N, T> = {i: 0, n: 0, delim: ''},
-                 end: Location<N, T> = {i: 0, n: 0, delim: ''}) {
-        this.math = math;
-        this.inputJax = jax;
-        this.display = display;
-        this.start = start;
-        this.end = end;
-        this.root = null;
-        this.typesetRoot = null;
-        this.metrics = {} as Metrics;
+  /**
+   * @override
+   */
+  public convert(document: MathDocument<N, T, D>, end: number = STATE.LAST) {
+    document.renderActions.renderConvert(this, document, end);
+  }
+
+  /**
+   * @override
+   */
+  public compile(document: MathDocument<N, T, D>) {
+    if (this.state() < STATE.COMPILED) {
+      this.root = this.inputJax.compile(this, document);
+      this.state(STATE.COMPILED);
+    }
+  }
+
+  /**
+   * @override
+   */
+  public typeset(document: MathDocument<N, T, D>) {
+    if (this.state() < STATE.TYPESET) {
+      this.typesetRoot = document.outputJax[this.isEscaped ? 'escaped' : 'typeset'](this, document);
+      this.state(STATE.TYPESET);
+    }
+  }
+
+  /**
+   * @override
+   */
+  public updateDocument(_document: MathDocument<N, T, D>) {}
+
+  /**
+   * @override
+   */
+  public removeFromDocument(_restore: boolean = false) {}
+
+  /**
+   * @override
+   */
+  public setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number) {
+    this.metrics = {
+      em: em, ex: ex,
+      containerWidth: cwidth,
+      lineWidth: lwidth,
+      scale: scale
+    };
+  }
+
+  /**
+   * @override
+   */
+  public state(state: number = null, restore: boolean = false) {
+    if (state != null) {
+      if (state < STATE.INSERTED && this._state >= STATE.INSERTED) {
+        this.removeFromDocument(restore);
+      }
+      if (state < STATE.TYPESET && this._state >= STATE.TYPESET) {
         this.bbox = {};
-        this.inputData = {};
         this.outputData = {};
+      }
+      if (state < STATE.COMPILED && this._state >= STATE.COMPILED) {
+        this.inputData = {};
+      }
+      this._state = state;
     }
+    return this._state;
+  }
 
-    /**
-     * @override
-     */
-    public render(document: MathDocument<N, T, D>) {
-        document.renderActions.renderMath(this, document);
-    }
-
-    /**
-     * @override
-     */
-    public rerender(document: MathDocument<N, T, D>, start: number = STATE.RERENDER) {
-        if (this.state() >= start) {
-            this.state(start - 1);
-        }
-        document.renderActions.renderMath(this, document, start);
-    }
-
-    /**
-     * @override
-     */
-    public convert(document: MathDocument<N, T, D>, end: number = STATE.LAST) {
-        document.renderActions.renderConvert(this, document, end);
-    }
-
-    /**
-     * @override
-     */
-    public compile(document: MathDocument<N, T, D>) {
-        if (this.state() < STATE.COMPILED) {
-            this.root = this.inputJax.compile(this, document);
-            this.state(STATE.COMPILED);
-        }
-    }
-
-    /**
-     * @override
-     */
-    public typeset(document: MathDocument<N, T, D>) {
-        if (this.state() < STATE.TYPESET) {
-            this.typesetRoot = document.outputJax[this.isEscaped ? 'escaped' : 'typeset'](this, document);
-            this.state(STATE.TYPESET);
-        }
-    }
-
-    /**
-     * @override
-     */
-    public updateDocument(document: MathDocument<N, T, D>) {}
-
-    /**
-     * @override
-     */
-    public removeFromDocument(restore: boolean = false) {}
-
-    /**
-     * @override
-     */
-    public setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number) {
-        this.metrics = {
-            em: em, ex: ex,
-            containerWidth: cwidth,
-            lineWidth: lwidth,
-            scale: scale
-        };
-    }
-
-    /**
-     * @override
-     */
-    public state(state: number = null, restore: boolean = false) {
-        if (state != null) {
-            if (state < STATE.INSERTED && this._state >= STATE.INSERTED) {
-                this.removeFromDocument(restore);
-            }
-            if (state < STATE.TYPESET && this._state >= STATE.TYPESET) {
-                this.bbox = {};
-                this.outputData = {};
-            }
-            if (state < STATE.COMPILED && this._state >= STATE.COMPILED) {
-                this.inputData = {};
-            }
-            this._state = state;
-        }
-        return this._state;
-    }
-
-    /**
-     * @override
-     */
-    public reset(restore: boolean = false) {
-        this.state(STATE.UNPROCESSED);
-    }
+  /**
+   * @override
+   */
+  public reset(restore: boolean = false) {
+    this.state(STATE.UNPROCESSED, restore);
+  }
 
 }
 
@@ -405,15 +454,15 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
  *   (open-ended so that extensions can add to it)
  */
 export const STATE: {[state: string]: number} = {
-    UNPROCESSED: 0,
-    FINDMATH: 10,
-    COMPILED: 20,
-    CONVERT: 100,
-    METRICS: 110,
-    RERENDER: 125,
-    TYPESET: 150,
-    INSERTED: 200,
-    LAST: 10000
+  UNPROCESSED: 0,
+  FINDMATH: 10,
+  COMPILED: 20,
+  CONVERT: 100,
+  METRICS: 110,
+  RERENDER: 125,
+  TYPESET: 150,
+  INSERTED: 200,
+  LAST: 10000
 };
 
 /**
@@ -423,8 +472,8 @@ export const STATE: {[state: string]: number} = {
  * @param {number} state   The value for the new state
  */
 export function newState(name: string, state: number) {
-    if (name in STATE) {
-        throw Error('State ' + name + ' already exists');
-    }
-    STATE[name] = state;
+  if (name in STATE) {
+    throw Error('State ' + name + ' already exists');
+  }
+  STATE[name] = state;
 }

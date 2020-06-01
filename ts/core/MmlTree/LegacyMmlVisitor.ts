@@ -37,92 +37,92 @@ let MML = MathJax.ElementJax.mml;
 
 export class LegacyMmlVisitor extends MmlVisitor {
 
-    /**
-     * Convert the tree rooted at a particular node into the old-style
-     * internal format used by MathJax v2.
-     *
-     * @param {MmlNode} node  The node to use as the root of the tree to traverse
-     * @return {any}  The old-style internal format equivalent of the tree
-     */
-    public visitTree(node: MmlNode) {
-        let root = MML.mrow();
-        this.visitNode(node, root);
-        root = root.data[0];
-        root.parent = null;
-        return root;
-    }
+  /**
+   * Convert the tree rooted at a particular node into the old-style
+   * internal format used by MathJax v2.
+   *
+   * @param {MmlNode} node  The node to use as the root of the tree to traverse
+   * @return {any}  The old-style internal format equivalent of the tree
+   */
+  public visitTree(node: MmlNode): any {
+    let root = MML.mrow();
+    this.visitNode(node, root);
+    root = root.data[0];
+    root.parent = null;
+    return root;
+  }
 
-    /**
-     * @param {TextNode} node  The text node to visit
-     * @param {any} parent  The old-style parent to which this node should be added
-     */
-    public visitTextNode(node: TextNode, parent: any) {
-        parent.Append(MML.chars(node.getText()));
-    }
+  /**
+   * @param {TextNode} node  The text node to visit
+   * @param {any} parent  The old-style parent to which this node should be added
+   */
+  public visitTextNode(node: TextNode, parent: any) {
+    parent.Append(MML.chars(node.getText()));
+  }
 
-    /**
-     * @param {XMLNode} node  The XML node to visit
-     * @param {any} parent  The old-style parent to which this node should be added
-     */
-    public visitXMLNode(node: XMLNode, parent: any) {
-        parent.Append(MML.xml(node.getXML()));
-    }
+  /**
+   * @param {XMLNode} node  The XML node to visit
+   * @param {any} parent  The old-style parent to which this node should be added
+   */
+  public visitXMLNode(node: XMLNode, parent: any) {
+    parent.Append(MML.xml(node.getXML()));
+  }
 
-    /**
-     * Visit an inferred mrow, but don't add the inferred row itself (the old-style
-     * nodes will add one automatically).
-     *
-     * @param {MmlNode} node  The inferred mrow to visit
-     * @param {any} parent  The old-style parent to which this node's children should be added
-     */
-    public visitInferredMrowNode(node: MmlNode, parent: any) {
-        for (const child of node.childNodes) {
-            this.visitNode(child, parent);
-        }
+  /**
+   * Visit an inferred mrow, but don't add the inferred row itself (the old-style
+   * nodes will add one automatically).
+   *
+   * @param {MmlNode} node  The inferred mrow to visit
+   * @param {any} parent  The old-style parent to which this node's children should be added
+   */
+  public visitInferredMrowNode(node: MmlNode, parent: any) {
+    for (const child of node.childNodes) {
+      this.visitNode(child, parent);
     }
+  }
 
-    /**
-     * The generic visiting function:
-     *   Create a node of the correct type.
-     *   Add its explicit attributes.
-     *   Add its non-attribute properties.
-     *   Append its children nodes.
-     *   Append the new node to the old-style parent.
-     *
-     * @param {MmlNode} node  The node to visit
-     * @param {any} parent  The old-style parent to which this node should be added
-     */
-    public visitDefault(node: MmlNode, parent: any) {
-        let mml = MML[node.kind]();
-        this.addAttributes(node, mml);
-        this.addProperties(node, mml);
-        for (const child of node.childNodes) {
-            this.visitNode(child, mml);
-        }
-        parent.Append(mml);
+  /**
+   * The generic visiting function:
+   *   Create a node of the correct type.
+   *   Add its explicit attributes.
+   *   Add its non-attribute properties.
+   *   Append its children nodes.
+   *   Append the new node to the old-style parent.
+   *
+   * @param {MmlNode} node  The node to visit
+   * @param {any} parent  The old-style parent to which this node should be added
+   */
+  public visitDefault(node: MmlNode, parent: any) {
+    let mml = MML[node.kind]();
+    this.addAttributes(node, mml);
+    this.addProperties(node, mml);
+    for (const child of node.childNodes) {
+      this.visitNode(child, mml);
     }
+    parent.Append(mml);
+  }
 
-    /**
-     * @param {MmlNode} node  The node who attributes are to be copied
-     * @param {any} mml  The old-style node to which attributes are being added
-     */
-    public addAttributes(node: MmlNode, mml: any) {
-        let attributes = node.attributes;
-        let names = attributes.getExplicitNames();
-        for (const name of names) {
-            mml[name] = attributes.getExplicit(name);
-        }
+  /**
+   * @param {MmlNode} node  The node who attributes are to be copied
+   * @param {any} mml  The old-style node to which attributes are being added
+   */
+  public addAttributes(node: MmlNode, mml: any) {
+    let attributes = node.attributes;
+    let names = attributes.getExplicitNames();
+    for (const name of names) {
+      mml[name] = attributes.getExplicit(name);
     }
+  }
 
-    /**
-     * @param {MmlNode} node  The node whose properties are to be copied
-     * @param {any} mml  The old-stype node to which the properties are being copied
-     */
-    public addProperties(node: MmlNode, mml: any) {
-        let names = node.getPropertyNames();
-        for (const name of names) {
-            mml[name] = node.getProperty(name);
-        }
+  /**
+   * @param {MmlNode} node  The node whose properties are to be copied
+   * @param {any} mml  The old-stype node to which the properties are being copied
+   */
+  public addProperties(node: MmlNode, mml: any) {
+    let names = node.getPropertyNames();
+    for (const name of names) {
+      mml[name] = node.getProperty(name);
     }
+  }
 
 }

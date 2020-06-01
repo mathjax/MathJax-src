@@ -28,37 +28,37 @@ import TexParser from '../TexParser.js';
 
 export const ColorV2Methods: Record<string, ParseMethod> = {
 
-    /**
-     * Implements the v2 color macro
-     *
-     * @param {TexParser} parser The calling parser.
-     * @param {string} name The macro name.
-     */
-    Color(parser: TexParser, name: string) {
-        // @test Color Frac
-        const color = parser.GetArgument(name);
-        const old = parser.stack.env['color'];
-        parser.stack.env['color'] = color;
-        const math = parser.ParseArg(name);
-        if (old) {
-            parser.stack.env['color'] = old;
-        } else {
-            delete parser.stack.env['color'];
-        }
-        const node = parser.create('node', 'mstyle', [math], {mathcolor: color});
-        parser.Push(node);
+  /**
+   * Implements the v2 color macro
+   *
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro name.
+   */
+  Color(parser: TexParser, name: string) {
+    // @test Color Frac
+    const color = parser.GetArgument(name);
+    const old = parser.stack.env['color'];
+    parser.stack.env['color'] = color;
+    const math = parser.ParseArg(name);
+    if (old) {
+      parser.stack.env['color'] = old;
+    } else {
+      delete parser.stack.env['color'];
     }
+    const node = parser.create('node', 'mstyle', [math], {mathcolor: color});
+    parser.Push(node);
+  }
 
 };
 
 /**
  * The color macros
  */
-new CommandMap('colorV2', {color: 'Color'}, ColorV2Methods);
+new CommandMap('colorv2', {color: 'Color'}, ColorV2Methods);
 
 /**
  * The configuration for the color macros
  */
 export const ColorConfiguration = Configuration.create(
-    'colorV2', {handler: {macro: ['colorV2']}}
+  'colorv2', {handler: {macro: ['colorv2']}}
 );

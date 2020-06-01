@@ -27,19 +27,20 @@ import './AmsCdMappings.js';
 
 
 export const AmsCdConfiguration = Configuration.create(
-  'amsCd',
-  {handler: {
-    character: ['amsCd_special'],
-    macro: ['amsCd_macros'],
-    environment: ['amsCd_environment']
-  },
-  options: {
-    amsCd: {
-      colspace: '5pt',
-      rowspace: '5pt',
-      harrowsize: '2.75em',
-      varrowsize: '1.75em',
-      hideHorizontalLabels: false
+  'amscd', {
+    handler: {
+      character: ['amscd_special'],
+      macro: ['amscd_macros'],
+      environment: ['amscd_environment']
+    },
+    options: {
+      amscd: {
+        colspace: '5pt',
+        rowspace: '5pt',
+        harrowsize: '2.75em',
+        varrowsize: '1.75em',
+        hideHorizontalLabels: false
+      }
     }
-  }}
+  }
 );

@@ -26,7 +26,6 @@ import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
-import TexError from '../TexError.js';
 import BaseMethods from '../base/BaseMethods.js';
 
 

@@ -24,7 +24,6 @@
 import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {BBox} from '../BBox.js';
-import {Property} from '../../../core/Tree/Node.js';
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/
@@ -45,28 +44,28 @@ export type EventHandler = (event: Event) => void;
  * Data used for tooltip actions
  */
 export const TooltipData = {
-    dx: '.2em',          // x-offset of tooltip from right side of maction bbox
-    dy: '.1em',          // y-offset of tooltip from bottom of maction bbox
+  dx: '.2em',          // x-offset of tooltip from right side of maction bbox
+  dy: '.1em',          // y-offset of tooltip from bottom of maction bbox
 
-    postDelay: 600,      // milliseconds before tooltip posts
-    clearDelay: 100,     // milliseconds before tooltip is removed
+  postDelay: 600,      // milliseconds before tooltip posts
+  clearDelay: 100,     // milliseconds before tooltip is removed
 
-    hoverTimer: new Map<any, number>(),    // timers for posting tooltips
-    clearTimer: new Map<any, number>(),    // timers for removing tooltips
+  hoverTimer: new Map<any, number>(),    // timers for posting tooltips
+  clearTimer: new Map<any, number>(),    // timers for removing tooltips
 
-    /*
-     * clear the timers if any are active
-     */
-    stopTimers: (node: any, data: ActionData) => {
-        if (data.clearTimer.has(node)) {
-            clearTimeout(data.clearTimer.get(node));
-            data.clearTimer.delete(node);
-        }
-        if (data.hoverTimer.has(node)) {
-            clearTimeout(data.hoverTimer.get(node));
-            data.hoverTimer.delete(node);
-        }
+  /*
+   * clear the timers if any are active
+   */
+  stopTimers: (node: any, data: ActionData) => {
+    if (data.clearTimer.has(node)) {
+      clearTimeout(data.clearTimer.get(node));
+      data.clearTimer.delete(node);
     }
+    if (data.hoverTimer.has(node)) {
+      clearTimeout(data.hoverTimer.get(node));
+      data.hoverTimer.delete(node);
+    }
+  }
 
 };
 
@@ -77,22 +76,22 @@ export const TooltipData = {
  * @template W  The maction wrapper type
  */
 export interface CommonMaction<W extends AnyWrapper> extends AnyWrapper {
-    /**
-     * The handler for the specified actiontype
-     */
-    action: ActionHandler<W>;
-    data: ActionData;
+  /**
+   * The handler for the specified actiontype
+   */
+  action: ActionHandler<W>;
+  data: ActionData;
 
-    /**
-     * Tooltip offsets
-     */
-    dx: number;
-    dy: number;
+  /**
+   * Tooltip offsets
+   */
+  dx: number;
+  dy: number;
 
-    /**
-     * The selected child wrapper
-     */
-    readonly selected: W;
+  /**
+   * The selected child wrapper
+   */
+  readonly selected: W;
 
 }
 
@@ -102,10 +101,10 @@ export interface CommonMaction<W extends AnyWrapper> extends AnyWrapper {
  * @template W  The maction wrapper type
  */
 export interface CommonMactionClass<W extends AnyWrapper> extends AnyWrapperClass {
-    /**
-     * The valid action types and their handlers
-     */
-    actions: ActionMap<W>;
+  /**
+   * The valid action types and their handlers
+   */
+  actions: ActionMap<W>;
 }
 
 /**
@@ -122,61 +121,73 @@ export type MactionConstructor<W extends AnyWrapper> = Constructor<CommonMaction
  * @template W  The maction wrapper type
  * @template T  The Wrapper class constructor type
  */
-export function CommonMactionMixin<W extends AnyWrapper,
-                                   T extends WrapperConstructor>(Base: T): MactionConstructor<W> & T {
-    return class extends Base {
+export function CommonMactionMixin<
+  W extends AnyWrapper,
+  T extends WrapperConstructor
+>(Base: T): MactionConstructor<W> & T {
 
-        /**
-         * The handler and data for the specified actiontype
-         */
-        public action: ActionHandler<W>;
-        public data: ActionData;
+  return class extends Base {
 
-        public dx: number;
-        public dy: number;
+    /**
+     * The handler for the specified actiontype
+     */
+    public action: ActionHandler<W>;
+    /**
+     * The data for the specified actiontype
+     */
+    public data: ActionData;
 
-        /**
-         * @return {W}  The selected child wrapper
-         */
-        public get selected(): W {
-            const selection = this.node.attributes.get('selection') as number;
-            const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
-            return this.childNodes[i] || this.wrap((this.node as MmlMaction).selected);
-        }
+    /**
+     * The x-offset for tooltips
+     */
+    public dx: number;
+    /**
+     * The y-offset for tooltips
+     */
+    public dy: number;
 
-        /*************************************************************/
+    /**
+     * @return {W}  The selected child wrapper
+     */
+    public get selected(): W {
+      const selection = this.node.attributes.get('selection') as number;
+      const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
+      return this.childNodes[i] || this.wrap((this.node as MmlMaction).selected);
+    }
 
-        /**
-         * @override
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            const actions = (this.constructor as CommonMactionClass<W>).actions;
-            const action = this.node.attributes.get('actiontype') as string;
-            const [handler, data] = actions.get(action) || [((node, data) => {}) as ActionHandler<W>, {}];
-            this.action = handler;
-            this.data = data;
-            this.getParameters();
-        }
+    /*************************************************************/
 
-        /**
-         * Look up attribute parameters
-         */
-        public getParameters() {
-            const offsets = this.node.attributes.get('data-offsets') as string;
-            let [dx, dy] = split(offsets || '');
-            this.dx = this.length2em(dx || TooltipData.dx);
-            this.dy = this.length2em(dy || TooltipData.dy);
-        }
+    /**
+     * @override
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      const actions = (this.constructor as CommonMactionClass<W>).actions;
+      const action = this.node.attributes.get('actiontype') as string;
+      const [handler, data] = actions.get(action) || [((_node, _data) => {}) as ActionHandler<W>, {}];
+      this.action = handler;
+      this.data = data;
+      this.getParameters();
+    }
 
-        /**
-         * @override
-         */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
-            bbox.updateFrom(this.selected.getBBox());
-            this.selected.setChildPWidths(recompute);
-        }
+    /**
+     * Look up attribute parameters
+     */
+    public getParameters() {
+      const offsets = this.node.attributes.get('data-offsets') as string;
+      let [dx, dy] = split(offsets || '');
+      this.dx = this.length2em(dx || TooltipData.dx);
+      this.dy = this.length2em(dy || TooltipData.dy);
+    }
 
-    };
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+      bbox.updateFrom(this.selected.getBBox());
+      this.selected.setChildPWidths(recompute);
+    }
+
+  };
 
 }

@@ -42,140 +42,146 @@ import {MathMLCompile} from './mathml/MathMLCompile.js';
  */
 export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
 
-    public static NAME: string = 'MathML';
-    public static OPTIONS: OptionList = defaultOptions({
-        parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
-        forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
-        FindMathML: null,        // The FindMathML instance to override the default one
-        MathMLCompile: null,     // The MathMLCompile instance to override the default one
-        /*
-         * The function to use to handle a parsing error (throw an error by default)
-         */
-        parseError: function (node: Node) {
-            this.error(this.adaptor.textContent(node).replace(/\n.*/g, ''));
-        }
-    }, AbstractInputJax.OPTIONS);
+  /**
+   * The name of this input jax
+   */
+  public static NAME: string = 'MathML';
 
-    /**
-     * The FindMathML instance used to locate MathML in the document
+  /**
+   * @override
+   */
+  public static OPTIONS: OptionList = defaultOptions({
+    parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
+    forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM
+    FindMathML: null,        // The FindMathML instance to override the default one
+    MathMLCompile: null,     // The MathMLCompile instance to override the default one
+    /*
+     * The function to use to handle a parsing error (throw an error by default)
      */
-    protected findMathML: FindMathML<N, T, D>;
-
-    /**
-     * The MathMLCompile instance used to convert the MathML tree to internal format
-     */
-    protected mathml: MathMLCompile<N, T, D>;
-
-    /**
-     * A list of functions to call on the parsed MathML DOM before conversion to internal structure
-     */
-    protected mmlFilters: FunctionList;
-
-    /**
-     * @override
-     */
-    constructor(options: OptionList = {}) {
-        let [mml, find, compile] = separateOptions(options, FindMathML.OPTIONS, MathMLCompile.OPTIONS);
-        super(mml);
-        this.findMathML = this.options['FindMathML'] || new FindMathML<N, T, D>(find);
-        this.mathml = this.options['MathMLCompile'] || new MathMLCompile<N, T, D>(compile);
-        this.mmlFilters = new FunctionList();
+    parseError: function (node: Node) {
+      this.error(this.adaptor.textContent(node).replace(/\n.*/g, ''));
     }
+  }, AbstractInputJax.OPTIONS);
 
-    /**
-     * Set the adaptor in any of the objects that need it
-     *
-     * @override
-     */
-    public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
-        super.setAdaptor(adaptor);
-        this.findMathML.adaptor = adaptor;
-        this.mathml.adaptor = adaptor;
-    }
+  /**
+   * The FindMathML instance used to locate MathML in the document
+   */
+  protected findMathML: FindMathML<N, T, D>;
 
-    /**
-     * @param {MmlFactory} mmlFactory  The MmlFactory to use for this MathML input jax
-     */
-    public setMmlFactory(mmlFactory: MmlFactory) {
-        super.setMmlFactory(mmlFactory);
-        this.mathml.setMmlFactory(mmlFactory);
-    }
+  /**
+   * The MathMLCompile instance used to convert the MathML tree to internal format
+   */
+  protected mathml: MathMLCompile<N, T, D>;
 
-    /**
-     * Don't process strings (process nodes)
-     *
-     * @override
-     */
-    public get processStrings() {
-        return false;
-    }
+  /**
+   * A list of functions to call on the parsed MathML DOM before conversion to internal structure
+   */
+  protected mmlFilters: FunctionList;
 
-    /**
-     * Convert a MathItem to internal format:
-     *   If there is no existing MathML node, or we are asked to reparse everything
-     *     Execute the preFilters on the math
-     *     Parse the MathML string in the desired format, and check the result for errors
-     *     If we got an HTML document:
-     *       Check that it has only one child (the <math> element), and use it
-     *     Otherwise
-     *       Use the root element from the XML document
-     *     If the node is not a <math> node, report the error.
-     *   Execute the mmlFilters on the parsed MathML
-     *   Compile the MathML to internal format, and execute the postFilters
-     *   Return the resulting internal format
-     *
-     * @override
-     */
-    public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
-        let mml = math.start.node;
-        if (!mml || !math.end.node || this.options['forceReparse'] || this.adaptor.kind(mml) === '#text') {
-            let mathml = this.executeFilters(this.preFilters, math, document, math.math || '<math></math>');
-            let doc = this.checkForErrors(this.adaptor.parse(mathml, 'text/' + this.options['parseAs']));
-            let body = this.adaptor.body(doc);
-            if (this.adaptor.childNodes(body).length !== 1) {
-                this.error('MathML must consist of a single element');
-            }
-            mml = this.adaptor.remove(this.adaptor.firstChild(body)) as N;
-            if (this.adaptor.kind(mml).replace(/^[a-z]+:/, '') !== 'math') {
-                this.error('MathML must be formed by a <math> element, not <' +
-                           this.adaptor.kind(mml) + '>');
-            }
-        }
-        mml = this.executeFilters(this.mmlFilters, math, document, mml);
-        return this.executeFilters(this.postFilters, math, document, this.mathml.compile(mml as N));
-    }
+  /**
+   * @override
+   */
+  constructor(options: OptionList = {}) {
+    let [mml, find, compile] = separateOptions(options, FindMathML.OPTIONS, MathMLCompile.OPTIONS);
+    super(mml);
+    this.findMathML = this.options['FindMathML'] || new FindMathML<N, T, D>(find);
+    this.mathml = this.options['MathMLCompile'] || new MathMLCompile<N, T, D>(compile);
+    this.mmlFilters = new FunctionList();
+  }
 
-    /**
-     * Check a parsed MathML string for errors.
-     *
-     * @param {Document} doc  The document returns from the DOMParser
-     * @return {Document}     The document
-     */
-    protected checkForErrors(doc: D) {
-        let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
-        if (err) {
-            if (this.adaptor.textContent(err) === '') {
-                this.error('Error processing MathML');
-            }
-            this.options['parseError'].call(this, err);
-        }
-        return doc;
-    }
+  /**
+   * Set the adaptor in any of the objects that need it
+   *
+   * @override
+   */
+  public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
+    super.setAdaptor(adaptor);
+    this.findMathML.adaptor = adaptor;
+    this.mathml.adaptor = adaptor;
+  }
 
-    /**
-     * Throw an error
-     *
-     * @param {string} message  The error message to produce
-     */
-    protected error(message: string) {
-        throw new Error(message);
-    }
+  /**
+   * @param {MmlFactory} mmlFactory  The MmlFactory to use for this MathML input jax
+   */
+  public setMmlFactory(mmlFactory: MmlFactory) {
+    super.setMmlFactory(mmlFactory);
+    this.mathml.setMmlFactory(mmlFactory);
+  }
 
-    /**
-     * @override
-     */
-    public findMath(node: N) {
-        return this.findMathML.findMath(node);
+  /**
+   * Don't process strings (process nodes)
+   *
+   * @override
+   */
+  public get processStrings() {
+    return false;
+  }
+
+  /**
+   * Convert a MathItem to internal format:
+   *   If there is no existing MathML node, or we are asked to reparse everything
+   *     Execute the preFilters on the math
+   *     Parse the MathML string in the desired format, and check the result for errors
+   *     If we got an HTML document:
+   *       Check that it has only one child (the <math> element), and use it
+   *     Otherwise
+   *       Use the root element from the XML document
+   *     If the node is not a <math> node, report the error.
+   *   Execute the mmlFilters on the parsed MathML
+   *   Compile the MathML to internal format, and execute the postFilters
+   *   Return the resulting internal format
+   *
+   * @override
+   */
+  public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
+    let mml = math.start.node;
+    if (!mml || !math.end.node || this.options['forceReparse'] || this.adaptor.kind(mml) === '#text') {
+      let mathml = this.executeFilters(this.preFilters, math, document, math.math || '<math></math>');
+      let doc = this.checkForErrors(this.adaptor.parse(mathml, 'text/' + this.options['parseAs']));
+      let body = this.adaptor.body(doc);
+      if (this.adaptor.childNodes(body).length !== 1) {
+        this.error('MathML must consist of a single element');
+      }
+      mml = this.adaptor.remove(this.adaptor.firstChild(body)) as N;
+      if (this.adaptor.kind(mml).replace(/^[a-z]+:/, '') !== 'math') {
+        this.error('MathML must be formed by a <math> element, not <' + this.adaptor.kind(mml) + '>');
+      }
     }
+    mml = this.executeFilters(this.mmlFilters, math, document, mml);
+    return this.executeFilters(this.postFilters, math, document, this.mathml.compile(mml as N));
+  }
+
+  /**
+   * Check a parsed MathML string for errors.
+   *
+   * @param {D} doc  The document returns from the DOMParser
+   * @return {D}     The document
+   */
+  protected checkForErrors(doc: D): D {
+    let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
+    if (err) {
+      if (this.adaptor.textContent(err) === '') {
+        this.error('Error processing MathML');
+      }
+      this.options['parseError'].call(this, err);
+    }
+    return doc;
+  }
+
+  /**
+   * Throw an error
+   *
+   * @param {string} message  The error message to produce
+   */
+  protected error(message: string) {
+    throw new Error(message);
+  }
+
+  /**
+   * @override
+   */
+  public findMath(node: N) {
+    return this.findMathML.findMath(node);
+  }
 
 }

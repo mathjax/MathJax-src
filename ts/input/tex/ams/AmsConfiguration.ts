@@ -23,8 +23,6 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../SymbolMap.js';
-import TexParser from '../TexParser.js';
 import {MultlineItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
 import './AmsMappings.js';
@@ -47,17 +45,17 @@ let init = function(config: Configuration) {
 };
 
 export const AmsConfiguration = Configuration.create(
-  'ams',
-  {handler: {
-    delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
-    macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
-            'AMSsymbols-delimiter', 'AMSsymbols-macros',
-            'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-    environment: ['AMSmath-environment']
-  },
-   items: {[MultlineItem.prototype.kind]: MultlineItem},
-   tags: {'ams': AmsTags},
-   init: init
+  'ams', {
+    handler: {
+      delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
+      macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
+              'AMSsymbols-delimiter', 'AMSsymbols-macros',
+              'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
+      environment: ['AMSmath-environment']
+    },
+    items: {[MultlineItem.prototype.kind]: MultlineItem},
+    tags: {'ams': AmsTags},
+    init: init
   }
 );
 

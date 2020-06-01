@@ -30,29 +30,36 @@ import {AbstractMmlNode} from '../MmlNode.js';
  */
 
 export class MmlMalignmark extends AbstractMmlNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults,
-        edge: 'left'
-    };
 
-    /**
-     * @return {string}  The malignmark kind
-     */
-    public get kind() {
-        return 'malignmark';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults,
+    edge: 'left'
+  };
 
-    /**
-     * @return {number}  No children allowed
-     */
-    public get arity() {
-        return 0;
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'malignmark';
+  }
 
-    /**
-     * @return {boolen} <malignmark> is space-like
-     */
-    public get isSpacelike() {
-        return true;
-    }
+  /**
+   * No children allowed
+   * @override
+   */
+  public get arity() {
+    return 0;
+  }
+
+  /**
+   * <malignmark> is space-like
+   * @override
+   */
+  public get isSpacelike() {
+    return true;
+  }
+
 }

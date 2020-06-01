@@ -31,85 +31,91 @@ import {MmlMsubsup} from './msubsup.js';
  */
 
 export class MmlMmultiscripts extends MmlMsubsup {
-    public static defaults: PropertyList = {
-        ...MmlMsubsup.defaults
-    };
 
-    /**
-     * @return {string}  The mmultiscripts kind
-     */
-    public get kind() {
-        return 'mmultiscripts';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...MmlMsubsup.defaults
+  };
 
-    /**
-     * @return {number}  <mmultiscripts> requires at least one child (the base)
-     */
-    public get arity() {
-        return 1;
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mmultiscripts';
+  }
 
-    /**
-     * Push the inherited values to the base
-     * Make sure the number of pre- and post-scripts are even by adding mrows, if needed.
-     * For the scripts, use displaystyle = false, scriptlevel + 1, and
-     *   set the primestyle in the subscripts.
-     *
-     * @override
-     */
-    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
-        let prescripts = false;
-        for (let i = 1, n = 0; i < this.childNodes.length; i++) {
-            let child = this.childNodes[i];
-            if (child.isKind('mprescripts')) {
-                if (!prescripts) {
-                    prescripts = true;
-                    if (i % 2 === 0) {
-                        let mrow = this.factory.create('mrow');
-                        this.childNodes.splice(i, 0, mrow);
-                        mrow.parent = this;
-                        i++;
-                    }
-                }
-            } else {
-                let primestyle = prime || (n % 2 === 0);
-                child.setInheritedAttributes(attributes, false, level + 1, primestyle);
-                n++;
-            }
-        }
-        if (this.childNodes.length % 2 === (prescripts ? 1 : 0)) {
-            this.appendChild(this.factory.create('mrow'));
-            this.childNodes[this.childNodes.length - 1].setInheritedAttributes(attributes, false, level + 1, prime);
-        }
-    }
+  /**
+   * <mmultiscripts> requires at least one child (the base)
+   * @override
+   */
+  public get arity() {
+    return 1;
+  }
 
-    /**
-     * Check that mprescripts only occurs once, and that the number of pre- and post-scripts are even.
-     *
-     * @override
-     */
-    protected verifyChildren(options: PropertyList) {
-        let prescripts = false;
-        let fix = options['fixMmultiscripts'];
-        for (let i = 0; i < this.childNodes.length; i++) {
-            let child = this.childNodes[i];
-            if (child.isKind('mprescripts')) {
-                if (prescripts) {
-                    child.mError(child.kind + ' can only appear once in ' + this.kind, options, true);
-                } else {
-                    prescripts = true;
-                    if (i % 2 === 0 && !fix) {
-                        this.mError('There must be an equal number of prescripts of each type', options);
-                    }
-                }
-            }
+  /**
+   * Push the inherited values to the base
+   * Make sure the number of pre- and post-scripts are even by adding mrows, if needed.
+   * For the scripts, use displaystyle = false, scriptlevel + 1, and
+   *   set the primestyle in the subscripts.
+   *
+   * @override
+   */
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
+    let prescripts = false;
+    for (let i = 1, n = 0; i < this.childNodes.length; i++) {
+      let child = this.childNodes[i];
+      if (child.isKind('mprescripts')) {
+        if (!prescripts) {
+          prescripts = true;
+          if (i % 2 === 0) {
+            let mrow = this.factory.create('mrow');
+            this.childNodes.splice(i, 0, mrow);
+            mrow.parent = this;
+            i++;
+          }
         }
-        if (this.childNodes.length % 2 === (prescripts ? 1 : 0) && !fix) {
-            this.mError('There must be an equal number of scripts of each type', options);
-        }
-        super.verifyChildren(options);
+      } else {
+        let primestyle = prime || (n % 2 === 0);
+        child.setInheritedAttributes(attributes, false, level + 1, primestyle);
+        n++;
+      }
     }
+    if (this.childNodes.length % 2 === (prescripts ? 1 : 0)) {
+      this.appendChild(this.factory.create('mrow'));
+      this.childNodes[this.childNodes.length - 1].setInheritedAttributes(attributes, false, level + 1, prime);
+    }
+  }
+
+  /**
+   * Check that mprescripts only occurs once, and that the number of pre- and post-scripts are even.
+   *
+   * @override
+   */
+  protected verifyChildren(options: PropertyList) {
+    let prescripts = false;
+    let fix = options['fixMmultiscripts'];
+    for (let i = 0; i < this.childNodes.length; i++) {
+      let child = this.childNodes[i];
+      if (child.isKind('mprescripts')) {
+        if (prescripts) {
+          child.mError(child.kind + ' can only appear once in ' + this.kind, options, true);
+        } else {
+          prescripts = true;
+          if (i % 2 === 0 && !fix) {
+            this.mError('There must be an equal number of prescripts of each type', options);
+          }
+        }
+      }
+    }
+    if (this.childNodes.length % 2 === (prescripts ? 1 : 0) && !fix) {
+      this.mError('There must be an equal number of scripts of each type', options);
+    }
+    super.verifyChildren(options);
+  }
+
 }
 
 /*****************************************************************/
@@ -118,35 +124,40 @@ export class MmlMmultiscripts extends MmlMsubsup {
  */
 
 export class MmlMprescripts extends AbstractMmlNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults
-    };
 
-    /**
-     * @return {string}  The mprescripts kind
-     */
-    public get kind() {
-        return 'mprescripts';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults
+  };
 
-    /**
-     * @return {number}  <mprescripts> can have no children
-     */
-    public get arity() {
-        return 0;
-    }
+  /**
+   * @return {string}  The mprescripts kind
+   */
+  public get kind(): string {
+    return 'mprescripts';
+  }
 
-    /**
-     * Check that parent is mmultiscripts
-     *
-     * @override
-     */
-    public verifyTree(options: PropertyList) {
-        super.verifyTree(options);
-        if (this.parent && !this.parent.isKind('mmultiscripts')) {
-            this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
-        }
+  /**
+   * @return {number}  <mprescripts> can have no children
+   */
+  public get arity(): number {
+    return 0;
+  }
+
+  /**
+   * Check that parent is mmultiscripts
+   *
+   * @override
+   */
+  public verifyTree(options: PropertyList) {
+    super.verifyTree(options);
+    if (this.parent && !this.parent.isKind('mmultiscripts')) {
+      this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
     }
+  }
+
 }
 
 /*****************************************************************/
@@ -155,33 +166,38 @@ export class MmlMprescripts extends AbstractMmlNode {
  */
 
 export class MmlNone extends AbstractMmlNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults
-    };
 
-    /**
-     * @return {string}  The none kind
-     */
-    public get kind() {
-        return 'none';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults
+  };
 
-    /**
-     * @return {number}  <none> can have no children
-     */
-    public get arity() {
-        return 0;
-    }
+  /**
+   * @return {string}  The none kind
+   */
+  public get kind(): string {
+    return 'none';
+  }
 
-    /**
-     * Check that parent is mmultiscripts
-     *
-     * @override
-     */
-    public verifyTree(options: PropertyList) {
-        super.verifyTree(options);
-        if (this.parent && !this.parent.isKind('mmultiscripts')) {
-            this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
-        }
+  /**
+   * @return {number}  <none> can have no children
+   */
+  public get arity(): number {
+    return 0;
+  }
+
+  /**
+   * Check that parent is mmultiscripts
+   *
+   * @override
+   */
+  public verifyTree(options: PropertyList) {
+    super.verifyTree(options);
+    if (this.parent && !this.parent.isKind('mmultiscripts')) {
+      this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
     }
+  }
+
 }

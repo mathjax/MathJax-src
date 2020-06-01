@@ -22,7 +22,7 @@
  */
 
 import {AbstractInputJax} from '../core/InputJax.js';
-import {defaultOptions, userOptions, separateOptions, selectOptions, OptionList} from '../util/Options.js';
+import {userOptions, separateOptions, OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
@@ -200,7 +200,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this.executeFilters(this.postFilters, math, document, this.parseOptions);
     this.mathNode = this.parseOptions.root;
     return this.mathNode;
-  };
+  }
 
 
   /**
@@ -220,6 +220,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     let message = err.message.replace(/\n.*/, '');
     return this.parseOptions.nodeFactory.create(
       'error', message, err.id, this.latex);
-  };
+  }
 
 }
