@@ -162,12 +162,9 @@ export class MJContextMenu extends ContextMenu {
      *                                   and text is the content of the annotation of that type
      */
     protected getAnnotations(node: MmlNode) {
-      console.log(node);
         const annotations = [] as [string, string][];
         if (!node) return annotations;
         for (const child of node.childNodes as MmlNode[]) {
-          console.log(child);
-          console.log(child.isKind('annotation'));
             if (child.isKind('annotation')) {
                 const match = this.annotationMatch(child);
                 if (match) {
