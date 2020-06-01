@@ -33,7 +33,6 @@ import TexParser from '../TexParser.js';
  */
 function noUndefined(parser: TexParser, name: string) {
   const textNode = parser.create('text', '\\' + name);
-console.log(parser.options);
   const options = parser.options.noundefined || {};
   const def = {} as {[name: string]: string};
   for (const id of ['color', 'background', 'size']) {
