@@ -67,6 +67,12 @@ export default class ParseOptions {
    */
   public tags: Tags;
 
+  /**
+   * Storage area for parser-specific package data (indexed by package name)
+   * @type {{[name: string]: any}}
+   */
+  public packageData: {[name: string]: any} = {};
+
   // Fields for ephemeral options, i.e., options that will be cleared for each
   // run of the parser.
   /**
