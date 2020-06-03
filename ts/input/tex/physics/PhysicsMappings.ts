@@ -224,6 +224,7 @@ new CommandMap('Physics-bra-ket-macros', {
   'bra':              'Bra',
   'ket':              'Ket',
   'innerproduct':     'BraKet',
+  'ip':               'BraKet',
   'braket':           'BraKet',
   'outerproduct':     'KetBra',
   'dyad':             'KetBra',
