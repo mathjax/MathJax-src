@@ -57,7 +57,7 @@ export class Configuration {
   protected configMethod: FunctionList = new FunctionList();
 
   /**
-   * Creates a configuration for a package.
+   * Creates and registers a named configuration for a package.
    * @param {string} name The package name.
    * @param {Object} config The configuration parameters:
    * Configuration for the TexParser consist of the following:
@@ -75,21 +75,23 @@ export class Configuration {
    *  * _priority_ priority of the init method.
    * @return {Configuration} The newly generated configuration.
    */
-  public static create(name: string,
-                       config: {handler?: HandlerConfig,
-                                fallback?: FallbackConfig,
-                                items?: StackItemConfig,
-                                tags?: TagsConfig,
-                                options?: OptionList,
-                                nodes?: {[key: string]: any},
-                                preprocessors?: ProcessorList,
-                                postprocessors?: ProcessorList,
-                                init?: Function,
-                                priority?: number,
-                                config?: Function,
-                                configPriority?: number
-                               } = {}): Configuration {
-    return new Configuration(name,
+  public static create(
+    name: string,
+    config: {handler?: HandlerConfig,
+             fallback?: FallbackConfig,
+             items?: StackItemConfig,
+             tags?: TagsConfig,
+             options?: OptionList,
+             nodes?: {[key: string]: any},
+             preprocessors?: ProcessorList,
+             postprocessors?: ProcessorList,
+             init?: Function,
+             priority?: number,
+             config?: Function,
+             configPriority?: number
+            } = {}
+  ): Configuration {
+    const configuration = new Configuration(
                              config.handler || {},
                              config.fallback || {},
                              config.items || {},
@@ -101,8 +103,55 @@ export class Configuration {
                              [config.init, config.priority],
                              [config.config, config.configPriority]
                             );
+    ConfigurationHandler.set(name, configuration);
+    return configuration;
   }
 
+  /**
+   * Creates an unregistered, unnaled configuration.
+   * @param {Object} config The configuration parameters:
+   * Configuration for the TexParser consist of the following:
+   *  * _handler_  configuration mapping handler types to lists of symbol mappings.
+   *  * _fallback_ configuration mapping handler types to fallback methods.
+   *  * _items_ for the StackItem factory.
+   *  * _tags_ mapping tagging configurations to tagging objects.
+   *  * _options_ parse options for the packages.
+   *  * _nodes_ for the Node factory.
+   *  * _preprocessors_ list of functions for preprocessing the LaTeX
+   *      string wrt. to given parse options. Can contain a priority.
+   *  * _postprocessors_ list of functions for postprocessing the MmlNode
+   *      wrt. to given parse options. Can contain a priority.
+   *  * _init_ init method.
+   *  * _priority_ priority of the init method.
+   * @return {Configuration} The newly generated configuration.
+   */
+  public static createUnNamed(
+    config: {handler?: HandlerConfig,
+             fallback?: FallbackConfig,
+             items?: StackItemConfig,
+             tags?: TagsConfig,
+             options?: OptionList,
+             nodes?: {[key: string]: any},
+             preprocessors?: ProcessorList,
+             postprocessors?: ProcessorList,
+             init?: Function,
+             priority?: number,
+             config?: Function,
+             configPriority?: number
+            } = {}
+  ): Configuration {
+    return new Configuration(config.handler || {},
+                             config.fallback || {},
+                             config.items || {},
+                             config.tags || {},
+                             config.options || {},
+                             config.nodes || {},
+                             config.preprocessors || [],
+                             config.postprocessors || [],
+                             [config.init, config.priority],
+                             [config.config, config.configPriority]
+                            );
+  }
 
   /**
    * @return {Configuration} An empty configuration.
@@ -219,8 +268,7 @@ export class Configuration {
   /**
    * @constructor
    */
-  private constructor(readonly name: string,
-                      readonly handler: HandlerConfig = {},
+  private constructor(readonly handler: HandlerConfig = {},
                       readonly fallback: FallbackConfig = {},
                       readonly items: StackItemConfig = {},
                       readonly tags: TagsConfig = {},
@@ -239,7 +287,6 @@ export class Configuration {
     }
     this.handler = Object.assign(
       {character: [], delimiter: [], macro: [], environment: []}, handler);
-    ConfigurationHandler.set(name, this);
   }
 
 }
