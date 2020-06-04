@@ -265,6 +265,7 @@ export const TextMacrosMethods = {
     const macro = texParser.lookup('macro', name);
     if (!macro || (autoload && macro._func === autoload.Autoload)) {
       texParser.parse('macro', [texParser, name]);
+      if (!macro) return;
       retryAfter(Promise.resolve());
     }
     texParser.parse('macro', [parser, name]);

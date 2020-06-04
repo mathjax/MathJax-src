@@ -35,7 +35,7 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import './TextMacrosMappings.js';
 
 /**
- *  The base text macro configuration (use in the TextParser)
+ *  The base text macro configuration (used in the TextParser)
  */
 export const textBase = Configuration.createUnNamed({
   handler: {
