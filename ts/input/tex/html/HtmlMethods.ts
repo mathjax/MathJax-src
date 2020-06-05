@@ -26,6 +26,7 @@
 import TexParser from '../TexParser.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
+import isUrl from 'validator/lib/isUrl';
 
 
 // Namespace
@@ -40,7 +41,8 @@ let HtmlMethods: Record<string, ParseMethod> = {};
 HtmlMethods.Href = function(parser: TexParser, name: string) {
   const url = parser.GetArgument(name);
   const arg = GetArgumentMML(parser, name);
-  NodeUtil.setAttribute(arg, 'href', url);
+  const safe_url = isUrl(url) ? url : "";
+  NodeUtil.setAttribute(arg, 'href', safe_url);
   parser.Push(arg);
 };
 
