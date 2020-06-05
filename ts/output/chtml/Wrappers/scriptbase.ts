@@ -25,10 +25,9 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonScriptbase, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
-import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
 import {BBox} from '../BBox.js';
-import {StyleData, StyleList} from '../../common/CssStyles.js';
+import {StyleData} from '../../common/CssStyles.js';
 
 /*****************************************************************/
 /**
@@ -39,68 +38,71 @@ import {StyleData, StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLscriptbase<N, T, D> extends
 CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    public static kind = 'scriptbase';
+  /**
+   * The scriptbase wrapper
+   */
+  public static kind = 'scriptbase';
 
-    /**
-     * Set to true for munderover/munder/mover/msup (Appendix G 13)
-     */
-    public static useIC: boolean = false;
+  /**
+   * Set to true for munderover/munder/mover/msup (Appendix G 13)
+   */
+  public static useIC: boolean = false;
 
-    /**
-     * This gives the common output for msub and msup.  It is overriden
-     * for all the others (msubsup, munder, mover, munderover).
-     *
-     * @override
-     */
-    public toCHTML(parent: N) {
-        this.chtml = this.standardCHTMLnode(parent);
-        const [x, v] = this.getOffset(this.baseChild.getBBox(), this.script.getBBox());
-        const style: StyleData = {'vertical-align': this.em(v)};
-        if (x) {
-            style['margin-left'] = this.em(x);
-        }
-        this.baseChild.toCHTML(this.chtml);
-        this.script.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
+  /**
+   * This gives the common output for msub and msup.  It is overridden
+   * for all the others (msubsup, munder, mover, munderover).
+   *
+   * @override
+   */
+  public toCHTML(parent: N) {
+    this.chtml = this.standardCHTMLnode(parent);
+    const [x, v] = this.getOffset(this.baseChild.getBBox(), this.script.getBBox());
+    const style: StyleData = {'vertical-align': this.em(v)};
+    if (x) {
+      style['margin-left'] = this.em(x);
     }
+    this.baseChild.toCHTML(this.chtml);
+    this.script.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
+  }
 
-    /**
-     * @param {N[]} nodes    The HTML elements to be centered in a stack
-     * @param {number[]} dx  The x offsets needed to center the elements
-     */
-    protected setDeltaW(nodes: N[], dx: number[]) {
-        for (let i = 0; i < dx.length; i++) {
-            if (dx[i]) {
-                this.adaptor.setStyle(nodes[i], 'paddingLeft', this.em(dx[i]));
-            }
-        }
+  /**
+   * @param {N[]} nodes    The HTML elements to be centered in a stack
+   * @param {number[]} dx  The x offsets needed to center the elements
+   */
+  protected setDeltaW(nodes: N[], dx: number[]) {
+    for (let i = 0; i < dx.length; i++) {
+      if (dx[i]) {
+        this.adaptor.setStyle(nodes[i], 'paddingLeft', this.em(dx[i]));
+      }
     }
+  }
 
-    /**
-     * @param {N} over        The HTML element for the overscript
-     * @param {BBox} overbox  The bbox for the overscript
-     */
-    protected adjustOverDepth(over: N, overbox: BBox) {
-        if (overbox.d >= 0) return;
-        this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
-    }
+  /**
+   * @param {N} over        The HTML element for the overscript
+   * @param {BBox} overbox  The bbox for the overscript
+   */
+  protected adjustOverDepth(over: N, overbox: BBox) {
+    if (overbox.d >= 0) return;
+    this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
+  }
 
-    /**
-     * @param {N} under        The HTML element for the underscript
-     * @param {BBox} underbox  The bbox for the underscript
-     */
-    protected adjustUnderDepth(under: N, underbox: BBox) {
-        if (underbox.d >= 0) return;
-        const adaptor = this.adaptor;
-        const child = adaptor.firstChild(adaptor.firstChild(under) as N) as N;
-        const v = this.em(underbox.d);
-        const box = this.html('mjx-box', {style: {'margin-bottom': v, 'vertical-align': v}});
-        for (const child of adaptor.childNodes(adaptor.firstChild(under) as N) as N[]) {
-            adaptor.append(box, child);
-        }
-        adaptor.append(adaptor.firstChild(under) as N, box);
+  /**
+   * @param {N} under        The HTML element for the underscript
+   * @param {BBox} underbox  The bbox for the underscript
+   */
+  protected adjustUnderDepth(under: N, underbox: BBox) {
+    if (underbox.d >= 0) return;
+    const adaptor = this.adaptor;
+    const v = this.em(underbox.d);
+    const box = this.html('mjx-box', {style: {'margin-bottom': v, 'vertical-align': v}});
+    for (const child of adaptor.childNodes(adaptor.firstChild(under) as N) as N[]) {
+      adaptor.append(box, child);
     }
+    adaptor.append(adaptor.firstChild(under) as N, box);
+  }
 
 }

@@ -22,11 +22,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor, Constructor} from '../Wrapper.js';
+import {CHTMLWrapper, Constructor} from '../Wrapper.js';
 import {CHTMLscriptbase} from './scriptbase.js';
-import {CommonMsub, CommonMsubMixin} from '../../common/Wrappers/msubsup.js';
-import {CommonMsup, CommonMsupMixin} from '../../common/Wrappers/msubsup.js';
-import {CommonMsubsup, CommonMsubsupMixin} from '../../common/Wrappers/msubsup.js';
+import {CommonMsubMixin} from '../../common/Wrappers/msubsup.js';
+import {CommonMsupMixin} from '../../common/Wrappers/msubsup.js';
+import {CommonMsubsupMixin} from '../../common/Wrappers/msubsup.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {StyleList} from '../../common/CssStyles.js';
 
@@ -38,12 +38,19 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmsub<N, T, D> extends
 CommonMsubMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, any, any>>>(CHTMLscriptbase)  {
 
-    public static kind = MmlMsub.prototype.kind;
+  /**
+   * The msub wrapper
+   */
+  public static kind = MmlMsub.prototype.kind;
 
-    public static useIC = false;
+  /**
+   * don't include italic correction
+   */
+  public static useIC = false;
 
 }
 
@@ -55,12 +62,19 @@ CommonMsubMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, an
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmsup<N, T, D> extends
 CommonMsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, any, any>>>(CHTMLscriptbase)  {
 
-    public static kind = MmlMsup.prototype.kind;
+  /**
+   * The msup wrapper
+   */
+  public static kind = MmlMsup.prototype.kind;
 
-    public static useIC = true;
+  /**
+   * Use italic correction
+   */
+  public static useIC = true;
 
 }
 
@@ -72,51 +86,61 @@ CommonMsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, an
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class CHTMLmsubsup<N, T, D> extends
 CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, any, any>>>(CHTMLscriptbase)  {
 
-    public static kind = MmlMsubsup.prototype.kind;
+  /**
+   * The msubsup wrapper
+   */
+  public static kind = MmlMsubsup.prototype.kind;
 
-    public static styles: StyleList = {
-        'mjx-script': {
-            display: 'inline-block',
-            'padding-right': '.05em'   // scriptspace
-        },
-        'mjx-script > *': {
-            display: 'block'
-        }
-    };
-
-    public static useIC = false;
-
-    /**
-     * Make sure styles get output when called from munderover with movable limits
-     *
-     * @override
-     */
-    public markUsed() {
-        super.markUsed();
-        (CHTMLmsubsup as any).used = true;
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'mjx-script': {
+      display: 'inline-block',
+      'padding-right': '.05em'   // scriptspace
+    },
+    'mjx-script > *': {
+      display: 'block'
     }
+  };
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        const chtml = this.standardCHTMLnode(parent);
-        const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
-        const [u, v, q] = this.getUVQ(base.getBBox(), sub.getBBox(), sup.getBBox());
-        const x = this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0;
-        const style = {'vertical-align': this.em(v)};
-        base.toCHTML(chtml);
-        const stack = this.adaptor.append(chtml, this.html('mjx-script', {style})) as N;
-        sup.toCHTML(stack);
-        this.adaptor.append(stack, this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
-        sub.toCHTML(stack);
-        const corebox = this.baseCore.bbox;
-        if (corebox.ic) {
-            this.adaptor.setStyle(sup.chtml, 'marginLeft', this.em(x / sup.bbox.rscale));
-        }
+  /**
+   * Don't use italic correction
+   */
+  public static useIC = false;
+
+  /**
+   * Make sure styles get output when called from munderover with movable limits
+   *
+   * @override
+   */
+  public markUsed() {
+    super.markUsed();
+    (CHTMLmsubsup as any).used = true;
+  }
+
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    const chtml = this.standardCHTMLnode(parent);
+    const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
+    const [ , v, q] = this.getUVQ(base.getBBox(), sub.getBBox(), sup.getBBox());
+    const x = this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0;
+    const style = {'vertical-align': this.em(v)};
+    base.toCHTML(chtml);
+    const stack = this.adaptor.append(chtml, this.html('mjx-script', {style})) as N;
+    sup.toCHTML(stack);
+    this.adaptor.append(stack, this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
+    sub.toCHTML(stack);
+    const corebox = this.baseCore.bbox;
+    if (corebox.ic) {
+      this.adaptor.setStyle(sup.chtml, 'marginLeft', this.em(x / sup.bbox.rscale));
     }
+  }
 
 }

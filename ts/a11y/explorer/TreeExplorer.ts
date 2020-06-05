@@ -26,7 +26,7 @@
 
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
-import {sreReady} from '../sre.js';
+import '../sre.js';
 
 
 export interface TreeExplorer extends Explorer {
@@ -40,7 +40,7 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
    * @override
    */
   protected constructor(public document: A11yDocument,
-              protected region: Region<void>,
+                        protected region: Region<void>,
                         protected node: HTMLElement,
                         protected mml: HTMLElement) {
     super(document, null, node);
@@ -49,7 +49,7 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
   /**
    * @override
    */
-  readonly stoppable = false;
+  public readonly stoppable = false;
 
 
   /**

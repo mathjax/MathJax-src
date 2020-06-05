@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMglyph, CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
+import {CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
 import {OptionList} from '../../../util/Options.js';
 
@@ -34,28 +34,33 @@ import {OptionList} from '../../../util/Options.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmglyph<N, T, D> extends CommonMglyphMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmglyph<N, T, D> extends
+CommonMglyphMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    public static kind = MmlMglyph.prototype.kind;
+  /**
+   * The mglyph wrapper
+   */
+  public static kind = MmlMglyph.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        const svg = this.standardSVGnode(parent);
-        const {src, alt} = this.node.attributes.getList('src', 'alt');
-        const h = this.fixed(this.height);
-        const w = this.fixed(this.width);
-        const y = this.fixed(this.height + (this.valign || 0));
-        const properties: OptionList = {
-            width: w, height: h,
-            transform: 'translate(0 ' + y + ') matrix(1 0 0 -1 0 0)',
-            preserveAspectRatio: 'none',
-            alt: alt, title: alt,
-            href: src
-        };
-        const img = this.svg('image', properties);
-        this.adaptor.append(svg, img);
-    }
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    const svg = this.standardSVGnode(parent);
+    const {src, alt} = this.node.attributes.getList('src', 'alt');
+    const h = this.fixed(this.height);
+    const w = this.fixed(this.width);
+    const y = this.fixed(this.height + (this.valign || 0));
+    const properties: OptionList = {
+      width: w, height: h,
+      transform: 'translate(0 ' + y + ') matrix(1 0 0 -1 0 0)',
+      preserveAspectRatio: 'none',
+      alt: alt, title: alt,
+      href: src
+    };
+    const img = this.svg('image', properties);
+    this.adaptor.append(svg, img);
+  }
 
 }

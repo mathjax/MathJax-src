@@ -31,7 +31,6 @@ import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 import {NodeFactory} from '../NodeFactory.js';
 import ParseOptions from '../ParseOptions.js';
-import {MathItem} from '../../../core/MathItem.js';
 
 let BOLDVARIANT: {[key: string]: string} = {};
 BOLDVARIANT[TexConstant.Variant.NORMAL] = TexConstant.Variant.BOLD;
@@ -86,8 +85,7 @@ export function createBoldToken(factory: NodeFactory, kind: string,
 
 /**
  * Postprocessor to rewrite token nodes to bold font, if possible.
- * @param {MmlNode} node The node to rewrite.
- * @param {ParseOptions} options The parse options.
+ * @param {ParseOptions} data The parse options.
  */
 export function rewriteBoldTokens(arg: {data: ParseOptions}) {
   for (let node of arg.data.getList('fixBold')) {
@@ -102,13 +100,13 @@ export function rewriteBoldTokens(arg: {data: ParseOptions}) {
       NodeUtil.removeProperties(node, 'fixBold');
     }
   }
-};
+}
 
 
 export const BoldsymbolConfiguration = Configuration.create(
-  'boldsymbol', {handler: {macro: ['boldsymbol']},
-                 nodes: {'token': createBoldToken},
-                 postprocessors: [rewriteBoldTokens]}
+    'boldsymbol', {
+        handler: {macro: ['boldsymbol']},
+        nodes: {'token': createBoldToken},
+        postprocessors: [rewriteBoldTokens]
+    }
 );
-
-

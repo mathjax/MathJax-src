@@ -44,28 +44,29 @@ export type TeXAtomConstructor = Constructor<CommonTeXAtom>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonTeXAtomMixin<T extends WrapperConstructor>(Base: T): TeXAtomConstructor & T {
-    return class extends Base {
 
-        /**
-         * @override
-         */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
-            super.computeBBox(bbox, recompute);
-            if (this.childNodes[0] && this.childNodes[0].bbox.ic) {
-                bbox.ic = this.childNodes[0].bbox.ic;
-            }
-            //
-            // Center VCENTER atoms vertically
-            //
-            if (this.node.texClass === TEXCLASS.VCENTER) {
-                const {h, d} = bbox;
-                const a = this.font.params.axis_height;
-                const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-                bbox.h += dh;
-                bbox.d -= dh;
-            }
-        }
+  return class extends Base {
 
-    };
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+      super.computeBBox(bbox, recompute);
+      if (this.childNodes[0] && this.childNodes[0].bbox.ic) {
+        bbox.ic = this.childNodes[0].bbox.ic;
+      }
+      //
+      // Center VCENTER atoms vertically
+      //
+      if (this.node.texClass === TEXCLASS.VCENTER) {
+        const {h, d} = bbox;
+        const a = this.font.params.axis_height;
+        const dh = ((h + d) / 2 + a) - h;  // new height minus old height
+        bbox.h += dh;
+        bbox.d -= dh;
+      }
+    }
+
+  };
 
 }

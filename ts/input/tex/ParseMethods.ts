@@ -26,7 +26,6 @@ import {Symbol} from './Symbol.js';
 import TexParser from './TexParser.js';
 import NodeUtil from './NodeUtil.js';
 import {TexConstant} from './TexConstants.js';
-import {ParseMethod, ParseInput} from './Types.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import ParseUtil from './ParseUtil.js';
 
@@ -44,7 +43,7 @@ namespace ParseMethods {
     // @test Identifier
     const node = parser.create('token', 'mi', def, c);
     parser.Push(node);
-  };
+  }
 
 
   /**
@@ -68,17 +67,17 @@ namespace ParseMethods {
       mml = parser.create('token', 'mo', def, c);
     }
     parser.Push(mml);
-  };
+  }
 
   /**
    * Lookup a control-sequence and process it.
    * @param {TexParser} parser The current tex parser.
    * @param {string} c The string '\'.
    */
-  export function controlSequence(parser: TexParser, c: string) {
+  export function controlSequence(parser: TexParser, _c: string) {
     const name = parser.GetCS();
     parser.parse('macro', [parser, name]);
-  };
+  }
 
 
   /**
@@ -91,7 +90,7 @@ namespace ParseMethods {
     // @test Greek
     const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
-  };
+  }
 
   /**
    * Handle normal mathchar (as an mo).
@@ -107,7 +106,7 @@ namespace ParseMethods {
     parser.configuration.addNode('fixStretchy', node);
     // PROBLEM: Attributes stop working when Char7 are explicitly set.
     parser.Push(node);
-  };
+  }
 
   /**
    * Handle mathchar in current family.
@@ -123,12 +122,12 @@ namespace ParseMethods {
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
     const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
-  };
+  }
 
   /**
    * Handle delimiter.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The parsed symbol.
+   * @param {Symbol} delim The parsed delimiter symbol.
    */
   export function delimiter(parser: TexParser, delim: Symbol) {
     let def = delim.attributes || {};
@@ -136,7 +135,7 @@ namespace ParseMethods {
     def = Object.assign({fence: false, stretchy: false}, def);
     const node = parser.create('token', 'mo', def, delim.char);
     parser.Push(node);
-  };
+  }
 
 
   /**
@@ -151,7 +150,7 @@ namespace ParseMethods {
     let mml = parser.itemFactory.create('begin').setProperties({name: env, end: end});
     mml = func(parser, mml, ...args.slice(1));
     parser.Push(mml);
-  };
+  }
 
 }
 

@@ -36,48 +36,51 @@ import {OptionList} from '../../util/Options.js';
  */
 export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
 
-    public adaptor: MinHTMLAdaptor<N, T, D>;  // declare a more specific adaptor type
+  /**
+   * The DOMAdaptor for the document being handled
+   */
+  public adaptor: MinHTMLAdaptor<N, T, D>;  // declare a more specific adaptor type
 
-    /**
-     * @override
-     */
-    public documentClass = HTMLDocument;
+  /**
+   * @override
+   */
+  public documentClass = HTMLDocument;
 
-    /**
-     * @override
-     */
-    public handlesDocument(document: any) {
-        const adaptor = this.adaptor;
-        if (typeof(document) === 'string') {
-            try {
-                document = adaptor.parse(document, 'text/html');
-            } catch (err) {}
-        }
-        if (document instanceof adaptor.window.Document ||
-            document instanceof adaptor.window.HTMLElement ||
-            document instanceof adaptor.window.DocumentFragment) {
-            return true;
-        }
-        return false;
+  /**
+   * @override
+   */
+  public handlesDocument(document: any) {
+    const adaptor = this.adaptor;
+    if (typeof(document) === 'string') {
+      try {
+        document = adaptor.parse(document, 'text/html');
+      } catch (err) {}
     }
-
-    /**
-     * If the document isn't already a Document object, create one
-     * using the given data
-     *
-     * @override
-     */
-    public create(document: any, options: OptionList) {
-        const adaptor = this.adaptor;
-        if (typeof(document) === 'string') {
-            document = adaptor.parse(document, 'text/html');
-        } else if (document instanceof adaptor.window.HTMLElement ||
-                   document instanceof adaptor.window.DocumentFragment) {
-            let child = document as N;
-            document = adaptor.parse('', 'text/html');
-            adaptor.append(adaptor.body(document), child);
-        }
-        return super.create(document, options) as HTMLDocument<N, T, D>;
+    if (document instanceof adaptor.window.Document ||
+        document instanceof adaptor.window.HTMLElement ||
+        document instanceof adaptor.window.DocumentFragment) {
+      return true;
     }
+    return false;
+  }
+
+  /**
+   * If the document isn't already a Document object, create one
+   * using the given data
+   *
+   * @override
+   */
+  public create(document: any, options: OptionList) {
+    const adaptor = this.adaptor;
+    if (typeof(document) === 'string') {
+      document = adaptor.parse(document, 'text/html');
+    } else if (document instanceof adaptor.window.HTMLElement ||
+               document instanceof adaptor.window.DocumentFragment) {
+      let child = document as N;
+      document = adaptor.parse('', 'text/html');
+      adaptor.append(adaptor.body(document), child);
+    }
+    return super.create(document, options) as HTMLDocument<N, T, D>;
+  }
 
 }

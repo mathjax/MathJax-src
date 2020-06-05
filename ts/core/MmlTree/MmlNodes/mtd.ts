@@ -31,55 +31,62 @@ import {INHERIT} from '../Attributes.js';
  */
 
 export class MmlMtd extends AbstractMmlBaseNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlBaseNode.defaults,
-        rowspan: 1,
-        columnspan: 1,
-        rowalign: INHERIT,
-        columnalign: INHERIT,
-        groupalign: INHERIT
-    };
 
-    /**
-     * @return {string}  The mtd kind
-     */
-    public get kind() {
-        return 'mtd';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlBaseNode.defaults,
+    rowspan: 1,
+    columnspan: 1,
+    rowalign: INHERIT,
+    columnalign: INHERIT,
+    groupalign: INHERIT
+  };
 
-    /**
-     * @return {number}  <mtd> has an inferred mrow
-     */
-    public get arity() {
-        return -1;
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mtd';
+  }
 
-    /**
-     * @return {boolean}  <mtd> can contain line breaks
-     */
-    public get linebreakContainer() {
-        return true;
-    }
+  /**
+   * <mtd> has an inferred mrow
+   * @overrride
+   */
+  public get arity() {
+    return -1;
+  }
 
-    /**
-     * Check that parent is mtr
-     *
-     * @override
-     */
-    protected verifyChildren(options: PropertyList) {
-        if (this.parent && !this.parent.isKind('mtr')) {
-            this.mError(this.kind + ' can only be a child of an mtr or mlabeledtr', options, true);
-            return;
-        }
-        super.verifyChildren(options);
-    }
+  /**
+   * <mtd> can contain line breaks
+   * @override
+   */
+  public get linebreakContainer() {
+    return true;
+  }
 
-    /**
-     * @override
-     */
-    public setTeXclass(prev: MmlNode) {
-        this.getPrevClass(prev);
-        this.childNodes[0].setTeXclass(null);
-        return this;
+  /**
+   * Check that parent is mtr
+   *
+   * @override
+   */
+  protected verifyChildren(options: PropertyList) {
+    if (this.parent && !this.parent.isKind('mtr')) {
+      this.mError(this.kind + ' can only be a child of an mtr or mlabeledtr', options, true);
+      return;
     }
+    super.verifyChildren(options);
+  }
+
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    this.getPrevClass(prev);
+    this.childNodes[0].setTeXclass(null);
+    return this;
+  }
+
 }

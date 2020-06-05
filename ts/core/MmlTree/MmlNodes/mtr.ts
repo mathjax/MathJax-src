@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList, Node} from '../../Tree/Node.js';
+import {PropertyList} from '../../Tree/Node.js';
 import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
 import {INHERIT} from '../Attributes.js';
 import {split} from '../../../util/string.js';
@@ -32,84 +32,90 @@ import {split} from '../../../util/string.js';
  */
 
 export class MmlMtr extends AbstractMmlNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults,
-        rowalign: INHERIT,
-        columnalign: INHERIT,
-        groupalign: INHERIT
-    };
 
-    /**
-     * @return {string}  The mtr kind
-     */
-    public get kind() {
-        return 'mtr';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults,
+    rowalign: INHERIT,
+    columnalign: INHERIT,
+    groupalign: INHERIT
+  };
 
-    /**
-     * @return {boolean}  <mtr> can contain linebreaks
-     */
-    public get linebreakContainer() {
-        return true;
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mtr';
+  }
 
-    /**
-     * Inherit the mtr attributes
-     *
-     * @override
-     */
-    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        for (const child of this.childNodes) {
-            if (!child.isKind('mtd')) {
-                this.replaceChild(this.factory.create('mtd'), child)
-                    .appendChild(child);
-            }
-        }
-        const calign = split(this.attributes.get('columnalign') as string);
-        if (this.arity === 1) {
-            calign.unshift(this.parent.attributes.get('side') as string);
-        }
-        attributes = this.addInheritedAttributes(attributes, {
-            rowalign: this.attributes.get('rowalign'),
-            columnalign: 'center'
-        });
-        for (const child of this.childNodes) {
-            attributes.columnalign[1] = calign.shift() || attributes.columnalign[1];
-            child.setInheritedAttributes(attributes, display, level, prime);
-        }
-    }
+  /**
+   * <mtr> can contain linebreaks
+   * @override
+   */
+  public get linebreakContainer() {
+    return true;
+  }
 
-    /**
-     * Check that parent is mtable and children are mtd
-     *
-     * @override
-     */
-    protected verifyChildren(options: PropertyList) {
-        if (this.parent && !this.parent.isKind('mtable')) {
-            this.mError(this.kind + ' can only be a child of an mtable', options, true);
-            return;
-        }
-        if (!options['fixMtables']) {
-            for (const child of this.childNodes) {
-                if (!child.isKind('mtd')) {
-                    let mtr = this.replaceChild(this.factory.create('mtr'), child) as MmlNode;
-                    mtr.mError('Children of ' + this.kind + ' must be mtd', options, true);
-                }
-            }
-        }
-        super.verifyChildren(options);
+  /**
+   * Inherit the mtr attributes
+   *
+   * @override
+   */
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    for (const child of this.childNodes) {
+      if (!child.isKind('mtd')) {
+        this.replaceChild(this.factory.create('mtd'), child)
+            .appendChild(child);
+      }
     }
+    const calign = split(this.attributes.get('columnalign') as string);
+    if (this.arity === 1) {
+      calign.unshift(this.parent.attributes.get('side') as string);
+    }
+    attributes = this.addInheritedAttributes(attributes, {
+      rowalign: this.attributes.get('rowalign'),
+      columnalign: 'center'
+    });
+    for (const child of this.childNodes) {
+      attributes.columnalign[1] = calign.shift() || attributes.columnalign[1];
+      child.setInheritedAttributes(attributes, display, level, prime);
+    }
+  }
 
-    /**
-     * @override
-     */
-    public setTeXclass(prev: MmlNode) {
-        this.getPrevClass(prev);
-        for (const child of this.childNodes) {
-            child.setTeXclass(null);
-        }
-        return this;
+  /**
+   * Check that parent is mtable and children are mtd
+   *
+   * @override
+   */
+  protected verifyChildren(options: PropertyList) {
+    if (this.parent && !this.parent.isKind('mtable')) {
+      this.mError(this.kind + ' can only be a child of an mtable', options, true);
+      return;
     }
+    if (!options['fixMtables']) {
+      for (const child of this.childNodes) {
+        if (!child.isKind('mtd')) {
+          let mtr = this.replaceChild(this.factory.create('mtr'), child) as MmlNode;
+          mtr.mError('Children of ' + this.kind + ' must be mtd', options, true);
+        }
+      }
+    }
+    super.verifyChildren(options);
+  }
+
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    this.getPrevClass(prev);
+    for (const child of this.childNodes) {
+      child.setTeXclass(null);
+    }
+    return this;
+  }
+
 }
 
 /*****************************************************************/
@@ -119,17 +125,19 @@ export class MmlMtr extends AbstractMmlNode {
 
 export class MmlMlabeledtr extends MmlMtr {
 
-    /**
-     * @return {string}  The mtr kind
-     */
-    public get kind() {
-        return 'mlabeledtr';
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mlabeledtr';
+  }
 
-    /**
-     * @return {number}  <mlabeledtr> requires at least one child (the label)
-     */
-    get arity() {
-        return 1;
-    }
+  /**
+   * <mlabeledtr> requires at least one child (the label)
+   * @override
+   */
+  get arity() {
+    return 1;
+  }
+
 }

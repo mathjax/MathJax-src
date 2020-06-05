@@ -6,9 +6,9 @@ import {AllPackages} from '../../../../js/input/tex/AllPackages.js';
 import '../../../../js/input/tex/require/RequireConfiguration.js';
 
 Loader.preLoad(
-    'input/tex-base',
-    '[tex]/all-packages',
-    '[tex]/require'
+  'input/tex-base',
+  '[tex]/all-packages',
+  '[tex]/require'
 );
 
 registerTeX(['require',...AllPackages]);

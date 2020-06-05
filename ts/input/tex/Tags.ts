@@ -219,7 +219,7 @@ export interface Tags {
    * @param {string} tag The tag content.
    * @param {boolean} noFormat True if tag should not be formatted.
    */
-  tag(tag: string, format: boolean): void;
+  tag(tag: string, noFormat: boolean): void;
 
   /**
    * Call an explicit no tag.
@@ -373,7 +373,7 @@ export class AbstractTags implements Tags {
    * @param {string} id The unique part of the id (e.g., label or number).
    * @return {string} The formatted id.
    */
-  protected formatId(id: string) {
+  protected formatId(id: string): string {
     return 'mjx-eqn-' + id.replace(/\s/g, '_');
   }
 
@@ -382,7 +382,7 @@ export class AbstractTags implements Tags {
    * @param {number} n The tag number.
    * @return {string} The formatted number.
    */
-  protected formatNumber(n: number) {
+  protected formatNumber(n: number): string {
     return n.toString();
   }
 
@@ -523,7 +523,7 @@ export class AbstractTags implements Tags {
   /**
    * @return {MmlNode} The actual tag node as an mtd.
    */
-  private makeTag() {
+  private makeTag(): MmlNode {
     this.makeId();
     if (this.label) {
       this.labels[this.label] = new Label(this.currentTag.tag, this.currentTag.tagId);
@@ -534,7 +534,7 @@ export class AbstractTags implements Tags {
                                                  {id: this.currentTag.tagId});
   }
 
-};
+}
 
 
 /**

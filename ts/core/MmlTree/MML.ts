@@ -60,7 +60,7 @@ import {MmlMglyph}      from './MmlNodes/mglyph.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from './MmlNodes/semantics.js';
 
 import {TeXAtom} from './MmlNodes/TeXAtom.js';
-import {mathchoice} from './MmlNodes/mathchoice.js';
+import {MathChoice} from './MmlNodes/mathchoice.js';
 
 /************************************************************************/
 /**
@@ -71,55 +71,55 @@ import {mathchoice} from './MmlNodes/mathchoice.js';
  */
 
 export let MML: {[kind: string]: MmlNodeClass} = {
-    [MmlMath.prototype.kind]: MmlMath,
+  [MmlMath.prototype.kind]: MmlMath,
 
-    [MmlMi.prototype.kind]: MmlMi,
-    [MmlMn.prototype.kind]: MmlMn,
-    [MmlMo.prototype.kind]: MmlMo,
-    [MmlMtext.prototype.kind]: MmlMtext,
-    [MmlMspace.prototype.kind]: MmlMspace,
-    [MmlMs.prototype.kind]: MmlMs,
+  [MmlMi.prototype.kind]: MmlMi,
+  [MmlMn.prototype.kind]: MmlMn,
+  [MmlMo.prototype.kind]: MmlMo,
+  [MmlMtext.prototype.kind]: MmlMtext,
+  [MmlMspace.prototype.kind]: MmlMspace,
+  [MmlMs.prototype.kind]: MmlMs,
 
-    [MmlMrow.prototype.kind]: MmlMrow,
-    [MmlInferredMrow.prototype.kind]: MmlInferredMrow,
-    [MmlMfrac.prototype.kind]: MmlMfrac,
-    [MmlMsqrt.prototype.kind]: MmlMsqrt,
-    [MmlMroot.prototype.kind]: MmlMroot,
-    [MmlMstyle.prototype.kind]: MmlMstyle,
-    [MmlMerror.prototype.kind]: MmlMerror,
-    [MmlMpadded.prototype.kind]: MmlMpadded,
-    [MmlMphantom.prototype.kind]: MmlMphantom,
-    [MmlMfenced.prototype.kind]: MmlMfenced,
-    [MmlMenclose.prototype.kind]: MmlMenclose,
+  [MmlMrow.prototype.kind]: MmlMrow,
+  [MmlInferredMrow.prototype.kind]: MmlInferredMrow,
+  [MmlMfrac.prototype.kind]: MmlMfrac,
+  [MmlMsqrt.prototype.kind]: MmlMsqrt,
+  [MmlMroot.prototype.kind]: MmlMroot,
+  [MmlMstyle.prototype.kind]: MmlMstyle,
+  [MmlMerror.prototype.kind]: MmlMerror,
+  [MmlMpadded.prototype.kind]: MmlMpadded,
+  [MmlMphantom.prototype.kind]: MmlMphantom,
+  [MmlMfenced.prototype.kind]: MmlMfenced,
+  [MmlMenclose.prototype.kind]: MmlMenclose,
 
-    [MmlMaction.prototype.kind]: MmlMaction,
+  [MmlMaction.prototype.kind]: MmlMaction,
 
-    [MmlMsub.prototype.kind]: MmlMsub,
-    [MmlMsup.prototype.kind]: MmlMsup,
-    [MmlMsubsup.prototype.kind]: MmlMsubsup,
-    [MmlMunder.prototype.kind]: MmlMunder,
-    [MmlMover.prototype.kind]: MmlMover,
-    [MmlMunderover.prototype.kind]: MmlMunderover,
-    [MmlMmultiscripts.prototype.kind]: MmlMmultiscripts,
-    [MmlMprescripts.prototype.kind]: MmlMprescripts,
-    [MmlNone.prototype.kind]: MmlNone,
+  [MmlMsub.prototype.kind]: MmlMsub,
+  [MmlMsup.prototype.kind]: MmlMsup,
+  [MmlMsubsup.prototype.kind]: MmlMsubsup,
+  [MmlMunder.prototype.kind]: MmlMunder,
+  [MmlMover.prototype.kind]: MmlMover,
+  [MmlMunderover.prototype.kind]: MmlMunderover,
+  [MmlMmultiscripts.prototype.kind]: MmlMmultiscripts,
+  [MmlMprescripts.prototype.kind]: MmlMprescripts,
+  [MmlNone.prototype.kind]: MmlNone,
 
-    [MmlMtable.prototype.kind]: MmlMtable,
-    [MmlMlabeledtr.prototype.kind]: MmlMlabeledtr,
-    [MmlMtr.prototype.kind]: MmlMtr,
-    [MmlMtd.prototype.kind]: MmlMtd,
-    [MmlMaligngroup.prototype.kind]: MmlMaligngroup,
-    [MmlMalignmark.prototype.kind]: MmlMalignmark,
+  [MmlMtable.prototype.kind]: MmlMtable,
+  [MmlMlabeledtr.prototype.kind]: MmlMlabeledtr,
+  [MmlMtr.prototype.kind]: MmlMtr,
+  [MmlMtd.prototype.kind]: MmlMtd,
+  [MmlMaligngroup.prototype.kind]: MmlMaligngroup,
+  [MmlMalignmark.prototype.kind]: MmlMalignmark,
 
-    [MmlMglyph.prototype.kind]: MmlMglyph,
+  [MmlMglyph.prototype.kind]: MmlMglyph,
 
-    [MmlSemantics.prototype.kind]: MmlSemantics,
-    [MmlAnnotation.prototype.kind]: MmlAnnotation,
-    [MmlAnnotationXML.prototype.kind]: MmlAnnotationXML,
+  [MmlSemantics.prototype.kind]: MmlSemantics,
+  [MmlAnnotation.prototype.kind]: MmlAnnotation,
+  [MmlAnnotationXML.prototype.kind]: MmlAnnotationXML,
 
-    [TeXAtom.prototype.kind]: TeXAtom,
-    [mathchoice.prototype.kind]: mathchoice,
+  [TeXAtom.prototype.kind]: TeXAtom,
+  [MathChoice.prototype.kind]: MathChoice,
 
-    [TextNode.prototype.kind]: TextNode,
-    [XMLNode.prototype.kind]: XMLNode
+  [TextNode.prototype.kind]: TextNode,
+  [XMLNode.prototype.kind]: XMLNode
 };

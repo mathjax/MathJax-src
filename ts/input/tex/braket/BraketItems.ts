@@ -23,9 +23,8 @@
  */
 
 
-import StackItemFactory from '../StackItemFactory.js';
-import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
-import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {CheckType, BaseItem, StackItem} from '../StackItem.js';
+import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
 
 

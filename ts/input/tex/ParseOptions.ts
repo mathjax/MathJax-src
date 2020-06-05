@@ -24,7 +24,7 @@
 
 import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
-import {HandlerType, SubHandlers} from './MapHandler.js';
+import {SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
@@ -99,8 +99,8 @@ export default class ParseOptions {
 
   /**
    * @constructor
-   * @param {{[key: string]: (string|boolean)}} setting A list of option
-   *     settings. Those are added to the default options.
+   * @param {Configuration} configuration Configuration object of the current
+   *     TeX parser.
    * @param {OptionList[]} options   [TeX options, Tag options, {packages}]
    */
   public constructor(configuration: Configuration, options: OptionList[] = []) {

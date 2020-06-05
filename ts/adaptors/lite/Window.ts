@@ -31,15 +31,39 @@ import {LiteParser} from './Parser.js';
  * Implements a lightweight Window replacement
  */
 export class LiteWindow {
-    public document: LiteDocument;
-    public DOMParser: typeof LiteParser = LiteParser;
-    public NodeList: typeof LiteList = LiteList;
-    public HTMLCollection: typeof LiteList = LiteList;
-    public HTMLElement: typeof LiteElement = LiteElement;
-    public DocumentFragment: typeof LiteList  = LiteList;
-    public Document: typeof LiteDocument  = LiteDocument;
+  /**
+   * The window's document instance
+   */
+  public document: LiteDocument;
+  /**
+   * The DOMParser class
+   */
+  public DOMParser: typeof LiteParser = LiteParser;
+  /**
+   * The NodeList class
+   */
+  public NodeList: typeof LiteList = LiteList;
+  /**
+   * The HTMLCollection class
+   */
+  public HTMLCollection: typeof LiteList = LiteList;
+  /**
+   * The HTMLElement class
+   */
+  public HTMLElement: typeof LiteElement = LiteElement;
+  /**
+   * The DocumentFragment class
+   */
+  public DocumentFragment: typeof LiteList  = LiteList;
+  /**
+   * The Document class
+   */
+  public Document: typeof LiteDocument  = LiteDocument;
 
-    constructor() {
-        this.document = new LiteDocument();
-    }
+  /**
+   * Create the LiteWindow and its LiteDocument
+   */
+  constructor() {
+    this.document = new LiteDocument();
+  }
 }

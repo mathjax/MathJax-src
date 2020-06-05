@@ -1,5 +1,4 @@
 {
-    "component": "input/tex/extensions/color",
-    "targets": ["input/tex/color"]
+  "component": "input/tex/extensions/color",
+  "targets": ["input/tex/color"]
 }
-

@@ -30,51 +30,63 @@ import {AbstractMmlTokenNode, AbstractMmlNode, AttributeList, TEXCLASS} from '..
  */
 
 export class MmlMi extends AbstractMmlTokenNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlTokenNode.defaults
-    };
-    /**
-     * Patterns for operator names and single-character texts
-     */
-    public static operatorName: RegExp = /^[a-z][a-z0-9]*$/i;
-    public static singleCharacter: RegExp = /^[\uD800-\uDBFF]?.$/;
 
-    public texClass = TEXCLASS.ORD;
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlTokenNode.defaults
+  };
 
-    /**
-     * @return {string}  The mi kind
-     */
-    public get kind() {
-        return 'mi';
+  /**
+   * Pattern for operator names
+   */
+  public static operatorName: RegExp = /^[a-z][a-z0-9]*$/i;
+  /**
+   * Pattern for single-character texts
+   */
+  public static singleCharacter: RegExp = /^[\uD800-\uDBFF]?.$/;
+
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mi';
+  }
+
+  /**
+   * Do the usual inheritance, then check the text length to see
+   *   if mathvariant should be normal or italic.
+   *
+   * @override
+   */
+  public setInheritedAttributes(attributes: AttributeList = {},
+                                display: boolean = false, level: number = 0, prime: boolean = false) {
+    super.setInheritedAttributes(attributes, display, level, prime);
+    let text = this.getText();
+    if (text.match(MmlMi.singleCharacter) && !attributes.mathvariant) {
+      this.attributes.setInherited('mathvariant', 'italic');
     }
+  }
 
-    /**
-     * Do the usual inheritance, then check the text length to see
-     *   if mathvariant should be normal or italic.
-     *
-     * @override
-     */
-    public setInheritedAttributes(attributes: AttributeList = {},
-                           display: boolean = false, level: number = 0, prime: boolean = false) {
-        super.setInheritedAttributes(attributes, display, level, prime);
-        let text = this.getText();
-        if (text.match(MmlMi.singleCharacter) && !attributes.mathvariant) {
-            this.attributes.setInherited('mathvariant', 'italic');
-        }
+  /**
+   * Mark multi-character texts as OP rather than ORD for spacing purposes
+   *
+   * @override
+   */
+  public setTeXclass(prev: AbstractMmlNode) {
+    this.getPrevClass(prev);
+    let name = this.getText();
+    if (name.length > 1 && name.match(MmlMi.operatorName) && this.texClass === TEXCLASS.ORD) {
+      this.texClass = TEXCLASS.OP;
+      this.setProperty('autoOP', true);
     }
+    return this;
+  }
 
-    /**
-     * Mark multi-character texts as OP rather than ORD for spacing purposes
-     *
-     * @override
-     */
-    public setTeXclass(prev: AbstractMmlNode) {
-        this.getPrevClass(prev);
-        let name = this.getText();
-        if (name.length > 1 && name.match(MmlMi.operatorName) && this.texClass === TEXCLASS.ORD) {
-            this.texClass = TEXCLASS.OP;
-            this.setProperty('autoOP', true);
-        }
-        return this;
-    }
 }

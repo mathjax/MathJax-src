@@ -1,5 +1,4 @@
 {
-    "component": "input/tex/extensions/boldsymbol",
-    "targets": ["input/tex/boldsymbol"]
+  "component": "input/tex/extensions/boldsymbol",
+  "targets": ["input/tex/boldsymbol"]
 }
-

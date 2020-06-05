@@ -1,13 +1,13 @@
 /*************************************************************
- *  
+ *
  *  Copyright (c) 2009-2018 The MathJax Consortium
- * 
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,10 +36,11 @@ export default class TexError {
 
   /**
    * The old MathJax processing function.
-   * @param {Array.<string>} input The input message.
+   * @param {string} str The basic error message.
+   * @param {string[]} args The arguments to be replaced in the error message.
    * @return {string} The processed error string.
    */
-  private static processString(str: string, args: string[]) {
+  private static processString(str: string, args: string[]): string {
     let parts = str.split(TexError.pattern);
     for (let i = 1, m = parts.length; i < m; i += 2) {
       let c = parts[i].charAt(0);  // first char will be { or \d or a char to be
@@ -73,7 +74,9 @@ export default class TexError {
 
   /**
    * @constructor
-   * @param{string[]} input 
+   * @param{string} id        message id (for localization)
+   * @param{string} message   text of English message
+   * @param{string[]=} rest   any substitution arguments
    */
   constructor(public id: string, message: string, ...rest: string[]) {
     this.message = TexError.processString(message, rest);

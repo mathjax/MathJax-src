@@ -23,12 +23,9 @@
  */
 
 
-import StackItemFactory from '../StackItemFactory.js';
-import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
-import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {CheckType, BaseItem, StackItem} from '../StackItem.js';
 import ParseUtil from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
-import NodeUtil from '../NodeUtil.js';
 
 
 export class AutoOpen extends BaseItem {

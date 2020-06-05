@@ -24,7 +24,6 @@
  */
 
 import {StackItemClass, StackItem, BaseItem} from './StackItem.js';
-import {MmlNode, TextNode, TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import ParseOptions from './ParseOptions.js';
 import {AbstractFactory} from '../../core/Tree/Factory.js';
 
@@ -56,7 +55,7 @@ export default class StackItemFactory extends AbstractFactory<StackItem, StackIt
 
   /**
    * The parser configuration.
-   * @type {ParseOptions} 
+   * @type {ParseOptions}
    */
   public configuration: ParseOptions = null;
 

@@ -25,7 +25,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonScriptbase, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
+import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
 
 /*****************************************************************/
 /**
@@ -36,30 +36,34 @@ import {CommonScriptbase, CommonScriptbaseMixin} from '../../common/Wrappers/scr
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGscriptbase<N, T, D> extends
 CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    public static kind = 'scriptbase';
+  /**
+   * The scriptbase wrapper
+   */
+  public static kind = 'scriptbase';
 
-    /**
-     * Set to true for munderover/munder/mover/msup (Appendix G 13)
-     */
-    public static useIC: boolean = false;
+  /**
+   * Set to true for munderover/munder/mover/msup (Appendix G 13)
+   */
+  public static useIC: boolean = false;
 
-    /**
-     * This gives the common output for msub and msup.  It is overridden
-     * for all the others (msubsup, munder, mover, munderover).
-     *
-     * @override
-     */
-    public toSVG(parent: N) {
-        const svg = this.standardSVGnode(parent);
-        const bbox = this.baseChild.getBBox();
-        const sbox = this.script.getBBox();
-        const [x, v] = this.getOffset(bbox, sbox);
-        this.baseChild.toSVG(svg);
-        this.script.toSVG(svg);
-        this.script.place(bbox.w * bbox.rscale + x, v);
-    }
+  /**
+   * This gives the common output for msub and msup.  It is overridden
+   * for all the others (msubsup, munder, mover, munderover).
+   *
+   * @override
+   */
+  public toSVG(parent: N) {
+    const svg = this.standardSVGnode(parent);
+    const bbox = this.baseChild.getBBox();
+    const sbox = this.script.getBBox();
+    const [x, v] = this.getOffset(bbox, sbox);
+    this.baseChild.toSVG(svg);
+    this.script.toSVG(svg);
+    this.script.place(bbox.w * bbox.rscale + x, v);
+  }
 
 }

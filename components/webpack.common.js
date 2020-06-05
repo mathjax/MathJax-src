@@ -33,7 +33,7 @@ const Uglify = require('uglifyjs-webpack-plugin');
  * @return {string}        The string with regex special characters escaped
  */
 function quoteRE(string) {
-    return string.replace(/([\\.{}[\]()?*^$])/g, '\$1')
+  return string.replace(/([\\.{}[\]()?*^$])/g, '\$1')
 }
 
 /**
@@ -45,51 +45,51 @@ function quoteRE(string) {
  * @return {any[]}             The plugin array (empty or with the conversion plugin)
  */
 const PLUGINS = function (mathjax, libs, dir) {
-    const mjdir = path.resolve(dir, mathjax);
-    const mjRE = new RegExp('^' + quoteRE(mjdir + '/'));
-    const root = path.dirname(mjdir);
-    const rootRE = new RegExp('^' + quoteRE(root + '/'));
-    const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + '/'));
+  const mjdir = path.resolve(dir, mathjax);
+  const mjRE = new RegExp('^' + quoteRE(mjdir + '/'));
+  const root = path.dirname(mjdir);
+  const rootRE = new RegExp('^' + quoteRE(root + '/'));
+  const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + '/'));
 
-    const plugins = [];
-    if (libs.length) {
-        plugins.push(
-            //
-            // Move mathjax references to component libraries
-            //
-            new webpack.NormalModuleReplacementPlugin(
-                /^[^\/].*\.js$/,
-                function (resource) {
-                    const request = path.resolve(resource.context, resource.request);
-                    if (!request.match(mjRE)) return;
-                    for (const lib of libs) {
-                        const file = request.replace(mjRE, path.join(root, lib) + '/');
-                        if (fs.existsSync(file)) {
-                            resource.request = file;
-                            break;
-                        }
-                    }
-                }
-            )
-        );
-    }
+  const plugins = [];
+  if (libs.length) {
     plugins.push(
-        //
-        // Check for packages that should be rerouted to node_modules
-        //
-        new webpack.NormalModuleReplacementPlugin(
-            /^[^\/].*\.js$/,
-            function (resource) {
-                const request = path.resolve(resource.context, resource.request);
-                if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
-                const file = request.replace(nodeRE, path.join(root, 'node_modules') + '/');
-                if (fs.existsSync(file)) {
-                    resource.request = file;
-                }
+      //
+      // Move mathjax references to component libraries
+      //
+      new webpack.NormalModuleReplacementPlugin(
+        /^[^\/].*\.js$/,
+        function (resource) {
+          const request = path.resolve(resource.context, resource.request);
+          if (!request.match(mjRE)) return;
+          for (const lib of libs) {
+            const file = request.replace(mjRE, path.join(root, lib) + '/');
+            if (fs.existsSync(file)) {
+              resource.request = file;
+              break;
             }
-        )
+          }
+        }
+      )
     );
-    return plugins;
+  }
+  plugins.push(
+    //
+    // Check for packages that should be rerouted to node_modules
+    //
+    new webpack.NormalModuleReplacementPlugin(
+      /^[^\/].*\.js$/,
+      function (resource) {
+        const request = path.resolve(resource.context, resource.request);
+        if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
+        const file = request.replace(nodeRE, path.join(root, 'node_modules') + '/');
+        if (fs.existsSync(file)) {
+          resource.request = file;
+        }
+      }
+    )
+  );
+  return plugins;
 };
 
 /**
@@ -99,24 +99,24 @@ const PLUGINS = function (mathjax, libs, dir) {
  * @return {any}          The modules specification for the webpack configuration
  */
 const MODULE = function (dir) {
-    //
-    // Only need to transpile our directory and components directory
-    //
-    const dirRE = (dir.substr(0, __dirname.length) === __dirname ? quoteRE(__dirname) :
-                   '(?:' + quoteRE(__dirname) + '|' + quoteRE(dir) + ')');
-    return {
-        // NOTE: for babel transpilation
-        rules: [{
-            test: new RegExp(dirRE + '\\/.*\\.js$'),
-            exclude: new RegExp(quoteRE(path.dirname(__dirname)) + '\\/es5\\/'),
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    presets: ['@babel/env']
-                }
-            }
-        }]
-    }
+  //
+  // Only need to transpile our directory and components directory
+  //
+  const dirRE = (dir.substr(0, __dirname.length) === __dirname ? quoteRE(__dirname) :
+                 '(?:' + quoteRE(__dirname) + '|' + quoteRE(dir) + ')');
+  return {
+    // NOTE: for babel transpilation
+    rules: [{
+      test: new RegExp(dirRE + '\\/.*\\.js$'),
+      exclude: new RegExp(quoteRE(path.dirname(__dirname)) + '\\/es5\\/'),
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/env']
+        }
+      }
+    }]
+  }
 };
 
 /**
@@ -130,35 +130,32 @@ const MODULE = function (dir) {
  *                              (defaults to mathjax/es5)
  */
 const PACKAGE = function (name, mathjax, libs, dir, dist) {
-    const distDir = dist ? path.resolve(dir, dist) :
-                           path.resolve(path.dirname(mathjax), 'es5', path.dirname(name));
-    name = path.basename(name);
-    return {
-        name: name,
-        entry: path.join(dir, name + '.js'),
-        output: {
-            path: distDir,
-            filename: name + (dist === '.' ? '.min.js' : '.js')
-        },
-        devtool: 'sourcemap',
-        plugins: PLUGINS(mathjax, libs, dir),
-        module: MODULE(dir),
-        performance: {
-            hints: false
-        },
-        optimization: {
-            minimizer: [new Uglify({
-                uglifyOptions: {
-                    output: {
-                        ascii_only: true
-                    }
-                },
-                sourceMap: true
-            })]
-        },
-        mode: 'production'
-    };
+  const distDir = dist ? path.resolve(dir, dist) :
+                         path.resolve(path.dirname(mathjax), 'es5', path.dirname(name));
+  name = path.basename(name);
+  return {
+    name: name,
+    entry: path.join(dir, name + '.js'),
+    output: {
+      path: distDir,
+      filename: name + (dist === '.' ? '.min.js' : '.js')
+    },
+    plugins: PLUGINS(mathjax, libs, dir),
+    module: MODULE(dir),
+    performance: {
+      hints: false
+    },
+    optimization: {
+      minimizer: [new Uglify({
+        uglifyOptions: {
+          output: {
+            ascii_only: true
+          }
+        }
+      })]
+    },
+    mode: 'production'
+  };
 }
 
 module.exports = PACKAGE;
-

@@ -26,8 +26,8 @@
 import TexParser from '../TexParser.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import isUrl from 'validator/lib/isUrl';
-
 
 // Namespace
 let HtmlMethods: Record<string, ParseMethod> = {};
@@ -106,7 +106,7 @@ HtmlMethods.Id = function(parser: TexParser, name: string) {
  * @param {string} name The calling macro name.
  * @return {MmlNode} The math node.
  */
-let GetArgumentMML = function(parser: TexParser, name: string) {
+let GetArgumentMML = function(parser: TexParser, name: string): MmlNode {
   let arg = parser.ParseArg(name);
   if (!NodeUtil.isInferred(arg)) {
     return arg;
