@@ -154,7 +154,7 @@ export class MmlMrow extends AbstractMmlNode {
    */
   public setTeXclass(prev: MmlNode) {
     if ((this.getProperty('open') != null || this.getProperty('close') != null) &&
-        (!prev || prev.getProperty('fnOp') != null)) {
+        (!prev || prev.getProperty('fnOP') != null)) {
       //
       // <mrow> came from \left...\right
       //   so treat as subexpression (TeX class INNER).
