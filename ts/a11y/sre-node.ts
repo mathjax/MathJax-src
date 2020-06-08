@@ -22,15 +22,22 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-declare const require: (name: string) => any;
-
-const Sre = require('speech-rule-engine');
+import * as SRE from 'speech-rule-engine';
 
 declare const global: any;
 
 /**
  * The global sre with sre.Engine.isReady() and sre.toEnriched()
  */
-global.SRE = Sre;
-global.sre = Object.create(Sre);
-global.sre.Engine = {isReady() {return Sre.engineReady()}};
+global.SRE = SRE;
+global.sre = Object.create(SRE);
+global.sre.Engine = {
+  /**
+   * @return {boolean}   True when SRE is ready
+   */
+  isReady(): boolean {
+    return SRE.engineReady();
+  }
+};
+
+export {};
