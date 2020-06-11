@@ -481,7 +481,7 @@ export class CommonWrapper<
     //
     // If there is a fontsize and no mathsize attribute, is that
     //
-    if (fontsize && !mathsize) {
+    if (fontsize && !attributes.getExplicit('mathsize')) {
       mathsize = fontsize;
     }
     //
