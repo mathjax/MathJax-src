@@ -27,7 +27,7 @@
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
 import {BBox} from '../BBox.js';
-import {StyleData} from '../../common/CssStyles.js';
+import {StyleData} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

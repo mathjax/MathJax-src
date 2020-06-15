@@ -24,7 +24,7 @@
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonMathMixin} from '../../common/Wrappers/math.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 import {BBox} from '../BBox.js';
 
 /*****************************************************************/

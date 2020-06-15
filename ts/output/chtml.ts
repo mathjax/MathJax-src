@@ -24,7 +24,7 @@
 import {CommonOutputJax} from './common/OutputJax.js';
 import {CommonWrapper} from './common/Wrapper.js';
 import {StyleList} from '../util/Styles.js';
-import {StyleList as CssStyleList} from './common/CssStyles.js';
+import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';

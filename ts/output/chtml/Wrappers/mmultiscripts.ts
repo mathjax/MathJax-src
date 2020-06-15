@@ -26,7 +26,7 @@ import {CHTMLmsubsup} from './msubsup.js';
 import {CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
 import {BBox} from '../BBox.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

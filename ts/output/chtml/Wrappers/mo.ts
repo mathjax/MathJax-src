@@ -25,7 +25,7 @@ import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../BBox.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/

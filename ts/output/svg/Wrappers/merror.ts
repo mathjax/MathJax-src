@@ -23,7 +23,7 @@
 
 import {SVGWrapper} from '../Wrapper.js';
 import {MmlMerror} from '../../../core/MmlTree/MmlNodes/merror.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
