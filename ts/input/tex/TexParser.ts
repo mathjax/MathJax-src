@@ -181,10 +181,8 @@ export default class TexParser {
    */
   public Parse() {
     let c: string;
-    let n: number;
     while (this.i < this.string.length) {
-      n = this.string.codePointAt(this.i);
-      c = String.fromCodePoint(n);
+      c = this.getCodePoint();
       this.i += c.length;
       this.parse('character', [this, c]);
     }
@@ -244,6 +242,13 @@ export default class TexParser {
   }
 
   /**
+   * @return {string}   Get the next unicode character in the string
+   */
+  public getCodePoint(): string {
+    return String.fromCodePoint(this.string.codePointAt(this.i));
+  }
+
+  /**
    * @return {boolean} True if the next character to parse is a space.
    */
   public nextIsSpace(): boolean {
@@ -257,7 +262,7 @@ export default class TexParser {
     while (this.nextIsSpace()) {
       this.i++;
     }
-    return String.fromCodePoint(this.string.codePointAt(this.i));
+    return this.getCodePoint();
   }
 
   /**
@@ -315,7 +320,7 @@ export default class TexParser {
       // @test MissingCloseBrace
       throw new TexError('MissingCloseBrace', 'Missing close brace');
     }
-    const c = String.fromCodePoint(this.string.codePointAt(this.i));
+    const c = this.getCodePoint();
     this.i += c.length;
     return c;
   }
