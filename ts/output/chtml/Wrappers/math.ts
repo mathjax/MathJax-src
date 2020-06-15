@@ -25,7 +25,7 @@ import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonMathMixin} from '../../common/Wrappers/math.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
 import {StyleList} from '../../../util/StyleList.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**

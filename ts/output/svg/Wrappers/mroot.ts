@@ -24,7 +24,7 @@
 import {SVGWrapper, Constructor} from '../Wrapper.js';
 import {SVGmsqrt} from './msqrt.js';
 import {CommonMrootMixin} from '../../common/Wrappers/mroot.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
 
 /*****************************************************************/

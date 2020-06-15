@@ -24,7 +24,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import * as Notation from '../Notation.js';
 import {CommonMsqrt} from './msqrt.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {split} from '../../../util/string.js';
 

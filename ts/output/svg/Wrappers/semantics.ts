@@ -24,7 +24,7 @@
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
 import {XMLNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../../util/StyleList.js';

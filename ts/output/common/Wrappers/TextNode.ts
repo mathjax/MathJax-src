@@ -22,7 +22,7 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/

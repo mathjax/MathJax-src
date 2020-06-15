@@ -24,7 +24,7 @@
 
 import {AnyWrapper, Constructor} from '../Wrapper.js';
 import {CommonScriptbase, ScriptbaseConstructor} from './scriptbase.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 
 /*****************************************************************/
