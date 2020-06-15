@@ -29,7 +29,7 @@ import {NodeFactory} from './NodeFactory.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
-import {Configuration} from './Configuration.js';
+import {ParserConfiguration} from './Configuration.js';
 
 
 /**
@@ -103,7 +103,7 @@ export default class ParseOptions {
    *     TeX parser.
    * @param {OptionList[]} options   [TeX options, Tag options, {packages}]
    */
-  public constructor(configuration: Configuration, options: OptionList[] = []) {
+  public constructor(configuration: ParserConfiguration, options: OptionList[] = []) {
     this.handlers = new SubHandlers(configuration);
     // Add node factory methods from packages.
     this.nodeFactory = new NodeFactory();
