@@ -150,7 +150,7 @@ namespace NodeUtil {
   /**
    * Returns the attribute of a node.
    * @param {MmlNode} node The node.
-   * @param {string} attribute A attribute name.
+   * @param {string} attr A attribute name.
    * @return {Property} Value of the attribute.
    */
   export function getAttribute(node: MmlNode, attr: string): Property  {

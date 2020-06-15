@@ -1215,6 +1215,8 @@ BaseMethods.Cr = function(parser: TexParser, name: string) {
  * Handle newline outside array.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
+ * @param {boolean} nobrackets Flag indicating if newline is followed by
+ *     brackets.
  */
 BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: boolean = false) {
   let n: string;
@@ -1357,7 +1359,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
  * @param {string} spacing Column spacing.
  * @param {string} vspacing Row spacing.
  * @param {string} style Display or text style.
- * @param {boolean} raggedHeight Does the height need to be adjusted.
+ * @param {boolean} raggedHeight Does the height need to be adjusted?
  */
 BaseMethods.Array = function(parser: TexParser, begin: StackItem,
                              open: string, close: string, align: string,

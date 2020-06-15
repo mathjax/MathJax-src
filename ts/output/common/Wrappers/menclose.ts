@@ -48,7 +48,7 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
 
   /**
    * The padding, thickness, and shape of the arrow head
-   *   (may be overriden using data-padding, data-thickness, and data-arrowhead attibutes)
+   *   (may be overridden using data-padding, data-thickness, and data-arrowhead attibutes)
    */
   padding: number;
   thickness: number;
@@ -189,15 +189,15 @@ export function CommonMencloseMixin<
     public msqrt: S = null;
 
     /**
-     * The padding of the arrow head (may be overriden using data-padding attibute)
+     * The padding of the arrow head (may be overridden using data-padding attibute)
      */
     public padding: number = Notation.PADDING;
     /**
-     * The thickness of the arrow head (may be overriden using data-thickness attibute)
+     * The thickness of the arrow head (may be overridden using data-thickness attibute)
      */
     public thickness: number = Notation.THICKNESS;
     /**
-     * The shape of the arrow head (may be overriden using data-arrowhead attibutes)
+     * The shape of the arrow head (may be overridden using data-arrowhead attibutes)
      */
     public arrowhead = {x: Notation.ARROWX, y: Notation.ARROWY, dx: Notation.ARROWDX};
 

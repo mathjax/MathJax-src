@@ -57,7 +57,7 @@ export interface OutputJax<N, T, D> {
   adaptor: DOMAdaptor<N, T, D>;
 
   /**
-   * @param {DOMAdaptor}  The adaptor to use in this jax
+   * @param {DOMAdaptor} adaptor The adaptor to use in this jax
    */
   setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
 

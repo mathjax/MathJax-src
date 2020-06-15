@@ -25,7 +25,7 @@ import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonMfracMixin} from '../../common/Wrappers/mfrac.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import {CHTMLmo} from './mo.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 import {OptionList} from '../../../util/Options.js';
 
 /*****************************************************************/

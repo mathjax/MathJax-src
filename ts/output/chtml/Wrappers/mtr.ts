@@ -28,7 +28,7 @@ import {CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
 import {CHTMLmtable} from './mtable.js';
 import {CHTMLmtd} from './mtd.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

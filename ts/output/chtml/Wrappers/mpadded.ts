@@ -24,7 +24,7 @@
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
 import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

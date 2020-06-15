@@ -729,7 +729,7 @@ export function CommonMtableMixin<
 
     /**
      * @param {number} height   The total height of the table
-     * @return {number[]}       The [height, depth] for the aligned table
+     * @return {[number, number]}  The [height, depth] for the aligned table
      */
     public getBBoxHD(height: number): [number, number] {
       const [align, row] = this.getAlignmentRow();

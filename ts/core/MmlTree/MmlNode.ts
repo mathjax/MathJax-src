@@ -77,7 +77,7 @@ export const indentAttributes = [
 ];
 
 /**
- * The nodes that can be in the internam MathML tree
+ * The nodes that can be in the internal MathML tree
  */
 export type MMLNODE = MmlNode | TextNode | XMLNode;
 
@@ -129,7 +129,7 @@ export interface MmlNode extends Node {
   core(): MmlNode;
   /**
    * @return {MmlNode}  For embellished operators, the core <mo> element (at whatever
-   *                    depth).  Fod non-embellished nodes, the original node itself.
+   *                    depth).  For non-embellished nodes, the original node itself.
    */
   coreMO(): MmlNode;
   /**
@@ -165,7 +165,7 @@ export interface MmlNode extends Node {
    *                                    from which they came)
    * @param {boolean} display           The displaystyle to inherit
    * @param {number} level              The scriptlevel to inherit
-   * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
+   * @param {boolean} prime             The TeX prime style to inherit (T vs. T', etc).
    */
   setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
 
@@ -376,7 +376,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
   }
 
   /**
-   * @return {MmlNode}  The logial parent of this node (skipping over inferred rows
+   * @return {MmlNode}  The logical parent of this node (skipping over inferred rows
    *                      some other node types)
    */
   public get Parent(): MmlNode {
@@ -596,7 +596,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    *                                    from which they came)
    * @param {boolean} display           The displaystyle to inherit
    * @param {number} level              The scriptlevel to inherit
-   * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
+   * @param {boolean} prime             The TeX prime style to inherit (T vs. T', etc).
    */
   protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
     for (const child of this.childNodes) {
@@ -604,8 +604,8 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     }
   }
   /**
-   * Used by subclasses to add add their own attributes to the inherited list
-   * (e.g., mstyle uses this to augment the inhertied attibutes)
+   * Used by subclasses to add their own attributes to the inherited list
+   * (e.g., mstyle uses this to augment the inherited attibutes)
    *
    * @param {AttributeList} current    The current list of inherited attributes
    * @param {PropertyList} attributes  The new attributes to add into the list
@@ -698,6 +698,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    *
    * @param {string} message         The error message to use
    * @param {PropertyList} options   The options telling how much to verify
+   * @param {boolean} short          True means use just the kind if not using full errors
    */
   public mError(message: string, options: PropertyList, short: boolean = false) {
     if (this.parent && this.parent.isKind('merror')) {
@@ -1083,8 +1084,8 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
   /**
    * No children or attributes, so ignore this call.
    *
-   * @param {MmlNode} node          The node tree to be checked
-   * @param {PropertyList} options  The opritons for the check
+   * @param {PropertyList} options  The options for the check
+   
    */
   public verifyTree(_options: PropertyList) {}
 
@@ -1171,6 +1172,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
 
   /**
    * @param {object} xml  The XML content to be saved
+   * @param {DOMAdaptor} adaptor DOM adaptor for the content
    * @return {XMLNode}  The XML node (for chaining of method calls)
    */
   public setXML(xml: Object, adaptor: DOMAdaptor<any, any, any> = null): XMLNode {

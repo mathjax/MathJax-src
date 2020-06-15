@@ -24,15 +24,15 @@
 import './base/BaseConfiguration.js';
 import './action/ActionConfiguration.js';
 import './ams/AmsConfiguration.js';
-import './ams_cd/AmsCdConfiguration.js';
+import './amscd/AmsCdConfiguration.js';
 import './bbox/BboxConfiguration.js';
 import './boldsymbol/BoldsymbolConfiguration.js';
 import './braket/BraketConfiguration.js';
 import './bussproofs/BussproofsConfiguration.js';
 import './cancel/CancelConfiguration.js';
 import './color/ColorConfiguration.js';
-import './color_v2/ColorV2Configuration.js';
-import './config_macros/ConfigMacrosConfiguration.js';
+import './colorv2/ColorV2Configuration.js';
+import './configmacros/ConfigMacrosConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
 import './html/HtmlConfiguration.js';
@@ -41,7 +41,7 @@ import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
 import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
-import './tag_format/TagFormatConfiguration.js';
+import './tagformat/TagFormatConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
@@ -50,14 +50,14 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
   MathJax.loader.preLoad(
     '[tex]/action',
     '[tex]/ams',
-    '[tex]/amsCd',
+    '[tex]/amscd',
     '[tex]/bbox',
     '[tex]/boldsymbol',
     '[tex]/braket',
     '[tex]/bussproofs',
     '[tex]/cancel',
     '[tex]/color',
-    '[tex]/color_v2',
+    '[tex]/colorv2',
     '[tex]/enclose',
     '[tex]/extpfeil',
     '[tex]/html',
@@ -68,8 +68,8 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/physics',
     '[tex]/unicode',
     '[tex]/verb',
-    '[tex]/configMacros',
-    '[tex]/tagFormat'
+    '[tex]/configmacros',
+    '[tex]/tagformat'
   );
 }
 
@@ -77,7 +77,7 @@ export const AllPackages: string[] = [
   'base',
   'action',
   'ams',
-  'amsCd',
+  'amscd',
   'bbox',
   'boldsymbol',
   'braket',
@@ -93,6 +93,6 @@ export const AllPackages: string[] = [
   'noundefined',
   'unicode',
   'verb',
-  'configMacros',
-  'tagFormat'
+  'configmacros',
+  'tagformat'
 ];

@@ -9,7 +9,7 @@
     "input/tex/noundefined",
     "input/tex/require",
     "input/tex/autoload",
-    "input/tex/config_macros",
+    "input/tex/configmacros",
     "util/entities/n.ts",
     "util/entities/p.ts",
     "util/entities/r.ts"

@@ -280,7 +280,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
      * @param {number[]} WHD     The [H, D] being requested from the parent mrow
      * @param {number} HD        The full height (including symmetry, etc)
      * @param {DelimiterData} C  The delimiter data for the stretchy character
-     * @return {number[]}        The height and depth for the vertically stretched delimiter
+     * @return {[number, number]}        The height and depth for the vertically stretched delimiter
      */
     public getBaseline(WHD: number[], HD: number, C: DelimiterData): [number, number] {
       const hasWHD = (WHD.length === 2 && WHD[0] + WHD[1] === HD);

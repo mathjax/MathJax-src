@@ -8,7 +8,6 @@
     "util/entities/r.ts"
   ],
   "exclude": [
-    "input/tex/tag_format",
     "input/tex/mhchem/mhchem_parser.d.ts"
   ]
 }

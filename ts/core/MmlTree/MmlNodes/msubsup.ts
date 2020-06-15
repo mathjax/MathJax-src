@@ -63,14 +63,14 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
   }
 
   /**
-   * @return {number}  The position of the subscript (overriden in msup below)
+   * @return {number}  The position of the subscript (overridden in msup below)
    */
   public get sub(): number {
     return 1;
   }
 
   /**
-   * @return {number}  The position of the superscript (overriden in msup below)
+   * @return {number}  The position of the superscript (overridden in msup below)
    */
   public get sup(): number {
     return 2;

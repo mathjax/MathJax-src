@@ -66,7 +66,7 @@ export interface DOMAdaptor<N, T, D> {
   /**
    * @param {string} kind      The tag name of the HTML node to be created
    * @param {OptionList} def   The properties to set for the created node
-   * @param {(N|T)[]} content  The child nodes for the created HTML node
+   * @param {(N|T)[]} children The child nodes for the created HTML node
    * @param {string} ns        The namespace in which to create the node
    * @return {N}               The generated HTML tree
    */
@@ -282,7 +282,7 @@ export interface DOMAdaptor<N, T, D> {
    * @param {string} name   The class to test
    * @return {boolean}      True if the node has the given class
    */
-  hasClass(node: N, name: string): void;
+  hasClass(node: N, name: string): boolean;
 
   /**
    * @param {N} node        The HTML node whose class list is needed
@@ -293,7 +293,7 @@ export interface DOMAdaptor<N, T, D> {
   /**
    * @param {N} node        The HTML node whose style is to be changed
    * @param {string} name   The style to be set
-   * @param {string} name   The new value of the style
+   * @param {string} value  The new value of the style
    */
   setStyle(node: N, name: string, value: string): void;
 
@@ -315,6 +315,12 @@ export interface DOMAdaptor<N, T, D> {
    * @return {number}       The font size (in pixels) of the node
    */
   fontSize(node: N): number;
+
+  /**
+   * @param {N} node        The HTML node whose font family is to be determined
+   * @return {string}       The font family
+   */
+  fontFamily(node: N): string;
 
   /**
    * @param {N} node            The HTML node whose dimensions are to be determined
@@ -596,6 +602,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract fontSize(node: N): number;
+
+  /**
+   * @override
+   */
+  public abstract fontFamily(node: N): string;
 
   /**
    * @override

@@ -68,10 +68,10 @@ export default class TexParser {
 
   /**
    * @constructor
-   * @param {string} _string The string to parse.
+   * @param {string} string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
    *     state of the overall expression translation.
-   * @param {ParseOptions=} config A parser configuration.
+   * @param {ParseOptions=} configuration A parser configuration.
    */
   constructor(private _string: string, env: EnvList,
               public configuration: ParseOptions) {
@@ -153,6 +153,7 @@ export default class TexParser {
   /**
    * Checks if a symbol is contained in one of the symbol mappings of the
    * specified kind.
+   * @param {HandlerType} kind Configuration name.
    * @param {string} symbol The symbol to parse.
    * @return {boolean} True if the symbol is contained in the given types of
    *     symbol mapping.
