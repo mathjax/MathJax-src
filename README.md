@@ -51,9 +51,9 @@ If you are loading MathJax from a CDN into a web page, there is no
 need to install anything.  Simply use a `script` tag that loads
 MathJax from the CDN.  E.g.,
 
-    <script id="MathJax-script" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+``` html
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+```
     
 See the [MathJax
 documentation](https://docs.mathjax.org/en/latest/index.html#browser-components),
@@ -62,39 +62,47 @@ and the [MathJax Component
 Repository](https://github.com/mathjax/MathJax-demos-web) for more information.
 
 
-
-
 ### Using MathJax Components in node applications
 
 To use MathJax components in a node application, install the `mathjax` package:
 
-    npm install mathjax@3
+``` bash
+npm install mathjax@3
+```
 
-(we are still making updates to version 2, so you should include `@3` since the latest chronological version may not be version 3).
+(we are still making updates to version 2, so you should include `@3`
+since the latest chronological version may not be version 3).
 
 Then require `mathjax` within your application:
 
-    require('mathjax').init({ ... }).then((MathJax) => { ... });
+``` javascript
+require('mathjax').init({ ... }).then((MathJax) => { ... });
+```
     
 where the first `{ ... }` is a MathJax configuration, and the second
 `{ ... }` is the code to run after MathJax has been loaded.  E.g.
 
-    require('mathjax').init({
-      loader: {
-        require: require,
-        paths: {mathjax: 'mathjax/es5'},
-        load: ['input/tex', 'output/svg']
-      }
-    }).then((MathJax) => {
-      const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
-      console.log(MathJax.startup.adaptor.outerHTML(svg));
-    }).catch((err) => console.log(err.message));
+``` javascript
+require('mathjax').init({
+  loader: {load: ['input/tex', 'output/svg']}
+}).then((MathJax) => {
+  const svg = MathJax.tex2svg('\\frac{1}{x^2-1}', {display: true});
+  console.log(MathJax.startup.adaptor.outerHTML(svg));
+}).catch((err) => console.log(err.message));
+```
 
+**Note:** this technique is for node-based application only, not for
+browser applications.  This method sets up an alternative DOM
+implementation, which you don't need in the browser, and tells MathJax
+to use node's `require()` command to load external modules.  This
+setup will not work properly in the browser, even if you webpack it or
+bundle it in other ways.
     
 See the
 [documentation](https//docs.mathjax.org/en/latest/index.html#server-nodejs)
 and the [MathJax Node
 Repository](https://github.com/mathjax/MathJax-demos-node) for more details.
+
 
 ### Using MathJax modules directly in node applications
 
@@ -120,10 +128,12 @@ demos](https://github.com/mathjax/MathJax-demos-node) for examples).
 
 If you want to work from the GitHub repository directly, then do the following:
 
-    git clone https://github.com/mathjax/MathJax-src.git mathjax-src
-    cd mathjax-src
-    npm run --silent compile
-    npm run --silent make-components
+``` bash
+git clone https://github.com/mathjax/MathJax-src.git mathjax-src
+cd mathjax-src
+npm run --silent compile
+npm run --silent make-components
+```
 
 in order to compile the JavaScript files from the TypeScript source,
 and build the component files from the JavaScript files.

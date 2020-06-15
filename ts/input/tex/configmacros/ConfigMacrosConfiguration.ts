@@ -17,7 +17,7 @@
 
 
 /**
- * @fileoverview    Configuration file for the config-macros package.
+ * @fileoverview    Configuration file for the configmacros package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -32,16 +32,16 @@ import {TeX} from '../../tex.js';
 /**
  * The name to use for the macros map
  */
-const MACROSMAP = 'configMacrosMap';
+const MACROSMAP = 'configmacros-map';
 
 /**
  * Create the command map for the macros
  *
  * @param {Configuration} config   The configuration object for the input jax
  */
-function configMacrosInit(config: Configuration) {
+function configmacrosInit(config: Configuration) {
   new CommandMap(MACROSMAP, {}, {});
-  config.append(Configuration.create('configMacroDefinitions', {handler: {macro: [MACROSMAP]}}));
+  config.append(Configuration.create('configmacros-definitions', {handler: {macro: [MACROSMAP]}}));
 }
 
 /**
@@ -50,7 +50,7 @@ function configMacrosInit(config: Configuration) {
  * @param {Configuration} config   The configuration object for the input jax
  * @param {TeX} jax                The TeX input jax
  */
-function configMacrosConfig(_config: Configuration, jax: TeX<any, any, any>) {
+function configmacrosConfig(_config: Configuration, jax: TeX<any, any, any>) {
   const macrosMap = jax.parseOptions.handlers.retrieve(MACROSMAP) as CommandMap;
   const macros = jax.parseOptions.options.macros;
   for (const cs of Object.keys(macros)) {
@@ -63,12 +63,12 @@ function configMacrosConfig(_config: Configuration, jax: TeX<any, any, any>) {
 }
 
 /**
- * The configuration object for configMacros
+ * The configuration object for configmacros
  */
 export const ConfigMacrosConfiguration = Configuration.create(
-  'configMacros', {
-    init: configMacrosInit,
-    config: configMacrosConfig,
+  'configmacros', {
+    init: configmacrosInit,
+    config: configmacrosConfig,
     options: {macros: expandable({})}
   }
 );

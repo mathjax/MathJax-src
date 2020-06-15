@@ -927,6 +927,7 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
  * Closes an automatic fence if one was opened.
  * @param {TexParser} parser The calling parser.
  * @param {string} fence The fence.
+ * @param {number} texclass The TeX class.
  */
 PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, _texclass: number) {
   const mo = parser.create('token', 'mo', {stretchy: false}, fence);

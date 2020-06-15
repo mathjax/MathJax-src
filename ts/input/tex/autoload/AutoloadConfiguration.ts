@@ -133,7 +133,7 @@ const AutoloadEnvironments = new AutoloadCommandMap('autoload-environments', {},
 
 
 /**
- * The configuration object for configMacros
+ * The configuration object for configmacros
  */
 export const AutoloadConfiguration = Configuration.create(
   'autoload', {
@@ -151,7 +151,7 @@ export const AutoloadConfiguration = Configuration.create(
       //
       autoload: expandable({
         action: ['toggle', 'mathtip', 'texttip'],
-        amsCd: [[], ['CD']],
+        amscd: [[], ['CD']],
         bbox: ['bbox'],
         boldsymbol: ['boldsymbol'],
         braket: ['bra', 'ket', 'braket', 'set', 'Bra', 'Ket', 'Braket', 'Set', 'ketbra', 'Ketbra'],

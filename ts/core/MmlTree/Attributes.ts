@@ -46,7 +46,7 @@ export class Attributes {
    */
   protected inherited: PropertyList;
   /**
-   * The default attribuites for the node type
+   * The default attributes for the node type
    */
   protected defaults: PropertyList;
   /**
@@ -153,7 +153,7 @@ export class Attributes {
   }
 
   /**
-   * @param {string} name  The name of an attribute to test for the existance of a default
+   * @param {string} name  The name of an attribute to test for the existence of a default
    * @return {boolean}     True of there is a default for the named attribute, false otherwise
    */
   public hasDefault(name: string): boolean {

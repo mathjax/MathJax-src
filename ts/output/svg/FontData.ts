@@ -76,9 +76,9 @@ export type SVGFontDataClass = typeof SVGFontData;
 
 /**
  * @param {CharMap} font        The font to augment
- * @param {StringMap} paths     The path data to use for each character
- * @param {StringMap} content   The string to use for remapped characters
- * @return {CharMap}            The augmented font
+ * @param {CharStringMap} paths     The path data to use for each character
+ * @param {CharStringMap} content   The string to use for remapped characters
+ * @return {SVGCharMap}            The augmented font
  */
 export function AddPaths(font: SVGCharMap, paths: CharStringMap, content: CharStringMap): SVGCharMap {
   for (const c of Object.keys(paths)) {

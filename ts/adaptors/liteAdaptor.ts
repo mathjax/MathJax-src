@@ -40,7 +40,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    * The default options
    */
   public static OPTIONS: OptionList = {
-    fontSize: 16,      // we can't compute the font size, so always use this
+    fontSize: 16,        // We can't compute the font size, so always use this
+    fontFamily: 'Times'  // We can't compute the font family, so always use this
   };
 
   /**
@@ -159,7 +160,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   }
 
   /**
-   * @param {LiteELement} node   The node to be searched
+   * @param {LiteElement} node   The node to be searched
    * @param {string} id          The id of the node to look for
    * @return {LiteElement}       The child node having the given id
    */
@@ -182,7 +183,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   }
 
   /**
-   * @param {LiteELement} node   The node to be searched
+   * @param {LiteElement} node   The node to be searched
    * @param {string} name        The name of the class to find
    * @return {LiteElement[]}     The nodes with the given class
    */
@@ -244,7 +245,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
 
   /**
    * @param {LiteNode} node  The node whose index is needed
-   * @return {number}        THe index of the node it its parent's children array
+   * @return {number}        The index of the node it its parent's children array
    */
   public childIndex(node: LiteNode): number {
     return (node.parent ? node.parent.children.findIndex(n => n === node) : -1);
@@ -533,6 +534,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    */
   public fontSize(_node: LiteElement) {
     return this.options.fontSize;
+  }
+
+  /**
+   * @override
+   */
+  public fontFamily(_node: LiteElement) {
+    return this.options.fontFamily;
   }
 
   /**

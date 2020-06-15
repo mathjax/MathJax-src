@@ -85,8 +85,7 @@ export function createBoldToken(factory: NodeFactory, kind: string,
 
 /**
  * Postprocessor to rewrite token nodes to bold font, if possible.
- * @param {MmlNode} node The node to rewrite.
- * @param {ParseOptions} options The parse options.
+ * @param {ParseOptions} data The parse options.
  */
 export function rewriteBoldTokens(arg: {data: ParseOptions}) {
   for (let node of arg.data.getList('fixBold')) {

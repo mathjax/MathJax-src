@@ -255,7 +255,7 @@ CommonWrapper<
    * @param {number} n        The character number
    * @param {number} x        The x-position of the character
    * @param {number} y        The y-position of the character
-   * @param {N}               The container for the character
+   * @param {N} parent        The container for the character
    * @param {string} variant  The variant to use for the character
    * @return {number}         The width of the character
    */
@@ -272,7 +272,7 @@ CommonWrapper<
       const g = this.adaptor.append(parent, this.svg('g', {'data-c': C}));
       this.place(x, y, g);
       x = 0;
-      for (const n of this.unicodeChars(data.c)) {
+      for (const n of this.unicodeChars(data.c, variant)) {
         x += this.placeChar(n, x, y, g, variant);
       }
     } else if (data.unknown) {

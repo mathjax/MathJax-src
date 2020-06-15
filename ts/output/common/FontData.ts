@@ -715,6 +715,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   }
 
   /**
+   * @param {string} family   The font camily to use
+   * @return {string}         The family with the css prefix
+   */
+  public getFamily(family: string): string {
+    return (this.cssFamilyPrefix ? this.cssFamilyPrefix + ', ' + family : family);
+  }
+
+  /**
    * @param {string} name   The name of the map to query
    * @param {number} c      The character to remap
    * @return {string}       The remapped character (or the original)

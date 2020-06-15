@@ -218,7 +218,6 @@ export class MmlMo extends AbstractMmlTokenNode {
     let {form, fence} = this.attributes.getList('form', 'fence') as {form: string, fence: string};
     if (this.getProperty('texClass') === undefined &&
         (this.attributes.isSet('lspace') || this.attributes.isSet('rspace'))) {
-      this.texClass = TEXCLASS.NONE;
       return null;
     }
     if (fence && this.texClass === TEXCLASS.REL) {

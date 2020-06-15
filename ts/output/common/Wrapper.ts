@@ -51,7 +51,7 @@ const SMALLSIZE = 2/18;
 /**
  * @param {boolean} script   The scriptlevel
  * @param {number} size      The space size
- * @return {numner}          The size clamped to SMALLSIZE when scriptlevel > 0
+ * @return {number}          The size clamped to SMALLSIZE when scriptlevel > 0
  */
 function MathMLSpace(script: boolean, size: number): number {
   return (script ? size < SMALLSIZE ? 0 : SMALLSIZE : size);
@@ -334,6 +334,7 @@ export class CommonWrapper<
    *   container width (or the child width, if none was passed).
    *   Overriden for mtables in order to compute the width.
    *
+   * @param {boolean} recompute  True if we are recomputing due to changes in children
    * @param {(number|null)=} w   The width of the container (from which percentages are computed)
    * @param {boolean=} clear     True if pwidth marker is to be cleared
    * @return {boolean}           True if a percentage width was found
@@ -717,17 +718,18 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {string} text     The text to turn into unicode locations
-   * @param {string} variant  The name of the variant for the characters
-   * @return {number[]}  Array of numbers represeting the string's unicode character positions
+   * @param {string} text   The text to turn into unicode locations
+   * @param {string} name   The name of the variant for the characters
+   * @return {number[]}     Array of numbers represeting the string's unicode character positions
    */
-  protected unicodeChars(text: string, variant: string = ''): number[] {
+  protected unicodeChars(text: string, name: string = this.variant): number[] {
     let chars = unicodeChars(text);
     //
     //  Remap to Math Alphanumerics block
     //
-    const map = this.font.getVariant(variant).chars;
-    if (map) {
+    const variant = this.font.getVariant(name);
+    if (variant && variant.chars) {
+      const map = variant.chars;
       //
       //  Is map[n] doesn't exist, (map[n] || []) still gives an CharData array.
       //  If the array doesn't have a CharOptions element use {} instead.

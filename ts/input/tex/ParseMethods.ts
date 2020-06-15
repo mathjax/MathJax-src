@@ -127,7 +127,7 @@ namespace ParseMethods {
   /**
    * Handle delimiter.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The parsed symbol.
+   * @param {Symbol} delim The parsed delimiter symbol.
    */
   export function delimiter(parser: TexParser, delim: Symbol) {
     let def = delim.attributes || {};

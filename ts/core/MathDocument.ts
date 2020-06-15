@@ -109,7 +109,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
   /**
    * Creates a new RenderList from an initial list of rendering actions
    *
-   * @param {RenderActions}   The list of actions to take during render(), rerender(), and convert() calls
+   * @param {RenderActions} actions The list of actions to take during render(), rerender(), and convert() calls
    * @returns {RenderList}    The newly created prioritied list
    */
   public static create<N, T, D>(actions: RenderActions<N, T, D>): RenderList<N, T, D> {
@@ -275,7 +275,7 @@ export interface MathDocument<N, T, D> {
   math: MathList<N, T, D>;
 
   /**
-   * The list of actions to take durring a render() or convert() call
+   * The list of actions to take during a render() or convert() call
    */
   renderActions: RenderList<N, T, D>;
 
@@ -297,7 +297,7 @@ export interface MathDocument<N, T, D> {
   outputJax: OutputJax<N, T, D>;
 
   /**
-   * The DOM adaotor to use for input and output
+   * The DOM adaptor to use for input and output
    */
   adaptor: DOMAdaptor<N, T, D>;
 
@@ -389,6 +389,7 @@ export interface MathDocument<N, T, D> {
    * Set the state of the document (allowing you to roll back
    *  the state to a previous one, if needed).
    *
+   * @param {number} state     The new state of the document
    * @param {boolean} restore  True if the original math should be put
    *                            back into the document during the rollback
    * @return {MathDocument}    The math document instance
@@ -527,7 +528,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
   };
 
   /**
-   * A bit-field for the actions that heve been processed
+   * A bit-field for the actions that have been processed
    */
   public static ProcessBits = BitFieldClass('findMath', 'compile', 'getMetrics', 'typeset', 'updateDocument');
 

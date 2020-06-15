@@ -299,7 +299,7 @@ export namespace Startup {
    *   Make Typeset() and TypesetPromise() methods using the given jax,
    *    and TypesetClear() to clear the existing math items
    * For each input jax
-   *   Make input2mml() and input2mmlPromise() conversion metods and inputReset() method
+   *   Make input2mml() and input2mmlPromise() conversion methods and inputReset() method
    *   If there is a registered output jax
    *     Make input2output() and input2outputPromise conversion methods and outputStylesheet() method
    */
@@ -343,7 +343,7 @@ export namespace Startup {
   }
 
   /**
-   * Make the input2output(math, options?) and input2outuputPromise(math, options?) methods,
+   * Make the input2output(math, options?) and input2outputPromise(math, options?) methods,
    *   and outputStylesheet() method, where "input" and "output" are replaced by the
    *   jax names (e.g., tex2chtml() and chtmlStyleSheet()).
    *
@@ -390,7 +390,7 @@ export namespace Startup {
    *   returns the resulting promise.
    *
    * @param {string} name     The name of the input jax
-   * @param {input} INPUTJAX  The input jax itself
+   * @param {INPUTJAX} input  The input jax itself
    */
   export function makeMmlMethods(name: string, input: INPUTJAX) {
     const STATE = MathJax._.core.MathItem.STATE;
@@ -414,7 +414,7 @@ export namespace Startup {
    * The texReset() method clears the equation numbers and labels
    *
    * @param {string} name     The name of the input jax
-   * @param {input} INPUTJAX  The input jax itself
+   * @param {INPUTJAX} input  The input jax itself
    */
   export function makeResetMethod(name: string, input: INPUTJAX) {
     if (name === 'tex') {

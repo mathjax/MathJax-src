@@ -131,7 +131,7 @@ const MODULE = function (dir) {
  */
 const PACKAGE = function (name, mathjax, libs, dir, dist) {
   const distDir = dist ? path.resolve(dir, dist) :
-        path.resolve(path.dirname(mathjax), 'es5', path.dirname(name));
+                         path.resolve(path.dirname(mathjax), 'es5', path.dirname(name));
   name = path.basename(name);
   return {
     name: name,
@@ -140,7 +140,6 @@ const PACKAGE = function (name, mathjax, libs, dir, dist) {
       path: distDir,
       filename: name + (dist === '.' ? '.min.js' : '.js')
     },
-    devtool: 'inline-source-map',
     plugins: PLUGINS(mathjax, libs, dir),
     module: MODULE(dir),
     performance: {
@@ -152,8 +151,7 @@ const PACKAGE = function (name, mathjax, libs, dir, dist) {
           output: {
             ascii_only: true
           }
-        },
-        sourceMap: true
+        }
       })]
     },
     mode: 'production'

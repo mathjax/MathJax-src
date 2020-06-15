@@ -167,7 +167,7 @@ export class HTMLDomStrings<N, T, D> {
    * Add more text to the current string, and record the
    * node and its position in the string.
    *
-   * @param {T} node        The node to be pushed
+   * @param {N|T} node        The node to be pushed
    * @param {string} text   The text to be added (it may not be the actual text
    *                         of the node, if it is one of the nodes that gets
    *                         translated to text, like <br> to a newline).

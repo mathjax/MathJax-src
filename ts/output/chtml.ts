@@ -23,7 +23,7 @@
 
 import {CommonOutputJax} from './common/OutputJax.js';
 import {CommonWrapper} from './common/Wrapper.js';
-import {StyleList, Styles} from '../util/Styles.js';
+import {StyleList} from '../util/Styles.js';
 import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
@@ -32,7 +32,6 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {CHTMLFontData} from './chtml/FontData.js';
-import {CssFontData} from './common/FontData.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import * as LENGTHS from '../util/lengths.js';
 import {unicodeChars} from '../util/string.js';
@@ -230,23 +229,5 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
     adaptor.remove(node);
     return {w: w, h: .75, d: .2};
   }
-
-  /**
-   * @override
-   */
-  public getFontData(styles: Styles) {
-    const font = super.getFontData(styles);
-    font[0] = 'MJXZERO, ' + font[0];
-    return font;
-  }
-
-  /**
-   * @override
-   */
-  public cssFontStyles(font: CssFontData, styles: StyleList = {}) {
-    font[0] = 'MJXZERO, ' + font[0];
-    return super.cssFontStyles(font, styles);
-  }
-
 
 }

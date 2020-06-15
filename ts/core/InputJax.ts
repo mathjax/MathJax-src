@@ -71,12 +71,12 @@ export interface InputJax<N, T, D> {
   mmlFactory: MmlFactory;
 
   /**
-   * @param {DOMAdaptor}  The adaptor to use in this jax
+   * @param {DOMAdaptor} adaptor The adaptor to use in this jax
    */
   setAdaptor(adaptor: DOMAdaptor<N, T, D>): void;
 
   /**
-   * @param {MmlFactory}  The MmlFactory to use in this jax
+   * @param {MmlFactory} mmlFactory The MmlFactory to use in this jax
    */
   setMmlFactory(mmlFactory: MmlFactory): void;
 
@@ -99,6 +99,7 @@ export interface InputJax<N, T, D> {
    * Convert the math in a math item into the internal format
    *
    * @param {MathItem} math  The MathItem whose math content is to processed
+   * @param {MathDocument} document The MathDocument for this input jax.
    * @return {MmlNode}       The resulting internal node tree for the math
    */
   compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode;
@@ -149,7 +150,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   public mmlFactory: MmlFactory = null;        // set by the handler
 
   /**
-   * @param {OptionList} options  The options to applyt to this input jax
+   * @param {OptionList} options  The options to apply to this input jax
    *
    * @constructor
    */
@@ -212,7 +213,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
    *
    * @param {FunctionList} filters   The list of functions to be performed
    * @param {MathItem} math          The math item that is being processed
-   * @param {MathDocument} document  The math document contaiing the math item
+   * @param {MathDocument} document  The math document containg the math item
    * @param {any} data               Whatever other data is needed
    * @return {any}                   The (possibly modified) data
    */
