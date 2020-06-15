@@ -24,9 +24,7 @@
 
 
 import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
 import {ParseMethod} from '../Types.js';
-import BaseMethods from '../base/BaseMethods.js';
 import {StackItem, EnvList} from '../StackItem.js';
 import {ArrayItem} from '../base/BaseItems.js';
 import {Other} from '../base/BaseConfiguration.js';
@@ -47,7 +45,7 @@ let AmsCdMethods: Record<string, ParseMethod> = {};
 AmsCdMethods.CD = function(parser: TexParser, begin: StackItem) {
   parser.Push(begin);
   let item = parser.itemFactory.create('array') as ArrayItem;
-  let options = parser.configuration.options.amsCd;
+  let options = parser.configuration.options.amscd;
   item.setProperties({
     minw: parser.stack.env.CD_minw || options.harrowsize,
     minh: parser.stack.env.CD_minh || options.varrowsize
@@ -130,7 +128,7 @@ AmsCdMethods.arrow = function(parser: TexParser, name: string) {
           let nodeB = new TexParser(b, parser.stack.env, parser.configuration).mml();
           NodeUtil.setChild(mml, mml.under, parser.create('node', 'mpadded', [nodeB], pad));
         }
-          if (parser.configuration.options.amsCd.hideHorizontalLabels) {
+          if (parser.configuration.options.amscd.hideHorizontalLabels) {
             mml = parser.create('node', 'mpadded', mml, {depth: 0, height: '.67em'});
           }
         }
@@ -173,7 +171,7 @@ AmsCdMethods.cell = function(parser: TexParser, name: string) {
     //
     // Add a strut to the first cell in even rows to get
     // better spacing of arrow rows.
-    // 
+    //
     parser.Push(parser.create('node', 'mpadded', [], {height: '8.5pt', depth: '2pt'}));
   }
   parser.Push(parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}));

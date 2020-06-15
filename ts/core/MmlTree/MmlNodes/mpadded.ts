@@ -30,19 +30,24 @@ import {AbstractMmlLayoutNode} from '../MmlNode.js';
  */
 
 export class MmlMpadded extends AbstractMmlLayoutNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlLayoutNode.defaults,
-        width: '',
-        height: '',
-        depth: '',
-        lspace: 0,
-        voffset: 0
-    };
 
-    /**
-     * @return {string}  The mpadded kind
-     */
-    public get kind() {
-        return 'mpadded';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlLayoutNode.defaults,
+    width: '',
+    height: '',
+    depth: '',
+    lspace: 0,
+    voffset: 0
+  };
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mpadded';
+  }
+
 }

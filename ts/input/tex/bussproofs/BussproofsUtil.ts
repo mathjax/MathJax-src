@@ -28,8 +28,7 @@ import NodeUtil from '../NodeUtil.js';
 import ParseUtil from '../ParseUtil.js';
 
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {mathjax} from '../../../mathjax.js';
-import {Property, PropertyList} from '../../../core/Tree/Node.js';
+import {Property} from '../../../core/Tree/Node.js';
 import {MathItem} from '../../../core/MathItem.js';
 import {MathDocument} from '../../../core/MathDocument.js';
 
@@ -170,6 +169,7 @@ let nextSibling = function(inf: MmlNode): MmlNode {
  * @param {MmlNode} inf The inference rule.
  * @return {MmlNode} The previous sibling.
  */
+// @ts-ignore
 let previousSibling = function(inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1] as MmlNode;
 };
@@ -414,7 +414,7 @@ const adjustSequentPairwise = function(config: ParseOptions, sequents: MmlNode[]
  * @param {MmlNode} bottom Bottom sequent.
  * @return {[number, number]} The delta for left and right side of the sequents.
  */
-const compareSequents = function(top: MmlNode, bottom: MmlNode) {
+const compareSequents = function(top: MmlNode, bottom: MmlNode): [number, number] {
   const tr = getBBox(top.childNodes[2] as MmlNode);
   const br = getBBox(bottom.childNodes[2] as MmlNode);
   const tl = getBBox(top.childNodes[0] as MmlNode);
@@ -485,10 +485,8 @@ export let balanceRules = function(arg: FilterData) {
   let config = arg.data;
   adjustSequents(config);
   let inferences = config.nodeLists['inference'] || [];
-  let topAdjust = 0;
   for (let inf of inferences) {
     let isProof = getProperty(inf, 'proof');
-    let label = getProperty(inf, 'labelledRule');
     // This currently only works with downwards rules.
     let rule = getRule(inf);
     let premises = getPremises(rule, getProperty(rule, 'inferenceRule') as string);
@@ -563,7 +561,7 @@ let blacklistedProperties = {
  * @param {string} property The property to set.
  * @param {Property} value Its value.
  */
-export let setProperty = function(node: MmlNode, property: string, value: Property){
+export let setProperty = function(node: MmlNode, property: string, value: Property) {
   NodeUtil.setProperty(node, property_prefix + property, value);
 };
 
@@ -595,7 +593,7 @@ export let removeProperty = function(node: MmlNode, property: string) {
  * @param {FilterData} arg The object to post-process.
  */
 export let makeBsprAttributes = function(arg: FilterData) {
-  arg.data.root.walkTree((mml: MmlNode, data?: any) => {
+  arg.data.root.walkTree((mml: MmlNode, _data?: any) => {
     let attr: string[] = [];
     mml.getPropertyNames().forEach(x => {
       if (!blacklistedProperties[x] && x.match(RegExp('^' + property_prefix))) {
@@ -617,12 +615,12 @@ export let saveDocument = function (arg: FilterData) {
   if (!('getBBox' in doc.outputJax)) {
     throw Error('The bussproofs extension requires an output jax with a getBBox() method');
   }
-}
+};
 
 /**
  * Clear the document when we are done
  * @param {FilterData} arg The object to pre-process.
  */
-export let clearDocument = function (arg: FilterData) {
+export let clearDocument = function (_arg: FilterData) {
   doc = null;
-}
+};

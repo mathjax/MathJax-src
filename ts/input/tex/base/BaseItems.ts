@@ -28,11 +28,10 @@ import {CharacterMap} from '../SymbolMap.js';
 import {entities} from '../../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
-import {TexConstant} from '../TexConstants.js';
 import TexError from '../TexError.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
-import {Property, PropertyList} from '../../../core/Tree/Node.js';
+import {Property} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 
@@ -234,7 +233,7 @@ export class SubsupItem extends BaseItem {
   /**
    * @override
    */
-  public checkItem(item: StackItem): CheckType {
+  public checkItem(item: StackItem): CheckType | null {
     if (item.isKind('open') || item.isKind('left')) {
       return BaseItem.success;
     }
@@ -265,6 +264,7 @@ export class SubsupItem extends BaseItem {
       const error = this.getErrors(['', 'sub', 'sup'][position]);
       throw new TexError(error[0], error[1], ...error.splice(2));
     }
+    return null;
   }
 
 }
@@ -791,7 +791,7 @@ export class ArrayItem extends BaseItem {
    * Properties for special array definitions.
    * @type {{[key: string]: string|number|boolean}}
    */
-  public arraydef: {[key: string]: string|number|boolean}= {};
+  public arraydef: {[key: string]: string | number | boolean} = {};
 
   /**
    * True if separators are dashed.

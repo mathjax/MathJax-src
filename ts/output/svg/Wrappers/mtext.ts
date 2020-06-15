@@ -33,8 +33,13 @@ import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmtext<N, T, D> extends CommonMtextMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmtext<N, T, D> extends
+CommonMtextMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    public static kind = MmlMtext.prototype.kind;
+  /**
+   * The mtet wrapper
+   */
+  public static kind = MmlMtext.prototype.kind;
 
 }

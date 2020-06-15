@@ -22,7 +22,7 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMspace, CommonMspaceMixin} from '../../common/Wrappers/mspace.js';
+import {CommonMspaceMixin} from '../../common/Wrappers/mspace.js';
 import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
 
 /*****************************************************************/
@@ -33,30 +33,35 @@ import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmspace<N, T, D> extends CommonMspaceMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmspace<N, T, D> extends
+CommonMspaceMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    public static kind = MmlMspace.prototype.kind;
+  /**
+   * The mspace wrapper
+   */
+  public static kind = MmlMspace.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        let chtml = this.standardCHTMLnode(parent);
-        let {w, h, d} = this.getBBox();
-        if (w < 0) {
-            this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
-            w = 0;
-        }
-        if (w) {
-            this.adaptor.setStyle(chtml, 'width', this.em(w));
-        }
-        h = Math.max(0, h + d);
-        if (h) {
-            this.adaptor.setStyle(chtml, 'height', this.em(Math.max(0, h)));
-        }
-        if (d) {
-            this.adaptor.setStyle(chtml, 'verticalAlign', this.em(-d));
-        }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    let chtml = this.standardCHTMLnode(parent);
+    let {w, h, d} = this.getBBox();
+    if (w < 0) {
+      this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
+      w = 0;
     }
+    if (w) {
+      this.adaptor.setStyle(chtml, 'width', this.em(w));
+    }
+    h = Math.max(0, h + d);
+    if (h) {
+      this.adaptor.setStyle(chtml, 'height', this.em(Math.max(0, h)));
+    }
+    if (d) {
+      this.adaptor.setStyle(chtml, 'verticalAlign', this.em(-d));
+    }
+  }
 
 }

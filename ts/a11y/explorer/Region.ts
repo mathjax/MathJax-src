@@ -24,8 +24,7 @@
 
 
 import {MathDocument} from '../../core/MathDocument.js';
-import {CssStyles, StyleList} from '../../output/common/CssStyles.js';
-
+import {CssStyles} from '../../output/common/CssStyles.js';
 import '../sre.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
@@ -204,7 +203,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
     let baseLeft = Number.POSITIVE_INFINITY;
     let regions = this.document.adaptor.document.getElementsByClassName(
       this.CLASS.className + '_Show');
-    // Get all the shown regions (one is this element!) and append at bottom. 
+    // Get all the shown regions (one is this element!) and append at bottom.
     for (let i = 0, region; region = regions[i]; i++) {
       if (region !== this.div) {
         baseBottom = Math.max(region.getBoundingClientRect().bottom, baseBottom);
@@ -221,21 +220,45 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
 export class DummyRegion extends AbstractRegion<void> {
 
+  /**
+   * @override
+   */
   public Clear() {}
 
+  /**
+   * @override
+   */
   public Update() {}
 
+  /**
+   * @override
+   */
   public Hide() {}
 
+  /**
+   * @override
+   */
   public Show() {}
 
+  /**
+   * @override
+   */
   public AddElement() {}
 
+  /**
+   * @override
+   */
   public AddStyles() {}
 
+  /**
+   * @override
+   */
   public position() {}
 
-  public highlight(highlighter: sre.Highlighter) {}
+  /**
+   * @override
+   */
+  public highlight(_highlighter: sre.Highlighter) {}
 }
 
 

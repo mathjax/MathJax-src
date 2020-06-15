@@ -95,6 +95,9 @@ export class ComplexityVisitor extends MmlVisitor {
 
     /*==========================================================================*/
 
+    /**
+     * @override
+     */
     public visitTree(node: MmlNode) {
         super.visitTree(node, true);
         if (this.options.makeCollapsible) {
@@ -267,7 +270,7 @@ export class ComplexityVisitor extends MmlVisitor {
     /**
      * For enclose, use sum of child complexities plus some for the enclose
      *
-     * @Param {MmlNode} node   The node whose complixity is being computed
+     * @param {MmlNode} node   The node whose complixity is being computed
      * @param {boolean} save   True if the complexity is to be saved or just returned
      */
     protected visitMencloseNode(node: MmlNode, save: boolean) {
@@ -339,7 +342,7 @@ export class ComplexityVisitor extends MmlVisitor {
      * @param {MmlNode} node   The node whose complixity is needed
      * @return {number}        The complexity fof the node (if collapsable, then the collapsed complexity)
      */
-    public getComplexity(node: MmlNode) {
+    public getComplexity(node: MmlNode): number {
         const collapsed = node.getProperty('collapsedComplexity');
         return (collapsed != null ? collapsed : node.attributes.get('data-semantic-complexity')) as number;
     }
@@ -363,7 +366,7 @@ export class ComplexityVisitor extends MmlVisitor {
      * @param {MmlNode} node   The node whose children complexities are to be added
      * @return {number}        The sum of the complexities, plus child complexity for each one
      */
-    protected childrenComplexity(node: MmlNode) {
+    protected childrenComplexity(node: MmlNode): number {
         super.visitDefault(node, true);
         let complexity = 0;
         for (const child of node.childNodes) {

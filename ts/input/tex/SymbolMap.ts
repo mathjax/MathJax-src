@@ -57,7 +57,7 @@ export interface SymbolMap {
 
   /**
    * @param {string} symbol A symbol to parse.
-   * @return {function(string): ParseResult} A parse method for the symbol.
+   * @return {ParseMethod} A parse method for the symbol.
    */
   parserFor(symbol: string): ParseMethod;
 
@@ -80,12 +80,12 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   /**
    * @constructor
    * @implements {SymbolMap}
-   * @param {string} _name Name of the mapping.
-   * @param {ParseMethod} _parser The parser for the mappiong.
+   * @param {string} name Name of the mapping.
+   * @param {ParseMethod} parser The parser for the mappiong.
    */
   constructor(private _name: string, private _parser: ParseMethod) {
     MapHandler.register(this);
-  };
+  }
 
 
   /**
@@ -150,11 +150,11 @@ export class RegExpMap extends AbstractSymbolMap<string> {
    * @extends {AbstractSymbolMap}
    * @param {string} name Name of the mapping.
    * @param {ParseMethod} parser The parser for the mappiong.
-   * @param {RegExp} _regexp The regular expression.
+   * @param {RegExp} regexp The regular expression.
    */
   constructor(name: string, parser: ParseMethod, private _regExp: RegExp) {
     super(name, parser);
-  };
+  }
 
 
   /**
@@ -200,9 +200,9 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   }
 
   /**
-   *
-   * @param {string} symbol
-   * @param {T} object
+   * Sets mapping for a symbol.
+   * @param {string} symbol The symbol to map.
+   * @param {T} object The symbols value in the mapping's codomain.
    */
   public add(symbol: string, object: K) {
     this.map.set(symbol, object);
@@ -226,7 +226,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
    * @param {JSON} json The JSON representation of the character mapping.
    */
   constructor(name: string, parser: ParseMethod,
-              json: {[index: string]: string|[string, Attributes]}) {
+              json: {[index: string]: string | [string, Attributes]}) {
     super(name, parser);
     for (const key of Object.keys(json)) {
       let value = json[key];
@@ -234,7 +234,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
       let character = new Symbol(key, char, attrs);
       this.add(key, character);
     }
-  };
+  }
 
 }
 
@@ -273,7 +273,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
    *     functions for the single macros.
    */
   constructor(name: string,
-              json: {[index: string]: string|Args[]},
+              json: {[index: string]: string | Args[]},
               functionMap: Record<string, ParseMethod>) {
     super(name, null);
     for (const key of Object.keys(json)) {
@@ -282,7 +282,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
       let character = new Macro(key, functionMap[func as string], attrs);
       this.add(key, character);
     }
-  };
+  }
 
 
   /**
@@ -326,7 +326,6 @@ export class CommandMap extends MacroMap {
     if (!macro || !parser) {
       return null;
     }
-    let args = ['\\' + macro.symbol].concat(macro.args as string[]);
     if (!parser) {
       return null;
     }
@@ -360,11 +359,11 @@ export class EnvironmentMap extends MacroMap {
    */
   constructor(name: string,
               parser: ParseMethod,
-              json: {[index: string]: string|Args[]},
+              json: {[index: string]: string | Args[]},
               functionMap: Record<string, ParseMethod>) {
     super(name, json, functionMap);
     this.parser = parser;
-  };
+  }
 
 
   /**

@@ -28,8 +28,7 @@ import './BraketMappings.js';
 
 
 export const BraketConfiguration = Configuration.create(
-  'braket',
-  {
+  'braket', {
     handler: {
       character: ['Braket-characters'],
       macro: ['Braket-macros']

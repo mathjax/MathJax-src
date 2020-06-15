@@ -30,17 +30,26 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMs extends AbstractMmlTokenNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlTokenNode.defaults,
-        lquote: '"',
-        rquote: '"'
-    };
-    public texClass = TEXCLASS.ORD;
 
-    /**
-     * @return {string}  The ms kind
-     */
-    public get kind() {
-        return 'ms';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlTokenNode.defaults,
+    lquote: '"',
+    rquote: '"'
+  };
+
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'ms';
+  }
+
 }

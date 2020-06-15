@@ -26,9 +26,6 @@
 import {ArrayItem} from '../base/BaseItems.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import StackItemFactory from '../StackItemFactory.js';
-import {StackItem, BaseItem} from '../StackItem.js';
 import TexError from '../TexError.js';
 import {TexConstant} from '../TexConstants.js';
 
@@ -96,7 +93,7 @@ export class MultlineItem extends ArrayItem {
   public EndTable() {
     super.EndTable();
     if (this.table.length) {
-      let m = this.table.length - 1, i, label = -1;
+      let m = this.table.length - 1, label = -1;
       if (!NodeUtil.getAttribute(
         NodeUtil.getChildren(this.table[0])[0], 'columnalign')) {
         NodeUtil.setAttribute(NodeUtil.getChildren(this.table[0])[0],

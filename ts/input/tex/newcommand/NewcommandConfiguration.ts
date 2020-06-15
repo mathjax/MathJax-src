@@ -40,8 +40,7 @@ let init = function(config: Configuration) {
 
 
 export const NewcommandConfiguration = Configuration.create(
-  'newcommand',
-  {
+  'newcommand', {
     handler: {
       macro: ['Newcommand-macros']
     },

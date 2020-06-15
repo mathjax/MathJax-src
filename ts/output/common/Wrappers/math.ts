@@ -22,7 +22,6 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -43,15 +42,16 @@ export type MathConstructor = Constructor<CommonMath>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMathMixin<T extends WrapperConstructor>(Base: T): MathConstructor & T {
-    return class extends Base {
 
-        /**
-         * @override
-         */
-        public getWrapWidth(i: number) {
-            return (this.parent ? this.getBBox().w : this.metrics.containerWidth / this.jax.pxPerEm);
-        }
+  return class extends Base {
 
-    };
+    /**
+     * @override
+     */
+    public getWrapWidth(_i: number) {
+      return (this.parent ? this.getBBox().w : this.metrics.containerWidth / this.jax.pxPerEm);
+    }
+
+  };
 
 }

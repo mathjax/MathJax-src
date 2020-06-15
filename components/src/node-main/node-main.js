@@ -29,7 +29,7 @@ MathJax.config.loader.paths.mathjax = (function () {
     return path.resolve(MathJax.config.loader.require.resolve('mathjax-full/package.json'), '../es5');
   } catch (err) {}
   try {
-     return path.resolve(MathJax.config.loader.require.resolve('mathjax/package.json'), '../es5');
+    return path.resolve(MathJax.config.loader.require.resolve('mathjax/package.json'), '../es5');
   } catch (err) {
     let dir = path.dirname(err.requireStack[0]); // err.requireStack[0] is the full path to this module
     if (path.basename(dir) == 'node-main') {

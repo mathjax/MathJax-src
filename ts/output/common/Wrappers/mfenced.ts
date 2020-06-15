@@ -23,7 +23,7 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonInferredMrow} from './mrow.js';
-import {MmlNode, AbstractMmlNode, AttributeList} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
 import {BBox} from '../BBox.js';
 
@@ -32,29 +32,29 @@ import {BBox} from '../BBox.js';
  * The CommonMfenced interface
  */
 export interface CommonMfenced extends AnyWrapper {
-    /**
-     * An mrow to use for the layout of the mfenced
-     */
-    mrow: CommonInferredMrow;
+  /**
+   * An mrow to use for the layout of the mfenced
+   */
+  mrow: CommonInferredMrow;
 
-    /**
-     * Creates the mrow wrapper to use for the layout
-     */
-    createMrow(): void;
+  /**
+   * Creates the mrow wrapper to use for the layout
+   */
+  createMrow(): void;
 
-    /**
-     * Populate the mrow with wrapped mo elements interleaved
-     *   with the mfenced children (the mo's are already created
-     *   in the mfenced object)
-     */
-    addMrowChildren(): void;
+  /**
+   * Populate the mrow with wrapped mo elements interleaved
+   *   with the mfenced children (the mo's are already created
+   *   in the mfenced object)
+   */
+  addMrowChildren(): void;
 
-    /**
-     * Wrap an mo element and push it onto the mrow
-     *
-     * @param {MmlNode} node  The mo element to push on the mrow
-     */
-    addMo(node: MmlNode): void;
+  /**
+   * Wrap an mo element and push it onto the mrow
+   *
+   * @param {MmlNode} node  The mo element to push on the mrow
+   */
+  addMo(node: MmlNode): void;
 }
 
 /**
@@ -69,75 +69,76 @@ export type MfencedConstructor = Constructor<CommonMfenced>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMfencedMixin<T extends WrapperConstructor>(Base: T): MfencedConstructor & T {
-    return class extends Base {
 
-        /**
-         * An mrow to use for the layout of the mfenced
-         */
-        public mrow: CommonInferredMrow = null;
+  return class extends Base {
 
-        /**
-         * @override
-         * @constructor
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            this.createMrow();
-            this.addMrowChildren();
-        }
+    /**
+     * An mrow to use for the layout of the mfenced
+     */
+    public mrow: CommonInferredMrow = null;
 
-        /**
-         * Creates the mrow wrapper to use for the layout
-         */
-        public createMrow() {
-            const mmlFactory = (this.node as AbstractMmlNode).factory;
-            const mrow = mmlFactory.create('inferredMrow');
-            mrow.inheritAttributesFrom(this.node);
-            this.mrow = this.wrap(mrow) as CommonInferredMrow;
-            this.mrow.parent = this;
-        }
+    /**
+     * @override
+     * @constructor
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      this.createMrow();
+      this.addMrowChildren();
+    }
 
-        /**
-         * Populate the mrow with wrapped mo elements interleaved
-         *   with the mfenced children (the mo's are already created
-         *   in the mfenced object)
-         */
-        public addMrowChildren() {
-            const mfenced = this.node as MmlMfenced;
-            const mrow = this.mrow;
-            this.addMo(mfenced.open);
-            if (this.childNodes.length) {
-                mrow.childNodes.push(this.childNodes[0]);
-            }
-            let i = 0;
-            for (const child of this.childNodes.slice(1)) {
-                this.addMo(mfenced.separators[i++]);
-                mrow.childNodes.push(child);
-            }
-            this.addMo(mfenced.close);
-            mrow.stretchChildren();
-        }
+    /**
+     * Creates the mrow wrapper to use for the layout
+     */
+    public createMrow() {
+      const mmlFactory = (this.node as AbstractMmlNode).factory;
+      const mrow = mmlFactory.create('inferredMrow');
+      mrow.inheritAttributesFrom(this.node);
+      this.mrow = this.wrap(mrow) as CommonInferredMrow;
+      this.mrow.parent = this;
+    }
 
-        /**
-         * Wrap an mo element and push it onto the mrow
-         *
-         * @param {MmlNode} node  The mo element to push on the mrow
-         */
-        public addMo(node: MmlNode) {
-            if (!node) return;
-            const mo = this.wrap(node);
-            this.mrow.childNodes.push(mo);
-            mo.parent = this.mrow;
-        }
+    /**
+     * Populate the mrow with wrapped mo elements interleaved
+     *   with the mfenced children (the mo's are already created
+     *   in the mfenced object)
+     */
+    public addMrowChildren() {
+      const mfenced = this.node as MmlMfenced;
+      const mrow = this.mrow;
+      this.addMo(mfenced.open);
+      if (this.childNodes.length) {
+        mrow.childNodes.push(this.childNodes[0]);
+      }
+      let i = 0;
+      for (const child of this.childNodes.slice(1)) {
+        this.addMo(mfenced.separators[i++]);
+        mrow.childNodes.push(child);
+      }
+      this.addMo(mfenced.close);
+      mrow.stretchChildren();
+    }
 
-        /**
-         * @override
-         */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
-            bbox.updateFrom(this.mrow.getBBox());
-            this.setChildPWidths(recompute);
-        }
+    /**
+     * Wrap an mo element and push it onto the mrow
+     *
+     * @param {MmlNode} node  The mo element to push on the mrow
+     */
+    public addMo(node: MmlNode) {
+      if (!node) return;
+      const mo = this.wrap(node);
+      this.mrow.childNodes.push(mo);
+      mo.parent = this.mrow;
+    }
 
-    };
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+      bbox.updateFrom(this.mrow.getBBox());
+      this.setChildPWidths(recompute);
+    }
+
+  };
 
 }

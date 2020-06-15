@@ -1,7 +1,10 @@
 {
-  "exclude": [
-    "*.d.ts"
-  ],
+  "linterOptions": {
+    "exclude": [
+      "**/*.d.ts",
+      "**/fonts/tex/*.ts"
+    ]
+  },
   "rulesDirectory": [
     "node_modules/tslint-jsdoc-rules/lib"
   ],
@@ -34,9 +37,12 @@
     "member-access": true,
     "member-ordering": [
       true,
-      "public-before-private",
-      "static-before-instance",
-      "variables-before-functions"
+      {"order": [
+        "static-field",
+        "instance-field",
+        "static-method",
+        "instance-method"
+      ]}
     ],
     "no-duplicate-variable": true,
     "no-eval": true,
@@ -75,7 +81,6 @@
         "variable-declaration": "nospace"
       }
     ],
-//    "use-strict": true,
     "variable-name": [
       true,
       "ban-keywords"
@@ -86,7 +91,9 @@
       "check-decl",
       "check-operator",
       "check-separator",
-      "check-type"
+      "check-type",
+      "check-rest-spread",
+      "check-type-operator"
     ]
   }
 }

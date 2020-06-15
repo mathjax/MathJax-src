@@ -16,59 +16,65 @@
  */
 
 /**
- * @fileoverview  Implements the mathchoice node
+ * @fileoverview  Implements the MathChoice node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, MmlNode, TEXCLASS, AttributeList} from '../MmlNode.js';
+import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
- *  Implements the mathchoice node class (subclass of AbstractMmlBaseNode)
+ *  Implements the MathChoice node class (subclass of AbstractMmlBaseNode)
  *
  *  This is used by TeX's \mathchoice macro, but removes itself
  *  during the setInheritedAttributes process
  */
 
-export class mathchoice extends AbstractMmlBaseNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlBaseNode.defaults
-    };
+export class MathChoice extends AbstractMmlBaseNode {
 
-    /**
-     *  @return {string}  The mathcoice kind
-     */
-    public get kind() {
-        return 'mathchoice';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlBaseNode.defaults
+  };
 
-    /**
-     *  @return {number}  4 children (display, text, script, and scriptscript styles)
-     */
-    public get arity() {
-        return 4;
-    }
+  /**
+   *  @override
+   */
+  public get kind() {
+    return 'MathChoice';
+  }
 
-    /**
-     *  @return {boolean}  This element is not considered a MathML container
-     */
-    public get notParent() {
-        return true;
-    }
+  /**
+   * 4 children (display, text, script, and scriptscript styles)
+   * @override
+   */
+  public get arity() {
+    return 4;
+  }
 
-    /**
-     * Replace the mathchoice node with the selected on based on the displaystyle and scriptlevel settings
-     * (so the mathchoice never ends up in a finished MmlNode tree)
-     *
-     * @override
-     */
-    setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        const selection = (display ? 0 : Math.max(0, Math.min(level, 2)) + 1);
-        const child = this.childNodes[selection] || this.factory.create('mrow');
-        this.parent.replaceChild(child, this);
-        child.setInheritedAttributes(attributes, display, level, prime);
-    }
+  /**
+   * This element is not considered a MathML container
+   * @override
+   */
+  public get notParent() {
+    return true;
+  }
+
+  /**
+   * Replace the MathChoice node with the selected on based on the displaystyle and scriptlevel settings
+   * (so the MathChoice never ends up in a finished MmlNode tree)
+   *
+   * @override
+   */
+  public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    const selection = (display ? 0 : Math.max(0, Math.min(level, 2)) + 1);
+    const child = this.childNodes[selection] || this.factory.create('mrow');
+    this.parent.replaceChild(child, this);
+    child.setInheritedAttributes(attributes, display, level, prime);
+  }
 
 }

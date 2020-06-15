@@ -18,20 +18,17 @@
 
 /**
  * @fileoverview Mappings for TeX parsing for the bussproofs package.
- *                                            
+ *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 
-import {Args, Attributes, ParseMethod} from '../Types.js';
+import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
-import BaseMethods from '../base/BaseMethods.js';
 import ParseUtil from '../ParseUtil.js';
 import {StackItem} from '../StackItem.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {NodeFactory} from '../NodeFactory.js';
-import NodeUtil from '../NodeUtil.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
 
@@ -46,7 +43,7 @@ let BussproofsMethods: Record<string, ParseMethod> = {};
  */
 // TODO: Error handling if we have leftover elements or elements are not in the
 // required order.
-BussproofsMethods.Prooftree = function(parser: TexParser, begin: StackItem) {
+BussproofsMethods.Prooftree = function(parser: TexParser, begin: StackItem): StackItem {
   parser.Push(begin);
   // TODO: Check if opening a proof tree is legal.
   let newItem = parser.itemFactory.create('proofTree').
@@ -149,8 +146,8 @@ BussproofsMethods.Inference = function(parser: TexParser, name: string, n: numbe
  * @param {boolean} rootAtTop Direction of inference rule: true for root at top.
  */
 function createRule(parser: TexParser, premise: MmlNode,
-                    conclusions: MmlNode[], left: MmlNode|null,
-                    right: MmlNode|null, style: string,
+                    conclusions: MmlNode[], left: MmlNode | null,
+                    right: MmlNode | null, style: string,
                     rootAtTop: boolean) {
   const upper = parser.create(
     'node', 'mtr', [parser.create('node', 'mtd', [premise], {})], {});
@@ -188,7 +185,7 @@ function createRule(parser: TexParser, premise: MmlNode,
   rule = parser.create('node', 'mrow', children);
   BussproofsUtil.setProperty(rule, 'labelledRule', label);
   return rule;
-};
+}
 
 
 /**
@@ -218,7 +215,7 @@ BussproofsMethods.Label = function(parser: TexParser, name: string, side: string
  * @param {string} style The line style to set.
  * @param {boolean} always Set as permanent style.
  */
-BussproofsMethods.SetLine = function(parser: TexParser, name: string, style: string, always: boolean) {
+BussproofsMethods.SetLine = function(parser: TexParser, _name: string, style: string, always: boolean) {
   let top = parser.stack.Top();
   // Label error
   if (top.kind !== 'proofTree') {
@@ -238,7 +235,7 @@ BussproofsMethods.SetLine = function(parser: TexParser, name: string, style: str
  * @param {string} name The name of the command.
  * @param {string} where If true root is at top, otherwise at bottom.
  */
-BussproofsMethods.RootAtTop = function(parser: TexParser, name: string, where: boolean) {
+BussproofsMethods.RootAtTop = function(parser: TexParser, _name: string, where: boolean) {
   let top = parser.stack.Top();
   if (top.kind !== 'proofTree') {
     throw new TexError('IllegalProofCommand',
@@ -296,7 +293,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   BussproofsUtil.setProperty(table, 'sequent', true);
   parser.configuration.addNode('sequent', row);
   return table;
-};
+}
 
 
 /**
@@ -304,7 +301,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
  * @param {TexParser} parser The current parser.
  * @param {string} name The name of the command.
  */
-BussproofsMethods.FCenter = function(parser: TexParser, name: string) { };
+BussproofsMethods.FCenter = function(_parser: TexParser, _name: string) { };
 
 
 /**

@@ -25,23 +25,27 @@
 /**
  * The MathJax variable as a configuration object
  */
-export interface MathJaxConfig {[name: string]: any};
+export interface MathJaxConfig {
+  [name: string]: any;
+}
 
 /**
  * The object used to store class and other definitions
  * from the various MathJax modules so that they can be shared
  * among the various component webpack files
  */
-export interface MathJaxLibrary {[name: string]: any};
+export interface MathJaxLibrary {
+  [name: string]: any;
+}
 
 /**
  * The MathJax global object structure
  */
 export interface MathJaxObject {
-    version: string;
-    _: MathJaxLibrary;
-    config: MathJaxConfig;
-};
+  version: string;
+  _: MathJaxLibrary;
+  config: MathJaxConfig;
+}
 
 declare const global: {MathJax: MathJaxObject | MathJaxConfig};
 
@@ -49,8 +53,8 @@ declare const global: {MathJax: MathJaxObject | MathJaxConfig};
  * @param {any} x     An item to test if it is an object
  * @return {boolean}  True if the item is a non-null object
  */
-export function isObject(x: any) {
-    return typeof x === 'object' && x !== null;
+export function isObject(x: any): boolean {
+  return typeof x === 'object' && x !== null;
 }
 
 /**
@@ -61,17 +65,17 @@ export function isObject(x: any) {
  * @param {any} src      The source configuration object (to replace defaul values in dst}
  * @return {any}         The resulting (modified) config object
  */
-export function combineConfig(dst: any, src: any) {
-    for (const id of Object.keys(src)) {
-        if (id === '__esModule') continue;
-        if (isObject(dst[id]) && isObject(src[id]) &&
-            !(src[id] instanceof Promise) /* needed for IE polyfill */) {
-            combineConfig(dst[id], src[id]);
-        } else if (src[id] !== null && src[id] !== undefined) {
-            dst[id] = src[id];
-        }
+export function combineConfig(dst: any, src: any): any {
+  for (const id of Object.keys(src)) {
+    if (id === '__esModule') continue;
+    if (isObject(dst[id]) && isObject(src[id]) &&
+        !(src[id] instanceof Promise) /* needed for IE polyfill */) {
+      combineConfig(dst[id], src[id]);
+    } else if (src[id] !== null && src[id] !== undefined) {
+      dst[id] = src[id];
     }
-    return dst;
+  }
+  return dst;
 }
 
 /**
@@ -84,19 +88,19 @@ export function combineConfig(dst: any, src: any) {
  * @param {any} src      The source configuration object (to replace defaul values in dst}
  * @return {any}         The resulting (modified) config object
  */
-export function combineDefaults(dst: any, name: string, src: any) {
-    if (!dst[name]) {
-        dst[name] = {};
+export function combineDefaults(dst: any, name: string, src: any): any {
+  if (!dst[name]) {
+    dst[name] = {};
+  }
+  dst = dst[name];
+  for (const id of Object.keys(src)) {
+    if (isObject(dst[id]) && isObject(src[id])) {
+      combineDefaults(dst, id, src[id]);
+    } else if (dst[id] == null && src[id] != null) {
+      dst[id] = src[id];
     }
-    dst = dst[name];
-    for (const id of Object.keys(src)) {
-        if (isObject(dst[id]) && isObject(src[id])) {
-            combineDefaults(dst, id, src[id]);
-        } else if (dst[id] == null && src[id] != null) {
-            dst[id] = src[id];
-        }
-    }
-    return dst;
+  }
+  return dst;
 }
 
 /**
@@ -105,7 +109,7 @@ export function combineDefaults(dst: any, name: string, src: any) {
  * @param {any} config   The data to be merged into the MathJax object
  */
 export function combineWithMathJax(config: any): MathJaxObject {
-    return combineConfig(MathJax, config);
+  return combineConfig(MathJax, config);
 }
 
 
@@ -113,7 +117,7 @@ export function combineWithMathJax(config: any): MathJaxObject {
  * Create the MathJax global, if it doesn't exist
  */
 if (typeof global.MathJax === 'undefined') {
-    global.MathJax = {} as MathJaxConfig;
+  global.MathJax = {} as MathJaxConfig;
 }
 
 /**
@@ -122,11 +126,11 @@ if (typeof global.MathJax === 'undefined') {
  * configuration.
  */
 if (!(global.MathJax as MathJaxObject).version) {
-    global.MathJax = {
-        version: '3.0.5',
-        _: {},
-        config: global.MathJax
-    };
+  global.MathJax = {
+    version: '3.0.5',
+    _: {},
+    config: global.MathJax
+  };
 }
 
 /**

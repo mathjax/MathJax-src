@@ -30,58 +30,63 @@ import {MmlNode, AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMfrac extends AbstractMmlBaseNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlBaseNode.defaults,
-        linethickness: 'medium',
-        numalign: 'center',
-        denomalign: 'center',
-        bevelled: false
-    };
 
-    /**
-     * @return {string}  The mfrac kind
-     */
-    public get kind() {
-        return 'mfrac';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlBaseNode.defaults,
+    linethickness: 'medium',
+    numalign: 'center',
+    denomalign: 'center',
+    bevelled: false
+  };
 
-    /**
-     * @return {number}  <mfrac> requires two children
-     */
-    public get arity() {
-        return 2;
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mfrac';
+  }
 
-    /**
-     * @return {boolean}  The children of <mfrac> can include line breaks
-     */
-    public get linebreakContainer() {
-        return true;
-    }
+  /**
+   * <mfrac> requires two children
+   * @override
+   */
+  public get arity() {
+    return 2;
+  }
 
-    /**
-     * Update the children separately
-     *
-     * @override
-     */
-    public setTeXclass(prev: MmlNode) {
-        this.getPrevClass(prev);
-        for (const child of this.childNodes) {
-            child.setTeXclass(null);
-        }
-        return this;
-    }
+  /**
+   * The children of <mfrac> can include line breaks
+   * @override
+   */
+  public get linebreakContainer() {
+    return true;
+  }
 
-    /**
-     * Adjust the display level, and use prime style in denominator
-     *
-     * @override
-     */
-    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        if (!display || level > 0) {
-            level++;
-        }
-        this.childNodes[0].setInheritedAttributes(attributes, false, level, prime);
-        this.childNodes[1].setInheritedAttributes(attributes, false, level, true);
+  /**
+   * Update the children separately
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    this.getPrevClass(prev);
+    for (const child of this.childNodes) {
+      child.setTeXclass(null);
     }
+    return this;
+  }
+
+  /**
+   * Adjust the display level, and use prime style in denominator
+   * @override
+   */
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    if (!display || level > 0) {
+      level++;
+    }
+    this.childNodes[0].setInheritedAttributes(attributes, false, level, prime);
+    this.childNodes[1].setInheritedAttributes(attributes, false, level, true);
+  }
+
 }
