@@ -370,10 +370,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     if (!mo.match(/^[\uD800-\uDBFF]?.$/)) {
       return null;
     }
-    let n = mo.charCodeAt(0);
-    if (mo.length === 2) {
-      n = (n - 0xD800) * 0x400 + mo.charCodeAt(1) - 0xDC00 + 0x10000;
-    }
+    let n = mo.codePointAt(0);
     let ranges = (this.constructor as typeof MmlMo).RANGES;
     for (const range of ranges) {
       if (range[0] <= n && n <= range[1]) {

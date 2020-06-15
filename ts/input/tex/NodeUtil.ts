@@ -51,7 +51,7 @@ namespace NodeUtil {
    * @return {string} The newly created entity.
    */
   export function createEntity(code: string): string  {
-    return String.fromCharCode(parseInt(code, 16));
+    return String.fromCodePoint(parseInt(code, 16));
   }
 
 

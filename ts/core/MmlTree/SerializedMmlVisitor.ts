@@ -29,6 +29,8 @@ import {MmlMi} from './MmlNodes/mi.js';
 
 export const DATAMJX = 'data-mjx-';
 
+export const toEntity = (c: string) => '&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';';
+
 type PropertyList = {[name: string]: string};
 
 
@@ -233,13 +235,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\"/g, '&quot;')
-      .replace(/([\uD800-\uDBFF].)/g, (_m, c) => {
-        return '&#x' + ((c.charCodeAt(0) - 0xD800) * 0x400 +
-                        (c.charCodeAt(1) - 0xDC00) + 0x10000).toString(16).toUpperCase() + ';';
-      })
-      .replace(/([\u0080-\uD7FF\uE000-\uFFFF])/g, (_m, c) => {
-        return '&#x' + c.charCodeAt(0).toString(16).toUpperCase() + ';';
-      });
+      .replace(/[\uD800-\uDBFF]./g, toEntity)
+      .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, toEntity);
   }
 
 }
