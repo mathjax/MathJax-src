@@ -901,7 +901,8 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     const adaptor = this.adaptor;
     const items = [] as MathItem<N, T, D>[];
     const containers = adaptor.getElements(elements, this.document);
-    ITEMS: for (const item of this.math) {
+    ITEMS:
+    for (const item of this.math) {
       for (const container of containers) {
         if (item.start.node && adaptor.contains(container, item.start.node)) {
           items.push(item);
