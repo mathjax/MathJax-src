@@ -173,7 +173,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode {
-xxx();
     this.parseOptions.clear();
     this.executeFilters(this.preFilters, math, document, this.parseOptions);
     let display = math.display;
