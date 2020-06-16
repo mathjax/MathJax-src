@@ -736,7 +736,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
    */
   public compileError(math: MathItem<N, T, D>, err: Error) {
     math.root = this.mmlFactory.create('math', null, [
-      this.mmlFactory.create('merror', {'data-mjx-error': err.message}, [
+      this.mmlFactory.create('merror', {'data-mjx-error': err.message, title: err.message}, [
         this.mmlFactory.create('mtext', null, [
           (this.mmlFactory.create('text') as TextNode).setText('Math input error')
         ])
@@ -745,6 +745,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     if (math.display) {
       math.root.attributes.set('display', 'block');
     }
+    math.inputData.error = err.message;
   }
 
   /**
@@ -775,10 +776,32 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
    * @param {Error} err      The Error object for the error
    */
   public typesetError(math: MathItem<N, T, D>, err: Error) {
-    math.typesetRoot = this.adaptor.node('span',
-                                         {'data-mjx-error': err.message},
-                                         [this.adaptor.text('Math output error')]);
-    math.isEscaped = true;
+    math.typesetRoot = this.adaptor.node('mjx-container', {
+      class: 'MathJax mjx-output-error',
+      jax: this.outputJax.name,
+    }, [
+      this.adaptor.node('span', {
+        'data-mjx-error': err.message,
+        title: err.message,
+        style: {
+          color: 'red',
+          'background-color': 'yellow',
+          'line-height': 'normal'
+        }
+      }, [
+        this.adaptor.text('Math output error')
+      ])
+    ]);
+    if (math.display) {
+      this.adaptor.setAttributes(math.typesetRoot, {
+        style: {
+          display: 'block',
+          margin: '1em 0',
+          'text-align': 'center'
+        }
+      });
+    }
+    math.outputData.error = err.message;
   }
 
   /**
