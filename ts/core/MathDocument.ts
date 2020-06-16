@@ -232,6 +232,15 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
 
 /*****************************************************************/
 /**
+ * The ways of specifying a container (a selector string, an actual node,
+ * or an array of those (e.g., the result of document.getElementsByTagName())
+ *
+ * @template N  The HTMLElement node class
+ */
+export type ContainerList<N> = string | N | (string | N | N[])[];
+
+/*****************************************************************/
+/**
  *  The MathDocument interface
  *
  *  The MathDocument is created by MathJax.Document() and holds the
@@ -427,6 +436,24 @@ export interface MathDocument<N, T, D> {
    * @return {MathDocument}   The math document instance
    */
   concat(list: MathList<N, T, D>): MathDocument<N, T, D>;
+
+  /**
+   * Clear the typeset MathItems that are within the given container
+   *   from the document's MathList.  (E.g., when the content of the
+   *   container has been updated and you want to remove the
+   *   associated MathItems)
+   *
+   * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be removed
+   */
+  clearMathItemsWithin(containers: ContainerList<N>): void;
+
+  /**
+   * Get the typeset MathItems that are within a given container.
+   *
+   * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be found
+   * @return {MathItem<N,T,D>[]}          The list of MathItems within that container
+   */
+  getMathItemsWithin(elements: ContainerList<N>): MathItem<N, T, D>[];
 
 }
 
@@ -878,6 +905,35 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
   public concat(list: MathList<N, T, D>) {
     this.math.merge(list);
     return this;
+  }
+
+  /**
+   * @override
+   */
+  public clearMathItemsWithin(containers: ContainerList<N>) {
+    this.math.remove(...this.getMathItemsWithin(containers));
+  }
+
+  /**
+   * @override
+   */
+  public getMathItemsWithin(elements: ContainerList<N>) {
+    if (!Array.isArray(elements)) {
+      elements = [elements];
+    }
+    const adaptor = this.adaptor;
+    const items = [] as MathItem<N, T, D>[];
+    const containers = adaptor.getElements(elements, this.document);
+    ITEMS:
+    for (const item of this.math) {
+      for (const container of containers) {
+        if (item.start.node && adaptor.contains(container, item.start.node)) {
+          items.push(item);
+          continue ITEMS;
+        }
+      }
+    }
+    return items;
   }
 
 }

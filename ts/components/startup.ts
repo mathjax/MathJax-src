@@ -353,19 +353,26 @@ export namespace Startup {
    * TypeseClear() clears all the MathItems from the document.
    */
   export function makeTypesetMethods() {
-    MathJax.typeset = (elements: any = null) => {
+    MathJax.typeset = (elements: any[] = null) => {
       document.options.elements = elements;
       document.reset();
       document.render();
     };
-    MathJax.typesetPromise = (elements: any = null) => {
+    MathJax.typesetPromise = (elements: any[] = null) => {
       document.options.elements = elements;
       document.reset();
       return mathjax.handleRetriesFor(() => {
         document.render();
       });
     };
-    MathJax.typesetClear = () => document.clear();
+    MathJax.typesetClear = (elements: any[] = null) => {
+      if (elements) {
+        document.reset();
+        document.clearMathItemsWithin(elements);
+      } else {
+        document.clear();
+      }
+    };
   }
 
   /**

@@ -74,6 +74,7 @@ export interface MinHTMLElement<N, T> {
   /* tslint:disable:jsdoc-require */
   getElementsByTagName(name: string): N[] | HTMLCollectionOf<Element>;
   getElementsByTagNameNS(ns: string, name: string): N[] | HTMLCollectionOf<Element>;
+  contains(child: N | T): boolean;
   appendChild(child: N | T): N | T | Node;
   removeChild(child: N | T): N | T  | Node;
   replaceChild(nnode: N | T, onode: N | T): N | T  | Node;
@@ -252,6 +253,13 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
       }
     }
     return containers;
+  }
+
+  /**
+   * @override
+   */
+  public contains(container: N, node: N | T) {
+    return container.contains(node);
   }
 
   /**
