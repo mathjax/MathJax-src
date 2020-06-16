@@ -51,7 +51,7 @@ newState('ASSISTIVEMML', 153);
 export interface AssistiveMmlMathItem<N, T, D> extends MathItem<N, T, D> {
   /**
    * @param {MathDocument} document  The document where assistive MathML is being added
-   * @param {boolean} force          True to force assistive MathML evenif enableAssistiveMml is false
+   * @param {boolean} force          True to force assistive MathML even if enableAssistiveMml is false
    */
   assistiveMml(document: MathDocument<N, T, D>, force?: boolean): void;
 }
