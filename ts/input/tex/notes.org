@@ -149,61 +149,83 @@
 
 * Priority handling of the different elements of a configuration:
 
-** Handler
+** Flow  
 
-*** Shadow!
-*** They should have priority lists themselves so they are correctly inserted.
-*** In particular, `extension` has to be inserted always at -1
+*** options gets the ParserConfiguration, initialised with 'packages'.
 
-** Fallback
+*** configurations is a priority list for the configurations from the configuration handler
+    They are added either with respect to their default priority or the priority
+    they had in the configuration.
 
-*** Override
-*** Generate once with priority list of configurations
-*** On new insertion needs to be regenerated.
+    Adding a Configuration means it is added to the configuration list.
 
-** Items
+*** Components are initialised 
 
-*** Override
-*** Same as fallback?
+*** When configuration is added throughout, not everything has to be initialised!
 
-** Tags
+** Components
 
-*** Override
-*** Same as fallback?
+*** TODO Handler
+    (At first just initialise.)
 
-** Options
+**** Initialisation should be moved to configurations. 
+     Then they do not have to reinitialised when a new package is loaded (e.g.,
+     via require) but only updated.
 
-*** Override
-*** Same as fallback?
-
-
-** Nodes
-
-*** Override
-*** Same as fallback?
-
-** Preprocessors
-
-*** All have to run
-*** They come each with their own priority and have to be stored that way
-*** If the come without priority they get the default priority of their Configuration.
-*** They are inserted with their respective priority into the prefilter lists
-*** When a configuration is added all we need to do is add their priorities
-
-** Postprocessors
-
-*** All have to run
-*** Same as Preprocessors
-
-** Init
-
-*** All have to run
-*** Each Configuration has an init method
-*** Has either priority of Configuration or its own
-*** They are handled with their own priority list as they all have to run.
+**** Shadow!
+**** They should have priority lists themselves so they are correctly inserted.
+**** In particular, `extension` has to be inserted always at -1
 
 
-** Config
+*** Fallback
 
-*** All have to run
-*** Same as config
+**** Override
+**** Generate once with priority list of configurations
+**** On new insertion needs to be regenerated.
+
+*** Items
+
+**** Override
+**** Same as fallback?
+
+*** Tags
+
+**** Override
+**** Same as fallback?
+
+*** Options
+
+**** Override
+**** Same as fallback?
+
+
+*** Nodes
+
+**** Override
+**** Same as fallback?
+
+*** Preprocessors
+
+**** All have to run
+**** They come each with their own priority and have to be stored that way
+**** If the come without priority they get the default priority of their Configuration.
+**** They are inserted with their respective priority into the prefilter lists
+**** When a configuration is added all we need to do is add their priorities
+
+*** Postprocessors
+
+**** All have to run
+**** Same as Preprocessors
+
+*** Init
+
+**** All have to run
+**** Each Configuration has an init method
+**** Has either priority of Configuration or its own
+**** They are handled with their own priority list as they all have to run.
+
+
+*** Config
+
+**** All have to run
+**** Same as config

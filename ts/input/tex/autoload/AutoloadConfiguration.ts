@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration} from '../Configuration.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../SymbolMap.js';
 import {Macro} from '../Symbol.js';
@@ -67,7 +67,7 @@ function Autoload(parser: TexParser, name: string, extension: string, isMacro: b
  *  the priorities of the initialization and configuration are set so that autoload
  *  will run after require when both are used.)
  */
-function initAutoload(config: Configuration) {
+function initAutoload(config: ParserConfiguration) {
   if (!config.options.require) {
     defaultOptions(config.options, RequireConfiguration.options);
   }
@@ -78,7 +78,7 @@ function initAutoload(config: Configuration) {
  * Only ones that aren't already defined are made to autoload
  *   (except for \color, which is overridden if present)
  */
-function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
+function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
   const parser = jax.parseOptions;
   const macros = parser.handlers.get('macro');
   const environments = parser.handlers.get('environment');
@@ -109,7 +109,10 @@ function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
   //
   //  Check if the require extension needs to be configured
   //
-  if (!parser.options.require.jax) {
+  // TODO:
+  // The require option does not appear to be in 'options'.
+  // The require configuration can current not be called.
+  if (parser.options.require && !parser.options.require.jax) {
     RequireConfiguration.config(config, jax);
   }
 }
@@ -155,7 +158,8 @@ export const AutoloadConfiguration = Configuration.create(
         verb: ['verb']
       })
     },
-    config: configAutoload, configPriority: 10,
-    init: initAutoload, priority: 10
+    config: configAutoload,
+    init: initAutoload,
+    priority: 10
   }
 );

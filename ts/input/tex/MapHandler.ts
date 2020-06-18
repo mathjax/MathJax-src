@@ -24,7 +24,7 @@
 
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
-import {Configuration} from './Configuration.js';
+import {ParserConfiguration} from './Configuration.js';
 
 
 export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
@@ -198,7 +198,7 @@ export class SubHandlers {
    * Sets a new configuration for the map handler.
    * @param {Configuration} config A setting for the map handler.
    */
-  constructor(config: Configuration) {
+  constructor(config: ParserConfiguration) {
     for (const key of Object.keys(config.handler)) {
       let name = key as HandlerType;
       let subHandler = new SubHandler(config.handler[name] || [],

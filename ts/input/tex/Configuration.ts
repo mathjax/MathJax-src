@@ -39,28 +39,26 @@ export type HandlerConfig = {[P in HandlerType]?: string[]};
 export type FallbackConfig = {[P in HandlerType]?: ParseMethod};
 export type StackItemConfig = {[kind: string]: StackItemClass};
 export type TagsConfig = {[kind: string]: TagsClass};
-export type Processor = Function | [Function, number];
-export type ProcessorList = Processor[];
+export type Processor<T> = [T, number];
+export type ProcessorList = Processor<Function>[];
+export type ConfigMethod = (c: ParserConfiguration, j: TeX<any, any, any>) => void;
+export type InitMethod = (c: ParserConfiguration) => void;
+
 
 
 export class Configuration {
 
 
   /**
-   * The init method.
-   * @type {Function}
+   * Creates a function priority pair.
+   * @param {Function | Processor} func The function or processor.
+   * @param {number} priority The default priority.
+   * @return {Processor} The processor pair.
    */
-  // protected init: (c: ParserConfiguration) => void;
+  private static makeProcessor<T>(func: T | Processor<T>, priority: number): Processor<T> {
+    return Array.isArray(func) ? func : [func, priority];
+  }
 
-  /**
-   * The config method to call once jax is ready.
-   * @type {FunctionList}
-   */
-  // protected config: (c: ParserConfiguration, j: TeX<any, any, any>) => void;
-
-
-  // public priority: number = 5;
-  
   /**
    * Creates a configuration for a package.
    * @param {string} name The package name.
@@ -87,12 +85,27 @@ export class Configuration {
                                 tags?: TagsConfig,
                                 options?: OptionList,
                                 nodes?: {[key: string]: any},
-                                preprocessors?: ProcessorList,
-                                postprocessors?: ProcessorList,
-                                init?: Processor,
-                                config?: Processor,
+                                preprocessors?: (Processor<Function> | Function)[],
+                                postprocessors?: (Processor<Function> | Function)[],
+                                init?: Processor<InitMethod> | InitMethod,
+                                config?: Processor<ConfigMethod> | ConfigMethod,
                                 priority?: number,
                                } = {}): Configuration {
+    let priority = config.priority || 5;
+    let init = config.init ? this.makeProcessor(config.init, priority) : null;
+    let conf = config.config ? this.makeProcessor(config.config, priority) : null;
+    let preprocessors = [];
+    if (config.preprocessors) {
+      for (const pre of config.preprocessors) {
+        preprocessors.push(this.makeProcessor(pre, priority));
+      }
+    }
+    let postprocessors = [];
+    if (config.postprocessors) {
+      for (const post of config.postprocessors) {
+        postprocessors.push(this.makeProcessor(post, priority));
+      }
+    }
     let configuration = new Configuration(
       name,
       config.handler || {},
@@ -101,11 +114,7 @@ export class Configuration {
       config.tags || {},
       config.options || {},
       config.nodes || {},
-      config.preprocessors || [],
-      config.postprocessors || [],
-      config.init || null,
-      config.config || null,
-      config.priority || 5
+      preprocessors, postprocessors, init, conf, priority
     );
     ConfigurationHandler.set(name, configuration);
     return configuration;
@@ -115,7 +124,7 @@ export class Configuration {
    * @return {Configuration} An empty configuration.
    */
   public static empty(): Configuration {
-    return Configuration.create('empty');
+    return this.create('empty');
   }
 
 
@@ -129,7 +138,7 @@ export class Configuration {
     new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
     new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT,
                           ParseMethods.environment, {}, {});
-    return Configuration.create(
+    return this.create(
       'extension',
       {handler: {character: [],
                  delimiter: [ExtensionMaps.NEW_DELIMITER],
@@ -235,18 +244,28 @@ export class Configuration {
                       readonly nodes: {[key: string]: any} = {},
                       readonly preprocessors: ProcessorList = [],
                       readonly postprocessors: ProcessorList = [],
-                      readonly init: Processor = null,
-                      readonly config: Processor = null,
+                      readonly initMethod: Processor<InitMethod> = null,
+                      readonly configMethod: Processor<ConfigMethod> = null,
                       public priority: number   // Default Priority
                      ) {
-    if (this.init || !Array.isArray(this.init)) {
-      this.init = [this.init as Function, this.priority];
-    }
-    if (this.config || !Array.isArray(this.config)) {
-      this.config = [this.config as Function, this.priority];
-    }
     this.handler = Object.assign(
       {character: [], delimiter: [], macro: [], environment: []}, handler);
+  }
+
+  /**
+   * The init method.
+   * @type {Function}
+   */
+  public get init(): InitMethod {
+    return this.initMethod ? this.initMethod[0]: null;
+  }
+
+  /**
+   * The config method to call once jax is ready.
+   * @type {FunctionList}
+   */
+  public get config(): ConfigMethod {
+    return this.configMethod ? this.configMethod[0]: null;
   }
 
 }
@@ -289,7 +308,6 @@ export namespace ConfigurationHandler {
 
 export class ParserConfiguration {
 
-
   /**
    * Priority list of init methods.
    * @type {FunctionList}
@@ -302,17 +320,18 @@ export class ParserConfiguration {
    */
   protected configMethod: FunctionList = new FunctionList();
 
+  protected preprocessors: ProcessorList = [];
+
+  protected postprocessors: ProcessorList = [];
+
   protected configurations: PrioritizedList<Configuration> = new PrioritizedList();
 
-  public handler: HandlerConfig;
-  public fallback: FallbackConfig;
-  public items: StackItemConfig;
-  public tags: TagsConfig;
-  public options: OptionList;
-  public nodes: {[key: string]: any};
-  public preprocessors: ProcessorList;
-  public postprocessors: ProcessorList;
-
+  public handler: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
+  public fallback: FallbackConfig = {};
+  public items: StackItemConfig = {};
+  public tags: TagsConfig = {};
+  public options: OptionList = {};
+  public nodes: {[key: string]: any}  = {};
 //  protected 
 
   /**
@@ -332,25 +351,100 @@ export class ParserConfiguration {
    */
   public config(jax: TeX<any, any, any>) {
     this.configMethod.execute(this, jax);
-    for (const pre of this.preprocessors) {
-      typeof pre === 'function' ? jax.preFilters.add(pre) :
-        jax.preFilters.add(pre[0], pre[1]);
+    for (const [pre, priority] of this.preprocessors) {
+      jax.preFilters.add(pre, priority);
     }
-    for (const post of this.postprocessors) {
-      typeof post === 'function' ? jax.postFilters.add(post) :
-        jax.postFilters.add(post[0], post[1]);
+    for (const [post, priority] of this.postprocessors) {
+      jax.postFilters.add(post, priority);
     }
   }
 
+  // /**
+  //  * Appends configurations to this configuration. Note that fallbacks are
+  //  * overwritten, while order of configurations is preserved.
+  //  *
+  //  * @param {Configuration} configuration A configuration setting for the TeX
+  //  *       parser.
+  //  */
+  // public append(config: Configuration): void {
+  //   let handlers = Object.keys(config.handler) as HandlerType[];
+  //   for (const key of handlers) {
+  //     for (const map of config.handler[key]) {
+  //       this.handler[key].unshift(map);
+  //     }
+  //   }
+  //   Object.assign(this.fallback, config.fallback);
+  //   Object.assign(this.items, config.items);
+  //   Object.assign(this.tags, config.tags);
+  //   defaultOptions(this.options, config.options);
+  //   Object.assign(this.nodes, config.nodes);
+  //   for (let pre of config.preprocessors) {
+  //     this.preprocessors.push(pre);
+  //   }
+  //   for (let post of config.postprocessors) {
+  //     this.postprocessors.push(post);
+  //   }
+  //   if (config.init) {
+  //   this.initMethod.add(config.init[0], config.init[0]);
+      
+  //   }
+  //   if (config.config) {
+  //     this.configMethod.add(config.config[0], config.config[1]);
+  //   }
+  // }
 
   /**
-   * Appends configurations to this configuration. Note that fallbacks are
-   * overwritten, while order of configurations is preserved.
+   * Registers a configuration after the input jax is created.  (Used by \require.)
    *
-   * @param {Configuration} configuration A configuration setting for the TeX
-   *       parser.
+   * @param {Configuration} config   The configuration to be registered in this one
+   * @param {TeX} jax                The TeX jax where it is being registered
+   * @param {OptionList=} options    The options for the configuration.
    */
-  public append(config: Configuration): void {
+  public register(_config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
+    // this.append(config);
+    // config.init(this);
+    const parser = jax.parseOptions;
+    parser.handlers = new SubHandlers(this);
+    // parser.nodeFactory.setCreators(config.nodes);
+    // for (const kind of Object.keys(config.items)) {
+    //   parser.itemFactory.setNodeClass(kind, config.items[kind]);
+    // }
+    // defaultOptions(parser.options, config.options);
+    userOptions(parser.options, options);
+    // config.config(this, jax);
+  }
+
+  public addPackage(pkg: (string | [string, number])) {
+    const name = typeof pkg === 'string' ? pkg : pkg[0];
+    let conf = ConfigurationHandler.get(name);
+    if (conf) {
+      this.configurations.add(
+        conf, typeof pkg === 'string' ? conf.priority : pkg[1]);
+    }
+  }
+
+  /**
+   * Adds a new Configuration to the existing parser configuration.
+   * @param {Configuration} config The new configuration.
+   * @param {number} priority It's priority.
+   */
+  public add(config: Configuration, priority: number = 5) {
+    this.append(config, priority);
+  }
+
+  public append(config: Configuration, _priority?: number) {
+    if (config.initMethod) {
+      this.initMethod.add(config.initMethod[0], config.initMethod[1]);
+    }
+    if (config.configMethod) {
+        this.configMethod.add(config.configMethod[0], config.configMethod[1]);
+      }
+    for (let pre of config.preprocessors) {
+      this.preprocessors.push(pre);
+    }
+    for (let post of config.postprocessors) {
+      this.postprocessors.push(post);
+    }
     let handlers = Object.keys(config.handler) as HandlerType[];
     for (const key of handlers) {
       for (const map of config.handler[key]) {
@@ -362,85 +456,21 @@ export class ParserConfiguration {
     Object.assign(this.tags, config.tags);
     defaultOptions(this.options, config.options);
     Object.assign(this.nodes, config.nodes);
-    for (let pre of config.preprocessors) {
-      this.preprocessors.push(pre);
-    }
-    for (let post of config.postprocessors) {
-      this.postprocessors.push(post);
-    }
-    if (config.init) {
-    this.initMethod.add(config.init[0], config.init[0]);
-      
-    }
-    if (config.config) {
-      this.configMethod.add(config.config[0], config.config[1]);
+  }
+
+  private combineConfigurations() {
+    for (let {item: config, priority: priority} of this.configurations) {
+      this.append(config, priority);
     }
   }
 
-  /**
-   * Registers a configuration after the input jax is created.  (Used by \require.)
-   *
-   * @param {Configuration} config   The configuration to be registered in this one
-   * @param {TeX} jax                The TeX jax where it is being registered
-   * @param {OptionList=} options    The options for the configuration.
-   */
-  public register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
-    this.append(config);
-    config.init(this);
-    const parser = jax.parseOptions;
-    parser.handlers = new SubHandlers(this);
-    parser.nodeFactory.setCreators(config.nodes);
-    for (const kind of Object.keys(config.items)) {
-      parser.itemFactory.setNodeClass(kind, config.items[kind]);
-    }
-    defaultOptions(parser.options, config.options);
-    userOptions(parser.options, options);
-    config.config(this, jax);
-  }
-
-  // private add(config: Configuration, priority: number) {
-  //   config.
-  // }
-
-  
   /**
    * @constructor
    */
-  constructor(packages: (string|[string, number])[]) {
+  constructor(packages: (string | [string, number])[]) {
+    packages.forEach(this.addPackage.bind(this));
     // Combine package configurations
-    for (let key of packages) {
-      const name = typeof key === 'string' ? key : key[0];
-      let conf = ConfigurationHandler.get(name);
-      if (conf) {
-        this.configurations.add(conf, typeof key === 'string' ? conf.priority : key[1]);
-      }
-    }
-    // for (let conf of this.configurations) {
-    //   this.add(conf.item, conf.priority);
-    // }
-    // for (let conf of this.configurations) {
-    //   const config = (typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs]);
-    //   if (config.init) {
-    //     this.initMethod.add(init, priority || 0);
-    // }
-    // // Combine package configurations
-    // for (let key of packages) {
-    //   let conf = ConfigurationHandler.get(key);
-    //   if (conf) {
-    //     configuration.append(conf);
-    //   }
-    // }
-    // configuration.init(configuration);
-    // return configuration;
-
-      
-    // }
-    // if (config) {
-    //   this.configMethod.add(config, configPriority || priority || 0);
-    // }
-    // this.handler = Object.assign(
-    //   {character: [], delimiter: [], macro: [], environment: []}, handler);
-    // ConfigurationHandler.set(name, this);
+    this.combineConfigurations();
   }
 
 }

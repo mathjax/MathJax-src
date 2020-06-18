@@ -36,7 +36,7 @@ import TexParser from './tex/TexParser.js';
 import TexError from './tex/TexError.js';
 import ParseOptions from './tex/ParseOptions.js';
 import {TagsFactory} from './tex/Tags.js';
-import {ParserConfiguration, ConfigurationHandler} from './tex/Configuration.js';
+import {ParserConfiguration} from './tex/Configuration.js';
 // Import base as it is the default package loaded.
 import './tex/base/BaseConfiguration.js';
 

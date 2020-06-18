@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {MultlineItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
 import './AmsMappings.js';
@@ -38,10 +38,10 @@ export class AmsTags extends AbstractTags { }
 
 /**
  * Init method for AMS package.
- * @param {Configuration} config The current configuration.
+ * @param {ParserConfiguration} config The current configuration.
  */
-let init = function(config: Configuration) {
-  config.append(Configuration.extension());
+let init = function(config: ParserConfiguration) {
+  config.add(Configuration.extension());
 };
 
 export const AmsConfiguration = Configuration.create(

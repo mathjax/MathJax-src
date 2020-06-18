@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {BeginEnvItem} from './NewcommandItems.js';
 import {ExtensionMaps} from '../MapHandler.js';
 import './NewcommandMappings.js';
@@ -32,9 +32,9 @@ import './NewcommandMappings.js';
  * Init method for Newcommand package.
  * @param {Configuration} config The current configuration.
  */
-let init = function(config: Configuration) {
+let init = function(config: ParserConfiguration) {
     if (config.handler['macro'].indexOf(ExtensionMaps.NEW_COMMAND) < 0) {
-        config.append(Configuration.extension());
+        config.add(Configuration.extension());
     }
 };
 
