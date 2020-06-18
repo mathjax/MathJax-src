@@ -58,15 +58,6 @@ export type Metrics = {
 
 /*****************************************************************/
 /**
- *  The BBox object contains the data about the bounding box
- *  for the typeset element.
- */
-export type BBox = {
-  // will be defined later
-};
-
-/*****************************************************************/
-/**
  *  The MathItem interface
  *
  *  The MathItem is the object that holds the information about a
@@ -122,11 +113,6 @@ export interface MathItem<N, T, D> {
    * (the em-size, scaling factor, etc.)
    */
   metrics: Metrics;
-
-  /**
-   * The bounding box for the typeset math (once typeset)
-   */
-  bbox: BBox;
 
   /**
    * Extra data needed by the input or output jax, as needed
@@ -303,11 +289,6 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   public metrics: Metrics = {} as Metrics;
 
   /**
-   * The bounding box of the typeset math
-   */
-  public bbox: BBox = {};
-
-  /**
    * Data private to the input jax
    */
   public inputData: OptionList = {};
@@ -348,7 +329,6 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     this.root = null;
     this.typesetRoot = null;
     this.metrics = {} as Metrics;
-    this.bbox = {};
     this.inputData = {};
     this.outputData = {};
   }
@@ -428,7 +408,6 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
         this.removeFromDocument(restore);
       }
       if (state < STATE.TYPESET && this._state >= STATE.TYPESET) {
-        this.bbox = {};
         this.outputData = {};
       }
       if (state < STATE.COMPILED && this._state >= STATE.COMPILED) {

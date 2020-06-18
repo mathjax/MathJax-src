@@ -26,7 +26,7 @@
  *  A symbol used to mark the special node used to indicate
  *  the start and end of the list.
  */
-const END = Symbol();
+export const END = Symbol();
 
 /**
  * Shorthand type for the functions used to sort the data items
@@ -188,6 +188,28 @@ export class LinkedList<DataClass> {
     item.next.prev = this.list;
     item.next = item.prev = null;
     return item.data as DataClass;
+  }
+
+  /**
+   * Remove items from the list
+   *
+   * @param {DataClass[]} items   The items to remove
+   */
+  public remove(...items: DataClass[]) {
+    const map = new Map<DataClass, boolean>();
+    for (const item of items) {
+      map.set(item, true);
+    }
+    let item = this.list.next;
+    while (item.data !== END) {
+      const next = item.next;
+      if (map.has(item.data as DataClass)) {
+        item.prev.next = item.next;
+        item.next.prev = item.prev;
+        item.next = item.prev = null;
+      }
+      item = next;
+    }
   }
 
   /**

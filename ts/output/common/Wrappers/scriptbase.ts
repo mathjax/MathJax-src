@@ -282,7 +282,7 @@ export function CommonScriptbaseMixin<
         base = base.childNodes[0];
       }
       return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
-              base.bbox.rscale === 1 && base.getText().length === 1 &&
+              base.bbox.rscale === 1 && Array.from(base.getText()).length === 1 &&
               !base.node.attributes.get('largeop'));
     }
 

@@ -202,10 +202,18 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   /**
    * Sets mapping for a symbol.
    * @param {string} symbol The symbol to map.
-   * @param {T} object The symbols value in the mapping's codomain.
+   * @param {K} object The symbols value in the mapping's codomain.
    */
   public add(symbol: string, object: K) {
     this.map.set(symbol, object);
+  }
+
+  /**
+   * Removes a symbol from the map
+   * @param {string} symbol The symbol to remove
+   */
+  public remove(symbol: string) {
+    this.map.delete(symbol);
   }
 
 }
