@@ -44,7 +44,6 @@ export type InitMethod = (c: ParserConfiguration) => void;
 
 export class Configuration {
 
-
   /**
    * Creates a function priority pair.
    * @param {Function | Processor} func The function or processor.
@@ -236,6 +235,11 @@ export namespace ConfigurationHandler {
 }
 
 
+/**
+ * Parser configuration combines the configurations of the currently selected
+ * packages.
+ * @constructor
+ */
 export class ParserConfiguration {
 
   /**
@@ -250,14 +254,54 @@ export class ParserConfiguration {
    */
   protected configMethod: FunctionList = new FunctionList();
 
+  /**
+   * An ordered list of cofigurations.
+   * @type {PrioritizedList<Configuration>}
+   */
   protected configurations: PrioritizedList<Configuration> = new PrioritizedList();
 
+  /**
+   * The subhandlers for this configuration.
+   * @type {SubHandlers}
+   */
   public handlers: SubHandlers = new SubHandlers();
 
+  /**
+   * The collated stack items.
+   * @type {StackItemConfig}
+   */
   public items: StackItemConfig = {};
+
+  /**
+   * The collated tag configurations.
+   * @type {TagsConfig}
+   */
   public tags: TagsConfig = {};
+
+  /**
+   * The collated options.
+   * @type {OptionList}
+   */
   public options: OptionList = {};
+
+  /**
+   * The collated node creators.
+   * @type {{[key: string]: any}}
+   */
   public nodes: {[key: string]: any}  = {};
+
+
+  /**
+   * @constructor
+   */
+  constructor(packages: (string | [string, number])[]) {
+    for (const pkg of packages.slice().reverse()) {
+      this.addPackage(pkg);
+    }
+    for (let {item: config, priority: priority} of this.configurations) {
+      this.append(config, priority);
+    }
+  }
 
   /**
    * Initmethod for the configuration;
@@ -278,20 +322,6 @@ export class ParserConfiguration {
     this.configMethod.execute(this, jax);
     for (const config of this.configurations) {
       this.addFilters(jax, config.item);
-    }
-  }
-
-  /**
-   * Adds pre- and postprocessor as filters to the jax.
-   * @param {TeX<any} jax The TeX Jax.
-   * @param {Configuration} config The configuration whose processors are added.
-   */
-  private addFilters(jax: TeX<any, any, any>, config: Configuration) {
-    for (const [pre, priority] of config.preprocessors) {
-      jax.preFilters.add(pre, priority);
-    }
-    for (const [post, priority] of config.postprocessors) {
-      jax.postFilters.add(post, priority);
     }
   }
 
@@ -354,16 +384,17 @@ export class ParserConfiguration {
     Object.assign(this.nodes, config.nodes);
   }
 
-
   /**
-   * @constructor
+   * Adds pre- and postprocessor as filters to the jax.
+   * @param {TeX<any} jax The TeX Jax.
+   * @param {Configuration} config The configuration whose processors are added.
    */
-  constructor(packages: (string | [string, number])[]) {
-    for (const pkg of packages.slice().reverse()) {
-      this.addPackage(pkg);
+  private addFilters(jax: TeX<any, any, any>, config: Configuration) {
+    for (const [pre, priority] of config.preprocessors) {
+      jax.preFilters.add(pre, priority);
     }
-    for (let {item: config, priority: priority} of this.configurations) {
-      this.append(config, priority);
+    for (const [post, priority] of config.postprocessors) {
+      jax.postFilters.add(post, priority);
     }
   }
 
