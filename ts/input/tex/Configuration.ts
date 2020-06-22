@@ -360,9 +360,9 @@ export class ParserConfiguration {
    * @param {TeX} jax                The TeX jax where it is being registered
    * @param {OptionList=} options    The options for the configuration.
    */
-  public register(_config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
-    // this.append(config);
-    // config.init(this);
+  public register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
+    this.add(config);
+    this.init();
     const parser = jax.parseOptions;
     parser.handlers = new SubHandlers(this);
     // parser.nodeFactory.setCreators(config.nodes);
@@ -371,7 +371,10 @@ export class ParserConfiguration {
     // }
     // defaultOptions(parser.options, config.options);
     userOptions(parser.options, options);
-    // config.config(this, jax);
+    let conf = config.config;
+    if (conf) {
+      conf(this, jax);
+    }
   }
 
   public addPackage(pkg: (string | [string, number])) {
