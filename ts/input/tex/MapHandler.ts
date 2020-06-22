@@ -63,18 +63,6 @@ export namespace MapHandler {
 }
 
 
-// Defining empty handlers for declaring new commands, macros, etc.
-export type ExtensionMap = 'new-Macro' | 'new-Delimiter' | 'new-Command' |
-  'new-Environment';
-export const ExtensionMaps: {[id: string]: ExtensionMap} = {
-  NEW_MACRO: 'new-Macro',
-  NEW_DELIMITER: 'new-Delimiter',
-  NEW_COMMAND: 'new-Command',
-  NEW_ENVIRONMENT: 'new-Environment'
-};
-
-
-
 /**
  * Class of symbol mappings that are active in a configuration.
  */

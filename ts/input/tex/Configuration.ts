@@ -22,12 +22,10 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import ParseMethods from './ParseMethods.js';
-import {ExtensionMaps, HandlerConfig, FallbackConfig} from './MapHandler.js';
+import {HandlerConfig, FallbackConfig} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
-import *  as sm from './SymbolMap.js';
 import {SubHandlers} from './MapHandler.js';
 import {FunctionList} from '../../util/FunctionList.js';
 import {TeX} from '../tex.js';
@@ -163,26 +161,6 @@ export class Configuration {
     return Configuration._create('', config);
   }
 
-  /**
-   * @return {Configuration} Initialises and returns an extension configuration.
-   */
-  public static extension(): Configuration {
-    new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
-    new sm.DelimiterMap(ExtensionMaps.NEW_DELIMITER,
-                        ParseMethods.delimiter, {});
-    new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
-    new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT,
-                          ParseMethods.environment, {}, {});
-    return this.temp(
-      {handler: {character: [],
-                 delimiter: [ExtensionMaps.NEW_DELIMITER],
-                 macro: [ExtensionMaps.NEW_DELIMITER,
-                         ExtensionMaps.NEW_COMMAND,
-                         ExtensionMaps.NEW_MACRO],
-                 environment: [ExtensionMaps.NEW_ENVIRONMENT]
-                },
-       priority: -1});
-  }
 
   /**
    * @constructor

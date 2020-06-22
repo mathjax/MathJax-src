@@ -24,8 +24,10 @@
 
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {BeginEnvItem} from './NewcommandItems.js';
-import {ExtensionMaps} from '../MapHandler.js';
+import NewcommandUtil from './NewcommandUtil.js';
 import './NewcommandMappings.js';
+import ParseMethods from '../ParseMethods.js';
+import * as sm from '../SymbolMap.js';
 
 
 /**
@@ -33,9 +35,19 @@ import './NewcommandMappings.js';
  * @param {Configuration} config The current configuration.
  */
 let init = function(config: ParserConfiguration) {
-  if (!config.handlers.get('macro').retrieve(ExtensionMaps.NEW_COMMAND)) {
-    config.append(Configuration.extension());
-  }
+  new sm.DelimiterMap(NewcommandUtil.NEW_DELIMITER,
+                      ParseMethods.delimiter, {});
+  new sm.CommandMap(NewcommandUtil.NEW_COMMAND, {}, {});
+  new sm.EnvironmentMap(NewcommandUtil.NEW_ENVIRONMENT,
+                        ParseMethods.environment, {}, {});
+  config.append(Configuration.temp(
+    {handler: {character: [],
+               delimiter: [NewcommandUtil.NEW_DELIMITER],
+               macro: [NewcommandUtil.NEW_DELIMITER,
+                       NewcommandUtil.NEW_COMMAND],
+               environment: [NewcommandUtil.NEW_ENVIRONMENT]
+              },
+     priority: -1}));
 };
 
 
