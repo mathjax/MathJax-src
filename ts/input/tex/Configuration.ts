@@ -73,7 +73,7 @@ export class Configuration {
                                   config?: Processor<ConfigMethod> | ConfigMethod,
                                   priority?: number,
                                  } = {}): Configuration {
-    let priority = config.priority || 5;
+    let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
     let conf = config.config ? this.makeProcessor(config.config, priority) : null;
     let preprocessors = [];

@@ -232,9 +232,9 @@
 
 ** TODO List
 
-*** TODO Ensure init methods are only added once.
+*** DONE Ensure init methods are only added once.
 
 *** TODO Move config method somewhere else.
 
-*** TODO Can we replace the register method simply with add?
+*** DONE Can we replace the register method simply with add? No!
 
