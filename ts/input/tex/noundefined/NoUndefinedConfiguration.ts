@@ -52,7 +52,8 @@ export const NoUndefinedConfiguration = Configuration.create(
         background: '',
         size: ''
       }
-    }
+    },
+    priority: 3
   }
 );
 
