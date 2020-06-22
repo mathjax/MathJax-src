@@ -32,6 +32,7 @@ import {SubHandlers} from './MapHandler.js';
 import {FunctionList} from '../../util/FunctionList.js';
 import {TeX} from '../tex.js';
 import {PrioritizedList} from '../../util/PrioritizedList.js';
+import {TagsFactory} from './Tags.js';
 
 
 export type StackItemConfig = {[kind: string]: StackItemClass};
@@ -353,6 +354,7 @@ export class ParserConfiguration {
     for (const kind of Object.keys(config.items)) {
       parser.itemFactory.setNodeClass(kind, config.items[kind]);
     }
+    TagsFactory.addTags(config.tags);
     userOptions(parser.options, options);
     this.addFilters(jax, config);
     if (config.config) {
