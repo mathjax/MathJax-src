@@ -23,7 +23,7 @@
 
 
 import { CommandMap } from '../SymbolMap.js';
-import { Configuration } from '../Configuration.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
 
 import { ColorMethods } from './ColorMethods.js';
 import { ColorModel } from './ColorUtil.js';
@@ -47,7 +47,7 @@ new CommandMap('color', {
  * @param {Configuration} config The current configuration.
  * @param {TeX} jax              The TeX jax having that configuration
  */
-const config = function(_config: Configuration, jax: TeX<any, any, any>) {
+const config = function(_config: ParserConfiguration, jax: TeX<any, any, any>) {
   jax.parseOptions.options.color.model = new ColorModel();
 };
 

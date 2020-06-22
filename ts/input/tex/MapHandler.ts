@@ -24,10 +24,16 @@
 
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
-import {Configuration} from './Configuration.js';
+// import {ParserConfiguration} from './Configuration.js';
+import {PrioritizedList} from '../../util/PrioritizedList.js';
+import {FunctionList} from '../../util/FunctionList.js';
 
 
 export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
+
+export type HandlerConfig = {[P in HandlerType]?: string[]};
+export type FallbackConfig = {[P in HandlerType]?: ParseMethod};
+
 
 export namespace MapHandler {
 
@@ -57,51 +63,32 @@ export namespace MapHandler {
 }
 
 
-// Defining empty handlers for declaring new commands, macros, etc.
-export type ExtensionMap = 'new-Macro' | 'new-Delimiter' | 'new-Command' |
-  'new-Environment';
-export const ExtensionMaps: {[id: string]: ExtensionMap} = {
-  NEW_MACRO: 'new-Macro',
-  NEW_DELIMITER: 'new-Delimiter',
-  NEW_COMMAND: 'new-Command',
-  NEW_ENVIRONMENT: 'new-Environment'
-};
-
-
-
 /**
  * Class of symbol mappings that are active in a configuration.
  */
 export class SubHandler {
 
-  private _configuration: SymbolMap[] = [];
-
-  /**
-   * @constructor
-   * @param {Array.<string>} maps Names of the maps included in this
-   *     configuration.
-   * @param {ParseMethod} fallback A fallback method if no map is found.
-   */
-  constructor(maps: string[], private _fallback: ParseMethod) {
-    for (const name of maps) {
-      this.add(name);
-    }
-  }
-
+  private _configuration: PrioritizedList<SymbolMap> = new PrioritizedList<SymbolMap>();
+  private _fallback: FunctionList = new FunctionList();
 
   /**
    * Adds a symbol map to the configuration if it exists.
    * @param {string} name of the symbol map.
    */
-  public add(name: string): void {
-    let map = MapHandler.getMap(name);
-    if (!map) {
-      this.warn('Configuration ' + name + ' not found! Omitted.');
-      return;
+  public add(maps: string[], fallback: ParseMethod,
+             priority: number = PrioritizedList.DEFAULTPRIORITY): void {
+    for (const name of maps.slice().reverse()) {
+      let map = MapHandler.getMap(name);
+      if (!map) {
+        this.warn('Configuration ' + name + ' not found! Omitted.');
+        return;
+      }
+      this._configuration.add(map, priority);
     }
-    this._configuration.push(map);
+    if (fallback) {
+      this._fallback.add(fallback, priority);
+    }
   }
-
 
   /**
    * Parses the given input with the first applicable symbol map.
@@ -109,14 +96,14 @@ export class SubHandler {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(input: ParseInput): ParseResult {
-    for (let map of this._configuration) {
+    for (let {item: map} of this._configuration) {
       const result = map.parse(input);
       if (result) {
         return result;
       }
     }
     let [env, symbol] = input;
-    this._fallback(env, symbol);
+    this._fallback.toArray()[0].item(env, symbol);
   }
 
 
@@ -148,9 +135,11 @@ export class SubHandler {
    * @override
    */
   public toString(): string {
-    return this._configuration
-      .map(function(x: SymbolMap) {return x.name; })
-      .join(', ');
+    let names = [];
+    for (let {item: map} of this._configuration) {
+      names.push(map.name);
+    }
+    return names.join(', ');
   }
 
 
@@ -160,7 +149,7 @@ export class SubHandler {
    * @return {SymbolMap} A map that can parse the symbol.
    */
   public applicable(symbol: string): SymbolMap {
-    for (let map of this._configuration) {
+    for (let {item: map} of this._configuration) {
       if (map.contains(symbol)) {
         return map;
       }
@@ -175,7 +164,12 @@ export class SubHandler {
    * @return {SymbolMap} The map if it exists.
    */
   public retrieve(name: string): SymbolMap {
-    return this._configuration.find(x => { return x.name === name; });
+    for (let {item: map} of this._configuration) {
+      if (map.name === name) {
+        return map;
+      }
+    }
+    return null;
   }
 
 
@@ -195,15 +189,19 @@ export class SubHandlers {
   private map = new Map<HandlerType, SubHandler>();
 
   /**
-   * Sets a new configuration for the map handler.
-   * @param {Configuration} config A setting for the map handler.
+   * Adds a symbol map to the configuration if it exists.
+   * @param {string} name of the symbol map.
    */
-  constructor(config: Configuration) {
-    for (const key of Object.keys(config.handler)) {
+  public add(handlers: HandlerConfig, fallbacks: FallbackConfig,
+             priority: number = PrioritizedList.DEFAULTPRIORITY): void {
+    for (const key of Object.keys(handlers)) {
       let name = key as HandlerType;
-      let subHandler = new SubHandler(config.handler[name] || [],
-                                      config.fallback[name]); // A dummy?
-      this.set(name, subHandler);
+      let subHandler = this.get(name);
+      if (!subHandler) {
+        subHandler = new SubHandler();
+        this.set(name, subHandler);
+      }
+      subHandler.add(handlers[name], fallbacks[name], priority);
     }
   }
 

@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import AmsMethods from './AmsMethods.js';
+import {AmsMethods} from './AmsMethods.js';
 import *  as sm from '../SymbolMap.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';

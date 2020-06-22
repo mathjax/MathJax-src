@@ -118,5 +118,123 @@
    ended up being superfluous.
 
 *** This is effectively the new textnode class.
->>>>>>> initial_parser
+
+
+
+# Rewrite TeX Configurations:
+
+* Have a ParseConfiguration options class
+
+** Inherit from Configuration
+
+** Have priority lists
+
+** Configurations get a single priority (more?)
+
+
+* Current flow:
+
+** Tex Parser is configured in the static method `configure`
+** That builds the general configuration (Configuration object)
+** Calls init method
+** TexParser.configuration gets that configuration
+** Parse options are initialised with that configuration
+*** Creates Subhandlers (those need to be prioritised)
+*** Sets the nodes (These should be prioritised in the new Configuration)
+*** Sets the items (Same thing)
+
+** Calls the config method. Why?
+** Sets up the tags. 
+*** Do we need a priority list for tags?
+
+* Priority handling of the different elements of a configuration:
+
+** Flow  
+
+*** options gets the ParserConfiguration, initialised with 'packages'.
+
+*** configurations is a priority list for the configurations from the configuration handler
+    They are added either with respect to their default priority or the priority
+    they had in the configuration.
+
+    Adding a Configuration means it is added to the configuration list.
+
+*** Components are initialised 
+
+*** When configuration is added throughout, not everything has to be initialised!
+
+** Components
+
+*** TODO Handler
+    (At first just initialise.)
+
+**** Initialisation should be moved to configurations. 
+     Then they do not have to reinitialised when a new package is loaded (e.g.,
+     via require) but only updated.
+
+**** Shadow!
+**** They should have priority lists themselves so they are correctly inserted.
+**** In particular, `extension` has to be inserted always at -1
+
+
+*** Fallback
+
+**** Keep FunctionList. Execute only the first one.
+
+
+*** Items
+
+**** Override
+**** Generate once with priority list of configurations
+**** On new insertion needs to be regenerated.
+
+*** Tags
+
+**** Override
+**** Same as fallback?
+
+*** Options
+
+**** Override
+**** Same as fallback?
+
+
+*** Nodes
+
+**** Override
+**** Same as fallback?
+
+*** Preprocessors
+
+**** All have to run
+**** They come each with their own priority and have to be stored that way
+**** If the come without priority they get the default priority of their Configuration.
+**** They are inserted with their respective priority into the prefilter lists
+**** When a configuration is added all we need to do is add their priorities
+
+*** Postprocessors
+
+**** All have to run
+**** Same as Preprocessors
+
+*** Init
+
+**** All have to run
+**** Each Configuration has an init method
+**** Has either priority of Configuration or its own
+**** They are handled with their own priority list as they all have to run.
+
+
+*** Config
+
+**** All have to run
+**** Same as config
+
+** TODO List
+
+*** TODO Ensure init methods are only added once.
+
+*** TODO Move config method somewhere else.
+
+*** TODO Can we replace the register method simply with add?
 
