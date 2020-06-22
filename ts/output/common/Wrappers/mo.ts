@@ -23,7 +23,7 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {DelimiterData} from '../FontData.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -176,8 +176,8 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
       const attributes = this.node.attributes;
       if (!attributes.get('stretchy')) return false;
       const c = this.getText();
-      if (c.length !== 1) return false;
-      const delim = this.font.getDelimiter(c.charCodeAt(0));
+      if (Array.from(c).length !== 1) return false;
+      const delim = this.font.getDelimiter(c.codePointAt(0));
       this.stretch = (delim && delim.dir === direction ? delim : NOSTRETCH);
       return this.stretch.dir !== DIRECTION.None;
     }
@@ -204,7 +204,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         //  Look through the delimiter sizes for one that matches
         //
         const delim = this.stretch;
-        const c = delim.c || this.getText().charCodeAt(0);
+        const c = delim.c || this.getText().codePointAt(0);
         let i = 0;
         if (delim.sizes) {
           for (const d of delim.sizes) {

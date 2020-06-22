@@ -23,7 +23,7 @@
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
 
 /*****************************************************************/

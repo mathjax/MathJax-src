@@ -35,7 +35,7 @@ import {NodeFactory} from '../NodeFactory.js';
 function noErrors(factory: NodeFactory,
                   message: string, _id: string, expr: string) {
   let mtext = factory.create('token', 'mtext', {}, expr.replace(/\n/g, ' '));
-  let error = factory.create('node', 'merror', [mtext], {'data-mjx-error': message});
+  let error = factory.create('node', 'merror', [mtext], {'data-mjx-error': message, title: message});
   return error;
 }
 

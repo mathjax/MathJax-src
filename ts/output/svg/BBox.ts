@@ -16,9 +16,9 @@
  */
 
 /**
- * @fileoverview  Implements the CHTML bounding box object
+ * @fileoverview  Implements the SVG bounding box object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export {BBox, BBoxData, BBoxStyleAdjust} from '../common/BBox.js';
+export * from '../../util/BBox.js';

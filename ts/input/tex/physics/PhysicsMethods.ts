@@ -232,7 +232,7 @@ function createVectorToken(factory: NodeFactory, kind: string,
                            def: any, text: string): MmlNode  {
   let parser = factory.configuration.parser;
   let token = NodeFactory.createToken(factory, kind, def, text);
-  let code: number = text.charCodeAt(0);
+  let code: number = text.codePointAt(0);
   if (text.length === 1 && !parser.stack.env.font &&
       parser.stack.env.vectorFont &&
       (inRange(code, latinCap) || inRange(code, latinSmall) ||

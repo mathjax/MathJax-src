@@ -23,7 +23,7 @@
 
 import {AnyWrapper, Constructor} from '../Wrapper.js';
 import {CommonMsubsup, MsubsupConstructor} from './msubsup.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 

@@ -23,7 +23,7 @@
 
 import {SVGWrapper} from '../Wrapper.js';
 import {MmlMerror} from '../../../core/MmlTree/MmlNodes/merror.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -64,6 +64,10 @@ export class SVGmerror<N, T, D> extends SVGWrapper<N, T, D> {
       'data-background': true,
       width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
     }));
+    const title = this.node.attributes.get('title') as string;
+    if (title) {
+      this.adaptor.append(this.element, this.svg('title', {}, [this.adaptor.text(title)]));
+    }
     this.addChildren(svg);
   }
 
