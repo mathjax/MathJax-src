@@ -164,13 +164,6 @@ export class Configuration {
   }
 
   /**
-   * @return {Configuration} An empty configuration.
-   */
-  public static empty(): Configuration {
-    return this.temp();
-  }
-
-  /**
    * @return {Configuration} Initialises and returns an extension configuration.
    */
   public static extension(): Configuration {
