@@ -81,7 +81,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
   /**
    * The configuration of the TeX jax.
-   * @type {Configuration}
+   * @type {ParserConfiguration}
    */
   protected configuration: ParserConfiguration;
 
@@ -104,8 +104,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {string[]} packages Names of packages.
    * @return {Configuration} The configuration object.
    */
-  protected static configure(packages: (string|[string, number])[]): ParserConfiguration {
-    return new ParserConfiguration(packages);
+  protected static configure(packages: (string | [string, number])[]): ParserConfiguration {
+    let configuration = new ParserConfiguration(packages);
+    configuration.init();
+    return configuration;
   }
 
 

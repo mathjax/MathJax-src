@@ -61,36 +61,23 @@ export class Configuration {
 
   /**
    * Creates a configuration for a package.
-   * @param {string} name The package name.
-   * @param {Object} config The configuration parameters:
-   * Configuration for the TexParser consist of the following:
-   *  * _handler_  configuration mapping handler types to lists of symbol mappings.
-   *  * _fallback_ configuration mapping handler types to fallback methods.
-   *  * _items_ for the StackItem factory.
-   *  * _tags_ mapping tagging configurations to tagging objects.
-   *  * _options_ parse options for the packages.
-   *  * _nodes_ for the Node factory.
-   *  * _preprocessors_ list of functions for preprocessing the LaTeX
-   *      string wrt. to given parse options. Can contain a priority.
-   *  * _postprocessors_ list of functions for postprocessing the MmlNode
-   *      wrt. to given parse options. Can contain a priority.
-   *  * _init_ init method.
-   *  * _priority_ priority of the init method.
+   * @param {string} name The package name or empty string.
+   * @param {Object} config See `create` method.
    * @return {Configuration} The newly generated configuration.
    */
-  public static create(name: string,
-                       config: {handler?: HandlerConfig,
-                                fallback?: FallbackConfig,
-                                items?: StackItemConfig,
-                                tags?: TagsConfig,
-                                options?: OptionList,
-                                nodes?: {[key: string]: any},
-                                preprocessors?: (Processor<Function> | Function)[],
-                                postprocessors?: (Processor<Function> | Function)[],
-                                init?: Processor<InitMethod> | InitMethod,
-                                config?: Processor<ConfigMethod> | ConfigMethod,
-                                priority?: number,
-                               } = {}): Configuration {
+  private static _create(name: string,
+                         config: {handler?: HandlerConfig,
+                                  fallback?: FallbackConfig,
+                                  items?: StackItemConfig,
+                                  tags?: TagsConfig,
+                                  options?: OptionList,
+                                  nodes?: {[key: string]: any},
+                                  preprocessors?: (Processor<Function> | Function)[],
+                                  postprocessors?: (Processor<Function> | Function)[],
+                                  init?: Processor<InitMethod> | InitMethod,
+                                  config?: Processor<ConfigMethod> | ConfigMethod,
+                                  priority?: number,
+                                 } = {}): Configuration {
     let priority = config.priority || 5;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
     let conf = config.config ? this.makeProcessor(config.config, priority) : null;
@@ -106,7 +93,7 @@ export class Configuration {
         postprocessors.push(this.makeProcessor(post, priority));
       }
     }
-    let configuration = new Configuration(
+    return new Configuration(
       name,
       config.handler || {},
       config.fallback || {},
@@ -116,20 +103,77 @@ export class Configuration {
       config.nodes || {},
       preprocessors, postprocessors, init, conf, priority
     );
+  }
+
+  /**
+   * Creator pattern for creating a named package configuration. This will be
+   * administered in the configuration handler and can be retrieved again.
+   * @param {string} name The package name.
+   * @param {Object} config The configuration parameters:
+   * Configuration for the TexParser consist of the following:
+   *  * _handler_  configuration mapping handler types to lists of symbol mappings.
+   *  * _fallback_ configuration mapping handler types to fallback methods.
+   *  * _items_ for the StackItem factory.
+   *  * _tags_ mapping tagging configurations to tagging objects.
+   *  * _options_ parse options for the packages.
+   *  * _nodes_ for the Node factory.
+   *  * _preprocessors_ list of functions for preprocessing the LaTeX
+   *      string wrt. to given parse options. Can contain a priority.
+   *  * _postprocessors_ list of functions for postprocessing the MmlNode
+   *      wrt. to given parse options. Can contain a priority.
+   *  * _init_ init method and optionally its priority.
+   *  * _config_ config method and optionally its priority.
+   *  * _priority_ default priority of the configuration.
+   * @return {Configuration} The newly generated configuration.
+   */
+  public static create(name: string,
+                       config: {handler?: HandlerConfig,
+                                fallback?: FallbackConfig,
+                                items?: StackItemConfig,
+                                tags?: TagsConfig,
+                                options?: OptionList,
+                                nodes?: {[key: string]: any},
+                                preprocessors?: (Processor<Function> | Function)[],
+                                postprocessors?: (Processor<Function> | Function)[],
+                                init?: Processor<InitMethod> | InitMethod,
+                                config?: Processor<ConfigMethod> | ConfigMethod,
+                                priority?: number,
+                               } = {}): Configuration {
+    let configuration = Configuration._create(name, config);
     ConfigurationHandler.set(name, configuration);
     return configuration;
+  }
+
+  /**
+   * Creates an unnamed, ephemeral package configuration. It will not added to
+   * the configuration handler.
+   * @param {Object} config See `create` method.
+   * @return {Configuration} The ephemeral package configuration.
+   */
+  public static temp(config: {handler?: HandlerConfig,
+                              fallback?: FallbackConfig,
+                              items?: StackItemConfig,
+                              tags?: TagsConfig,
+                              options?: OptionList,
+                              nodes?: {[key: string]: any},
+                              preprocessors?: (Processor<Function> | Function)[],
+                              postprocessors?: (Processor<Function> | Function)[],
+                              init?: Processor<InitMethod> | InitMethod,
+                              config?: Processor<ConfigMethod> | ConfigMethod,
+                              priority?: number,
+                             } = {}): Configuration {
+    return Configuration._create('', config);
   }
 
   /**
    * @return {Configuration} An empty configuration.
    */
   public static empty(): Configuration {
-    return this.create('empty');
+    return this.temp();
   }
 
-
   /**
-   * @return {Configuration} Initialises and returns the extension maps.
+   * @return {Configuration} Initialises and returns an extension configuration.
    */
   public static extension(): Configuration {
     new sm.MacroMap(ExtensionMaps.NEW_MACRO, {}, {});
@@ -138,8 +182,7 @@ export class Configuration {
     new sm.CommandMap(ExtensionMaps.NEW_COMMAND, {}, {});
     new sm.EnvironmentMap(ExtensionMaps.NEW_ENVIRONMENT,
                           ParseMethods.environment, {}, {});
-    return this.create(
-      'extension',
+    return this.temp(
       {handler: {character: [],
                  delimiter: [ExtensionMaps.NEW_DELIMITER],
                  macro: [ExtensionMaps.NEW_DELIMITER,
@@ -148,89 +191,6 @@ export class Configuration {
                  environment: [ExtensionMaps.NEW_ENVIRONMENT]
                 }});
   }
-
-
-  /**
-   * Init method for the configuration.
-   *
-   * @param {Configuration} configuration   The configuration where this one is being initialized
-   */
-  // public init(configuration: Configuration) {
-  //   this.initMethod.execute(configuration);
-  // }
-
-  /**
-   * Init method for when the jax is ready
-   *
-   * @param {Configuration} configuration   The configuration where this one is being initialized
-   * @param {TeX} jax                       The TeX jax for this configuration
-   */
-  // public config(configuration: Configuration, jax: TeX<any, any, any>) {
-  //   this.configMethod.execute(configuration, jax);
-  //   for (const pre of this.preprocessors) {
-  //     typeof pre === 'function' ? jax.preFilters.add(pre) :
-  //       jax.preFilters.add(pre[0], pre[1]);
-  //   }
-  //   for (const post of this.postprocessors) {
-  //     typeof post === 'function' ? jax.postFilters.add(post) :
-  //       jax.postFilters.add(post[0], post[1]);
-  //   }
-  // }
-
-
-  // /**
-  //  * Appends configurations to this configuration. Note that fallbacks are
-  //  * overwritten, while order of configurations is preserved.
-  //  *
-  //  * @param {Configuration} configuration A configuration setting for the TeX
-  //  *       parser.
-  //  */
-  // public append(config: Configuration): void {
-  //   let handlers = Object.keys(config.handler) as HandlerType[];
-  //   for (const key of handlers) {
-  //     for (const map of config.handler[key]) {
-  //       this.handler[key].unshift(map);
-  //     }
-  //   }
-  //   Object.assign(this.fallback, config.fallback);
-  //   Object.assign(this.items, config.items);
-  //   Object.assign(this.tags, config.tags);
-  //   defaultOptions(this.options, config.options);
-  //   Object.assign(this.nodes, config.nodes);
-  //   for (let pre of config.preprocessors) {
-  //     this.preprocessors.push(pre);
-  //   }
-  //   for (let post of config.postprocessors) {
-  //     this.postprocessors.push(post);
-  //   }
-  //   for (let init of config.initMethod) {
-  //     this.initMethod.add(init.item, init.priority);
-  //   }
-  //   for (let init of config.configMethod) {
-  //     this.configMethod.add(init.item, init.priority);
-  //   }
-  // }
-
-  // /**
-  //  * Registers a configuration after the input jax is created.  (Used by \require.)
-  //  *
-  //  * @param {Configuration} config   The configuration to be registered in this one
-  //  * @param {TeX} jax                The TeX jax where it is being registered
-  //  * @param {OptionList=} options    The options for the configuration.
-  //  */
-  // public register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
-  //   this.append(config);
-  //   config.init(this);
-  //   const parser = jax.parseOptions;
-  //   parser.handlers = new SubHandlers(this);
-  //   parser.nodeFactory.setCreators(config.nodes);
-  //   for (const kind of Object.keys(config.items)) {
-  //     parser.itemFactory.setNodeClass(kind, config.items[kind]);
-  //   }
-  //   defaultOptions(parser.options, config.options);
-  //   userOptions(parser.options, options);
-  //   config.config(this, jax);
-  // }
 
   /**
    * @constructor
@@ -246,7 +206,7 @@ export class Configuration {
                       readonly postprocessors: ProcessorList = [],
                       readonly initMethod: Processor<InitMethod> = null,
                       readonly configMethod: Processor<ConfigMethod> = null,
-                      public priority: number   // Default Priority
+                      public priority: number
                      ) {
     this.handler = Object.assign(
       {character: [], delimiter: [], macro: [], environment: []}, handler);
@@ -257,7 +217,7 @@ export class Configuration {
    * @type {Function}
    */
   public get init(): InitMethod {
-    return this.initMethod ? this.initMethod[0]: null;
+    return this.initMethod ? this.initMethod[0] : null;
   }
 
   /**
@@ -265,7 +225,7 @@ export class Configuration {
    * @type {FunctionList}
    */
   public get config(): ConfigMethod {
-    return this.configMethod ? this.configMethod[0]: null;
+    return this.configMethod ? this.configMethod[0] : null;
   }
 
 }
