@@ -109,9 +109,6 @@ function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
   //
   //  Check if the require extension needs to be configured
   //
-  // TODO:
-  // The require option does not appear to be in 'options'.
-  // The require configuration can current not be called.
   if (parser.options.require && !parser.options.require.jax) {
     RequireConfiguration.config(config, jax);
   }

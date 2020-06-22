@@ -278,10 +278,6 @@ export class ParserConfiguration {
    */
   protected configMethod: FunctionList = new FunctionList();
 
-  protected preprocessors: ProcessorList = [];
-
-  protected postprocessors: ProcessorList = [];
-
   protected configurations: PrioritizedList<Configuration> = new PrioritizedList();
 
   public handlers: SubHandlers = new SubHandlers();
@@ -308,47 +304,19 @@ export class ParserConfiguration {
    */
   public config(jax: TeX<any, any, any>) {
     this.configMethod.execute(this, jax);
-    for (const [pre, priority] of this.preprocessors) {
-      jax.preFilters.add(pre, priority);
-    }
-    for (const [post, priority] of this.postprocessors) {
-      jax.postFilters.add(post, priority);
+    for (const config of this.configurations) {
+      this.addFilters(jax, config.item);
     }
   }
 
-  // /**
-  //  * Appends configurations to this configuration. Note that fallbacks are
-  //  * overwritten, while order of configurations is preserved.
-  //  *
-  //  * @param {Configuration} configuration A configuration setting for the TeX
-  //  *       parser.
-  //  */
-  // public append(config: Configuration): void {
-  //   let handlers = Object.keys(config.handler) as HandlerType[];
-  //   for (const key of handlers) {
-  //     for (const map of config.handler[key]) {
-  //       this.handler[key].unshift(map);
-  //     }
-  //   }
-  //   Object.assign(this.fallback, config.fallback);
-  //   Object.assign(this.items, config.items);
-  //   Object.assign(this.tags, config.tags);
-  //   defaultOptions(this.options, config.options);
-  //   Object.assign(this.nodes, config.nodes);
-  //   for (let pre of config.preprocessors) {
-  //     this.preprocessors.push(pre);
-  //   }
-  //   for (let post of config.postprocessors) {
-  //     this.postprocessors.push(post);
-  //   }
-  //   if (config.init) {
-  //   this.initMethod.add(config.init[0], config.init[0]);
-      
-  //   }
-  //   if (config.config) {
-  //     this.configMethod.add(config.config[0], config.config[1]);
-  //   }
-  // }
+  private addFilters(jax: TeX<any, any, any>, config: Configuration) {
+    for (const [pre, priority] of config.preprocessors) {
+      jax.preFilters.add(pre, priority);
+    }
+    for (const [post, priority] of config.postprocessors) {
+      jax.postFilters.add(post, priority);
+    }
+  }
 
   /**
    * Registers a configuration after the input jax is created.  (Used by \require.)
@@ -359,18 +327,17 @@ export class ParserConfiguration {
    */
   public register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
     this.add(config);
+    this.configurations.add(config, config.priority);
     this.init();
     const parser = jax.parseOptions;
-    // parser.handlers = new SubHandlers(this);
     parser.nodeFactory.setCreators(config.nodes);
     for (const kind of Object.keys(config.items)) {
       parser.itemFactory.setNodeClass(kind, config.items[kind]);
     }
-    // defaultOptions(parser.options, config.options);
     userOptions(parser.options, options);
-    let conf = config.config;
-    if (conf) {
-      conf(this, jax);
+    this.addFilters(jax, config);
+    if (config.config) {
+      config.config(this, jax);
     }
   }
 
@@ -400,12 +367,6 @@ export class ParserConfiguration {
     if (config.configMethod) {
         this.configMethod.add(config.configMethod[0], config.configMethod[1]);
       }
-    for (let pre of config.preprocessors) {
-      this.preprocessors.push(pre);
-    }
-    for (let post of config.postprocessors) {
-      this.postprocessors.push(post);
-    }
     this.handlers.add(config.handler, config.fallback, priority);
     Object.assign(this.items, config.items);
     Object.assign(this.tags, config.tags);

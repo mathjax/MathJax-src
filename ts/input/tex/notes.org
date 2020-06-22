@@ -179,14 +179,14 @@
 
 *** Fallback
 
-**** Override
-**** Generate once with priority list of configurations
-**** On new insertion needs to be regenerated.
+**** Keep FunctionList. Execute only the first one.
+
 
 *** Items
 
 **** Override
-**** Same as fallback?
+**** Generate once with priority list of configurations
+**** On new insertion needs to be regenerated.
 
 *** Tags
 
