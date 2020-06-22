@@ -165,7 +165,7 @@
 
 ** Components
 
-*** TODO Handler
+*** DONE Handler
     (At first just initialise.)
 
 **** Initialisation should be moved to configurations. 
