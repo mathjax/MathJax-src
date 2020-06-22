@@ -127,7 +127,7 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
 };
 
 
-export const AMS_DECLARE_OPS = 'ams-declare-ops';
+export const NEW_OPS = 'ams-declare-ops';
 
 /**
  * Handle DeclareMathOperator.
@@ -144,7 +144,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   if (!op.match(/\\text/)) {
     op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
   }
-  (parser.configuration.handlers.retrieve(AMS_DECLARE_OPS) as CommandMap).
+  (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).
     add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
 };
 

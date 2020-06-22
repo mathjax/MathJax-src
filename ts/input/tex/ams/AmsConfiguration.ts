@@ -25,7 +25,7 @@
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {MultlineItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
-import {AMS_DECLARE_OPS} from './AmsMethods.js';
+import {NEW_OPS} from './AmsMethods.js';
 import './AmsMappings.js';
 import {CommandMap} from '../SymbolMap.js';
 
@@ -43,8 +43,9 @@ export class AmsTags extends AbstractTags { }
  * @param {ParserConfiguration} config The current configuration.
  */
 let init = function(config: ParserConfiguration) {
-  new CommandMap(AMS_DECLARE_OPS, {}, {});
-  config.append(Configuration.temp({handler: {macro: [AMS_DECLARE_OPS]}}));
+  new CommandMap(NEW_OPS, {}, {});
+  config.append(Configuration.temp({handler: {macro: [NEW_OPS]},
+                                    priority: -1}));
 };
 
 export const AmsConfiguration = Configuration.create(
