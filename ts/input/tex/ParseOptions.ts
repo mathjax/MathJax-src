@@ -104,7 +104,7 @@ export default class ParseOptions {
    * @param {OptionList[]} options   [TeX options, Tag options, {packages}]
    */
   public constructor(configuration: ParserConfiguration, options: OptionList[] = []) {
-    this.handlers = new SubHandlers(configuration);
+    this.handlers = configuration.handlers;
     // Add node factory methods from packages.
     this.nodeFactory = new NodeFactory();
     this.nodeFactory.configuration = this;

@@ -22,9 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {ParseMethod} from './Types.js';
 import ParseMethods from './ParseMethods.js';
-import {ExtensionMaps, HandlerType} from './MapHandler.js';
+import {ExtensionMaps, HandlerConfig, FallbackConfig} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
@@ -35,8 +34,6 @@ import {TeX} from '../tex.js';
 import {PrioritizedList} from '../../util/PrioritizedList.js';
 
 
-export type HandlerConfig = {[P in HandlerType]?: string[]};
-export type FallbackConfig = {[P in HandlerType]?: ParseMethod};
 export type StackItemConfig = {[kind: string]: StackItemClass};
 export type TagsConfig = {[kind: string]: TagsClass};
 export type Processor<T> = [T, number];
@@ -189,7 +186,8 @@ export class Configuration {
                          ExtensionMaps.NEW_COMMAND,
                          ExtensionMaps.NEW_MACRO],
                  environment: [ExtensionMaps.NEW_ENVIRONMENT]
-                }});
+                },
+       priority: -1});
   }
 
   /**
@@ -286,13 +284,12 @@ export class ParserConfiguration {
 
   protected configurations: PrioritizedList<Configuration> = new PrioritizedList();
 
-  public handler: HandlerConfig = {character: [], delimiter: [], macro: [], environment: []};
-  public fallback: FallbackConfig = {};
+  public handlers: SubHandlers = new SubHandlers();
+
   public items: StackItemConfig = {};
   public tags: TagsConfig = {};
   public options: OptionList = {};
   public nodes: {[key: string]: any}  = {};
-//  protected 
 
   /**
    * Initmethod for the configuration;
@@ -364,7 +361,7 @@ export class ParserConfiguration {
     this.add(config);
     this.init();
     const parser = jax.parseOptions;
-    parser.handlers = new SubHandlers(this);
+    // parser.handlers = new SubHandlers(this);
     parser.nodeFactory.setCreators(config.nodes);
     for (const kind of Object.keys(config.items)) {
       parser.itemFactory.setNodeClass(kind, config.items[kind]);
@@ -391,11 +388,12 @@ export class ParserConfiguration {
    * @param {Configuration} config The new configuration.
    * @param {number} priority It's priority.
    */
-  public add(config: Configuration, priority: number = 5) {
+  public add(config: Configuration, priority?: number) {
     this.append(config, priority);
   }
 
-  public append(config: Configuration, _priority?: number) {
+  public append(config: Configuration, priority?: number) {
+    priority = priority || config.priority;
     if (config.initMethod) {
       this.initMethod.add(config.initMethod[0], config.initMethod[1]);
     }
@@ -408,13 +406,7 @@ export class ParserConfiguration {
     for (let post of config.postprocessors) {
       this.postprocessors.push(post);
     }
-    let handlers = Object.keys(config.handler) as HandlerType[];
-    for (const key of handlers) {
-      for (const map of config.handler[key]) {
-        this.handler[key].unshift(map);
-      }
-    }
-    Object.assign(this.fallback, config.fallback);
+    this.handlers.add(config.handler, config.fallback, priority);
     Object.assign(this.items, config.items);
     Object.assign(this.tags, config.tags);
     defaultOptions(this.options, config.options);

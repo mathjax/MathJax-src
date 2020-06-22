@@ -33,9 +33,9 @@ import './NewcommandMappings.js';
  * @param {Configuration} config The current configuration.
  */
 let init = function(config: ParserConfiguration) {
-    if (config.handler['macro'].indexOf(ExtensionMaps.NEW_COMMAND) < 0) {
-        config.add(Configuration.extension());
-    }
+  if (!config.handlers.get('macro').retrieve(ExtensionMaps.NEW_COMMAND)) {
+    config.add(Configuration.extension());
+  }
 };
 
 
