@@ -41,7 +41,7 @@ export class AmsTags extends AbstractTags { }
  * @param {ParserConfiguration} config The current configuration.
  */
 let init = function(config: ParserConfiguration) {
-  config.add(Configuration.extension());
+  config.append(Configuration.extension());
 };
 
 export const AmsConfiguration = Configuration.create(

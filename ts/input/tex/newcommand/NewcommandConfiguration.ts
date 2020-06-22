@@ -34,7 +34,7 @@ import './NewcommandMappings.js';
  */
 let init = function(config: ParserConfiguration) {
   if (!config.handlers.get('macro').retrieve(ExtensionMaps.NEW_COMMAND)) {
-    config.add(Configuration.extension());
+    config.append(Configuration.extension());
   }
 };
 

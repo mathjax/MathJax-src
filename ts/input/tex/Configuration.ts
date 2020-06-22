@@ -309,6 +309,11 @@ export class ParserConfiguration {
     }
   }
 
+  /**
+   * Adds pre- and postprocessor as filters to the jax.
+   * @param {TeX<any} jax The TeX Jax.
+   * @param {Configuration} config The configuration whose processors are added.
+   */
   private addFilters(jax: TeX<any, any, any>, config: Configuration) {
     for (const [pre, priority] of config.preprocessors) {
       jax.preFilters.add(pre, priority);
@@ -319,14 +324,28 @@ export class ParserConfiguration {
   }
 
   /**
-   * Registers a configuration after the input jax is created.  (Used by \require.)
+   * Retrieves and adds configuration for a pacakge with priority.
+   * @param {(string | [string, number]} pkg Package with priority.
+   */
+  public addPackage(pkg: (string | [string, number])) {
+    const name = typeof pkg === 'string' ? pkg : pkg[0];
+    let conf = ConfigurationHandler.get(name);
+    if (conf) {
+      this.configurations.add(
+        conf, typeof pkg === 'string' ? conf.priority : pkg[1]);
+    }
+  }
+
+  /**
+   * Adds a configuration after the input jax is created.  (Used by \require.)
+   * Sets items, nodes and runs configuration method explicitly.
    *
    * @param {Configuration} config   The configuration to be registered in this one
    * @param {TeX} jax                The TeX jax where it is being registered
    * @param {OptionList=} options    The options for the configuration.
    */
-  public register(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
-    this.add(config);
+  public add(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
+    this.append(config);
     this.configurations.add(config, config.priority);
     this.init();
     const parser = jax.parseOptions;
@@ -341,24 +360,12 @@ export class ParserConfiguration {
     }
   }
 
-  public addPackage(pkg: (string | [string, number])) {
-    const name = typeof pkg === 'string' ? pkg : pkg[0];
-    let conf = ConfigurationHandler.get(name);
-    if (conf) {
-      this.configurations.add(
-        conf, typeof pkg === 'string' ? conf.priority : pkg[1]);
-    }
-  }
 
   /**
-   * Adds a new Configuration to the existing parser configuration.
-   * @param {Configuration} config The new configuration.
-   * @param {number} priority It's priority.
+   * Appends a configuration to the overall configuration object.
+   * @param {Configuration} config A configuration.
+   * @param {number} priority The configurations optional priority.
    */
-  public add(config: Configuration, priority?: number) {
-    this.append(config, priority);
-  }
-
   public append(config: Configuration, priority?: number) {
     priority = priority || config.priority;
     if (config.initMethod) {
@@ -374,11 +381,6 @@ export class ParserConfiguration {
     Object.assign(this.nodes, config.nodes);
   }
 
-  private combineConfigurations() {
-    for (let {item: config, priority: priority} of this.configurations) {
-      this.append(config, priority);
-    }
-  }
 
   /**
    * @constructor
@@ -387,8 +389,9 @@ export class ParserConfiguration {
     for (const pkg of packages.slice().reverse()) {
       this.addPackage(pkg);
     }
-    // Combine package configurations
-    this.combineConfigurations();
+    for (let {item: config, priority: priority} of this.configurations) {
+      this.append(config, priority);
+    }
   }
 
 }

@@ -41,7 +41,7 @@ const MACROSMAP = 'configmacros-map';
  */
 function configmacrosInit(config: ParserConfiguration) {
   new CommandMap(MACROSMAP, {}, {});
-  config.add(Configuration.create('configmacros-definitions',
+  config.append(Configuration.create('configmacros-definitions',
                                   {handler: {macro: [MACROSMAP]}}));
 }
 
