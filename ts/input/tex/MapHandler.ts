@@ -25,6 +25,7 @@
 import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 import {ParserConfiguration} from './Configuration.js';
+import {PrioritizedList} from '../../util/PrioritizedList.js';
 
 
 export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
@@ -74,7 +75,7 @@ export const ExtensionMaps: {[id: string]: ExtensionMap} = {
  */
 export class SubHandler {
 
-  private _configuration: SymbolMap[] = [];
+  private _configuration: PrioritizedList<SymbolMap> = new PrioritizedList<SymbolMap>();
 
   /**
    * @constructor
@@ -82,9 +83,9 @@ export class SubHandler {
    *     configuration.
    * @param {ParseMethod} fallback A fallback method if no map is found.
    */
-  constructor(maps: string[], private _fallback: ParseMethod) {
+  constructor(maps: string[], private _fallback: ParseMethod, priority?: number) {
     for (const name of maps) {
-      this.add(name);
+      this.add(name, priority);
     }
   }
 
@@ -93,13 +94,17 @@ export class SubHandler {
    * Adds a symbol map to the configuration if it exists.
    * @param {string} name of the symbol map.
    */
-  public add(name: string): void {
+  private add(name: string, priority?: number): void {
     let map = MapHandler.getMap(name);
     if (!map) {
       this.warn('Configuration ' + name + ' not found! Omitted.');
       return;
     }
-    this._configuration.push(map);
+    if (priority) {
+      this._configuration.add(map, priority);
+    } else {
+      this._configuration.add(map);
+    }
   }
 
 
@@ -109,7 +114,7 @@ export class SubHandler {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(input: ParseInput): ParseResult {
-    for (let map of this._configuration) {
+    for (let {item: map} of this._configuration) {
       const result = map.parse(input);
       if (result) {
         return result;
@@ -148,9 +153,11 @@ export class SubHandler {
    * @override
    */
   public toString(): string {
-    return this._configuration
-      .map(function(x: SymbolMap) {return x.name; })
-      .join(', ');
+    let names = [];
+    for (let {item: map} of this._configuration) {
+      names.push(map.name);
+    }
+    return names.join(', ');
   }
 
 
@@ -160,7 +167,7 @@ export class SubHandler {
    * @return {SymbolMap} A map that can parse the symbol.
    */
   public applicable(symbol: string): SymbolMap {
-    for (let map of this._configuration) {
+    for (let {item: map} of this._configuration) {
       if (map.contains(symbol)) {
         return map;
       }
@@ -175,7 +182,12 @@ export class SubHandler {
    * @return {SymbolMap} The map if it exists.
    */
   public retrieve(name: string): SymbolMap {
-    return this._configuration.find(x => { return x.name === name; });
+    for (let {item: map} of this._configuration) {
+      if (map.name === name) {
+        return map;
+      }
+    }
+    return null;
   }
 
 

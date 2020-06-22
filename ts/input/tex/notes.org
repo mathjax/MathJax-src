@@ -229,3 +229,12 @@
 
 **** All have to run
 **** Same as config
+
+** TODO List
+
+*** TODO Ensure init methods are only added once.
+
+*** TODO Move config method somewhere else.
+
+*** TODO Can we replace the register method simply with add?
+

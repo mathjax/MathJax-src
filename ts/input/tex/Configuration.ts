@@ -365,10 +365,10 @@ export class ParserConfiguration {
     this.init();
     const parser = jax.parseOptions;
     parser.handlers = new SubHandlers(this);
-    // parser.nodeFactory.setCreators(config.nodes);
-    // for (const kind of Object.keys(config.items)) {
-    //   parser.itemFactory.setNodeClass(kind, config.items[kind]);
-    // }
+    parser.nodeFactory.setCreators(config.nodes);
+    for (const kind of Object.keys(config.items)) {
+      parser.itemFactory.setNodeClass(kind, config.items[kind]);
+    }
     // defaultOptions(parser.options, config.options);
     userOptions(parser.options, options);
     let conf = config.config;
