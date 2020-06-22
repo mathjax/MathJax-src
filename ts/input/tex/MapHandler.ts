@@ -89,7 +89,7 @@ export class SubHandler {
    */
   public add(maps: string[], fallback: ParseMethod,
              priority: number = PrioritizedList.DEFAULTPRIORITY): void {
-    for (const name of maps) {
+    for (const name of maps.slice().reverse()) {
       let map = MapHandler.getMap(name);
       if (!map) {
         this.warn('Configuration ' + name + ' not found! Omitted.');

@@ -423,7 +423,7 @@ export class ParserConfiguration {
    * @constructor
    */
   constructor(packages: (string | [string, number])[]) {
-    for (const pkg of packages) {
+    for (const pkg of packages.slice().reverse()) {
       this.addPackage(pkg);
     }
     // Combine package configurations
