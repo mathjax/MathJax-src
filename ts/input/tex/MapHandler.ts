@@ -72,11 +72,13 @@ export class SubHandler {
   private _fallback: FunctionList = new FunctionList();
 
   /**
-   * Adds a symbol map to the configuration if it exists.
-   * @param {string} name of the symbol map.
+   * Adds a list of symbol maps to the handler.
+   * @param {string[]} maps The names of the symbol maps to add.
+   * @param {ParseMethod} fallback A fallback method.
+   * @param {number} priority Optionally a priority.
    */
   public add(maps: string[], fallback: ParseMethod,
-             priority: number = PrioritizedList.DEFAULTPRIORITY): void {
+             priority: number = PrioritizedList.DEFAULTPRIORITY) {
     for (const name of maps.slice().reverse()) {
       let map = MapHandler.getMap(name);
       if (!map) {
