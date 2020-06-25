@@ -147,7 +147,7 @@ export interface MenuMathDocument extends ComplexityMathDocument<HTMLElement, Te
 /**
  * The mixin for adding context menus to MathDocuments
  *
- * @param {B} BaseMathDocument     The MathDocument class to be extended
+ * @param {B} BaseDocument     The MathDocument class to be extended
  * @return {MenuMathDocument}      The extended MathDocument class
  *
  * @template B  The MathDocument class to extend

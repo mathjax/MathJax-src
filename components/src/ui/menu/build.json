@@ -1,5 +1,4 @@
 {
-    "component": "ui/menu",
-    "targets": ["ui/menu"]
+  "component": "ui/menu",
+  "targets": ["ui/menu"]
 }
-

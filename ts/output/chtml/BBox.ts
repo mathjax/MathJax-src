@@ -21,4 +21,4 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export {BBox, BBoxData, BBoxStyleAdjust} from '../common/BBox.js';
+export * from '../../util/BBox.js';

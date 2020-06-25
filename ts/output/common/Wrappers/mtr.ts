@@ -24,7 +24,7 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -56,7 +56,7 @@ export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
   childNodes: C[];
 
   /**
-   * @param {nunber} i   The index of the child to get (skipping labels)
+   * @param {number} i   The index of the child to get (skipping labels)
    * @return {C}         The ith child node wrapper
    */
   getChild(i: number): C;

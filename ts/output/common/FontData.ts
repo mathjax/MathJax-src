@@ -23,7 +23,7 @@
  */
 
 import {OptionList} from '../../util/Options.js';
-import {StyleList} from './CssStyles.js';
+import {StyleList} from '../../util/StyleList.js';
 
 /****************************************************************************/
 
@@ -712,6 +712,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    */
   public getCssFont(variant: string): CssFontData {
     return this.cssFontMap[variant] || ['serif', false, false];
+  }
+
+  /**
+   * @param {string} family   The font camily to use
+   * @return {string}         The family with the css prefix
+   */
+  public getFamily(family: string): string {
+    return (this.cssFamilyPrefix ? this.cssFamilyPrefix + ', ' + family : family);
   }
 
   /**

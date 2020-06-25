@@ -232,7 +232,7 @@ function createVectorToken(factory: NodeFactory, kind: string,
                            def: any, text: string): MmlNode  {
   let parser = factory.configuration.parser;
   let token = NodeFactory.createToken(factory, kind, def, text);
-  let code: number = text.charCodeAt(0);
+  let code: number = text.codePointAt(0);
   if (text.length === 1 && !parser.stack.env.font &&
       parser.stack.env.vectorFont &&
       (inRange(code, latinCap) || inRange(code, latinSmall) ||
@@ -927,6 +927,7 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
  * Closes an automatic fence if one was opened.
  * @param {TexParser} parser The calling parser.
  * @param {string} fence The fence.
+ * @param {number} texclass The TeX class.
  */
 PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, _texclass: number) {
   const mo = parser.create('token', 'mo', {stretchy: false}, fence);

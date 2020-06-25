@@ -32,17 +32,6 @@ import {RequireLoad, RequireConfiguration} from '../require/RequireConfiguration
 import {Package} from '../../../components/package.js';
 import {expandable, defaultOptions} from '../../../util/Options.js';
 
-/**
- * A CommandMap class that allows removal of macros
- */
-export class AutoloadCommandMap extends CommandMap {
-  /**
-   * @param{string} name   The command to be removed
-   */
-  public remove(name: string) {
-    (this as any).map.delete(name);
-  }
-}
 
 /**
  * Autoload an extension when the first macro for it is encountered
@@ -128,12 +117,12 @@ function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
 /**
  * The command and environment maps for the macros that autoload extensions
  */
-const AutoloadMacros = new AutoloadCommandMap('autoload-macros', {}, {});
-const AutoloadEnvironments = new AutoloadCommandMap('autoload-environments', {}, {});
+const AutoloadMacros = new CommandMap('autoload-macros', {}, {});
+const AutoloadEnvironments = new CommandMap('autoload-environments', {}, {});
 
 
 /**
- * The configuration object for configMacros
+ * The configuration object for configmacros
  */
 export const AutoloadConfiguration = Configuration.create(
   'autoload', {
@@ -151,7 +140,7 @@ export const AutoloadConfiguration = Configuration.create(
       //
       autoload: expandable({
         action: ['toggle', 'mathtip', 'texttip'],
-        amsCd: [[], ['CD']],
+        amscd: [[], ['CD']],
         bbox: ['bbox'],
         boldsymbol: ['boldsymbol'],
         braket: ['bra', 'ket', 'braket', 'set', 'Bra', 'Ket', 'Braket', 'Set', 'ketbra', 'Ketbra'],

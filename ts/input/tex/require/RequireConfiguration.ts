@@ -44,7 +44,7 @@ const MJCONFIG = MathJax.config;
  * Add an extension to the configuration, and configure its user options
  *
  * @param {TeX} jax       The TeX jax whose configuration is to be modified
- * @param {string} name   The name of the extension being added (e.g., '[tex]/amsCd')
+ * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
  */
 function RegisterExtension(jax: TeX<any, any, any>, name: string) {
   const require = jax.parseOptions.options.require;

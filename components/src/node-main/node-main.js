@@ -11,6 +11,7 @@ const {dependencies, paths, provides} = require('../dependencies.js');
 /*
  * Set up the initial configuration
  */
+paths.sre = '[mathjax]/sre/sre-node';
 combineDefaults(MathJax.config, 'loader', {
   require: eval('require'),      // use node's require() to load files
   failed: (err) => {throw err}   // pass on error message to init()'s catch function
@@ -28,7 +29,7 @@ MathJax.config.loader.paths.mathjax = (function () {
     return path.resolve(MathJax.config.loader.require.resolve('mathjax-full/package.json'), '../es5');
   } catch (err) {}
   try {
-     return path.resolve(MathJax.config.loader.require.resolve('mathjax/package.json'), '../es5');
+    return path.resolve(MathJax.config.loader.require.resolve('mathjax/package.json'), '../es5');
   } catch (err) {
     let dir = path.dirname(err.requireStack[0]); // err.requireStack[0] is the full path to this module
     if (path.basename(dir) == 'node-main') {
@@ -50,6 +51,11 @@ MathJax.config.loader.paths.mathjax = (function () {
 Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
 require('../core/core.js');
 require('../adaptors/liteDOM/liteDOM.js');
+const REQUIRE = MathJax.config.loader.require;
+MathJax._.mathjax.mathjax.asyncLoad = function (name) {
+  return REQUIRE(name.charAt(0) === '.' ? path.resolve(root, name) : name);
+}
+
 
 /*
  * The initialization function.  Use as:

@@ -24,7 +24,7 @@
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

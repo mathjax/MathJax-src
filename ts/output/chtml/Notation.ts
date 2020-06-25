@@ -36,7 +36,7 @@ export type DEFPAIR<N, T, D> = Notation.DefPair<CHTMLmenclose<N, T, D>, N>;
  *
  * @param {string} name    The name of the element to create
  * @param {string} offset  The offset direction to adjust if thickness is non-standard
- * @return {Renderer}      The renderer function for the given element name
+ * @return {RENDERER}      The renderer function for the given element name
  */
 export const RenderElement = function<N, T, D>(name: string, offset: string = ''):  RENDERER<N, T, D> {
   return ((node, _child) => {
@@ -50,8 +50,8 @@ export const RenderElement = function<N, T, D>(name: string, offset: string = ''
 };
 
 /**
- * @param {string} side   The side on which a border should appear
- * @return {DefPair}      The notation definition for the notation having a line on the given side
+ * @param {Notation.Side} side   The side on which a border should appear
+ * @return {DEFPAIR}      The notation definition for the notation having a line on the given side
  */
 export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
   return Notation.CommonBorder<CHTMLmenclose<N, T, D>, N>((node, child) => {
@@ -62,9 +62,9 @@ export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
 
 /**
  * @param {string} name    The name of the notation to define
- * @param {string} side1   The first side to get a border
- * @param {string} side2   The second side to get a border
- * @return {DefPair}       The notation definition for the notation having lines on two sides
+ * @param {Notation.Side} side1   The first side to get a border
+ * @param {Notation.Side} side2   The second side to get a border
+ * @return {DEFPAIR}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, side2: Notation.Side): DEFPAIR<N, T, D> {
   return Notation.CommonBorder2<CHTMLmenclose<N, T, D>, N>((node, child) => {
@@ -77,7 +77,7 @@ export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, sid
 /**
  * @param {string} name  The name of the diagonal strike to define
  * @param {number} neg   1 or -1 to use with the angle
- * @return {DefPair}     The notation definition for the diagonal strike
+ * @return {DEFPAIR}     The notation definition for the diagonal strike
  */
 export const DiagonalStrike = function<N, T, D>(name: string, neg: number): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalStrike<CHTMLmenclose<N, T, D>, N>((cname: string) => (node, _child) => {
@@ -94,7 +94,7 @@ export const DiagonalStrike = function<N, T, D>(name: string, neg: number): DEFP
 
 /**
  * @param {string} name   The name of the diagonal arrow to define
- * @return {DefPair}      The notation definition for the diagonal arrow
+ * @return {DEFPAIR}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalArrow<CHTMLmenclose<N, T, D>, N>((node, arrow) => {
@@ -104,7 +104,7 @@ export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
 
 /**
  * @param {string} name   The name of the horizontal or vertical arrow to define
- * @return {DefPair}      The notation definition for the arrow
+ * @return {DEFPAIR}      The notation definition for the arrow
  */
 export const Arrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonArrow<CHTMLmenclose<N, T, D>, N>((node, arrow) => {

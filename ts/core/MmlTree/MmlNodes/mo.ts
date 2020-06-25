@@ -218,7 +218,6 @@ export class MmlMo extends AbstractMmlTokenNode {
     let {form, fence} = this.attributes.getList('form', 'fence') as {form: string, fence: string};
     if (this.getProperty('texClass') === undefined &&
         (this.attributes.isSet('lspace') || this.attributes.isSet('rspace'))) {
-      this.texClass = TEXCLASS.NONE;
       return null;
     }
     if (fence && this.texClass === TEXCLASS.REL) {
@@ -255,8 +254,8 @@ export class MmlMo extends AbstractMmlTokenNode {
       return prev;
     }
     if (prev) {
-      if (prev.getProperty('autoOp') && (texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL)) {
-        texClass = this.texClass = TEXCLASS.ORD;
+      if (prev.getProperty('autoOP') && (texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL)) {
+        prevClass = prev.texClass = TEXCLASS.ORD;
       }
       prevClass = this.prevClass = (prev.texClass || TEXCLASS.ORD);
       this.prevLevel = this.attributes.getInherited('scriptlevel') as number;
@@ -371,10 +370,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     if (!mo.match(/^[\uD800-\uDBFF]?.$/)) {
       return null;
     }
-    let n = mo.charCodeAt(0);
-    if (mo.length === 2) {
-      n = (n - 0xD800) * 0x400 + mo.charCodeAt(1) - 0xDC00 + 0x10000;
-    }
+    let n = mo.codePointAt(0);
     let ranges = (this.constructor as typeof MmlMo).RANGES;
     for (const range of ranges) {
       if (range[0] <= n && n <= range[1]) {

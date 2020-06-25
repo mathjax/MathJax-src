@@ -165,7 +165,7 @@ export interface MmlNode extends Node {
    *                                    from which they came)
    * @param {boolean} display           The displaystyle to inherit
    * @param {number} level              The scriptlevel to inherit
-   * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
+   * @param {boolean} prime             The TeX prime style to inherit (T vs. T', etc).
    */
   setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
 
@@ -254,6 +254,16 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
       mtable: {groupalign: true}
     }
   };
+
+  /**
+   * This lists the attributes that should always be inherited,
+   *   even when there is no default value for the attribute.
+   */
+  public static alwaysInherit: {[name: string]: boolean} = {
+    scriptminsize: true,
+    scriptsizemultiplier: true
+  };
+
   /**
    * This is the list of options for the verifyTree() method
    */
@@ -552,7 +562,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
                                 display: boolean = false, level: number = 0, prime: boolean = false) {
     let defaults = this.attributes.getAllDefaults();
     for (const key of Object.keys(attributes)) {
-      if (defaults.hasOwnProperty(key)) {
+      if (defaults.hasOwnProperty(key) || AbstractMmlNode.alwaysInherit.hasOwnProperty(key)) {
         let [node, value] = attributes[key];
         let noinherit = (AbstractMmlNode.noInherit[node] || {})[this.kind] || {};
         if (!noinherit[key]) {
@@ -596,7 +606,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    *                                    from which they came)
    * @param {boolean} display           The displaystyle to inherit
    * @param {number} level              The scriptlevel to inherit
-   * @param {bookean} prime             The TeX prime style to inherit (T vs. T', etc).
+   * @param {boolean} prime             The TeX prime style to inherit (T vs. T', etc).
    */
   protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
     for (const child of this.childNodes) {
@@ -698,6 +708,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    *
    * @param {string} message         The error message to use
    * @param {PropertyList} options   The options telling how much to verify
+   * @param {boolean} short          True means use just the kind if not using full errors
    */
   public mError(message: string, options: PropertyList, short: boolean = false) {
     if (this.parent && this.parent.isKind('merror')) {
@@ -1083,8 +1094,8 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
   /**
    * No children or attributes, so ignore this call.
    *
-   * @param {MmlNode} node          The node tree to be checked
    * @param {PropertyList} options  The options for the check
+   
    */
   public verifyTree(_options: PropertyList) {}
 
@@ -1171,6 +1182,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
 
   /**
    * @param {object} xml  The XML content to be saved
+   * @param {DOMAdaptor} adaptor DOM adaptor for the content
    * @return {XMLNode}  The XML node (for chaining of method calls)
    */
   public setXML(xml: Object, adaptor: DOMAdaptor<any, any, any> = null): XMLNode {

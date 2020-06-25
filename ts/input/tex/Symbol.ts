@@ -32,9 +32,9 @@ export class Symbol {
 
   /**
    * @constructor
-   * @param {string} _symbol The symbol parsed.
+   * @param {string} symbol The symbol parsed.
    * @param {string} char The corresponding translation.
-   * @param {Attributes} _attributes The attributes for the translation.
+   * @param {Attributes} attributes The attributes for the translation.
    */
   constructor(private _symbol: string, private _char: string,
               private _attributes: Attributes) {
@@ -59,9 +59,9 @@ export class Macro {
 
   /**
    * @constructor
-   * @param {string} _symbol The symbol parsed
-   * @param {ParseMethod} _func The parsing function for that symbol.
-   * @param {Args[]} _args Additional arguments for the function.
+   * @param {string} symbol The symbol parsed
+   * @param {ParseMethod} func The parsing function for that symbol.
+   * @param {Args[]} args Additional arguments for the function.
    */
   constructor(private _symbol: string, private _func: ParseMethod,
               private _args: Args[] = []) {

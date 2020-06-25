@@ -24,7 +24,7 @@
 
 
 import {MathDocument} from '../../core/MathDocument.js';
-import {CssStyles} from '../../output/common/CssStyles.js';
+import {CssStyles} from '../../util/StyleList.js';
 import '../sre.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;

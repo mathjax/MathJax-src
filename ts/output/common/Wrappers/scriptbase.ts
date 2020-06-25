@@ -27,7 +27,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*
@@ -282,7 +282,7 @@ export function CommonScriptbaseMixin<
         base = base.childNodes[0];
       }
       return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
-              base.bbox.rscale === 1 && base.getText().length === 1 &&
+              base.bbox.rscale === 1 && Array.from(base.getText()).length === 1 &&
               !base.node.attributes.get('largeop'));
     }
 
@@ -296,7 +296,7 @@ export function CommonScriptbaseMixin<
      *
      * @param {BBox} bbox   The bounding box of the base element
      * @param {BBox} sbox   The bounding box of the script element
-     * @return {number[]}   The horizontal and vertical offsets for the script
+     * @return {[number, number]}   The horizontal and vertical offsets for the script
      */
     public getOffset(_bbox: BBox, _sbox: BBox): [number, number] {
       return [0, 0];
@@ -358,7 +358,7 @@ export function CommonScriptbaseMixin<
      *
      * @param {BBox} basebox  The bounding box of the base
      * @param {BBox} overbox  The bounding box of the overscript
-     * @return {number[]}     The separation between their boxes, and the offset of the overscript
+     * @return {[number, number]}     The separation between their boxes, and the offset of the overscript
      */
     public getOverKU(basebox: BBox, overbox: BBox): [number, number] {
       const accent = this.node.attributes.get('accent') as boolean;
@@ -375,7 +375,7 @@ export function CommonScriptbaseMixin<
      *
      * @param {BBox} basebox   The bounding box of the base
      * @param {BBox} underbox  The bounding box of the underscript
-     * @return {number[]}      The separation between their boxes, and the offset of the underscript
+     * @return {[number, number]}      The separation between their boxes, and the offset of the underscript
      */
     public getUnderKV(basebox: BBox, underbox: BBox): [number, number] {
       const accent = this.node.attributes.get('accentunder') as boolean;

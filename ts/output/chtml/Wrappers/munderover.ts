@@ -28,7 +28,7 @@ import {CommonMunderMixin} from '../../common/Wrappers/munderover.js';
 import {CommonMoverMixin} from '../../common/Wrappers/munderover.js';
 import {CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

@@ -29,6 +29,8 @@ import {MmlMi} from './MmlNodes/mi.js';
 
 export const DATAMJX = 'data-mjx-';
 
+export const toEntity = (c: string) => '&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';';
+
 type PropertyList = {[name: string]: string};
 
 
@@ -137,7 +139,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
    *   Add the end tag with proper spacing (empty tags have the close tag following directly)
    *
    * @param {MmlNode} node    The node to visit
-   * @param {Element} parent  The DOM parent to which this node should be added
+   * @param {string} space    The number of spaces to use for indentation
    * @return {string}         The serialization of the given node
    */
   public visitDefault(node: MmlNode, space: string): string {
@@ -212,7 +214,9 @@ export class SerializedMmlVisitor extends MmlVisitor {
   }
 
   /**
+   * @param {PropertyList} data  The class attribute list
    * @param {string} name    The name for the data-mjx-name attribute
+   * @param {string} value   The value of the attribute
    */
   protected setDataAttribute(data: PropertyList, name: string, value: string) {
     data[DATAMJX + name] = value;
@@ -231,13 +235,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\"/g, '&quot;')
-      .replace(/([\uD800-\uDBFF].)/g, (_m, c) => {
-        return '&#x' + ((c.charCodeAt(0) - 0xD800) * 0x400 +
-                        (c.charCodeAt(1) - 0xDC00) + 0x10000).toString(16).toUpperCase() + ';';
-      })
-      .replace(/([\u0080-\uD7FF\uE000-\uFFFF])/g, (_m, c) => {
-        return '&#x' + c.charCodeAt(0).toString(16).toUpperCase() + ';';
-      });
+      .replace(/[\uD800-\uDBFF]./g, toEntity)
+      .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, toEntity);
   }
 
 }

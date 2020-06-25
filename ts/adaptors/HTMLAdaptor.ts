@@ -64,6 +64,7 @@ export interface MinHTMLElement<N, T> {
   offsetHeight: number;
 
   attributes: AttributeData[] | NamedNodeMap;
+  className: string;
   classList: DOMTokenList;
   style: OptionList;
 
@@ -73,6 +74,7 @@ export interface MinHTMLElement<N, T> {
   /* tslint:disable:jsdoc-require */
   getElementsByTagName(name: string): N[] | HTMLCollectionOf<Element>;
   getElementsByTagNameNS(ns: string, name: string): N[] | HTMLCollectionOf<Element>;
+  contains(child: N | T): boolean;
   appendChild(child: N | T): N | T | Node;
   removeChild(child: N | T): N | T  | Node;
   replaceChild(nnode: N | T, onode: N | T): N | T  | Node;
@@ -256,6 +258,13 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   /**
    * @override
    */
+  public contains(container: N, node: N | T) {
+    return container.contains(node);
+  }
+
+  /**
+   * @override
+   */
   public parent(node: N | T) {
     return node.parentNode as N;
   }
@@ -426,21 +435,32 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public addClass(node: N, name: string) {
-    node.classList.add(name);
+    if (node.classList) {
+      node.classList.add(name);
+    } else {
+      node.className = (node.className + ' ' + name).trim();
+    }
   }
 
   /**
    * @override
    */
   public removeClass(node: N, name: string) {
-    return node.classList.remove(name);
+    if (node.classList) {
+      node.classList.remove(name);
+    } else {
+      node.className = node.className.split(/ /).filter((c) => c !== name).join(' ');
+    }
   }
 
   /**
    * @override
    */
   public hasClass(node: N, name: string) {
-    return node.classList.contains(name);
+    if (node.classList) {
+      return node.classList.contains(name);
+    }
+    return node.className.split(/ /).indexOf(name) >= 0;
   }
 
   /**
@@ -470,6 +490,14 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   public fontSize(node: N) {
     const style = this.window.getComputedStyle(node);
     return parseFloat(style.fontSize);
+  }
+
+  /**
+   * @override
+   */
+  public fontFamily(node: N) {
+    const style = this.window.getComputedStyle(node);
+    return style.fontFamily || '';
   }
 
   /**

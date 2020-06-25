@@ -24,8 +24,8 @@
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../BBox.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {BBox} from '../../../util/BBox.js';
+import {StyleList} from '../../../util/StyleList.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -158,7 +158,7 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
    * @param {N} chtml  The parent element in which to put the delimiter
    */
   protected stretchHTML(chtml: N) {
-    const c = this.getText().charCodeAt(0);
+    const c = this.getText().codePointAt(0);
     const delim = this.stretch;
     delim.used = true;
     const stretch = delim.stretch;

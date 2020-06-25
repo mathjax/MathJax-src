@@ -9,5 +9,5 @@ combineDefaults(MathJax.config.loader, 'paths', paths);
 combineDefaults(MathJax.config.loader, 'provides', provides);
 
 Loader.load(...CONFIG.load)
-    .then(() => CONFIG.ready())
-    .catch((message, name) => CONFIG.failed(message, name));
+      .then(() => CONFIG.ready())
+      .catch((message, name) => CONFIG.failed(message, name));

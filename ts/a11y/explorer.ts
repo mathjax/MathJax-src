@@ -224,7 +224,7 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
 /**
  * The mixin for adding the Explorer to MathDocuments
  *
- * @param {B} BaseMathDocument      The MathDocument class to be extended
+ * @param {B} BaseDocument      The MathDocument class to be extended
  * @returns {ExplorerMathDocument}  The extended MathDocument class
  */
 export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTMLDOCUMENT>>(

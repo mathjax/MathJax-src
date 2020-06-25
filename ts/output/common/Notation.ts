@@ -211,15 +211,15 @@ export const CommonBorder = function<W extends Menclose, N>(render: Renderer<W, 
 
 /**
  * @param {Renderer} render                    The function for adding the borders to the node
- * @return {(sring,string,string) => DefPair}  The function returning the notation definition
+ * @return {(sring, Side, Side) => DefPair}    The function returning the notation definition
  *                                             for the notation having lines on two sides
  */
 export const CommonBorder2 = function<W extends Menclose, N>(render: Renderer<W, N>):
 (name: string, side1: Side, side2: Side) => DefPair<W, N> {
   /**
    * @param {string} name    The name of the notation to define
-   * @param {string} side1   The first side to get a border
-   * @param {string} side2   The second side to get a border
+   * @param {Side} side1   The first side to get a border
+   * @param {Side} side2   The second side to get a border
    * @return {DefPair}       The notation definition for the notation having lines on two sides
    */
   return (name: string, side1: Side, side2: Side) => {
@@ -259,7 +259,7 @@ export const CommonBorder2 = function<W extends Menclose, N>(render: Renderer<W,
 
 /**
  * @param {string => Renderer} render      The function for adding the strike to the node
- * @return {(string, number) => DefPair}   The function returning the notation definition for the diagonal strike
+ * @return {string => DefPair}   The function returning the notation definition for the diagonal strike
  */
 export const CommonDiagonalStrike = function<W extends Menclose, N>(render: (sname: string) => Renderer<W, N>):
 DefPairF<string, W, N> {

@@ -29,11 +29,11 @@ import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {Styles} from '../../util/Styles.js';
+import {StyleList} from '../../util/StyleList.js';
 import {CommonOutputJax} from './OutputJax.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
-import {BBox} from './BBox.js';
+import {BBox} from '../../util/BBox.js';
 import {FontData, DelimiterData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
-import {StyleList} from '../common/CssStyles.js';
 
 /*****************************************************************/
 
@@ -51,7 +51,7 @@ const SMALLSIZE = 2/18;
 /**
  * @param {boolean} script   The scriptlevel
  * @param {number} size      The space size
- * @return {numner}          The size clamped to SMALLSIZE when scriptlevel > 0
+ * @return {number}          The size clamped to SMALLSIZE when scriptlevel > 0
  */
 function MathMLSpace(script: boolean, size: number): number {
   return (script ? size < SMALLSIZE ? 0 : SMALLSIZE : size);
@@ -334,6 +334,7 @@ export class CommonWrapper<
    *   container width (or the child width, if none was passed).
    *   Overriden for mtables in order to compute the width.
    *
+   * @param {boolean} recompute  True if we are recomputing due to changes in children
    * @param {(number|null)=} w   The width of the container (from which percentages are computed)
    * @param {boolean=} clear     True if pwidth marker is to be cleared
    * @return {boolean}           True if a percentage width was found

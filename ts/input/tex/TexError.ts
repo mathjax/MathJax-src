@@ -36,7 +36,8 @@ export default class TexError {
 
   /**
    * The old MathJax processing function.
-   * @param {Array.<string>} input The input message.
+   * @param {string} str The basic error message.
+   * @param {string[]} args The arguments to be replaced in the error message.
    * @return {string} The processed error string.
    */
   private static processString(str: string, args: string[]): string {
@@ -75,7 +76,7 @@ export default class TexError {
    * @constructor
    * @param{string} id        message id (for localization)
    * @param{string} message   text of English message
-   * @param{...string} rest   any substitution arguments
+   * @param{string[]=} rest   any substitution arguments
    */
   constructor(public id: string, message: string, ...rest: string[]) {
     this.message = TexError.processString(message, rest);

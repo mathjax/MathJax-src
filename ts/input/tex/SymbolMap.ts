@@ -57,7 +57,7 @@ export interface SymbolMap {
 
   /**
    * @param {string} symbol A symbol to parse.
-   * @return {function(string): ParseResult} A parse method for the symbol.
+   * @return {ParseMethod} A parse method for the symbol.
    */
   parserFor(symbol: string): ParseMethod;
 
@@ -80,8 +80,8 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   /**
    * @constructor
    * @implements {SymbolMap}
-   * @param {string} _name Name of the mapping.
-   * @param {ParseMethod} _parser The parser for the mappiong.
+   * @param {string} name Name of the mapping.
+   * @param {ParseMethod} parser The parser for the mappiong.
    */
   constructor(private _name: string, private _parser: ParseMethod) {
     MapHandler.register(this);
@@ -150,7 +150,7 @@ export class RegExpMap extends AbstractSymbolMap<string> {
    * @extends {AbstractSymbolMap}
    * @param {string} name Name of the mapping.
    * @param {ParseMethod} parser The parser for the mappiong.
-   * @param {RegExp} _regexp The regular expression.
+   * @param {RegExp} regexp The regular expression.
    */
   constructor(name: string, parser: ParseMethod, private _regExp: RegExp) {
     super(name, parser);
@@ -200,12 +200,20 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   }
 
   /**
-   *
-   * @param {string} symbol
-   * @param {T} object
+   * Sets mapping for a symbol.
+   * @param {string} symbol The symbol to map.
+   * @param {K} object The symbols value in the mapping's codomain.
    */
   public add(symbol: string, object: K) {
     this.map.set(symbol, object);
+  }
+
+  /**
+   * Removes a symbol from the map
+   * @param {string} symbol The symbol to remove
+   */
+  public remove(symbol: string) {
+    this.map.delete(symbol);
   }
 
 }

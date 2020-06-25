@@ -27,7 +27,7 @@ import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
-import {StyleList} from '../output/common/CssStyles.js';
+import {StyleList} from '../util/StyleList.js';
 
 /**
  * Generic constructor for Mixins
@@ -131,7 +131,7 @@ export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
   /**
    * Add assistive MathML to the MathItems in the MathDocument
    *
-   * @return {AssisiitveMmlMathDocument}   The MathDocument (so calls can be chained)
+   * @return {AssistiveMmlMathDocument}   The MathDocument (so calls can be chained)
    */
   assistiveMml(): AssistiveMmlMathDocument<N, T, D>;
 
@@ -140,8 +140,8 @@ export interface AssistiveMmlMathDocument<N, T, D> extends AbstractMathDocument<
 /**
  * The mixin for adding assistive MathML to MathDocuments
  *
- * @param {B} BaseMathDocument         The MathDocument class to be extended
- * @return {AssistiveMMlMathDocument}  The Assistive MathML MathDocument class
+ * @param {B} BaseDocument         The MathDocument class to be extended
+ * @return {AssistiveMmlMathDocument}  The Assistive MathML MathDocument class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

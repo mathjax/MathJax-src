@@ -119,7 +119,7 @@ new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
   wp:           ['\u2118', {mathvariant: TexConstant.Variant.NORMAL}],
   Re:           ['\u211C', {mathvariant: TexConstant.Variant.NORMAL}],
   Im:           ['\u2111', {mathvariant: TexConstant.Variant.NORMAL}],
-  partial:      ['\u2202', {mathvariant: TexConstant.Variant.NORMAL}],
+  partial:      ['\u2202', {mathvariant: TexConstant.Variant.ITALIC}],
   infty:        ['\u221E', {mathvariant: TexConstant.Variant.NORMAL}],
   prime:        ['\u2032', {mathvariant: TexConstant.Variant.NORMAL,
                             variantForm: true}],

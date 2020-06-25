@@ -76,19 +76,19 @@ let PACKAGE = [];
  * @param {boolean} top    True if this is the initial list of files
  */
 function processList(base, dir, list, top = true) {
-    for (const item of list) {
-        const file = path.join(dir, item);
-        if (!EXCLUDE.has(file)) {
-            const stat = fs.statSync(path.resolve(base, file));
-            if (stat.isDirectory()) {
-                if (top || !EXCLUDESUBDIRS) {
-                    processDir(base, file);
-                }
-            } else if (file.match(/\.ts$/)) {
-                processFile(base, file);
-            }
+  for (const item of list) {
+    const file = path.join(dir, item);
+    if (!EXCLUDE.has(file)) {
+      const stat = fs.statSync(path.resolve(base, file));
+      if (stat.isDirectory()) {
+        if (top || !EXCLUDESUBDIRS) {
+          processDir(base, file);
         }
+      } else if (file.match(/\.ts$/)) {
+        processFile(base, file);
+      }
     }
+  }
 }
 
 /**
@@ -98,8 +98,8 @@ function processList(base, dir, list, top = true) {
  * @param {string} dir     The relative path within the root for the directory to process
  */
 function processDir(base, dir) {
-    const root = path.resolve(base, dir);
-    processList(base, dir, fs.readdirSync(root), false);
+  const root = path.resolve(base, dir);
+  processList(base, dir, fs.readdirSync(root), false);
 }
 
 /**
@@ -113,15 +113,15 @@ function processDir(base, dir) {
  * @param {string} name    The path of the file relative to the base
  */
 function processFile(base, name) {
-    console.info('  ' + name);
-    const file = fs.readFileSync(path.resolve(base, name)).toString();
-    const parts = file.split(EXPORTPATTERN);
-    const objects = processParts(parts);
-    const lines = processLines(name, objects);
-    makeFile(name, lines);
-    if (objects.length) {
-        PACKAGE.push(name);
-    }
+  console.info('  ' + name);
+  const file = fs.readFileSync(path.resolve(base, name)).toString();
+  const parts = file.split(EXPORTPATTERN);
+  const objects = processParts(parts);
+  const lines = processLines(name, objects);
+  makeFile(name, lines);
+  if (objects.length) {
+    PACKAGE.push(name);
+  }
 }
 
 /**
@@ -132,21 +132,21 @@ function processFile(base, name) {
  * @return {string[]}            An array of names of exported objects
  */
 function processParts(parts) {
-    const objects = [];
-    for (let i = 1; i < parts.length; i += 2) {
-        const words = parts[i].split(/\s+/);
-        const type = words[words.length - 2];
-        const name = words[words.length - 1];
+  const objects = [];
+  for (let i = 1; i < parts.length; i += 2) {
+    const words = parts[i].split(/\s+/);
+    const type = words[words.length - 2];
+    const name = words[words.length - 1];
 
-        if (words[1] === 'default' || type === 'default') {
-            objects.push('default');
-        } else if (EXPORT_PROCESS.indexOf(type) >= 0) {
-            objects.push(name);
-        } else if (EXPORT_IGNORE.indexOf(type) < 0) {
-            console.info("    Can't process '" + parts[i] + "'");
-        }
+    if (words[1] === 'default' || type === 'default') {
+      objects.push('default');
+    } else if (EXPORT_PROCESS.indexOf(type) >= 0) {
+      objects.push(name);
+    } else if (EXPORT_IGNORE.indexOf(type) < 0) {
+      console.info("    Can't process '" + parts[i] + "'");
     }
-    return objects;
+  }
+  return objects;
 }
 
 /**
@@ -157,24 +157,24 @@ function processParts(parts) {
  * @return {string[]}         Array of lines for the contents of the library file
  */
 function processLines(file, objects) {
-    if (objects.length === 0) return [];
-    const dir = path.dirname(file).replace(/^\.$/, '');
-    const dots = dir.replace(/[^\/]+/g, '..') || '.';
-    const relative = path.join(dots, '..', MATHJAX, dir, path.basename(file)).replace(/\.ts$/, '.js');
-    const name = path.parse(file).name;
-    const lines = [
-        '"use strict";',
-        `Object.defineProperty(exports, '__esModule', {value: true});`
-    ];
-    let source = (dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
-        .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
-    if (exists(path.resolve(MATHJAX, file.replace(/\.ts$/, '')))) {
-        source += '_ts';
-    }
-    for (const id of objects) {
-        lines.push(`exports.${id} = MathJax._.${source}.${id};`);
-    }
-    return lines;
+  if (objects.length === 0) return [];
+  const dir = path.dirname(file).replace(/^\.$/, '');
+  const dots = dir.replace(/[^\/]+/g, '..') || '.';
+  const relative = path.join(dots, '..', MATHJAX, dir, path.basename(file)).replace(/\.ts$/, '.js');
+  const name = path.parse(file).name;
+  const lines = [
+    '"use strict";',
+    `Object.defineProperty(exports, '__esModule', {value: true});`
+  ];
+  let source = (dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
+      .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
+  if (exists(path.resolve(MATHJAX, file.replace(/\.ts$/, '')))) {
+    source += '_ts';
+  }
+  for (const id of objects) {
+    lines.push(`exports.${id} = MathJax._.${source}.${id};`);
+  }
+  return lines;
 }
 
 /**
@@ -182,13 +182,13 @@ function processLines(file, objects) {
  * @return {boolean}        True if the file exists, false if not
  */
 function exists(file) {
-    if (!fs.existsSync(file)) return false;
-    //
-    // For case-insensitive file systems (like Mac OS),
-    //   check that the file names match exactly
-    //
-    const [dir, name] = [path.dirname(file), path.basename(file)];
-    return fs.readdirSync(dir).indexOf(name) >= 0;
+  if (!fs.existsSync(file)) return false;
+  //
+  // For case-insensitive file systems (like Mac OS),
+  //   check that the file names match exactly
+  //
+  const [dir, name] = [path.dirname(file), path.basename(file)];
+  return fs.readdirSync(dir).indexOf(name) >= 0;
 }
 
 /**
@@ -197,10 +197,10 @@ function exists(file) {
  * @param {string} dir   The directory relative to the library directory
  */
 function makeDir(dir) {
-    const fulldir = path.resolve(LIB, dir);
-    if (fs.existsSync(fulldir)) return;
-    makeDir(path.dirname(fulldir));
-    fs.mkdirSync(fulldir);
+  const fulldir = path.resolve(LIB, dir);
+  if (fs.existsSync(fulldir)) return;
+  makeDir(path.dirname(fulldir));
+  fs.mkdirSync(fulldir);
 }
 
 /**
@@ -210,41 +210,41 @@ function makeDir(dir) {
  * @param {string[]} lines  The contents of the file to create
  */
 function makeFile(file, lines) {
-    if (!lines.length) return;
-    const [dir, name] = [path.dirname(file), path.basename(file)];
-    makeDir(dir);
-    fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, '.js')), lines.join('\n') + '\n');
+  if (!lines.length) return;
+  const [dir, name] = [path.dirname(file), path.basename(file)];
+  makeDir(dir);
+  fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, '.js')), lines.join('\n') + '\n');
 }
 
 /**
  * Make the library file that adds all the exported objects into the MathJax global object
  */
 function processGlobal() {
-    console.info('  ' + COMPONENT + '.ts');
-    const lines = [
-        `import {combineWithMathJax} from '${GLOBAL}';`,
-        '',
-    ];
-    const packages = [];
-    PACKAGE = PACKAGE.sort(sortDir);
-    while (PACKAGE.length) {
-        const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
-        packages.push(processPackage(lines, INDENT, dir));
-    }
-    lines.push('', `combineWithMathJax({_: {`);
-    lines.push(INDENT + packages.join(',\n' + INDENT));
-    lines.push('}});');
-    fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');
+  console.info('  ' + COMPONENT + '.ts');
+  const lines = [
+    `import {combineWithMathJax} from '${GLOBAL}';`,
+    '',
+  ];
+  const packages = [];
+  PACKAGE = PACKAGE.sort(sortDir);
+  while (PACKAGE.length) {
+    const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
+    packages.push(processPackage(lines, INDENT, dir));
+  }
+  lines.push('', `combineWithMathJax({_: {`);
+  lines.push(INDENT + packages.join(',\n' + INDENT));
+  lines.push('}});');
+  fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');
 }
 
 /**
  * Sort file paths alphabetically
  */
 function sortDir(a, b) {
-    const A = a.replace(/\//g, '|');          // Replace directory separator by one that is after the alphnumerics
-    const B = b.replace(/\//g, '|');
-    return (A === B ? 0 : A < B ? -1 : 1);
- }
+  const A = a.replace(/\//g, '|');          // Replace directory separator by one that is after the alphnumerics
+  const B = b.replace(/\//g, '|');
+  return (A === B ? 0 : A < B ? -1 : 1);
+}
 
 let importCount = 0;
 /**
@@ -256,65 +256,65 @@ let importCount = 0;
  * @return {string}          The string to use to load all the objects from the given directory
  */
 function processPackage(lines, space, dir) {
-    const packages = [];
+  const packages = [];
+  //
+  //  Loop through the lines that are in the current directory
+  //
+  while (PACKAGE.length && (PACKAGE[0].substr(0, dir.length) === dir || dir === '.')) {
     //
-    //  Loop through the lines that are in the current directory
+    // If the current package is in this directory (not a subdirectory)
+    //   Get the location of transpiled mathjax file
+    //   Get the name to use for the data from that file
+    //   Create an entry for the file in the MathJax global that loads the reuired component
+    // Otherwise (its in a subdirectory)
+    //   Get the subdirectory name
+    //   Process the subdirectory using an additional indentation
     //
-    while (PACKAGE.length && (PACKAGE[0].substr(0, dir.length) === dir || dir === '.')) {
-        //
-        // If the current package is in this directory (not a subdirectory)
-        //   Get the location of transpiled mathjax file
-        //   Get the name to use for the data from that file
-        //   Create an entry for the file in the MathJax global that loads the reuired component
-        // Otherwise (its in a subdirectory)
-        //   Get the subdirectory name
-        //   Process the subdirectory using an additional indentation
-        //
-        if (path.dirname(PACKAGE[0]) === dir) {
-            const file = PACKAGE.shift();
-            const name = path.basename(file);
-            const relativefile = path.join('..', MATHJAX, dir, name).replace(/\.ts$/, '.js');
-            const component = 'module' + (++importCount);
-            lines.push(`import * as ${component} from '${relativefile}';`);
-            let property = name.replace(/\.ts$/, '');
-            if (property !== name && exists(path.resolve(MATHJAX, file.replace(/\.ts$/, '')))) {
-                property += '_ts';
-            }
-            if (property.match(/[^a-zA-Z0-9_]/)) {
-                property = `"${property}"`;
-            }
-            packages.push(`${property}: ${component}`);
-        } else {
-            let subdir = path.dirname(PACKAGE[0]);
-            while (path.dirname(subdir) !== dir && subdir !== '.') {
-                subdir = path.dirname(subdir);
-            }
-            packages.push(processPackage(lines, space + (dir === '.' ? '' : INDENT), subdir));
-        }
+    if (path.dirname(PACKAGE[0]) === dir) {
+      const file = PACKAGE.shift();
+      const name = path.basename(file);
+      const relativefile = path.join('..', MATHJAX, dir, name).replace(/\.ts$/, '.js');
+      const component = 'module' + (++importCount);
+      lines.push(`import * as ${component} from '${relativefile}';`);
+      let property = name.replace(/\.ts$/, '');
+      if (property !== name && exists(path.resolve(MATHJAX, file.replace(/\.ts$/, '')))) {
+        property += '_ts';
+      }
+      if (property.match(/[^a-zA-Z0-9_]/)) {
+        property = `"${property}"`;
+      }
+      packages.push(`${property}: ${component}`);
+    } else {
+      let subdir = path.dirname(PACKAGE[0]);
+      while (path.dirname(subdir) !== dir && subdir !== '.') {
+        subdir = path.dirname(subdir);
+      }
+      packages.push(processPackage(lines, space + (dir === '.' ? '' : INDENT), subdir));
     }
-    //
-    // Create the string defining the object that loads all the needed files into the proper places
-    //
-    if (dir === '.') return packages.join(',\n    ');
-    return path.basename(dir) + ': {\n' + INDENT + space + packages.join(',\n' + INDENT + space) + '\n' + space + '}';
+  }
+  //
+  // Create the string defining the object that loads all the needed files into the proper places
+  //
+  if (dir === '.') return packages.join(',\n    ');
+  return path.basename(dir) + ': {\n' + INDENT + space + packages.join(',\n' + INDENT + space) + '\n' + space + '}';
 }
 
 /**
  * @param {string} dir   The path to the directory tree to be removed (recursively)
  */
 function rmDir(dir) {
-    if (!dir) return;
-    if (fs.existsSync(dir)) {
-        for (const name of fs.readdirSync(dir)) {
-            const file = path.join(dir, name);
-            if (fs.lstatSync(file).isDirectory()) {
-                rmDir(file);
-            } else {
-                fs.unlinkSync(file);
-            }
-        }
-        fs.rmdirSync(dir);
+  if (!dir) return;
+  if (fs.existsSync(dir)) {
+    for (const name of fs.readdirSync(dir)) {
+      const file = path.join(dir, name);
+      if (fs.lstatSync(file).isDirectory()) {
+        rmDir(file);
+      } else {
+        fs.unlinkSync(file);
+      }
     }
+    fs.rmdirSync(dir);
+  }
 }
 
 //

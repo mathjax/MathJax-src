@@ -24,7 +24,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMtr} from './mtr.js';
 import {CommonMo} from './mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 import {split, isPercent} from '../../../util/string.js';
 import {sum, max} from '../../../util/numeric.js';
@@ -729,7 +729,7 @@ export function CommonMtableMixin<
 
     /**
      * @param {number} height   The total height of the table
-     * @return {number[]}       The [height, depth] for the aligned table
+     * @return {[number, number]}  The [height, depth] for the aligned table
      */
     public getBBoxHD(height: number): [number, number] {
       const [align, row] = this.getAlignmentRow();

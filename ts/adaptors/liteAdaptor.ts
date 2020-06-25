@@ -40,7 +40,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    * The default options
    */
   public static OPTIONS: OptionList = {
-    fontSize: 16,      // we can't compute the font size, so always use this
+    fontSize: 16,        // We can't compute the font size, so always use this
+    fontFamily: 'Times'  // We can't compute the font family, so always use this
   };
 
   /**
@@ -159,7 +160,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   }
 
   /**
-   * @param {LiteELement} node   The node to be searched
+   * @param {LiteElement} node   The node to be searched
    * @param {string} id          The id of the node to look for
    * @return {LiteElement}       The child node having the given id
    */
@@ -182,7 +183,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   }
 
   /**
-   * @param {LiteELement} node   The node to be searched
+   * @param {LiteElement} node   The node to be searched
    * @param {string} name        The name of the class to find
    * @return {LiteElement[]}     The nodes with the given class
    */
@@ -233,6 +234,16 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
       }
     }
     return containers;
+  }
+
+  /**
+   * @override
+   */
+  public contains(container: LiteNode, node: LiteNode | LiteText) {
+    while (node && node !== container) {
+      node = this.parent(node);
+    }
+    return !!node;
   }
 
   /**
@@ -295,6 +306,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     const i = this.childIndex(onode);
     if (i >= 0) {
       onode.parent.children[i] = nnode;
+      nnode.parent = onode.parent;
+      onode.parent = null;
     }
     return onode;
   }
@@ -533,6 +546,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    */
   public fontSize(_node: LiteElement) {
     return this.options.fontSize;
+  }
+
+  /**
+   * @override
+   */
+  public fontFamily(_node: LiteElement) {
+    return this.options.fontFamily;
   }
 
   /**

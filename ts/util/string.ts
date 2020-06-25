@@ -25,7 +25,8 @@
 /**
  * Sort strings by length
  *
- * @param {string} a, b  The strings to be compared
+ * @param {string} a  First string to be compared
+ * @param {string} b  Second string to be compared
  * @return {number}  -1 id a < b, 0 of a === b, 1 if a > b
  */
 export function sortLength(a: string, b: string): number {
@@ -49,15 +50,7 @@ export function quotePattern(text: string): string {
  * @return {number[]}  Array of numbers representing the string's unicode character positions
  */
 export function unicodeChars(text: string): number[] {
-  let unicode: number[] = [];
-  for (let i = 0, m = text.length; i < m; i++) {
-    let n = text.charCodeAt(i);
-    if (n >= 0xD800 && n < 0xDBFF) {
-      n = (((n - 0xD800) << 10) + (text.charCodeAt(++i) - 0xDC00)) + 0x10000;
-    }
-    unicode.push(n);
-  }
-  return unicode;
+  return Array.from(text).map((c) => c.codePointAt(0));
 }
 
 /**

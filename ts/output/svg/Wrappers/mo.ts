@@ -24,7 +24,7 @@
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonMoMixin} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {DIRECTION, SVGCharData, SVGCharOptions} from '../FontData.js';
 
 
@@ -208,7 +208,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
   /**
    * @param {number} n    The character number for the middle glyph
    * @param {number} W    The width of the stretched delimiter
-   * @return {number[]}   The top and bottom positions of the middle glyph
+   * @return {[number, number]}   The top and bottom positions of the middle glyph
    */
   protected addMidV(n: number, W: number): [number, number] {
     if (!n) return [0, 0];
@@ -270,7 +270,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
   /**
    * @param {number} n   The character number for the middle glyph of the stretchy character
    * @param {number} W   The width of the stretched character
-   * @return {number[]}  The positions of the left and right edges of the middle glyph
+   * @return {[number, number]}  The positions of the left and right edges of the middle glyph
    */
   protected addMidH(n: number, W: number): [number, number] {
     if (!n) return [0, 0];

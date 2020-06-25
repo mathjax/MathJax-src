@@ -22,11 +22,10 @@
  */
 
 import {mathjax} from '../../mathjax.js';
+import * as path from 'path';
 
 declare var require: (name: string) => any;
 declare var __dirname: string;
-
-const path = require('path');
 
 const root = path.dirname(path.dirname(__dirname));
 

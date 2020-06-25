@@ -53,18 +53,18 @@ const nodeDir = (dir => (fs.existsSync(dir) ? dir : path.resolve(parent, '..')))
  * @param {string} space    The indentation for output
  */
 function copyFile(from, to, name, space) {
-    !fs.existsSync(to) && fs.mkdirSync(to, {recursive: true});
-    const copy = path.resolve(from, name);
-    const dest = path.resolve(to, name);
-    if (fs.lstatSync(copy).isDirectory()) {
-        console.info(space + name + '/');
-        for (const file of fs.readdirSync(copy)) {
-            copyFile(copy, dest, file, space + INDENT);
-        }
-    } else {
-        console.info(space + name);
-        fs.copyFileSync(copy, dest);
+  !fs.existsSync(to) && fs.mkdirSync(to, {recursive: true});
+  const copy = path.resolve(from, name);
+  const dest = path.resolve(to, name);
+  if (fs.lstatSync(copy).isDirectory()) {
+    console.info(space + name + '/');
+    for (const file of fs.readdirSync(copy)) {
+      copyFile(copy, dest, file, space + INDENT);
     }
+  } else {
+    console.info(space + name);
+    fs.copyFileSync(copy, dest);
+  }
 }
 
 /**
@@ -74,5 +74,5 @@ const wd = process.cwd();
 const to = path.resolve(wd, config.to);
 const from = path.resolve(wd, config.from.replace(/\[node\]/, nodeDir));
 for (const name of config.copy) {
-    copyFile(from, to, name, '');
+  copyFile(from, to, name, '');
 }

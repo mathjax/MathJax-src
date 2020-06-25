@@ -44,7 +44,8 @@ export default class Stack {
 
   /**
    * @constructor
-   * @param {EnvList} _env The environment.
+   * @param {StackItemFactory} factory The stack item factory.
+   * @param {EnvList} env The environment.
    * @param {boolean} inner True if parser has been called recursively.
    */
   constructor(private _factory: StackItemFactory,
