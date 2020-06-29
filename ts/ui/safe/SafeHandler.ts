@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  MathItem, MathDocumen, and Handler for the safe extension
+ * @fileoverview  MathItem, MathDocument, and Handler for the safe extension
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -37,7 +37,7 @@ export type Constructor<T> = new(...args: any[]) => T;
 /*==========================================================================*/
 
 /**
- * The properties needed in the MathDocument for sanitizing the int4ernal MathML
+ * The properties needed in the MathDocument for sanitizing the internal MathML
  */
 export interface SafeMathDocument<N, T, D> extends MathDocument<N, T, D> {
 

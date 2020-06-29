@@ -66,7 +66,7 @@ export class Safe<N, T, D> {
     //
     lengthMax: 3,
     //
-    // Valid range for scriptsisemultiplier
+    // Valid range for scriptsizemultiplier
     //
     scriptsizemultiplierRange: [.6, 1],
     //
@@ -152,23 +152,23 @@ export class Safe<N, T, D> {
   /**
    * The attribute-to-filter-method mapping
    */
-  public filterAttributes: {[name: string]: string} = {
+  public filterAttributes: Map<string, string> = new Map([
     //
     //  Methods called for MathML attribute processing
     //
-    href:                 'filterURL',
-    src:                  'filterURL',
-    altimg:               'filterURL',
-    'class':              'filterClassList',
-    style:                'filterStyles',
-    id:                   'filterID',
-    fontsize:             'filterFontSize',
-    mathsize:             'filterFontSize',
-    scriptminsize:        'filterFontSize',
-    scriptsizemultiplier: 'filterSizeMultiplier',
-    scriptlevel:          'filterScriptLevel',
-    'data-':              'filterData'
-  };
+    ['href', 'filterURL'],
+    ['src',  'filterURL'],
+    ['altimg', 'filterURL'],
+    ['class', 'filterClassList'],
+    ['style', 'filterStyles'],
+    ['id', 'filterID'],
+    ['fontsize', 'filterFontSize'],
+    ['mathsize', 'filterFontSize'],
+    ['scriptminsize', 'filterFontSize'],
+    ['scriptsizemultiplier', 'filterSizeMultiplier'],
+    ['scriptlevel', 'filterScriptLevel'],
+    ['data-', 'filterData']
+  ]);
 
   /**
    * The safe options from the document option list
@@ -224,8 +224,9 @@ export class Safe<N, T, D> {
   protected sanitizeNode(node: MmlNode) {
     const attributes = node.attributes.getAllAttributes();
     for (const id of Object.keys(attributes)) {
-      if (this.filterAttributes.hasOwnProperty(id)) {
-        const value = this.filterMethods[this.filterAttributes[id]](this, attributes[id]);
+      const method = this.filterAttributes.get(id);
+      if (method) {
+        const value = this.filterMethods[method](this, attributes[id]);
         if (value) {
           if (value !== (typeof value === 'number' ? parseFloat(attributes[id] as string) : attributes[id])) {
             attributes[id] = value;
@@ -246,9 +247,11 @@ export class Safe<N, T, D> {
    */
   public mmlAttribute(id: string, value: string): string | null {
     if (id === 'class') return null;
-    const filter = (this.filterAttributes.hasOwnProperty(id) ? this.filterAttributes[id] :
-                    (id.substr(0, 5) === 'data-' ? this.filterAttributes['data-'] : null));
-    if (!filter) return value;
+    const method = this.filterAttributes.get(id);
+    const filter = (method || (id.substr(0, 5) === 'data-' ? this.filterAttributes.get('data-') : null));
+    if (!filter) {
+      return value;
+    }
     const result = this.filterMethods[filter](this, value, id);
     return (typeof result === 'number' || typeof result === 'boolean' ? String(result) : result);
   }

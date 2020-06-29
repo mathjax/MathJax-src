@@ -152,7 +152,7 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} style      The style name being tested
-   * @param {N} div             The temp DIV node containing the style object to tbe tested
+   * @param {N} div             The temp DIV node containing the style object to be tested
    * @return {string|null}      The sanitized style string or null if invalid
    *
    * @template N  The HTMLElement node class
@@ -174,12 +174,12 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
   },
 
   /**
-   * Filter a style's value, handling compount values (e.g., borders that have widths as well as styles and colors)
+   * Filter a style's value, handling compound values (e.g., borders that have widths as well as styles and colors)
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} style      The style name being tested
    * @param {string} value      The value of the style to test
-   * @param {N} div             The temp DIV node containing the style object to tbe tested
+   * @param {N} div             The temp DIV node containing the style object to be tested
    * @return {string|null}      The sanitized style string or null if invalid
    *
    * @template N  The HTMLElement node class
