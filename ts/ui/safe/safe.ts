@@ -57,8 +57,8 @@ export class Safe<N, T, D> {
       //  Values can be "all", "safe", or "none"
       //
       URLs:    'safe',   // safe are in safeProtocols below
-      classes: 'safe',   // safe start with MJX-
-      cssIDs:  'safe',   // safe start with MJX-
+      classes: 'safe',   // safe start with mjx- (can be set by pattern below)
+      cssIDs:  'safe',   // safe start with mjx- (can be set by pattern below)
       styles:  'safe'    // safe are in safeStyles below
     },
     //
