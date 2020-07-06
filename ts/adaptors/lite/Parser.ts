@@ -281,7 +281,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
       if (child === node) {
         break;
       }
-      if (child instanceof LiteComment && child.value.match(/^!DOCTYPE/)) {
+      if (child instanceof LiteComment && child.value.match(/^<!DOCTYPE/)) {
         root.type = child.value;
       }
     }
