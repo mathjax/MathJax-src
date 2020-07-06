@@ -45,17 +45,12 @@ export class MathMLCompile<N, T, D> {
   public static OPTIONS: OptionList = {
     MmlFactory: null,                   // The MmlFactory to use (defaults to a new MmlFactory)
     fixMisplacedChildren: true,         // True if we want to use heuristics to try to fix
-    //   problems with the tree based on HTML not handling
-    //   self-closing tags properly
-    verify: {},                         // Options to pass to verifyTree() controlling MathML verification
+                                        //   problems with the tree based on HTML not handling
+                                        //   self-closing tags properly
+    verify: {                           // Options to pass to verifyTree() controlling MathML verification
+      ...AbstractMmlNode.verifyDefaults
+    },
     translateEntities: true             // True means translate entities in text nodes
-  };
-
-  /**
-   *  The default values for the verify option
-   */
-  public static VERIFY: OptionList = {
-    ...AbstractMmlNode.verifyDefaults
   };
 
   /**
@@ -81,9 +76,6 @@ export class MathMLCompile<N, T, D> {
   constructor(options: OptionList = {}) {
     const Class = this.constructor as typeof MathMLCompile;
     this.options = userOptions(defaultOptions({}, Class.OPTIONS), options);
-    if (this.options['verify']) {
-      this.options['verify'] = userOptions(defaultOptions({}, Class.VERIFY), this.options['verify']);
-    }
   }
 
   /**
