@@ -136,6 +136,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   /**
    * @override
    */
+  public doctype(doc: LiteDocument) {
+    return doc.type;
+  }
+
+  /**
+   * @override
+   */
   public tags(node: LiteElement, name: string, ns: string = null) {
     let stack = [] as LiteNode[];
     let tags = [] as LiteElement[];
@@ -402,7 +409,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    * @override
    */
   public value(node: LiteNode | LiteText) {
-    return (node.kind === '#text' ? (node as LiteText).value : '');
+    return (node.kind === '#text' ? (node as LiteText).value :
+            node.kind === '#comment' ? (node as LiteComment).value.replace(/^<!(--)?((?:.|\n)*)\1>$/, '$2') : '');
   }
 
   /**

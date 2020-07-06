@@ -22,6 +22,7 @@
  */
 
 import {LiteElement} from './Element.js';
+import {LiteComment} from './Text.js';
 
 /************************************************************/
 /**
@@ -42,6 +43,11 @@ export class LiteDocument {
   public body: LiteElement;
 
   /**
+   * the DOCTYPE comment
+   */
+  public type: string;
+
+  /**
    * The kind is always #document
    */
   public get kind() {
@@ -56,5 +62,6 @@ export class LiteDocument {
       this.head = new LiteElement('head'),
       this.body = new LiteElement('body')
     ]);
+    this.type = '<!DOCTYPE html>';
   }
 }

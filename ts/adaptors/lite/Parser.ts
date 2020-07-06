@@ -41,8 +41,8 @@ export namespace PATTERNS {
   export const OPTIONALSPACE = '(?:\\s|\\n)*';
   export const ATTRIBUTE = ATTNAME + '(?:' + OPTIONALSPACE + '=' + OPTIONALSPACE + VALUE + ')?';
   export const ATTRIBUTESPLIT = '(' + ATTNAME + ')(?:' + OPTIONALSPACE + '=' + OPTIONALSPACE + VALUESPLIT + ')?';
-  export const TAG = '(<(?:' + TAGNAME + '(?:' + SPACE + ATTRIBUTE + ')*' +
-    OPTIONALSPACE + '/?|/' + TAGNAME + '|!--[^]*?--|![^]*?)(?:>|$))';
+  export const TAG = '(<(?:' + TAGNAME + '(?:' + SPACE + ATTRIBUTE + ')*'
+                       + OPTIONALSPACE + '/?|/' + TAGNAME + '|!--[^]*?--|![^]*?)(?:>|$))';
   export const tag = new RegExp(TAG, 'i');
   export const attr = new RegExp(ATTRIBUTE, 'i');
   export const attrsplit = new RegExp(ATTRIBUTESPLIT, 'i');
@@ -277,6 +277,14 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   protected checkDocument(adaptor: LiteAdaptor, root: LiteDocument) {
     let node = this.getOnlyChild(adaptor, adaptor.body(root));
     if (!node) return;
+    for (const child of adaptor.childNodes(adaptor.body(root))) {
+      if (child === node) {
+        break;
+      }
+      if (child instanceof LiteComment && child.value.match(/^!DOCTYPE/)) {
+        root.type = child.value;
+      }
+    }
     switch (adaptor.kind(node)) {
     case 'html':
       //
@@ -365,7 +373,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     return adaptor.childNodes(node).map(x => {
       const kind = adaptor.kind(x);
       return (kind === '#text' ? this.protectHTML(adaptor.value(x)) :
-              kind === '#comment' ? adaptor.value(x) :
+              kind === '#comment' ? (x as LiteComment).value :
               this.serialize(adaptor, x as LiteElement));
     }).join('');
   }

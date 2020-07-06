@@ -97,6 +97,12 @@ export interface DOMAdaptor<N, T, D> {
   root(doc: D): N;
 
   /**
+   * @paramn {D} doc    The document whose doctype is to be obtained
+   * @return {string}   The DOCTYPE comment
+   */
+  doctype(doc: D): string;
+
+  /**
    * @param {N} node        The node to search for tags
    * @param {string} name   The name of the tag to search for
    * @param {string} ns     The namespace to search in (or null for no namespace)
@@ -435,6 +441,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract root(doc: D): N;
+
+  /**
+   * @override
+   */
+  public abstract doctype(doc: D): string;
 
   /**
    * @override
