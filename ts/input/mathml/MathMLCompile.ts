@@ -121,8 +121,11 @@ export class MathMLCompile<N, T, D> {
     let limits = false;
     let kind = adaptor.kind(node).replace(/^.*:/, '');
     let texClass = adaptor.getAttribute(node, 'data-mjx-texclass') || '';
+    if (texClass) {
+      texClass = this.filterAttribute('data-mjx-texclass', texClass) || '';
+    }
     let type = texClass && kind === 'mrow' ? 'TeXAtom' : kind;
-    for (const name of adaptor.allClasses(node)) {
+    for (const name of this.filterClassList(adaptor.allClasses(node))) {
       if (name.match(/^MJX-TeXAtom-/)) {
         texClass = name.substr(12);
         type = 'TeXAtom';
@@ -154,36 +157,45 @@ export class MathMLCompile<N, T, D> {
     let ignoreVariant = false;
     for (const attr of this.adaptor.allAttributes(node)) {
       let name = attr.name;
+      let value = this.filterAttribute(name, attr.value);
+      if (value === null) {
+        return;
+      }
       if (name.substr(0, 9) === 'data-mjx-') {
         if (name === 'data-mjx-alternate') {
           mml.setProperty('variantForm', true);
         } else if (name === 'data-mjx-variant') {
-          mml.attributes.set('mathvariant', this.filterAttribute('mathvariant', attr.value));
+          mml.attributes.set('mathvariant', value);
           ignoreVariant = true;
         }
       } else if (name !== 'class') {
-        let value = this.filterAttribute(name, attr.value);
-        if (value !== null) {
-          let val = value.toLowerCase();
-          if (val === 'true' || val === 'false') {
-            mml.attributes.set(name, val === 'true');
-          } else if (!ignoreVariant || name !== 'mathvariant') {
-            mml.attributes.set(name, value);
-          }
+        let val = value.toLowerCase();
+        if (val === 'true' || val === 'false') {
+          mml.attributes.set(name, val === 'true');
+        } else if (!ignoreVariant || name !== 'mathvariant') {
+          mml.attributes.set(name, value);
         }
       }
     }
   }
 
   /**
-   * Provide a hook for the Safe extension to filter
-   * attribute values.
+   * Provide a hook for the Safe extension to filter attribute values.
    *
    * @param {string} name   The name of an attribute to filter
    * @param {string} value  The value to filter
    */
   protected filterAttribute(_name: string, value: string) {
     return value;
+  }
+
+  /**
+   * Provide a hook for the Safe extension to filter class names.
+   *
+   * @param {string[]} list   The list of class names to filter
+   */
+  protected filterClassList(list: string[]) {
+    return list;
   }
 
   /**
@@ -247,7 +259,7 @@ export class MathMLCompile<N, T, D> {
    */
   protected checkClass(mml: MmlNode, node: N) {
     let classList = [];
-    for (const name of this.adaptor.allClasses(node)) {
+    for (const name of this.filterClassList(this.adaptor.allClasses(node))) {
       if (name.substr(0, 4) === 'MJX-') {
         if (name === 'MJX-variant') {
           mml.setProperty('variantForm', true);
