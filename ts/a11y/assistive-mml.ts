@@ -29,6 +29,22 @@ import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {StyleList} from '../util/StyleList.js';
 
+/*==========================================================================*/
+
+export class LimitedMmlVisitor extends SerializedMmlVisitor {
+
+  /**
+   * @override
+   */
+  protected getAttributes(node: MmlNode): string {
+    /**
+     * Remove id from attribute output
+     */
+    return super.getAttributes(node).replace(/ ?id=".*?"/, '');
+  }
+
+}
+
 /**
  * Generic constructor for Mixins
  */
@@ -198,7 +214,7 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
     /**
      * Visitor used for serializing internal MathML nodes
      */
-    protected visitor: SerializedMmlVisitor;
+    protected visitor: LimitedMmlVisitor;
 
     /**
      * Augment the MathItem class used for this MathDocument, and create the serialization visitor.
@@ -213,7 +229,7 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
       if (!ProcessBits.has('assistive-mml')) {
         ProcessBits.allocate('assistive-mml');
       }
-      this.visitor = new SerializedMmlVisitor(this.mmlFactory);
+      this.visitor = new LimitedMmlVisitor(this.mmlFactory);
       this.options.MathItem =
         AssistiveMmlMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(
           this.options.MathItem
