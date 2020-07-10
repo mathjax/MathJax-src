@@ -36,7 +36,7 @@ export interface MinDocument<N, T> {
   head: N;
   body: N;
   title: string;
-  doctype: string;
+  doctype: {name: string};
   /* tslint:disable:jsdoc-require */
   createElement(kind: string): N;
   createElementNS(ns: string, kind: string): N;
@@ -233,7 +233,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public doctype(doc: D) {
-    return doc.doctype;
+    return `<!DOCTYPE ${doc.doctype.name}>`;
   }
 
   /**

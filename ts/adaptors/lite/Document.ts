@@ -22,7 +22,6 @@
  */
 
 import {LiteElement} from './Element.js';
-import {LiteComment} from './Text.js';
 
 /************************************************************/
 /**
