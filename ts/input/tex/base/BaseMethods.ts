@@ -676,7 +676,7 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
 BaseMethods.Underset = function(parser: TexParser, name: string) {
   // @test Underset
   const bot = parser.ParseArg(name), base = parser.ParseArg(name);
-  if (NodeUtil.getAttribute(base, 'movablelimits') || NodeUtil.getProperty(base, 'movablelimits')) {
+  if (NodeUtil.isType(base, 'mo') || NodeUtil.getProperty(base, 'movablelimits')) {
     // @test Overline Sum
     NodeUtil.setProperties(base, {'movablelimits': false});
   }

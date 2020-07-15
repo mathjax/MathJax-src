@@ -23,12 +23,12 @@
 
 
 import NodeUtil from '../NodeUtil.js';
-import { ParseMethod } from '../Types.js';
-import { PropertyList } from '../../../core/Tree/Node.js';
+import {ParseMethod} from '../Types.js';
+import {PropertyList} from '../../../core/Tree/Node.js';
 import ParseUtil from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 
-import { ColorModel } from './ColorUtil.js';
+import {ColorModel} from './ColorUtil.js';
 
 
 /**
@@ -62,7 +62,7 @@ export const ColorMethods: Record<string, ParseMethod> = {};
 ColorMethods.Color = function (parser: TexParser, name: string) {
   const model = parser.GetBrackets(name, '');
   const colorDef = parser.GetArgument(name);
-  const colorModel: ColorModel = parser.options.color.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
   const color = colorModel.getColor(model, colorDef);
 
   const style = parser.itemFactory.create('style')
@@ -82,7 +82,7 @@ ColorMethods.Color = function (parser: TexParser, name: string) {
 ColorMethods.TextColor = function (parser: TexParser, name: string) {
   const model = parser.GetBrackets(name, '');
   const colorDef = parser.GetArgument(name);
-  const colorModel: ColorModel = parser.options.color.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
   const color = colorModel.getColor(model, colorDef);
   const old = parser.stack.env['color'];
 
@@ -95,7 +95,7 @@ ColorMethods.TextColor = function (parser: TexParser, name: string) {
     delete parser.stack.env['color'];
   }
 
-  const node = parser.create('node', 'mstyle', [math], { mathcolor: color });
+  const node = parser.create('node', 'mstyle', [math], {mathcolor: color});
   parser.Push(node);
 };
 
@@ -110,7 +110,7 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
   const model = parser.GetArgument(name);
   const def = parser.GetArgument(name);
 
-  const colorModel: ColorModel = parser.options.color.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
   colorModel.defineColor(model, cname, def);
 };
 
@@ -123,14 +123,13 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
 ColorMethods.ColorBox = function (parser: TexParser, name: string) {
   const cname = parser.GetArgument(name);
   const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
-  const options = parser.options.color;
-  const colorModel: ColorModel = options.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
 
   const node = parser.create('node', 'mpadded', math, {
     mathbackground: colorModel.getColor('named', cname)
   });
 
-  NodeUtil.setProperties(node, padding(options.padding));
+  NodeUtil.setProperties(node, padding(parser.options.color.padding));
   parser.Push(node);
 };
 
@@ -145,7 +144,7 @@ ColorMethods.FColorBox = function (parser: TexParser, name: string) {
   const cname = parser.GetArgument(name);
   const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
   const options = parser.options.color;
-  const colorModel: ColorModel = options.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
 
   const node = parser.create('node', 'mpadded', math, {
     mathbackground: colorModel.getColor('named', cname),

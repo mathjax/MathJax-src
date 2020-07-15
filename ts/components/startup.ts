@@ -367,7 +367,6 @@ export namespace Startup {
     };
     MathJax.typesetClear = (elements: any[] = null) => {
       if (elements) {
-        document.reset();
         document.clearMathItemsWithin(elements);
       } else {
         document.clear();

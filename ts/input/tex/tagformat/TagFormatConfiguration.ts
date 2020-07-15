@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration} from '../Configuration.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {TeX} from '../../tex.js';
 import {AbstractTags, TagsFactory} from '../Tags.js';
 
@@ -38,7 +38,7 @@ let tagID = 0;
  * @param {Configuration} config   The configuration for the input jax
  * @param {TeX} jax                The TeX input jax
  */
-export function tagformatConfig(config: Configuration, jax: TeX<any, any, any>) {
+export function tagformatConfig(config: ParserConfiguration, jax: TeX<any, any, any>) {
 
   /**
    * If the tag format is being added by one of the other extensions,
@@ -111,8 +111,7 @@ export function tagformatConfig(config: Configuration, jax: TeX<any, any, any>) 
  */
 export const TagFormatConfiguration = Configuration.create(
   'tagformat', {
-    config: tagformatConfig,
-    configPriority: 10,
+    config: [tagformatConfig, 10],
     options: {
       tagformat: {
         number: (n: number) => n.toString(),

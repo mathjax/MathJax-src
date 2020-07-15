@@ -11,7 +11,6 @@ const {dependencies, paths, provides} = require('../dependencies.js');
 /*
  * Set up the initial configuration
  */
-paths.sre = '[mathjax]/sre/sre-node';
 combineDefaults(MathJax.config, 'loader', {
   require: eval('require'),      // use node's require() to load files
   failed: (err) => {throw err}   // pass on error message to init()'s catch function
