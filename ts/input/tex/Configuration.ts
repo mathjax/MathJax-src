@@ -36,6 +36,7 @@ import {TagsFactory} from './Tags.js';
 export type StackItemConfig = {[kind: string]: StackItemClass};
 export type TagsConfig = {[kind: string]: TagsClass};
 export type Processor<T> = [T, number];
+export type ProtoProcessor<T> = Processor<T> | T;
 export type ProcessorList = Processor<Function>[];
 export type ConfigMethod = (c: ParserConfiguration, j: TeX<any, any, any>) => void;
 export type InitMethod = (c: ParserConfiguration) => void;
@@ -46,11 +47,12 @@ export class Configuration {
 
   /**
    * Creates a function priority pair.
-   * @param {Function | Processor} func The function or processor.
+   * @param {ProtoProcessor<T>} func The function or processor.
    * @param {number} priority The default priority.
    * @return {Processor} The processor pair.
+   * @template T
    */
-  private static makeProcessor<T>(func: T | Processor<T>, priority: number): Processor<T> {
+  private static makeProcessor<T>(func: ProtoProcessor<T>, priority: number): Processor<T> {
     return Array.isArray(func) ? func : [func, priority];
   }
 
@@ -67,27 +69,19 @@ export class Configuration {
                                   tags?: TagsConfig,
                                   options?: OptionList,
                                   nodes?: {[key: string]: any},
-                                  preprocessors?: (Processor<Function> | Function)[],
-                                  postprocessors?: (Processor<Function> | Function)[],
-                                  init?: Processor<InitMethod> | InitMethod,
-                                  config?: Processor<ConfigMethod> | ConfigMethod,
+                                  preprocessors?: ProtoProcessor<Function>[],
+                                  postprocessors?: ProtoProcessor<Function>[],
+                                  init?: ProtoProcessor<InitMethod>,
+                                  config?: ProtoProcessor<ConfigMethod>,
                                   priority?: number,
                                  } = {}): Configuration {
     let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
     let conf = config.config ? this.makeProcessor(config.config, priority) : null;
-    let preprocessors = [];
-    if (config.preprocessors) {
-      for (const pre of config.preprocessors) {
-        preprocessors.push(this.makeProcessor(pre, priority));
-      }
-    }
-    let postprocessors = [];
-    if (config.postprocessors) {
-      for (const post of config.postprocessors) {
-        postprocessors.push(this.makeProcessor(post, priority));
-      }
-    }
+    let preprocessors = (config.preprocessors || []).map(
+      pre => this.makeProcessor(pre, priority));
+    let postprocessors = (config.postprocessors || []).map(
+      post => this.makeProcessor(post, priority));
     return new Configuration(
       name,
       config.handler || {},
@@ -128,10 +122,10 @@ export class Configuration {
                                 tags?: TagsConfig,
                                 options?: OptionList,
                                 nodes?: {[key: string]: any},
-                                preprocessors?: (Processor<Function> | Function)[],
-                                postprocessors?: (Processor<Function> | Function)[],
-                                init?: Processor<InitMethod> | InitMethod,
-                                config?: Processor<ConfigMethod> | ConfigMethod,
+                                preprocessors?: ProtoProcessor<Function>[],
+                                postprocessors?: ProtoProcessor<Function>[],
+                                init?: ProtoProcessor<InitMethod>,
+                                config?: ProtoProcessor<ConfigMethod>,
                                 priority?: number,
                                } = {}): Configuration {
     let configuration = Configuration._create(name, config);
@@ -151,10 +145,10 @@ export class Configuration {
                               tags?: TagsConfig,
                               options?: OptionList,
                               nodes?: {[key: string]: any},
-                              preprocessors?: (Processor<Function> | Function)[],
-                              postprocessors?: (Processor<Function> | Function)[],
-                              init?: Processor<InitMethod> | InitMethod,
-                              config?: Processor<ConfigMethod> | ConfigMethod,
+                              preprocessors?: ProtoProcessor<Function>[],
+                              postprocessors?: ProtoProcessor<Function>[],
+                              init?: ProtoProcessor<InitMethod>,
+                              config?: ProtoProcessor<ConfigMethod>,
                               priority?: number,
                              } = {}): Configuration {
     return Configuration._create('', config);
@@ -293,6 +287,8 @@ export class ParserConfiguration {
 
   /**
    * @constructor
+   * @param {(string|[string,number])[]} packages A list of packages with
+   *     optional priorities.
    */
   constructor(packages: (string | [string, number])[]) {
     for (const pkg of packages.slice().reverse()) {
@@ -304,9 +300,7 @@ export class ParserConfiguration {
   }
 
   /**
-   * Initmethod for the configuration;
-   *
-   * @param {Configuration} configuration   The configuration where this one is being initialized
+   * Init method for the configuration;
    */
   public init() {
     this.initMethod.execute(this);
@@ -314,9 +308,7 @@ export class ParserConfiguration {
 
   /**
    * Init method for when the jax is ready
-   *
-   * @param {Configuration} configuration   The configuration where this one is being initialized
-   * @param {TeX} jax                       The TeX jax for this configuration
+   * @param {TeX} jax The TeX jax for this configuration
    */
   public config(jax: TeX<any, any, any>) {
     this.configMethod.execute(this, jax);
