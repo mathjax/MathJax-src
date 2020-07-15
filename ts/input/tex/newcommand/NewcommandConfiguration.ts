@@ -22,20 +22,32 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {BeginEnvItem} from './NewcommandItems.js';
-import {ExtensionMaps} from '../MapHandler.js';
+import NewcommandUtil from './NewcommandUtil.js';
 import './NewcommandMappings.js';
+import ParseMethods from '../ParseMethods.js';
+import * as sm from '../SymbolMap.js';
 
 
 /**
  * Init method for Newcommand package.
  * @param {Configuration} config The current configuration.
  */
-let init = function(config: Configuration) {
-    if (config.handler['macro'].indexOf(ExtensionMaps.NEW_COMMAND) < 0) {
-        config.append(Configuration.extension());
-    }
+let init = function(config: ParserConfiguration) {
+  new sm.DelimiterMap(NewcommandUtil.NEW_DELIMITER,
+                      ParseMethods.delimiter, {});
+  new sm.CommandMap(NewcommandUtil.NEW_COMMAND, {}, {});
+  new sm.EnvironmentMap(NewcommandUtil.NEW_ENVIRONMENT,
+                        ParseMethods.environment, {}, {});
+  config.append(Configuration.local(
+    {handler: {character: [],
+               delimiter: [NewcommandUtil.NEW_DELIMITER],
+               macro: [NewcommandUtil.NEW_DELIMITER,
+                       NewcommandUtil.NEW_COMMAND],
+               environment: [NewcommandUtil.NEW_ENVIRONMENT]
+              },
+     priority: -1}));
 };
 
 

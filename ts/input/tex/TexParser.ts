@@ -245,7 +245,8 @@ export default class TexParser {
    * @return {string}   Get the next unicode character in the string
    */
   public getCodePoint(): string {
-    return String.fromCodePoint(this.string.codePointAt(this.i));
+    const code = this.string.codePointAt(this.i);
+    return code === undefined ? '' : String.fromCodePoint(code);
   }
 
   /**
