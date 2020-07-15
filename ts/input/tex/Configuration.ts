@@ -139,7 +139,7 @@ export class Configuration {
    * @param {Object} config See `create` method.
    * @return {Configuration} The ephemeral package configuration.
    */
-  public static temp(config: {handler?: HandlerConfig,
+  public static local(config: {handler?: HandlerConfig,
                               fallback?: FallbackConfig,
                               items?: StackItemConfig,
                               tags?: TagsConfig,
@@ -348,6 +348,7 @@ export class ParserConfiguration {
       parser.itemFactory.setNodeClass(kind, config.items[kind]);
     }
     TagsFactory.addTags(config.tags);
+    defaultOptions(parser.options, config.options);
     userOptions(parser.options, options);
     this.addFilters(jax, config);
     if (config.config) {

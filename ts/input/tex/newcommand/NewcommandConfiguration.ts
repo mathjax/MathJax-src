@@ -40,7 +40,7 @@ let init = function(config: ParserConfiguration) {
   new sm.CommandMap(NewcommandUtil.NEW_COMMAND, {}, {});
   new sm.EnvironmentMap(NewcommandUtil.NEW_ENVIRONMENT,
                         ParseMethods.environment, {}, {});
-  config.append(Configuration.temp(
+  config.append(Configuration.local(
     {handler: {character: [],
                delimiter: [NewcommandUtil.NEW_DELIMITER],
                macro: [NewcommandUtil.NEW_DELIMITER,
