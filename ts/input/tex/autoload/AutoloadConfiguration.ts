@@ -109,7 +109,7 @@ function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
   //
   //  Check if the require extension needs to be configured
   //
-  if (parser.options.require && !parser.options.require.jax) {
+  if (!parser.packageData.get('require')) {
     RequireConfiguration.config(config, jax);
   }
 }

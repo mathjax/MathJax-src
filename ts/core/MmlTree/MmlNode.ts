@@ -1095,7 +1095,6 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
    * No children or attributes, so ignore this call.
    *
    * @param {PropertyList} options  The options for the check
-   
    */
   public verifyTree(_options: PropertyList) {}
 

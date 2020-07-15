@@ -67,6 +67,12 @@ export default class ParseOptions {
    */
   public tags: Tags;
 
+  /**
+   * Storage area for parser-specific package data (indexed by package name)
+   * @type {Map<string, any>}
+   */
+  public packageData: Map<string, any> = new Map();
+
   // Fields for ephemeral options, i.e., options that will be cleared for each
   // run of the parser.
   /**

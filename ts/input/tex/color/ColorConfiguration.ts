@@ -22,13 +22,11 @@
  */
 
 
-import { CommandMap } from '../SymbolMap.js';
-import { Configuration, ParserConfiguration } from '../Configuration.js';
-
-import { ColorMethods } from './ColorMethods.js';
-import { ColorModel } from './ColorUtil.js';
-
-import { TeX } from '../../tex.js';
+import {CommandMap} from '../SymbolMap.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
+import {ColorMethods} from './ColorMethods.js';
+import {ColorModel} from './ColorUtil.js';
+import {TeX} from '../../tex.js';
 
 /**
  * The color macros
@@ -48,7 +46,7 @@ new CommandMap('color', {
  * @param {TeX} jax              The TeX jax having that configuration
  */
 const config = function(_config: ParserConfiguration, jax: TeX<any, any, any>) {
-  jax.parseOptions.options.color.model = new ColorModel();
+  jax.parseOptions.packageData.set('color', {model: new ColorModel()});
 };
 
 /**
