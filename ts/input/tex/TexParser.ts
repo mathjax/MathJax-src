@@ -246,7 +246,7 @@ export default class TexParser {
    */
   public getCodePoint(): string {
     const code = this.string.codePointAt(this.i);
-    return code ? String.fromCodePoint(code) : '';
+    return code === undefined ? '' : String.fromCodePoint(code);
   }
 
   /**
