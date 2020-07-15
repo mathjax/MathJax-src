@@ -31,7 +31,7 @@ export const dependencies = {
 
 export const paths = {
   tex: '[mathjax]/input/tex/extensions',
-  sre: '[mathjax]/sre/sre_browser'
+  sre: '[mathjax]/sre/' + (typeof window === 'undefined' ? 'sre-node' : 'sre_browser')
 };
 
 const allPackages = [

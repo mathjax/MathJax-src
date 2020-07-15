@@ -23,7 +23,7 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/

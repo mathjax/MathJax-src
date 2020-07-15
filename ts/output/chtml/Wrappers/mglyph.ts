@@ -24,7 +24,7 @@
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
-import {StyleList, StyleData} from '../../common/CssStyles.js';
+import {StyleList, StyleData} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

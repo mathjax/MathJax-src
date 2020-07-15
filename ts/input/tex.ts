@@ -36,7 +36,7 @@ import TexParser from './tex/TexParser.js';
 import TexError from './tex/TexError.js';
 import ParseOptions from './tex/ParseOptions.js';
 import {TagsFactory} from './tex/Tags.js';
-import {Configuration, ConfigurationHandler} from './tex/Configuration.js';
+import {ParserConfiguration} from './tex/Configuration.js';
 // Import base as it is the default package loaded.
 import './tex/base/BaseConfiguration.js';
 
@@ -70,7 +70,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     // Digit pattern to match numbers.
     digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
     // Maximum size of TeX string to process.
-    maxBuffer: 5 * 1024
+    maxBuffer: 5 * 1024,
+    formatError: (jax: TeX<any, any, any>, err: TexError) => jax.formatError(err)
   };
 
   /**
@@ -80,9 +81,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
   /**
    * The configuration of the TeX jax.
-   * @type {Configuration}
+   * @type {ParserConfiguration}
    */
-  protected configuration: Configuration;
+  protected configuration: ParserConfiguration;
 
   /**
    * The LaTeX code that is parsed.
@@ -103,16 +104,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {string[]} packages Names of packages.
    * @return {Configuration} The configuration object.
    */
-  protected static configure(packages: string[]): Configuration {
-    let configuration = Configuration.empty();
-    // Combine package configurations
-    for (let key of packages) {
-      let conf = ConfigurationHandler.get(key);
-      if (conf) {
-        configuration.append(conf);
-      }
-    }
-    configuration.init(configuration);
+  protected static configure(packages: (string | [string, number])[]): ParserConfiguration {
+    let configuration = new ParserConfiguration(packages);
+    configuration.init();
     return configuration;
   }
 
@@ -123,7 +117,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {ParseOptions} options The parse options.
    * @param {Configuration} configuration The configuration.
    */
-  protected static tags(options: ParseOptions, configuration: Configuration) {
+  protected static tags(options: ParseOptions, configuration: ParserConfiguration) {
     TagsFactory.addTags(configuration.tags);
     TagsFactory.setDefault(options.options.tags);
     options.tags = TagsFactory.getDefault();
@@ -140,9 +134,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this.findTeX = this.options['FindTeX'] || new FindTeX(find);
     const packages = this.options.packages;
     const configuration = this.configuration = TeX.configure(packages);
-    const parseOptions = this._parseOptions = new ParseOptions(configuration, [this.options, TagsFactory.OPTIONS]);
+    const parseOptions = this._parseOptions =
+      new ParseOptions(configuration, [this.options, TagsFactory.OPTIONS]);
     userOptions(parseOptions.options, rest);
-    configuration.config(configuration, this);
+    configuration.config(this);
     TeX.tags(parseOptions, configuration);
     this.postFilters.add(FilterUtil.cleanSubSup, -6);
     this.postFilters.add(FilterUtil.setInherited, -5);
@@ -189,7 +184,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         throw err;
       }
       this.parseOptions.error = true;
-      node = this.formatError(err);
+      node = this.options.formatError(this, err);
     }
     node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
     if (display) {
@@ -210,13 +205,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     return this.findTeX.findMath(strings);
   }
 
-
   /**
-   * Wraps an error into a node for output.
+   * Default formatter for error messages:
+   *   wrap an error into a node for output.
    * @param {TeXError} err The TexError.
    * @return {Node} The merror node.
    */
-  protected formatError(err: TexError): MmlNode {
+  public formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
     return this.parseOptions.nodeFactory.create(
       'error', message, err.id, this.latex);

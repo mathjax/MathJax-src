@@ -140,7 +140,7 @@ export class NodeFactory {
   public static createError(factory: NodeFactory, message: string): MmlNode  {
     let text = factory.create('text', message);
     let mtext = factory.create('node', 'mtext', [], {}, text);
-    let error = factory.create('node', 'merror', [mtext]);
+    let error = factory.create('node', 'merror', [mtext], {'data-mjx-error': message});
     return error;
   }
 

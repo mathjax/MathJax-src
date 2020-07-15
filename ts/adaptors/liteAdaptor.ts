@@ -40,7 +40,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    * The default options
    */
   public static OPTIONS: OptionList = {
-    fontSize: 16,      // we can't compute the font size, so always use this
+    fontSize: 16,        // We can't compute the font size, so always use this
+    fontFamily: 'Times'  // We can't compute the font family, so always use this
   };
 
   /**
@@ -238,6 +239,16 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   /**
    * @override
    */
+  public contains(container: LiteNode, node: LiteNode | LiteText) {
+    while (node && node !== container) {
+      node = this.parent(node);
+    }
+    return !!node;
+  }
+
+  /**
+   * @override
+   */
   public parent(node: LiteNode) {
     return node.parent;
   }
@@ -295,6 +306,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     const i = this.childIndex(onode);
     if (i >= 0) {
       onode.parent.children[i] = nnode;
+      nnode.parent = onode.parent;
+      onode.parent = null;
     }
     return onode;
   }
@@ -533,6 +546,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    */
   public fontSize(_node: LiteElement) {
     return this.options.fontSize;
+  }
+
+  /**
+   * @override
+   */
+  public fontFamily(_node: LiteElement) {
+    return this.options.fontFamily;
   }
 
   /**

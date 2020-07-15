@@ -254,6 +254,16 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
       mtable: {groupalign: true}
     }
   };
+
+  /**
+   * This lists the attributes that should always be inherited,
+   *   even when there is no default value for the attribute.
+   */
+  public static alwaysInherit: {[name: string]: boolean} = {
+    scriptminsize: true,
+    scriptsizemultiplier: true
+  };
+
   /**
    * This is the list of options for the verifyTree() method
    */
@@ -552,7 +562,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
                                 display: boolean = false, level: number = 0, prime: boolean = false) {
     let defaults = this.attributes.getAllDefaults();
     for (const key of Object.keys(attributes)) {
-      if (defaults.hasOwnProperty(key)) {
+      if (defaults.hasOwnProperty(key) || AbstractMmlNode.alwaysInherit.hasOwnProperty(key)) {
         let [node, value] = attributes[key];
         let noinherit = (AbstractMmlNode.noInherit[node] || {})[this.kind] || {};
         if (!noinherit[key]) {
@@ -1085,7 +1095,6 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
    * No children or attributes, so ignore this call.
    *
    * @param {PropertyList} options  The options for the check
-   
    */
   public verifyTree(_options: PropertyList) {}
 

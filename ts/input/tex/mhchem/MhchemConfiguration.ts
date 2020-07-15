@@ -28,7 +28,7 @@ import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
-import AmsMethods from '../ams/AmsMethods.js';
+import {AmsMethods} from '../ams/AmsMethods.js';
 import {mhchemParser, texify} from './mhchem_parser.js';
 
 // Namespace

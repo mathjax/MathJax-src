@@ -27,20 +27,23 @@ import {MathItem, Metrics, STATE} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {FontData, FontDataClass, CharOptions, DelimiterData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
-import {CssStyles} from './CssStyles.js';
 import {CommonWrapper, AnyWrapper, AnyWrapperClass} from './Wrapper.js';
 import {CommonWrapperFactory, AnyWrapperFactory} from './WrapperFactory.js';
 import {percent} from '../../util/lengths.js';
 import {StyleList, Styles} from '../../util/Styles.js';
-import {StyleList as CssStyleList} from './CssStyles.js';
+import {StyleList as CssStyleList, CssStyles} from '../../util/StyleList.js';
 
 /*****************************************************************/
+
+export interface ExtendedMetrics extends Metrics {
+  family: string;     // the font family for the surrounding text
+}
 
 /**
  * Maps linking a node to the test node it contains,
  *  and a map linking a node to the metrics within that node.
  */
-export type MetricMap<N> = Map<N, Metrics>;
+export type MetricMap<N> = Map<N, ExtendedMetrics>;
 type MetricDomMap<N> = Map<N, N>;
 
 /**
@@ -85,7 +88,9 @@ export abstract class CommonOutputJax<
     minScale: .5,                  // smallest scaling factor to use
     matchFontHeight: true,         // true to match ex-height of surrounding font
     mtextInheritFont: false,       // true to make mtext elements use surrounding font
-    merrorInheritFont: true,       // true to make merror text use surrounding font
+    merrorInheritFont: false,      // true to make merror text use surrounding font
+    mtextFont: '',                 // font to use for mtext, if not inheriting (empty means use MathJax fonts)
+    merrorFont: 'serif',           // font to use for merror, if not inheriting (empty means use MathJax fonts)
     mathmlSpacing: false,          // true for MathML spacing rules, false for TeX rules
     skipAttributes: {},            // RFDa and other attributes NOT to copy to the output
     exFactor: .5,                  // default size of ex in em units
@@ -287,8 +292,14 @@ export abstract class CommonOutputJax<
       const parent = adaptor.parent(math.start.node);
       if (math.state() < STATE.METRICS && parent) {
         const map = maps[math.display ? 1 : 0];
-        const {em, ex, containerWidth, lineWidth, scale} = map.get(parent);
+        const {em, ex, containerWidth, lineWidth, scale, family} = map.get(parent);
         math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+        if (this.options.mtextInheritFont) {
+          math.outputData.mtextFamily = family;
+        }
+        if (this.options.merrorInheritFont) {
+          math.outputData.merrorFamily = family;
+        }
         math.state(STATE.METRICS);
       }
     }
@@ -299,9 +310,10 @@ export abstract class CommonOutputJax<
    * @param {boolean} display   True if the metrics are for displayed math
    * @return {Metrics}          Object containing em, ex, containerWidth, etc.
    */
-  public getMetricsFor(node: N, display: boolean): Metrics {
+  public getMetricsFor(node: N, display: boolean): ExtendedMetrics {
+    const getFamily = (this.options.mtextInheritFont || this.options.merrorInheritFont);
     const test = this.getTestElement(node, display);
-    const metrics = this.measureMetrics(test);
+    const metrics = this.measureMetrics(test, getFamily);
     this.adaptor.remove(test);
     return metrics;
   }
@@ -334,10 +346,11 @@ export abstract class CommonOutputJax<
     //
     // Measure the metrics for all the mapped elements
     //
+    const getFamily = this.options.mtextInheritFont || this.options.merrorInheritFont;
     const maps = [new Map() as MetricMap<N>, new Map() as MetricMap<N>];
     for (const i of maps.keys()) {
       for (const node of domMaps[i].keys()) {
-        maps[i].set(node, this.measureMetrics(domMaps[i].get(node)));
+        maps[i].set(node, this.measureMetrics(domMaps[i].get(node), getFamily));
       }
     }
     //
@@ -402,11 +415,13 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @param {N} node    The test node to measure
-   * @return {Metrics}  The metric data for the given node
+   * @param {N} node              The test node to measure
+   * @param {boolean} getFamily   True if font family of surroundings is to be determined
+   * @return {ExtendedMetrics}    The metric data for the given node
    */
-  protected measureMetrics(node: N): Metrics {
+  protected measureMetrics(node: N, getFamily: boolean): ExtendedMetrics {
     const adaptor = this.adaptor;
+    const family = (getFamily ? adaptor.fontFamily(node) : '');
     const em = adaptor.fontSize(node);
     const ex = (adaptor.nodeSize(adaptor.childNode(node, 1) as N)[1] / 60) || (em * this.options.exFactor);
     const containerWidth = (adaptor.getStyle(node, 'display') === 'table' ?
@@ -416,7 +431,7 @@ export abstract class CommonOutputJax<
     const scale = Math.max(this.options.minScale,
                            this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1);
     const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
-    return {em, ex, containerWidth, lineWidth, scale};
+    return {em, ex, containerWidth, lineWidth, scale, family};
   }
 
   /*****************************************************************/
@@ -549,21 +564,23 @@ export abstract class CommonOutputJax<
    * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
    * @return {UnknownBBox}   The width, height and depth for the text
    */
-  public measureTextNodeWithCache(text: N, chars: string, variant: string,
-                                  font: CssFontData = ['', false, false]): UnknownBBox {
-                                    if (variant === '-explicitFont') {
-                                      variant = [font[0], font[1] ? 'T' : 'F', font[2] ? 'T' : 'F', ''].join('-');
-                                    }
-                                    if (!this.unknownCache.has(variant)) {
-                                      this.unknownCache.set(variant, new Map());
-                                    }
-                                    const map = this.unknownCache.get(variant);
-                                    const cached = map.get(chars);
-                                    if (cached) return cached;
-                                    const bbox = this.measureTextNode(text);
-                                    map.set(chars, bbox);
-                                    return bbox;
-                                  }
+  public measureTextNodeWithCache(
+    text: N, chars: string, variant: string,
+    font: CssFontData = ['', false, false]
+  ): UnknownBBox {
+    if (variant === '-explicitFont') {
+      variant = [font[0], font[1] ? 'T' : 'F', font[2] ? 'T' : 'F', ''].join('-');
+    }
+    if (!this.unknownCache.has(variant)) {
+      this.unknownCache.set(variant, new Map());
+    }
+    const map = this.unknownCache.get(variant);
+    const cached = map.get(chars);
+    if (cached) return cached;
+    const bbox = this.measureTextNode(text);
+    map.set(chars, bbox);
+    return bbox;
+  }
 
   /**
    * Measure the width of a text element by placing it in the page

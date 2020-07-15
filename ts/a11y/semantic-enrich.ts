@@ -68,8 +68,9 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
 
   /**
    * @param {MathDocument} document  The document where enrichment is occurring
+   * @param {boolean} force          True to force the enrichment even if not enabled
    */
-  enrich(document: MathDocument<N, T, D>): void;
+  enrich(document: MathDocument<N, T, D>, force?: boolean): void;
 
   /**
    * @param {MathDocument} document  The document where enrichment is occurring
@@ -122,22 +123,25 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
 
     /**
      * @param {MathDocument} document   The MathDocument for the MathItem
+     * @param {boolean} force           True to force the enrichment even if not enabled
      */
-    public enrich(document: MathDocument<N, T, D>) {
-      if (this.state() >= STATE.ENRICHED || this.isEscaped) return;
-      if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
-        mathjax.retryAfter(sreReady());
+    public enrich(document: MathDocument<N, T, D>, force: boolean = false) {
+      if (this.state() >= STATE.ENRICHED) return;
+      if (!this.isEscaped && (document.options.enableEnrichment || force)) {
+        if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
+          mathjax.retryAfter(sreReady());
+        }
+        if (document.options.enrichSpeech !== currentSpeech) {
+          SRE.setupEngine({speech: document.options.enrichSpeech});
+          currentSpeech = document.options.enrichSpeech;
+        }
+        const math = new document.options.MathItem('', MmlJax);
+        math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
+        math.display = this.display;
+        math.compile(document);
+        this.root = math.root;
+        this.inputData.originalMml = math.math;
       }
-      if (document.options.enrichSpeech !== currentSpeech) {
-        SRE.setupEngine({speech: document.options.enrichSpeech});
-        currentSpeech = document.options.enrichSpeech;
-      }
-      const math = new document.options.MathItem('', MmlJax);
-      math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
-      math.display = this.display;
-      math.compile(document);
-      this.root = math.root;
-      this.inputData.originalMml = math.math;
       this.state(STATE.ENRICHED);
     }
 
@@ -235,6 +239,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
+      enableEnrichment: true,
       enrichSpeech: 'none',                   // or 'shallow', or 'deep'
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
@@ -284,8 +289,10 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      */
     public enrich() {
       if (!this.processed.isSet('enriched')) {
-        for (const math of this.math) {
-          (math as EnrichedMathItem<N, T, D>).enrich(this);
+        if (this.options.enableEnrichment) {
+          for (const math of this.math) {
+            (math as EnrichedMathItem<N, T, D>).enrich(this);
+          }
         }
         this.processed.set('enriched');
       }

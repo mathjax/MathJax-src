@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration} from '../Configuration.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {expandable} from '../../../util/Options.js';
 import {CommandMap} from '../SymbolMap.js';
 import {Macro} from '../Symbol.js';
@@ -39,9 +39,9 @@ const MACROSMAP = 'configmacros-map';
  *
  * @param {Configuration} config   The configuration object for the input jax
  */
-function configmacrosInit(config: Configuration) {
+function configmacrosInit(config: ParserConfiguration) {
   new CommandMap(MACROSMAP, {}, {});
-  config.append(Configuration.create('configmacros-definitions', {handler: {macro: [MACROSMAP]}}));
+  config.append(Configuration.local({handler: {macro: [MACROSMAP]}, priority: 3}));
 }
 
 /**
@@ -50,7 +50,7 @@ function configmacrosInit(config: Configuration) {
  * @param {Configuration} config   The configuration object for the input jax
  * @param {TeX} jax                The TeX input jax
  */
-function configmacrosConfig(_config: Configuration, jax: TeX<any, any, any>) {
+function configmacrosConfig(_config: ParserConfiguration, jax: TeX<any, any, any>) {
   const macrosMap = jax.parseOptions.handlers.retrieve(MACROSMAP) as CommandMap;
   const macros = jax.parseOptions.options.macros;
   for (const cs of Object.keys(macros)) {

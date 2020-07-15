@@ -32,7 +32,6 @@ import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {Macro} from '../Symbol.js';
 import {CommandMap} from '../SymbolMap.js';
-import {ExtensionMaps} from '../MapHandler.js';
 import {ArrayItem} from '../base/BaseItems.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
@@ -40,7 +39,7 @@ import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 
 
 // Namespace
-let AmsMethods: Record<string, ParseMethod> = {};
+export const AmsMethods: Record<string, ParseMethod> = {};
 
 
 /**
@@ -128,6 +127,8 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
 };
 
 
+export const NEW_OPS = 'ams-declare-ops';
+
 /**
  * Handle DeclareMathOperator.
  * @param {TexParser} parser The calling parser.
@@ -143,7 +144,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   if (!op.match(/\\text/)) {
     op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
   }
-  (parser.configuration.handlers.retrieve(ExtensionMaps.NEW_COMMAND) as CommandMap).
+  (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).
     add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
 };
 
@@ -225,7 +226,7 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   let bot = parser.GetBrackets(name);
   let first = parser.ParseArg(name);
   let arrow = parser.create('token',
-    'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCharCode(chr));
+    'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCodePoint(chr));
   let mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
   let mpadded = parser.create('node', 'mpadded', [first], def);
   NodeUtil.setAttribute(mpadded, 'voffset', '.15em');
@@ -399,5 +400,3 @@ AmsMethods.Spacer = BaseMethods.Spacer;
 AmsMethods.NamedOp = BaseMethods.NamedOp;
 
 AmsMethods.EqnArray = BaseMethods.EqnArray;
-
-export default AmsMethods;

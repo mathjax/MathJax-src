@@ -30,7 +30,7 @@ import {SVGWrapper} from './svg/Wrapper.js';
 import {SVGWrapperFactory} from './svg/WrapperFactory.js';
 import {SVGFontData} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
-import {StyleList as CssStyleList} from './common/CssStyles.js';
+import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {FontCache} from './svg/FontCache.js';
 import {unicodeChars} from '../util/string.js';
 import {percent} from '../util/lengths.js';
@@ -112,7 +112,12 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
   /**
    * The container element for the math
    */
-  public container: N;
+  public container: N = null;
+
+  /**
+   * The SVG stylesheet, once it is constructed
+   */
+  public svgStyles: N = null;
 
   /**
    * @override
@@ -160,7 +165,10 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    * @override
    */
   public styleSheet(html: MathDocument<N, T, D>) {
-    const sheet = super.styleSheet(html);
+    if (this.svgStyles) {
+      return null;  // stylesheet is already added to the document
+    }
+    const sheet = this.svgStyles = super.styleSheet(html);
     this.adaptor.setAttribute(sheet, 'id', SVG.STYLESHEETID);
     return sheet;
   }

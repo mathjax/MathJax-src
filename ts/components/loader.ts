@@ -60,11 +60,11 @@ export interface MathJaxObject extends MJObject {
   _: MathJaxLibrary;
   config: MathJaxConfig;
   loader: {
-    ready: (...names: string[]) => Promise<void>;    // Get a promise for when all the named packages are loaded
-    load: (...names: string[]) => Promise<string>;   // Load the packages and return a promise for when ready
-    preLoad: (...names: string[]) => void;           // Indicate that packages are already loaded by hand
-    defaultReady: () => void;                        // The function performed when all packages are loaded
-    getRoot: () => string;                           // Find the root URL for the MathJax files
+    ready: (...names: string[]) => Promise<string[]>; // Get a promise for when all the named packages are loaded
+    load: (...names: string[]) => Promise<string>;    // Load the packages and return a promise for when ready
+    preLoad: (...names: string[]) => void;            // Indicate that packages are already loaded by hand
+    defaultReady: () => void;                         // The function performed when all packages are loaded
+    getRoot: () => string;                            // Find the root URL for the MathJax files
   };
   startup?: any;
 }

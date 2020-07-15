@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration} from '../Configuration.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../SymbolMap.js';
 import {Macro} from '../Symbol.js';
@@ -32,17 +32,6 @@ import {RequireLoad, RequireConfiguration} from '../require/RequireConfiguration
 import {Package} from '../../../components/package.js';
 import {expandable, defaultOptions} from '../../../util/Options.js';
 
-/**
- * A CommandMap class that allows removal of macros
- */
-export class AutoloadCommandMap extends CommandMap {
-  /**
-   * @param{string} name   The command to be removed
-   */
-  public remove(name: string) {
-    (this as any).map.delete(name);
-  }
-}
 
 /**
  * Autoload an extension when the first macro for it is encountered
@@ -78,7 +67,7 @@ function Autoload(parser: TexParser, name: string, extension: string, isMacro: b
  *  the priorities of the initialization and configuration are set so that autoload
  *  will run after require when both are used.)
  */
-function initAutoload(config: Configuration) {
+function initAutoload(config: ParserConfiguration) {
   if (!config.options.require) {
     defaultOptions(config.options, RequireConfiguration.options);
   }
@@ -89,7 +78,7 @@ function initAutoload(config: Configuration) {
  * Only ones that aren't already defined are made to autoload
  *   (except for \color, which is overridden if present)
  */
-function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
+function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
   const parser = jax.parseOptions;
   const macros = parser.handlers.get('macro');
   const environments = parser.handlers.get('environment');
@@ -120,7 +109,7 @@ function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
   //
   //  Check if the require extension needs to be configured
   //
-  if (!parser.options.require.jax) {
+  if (!parser.packageData.get('require')) {
     RequireConfiguration.config(config, jax);
   }
 }
@@ -128,8 +117,8 @@ function configAutoload(config: Configuration, jax: TeX<any, any, any>) {
 /**
  * The command and environment maps for the macros that autoload extensions
  */
-const AutoloadMacros = new AutoloadCommandMap('autoload-macros', {}, {});
-const AutoloadEnvironments = new AutoloadCommandMap('autoload-environments', {}, {});
+const AutoloadMacros = new CommandMap('autoload-macros', {}, {});
+const AutoloadEnvironments = new CommandMap('autoload-environments', {}, {});
 
 
 /**
@@ -166,7 +155,8 @@ export const AutoloadConfiguration = Configuration.create(
         verb: ['verb']
       })
     },
-    config: configAutoload, configPriority: 10,
-    init: initAutoload, priority: 10
+    config: configAutoload,
+    init: initAutoload,
+    priority: 10
   }
 );
