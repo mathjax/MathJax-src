@@ -262,9 +262,9 @@ export class AbstractExplorer<T> implements Explorer {
   protected getHighlighter(): sre.Highlighter {
     let opts = this.document.options.a11y;
     let foreground = {color: opts.foregroundColor.toLowerCase(),
-                      alpha: opts.foregroundOpacity};
+                      alpha: opts.foregroundOpacity / 100};
     let background = {color: opts.backgroundColor.toLowerCase(),
-                      alpha: opts.backgroundOpacity};
+                      alpha: opts.backgroundOpacity / 100};
     return sre.HighlighterFactory.highlighter(
       background, foreground,
       {renderer: this.document.outputJax.name, browser: 'v3'});

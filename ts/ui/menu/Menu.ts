@@ -83,9 +83,11 @@ export interface MenuSettings {
   assistiveMml: boolean;
   // A11y settings
   backgroundColor: string;
+  backgroundOpacity: string;
   braille: boolean;
   explorer: boolean;
   foregroundColor: string;
+  foregroundOpacity: string;
   highlight: string;
   infoPrefix: boolean;
   infoRole: boolean;
@@ -408,7 +410,9 @@ export class Menu {
           this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
           this.a11yVar<string> ('highlight'),
           this.a11yVar<string> ('backgroundColor'),
+          this.a11yVar<string> ('backgroundOpacity'),
           this.a11yVar<string> ('foregroundColor'),
+          this.a11yVar<string> ('foregroundOpacity'),
           this.a11yVar<boolean>('speech'),
           this.a11yVar<boolean>('subtitles'),
           this.a11yVar<boolean>('braille'),
@@ -489,9 +493,17 @@ export class Menu {
               this.submenu('Background', 'Background', this.radioGroup('backgroundColor', [
                 ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
               ])),
+              {'type': 'slider',
+               'variable': 'backgroundOpacity',
+               'content': ' '
+              },
               this.submenu('Foreground', 'Foreground', this.radioGroup('foregroundColor', [
                 ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
               ])),
+              {'type': 'slider',
+               'variable': 'foregroundOpacity',
+               'content': ' '
+              },
               this.rule(),
               this.radioGroup('highlight', [
                 ['None'], ['Hover'], ['Flame']

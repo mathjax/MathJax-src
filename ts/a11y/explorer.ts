@@ -249,11 +249,11 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
       a11y: {
         align: 'top',                      // placement of magnified expression
         backgroundColor: 'Blue',           // color for background of selected sub-expression
-        backgroundOpacity: .2,             // opacity for background of selected sub-expression
+        backgroundOpacity: 20,             // opacity for background of selected sub-expression
         braille: false,                    // switch on Braille output
         flame: false,                      // color collapsible sub-expressions
         foregroundColor: 'Black',          // color to use for text of selected sub-expression
-        foregroundOpacity: 1,              // opacity for text of selected sub-expression
+        foregroundOpacity: 100,            // opacity for text of selected sub-expression
         highlight: 'None',                 // type of highlighting for collapsible sub-expressions
         hover: false,                      // show collapsible sub-expression on mouse hovering
         infoPrefix: false,                 // show speech prefixes on mouse hovering
