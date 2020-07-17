@@ -393,151 +393,150 @@ export class Menu {
    */
   protected initMenu() {
     let parser = new Parser([['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)]]);
-    this.menu = parser.contextMenu({
-      menu: {
-        id: 'MathJax_Menu',
-        pool: [
-          this.variable<boolean>('texHints'),
-          this.variable<boolean>('semantics'),
-          this.variable<string> ('zoom'),
-          this.variable<string> ('zscale'),
-          this.variable<string> ('renderer', (jax: string) => this.setRenderer(jax)),
-          this.variable<boolean>('alt'),
-          this.variable<boolean>('cmd'),
-          this.variable<boolean>('ctrl'),
-          this.variable<boolean>('shift'),
-          this.variable<string> ('scale', (scale: string) => this.setScale(scale)),
-          this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
-          this.a11yVar<string> ('highlight'),
-          this.a11yVar<string> ('backgroundColor'),
-          this.a11yVar<string> ('backgroundOpacity'),
-          this.a11yVar<string> ('foregroundColor'),
-          this.a11yVar<string> ('foregroundOpacity'),
-          this.a11yVar<boolean>('speech'),
-          this.a11yVar<boolean>('subtitles'),
-          this.a11yVar<boolean>('braille'),
-          this.a11yVar<boolean>('viewBraille'),
-          this.a11yVar<string> ('speechRules'),
-          this.a11yVar<string> ('magnification'),
-          this.a11yVar<string> ('magnify'),
-          this.a11yVar<boolean>('treeColoring'),
-          this.a11yVar<boolean>('infoType'),
-          this.a11yVar<boolean>('infoRole'),
-          this.a11yVar<boolean>('infoPrefix'),
-          this.variable<boolean>('autocollapse'),
-          this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
-          this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab)),
-          this.variable<boolean>('assistiveMml', (mml: boolean) => this.setAssistiveMml(mml))
-        ],
-        items: [
-          this.submenu('Show', 'Show Math As', [
-            this.command('MathMLcode', 'MathML Code', () => this.mathmlCode.post()),
-            this.command('Original', 'Original Form', () => this.originalText.post()),
-            this.submenu('Annotation', 'Annotation')
-          ]),
-          this.submenu('Copy', 'Copy to Clipboard', [
-            this.command('MathMLcode', 'MathML Code', () => this.copyMathML()),
-            this.command('Original', 'Original Form', () => this.copyOriginal()),
-            this.submenu('Annotation', 'Annotation')
-          ]),
+    this.menu = parser.parse({
+      type: 'contextMenu',
+      id: 'MathJax_Menu',
+      pool: [
+        this.variable<boolean>('texHints'),
+        this.variable<boolean>('semantics'),
+        this.variable<string> ('zoom'),
+        this.variable<string> ('zscale'),
+        this.variable<string> ('renderer', (jax: string) => this.setRenderer(jax)),
+        this.variable<boolean>('alt'),
+        this.variable<boolean>('cmd'),
+        this.variable<boolean>('ctrl'),
+        this.variable<boolean>('shift'),
+        this.variable<string> ('scale', (scale: string) => this.setScale(scale)),
+        this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
+        this.a11yVar<string> ('highlight'),
+        this.a11yVar<string> ('backgroundColor'),
+        this.a11yVar<string> ('backgroundOpacity'),
+        this.a11yVar<string> ('foregroundColor'),
+        this.a11yVar<string> ('foregroundOpacity'),
+        this.a11yVar<boolean>('speech'),
+        this.a11yVar<boolean>('subtitles'),
+        this.a11yVar<boolean>('braille'),
+        this.a11yVar<boolean>('viewBraille'),
+        this.a11yVar<string> ('speechRules'),
+        this.a11yVar<string> ('magnification'),
+        this.a11yVar<string> ('magnify'),
+        this.a11yVar<boolean>('treeColoring'),
+        this.a11yVar<boolean>('infoType'),
+        this.a11yVar<boolean>('infoRole'),
+        this.a11yVar<boolean>('infoPrefix'),
+        this.variable<boolean>('autocollapse'),
+        this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
+        this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab)),
+        this.variable<boolean>('assistiveMml', (mml: boolean) => this.setAssistiveMml(mml))
+      ],
+      items: [
+        this.submenu('Show', 'Show Math As', [
+          this.command('MathMLcode', 'MathML Code', () => this.mathmlCode.post()),
+          this.command('Original', 'Original Form', () => this.originalText.post()),
+          this.submenu('Annotation', 'Annotation')
+        ]),
+        this.submenu('Copy', 'Copy to Clipboard', [
+          this.command('MathMLcode', 'MathML Code', () => this.copyMathML()),
+          this.command('Original', 'Original Form', () => this.copyOriginal()),
+          this.submenu('Annotation', 'Annotation')
+        ]),
+        this.rule(),
+        this.submenu('Settings', 'Math Settings', [
+          this.submenu('Renderer', 'Math Renderer', this.radioGroup('renderer', [['CHTML'], ['SVG']])),
           this.rule(),
-          this.submenu('Settings', 'Math Settings', [
-            this.submenu('Renderer', 'Math Renderer', this.radioGroup('renderer', [['CHTML'], ['SVG']])),
+          this.submenu('ZoomTrigger', 'Zoom Trigger', [
+            this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '', this.menu.mathItem)),
             this.rule(),
-            this.submenu('ZoomTrigger', 'Zoom Trigger', [
-              this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '', this.menu.mathItem)),
-              this.rule(),
-              this.radioGroup('zoom', [
-                ['Click'], ['DoubleClick', 'Double-Click'], ['NoZoom', 'No Zoom']
-              ]),
-              this.rule(),
-              this.label('TriggerRequires', 'Trigger Requires:'),
-              this.checkbox((isMac ? 'Option' : 'Alt'), (isMac ? 'Option' : 'Alt'), 'alt'),
-              this.checkbox('Command', 'Command', 'cmd', {hidden: !isMac}),
-              this.checkbox('Control', 'Control', 'ctrl', {hiddne: isMac}),
-              this.checkbox('Shift', 'Shift', 'shift')
+            this.radioGroup('zoom', [
+              ['Click'], ['DoubleClick', 'Double-Click'], ['NoZoom', 'No Zoom']
             ]),
-            this.submenu('ZoomFactor', 'Zoom Factor', this.radioGroup('zscale', [
-              ['150%'], ['175%'], ['200%'], ['250%'], ['300%'], ['400%']
+            this.rule(),
+            this.label('TriggerRequires', 'Trigger Requires:'),
+            this.checkbox((isMac ? 'Option' : 'Alt'), (isMac ? 'Option' : 'Alt'), 'alt'),
+            this.checkbox('Command', 'Command', 'cmd', {hidden: !isMac}),
+            this.checkbox('Control', 'Control', 'ctrl', {hiddne: isMac}),
+            this.checkbox('Shift', 'Shift', 'shift')
+          ]),
+          this.submenu('ZoomFactor', 'Zoom Factor', this.radioGroup('zscale', [
+            ['150%'], ['175%'], ['200%'], ['250%'], ['300%'], ['400%']
+          ])),
+          this.rule(),
+          this.command('Scale', 'Scale All Math...', () => this.scaleAllMath()),
+          this.rule(),
+          this.checkbox('texHints', 'Add TeX hints to MathML', 'texHints'),
+          this.checkbox('semantics', 'Add original as annotation', 'semantics'),
+          this.rule(),
+          this.command('Reset', 'Reset to defaults', () => this.resetDefaults())
+        ]),
+        this.submenu('Accessibility', 'Accessibility', [
+          this.checkbox('Activate', 'Activate', 'explorer'),
+          this.submenu('Speech', 'Speech', [
+            this.checkbox('Speech', 'Speech Output', 'speech'),
+            this.checkbox('Subtitles', 'Speech Subtities', 'subtitles'),
+            this.checkbox('Braille', 'Braille Output', 'braille'),
+            this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
+            this.rule(),
+            this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechRules', [
+              ['mathspeak-default', 'Verbose'],
+              ['mathspeak-brief', 'Brief'],
+              ['mathspeak-sbrief', 'Superbrief']
             ])),
-            this.rule(),
-            this.command('Scale', 'Scale All Math...', () => this.scaleAllMath()),
-            this.rule(),
-            this.checkbox('texHints', 'Add TeX hints to MathML', 'texHints'),
-            this.checkbox('semantics', 'Add original as annotation', 'semantics'),
-            this.rule(),
-            this.command('Reset', 'Reset to defaults', () => this.resetDefaults())
+            this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechRules', [
+              ['clearspeak-default', 'Auto']
+            ])),
+            this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
+              ['default-default', 'Standard'],
+              ['default-alternative', 'Alternative']
+            ]))
           ]),
-          this.submenu('Accessibility', 'Accessibility', [
-            this.checkbox('Activate', 'Activate', 'explorer'),
-            this.submenu('Speech', 'Speech', [
-              this.checkbox('Speech', 'Speech Output', 'speech'),
-              this.checkbox('Subtitles', 'Speech Subtities', 'subtitles'),
-              this.checkbox('Braille', 'Braille Output', 'braille'),
-              this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
-              this.rule(),
-              this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechRules', [
-                ['mathspeak-default', 'Verbose'],
-                ['mathspeak-brief', 'Brief'],
-                ['mathspeak-sbrief', 'Superbrief']
-              ])),
-              this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechRules', [
-                ['clearspeak-default', 'Auto']
-              ])),
-              this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
-                ['default-default', 'Standard'],
-                ['default-alternative', 'Alternative']
-              ]))
-            ]),
-            this.submenu('Highlight', 'Highlight', [
-              this.submenu('Background', 'Background', this.radioGroup('backgroundColor', [
-                ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
-              ])),
-              {'type': 'slider',
-               'variable': 'backgroundOpacity',
-               'content': ' '
-              },
-              this.submenu('Foreground', 'Foreground', this.radioGroup('foregroundColor', [
-                ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
-              ])),
-              {'type': 'slider',
-               'variable': 'foregroundOpacity',
-               'content': ' '
-              },
-              this.rule(),
-              this.radioGroup('highlight', [
-                ['None'], ['Hover'], ['Flame']
-              ]),
-              this.rule(),
-              this.checkbox('TreeColoring', 'Tree Coloring', 'treeColoring')
-            ]),
-            this.submenu('Magnification', 'Magnification', [
-              this.radioGroup('magnification', [
-                ['None'], ['Keyboard'], ['Mouse']
-              ]),
-              this.rule(),
-              this.radioGroup('magnify', [
-                ['200%'], ['300%'], ['400%'], ['500%']
-              ])
-            ]),
-            this.submenu('Semantic Info', 'Semantic Info', [
-              this.checkbox('Type', 'Type', 'infoType'),
-              this.checkbox('Role', 'Role', 'infoRole'),
-              this.checkbox('Prefix', 'Prefix', 'infoPrefix')
-            ], true),
+          this.submenu('Highlight', 'Highlight', [
+            this.submenu('Background', 'Background', this.radioGroup('backgroundColor', [
+              ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
+            ])),
+            {'type': 'slider',
+             'variable': 'backgroundOpacity',
+             'content': ' '
+            },
+            this.submenu('Foreground', 'Foreground', this.radioGroup('foregroundColor', [
+              ['Black'], ['White'], ['Magenta'], ['Cyan'], ['Yellow'], ['Green'], ['Red'], ['Blue']
+            ])),
+            {'type': 'slider',
+             'variable': 'foregroundOpacity',
+             'content': ' '
+            },
             this.rule(),
-            this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
-            this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {disabled: true}),
+            this.radioGroup('highlight', [
+              ['None'], ['Hover'], ['Flame']
+            ]),
             this.rule(),
-            this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder'),
-            this.checkbox('AssistiveMml', 'Include Hidden MathML', 'assistiveMml')
+            this.checkbox('TreeColoring', 'Tree Coloring', 'treeColoring')
           ]),
-          this.submenu('Language', 'Language'),
+          this.submenu('Magnification', 'Magnification', [
+            this.radioGroup('magnification', [
+              ['None'], ['Keyboard'], ['Mouse']
+            ]),
+            this.rule(),
+            this.radioGroup('magnify', [
+              ['200%'], ['300%'], ['400%'], ['500%']
+            ])
+          ]),
+          this.submenu('Semantic Info', 'Semantic Info', [
+            this.checkbox('Type', 'Type', 'infoType'),
+            this.checkbox('Role', 'Role', 'infoRole'),
+            this.checkbox('Prefix', 'Prefix', 'infoPrefix')
+          ], true),
           this.rule(),
-          this.command('About', 'About MathJax', () => this.about.post()),
-          this.command('Help', 'MathJax Help', () => this.help.post())
-        ]
-      }
+          this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
+          this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {disabled: true}),
+          this.rule(),
+          this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder'),
+          this.checkbox('AssistiveMml', 'Include Hidden MathML', 'assistiveMml')
+        ]),
+        this.submenu('Language', 'Language'),
+        this.rule(),
+        this.command('About', 'About MathJax', () => this.about.post()),
+        this.command('Help', 'MathJax Help', () => this.help.post())
+      ]
     }) as MJContextMenu;
     const menu = this.menu;
     this.about.attachMenu(menu);
