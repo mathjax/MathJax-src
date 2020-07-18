@@ -525,6 +525,7 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
 let csMenu = function(menu: MJContextMenu, sub: Submenu) {
     // TODO: Replace with real locale!
     const items = sre.ClearspeakPreferences.smartPreferences(menu.mathItem, 'en');
+  console.log(sre.Variables.LOCALES);
     return menu.factory.get('subMenu')(menu.factory, {
         items: items,
         id: 'Clearspeak'
@@ -532,3 +533,14 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
 };
 
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
+
+let language = function(menu: MJContextMenu, sub: Submenu) {
+  console.log(menu);
+  console.log(sub);
+  return menu.factory.get('subMenu')(menu.factory, {
+    items: [{'type': 'rule'}], id: 'Language'}, sub);
+  // menu.radioGroup() sre.Variables.LOCALES
+};
+
+MJContextMenu.DynamicSubmenus.set('Language', language);
+

@@ -66,6 +66,12 @@ declare namespace sre.ClearspeakPreferences {
 
 }
 
+declare namespace sre.Variables {
+  export const LOCALES: string[];
+}
+
+
+
 declare namespace SRE {
   type config = {
     locale?: string,
