@@ -523,12 +523,25 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
 
 
 let csMenu = function(menu: MJContextMenu, sub: Submenu) {
-    // TODO: Replace with real locale!
-    const items = sre.ClearspeakPreferences.smartPreferences(menu.mathItem, 'en');
-    return menu.factory.get('subMenu')(menu.factory, {
-        items: items,
-        id: 'Clearspeak'
-    }, sub);
+  const items = sre.ClearspeakPreferences.smartPreferences(
+    menu.mathItem, menu.pool.lookup('locale').getValue() as string);
+  return menu.factory.get('subMenu')(menu.factory, {
+    items: items,
+    id: 'Clearspeak'
+  }, sub);
 };
 
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
+
+let language = function(menu: MJContextMenu, sub: Submenu) {
+  let radios = [];
+  for (let lang of sre.Variables.LOCALES) {
+    if (lang === 'nemeth') continue;
+    radios.push({type: 'radio', id: lang, content: lang, variable: 'locale'});
+  }
+  return menu.factory.get('subMenu')(menu.factory, {
+    items: radios, id: 'Language'}, sub);
+};
+
+MJContextMenu.DynamicSubmenus.set('Language', language);
+
