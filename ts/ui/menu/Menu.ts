@@ -89,6 +89,7 @@ export interface MenuSettings {
   foregroundColor: string;
   foregroundOpacity: string;
   highlight: string;
+  locale: string;
   infoPrefix: boolean;
   infoRole: boolean;
   infoType: boolean;
@@ -417,6 +418,7 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
+        this.a11yVar<string>('locale'),
         this.a11yVar<string> ('speechRules'),
         this.a11yVar<string> ('magnification'),
         this.a11yVar<string> ('magnify'),

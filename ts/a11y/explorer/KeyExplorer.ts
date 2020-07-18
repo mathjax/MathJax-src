@@ -299,9 +299,11 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     let options = this.speechGenerator.getOptions();
     let [domain, style] = this.document.options.a11y.speechRules.split('-');
     if (options.modality === 'speech' &&
-        (options.domain !== domain || options.style !== style)) {
+        (options.locale !== this.document.options.a11y.locale ||
+          options.domain !== domain || options.style !== style)) {
       options.domain = domain;
       options.style = style;
+      options.locale = this.document.options.a11y.locale;
       this.walker.update(options);
     }
     return options;
