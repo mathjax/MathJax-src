@@ -522,6 +522,11 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
 }
 
 
+/**
+ * Creates dynamic clearspeak menu.
+ * @param {MJContextMenu} menu The context menu.
+ * @param {Submenu} sub The submenu to attach.
+ */
 let csMenu = function(menu: MJContextMenu, sub: Submenu) {
   const items = sre.ClearspeakPreferences.smartPreferences(
     menu.mathItem, menu.pool.lookup('locale').getValue() as string);
@@ -533,6 +538,11 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
 
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
 
+/**
+ * Creates dynamic locale menu.
+ * @param {MJContextMenu} menu The context menu.
+ * @param {Submenu} sub The submenu to attach.
+ */
 let language = function(menu: MJContextMenu, sub: Submenu) {
   let radios = [];
   for (let lang of sre.Variables.LOCALES) {
