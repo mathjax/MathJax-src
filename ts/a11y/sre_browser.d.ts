@@ -64,6 +64,7 @@ declare namespace sre.ClearspeakPreferences {
 
   export function smartPreferences(item: Object, locale: string): string[];
 
+  export function getLocalePreferences(): string[];
 }
 
 declare namespace sre.Variables {

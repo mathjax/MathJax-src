@@ -528,6 +528,7 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
  * @param {Submenu} sub The submenu to attach.
  */
 let csMenu = function(menu: MJContextMenu, sub: Submenu) {
+  console.log(sre.ClearspeakPreferences.getLocalePreferences());
   const items = sre.ClearspeakPreferences.smartPreferences(
     menu.mathItem, menu.pool.lookup('locale').getValue() as string);
   return menu.factory.get('subMenu')(menu.factory, {
