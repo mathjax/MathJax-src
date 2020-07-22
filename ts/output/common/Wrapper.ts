@@ -708,7 +708,7 @@ export class CommonWrapper<
         //
         //  Remap to Math Alphanumerics block
         //
-        const map = this.font.getVariant(variant).chars;
+        const map = this.font.getVariant(variant)?.chars;
         if (map) {
             //
             //  Is map[n] doesn't exist, (map[n] || []) still gives an CharData array.
