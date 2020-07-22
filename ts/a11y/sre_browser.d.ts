@@ -48,6 +48,7 @@ declare namespace sre.SpeechGeneratorFactory {
 }
 
 declare namespace sre.Engine {
+  export const DOMAIN_TO_STYLES: {[rules: string]: string};
   export function isReady(): boolean;
 }
 
@@ -65,6 +66,8 @@ declare namespace sre.ClearspeakPreferences {
   export function smartPreferences(item: Object, locale: string): Object[];
 
   export function getLocalePreferences(): {[locale: string]: {[pref: string]: string[]}};
+
+  export function addPreference(previous: string, key: string, value: string): string;
 }
 
 declare namespace sre.Variables {

@@ -521,23 +521,50 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
   }
 }
 
-
+/**
+ * Values for the ClearSpeak preference variables.
+ */
 let csPrefsSetting: {[pref: string]: string} = {};
 
+/**
+ * Generator of all variables for the Clearspeak Preference settings.
+ * @param {MJContextMenu} menu The current context menu.
+ * @param {string[]} prefs The preferences.
+ */
 let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
+  let srVariable = menu.pool.lookup('speechRules');
   for (let pref of prefs) {
     if (csPrefsSetting[pref]) continue;
     menu.factory.get('variable')(menu.factory, {
       name: 'csprf_' + pref,
-      setter: (value: string) => {csPrefsSetting[pref] = value;},
-      getter: () => {return csPrefsSetting[pref] || 'Auto'}
+      setter: (value: string) => {
+        csPrefsSetting[pref] = value;
+          srVariable.setValue(
+          'clearspeak-' +
+            sre.ClearspeakPreferences.addPreference(
+              sre.Engine.DOMAIN_TO_STYLES['clearspeak'], pref, value)
+        );
+      },
+      getter: () => { return csPrefsSetting[pref] || 'Auto'; }
     }, menu.pool);
   }
 };
 
+/**
+ * Generate the selection box for the Clearspeak Preferences.
+ * @param {MJContextMenu} menu The current context menu.
+ * @param {string} locale The current locale.
+ */
 let csSelectionBox = function(menu: MJContextMenu, locale: string) {
   let prefs = sre.ClearspeakPreferences.getLocalePreferences();
   let props = prefs[locale];
+  if (!props) {
+    let csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
+    if (csEntry) {
+      csEntry.disable();
+    }
+    return null;
+  }
   csPrefsVariables(menu, Object.keys(props));
   let items = [];
   for (const prop of Object.getOwnPropertyNames(props)) {
@@ -548,16 +575,16 @@ let csSelectionBox = function(menu: MJContextMenu, locale: string) {
     });
   }
   let sb = menu.factory.get('selectionBox')(menu.factory, {
-           'title': 'Clearspeak Preferences',
-           'signature': '',
-           'order': 'alphabetic',
-           'selections': items
+    'title': 'Clearspeak Preferences',
+    'signature': '',
+    'order': 'alphabetic',
+    'grid': 'square',
+    'selections': items
   }, menu);
   return {'type': 'command',
           'id': 'ClearspeakPreferences',
           'content': 'Select Preferences',
-          'action': () => sb.post(0, 0)
-  }
+          'action': () => sb.post(0, 0)};
 };
 
 /**
@@ -570,7 +597,9 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
   const box = csSelectionBox(menu, locale);
   const items = sre.ClearspeakPreferences.smartPreferences(
     menu.mathItem, locale);
-  items.splice(2, 0, box);
+  if (box) {
+    items.splice(2, 0, box);
+  }
   return menu.factory.get('subMenu')(menu.factory, {
     items: items,
     id: 'Clearspeak'
@@ -579,12 +608,16 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
 
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
 
+/**
+ * Locale mapping to language names.
+ * @type {{[locale: string]: string}}
+ */
 const iso: {[locale: string]: string} = {
   'de': 'German',
   'en': 'English',
   'es': 'Spanish',
   'fr': 'French'
-}
+};
 
 /**
  * Creates dynamic locale menu.
@@ -596,8 +629,10 @@ let language = function(menu: MJContextMenu, sub: Submenu) {
                content: string, variable: string}[] = [];
   for (let lang of sre.Variables.LOCALES) {
     if (lang === 'nemeth') continue;
-    radios.push({type: 'radio', id: lang, content: iso[lang] || lang, variable: 'locale'});
+    radios.push({type: 'radio', id: lang,
+                 content: iso[lang] || lang, variable: 'locale'});
   }
+  radios.sort((x, y) => x.content.localeCompare(y.content, 'en'));
   return menu.factory.get('subMenu')(menu.factory, {
     items: radios, id: 'Language'}, sub);
 };
