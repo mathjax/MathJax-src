@@ -522,15 +522,55 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
 }
 
 
+let csPrefsSetting: {[pref: string]: string} = {};
+
+let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
+  for (let pref of prefs) {
+    if (csPrefsSetting[pref]) continue;
+    menu.factory.get('variable')(menu.factory, {
+      name: 'csprf_' + pref,
+      setter: (value: string) => {csPrefsSetting[pref] = value;},
+      getter: () => {return csPrefsSetting[pref] || 'Auto'}
+    }, menu.pool);
+  }
+};
+
+let csSelectionBox = function(menu: MJContextMenu, locale: string) {
+  let prefs = sre.ClearspeakPreferences.getLocalePreferences();
+  let props = prefs[locale];
+  csPrefsVariables(menu, Object.keys(props));
+  let items = [];
+  for (const prop of Object.getOwnPropertyNames(props)) {
+    items.push({
+      'title': prop,
+      'values': props[prop].map(x => x.replace(RegExp('^' + prop + '_'), '')),
+      'variable': 'csprf_' + prop
+    });
+  }
+  let sb = menu.factory.get('selectionBox')(menu.factory, {
+           'title': 'Clearspeak Preferences',
+           'signature': '',
+           'order': 'alphabetic',
+           'selections': items
+  }, menu);
+  return {'type': 'command',
+          'id': 'ClearspeakPreferences',
+          'content': 'Select Preferences',
+          'action': () => sb.post(0, 0)
+  }
+};
+
 /**
  * Creates dynamic clearspeak menu.
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach.
  */
 let csMenu = function(menu: MJContextMenu, sub: Submenu) {
-  console.log(sre.ClearspeakPreferences.getLocalePreferences());
+  let locale = menu.pool.lookup('locale').getValue() as string;
+  const box = csSelectionBox(menu, locale);
   const items = sre.ClearspeakPreferences.smartPreferences(
-    menu.mathItem, menu.pool.lookup('locale').getValue() as string);
+    menu.mathItem, locale);
+  items.splice(2, 0, box);
   return menu.factory.get('subMenu')(menu.factory, {
     items: items,
     id: 'Clearspeak'
@@ -539,20 +579,27 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
 
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
 
+const iso: {[locale: string]: string} = {
+  'de': 'German',
+  'en': 'English',
+  'es': 'Spanish',
+  'fr': 'French'
+}
+
 /**
  * Creates dynamic locale menu.
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach.
  */
 let language = function(menu: MJContextMenu, sub: Submenu) {
-  let radios = [];
+  let radios: {type: string, id: string,
+               content: string, variable: string}[] = [];
   for (let lang of sre.Variables.LOCALES) {
     if (lang === 'nemeth') continue;
-    radios.push({type: 'radio', id: lang, content: lang, variable: 'locale'});
+    radios.push({type: 'radio', id: lang, content: iso[lang] || lang, variable: 'locale'});
   }
   return menu.factory.get('subMenu')(menu.factory, {
     items: radios, id: 'Language'}, sub);
 };
 
-MJContextMenu.DynamicSubmenus.set('Language', language);
-
+MJContextMenu.DynamicSubmenus.set('A11yLanguage', language);

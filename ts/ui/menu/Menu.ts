@@ -478,6 +478,8 @@ export class Menu {
             this.checkbox('Braille', 'Braille Output', 'braille'),
             this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
             this.rule(),
+            this.submenu('A11yLanguage', 'Language'),
+            this.rule(),
             this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechRules', [
               ['mathspeak-default', 'Verbose'],
               ['mathspeak-brief', 'Brief'],

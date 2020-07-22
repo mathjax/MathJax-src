@@ -62,9 +62,9 @@ declare namespace sre.HighlighterFactory {
 
 declare namespace sre.ClearspeakPreferences {
 
-  export function smartPreferences(item: Object, locale: string): string[];
+  export function smartPreferences(item: Object, locale: string): Object[];
 
-  export function getLocalePreferences(): string[];
+  export function getLocalePreferences(): {[locale: string]: {[pref: string]: string[]}};
 }
 
 declare namespace sre.Variables {
