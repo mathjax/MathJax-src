@@ -71,10 +71,9 @@ export default class TexParser {
    * @param {string} string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
    *     state of the overall expression translation.
-   * @param {ParseOptions=} configuration A parser configuration.
+   * @param {ParseOptions} configuration A parser configuration.
    */
-  constructor(private _string: string, env: EnvList,
-              public configuration: ParseOptions) {
+  constructor(private _string: string, env: EnvList, public configuration: ParseOptions) {
     const inner = env.hasOwnProperty('isInner');
     const isInner = env['isInner'] as boolean;
     delete env['isInner'];
@@ -272,7 +271,7 @@ export default class TexParser {
   public GetCS(): string {
     let CS = this.string.slice(this.i).match(/^([a-z]+|[\uD800-\uDBFF].|.) ?/i);
     if (CS) {
-      this.i += CS[1].length;
+      this.i += CS[0].length;
       return CS[1];
     } else {
       this.i++;

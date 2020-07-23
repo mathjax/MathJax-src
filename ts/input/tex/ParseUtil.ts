@@ -240,6 +240,9 @@ namespace ParseUtil {
    */
   export function internalMath(parser: TexParser, text: string,
                                level?: number | string): MmlNode[] {
+    if (parser.configuration.options.internalMath) {
+      return parser.configuration.options.internalMath(parser, text, level);
+    }
     let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
     if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {

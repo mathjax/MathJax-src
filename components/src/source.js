@@ -29,6 +29,7 @@ export const source = {
   '[tex]/physics': `${src}/input/tex/extensions/physics/physics.js`,
   '[tex]/require': `${src}/input/tex/extensions/require/require.js`,
   '[tex]/tagformat': `${src}/input/tex/extensions/tagformat/tagformat.js`,
+  '[tex]/textmacros': `${src}/input/tex/extensions/textmacros/textmacros.js`,
   '[tex]/unicode': `${src}/input/tex/extensions/unicode/unicode.js`,
   '[tex]/verb': `${src}/input/tex/extensions/verb/verb.js`,
   'input/mml': `${src}/input/mml/mml.js`,

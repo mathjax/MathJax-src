@@ -83,6 +83,7 @@ function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
   const macros = parser.handlers.get('macro');
   const environments = parser.handlers.get('environment');
   const autoload = parser.options.autoload;
+  parser.packageData.set('autoload', {Autoload});  // used by textmacros to tell if a macro is autoloading
   //
   // Loop through the autoload definitions
   //
