@@ -97,7 +97,7 @@ export interface DOMAdaptor<N, T, D> {
   root(doc: D): N;
 
   /**
-   * @paramn {D} doc    The document whose doctype is to be obtained
+   * @param {D} doc     The document whose doctype is to be obtained
    * @return {string}   The DOCTYPE comment
    */
   doctype(doc: D): string;
