@@ -52,7 +52,7 @@ export const textBase = Configuration.createUnNamed({
     //
     // For unknown macros, if they are defined in the main TeX parser
     //   and not string-replacement macros, give an error, otherwise
-    //   run the macro (this either does the string replacementor
+    //   run the macro (this either does the string replacement or
     //   produces the error as configured in the main TeX parser, so
     //   this will respect the noundefined package, if loaded).
     //

@@ -112,7 +112,7 @@ export const TextMacrosMethods = {
    */
   OpenBrace(parser: TextParser, _c: string) {
     //
-    //  Save the current stackl environment and make a copy of it for
+    //  Save the current stack environment and make a copy of it for
     //    use within the braced group.
     //
     const env = parser.stack.env;
@@ -258,8 +258,10 @@ export const TextMacrosMethods = {
     const texParser = parser.texParser;
     name = name.slice(1);
     //
-    // Check if a macro is currently set to autoload an extension.
-    // If so, process the macro in the original TexParser and restart the expression
+    // Check if a macro is undefined, or currently set to autoload an extension.
+    // If so, process the macro in the original TexParser:
+    //    This will handle the undefined macro using the TeX parser's configuration, then return,
+    //    or will cause the autoloaded extension to load or be processed and restart the expression.
     // Otherwise, process the macro in text mode.
     //
     const macro = texParser.lookup('macro', name);

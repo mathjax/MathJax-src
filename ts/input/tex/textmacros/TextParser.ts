@@ -154,11 +154,10 @@ export class TextParser extends TexParser {
    */
   public addAttributes(mml: MmlNode) {
     const env = this.stack.env;
-    if (mml.isToken) {
-      for (const name of ['mathsize', 'mathcolor', 'mathvariant']) {
-        if (env[name] && !mml.attributes.getExplicit(name)) {
-          NodeUtil.setAttribute(mml, name, env[name]);
-        }
+    if (!mml.isToken) return;
+    for (const name of ['mathsize', 'mathcolor', 'mathvariant']) {
+      if (env[name] && !mml.attributes.getExplicit(name)) {
+        NodeUtil.setAttribute(mml, name, env[name]);
       }
     }
   }
